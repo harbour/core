@@ -101,8 +101,13 @@ CREATE CLASS QGridLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QGridLayout:new( pParent )
-   ::pPtr := Qt_QGridLayout( hbqt_ptr( pParent ) )
+METHOD QGridLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QGridLayout( ... )
    RETURN Self
 
 

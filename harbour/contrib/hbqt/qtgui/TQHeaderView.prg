@@ -132,8 +132,13 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHeaderView:new( pParent )
-   ::pPtr := Qt_QHeaderView( hbqt_ptr( pParent ) )
+METHOD QHeaderView:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QHeaderView( ... )
    RETURN Self
 
 

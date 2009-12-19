@@ -84,8 +84,13 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionHeader:new( pParent )
-   ::pPtr := Qt_QStyleOptionHeader( hbqt_ptr( pParent ) )
+METHOD QStyleOptionHeader:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionHeader( ... )
    RETURN Self
 
 

@@ -286,8 +286,13 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWidget:new( pParent )
-   ::pPtr := Qt_QWidget( hbqt_ptr( pParent ) )
+METHOD QWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QWidget( ... )
    RETURN Self
 
 

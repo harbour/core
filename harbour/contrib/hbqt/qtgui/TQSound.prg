@@ -82,8 +82,13 @@ CREATE CLASS QSound
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSound:new( pParent )
-   ::pPtr := Qt_QSound( hbqt_ptr( pParent ) )
+METHOD QSound:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSound( ... )
    RETURN Self
 
 

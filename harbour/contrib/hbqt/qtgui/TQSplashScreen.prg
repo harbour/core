@@ -81,8 +81,13 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSplashScreen:new( pParent )
-   ::pPtr := Qt_QSplashScreen( hbqt_ptr( pParent ) )
+METHOD QSplashScreen:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSplashScreen( ... )
    RETURN Self
 
 

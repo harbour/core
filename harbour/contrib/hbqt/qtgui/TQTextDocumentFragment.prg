@@ -82,8 +82,13 @@ CREATE CLASS QTextDocumentFragment
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocumentFragment:new( pParent )
-   ::pPtr := Qt_QTextDocumentFragment( hbqt_ptr( pParent ) )
+METHOD QTextDocumentFragment:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextDocumentFragment( ... )
    RETURN Self
 
 

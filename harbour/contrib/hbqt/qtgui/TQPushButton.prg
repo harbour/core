@@ -84,8 +84,13 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPushButton:new( pParent )
-   ::pPtr := Qt_QPushButton( hbqt_ptr( pParent ) )
+METHOD QPushButton:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPushButton( ... )
    RETURN Self
 
 

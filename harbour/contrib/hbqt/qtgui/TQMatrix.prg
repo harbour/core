@@ -104,8 +104,13 @@ CREATE CLASS QMatrix
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMatrix:new( pParent )
-   ::pPtr := Qt_QMatrix( hbqt_ptr( pParent ) )
+METHOD QMatrix:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QMatrix( ... )
    RETURN Self
 
 

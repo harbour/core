@@ -123,8 +123,13 @@ CREATE CLASS QAction INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAction:new( pParent )
-   ::pPtr := Qt_QAction( hbqt_ptr( pParent ) )
+METHOD QAction:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAction( ... )
    RETURN Self
 
 

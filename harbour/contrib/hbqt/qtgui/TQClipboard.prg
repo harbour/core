@@ -89,8 +89,13 @@ CREATE CLASS QClipboard INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QClipboard:new( pParent )
-   ::pPtr := Qt_QClipboard( hbqt_ptr( pParent ) )
+METHOD QClipboard:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QClipboard( ... )
    RETURN Self
 
 

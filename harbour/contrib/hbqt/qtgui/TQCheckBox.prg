@@ -79,8 +79,13 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCheckBox:new( pParent )
-   ::pPtr := Qt_QCheckBox( hbqt_ptr( pParent ) )
+METHOD QCheckBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCheckBox( ... )
    RETURN Self
 
 

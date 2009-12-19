@@ -99,8 +99,13 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractSlider:new( pParent )
-   ::pPtr := Qt_QAbstractSlider( hbqt_ptr( pParent ) )
+METHOD QAbstractSlider:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractSlider( ... )
    RETURN Self
 
 

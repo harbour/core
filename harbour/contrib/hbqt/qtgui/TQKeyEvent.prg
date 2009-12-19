@@ -84,8 +84,13 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QKeyEvent:new( pParent )
-   ::pPtr := Qt_QKeyEvent( hbqt_ptr( pParent ) )
+METHOD QKeyEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QKeyEvent( ... )
    RETURN Self
 
 

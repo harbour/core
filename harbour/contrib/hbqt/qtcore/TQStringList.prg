@@ -110,8 +110,13 @@ CREATE CLASS QStringList INHERIT QList
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStringList:new( pParent )
-   ::pPtr := Qt_QStringList( hbqt_ptr( pParent ) )
+METHOD QStringList:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStringList( ... )
    RETURN Self
 
 

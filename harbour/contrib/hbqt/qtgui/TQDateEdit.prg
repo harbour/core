@@ -75,8 +75,13 @@ CREATE CLASS QDateEdit INHERIT QDateTimeEdit
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDateEdit:new( pParent )
-   ::pPtr := Qt_QDateEdit( hbqt_ptr( pParent ) )
+METHOD QDateEdit:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDateEdit( ... )
    RETURN Self
 
 

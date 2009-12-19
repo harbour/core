@@ -79,8 +79,13 @@ CREATE CLASS QTextObject INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextObject:new( pParent )
-   ::pPtr := Qt_QTextObject( hbqt_ptr( pParent ) )
+METHOD QTextObject:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextObject( ... )
    RETURN Self
 
 

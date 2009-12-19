@@ -111,8 +111,13 @@ CREATE CLASS QFormLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFormLayout:new( pParent )
-   ::pPtr := Qt_QFormLayout( hbqt_ptr( pParent ) )
+METHOD QFormLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFormLayout( ... )
    RETURN Self
 
 

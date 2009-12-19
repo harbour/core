@@ -85,8 +85,13 @@ CREATE CLASS QStatusBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStatusBar:new( pParent )
-   ::pPtr := Qt_QStatusBar( hbqt_ptr( pParent ) )
+METHOD QStatusBar:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStatusBar( ... )
    RETURN Self
 
 

@@ -92,8 +92,13 @@ CREATE CLASS QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLayoutItem:new( pParent )
-   ::pPtr := Qt_QLayoutItem( hbqt_ptr( pParent ) )
+METHOD QLayoutItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLayoutItem( ... )
    RETURN Self
 
 

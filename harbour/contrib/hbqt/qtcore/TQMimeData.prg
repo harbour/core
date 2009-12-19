@@ -94,8 +94,13 @@ CREATE CLASS QMimeData INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMimeData:new( pParent )
-   ::pPtr := Qt_QMimeData( hbqt_ptr( pParent ) )
+METHOD QMimeData:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QMimeData( ... )
    RETURN Self
 
 

@@ -100,8 +100,13 @@ CREATE CLASS QTextBlock
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBlock:new( pParent )
-   ::pPtr := Qt_QTextBlock( hbqt_ptr( pParent ) )
+METHOD QTextBlock:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextBlock( ... )
    RETURN Self
 
 

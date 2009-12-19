@@ -94,8 +94,13 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBlockFormat:new( pParent )
-   ::pPtr := Qt_QTextBlockFormat( hbqt_ptr( pParent ) )
+METHOD QTextBlockFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextBlockFormat( ... )
    RETURN Self
 
 

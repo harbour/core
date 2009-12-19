@@ -119,8 +119,13 @@ CREATE CLASS QFileInfo
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileInfo:new( pParent )
-   ::pPtr := Qt_QFileInfo( hbqt_ptr( pParent ) )
+METHOD QFileInfo:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFileInfo( ... )
    RETURN Self
 
 

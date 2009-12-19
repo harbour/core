@@ -104,8 +104,13 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QListView:new( pParent )
-   ::pPtr := Qt_QListView( hbqt_ptr( pParent ) )
+METHOD QListView:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QListView( ... )
    RETURN Self
 
 

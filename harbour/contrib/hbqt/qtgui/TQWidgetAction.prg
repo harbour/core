@@ -79,8 +79,13 @@ CREATE CLASS QWidgetAction INHERIT QAction
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWidgetAction:new( pParent )
-   ::pPtr := Qt_QWidgetAction( hbqt_ptr( pParent ) )
+METHOD QWidgetAction:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QWidgetAction( ... )
    RETURN Self
 
 

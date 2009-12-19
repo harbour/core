@@ -99,8 +99,13 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProgressDialog:new( pParent )
-   ::pPtr := Qt_QProgressDialog( hbqt_ptr( pParent ) )
+METHOD QProgressDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QProgressDialog( ... )
    RETURN Self
 
 

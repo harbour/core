@@ -103,8 +103,13 @@ CREATE CLASS QMovie INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMovie:new( pParent )
-   ::pPtr := Qt_QMovie( hbqt_ptr( pParent ) )
+METHOD QMovie:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QMovie( ... )
    RETURN Self
 
 

@@ -79,8 +79,13 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSlider:new( pParent )
-   ::pPtr := Qt_QSlider( hbqt_ptr( pParent ) )
+METHOD QSlider:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSlider( ... )
    RETURN Self
 
 

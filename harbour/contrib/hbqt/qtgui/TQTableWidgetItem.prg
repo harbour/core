@@ -110,8 +110,13 @@ CREATE CLASS QTableWidgetItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableWidgetItem:new( pParent )
-   ::pPtr := Qt_QTableWidgetItem( hbqt_ptr( pParent ) )
+METHOD QTableWidgetItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTableWidgetItem( ... )
    RETURN Self
 
 

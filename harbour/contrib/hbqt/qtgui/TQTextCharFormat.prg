@@ -122,8 +122,13 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextCharFormat:new( pParent )
-   ::pPtr := Qt_QTextCharFormat( hbqt_ptr( pParent ) )
+METHOD QTextCharFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextCharFormat( ... )
    RETURN Self
 
 

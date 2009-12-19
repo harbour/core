@@ -82,8 +82,13 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextImageFormat:new( pParent )
-   ::pPtr := Qt_QTextImageFormat( hbqt_ptr( pParent ) )
+METHOD QTextImageFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextImageFormat( ... )
    RETURN Self
 
 

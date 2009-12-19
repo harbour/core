@@ -78,8 +78,13 @@ CREATE CLASS QFocusEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFocusEvent:new( pParent )
-   ::pPtr := Qt_QFocusEvent( hbqt_ptr( pParent ) )
+METHOD QFocusEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFocusEvent( ... )
    RETURN Self
 
 

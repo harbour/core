@@ -113,8 +113,13 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCalendarWidget:new( pParent )
-   ::pPtr := Qt_QCalendarWidget( hbqt_ptr( pParent ) )
+METHOD QCalendarWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCalendarWidget( ... )
    RETURN Self
 
 

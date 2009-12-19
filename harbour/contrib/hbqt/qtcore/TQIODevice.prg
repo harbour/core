@@ -108,8 +108,13 @@ CREATE CLASS QIODevice INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QIODevice:new( pParent )
-   ::pPtr := Qt_QIODevice( hbqt_ptr( pParent ) )
+METHOD QIODevice:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QIODevice( ... )
    RETURN Self
 
 

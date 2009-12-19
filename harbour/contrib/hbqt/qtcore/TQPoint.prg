@@ -84,16 +84,12 @@ CREATE CLASS QPoint
 /*----------------------------------------------------------------------*/
 
 METHOD QPoint:new( ... )
-   LOCAL p, aP := hb_aParams()
-
-   IF len( aP ) > 0
-      FOR EACH p IN aP
-         p := hbqt_ptr( p )
-      NEXT
-   ENDIF
-
-   ::pPtr := hb_ExecFromArray( @Qt_QPoint(), aP )
-
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPoint( ... )
    RETURN Self
 
 

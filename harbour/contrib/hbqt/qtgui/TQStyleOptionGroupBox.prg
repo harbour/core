@@ -81,8 +81,13 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionGroupBox:new( pParent )
-   ::pPtr := Qt_QStyleOptionGroupBox( hbqt_ptr( pParent ) )
+METHOD QStyleOptionGroupBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionGroupBox( ... )
    RETURN Self
 
 

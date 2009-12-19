@@ -73,10 +73,6 @@
  *  -----------------------------
  *
  *  void append ( const QList<T> & value )
- *  iterator begin ()
- *  iterator erase ( iterator pos )
- *  iterator erase ( iterator begin, iterator end )
- *  iterator insert ( iterator before, const T & value )
  *  QList<T> mid ( int pos, int length = -1 ) const
  *  QSet<T> toSet () const
  *  std::list<T> toStdList () const
@@ -84,12 +80,16 @@
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
+ *  //iterator begin ()
  *  //const_iterator begin () const
  *  //const_iterator constBegin () const
  *  //const_iterator constEnd () const
  *  //bool contains ( const T & value ) const
  *  //iterator end ()
  *  //const_iterator end () const
+ *  //iterator erase ( iterator pos )
+ *  //iterator erase ( iterator begin, iterator end )
+ *  //iterator insert ( iterator before, const T & value )
  */
 
 #include <QtCore/QPointer>

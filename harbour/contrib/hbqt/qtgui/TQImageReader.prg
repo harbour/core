@@ -113,8 +113,13 @@ CREATE CLASS QImageReader
 
 /*----------------------------------------------------------------------*/
 
-METHOD QImageReader:new( pParent )
-   ::pPtr := Qt_QImageReader( hbqt_ptr( pParent ) )
+METHOD QImageReader:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QImageReader( ... )
    RETURN Self
 
 

@@ -76,8 +76,13 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionSizeGrip:new( pParent )
-   ::pPtr := Qt_QStyleOptionSizeGrip( hbqt_ptr( pParent ) )
+METHOD QStyleOptionSizeGrip:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionSizeGrip( ... )
    RETURN Self
 
 

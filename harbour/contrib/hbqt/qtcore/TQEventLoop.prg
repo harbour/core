@@ -81,8 +81,13 @@ CREATE CLASS QEventLoop INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QEventLoop:new( pParent )
-   ::pPtr := Qt_QEventLoop( hbqt_ptr( pParent ) )
+METHOD QEventLoop:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QEventLoop( ... )
    RETURN Self
 
 

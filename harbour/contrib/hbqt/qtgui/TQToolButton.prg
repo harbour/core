@@ -88,8 +88,13 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolButton:new( pParent )
-   ::pPtr := Qt_QToolButton( hbqt_ptr( pParent ) )
+METHOD QToolButton:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QToolButton( ... )
    RETURN Self
 
 

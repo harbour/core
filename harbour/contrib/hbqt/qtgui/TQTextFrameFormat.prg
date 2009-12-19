@@ -104,8 +104,13 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFrameFormat:new( pParent )
-   ::pPtr := Qt_QTextFrameFormat( hbqt_ptr( pParent ) )
+METHOD QTextFrameFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextFrameFormat( ... )
    RETURN Self
 
 

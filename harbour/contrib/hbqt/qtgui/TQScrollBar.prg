@@ -75,8 +75,13 @@ CREATE CLASS QScrollBar INHERIT QAbstractSlider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QScrollBar:new( pParent )
-   ::pPtr := Qt_QScrollBar( hbqt_ptr( pParent ) )
+METHOD QScrollBar:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QScrollBar( ... )
    RETURN Self
 
 

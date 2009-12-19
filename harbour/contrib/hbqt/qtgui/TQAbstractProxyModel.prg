@@ -81,8 +81,13 @@ CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractProxyModel:new( pParent )
-   ::pPtr := Qt_QAbstractProxyModel( hbqt_ptr( pParent ) )
+METHOD QAbstractProxyModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractProxyModel( ... )
    RETURN Self
 
 

@@ -93,8 +93,13 @@ CREATE CLASS QImageWriter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QImageWriter:new( pParent )
-   ::pPtr := Qt_QImageWriter( hbqt_ptr( pParent ) )
+METHOD QImageWriter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QImageWriter( ... )
    RETURN Self
 
 

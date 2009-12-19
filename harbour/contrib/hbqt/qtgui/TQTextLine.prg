@@ -96,8 +96,13 @@ CREATE CLASS QTextLine
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextLine:new( pParent )
-   ::pPtr := Qt_QTextLine( hbqt_ptr( pParent ) )
+METHOD QTextLine:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextLine( ... )
    RETURN Self
 
 

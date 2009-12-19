@@ -91,8 +91,13 @@ CREATE CLASS QSessionManager INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSessionManager:new( pParent )
-   ::pPtr := Qt_QSessionManager( hbqt_ptr( pParent ) )
+METHOD QSessionManager:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSessionManager( ... )
    RETURN Self
 
 

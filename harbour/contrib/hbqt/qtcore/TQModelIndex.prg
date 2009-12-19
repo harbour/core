@@ -86,8 +86,13 @@ CREATE CLASS QModelIndex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QModelIndex:new( pParent )
-   ::pPtr := Qt_QModelIndex( hbqt_ptr( pParent ) )
+METHOD QModelIndex:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QModelIndex( ... )
    RETURN Self
 
 

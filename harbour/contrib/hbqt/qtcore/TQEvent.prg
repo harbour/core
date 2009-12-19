@@ -82,8 +82,13 @@ CREATE CLASS QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QEvent:new( pParent )
-   ::pPtr := Qt_QEvent( hbqt_ptr( pParent ) )
+METHOD QEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QEvent( ... )
    RETURN Self
 
 

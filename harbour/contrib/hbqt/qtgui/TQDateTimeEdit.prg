@@ -119,8 +119,13 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDateTimeEdit:new( pParent )
-   ::pPtr := Qt_QDateTimeEdit( hbqt_ptr( pParent ) )
+METHOD QDateTimeEdit:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDateTimeEdit( ... )
    RETURN Self
 
 

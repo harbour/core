@@ -102,8 +102,13 @@ CREATE CLASS QLineF
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLineF:new( pParent )
-   ::pPtr := Qt_QLineF( hbqt_ptr( pParent ) )
+METHOD QLineF:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLineF( ... )
    RETURN Self
 
 

@@ -90,8 +90,13 @@ CREATE CLASS QColorDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QColorDialog:new( pParent )
-   ::pPtr := Qt_QColorDialog( hbqt_ptr( pParent ) )
+METHOD QColorDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QColorDialog( ... )
    RETURN Self
 
 

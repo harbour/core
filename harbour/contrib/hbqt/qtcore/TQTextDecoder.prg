@@ -76,8 +76,13 @@ CREATE CLASS QTextDecoder
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDecoder:new( pParent )
-   ::pPtr := Qt_QTextDecoder( hbqt_ptr( pParent ) )
+METHOD QTextDecoder:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextDecoder( ... )
    RETURN Self
 
 

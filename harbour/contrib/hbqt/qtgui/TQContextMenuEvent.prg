@@ -82,8 +82,13 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QContextMenuEvent:new( pParent )
-   ::pPtr := Qt_QContextMenuEvent( hbqt_ptr( pParent ) )
+METHOD QContextMenuEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QContextMenuEvent( ... )
    RETURN Self
 
 

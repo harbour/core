@@ -87,8 +87,13 @@ CREATE CLASS QFontInfo
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontInfo:new( pParent )
-   ::pPtr := Qt_QFontInfo( hbqt_ptr( pParent ) )
+METHOD QFontInfo:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFontInfo( ... )
    RETURN Self
 
 

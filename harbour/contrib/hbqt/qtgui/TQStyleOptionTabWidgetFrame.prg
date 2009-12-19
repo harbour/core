@@ -81,8 +81,13 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionTabWidgetFrame:new( pParent )
-   ::pPtr := Qt_QStyleOptionTabWidgetFrame( hbqt_ptr( pParent ) )
+METHOD QStyleOptionTabWidgetFrame:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionTabWidgetFrame( ... )
    RETURN Self
 
 

@@ -82,8 +82,13 @@ CREATE CLASS QTextFrame INHERIT QTextObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFrame:new( pParent )
-   ::pPtr := Qt_QTextFrame( hbqt_ptr( pParent ) )
+METHOD QTextFrame:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextFrame( ... )
    RETURN Self
 
 

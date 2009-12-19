@@ -89,8 +89,13 @@ CREATE CLASS QSizePolicy
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSizePolicy:new( pParent )
-   ::pPtr := Qt_QSizePolicy( hbqt_ptr( pParent ) )
+METHOD QSizePolicy:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSizePolicy( ... )
    RETURN Self
 
 

@@ -77,8 +77,13 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QResizeEvent:new( pParent )
-   ::pPtr := Qt_QResizeEvent( hbqt_ptr( pParent ) )
+METHOD QResizeEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QResizeEvent( ... )
    RETURN Self
 
 

@@ -86,8 +86,13 @@ CREATE CLASS QSignalMapper INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSignalMapper:new( pParent )
-   ::pPtr := Qt_QSignalMapper( hbqt_ptr( pParent ) )
+METHOD QSignalMapper:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSignalMapper( ... )
    RETURN Self
 
 

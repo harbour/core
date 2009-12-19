@@ -77,8 +77,13 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionComplex:new( pParent )
-   ::pPtr := Qt_QStyleOptionComplex( hbqt_ptr( pParent ) )
+METHOD QStyleOptionComplex:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionComplex( ... )
    RETURN Self
 
 

@@ -138,8 +138,13 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractItemView:new( pParent )
-   ::pPtr := Qt_QAbstractItemView( hbqt_ptr( pParent ) )
+METHOD QAbstractItemView:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractItemView( ... )
    RETURN Self
 
 

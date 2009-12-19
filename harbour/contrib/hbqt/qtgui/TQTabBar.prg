@@ -119,8 +119,13 @@ CREATE CLASS QTabBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTabBar:new( pParent )
-   ::pPtr := Qt_QTabBar( hbqt_ptr( pParent ) )
+METHOD QTabBar:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTabBar( ... )
    RETURN Self
 
 

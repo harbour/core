@@ -117,8 +117,13 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableView:new( pParent )
-   ::pPtr := Qt_QTableView( hbqt_ptr( pParent ) )
+METHOD QTableView:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTableView( ... )
    RETURN Self
 
 

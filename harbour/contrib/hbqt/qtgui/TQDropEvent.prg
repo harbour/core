@@ -85,8 +85,13 @@ CREATE CLASS QDropEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDropEvent:new( pParent )
-   ::pPtr := Qt_QDropEvent( hbqt_ptr( pParent ) )
+METHOD QDropEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDropEvent( ... )
    RETURN Self
 
 

@@ -116,8 +116,13 @@ CREATE CLASS QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFormat:new( pParent )
-   ::pPtr := Qt_QTextFormat( hbqt_ptr( pParent ) )
+METHOD QTextFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextFormat( ... )
    RETURN Self
 
 

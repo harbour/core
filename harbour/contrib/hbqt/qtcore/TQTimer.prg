@@ -85,8 +85,13 @@ CREATE CLASS QTimer INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTimer:new( pParent )
-   ::pPtr := Qt_QTimer( hbqt_ptr( pParent ) )
+METHOD QTimer:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTimer( ... )
    RETURN Self
 
 

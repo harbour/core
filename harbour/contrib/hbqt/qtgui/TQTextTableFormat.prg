@@ -86,8 +86,13 @@ CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextTableFormat:new( pParent )
-   ::pPtr := Qt_QTextTableFormat( hbqt_ptr( pParent ) )
+METHOD QTextTableFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextTableFormat( ... )
    RETURN Self
 
 

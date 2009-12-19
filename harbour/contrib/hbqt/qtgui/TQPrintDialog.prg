@@ -84,8 +84,13 @@ CREATE CLASS QPrintDialog INHERIT QAbstractPrintDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrintDialog:new( pParent )
-   ::pPtr := Qt_QPrintDialog( hbqt_ptr( pParent ) )
+METHOD QPrintDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPrintDialog( ... )
    RETURN Self
 
 

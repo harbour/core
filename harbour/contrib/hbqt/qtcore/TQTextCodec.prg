@@ -95,8 +95,13 @@ CREATE CLASS QTextCodec
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextCodec:new( pParent )
-   ::pPtr := Qt_QTextCodec( hbqt_ptr( pParent ) )
+METHOD QTextCodec:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextCodec( ... )
    RETURN Self
 
 

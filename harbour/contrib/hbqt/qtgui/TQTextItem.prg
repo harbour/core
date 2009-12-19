@@ -81,8 +81,13 @@ CREATE CLASS QTextItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextItem:new( pParent )
-   ::pPtr := Qt_QTextItem( hbqt_ptr( pParent ) )
+METHOD QTextItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextItem( ... )
    RETURN Self
 
 

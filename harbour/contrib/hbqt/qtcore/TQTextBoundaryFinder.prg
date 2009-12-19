@@ -86,8 +86,13 @@ CREATE CLASS QTextBoundaryFinder
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBoundaryFinder:new( pParent )
-   ::pPtr := Qt_QTextBoundaryFinder( hbqt_ptr( pParent ) )
+METHOD QTextBoundaryFinder:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextBoundaryFinder( ... )
    RETURN Self
 
 

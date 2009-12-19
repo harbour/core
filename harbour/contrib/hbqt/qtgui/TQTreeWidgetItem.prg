@@ -127,8 +127,13 @@ CREATE CLASS QTreeWidgetItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeWidgetItem:new( pParent )
-   ::pPtr := Qt_QTreeWidgetItem( hbqt_ptr( pParent ) )
+METHOD QTreeWidgetItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTreeWidgetItem( ... )
    RETURN Self
 
 

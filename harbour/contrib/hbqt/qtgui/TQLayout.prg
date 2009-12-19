@@ -104,8 +104,13 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLayout:new( pParent )
-   ::pPtr := Qt_QLayout( hbqt_ptr( pParent ) )
+METHOD QLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLayout( ... )
    RETURN Self
 
 

@@ -70,14 +70,20 @@ CREATE CLASS QErrorMessage INHERIT QDialog
    METHOD  new()
    METHOD  configure( xObject )
 
-   METHOD  showMessage( cMessage, cType )
+   METHOD  showMessage( cMessage )
+   METHOD  showMessage_1( cMessage, cType )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QErrorMessage:new( pParent )
-   ::pPtr := Qt_QErrorMessage( hbqt_ptr( pParent ) )
+METHOD QErrorMessage:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QErrorMessage( ... )
    RETURN Self
 
 
@@ -90,6 +96,10 @@ METHOD QErrorMessage:configure( xObject )
    RETURN Self
 
 
-METHOD QErrorMessage:showMessage( cMessage, cType )
-   RETURN Qt_QErrorMessage_showMessage( ::pPtr, cMessage, cType )
+METHOD QErrorMessage:showMessage( cMessage )
+   RETURN Qt_QErrorMessage_showMessage( ::pPtr, cMessage )
+
+
+METHOD QErrorMessage:showMessage_1( cMessage, cType )
+   RETURN Qt_QErrorMessage_showMessage_1( ::pPtr, cMessage, cType )
 

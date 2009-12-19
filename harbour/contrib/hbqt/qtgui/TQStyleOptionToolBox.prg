@@ -77,8 +77,13 @@ CREATE CLASS QStyleOptionToolBox INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionToolBox:new( pParent )
-   ::pPtr := Qt_QStyleOptionToolBox( hbqt_ptr( pParent ) )
+METHOD QStyleOptionToolBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionToolBox( ... )
    RETURN Self
 
 

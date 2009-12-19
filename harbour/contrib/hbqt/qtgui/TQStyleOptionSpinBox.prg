@@ -78,8 +78,13 @@ CREATE CLASS QStyleOptionSpinBox INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionSpinBox:new( pParent )
-   ::pPtr := Qt_QStyleOptionSpinBox( hbqt_ptr( pParent ) )
+METHOD QStyleOptionSpinBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionSpinBox( ... )
    RETURN Self
 
 

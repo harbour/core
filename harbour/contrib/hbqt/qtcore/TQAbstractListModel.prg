@@ -76,8 +76,13 @@ CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractListModel:new( pParent )
-   ::pPtr := Qt_QAbstractListModel( hbqt_ptr( pParent ) )
+METHOD QAbstractListModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractListModel( ... )
    RETURN Self
 
 

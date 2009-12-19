@@ -89,8 +89,13 @@ CREATE CLASS QUiLoader INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QUiLoader:new( pParent )
-   ::pPtr := Qt_QUiLoader( hbqt_ptr( pParent ) )
+METHOD QUiLoader:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QUiLoader( ... )
    RETURN Self
 
 

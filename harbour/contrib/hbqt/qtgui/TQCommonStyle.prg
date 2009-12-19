@@ -75,8 +75,13 @@ CREATE CLASS QCommonStyle INHERIT QStyle
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCommonStyle:new( pParent )
-   ::pPtr := Qt_QCommonStyle( hbqt_ptr( pParent ) )
+METHOD QCommonStyle:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCommonStyle( ... )
    RETURN Self
 
 

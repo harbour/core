@@ -101,8 +101,13 @@ CREATE CLASS QFtp INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFtp:new( pParent )
-   ::pPtr := Qt_QFtp( hbqt_ptr( pParent ) )
+METHOD QFtp:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFtp( ... )
    RETURN Self
 
 

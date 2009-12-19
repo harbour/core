@@ -79,8 +79,13 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionDockWidget:new( pParent )
-   ::pPtr := Qt_QStyleOptionDockWidget( hbqt_ptr( pParent ) )
+METHOD QStyleOptionDockWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionDockWidget( ... )
    RETURN Self
 
 

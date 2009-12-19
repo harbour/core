@@ -77,8 +77,13 @@ CREATE CLASS QCommandLinkButton INHERIT QPushButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCommandLinkButton:new( pParent )
-   ::pPtr := Qt_QCommandLinkButton( hbqt_ptr( pParent ) )
+METHOD QCommandLinkButton:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCommandLinkButton( ... )
    RETURN Self
 
 

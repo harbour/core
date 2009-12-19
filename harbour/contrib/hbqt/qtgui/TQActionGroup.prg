@@ -87,8 +87,13 @@ CREATE CLASS QActionGroup INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QActionGroup:new( pParent )
-   ::pPtr := Qt_QActionGroup( hbqt_ptr( pParent ) )
+METHOD QActionGroup:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QActionGroup( ... )
    RETURN Self
 
 

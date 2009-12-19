@@ -76,8 +76,13 @@ CREATE CLASS QLatin1String
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLatin1String:new( pParent )
-   ::pPtr := Qt_QLatin1String( hbqt_ptr( pParent ) )
+METHOD QLatin1String:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLatin1String( ... )
    RETURN Self
 
 

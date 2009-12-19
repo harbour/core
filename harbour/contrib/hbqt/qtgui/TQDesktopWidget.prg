@@ -87,8 +87,13 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDesktopWidget:new( pParent )
-   ::pPtr := Qt_QDesktopWidget( hbqt_ptr( pParent ) )
+METHOD QDesktopWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDesktopWidget( ... )
    RETURN Self
 
 

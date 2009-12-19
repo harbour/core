@@ -111,8 +111,13 @@ CREATE CLASS QTextStream
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextStream:new( pParent )
-   ::pPtr := Qt_QTextStream( hbqt_ptr( pParent ) )
+METHOD QTextStream:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextStream( ... )
    RETURN Self
 
 

@@ -80,8 +80,13 @@ CREATE CLASS QInputMethodEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputMethodEvent:new( pParent )
-   ::pPtr := Qt_QInputMethodEvent( hbqt_ptr( pParent ) )
+METHOD QInputMethodEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QInputMethodEvent( ... )
    RETURN Self
 
 

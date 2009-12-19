@@ -130,8 +130,13 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrinter:new( pParent )
-   ::pPtr := Qt_QPrinter( hbqt_ptr( pParent ) )
+METHOD QPrinter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPrinter( ... )
    RETURN Self
 
 

@@ -120,8 +120,13 @@ CREATE CLASS QFileDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileDialog:new( pParent )
-   ::pPtr := Qt_QFileDialog( hbqt_ptr( pParent ) )
+METHOD QFileDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFileDialog( ... )
    RETURN Self
 
 

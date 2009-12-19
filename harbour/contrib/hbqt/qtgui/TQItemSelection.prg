@@ -78,8 +78,13 @@ CREATE CLASS QItemSelection INHERIT QList
 
 /*----------------------------------------------------------------------*/
 
-METHOD QItemSelection:new( pParent )
-   ::pPtr := Qt_QItemSelection( hbqt_ptr( pParent ) )
+METHOD QItemSelection:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QItemSelection( ... )
    RETURN Self
 
 

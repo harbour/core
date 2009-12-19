@@ -75,8 +75,13 @@ CREATE CLASS QStyleHintReturn
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleHintReturn:new( pParent )
-   ::pPtr := Qt_QStyleHintReturn( hbqt_ptr( pParent ) )
+METHOD QStyleHintReturn:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleHintReturn( ... )
    RETURN Self
 
 

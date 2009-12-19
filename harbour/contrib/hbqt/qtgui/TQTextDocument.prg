@@ -141,8 +141,13 @@ CREATE CLASS QTextDocument INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocument:new( pParent )
-   ::pPtr := Qt_QTextDocument( hbqt_ptr( pParent ) )
+METHOD QTextDocument:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextDocument( ... )
    RETURN Self
 
 

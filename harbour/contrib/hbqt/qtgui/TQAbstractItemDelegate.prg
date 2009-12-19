@@ -82,8 +82,13 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractItemDelegate:new( pParent )
-   ::pPtr := Qt_QAbstractItemDelegate( hbqt_ptr( pParent ) )
+METHOD QAbstractItemDelegate:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractItemDelegate( ... )
    RETURN Self
 
 

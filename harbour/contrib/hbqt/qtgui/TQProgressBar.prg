@@ -96,8 +96,13 @@ CREATE CLASS QProgressBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProgressBar:new( pParent )
-   ::pPtr := Qt_QProgressBar( hbqt_ptr( pParent ) )
+METHOD QProgressBar:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QProgressBar( ... )
    RETURN Self
 
 

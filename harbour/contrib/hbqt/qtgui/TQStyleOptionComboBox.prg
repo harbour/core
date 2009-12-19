@@ -81,8 +81,13 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionComboBox:new( pParent )
-   ::pPtr := Qt_QStyleOptionComboBox( hbqt_ptr( pParent ) )
+METHOD QStyleOptionComboBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionComboBox( ... )
    RETURN Self
 
 

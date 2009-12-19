@@ -101,8 +101,13 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractButton:new( pParent )
-   ::pPtr := Qt_QAbstractButton( hbqt_ptr( pParent ) )
+METHOD QAbstractButton:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractButton( ... )
    RETURN Self
 
 

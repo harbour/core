@@ -108,8 +108,13 @@ CREATE CLASS QMenu INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMenu:new( pParent )
-   ::pPtr := Qt_QMenu( hbqt_ptr( pParent ) )
+METHOD QMenu:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QMenu( ... )
    RETURN Self
 
 

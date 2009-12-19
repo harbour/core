@@ -112,8 +112,13 @@ CREATE CLASS QDirModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDirModel:new( pParent )
-   ::pPtr := Qt_QDirModel( hbqt_ptr( pParent ) )
+METHOD QDirModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDirModel( ... )
    RETURN Self
 
 

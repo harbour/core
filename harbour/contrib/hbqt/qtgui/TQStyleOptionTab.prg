@@ -82,8 +82,13 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionTab:new( pParent )
-   ::pPtr := Qt_QStyleOptionTab( hbqt_ptr( pParent ) )
+METHOD QStyleOptionTab:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionTab( ... )
    RETURN Self
 
 

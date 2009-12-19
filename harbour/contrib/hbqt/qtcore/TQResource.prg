@@ -87,8 +87,13 @@ CREATE CLASS QResource
 
 /*----------------------------------------------------------------------*/
 
-METHOD QResource:new( pParent )
-   ::pPtr := Qt_QResource( hbqt_ptr( pParent ) )
+METHOD QResource:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QResource( ... )
    RETURN Self
 
 

@@ -88,8 +88,13 @@ CREATE CLASS QTextInlineObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextInlineObject:new( pParent )
-   ::pPtr := Qt_QTextInlineObject( hbqt_ptr( pParent ) )
+METHOD QTextInlineObject:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextInlineObject( ... )
    RETURN Self
 
 

@@ -81,8 +81,13 @@ CREATE CLASS QTableWidgetSelectionRange
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableWidgetSelectionRange:new( pParent )
-   ::pPtr := Qt_QTableWidgetSelectionRange( hbqt_ptr( pParent ) )
+METHOD QTableWidgetSelectionRange:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTableWidgetSelectionRange( ... )
    RETURN Self
 
 

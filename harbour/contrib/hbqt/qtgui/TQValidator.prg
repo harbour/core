@@ -77,8 +77,13 @@ CREATE CLASS QValidator INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QValidator:new( pParent )
-   ::pPtr := Qt_QValidator( hbqt_ptr( pParent ) )
+METHOD QValidator:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QValidator( ... )
    RETURN Self
 
 

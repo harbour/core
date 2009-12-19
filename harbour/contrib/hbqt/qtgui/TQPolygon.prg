@@ -88,8 +88,13 @@ CREATE CLASS QPolygon
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPolygon:new( pParent )
-   ::pPtr := Qt_QPolygon( hbqt_ptr( pParent ) )
+METHOD QPolygon:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPolygon( ... )
    RETURN Self
 
 

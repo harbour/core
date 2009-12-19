@@ -94,8 +94,13 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLCDNumber:new( pParent )
-   ::pPtr := Qt_QLCDNumber( hbqt_ptr( pParent ) )
+METHOD QLCDNumber:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLCDNumber( ... )
    RETURN Self
 
 

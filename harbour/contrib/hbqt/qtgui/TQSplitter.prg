@@ -96,8 +96,13 @@ CREATE CLASS QSplitter INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSplitter:new( pParent )
-   ::pPtr := Qt_QSplitter( hbqt_ptr( pParent ) )
+METHOD QSplitter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSplitter( ... )
    RETURN Self
 
 

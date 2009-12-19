@@ -146,8 +146,13 @@ CREATE CLASS QStandardItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStandardItem:new( pParent )
-   ::pPtr := Qt_QStandardItem( hbqt_ptr( pParent ) )
+METHOD QStandardItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStandardItem( ... )
    RETURN Self
 
 

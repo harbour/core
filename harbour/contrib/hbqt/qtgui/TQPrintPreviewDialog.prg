@@ -77,8 +77,13 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrintPreviewDialog:new( pParent )
-   ::pPtr := Qt_QPrintPreviewDialog( hbqt_ptr( pParent ) )
+METHOD QPrintPreviewDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPrintPreviewDialog( ... )
    RETURN Self
 
 

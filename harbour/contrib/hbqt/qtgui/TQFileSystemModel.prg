@@ -104,8 +104,13 @@ CREATE CLASS QFileSystemModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileSystemModel:new( pParent )
-   ::pPtr := Qt_QFileSystemModel( hbqt_ptr( pParent ) )
+METHOD QFileSystemModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFileSystemModel( ... )
    RETURN Self
 
 

@@ -85,8 +85,13 @@ CREATE CLASS QGroupBox INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QGroupBox:new( pParent )
-   ::pPtr := Qt_QGroupBox( hbqt_ptr( pParent ) )
+METHOD QGroupBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QGroupBox( ... )
    RETURN Self
 
 

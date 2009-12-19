@@ -85,8 +85,13 @@ CREATE CLASS QTextDocumentWriter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocumentWriter:new( pParent )
-   ::pPtr := Qt_QTextDocumentWriter( hbqt_ptr( pParent ) )
+METHOD QTextDocumentWriter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextDocumentWriter( ... )
    RETURN Self
 
 

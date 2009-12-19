@@ -81,8 +81,13 @@ CREATE CLASS QPrintEngine
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrintEngine:new( pParent )
-   ::pPtr := Qt_QPrintEngine( hbqt_ptr( pParent ) )
+METHOD QPrintEngine:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPrintEngine( ... )
    RETURN Self
 
 

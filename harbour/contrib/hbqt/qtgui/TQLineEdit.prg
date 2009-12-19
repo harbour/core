@@ -130,8 +130,13 @@ CREATE CLASS QLineEdit INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLineEdit:new( pParent )
-   ::pPtr := Qt_QLineEdit( hbqt_ptr( pParent ) )
+METHOD QLineEdit:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLineEdit( ... )
    RETURN Self
 
 

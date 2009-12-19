@@ -94,8 +94,13 @@ CREATE CLASS QRegExp
 
 /*----------------------------------------------------------------------*/
 
-METHOD QRegExp:new( pParent )
-   ::pPtr := Qt_QRegExp( hbqt_ptr( pParent ) )
+METHOD QRegExp:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QRegExp( ... )
    RETURN Self
 
 

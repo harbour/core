@@ -108,8 +108,13 @@ CREATE CLASS QWizard INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWizard:new( pParent )
-   ::pPtr := Qt_QWizard( hbqt_ptr( pParent ) )
+METHOD QWizard:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QWizard( ... )
    RETURN Self
 
 

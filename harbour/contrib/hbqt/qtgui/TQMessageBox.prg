@@ -113,8 +113,13 @@ CREATE CLASS QMessageBox INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMessageBox:new( pParent )
-   ::pPtr := Qt_QMessageBox( hbqt_ptr( pParent ) )
+METHOD QMessageBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QMessageBox( ... )
    RETURN Self
 
 

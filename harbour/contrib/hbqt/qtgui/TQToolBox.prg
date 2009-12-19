@@ -95,8 +95,13 @@ CREATE CLASS QToolBox INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolBox:new( pParent )
-   ::pPtr := Qt_QToolBox( hbqt_ptr( pParent ) )
+METHOD QToolBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QToolBox( ... )
    RETURN Self
 
 

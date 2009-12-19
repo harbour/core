@@ -104,8 +104,13 @@ CREATE CLASS QTextLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextLayout:new( pParent )
-   ::pPtr := Qt_QTextLayout( hbqt_ptr( pParent ) )
+METHOD QTextLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextLayout( ... )
    RETURN Self
 
 

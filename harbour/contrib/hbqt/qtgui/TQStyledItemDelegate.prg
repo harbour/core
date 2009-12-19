@@ -82,8 +82,13 @@ CREATE CLASS QStyledItemDelegate
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyledItemDelegate:new( pParent )
-   ::pPtr := Qt_QStyledItemDelegate( hbqt_ptr( pParent ) )
+METHOD QStyledItemDelegate:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyledItemDelegate( ... )
    RETURN Self
 
 

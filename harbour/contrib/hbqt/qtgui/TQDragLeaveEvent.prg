@@ -75,8 +75,13 @@ CREATE CLASS QDragLeaveEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDragLeaveEvent:new( pParent )
-   ::pPtr := Qt_QDragLeaveEvent( hbqt_ptr( pParent ) )
+METHOD QDragLeaveEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDragLeaveEvent( ... )
    RETURN Self
 
 

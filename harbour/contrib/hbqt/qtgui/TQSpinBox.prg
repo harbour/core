@@ -89,8 +89,13 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSpinBox:new( pParent )
-   ::pPtr := Qt_QSpinBox( hbqt_ptr( pParent ) )
+METHOD QSpinBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSpinBox( ... )
    RETURN Self
 
 

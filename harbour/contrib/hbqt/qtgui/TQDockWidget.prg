@@ -87,8 +87,13 @@ CREATE CLASS QDockWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDockWidget:new( pParent )
-   ::pPtr := Qt_QDockWidget( hbqt_ptr( pParent ) )
+METHOD QDockWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDockWidget( ... )
    RETURN Self
 
 

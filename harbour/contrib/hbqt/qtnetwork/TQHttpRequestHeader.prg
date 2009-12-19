@@ -80,8 +80,13 @@ CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHttpRequestHeader:new( pParent )
-   ::pPtr := Qt_QHttpRequestHeader( hbqt_ptr( pParent ) )
+METHOD QHttpRequestHeader:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QHttpRequestHeader( ... )
    RETURN Self
 
 

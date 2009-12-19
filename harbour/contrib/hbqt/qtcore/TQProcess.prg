@@ -108,8 +108,13 @@ CREATE CLASS QProcess INHERIT QIODevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProcess:new( pParent )
-   ::pPtr := Qt_QProcess( hbqt_ptr( pParent ) )
+METHOD QProcess:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QProcess( ... )
    RETURN Self
 
 

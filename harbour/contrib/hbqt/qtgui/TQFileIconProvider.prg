@@ -78,8 +78,13 @@ CREATE CLASS QFileIconProvider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileIconProvider:new( pParent )
-   ::pPtr := Qt_QFileIconProvider( hbqt_ptr( pParent ) )
+METHOD QFileIconProvider:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFileIconProvider( ... )
    RETURN Self
 
 

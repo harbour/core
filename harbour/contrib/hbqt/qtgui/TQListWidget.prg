@@ -105,8 +105,13 @@ CREATE CLASS QListWidget INHERIT QListView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QListWidget:new( pParent )
-   ::pPtr := Qt_QListWidget( hbqt_ptr( pParent ) )
+METHOD QListWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QListWidget( ... )
    RETURN Self
 
 

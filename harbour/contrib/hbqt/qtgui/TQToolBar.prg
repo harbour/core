@@ -103,8 +103,13 @@ CREATE CLASS QToolBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolBar:new( pParent )
-   ::pPtr := Qt_QToolBar( hbqt_ptr( pParent ) )
+METHOD QToolBar:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QToolBar( ... )
    RETURN Self
 
 

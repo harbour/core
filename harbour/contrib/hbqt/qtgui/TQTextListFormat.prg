@@ -80,8 +80,13 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextListFormat:new( pParent )
-   ::pPtr := Qt_QTextListFormat( hbqt_ptr( pParent ) )
+METHOD QTextListFormat:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextListFormat( ... )
    RETURN Self
 
 

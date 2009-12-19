@@ -81,8 +81,13 @@ CREATE CLASS QHelpEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHelpEvent:new( pParent )
-   ::pPtr := Qt_QHelpEvent( hbqt_ptr( pParent ) )
+METHOD QHelpEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QHelpEvent( ... )
    RETURN Self
 
 

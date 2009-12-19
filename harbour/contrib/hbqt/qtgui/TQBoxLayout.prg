@@ -95,8 +95,13 @@ CREATE CLASS QBoxLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QBoxLayout:new( pParent )
-   ::pPtr := Qt_QBoxLayout( hbqt_ptr( pParent ) )
+METHOD QBoxLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QBoxLayout( ... )
    RETURN Self
 
 

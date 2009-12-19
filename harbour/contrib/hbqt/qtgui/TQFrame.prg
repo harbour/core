@@ -88,8 +88,13 @@ CREATE CLASS QFrame INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFrame:new( pParent )
-   ::pPtr := Qt_QFrame( hbqt_ptr( pParent ) )
+METHOD QFrame:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFrame( ... )
    RETURN Self
 
 

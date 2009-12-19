@@ -104,8 +104,13 @@ CREATE CLASS QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QObject:new( pParent )
-   ::pPtr := Qt_QObject( hbqt_ptr( pParent ) )
+METHOD QObject:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QObject( ... )
    RETURN Self
 
 

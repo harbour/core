@@ -77,8 +77,13 @@ CREATE CLASS QWidgetItem INHERIT QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWidgetItem:new( pParent )
-   ::pPtr := Qt_QWidgetItem( hbqt_ptr( pParent ) )
+METHOD QWidgetItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QWidgetItem( ... )
    RETURN Self
 
 

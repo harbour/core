@@ -84,8 +84,13 @@ CREATE CLASS QNetworkRequest
 
 /*----------------------------------------------------------------------*/
 
-METHOD QNetworkRequest:new( pParent )
-   ::pPtr := Qt_QNetworkRequest( hbqt_ptr( pParent ) )
+METHOD QNetworkRequest:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QNetworkRequest( ... )
    RETURN Self
 
 

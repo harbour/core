@@ -77,8 +77,13 @@ CREATE CLASS QStyleFactory
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleFactory:new( pParent )
-   ::pPtr := Qt_QStyleFactory( hbqt_ptr( pParent ) )
+METHOD QStyleFactory:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleFactory( ... )
    RETURN Self
 
 

@@ -83,8 +83,13 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPageSetupDialog:new( pParent )
-   ::pPtr := Qt_QPageSetupDialog( hbqt_ptr( pParent ) )
+METHOD QPageSetupDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPageSetupDialog( ... )
    RETURN Self
 
 

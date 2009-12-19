@@ -76,8 +76,13 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractTableModel:new( pParent )
-   ::pPtr := Qt_QAbstractTableModel( hbqt_ptr( pParent ) )
+METHOD QAbstractTableModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractTableModel( ... )
    RETURN Self
 
 

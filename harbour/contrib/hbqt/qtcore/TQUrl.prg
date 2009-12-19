@@ -144,8 +144,13 @@ CREATE CLASS QUrl INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QUrl:new( pParent )
-   ::pPtr := Qt_QUrl( hbqt_ptr( pParent ) )
+METHOD QUrl:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QUrl( ... )
    RETURN Self
 
 

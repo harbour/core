@@ -73,14 +73,11 @@
  */
 
 /*
- *  Constructed[ 81/86 [ 94.19% ] ]
+ *  Constructed[ 81/83 [ 97.59% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QTextEdit ( QWidget * parent = 0 )
- *  QTextEdit ( const QString & text, QWidget * parent = 0 )
- *  virtual ~QTextEdit ()
  *  QList<ExtraSelection> extraSelections () const
  *  void setExtraSelections ( const QList<ExtraSelection> & selections )
  */
@@ -90,8 +87,9 @@
 #include <QtGui/QTextEdit>
 
 
-/*
-
+/* QTextEdit ( QWidget * parent = 0 )
+ * QTextEdit ( const QString & text, QWidget * parent = 0 )
+ * virtual ~QTextEdit ()
  */
 
 typedef struct
@@ -155,9 +153,9 @@ HB_FUNC( QT_QTEXTEDIT )
    void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
-      pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextEdit( pObj ) );
 }

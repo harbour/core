@@ -77,8 +77,13 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionFrame:new( pParent )
-   ::pPtr := Qt_QStyleOptionFrame( hbqt_ptr( pParent ) )
+METHOD QStyleOptionFrame:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionFrame( ... )
    RETURN Self
 
 

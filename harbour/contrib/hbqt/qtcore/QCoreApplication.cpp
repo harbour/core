@@ -70,20 +70,6 @@
  *  enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
  */
 
-/*
- *  Constructed[ 40/43 [ 93.02% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  EventFilter setEventFilter ( EventFilter filter )
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // bool filterEvent ( void * message, long * result )
- *  // virtual bool winEventFilter ( MSG * msg, long * result )
- */
-
 #include <QtCore/QPointer>
 
 #include <QStringList>

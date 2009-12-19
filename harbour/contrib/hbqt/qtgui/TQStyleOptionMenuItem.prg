@@ -85,8 +85,13 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionMenuItem:new( pParent )
-   ::pPtr := Qt_QStyleOptionMenuItem( hbqt_ptr( pParent ) )
+METHOD QStyleOptionMenuItem:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionMenuItem( ... )
    RETURN Self
 
 

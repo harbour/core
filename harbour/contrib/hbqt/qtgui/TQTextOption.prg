@@ -87,8 +87,13 @@ CREATE CLASS QTextOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextOption:new( pParent )
-   ::pPtr := Qt_QTextOption( hbqt_ptr( pParent ) )
+METHOD QTextOption:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextOption( ... )
    RETURN Self
 
 

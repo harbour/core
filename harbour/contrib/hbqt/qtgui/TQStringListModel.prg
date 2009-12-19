@@ -83,8 +83,13 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStringListModel:new( pParent )
-   ::pPtr := Qt_QStringListModel( hbqt_ptr( pParent ) )
+METHOD QStringListModel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStringListModel( ... )
    RETURN Self
 
 

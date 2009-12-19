@@ -112,8 +112,13 @@ CREATE CLASS QTreeWidget INHERIT QTreeView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeWidget:new( pParent )
-   ::pPtr := Qt_QTreeWidget( hbqt_ptr( pParent ) )
+METHOD QTreeWidget:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTreeWidget( ... )
    RETURN Self
 
 

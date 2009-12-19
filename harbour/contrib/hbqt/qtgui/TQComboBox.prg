@@ -134,8 +134,13 @@ CREATE CLASS QComboBox INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QComboBox:new( pParent )
-   ::pPtr := Qt_QComboBox( hbqt_ptr( pParent ) )
+METHOD QComboBox:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QComboBox( ... )
    RETURN Self
 
 

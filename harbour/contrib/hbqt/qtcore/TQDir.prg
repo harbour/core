@@ -127,8 +127,13 @@ CREATE CLASS QDir
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDir:new( pParent )
-   ::pPtr := Qt_QDir( hbqt_ptr( pParent ) )
+METHOD QDir:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDir( ... )
    RETURN Self
 
 

@@ -86,8 +86,13 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractTextDocumentLayout:new( pParent )
-   ::pPtr := Qt_QAbstractTextDocumentLayout( hbqt_ptr( pParent ) )
+METHOD QAbstractTextDocumentLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QAbstractTextDocumentLayout( ... )
    RETURN Self
 
 

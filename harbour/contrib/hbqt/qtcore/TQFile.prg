@@ -109,8 +109,13 @@ CREATE CLASS QFile INHERIT QIODevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFile:new( pParent )
-   ::pPtr := Qt_QFile( hbqt_ptr( pParent ) )
+METHOD QFile:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFile( ... )
    RETURN Self
 
 

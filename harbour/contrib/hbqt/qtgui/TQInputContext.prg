@@ -86,8 +86,13 @@ CREATE CLASS QInputContext INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputContext:new( pParent )
-   ::pPtr := Qt_QInputContext( hbqt_ptr( pParent ) )
+METHOD QInputContext:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QInputContext( ... )
    RETURN Self
 
 

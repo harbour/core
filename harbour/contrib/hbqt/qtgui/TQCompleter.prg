@@ -104,8 +104,13 @@ CREATE CLASS QCompleter INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCompleter:new( pParent )
-   ::pPtr := Qt_QCompleter( hbqt_ptr( pParent ) )
+METHOD QCompleter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCompleter( ... )
    RETURN Self
 
 

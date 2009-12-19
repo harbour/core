@@ -257,8 +257,13 @@ CREATE CLASS QPainter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPainter:new( pParent )
-   ::pPtr := Qt_QPainter( hbqt_ptr( pParent ) )
+METHOD QPainter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QPainter( ... )
    RETURN Self
 
 

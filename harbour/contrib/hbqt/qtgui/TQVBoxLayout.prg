@@ -75,8 +75,13 @@ CREATE CLASS QVBoxLayout INHERIT QBoxLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QVBoxLayout:new( pParent )
-   ::pPtr := Qt_QVBoxLayout( hbqt_ptr( pParent ) )
+METHOD QVBoxLayout:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QVBoxLayout( ... )
    RETURN Self
 
 

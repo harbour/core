@@ -83,8 +83,13 @@ CREATE CLASS QStyleOptionToolButton INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionToolButton:new( pParent )
-   ::pPtr := Qt_QStyleOptionToolButton( hbqt_ptr( pParent ) )
+METHOD QStyleOptionToolButton:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOptionToolButton( ... )
    RETURN Self
 
 

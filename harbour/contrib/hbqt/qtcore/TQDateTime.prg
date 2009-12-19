@@ -101,8 +101,13 @@ CREATE CLASS QDateTime
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDateTime:new( pParent )
-   ::pPtr := Qt_QDateTime( hbqt_ptr( pParent ) )
+METHOD QDateTime:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QDateTime( ... )
    RETURN Self
 
 

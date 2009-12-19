@@ -84,8 +84,13 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWheelEvent:new( pParent )
-   ::pPtr := Qt_QWheelEvent( hbqt_ptr( pParent ) )
+METHOD QWheelEvent:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QWheelEvent( ... )
    RETURN Self
 
 

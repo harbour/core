@@ -84,8 +84,13 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
 /*----------------------------------------------------------------------*/
 
-METHOD QScrollArea:new( pParent )
-   ::pPtr := Qt_QScrollArea( hbqt_ptr( pParent ) )
+METHOD QScrollArea:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QScrollArea( ... )
    RETURN Self
 
 

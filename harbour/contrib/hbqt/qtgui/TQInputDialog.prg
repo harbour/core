@@ -119,8 +119,13 @@ CREATE CLASS QInputDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputDialog:new( pParent )
-   ::pPtr := Qt_QInputDialog( hbqt_ptr( pParent ) )
+METHOD QInputDialog:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QInputDialog( ... )
    RETURN Self
 
 

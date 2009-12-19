@@ -104,8 +104,13 @@ CREATE CLASS QLabel INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLabel:new( pParent )
-   ::pPtr := Qt_QLabel( hbqt_ptr( pParent ) )
+METHOD QLabel:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLabel( ... )
    RETURN Self
 
 

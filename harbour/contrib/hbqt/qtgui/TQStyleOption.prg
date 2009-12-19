@@ -83,8 +83,13 @@ CREATE CLASS QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOption:new( pParent )
-   ::pPtr := Qt_QStyleOption( hbqt_ptr( pParent ) )
+METHOD QStyleOption:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QStyleOption( ... )
    RETURN Self
 
 

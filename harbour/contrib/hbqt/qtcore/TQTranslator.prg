@@ -79,8 +79,13 @@ CREATE CLASS QTranslator INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTranslator:new( pParent )
-   ::pPtr := Qt_QTranslator( hbqt_ptr( pParent ) )
+METHOD QTranslator:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTranslator( ... )
    RETURN Self
 
 

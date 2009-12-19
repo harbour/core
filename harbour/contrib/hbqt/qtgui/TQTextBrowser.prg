@@ -95,8 +95,13 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBrowser:new( pParent )
-   ::pPtr := Qt_QTextBrowser( hbqt_ptr( pParent ) )
+METHOD QTextBrowser:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTextBrowser( ... )
    RETURN Self
 
 

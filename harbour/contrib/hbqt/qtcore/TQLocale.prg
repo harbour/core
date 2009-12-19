@@ -123,8 +123,13 @@ CREATE CLASS QLocale
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLocale:new( pParent )
-   ::pPtr := Qt_QLocale( hbqt_ptr( pParent ) )
+METHOD QLocale:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QLocale( ... )
    RETURN Self
 
 

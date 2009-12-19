@@ -81,8 +81,13 @@ CREATE CLASS QKeySequence
 
 /*----------------------------------------------------------------------*/
 
-METHOD QKeySequence:new( pParent )
-   ::pPtr := Qt_QKeySequence( hbqt_ptr( pParent ) )
+METHOD QKeySequence:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QKeySequence( ... )
    RETURN Self
 
 

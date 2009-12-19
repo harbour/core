@@ -124,8 +124,13 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeView:new( pParent )
-   ::pPtr := Qt_QTreeView( hbqt_ptr( pParent ) )
+METHOD QTreeView:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QTreeView( ... )
    RETURN Self
 
 

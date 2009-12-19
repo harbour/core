@@ -66,15 +66,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 1/2 [ 50.00% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  oid showMessage ( const QString & message )
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QErrorMessage>
@@ -150,9 +141,17 @@ HB_FUNC( QT_QERRORMESSAGE )
    hb_retptrGC( hbqt_gcAllocate_QErrorMessage( pObj ) );
 }
 /*
- * void showMessage ( const QString & message, const QString & type )
+ * void showMessage ( const QString & message )
  */
 HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
+{
+   hbqt_par_QErrorMessage( 1 )->showMessage( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void showMessage ( const QString & message, const QString & type )
+ */
+HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE_1 )
 {
    hbqt_par_QErrorMessage( 1 )->showMessage( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
 }

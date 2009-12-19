@@ -95,8 +95,13 @@ CREATE CLASS QFontDatabase
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontDatabase:new( pParent )
-   ::pPtr := Qt_QFontDatabase( hbqt_ptr( pParent ) )
+METHOD QFontDatabase:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QFontDatabase( ... )
    RETURN Self
 
 

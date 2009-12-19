@@ -172,8 +172,13 @@ CREATE CLASS QByteArray
 
 /*----------------------------------------------------------------------*/
 
-METHOD QByteArray:new( pParent )
-   ::pPtr := Qt_QByteArray( hbqt_ptr( pParent ) )
+METHOD QByteArray:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QByteArray( ... )
    RETURN Self
 
 

@@ -115,8 +115,13 @@ CREATE CLASS QCoreApplication INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCoreApplication:new( pParent )
-   ::pPtr := Qt_QCoreApplication( hbqt_ptr( pParent ) )
+METHOD QCoreApplication:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QCoreApplication( ... )
    RETURN Self
 
 
