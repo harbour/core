@@ -206,6 +206,7 @@ CLASS HbIde
    METHOD updateFuncList()
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
+   METHOD fetchProjectPropertiesViaUI()
    METHOD loadProjectProperties()
    METHOD appendProjectInTree()
    METHOD manageItemSelected()
@@ -226,7 +227,13 @@ CLASS HbIde
    DATA   aProjects                               INIT {}
 
    METHOD createTags()
+
+   DATA   oProps
+   DATA   oFindRepl
+   METHOD find()
+   METHOD replace()
    METHOD findReplace()
+
    METHOD manageFocusInEditor()
    METHOD convertSelection()
    METHOD printPreview()
@@ -236,12 +243,15 @@ CLASS HbIde
    METHOD updateHbp()
    METHOD saveProject()
    METHOD addSourcesToProject()
+
    /* Project Build and Launch Methods */
    DATA   cProcessInfo
    DATA   qProcess
+
    METHOD buildProject()
    METHOD buildProjectViaQt()
    METHOD readProcessInfo()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -350,7 +360,7 @@ METHOD HbIde:create( cProjIni )
 
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
-               ::findReplace( "finddialog" )
+               ::findReplace()
             ENDIF
 
          ENDCASE
@@ -358,6 +368,10 @@ METHOD HbIde:create( cProjIni )
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
+
+   IF !empty( ::oFindRepl )
+      ::oFindRepl:destroy()
+   ENDIF
 
    /* Very important - destroy resources */
    HBXBP_DEBUG( "======================================================" )
@@ -1480,7 +1494,7 @@ METHOD HbIde:executeAction( cKey )
       ENDIF
    CASE cKey == "Find"
       IF !empty( ::qCurEdit )
-         ::findReplace( "finddialog" )
+         ::findReplace()
       ENDIF
    CASE cKey == "ToUpper"
       ::convertSelection( cKey )
@@ -1517,7 +1531,7 @@ METHOD HbIde:executeAction( cKey )
       ::lDockRVisible := !( ::lDockRVisible )
 
    CASE cKey == "Compile"
-      TestXbpQtUiLoader()
+
    CASE cKey == "CompilePPO"
 
    ENDCASE
@@ -1542,40 +1556,6 @@ METHOD HbIde:loadUI( cUi )
    ENDIF
 
    RETURN qDialog
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:findReplace( cUi )
-   LOCAL qUiLoader, qFile, cUiFull
-
-   IF ::qFindDlg == NIL
-      cUiFull := s_resPath + cUi + ".ui"
-      qFile := QFile():new( cUiFull )
-      IF qFile:open( 1 )
-         qUiLoader  := QUiLoader():new()
-         ::qFindDlg := QDialog():configure( qUiLoader:load( qFile, QT_PTROFXBP( ::oDlg ) ) )
-         qFile:close()
-         //
-         ::qFindDlg:setWindowFlags( Qt_Sheet )
-         //
-         ::oFind := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "comboFindWhat" ) )
-         ::oRepl := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "comboReplaceWith" ) )
-
-         ::oPBFind := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonFind" ) )
-         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
-
-         ::oPBRepl := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonReplace" ) )
-         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
-
-         ::oPBClose := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonClose" ) )
-         ::oPBClose:activate := {|| ::qFindDlg:hide() }
-      ENDIF
-   ENDIF
-
-   ::oFind:setFocus()
-   ::qFindDlg:show()
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 //                           Project Properties
@@ -1621,6 +1601,7 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
    IF lFetch
       ::cSaveTo := ""
       ::fetchProjectProperties()
+      //::fetchProjectPropertiesViaUI()
       IF !empty( ::cSaveTo ) .and. file( ::cSaveTo )
          cProject := ::cSaveTo
          /* Reload from file */
@@ -1633,6 +1614,61 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
    ELSE
       ::aProjects[ n,3 ] := aclone( ::aPrjProps )
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:fetchProjectPropertiesViaUI()
+   LOCAL cPrjLoc   := hb_dirBase() + "projects"
+   LOCAL aPrjProps := ::aPrjProps
+
+   ::oProps := XbpQtUiLoader():new( ::oDlg )
+   ::oProps:file := s_resPath + "projectproperties.ui"
+   ::oProps:create()
+
+   ::oProps:qObj[ "comboPrjType" ]:addItem( "Executable" )
+   ::oProps:qObj[ "comboPrjType" ]:addItem( "Library"    )
+   ::oProps:qObj[ "comboPrjType" ]:addItem( "Dll"        )
+
+   ::oProps:signal( "buttonCn"      , "clicked()", {|| ::oProps:oWidget:close() } )
+   ::oProps:signal( "buttonSave"    , "clicked()", {|| ::saveProject() } )
+   ::oProps:signal( "buttonSaveExit", "clicked()", {|| ::saveProject(), ::oProps:oWidget:close() } )
+   ::oProps:signal( "buttonSelect"  , "clicked()", {|| ::addSourcesToProject() } )
+
+   ::oProps:signal( "tabWidget"     , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
+
+   IF empty( aPrjProps )
+      ::oProps:qObj[ "editPrjTitle"  ]:setText( "untitled"   )
+      ::oProps:qObj[ "editPrjLoctn"  ]:setText( cPrjLoc      )
+      ::oProps:qObj[ "editWrkFolder" ]:setText( hb_dirBase() )
+      ::oProps:qObj[ "editDstFolder" ]:setText( cPrjLoc      )
+      ::oProps:qObj[ "editOutName"   ]:setText( "untitled"   )
+
+   ELSE
+      ::oProps:qObj[ "editPrjTitle"  ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
+      ::oProps:qObj[ "editPrjLoctn"  ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
+      ::oProps:qObj[ "editWrkFolder" ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
+      ::oProps:qObj[ "editDstFolder" ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
+      ::oProps:qObj[ "editOutName"   ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
+
+      ::oProps:qObj[ "editFlags"     ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
+      ::oProps:qObj[ "editSources"   ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
+      ::oProps:qObj[ "editMetaData"  ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
+      ::oProps:qObj[ "editCompilers" ]:setPlainText( memoread( hb_dirBase() + "hbide.env" ) )
+
+      #if 0
+      ::oProps:qObj[ "editLaunchParams" ]:setText()
+      ::oProps:qObj[ "editLaunchExe"    ]:setText()
+      ::oProps:qObj[ "editHbp"          ]:setPlainText()
+      #endif
+   ENDIF
+
+   ::oProps:exec()
+   ::oProps:destroy()
+   ::oProps := NIL
+
+   ::manageFocusInEditor()
 
    RETURN Self
 
@@ -1946,14 +1982,35 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION TestXbpQtUiLoader()
-   LOCAL oUiLoader
+METHOD HbIde:replace()
 
-   oUiLoader := XbpQtUiLoader():new()
-   oUiLoader:file := s_resPath + "finddialog.ui"
-   oUiLoader:create()
+   RETURN QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text()
 
-   oUiLoader:setText( "comboFindWhat", "Harbour" )
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:find()
+
+   ::qCurEdit:find( QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text() )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:findReplace()
+
+   IF empty( ::oFindRepl )
+      ::oFindRepl := XbpQtUiLoader():new( ::oDlg )
+      ::oFindRepl:file := s_resPath + "finddialog.ui"
+      ::oFindRepl:create()
+      ::oFindRepl:setWindowFlags( Qt_Sheet )
+
+      ::oFindRepl:signal( "buttonFind"    , "clicked()", {|| ::find()           } )
+      ::oFindRepl:signal( "buttonReplace" , "clicked()", {|| ::replace()        } )
+      ::oFindRepl:signal( "buttonClose"   , "clicked()", {|| ::oFindRepl:hide() } )
+   ENDIF
+
+   ::oFindRepl:qObj[ "comboFindWhat" ]:setFocus()
+   ::oFindRepl:show()
 
    RETURN Nil
 

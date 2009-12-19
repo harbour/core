@@ -78,17 +78,23 @@ CLASS XbpQtUiLoader INHERIT XbpWindow
 
    DATA     file                                  INIT ""
    DATA     modal                                 INIT .t.
-   DATA     parts                                 INIT hb_hash()
-   DATA     baseWidget
+   DATA     qObj                                  INIT hb_hash()
    DATA     widgets                               INIT {}
+
+   DATA     aSignals                              INIT {}
+   DATA     aEvents                               INIT {}
 
    METHOD   new()
    METHOD   create()
    METHOD   configure()                           VIRTUAL
-   METHOD   destroy()                             VIRTUAL
+   METHOD   destroy()
+
    METHOD   loadUI()
    METHOD   loadContents()
    METHOD   loadWidgets()
+   METHOD   signal()
+   METHOD   event()
+
 
    ERROR HANDLER OnError()
 
@@ -110,11 +116,54 @@ METHOD XbpQtUiLoader:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    IF !empty( ::file ) .and. file( ::file )
       ::loadContents( ::file )
+
       ::oWidget := ::loadUI( ::file )
 
       IF !empty( ::oWidget )
          ::loadWidgets()
-         ::oWidget:show()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpQtUiLoader:destroy()
+   LOCAL a_
+
+   FOR EACH a_ IN ::aSignals
+      Qt_DisConnect_Signal( a_[ 1 ], a_[ 2 ] )
+   NEXT
+
+   FOR EACH a_ IN ::aEvents
+      Qt_DisConnect_Event( a_[ 1 ], a_[ 2 ] )
+   NEXT
+
+   ::oWidget:hide()
+   ::oWidget:close()
+   ::oWidget:pPtr := 0
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpQtUiLoader:event( cWidget, nEvent, bBlock )
+
+   IF hb_hHasKey( ::qObj, cWidget )
+      IF Qt_Connect_Signal( ::qObj[ cWidget ], nEvent, bBlock )
+         aadd( ::aEvents, { ::qObj[ cWidget ], nEvent } )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpQtUiLoader:signal( cWidget, cSignal, bBlock )
+
+   IF hb_hHasKey( ::qObj, cWidget )
+      IF Qt_Connect_Signal( ::qObj[ cWidget ], cSignal, bBlock )
+         aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
       ENDIF
    ENDIF
 
@@ -127,16 +176,18 @@ METHOD XbpQtUiLoader:loadWidgets()
 
    FOR EACH a_ IN ::widgets
       IF a_:__enumIndex() > 1
-         cBlock := "{|| " + a_[ 1 ] + "() }"
+         IF type( a_[ 1 ] + "()" ) == "UI"
+            cBlock := "{|| " + a_[ 1 ] + "() }"
 
-         pPtr := Qt_findChild( ::oWidget, a_[ 2 ] )
-         bBlock := &( cBlock )
+            pPtr := Qt_findChild( ::oWidget, a_[ 2 ] )
+            bBlock := &( cBlock )
 
-         x := eval( bBlock )
-         IF hb_isObject( x )
-            x:pPtr := pPtr
+            x := eval( bBlock )
+            IF hb_isObject( x )
+               x:pPtr := pPtr
+               ::qObj[ a_[ 2 ] ] := x
+            ENDIF
          ENDIF
-         ::parts[ a_[ 2 ] ] := x
       ENDIF
    NEXT
 
@@ -161,7 +212,7 @@ METHOD XbpQtUiLoader:loadContents( cUiFull )
       n := at( ">", cBuffer )
       cWidget := alltrim( strtran( substr( cBuffer, 1, n-1 ), '"', "" ) )
 
-      HBXBP_DEBUG( "XbpQtUiLoader:loadContents", cClass, cWidget )
+      HBXBP_DEBUG( pad( cClass,30 ), cWidget )
 
       aadd( ::widgets, { cClass, cWidget } )
    ENDDO
@@ -171,12 +222,22 @@ METHOD XbpQtUiLoader:loadContents( cUiFull )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpQtUiLoader:loadUI( cUiFull )
-   LOCAL qWidget, qUiLoader, qFile
+   LOCAL qWidget, qUiLoader, qFile, pWidget
 
    qFile := QFile():new( cUiFull )
    IF qFile:open( 1 )
       qUiLoader  := QUiLoader():new()
-      qWidget    := QWidget():configure( qUiLoader:load( qFile, IF( empty( ::oParent ), NIL, QT_PTROFXBP( ::oParent ) ) ) )
+      pWidget    := qUiLoader:load( qFile, IF( empty( ::oParent ), NIL, QT_PTROFXBP( ::oParent ) ) )
+      DO CASE
+      CASE ::widgets[ 1,1 ] == "QWidget"
+         qWidget    := QWidget():configure( pWidget )
+      CASE ::widgets[ 1,1 ] == "QDialog"
+         qWidget    := QDialog():configure( pWidget )
+      CASE ::widgets[ 1,1 ] == "QMainWindow"
+         qWidget    := QMainWindow():configure( pWidget )
+      OTHERWISE
+         qWidget    := QWidget():configure( pWidget )
+      ENDCASE
       qFile:close()
    ENDIF
 
@@ -184,32 +245,20 @@ METHOD XbpQtUiLoader:loadUI( cUiFull )
 
 /*----------------------------------------------------------------------*/
 
-#if 0  /* Syntax */
-   oUI:setText( "editWidget", "Some Text" )
-   ^^^                                         XbpQtUiLoader()
-       ^^^^^^^                                 HBQT Object Method
-                ^^^^^^^^^^^^                   Object Name In the Widget
-                              ^^^^^^^^^^^      Value to be posted
-#endif
-
 METHOD OnError( ... )
-   LOCAL cMsg, xReturn, cWidget
-   LOCAL aP, aPP := {}
+   LOCAL cMsg
+   LOCAL xReturn
 
    cMsg := __GetMessage()
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
 
-   aP := hb_aParams()
-   cWidget := aP[ 1 ]
+   HBXBP_DEBUG( "OnError", cMsg )
 
-   aeval( aP, {|e| aadd( aPP, e ) }, 2 )
-
-   IF hb_hHasKey( ::parts, cWidget )
-      xReturn := hb_ExecFromArray( ::parts[ cWidget ], cMsg, aPP )
-   ENDIF
+   xReturn := ::oWidget:&cMsg( ... )
 
    RETURN xReturn
 
 /*----------------------------------------------------------------------*/
+
