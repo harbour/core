@@ -55,6 +55,8 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <april@users.sourceforge.net
   History :
     - removed use of ftruncate() - wasn't reporting error when it failed
 
+    12/13/09 - remove casts in file io calls
+
     04/27/02 - add 'buffers' as a parameter to main()
     07/11/01 - minor cosmetic changes
     07/08/01 - added flag IsMultiBuffers & set/clear it in ioBufferAlloc()
@@ -218,7 +220,7 @@ HB_EXTERN_BEGIN
 #define NULLPAGE    0L
 
 #define BTREENODEISNULL( pBTree, node ) ( BOOL )( ( node ) == NULLPAGE )
-#define READPAGE_IF_NEEDED( pBTree, node ) if ( node != pBTree->ioBuffer->ulPage )  ioBufferScan( pBTree, node )
+#define READPAGE_IF_NEEDED( pBTree, node ) if ( node != pBTree->ioBuffer->xPage.ulPage )  ioBufferScan( pBTree, node )
 #define CLEARKEYDATA( pBTree ) ( ( pBTree )->pThisKeyData->szKey[ 0 ] = '\0', \
                                  ( pBTree )->pThisKeyData->xData.lData = 0, \
                                  ( pBTree )->pThisKeyData->xData.pData = NULL )
@@ -250,7 +252,10 @@ typedef struct stack_tag
 typedef struct ioBuffer_tag
 {
   struct ioBuffer_tag *prev, *next;
-  ULONG ulPage;
+  union {
+    ULONG ulPage;
+    struct ioBuffer_tag * pPage;
+  } xPage;
   BOOL IsDirty;
 
   /* was: Buffer_T pBuffer; */
@@ -289,6 +294,7 @@ typedef int hb_BTreeFlags_T;
 #define SETFLAG( pBTree, flag )   ( ( pBTree )->ulFlags |= ( flag ) )
 #define RESETFLAG( pBTree, flag ) ( ( pBTree )->ulFlags &= ~( flag ) )
 
+/* TODO: if 64 bit the size of the union may be different so this code will fail to work as expected */
 typedef struct hb_KeyData_Tag
 {
   union {
@@ -407,7 +413,8 @@ static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * pre
     thisptr->szKey        = ( BYTE * )&thisptr->xData.plData[ pBTree->usMaxKeys ];
   }
 
-  thisptr->ulPage  = NULLPAGE;
+  thisptr->xPage.ulPage  = NULLPAGE;
+  thisptr->xPage.pPage  = 0;
   thisptr->IsDirty = FALSE;
 
   thisptr->prev = prev;
@@ -425,9 +432,13 @@ static void ioBufferAlloc( struct hb_BTree * pBTree, ULONG ulBuffers )
     ulBuffers = 1;
 
   if ( ulBuffers > 1 || GETFLAG( pBTree, IsInMemory ) )
+  {
     SETFLAG( pBTree, IsMultiBuffers );
+  }
   else
+  {
     RESETFLAG( pBTree, IsMultiBuffers );
+  }
 
   while ( ulBuffers-- > 0 )
   {
@@ -441,7 +452,7 @@ static void ioBufferAlloc( struct hb_BTree * pBTree, ULONG ulBuffers )
 
 static void ioBufferWrite( struct hb_BTree * pBTree, ioBuffer_T *thisptr )
 {
-  hb_fsSeek( pBTree->hFile, thisptr->ulPage, FS_SET );
+  hb_fsSeek( pBTree->hFile, thisptr->xPage.ulPage, FS_SET );
   if ( hb_fsWrite( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize ) != pBTree->usPageSize )
   {
     hb_RaiseError( HB_BTree_WriteError_EC, "write error", "ioBufferWrite*", 0 );
@@ -458,8 +469,8 @@ static void ioBufferRead( struct hb_BTree * pBTree, ULONG ulNode )
     ioBufferWrite( pBTree, thisptr );
     thisptr->IsDirty = FALSE;
   }
-  thisptr->ulPage = ulNode;
-  hb_fsSeek( pBTree->hFile, thisptr->ulPage, FS_SET );
+  thisptr->xPage.ulPage = ulNode;
+  hb_fsSeek( pBTree->hFile, thisptr->xPage.ulPage, FS_SET );
   hb_fsRead( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize );
 }
 
@@ -478,8 +489,10 @@ static void ioBufferRelease( struct hb_BTree * pBTree )
     else if ( GETFLAG( pBTree, IsInMemory ) )
     {
       for ( n = 0; n < *thisptr->pulPageCount; n++ )
+       {
 /*        { printf( "%p", thisptr->xData.ppData[ n ] ); PrintCRLF(); }*/
         hb_itemRelease( thisptr->xData.ppData[ n ] );
+       }
     }
     BufferRelease( thisptr );
   }
@@ -506,7 +519,7 @@ static void ioBufferScan( struct hb_BTree * pBTree, ULONG page )
   /* locate either the buffer the page is in, the first empty buffer,
      or the last buffer in the list */
   for ( thisptr = pBTree->ioBuffer;
-        thisptr && !BTREENODEISNULL( pBTree, thisptr->ulPage ) && thisptr->ulPage != page && thisptr->next;
+        thisptr && !BTREENODEISNULL( pBTree, thisptr->xPage.ulPage ) && thisptr->xPage.ulPage != page && thisptr->next;
         thisptr = thisptr->next )
     ;
 
@@ -514,8 +527,10 @@ static void ioBufferScan( struct hb_BTree * pBTree, ULONG page )
   if ( thisptr != pBTree->ioBuffer )
   {
     /* minimize writes */
-    if ( thisptr->ulPage != page && thisptr->IsDirty )
+    if ( thisptr->xPage.ulPage != page && thisptr->IsDirty )
+    {
       ioBufferWrite( pBTree, thisptr );
+    }
 
     thisprev = thisptr->prev;
     thisnext = thisptr->next;
@@ -532,8 +547,10 @@ static void ioBufferScan( struct hb_BTree * pBTree, ULONG page )
     ioBufferWrite( pBTree, thisptr );
 
   /* Grow() will call this with a null page, to flush & shuffle buffers */
-  if ( !BTREENODEISNULL( pBTree, page ) && thisptr->ulPage != page && !GETFLAG( pBTree, IsInMemory ) )
+  if ( !BTREENODEISNULL( pBTree, page ) && thisptr->xPage.ulPage != page && !GETFLAG( pBTree, IsInMemory ) )
+  {
     ioBufferRead( pBTree, page );
+  }
 }
 
 static void StackNew( BTreeStack **pStack )
@@ -708,12 +725,12 @@ static void HeaderWrite( struct hb_BTree * pBTree )
   hb_fsSeek( pBTree->hFile, 0, FS_SET );
 
   if ( hb_fsWrite( pBTree->hFile, HEADER_ID, sizeof( HEADER_ID ) ) +
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->usPageSize, sizeof( pBTree->usPageSize ) ) + /* 2 bytes */
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->usKeySize , sizeof( pBTree->usKeySize  ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->usPageSize, sizeof( pBTree->usPageSize ) ) + /* 2 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->usKeySize , sizeof( pBTree->usKeySize  ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) ) + /* 4 bytes */
        0 != sizeof( HEADER_ID ) +
             sizeof( pBTree->ulFreePage ) +
             sizeof( pBTree->usPageSize ) +
@@ -737,7 +754,7 @@ static ULONG Grow( struct hb_BTree * pBTree )
 
     thisptr = ioOneBufferAlloc( pBTree, NULL, pBTree->ioBuffer );
     /* TOFIX: casting pointer to ULONG! */
-    thisptr->ulPage = ( ULONG ) thisptr;
+    thisptr->xPage.pPage = thisptr;
     if ( pBTree->ioBuffer )  pBTree->ioBuffer->prev = thisptr;
     pBTree->ioBuffer = thisptr;
   }
@@ -750,7 +767,7 @@ static ULONG Grow( struct hb_BTree * pBTree )
     {
       BYTE *buffer = pBTree->ioBuffer->Buffer;
 
-      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, 0, FS_END );
+      pBTree->ioBuffer->xPage.ulPage = hb_fsSeek( pBTree->hFile, 0, FS_END );
       hb_xmemset( buffer, '\0', pBTree->usPageSize );
       if ( pBTree->usPageSize != hb_fsWrite( pBTree->hFile, buffer, pBTree->usPageSize ) )
       {
@@ -759,13 +776,13 @@ static ULONG Grow( struct hb_BTree * pBTree )
     }
     else
     {
-      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, pBTree->ulFreePage, FS_SET );
-      hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
+      pBTree->ioBuffer->xPage.ulPage = hb_fsSeek( pBTree->hFile, pBTree->ulFreePage, FS_SET );
+      hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
     }
     pBTree->ioBuffer->IsDirty = TRUE;
   }
 
-  return pBTree->ioBuffer->ulPage;
+  return pBTree->ioBuffer->xPage.ulPage;
 }
 
 static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
@@ -775,7 +792,7 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
     ioBuffer_T * thisptr;
     ULONG n;
 
-    for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->ulPage != ulNode; thisptr = thisptr->next )
+    for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->xPage.ulPage != ulNode; thisptr = thisptr->next )
       ;
 
     if ( thisptr->prev )   thisptr->prev->next = thisptr->next;
@@ -785,13 +802,15 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
       pBTree->ioBuffer = thisptr->next;
 
     for ( n = 0; n < *thisptr->pulPageCount; n++ )
+    {
       hb_itemRelease( thisptr->xData.ppData[ n ] );
+    }
     hb_xfree( thisptr );
   }
   else
   {
     hb_fsSeek( pBTree->hFile, ulNode, FS_SET );
-    if ( hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
+    if ( hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
     {
       hb_RaiseError( HB_BTree_WriteError_EC, "write error", "Prune*", 0 );
     }
@@ -832,9 +851,13 @@ static void NodeCopy( struct hb_BTree * pBTree, ULONG toNode, int toPosition, UL
   ulBranch = pBTree->ioBuffer->pulBranch[ fromPosition ];
 
   if ( GETFLAG( pBTree, IsInMemory ) )
-    pData    = pBTree->ioBuffer->xData.ppData[ fromPosition - 1 ];
+  {
+    pData = pBTree->ioBuffer->xData.ppData[ fromPosition - 1 ];
+  }
   else
-    lData    = pBTree->ioBuffer->xData.plData[ fromPosition - 1 ];
+  {
+    lData = pBTree->ioBuffer->xData.plData[ fromPosition - 1 ];
+  }
 
   hb_xmemcpy( buffer->szKey, pBTree->ioBuffer->szKey + ( fromPosition - 1 ) * pBTree->usKeySize, pBTree->usKeySize );
   buffer->szKey[ pBTree->usKeySize ] = '\0';
@@ -842,9 +865,13 @@ static void NodeCopy( struct hb_BTree * pBTree, ULONG toNode, int toPosition, UL
   READPAGE_IF_NEEDED( pBTree, toNode );
   pBTree->ioBuffer->pulBranch[ toPosition ] = ulBranch;
   if ( GETFLAG( pBTree, IsInMemory ) )
+  {
     pBTree->ioBuffer->xData.ppData[ toPosition - 1 ] = pData;
+  }
   else
+  {
     pBTree->ioBuffer->xData.plData[ toPosition - 1 ] = lData;
+  }
   hb_xmemcpy( pBTree->ioBuffer->szKey + ( toPosition - 1 ) * pBTree->usKeySize, buffer->szKey, pBTree->usKeySize );
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
@@ -909,9 +936,13 @@ static hb_KeyData_T *KeyGet( struct hb_BTree * pBTree, ULONG ulNode, int iPositi
   hb_xmemcpy( buffer->szKey, pBTree->ioBuffer->szKey + ( iPosition - 1 ) * pBTree->usKeySize, pBTree->usKeySize );
   buffer->szKey[ pBTree->usKeySize ] = '\0';
   if ( GETFLAG( pBTree, IsInMemory ) )
+  {
     buffer->xData.pData = pBTree->ioBuffer->xData.ppData[ iPosition - 1 ];
+  }
   else
+  {
     buffer->xData.lData = pBTree->ioBuffer->xData.plData[ iPosition - 1 ];
+  }
 
   return buffer;
 }
@@ -923,9 +954,13 @@ static void KeySet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, hb_Ke
 /*  if ( pBTree->ioBuffer->szKey + ( iPosition - 1 ) * pBTree->usKeySize + pBTree->usKeySize > pBTree->ioBuffer->Buffer + pBTree->usPageSize ) */
   hb_xmemcpy( pBTree->ioBuffer->szKey + ( iPosition - 1 ) * pBTree->usKeySize, key->szKey, pBTree->usKeySize );
   if ( GETFLAG( pBTree, IsInMemory ) )
+  {
     pBTree->ioBuffer->xData.ppData[ iPosition - 1 ] = key->xData.pData;
+  }
   else
+  {
     pBTree->ioBuffer->xData.plData[ iPosition - 1 ] = key->xData.lData;
+  }
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
 
@@ -1700,12 +1735,12 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
     return NULL;
   }
 
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->usPageSize, sizeof( pBTree->usPageSize ) );
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->usKeySize , sizeof( pBTree->usKeySize  ) );
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) );
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) );
-  hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->usPageSize, sizeof( pBTree->usPageSize ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->usKeySize , sizeof( pBTree->usKeySize  ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) );
+  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) );
 
   iMaximumKeys = ( + pBTree->usPageSize                    \
                    - sizeof( *pBTree->ioBuffer->pulPageCount ) \
@@ -1744,9 +1779,13 @@ void hb_BTreeClose( struct hb_BTree * pBTree )
   ioBufferRelease( pBTree );
   if ( GETFLAG( pBTree, IsInMemory ) == FALSE )  HeaderWrite( pBTree );
   if ( pBTree->hFile != 0 )
+  {
     hb_fsClose( pBTree->hFile );
+  }
   if ( pBTree->szFileName != NULL )
+  {
     BufferRelease( pBTree->szFileName );
+  }
   StackRelease( &pBTree->pStack );
   BufferRelease( pBTree->pThisKeyData );
   BufferRelease( pBTree );
@@ -1846,7 +1885,9 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || HB_ISNUM( 3 ) ) )
+  {
     hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), hb_parc( 2 ), hb_paramError( 3 ) ) );
+  }
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1879,9 +1920,13 @@ HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | x
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
     if ( pBTree->pThisKeyData->xData.pData )
+    {
       hb_itemReturn( pBTree->pThisKeyData->xData.pData );
+    }
     else
+    {
       hb_ret();
+    }
   }
   else
   {
