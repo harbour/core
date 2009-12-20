@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "simpleio.ch"
+
 /*
  * Harbour Project source code:
  *    DLL call demonstration.
@@ -92,12 +94,20 @@ PROCEDURE Main()
    /* Get some standard Windows folders */
 
    hDLL := DllLoad( "shell32.dll" )
-   ? ValType( hDLL )
+   ? "ValType( hDLL ): ", ValType( hDLL )
    cData := Space( MAX_PATH )
-   ? CallDllBool( GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
-   ? cData
-   ? CallDll( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
-   ? cData
+   ? "CALLDLLBOOL: ", CallDllBool( GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
+   ? "@cData: ", cData
+   ? "CALLDLL: ", CallDll( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
+   ? "cData:", cData
+   cData := Space( MAX_PATH )
+   ? "CALDLL: ", CallDll( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "@cData: ", cData
    DllUnload( hDLL )
+
+   ? "DLLCALL"
+   cData := Space( MAX_PATH )
+   ? DllCall( "shell32.dll", NIL, "SHGetFolderPath", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? cData
 
    RETURN
