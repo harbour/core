@@ -212,12 +212,13 @@ HB_EXTERN_BEGIN
  */
 #define HB_TRACE_STEALTH(l, x)            HB_ECHO_STEALTH_##l(x)
 
+extern HB_EXPORT int    hb_tracestate( int new_state );
+extern HB_EXPORT int    hb_tracelevel( int new_level );
+extern HB_EXPORT void   hb_tracelog( int level, const char * file, int line, const char * proc, const char * fmt, ... ) HB_PRINTF_FORMAT( 5, 6 );
+
 extern HB_EXPORT const char * hb_tr_file_;
 extern HB_EXPORT int          hb_tr_line_;
 extern HB_EXPORT int          hb_tr_level_;
-
-extern HB_EXPORT int    hb_tracestate( int new_state );
-extern HB_EXPORT int    hb_tracelevel( int new_level );
 
 extern HB_EXPORT int    hb_tr_level( void );
 extern HB_EXPORT void   hb_tr_trace( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );

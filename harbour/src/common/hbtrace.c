@@ -63,11 +63,8 @@
 #include "hb_io.h"
 #include "hbtrace.h"
 
-const char * hb_tr_file_ = "";
-int          hb_tr_line_ = 0;
-int          hb_tr_level_ = 0;
-
 static int s_enabled = 1;
+static int s_level   = -1;
 static int s_flush   = 0;
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 static int s_winout  = 0;
@@ -98,19 +95,17 @@ int hb_tracestate( int new_state )
 
 int hb_tracelevel( int new_level )
 {
-   int old_level = hb_tr_level_;
+   int old_level = hb_tr_level();
 
    if( new_level >= HB_TR_ALWAYS &&
        new_level <  HB_TR_LAST )
-      hb_tr_level_ = new_level;
+      s_level = new_level;
 
    return old_level;
 }
 
 int hb_tr_level( void )
 {
-   static int s_level = -1;
-
    if( s_level == -1 )
    {
       char * env;
@@ -142,9 +137,8 @@ int hb_tr_level( void )
 
          for( i = 0; i < HB_TR_LAST; ++i )
          {
-            /* 17/04/2000 - maurilio.longo@libero.it
-               SET HB_TR_LEVEL=hb_tr_debug is valid under OS/2 and environment variable value returned is lower case */
-            if( hb_stricmp( env, s_slevel[ i ] ) == 0 )
+            if( hb_stricmp( env, s_slevel[ i ] ) == 0 ||
+                hb_stricmp( env, s_slevel[ i ] + 6 ) == 0 )
             {
                s_level = i;
                break;
@@ -185,6 +179,96 @@ int hb_tr_level( void )
    return s_level;
 }
 
+static void hb_tracelog_( int level, const char * file, int line, const char * proc,
+                          const char * fmt, va_list ap )
+{
+   const char * pszLevel;
+
+   /*
+    * Clean up the file, so that instead of showing
+    *
+    *   ../../../foo/bar/baz.c
+    *
+    * we just show
+    *
+    *   foo/bar/baz.c
+    */
+   while( *file == '.' || *file == '/' || *file == '\\' )
+      file++;
+
+   pszLevel = level < 0 ? "(\?\?\?)" : s_slevel[ level ];
+
+   /*
+    * Print file and line.
+    */
+   if( proc )
+      fprintf( s_fp, "%s:%d:%s(): %s ", file, line, proc, pszLevel );
+   else
+      fprintf( s_fp, "%s:%d: %s ", file, line, pszLevel );
+
+   /*
+    * Print the name and arguments for the function.
+    */
+   vfprintf( s_fp, fmt, ap );
+   va_end( ap );
+
+   /*
+    * Print a new-line.
+    */
+   fprintf( s_fp, "\n" );
+
+   if( s_flush )
+      fflush( s_fp );
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+
+   if( s_winout )
+   {
+      char buffer1[ 1024 ];
+      char buffer2[ 1024 ];
+
+      hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
+
+      if( proc )
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s",
+                      file, line, proc, pszLevel, buffer1 );
+      else
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s",
+                      file, line, pszLevel, buffer1 );
+
+      #if defined( UNICODE )
+      {
+         LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer2 );
+         OutputDebugString( lpOutputString );
+         HB_TCHAR_FREE( lpOutputString );
+      }
+      #else
+         OutputDebugString( buffer2 );
+      #endif
+   }
+
+#endif
+}
+
+void hb_tracelog( int level, const char * file, int line, const char * proc,
+                  const char * fmt, ... )
+{
+   /*
+    * If tracing is disabled, do nothing.
+    */
+   if( s_enabled && level <= hb_tr_level() )
+   {
+      va_list ap;
+      va_start( ap, fmt );
+      hb_tracelog_( level, file, line, proc, fmt, ap );
+      va_end( ap );
+   }
+}
+
+const char * hb_tr_file_ = "";
+int          hb_tr_line_ = 0;
+int          hb_tr_level_ = 0;
+
 void hb_tr_trace( const char * fmt, ... )
 {
    /*
@@ -192,69 +276,10 @@ void hb_tr_trace( const char * fmt, ... )
     */
    if( s_enabled )
    {
-      int i;
       va_list ap;
-
-      /*
-       * Clean up the file, so that instead of showing
-       *
-       *   ../../../foo/bar/baz.c
-       *
-       * we just show
-       *
-       *   foo/bar/baz.c
-       */
-      for( i = 0; hb_tr_file_[ i ] != '\0'; ++i )
-      {
-         if( hb_tr_file_[ i ] != '.' &&
-             hb_tr_file_[ i ] != '/' &&
-             hb_tr_file_[ i ] != '\\' )
-            break;
-      }
-
-      /*
-       * Print file and line.
-       */
-      fprintf( s_fp, "%s:%d: %s ",
-               hb_tr_file_ + i, hb_tr_line_, s_slevel[ hb_tr_level_ ] );
-
-      /*
-       * Print the name and arguments for the function.
-       */
       va_start( ap, fmt );
-      vfprintf( s_fp, fmt, ap );
+      hb_tracelog_( hb_tr_level_, hb_tr_file_, hb_tr_line_, NULL, fmt, ap );
       va_end( ap );
-
-      /*
-       * Print a new-line.
-       */
-      fprintf( s_fp, "\n" );
-
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-
-      if( s_winout )
-      {
-         char buffer1[ 1024 ];
-         char buffer2[ 1024 ];
-
-         va_start( ap, fmt );
-         hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
-         va_end( ap );
-
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s", hb_tr_file_ + i, hb_tr_line_, s_slevel[ hb_tr_level_ ], buffer1 );
-
-         #if defined( UNICODE )
-         {
-            LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer2 );
-            OutputDebugString( lpOutputString );
-            HB_TCHAR_FREE( lpOutputString );
-         }
-         #else
-            OutputDebugString( buffer2 );
-         #endif
-      }
-
-#endif
 
       /*
        * Reset file and line.
@@ -268,11 +293,6 @@ void hb_tr_trace( const char * fmt, ... )
       {
          hb_tr_file_ = "";
          hb_tr_line_ = -1;
-      }
-
-      if( s_flush )
-      {
-         fflush( s_fp );
       }
    }
 }

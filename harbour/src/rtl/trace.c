@@ -55,6 +55,36 @@
 #include "hbapiitm.h"
 #include "hbtrace.h"
 
+static int s_traceLogLevel = HB_TR_DEFAULT;
+
+static void hb_trace_message( char * buffer, ULONG ulSize, int iParam, int iCount )
+{
+   int iFirst = iParam;
+
+   buffer[ 0 ] = '\0';
+
+   while( iParam <= iCount && ulSize > 1 )
+   {
+      char * pszString;
+      ULONG ulLen;
+      BOOL fFree;
+
+      if( iParam > iFirst )
+      {
+         *buffer++ = ' ';
+         --ulSize;
+      }
+      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
+      hb_strncpy( buffer, pszString, ulSize );
+      ulLen = ( ULONG ) strlen( buffer );
+      ulSize -= ulLen;
+      buffer += ulLen;
+      if( fFree )
+         hb_xfree( pszString );
+      iParam++;
+   }
+}
+
 HB_FUNC( HB_TRACESTATE )
 {
    hb_retni( hb_tracestate( HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
@@ -65,34 +95,61 @@ HB_FUNC( HB_TRACELEVEL )
    hb_retni( hb_tracelevel( HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
 }
 
+HB_FUNC( HB_TRACELOGLEVEL )
+{
+   int iOldLevel = s_traceLogLevel, iLevel;
+
+   if( HB_ISNUM( 1 ) )
+   {
+      iLevel = hb_parni( 1 );
+      if( iLevel >= HB_TR_ALWAYS && iLevel < HB_TR_LAST )
+         s_traceLogLevel = iLevel;
+   }
+   hb_retni( iOldLevel );
+}
+
+HB_FUNC( HB_TRACELOG )
+{
+   char message[ 1024 ];
+   char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   char file[ HB_PATH_MAX ];
+   USHORT line;
+
+   hb_trace_message( message, sizeof( message ) - 1, 1, hb_pcount() );
+   hb_procinfo( 1, procname, &line, file );
+   hb_tracelog( s_traceLogLevel, file, line, procname, "%s", message );
+}
+
+HB_FUNC( HB_TRACELOGAT )
+{
+   if( HB_ISNUM( 1 ) )
+   {
+      int iLevel = hb_parni( 1 );
+
+      if( iLevel <= hb_tr_level() )
+      {
+         char message[ 1024 ];
+         char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+         char file[ HB_PATH_MAX ];
+         USHORT line;
+
+         hb_trace_message( message, sizeof( message ) - 1, 2, hb_pcount() );
+         hb_procinfo( 1, procname, &line, file );
+         hb_tracelog( iLevel, file, line, procname, "%s", message );
+      }
+   }
+}
+
 HB_FUNC( HB_TRACESTRING )
 {
    int iPCount = hb_pcount();
 
    if( iPCount > 0 )
    {
-      char buffer[ 1024 ];
-      int iParam;
+      char message[ 1024 ];
 
-      buffer[ 0 ] = '\0';
+      hb_trace_message( message, sizeof( message ) - 1, 1, iPCount );
 
-      for( iParam = 1; iParam <= iPCount; iParam++ )
-      {
-         char * pszString;
-         ULONG ulLen;
-         BOOL fFree;
-
-         if( iParam > 1 )
-            hb_strncat( buffer, " ", sizeof( buffer ) - 1 );
-
-         pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
-
-         hb_strncat( buffer, pszString, sizeof( buffer ) - 1 );
-
-         if( fFree )
-            hb_xfree( pszString );
-      }
-
-      HB_TRACE(HB_TR_ALWAYS, ("%s", buffer) );
+      HB_TRACE(HB_TR_ALWAYS, ("%s", message) );
    }
 }

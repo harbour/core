@@ -106,6 +106,7 @@ PRG_HEADERS := \
    hbsocket.ch \
    hbstdgen.ch \
    hbthread.ch \
+   hbtrace.ch \
    hbusrrdd.ch \
    hbver.ch \
    hbzlib.ch \
