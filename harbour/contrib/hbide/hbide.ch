@@ -70,8 +70,11 @@
 #define FunctionListGeometry                      5
 #define RecentTabIndex                            6
 #define CurrentProject                            7
+#define GotoDialogGeometry                        8
+#define PropsDialogGeometry                       9
+#define FindDialogGeometry                        10
 
-#define INI_HBIDE_VRBLS                           7
+#define INI_HBIDE_VRBLS                           10
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

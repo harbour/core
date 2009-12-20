@@ -180,6 +180,7 @@ CLASS HbIde
    METHOD loadConfig()
    METHOD saveConfig()
    METHOD setPosAndSizeByIni()
+   METHOD setPosByIni()
 
    METHOD buildDialog()
    METHOD buildStatusBar()
@@ -250,6 +251,7 @@ CLASS HbIde
    METHOD buildProject()
    METHOD buildProjectViaQt()
    METHOD readProcessInfo()
+   METHOD goto()
 
    ENDCLASS
 
@@ -357,6 +359,11 @@ METHOD HbIde:create( cProjIni )
          CASE ::mp1 == xbeK_CTRL_S
             ::saveSource( ::getCurrentTab(), .f. )
 
+         CASE ::mp1 == xbeK_CTRL_G
+            IF !empty( ::qCurEdit )
+               ::goto()
+            ENDIF
+
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
                ::findReplace()
@@ -405,13 +412,15 @@ METHOD HbIde:saveConfig()
    txt_:= {}
    //    Properties
    aadd( txt_, "[HBIDE]" )
-   aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )           )
-   aadd( txt_, "ProjectTreeVisible     = " + IIF( ::lProjTreeVisible, "YES", "NO" ) )
-   aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( ::oProjTree:oWidget )      )
-   aadd( txt_, "FunctionListVisible    = " + IIF( ::lDockRVisible, "YES", "NO" )    )
-   aadd( txt_, "FunctionListGeometry   = " + PosAndSize( ::oFuncList:oWidget )      )
-   aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() ) )
-   aadd( txt_, "CurrentProject         = " + ""                                     )
+   aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )             )
+   aadd( txt_, "ProjectTreeVisible     = " + IIF( ::lProjTreeVisible, "YES", "NO" )   )
+   aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( ::oProjTree:oWidget )        )
+   aadd( txt_, "FunctionListVisible    = " + IIF( ::lDockRVisible, "YES", "NO" )      )
+   aadd( txt_, "FunctionListGeometry   = " + PosAndSize( ::oFuncList:oWidget )        )
+   aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() )   )
+   aadd( txt_, "CurrentProject         = " + ""                                       )
+   aadd( txt_, "GotoDialogGeometry     = " + ::aIni[ INI_HBIDE, GotoDialogGeometry  ] )
+   aadd( txt_, "PropsDialogGeometry    = " + ::aIni[ INI_HBIDE, PropsDialogGeometry ] )
    aadd( txt_, " " )
 
    //    Projects
@@ -445,8 +454,10 @@ METHOD HbIde:saveConfig()
 
 METHOD HbIde:loadConfig( cHbideIni )
    LOCAL aElem, s, n, nPart, cKey, cVal, a_
-   LOCAL aIdeEle := { "mainwindowgeometry", "projecttreevisible", "projecttreegeometry", "functionlistvisible", ;
-                      "functionlistgeometry", "recenttabindex", "currentproject" }
+   LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
+                      "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
+                      "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
+                      "finddialoggeometry" }
 
    DEFAULT cHbideIni TO "hbide.ini"
 
@@ -465,23 +476,6 @@ METHOD HbIde:loadConfig( cHbideIni )
    ::aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {} }
 
    IF file( ::cProjIni )
-      #if 0
-      [HBIDE]
-      MainWindowGeometry   =
-      ProjectTreeVisible   =
-      ProjectTreeGeometry  =
-      FunctionListVisible  =
-      FunctionListGeometry =
-      RecentTabIndex       =
-      CurrentProject       =
-      [PROJECTS]
-      c:\harbour\contrib\hbide\projects\vouch.hbi
-      ...
-      [FILES]
-      c:\dev_sources\vouch\source\vouch.prg : scrollpos horz : scrollpos vert : CursorPos :
-      ...
-      #endif
-
       aElem := ReadSource( ::cProjIni )
 
       FOR EACH s IN aElem
@@ -580,6 +574,20 @@ METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
 
       qWidget:move( aRect[ 1 ], aRect[ 2 ] )
       qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:setPosByIni( qWidget, nPart )
+   LOCAL aRect
+
+   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
+      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+
+      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
    ENDIF
 
    RETURN Self
@@ -1495,6 +1503,12 @@ METHOD HbIde:executeAction( cKey )
       IF !empty( ::qCurEdit )
          ::findReplace()
       ENDIF
+   CASE cKey == "SetMark"
+   CASE cKey == "GotoMark"
+   CASE cKey == "Goto"
+      IF !empty( ::qCurEdit )
+         ::goto()
+      ENDIF
    CASE cKey == "ToUpper"
       ::convertSelection( cKey )
    CASE cKey == "ToLower"
@@ -1661,7 +1675,9 @@ METHOD HbIde:fetchProjectProperties()
       #endif
    ENDIF
 
+   ::setPosByIni( ::oProps:oWidget, PropsDialogGeometry )
    ::oProps:exec()
+   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := PosAndSize( ::oProps:oWidget )
    ::oProps:destroy()
    ::oProps := NIL
 
@@ -1891,6 +1907,8 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+//                            Find / Replace
+/*----------------------------------------------------------------------*/
 
 METHOD HbIde:replace()
 
@@ -1914,11 +1932,13 @@ METHOD HbIde:findReplace()
       ::oFindRepl:create()
       ::oFindRepl:setWindowFlags( Qt_Sheet )
 
-      ::oFindRepl:signal( "buttonFind"    , "clicked()", {|| ::find()           } )
-      ::oFindRepl:signal( "buttonReplace" , "clicked()", {|| ::replace()        } )
-      ::oFindRepl:signal( "buttonClose"   , "clicked()", {|| ::oFindRepl:hide() } )
+      ::oFindRepl:signal( "buttonFind"   , "clicked()", {|| ::find()           } )
+      ::oFindRepl:signal( "buttonReplace", "clicked()", {|| ::replace()        } )
+      ::oFindRepl:signal( "buttonClose"  , "clicked()", ;
+            {|| ::aIni[ INI_HBIDE, FindDialogGeometry ] := PosAndSize( ::oFindRepl:oWidget ), ::oFindRepl:hide() } )
    ENDIF
 
+   ::setPosByIni( ::oFindRepl:oWidget, FindDialogGeometry )
    ::oFindRepl:qObj[ "comboFindWhat" ]:setFocus()
    ::oFindRepl:show()
 
@@ -1926,3 +1946,35 @@ METHOD HbIde:findReplace()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:goto()
+   LOCAL qGo, nLine
+   LOCAL qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+
+   nLine := qCursor:blockNumber()
+
+   qGo := QInputDialog():new( ::oDlg:oWidget )
+   qGo:setIntMinimum( 1 )
+   qGo:setIntMaximum( ::qCurDocument:blockCount() )
+   qGo:setIntValue( nLine + 1 )
+   qGo:setLabelText( "Goto Line Number ?" )
+   qGo:setWindowTitle( "Harbour-Qt" )
+
+   ::setPosByIni( qGo, GotoDialogGeometry )
+   qGo:exec()
+   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := PosAndSize( qGo )
+
+   nLine := qGo:intValue() -  nLine
+
+   qGo:pPtr := 0
+
+   IF nLine < 0
+      qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
+   ELSEIF nLine > 0
+      qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+   ENDIF
+   ::qCurEdit:setTextCursor( qCursor )
+
+
+   RETURN nLine
+
+/*----------------------------------------------------------------------*/
