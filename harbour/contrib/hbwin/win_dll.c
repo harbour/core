@@ -164,8 +164,8 @@ typedef struct DYNAPARM
 
 #pragma pack()
 
-RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
-                 DYNAPARM Parm[], LPVOID pRet,       int nRetSiz )
+RESULT DynaCall( int iFlags, FARPROC lpFunction, int nArgs,
+                 DYNAPARM Parm[], LPVOID pRet, int nRetSiz )
 {
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
@@ -379,15 +379,15 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 typedef struct _XPP_DLLEXEC
 {
    HMODULE  hDLL;       /* Handle */
-   BOOL     fFreeDLL;   /* Free library handle on destroy? */
+   HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
    DWORD    dwFlags;    /* Calling Flags */
-   LPVOID   lpFunc;     /* Function Address */
+   FARPROC  lpFunc;     /* Function Address */
 } XPP_DLLEXEC, * PXPP_DLLEXEC;
 
 #define _DLLEXEC_MAXPARAM   15
 
 /* Based originally on CallDLL() from What32 */
-static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec, int iParams, int iFirst )
+static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PXPP_DLLEXEC xec, int iParams, int iFirst )
 {
    DYNAPARM Parm[ _DLLEXEC_MAXPARAM ];
    RESULT rc;
@@ -612,7 +612,7 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 {
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) Cargo;
 
-   if( xec->hDLL && xec->fFreeDLL )
+   if( xec->hDLL && xec->bFreeDLL )
    {
       FreeLibrary( xec->hDLL );
       xec->hDLL = NULL;
@@ -626,13 +626,13 @@ static const HB_GC_FUNCS s_gcDllFuncs =
 };
 
 
-static LPVOID hb_getprocaddress( HMODULE hDLL, int iParam )
+static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam )
 {
 #if defined( HB_OS_WIN_CE )
    void * hStr;
    ULONG ulLen;
    LPCWSTR szProc = hb_parstr_u16( iParam, HB_CDP_ENDIAN_NATIVE, &hStr, &ulLen );
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, szProc ? szProc :
+   FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
                   ( LPCWSTR ) ( HB_PTRDIFF ) ( hb_parni( iParam ) & 0x0FFFF ) );
 
    if( ! lpFunction && szProc ) /* try with WIDE suffix? */
@@ -641,19 +641,19 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iParam )
       memcpy( pszProcW, szProc, ulLen * sizeof( WCHAR ) );
       pszProcW[ ulLen++ ] = L'W';
       pszProcW[ ulLen++ ] = 0;
-      lpFunction = ( LPVOID ) GetProcAddress( hDLL, pszProcW );
+      lpFunction = GetProcAddress( hDLL, pszProcW );
       hb_xfree( pszProcW );
    }
    hb_strfree( hStr );
 #else
    const char * szProc = hb_parc( iParam );
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, szProc ? szProc :
+   FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
                   ( LPCSTR ) ( HB_PTRDIFF ) ( hb_parni( iParam ) & 0x0FFFF ) );
 
    if( ! lpFunction && szProc ) /* try with ANSI suffix? */
    {
       char * pszFuncName = hb_xstrcpy( NULL, szProc, "A", NULL );
-      lpFunction = ( LPVOID ) GetProcAddress( hDLL, pszFuncName );
+      lpFunction = GetProcAddress( hDLL, pszFuncName );
       hb_xfree( pszFuncName );
    }
 #endif
@@ -688,7 +688,7 @@ HB_FUNC( GETPROCADDRESS )
    else
       hDLL = ( HMODULE ) hb_parptr( 1 );
 
-   hb_retptr( hDLL ? hb_getprocaddress( hDLL, 2 ) : NULL );
+   hb_retptr( hDLL ? ( void * ) hb_getprocaddress( hDLL, 2 ) : NULL );
 }
 
 #ifdef HB_COMPAT_XPP
@@ -742,7 +742,7 @@ HB_FUNC( DLLPREPARECALL )
       xec->hDLL = LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
       hb_strfree( hFileName );
       if( xec->hDLL )
-         xec->fFreeDLL = TRUE;
+         xec->bFreeDLL = HB_TRUE;
    }
    else if( HB_ISPOINTER( 1 ) )
       xec->hDLL = ( HMODULE ) hb_parptr( 1 );
@@ -780,21 +780,21 @@ HB_FUNC( DLLEXECUTECALL )
 
 /* ------------------------------------------------------------------ */
 
-/* Call a DLL function from (x)Harbour, the first parameter is a pointer returned from
+/* Call a DLL function from Harbour, the first parameter is a pointer returned from
    GetProcAddress() above. Note that it is hardcoded to use PASCAL calling convention. */
 HB_FUNC( CALLDLL )
 {
-   DllExec( DC_CALL_STD, 0, ( LPVOID ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   DllExec( DC_CALL_STD, 0, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   DllExec( DC_CALL_STD, CTYPE_BOOL, ( LPVOID ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   DllExec( DC_CALL_STD, CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   DllExec( DC_CALL_STD, hb_parni( 2 ), ( LPVOID ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
+   DllExec( DC_CALL_STD, hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
 }
 
 #endif /* HB_OS_WIN && && !__CYGWIN__ !HB_NO_ASM */
