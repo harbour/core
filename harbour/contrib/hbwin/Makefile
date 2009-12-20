@@ -31,6 +31,7 @@ C_SOURCES := \
    wapi_commctrl.c \
    wapi_shellapi.c \
    wapi_winbase.c \
+   wapi_winbase_mutex.c \
    wapi_winnls.c \
    wapi_winuser.c \
 
