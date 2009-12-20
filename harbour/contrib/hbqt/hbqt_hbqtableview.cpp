@@ -193,10 +193,9 @@ HB_FUNC( QT_HBQTABLEVIEW )
    hb_retptrGC( hbqt_gcAllocate_HBQTableView( pObj ) );
 }
 
-/* TOFIX: Leak */
 HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
 {
-   hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) ) );
 }
 
 #endif

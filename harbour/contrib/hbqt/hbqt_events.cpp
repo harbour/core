@@ -115,7 +115,19 @@ Events::Events( QObject * parent ) : QObject( parent )
 
 Events::~Events()
 {
-   /* TOFIX: Possible leak of PHB_ITEMs stored in list. */
+   HB_TRACE( HB_TR_DEBUG, ( "      Events::~Events()" ) );
+   int i;
+
+   for( i = 0; i < listBlock.size(); i++ )
+   {
+      if( listBlock[ i ] != NULL )
+      {
+         hb_itemRelease( listBlock.at( i ) );
+         listBlock[ i ] = NULL;
+         listObj[ i ] = NULL;
+      }
+   }
+
    listBlock.clear();
 }
 

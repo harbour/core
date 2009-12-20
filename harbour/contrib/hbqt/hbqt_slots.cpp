@@ -107,8 +107,19 @@ Slots::Slots( QObject* parent ) : QObject( parent )
 
 Slots::~Slots()
 {
-   /* TOFIX: Possible leak of PHB_ITEMs stored in list.
-      QUESTION: Should there be all remaining active slots disconnected at this point? */
+   int i;
+
+   for( i = 0; i < listBlock.size(); i++ )
+   {
+      if( listBlock[ i ] != NULL )
+      {
+         hb_itemRelease( listBlock.at( i ) );
+         listBlock[ i ] = NULL;
+      }
+   }
+   /* QUESTION: Should there be all remaining active slots disconnected at this point? */
+
+   /*           Should be disconnected, but this is a responsibility of programmer as object is only known to the application */
    listBlock.clear();
 }
 

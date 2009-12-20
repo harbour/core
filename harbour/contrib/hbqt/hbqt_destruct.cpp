@@ -88,8 +88,10 @@ void * hbqt_gcpointer( int iParam )
 
    if( p && p->ph )
       return p->ph;
+   else if( HB_ISPOINTER( iParam ) )
+      return hb_parptr( iParam );
    else
-      return hb_parptr( iParam ); /* TOFIX: This is dangerous. */
+      return( NULL );  /* Still better if RTE */
 }
 
 void * hbqt_pPtrFromObj( int iParam )
