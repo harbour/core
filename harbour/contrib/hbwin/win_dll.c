@@ -6,12 +6,10 @@
  * Harbour Project source code:
  * Windows DLL handling function (Xbase++ compatible + proprietary)
  *
- * Copyright 2006 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (win64 support)
+ * Copyright 2006 Paul Tucker <ptucker@sympatico.ca> (Borland mods)
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
- * www - http://www.vicmcclung.com
- * Borland mods by ptucker@sympatico.ca
- * MinGW support by Phil Krylov <phil a t newstar.rinet.ru>
- *
+ * Copyright 2002 Phil Krylov <phil a t newstar.rinet.ru> (MinGW support)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -138,7 +136,7 @@
 
 #pragma pack(1)
 
-typedef union RESULT
+typedef union
 {                                /* Various result types */
    int     Int;                  /* Generic four-byte type */
    long    Long;                 /* Four-byte long */
@@ -146,9 +144,9 @@ typedef union RESULT
    float   Float;                /* Four byte real */
    double  Double;               /* 8-byte real */
    __int64 int64;                /* big int (64-bit) */
-} RESULT;
+} HB_DYNRETVAL;
 
-typedef struct DYNAPARM
+typedef struct
 {
    DWORD       dwFlags;          /* Parameter flags */
    int         nWidth;           /* Byte width */
@@ -160,16 +158,15 @@ typedef struct DYNAPARM
       double   dArg;             /* double argument */
    } numargs;
    void *      pArg;             /* Pointer to argument */
-} DYNAPARM;
+} HB_DYNPARAM;
 
 #pragma pack()
 
-RESULT DynaCall( int iFlags, FARPROC lpFunction, int nArgs,
-                 DYNAPARM Parm[], LPVOID pRet, int nRetSiz )
+HB_DYNRETVAL DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Parm[], void * pRet, int nRetSiz )
 {
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
-   RESULT  Res = { 0 };
+   HB_DYNRETVAL Res = { 0 };
 #if defined( HB_OS_WIN_CE ) || defined( HB_OS_WIN_64 )
    HB_SYMBOL_UNUSED( iFlags );
    HB_SYMBOL_UNUSED( lpFunction );
@@ -376,22 +373,179 @@ RESULT DynaCall( int iFlags, FARPROC lpFunction, int nArgs,
  * ==================================================================
  */
 
-typedef struct _XPP_DLLEXEC
+typedef struct
 {
    HMODULE  hDLL;       /* Handle */
    HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
    DWORD    dwFlags;    /* Calling Flags */
    FARPROC  lpFunc;     /* Function Address */
-} XPP_DLLEXEC, * PXPP_DLLEXEC;
+} HB_DLLEXEC, * PHB_DLLEXEC;
 
 #define _DLLEXEC_MAXPARAM   15
 
-/* Based originally on CallDLL() from What32 */
-static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PXPP_DLLEXEC xec, int iParams, int iFirst )
+#if defined( HB_OS_WIN_64 )
+
+static HB_U64 hb_u64par( int iParam )
 {
-   DYNAPARM Parm[ _DLLEXEC_MAXPARAM ];
-   RESULT rc;
+   PHB_ITEM pParam = hb_param( iParam, HB_IT_ANY );
+   HB_U64 r = 0;
+
+   if( pParam )
+   {
+      switch( HB_ITEM_TYPE( pParam ) )
+      {
+         case HB_IT_POINTER:
+            r = ( HB_PTRUINT ) hb_itemGetPtr( pParam );
+            break;
+
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DATE:
+         case HB_IT_LOGICAL:
+            r = hb_itemGetNInt( pParam );
+            break;
+
+         case HB_IT_DOUBLE:
+            /* TODO */
+            break;
+
+         case HB_IT_STRING:
+         case HB_IT_MEMO:
+            r = ( HB_PTRUINT ) hb_itemGetCPtr( pParam );
+            break;
+      }
+   }
+
+   return r;
+}
+
+static void hb_u64ret( int iType, HB_U64 nValue )
+{
+   switch( iType )
+   {
+      case CTYPE_VOID:
+         hb_ret();
+         break;
+
+      case CTYPE_BOOL:
+         hb_retl( nValue != 0 );
+         break;
+
+      case CTYPE_CHAR:
+      case CTYPE_UNSIGNED_CHAR:
+      case CTYPE_SHORT:
+      case CTYPE_UNSIGNED_SHORT:
+      case CTYPE_INT:
+         hb_retni( ( int ) nValue );
+         break;
+
+      case CTYPE_LONG:
+         hb_retnl( ( long ) nValue );
+         break;
+
+      case CTYPE_UNSIGNED_INT:
+      case CTYPE_UNSIGNED_LONG:
+         hb_retnint( nValue );
+         break;
+
+      case CTYPE_CHAR_PTR:
+      case CTYPE_UNSIGNED_CHAR_PTR:
+         hb_retc( ( char * ) nValue );
+         break;
+
+      case CTYPE_INT_PTR:
+      case CTYPE_UNSIGNED_SHORT_PTR:
+      case CTYPE_UNSIGNED_INT_PTR:
+      case CTYPE_STRUCTURE_PTR:
+      case CTYPE_LONG_PTR:
+      case CTYPE_UNSIGNED_LONG_PTR:
+      case CTYPE_VOID_PTR:
+      case CTYPE_FLOAT_PTR:
+      case CTYPE_DOUBLE_PTR:
+         hb_retptr( ( void * ) nValue );
+         break;
+
+      case CTYPE_FLOAT:
+      case CTYPE_DOUBLE:
+         /* TOFIX */
+         hb_retnd( 0 );
+         break;
+   }
+}
+
+typedef HB_U64( WINAPI * WIN64_01 ) ( HB_U64 );
+typedef HB_U64( WINAPI * WIN64_02 ) ( HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_03 ) ( HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_04 ) ( HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_05 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_06 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_07 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_08 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_09 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_10 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_11 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_12 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( WINAPI * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+
+static HB_U64 win64_01( FARPROC p, HB_U64 p01 )                                                                                                                                                                         { return ( ( WIN64_01 ) *p )( p01 ); }
+static HB_U64 win64_02( FARPROC p, HB_U64 p01, HB_U64 p02 )                                                                                                                                                             { return ( ( WIN64_02 ) *p )( p01, p02 ); }
+static HB_U64 win64_03( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03 )                                                                                                                                                 { return ( ( WIN64_03 ) *p )( p01, p02, p03 ); }
+static HB_U64 win64_04( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04 )                                                                                                                                     { return ( ( WIN64_04 ) *p )( p01, p02, p03, p04 ); }
+static HB_U64 win64_05( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05 )                                                                                                                         { return ( ( WIN64_05 ) *p )( p01, p02, p03, p04, p05 ); }
+static HB_U64 win64_06( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06 )                                                                                                             { return ( ( WIN64_06 ) *p )( p01, p02, p03, p04, p05, p06 ); }
+static HB_U64 win64_07( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07 )                                                                                                 { return ( ( WIN64_07 ) *p )( p01, p02, p03, p04, p05, p06, p07 ); }
+static HB_U64 win64_08( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08 )                                                                                     { return ( ( WIN64_08 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08 ); }
+static HB_U64 win64_09( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09 )                                                                         { return ( ( WIN64_09 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09 ); }
+static HB_U64 win64_10( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10 )                                                             { return ( ( WIN64_10 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10 ); }
+static HB_U64 win64_11( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11 )                                                 { return ( ( WIN64_11 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11 ); }
+static HB_U64 win64_12( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12 )                                     { return ( ( WIN64_12 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12 ); }
+static HB_U64 win64_13( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13 )                         { return ( ( WIN64_13 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13 ); }
+static HB_U64 win64_14( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13, HB_U64 p14 )             { return ( ( WIN64_14 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14 ); }
+static HB_U64 win64_15( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13, HB_U64 p14, HB_U64 p15 ) { return ( ( WIN64_15 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14, p15 ); }
+
+#endif
+
+/* Based originally on CallDLL() from What32 */
+static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
+{
+#if defined( HB_OS_WIN_64 )
+
+   HB_SYMBOL_UNUSED( iFlags );
+   HB_SYMBOL_UNUSED( xec );
+
+   --iFirst;
+
+   switch( iParams - iFirst )
+   {
+      case  1: hb_u64ret( iRtype, win64_01( lpFunction, hb_u64par( iFirst + 1 ) ) ); break;
+      case  2: hb_u64ret( iRtype, win64_02( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ) ) ); break;
+      case  3: hb_u64ret( iRtype, win64_03( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ) ) ); break;
+      case  4: hb_u64ret( iRtype, win64_04( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ) ) ); break;
+      case  5: hb_u64ret( iRtype, win64_05( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ) ) ); break;
+      case  6: hb_u64ret( iRtype, win64_06( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ) ) ); break;
+      case  7: hb_u64ret( iRtype, win64_07( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ) ) ); break;
+      case  8: hb_u64ret( iRtype, win64_08( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ) ) ); break;
+      case  9: hb_u64ret( iRtype, win64_09( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ) ) ); break;
+      case 10: hb_u64ret( iRtype, win64_10( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ) ) ); break;
+      case 11: hb_u64ret( iRtype, win64_11( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ) ) ); break;
+      case 12: hb_u64ret( iRtype, win64_12( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ) ) ); break;
+      case 13: hb_u64ret( iRtype, win64_13( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ) ) ); break;
+      case 14: hb_u64ret( iRtype, win64_14( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ), hb_u64par( iFirst + 14 ) ) ); break;
+      case 15: hb_u64ret( iRtype, win64_15( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ), hb_u64par( iFirst + 14 ), hb_u64par( iFirst + 15 ) ) ); break;
+      default:
+         hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+
+#else
+
+   HB_DYNPARAM Parm[ _DLLEXEC_MAXPARAM ];
+   HB_DYNRETVAL rc;
    int i, iCnt, iArgCnt;
+
+   if( ! lpFunction )
+      return;
 
    if( xec )
    {
@@ -400,9 +554,6 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PXPP_DLLEXEC xe
 
       /* TODO: Params maybe explictly specified in xec! */
    }
-
-   if( ! lpFunction )
-      return;
 
    iArgCnt = iParams - iFirst + 1;
 
@@ -550,7 +701,7 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PXPP_DLLEXEC xe
          break;
 
       case CTYPE_VOID:
-         hb_retni( 0 );
+         hb_ret();
          break;
 
       case CTYPE_CHAR:
@@ -604,13 +755,15 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PXPP_DLLEXEC xe
       default:
          hb_errRT_BASE( EG_ARG, 2010, "Unknown return type from DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
+
+#endif
 }
 
 /* ------------------------------------------------------------------ */
 
 static HB_GARBAGE_FUNC( _DLLUnload )
 {
-   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) Cargo;
+   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) Cargo;
 
    if( xec->hDLL && xec->bFreeDLL )
    {
@@ -731,10 +884,10 @@ HB_FUNC( DLLCALL )
 
 HB_FUNC( DLLPREPARECALL )
 {
-   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAllocate( sizeof( XPP_DLLEXEC ), &s_gcDllFuncs );
+   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_gcAllocate( sizeof( HB_DLLEXEC ), &s_gcDllFuncs );
    const char * pszErrorText;
 
-   memset( xec, 0, sizeof( XPP_DLLEXEC ) );
+   memset( xec, 0, sizeof( HB_DLLEXEC ) );
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -770,7 +923,7 @@ HB_FUNC( DLLPREPARECALL )
 
 HB_FUNC( DLLEXECUTECALL )
 {
-   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
+   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
 
    if( xec && xec->hDLL && xec->lpFunc )
       DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
