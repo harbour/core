@@ -216,7 +216,7 @@ HB_EXTERN_BEGIN
   #define SRCLINENO ""
 #endif
 
-#define HEADER_ID   ( BYTE * )"BTR\x10"
+#define HEADER_ID   "BTR\x10"
 #define NULLPAGE    0L
 
 #define BTREENODEISNULL( pBTree, node ) ( BOOL )( ( node ) == NULLPAGE )
@@ -357,11 +357,11 @@ static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const char * szD
 {
     PHB_ITEM pErr = hb_errRT_New(
     ES_ERROR        /* USHORT uiSeverity */,
-    "HBBTREE"       /* char * szSubSystem */,
+    "HBBTREE"       /* const char * szSubSystem */,
     EG_ARG          /* ULONG  ulGenCode */,
     ulSubCode       /* ULONG  ulSubCode */,
-    ( char * )szDescription   /* char * szDescription */,
-    ( char * )szOperation     /* char * szOperation */,
+    szDescription   /* const char * szDescription */,
+    szOperation     /* const char * szOperation */,
     0               /* USHORT uiOsCode */,
     EF_NONE         /* USHORT uiFlags */ );
 
@@ -967,7 +967,7 @@ static void KeySet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, hb_Ke
 static LONG KeyCompare( struct hb_BTree * pBTree, hb_KeyData_T *left, hb_KeyData_T *right )
 {
 /*  LONG lResults = strnicmp( left->szKey, right->szKey, pBTree->usKeySize );*/
-  LONG lResults = ( pBTree->pStrCompare )( ( char * ) left->szKey, ( char * ) right->szKey, pBTree->usKeySize );
+  LONG lResults = ( pBTree->pStrCompare )( ( const char * ) left->szKey, ( const char * ) right->szKey, pBTree->usKeySize );
 
   if ( lResults == 0 && GETFLAG( pBTree, IsUnique ) )
   {
@@ -1980,7 +1980,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
   if ( pBTree )
     switch ( hb_parni( 2 ) )
     {
-    case HB_BTREEINFO_FILENAME:  hb_retc( ( char * ) pBTree->szFileName ); break;
+    case HB_BTREEINFO_FILENAME:  hb_retc( pBTree->szFileName ); break;
     case HB_BTREEINFO_PAGESIZE:  hb_retni( pBTree->usPageSize ); break;
     case HB_BTREEINFO_KEYSIZE:   hb_retni( pBTree->usKeySize ); break;
     case HB_BTREEINFO_MAXKEYS:   hb_retni( pBTree->usMaxKeys ); break;
@@ -1992,7 +1992,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
       {
         PHB_ITEM info = hb_itemArrayNew( HB_BTREEINFO__SIZE );
 
-        hb_arraySetC(  info, HB_BTREEINFO_FILENAME, ( char * ) pBTree->szFileName );
+        hb_arraySetC(  info, HB_BTREEINFO_FILENAME, pBTree->szFileName );
         hb_arraySetNI( info, HB_BTREEINFO_PAGESIZE, pBTree->usPageSize );
         hb_arraySetNI( info, HB_BTREEINFO_KEYSIZE , pBTree->usKeySize );
         hb_arraySetNI( info, HB_BTREEINFO_MAXKEYS , pBTree->usMaxKeys );
