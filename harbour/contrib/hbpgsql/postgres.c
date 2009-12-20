@@ -283,7 +283,7 @@ HB_FUNC( PQEXECPARAMS )
 
       res = PQexecParams( PGconn_par( 1 ), hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 );
 
-      hb_xfree( paramvalues );
+      hb_xfree( ( void * ) paramvalues );
    }
 
    hb_retptr( res );

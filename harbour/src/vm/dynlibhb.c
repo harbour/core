@@ -138,7 +138,7 @@ HB_FUNC( HB_LIBLOAD )
       }
 
       if( argv )
-         hb_xfree( argv );
+         hb_xfree( ( void * ) argv );
    }
 
    if( hDynLib )

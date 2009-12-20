@@ -868,7 +868,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
    if( iPatternsCount > HB_PATERN_BUF_SIZE )
    {
-      hb_xfree( patterns );
+      hb_xfree( ( void * ) patterns );
       hb_xfree( patternsizes );
    }
 }
