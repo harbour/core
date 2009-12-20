@@ -233,6 +233,7 @@ CLASS HbIde
    METHOD find()
    METHOD replace()
    METHOD findReplace()
+   METHOD updateFindReplaceData()
 
    METHOD manageFocusInEditor()
    METHOD convertSelection()
@@ -324,6 +325,8 @@ METHOD HbIde:create( cProjIni )
 
    ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
 
+   ::findReplace( .f. )
+
    ::oDlg:Show()
 
    ::loadSources()
@@ -366,7 +369,15 @@ METHOD HbIde:create( cProjIni )
 
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
-               ::findReplace()
+               ::findReplace( .t. )
+            ENDIF
+         CASE ::mp1 == xbeK_CTRL_N
+            IF !empty( ::qCurEdit )
+               ::find()
+            ENDIF
+         CASE ::mp1 == xbeK_CTRL_R
+            IF !empty( ::qCurEdit )
+               ::replace()
             ENDIF
 
          ENDCASE
@@ -421,6 +432,7 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "CurrentProject         = " + ""                                       )
    aadd( txt_, "GotoDialogGeometry     = " + ::aIni[ INI_HBIDE, GotoDialogGeometry  ] )
    aadd( txt_, "PropsDialogGeometry    = " + ::aIni[ INI_HBIDE, PropsDialogGeometry ] )
+   aadd( txt_, "FindDialogGeometry     = " + ::aIni[ INI_HBIDE, FindDialogGeometry  ] )
    aadd( txt_, " " )
 
    //    Projects
@@ -445,6 +457,20 @@ METHOD HbIde:saveConfig()
                   hb_ntos( qHScr:value() ) + "," + ;
                   hb_ntos( qVScr:value() ) + ","   ;
            )
+   NEXT
+   aadd( txt_, " " )
+
+   //    Find
+   aadd( txt_, "[FIND]" )
+   FOR n := 1 TO len( ::aIni[ INI_FIND ] )
+      aadd( txt_, ::aIni[ INI_FIND, n ] )
+   NEXT
+   aadd( txt_, " " )
+
+   //    Replace
+   aadd( txt_, "[REPLACE]" )
+   FOR n := 1 TO len( ::aIni[ INI_REPLACE ] )
+      aadd( txt_, ::aIni[ INI_REPLACE, n ] )
    NEXT
    aadd( txt_, " " )
 
@@ -473,7 +499,7 @@ METHOD HbIde:loadConfig( cHbideIni )
 
    ::cProjIni := cHbideIni
 
-   ::aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {} }
+   ::aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {}, {}, {} }
 
    IF file( ::cProjIni )
       aElem := ReadSource( ::cProjIni )
@@ -488,6 +514,10 @@ METHOD HbIde:loadConfig( cHbideIni )
                nPart := INI_PROJECTS
             CASE s == "[FILES]"
                nPart := INI_FILES
+            CASE s == "[FIND]"
+               nPart := INI_FIND
+            CASE s == "[REPLACE]"
+               nPart := INI_REPLACE
             OTHERWISE
                DO CASE
                CASE nPart == INI_HBIDE
@@ -517,6 +547,10 @@ METHOD HbIde:loadConfig( cHbideIni )
                   a_[ 4 ] := val( a_[ 4 ] )
                   aadd( ::aIni[ nPart ], a_ )
 
+               CASE nPart == INI_FIND
+                  aadd( ::aIni[ nPart ], s )
+               CASE nPart == INI_REPLACE
+                  aadd( ::aIni[ nPart ], s )
                ENDCASE
             ENDCASE
          ENDIF
@@ -1140,8 +1174,9 @@ METHOD HbIde:buildStatusBar()
    ::oSBar:addItem( "", , , , "Misc"   ):oWidget:setMinimumWidth( 30 )
    ::oSBar:addItem( "", , , , "State"  ):oWidget:setMinimumWidth( 50 )
    ::oSBar:addItem( "", , , , "Misc_2" ):oWidget:setMinimumWidth( 30 )
-   ::oSBar:addItem( "", , , , "Misc_3" ):oWidget:setMinimumWidth( 20 )
-   ::oSBar:addItem( "", , , , "Misc_4" ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Stream" ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Edit"   ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Search" ):oWidget:setMinimumWidth( 20 )
 
    RETURN Self
 
@@ -1501,7 +1536,7 @@ METHOD HbIde:executeAction( cKey )
       ENDIF
    CASE cKey == "Find"
       IF !empty( ::qCurEdit )
-         ::findReplace()
+         ::findReplace( .t. )
       ENDIF
    CASE cKey == "SetMark"
    CASE cKey == "GotoMark"
@@ -1911,20 +1946,75 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:replace()
+   LOCAL cReplWith, nB, nL, cBuffer
 
-   RETURN QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text()
+   IF !empty( ::qCurEdit )
+      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
+         cReplWith := QLineEdit():configure( ::oFindRepl:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
 
-/*----------------------------------------------------------------------*/
+         nL := len( cBuffer )
+         nB := ::qCursor:position() - nL
 
-METHOD HbIde:find()
+         ::qCursor:beginEditBlock()
+         ::qCursor:removeSelectedText()
+         ::qCursor:insertText( cReplWith )
+         ::qCursor:setPosition( nB )
+         ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, len( cReplWith ) )
+         ::qCurEdit:setTextCursor( ::qCursor )
+         ::qCursor:endEditBlock()
+      ENDIF
 
-   ::qCurEdit:find( QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text() )
+      ::find()
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:findReplace()
+METHOD HbIde:find()
+   LOCAL nFlags
+   LOCAL cText := QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text()
+
+   IF !empty( cText )
+      nFlags := 0
+      nFlags += iif( ::oFindRepl:qObj[ "checkMatchCase" ]:isChecked(), QTextDocument_FindCaseSensitively, 0 )
+      nFlags += iif( ::oFindRepl:qObj[ "radioUp" ]:isChecked(), QTextDocument_FindBackward, 0 )
+
+      ::qCurEdit:find( cText, nFlags )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:updateFindReplaceData( cMode )
+   LOCAL cData
+
+   IF cMode == "find"
+      cData := QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text()
+      IF !empty( cData )
+         IF ascan( ::aIni[ INI_FIND ], {|e| cData = e } ) == 0
+            hb_ains( ::aIni[ INI_FIND ], 1, cData, .t. )
+            ::oFindRepl:qObj[ "comboFindWhat" ]:insertItem( 0, cData )
+         ENDIF
+      ENDIF
+      //
+      ::oSBar:getItem( 11 ):caption := "FIND: " + cData
+   ELSE
+      cData := QLineEdit():configure( ::oFindRepl:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
+      IF !empty( cData )
+         IF ascan( ::aIni[ INI_REPLACE ], cData ) == 0
+            hb_ains( ::aIni[ INI_REPLACE ], 1, cData, .t. )
+            ::oFindRepl:qObj[ "comboReplaceWith" ]:insertItem( 0, cData )
+         ENDIF
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:findReplace( lShow )
 
    IF empty( ::oFindRepl )
       ::oFindRepl := XbpQtUiLoader():new( ::oDlg )
@@ -1932,16 +2022,26 @@ METHOD HbIde:findReplace()
       ::oFindRepl:create()
       ::oFindRepl:setWindowFlags( Qt_Sheet )
 
-      ::oFindRepl:signal( "buttonFind"   , "clicked()", {|| ::find()           } )
-      ::oFindRepl:signal( "buttonReplace", "clicked()", {|| ::replace()        } )
+      aeval( ::aIni[ INI_FIND    ], {|e| ::oFindRepl:qObj[ "comboFindWhat"    ]:addItem( e ) } )
+      aeval( ::aIni[ INI_REPLACE ], {|e| ::oFindRepl:qObj[ "comboReplaceWith" ]:addItem( e ) } )
+
+      ::oFindRepl:signal( "buttonFind"   , "clicked()", {|| ::updateFindReplaceData( "find" ), ::find() } )
+      ::oFindRepl:signal( "buttonReplace", "clicked()", {|| ::updateFindReplaceData( "replace" ), ::replace() } )
       ::oFindRepl:signal( "buttonClose"  , "clicked()", ;
             {|| ::aIni[ INI_HBIDE, FindDialogGeometry ] := PosAndSize( ::oFindRepl:oWidget ), ::oFindRepl:hide() } )
+
+      ::oFindRepl:signal( "comboFindWhat"   , "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
+      #if 0
+      ::oFindRepl:signal( "comboFindWhat"   , "editTextChanged(text)"    , {|o,p| o := o, ::updateFindReplaceData( "find", p ) } )
+      ::oFindRepl:signal( "comboReplaceWith", "editTextChanged(text)"    , {|o,p| o := o, ::updateFindReplaceData( "replace", p ) } )
+      #endif
    ENDIF
 
-   ::setPosByIni( ::oFindRepl:oWidget, FindDialogGeometry )
-   ::oFindRepl:qObj[ "comboFindWhat" ]:setFocus()
-   ::oFindRepl:show()
-
+   IF lShow
+      ::setPosByIni( ::oFindRepl:oWidget, FindDialogGeometry )
+      ::oFindRepl:qObj[ "comboFindWhat" ]:setFocus()
+      ::oFindRepl:show()
+   ENDIF
    RETURN Nil
 
 /*----------------------------------------------------------------------*/
@@ -1956,7 +2056,7 @@ METHOD HbIde:goto()
    qGo:setIntMinimum( 1 )
    qGo:setIntMaximum( ::qCurDocument:blockCount() )
    qGo:setIntValue( nLine + 1 )
-   qGo:setLabelText( "Goto Line Number ?" )
+   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( ::qCurDocument:blockCount() ) + "]" )
    qGo:setWindowTitle( "Harbour-Qt" )
 
    ::setPosByIni( qGo, GotoDialogGeometry )

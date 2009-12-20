@@ -60,6 +60,8 @@
 #define INI_HBIDE                                 1
 #define INI_PROJECTS                              2
 #define INI_FILES                                 3
+#define INI_FIND                                  4
+#define INI_REPLACE                               5
 
 
 /* INI_HBIDE */

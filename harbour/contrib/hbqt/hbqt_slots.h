@@ -213,7 +213,12 @@ public slots:
    void readyReadStandardOutput();
    void started();
    void stateChanged( QProcess::ProcessState newState );
-   /* */
+   /* QComboBox */
+   void activated( const QString & text );
+   void currentIndexChanged( const QString & text );
+   void editTextChanged( const QString & text );
+   void highlighted( const QString & text );
+   /*  */
 };
 
 /*----------------------------------------------------------------------*/

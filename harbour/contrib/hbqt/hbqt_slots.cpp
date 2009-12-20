@@ -489,8 +489,12 @@ void Slots::readyReadStandardError()                                            
 void Slots::readyReadStandardOutput()                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardOutput()" ); }
 void Slots::started()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "started()" ); }
 void Slots::stateChanged( QProcess::ProcessState newState )                                              { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", newState ); }
-/* */
-
+/* QComboBox */
+void Slots::activated( const QString & text )                                                            { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "activated(text)", text ); }
+void Slots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentIndexChanged(text)", text ); }
+void Slots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "editTextChanged(text)", text ); }
+void Slots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "highlighted(text)", text ); }
+/**/
 
 /*----------------------------------------------------------------------*/
 /*
@@ -617,6 +621,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    else if( signal == ( QString ) "readyReadStandardOutput()" )                 ret = object->connect( object, SIGNAL( readyReadStandardOutput() )                                 , t_slots, SLOT( readyReadStandardOutput() )                                 , Qt::AutoConnection );
    else if( signal == ( QString ) "started()" )                                 ret = object->connect( object, SIGNAL( started() )                                                 , t_slots, SLOT( started() )                                                 , Qt::AutoConnection );
    else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , t_slots, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
+   /* QComboBox */
+   else if( signal == ( QString ) "activated(text)" )                           ret = object->connect( object, SIGNAL( activated( const QString & ) )                              , t_slots, SLOT( activated( const QString & ) )                              , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentIndexChanged(text)" )                 ret = object->connect( object, SIGNAL( currentIndexChanged( const QString & ) )                    , t_slots, SLOT( currentIndexChanged( const QString & ) )                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "editTextChanged(text)" )                     ret = object->connect( object, SIGNAL( editTextChanged( const QString & ) )                        , t_slots, SLOT( editTextChanged( const QString & ) )                        , Qt::AutoConnection );
+   else if( signal == ( QString ) "highlighted(text)" )                         ret = object->connect( object, SIGNAL( highlighted( const QString & ) )                            , t_slots, SLOT( highlighted( const QString & ) )                            , Qt::AutoConnection );
    else ret = false;
 
    if( ret == true )
@@ -735,6 +744,11 @@ static bool disconnect_signal( QObject * object, const char * signal )
    else if( signal == ( QString ) "readyReadStandardOutput()" )                 return object->disconnect( SIGNAL( readyReadStandardOutput() ) );
    else if( signal == ( QString ) "started()" )                                 return object->disconnect( SIGNAL( started() ) );
    else if( signal == ( QString ) "stateChanged(int)" )                         return object->disconnect( SIGNAL( stateChanged( int ) ) );
+   /* QComboBox */
+   else if( signal == ( QString ) "activated(text)" )                           return object->disconnect( SIGNAL( activated( const QString & ) ) );
+   else if( signal == ( QString ) "currentIndexChanged(text)" )                 return object->disconnect( SIGNAL( currentIndexChanged( const QString & ) ) );
+   else if( signal == ( QString ) "editTextChanged(text)" )                     return object->disconnect( SIGNAL( editTextChanged( const QString & ) ) );
+   else if( signal == ( QString ) "highlighted(text)" )                         return object->disconnect( SIGNAL( highlighted( const QString & ) ) );
 
    return false;
 }
