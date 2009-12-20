@@ -87,27 +87,24 @@
  *   20/07/2002.
  */
 
-/* Calling conventions */
-#define DLL_CDECL                DC_CALL_CDECL
-#define DLL_STDCALL              DC_CALL_STD
-
-/* Parameter passing mode */
+/* Call flags */
 #define DLL_CALLMODE_NORMAL      0x0000
 #define DLL_CALLMODE_COPY        0x2000
-
 #define DC_MICROSOFT             0x0000      /* Default */
 #define DC_BORLAND               0x0001      /* Borland compatible */
 #define DC_CALL_CDECL            0x0010      /* __cdecl */
-#define DC_CALL_STD              0x0020      /* __stdcall */
+#define DC_CALL_STDCALL          0x0020      /* __stdcall */
 #define DC_RETVAL_MATH4          0x0100      /* Return value in ST */
 #define DC_RETVAL_MATH8          0x0200      /* Return value in ST */
+#define DC_UNICODE               0x0400
+#define DC_CALL_STDCALL_BO       ( DC_CALL_STDCALL | DC_BORLAND )
+#define DC_CALL_STDCALL_MS       ( DC_CALL_STDCALL | DC_MICROSOFT )
+#define DC_CALL_STDCALL_M8       ( DC_CALL_STDCALL | DC_RETVAL_MATH8 )
 
-#define DC_CALL_STD_BO           ( DC_CALL_STD | DC_BORLAND )
-#define DC_CALL_STD_MS           ( DC_CALL_STD | DC_MICROSOFT )
-#define DC_CALL_STD_M8           ( DC_CALL_STD | DC_RETVAL_MATH8 )
+/* Parameter flags */
+#define DC_PARFLAG_ARGPTR        0x0002
 
-#define DC_FLAG_ARGPTR           0x00000002
-
+/* C Types */
 #define CTYPE_VOID               9
 #define CTYPE_CHAR               1
 #define CTYPE_UNSIGNED_CHAR      -1
@@ -148,8 +145,8 @@ typedef union
 
 typedef struct
 {
-   DWORD       dwFlags;          /* Parameter flags */
-   int         nWidth;           /* Byte width */
+   int         iParFlags;        /* Parameter flags */
+   int         iWidth;           /* Byte width */
    union
    {
       BYTE     bArg;             /* 1-byte argument */
@@ -162,12 +159,14 @@ typedef struct
 
 #pragma pack()
 
-HB_DYNRETVAL DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Parm[], void * pRet, int nRetSiz )
+#if ! defined( HB_OS_WIN_64 )
+
+static HB_DYNRETVAL hb_DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Parm[], void * pRet, int nRetSiz )
 {
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
    HB_DYNRETVAL Res = { 0 };
-#if defined( HB_OS_WIN_CE ) || defined( HB_OS_WIN_64 )
+#if defined( HB_OS_WIN_CE )
    HB_SYMBOL_UNUSED( iFlags );
    HB_SYMBOL_UNUSED( lpFunction );
    HB_SYMBOL_UNUSED( nArgs );
@@ -205,7 +204,7 @@ HB_DYNRETVAL DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Pa
    {
       nInd  = ( nArgs - 1 ) - i;
       /* Start at the back of the arg ptr, aligned on a DWORD */
-      nSize = ( Parm[ nInd ].nWidth + 3 ) / 4 * 4;
+      nSize = ( Parm[ nInd ].iWidth + 3 ) / 4 * 4;
       pArg  = ( BYTE * ) Parm[ nInd ].pArg + nSize - 4;
       dwStSize += ( DWORD ) nSize; /* Count no of bytes on stack */
 
@@ -214,7 +213,7 @@ HB_DYNRETVAL DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Pa
       while( nSize > 0 )
       {
          /* Copy argument to the stack */
-         if( Parm[ nInd ].dwFlags & DC_FLAG_ARGPTR )
+         if( Parm[ nInd ].iParFlags & DC_PARFLAG_ARGPTR )
          {
             /* Arg has a ptr to a variable that has the arg */
             dwVal = ( DWORD ) pArg; /* Get first four bytes */
@@ -369,6 +368,8 @@ HB_DYNRETVAL DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Pa
    return Res;
 }
 
+#endif
+
 /*
  * ==================================================================
  */
@@ -377,17 +378,26 @@ typedef struct
 {
    HMODULE  hDLL;       /* Handle */
    HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
-   DWORD    dwFlags;    /* Calling Flags */
-   FARPROC  lpFunc;     /* Function Address */
+   int      iCallFlags; /* Calling Flags */
+   FARPROC  lpFunction; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
 
 #define _DLLEXEC_MAXPARAM   15
 
 #if defined( HB_OS_WIN_64 )
 
-static HB_U64 hb_u64par( int iParam )
+typedef struct
 {
-   PHB_ITEM pParam = hb_param( iParam, HB_IT_ANY );
+   HB_BOOL bUNICODE;
+   int     iRetType;
+   int     iFirst;
+   int     iString;
+   void ** hString;
+} HB_WINCALL, * PHB_WINCALL;
+
+static HB_U64 hb_u64par( PHB_WINCALL wcall, int iParam )
+{
+   PHB_ITEM pParam = hb_param( wcall->iFirst + iParam, HB_IT_ANY );
    HB_U64 r = 0;
 
    if( pParam )
@@ -411,7 +421,10 @@ static HB_U64 hb_u64par( int iParam )
 
          case HB_IT_STRING:
          case HB_IT_MEMO:
-            r = ( HB_PTRUINT ) hb_itemGetCPtr( pParam );
+            if( wcall->bUNICODE )
+               r = ( HB_PTRUINT ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->hString[ wcall->iString++ ], NULL );
+            else
+               r = ( HB_PTRUINT ) hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->hString[ wcall->iString++ ], NULL );
             break;
       }
    }
@@ -419,9 +432,9 @@ static HB_U64 hb_u64par( int iParam )
    return r;
 }
 
-static void hb_u64ret( int iType, HB_U64 nValue )
+static void hb_u64ret( PHB_WINCALL wcall, HB_U64 nValue )
 {
-   switch( iType )
+   switch( wcall->iRetType )
    {
       case CTYPE_VOID:
          hb_ret();
@@ -450,7 +463,10 @@ static void hb_u64ret( int iType, HB_U64 nValue )
 
       case CTYPE_CHAR_PTR:
       case CTYPE_UNSIGNED_CHAR_PTR:
-         hb_retc( ( char * ) nValue );
+         if( wcall->bUNICODE )
+            hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nValue );
+         else
+            hb_retstr( hb_setGetOSCP(), ( const char * ) nValue );
          break;
 
       case CTYPE_INT_PTR:
@@ -473,6 +489,7 @@ static void hb_u64ret( int iType, HB_U64 nValue )
    }
 }
 
+typedef HB_U64( WINAPI * WIN64_00 ) ( void );
 typedef HB_U64( WINAPI * WIN64_01 ) ( HB_U64 );
 typedef HB_U64( WINAPI * WIN64_02 ) ( HB_U64, HB_U64 );
 typedef HB_U64( WINAPI * WIN64_03 ) ( HB_U64, HB_U64, HB_U64 );
@@ -489,6 +506,7 @@ typedef HB_U64( WINAPI * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB
 typedef HB_U64( WINAPI * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 typedef HB_U64( WINAPI * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 
+static HB_U64 win64_00( FARPROC p )                                                                                                                                                                                     { return ( ( WIN64_00 ) *p )(); }
 static HB_U64 win64_01( FARPROC p, HB_U64 p01 )                                                                                                                                                                         { return ( ( WIN64_01 ) *p )( p01 ); }
 static HB_U64 win64_02( FARPROC p, HB_U64 p01, HB_U64 p02 )                                                                                                                                                             { return ( ( WIN64_02 ) *p )( p01, p02 ); }
 static HB_U64 win64_03( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03 )                                                                                                                                                 { return ( ( WIN64_03 ) *p )( p01, p02, p03 ); }
@@ -508,34 +526,50 @@ static HB_U64 win64_15( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p0
 #endif
 
 /* Based originally on CallDLL() from What32 */
-static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
+static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
 {
 #if defined( HB_OS_WIN_64 )
+   HB_WINCALL wcall;
 
-   HB_SYMBOL_UNUSED( iFlags );
-   HB_SYMBOL_UNUSED( xec );
+   HB_SYMBOL_UNUSED( iCallFlags );
 
    --iFirst;
+   iParams -= iFirst;
 
-   switch( iParams - iFirst )
+   wcall.bUNICODE = ( xec != NULL ) && ( xec->iCallFlags & DC_UNICODE );
+   wcall.iRetType = iRtype;
+   wcall.iFirst   = iFirst;
+   wcall.iString  = 0;
+   wcall.hString  = iParams ? ( void ** ) hb_xgrab( iParams * sizeof( void * ) ) : NULL;
+
+   switch( iParams )
    {
-      case  1: hb_u64ret( iRtype, win64_01( lpFunction, hb_u64par( iFirst + 1 ) ) ); break;
-      case  2: hb_u64ret( iRtype, win64_02( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ) ) ); break;
-      case  3: hb_u64ret( iRtype, win64_03( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ) ) ); break;
-      case  4: hb_u64ret( iRtype, win64_04( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ) ) ); break;
-      case  5: hb_u64ret( iRtype, win64_05( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ) ) ); break;
-      case  6: hb_u64ret( iRtype, win64_06( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ) ) ); break;
-      case  7: hb_u64ret( iRtype, win64_07( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ) ) ); break;
-      case  8: hb_u64ret( iRtype, win64_08( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ) ) ); break;
-      case  9: hb_u64ret( iRtype, win64_09( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ) ) ); break;
-      case 10: hb_u64ret( iRtype, win64_10( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ) ) ); break;
-      case 11: hb_u64ret( iRtype, win64_11( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ) ) ); break;
-      case 12: hb_u64ret( iRtype, win64_12( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ) ) ); break;
-      case 13: hb_u64ret( iRtype, win64_13( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ) ) ); break;
-      case 14: hb_u64ret( iRtype, win64_14( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ), hb_u64par( iFirst + 14 ) ) ); break;
-      case 15: hb_u64ret( iRtype, win64_15( lpFunction, hb_u64par( iFirst + 1 ), hb_u64par( iFirst + 2 ), hb_u64par( iFirst + 3 ), hb_u64par( iFirst + 4 ), hb_u64par( iFirst + 5 ), hb_u64par( iFirst + 6 ), hb_u64par( iFirst + 7 ), hb_u64par( iFirst + 8 ), hb_u64par( iFirst + 9 ), hb_u64par( iFirst + 10 ), hb_u64par( iFirst + 11 ), hb_u64par( iFirst + 12 ), hb_u64par( iFirst + 13 ), hb_u64par( iFirst + 14 ), hb_u64par( iFirst + 15 ) ) ); break;
+      case  0: hb_u64ret( &wcall, win64_00( lpFunction ) ); break;
+      case  1: hb_u64ret( &wcall, win64_01( lpFunction, hb_u64par( &wcall, 1 ) ) ); break;
+      case  2: hb_u64ret( &wcall, win64_02( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ) ) ); break;
+      case  3: hb_u64ret( &wcall, win64_03( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ) ) ); break;
+      case  4: hb_u64ret( &wcall, win64_04( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ) ) ); break;
+      case  5: hb_u64ret( &wcall, win64_05( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ) ) ); break;
+      case  6: hb_u64ret( &wcall, win64_06( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ) ) ); break;
+      case  7: hb_u64ret( &wcall, win64_07( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ) ) ); break;
+      case  8: hb_u64ret( &wcall, win64_08( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ) ) ); break;
+      case  9: hb_u64ret( &wcall, win64_09( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ) ) ); break;
+      case 10: hb_u64ret( &wcall, win64_10( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ) ) ); break;
+      case 11: hb_u64ret( &wcall, win64_11( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ) ) ); break;
+      case 12: hb_u64ret( &wcall, win64_12( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ) ) ); break;
+      case 13: hb_u64ret( &wcall, win64_13( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ) ) ); break;
+      case 14: hb_u64ret( &wcall, win64_14( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ) ) ); break;
+      case 15: hb_u64ret( &wcall, win64_15( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ), hb_u64par( &wcall, 15 ) ) ); break;
       default:
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+
+   if( wcall.hString )
+   {
+      while( --wcall.iString >= 0 )
+         hb_strfree( wcall.hString[ wcall.iString ] );
+
+      hb_xfree( wcall.hString );
    }
 
 #else
@@ -549,15 +583,15 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec
 
    if( xec )
    {
-      iFlags     = xec->dwFlags;
-      lpFunction = xec->lpFunc;
+      iCallFlags = xec->iCallFlags;
+      lpFunction = xec->lpFunction;
 
       /* TODO: Params maybe explictly specified in xec! */
    }
 
    iArgCnt = iParams - iFirst + 1;
 
-   iFlags &= 0x00ff;  /* Calling Convention */
+   iCallFlags &= 0x00FF;  /* Calling Convention */
 
    if( iRtype == 0 )
       iRtype = CTYPE_UNSIGNED_LONG;
@@ -573,20 +607,20 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec
          switch( HB_ITEM_TYPE( pParam ) )
          {
             case HB_IT_NIL:
-               Parm[ iCnt ].nWidth = sizeof( void * );
+               Parm[ iCnt ].iWidth = sizeof( void * );
                /* TOFIX: Store NULL pointer in pointer variable. */
                Parm[ iCnt ].numargs.dwArg = 0;
                break;
 
             case HB_IT_POINTER:
-               Parm[ iCnt ].nWidth = sizeof( void * );
+               Parm[ iCnt ].iWidth = sizeof( void * );
                /* TOFIX: Store pointer in pointer variable. */
                Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetPtr( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
                   Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
-                  Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
+                  Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
                }
                break;
 
@@ -595,33 +629,33 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec
             case HB_IT_DATE:
             case HB_IT_LOGICAL:
                /* TOFIX: HB_IT_LONG is 64 bit integer */
-               Parm[ iCnt ].nWidth = sizeof( DWORD );
+               Parm[ iCnt ].iWidth = sizeof( DWORD );
                Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetNL( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
                   Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
-                  Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
+                  Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
                }
                break;
 
             case HB_IT_DOUBLE:
-               Parm[ iCnt ].nWidth = sizeof( double );
+               Parm[ iCnt ].iWidth = sizeof( double );
                Parm[ iCnt ].numargs.dArg = hb_itemGetND( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
-                  Parm[ iCnt ].nWidth = sizeof( void * );
+                  Parm[ iCnt ].iWidth = sizeof( void * );
                   Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dArg );
-                  Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
+                  Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
                }
 
-               iFlags |= DC_RETVAL_MATH8;
+               iCallFlags |= DC_RETVAL_MATH8;
                break;
 
             case HB_IT_STRING:
             case HB_IT_MEMO:
-               Parm[ iCnt ].nWidth = sizeof( void * );
+               Parm[ iCnt ].iWidth = sizeof( void * );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
@@ -630,13 +664,13 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec
                }
                else
                {
-                  if( iFlags & DLL_CALLMODE_COPY )
+                  if( iCallFlags & DLL_CALLMODE_COPY )
                      pParam = hb_itemUnShareString( pParam );
 
                   Parm[ iCnt ].pArg = ( void * ) hb_itemGetCPtr( pParam );
                }
 
-               Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
+               Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
                break;
 
             case HB_IT_ARRAY:
@@ -651,7 +685,7 @@ static void DllExec( int iFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec
       }
    }
 
-   rc = DynaCall( iFlags, lpFunction, iArgCnt, Parm, NULL, 0 );
+   rc = hb_DynaCall( iCallFlags, lpFunction, iArgCnt, Parm, NULL, 0 );
 
    if( iArgCnt > 0 )
    {
@@ -778,22 +812,21 @@ static const HB_GC_FUNCS s_gcDllFuncs =
    hb_gcDummyMark
 };
 
-
 static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam )
 {
 #if defined( HB_OS_WIN_CE )
    void * hStr;
-   ULONG ulLen;
-   LPCWSTR szProc = hb_parstr_u16( iParam, HB_CDP_ENDIAN_NATIVE, &hStr, &ulLen );
+   HB_SIZE nLen;
+   LPCWSTR szProc = hb_parstr_u16( iParam, HB_CDP_ENDIAN_NATIVE, &hStr, &nLen );
    FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
                   ( LPCWSTR ) ( HB_PTRDIFF ) ( hb_parni( iParam ) & 0x0FFFF ) );
 
    if( ! lpFunction && szProc ) /* try with WIDE suffix? */
    {
-      LPWSTR pszProcW = ( LPWSTR ) hb_xgrab( ( ulLen + 2 ) * sizeof( WCHAR ) );
-      memcpy( pszProcW, szProc, ulLen * sizeof( WCHAR ) );
-      pszProcW[ ulLen++ ] = L'W';
-      pszProcW[ ulLen++ ] = 0;
+      LPWSTR pszProcW = ( LPWSTR ) hb_xgrab( ( nLen + 2 ) * sizeof( WCHAR ) );
+      memcpy( pszProcW, szProc, nLen * sizeof( WCHAR ) );
+      pszProcW[ nLen++ ] = L'W';
+      pszProcW[ nLen++ ] = 0;
       lpFunction = GetProcAddress( hDLL, pszProcW );
       hb_xfree( pszProcW );
    }
@@ -873,7 +906,7 @@ HB_FUNC( DLLCALL )
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
-      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
+      hb_DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
 
       if( HB_ISCHAR( 1 ) )
          FreeLibrary( hDLL );
@@ -904,10 +937,10 @@ HB_FUNC( DLLPREPARECALL )
 
    if( xec->hDLL )
    {
-      xec->lpFunc = hb_getprocaddress( xec->hDLL, 3 );
-      if( xec->lpFunc )
+      xec->lpFunction = hb_getprocaddress( xec->hDLL, 3 );
+      if( xec->lpFunction )
       {
-         xec->dwFlags = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : DC_CALL_STD;
+         xec->iCallFlags = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : DC_CALL_STDCALL;
          hb_retptrGC( xec );
          return;
       }
@@ -925,8 +958,8 @@ HB_FUNC( DLLEXECUTECALL )
 {
    PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
 
-   if( xec && xec->hDLL && xec->lpFunc )
-      DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
+   if( xec && xec->hDLL && xec->lpFunction )
+      hb_DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
 }
 
 #endif /* HB_COMPAT_XPP */
@@ -937,17 +970,17 @@ HB_FUNC( DLLEXECUTECALL )
    GetProcAddress() above. Note that it is hardcoded to use PASCAL calling convention. */
 HB_FUNC( CALLDLL )
 {
-   DllExec( DC_CALL_STD, 0, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   hb_DllExec( DC_CALL_STDCALL, 0, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   DllExec( DC_CALL_STD, CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   hb_DllExec( DC_CALL_STDCALL, CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   DllExec( DC_CALL_STD, hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
+   hb_DllExec( DC_CALL_STDCALL, hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
 }
 
 #endif /* HB_OS_WIN && && !__CYGWIN__ !HB_NO_ASM */
