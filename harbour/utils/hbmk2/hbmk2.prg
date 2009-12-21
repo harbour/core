@@ -2806,7 +2806,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] == "dos"
             /* workaround for not included automatically CLIB in pure C mode DOS builds */
-            cOpt_Link += " LIB clib3r"
+            AAdd( l_aLIBSYS, "clib3r" )
          ENDIF
          cBin_Lib := "wlib" + cCCEXT
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"

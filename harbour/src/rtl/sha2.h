@@ -52,7 +52,7 @@
 #define SHA2_TYPES
 typedef unsigned char uint8;
 typedef unsigned int  uint32;
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ ) || defined( _MSC_VER )
 typedef unsigned __int64 uint64;
 #else
 typedef unsigned long long uint64;
