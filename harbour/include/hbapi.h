@@ -583,6 +583,8 @@ extern HB_EXPORT  void     hb_gcFree( void * pAlloc ); /* deallocates a memory a
 extern HB_EXPORT  void *   hb_gcLock( void * pAlloc ); /* do not release passed memory block */
 extern HB_EXPORT  void *   hb_gcUnlock( void * pAlloc ); /* passed block is allowed to be released */
 extern HB_EXPORT  void     hb_gcMark( void * pAlloc ); /* mark given block as used */
+extern HB_EXPORT  void     hb_gcRefInc( void * pAlloc );  /* increment reference counter */
+extern HB_EXPORT  void     hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 
 extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark function */
 
@@ -604,14 +606,10 @@ extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
 
 extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
-extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
-extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return HB_TRUE when 0 reached */
-extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
 
 #if 0
 #define hb_gcRefInc( p )      hb_xRefInc( HB_GC_PTR( p ) )
-#define hb_gcRefDec( p )      hb_xRefDec( HB_GC_PTR( p ) )
 #define hb_gcRefCount( p )    hb_xRefCount( HB_GC_PTR( p ) )
 #define hb_gcFunc( p )        ( HB_GC_PTR( p )->pFunc )
 #endif

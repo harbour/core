@@ -298,13 +298,6 @@ void hb_gcRefInc( void * pBlock )
    hb_xRefInc( HB_GC_PTR( pBlock ) );
 }
 
-/* decrement reference counter, return TRUE when 0 reached */
-#undef hb_gcRefDec
-BOOL hb_gcRefDec( void * pBlock )
-{
-   return hb_xRefDec( HB_GC_PTR( pBlock ) );
-}
-
 /* decrement reference counter and free the block when 0 reached */
 #undef hb_gcRefFree
 void hb_gcRefFree( void * pBlock )
