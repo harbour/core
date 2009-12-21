@@ -4,8 +4,8 @@
 
 #: hbmk2.prg:7106
 #, c-format
-msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr "As opá‰es em um arquivo .hbc devem estar em linhas separadas e s∆o: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[m¢dulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLinhas iniciadas com '#' s∆o interpretadas como coment†rios e ser∆o ignoradas"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr "As opá‰es em um arquivo .hbc devem estar em linhas separadas e s∆o: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[m¢dulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLinhas iniciadas com '#' s∆o interpretadas como coment†rios e ser∆o ignoradas"
 
 #: hbmk2.prg:799
 #, c-format
@@ -971,4 +971,3 @@ msgstr "lista de idiomas Ö serem substituidos nas macros %1$s nos arquivos .pot/
 #, c-format
 msgid "stop after running Harbour compiler"
 msgstr "interromper ap¢s executar o compilador Harbour"
-
