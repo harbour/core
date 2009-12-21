@@ -427,7 +427,7 @@ static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
 
    if ( pArea->ulRecCount + 1 >= pArea->ulRecMax )
    {
-      pArea->pRow = ( PHB_ITEM * ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( PHB_ITEM ) );
+      pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
       pArea->pRowFlags = ( BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( BYTE ) );
       pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
    }
@@ -464,7 +464,7 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM 
 {
    if ( pArea->bRecordFlags & SQLDD_FLAG_CACHED )
    {
-      hb_arrayGet( pArea->pRecord, uiIndex, pItem );
+      hb_arrayGet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
       return HB_SUCCESS;
    }
    return pArea->pSDD->GetValue( pArea, uiIndex, pItem );
@@ -543,7 +543,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM 
         ( HB_IS_LOGICAL( pItem ) && pField->uiType == HB_FT_LOGICAL ) ||
         HB_IS_NIL( pItem ) )
    {
-       hb_arraySet( pArea->pRecord, uiIndex, pItem );
+       hb_arraySet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
    }
    else
    {
@@ -746,7 +746,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->ulRecCount = 0;
 
-   pArea->pRow = ( PHB_ITEM * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( PHB_ITEM ) );
+   pArea->pRow = ( void ** ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
    pArea->pRowFlags = ( BYTE * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( BYTE ) );
    pArea->ulRecMax = SQLDD_ROWSET_RESIZE;
 

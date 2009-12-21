@@ -95,10 +95,10 @@ typedef struct _SQLBASEAREA
    ULONG                      ulRecCount;    /* Total records */
    ULONG                      ulRecMax;      /* Size of pRow, pRowFlags buffer */
 
-   PHB_ITEM *                 pRow;          /* array of native pointers or cached PHB_ITEM */
+   void **                    pRow;          /* array of native pointers or cached PHB_ITEM */
    BYTE *                     pRowFlags;
 
-   PHB_ITEM                   pRecord;
+   void *                     pRecord;
    BYTE                       bRecordFlags;
 
    void *                     pResult;          /* SQL result */
