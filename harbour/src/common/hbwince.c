@@ -187,7 +187,6 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    /* use registry instead of "environment variable". */
    HKEY hk;
    LONG lret;
-   LPBYTE lpData;
    DWORD dwType = REG_SZ, cbData;
    TCHAR buf[ MAX_PATH ] = { 0 };
    LPWSTR wname;
@@ -202,28 +201,25 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
       return 0;
    }
 
-   lpData = ( LPBYTE ) buf;
    cbData = MAX_PATH * sizeof( *buf );
    wname = hb_mbtowc( name );
-
-   lret = RegQueryValueExW( hk, wname, NULL, &dwType, lpData, &cbData );
+   lret = RegQueryValueExW( hk, wname, NULL, &dwType, ( LPBYTE ) buf, &cbData );
+   hb_xfree( wname );
    RegCloseKey( hk );
 
    if( lret != ERROR_SUCCESS )
    {
       if( value && size )
          value[ 0 ] = '\0';
-      hb_xfree( wname );
       return 0;
    }
 
-   avalue = hb_wctomb( ( LPCWSTR ) lpData );
+   avalue = hb_wctomb( buf );
    if( value && size )
       hb_strncpy( value, avalue, size - 1 );
    size = strlen( avalue );
 
    hb_xfree( avalue );
-   hb_xfree( wname );
 
    return size;
 }

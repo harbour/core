@@ -60,16 +60,6 @@
 
 HB_EXTERN_BEGIN
 
-static HB_GARBAGE_FUNC( hb_pp_Destructor );
-static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
-                                char cPrefix, int iCode,
-                                const char * szParam1, const char * szParam2 );
-static void hb_pp_Disp( void * cargo, const char * szMessage );
-static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
-                                  int iValue );
-
-HB_EXTERN_END
-
 static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
                                 char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
@@ -121,6 +111,8 @@ static HB_GARBAGE_FUNC( hb_pp_Destructor )
       * pStatePtr = NULL;
    }
 }
+
+HB_EXTERN_END
 
 static const HB_GC_FUNCS s_gcPPFuncs =
 {

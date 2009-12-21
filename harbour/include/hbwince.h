@@ -183,6 +183,12 @@ extern char * strerror( int errnum );
    #endif
 #endif /* HB_OS_WIN_USED && _MSC_VER */
 
+#if !defined( GetEnvironmentVariable )
+   DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
+   DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
+   #define GetEnvironmentVariable GetEnvironmentVariableW
+#endif
+
 #endif /* HB_OS_WIN_CE */
 
 extern HB_EXPORT wchar_t * hb_mbtowc( const char *srcA );
