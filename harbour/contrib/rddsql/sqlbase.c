@@ -427,7 +427,7 @@ static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
 
    if ( pArea->ulRecCount + 1 >= pArea->ulRecMax )
    {
-      pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+      pArea->pRow = ( PHB_ITEM * ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( PHB_ITEM ) );
       pArea->pRowFlags = ( BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( BYTE ) );
       pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
    }
@@ -746,7 +746,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->ulRecCount = 0;
 
-   pArea->pRow = ( void ** ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
+   pArea->pRow = ( PHB_ITEM * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( PHB_ITEM ) );
    pArea->pRowFlags = ( BYTE * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( BYTE ) );
    pArea->ulRecMax = SQLDD_ROWSET_RESIZE;
 

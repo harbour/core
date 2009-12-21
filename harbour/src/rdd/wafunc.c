@@ -1248,7 +1248,7 @@ static HB_ERRCODE hb_rddEvalWABlock( AREAP pArea, void * pBlock )
    PHB_ITEM pItem;
 
    hb_rddSelectWorkAreaNumber( pArea->uiArea );
-   pItem = hb_vmEvalBlockOrMacro( pBlock );
+   pItem = hb_vmEvalBlockOrMacro( ( PHB_ITEM ) pBlock );
 
    if( hb_vmRequestQuery() != 0 ||
        ( HB_IS_LOGICAL( pItem ) && ! hb_itemGetL( pItem ) ) )

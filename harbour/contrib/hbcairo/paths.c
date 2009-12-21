@@ -121,8 +121,8 @@ HB_FUNC( CAIRO_GET_CURRENT_POINT )
       double    x, y;
       hb_arrayNew( pItem, 2 );
       cairo_get_current_point( pCairo, &x, &y );
-      hb_arraySetND( pCairo, 1, x );
-      hb_arraySetND( pCairo, 2, y );
+      hb_arraySetND( pItem, 1, x );
+      hb_arraySetND( pItem, 2, y );
    }
 }
 
