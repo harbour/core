@@ -736,13 +736,9 @@ hb_lnk_request()
     gt="\${HB_GT_REQ%% *}"
     if [ -n "\$gt" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         echo "#include \\"hbinit.h\\""
-        echo "HB_EXTERN_BEGIN"
-        echo "extern \${HB_LNK_ATTR} const char * hb_gt_szNameDefault;"
-        echo "extern \${HB_LNK_ATTR} void hb_vmSetLinkedMain( const char * szMain );"
-        echo "HB_EXTERN_END"
         echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
         if [ -n "\$gt" ]; then
-            echo "   hb_gt_szNameDefault = \\"\$gt\\";"
+            echo "   hb_vmSetDefaultGT( \\"\$gt\\" );"
         fi
         if [ -n "\${HB_MAIN_FUNC}" ]; then
             if [ \${HB_MAIN_FUNC} != \${HB_MAIN_FUNC/x/y} ]; then

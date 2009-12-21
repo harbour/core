@@ -11514,6 +11514,11 @@ void hb_vmSetLinkedMain( const char * szMain )
    s_vm_pszLinkedMain = szMain;
 }
 
+void hb_vmSetDefaultGT( const char * szGtName )
+{
+   hb_gtSetDefault( szGtName );
+}
+
 /* Force linking default language and codepage modules */
 HB_CODEPAGE_REQUEST( HB_CODEPAGE_DEFAULT )
 HB_LANG_REQUEST( HB_LANG_DEFAULT )

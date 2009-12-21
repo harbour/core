@@ -1354,7 +1354,7 @@ ifeq ($(HB_INIT_DONE),)
          endif
       endif
 
-      ifeq ($(HB_PLATFORM)-$(HB_COMPILER),dos-watcom)
+      ifeq ($(HB_PLATFORM),dos)
          HB_DYNLIB_BASE_ST := harbour
          HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)

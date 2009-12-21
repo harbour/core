@@ -19,33 +19,63 @@ endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
-# We're linking them directly to Harbour dynlib now.
-#ifneq ($(HB_HAS_PCRE_LOCAL),)
-#   SYSLIBS += hbpcre
-#endif
-#ifneq ($(HB_HAS_ZLIB_LOCAL),)
-#   SYSLIBS += hbzlib
-#endif
-
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
 
-HB_LIBS_TPL = \
-   hbextern \
-   hbdebug \
-   $(_HB_VM) \
+ifeq ($(HB_LINKING_VMMT),yes)
+   _HB_VM := hbvmmt
+else
+   _HB_VM := hbvm
+endif
+
+HB_DYN_LIBS := \
+   hbcommon \
+   hbpp \
    hbrtl \
+   hbmacro \
    hblang \
    hbcpage \
-   $(HB_GT_LIBS) \
-   $(_HB_RDD) \
-   hbrtl \
+   hbextern \
+   hbrdd \
+   rddntx \
+   rddnsx \
+   rddcdx \
+   rddfpt \
+   hbsix \
+   hbhsx \
+   hbusrrdd \
+   gtcgi \
+   gtpca \
+   gtstd \
+   gtwvt \
+   gtgui \
+   gtwin \
+   gtos2 \
+   gttrm \
+   gtcrs \
+   gtsln \
+   gtxwc \
    $(_HB_VM) \
-   hbmacro \
-   hbcplr \
-   hbpp \
-   hbcommon
+   hbmaindllh
+
+ifneq ($(HB_HAS_PCRE_LOCAL),)
+   HB_DYN_LIBS += hbpcre
+endif
+ifneq ($(HB_HAS_ZLIB_LOCAL),)
+   HB_DYN_LIBS += hbzlib
+endif
+
+#   hbcplr \
+#   hbdebug \
+
+ifneq ($(HB_HAS_PCRE_LOCAL),)
+   HB_DYN_LIBS += hbpcre
+endif
+ifneq ($(HB_HAS_ZLIB_LOCAL),)
+   HB_DYN_LIBS += hbzlib
+endif
+
 
 DYN_FILE :=
 IMP_FILE :=
@@ -63,7 +93,11 @@ ifneq ($(IMP_DIR),)
    IMP_FILE := $(IMP_DIR)/$(IMP_NAME)
 endif
 
-ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*$(OBJ_DYN_POSTFIX)$(OBJ_EXT))))
+ifeq ($(HB_DYN_FROM_LIBS),yes)
+   ALL_OBJS := $(subst /,$(DIRSEP),$(foreach lib,$(HB_DYN_LIBS),$(wildcard $(LIB_DIR)/$(LIB_PREF)$(lib)$(LIB_EXT))))
+else
+   ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*$(OBJ_DYN_POSTFIX)$(OBJ_EXT))))
+endif
 
 first:: dirbase descend
 

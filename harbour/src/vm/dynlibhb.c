@@ -68,7 +68,9 @@
 #if !defined( HB_HAS_DLFCN ) && \
     ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_DARWIN ) || \
-      defined( HB_OS_BSD ) || defined( HB_OS_BEOS )  )
+      defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
+      ( defined( __DJGPP__ ) && \
+        ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) )
 #  define HB_HAS_DLFCN
 #endif
 

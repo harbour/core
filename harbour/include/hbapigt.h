@@ -156,6 +156,7 @@ typedef struct
 extern void hb_gtIsGtRef( void * );
 
 extern HB_EXPORT void   hb_gtStartupInit( void );
+extern HB_EXPORT void   hb_gtSetDefault( const char * szGtName );
 extern HB_EXPORT void * hb_gtAlloc( void * hGT );
 extern HB_EXPORT void   hb_gtRelease( void * hGT );
 extern HB_EXPORT void   hb_gtAttach( void * hGT );

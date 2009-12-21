@@ -590,7 +590,6 @@ extern void hb_gt_gcMark( void );
 #define HB_GTSUPER_GFXTEXT(g,t,l,s,c,h,w)        (HB_GTSUPERTABLE(g))->GfxText(g,t,l,s,c,h,w)
 #define HB_GTSUPER_WHOCARES(g,p)                 (HB_GTSUPERTABLE(g))->WhoCares(g,p)
 
-extern HB_EXPORT void   hb_gtSetDefault( const char * szGtName );
 extern HB_EXPORT BOOL   hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 

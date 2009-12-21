@@ -3701,11 +3701,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   ELSE
                      cFile += '#include "hbinit.h"'                                                  + Chr( 10 ) +;
                               ''                                                                     + Chr( 10 ) +;
-                              'HB_EXTERN_BEGIN'                                                      + Chr( 10 ) +;
-                              'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'   + Chr( 10 ) +;
-                              'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'    + Chr( 10 ) +;
-                              'HB_EXTERN_END'                                                        + Chr( 10 ) +;
-                              ''                                                                     + Chr( 10 ) +;
                               'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                         + Chr( 10 )
                   ENDIF
                   IF hbmk[ _HBMK_cGT ] != NIL
@@ -3713,7 +3708,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
                         cFile += '   s_defaultGT = "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '";'           + Chr( 10 )
                      ELSE
-                        cFile += '   hb_gtSetDefault( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'      + Chr( 10 )
+                        cFile += '   hb_vmSetDefaultGT( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'      + Chr( 10 )
                      ENDIF
                   ENDIF
                   IF l_cMAIN != NIL

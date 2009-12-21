@@ -11,6 +11,7 @@ endif
 OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
+DYN_EXT := .dxe
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
@@ -38,6 +39,9 @@ endif
 ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    LDSTRIP := -s
    DYSTRIP := -s
+else
+   LDSTRIP :=
+   DYSTRIP :=
 endif
 
 SYSLIBPATHS :=
@@ -100,22 +104,34 @@ AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
-#DY := $(CC)
-#DFLAGS += -Wl,-shared $(LIBPATHS)
-#DY_OUT := -o$(subst x,x, )
-#DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
-#
-## NOTE: The empty line directly before 'endef' HAVE TO exist!
-#define dyn_object
-#   @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
-#
-#endef
-#define create_dynlib
-#   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-#   $(foreach file,$^,$(dyn_object))
-#   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) $(DYSTRIP)
-#endef
-#
-#DY_RULE = $(create_dynlib)
+ifeq ($(HB_BUILD_DLL),yes)
+
+   DY := dxe3gen
+   DFLAGS += $(LIBPATHS)
+   DY_OUT := -o$(subst x,x, )
+   DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
+
+   # due to limited size of ld parameter list use libraries directly
+   HB_DYN_FROM_LIBS := yes
+   DFLAGS += --whole-archive
+   DLIBS :=
+
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   define dyn_object
+      @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __dyn__.tmp
+
+   endef
+   define create_dynlib
+      @$(ECHO) $(ECHOQUOTE)$(DFLAGS) $(HB_USER_DFLAGS)$(ECHOQUOTE) > __dyn__.tmp
+      @$(ECHO) $(ECHOQUOTE)$(DY_OUT)$(DYN_DIR)/$@$(ECHOQUOTE) >> __dyn__.tmp
+      @$(ECHO) $(ECHOQUOTE)-Y $(IMP_FILE) -U $(DYSTRIP)$(ECHOQUOTE) >> __dyn__.tmp
+      $(foreach file,$^,$(dyn_object))
+      @$(ECHO) $(ECHOQUOTE)$(DLIBS)$(ECHOQUOTE) >> __dyn__.tmp
+      $(DY) @__dyn__.tmp
+   endef
+
+   DY_RULE = $(create_dynlib)
+
+endif # HB_BUILD_DLL
 
 include $(TOP)$(ROOT)config/rules.mk

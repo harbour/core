@@ -1123,6 +1123,7 @@ extern void *   hb_i18n_alloc( void * cargo );
 #endif /* _HB_API_INTERNAL_ || _HB_I18N_INTERNAL_ */
 
 extern HB_EXPORT void         hb_vmSetLinkedMain( const char * szMain );
+extern HB_EXPORT void         hb_vmSetDefaultGT( const char * szGtName );
 
 /* misc */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
