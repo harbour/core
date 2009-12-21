@@ -105,7 +105,7 @@ QAction * insertSeparator ( QAction * before )
 bool isEmpty () const
 bool isTearOffEnabled () const
 bool isTearOffMenuVisible () const
-OSMenuRef macMenu ( OSMenuRef merge = 0 )
+// OSMenuRef macMenu ( OSMenuRef merge = 0 )
 QAction * menuAction () const
 void popup ( const QPoint & p, QAction * atAction = 0 )
 bool separatorsCollapsible () const
@@ -116,7 +116,7 @@ void setSeparatorsCollapsible ( bool collapse )
 void setTearOffEnabled ( bool )
 void setTitle ( const QString & title )
 QString title () const
-HMENU wceMenu ( bool create = false )
+// HMENU wceMenu ( bool create = false )
 </PROTOS>
 
 <SIGNALS>

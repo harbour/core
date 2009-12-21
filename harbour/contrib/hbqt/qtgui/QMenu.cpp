@@ -66,16 +66,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 33/35 [ 94.29% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  OSMenuRef macMenu ( OSMenuRef merge = 0 )
- *  HMENU wceMenu ( bool create = false )
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QMenu>
