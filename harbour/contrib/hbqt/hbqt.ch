@@ -67,13 +67,18 @@
 
 #ifndef _HBQT_CH
 
-#if defined( __HB_DEBUG__ )
-   #xtranslate HBQT_DEBUG( [<x,...>] ) => hb_TraceString( <x> )
-#else
-   #xtranslate HBQT_DEBUG( [<x,...>] ) => iif( .T.,, )
-#endif
+/*----------------------------------------------------------------------*/
 
+#include "hbtrace.ch"
+
+#xtranslate HBQT_DEBUG( [<x,...>] ) => HB_TRACE( HB_TR_DEBUG, <x> )
+
+/*----------------------------------------------------------------------*/
+
+/* Retained for compatibility */
 #define QT_PTROF( oObj )                          ( oObj )
+
+/*----------------------------------------------------------------------*/
 
 #define HBQT_RELEASE_WITH_DELETE                  0        // Release the QObject with delete operator
 #define HBQT_RELEASE_WITH_DESTRUTOR               1        // Release the QObject with his destructor

@@ -4,11 +4,11 @@
 
 #ifndef _XBP_CH
 
-#if defined( __HB_DEBUG__ )
-   #xtranslate HBXBP_DEBUG( [<x,...>] ) => hb_TraceString( <x> )
-#else
-   #xtranslate HBXBP_DEBUG( [<x,...>] ) => iif( .T.,, )
-#endif
+/*----------------------------------------------------------------------*/
+
+#include "hbtrace.ch"
+
+#xtranslate HBXBP_DEBUG( [<x,...>] ) => HB_TRACE( HB_TR_DEBUG, <x> )
 
 /*----------------------------------------------------------------------*/
 

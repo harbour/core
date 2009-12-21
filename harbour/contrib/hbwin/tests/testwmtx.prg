@@ -13,11 +13,10 @@ PROCEDURE Main()
    s_hMutex := wapi_CreateMutex( NIL, NIL, cAppName )
    IF ! Empty( s_hMutex ) .AND. wapi_GetLastError() == 0
       ? cAppName, "=> Hello World! OK."
-      WAIT
-      wapi_ReleaseMutex( s_hMutex )
    ELSE
       ? cAppName, "=> Application is running. Error", wapi_GetLastError()
-      WAIT
    ENDIF
+
+   WAIT
 
    RETURN
