@@ -89,9 +89,9 @@ void * hbqt_gcpointer( int iParam )
    if( p && p->ph )
       return p->ph;
    else if( HB_ISPOINTER( iParam ) )
-      return hb_parptr( iParam );
+      return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
    else
-      return( NULL );  /* Still better if RTE */
+      return NULL; /* TODO: Still better if RTE. */
 }
 
 void * hbqt_pPtrFromObj( int iParam )

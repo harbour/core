@@ -89,7 +89,7 @@ static HANDLE wapi_mutex_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_wapi_mutex_funcs, iParam );
 
-   return ( ph ? ( HANDLE ) *ph : NULL );
+   return ph ? ( HANDLE ) *ph : NULL;
 }
 
 /* HANDLE WINAPI CreateMutex( LPSECURITY_ATTRIBUTES lpMutexAttributes, BOOL bInitialOwner, LPCTSTR lpName ) */

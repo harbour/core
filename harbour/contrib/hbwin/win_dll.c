@@ -177,6 +177,9 @@ static HB_DYNRETVAL hb_DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_D
    int     i, nInd, nSize, nLoops;
    DWORD   dwEAX, dwEDX, dwVal, * pStack, dwStSize = 0;
    BYTE *  pArg;
+#if ! defined( __MINGW32__ ) && ! defined( __BORLANDC__ ) && ! defined( __DMC__ )
+   LPVOID  lpFunctionVoid = ( LPVOID ) lpFunction;
+#endif
 
    #if defined( __MINGW32__ )
    #elif defined( __BORLANDC__ ) || defined( __DMC__ )
@@ -325,7 +328,7 @@ static HB_DYNRETVAL hb_DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_D
       _asm sub esp, dwStSize    /* Adjust for our new parameters */
 
       /* Stack is now properly built, we can call the function */
-      _asm call [lpFunction]
+      _asm call [lpFunctionVoid]
 
       _asm mov dwEAX, eax       /* Save eax/edx registers */
       _asm mov dwEDX, edx       /* */
