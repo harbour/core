@@ -89,12 +89,12 @@ typedef struct
   QPointer< QFrame > pq;
 } QGC_POINTER_QFrame;
 
-QT_G_FUNC( release_QFrame )
+QT_G_FUNC( hbqt_gcRelease_QFrame )
 {
    QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QFrame                       p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QFrame                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFrame                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFrame                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -114,16 +114,16 @@ QT_G_FUNC( release_QFrame )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFrame                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFrame                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QFrame                      Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QFrame                      Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFrame                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFrame                      Object Already deleted!" ) );
    }
 }
 
@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QFrame( void * pObj )
    QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFrame ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QFrame;
+   p->func = hbqt_gcRelease_QFrame;
    new( & p->pq ) QPointer< QFrame >( ( QFrame * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFrame                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

@@ -83,22 +83,22 @@
  * virtual ~QListWidgetItem ()
  */
 
-QT_G_FUNC( release_QListWidgetItem )
+QT_G_FUNC( hbqt_gcRelease_QListWidgetItem )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QListWidgetItem              p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QListWidgetItem             ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QListWidgetItem              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QListWidgetItem             ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QListWidgetItem * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QListWidgetItem             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QListWidgetItem             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QListWidgetItem             Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QListWidgetItem             Object Already deleted!" ) );
    }
 }
 
@@ -107,7 +107,7 @@ void * hbqt_gcAllocate_QListWidgetItem( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QListWidgetItem;
+   p->func = hbqt_gcRelease_QListWidgetItem;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QListWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

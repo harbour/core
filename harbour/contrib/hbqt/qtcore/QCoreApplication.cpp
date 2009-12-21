@@ -81,7 +81,7 @@
  * ~QCoreApplication ()
  */
 
-QT_G_FUNC( release_QCoreApplication )
+QT_G_FUNC( hbqt_gcRelease_QCoreApplication )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

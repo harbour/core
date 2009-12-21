@@ -87,12 +87,12 @@ typedef struct
   QPointer< QDialog > pq;
 } QGC_POINTER_QDialog;
 
-QT_G_FUNC( release_QDialog )
+QT_G_FUNC( hbqt_gcRelease_QDialog )
 {
    QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDialog                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDialog                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -112,16 +112,16 @@ QT_G_FUNC( release_QDialog )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDialog                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QDialog                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QDialog                     Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDialog                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDialog                     Object Already deleted!" ) );
    }
 }
 
@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QDialog( void * pObj )
    QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QDialog;
+   p->func = hbqt_gcRelease_QDialog;
    new( & p->pq ) QPointer< QDialog >( ( QDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDialog                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

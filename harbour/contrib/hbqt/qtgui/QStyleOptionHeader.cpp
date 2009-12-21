@@ -84,22 +84,22 @@
  * QStyleOptionHeader ( const QStyleOptionHeader & other )
  */
 
-QT_G_FUNC( release_QStyleOptionHeader )
+QT_G_FUNC( hbqt_gcRelease_QStyleOptionHeader )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionHeader           p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionHeader          ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionHeader           p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionHeader          ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStyleOptionHeader * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionHeader          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionHeader          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionHeader          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionHeader          Object Already deleted!" ) );
    }
 }
 
@@ -108,7 +108,7 @@ void * hbqt_gcAllocate_QStyleOptionHeader( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyleOptionHeader;
+   p->func = hbqt_gcRelease_QStyleOptionHeader;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionHeader          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

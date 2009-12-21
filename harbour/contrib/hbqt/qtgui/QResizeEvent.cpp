@@ -75,7 +75,7 @@
  * QResizeEvent ( const QSize & size, const QSize & oldSize )
  */
 
-QT_G_FUNC( release_QResizeEvent )
+QT_G_FUNC( hbqt_gcRelease_QResizeEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

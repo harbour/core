@@ -81,7 +81,7 @@
  * QStyleHintReturnMask ()
  */
 
-QT_G_FUNC( release_QStyleHintReturnMask )
+QT_G_FUNC( hbqt_gcRelease_QStyleHintReturnMask )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

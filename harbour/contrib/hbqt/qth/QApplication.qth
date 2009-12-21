@@ -78,10 +78,10 @@ New      =
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
 
-void release_codeblocks();
+//void release_codeblocks();
 
-static QApplication * app = NULL;
-static bool hbqtinit = false;
+static QApplication * s_app = NULL;
+static bool s_hbqtinit = false;
 
 static int s_argc;
 static char ** s_argv;
@@ -97,7 +97,7 @@ static char ** s_argv;
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   hb_retptr( ( QApplication * ) app );
+   hb_retptr( ( QApplication * ) s_app );
 }
 
 static void hbqt_Exit( void * cargo )
@@ -114,12 +114,12 @@ static void hbqt_Init( void * cargo )
    s_argc = hb_cmdargARGC();
    s_argv = hb_cmdargARGV();
 
-   app = new QApplication( s_argc, s_argv );
+   s_app = new QApplication( s_argc, s_argv );
 
-   if( app )
-      hbqtinit = true;
+   if( s_app )
+      s_hbqtinit = true;
 
-   if( ! hbqtinit )
+   if( ! s_hbqtinit )
       hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
@@ -140,12 +140,12 @@ HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
 
 HB_FUNC( QT_QAPPLICATION_EXECUTE )
 {
-   hb_retni( app->exec() );
+   hb_retni( s_app->exec() );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )
 {
-   app->quit();
+   s_app->quit();
 }
 </CODE>
 

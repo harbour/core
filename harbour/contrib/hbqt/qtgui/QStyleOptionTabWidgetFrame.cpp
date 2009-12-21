@@ -81,22 +81,22 @@
  * QStyleOptionTabWidgetFrame ( const QStyleOptionTabWidgetFrame & other )
  */
 
-QT_G_FUNC( release_QStyleOptionTabWidgetFrame )
+QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabWidgetFrame )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame   p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame  ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionTabWidgetFrame   p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionTabWidgetFrame  ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStyleOptionTabWidgetFrame * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionTabWidgetFrame  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionTabWidgetFrame  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTabWidgetFrame  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionTabWidgetFrame  Object Already deleted!" ) );
    }
 }
 
@@ -105,7 +105,7 @@ void * hbqt_gcAllocate_QStyleOptionTabWidgetFrame( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyleOptionTabWidgetFrame;
+   p->func = hbqt_gcRelease_QStyleOptionTabWidgetFrame;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionTabWidgetFrame  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

@@ -99,22 +99,22 @@
  * virtual ~QStandardItem ()
  */
 
-QT_G_FUNC( release_QStandardItem )
+QT_G_FUNC( hbqt_gcRelease_QStandardItem )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItem                p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItem               ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItem                p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItem               ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStandardItem * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStandardItem               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStandardItem               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStandardItem               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStandardItem               Object Already deleted!" ) );
    }
 }
 
@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QStandardItem( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStandardItem;
+   p->func = hbqt_gcRelease_QStandardItem;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStandardItem               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

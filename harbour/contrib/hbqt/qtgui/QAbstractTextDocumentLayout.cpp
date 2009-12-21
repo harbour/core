@@ -75,7 +75,7 @@
  *
  */
 
-QT_G_FUNC( release_QAbstractTextDocumentLayout )
+QT_G_FUNC( hbqt_gcRelease_QAbstractTextDocumentLayout )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

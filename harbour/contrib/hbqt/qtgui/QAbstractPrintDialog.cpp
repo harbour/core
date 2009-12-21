@@ -90,7 +90,7 @@
  * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
  */
 
-QT_G_FUNC( release_QAbstractPrintDialog )
+QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

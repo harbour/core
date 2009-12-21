@@ -83,12 +83,12 @@ typedef struct
   QPointer< QDesktopWidget > pq;
 } QGC_POINTER_QDesktopWidget;
 
-QT_G_FUNC( release_QDesktopWidget )
+QT_G_FUNC( hbqt_gcRelease_QDesktopWidget )
 {
    QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget               p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDesktopWidget               p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDesktopWidget              ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -108,16 +108,16 @@ QT_G_FUNC( release_QDesktopWidget )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDesktopWidget              Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QDesktopWidget              Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QDesktopWidget              Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDesktopWidget              Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDesktopWidget              Object Already deleted!" ) );
    }
 }
 
@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QDesktopWidget( void * pObj )
    QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesktopWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QDesktopWidget;
+   p->func = hbqt_gcRelease_QDesktopWidget;
    new( & p->pq ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

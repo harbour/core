@@ -76,7 +76,7 @@
  * ~QKeyEvent ()
  */
 
-QT_G_FUNC( release_QKeyEvent )
+QT_G_FUNC( hbqt_gcRelease_QKeyEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

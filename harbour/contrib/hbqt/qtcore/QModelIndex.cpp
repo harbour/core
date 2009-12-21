@@ -77,22 +77,22 @@
  * ~QModelIndex ()
  */
 
-QT_G_FUNC( release_QModelIndex )
+QT_G_FUNC( hbqt_gcRelease_QModelIndex )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QModelIndex                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QModelIndex                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QModelIndex * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QModelIndex                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QModelIndex                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QModelIndex                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QModelIndex                 Object Already deleted!" ) );
    }
 }
 
@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QModelIndex( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QModelIndex;
+   p->func = hbqt_gcRelease_QModelIndex;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

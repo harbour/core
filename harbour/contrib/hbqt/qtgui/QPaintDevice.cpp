@@ -78,7 +78,7 @@
  * virtual ~QPaintDevice ()
  */
 
-QT_G_FUNC( release_QPaintDevice )
+QT_G_FUNC( hbqt_gcRelease_QPaintDevice )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

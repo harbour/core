@@ -88,12 +88,12 @@ typedef struct
   QPointer< QItemSelectionModel > pq;
 } QGC_POINTER_QItemSelectionModel;
 
-QT_G_FUNC( release_QItemSelectionModel )
+QT_G_FUNC( hbqt_gcRelease_QItemSelectionModel )
 {
    QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel          p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel          p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel         ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -113,16 +113,16 @@ QT_G_FUNC( release_QItemSelectionModel )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QItemSelectionModel         Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QItemSelectionModel         Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QItemSelectionModel         Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QItemSelectionModel         Object Already deleted!" ) );
    }
 }
 
@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QItemSelectionModel( void * pObj )
    QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QItemSelectionModel;
+   p->func = hbqt_gcRelease_QItemSelectionModel;
    new( & p->pq ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

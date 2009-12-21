@@ -90,12 +90,12 @@ typedef struct
   QPointer< QTabBar > pq;
 } QGC_POINTER_QTabBar;
 
-QT_G_FUNC( release_QTabBar )
+QT_G_FUNC( hbqt_gcRelease_QTabBar )
 {
    QGC_POINTER_QTabBar * p = ( QGC_POINTER_QTabBar * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTabBar                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTabBar                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -115,16 +115,16 @@ QT_G_FUNC( release_QTabBar )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTabBar                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QTabBar                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTabBar                     Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTabBar                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTabBar                     Object Already deleted!" ) );
    }
 }
 
@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QTabBar( void * pObj )
    QGC_POINTER_QTabBar * p = ( QGC_POINTER_QTabBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTabBar;
+   p->func = hbqt_gcRelease_QTabBar;
    new( & p->pq ) QPointer< QTabBar >( ( QTabBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

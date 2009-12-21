@@ -83,22 +83,22 @@
  * QConicalGradient ( qreal cx, qreal cy, qreal angle )
  */
 
-QT_G_FUNC( release_QConicalGradient )
+QT_G_FUNC( hbqt_gcRelease_QConicalGradient )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QConicalGradient             p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QConicalGradient            ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QConicalGradient             p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QConicalGradient            ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QConicalGradient * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QConicalGradient            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QConicalGradient            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QConicalGradient            Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QConicalGradient            Object Already deleted!" ) );
    }
 }
 
@@ -107,7 +107,7 @@ void * hbqt_gcAllocate_QConicalGradient( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QConicalGradient;
+   p->func = hbqt_gcRelease_QConicalGradient;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QConicalGradient            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

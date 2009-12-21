@@ -76,7 +76,7 @@
  *
  */
 
-QT_G_FUNC( release_QTextInlineObject )
+QT_G_FUNC( hbqt_gcRelease_QTextInlineObject )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

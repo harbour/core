@@ -86,12 +86,12 @@ typedef struct
   QPointer< QThread > pq;
 } QGC_POINTER_QThread;
 
-QT_G_FUNC( release_QThread )
+QT_G_FUNC( hbqt_gcRelease_QThread )
 {
    QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QThread                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QThread                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QThread                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -111,16 +111,16 @@ QT_G_FUNC( release_QThread )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QThread                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QThread                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QThread                     Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QThread                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QThread                     Object Already deleted!" ) );
    }
 }
 
@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QThread( void * pObj )
    QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QThread;
+   p->func = hbqt_gcRelease_QThread;
    new( & p->pq ) QPointer< QThread >( ( QThread * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QThread                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

@@ -91,12 +91,12 @@ typedef struct
   QPointer< QMovie > pq;
 } QGC_POINTER_QMovie;
 
-QT_G_FUNC( release_QMovie )
+QT_G_FUNC( hbqt_gcRelease_QMovie )
 {
    QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                       p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -116,16 +116,16 @@ QT_G_FUNC( release_QMovie )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QMovie                      Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMovie                      Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMovie                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMovie                      Object Already deleted!" ) );
    }
 }
 
@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QMovie( void * pObj )
    QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QMovie;
+   p->func = hbqt_gcRelease_QMovie;
    new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

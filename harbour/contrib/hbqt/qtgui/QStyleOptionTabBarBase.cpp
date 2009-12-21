@@ -81,22 +81,22 @@
  * QStyleOptionTabBarBase ( const QStyleOptionTabBarBase & other )
  */
 
-QT_G_FUNC( release_QStyleOptionTabBarBase )
+QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabBarBase )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase       p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase      ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionTabBarBase       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionTabBarBase      ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStyleOptionTabBarBase * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionTabBarBase      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionTabBarBase      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTabBarBase      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionTabBarBase      Object Already deleted!" ) );
    }
 }
 
@@ -105,7 +105,7 @@ void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyleOptionTabBarBase;
+   p->func = hbqt_gcRelease_QStyleOptionTabBarBase;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionTabBarBase      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

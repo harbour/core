@@ -80,7 +80,7 @@
  * ~QAbstractSlider ()
  */
 
-QT_G_FUNC( release_QAbstractSlider )
+QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

@@ -81,22 +81,22 @@
  * QLineF ( const QLine & line )
  */
 
-QT_G_FUNC( release_QLineF )
+QT_G_FUNC( hbqt_gcRelease_QLineF )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLineF                       p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLineF                      ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineF                       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineF                      ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QLineF * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QLineF                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QLineF                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLineF                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLineF                      Object Already deleted!" ) );
    }
 }
 
@@ -105,7 +105,7 @@ void * hbqt_gcAllocate_QLineF( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QLineF;
+   p->func = hbqt_gcRelease_QLineF;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLineF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

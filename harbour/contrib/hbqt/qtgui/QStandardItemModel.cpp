@@ -99,12 +99,12 @@ typedef struct
   QPointer< QStandardItemModel > pq;
 } QGC_POINTER_QStandardItemModel;
 
-QT_G_FUNC( release_QStandardItemModel )
+QT_G_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel           p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel           p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel          ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -124,16 +124,16 @@ QT_G_FUNC( release_QStandardItemModel )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QStandardItemModel          Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QStandardItemModel          Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStandardItemModel          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStandardItemModel          Object Already deleted!" ) );
    }
 }
 
@@ -142,7 +142,7 @@ void * hbqt_gcAllocate_QStandardItemModel( void * pObj )
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStandardItemModel;
+   p->func = hbqt_gcRelease_QStandardItemModel;
    new( & p->pq ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

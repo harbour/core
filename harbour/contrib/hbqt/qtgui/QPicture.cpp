@@ -77,22 +77,22 @@
  * ~QPicture ()
  */
 
-QT_G_FUNC( release_QPicture )
+QT_G_FUNC( hbqt_gcRelease_QPicture )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                     p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                    ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPicture                     p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPicture                    ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QPicture * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QPicture                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QPicture                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPicture                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QPicture                    Object Already deleted!" ) );
    }
 }
 
@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QPicture( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QPicture;
+   p->func = hbqt_gcRelease_QPicture;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPicture                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

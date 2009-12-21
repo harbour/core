@@ -75,7 +75,7 @@
  * QTextBlockGroup ( QTextDocument * document )
  */
 
-QT_G_FUNC( release_QTextBlockGroup )
+QT_G_FUNC( hbqt_gcRelease_QTextBlockGroup )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

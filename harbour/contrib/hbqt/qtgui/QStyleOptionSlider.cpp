@@ -81,22 +81,22 @@
  * QStyleOptionSlider ( const QStyleOptionSlider & other )
  */
 
-QT_G_FUNC( release_QStyleOptionSlider )
+QT_G_FUNC( hbqt_gcRelease_QStyleOptionSlider )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSlider           p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSlider          ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionSlider           p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionSlider          ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStyleOptionSlider * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionSlider          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionSlider          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSlider          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionSlider          Object Already deleted!" ) );
    }
 }
 
@@ -105,7 +105,7 @@ void * hbqt_gcAllocate_QStyleOptionSlider( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyleOptionSlider;
+   p->func = hbqt_gcRelease_QStyleOptionSlider;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionSlider          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

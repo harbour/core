@@ -80,7 +80,7 @@
  * QLayout ()
  */
 
-QT_G_FUNC( release_QLayout )
+QT_G_FUNC( hbqt_gcRelease_QLayout )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

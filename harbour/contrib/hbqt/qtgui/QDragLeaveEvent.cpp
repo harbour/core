@@ -75,7 +75,7 @@
  * QDragLeaveEvent ()
  */
 
-QT_G_FUNC( release_QDragLeaveEvent )
+QT_G_FUNC( hbqt_gcRelease_QDragLeaveEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

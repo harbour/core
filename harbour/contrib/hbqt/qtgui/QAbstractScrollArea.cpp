@@ -76,7 +76,7 @@
  * ~QAbstractScrollArea ()
  */
 
-QT_G_FUNC( release_QAbstractScrollArea )
+QT_G_FUNC( hbqt_gcRelease_QAbstractScrollArea )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

@@ -76,22 +76,22 @@
  * ~QTextDecoder ()
  */
 
-QT_G_FUNC( release_QTextDecoder )
+QT_G_FUNC( hbqt_gcRelease_QTextDecoder )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDecoder                 p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDecoder                ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDecoder                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDecoder                ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextDecoder * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextDecoder                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextDecoder                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDecoder                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextDecoder                Object Already deleted!" ) );
    }
 }
 
@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QTextDecoder( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTextDecoder;
+   p->func = hbqt_gcRelease_QTextDecoder;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextDecoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

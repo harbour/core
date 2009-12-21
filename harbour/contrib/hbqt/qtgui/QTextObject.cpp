@@ -75,7 +75,7 @@
  *
  */
 
-QT_G_FUNC( release_QTextObject )
+QT_G_FUNC( hbqt_gcRelease_QTextObject )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

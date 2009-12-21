@@ -96,22 +96,22 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 
 }
 
-QT_G_FUNC( release_QTextStream )
+QT_G_FUNC( hbqt_gcRelease_QTextStream )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextStream                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextStream                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextStream * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextStream                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextStream                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextStream                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextStream                 Object Already deleted!" ) );
    }
 }
 
@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QTextStream( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTextStream;
+   p->func = hbqt_gcRelease_QTextStream;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

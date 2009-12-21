@@ -83,12 +83,12 @@ typedef struct
   QPointer< QStyledItemDelegate > pq;
 } QGC_POINTER_QStyledItemDelegate;
 
-QT_G_FUNC( release_QStyledItemDelegate )
+QT_G_FUNC( hbqt_gcRelease_QStyledItemDelegate )
 {
    QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate          p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyledItemDelegate          p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyledItemDelegate         ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -108,16 +108,16 @@ QT_G_FUNC( release_QStyledItemDelegate )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyledItemDelegate         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QStyledItemDelegate         Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QStyledItemDelegate         Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyledItemDelegate         Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyledItemDelegate         Object Already deleted!" ) );
    }
 }
 
@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj )
    QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QStyledItemDelegate ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyledItemDelegate;
+   p->func = hbqt_gcRelease_QStyledItemDelegate;
    new( & p->pq ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

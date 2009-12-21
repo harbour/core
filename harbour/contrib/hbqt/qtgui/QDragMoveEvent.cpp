@@ -76,7 +76,7 @@
  * ~QDragMoveEvent ()
  */
 
-QT_G_FUNC( release_QDragMoveEvent )
+QT_G_FUNC( hbqt_gcRelease_QDragMoveEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

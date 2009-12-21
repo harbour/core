@@ -75,22 +75,22 @@
  * QLatin1String ( const char * str )
  */
 
-QT_G_FUNC( release_QLatin1String )
+QT_G_FUNC( hbqt_gcRelease_QLatin1String )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLatin1String                p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLatin1String               ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLatin1String                p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLatin1String               ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QLatin1String * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QLatin1String               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QLatin1String               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLatin1String               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLatin1String               Object Already deleted!" ) );
    }
 }
 
@@ -99,7 +99,7 @@ void * hbqt_gcAllocate_QLatin1String( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QLatin1String;
+   p->func = hbqt_gcRelease_QLatin1String;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLatin1String               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

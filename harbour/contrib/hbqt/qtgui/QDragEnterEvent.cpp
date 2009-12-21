@@ -75,7 +75,7 @@
  * QDragEnterEvent ( const QPoint & point, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
  */
 
-QT_G_FUNC( release_QDragEnterEvent )
+QT_G_FUNC( hbqt_gcRelease_QDragEnterEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

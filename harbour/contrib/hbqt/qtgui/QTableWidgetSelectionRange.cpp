@@ -77,22 +77,22 @@
  * ~QTableWidgetSelectionRange ()
  */
 
-QT_G_FUNC( release_QTableWidgetSelectionRange )
+QT_G_FUNC( hbqt_gcRelease_QTableWidgetSelectionRange )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetSelectionRange   p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetSelectionRange  ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableWidgetSelectionRange   p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableWidgetSelectionRange  ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTableWidgetSelectionRange * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTableWidgetSelectionRange  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTableWidgetSelectionRange  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableWidgetSelectionRange  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTableWidgetSelectionRange  Object Already deleted!" ) );
    }
 }
 
@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QTableWidgetSelectionRange( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTableWidgetSelectionRange;
+   p->func = hbqt_gcRelease_QTableWidgetSelectionRange;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTableWidgetSelectionRange  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

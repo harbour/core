@@ -75,7 +75,7 @@
  *
  */
 
-QT_G_FUNC( release_QHelpEvent )
+QT_G_FUNC( hbqt_gcRelease_QHelpEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

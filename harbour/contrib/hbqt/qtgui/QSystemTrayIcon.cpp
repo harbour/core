@@ -89,12 +89,12 @@ typedef struct
   QPointer< QSystemTrayIcon > pq;
 } QGC_POINTER_QSystemTrayIcon;
 
-QT_G_FUNC( release_QSystemTrayIcon )
+QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 {
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSystemTrayIcon              p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSystemTrayIcon             ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon              p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon             ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -114,16 +114,16 @@ QT_G_FUNC( release_QSystemTrayIcon )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSystemTrayIcon             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSystemTrayIcon             Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSystemTrayIcon             Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSystemTrayIcon             Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSystemTrayIcon             Object Already deleted!" ) );
    }
 }
 
@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj )
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QSystemTrayIcon;
+   p->func = hbqt_gcRelease_QSystemTrayIcon;
    new( & p->pq ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSystemTrayIcon             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

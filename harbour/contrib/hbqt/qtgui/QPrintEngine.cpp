@@ -79,7 +79,7 @@
  * virtual ~QPrintEngine ()
  */
 
-QT_G_FUNC( release_QPrintEngine )
+QT_G_FUNC( hbqt_gcRelease_QPrintEngine )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

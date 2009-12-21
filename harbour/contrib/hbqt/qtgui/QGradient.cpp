@@ -81,7 +81,7 @@
  *
  */
 
-QT_G_FUNC( release_QGradient )
+QT_G_FUNC( hbqt_gcRelease_QGradient )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

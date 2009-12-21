@@ -81,7 +81,7 @@
  *
  */
 
-QT_G_FUNC( release_QClipboard )
+QT_G_FUNC( hbqt_gcRelease_QClipboard )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

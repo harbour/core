@@ -79,22 +79,22 @@
  * ~QRect ()
  */
 
-QT_G_FUNC( release_QRect )
+QT_G_FUNC( hbqt_gcRelease_QRect )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QRect                        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QRect                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QRect                       ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QRect * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QRect                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QRect                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRect                       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QRect                       Object Already deleted!" ) );
    }
 }
 
@@ -103,7 +103,7 @@ void * hbqt_gcAllocate_QRect( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QRect;
+   p->func = hbqt_gcRelease_QRect;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

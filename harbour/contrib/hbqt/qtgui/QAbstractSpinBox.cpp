@@ -83,7 +83,7 @@
  * ~QAbstractSpinBox ()
  */
 
-QT_G_FUNC( release_QAbstractSpinBox )
+QT_G_FUNC( hbqt_gcRelease_QAbstractSpinBox )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

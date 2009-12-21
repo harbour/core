@@ -80,22 +80,22 @@
  * ~QBitmap ()
  */
 
-QT_G_FUNC( release_QBitmap )
+QT_G_FUNC( hbqt_gcRelease_QBitmap )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                      p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                     ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBitmap                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBitmap                     ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QBitmap * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QBitmap                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QBitmap                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBitmap                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QBitmap                     Object Already deleted!" ) );
    }
 }
 
@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QBitmap( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QBitmap;
+   p->func = hbqt_gcRelease_QBitmap;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QBitmap                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

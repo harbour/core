@@ -76,7 +76,7 @@
  * ~QAbstractTableModel ()
  */
 
-QT_G_FUNC( release_QAbstractTableModel )
+QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

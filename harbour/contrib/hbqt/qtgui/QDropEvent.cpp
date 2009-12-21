@@ -75,7 +75,7 @@
  * QDropEvent ( const QPoint & pos, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = Drop )
  */
 
-QT_G_FUNC( release_QDropEvent )
+QT_G_FUNC( hbqt_gcRelease_QDropEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

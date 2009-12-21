@@ -82,12 +82,12 @@ typedef struct
   QPointer< QDoubleSpinBox > pq;
 } QGC_POINTER_QDoubleSpinBox;
 
-QT_G_FUNC( release_QDoubleSpinBox )
+QT_G_FUNC( hbqt_gcRelease_QDoubleSpinBox )
 {
    QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDoubleSpinBox               p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QDoubleSpinBox              ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDoubleSpinBox               p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDoubleSpinBox              ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -107,16 +107,16 @@ QT_G_FUNC( release_QDoubleSpinBox )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QDoubleSpinBox              Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDoubleSpinBox              Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QDoubleSpinBox              Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QDoubleSpinBox              Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDoubleSpinBox              Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDoubleSpinBox              Object Already deleted!" ) );
    }
 }
 
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj )
    QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QDoubleSpinBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QDoubleSpinBox;
+   p->func = hbqt_gcRelease_QDoubleSpinBox;
    new( & p->pq ) QPointer< QDoubleSpinBox >( ( QDoubleSpinBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDoubleSpinBox              %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

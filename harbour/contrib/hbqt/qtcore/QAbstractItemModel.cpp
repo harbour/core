@@ -96,7 +96,7 @@
 
 
 
-QT_G_FUNC( release_QAbstractItemModel )
+QT_G_FUNC( hbqt_gcRelease_QAbstractItemModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

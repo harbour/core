@@ -87,7 +87,7 @@
  * virtual ~QHttpHeader ()
  */
 
-QT_G_FUNC( release_QHttpHeader )
+QT_G_FUNC( hbqt_gcRelease_QHttpHeader )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

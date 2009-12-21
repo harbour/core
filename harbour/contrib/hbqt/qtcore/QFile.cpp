@@ -93,12 +93,12 @@ typedef struct
   QPointer< QFile > pq;
 } QGC_POINTER_QFile;
 
-QT_G_FUNC( release_QFile )
+QT_G_FUNC( hbqt_gcRelease_QFile )
 {
    QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QFile                        p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFile                        p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFile                       ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -118,16 +118,16 @@ QT_G_FUNC( release_QFile )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFile                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QFile                       Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QFile                       Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFile                       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFile                       Object Already deleted!" ) );
    }
 }
 
@@ -136,7 +136,7 @@ void * hbqt_gcAllocate_QFile( void * pObj )
    QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) hb_gcAllocate( sizeof( QGC_POINTER_QFile ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QFile;
+   p->func = hbqt_gcRelease_QFile;
    new( & p->pq ) QPointer< QFile >( ( QFile * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

@@ -92,7 +92,7 @@
  * virtual ~QInputContext ()
  */
 
-QT_G_FUNC( release_QInputContext )
+QT_G_FUNC( hbqt_gcRelease_QInputContext )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

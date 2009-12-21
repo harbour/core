@@ -76,7 +76,7 @@
  * virtual ~QLayoutItem ()
  */
 
-QT_G_FUNC( release_QLayoutItem )
+QT_G_FUNC( hbqt_gcRelease_QLayoutItem )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

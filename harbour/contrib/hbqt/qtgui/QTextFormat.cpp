@@ -101,22 +101,22 @@
  * ~QTextFormat ()
  */
 
-QT_G_FUNC( release_QTextFormat )
+QT_G_FUNC( hbqt_gcRelease_QTextFormat )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFormat                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFormat                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFormat                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFormat                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextFormat * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextFormat                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextFormat                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFormat                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextFormat                 Object Already deleted!" ) );
    }
 }
 
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QTextFormat( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTextFormat;
+   p->func = hbqt_gcRelease_QTextFormat;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextFormat                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

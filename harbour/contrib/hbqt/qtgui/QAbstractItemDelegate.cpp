@@ -79,7 +79,7 @@
  * virtual ~QAbstractItemDelegate ()
  */
 
-QT_G_FUNC( release_QAbstractItemDelegate )
+QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

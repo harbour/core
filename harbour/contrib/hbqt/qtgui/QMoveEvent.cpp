@@ -76,7 +76,7 @@
  * ~QMoveEvent ()
  */
 
-QT_G_FUNC( release_QMoveEvent )
+QT_G_FUNC( hbqt_gcRelease_QMoveEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

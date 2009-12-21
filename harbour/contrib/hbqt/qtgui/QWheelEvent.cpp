@@ -76,7 +76,7 @@
  * QWheelEvent ( const QPoint & pos, const QPoint & globalPos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orient = Qt::Vertical )
  */
 
-QT_G_FUNC( release_QWheelEvent )
+QT_G_FUNC( hbqt_gcRelease_QWheelEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

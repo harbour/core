@@ -83,12 +83,12 @@ typedef struct
   QPointer< QSound > pq;
 } QGC_POINTER_QSound;
 
-QT_G_FUNC( release_QSound )
+QT_G_FUNC( hbqt_gcRelease_QSound )
 {
    QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSound                       p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSound                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSound                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -108,16 +108,16 @@ QT_G_FUNC( release_QSound )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSound                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSound                      Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSound                      Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSound                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSound                      Object Already deleted!" ) );
    }
 }
 
@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QSound( void * pObj )
    QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QSound;
+   p->func = hbqt_gcRelease_QSound;
    new( & p->pq ) QPointer< QSound >( ( QSound * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

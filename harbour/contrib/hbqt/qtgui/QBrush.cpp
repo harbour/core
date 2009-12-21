@@ -85,22 +85,22 @@
  * ~QBrush ()
  */
 
-QT_G_FUNC( release_QBrush )
+QT_G_FUNC( hbqt_gcRelease_QBrush )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                       p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                      ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBrush                       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBrush                      ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QBrush * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QBrush                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QBrush                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBrush                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QBrush                      Object Already deleted!" ) );
    }
 }
 
@@ -109,7 +109,7 @@ void * hbqt_gcAllocate_QBrush( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QBrush;
+   p->func = hbqt_gcRelease_QBrush;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

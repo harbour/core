@@ -82,7 +82,7 @@
  * virtual ~QIODevice ()
  */
 
-QT_G_FUNC( release_QIODevice )
+QT_G_FUNC( hbqt_gcRelease_QIODevice )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

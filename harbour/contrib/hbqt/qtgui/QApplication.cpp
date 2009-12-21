@@ -91,10 +91,10 @@
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
 
-void release_codeblocks();
+//void release_codeblocks();
 
-static QApplication * app = NULL;
-static bool hbqtinit = false;
+static QApplication * s_app = NULL;
+static bool s_hbqtinit = false;
 
 static int s_argc;
 static char ** s_argv;
@@ -123,12 +123,12 @@ static void hbqt_Init( void * cargo )
    s_argc = hb_cmdargARGC();
    s_argv = hb_cmdargARGV();
 
-   app = new QApplication( s_argc, s_argv );
+   s_app = new QApplication( s_argc, s_argv );
 
-   if( app )
-      hbqtinit = true;
+   if( s_app )
+      s_hbqtinit = true;
 
-   if( ! hbqtinit )
+   if( ! s_hbqtinit )
       hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
@@ -149,12 +149,12 @@ HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
 
 HB_FUNC( QT_QAPPLICATION_EXECUTE )
 {
-   hb_retni( app->exec() );
+   hb_retni( s_app->exec() );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )
 {
-   app->quit();
+   s_app->quit();
 }
 
 typedef struct
@@ -164,12 +164,12 @@ typedef struct
   QPointer< QApplication > pq;
 } QGC_POINTER_QApplication;
 
-QT_G_FUNC( release_QApplication )
+QT_G_FUNC( hbqt_gcRelease_QApplication )
 {
    QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QApplication                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QApplication                ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -189,16 +189,16 @@ QT_G_FUNC( release_QApplication )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QApplication                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QApplication                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QApplication                Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QApplication                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QApplication                Object Already deleted!" ) );
    }
 }
 
@@ -207,7 +207,7 @@ void * hbqt_gcAllocate_QApplication( void * pObj )
    QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) hb_gcAllocate( sizeof( QGC_POINTER_QApplication ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QApplication;
+   p->func = hbqt_gcRelease_QApplication;
    new( & p->pq ) QPointer< QApplication >( ( QApplication * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
@@ -217,7 +217,7 @@ HB_FUNC( QT_QAPPLICATION )
 {
    void * pObj = NULL;
 
-   pObj = ( QApplication * ) app ;
+   pObj = ( QApplication * ) s_app ;
 
    hb_retptrGC( hbqt_gcAllocate_QApplication( pObj ) );
 }

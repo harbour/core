@@ -77,22 +77,22 @@
  * QHttpResponseHeader ( int code, const QString & text = QString(), int majorVer = 1, int minorVer = 1 )
  */
 
-QT_G_FUNC( release_QHttpResponseHeader )
+QT_G_FUNC( hbqt_gcRelease_QHttpResponseHeader )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QHttpResponseHeader          p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QHttpResponseHeader         ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QHttpResponseHeader          p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QHttpResponseHeader         ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QHttpResponseHeader * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QHttpResponseHeader         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QHttpResponseHeader         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHttpResponseHeader         Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QHttpResponseHeader         Object Already deleted!" ) );
    }
 }
 
@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QHttpResponseHeader;
+   p->func = hbqt_gcRelease_QHttpResponseHeader;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QHttpResponseHeader         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

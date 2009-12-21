@@ -95,12 +95,12 @@ typedef struct
   QPointer< QTreeWidget > pq;
 } QGC_POINTER_QTreeWidget;
 
-QT_G_FUNC( release_QTreeWidget )
+QT_G_FUNC( hbqt_gcRelease_QTreeWidget )
 {
    QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -120,16 +120,16 @@ QT_G_FUNC( release_QTreeWidget )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QTreeWidget                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTreeWidget                 Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTreeWidget                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTreeWidget                 Object Already deleted!" ) );
    }
 }
 
@@ -138,7 +138,7 @@ void * hbqt_gcAllocate_QTreeWidget( void * pObj )
    QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTreeWidget;
+   p->func = hbqt_gcRelease_QTreeWidget;
    new( & p->pq ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

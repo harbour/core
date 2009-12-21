@@ -75,7 +75,7 @@
  * ~QAbstractProxyModel ()
  */
 
-QT_G_FUNC( release_QAbstractProxyModel )
+QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

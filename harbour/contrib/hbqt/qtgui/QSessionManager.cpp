@@ -79,7 +79,7 @@
  *
  */
 
-QT_G_FUNC( release_QSessionManager )
+QT_G_FUNC( hbqt_gcRelease_QSessionManager )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

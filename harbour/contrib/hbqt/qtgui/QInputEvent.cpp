@@ -76,22 +76,22 @@
  *
  */
 
-QT_G_FUNC( release_QInputEvent )
+QT_G_FUNC( hbqt_gcRelease_QInputEvent )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QInputEvent                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QInputEvent                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QInputEvent * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QInputEvent                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QInputEvent                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QInputEvent                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QInputEvent                 Object Already deleted!" ) );
    }
 }
 
@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QInputEvent( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QInputEvent;
+   p->func = hbqt_gcRelease_QInputEvent;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

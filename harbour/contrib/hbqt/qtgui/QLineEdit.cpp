@@ -88,12 +88,12 @@ typedef struct
   QPointer< QLineEdit > pq;
 } QGC_POINTER_QLineEdit;
 
-QT_G_FUNC( release_QLineEdit )
+QT_G_FUNC( hbqt_gcRelease_QLineEdit )
 {
    QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -113,16 +113,16 @@ QT_G_FUNC( release_QLineEdit )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QLineEdit                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QLineEdit                   Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLineEdit                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLineEdit                   Object Already deleted!" ) );
    }
 }
 
@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QLineEdit( void * pObj )
    QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QLineEdit;
+   p->func = hbqt_gcRelease_QLineEdit;
    new( & p->pq ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

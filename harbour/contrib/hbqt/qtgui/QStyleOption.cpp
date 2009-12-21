@@ -83,22 +83,22 @@
  * ~QStyleOption ()
  */
 
-QT_G_FUNC( release_QStyleOption )
+QT_G_FUNC( hbqt_gcRelease_QStyleOption )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                 p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOption                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOption                ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QStyleOption * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOption                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOption                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOption                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOption                Object Already deleted!" ) );
    }
 }
 
@@ -107,7 +107,7 @@ void * hbqt_gcAllocate_QStyleOption( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QStyleOption;
+   p->func = hbqt_gcRelease_QStyleOption;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

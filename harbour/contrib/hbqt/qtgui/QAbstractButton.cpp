@@ -76,7 +76,7 @@
  * ~QAbstractButton ()
  */
 
-QT_G_FUNC( release_QAbstractButton )
+QT_G_FUNC( hbqt_gcRelease_QAbstractButton )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

@@ -75,7 +75,7 @@
  * QFocusEvent ( Type type, Qt::FocusReason reason = Qt::OtherFocusReason )
  */
 
-QT_G_FUNC( release_QFocusEvent )
+QT_G_FUNC( hbqt_gcRelease_QFocusEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

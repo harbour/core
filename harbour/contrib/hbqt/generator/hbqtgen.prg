@@ -540,14 +540,14 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, " "                               )
             ENDIF
          ENDIF
-         aadd( cpp_, "QT_G_FUNC( release_" + cWidget + " )"  )
+         aadd( cpp_, "QT_G_FUNC( hbqt_gcRelease_" + cWidget + " )"  )
          aadd( cpp_, "{"                                     )
          IF ( lDestructor ) .AND. ( lConst )
             IF lObject
                aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) Cargo; " )
                aadd( cpp_, "   " )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + '  p=%p", p));')
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + ' ph=%p pq=%p", p->ph, (void *)(p->pq)));')
+               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + '  p=%p", p));')
+               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' ph=%p pq=%p", p->ph, (void *)(p->pq)));')
                aadd( cpp_, "   " )
                aadd( cpp_, "   if( p && p->ph && p->pq )                                 " )
                aadd( cpp_, "   {                                                " )
@@ -567,29 +567,29 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, "            break;" )
                aadd( cpp_, "         }" )
                aadd( cpp_, "         p->ph = NULL;" )
-               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
                aadd( cpp_, "      }" )
                aadd( cpp_, "      else" )
                aadd( cpp_, "      {" )
-               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "NO release_' + pad( cWidget, 27 ) + ' Object Name Missing!" ) );')
+               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object Name Missing!" ) );')
                aadd( cpp_, "      }" )
             ELSE
                aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;       " )
                aadd( cpp_, "   " )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + '  p=%p", p ) );' )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + ' ph=%p", p->ph ) );' )
+               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + '  p=%p", p ) );' )
+               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' ph=%p", p->ph ) );' )
                aadd( cpp_, "   " )
                aadd( cpp_, "   if( p && p->ph )                                 " )
                aadd( cpp_, "   {                                                " )
                aadd( cpp_, "      delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
                //aadd( cpp_, "      ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph )->~" + cWidget + "(); " )
                aadd( cpp_, "      p->ph = NULL;" )
-               aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "YES release_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+               aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
             ENDIF
             aadd( cpp_, "   }" )
             aadd( cpp_, "   else" )
             aadd( cpp_, "   {" )
-            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "DEL release_' + pad( cWidget, 27 ) + ' Object Already deleted!" ) );' )
+            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object Already deleted!" ) );' )
             aadd( cpp_, "   }" )
          ELSE
             aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
@@ -597,10 +597,10 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, "}                                      " )
          aadd( cpp_, "                                       " )
       ELSE
-         aadd( cpp_, "QT_G_FUNC( release_" + cWidget + " )   " )
+         aadd( cpp_, "QT_G_FUNC( hbqt_gcRelease_" + cWidget + " )   " )
          aadd( cpp_, "{                                      " )
          IF lDestructor
-            aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "release_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+            aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
             aadd( cpp_, "" )
             aadd( cpp_, "   void * ph = ( void * ) Cargo;       " )
             aadd( cpp_, "   if( ph )                            " )
@@ -656,7 +656,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                ENDIF
                aadd( cpp_, " " )
                aadd( cpp_, "   p->ph = pObj;" )
-               aadd( cpp_, "   p->func = release_" + cWidget +";" )
+               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget +";" )
                IF lObject
                   aadd( cpp_, "   new( & p->pq ) QPointer< "+ cWidget +" >( ( " + cWidget + " * ) pObj );" )
                ENDIF
@@ -727,7 +727,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             //IF lObject .or. IsMemObject( cWidget )
             IF lDestructor
                aadd( cpp_, "   p->ph = pObj;" )
-               aadd( cpp_, "   p->func = release_" + cWidget +";" )
+               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget +";" )
                aadd( cpp_, " " )
                aadd( cpp_, "   hb_retptrGC( p );" )
             ELSE
@@ -1659,7 +1659,7 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    aadd( txt_, " " )
 
    FOR EACH s IN cpp_
-      aadd( txt_, "extern QT_G_FUNC( release_" + s + " );" )
+      aadd( txt_, "extern QT_G_FUNC( hbqt_gcRelease_" + s + " );" )
    NEXT
    aadd( txt_, "" )
 
@@ -2330,13 +2330,12 @@ FUNCTION Get_Command( cWgt, cCmn )
 
    IF ascan( a_, cWgt ) == 0
       aadd( a_, cWgt )
-//hb_ToOutDebug( pad( cWgt,30 ) + "No         " + zWidget )
    ENDIF
 
    IF (lNewGCtoQT)
       cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ) ) )'
    ELSE
-      cRet := 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), release_' + cWgt +' ) )'
+      cRet := 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), hbqt_gcRelease_' + cWgt +' ) )'
    ENDIF
 
    RETURN cRet

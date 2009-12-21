@@ -110,22 +110,22 @@ HB_FUNC( QT_QURL_SETQUERYDELIMITERS )
    hbqt_par_QUrl( 1 )->setQueryDelimiters( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) );
 }
 
-QT_G_FUNC( release_QUrl )
+QT_G_FUNC( hbqt_gcRelease_QUrl )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QUrl                         p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QUrl                        ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QUrl                         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QUrl                        ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QUrl * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QUrl                        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QUrl                        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QUrl                        Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QUrl                        Object Already deleted!" ) );
    }
 }
 
@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QUrl( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QUrl;
+   p->func = hbqt_gcRelease_QUrl;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QUrl                        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

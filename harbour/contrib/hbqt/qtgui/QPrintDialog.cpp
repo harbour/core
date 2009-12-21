@@ -89,12 +89,12 @@ typedef struct
   QPointer< QPrintDialog > pq;
 } QGC_POINTER_QPrintDialog;
 
-QT_G_FUNC( release_QPrintDialog )
+QT_G_FUNC( hbqt_gcRelease_QPrintDialog )
 {
    QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QPrintDialog                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QPrintDialog                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPrintDialog                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPrintDialog                ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -114,16 +114,16 @@ QT_G_FUNC( release_QPrintDialog )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QPrintDialog                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPrintDialog                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QPrintDialog                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QPrintDialog                Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPrintDialog                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QPrintDialog                Object Already deleted!" ) );
    }
 }
 
@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QPrintDialog( void * pObj )
    QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QPrintDialog;
+   p->func = hbqt_gcRelease_QPrintDialog;
    new( & p->pq ) QPointer< QPrintDialog >( ( QPrintDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPrintDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

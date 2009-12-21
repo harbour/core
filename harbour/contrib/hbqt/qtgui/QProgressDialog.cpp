@@ -84,12 +84,12 @@ typedef struct
   QPointer< QProgressDialog > pq;
 } QGC_POINTER_QProgressDialog;
 
-QT_G_FUNC( release_QProgressDialog )
+QT_G_FUNC( hbqt_gcRelease_QProgressDialog )
 {
    QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog              p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProgressDialog              p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProgressDialog             ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -109,16 +109,16 @@ QT_G_FUNC( release_QProgressDialog )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProgressDialog             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QProgressDialog             Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QProgressDialog             Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QProgressDialog             Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QProgressDialog             Object Already deleted!" ) );
    }
 }
 
@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj )
    QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QProgressDialog;
+   p->func = hbqt_gcRelease_QProgressDialog;
    new( & p->pq ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

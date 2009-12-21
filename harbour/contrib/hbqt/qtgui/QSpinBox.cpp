@@ -82,12 +82,12 @@ typedef struct
   QPointer< QSpinBox > pq;
 } QGC_POINTER_QSpinBox;
 
-QT_G_FUNC( release_QSpinBox )
+QT_G_FUNC( hbqt_gcRelease_QSpinBox )
 {
    QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                     p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSpinBox                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSpinBox                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -107,16 +107,16 @@ QT_G_FUNC( release_QSpinBox )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSpinBox                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSpinBox                    Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSpinBox                    Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSpinBox                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSpinBox                    Object Already deleted!" ) );
    }
 }
 
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QSpinBox( void * pObj )
    QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QSpinBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QSpinBox;
+   p->func = hbqt_gcRelease_QSpinBox;
    new( & p->pq ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

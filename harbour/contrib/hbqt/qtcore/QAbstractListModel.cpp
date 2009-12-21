@@ -76,7 +76,7 @@
  * ~QAbstractListModel ()
  */
 
-QT_G_FUNC( release_QAbstractListModel )
+QT_G_FUNC( hbqt_gcRelease_QAbstractListModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

@@ -75,22 +75,22 @@
  * QTextBlock ( const QTextBlock & other )
  */
 
-QT_G_FUNC( release_QTextBlock )
+QT_G_FUNC( hbqt_gcRelease_QTextBlock )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlock                   p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlock                  ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBlock                   p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBlock                  ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextBlock * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextBlock                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextBlock                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlock                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextBlock                  Object Already deleted!" ) );
    }
 }
 
@@ -99,7 +99,7 @@ void * hbqt_gcAllocate_QTextBlock( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTextBlock;
+   p->func = hbqt_gcRelease_QTextBlock;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBlock                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

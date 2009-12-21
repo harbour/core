@@ -85,22 +85,22 @@
  * QTextFrameFormat ()
  */
 
-QT_G_FUNC( release_QTextFrameFormat )
+QT_G_FUNC( hbqt_gcRelease_QTextFrameFormat )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat             p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat            ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFrameFormat             p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFrameFormat            ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextFrameFormat * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextFrameFormat            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextFrameFormat            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFrameFormat            Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextFrameFormat            Object Already deleted!" ) );
    }
 }
 
@@ -109,7 +109,7 @@ void * hbqt_gcAllocate_QTextFrameFormat( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QTextFrameFormat;
+   p->func = hbqt_gcRelease_QTextFrameFormat;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

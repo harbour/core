@@ -82,22 +82,22 @@
  * ~QCursor ()
  */
 
-QT_G_FUNC( release_QCursor )
+QT_G_FUNC( hbqt_gcRelease_QCursor )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QCursor                      p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QCursor                     ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCursor                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCursor                     ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QCursor * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QCursor                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QCursor                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCursor                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QCursor                     Object Already deleted!" ) );
    }
 }
 
@@ -106,7 +106,7 @@ void * hbqt_gcAllocate_QCursor( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QCursor;
+   p->func = hbqt_gcRelease_QCursor;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

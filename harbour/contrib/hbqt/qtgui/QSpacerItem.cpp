@@ -75,22 +75,22 @@
  *
  */
 
-QT_G_FUNC( release_QSpacerItem )
+QT_G_FUNC( hbqt_gcRelease_QSpacerItem )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSpacerItem                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSpacerItem                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QSpacerItem * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES release_QSpacerItem                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QSpacerItem                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSpacerItem                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSpacerItem                 Object Already deleted!" ) );
    }
 }
 
@@ -99,7 +99,7 @@ void * hbqt_gcAllocate_QSpacerItem( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QSpacerItem;
+   p->func = hbqt_gcRelease_QSpacerItem;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSpacerItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }

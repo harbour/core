@@ -86,7 +86,7 @@
  * ~QAbstractItemView ()
  */
 
-QT_G_FUNC( release_QAbstractItemView )
+QT_G_FUNC( hbqt_gcRelease_QAbstractItemView )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

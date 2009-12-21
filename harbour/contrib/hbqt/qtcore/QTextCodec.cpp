@@ -95,7 +95,7 @@
  *
  */
 
-QT_G_FUNC( release_QTextCodec )
+QT_G_FUNC( hbqt_gcRelease_QTextCodec )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }

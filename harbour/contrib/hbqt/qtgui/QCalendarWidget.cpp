@@ -98,12 +98,12 @@ typedef struct
   QPointer< QCalendarWidget > pq;
 } QGC_POINTER_QCalendarWidget;
 
-QT_G_FUNC( release_QCalendarWidget )
+QT_G_FUNC( hbqt_gcRelease_QCalendarWidget )
 {
    QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget              p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCalendarWidget              p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCalendarWidget             ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -123,16 +123,16 @@ QT_G_FUNC( release_QCalendarWidget )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCalendarWidget             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QCalendarWidget             Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QCalendarWidget             Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCalendarWidget             Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QCalendarWidget             Object Already deleted!" ) );
    }
 }
 
@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj )
    QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QCalendarWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_QCalendarWidget;
+   p->func = hbqt_gcRelease_QCalendarWidget;
    new( & p->pq ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );

@@ -91,7 +91,7 @@
  * virtual ~QStyle ()
  */
 
-QT_G_FUNC( release_QStyle )
+QT_G_FUNC( hbqt_gcRelease_QStyle )
 {
    HB_SYMBOL_UNUSED( Cargo );
 }
