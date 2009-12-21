@@ -6,216 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>463</width>
-    <height>212</height>
+    <width>415</width>
+    <height>166</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Find and Replace</string>
   </property>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>12</y>
-     <width>353</width>
-     <height>189</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>16</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Find what:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>132</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Replace with:</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkMatchCase">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>40</y>
-      <width>81</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Match case</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkListOnly">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>40</y>
-      <width>71</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>List only</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>88</x>
-      <y>68</y>
-      <width>161</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QRadioButton" name="radioFromCursor">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>4</y>
-       <width>141</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Start from cursor position</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radioEntire">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>24</y>
-       <width>141</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Entire file</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_3">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>68</y>
-      <width>81</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QRadioButton" name="radioUp">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>4</y>
-       <width>41</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>up</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radioDown">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>24</y>
-       <width>51</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Down</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QComboBox" name="comboFindWhat">
-    <property name="geometry">
-     <rect>
-      <x>88</x>
-      <y>12</y>
-      <width>253</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="editable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboReplaceWith">
-    <property name="geometry">
-     <rect>
-      <x>88</x>
-      <y>128</y>
-      <width>253</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="editable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkGlobal">
-    <property name="geometry">
-     <rect>
-      <x>88</x>
-      <y>160</y>
-      <width>71</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Global</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkNoPrompting">
-    <property name="geometry">
-     <rect>
-      <x>248</x>
-      <y>160</y>
-      <width>89</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>No prompting</string>
-    </property>
-   </widget>
-  </widget>
   <widget class="QPushButton" name="buttonFind">
    <property name="geometry">
     <rect>
-     <x>376</x>
-     <y>24</y>
+     <x>332</x>
+     <y>8</y>
      <width>75</width>
      <height>24</height>
     </rect>
@@ -233,8 +35,8 @@
   <widget class="QPushButton" name="buttonReplace">
    <property name="geometry">
     <rect>
-     <x>376</x>
-     <y>140</y>
+     <x>332</x>
+     <y>106</y>
      <width>75</width>
      <height>24</height>
     </rect>
@@ -252,14 +54,196 @@
   <widget class="QPushButton" name="buttonClose">
    <property name="geometry">
     <rect>
-     <x>376</x>
-     <y>172</y>
-     <width>75</width>
+     <x>332</x>
+     <y>136</y>
+     <width>77</width>
      <height>24</height>
     </rect>
    </property>
    <property name="text">
     <string>Close</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboReplaceWith">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>108</y>
+     <width>253</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkGlobal">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>136</y>
+     <width>71</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Global</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkNoPrompting">
+   <property name="geometry">
+    <rect>
+     <x>192</x>
+     <y>136</y>
+     <width>89</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No prompting</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>108</y>
+     <width>53</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Replace:</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>60</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QRadioButton" name="radioFromCursor">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>4</y>
+      <width>141</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start from cursor position</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioEntire">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>20</y>
+      <width>141</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Entire file</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>60</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QRadioButton" name="radioUp">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>4</y>
+      <width>41</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>up</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioDown">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>51</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Down</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="checkMatchCase">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>36</y>
+     <width>81</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Match case</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkListOnly">
+   <property name="geometry">
+    <rect>
+     <x>192</x>
+     <y>36</y>
+     <width>71</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>List only</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboFindWhat">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>10</y>
+     <width>253</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Find what:</string>
    </property>
   </widget>
  </widget>
