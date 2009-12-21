@@ -1000,7 +1000,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       l_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
       cDynLibNamePrefix := ""
-      cDynLibExt := ""
+      cDynLibExt := "" /* NOTE: This will be reset later if djgpp is detected. */
       cBinExt := ".exe"
       cOptPrefix := "-/"
    CASE hbmk[ _HBMK_cPLAT ] == "os2"
@@ -1345,6 +1345,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" ) )
       ENDIF
    ENDCASE
+
+   /* Tweaks to compiler setup */
+
+   IF hbmk[ _HBMK_cCOMP ] == "djgpp"
+      cDynLibExt := ".dxe"
+   ENDIF
 
    /* Finish detecting bin/lib/include dirs */
 
@@ -2651,6 +2657,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         cBin_Dyn := "dxe3gen"
+         cOpt_Dyn := "--whole-archive {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
@@ -2666,6 +2674,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
+         ENDIF
+         IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Y {OI}" )
          ENDIF
          IF ! hbmk[ _HBMK_lSHARED ]
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "m" } )
@@ -2690,6 +2701,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF IsGTRequested( hbmk, "gtcrs" )
             AAdd( l_aLIBSYS, "pdcurses" )
          ENDIF
+
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cDL_Version_Alter + cLibExt,;
+                                                   "harbour" + cDL_Version_Alter + cLibExt ) }
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
@@ -3708,7 +3722,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
                         cFile += '   s_defaultGT = "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '";'           + Chr( 10 )
                      ELSE
-                        cFile += '   hb_vmSetDefaultGT( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'      + Chr( 10 )
+                        cFile += '   hb_vmSetDefaultGT( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'    + Chr( 10 )
                      ENDIF
                   ENDIF
                   IF l_cMAIN != NIL
