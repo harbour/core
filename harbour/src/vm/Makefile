@@ -10,7 +10,9 @@ ifeq ($(HB_HVM_ALL),)
 
    HB_HVM_ALL := yes
    ifeq ($(HB_COMPILER),watcom)
-      HB_HVM_ALL := no
+      ifeq ($(HB_BUILD_MODE),cpp)
+         HB_HVM_ALL := no
+      endif
    endif
    ifeq ($(HB_COMPILER),bcc)
       HB_HVM_ALL := no

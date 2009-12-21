@@ -128,7 +128,7 @@ HB_FUNC( HB_LIBLOAD )
          }
 #elif defined( HB_HAS_DLFCN )
          hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
-#elif !defined( HB_OS_DOS )
+#else
          {
             int TODO;
          }

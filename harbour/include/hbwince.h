@@ -71,89 +71,91 @@ extern int remove( const char * filename );
 extern int system( const char * string );
 extern char * strerror( int errnum );
 
-#if defined( HB_OS_WIN_USED ) && defined( _MSC_VER )
+#if defined( HB_OS_WIN_USED )
 
-   #ifndef MAX_COMPUTERNAME_LENGTH
-      #define MAX_COMPUTERNAME_LENGTH           31
-      #define SEM_FAILCRITICALERRORS            0x0001
-      #define FILE_TYPE_CHAR                    0x0002
-      #define STD_INPUT_HANDLE                  ((DWORD)-10)
-      #define STD_OUTPUT_HANDLE                 ((DWORD)-11)
-      #define STD_ERROR_HANDLE                  ((DWORD)-12)
-      #define LOCKFILE_FAIL_IMMEDIATELY         0x00000001
-      #define LOCKFILE_EXCLUSIVE_LOCK           0x00000002
-      #define OEM_FIXED_FONT                    SYSTEM_FONT
-      #define WM_NCMOUSEMOVE                    0x00A0
-      #define WM_QUERYENDSESSION                0x0011
-      #define WM_ENTERIDLE                      0x0121
-      #define SM_CMOUSEBUTTONS                  43
-      #define PROOF_QUALITY                     2
-      #define LR_LOADFROMFILE                   0x0010
-      #ifndef DRIVE_UNKNOWN
-         #define DRIVE_UNKNOWN                     0
+   #if defined( _MSC_VER )
+      #ifndef MAX_COMPUTERNAME_LENGTH
+         #define MAX_COMPUTERNAME_LENGTH           31
+         #define SEM_FAILCRITICALERRORS            0x0001
+         #define FILE_TYPE_CHAR                    0x0002
+         #define STD_INPUT_HANDLE                  ((DWORD)-10)
+         #define STD_OUTPUT_HANDLE                 ((DWORD)-11)
+         #define STD_ERROR_HANDLE                  ((DWORD)-12)
+         #define LOCKFILE_FAIL_IMMEDIATELY         0x00000001
+         #define LOCKFILE_EXCLUSIVE_LOCK           0x00000002
+         #define OEM_FIXED_FONT                    SYSTEM_FONT
+         #define WM_NCMOUSEMOVE                    0x00A0
+         #define WM_QUERYENDSESSION                0x0011
+         #define WM_ENTERIDLE                      0x0121
+         #define SM_CMOUSEBUTTONS                  43
+         #define PROOF_QUALITY                     2
+         #define LR_LOADFROMFILE                   0x0010
+         #ifndef DRIVE_UNKNOWN
+            #define DRIVE_UNKNOWN                     0
+         #endif
       #endif
-   #endif
 
-   DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
-   BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value );
-   LPSTR WINAPI GetEnvironmentStringsA( void );
-   BOOL WINAPI GetProcessTimes( HANDLE hprocess,
-                                LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
-                                LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
-   BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len );
-   BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
-   BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len );
-   BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
-   DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer );
-   DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
-   BOOL WINAPI SetCurrentDirectoryA( LPCSTR dirname );
-   BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
-   BOOL WINAPI LockFile( HANDLE hFile,
-                         DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                         DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
-   BOOL WINAPI LockFileEx( HANDLE hFile,
-                           DWORD dwFlags, DWORD dwReserved,
-                           DWORD nNumberOfBytesToLockLow,
-                           DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
-   BOOL WINAPI UnlockFile( HANDLE hFile,
-                           DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                           DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
-   BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
-                             DWORD nNumberOfBytesToUnlockLow,
-                             DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
-   BOOL WINAPI GetVolumeInformationA( LPCSTR p1, LPSTR p2, DWORD p3, PDWORD p4,
-                                      PDWORD p5, PDWORD p6, LPSTR p7, DWORD p8 );
-   UINT WINAPI SetErrorMode( UINT mode );
-   HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
-                       DWORD sharing, LPSECURITY_ATTRIBUTES sa,
-                       DWORD creation, DWORD attributes, HANDLE tmplt );
-   BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 );
-   BOOL WINAPI DeleteFileA( LPCSTR path );
-   BOOL WINAPI RemoveDirectoryA( LPCSTR path );
-   BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr );
-   BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr );
-   BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len );
-   BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len );
-   HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data );
-   BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data );
-   BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v );
-   HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
-   DWORD WINAPI GetFileType( HANDLE handle );
-   HMODULE WINAPI GetModuleHandleA( LPCSTR modulename );
-   HINSTANCE WINAPI LoadLibraryA( LPCSTR libname );
-   DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer );
-   UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename );
-   BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
-                                  PDWORD pdwBytesPerSector,
-                                  PDWORD pdwNumberOfFreeClusters, PDWORD pdwTotalNumberOfClusters );
-   BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
-   int WINAPI SetTextCharacterExtra( HDC hdc, int i );
-   BOOL WINAPI GetKeyboardState( PBYTE p );
-   BOOL WINAPI SetKeyboardState( PBYTE p );
+      DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
+      BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value );
+      LPSTR WINAPI GetEnvironmentStringsA( void );
+      BOOL WINAPI GetProcessTimes( HANDLE hprocess,
+                                   LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
+                                   LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
+      BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len );
+      BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
+      BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len );
+      BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
+      DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer );
+      DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
+      BOOL WINAPI SetCurrentDirectoryA( LPCSTR dirname );
+      BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
+      BOOL WINAPI LockFile( HANDLE hFile,
+                            DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                            DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
+      BOOL WINAPI LockFileEx( HANDLE hFile,
+                              DWORD dwFlags, DWORD dwReserved,
+                              DWORD nNumberOfBytesToLockLow,
+                              DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
+      BOOL WINAPI UnlockFile( HANDLE hFile,
+                              DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                              DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
+      BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
+                                DWORD nNumberOfBytesToUnlockLow,
+                                DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
+      BOOL WINAPI GetVolumeInformationA( LPCSTR p1, LPSTR p2, DWORD p3, PDWORD p4,
+                                         PDWORD p5, PDWORD p6, LPSTR p7, DWORD p8 );
+      UINT WINAPI SetErrorMode( UINT mode );
+      HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
+                          DWORD sharing, LPSECURITY_ATTRIBUTES sa,
+                          DWORD creation, DWORD attributes, HANDLE tmplt );
+      BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 );
+      BOOL WINAPI DeleteFileA( LPCSTR path );
+      BOOL WINAPI RemoveDirectoryA( LPCSTR path );
+      BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr );
+      BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr );
+      BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len );
+      BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len );
+      HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data );
+      BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data );
+      BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v );
+      HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
+      DWORD WINAPI GetFileType( HANDLE handle );
+      HMODULE WINAPI GetModuleHandleA( LPCSTR modulename );
+      HINSTANCE WINAPI LoadLibraryA( LPCSTR libname );
+      DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer );
+      UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename );
+      BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
+                                     PDWORD pdwBytesPerSector,
+                                     PDWORD pdwNumberOfFreeClusters, PDWORD pdwTotalNumberOfClusters );
+      BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
+      int WINAPI SetTextCharacterExtra( HDC hdc, int i );
+      BOOL WINAPI GetKeyboardState( PBYTE p );
+      BOOL WINAPI SetKeyboardState( PBYTE p );
 
-   int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
-   BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
-   BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
+      int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
+      BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
+      BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
+   #endif /* _MSC_VER */
 
    #if defined( __POCC__ ) || defined( __XCC__ )
       #ifndef GlobalAlloc
@@ -179,15 +181,16 @@ extern char * strerror( int errnum );
       #endif
       #ifndef GlobalFlags
       #define GlobalFlags(lp)             LocalFlags(lp)
+      #endif
    #endif
-   #endif
-#endif /* HB_OS_WIN_USED && _MSC_VER */
 
-#if !defined( GetEnvironmentVariable )
-   DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
-   DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
-   #define GetEnvironmentVariable GetEnvironmentVariableW
-#endif
+   #if !defined( GetEnvironmentVariable )
+      DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
+      DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
+      #define GetEnvironmentVariable GetEnvironmentVariableW
+   #endif
+
+#endif /* HB_OS_WIN_USED */
 
 #endif /* HB_OS_WIN_CE */
 
