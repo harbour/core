@@ -33,147 +33,29 @@
  *
  */
 
-/* Changelog
-
-  * Changed, bla-bla
-  ! Fixed
-  % Optimized
-  + Added
-  - Removed
-  ; Comment
-
-see ChangeLog 2002-07-19 09:10 UTC+0500 April White <april@users.sourceforge.net>
-see ChangeLog 2002-07-14 14:14 UTC+0500 April White <april@users.sourceforge.net>
-
-    TODO: impliment ulFlags within hb_btreeopen() - see warning above
-          - clear im-memory flag
-          - get unique flag from file header
-
-*/
-
 /*
-  History :
-    - removed use of ftruncate() - wasn't reporting error when it failed
-
-    12/13/09 - remove casts in file io calls
-
-    04/27/02 - add 'buffers' as a parameter to main()
-    07/11/01 - minor cosmetic changes
-    07/08/01 - added flag IsMultiBuffers & set/clear it in ioBufferAlloc()
-    07/07/01 - it works!
-             - removed disabled code that refered to the tree->IsDirty
-               flag, since it has been replaced by the ioBuffer flag
-    07/07/01 - lots of cleanup of ioBufferScan() re. page reads when only
-               a single buffer
-             - amended Grow() to call ioBufferScan() w/ NULLPAGE
-             - replaced all tree IsDirty flags w/ ioBuffer IsDirty flags
-    07/04/01 - retry ioBufferAlloc() w/ 1 - insert seems to work
-    07/03/01 - try ioBufferAlloc() with a value of 1
-               - add's worked w/ no error, delete's failed w/o unique, but
-                 the app stopped w/ unique - follow this!
-                   - the successor() 'exit(0)' is hit
-    06/21/01 - initial code on a link-list io buffer system
-    06/16/01 - more coding of key-driven move first/last/next/previous
-               - can this code be used for stack-driven movements?
-    06/15/01 - based on compiling w/ VC++ at work, these amendments were done:
-               * replace NULL with either 0 or a defined constant
-               * fix macro var names in FOpen() group of macros
-               * added FOpen() for non-gnu compilers
-               * if cannot open output file, report that properly - it is
-                 reporting an 'out of disk space' error on the long jump
-               * replace F_OK in access() call with 0, or define it at the top;
-                 check errno for error condition
-               * replace FCreate() with:
-                 pBTree->hFile      = FCreate( pBTree->szFileName, _A_NORMAL );
-                 if ( pBTree->hFile == -1 )
-                 {
-                   BufferRelease( pBTree );
-                   return NULL;
-                 }
-    06/14/01 - initial coding of key-driven move first/last/next/previous
-    06/13/01 - backed up code and moved bBufferIsDirty to a flag in Flags
-    06/09/01 - renamed Key_T to hb_KeyData_T throughout most of the code
-    06/04/01 - moved NodeGet() & NodeSet() into NodeCopy()
-             - add UNIQUE create flag, add to file & mem header, and
-               recognize it inside KeyCompare()
-    06/01/01 - moved sbRecordNotFound & sbDuplicateKey into the btree structure
-             - wrapped sulMax* variables in conditional code
-    05/31/01 - remove all usage of TmpKey
-    05/30/01 - initial code to include a Data element to the BTree
-               - need: UNIQUE parameter for BtreeNew
-                     : amend KeyCompare to recoqnize and use the flag
-    05/25/01 - initial code to add Data elements to the tree
-               - do I want to have a conditional flag, so that space can be saved?
-                 - no, since most btree files will being either on external
-                   data or something like a spelling dictionary, which might
-                   need flags
-    05/15/01 - found a bug - Combine() was calling BranchSet() which was
-               overwriting the first key - inside BtreeNew() I reduced the
-               MaxKey value by 1 and it seems to work
-               - test to see how much wasted space there is in the output file
-                 - the problem wasn't so much MaxKey but MinKey - I increased
-                   MaxKey by 1 and improved block usage without side effects
-    05/09/01 - the last big change was to replace use of tree->TmpKey
-               with locally allocated buffers, and adding a 'destination'
-               pointer to KeyGet() worked once I increased the buffer sizes
-               by 1, but the same bug with deleting 'acapatity' still exists,
-               and I discovered that deleting 'aelem' creates an empty element
-    05/06/01 - by replacing 'tree->ulThisPage' with 'tree->ulRootPage',
-               I fixed the bug with deleting 'be', but another popped up
-               - when 'range' is deleted, 'zero' is also deleted
-                 - I think it was caused by a missing READPAGE_IF_NEEDED()
-                   - to be tested - testing failed!
-                   - the only pattern is that 'reference' is in the last
-                     iPosition of its page, as is 'zero'
-    05/05/01 - I have found a simple case [about 196 records] that causes the
-               delete code to fail - a non-root page has too few records!
-    05/04/01 - when allocating a buffer for writing to the file, zero fill it
-    12/28/00 - replaced BufferAlloc() with macro to BufferRealloc()
-             - removed PadToSize parameter from HeaderWrite() and moved
-               the corresponding code to BTreeNew()
-             - added macro FTell() and replaced tell()
-             - removed the BTree prefix from several static functions
-
-    09/09/00 - branchget requested a iPosition > page count (84 vs 83)
-             - by placing a search before actual delete, problem solved
-             - some keys are not deleted for different page sizes, and
-               in infinite loop startes for small page sizes (256/512)
-               - CountAdj set a page count to 0 - look into this
-    09/08/00 - when storing a branch, see if it already exists in the current page
-             - a branch > filesize was retrieved/created!
-    09/04/00 - replacing binary search in SearchNode() removed the crash
-               for 1024 but left 4096
-             - there is a problem with the code with 1024 - there was no crash
-               at 1024, but a page was corrupted - the Traverse() code was
-               messed up and apparently recurisvely calling the same page
-             - making 'MaximumKeys' 1 smaller (ie. - 1 - 1) still leaves a
-               crash with 4096
-    09/02/00 - still crashes
-             - increased size of TmpKey and set last char to '\0', as well
-               other temporary key holders
-             - introduced 'DEADFOOD' as a buffer trailer & BTR as file page
-               header - nothing
-             - removed all calls to assert(), trying to fprintf() before
-               any longjmp's
-    09/01/00 - possible crash with some block size may be caused by not
-               properly allocating size of buffer
-    08/27/00 - had to reduce the max key by 1 because in some cases the
-      code crashes (ie. tested with a block of 512 is okay, 1K fataly crashes)
-
-  TODO:
-    - determine how to handle page buffers in a multi-user environment
-    - replace some of the for..next loops through the key/branches that
-      move them around with memmove()
-    - this may not be feasible - in a multi-user environ, the stack
-      would become invalid; I would have to save the current key and then
-      locate the next/prev as needed, locking the file for the duration
-      (as well, page buffering would not be allowed because a page in
-      memory would become invalid)
-    - complete Move() API
+TODO:
+   - determine how to handle page buffers in a multi-user environment
+   - replace some of the for..next loops through the key/branches that
+     move them around with memmove()
+      - this may not be feasible - in a multi-user environ, the stack
+        would become invalid; I would have to save the current key and then
+        locate the next/prev as needed, locking the file for the duration
+        (as well, page buffering would not be allowed because a page in
+        memory would become invalid)
+   - complete Move() API
       - when move right/left, follow any branch down
       - when hit end of a node, pop from stack
         - increment the position and follow branch down
-    - implement code to handle big & little endian systems
+   - impliment ulFlags within hb_btreeopen() - see warning above
+      - clear im-memory flag
+      - get unique flag from file header
+   - detect change to header, only write the header as needed
+   - build page output buffer then write it
+   - read page input buffer then split it
+   - make MT safe
+
+TOFIX:
 */
 
 #include "hbvm.h"
@@ -190,9 +72,8 @@ HB_EXTERN_BEGIN
 #if !defined( DEBUG ) && !defined( NDEBUG )
   #define NDEBUG
 #else
+   #define PrintCRLF() hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) )
 #endif
-
-#define PrintCRLF() hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) )
 
 #if defined( __GNUC__ )
 
@@ -217,6 +98,7 @@ HB_EXTERN_BEGIN
 #endif
 
 #define HEADER_ID   "BTR\x10"
+
 #define NULLPAGE    0L
 
 #define BTREENODEISNULL( pBTree, node ) ( BOOL )( ( node ) == NULLPAGE )
@@ -225,14 +107,8 @@ HB_EXTERN_BEGIN
                                  ( pBTree )->pThisKeyData->xData.lData = 0, \
                                  ( pBTree )->pThisKeyData->xData.pData = NULL )
 
-#ifndef HB_BTREE_HEADERSIZE
+#undef HB_BTREE_HEADERSIZE
 #define HB_BTREE_HEADERSIZE  2048
-#endif
-
-/*
-  #define MAXKEYS(m) ((m)-1)
-  #define MINKEYS(m) (((m)+1)/2-1)
-*/
 
 typedef struct stack_item
 {
@@ -249,21 +125,22 @@ typedef struct stack_tag
 #define STACKNODE( pStack )     ( *pStack )->items[ ( *pStack )->usCount - 1 ].ulNode
 #define STACKPOSITION( pStack ) ( *pStack )->items[ ( *pStack )->usCount - 1 ].iPosition
 
+/* TODO: create two structs, one for in-memory, one for files */
 typedef struct ioBuffer_tag
 {
   struct ioBuffer_tag *prev, *next;
   union {
-    ULONG ulPage;
-    struct ioBuffer_tag * pPage;
+    ULONG ulPage; /* not in-memory */
+    struct ioBuffer_tag * pPage; /* in-memory */
   } xPage;
   BOOL IsDirty;
 
   /* was: Buffer_T pBuffer; */
-  ULONG * pulPageCount;
+  ULONG * pulPageCount; /* TODO: use LE get macro to retrieve this; better yet, dont use this */
   ULONG * pulBranch;
   union {
-    LONG  * plData;
-    PHB_ITEM * ppData;
+    LONG  * plData; /* not in-memory */
+    PHB_ITEM * ppData; /* in-memory */
   } xData;
   BYTE  * szKey;
   BYTE    Buffer[ 1 ];
@@ -325,7 +202,6 @@ struct hb_BTree
   BOOL            IsDirtyFlagAssignment;   /* replaces const TRUE, and !GETFLAG( pBTree, IsInMemory ) */
 
   BTreeCmpFunc    pStrCompare;
-
 };
 
 #if !defined( DEBUG ) && !defined( NDEBUG )
@@ -357,7 +233,7 @@ static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const char * szD
 {
     PHB_ITEM pErr = hb_errRT_New(
     ES_ERROR        /* USHORT uiSeverity */,
-    "HBBTREE"       /* const char * szSubSystem */,
+    "HB_BTREE"      /* const char * szSubSystem */,
     EG_ARG          /* ULONG  ulGenCode */,
     ulSubCode       /* ULONG  ulSubCode */,
     szDescription   /* const char * szDescription */,
@@ -402,6 +278,7 @@ static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * pre
 
   thisptr->pulPageCount = ( ULONG * )( thisptr->Buffer );
   thisptr->pulBranch    = ( ULONG * )&thisptr->pulPageCount[ 1 ];
+
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
     thisptr->xData.ppData = ( PHB_ITEM * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
@@ -710,6 +587,9 @@ static void StackRelease( BTreeStack **pStack )
 
 static void HeaderWrite( struct hb_BTree * pBTree )
 {
+   BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
+   BYTE * pHeader = &TmpHeader[ 0 ];
+
   /*
     header       [4 bytes]
     ulFreePage   [4 bytes, little endian]
@@ -720,28 +600,29 @@ static void HeaderWrite( struct hb_BTree * pBTree )
     ulKeyCount   [4 bytes, little endian]
   */
 
-/* TODO: store this to a temp buffer and write the buffer */
-/* TODO: write this info in a non-endian method */
-  hb_fsSeek( pBTree->hFile, 0, FS_SET );
+   hb_xmemset( TmpHeader, '\0', sizeof( TmpHeader ) );
 
-  if ( hb_fsWrite( pBTree->hFile, HEADER_ID, sizeof( HEADER_ID ) ) +
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->usPageSize, sizeof( pBTree->usPageSize ) ) + /* 2 bytes */
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->usKeySize , sizeof( pBTree->usKeySize  ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) ) + /* 4 bytes */
-       0 != sizeof( HEADER_ID ) +
-            sizeof( pBTree->ulFreePage ) +
-            sizeof( pBTree->usPageSize ) +
-            sizeof( pBTree->usKeySize  ) +
-            sizeof( pBTree->ulRootPage ) +
-            sizeof( pBTree->ulFlags    ) +
-            sizeof( pBTree->ulKeyCount ) +
-            0 )
-  {
+   #define put_uint16( v, p ) { HB_PUT_LE_UINT16( p, ( UINT32 )v ); p += 4; }
+   #define put_uint32( v, p ) { HB_PUT_LE_UINT32( p, v ); p += 4; }
+
+   hb_xmemcpy( pHeader, HEADER_ID, sizeof( HEADER_ID ) - 1 ); pHeader += sizeof( HEADER_ID ) - 1;
+   put_uint32( ( UINT32 )HB_BTREE_HEADERSIZE, pHeader );
+   put_uint16( pBTree->usPageSize, pHeader );
+   put_uint16( pBTree->usKeySize , pHeader );
+   put_uint16( pBTree->usMaxKeys, pHeader );
+   put_uint16( pBTree->usMinKeys, pHeader );
+   put_uint32( pBTree->ulFlags   , pHeader );
+
+   pHeader = &TmpHeader[ 64 ];
+   put_uint32( pBTree->ulRootPage, pHeader );
+   put_uint32( pBTree->ulFreePage, pHeader );
+   put_uint32( pBTree->ulKeyCount, pHeader );
+
+   hb_fsSeek( pBTree->hFile, 0, FS_SET );
+   if ( hb_fsWrite( pBTree->hFile, TmpHeader, sizeof( TmpHeader ) ) != sizeof( TmpHeader ) )
+   {
     hb_RaiseError( HB_BTree_WriteError_EC, "write error", "HeaderWrite*", 0 );
-  }
+   }
 }
 
 static ULONG Grow( struct hb_BTree * pBTree )
@@ -753,7 +634,6 @@ static ULONG Grow( struct hb_BTree * pBTree )
     ioBuffer_T * thisptr;
 
     thisptr = ioOneBufferAlloc( pBTree, NULL, pBTree->ioBuffer );
-    /* TOFIX: casting pointer to ULONG! */
     thisptr->xPage.pPage = thisptr;
     if ( pBTree->ioBuffer )  pBTree->ioBuffer->prev = thisptr;
     pBTree->ioBuffer = thisptr;
@@ -1598,9 +1478,7 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
   int iMaximumKeys;
-  ULONG size;
   int iFileIOmode;
-  BYTE *buffer;
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
@@ -1634,6 +1512,8 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
     if ( ( ulFlags & ( HB_BTREE_READONLY ) ) == HB_BTREE_READONLY )
     {
       iFileIOmode = FC_READONLY;
+      ulFlags &= ~HB_BTREE_READONLY;
+      ulFlags &= ~HB_BTREE_SHARED;
     }
     else
     {
@@ -1686,21 +1566,7 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 
   if ( GETFLAG( pBTree, IsInMemory ) == FALSE )
   {
-  /* HeaderWrite() leaves the file pointer at the end of the usable area,
-     so the padding amount is the header size minus current position */
     HeaderWrite( pBTree );
-    size = HB_BTREE_HEADERSIZE - hb_fsTell( pBTree->hFile );
-    buffer = ( BYTE * ) BufferAlloc( size );
-    hb_xmemset( buffer, '\0', size );
-
-    if ( size != hb_fsWriteLarge( pBTree->hFile, buffer, size ) )
-    {
-      BufferRelease( buffer );
-      BufferRelease( pBTree );
-      hb_RaiseError( HB_BTree_WriteError_EC, "write error", "hb_btreenew", 0 );
-      hb_retni( -1 );
-    }
-    BufferRelease( buffer );
   }
   else /* IsInMemory == TRUE */
   {
@@ -1714,48 +1580,48 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
-  int iMaximumKeys;
-  BYTE TmpHeader[ sizeof( HEADER_ID ) - 1 ];
+  BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
+  BYTE * pHeader = &TmpHeader[ 0 ];
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
   pBTree->szFileName = hb_strdup( FileName );
-  pBTree->hFile      = hb_fsOpen( pBTree->szFileName, FO_READWRITE );
+  pBTree->hFile      = hb_fsOpen( pBTree->szFileName, ( ( ulFlags & HB_BTREE_READONLY ) ? FO_READ : FO_READWRITE ) );
   if ( pBTree->hFile == -1 )
   {
     BufferRelease( pBTree );
     return NULL;
   }
 
-  hb_fsRead( pBTree->hFile, TmpHeader, sizeof( HEADER_ID ) - 1 );
-  if ( memcmp( TmpHeader, HEADER_ID, sizeof( HEADER_ID ) - 1 ) != 0 )
+  hb_fsRead( pBTree->hFile, TmpHeader, sizeof( TmpHeader ) );
+  if ( memcmp( TmpHeader, HEADER_ID, sizeof( HEADER_ID ) ) != 0 )
   {
     hb_fsClose( pBTree->hFile );
     BufferRelease( pBTree );
     return NULL;
   }
 
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->usPageSize, sizeof( pBTree->usPageSize ) );
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->usKeySize , sizeof( pBTree->usKeySize  ) );
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) );
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) );
-  hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) );
+  #define get_uint16( v, p ) { v = ( UINT16 ) HB_GET_LE_UINT32( p ); p += 4; }
+  #define get_uint32( v, p ) { v = HB_GET_LE_UINT32( p ); p += 4; }
 
-  iMaximumKeys = ( + pBTree->usPageSize                    \
-                   - sizeof( *pBTree->ioBuffer->pulPageCount ) \
-                   - sizeof( *pBTree->ioBuffer->pulBranch ) )  \
-                 / ( sizeof( *pBTree->ioBuffer->pulBranch ) +  \
-                     sizeof( *pBTree->ioBuffer->xData.plData )    +  \
-                     pBTree->usKeySize ) - 1;
+  pHeader += sizeof( HEADER_ID ) - 1;
+  pHeader += sizeof( ( UINT32 )HB_BTREE_HEADERSIZE );
+  get_uint16( pBTree->usPageSize, pHeader );
+  get_uint16( pBTree->usKeySize , pHeader );
+  get_uint16( pBTree->usMaxKeys, pHeader );
+  get_uint16( pBTree->usMinKeys, pHeader );
+  get_uint32( pBTree->ulFlags   , pHeader );
 
-  pBTree->usMaxKeys  = ( USHORT ) iMaximumKeys;
-  pBTree->usMinKeys  = ( USHORT ) ( ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2 );
+  pHeader = &TmpHeader[ 64 ];
+  get_uint32( pBTree->ulRootPage, pHeader );
+  get_uint32( pBTree->ulFreePage, pHeader );
+  get_uint32( pBTree->ulKeyCount, pHeader );
+
   pBTree->pThisKeyData = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   CLEARKEYDATA( pBTree );
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
-  HB_SYMBOL_UNUSED( ulFlags );
+  pBTree->ulFlags |= (ulFlags & HB_BTREE_READONLY);
   ioBufferAlloc( pBTree, ulBuffers );
 
   RESETFLAG( pBTree, HB_BTREE_INMEMORY ); /* clear this flag */
@@ -1776,16 +1642,25 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
 void hb_BTreeClose( struct hb_BTree * pBTree )
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
+
   ioBufferRelease( pBTree );
-  if ( GETFLAG( pBTree, IsInMemory ) == FALSE )  HeaderWrite( pBTree );
+
+  if ( GETFLAG( pBTree, IsInMemory ) == FALSE &&
+       GETFLAG( pBTree, IsReadOnly ) == FALSE )
+  {
+     HeaderWrite( pBTree );
+  }
+
   if ( pBTree->hFile != 0 )
   {
     hb_fsClose( pBTree->hFile );
   }
+
   if ( pBTree->szFileName != NULL )
   {
     BufferRelease( pBTree->szFileName );
   }
+
   StackRelease( &pBTree->pStack );
   BufferRelease( pBTree->pThisKeyData );
   BufferRelease( pBTree );
@@ -1844,11 +1719,13 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
     return s_BTree_List[ index - 1 ];
 }
 
-HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int nBuffers=1 ] )  ->  hb_Btree_Handle */
+HB_FUNC( HB_BTREEOPEN )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISCHAR( 1 ) )
+  {
     hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( hb_parc( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) ) );
+  }
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1886,7 +1763,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || HB_ISNUM( 3 ) ) )
   {
-    hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), hb_parc( 2 ), hb_paramError( 3 ) ) );
+    hb_retl( hb_BTreeInsert( /*BTree_GetTreeIndex( "hb_btreeinsert" )*/ pBTree, hb_parc( 2 ), hb_paramError( 3 ) ) );
   }
   else
   {
@@ -1985,7 +1862,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
     case HB_BTREEINFO_KEYSIZE:   hb_retni( pBTree->usKeySize ); break;
     case HB_BTREEINFO_MAXKEYS:   hb_retni( pBTree->usMaxKeys ); break;
     case HB_BTREEINFO_MINKEYS:   hb_retni( pBTree->usMinKeys ); break;
-    case HB_BTREEINFO_FLAGS:     hb_retnl( pBTree->ulFlags ); break;
+    case HB_BTREEINFO_FLAGS:     hb_retnl( pBTree->ulFlags & ~( HB_BTREE_READONLY ) ); break;
     case HB_BTREEINFO_KEYCOUNT:  hb_retnl( pBTree->ulKeyCount ); break;
     case HB_BTREEINFO_ALL:
     default:  /* build an array and store all elements from above into it */
@@ -1997,7 +1874,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
         hb_arraySetNI( info, HB_BTREEINFO_KEYSIZE , pBTree->usKeySize );
         hb_arraySetNI( info, HB_BTREEINFO_MAXKEYS , pBTree->usMaxKeys );
         hb_arraySetNI( info, HB_BTREEINFO_MINKEYS , pBTree->usMinKeys );
-        hb_arraySetNL( info, HB_BTREEINFO_FLAGS   , pBTree->ulFlags );
+        hb_arraySetNL( info, HB_BTREEINFO_FLAGS   , pBTree->ulFlags & ~( HB_BTREE_READONLY ) );
         hb_arraySetNL( info, HB_BTREEINFO_KEYCOUNT, pBTree->ulKeyCount );
 
         hb_itemReturnRelease( info );
