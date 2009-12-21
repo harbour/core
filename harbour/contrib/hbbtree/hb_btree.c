@@ -589,6 +589,7 @@ static void HeaderWrite( struct hb_BTree * pBTree )
 {
    BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
    BYTE * pHeader = &TmpHeader[ 0 ];
+   UINT32 uiHeaderSize = HB_BTREE_HEADERSIZE;
 
   /*
     header       [4 bytes]
@@ -602,11 +603,11 @@ static void HeaderWrite( struct hb_BTree * pBTree )
 
    hb_xmemset( TmpHeader, '\0', sizeof( TmpHeader ) );
 
-   #define put_uint16( v, p ) { HB_PUT_LE_UINT16( p, ( UINT32 )v ); p += 4; }
+   #define put_uint16( v, p ) { HB_PUT_LE_UINT32( p, ( UINT32 ) v ); p += 4; }
    #define put_uint32( v, p ) { HB_PUT_LE_UINT32( p, v ); p += 4; }
 
    hb_xmemcpy( pHeader, HEADER_ID, sizeof( HEADER_ID ) - 1 ); pHeader += sizeof( HEADER_ID ) - 1;
-   put_uint32( ( UINT32 )HB_BTREE_HEADERSIZE, pHeader );
+   put_uint32( uiHeaderSize, pHeader );
    put_uint16( pBTree->usPageSize, pHeader );
    put_uint16( pBTree->usKeySize , pHeader );
    put_uint16( pBTree->usMaxKeys, pHeader );
