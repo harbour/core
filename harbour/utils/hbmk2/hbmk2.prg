@@ -2658,7 +2658,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := "dxe3gen"
-         cOpt_Dyn := "--whole-archive {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "--whole-archive -U {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
@@ -2702,8 +2702,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( l_aLIBSYS, "pdcurses" )
          ENDIF
 
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cDL_Version_Alter + cLibExt,;
-                                                   "harbour" + cDL_Version_Alter + cLibExt ) }
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cLibExt,;
+                                                   "harbour" + cLibExt ) }
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
@@ -2804,6 +2804,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          ENDCASE
+         IF hbmk[ _HBMK_cPLAT ] == "dos"
+            /* workaround for not included automatically CLIB in pure C mode DOS builds */
+            cOpt_Link += " LIB clib3r"
+         ENDIF
          cBin_Lib := "wlib" + cCCEXT
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
