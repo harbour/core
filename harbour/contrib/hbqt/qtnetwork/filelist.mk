@@ -11,6 +11,7 @@
 CPP_SOURCES := \
    QFtp.cpp \
    QHttp.cpp \
+   QHttpHeader.cpp \
    QHttpRequestHeader.cpp \
    QHttpResponseHeader.cpp \
    QNetworkRequest.cpp \
@@ -20,6 +21,7 @@ CPP_SOURCES := \
 PRG_SOURCES := \
    TQFtp.prg \
    TQHttp.prg \
+   TQHttpHeader.prg \
    TQHttpRequestHeader.prg \
    TQHttpResponseHeader.prg \
    TQNetworkRequest.prg \

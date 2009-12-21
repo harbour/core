@@ -92,6 +92,7 @@ QHBoxLayout.qth
 QHeaderView.qth
 QHelpEvent.qth
 QHttp.qth
+QHttpHeader.qth
 QHttpRequestHeader.qth
 QHttpResponseHeader.qth
 QIcon.qth

@@ -170,6 +170,7 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QHeaderView( n )                   ( ( QHeaderView                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHelpEvent( n )                    ( ( QHelpEvent                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttp( n )                         ( ( QHttp                       * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttpHeader( n )                   ( ( QHttpHeader                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttpResponseHeader( n )           ( ( QHttpResponseHeader         * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttpRequestHeader( n )            ( ( QHttpRequestHeader          * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QIcon( n )                         ( ( QIcon                       * ) hbqt_gcpointer( n ) )
