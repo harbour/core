@@ -87,7 +87,7 @@ void clear ()
 QAction * insertMenu ( QAction * before, QMenu * menu )
 QAction * insertSeparator ( QAction * before )
 bool isDefaultUp () const
-OSMenuRef macMenu ()
+// OSMenuRef macMenu ()
 void setActiveAction ( QAction * act )
 // void setDefaultAction ( QAction * act )
 void setDefaultUp ( bool )
