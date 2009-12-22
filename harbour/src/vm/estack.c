@@ -102,7 +102,7 @@
                                       hb_stack_ptr = NULL; } while ( 0 )
 #     define hb_stack_ready()    (hb_stack_ptr != NULL)
 
-#else
+#  else
 
       /* compiler has no native TLS support, we have to implement it ourselves */
 #     if defined( HB_STACK_MACROS )
@@ -123,7 +123,7 @@
                                  while ( 0 )
 #     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) )
 
-#endif /* HB_USE_TLS */
+#  endif /* HB_USE_TLS */
 
 #  if !defined( HB_STACK_PRELOAD )
 #     undef hb_stack

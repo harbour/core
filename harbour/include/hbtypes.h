@@ -53,9 +53,7 @@
 #ifndef HB_TYPES_H_
 #define HB_TYPES_H_
 
-#ifdef HB_API_MACROS
-   #undef HB_API_MACROS
-#endif
+#undef HB_API_MACROS
 
 #include "hbvm.h"
 #include "hbapiitm.h"
