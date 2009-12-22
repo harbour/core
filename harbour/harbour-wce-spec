@@ -14,8 +14,8 @@
 ######################################################################
 
 %define name      harbour-wce
-%define version   2.0.0
-%define releasen  0
+%define version   2.0.1
+%define releasen  dev
 %define hb_pref   hbce
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
