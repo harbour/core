@@ -1800,7 +1800,7 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   int   handle = hb_fsOpen( hb_parcx(1), FO_READ );
+   HB_FHANDLE handle = hb_fsOpen( hb_parcx(1), FO_READ );
 
    if( handle != FS_ERROR )
    {
@@ -1824,7 +1824,7 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
 
 HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
-   int   handle = hb_fsCreate( hb_parcx(1), FC_NORMAL );
+   HB_FHANDLE handle = hb_fsCreate( hb_parcx(1), FC_NORMAL );
    ULONG iSize = hb_parcsiz( 2 ) - 1;
 
    if( handle != FS_ERROR && iSize > 0 )
