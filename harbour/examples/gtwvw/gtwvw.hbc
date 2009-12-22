@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+{!allwin|!x86}skip=yes
+
+incpaths=.
+
+gt=gtwvw
+gui=yes

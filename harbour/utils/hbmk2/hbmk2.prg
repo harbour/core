@@ -1544,42 +1544,42 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          hbmk[ _HBMK_lBLDFLGP ] := "p" $ cParam
          hbmk[ _HBMK_lBLDFLGC ] := "c" $ cParam
          hbmk[ _HBMK_lBLDFLGL ] := "l" $ cParam
-      CASE cParamL == "-debug"           ; hbmk[ _HBMK_lDEBUG ]      := .T.
+      CASE cParamL == "-debug"           ; hbmk[ _HBMK_lDEBUG ]       := .T.
       CASE cParamL == "-debug-" .OR. ;
-           cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]      := .F.
-      CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]      := .T.
+           cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]       := .F.
+      CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]       := .T.
       CASE cParamL == "-optim-" .OR. ;
-           cParamL == "-noopt"           ; hbmk[ _HBMK_lOPTIM ]      := .F.
-      CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ]  := .T.
-      CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]   := .T.
-      CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]  := .T.
-      CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ]  := .T.
-      CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]     := .T.
-      CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]     := .F.
-      CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]        := .T.
+           cParamL == "-noopt"           ; hbmk[ _HBMK_lOPTIM ]       := .F.
+      CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ]   := .T.
+      CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]    := .T.
+      CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]   := .T.
+      CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ]   := .T.
+      CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]      := .T.
+      CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]      := .F.
+      CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]         := .T.
       CASE cParamL == "-map-" .OR. ;
-           cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]        := .F.
-      CASE cParamL == "-implib"          ; hbmk[ _HBMK_lIMPLIB ]     := .T.
+           cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]         := .F.
+      CASE cParamL == "-implib"          ; hbmk[ _HBMK_lIMPLIB ]      := .T.
       CASE cParamL == "-implib-" .OR. ;
-           cParamL == "-noimplib"        ; hbmk[ _HBMK_lIMPLIB ]     := .F.
-      CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]       := .T.
+           cParamL == "-noimplib"        ; hbmk[ _HBMK_lIMPLIB ]      := .F.
+      CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]        := .T.
       CASE cParamL == "-beep-" .OR. ;
-           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]       := .F.
-      CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]        := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
-      CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]  := .T.
-      CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]     := .T.
+           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F.
+      CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]         := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
+      CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]   := .T.
+      CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]      := .T.
       CASE cParamL == "-minipo-" .OR. ;
-           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]     := .F.
-      CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]        := .T. ; l_lCLEAN := .T.
-      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]        := .T.
+           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]      := .F.
+      CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]         := .T. ; l_lCLEAN := .T.
+      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]         := .T.
       CASE cParamL == "-inc-" .OR. ;
-           cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]        := .F.
-      CASE cParamL == "-ignore"          ; hbmk[ _HBMK_lIGNOREERROR] := .T.
+           cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]         := .F.
+      CASE cParamL == "-ignore"          ; hbmk[ _HBMK_lIGNOREERROR ] := .T.
       CASE cParamL == "-ignore-" .OR. ;
-           cParamL == "-noignore"        ; hbmk[ _HBMK_lIGNOREERROR] := .F.
-      CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]      := .T.
+           cParamL == "-noignore"        ; hbmk[ _HBMK_lIGNOREERROR ] := .F.
+      CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]       := .T.
       CASE cParamL == "-strip-" .OR. ;
-           cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]      := .F.
+           cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F.
 
       CASE cParamL == "-warn" .OR. ;
            Left( cParamL, 7 ) == "-warn="
@@ -4607,7 +4607,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                      hbmk_OutStd( hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
                   ENDIF
                ELSE
-                  hbmk_OutErr( hb_StrFormat( I_( "Warning: Cannot create directory for target install %1$s." ), tmp1 ) )
+                  hbmk_OutErr( hb_StrFormat( I_( "Warning: Cannot create install directory for target %1$s." ), tmp1 ) )
                ENDIF
             NEXT
          ENDIF

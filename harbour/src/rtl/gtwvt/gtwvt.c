@@ -263,7 +263,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
       return NULL;
    }
 
-   pWVT->hInstance         = ( HINSTANCE ) hInstance;
+   pWVT->hInstance         = hInstance;
    pWVT->iCmdShow          = iCmdShow;
 
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
