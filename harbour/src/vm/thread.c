@@ -786,7 +786,7 @@ HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC sta
    *th_id = _beginthread( start_func, NULL, 128 * 1024, Cargo );
    th_h = *th_id;
 #else
-   { int TODO_MT; }
+   { int iTODO_MT; }
    *th_id = ( HB_THREAD_ID ) 0;
    th_h = ( HB_THREAD_HANDLE ) 0;
 #endif
@@ -818,7 +818,7 @@ BOOL hb_threadJoin( HB_THREAD_HANDLE th_h )
     */
    return rc == NO_ERROR || rc == ERROR_INVALID_THREADID;
 #else
-   { int TODO_MT; }
+   { int iTODO_MT; }
    return FALSE;
 #endif
 }
@@ -839,7 +839,7 @@ BOOL hb_threadDetach( HB_THREAD_HANDLE th_h )
    APIRET rc = DosWaitThread( &th_h, DCWW_NOWAIT );
    return rc == NO_ERROR || rc == ERROR_INVALID_THREADID;
 #else
-   { int TODO_MT; }
+   { int iTODO_MT; }
    return FALSE;
 #endif
 }

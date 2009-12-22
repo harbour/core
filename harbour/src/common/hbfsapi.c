@@ -330,7 +330,7 @@ BOOL hb_fsNameExists( const char * pszFileName )
    }
 #else
    {
-      int TODO; /* To force warning */
+      int iTODO; /* To force warning */
 
       fExist = FALSE;
    }
@@ -393,7 +393,7 @@ BOOL hb_fsFileExists( const char * pszFileName )
    }
 #else
    {
-      int TODO; /* To force warning */
+      int iTODO; /* To force warning */
 
       fExist = FALSE;
    }
@@ -455,7 +455,7 @@ BOOL hb_fsDirExists( const char * pszDirName )
    }
 #else
    {
-      int TODO; /* To force warning */
+      int iTODO; /* To force warning */
 
       fExist = FALSE;
    }

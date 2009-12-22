@@ -712,7 +712,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 #else
 
    {
-      int TODO; /* TODO: for given platform */
+      int iTODO; /* TODO: for given platform */
 
       /* HB_SYMBOL_UNUSED( ffind ); */
 
@@ -865,7 +865,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          {
             /* Intentionally do nothing */
-            int TODO; /* TODO: for given platform */
+            int iTODO; /* TODO: for given platform */
 
             HB_SYMBOL_UNUSED( info );
          }

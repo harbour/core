@@ -684,7 +684,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    }
 #else
    {
-      int TODO; /* TODO: */
+      int iTODO; /* TODO: */
    }
 #endif
 

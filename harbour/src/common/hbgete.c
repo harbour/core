@@ -233,7 +233,7 @@ BOOL hb_setenv( const char * szName, const char * szValue )
     * to the above #elif ... to eliminate warning [druzus]
     */
 
-   int TODO;
+   int iTODO;
 
    HB_SYMBOL_UNUSED( szName );
    HB_SYMBOL_UNUSED( szValue );

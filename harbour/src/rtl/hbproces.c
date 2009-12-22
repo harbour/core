@@ -366,7 +366,7 @@ static int hb_fsProcessExec( const char *pszFilename,
 }
 #else
 {
-   int TODO; /* TODO: for given platform */
+   int iTODO; /* TODO: for given platform */
 
    HB_SYMBOL_UNUSED( pszFilename );
    HB_SYMBOL_UNUSED( hStdin );
@@ -777,7 +777,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
 }
 #else
 {
-   int TODO; /* TODO: for given platform */
+   int iTODO; /* TODO: for given platform */
 
    HB_SYMBOL_UNUSED( pszFilename );
    HB_SYMBOL_UNUSED( phStdin );
@@ -874,7 +874,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
 }
 #else
 {
-   int TODO; /* TODO: for given platform */
+   int iTODO; /* TODO: for given platform */
 
    HB_SYMBOL_UNUSED( hProcess );
    HB_SYMBOL_UNUSED( fWait );
@@ -934,7 +934,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 }
 #else
 {
-   int TODO; /* TODO: for given platform */
+   int iTODO; /* TODO: for given platform */
 
    HB_SYMBOL_UNUSED( hProcess );
    HB_SYMBOL_UNUSED( fGentle );
@@ -1265,7 +1265,7 @@ int hb_fsProcessRun( const char * pszFilename,
 
 #else
 
-      int TODO;
+      int iTODO;
 
       HB_SYMBOL_UNUSED( ulStdInLen );
 

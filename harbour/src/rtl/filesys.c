@@ -1001,7 +1001,7 @@ BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMilli
    }
 #else
    {
-      int TODO; /* TODO: for given platform */
+      int iTODO; /* TODO: for given platform */
 
       HB_SYMBOL_UNUSED( pszFileName );
       HB_SYMBOL_UNUSED( plJulian );
@@ -1088,7 +1088,7 @@ BOOL hb_fsGetAttr( const char * pszFileName, ULONG * pulAttr )
    }
 #else
    {
-      int TODO; /* TODO: for given platform */
+      int iTODO; /* TODO: for given platform */
 
       HB_SYMBOL_UNUSED( pszFileName );
       HB_SYMBOL_UNUSED( pulAttr );
@@ -1272,7 +1272,7 @@ BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
    }
 #else
    {
-      int TODO; /* To force warning */
+      int iTODO; /* To force warning */
 
       fResult = FALSE;
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -1376,7 +1376,7 @@ BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
    }
 #else
    {
-      int TODO; /* To force warning */
+      int iTODO; /* To force warning */
 
       fResult = FALSE;
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );

@@ -130,7 +130,7 @@ HB_FUNC( HB_LIBLOAD )
          hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
 #else
          {
-            int TODO;
+            int iTODO;
          }
 #endif
          /* set real marker */

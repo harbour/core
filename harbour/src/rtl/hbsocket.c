@@ -1627,7 +1627,7 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
 #elif defined( IN6ADDR_ANY_INIT )
       memcpy( &sa.sin6_addr, &s_in6addr_any, sizeof( struct in6_addr ) );
 #else
-      int TODO;
+      int iTODO;
 #endif
       *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
       *puiLen = ( unsigned ) sizeof( sa );
@@ -1648,7 +1648,7 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
       else
          hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
 #else
-      int TODO;
+      int iTODO;
 #endif
    }
 #else
@@ -1699,7 +1699,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             szAddr = inet_ntop( AF_INET, &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
-               int TODO;
+               int iTODO;
                szAddr = NULL;
             }
 #  endif
@@ -1853,7 +1853,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             szAddr = inet_ntop( AF_INET, &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
-               int TODO;
+               int iTODO;
                szAddr = NULL;
             }
 #  endif
@@ -2367,7 +2367,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking )
    if( ret == 0 )
       ret = 1;
 #else
-   int TODO;
+   int iTODO;
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fBlocking );
    hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
@@ -2391,7 +2391,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, BOOL fNoDelay )
    ret = setsockopt( sd, IPPROTO_TCP, TCP_NODELAY, ( const char * ) &val, sizeof( val ) );
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
 #else
-   int TODO;
+   int iTODO;
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fNoDelay );
    hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
@@ -2472,7 +2472,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
       hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
       return ret;
 #else
-      int TODO;
+      int iTODO;
 #endif
    }
 #if defined( HB_HAS_INET6 )
@@ -2494,7 +2494,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
          hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
       return -1;
 #else
-      int TODO;
+      int iTODO;
 #endif
    }
 #endif
@@ -2772,7 +2772,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
       struct in6_addr sin;
       fTrans = inet_pton( AF_INET6, szAddr, &sin ) > 0;
 #else
-      int TODO;
+      int iTODO;
       fTrans = FALSE;
 #endif
    }
@@ -2911,7 +2911,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #if defined( HB_HAS_INET6 )
    else if( af == HB_SOCKET_PF_INET6 )
    {
-      int TODO;
+      int iTODO;
    }
 #endif
 
