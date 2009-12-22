@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionProgressBar:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QStyleOptionProgressBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionProgressBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionProgressBar:maximum()

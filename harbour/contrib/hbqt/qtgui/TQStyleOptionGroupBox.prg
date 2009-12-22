@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionGroupBox:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QStyleOptionGroupBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionGroupBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionGroupBox:features()

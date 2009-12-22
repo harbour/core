@@ -67,6 +67,8 @@ CREATE CLASS QLinearGradient INHERIT QGradient
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QLinearGradient INHERIT QGradient
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLinearGradient:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QLinearGradient:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLinearGradient:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLinearGradient:finalStop()

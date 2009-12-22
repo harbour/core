@@ -67,13 +67,14 @@ CREATE CLASS QRadioButton INHERIT QAbstractButton
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QRadioButton:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QRadioButton:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QRadioButton:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

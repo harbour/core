@@ -67,6 +67,8 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSystemTrayIcon:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QSystemTrayIcon:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSystemTrayIcon:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSystemTrayIcon:contextMenu()

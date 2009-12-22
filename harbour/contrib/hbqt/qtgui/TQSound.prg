@@ -67,6 +67,8 @@ CREATE CLASS QSound
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QSound
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSound:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QSound:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSound:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSound:fileName()

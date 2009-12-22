@@ -67,6 +67,8 @@ CREATE CLASS QThread INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QThread INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QThread:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QThread:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QThread:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QThread:exit( nReturnCode )

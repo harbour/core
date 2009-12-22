@@ -67,6 +67,8 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -136,7 +138,6 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractItemView:new( ... )
    LOCAL p
@@ -155,6 +156,10 @@ METHOD QAbstractItemView:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractItemView:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractItemView:alternatingRowColors()

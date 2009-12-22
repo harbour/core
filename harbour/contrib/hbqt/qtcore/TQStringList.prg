@@ -67,6 +67,8 @@ CREATE CLASS QStringList INHERIT QList
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -108,7 +110,6 @@ CREATE CLASS QStringList INHERIT QList
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStringList:new( ... )
    LOCAL p
@@ -127,6 +128,10 @@ METHOD QStringList:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStringList:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStringList:append( cValue )

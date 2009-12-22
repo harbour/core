@@ -67,13 +67,14 @@ CREATE CLASS QTextBlockGroup INHERIT QTextObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextBlockGroup:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QTextBlockGroup:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextBlockGroup:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

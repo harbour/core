@@ -67,13 +67,14 @@ CREATE CLASS QDragEnterEvent INHERIT QDragMoveEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDragEnterEvent:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QDragEnterEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDragEnterEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

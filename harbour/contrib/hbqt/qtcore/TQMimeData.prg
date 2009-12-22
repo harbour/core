@@ -67,6 +67,8 @@ CREATE CLASS QMimeData INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -92,7 +94,6 @@ CREATE CLASS QMimeData INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMimeData:new( ... )
    LOCAL p
@@ -111,6 +112,10 @@ METHOD QMimeData:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMimeData:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMimeData:clear()

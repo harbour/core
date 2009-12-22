@@ -67,6 +67,8 @@ CREATE CLASS QBitmap INHERIT QPixmap
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QBitmap INHERIT QPixmap
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QBitmap:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QBitmap:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QBitmap:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QBitmap:clear()

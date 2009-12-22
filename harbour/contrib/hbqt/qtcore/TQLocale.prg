@@ -67,6 +67,8 @@ CREATE CLASS QLocale
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -121,7 +123,6 @@ CREATE CLASS QLocale
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLocale:new( ... )
    LOCAL p
@@ -140,6 +141,10 @@ METHOD QLocale:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLocale:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLocale:amText()

@@ -67,6 +67,8 @@ CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractProxyModel:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QAbstractProxyModel:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractProxyModel:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractProxyModel:mapFromSource( pSourceIndex )

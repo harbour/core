@@ -67,6 +67,8 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -115,7 +117,6 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTableView:new( ... )
    LOCAL p
@@ -134,6 +135,10 @@ METHOD QTableView:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTableView:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableView:clearSpans()

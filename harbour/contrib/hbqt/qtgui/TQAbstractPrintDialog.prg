@@ -67,6 +67,8 @@ CREATE CLASS QAbstractPrintDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QAbstractPrintDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractPrintDialog:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QAbstractPrintDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractPrintDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractPrintDialog:exec()

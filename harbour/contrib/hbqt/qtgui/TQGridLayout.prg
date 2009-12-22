@@ -67,6 +67,8 @@ CREATE CLASS QGridLayout INHERIT QLayout
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -99,7 +101,6 @@ CREATE CLASS QGridLayout INHERIT QLayout
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QGridLayout:new( ... )
    LOCAL p
@@ -118,6 +119,10 @@ METHOD QGridLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QGridLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )

@@ -67,6 +67,8 @@ CREATE CLASS QMenu INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -106,7 +108,6 @@ CREATE CLASS QMenu INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMenu:new( ... )
    LOCAL p
@@ -125,6 +126,10 @@ METHOD QMenu:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMenu:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMenu:actionAt( pPt )

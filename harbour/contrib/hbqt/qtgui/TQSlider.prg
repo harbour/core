@@ -67,6 +67,8 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSlider:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QSlider:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSlider:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSlider:setTickInterval( nTi )

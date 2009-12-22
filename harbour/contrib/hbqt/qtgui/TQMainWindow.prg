@@ -67,6 +67,8 @@ CREATE CLASS QMainWindow INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -121,7 +123,6 @@ CREATE CLASS QMainWindow INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMainWindow:new( ... )
    LOCAL p
@@ -140,6 +141,10 @@ METHOD QMainWindow:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMainWindow:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMainWindow:addDockWidget( nArea, pDockwidget )

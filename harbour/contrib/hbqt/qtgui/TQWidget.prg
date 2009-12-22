@@ -67,6 +67,8 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -284,7 +286,6 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWidget:new( ... )
    LOCAL p
@@ -303,6 +304,10 @@ METHOD QWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWidget:acceptDrops()

@@ -67,6 +67,8 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -117,7 +119,6 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDateTimeEdit:new( ... )
    LOCAL p
@@ -136,6 +137,10 @@ METHOD QDateTimeEdit:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDateTimeEdit:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDateTimeEdit:calendarPopup()

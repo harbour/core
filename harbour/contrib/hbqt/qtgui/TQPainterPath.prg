@@ -67,6 +67,8 @@ CREATE CLASS QPainterPath
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -124,7 +126,6 @@ CREATE CLASS QPainterPath
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPainterPath:new( ... )
    LOCAL p
@@ -143,6 +144,10 @@ METHOD QPainterPath:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPainterPath:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPainterPath:addEllipse( pBoundingRectangle )

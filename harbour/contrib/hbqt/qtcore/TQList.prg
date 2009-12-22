@@ -67,6 +67,8 @@ CREATE CLASS QList
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -113,7 +115,6 @@ CREATE CLASS QList
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QList:new( ... )
    LOCAL p
@@ -132,6 +133,10 @@ METHOD QList:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QList:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QList:append( xValue )

@@ -67,6 +67,8 @@ CREATE CLASS QRegExp
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -92,7 +94,6 @@ CREATE CLASS QRegExp
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QRegExp:new( ... )
    LOCAL p
@@ -111,6 +112,10 @@ METHOD QRegExp:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QRegExp:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRegExp:cap( nNth )

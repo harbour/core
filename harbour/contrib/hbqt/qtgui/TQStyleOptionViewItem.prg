@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionViewItem:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QStyleOptionViewItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionViewItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionViewItem:decorationAlignment()

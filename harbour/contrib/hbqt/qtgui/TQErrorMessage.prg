@@ -67,6 +67,8 @@ CREATE CLASS QErrorMessage INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QErrorMessage INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QErrorMessage:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QErrorMessage:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QErrorMessage:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QErrorMessage:showMessage( cMessage )

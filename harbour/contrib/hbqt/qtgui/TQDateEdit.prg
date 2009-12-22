@@ -67,13 +67,14 @@ CREATE CLASS QDateEdit INHERIT QDateTimeEdit
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDateEdit:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QDateEdit:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDateEdit:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

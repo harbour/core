@@ -67,6 +67,8 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMouseEvent:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QMouseEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMouseEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMouseEvent:button()

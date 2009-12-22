@@ -67,6 +67,8 @@ CREATE CLASS QWidgetAction INHERIT QAction
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QWidgetAction INHERIT QAction
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWidgetAction:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QWidgetAction:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWidgetAction:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWidgetAction:defaultWidget()

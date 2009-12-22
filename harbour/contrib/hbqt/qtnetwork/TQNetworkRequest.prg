@@ -67,6 +67,8 @@ CREATE CLASS QNetworkRequest
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QNetworkRequest
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QNetworkRequest:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QNetworkRequest:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QNetworkRequest:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QNetworkRequest:attribute( nCode, pDefaultValue )

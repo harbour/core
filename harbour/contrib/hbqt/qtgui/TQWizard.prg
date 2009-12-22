@@ -67,6 +67,8 @@ CREATE CLASS QWizard INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -106,7 +108,6 @@ CREATE CLASS QWizard INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWizard:new( ... )
    LOCAL p
@@ -125,6 +126,10 @@ METHOD QWizard:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWizard:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWizard:addPage( pPage )

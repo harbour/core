@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionMenuItem:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QStyleOptionMenuItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionMenuItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionMenuItem:checkType()

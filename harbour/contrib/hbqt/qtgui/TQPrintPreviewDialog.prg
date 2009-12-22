@@ -67,6 +67,8 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPrintPreviewDialog:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QPrintPreviewDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPrintPreviewDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPrintPreviewDialog:open( pReceiver, pMember )

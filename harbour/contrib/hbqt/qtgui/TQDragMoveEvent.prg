@@ -67,6 +67,8 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -78,7 +80,6 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDragMoveEvent:new( ... )
    LOCAL p
@@ -97,6 +98,10 @@ METHOD QDragMoveEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDragMoveEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDragMoveEvent:accept( pRectangle )

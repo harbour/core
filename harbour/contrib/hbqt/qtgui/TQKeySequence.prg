@@ -67,6 +67,8 @@ CREATE CLASS QKeySequence
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QKeySequence
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QKeySequence:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QKeySequence:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QKeySequence:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QKeySequence:count()

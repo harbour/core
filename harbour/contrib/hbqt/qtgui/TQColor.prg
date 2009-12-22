@@ -67,6 +67,8 @@ CREATE CLASS QColor
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -138,7 +140,6 @@ CREATE CLASS QColor
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QColor:new( ... )
    LOCAL p
@@ -157,6 +158,10 @@ METHOD QColor:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QColor:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QColor:alpha()

@@ -67,6 +67,8 @@ CREATE CLASS QTextFrame INHERIT QTextObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QTextFrame INHERIT QTextObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextFrame:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QTextFrame:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextFrame:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFrame:firstCursorPosition()

@@ -67,6 +67,8 @@ CREATE CLASS QFormLayout INHERIT QLayout
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -109,7 +111,6 @@ CREATE CLASS QFormLayout INHERIT QLayout
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFormLayout:new( ... )
    LOCAL p
@@ -128,6 +129,10 @@ METHOD QFormLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFormLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFormLayout:addRow( pLabel, pField )

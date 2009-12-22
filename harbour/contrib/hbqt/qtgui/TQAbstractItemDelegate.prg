@@ -67,6 +67,8 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractItemDelegate:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QAbstractItemDelegate:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractItemDelegate:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractItemDelegate:createEditor( pParent, pOption, pIndex )

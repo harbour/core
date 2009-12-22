@@ -67,6 +67,8 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QScrollArea:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QScrollArea:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QScrollArea:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QScrollArea:alignment()

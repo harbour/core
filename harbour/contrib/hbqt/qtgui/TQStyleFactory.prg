@@ -67,6 +67,8 @@ CREATE CLASS QStyleFactory
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QStyleFactory
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleFactory:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QStyleFactory:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleFactory:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleFactory:create( cKey )

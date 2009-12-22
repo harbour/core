@@ -67,6 +67,8 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -111,7 +113,6 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QCalendarWidget:new( ... )
    LOCAL p
@@ -130,6 +131,10 @@ METHOD QCalendarWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QCalendarWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCalendarWidget:dateEditAcceptDelay()

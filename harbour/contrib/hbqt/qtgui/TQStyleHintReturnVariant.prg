@@ -67,13 +67,14 @@ CREATE CLASS QStyleHintReturnVariant INHERIT QStyleHintReturn
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleHintReturnVariant:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QStyleHintReturnVariant:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleHintReturnVariant:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

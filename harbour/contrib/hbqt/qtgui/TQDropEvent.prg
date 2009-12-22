@@ -67,6 +67,8 @@ CREATE CLASS QDropEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QDropEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDropEvent:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QDropEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDropEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDropEvent:acceptProposedAction()

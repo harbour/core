@@ -67,6 +67,8 @@ CREATE CLASS QTextCursor
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -133,7 +135,6 @@ CREATE CLASS QTextCursor
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextCursor:new( ... )
    LOCAL p
@@ -152,6 +153,10 @@ METHOD QTextCursor:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextCursor:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCursor:anchor()

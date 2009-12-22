@@ -67,6 +67,8 @@ CREATE CLASS QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOption:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QStyleOption:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOption:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOption:initFrom( pWidget )

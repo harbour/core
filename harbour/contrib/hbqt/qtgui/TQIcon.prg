@@ -67,6 +67,8 @@ CREATE CLASS QIcon
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QIcon
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QIcon:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QIcon:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QIcon:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QIcon:actualSize( pSize, nMode, nState )

@@ -67,6 +67,8 @@ CREATE CLASS QTranslator INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QTranslator INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTranslator:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QTranslator:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTranslator:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTranslator:isEmpty()

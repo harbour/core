@@ -67,6 +67,8 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -92,7 +94,6 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextBlockFormat:new( ... )
    LOCAL p
@@ -111,6 +112,10 @@ METHOD QTextBlockFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextBlockFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBlockFormat:alignment()

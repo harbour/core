@@ -67,6 +67,8 @@ CREATE CLASS QTimer INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QTimer INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTimer:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QTimer:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTimer:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTimer:interval()

@@ -67,6 +67,8 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -78,7 +80,6 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextListFormat:new( ... )
    LOCAL p
@@ -97,6 +98,10 @@ METHOD QTextListFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextListFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextListFormat:indent()

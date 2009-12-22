@@ -67,6 +67,8 @@ CREATE CLASS QRegion
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -91,7 +93,6 @@ CREATE CLASS QRegion
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QRegion:new( ... )
    LOCAL p
@@ -110,6 +111,10 @@ METHOD QRegion:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QRegion:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRegion:boundingRect()

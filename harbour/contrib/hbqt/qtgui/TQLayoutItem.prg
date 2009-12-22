@@ -67,6 +67,8 @@ CREATE CLASS QLayoutItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -90,7 +92,6 @@ CREATE CLASS QLayoutItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLayoutItem:new( ... )
    LOCAL p
@@ -109,6 +110,10 @@ METHOD QLayoutItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLayoutItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLayoutItem:alignment()

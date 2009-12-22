@@ -67,6 +67,8 @@ CREATE CLASS QItemSelectionModel INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -88,7 +90,6 @@ CREATE CLASS QItemSelectionModel INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QItemSelectionModel:new( ... )
    LOCAL p
@@ -107,6 +108,10 @@ METHOD QItemSelectionModel:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QItemSelectionModel:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QItemSelectionModel:columnIntersectsSelection( nColumn, pParent )

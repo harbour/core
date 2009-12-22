@@ -67,6 +67,8 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -86,7 +88,6 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QToolButton:new( ... )
    LOCAL p
@@ -105,6 +106,10 @@ METHOD QToolButton:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QToolButton:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolButton:arrowType()

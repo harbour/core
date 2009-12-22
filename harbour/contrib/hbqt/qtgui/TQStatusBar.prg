@@ -67,6 +67,8 @@ CREATE CLASS QStatusBar INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QStatusBar INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStatusBar:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QStatusBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStatusBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStatusBar:addPermanentWidget( pWidget, nStretch )

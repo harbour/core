@@ -67,13 +67,14 @@ CREATE CLASS QCommonStyle INHERIT QStyle
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QCommonStyle:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QCommonStyle:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QCommonStyle:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

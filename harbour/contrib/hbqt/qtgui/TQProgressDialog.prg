@@ -67,6 +67,8 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -97,7 +99,6 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QProgressDialog:new( ... )
    LOCAL p
@@ -116,6 +117,10 @@ METHOD QProgressDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QProgressDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProgressDialog:autoClose()

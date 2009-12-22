@@ -67,6 +67,8 @@ CREATE CLASS QVariant
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -109,7 +111,6 @@ CREATE CLASS QVariant
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QVariant:new( ... )
    LOCAL p
@@ -128,6 +129,10 @@ METHOD QVariant:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QVariant:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QVariant:canConvert( nT )

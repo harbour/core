@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTabWidgetFrame:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QStyleOptionTabWidgetFrame:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionTabWidgetFrame:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTabWidgetFrame:leftCornerWidgetSize()

@@ -67,6 +67,8 @@ CREATE CLASS QProcess INHERIT QIODevice
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -106,7 +108,6 @@ CREATE CLASS QProcess INHERIT QIODevice
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QProcess:new( ... )
    LOCAL p
@@ -125,6 +126,10 @@ METHOD QProcess:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QProcess:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProcess:close()

@@ -67,6 +67,8 @@ CREATE CLASS QAction INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -121,7 +123,6 @@ CREATE CLASS QAction INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAction:new( ... )
    LOCAL p
@@ -140,6 +141,10 @@ METHOD QAction:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAction:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAction:actionGroup()

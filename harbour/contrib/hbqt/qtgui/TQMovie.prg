@@ -67,6 +67,8 @@ CREATE CLASS QMovie INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -101,7 +103,6 @@ CREATE CLASS QMovie INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMovie:new( ... )
    LOCAL p
@@ -120,6 +121,10 @@ METHOD QMovie:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMovie:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMovie:backgroundColor()

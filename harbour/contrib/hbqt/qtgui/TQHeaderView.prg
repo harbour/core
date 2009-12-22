@@ -67,6 +67,8 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -130,7 +132,6 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHeaderView:new( ... )
    LOCAL p
@@ -149,6 +150,10 @@ METHOD QHeaderView:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHeaderView:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHeaderView:cascadingSectionResizes()

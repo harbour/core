@@ -67,6 +67,8 @@ CREATE CLASS QListWidgetItem INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -108,7 +110,6 @@ CREATE CLASS QListWidgetItem INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QListWidgetItem:new( ... )
    LOCAL p
@@ -127,6 +128,10 @@ METHOD QListWidgetItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QListWidgetItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListWidgetItem:background()

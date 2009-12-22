@@ -67,6 +67,8 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSplashScreen:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QSplashScreen:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSplashScreen:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSplashScreen:finish( pMainWin )

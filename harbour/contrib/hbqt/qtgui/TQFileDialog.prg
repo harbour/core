@@ -67,6 +67,8 @@ CREATE CLASS QFileDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -118,7 +120,6 @@ CREATE CLASS QFileDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFileDialog:new( ... )
    LOCAL p
@@ -137,6 +138,10 @@ METHOD QFileDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFileDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFileDialog:acceptMode()

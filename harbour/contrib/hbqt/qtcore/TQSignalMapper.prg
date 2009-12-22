@@ -67,6 +67,8 @@ CREATE CLASS QSignalMapper INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QSignalMapper INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSignalMapper:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QSignalMapper:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSignalMapper:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSignalMapper:mapping( nId )

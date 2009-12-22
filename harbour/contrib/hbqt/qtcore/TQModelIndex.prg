@@ -67,6 +67,8 @@ CREATE CLASS QModelIndex
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QModelIndex
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QModelIndex:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QModelIndex:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QModelIndex:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QModelIndex:child( nRow, nColumn )

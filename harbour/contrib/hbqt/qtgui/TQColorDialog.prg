@@ -67,6 +67,8 @@ CREATE CLASS QColorDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -88,7 +90,6 @@ CREATE CLASS QColorDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QColorDialog:new( ... )
    LOCAL p
@@ -107,6 +108,10 @@ METHOD QColorDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QColorDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QColorDialog:currentColor()

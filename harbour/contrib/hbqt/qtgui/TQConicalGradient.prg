@@ -67,6 +67,8 @@ CREATE CLASS QConicalGradient INHERIT QGradient
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -78,7 +80,6 @@ CREATE CLASS QConicalGradient INHERIT QGradient
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QConicalGradient:new( ... )
    LOCAL p
@@ -97,6 +98,10 @@ METHOD QConicalGradient:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QConicalGradient:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QConicalGradient:angle()

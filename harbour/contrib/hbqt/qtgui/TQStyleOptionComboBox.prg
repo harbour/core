@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionComboBox:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QStyleOptionComboBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionComboBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionComboBox:currentIcon()

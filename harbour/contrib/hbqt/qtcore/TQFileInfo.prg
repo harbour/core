@@ -67,6 +67,8 @@ CREATE CLASS QFileInfo
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -117,7 +119,6 @@ CREATE CLASS QFileInfo
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFileInfo:new( ... )
    LOCAL p
@@ -136,6 +137,10 @@ METHOD QFileInfo:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFileInfo:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFileInfo:absoluteDir()

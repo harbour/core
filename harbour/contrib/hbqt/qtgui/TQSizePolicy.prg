@@ -67,6 +67,8 @@ CREATE CLASS QSizePolicy
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QSizePolicy
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSizePolicy:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QSizePolicy:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSizePolicy:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSizePolicy:controlType()

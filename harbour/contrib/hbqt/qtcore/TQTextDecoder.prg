@@ -67,6 +67,8 @@ CREATE CLASS QTextDecoder
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QTextDecoder
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextDecoder:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QTextDecoder:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextDecoder:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDecoder:toUnicode( pChars, nLen )

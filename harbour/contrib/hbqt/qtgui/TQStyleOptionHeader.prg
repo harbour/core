@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionHeader:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QStyleOptionHeader:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionHeader:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionHeader:icon()

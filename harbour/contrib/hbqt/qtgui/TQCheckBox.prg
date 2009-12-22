@@ -67,6 +67,8 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QCheckBox:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QCheckBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QCheckBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCheckBox:checkState()

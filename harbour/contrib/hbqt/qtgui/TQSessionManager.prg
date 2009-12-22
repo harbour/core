@@ -67,6 +67,8 @@ CREATE CLASS QSessionManager INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -89,7 +91,6 @@ CREATE CLASS QSessionManager INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSessionManager:new( ... )
    LOCAL p
@@ -108,6 +109,10 @@ METHOD QSessionManager:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSessionManager:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSessionManager:allowsErrorInteraction()

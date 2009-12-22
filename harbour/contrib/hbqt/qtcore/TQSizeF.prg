@@ -67,6 +67,8 @@ CREATE CLASS QSizeF
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -88,7 +90,6 @@ CREATE CLASS QSizeF
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSizeF:new( ... )
    LOCAL p
@@ -107,6 +108,10 @@ METHOD QSizeF:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSizeF:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSizeF:boundedTo( pOtherSize )

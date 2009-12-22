@@ -67,6 +67,8 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -113,7 +115,6 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPixmap:new( ... )
    LOCAL p
@@ -132,6 +133,10 @@ METHOD QPixmap:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPixmap:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPixmap:alphaChannel()

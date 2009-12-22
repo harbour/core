@@ -67,6 +67,8 @@ CREATE CLASS QTextLayout
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QTextLayout
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextLayout:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QTextLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextLayout:beginLayout()

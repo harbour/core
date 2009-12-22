@@ -67,6 +67,8 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -92,7 +94,6 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLCDNumber:new( ... )
    LOCAL p
@@ -111,6 +112,10 @@ METHOD QLCDNumber:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLCDNumber:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLCDNumber:checkOverflow( nNum )

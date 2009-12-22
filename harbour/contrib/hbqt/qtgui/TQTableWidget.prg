@@ -67,6 +67,8 @@ CREATE CLASS QTableWidget INHERIT QTableView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -119,7 +121,6 @@ CREATE CLASS QTableWidget INHERIT QTableView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTableWidget:new( ... )
    LOCAL p
@@ -138,6 +139,10 @@ METHOD QTableWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTableWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableWidget:cellWidget( nRow, nColumn )

@@ -67,6 +67,8 @@ CREATE CLASS QClipboard INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QClipboard INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QClipboard:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QClipboard:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QClipboard:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QClipboard:clear( nMode )

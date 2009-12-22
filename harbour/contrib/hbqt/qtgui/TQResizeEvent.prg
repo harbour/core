@@ -67,6 +67,8 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QResizeEvent:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QResizeEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QResizeEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QResizeEvent:oldSize()

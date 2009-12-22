@@ -67,6 +67,8 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDesktopWidget:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QDesktopWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDesktopWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDesktopWidget:availableGeometry( nScreen )

@@ -67,6 +67,8 @@ CREATE CLASS QPainter
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -255,7 +257,6 @@ CREATE CLASS QPainter
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPainter:new( ... )
    LOCAL p
@@ -274,6 +275,10 @@ METHOD QPainter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPainter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPainter:background()

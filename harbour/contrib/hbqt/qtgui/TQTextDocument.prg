@@ -67,6 +67,8 @@ CREATE CLASS QTextDocument INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -139,7 +141,6 @@ CREATE CLASS QTextDocument INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextDocument:new( ... )
    LOCAL p
@@ -158,6 +159,10 @@ METHOD QTextDocument:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextDocument:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDocument:addResource( nType, pName, pResource )

@@ -67,6 +67,8 @@ CREATE CLASS QTableWidgetItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -108,7 +110,6 @@ CREATE CLASS QTableWidgetItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTableWidgetItem:new( ... )
    LOCAL p
@@ -127,6 +128,10 @@ METHOD QTableWidgetItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTableWidgetItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableWidgetItem:background()

@@ -67,6 +67,8 @@ CREATE CLASS QToolBar INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -101,7 +103,6 @@ CREATE CLASS QToolBar INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QToolBar:new( ... )
    LOCAL p
@@ -120,6 +121,10 @@ METHOD QToolBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QToolBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolBar:actionAt( pP )

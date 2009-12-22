@@ -67,6 +67,8 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -93,7 +95,6 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextBrowser:new( ... )
    LOCAL p
@@ -112,6 +113,10 @@ METHOD QTextBrowser:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextBrowser:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBrowser:backwardHistoryCount()

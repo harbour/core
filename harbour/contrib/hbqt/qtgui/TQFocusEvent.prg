@@ -67,6 +67,8 @@ CREATE CLASS QFocusEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QFocusEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFocusEvent:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QFocusEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFocusEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFocusEvent:gotFocus()

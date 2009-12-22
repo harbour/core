@@ -67,6 +67,8 @@ CREATE CLASS QTextDocumentWriter
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QTextDocumentWriter
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextDocumentWriter:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QTextDocumentWriter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextDocumentWriter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDocumentWriter:codec()

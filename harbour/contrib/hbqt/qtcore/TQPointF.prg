@@ -67,6 +67,8 @@ CREATE CLASS QPointF
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QPointF
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPointF:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QPointF:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPointF:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPointF:isNull()

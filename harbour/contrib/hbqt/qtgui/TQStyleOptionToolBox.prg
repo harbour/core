@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionToolBox INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QStyleOptionToolBox INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionToolBox:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QStyleOptionToolBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionToolBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionToolBox:icon()

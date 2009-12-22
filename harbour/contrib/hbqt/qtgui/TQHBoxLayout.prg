@@ -67,13 +67,14 @@ CREATE CLASS QHBoxLayout INHERIT QBoxLayout
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHBoxLayout:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QHBoxLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHBoxLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

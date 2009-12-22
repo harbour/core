@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionFocusRect:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QStyleOptionFocusRect:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionFocusRect:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionFocusRect:backgroundColor()

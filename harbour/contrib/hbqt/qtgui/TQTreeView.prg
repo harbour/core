@@ -67,6 +67,8 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -122,7 +124,6 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTreeView:new( ... )
    LOCAL p
@@ -141,6 +142,10 @@ METHOD QTreeView:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTreeView:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTreeView:allColumnsShowFocus()

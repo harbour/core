@@ -67,6 +67,8 @@ CREATE CLASS QDockWidget INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QDockWidget INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDockWidget:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QDockWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDockWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDockWidget:allowedAreas()

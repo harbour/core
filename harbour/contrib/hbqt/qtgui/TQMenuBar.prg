@@ -67,6 +67,8 @@ CREATE CLASS QMenuBar INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QMenuBar INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMenuBar:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QMenuBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMenuBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMenuBar:activeAction()

@@ -67,6 +67,8 @@ CREATE CLASS QFont
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -131,7 +133,6 @@ CREATE CLASS QFont
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFont:new( ... )
    LOCAL p
@@ -150,6 +151,10 @@ METHOD QFont:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFont:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFont:bold()

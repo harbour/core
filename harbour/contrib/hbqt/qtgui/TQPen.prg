@@ -67,6 +67,8 @@ CREATE CLASS QPen
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -94,7 +96,6 @@ CREATE CLASS QPen
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPen:new( ... )
    LOCAL p
@@ -113,6 +114,10 @@ METHOD QPen:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPen:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPen:brush()

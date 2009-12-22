@@ -67,6 +67,8 @@ CREATE CLASS QLineF
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -100,7 +102,6 @@ CREATE CLASS QLineF
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLineF:new( ... )
    LOCAL p
@@ -119,6 +120,10 @@ METHOD QLineF:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLineF:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLineF:p1()

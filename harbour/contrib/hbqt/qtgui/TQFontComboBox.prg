@@ -67,6 +67,8 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFontComboBox:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QFontComboBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFontComboBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontComboBox:currentFont()

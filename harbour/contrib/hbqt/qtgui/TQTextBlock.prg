@@ -67,6 +67,8 @@ CREATE CLASS QTextBlock
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -98,7 +100,6 @@ CREATE CLASS QTextBlock
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextBlock:new( ... )
    LOCAL p
@@ -117,6 +118,10 @@ METHOD QTextBlock:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextBlock:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBlock:blockFormat()

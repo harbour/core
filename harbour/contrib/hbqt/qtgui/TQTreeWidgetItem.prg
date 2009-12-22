@@ -67,6 +67,8 @@ CREATE CLASS QTreeWidgetItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -125,7 +127,6 @@ CREATE CLASS QTreeWidgetItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTreeWidgetItem:new( ... )
    LOCAL p
@@ -144,6 +145,10 @@ METHOD QTreeWidgetItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTreeWidgetItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTreeWidgetItem:addChild( pChild )

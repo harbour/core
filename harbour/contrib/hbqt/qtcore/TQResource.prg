@@ -67,6 +67,8 @@ CREATE CLASS QResource
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QResource
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QResource:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QResource:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QResource:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QResource:absoluteFilePath()

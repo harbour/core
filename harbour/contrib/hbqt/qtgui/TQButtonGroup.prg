@@ -67,6 +67,8 @@ CREATE CLASS QButtonGroup INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QButtonGroup INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QButtonGroup:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QButtonGroup:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QButtonGroup:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QButtonGroup:addButton( pButton )

@@ -67,6 +67,8 @@ CREATE CLASS QLatin1String
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QLatin1String
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLatin1String:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QLatin1String:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLatin1String:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLatin1String:latin1()

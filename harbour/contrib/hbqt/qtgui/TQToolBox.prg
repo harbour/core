@@ -67,6 +67,8 @@ CREATE CLASS QToolBox INHERIT QFrame
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -93,7 +95,6 @@ CREATE CLASS QToolBox INHERIT QFrame
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QToolBox:new( ... )
    LOCAL p
@@ -112,6 +113,10 @@ METHOD QToolBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QToolBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolBox:addItem( pWidget, cIconSet, cText )

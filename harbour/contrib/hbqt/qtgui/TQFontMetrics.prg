@@ -67,6 +67,8 @@ CREATE CLASS QFontMetrics
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -99,7 +101,6 @@ CREATE CLASS QFontMetrics
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFontMetrics:new( ... )
    LOCAL p
@@ -118,6 +119,10 @@ METHOD QFontMetrics:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFontMetrics:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontMetrics:ascent()

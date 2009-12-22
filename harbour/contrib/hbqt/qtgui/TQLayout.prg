@@ -67,6 +67,8 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLayout:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLayout:activate()

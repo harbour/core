@@ -67,6 +67,8 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractTextDocumentLayout:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QAbstractTextDocumentLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractTextDocumentLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractTextDocumentLayout:anchorAt( pPosition )

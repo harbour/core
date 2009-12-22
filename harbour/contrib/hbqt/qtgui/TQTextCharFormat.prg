@@ -67,6 +67,8 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -120,7 +122,6 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextCharFormat:new( ... )
    LOCAL p
@@ -139,6 +140,10 @@ METHOD QTextCharFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextCharFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCharFormat:anchorHref()

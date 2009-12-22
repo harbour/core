@@ -67,6 +67,8 @@ CREATE CLASS QListWidget INHERIT QListView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -103,7 +105,6 @@ CREATE CLASS QListWidget INHERIT QListView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QListWidget:new( ... )
    LOCAL p
@@ -122,6 +123,10 @@ METHOD QListWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QListWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListWidget:addItem( cLabel )

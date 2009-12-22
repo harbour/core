@@ -67,6 +67,8 @@ CREATE CLASS QDial INHERIT QAbstractSlider
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QDial INHERIT QAbstractSlider
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDial:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QDial:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDial:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDial:notchSize()

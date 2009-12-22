@@ -67,6 +67,8 @@ CREATE CLASS QRect
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -132,7 +134,6 @@ CREATE CLASS QRect
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QRect:new( ... )
    LOCAL p
@@ -151,6 +152,10 @@ METHOD QRect:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QRect:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRect:adjust( nDx1, nDy1, nDx2, nDy2 )

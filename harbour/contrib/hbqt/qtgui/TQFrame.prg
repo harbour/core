@@ -67,6 +67,8 @@ CREATE CLASS QFrame INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -86,7 +88,6 @@ CREATE CLASS QFrame INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFrame:new( ... )
    LOCAL p
@@ -105,6 +106,10 @@ METHOD QFrame:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFrame:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFrame:frameRect()

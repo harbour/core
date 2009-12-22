@@ -67,6 +67,8 @@ CREATE CLASS QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QEvent:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QEvent:accept()

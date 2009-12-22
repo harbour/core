@@ -67,6 +67,8 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QListView:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QListView:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QListView:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListView:batchSize()

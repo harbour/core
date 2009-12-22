@@ -67,6 +67,8 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPicture:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QPicture:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPicture:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPicture:boundingRect()

@@ -67,6 +67,8 @@ CREATE CLASS QSyntaxHighlighter INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QSyntaxHighlighter INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSyntaxHighlighter:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QSyntaxHighlighter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSyntaxHighlighter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSyntaxHighlighter:document()

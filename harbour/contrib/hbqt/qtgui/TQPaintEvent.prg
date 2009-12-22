@@ -67,6 +67,8 @@ CREATE CLASS QPaintEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QPaintEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPaintEvent:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QPaintEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPaintEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPaintEvent:rect()

@@ -67,6 +67,8 @@ CREATE CLASS QInputEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QInputEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QInputEvent:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QInputEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QInputEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QInputEvent:modifiers()

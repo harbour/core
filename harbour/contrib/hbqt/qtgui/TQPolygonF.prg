@@ -67,6 +67,8 @@ CREATE CLASS QPolygonF
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QPolygonF
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPolygonF:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QPolygonF:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPolygonF:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPolygonF:boundingRect()

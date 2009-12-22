@@ -67,6 +67,8 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractTableModel:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QAbstractTableModel:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractTableModel:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractTableModel:index( nRow, nColumn, pParent )

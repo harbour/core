@@ -67,6 +67,8 @@ CREATE CLASS QTextLength
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QTextLength
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextLength:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QTextLength:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextLength:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextLength:rawValue()

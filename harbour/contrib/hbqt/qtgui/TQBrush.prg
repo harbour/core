@@ -67,6 +67,8 @@ CREATE CLASS QBrush
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QBrush
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QBrush:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QBrush:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QBrush:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QBrush:color()

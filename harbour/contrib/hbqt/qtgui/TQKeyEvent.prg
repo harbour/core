@@ -67,6 +67,8 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QKeyEvent:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QKeyEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QKeyEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QKeyEvent:count()

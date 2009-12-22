@@ -67,6 +67,8 @@ CREATE CLASS QTextCodec
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -93,7 +95,6 @@ CREATE CLASS QTextCodec
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextCodec:new( ... )
    LOCAL p
@@ -112,6 +113,10 @@ METHOD QTextCodec:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextCodec:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCodec:canEncode( nCh )

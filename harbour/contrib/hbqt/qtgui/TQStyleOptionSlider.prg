@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionSlider:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QStyleOptionSlider:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionSlider:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionSlider:dialWrapping()

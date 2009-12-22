@@ -67,6 +67,8 @@ CREATE CLASS QFontDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QFontDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFontDialog:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QFontDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFontDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontDialog:currentFont()

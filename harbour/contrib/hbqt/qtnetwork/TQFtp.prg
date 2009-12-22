@@ -67,6 +67,8 @@ CREATE CLASS QFtp INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -99,7 +101,6 @@ CREATE CLASS QFtp INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFtp:new( ... )
    LOCAL p
@@ -118,6 +119,10 @@ METHOD QFtp:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFtp:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFtp:bytesAvailable()

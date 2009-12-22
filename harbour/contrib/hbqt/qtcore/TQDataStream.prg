@@ -67,6 +67,8 @@ CREATE CLASS QDataStream
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -86,7 +88,6 @@ CREATE CLASS QDataStream
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDataStream:new( ... )
    LOCAL p
@@ -105,6 +106,10 @@ METHOD QDataStream:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDataStream:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDataStream:atEnd()

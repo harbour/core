@@ -67,6 +67,8 @@ CREATE CLASS QCursor
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QCursor
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QCursor:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QCursor:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QCursor:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCursor:bitmap()

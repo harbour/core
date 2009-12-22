@@ -67,6 +67,8 @@ CREATE CLASS QDate
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -92,7 +94,6 @@ CREATE CLASS QDate
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDate:new( ... )
    LOCAL p
@@ -111,6 +112,10 @@ METHOD QDate:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDate:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDate:addDays( nNdays )

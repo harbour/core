@@ -67,6 +67,8 @@ CREATE CLASS QFile INHERIT QIODevice
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -107,7 +109,6 @@ CREATE CLASS QFile INHERIT QIODevice
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFile:new( ... )
    LOCAL p
@@ -126,6 +127,10 @@ METHOD QFile:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFile:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFile:atEnd()

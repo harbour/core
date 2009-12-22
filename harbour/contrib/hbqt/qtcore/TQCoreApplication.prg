@@ -67,6 +67,8 @@ CREATE CLASS QCoreApplication INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -113,7 +115,6 @@ CREATE CLASS QCoreApplication INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QCoreApplication:new( ... )
    LOCAL p
@@ -132,6 +133,10 @@ METHOD QCoreApplication:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QCoreApplication:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCoreApplication:notify( pReceiver, pEvent )

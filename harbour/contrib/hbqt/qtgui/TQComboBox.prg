@@ -67,6 +67,8 @@ CREATE CLASS QComboBox INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -132,7 +134,6 @@ CREATE CLASS QComboBox INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QComboBox:new( ... )
    LOCAL p
@@ -151,6 +152,10 @@ METHOD QComboBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QComboBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QComboBox:addItem( cText, pUserData )

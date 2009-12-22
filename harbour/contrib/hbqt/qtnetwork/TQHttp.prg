@@ -67,6 +67,8 @@ CREATE CLASS QHttp INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -97,7 +99,6 @@ CREATE CLASS QHttp INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHttp:new( ... )
    LOCAL p
@@ -116,6 +117,10 @@ METHOD QHttp:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHttp:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHttp:bytesAvailable()

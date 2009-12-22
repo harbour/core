@@ -67,6 +67,8 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextFrameFormat:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QTextFrameFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextFrameFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFrameFormat:border()

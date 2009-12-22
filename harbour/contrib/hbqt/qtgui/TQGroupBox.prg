@@ -67,6 +67,8 @@ CREATE CLASS QGroupBox INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -83,7 +85,6 @@ CREATE CLASS QGroupBox INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QGroupBox:new( ... )
    LOCAL p
@@ -102,6 +103,10 @@ METHOD QGroupBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QGroupBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QGroupBox:alignment()

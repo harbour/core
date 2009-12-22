@@ -67,6 +67,8 @@ CREATE CLASS QStylePainter INHERIT QPainter
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QStylePainter INHERIT QPainter
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStylePainter:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QStylePainter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStylePainter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStylePainter:begin( pWidget )

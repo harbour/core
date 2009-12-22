@@ -67,6 +67,8 @@ CREATE CLASS QUiLoader INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QUiLoader INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QUiLoader:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QUiLoader:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QUiLoader:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QUiLoader:addPluginPath( cPath )

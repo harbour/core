@@ -67,6 +67,8 @@ CREATE CLASS QStyle INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QStyle INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyle:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QStyle:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyle:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyle:combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )

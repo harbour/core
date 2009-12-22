@@ -67,6 +67,8 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QRadialGradient:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QRadialGradient:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QRadialGradient:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRadialGradient:center()

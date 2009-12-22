@@ -67,6 +67,8 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -97,7 +99,6 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractSlider:new( ... )
    LOCAL p
@@ -116,6 +117,10 @@ METHOD QAbstractSlider:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractSlider:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractSlider:hasTracking()

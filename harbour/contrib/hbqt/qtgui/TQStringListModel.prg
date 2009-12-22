@@ -67,6 +67,8 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStringListModel:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QStringListModel:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStringListModel:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStringListModel:data( pIndex, nRole )

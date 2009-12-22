@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionDockWidget:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QStyleOptionDockWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionDockWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionDockWidget:closable()

@@ -67,6 +67,8 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWheelEvent:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QWheelEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWheelEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWheelEvent:buttons()

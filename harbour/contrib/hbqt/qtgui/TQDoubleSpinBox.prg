@@ -67,6 +67,8 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -91,7 +93,6 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDoubleSpinBox:new( ... )
    LOCAL p
@@ -110,6 +111,10 @@ METHOD QDoubleSpinBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDoubleSpinBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDoubleSpinBox:cleanText()

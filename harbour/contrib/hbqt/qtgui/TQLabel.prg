@@ -67,6 +67,8 @@ CREATE CLASS QLabel INHERIT QFrame
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QLabel INHERIT QFrame
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLabel:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QLabel:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLabel:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLabel:alignment()

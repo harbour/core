@@ -67,6 +67,8 @@ CREATE CLASS QPlainTextEdit INHERIT QAbstractScrollArea
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -130,7 +132,6 @@ CREATE CLASS QPlainTextEdit INHERIT QAbstractScrollArea
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPlainTextEdit:new( ... )
    LOCAL p
@@ -149,6 +150,10 @@ METHOD QPlainTextEdit:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPlainTextEdit:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPlainTextEdit:backgroundVisible()

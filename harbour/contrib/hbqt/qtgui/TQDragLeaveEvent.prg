@@ -67,13 +67,14 @@ CREATE CLASS QDragLeaveEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDragLeaveEvent:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QDragLeaveEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDragLeaveEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

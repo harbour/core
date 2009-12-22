@@ -67,6 +67,8 @@ CREATE CLASS QTextBoundaryFinder
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QTextBoundaryFinder
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextBoundaryFinder:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QTextBoundaryFinder:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextBoundaryFinder:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBoundaryFinder:boundaryReasons()

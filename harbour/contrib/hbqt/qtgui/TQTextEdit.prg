@@ -67,6 +67,8 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -154,7 +156,6 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextEdit:new( ... )
    LOCAL p
@@ -173,6 +174,10 @@ METHOD QTextEdit:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextEdit:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextEdit:acceptRichText()

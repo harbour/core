@@ -67,6 +67,8 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -99,7 +101,6 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractButton:new( ... )
    LOCAL p
@@ -118,6 +119,10 @@ METHOD QAbstractButton:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractButton:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractButton:autoExclusive()

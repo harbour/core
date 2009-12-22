@@ -67,6 +67,8 @@ CREATE CLASS QFontDatabase
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -93,7 +95,6 @@ CREATE CLASS QFontDatabase
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFontDatabase:new( ... )
    LOCAL p
@@ -112,6 +113,10 @@ METHOD QFontDatabase:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFontDatabase:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontDatabase:bold( cFamily, cStyle )

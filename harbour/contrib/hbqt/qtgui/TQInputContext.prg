@@ -67,6 +67,8 @@ CREATE CLASS QInputContext INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QInputContext INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QInputContext:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QInputContext:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QInputContext:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QInputContext:filterEvent( pEvent )

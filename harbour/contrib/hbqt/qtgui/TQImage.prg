@@ -67,6 +67,8 @@ CREATE CLASS QImage
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -133,7 +135,6 @@ CREATE CLASS QImage
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QImage:new( ... )
    LOCAL p
@@ -152,6 +153,10 @@ METHOD QImage:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QImage:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImage:allGray()

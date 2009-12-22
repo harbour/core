@@ -67,13 +67,14 @@ CREATE CLASS QVBoxLayout INHERIT QBoxLayout
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QVBoxLayout:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QVBoxLayout:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QVBoxLayout:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

@@ -67,6 +67,8 @@ CREATE CLASS QWizardPage INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -90,7 +92,6 @@ CREATE CLASS QWizardPage INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWizardPage:new( ... )
    LOCAL p
@@ -109,6 +110,10 @@ METHOD QWizardPage:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWizardPage:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWizardPage:buttonText( nWhich )

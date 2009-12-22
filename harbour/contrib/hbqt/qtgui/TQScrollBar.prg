@@ -67,13 +67,14 @@ CREATE CLASS QScrollBar INHERIT QAbstractSlider
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QScrollBar:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QScrollBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QScrollBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

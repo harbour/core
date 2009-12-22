@@ -67,6 +67,8 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -82,7 +84,6 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPushButton:new( ... )
    LOCAL p
@@ -101,6 +102,10 @@ METHOD QPushButton:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPushButton:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPushButton:autoDefault()

@@ -50,6 +50,10 @@
  */
 /*----------------------------------------------------------------------*/
 
+#include "hbqt.ch"
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbqt_ptr( xParam )
    LOCAL cClsName
 
@@ -68,5 +72,33 @@ FUNCTION hbqt_ptr( xParam )
    ENDIF
 
    RETURN xParam
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbqt_messageBox( cMsg, cInfo )
+   LOCAL oMB
+
+   oMB := QMessageBox():new()
+   oMB:setText( cMsg )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( QMessageBox_Information )
+   oMB:setWindowTitle( "Information" )
+
+   oMB:exec()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbqt_showError( cMsg )
+
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+   hbqt_messageBox( ":" + cMsg, "Message not found - " + ProcName( 2 ) + ":" + hb_ntos( ProcLine( 2 ) ) )
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/

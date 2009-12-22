@@ -67,6 +67,8 @@ CREATE CLASS QDir
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -125,7 +127,6 @@ CREATE CLASS QDir
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QDir:new( ... )
    LOCAL p
@@ -144,6 +145,10 @@ METHOD QDir:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QDir:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDir:absoluteFilePath( cFileName )

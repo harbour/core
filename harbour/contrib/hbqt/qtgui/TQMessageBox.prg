@@ -67,6 +67,8 @@ CREATE CLASS QMessageBox INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -111,7 +113,6 @@ CREATE CLASS QMessageBox INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMessageBox:new( ... )
    LOCAL p
@@ -130,6 +131,10 @@ METHOD QMessageBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMessageBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMessageBox:addButton( pButton, nRole )

@@ -67,6 +67,8 @@ CREATE CLASS QFocusFrame INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QFocusFrame INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFocusFrame:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QFocusFrame:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFocusFrame:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFocusFrame:setWidget( pWidget )

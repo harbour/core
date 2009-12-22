@@ -67,6 +67,8 @@ CREATE CLASS QMatrix
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -102,7 +104,6 @@ CREATE CLASS QMatrix
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMatrix:new( ... )
    LOCAL p
@@ -121,6 +122,10 @@ METHOD QMatrix:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMatrix:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMatrix:m11()

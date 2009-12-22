@@ -67,6 +67,8 @@ CREATE CLASS QMoveEvent INHERIT QEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QMoveEvent INHERIT QEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QMoveEvent:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QMoveEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QMoveEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMoveEvent:oldPos()

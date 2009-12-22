@@ -67,6 +67,8 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -81,7 +83,6 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QPageSetupDialog:new( ... )
    LOCAL p
@@ -100,6 +101,10 @@ METHOD QPageSetupDialog:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QPageSetupDialog:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPageSetupDialog:exec()

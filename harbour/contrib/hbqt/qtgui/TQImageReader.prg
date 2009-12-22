@@ -67,6 +67,8 @@ CREATE CLASS QImageReader
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -111,7 +113,6 @@ CREATE CLASS QImageReader
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QImageReader:new( ... )
    LOCAL p
@@ -130,6 +131,10 @@ METHOD QImageReader:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QImageReader:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImageReader:autoDetectImageFormat()

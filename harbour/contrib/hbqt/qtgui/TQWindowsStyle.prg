@@ -67,13 +67,14 @@ CREATE CLASS QWindowsStyle INHERIT QCommonStyle
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWindowsStyle:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QWindowsStyle:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWindowsStyle:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

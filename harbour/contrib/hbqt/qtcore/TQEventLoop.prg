@@ -67,6 +67,8 @@ CREATE CLASS QEventLoop INHERIT QObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QEventLoop INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QEventLoop:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QEventLoop:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QEventLoop:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QEventLoop:exec( nFlags )

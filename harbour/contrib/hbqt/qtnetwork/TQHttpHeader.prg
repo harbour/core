@@ -67,6 +67,8 @@ CREATE CLASS QHttpHeader
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -91,7 +93,6 @@ CREATE CLASS QHttpHeader
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHttpHeader:new( ... )
    LOCAL p
@@ -110,6 +111,10 @@ METHOD QHttpHeader:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHttpHeader:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHttpHeader:addValue( cKey, cValue )

@@ -67,6 +67,8 @@ CREATE CLASS QTextFragment
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QTextFragment
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextFragment:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QTextFragment:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextFragment:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFragment:charFormat()

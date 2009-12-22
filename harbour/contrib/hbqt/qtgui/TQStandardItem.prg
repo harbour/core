@@ -67,6 +67,8 @@ CREATE CLASS QStandardItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -144,7 +146,6 @@ CREATE CLASS QStandardItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStandardItem:new( ... )
    LOCAL p
@@ -163,6 +164,10 @@ METHOD QStandardItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStandardItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStandardItem:accessibleDescription()

@@ -67,6 +67,8 @@ CREATE CLASS QImageWriter
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -91,7 +93,6 @@ CREATE CLASS QImageWriter
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QImageWriter:new( ... )
    LOCAL p
@@ -110,6 +111,10 @@ METHOD QImageWriter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QImageWriter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImageWriter:canWrite()

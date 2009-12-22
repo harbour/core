@@ -67,6 +67,8 @@ CREATE CLASS QUrl INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -142,7 +144,6 @@ CREATE CLASS QUrl INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QUrl:new( ... )
    LOCAL p
@@ -161,6 +162,10 @@ METHOD QUrl:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QUrl:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QUrl:addEncodedQueryItem( pKey, pValue )

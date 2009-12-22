@@ -67,6 +67,8 @@ CREATE CLASS QTextFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -114,7 +116,6 @@ CREATE CLASS QTextFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextFormat:new( ... )
    LOCAL p
@@ -133,6 +134,10 @@ METHOD QTextFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFormat:background()

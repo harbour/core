@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionComplex:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QStyleOptionComplex:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionComplex:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionComplex:activeSubControls()

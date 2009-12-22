@@ -67,6 +67,8 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -99,7 +101,6 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractSpinBox:new( ... )
    LOCAL p
@@ -118,6 +119,10 @@ METHOD QAbstractSpinBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractSpinBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractSpinBox:alignment()

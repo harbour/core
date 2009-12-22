@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTabBarBase:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QStyleOptionTabBarBase:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionTabBarBase:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTabBarBase:selectedTabRect()

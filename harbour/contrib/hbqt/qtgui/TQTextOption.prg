@@ -67,6 +67,8 @@ CREATE CLASS QTextOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -85,7 +87,6 @@ CREATE CLASS QTextOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextOption:new( ... )
    LOCAL p
@@ -104,6 +105,10 @@ METHOD QTextOption:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextOption:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextOption:alignment()

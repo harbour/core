@@ -67,6 +67,8 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSpinBox:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QSpinBox:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSpinBox:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSpinBox:cleanText()

@@ -67,6 +67,8 @@ CREATE CLASS QSpacerItem INHERIT QLayoutItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QSpacerItem INHERIT QLayoutItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSpacerItem:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QSpacerItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSpacerItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSpacerItem:changeSize( nW, nH, nHPolicy, nVPolicy )

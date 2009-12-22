@@ -67,6 +67,8 @@ CREATE CLASS QTime
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -93,7 +95,6 @@ CREATE CLASS QTime
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTime:new( ... )
    LOCAL p
@@ -112,6 +113,10 @@ METHOD QTime:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTime:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTime:addMSecs( nMs )

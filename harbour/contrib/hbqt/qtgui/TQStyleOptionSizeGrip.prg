@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -74,7 +76,6 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionSizeGrip:new( ... )
    LOCAL p
@@ -93,6 +94,10 @@ METHOD QStyleOptionSizeGrip:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionSizeGrip:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionSizeGrip:corner()

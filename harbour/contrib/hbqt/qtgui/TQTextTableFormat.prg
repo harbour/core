@@ -67,6 +67,8 @@ CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -84,7 +86,6 @@ CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextTableFormat:new( ... )
    LOCAL p
@@ -103,6 +104,10 @@ METHOD QTextTableFormat:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextTableFormat:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextTableFormat:alignment()

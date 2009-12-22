@@ -67,6 +67,8 @@ CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -78,7 +80,6 @@ CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHttpResponseHeader:new( ... )
    LOCAL p
@@ -97,6 +98,10 @@ METHOD QHttpResponseHeader:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHttpResponseHeader:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHttpResponseHeader:majorVersion()

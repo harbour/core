@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTab:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QStyleOptionTab:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionTab:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTab:cornerWidgets()

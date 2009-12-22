@@ -67,6 +67,8 @@ CREATE CLASS QTextInlineObject
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -86,7 +88,6 @@ CREATE CLASS QTextInlineObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextInlineObject:new( ... )
    LOCAL p
@@ -105,6 +106,10 @@ METHOD QTextInlineObject:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTextInlineObject:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextInlineObject:ascent()

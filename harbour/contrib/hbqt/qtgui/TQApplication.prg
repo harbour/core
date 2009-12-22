@@ -67,6 +67,8 @@ CREATE CLASS QApplication INHERIT QCoreApplication
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -149,7 +151,6 @@ CREATE CLASS QApplication INHERIT QCoreApplication
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QApplication:new( ... )
    LOCAL p
@@ -168,6 +169,10 @@ METHOD QApplication:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QApplication:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QApplication:commitData( pManager )

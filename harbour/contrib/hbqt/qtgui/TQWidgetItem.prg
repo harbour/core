@@ -67,6 +67,8 @@ CREATE CLASS QWidgetItem INHERIT QLayoutItem
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QWidgetItem INHERIT QLayoutItem
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QWidgetItem:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QWidgetItem:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QWidgetItem:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWidgetItem:isEmpty()

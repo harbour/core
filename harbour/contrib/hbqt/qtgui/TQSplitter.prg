@@ -67,6 +67,8 @@ CREATE CLASS QSplitter INHERIT QFrame
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -94,7 +96,6 @@ CREATE CLASS QSplitter INHERIT QFrame
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSplitter:new( ... )
    LOCAL p
@@ -113,6 +114,10 @@ METHOD QSplitter:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSplitter:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSplitter:addWidget( pWidget )

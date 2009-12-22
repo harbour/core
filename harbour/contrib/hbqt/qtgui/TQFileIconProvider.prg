@@ -67,6 +67,8 @@ CREATE CLASS QFileIconProvider
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -76,7 +78,6 @@ CREATE CLASS QFileIconProvider
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QFileIconProvider:new( ... )
    LOCAL p
@@ -95,6 +96,10 @@ METHOD QFileIconProvider:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QFileIconProvider:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFileIconProvider:icon( nType )

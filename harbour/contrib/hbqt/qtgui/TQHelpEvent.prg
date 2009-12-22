@@ -67,6 +67,8 @@ CREATE CLASS QHelpEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -79,7 +81,6 @@ CREATE CLASS QHelpEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QHelpEvent:new( ... )
    LOCAL p
@@ -98,6 +99,10 @@ METHOD QHelpEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QHelpEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHelpEvent:globalPos()

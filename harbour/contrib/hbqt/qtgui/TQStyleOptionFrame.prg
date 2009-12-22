@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -75,7 +77,6 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionFrame:new( ... )
    LOCAL p
@@ -94,6 +95,10 @@ METHOD QStyleOptionFrame:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionFrame:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionFrame:lineWidth()

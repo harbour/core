@@ -67,6 +67,8 @@ CREATE CLASS QStyleOptionButton INHERIT QStyleOption
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -77,7 +79,6 @@ CREATE CLASS QStyleOptionButton INHERIT QStyleOption
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionButton:new( ... )
    LOCAL p
@@ -96,6 +97,10 @@ METHOD QStyleOptionButton:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QStyleOptionButton:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionButton:features()

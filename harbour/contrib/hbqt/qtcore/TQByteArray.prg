@@ -67,6 +67,8 @@ CREATE CLASS QByteArray
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -170,7 +172,6 @@ CREATE CLASS QByteArray
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QByteArray:new( ... )
    LOCAL p
@@ -189,6 +190,10 @@ METHOD QByteArray:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QByteArray:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QByteArray:append( pBa )

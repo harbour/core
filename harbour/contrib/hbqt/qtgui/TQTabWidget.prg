@@ -67,6 +67,8 @@ CREATE CLASS QTabWidget INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -114,7 +116,6 @@ CREATE CLASS QTabWidget INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTabWidget:new( ... )
    LOCAL p
@@ -133,6 +134,10 @@ METHOD QTabWidget:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTabWidget:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTabWidget:addTab( pPage, cLabel )

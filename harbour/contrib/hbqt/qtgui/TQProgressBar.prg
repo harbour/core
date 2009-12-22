@@ -67,6 +67,8 @@ CREATE CLASS QProgressBar INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -94,7 +96,6 @@ CREATE CLASS QProgressBar INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QProgressBar:new( ... )
    LOCAL p
@@ -113,6 +114,10 @@ METHOD QProgressBar:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QProgressBar:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProgressBar:alignment()

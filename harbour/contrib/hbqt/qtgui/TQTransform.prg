@@ -67,6 +67,8 @@ CREATE CLASS QTransform
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -122,7 +124,6 @@ CREATE CLASS QTransform
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTransform:new( ... )
    LOCAL p
@@ -141,6 +142,10 @@ METHOD QTransform:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QTransform:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTransform:m11()

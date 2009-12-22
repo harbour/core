@@ -67,6 +67,8 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -80,7 +82,6 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QContextMenuEvent:new( ... )
    LOCAL p
@@ -99,6 +100,10 @@ METHOD QContextMenuEvent:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QContextMenuEvent:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QContextMenuEvent:globalPos()

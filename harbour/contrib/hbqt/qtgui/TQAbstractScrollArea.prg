@@ -67,6 +67,8 @@ CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -87,7 +89,6 @@ CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QAbstractScrollArea:new( ... )
    LOCAL p
@@ -106,6 +107,10 @@ METHOD QAbstractScrollArea:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QAbstractScrollArea:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractScrollArea:addScrollBarWidget( pWidget, nAlignment )

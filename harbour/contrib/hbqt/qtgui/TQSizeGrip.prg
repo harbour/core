@@ -67,13 +67,14 @@ CREATE CLASS QSizeGrip INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSizeGrip:new( ... )
    LOCAL p
@@ -92,4 +93,8 @@ METHOD QSizeGrip:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QSizeGrip:onError()
+   RETURN hbqt_showError( __GetMessage() )
 

@@ -67,6 +67,8 @@ CREATE CLASS QLineEdit INHERIT QWidget
 
    VAR     pPtr
 
+   ERROR HANDLER onError()
+
    METHOD  new()
    METHOD  configure( xObject )
 
@@ -128,7 +130,6 @@ CREATE CLASS QLineEdit INHERIT QWidget
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QLineEdit:new( ... )
    LOCAL p
@@ -147,6 +148,10 @@ METHOD QLineEdit:configure( xObject )
       ::pPtr := xObject
    ENDIF
    RETURN Self
+
+
+METHOD QLineEdit:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLineEdit:alignment()
