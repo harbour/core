@@ -330,6 +330,7 @@ REQUEST hbmk_KEYW
 
 #define hb_DirCreate( d )     MakeDir( d )
 #define hb_DirDelete( d )     DirRemove( d )
+#define hb_CurDrive()         CurDrive()
 
 PROCEDURE Main( ... )
    LOCAL aArgsIn := hb_AParams()
@@ -6338,8 +6339,6 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    ENDIF
 
    RETURN cItem
-
-#define hb_CurDrive() CurDrive()
 
 STATIC FUNCTION hb_pwd()
    RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() )
