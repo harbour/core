@@ -9,7 +9,7 @@
 
 xcopy /y /s ..\..\examples\*.* F:\hb\hb20\examples\
 xcopy /y /s ..\..\tests\*.*    F:\hb\hb20\tests\
-xcopy RELNOTES                 F:\hb\hb20\
+xcopy /y RELNOTES              F:\hb\hb20\
 
 pushd
 
