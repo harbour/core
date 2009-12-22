@@ -1951,7 +1951,7 @@ METHOD HbIde:onClickReplace()
 
    ::updateFindReplaceData( "replace" )
 
-   IF ::oFR:qObj[ "comboReplaceWith" ]:enabled()
+   IF ::oFR:qObj[ "comboReplaceWith" ]:isEnabled()
       ::replace()
    ENDIF
 
@@ -1983,37 +1983,26 @@ METHOD HbIde:replaceSelection( cReplWith )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:replace()
-   LOCAL cReplWith//, nB, nL, cBuffer
+   LOCAL cReplWith
+   LOCAL nFound
 
    IF !empty( ::qCurEdit )
       cReplWith := QLineEdit():configure( ::oFR:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
       ::replaceSelection( cReplWith )
-      #if 0
-      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-      IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
-         cReplWith := QLineEdit():configure( ::oFR:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
-
-         nL := len( cBuffer )
-         nB := ::qCursor:position() - nL
-
-         ::qCursor:beginEditBlock()
-         ::qCursor:removeSelectedText()
-         ::qCursor:insertText( cReplWith )
-         ::qCursor:setPosition( nB )
-         ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, len( cReplWith ) )
-         ::qCurEdit:setTextCursor( ::qCursor )
-         ::qCursor:endEditBlock()
-      ENDIF
-      #endif
 
       IF ::oFR:qObj[ "checkGlobal" ]:isChecked()
-         ::find()
          IF ::oFR:qObj[ "checkNoPrompting" ]:isChecked()
-            DO WHILE ::find()
+            nFound := 1
+            DO WHILE ::find( .f. )
+               nFound++
                ::replaceSelection( cReplWith )
             ENDDO
+            ::oSBar:getItem( 1 ):caption := '<font color="2343212"><b>Replaced [' + hb_ntos( nFound ) + "] : "+ cReplWith + "</b></font>"
+            ::oFR:qObj[ "buttonReplace" ]:setEnabled( .f. )
             ::oFR:qObj[ "checkGlobal" ]:setChecked( .f. )
             ::oFR:qObj[ "checkNoPrompting" ]:setChecked( .f. )
+         ELSE
+            ::find()
          ENDIF
       ENDIF
    ENDIF
@@ -2023,12 +2012,31 @@ METHOD HbIde:replace()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:onClickFind()
+   LOCAL lFound, nPos
 
    ::updateFindReplaceData( "find" )
-   IF ::find()
+
+   IF ::oFR:qObj[ "radioEntire" ]:isChecked()
+      ::oFR:qObj[ "radioFromCursor" ]:setChecked( .t. )
+      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      nPos := ::qCursor:position()
+
+      ::qCursor:setPosition( 0 )
+      ::qCurEdit:setTextCursor( ::qCursor )
+      IF !( lFound := ::find() )
+         ::qCursor:setPosition( nPos )
+         ::qCurEdit:setTextCursor( ::qCursor )
+      ENDIF
+   ELSE
+      lFound := ::find()
+   ENDIF
+
+   IF lFound
+      ::oFR:qObj[ "buttonReplace" ]:setEnabled( .t. )
       ::oFR:qObj[ "checkGlobal" ]:setEnabled( .t. )
       ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .t. )
    ELSE
+      ::oFR:qObj[ "buttonReplace" ]:setEnabled( .f. )
       ::oFR:qObj[ "checkGlobal" ]:setEnabled( .f. )
       ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .f. )
    ENDIF
@@ -2037,17 +2045,19 @@ METHOD HbIde:onClickFind()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:find()
+METHOD HbIde:find( lWarn )
    LOCAL nFlags
    LOCAL cText := QLineEdit():configure( ::oFR:qObj[ "comboFindWhat" ]:lineEdit() ):text()
    LOCAL lFound := .f.
+
+   DEFAULT lWarn TO .t.
 
    IF !empty( cText )
       nFlags := 0
       nFlags += iif( ::oFR:qObj[ "checkMatchCase" ]:isChecked(), QTextDocument_FindCaseSensitively, 0 )
       nFlags += iif( ::oFR:qObj[ "radioUp" ]:isChecked(), QTextDocument_FindBackward, 0 )
 
-      IF !( lFound := ::qCurEdit:find( cText, nFlags ) )
+      IF !( lFound := ::qCurEdit:find( cText, nFlags ) ) .and. lWarn
          ShowWarning( "Cannot find : " + cText )
       ENDIF
    ENDIF
@@ -2103,14 +2113,16 @@ METHOD HbIde:findReplace( lShow )
 
       ::oFR:signal( "comboFindWhat"   , "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
 
-      ::oFR:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ::oFR:qObj[ "comboReplaceWith" ]:setEnabled( p == 0 ) } )
+      ::oFR:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ;
+                                           ::oFR:qObj[ "comboReplaceWith" ]:setEnabled( p == 0 ), ;
+                                   iif( p == 1, ::oFR:qObj[ "buttonReplace" ]:setEnabled( .f. ), NIL ) } )
 
-      // Generate run-time error
-      ::oFR:qObj[ "checkGlobal" ]:seteEnabled( .f. )
-
+      // Comment out following line to generate run-time error
+      // ::oFR:qObj[ "checkGlobal" ]:seteEnabled( .f. )
    ENDIF
 
    IF lShow
+      ::oFR:qObj[ "buttonReplace" ]:setEnabled( .f. )
       ::oFR:qObj[ "checkGlobal" ]:setEnabled( .f. )
       ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .f. )
       ::oFR:qObj[ "checkListOnly" ]:setChecked( .f. )
