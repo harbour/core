@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSizeGrip INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSizeGrip INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QSizeGrip:new( ... )
    NEXT
    ::pPtr := Qt_QSizeGrip( ... )
    RETURN Self
-
-
-METHOD QSizeGrip:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSizeGrip:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

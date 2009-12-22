@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyledItemDelegate
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyledItemDelegate INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  displayText( pValue, pLocale )
@@ -91,19 +86,6 @@ METHOD QStyledItemDelegate:new( ... )
    NEXT
    ::pPtr := Qt_QStyledItemDelegate( ... )
    RETURN Self
-
-
-METHOD QStyledItemDelegate:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyledItemDelegate:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyledItemDelegate:createEditor( pParent, pOption, pIndex )

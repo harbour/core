@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLinearGradient INHERIT QGradient
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, QGradient
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  finalStop()
    METHOD  setFinalStop( pStop )
@@ -90,19 +85,6 @@ METHOD QLinearGradient:new( ... )
    NEXT
    ::pPtr := Qt_QLinearGradient( ... )
    RETURN Self
-
-
-METHOD QLinearGradient:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLinearGradient:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLinearGradient:finalStop()

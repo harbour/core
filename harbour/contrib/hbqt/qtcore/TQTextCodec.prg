@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCodec
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextCodec INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  canEncode( nCh )
    METHOD  canEncode_1( cS )
@@ -104,19 +99,6 @@ METHOD QTextCodec:new( ... )
    NEXT
    ::pPtr := Qt_QTextCodec( ... )
    RETURN Self
-
-
-METHOD QTextCodec:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextCodec:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCodec:canEncode( nCh )

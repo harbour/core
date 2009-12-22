@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSound
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSound INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  fileName()
    METHOD  isFinished()
@@ -91,19 +86,6 @@ METHOD QSound:new( ... )
    NEXT
    ::pPtr := Qt_QSound( ... )
    RETURN Self
-
-
-METHOD QSound:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSound:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSound:fileName()

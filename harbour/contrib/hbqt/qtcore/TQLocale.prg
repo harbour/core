@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLocale
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLocale INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  amText()
    METHOD  country()
@@ -132,19 +127,6 @@ METHOD QLocale:new( ... )
    NEXT
    ::pPtr := Qt_QLocale( ... )
    RETURN Self
-
-
-METHOD QLocale:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLocale:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLocale:amText()

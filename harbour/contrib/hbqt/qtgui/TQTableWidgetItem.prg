@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableWidgetItem
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  checkState()
@@ -119,19 +114,6 @@ METHOD QTableWidgetItem:new( ... )
    NEXT
    ::pPtr := Qt_QTableWidgetItem( ... )
    RETURN Self
-
-
-METHOD QTableWidgetItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTableWidgetItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableWidgetItem:background()

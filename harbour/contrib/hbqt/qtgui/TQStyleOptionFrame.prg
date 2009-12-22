@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  lineWidth()
    METHOD  midLineWidth()
@@ -86,19 +81,6 @@ METHOD QStyleOptionFrame:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionFrame( ... )
    RETURN Self
-
-
-METHOD QStyleOptionFrame:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionFrame:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionFrame:lineWidth()

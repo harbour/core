@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTime
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTime INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addMSecs( nMs )
    METHOD  addSecs( nS )
@@ -104,19 +99,6 @@ METHOD QTime:new( ... )
    NEXT
    ::pPtr := Qt_QTime( ... )
    RETURN Self
-
-
-METHOD QTime:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTime:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTime:addMSecs( nMs )

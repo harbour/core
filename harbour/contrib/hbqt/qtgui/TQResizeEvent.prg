@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QResizeEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  oldSize()
    METHOD  size()
@@ -86,19 +81,6 @@ METHOD QResizeEvent:new( ... )
    NEXT
    ::pPtr := Qt_QResizeEvent( ... )
    RETURN Self
-
-
-METHOD QResizeEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QResizeEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QResizeEvent:oldSize()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPolygonF
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPolygonF INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  boundingRect()
    METHOD  containsPoint( pPoint, nFillRule )
@@ -93,19 +88,6 @@ METHOD QPolygonF:new( ... )
    NEXT
    ::pPtr := Qt_QPolygonF( ... )
    RETURN Self
-
-
-METHOD QPolygonF:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPolygonF:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPolygonF:boundingRect()

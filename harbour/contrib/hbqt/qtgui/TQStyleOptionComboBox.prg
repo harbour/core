@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  currentIcon()
    METHOD  currentText()
@@ -90,19 +85,6 @@ METHOD QStyleOptionComboBox:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionComboBox( ... )
    RETURN Self
-
-
-METHOD QStyleOptionComboBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionComboBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionComboBox:currentIcon()

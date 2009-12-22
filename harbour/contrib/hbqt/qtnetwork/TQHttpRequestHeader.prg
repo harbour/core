@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QHttpRequestHeader INHERIT HbQtObjectHandler, QHttpHeader
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  majorVersion()
    METHOD  method()
@@ -89,19 +84,6 @@ METHOD QHttpRequestHeader:new( ... )
    NEXT
    ::pPtr := Qt_QHttpRequestHeader( ... )
    RETURN Self
-
-
-METHOD QHttpRequestHeader:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QHttpRequestHeader:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHttpRequestHeader:majorVersion()

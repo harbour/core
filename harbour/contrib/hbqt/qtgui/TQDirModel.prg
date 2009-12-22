@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDirModel INHERIT QAbstractItemModel
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDirModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  columnCount( pParent )
    METHOD  data( pIndex, nRole )
@@ -121,19 +116,6 @@ METHOD QDirModel:new( ... )
    NEXT
    ::pPtr := Qt_QDirModel( ... )
    RETURN Self
-
-
-METHOD QDirModel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDirModel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDirModel:columnCount( pParent )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, QAbstractScrollArea
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  acceptRichText()
    METHOD  alignment()
@@ -165,19 +160,6 @@ METHOD QTextEdit:new( ... )
    NEXT
    ::pPtr := Qt_QTextEdit( ... )
    RETURN Self
-
-
-METHOD QTextEdit:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextEdit:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextEdit:acceptRichText()

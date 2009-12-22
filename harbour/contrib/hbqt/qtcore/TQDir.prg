@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDir
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDir INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  absoluteFilePath( cFileName )
    METHOD  absolutePath()
@@ -136,19 +131,6 @@ METHOD QDir:new( ... )
    NEXT
    ::pPtr := Qt_QDir( ... )
    RETURN Self
-
-
-METHOD QDir:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDir:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDir:absoluteFilePath( cFileName )

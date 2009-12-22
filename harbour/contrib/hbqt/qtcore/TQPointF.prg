@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPointF
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPointF INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  isNull()
    METHOD  rx()
@@ -92,19 +87,6 @@ METHOD QPointF:new( ... )
    NEXT
    ::pPtr := Qt_QPointF( ... )
    RETURN Self
-
-
-METHOD QPointF:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPointF:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPointF:isNull()

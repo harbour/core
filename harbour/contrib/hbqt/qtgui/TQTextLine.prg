@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextLine
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextLine INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  cursorToX( nCursorPos, nEdge )
@@ -105,19 +100,6 @@ METHOD QTextLine:new( ... )
    NEXT
    ::pPtr := Qt_QTextLine( ... )
    RETURN Self
-
-
-METHOD QTextLine:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextLine:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextLine:ascent()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSyntaxHighlighter INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  document()
    METHOD  setDocument( pDoc )
@@ -87,19 +82,6 @@ METHOD QSyntaxHighlighter:new( ... )
    NEXT
    ::pPtr := Qt_QSyntaxHighlighter( ... )
    RETURN Self
-
-
-METHOD QSyntaxHighlighter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSyntaxHighlighter:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSyntaxHighlighter:document()

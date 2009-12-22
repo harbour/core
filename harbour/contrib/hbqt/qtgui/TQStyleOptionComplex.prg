@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionComplex INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  activeSubControls()
    METHOD  subControls()
@@ -86,19 +81,6 @@ METHOD QStyleOptionComplex:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionComplex( ... )
    RETURN Self
-
-
-METHOD QStyleOptionComplex:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionComplex:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionComplex:activeSubControls()

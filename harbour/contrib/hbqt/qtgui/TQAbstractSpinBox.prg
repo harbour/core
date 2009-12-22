@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractSpinBox INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractSpinBox INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  buttonSymbols()
@@ -110,19 +105,6 @@ METHOD QAbstractSpinBox:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractSpinBox( ... )
    RETURN Self
-
-
-METHOD QAbstractSpinBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractSpinBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractSpinBox:alignment()

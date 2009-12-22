@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextEncoder
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  fromUnicode( cStr )
 
@@ -85,19 +80,6 @@ METHOD QTextEncoder:new( ... )
    NEXT
    ::pPtr := Qt_QTextEncoder( ... )
    RETURN Self
-
-
-METHOD QTextEncoder:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextEncoder:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextEncoder:fromUnicode( cStr )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBrowser INHERIT QTextEdit
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, QTextEdit
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  backwardHistoryCount()
    METHOD  clearHistory()
@@ -104,19 +99,6 @@ METHOD QTextBrowser:new( ... )
    NEXT
    ::pPtr := Qt_QTextBrowser( ... )
    RETURN Self
-
-
-METHOD QTextBrowser:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextBrowser:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBrowser:backwardHistoryCount()

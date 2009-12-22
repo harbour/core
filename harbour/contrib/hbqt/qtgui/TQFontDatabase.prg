@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontDatabase
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bold( cFamily, cStyle )
    METHOD  families( nWritingSystem )
@@ -104,19 +99,6 @@ METHOD QFontDatabase:new( ... )
    NEXT
    ::pPtr := Qt_QFontDatabase( ... )
    RETURN Self
-
-
-METHOD QFontDatabase:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFontDatabase:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontDatabase:bold( cFamily, cStyle )

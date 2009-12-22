@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTabBar INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTabBar INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addTab( cText )
    METHOD  count()
@@ -128,19 +123,6 @@ METHOD QTabBar:new( ... )
    NEXT
    ::pPtr := Qt_QTabBar( ... )
    RETURN Self
-
-
-METHOD QTabBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTabBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTabBar:addTab( cText )

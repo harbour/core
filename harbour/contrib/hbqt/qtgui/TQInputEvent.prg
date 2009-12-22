@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QInputEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QInputEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  modifiers()
 
@@ -85,19 +80,6 @@ METHOD QInputEvent:new( ... )
    NEXT
    ::pPtr := Qt_QInputEvent( ... )
    RETURN Self
-
-
-METHOD QInputEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QInputEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QInputEvent:modifiers()

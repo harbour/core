@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QKeyEvent INHERIT QInputEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QKeyEvent INHERIT HbQtObjectHandler, QInputEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  count()
    METHOD  isAutoRepeat()
@@ -93,19 +88,6 @@ METHOD QKeyEvent:new( ... )
    NEXT
    ::pPtr := Qt_QKeyEvent( ... )
    RETURN Self
-
-
-METHOD QKeyEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QKeyEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QKeyEvent:count()

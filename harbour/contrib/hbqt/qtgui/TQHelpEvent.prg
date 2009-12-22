@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHelpEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QHelpEvent INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  globalPos()
    METHOD  globalX()
@@ -90,19 +85,6 @@ METHOD QHelpEvent:new( ... )
    NEXT
    ::pPtr := Qt_QHelpEvent( ... )
    RETURN Self
-
-
-METHOD QHelpEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QHelpEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHelpEvent:globalPos()

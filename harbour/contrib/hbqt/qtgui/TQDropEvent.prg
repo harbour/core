@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDropEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  acceptProposedAction()
    METHOD  dropAction()
@@ -94,19 +89,6 @@ METHOD QDropEvent:new( ... )
    NEXT
    ::pPtr := Qt_QDropEvent( ... )
    RETURN Self
-
-
-METHOD QDropEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDropEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDropEvent:acceptProposedAction()

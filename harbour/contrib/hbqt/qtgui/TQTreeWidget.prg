@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTreeWidget INHERIT QTreeView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, QTreeView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addTopLevelItem( pItem )
    METHOD  closePersistentEditor( pItem, nColumn )
@@ -121,19 +116,6 @@ METHOD QTreeWidget:new( ... )
    NEXT
    ::pPtr := Qt_QTreeWidget( ... )
    RETURN Self
-
-
-METHOD QTreeWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTreeWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTreeWidget:addTopLevelItem( pItem )

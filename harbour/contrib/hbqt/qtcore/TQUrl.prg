@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QUrl INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QUrl INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addEncodedQueryItem( pKey, pValue )
    METHOD  addQueryItem( cKey, cValue )
@@ -153,19 +148,6 @@ METHOD QUrl:new( ... )
    NEXT
    ::pPtr := Qt_QUrl( ... )
    RETURN Self
-
-
-METHOD QUrl:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QUrl:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QUrl:addEncodedQueryItem( pKey, pValue )

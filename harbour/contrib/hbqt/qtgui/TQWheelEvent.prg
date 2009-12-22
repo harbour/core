@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWheelEvent INHERIT QInputEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, QInputEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  buttons()
    METHOD  delta()
@@ -93,19 +88,6 @@ METHOD QWheelEvent:new( ... )
    NEXT
    ::pPtr := Qt_QWheelEvent( ... )
    RETURN Self
-
-
-METHOD QWheelEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QWheelEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWheelEvent:buttons()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDragLeaveEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDragLeaveEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QDragLeaveEvent:new( ... )
    NEXT
    ::pPtr := Qt_QDragLeaveEvent( ... )
    RETURN Self
-
-
-METHOD QDragLeaveEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDragLeaveEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

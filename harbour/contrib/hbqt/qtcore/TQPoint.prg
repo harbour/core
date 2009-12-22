@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPoint
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPoint INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  isNull()
    METHOD  manhattanLength()
@@ -92,19 +87,6 @@ METHOD QPoint:new( ... )
    NEXT
    ::pPtr := Qt_QPoint( ... )
    RETURN Self
-
-
-METHOD QPoint:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPoint:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPoint:isNull()

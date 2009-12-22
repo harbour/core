@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, QTextFrameFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  cellPadding()
@@ -95,19 +90,6 @@ METHOD QTextTableFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextTableFormat( ... )
    RETURN Self
-
-
-METHOD QTextTableFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextTableFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextTableFormat:alignment()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPrintPreviewDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPrintPreviewDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  open( pReceiver, pMember )
    METHOD  printer()
@@ -86,19 +81,6 @@ METHOD QPrintPreviewDialog:new( ... )
    NEXT
    ::pPtr := Qt_QPrintPreviewDialog( ... )
    RETURN Self
-
-
-METHOD QPrintPreviewDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPrintPreviewDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPrintPreviewDialog:open( pReceiver, pMember )

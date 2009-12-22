@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyle INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyle INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
    METHOD  drawComplexControl( nControl, pOption, pPainter, pWidget )
@@ -113,19 +108,6 @@ METHOD QStyle:new( ... )
    NEXT
    ::pPtr := Qt_QStyle( ... )
    RETURN Self
-
-
-METHOD QStyle:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyle:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyle:combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )

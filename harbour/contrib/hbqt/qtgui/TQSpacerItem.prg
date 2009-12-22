@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSpacerItem INHERIT QLayoutItem
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, QLayoutItem
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )
    METHOD  isEmpty()
@@ -87,19 +82,6 @@ METHOD QSpacerItem:new( ... )
    NEXT
    ::pPtr := Qt_QSpacerItem( ... )
    RETURN Self
-
-
-METHOD QSpacerItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSpacerItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSpacerItem:changeSize( nW, nH, nHPolicy, nVPolicy )

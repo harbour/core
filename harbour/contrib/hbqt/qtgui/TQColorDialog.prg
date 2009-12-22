@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QColorDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  currentColor()
    METHOD  open()
@@ -99,19 +94,6 @@ METHOD QColorDialog:new( ... )
    NEXT
    ::pPtr := Qt_QColorDialog( ... )
    RETURN Self
-
-
-METHOD QColorDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QColorDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QColorDialog:currentColor()

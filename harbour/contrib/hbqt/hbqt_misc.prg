@@ -50,7 +50,35 @@
  */
 /*----------------------------------------------------------------------*/
 
+#include "hbclass.ch"
 #include "hbqt.ch"
+
+/*----------------------------------------------------------------------*/
+
+CLASS HbQtObjectHandler
+
+   VAR    pPtr
+
+   METHOD configure()
+
+   ERROR HANDLER onError()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:configure( xObject )
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:onError()
+   RETURN hbqt_showError( __GetMessage() )
 
 /*----------------------------------------------------------------------*/
 

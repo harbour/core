@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, QAbstractScrollArea
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alternatingRowColors()
    METHOD  autoScrollMargin()
@@ -147,19 +142,6 @@ METHOD QAbstractItemView:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractItemView( ... )
    RETURN Self
-
-
-METHOD QAbstractItemView:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractItemView:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractItemView:alternatingRowColors()

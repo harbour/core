@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, QAbstractSpinBox
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cleanText()
    METHOD  decimals()
@@ -102,19 +97,6 @@ METHOD QDoubleSpinBox:new( ... )
    NEXT
    ::pPtr := Qt_QDoubleSpinBox( ... )
    RETURN Self
-
-
-METHOD QDoubleSpinBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDoubleSpinBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDoubleSpinBox:cleanText()

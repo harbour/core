@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, QStyleOptionComplex
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  dialWrapping()
    METHOD  maximum()
@@ -96,19 +91,6 @@ METHOD QStyleOptionSlider:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionSlider( ... )
    RETURN Self
-
-
-METHOD QStyleOptionSlider:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionSlider:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionSlider:dialWrapping()

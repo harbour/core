@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTranslator INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTranslator INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  isEmpty()
    METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
@@ -88,19 +83,6 @@ METHOD QTranslator:new( ... )
    NEXT
    ::pPtr := Qt_QTranslator( ... )
    RETURN Self
-
-
-METHOD QTranslator:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTranslator:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTranslator:isEmpty()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QObject INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  blockSignals( lBlock )
    METHOD  connect( pSender, pSignal, pMethod, nType )
@@ -113,19 +108,6 @@ METHOD QObject:new( ... )
    NEXT
    ::pPtr := Qt_QObject( ... )
    RETURN Self
-
-
-METHOD QObject:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QObject:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QObject:blockSignals( lBlock )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionHeader INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  icon()
    METHOD  iconAlignment()
@@ -93,19 +88,6 @@ METHOD QStyleOptionHeader:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionHeader( ... )
    RETURN Self
-
-
-METHOD QStyleOptionHeader:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionHeader:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionHeader:icon()

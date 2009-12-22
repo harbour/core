@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTimer INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTimer INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  interval()
    METHOD  isActive()
@@ -94,19 +89,6 @@ METHOD QTimer:new( ... )
    NEXT
    ::pPtr := Qt_QTimer( ... )
    RETURN Self
-
-
-METHOD QTimer:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTimer:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTimer:interval()

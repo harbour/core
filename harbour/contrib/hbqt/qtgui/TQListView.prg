@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QListView INHERIT QAbstractItemView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QListView INHERIT HbQtObjectHandler, QAbstractItemView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  batchSize()
    METHOD  clearPropertyFlags()
@@ -113,19 +108,6 @@ METHOD QListView:new( ... )
    NEXT
    ::pPtr := Qt_QListView( ... )
    RETURN Self
-
-
-METHOD QListView:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QListView:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListView:batchSize()

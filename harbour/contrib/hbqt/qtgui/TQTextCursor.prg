@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCursor
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  anchor()
    METHOD  atBlockEnd()
@@ -144,19 +139,6 @@ METHOD QTextCursor:new( ... )
    NEXT
    ::pPtr := Qt_QTextCursor( ... )
    RETURN Self
-
-
-METHOD QTextCursor:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextCursor:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCursor:anchor()

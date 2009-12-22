@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBoundaryFinder
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  boundaryReasons()
    METHOD  isAtBoundary()
@@ -95,19 +90,6 @@ METHOD QTextBoundaryFinder:new( ... )
    NEXT
    ::pPtr := Qt_QTextBoundaryFinder( ... )
    RETURN Self
-
-
-METHOD QTextBoundaryFinder:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextBoundaryFinder:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBoundaryFinder:boundaryReasons()

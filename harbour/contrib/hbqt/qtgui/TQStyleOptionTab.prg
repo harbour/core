@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionTab INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionTab INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cornerWidgets()
    METHOD  icon()
@@ -91,19 +86,6 @@ METHOD QStyleOptionTab:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionTab( ... )
    RETURN Self
-
-
-METHOD QStyleOptionTab:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionTab:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTab:cornerWidgets()

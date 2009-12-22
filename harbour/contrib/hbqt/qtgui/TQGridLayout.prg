@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGridLayout INHERIT QLayout
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, QLayout
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
    METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )
@@ -110,19 +105,6 @@ METHOD QGridLayout:new( ... )
    NEXT
    ::pPtr := Qt_QGridLayout( ... )
    RETURN Self
-
-
-METHOD QGridLayout:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QGridLayout:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )

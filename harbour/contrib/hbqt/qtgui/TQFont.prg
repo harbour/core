@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFont
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFont INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bold()
    METHOD  capitalization()
@@ -142,19 +137,6 @@ METHOD QFont:new( ... )
    NEXT
    ::pPtr := Qt_QFont( ... )
    RETURN Self
-
-
-METHOD QFont:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFont:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFont:bold()

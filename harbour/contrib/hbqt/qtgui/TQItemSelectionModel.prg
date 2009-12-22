@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemSelectionModel INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  columnIntersectsSelection( nColumn, pParent )
    METHOD  currentIndex()
@@ -99,19 +94,6 @@ METHOD QItemSelectionModel:new( ... )
    NEXT
    ::pPtr := Qt_QItemSelectionModel( ... )
    RETURN Self
-
-
-METHOD QItemSelectionModel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QItemSelectionModel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QItemSelectionModel:columnIntersectsSelection( nColumn, pParent )

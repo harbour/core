@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, QAbstractScrollArea
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )
@@ -93,19 +88,6 @@ METHOD QScrollArea:new( ... )
    NEXT
    ::pPtr := Qt_QScrollArea( ... )
    RETURN Self
-
-
-METHOD QScrollArea:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QScrollArea:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QScrollArea:alignment()

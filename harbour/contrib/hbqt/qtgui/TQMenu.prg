@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMenu INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMenu INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  actionAt( pPt )
    METHOD  actionGeometry( pAct )
@@ -117,19 +112,6 @@ METHOD QMenu:new( ... )
    NEXT
    ::pPtr := Qt_QMenu( ... )
    RETURN Self
-
-
-METHOD QMenu:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMenu:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMenu:actionAt( pPt )

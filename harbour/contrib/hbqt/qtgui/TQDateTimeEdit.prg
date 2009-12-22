@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, QAbstractSpinBox
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  calendarPopup()
    METHOD  calendarWidget()
@@ -128,19 +123,6 @@ METHOD QDateTimeEdit:new( ... )
    NEXT
    ::pPtr := Qt_QDateTimeEdit( ... )
    RETURN Self
-
-
-METHOD QDateTimeEdit:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDateTimeEdit:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDateTimeEdit:calendarPopup()

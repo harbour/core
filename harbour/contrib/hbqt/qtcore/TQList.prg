@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QList
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QList INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  append( xValue )
    METHOD  at( nI )
@@ -124,19 +119,6 @@ METHOD QList:new( ... )
    NEXT
    ::pPtr := Qt_QList( ... )
    RETURN Self
-
-
-METHOD QList:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QList:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QList:append( xValue )

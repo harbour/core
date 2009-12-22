@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStandardItemModel INHERIT QAbstractItemModeL
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, QAbstractItemModeL
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  appendRow( pItem )
    METHOD  clear()
@@ -110,19 +105,6 @@ METHOD QStandardItemModel:new( ... )
    NEXT
    ::pPtr := Qt_QStandardItemModel( ... )
    RETURN Self
-
-
-METHOD QStandardItemModel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStandardItemModel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStandardItemModel:appendRow( pItem )

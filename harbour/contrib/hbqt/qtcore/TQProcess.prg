@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProcess INHERIT QIODevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QProcess INHERIT HbQtObjectHandler, QIODevice
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  close()
    METHOD  closeReadChannel( nChannel )
@@ -117,19 +112,6 @@ METHOD QProcess:new( ... )
    NEXT
    ::pPtr := Qt_QProcess( ... )
    RETURN Self
-
-
-METHOD QProcess:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QProcess:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProcess:close()

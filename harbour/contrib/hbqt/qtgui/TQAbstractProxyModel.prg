@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  mapFromSource( pSourceIndex )
    METHOD  mapSelectionFromSource( pSourceSelection )
@@ -90,19 +85,6 @@ METHOD QAbstractProxyModel:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractProxyModel( ... )
    RETURN Self
-
-
-METHOD QAbstractProxyModel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractProxyModel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractProxyModel:mapFromSource( pSourceIndex )

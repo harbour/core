@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextFrameFormat INHERIT QTextFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, QTextFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  border()
    METHOD  borderBrush()
@@ -113,19 +108,6 @@ METHOD QTextFrameFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextFrameFormat( ... )
    RETURN Self
-
-
-METHOD QTextFrameFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextFrameFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFrameFormat:border()

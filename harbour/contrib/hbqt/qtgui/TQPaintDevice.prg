@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPaintDevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  depth()
    METHOD  height()
@@ -96,19 +91,6 @@ METHOD QPaintDevice:new( ... )
    NEXT
    ::pPtr := Qt_QPaintDevice( ... )
    RETURN Self
-
-
-METHOD QPaintDevice:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPaintDevice:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPaintDevice:depth()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTransform
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTransform INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  m11()
    METHOD  m12()
@@ -133,19 +128,6 @@ METHOD QTransform:new( ... )
    NEXT
    ::pPtr := Qt_QTransform( ... )
    RETURN Self
-
-
-METHOD QTransform:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTransform:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTransform:m11()

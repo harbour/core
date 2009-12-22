@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLineEdit INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  backspace()
@@ -139,19 +134,6 @@ METHOD QLineEdit:new( ... )
    NEXT
    ::pPtr := Qt_QLineEdit( ... )
    RETURN Self
-
-
-METHOD QLineEdit:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLineEdit:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLineEdit:alignment()

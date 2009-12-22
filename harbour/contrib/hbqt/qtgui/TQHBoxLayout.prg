@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHBoxLayout INHERIT QBoxLayout
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QHBoxLayout INHERIT HbQtObjectHandler, QBoxLayout
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QHBoxLayout:new( ... )
    NEXT
    ::pPtr := Qt_QHBoxLayout( ... )
    RETURN Self
-
-
-METHOD QHBoxLayout:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QHBoxLayout:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFocusFrame INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  setWidget( pWidget )
    METHOD  widget()
@@ -86,19 +81,6 @@ METHOD QFocusFrame:new( ... )
    NEXT
    ::pPtr := Qt_QFocusFrame( ... )
    RETURN Self
-
-
-METHOD QFocusFrame:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFocusFrame:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFocusFrame:setWidget( pWidget )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPainterPath
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPainterPath INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addEllipse( pBoundingRectangle )
    METHOD  addEllipse_1( nX, nY, nWidth, nHeight )
@@ -135,19 +130,6 @@ METHOD QPainterPath:new( ... )
    NEXT
    ::pPtr := Qt_QPainterPath( ... )
    RETURN Self
-
-
-METHOD QPainterPath:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPainterPath:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPainterPath:addEllipse( pBoundingRectangle )

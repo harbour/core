@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolButton INHERIT QAbstractButton
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QToolButton INHERIT HbQtObjectHandler, QAbstractButton
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  arrowType()
    METHOD  autoRaise()
@@ -97,19 +92,6 @@ METHOD QToolButton:new( ... )
    NEXT
    ::pPtr := Qt_QToolButton( ... )
    RETURN Self
-
-
-METHOD QToolButton:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QToolButton:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolButton:arrowType()

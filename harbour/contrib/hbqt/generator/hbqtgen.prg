@@ -1554,16 +1554,19 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '' )
 
    n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
-   s := 'CREATE CLASS ' + cWidget + iif( n > 0, ' INHERIT ' + cls_[ n, 2 ], '' )
+   //s := 'CREATE CLASS ' + cWidget + iif( n > 0, ' INHERIT HbQtObjectHandler' + iif( empty( cls_[ n, 2 ] ), "" , ", " + cls_[ n, 2 ] ), '' )
+   s := 'CREATE CLASS ' + cWidget + ' INHERIT HbQtObjectHandler' + iif( n > 0, ", " + cls_[ n, 2 ], '' )
 
    aadd( txt_, s                                 )
    aadd( txt_, '   '                             )
+   #if 0
    aadd( txt_, '   VAR     pPtr'                 )
    aadd( txt_, '   '                             )
    aadd( txt_, '   ERROR HANDLER onError()'      )
    aadd( txt_, '   '                             )
+   #endif
    aadd( txt_, '   METHOD  new()'                )
-   aadd( txt_, '   METHOD  configure( xObject )' )
+   //aadd( txt_, '   METHOD  configure( xObject )' )
    aadd( txt_, '   '                             )
 
    /* Populate METHODS */
@@ -1605,6 +1608,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )'      )
    aadd( txt_, '   RETURN Self'                              )
    aadd( txt_, '   '                                         )
+   #if 0
    aadd( txt_, '   '                                         )
    aadd( txt_, 'METHOD ' + cWidget + ':configure( xObject )' )
    aadd( txt_, '   IF hb_isObject( xObject )'                )
@@ -1618,6 +1622,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, 'METHOD ' + cWidget + ':onError()'            )
    aadd( txt_, '   RETURN hbqt_showError( __GetMessage() )'  )
    aadd( txt_, '   '                                         )
+   #endif
    /* Define methods */
    FOR i := 1 TO len( mth_ )
       aadd( txt_, '                                        ' )

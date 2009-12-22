@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableView INHERIT QAbstractItemView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTableView INHERIT HbQtObjectHandler, QAbstractItemView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  clearSpans()
    METHOD  columnAt( nX )
@@ -126,19 +121,6 @@ METHOD QTableView:new( ... )
    NEXT
    ::pPtr := Qt_QTableView( ... )
    RETURN Self
-
-
-METHOD QTableView:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTableView:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableView:clearSpans()

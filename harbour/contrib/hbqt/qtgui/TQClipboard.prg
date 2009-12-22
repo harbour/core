@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QClipboard INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QClipboard INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  clear( nMode )
    METHOD  image( nMode )
@@ -98,19 +93,6 @@ METHOD QClipboard:new( ... )
    NEXT
    ::pPtr := Qt_QClipboard( ... )
    RETURN Self
-
-
-METHOD QClipboard:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QClipboard:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QClipboard:clear( nMode )

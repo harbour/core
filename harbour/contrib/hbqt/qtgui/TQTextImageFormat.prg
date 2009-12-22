@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextImageFormat INHERIT HbQtObjectHandler, QTextCharFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  height()
    METHOD  isValid()
@@ -91,19 +86,6 @@ METHOD QTextImageFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextImageFormat( ... )
    RETURN Self
-
-
-METHOD QTextImageFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextImageFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextImageFormat:height()

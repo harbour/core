@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPalette
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPalette INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alternateBase()
    METHOD  base()
@@ -119,19 +114,6 @@ METHOD QPalette:new( ... )
    NEXT
    ::pPtr := Qt_QPalette( ... )
    RETURN Self
-
-
-METHOD QPalette:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPalette:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPalette:alternateBase()

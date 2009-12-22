@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFrame INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFrame INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  frameRect()
    METHOD  frameShadow()
@@ -97,19 +92,6 @@ METHOD QFrame:new( ... )
    NEXT
    ::pPtr := Qt_QFrame( ... )
    RETURN Self
-
-
-METHOD QFrame:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFrame:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFrame:frameRect()

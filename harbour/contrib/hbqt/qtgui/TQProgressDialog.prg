@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProgressDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  autoClose()
    METHOD  autoReset()
@@ -108,19 +103,6 @@ METHOD QProgressDialog:new( ... )
    NEXT
    ::pPtr := Qt_QProgressDialog( ... )
    RETURN Self
-
-
-METHOD QProgressDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QProgressDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProgressDialog:autoClose()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QComboBox INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QComboBox INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addItem( cText, pUserData )
    METHOD  addItem_1( cIcon, cText, pUserData )
@@ -143,19 +138,6 @@ METHOD QComboBox:new( ... )
    NEXT
    ::pPtr := Qt_QComboBox( ... )
    RETURN Self
-
-
-METHOD QComboBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QComboBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QComboBox:addItem( cText, pUserData )

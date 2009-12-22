@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QNetworkRequest
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  attribute( nCode, pDefaultValue )
    METHOD  hasRawHeader( pHeaderName )
@@ -93,19 +88,6 @@ METHOD QNetworkRequest:new( ... )
    NEXT
    ::pPtr := Qt_QNetworkRequest( ... )
    RETURN Self
-
-
-METHOD QNetworkRequest:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QNetworkRequest:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QNetworkRequest:attribute( nCode, pDefaultValue )

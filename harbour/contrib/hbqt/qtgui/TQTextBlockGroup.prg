@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBlockGroup INHERIT QTextObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextBlockGroup INHERIT HbQtObjectHandler, QTextObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QTextBlockGroup:new( ... )
    NEXT
    ::pPtr := Qt_QTextBlockGroup( ... )
    RETURN Self
-
-
-METHOD QTextBlockGroup:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextBlockGroup:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

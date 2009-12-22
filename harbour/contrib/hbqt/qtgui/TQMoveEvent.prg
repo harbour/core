@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMoveEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  oldPos()
    METHOD  pos()
@@ -86,19 +81,6 @@ METHOD QMoveEvent:new( ... )
    NEXT
    ::pPtr := Qt_QMoveEvent( ... )
    RETURN Self
-
-
-METHOD QMoveEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMoveEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMoveEvent:oldPos()

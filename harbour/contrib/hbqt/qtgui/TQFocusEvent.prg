@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFocusEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  gotFocus()
    METHOD  lostFocus()
@@ -87,19 +82,6 @@ METHOD QFocusEvent:new( ... )
    NEXT
    ::pPtr := Qt_QFocusEvent( ... )
    RETURN Self
-
-
-METHOD QFocusEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFocusEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFocusEvent:gotFocus()

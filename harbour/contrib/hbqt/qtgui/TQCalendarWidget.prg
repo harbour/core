@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCalendarWidget INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  dateEditAcceptDelay()
    METHOD  dateTextFormat( pDate )
@@ -122,19 +117,6 @@ METHOD QCalendarWidget:new( ... )
    NEXT
    ::pPtr := Qt_QCalendarWidget( ... )
    RETURN Self
-
-
-METHOD QCalendarWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCalendarWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCalendarWidget:dateEditAcceptDelay()

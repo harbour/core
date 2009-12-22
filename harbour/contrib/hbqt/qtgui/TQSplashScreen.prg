@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSplashScreen INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  finish( pMainWin )
    METHOD  pixmap()
@@ -90,19 +85,6 @@ METHOD QSplashScreen:new( ... )
    NEXT
    ::pPtr := Qt_QSplashScreen( ... )
    RETURN Self
-
-
-METHOD QSplashScreen:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSplashScreen:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSplashScreen:finish( pMainWin )

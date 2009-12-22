@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontComboBox INHERIT QComboBox
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, QComboBox
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  currentFont()
    METHOD  fontFilters()
@@ -90,19 +85,6 @@ METHOD QFontComboBox:new( ... )
    NEXT
    ::pPtr := Qt_QFontComboBox( ... )
    RETURN Self
-
-
-METHOD QFontComboBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFontComboBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontComboBox:currentFont()

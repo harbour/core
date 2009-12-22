@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QColor
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QColor INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alpha()
    METHOD  alphaF()
@@ -149,19 +144,6 @@ METHOD QColor:new( ... )
    NEXT
    ::pPtr := Qt_QColor( ... )
    RETURN Self
-
-
-METHOD QColor:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QColor:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QColor:alpha()

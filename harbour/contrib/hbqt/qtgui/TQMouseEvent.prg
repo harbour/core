@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMouseEvent INHERIT QInputEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, QInputEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  button()
    METHOD  buttons()
@@ -93,19 +88,6 @@ METHOD QMouseEvent:new( ... )
    NEXT
    ::pPtr := Qt_QMouseEvent( ... )
    RETURN Self
-
-
-METHOD QMouseEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMouseEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMouseEvent:button()

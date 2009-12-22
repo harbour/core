@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolBar INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QToolBar INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  actionAt( pP )
    METHOD  actionAt_1( nX, nY )
@@ -112,19 +107,6 @@ METHOD QToolBar:new( ... )
    NEXT
    ::pPtr := Qt_QToolBar( ... )
    RETURN Self
-
-
-METHOD QToolBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QToolBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolBar:actionAt( pP )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPen
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPen INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  brush()
    METHOD  capStyle()
@@ -105,19 +100,6 @@ METHOD QPen:new( ... )
    NEXT
    ::pPtr := Qt_QPen( ... )
    RETURN Self
-
-
-METHOD QPen:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPen:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPen:brush()

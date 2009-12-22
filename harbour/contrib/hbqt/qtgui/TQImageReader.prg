@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QImageReader
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QImageReader INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  autoDetectImageFormat()
    METHOD  backgroundColor()
@@ -122,19 +117,6 @@ METHOD QImageReader:new( ... )
    NEXT
    ::pPtr := Qt_QImageReader( ... )
    RETURN Self
-
-
-METHOD QImageReader:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QImageReader:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImageReader:autoDetectImageFormat()

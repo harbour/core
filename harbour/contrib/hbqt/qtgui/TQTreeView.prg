@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTreeView INHERIT QAbstractItemView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTreeView INHERIT HbQtObjectHandler, QAbstractItemView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  allColumnsShowFocus()
    METHOD  autoExpandDelay()
@@ -133,19 +128,6 @@ METHOD QTreeView:new( ... )
    NEXT
    ::pPtr := Qt_QTreeView( ... )
    RETURN Self
-
-
-METHOD QTreeView:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTreeView:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTreeView:allColumnsShowFocus()

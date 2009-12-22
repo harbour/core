@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QModelIndex
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QModelIndex INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  child( nRow, nColumn )
    METHOD  column()
@@ -95,19 +90,6 @@ METHOD QModelIndex:new( ... )
    NEXT
    ::pPtr := Qt_QModelIndex( ... )
    RETURN Self
-
-
-METHOD QModelIndex:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QModelIndex:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QModelIndex:child( nRow, nColumn )

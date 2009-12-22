@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesktopWidget INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  availableGeometry( nScreen )
    METHOD  availableGeometry_1( pWidget )
@@ -96,19 +91,6 @@ METHOD QDesktopWidget:new( ... )
    NEXT
    ::pPtr := Qt_QDesktopWidget( ... )
    RETURN Self
-
-
-METHOD QDesktopWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDesktopWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDesktopWidget:availableGeometry( nScreen )

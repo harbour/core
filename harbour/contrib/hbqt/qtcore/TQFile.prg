@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFile INHERIT QIODevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFile INHERIT HbQtObjectHandler, QIODevice
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  close()
@@ -118,19 +113,6 @@ METHOD QFile:new( ... )
    NEXT
    ::pPtr := Qt_QFile( ... )
    RETURN Self
-
-
-METHOD QFile:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFile:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFile:atEnd()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWidgetAction INHERIT QAction
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QWidgetAction INHERIT HbQtObjectHandler, QAction
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  defaultWidget()
    METHOD  releaseWidget( pWidget )
@@ -88,19 +83,6 @@ METHOD QWidgetAction:new( ... )
    NEXT
    ::pPtr := Qt_QWidgetAction( ... )
    RETURN Self
-
-
-METHOD QWidgetAction:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QWidgetAction:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWidgetAction:defaultWidget()

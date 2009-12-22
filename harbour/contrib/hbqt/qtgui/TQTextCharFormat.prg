@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCharFormat INHERIT QTextFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextCharFormat INHERIT HbQtObjectHandler, QTextFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  anchorHref()
    METHOD  anchorNames()
@@ -131,19 +126,6 @@ METHOD QTextCharFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextCharFormat( ... )
    RETURN Self
-
-
-METHOD QTextCharFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextCharFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextCharFormat:anchorHref()

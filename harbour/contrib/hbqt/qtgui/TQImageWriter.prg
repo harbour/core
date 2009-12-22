@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QImageWriter
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QImageWriter INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  canWrite()
    METHOD  compression()
@@ -102,19 +97,6 @@ METHOD QImageWriter:new( ... )
    NEXT
    ::pPtr := Qt_QImageWriter( ... )
    RETURN Self
-
-
-METHOD QImageWriter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QImageWriter:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImageWriter:canWrite()

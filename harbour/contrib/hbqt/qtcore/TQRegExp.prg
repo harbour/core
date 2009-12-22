@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRegExp
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QRegExp INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cap( nNth )
    METHOD  capturedTexts()
@@ -103,19 +98,6 @@ METHOD QRegExp:new( ... )
    NEXT
    ::pPtr := Qt_QRegExp( ... )
    RETURN Self
-
-
-METHOD QRegExp:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QRegExp:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRegExp:cap( nNth )

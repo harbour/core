@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QIcon
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QIcon INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  actualSize( pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )
@@ -94,19 +89,6 @@ METHOD QIcon:new( ... )
    NEXT
    ::pPtr := Qt_QIcon( ... )
    RETURN Self
-
-
-METHOD QIcon:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QIcon:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QIcon:actualSize( pSize, nMode, nState )

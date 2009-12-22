@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextStream
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextStream INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  autoDetectUnicode()
@@ -120,19 +115,6 @@ METHOD QTextStream:new( ... )
    NEXT
    ::pPtr := Qt_QTextStream( ... )
    RETURN Self
-
-
-METHOD QTextStream:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextStream:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextStream:atEnd()

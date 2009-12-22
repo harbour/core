@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextItem
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextItem INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  descent()
@@ -90,19 +85,6 @@ METHOD QTextItem:new( ... )
    NEXT
    ::pPtr := Qt_QTextItem( ... )
    RETURN Self
-
-
-METHOD QTextItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextItem:ascent()

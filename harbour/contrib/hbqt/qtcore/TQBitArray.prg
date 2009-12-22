@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBitArray
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QBitArray INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  at( nI )
    METHOD  clear()
@@ -100,19 +95,6 @@ METHOD QBitArray:new( ... )
    NEXT
    ::pPtr := Qt_QBitArray( ... )
    RETURN Self
-
-
-METHOD QBitArray:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QBitArray:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QBitArray:at( nI )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStatusBar INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addPermanentWidget( pWidget, nStretch )
    METHOD  addWidget( pWidget, nStretch )
@@ -94,19 +89,6 @@ METHOD QStatusBar:new( ... )
    NEXT
    ::pPtr := Qt_QStatusBar( ... )
    RETURN Self
-
-
-METHOD QStatusBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStatusBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStatusBar:addPermanentWidget( pWidget, nStretch )

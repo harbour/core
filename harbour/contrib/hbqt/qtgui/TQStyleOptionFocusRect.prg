@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  backgroundColor()
 
@@ -85,19 +80,6 @@ METHOD QStyleOptionFocusRect:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionFocusRect( ... )
    RETURN Self
-
-
-METHOD QStyleOptionFocusRect:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionFocusRect:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionFocusRect:backgroundColor()

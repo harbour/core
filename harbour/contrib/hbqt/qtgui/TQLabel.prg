@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLabel INHERIT QFrame
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLabel INHERIT HbQtObjectHandler, QFrame
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  buddy()
@@ -113,19 +108,6 @@ METHOD QLabel:new( ... )
    NEXT
    ::pPtr := Qt_QLabel( ... )
    RETURN Self
-
-
-METHOD QLabel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLabel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLabel:alignment()

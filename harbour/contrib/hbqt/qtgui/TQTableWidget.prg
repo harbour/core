@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableWidget INHERIT QTableView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, QTableView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cellWidget( nRow, nColumn )
    METHOD  closePersistentEditor( pItem )
@@ -130,19 +125,6 @@ METHOD QTableWidget:new( ... )
    NEXT
    ::pPtr := Qt_QTableWidget( ... )
    RETURN Self
-
-
-METHOD QTableWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTableWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableWidget:cellWidget( nRow, nColumn )

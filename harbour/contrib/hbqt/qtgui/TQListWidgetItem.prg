@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QListWidgetItem INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QListWidgetItem INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  checkState()
@@ -119,19 +114,6 @@ METHOD QListWidgetItem:new( ... )
    NEXT
    ::pPtr := Qt_QListWidgetItem( ... )
    RETURN Self
-
-
-METHOD QListWidgetItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QListWidgetItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListWidgetItem:background()

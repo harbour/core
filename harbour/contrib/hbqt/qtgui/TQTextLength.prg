@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextLength
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextLength INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  rawValue()
    METHOD  type()
@@ -87,19 +82,6 @@ METHOD QTextLength:new( ... )
    NEXT
    ::pPtr := Qt_QTextLength( ... )
    RETURN Self
-
-
-METHOD QTextLength:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextLength:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextLength:rawValue()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMimeData INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMimeData INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  clear()
    METHOD  colorData()
@@ -103,19 +98,6 @@ METHOD QMimeData:new( ... )
    NEXT
    ::pPtr := Qt_QMimeData( ... )
    RETURN Self
-
-
-METHOD QMimeData:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMimeData:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMimeData:clear()

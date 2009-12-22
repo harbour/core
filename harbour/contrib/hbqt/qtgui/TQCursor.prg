@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCursor
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCursor INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bitmap()
    METHOD  hotSpot()
@@ -93,19 +88,6 @@ METHOD QCursor:new( ... )
    NEXT
    ::pPtr := Qt_QCursor( ... )
    RETURN Self
-
-
-METHOD QCursor:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCursor:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCursor:bitmap()

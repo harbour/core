@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSessionManager INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  allowsErrorInteraction()
    METHOD  allowsInteraction()
@@ -100,19 +95,6 @@ METHOD QSessionManager:new( ... )
    NEXT
    ::pPtr := Qt_QSessionManager( ... )
    RETURN Self
-
-
-METHOD QSessionManager:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSessionManager:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSessionManager:allowsErrorInteraction()

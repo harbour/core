@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QInputContext INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QInputContext INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  filterEvent( pEvent )
    METHOD  font()
@@ -95,19 +90,6 @@ METHOD QInputContext:new( ... )
    NEXT
    ::pPtr := Qt_QInputContext( ... )
    RETURN Self
-
-
-METHOD QInputContext:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QInputContext:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QInputContext:filterEvent( pEvent )

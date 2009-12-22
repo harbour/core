@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QIODevice INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QIODevice INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  bytesAvailable()
@@ -117,19 +112,6 @@ METHOD QIODevice:new( ... )
    NEXT
    ::pPtr := Qt_QIODevice( ... )
    RETURN Self
-
-
-METHOD QIODevice:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QIODevice:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QIODevice:atEnd()

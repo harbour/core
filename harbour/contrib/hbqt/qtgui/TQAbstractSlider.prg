@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractSlider INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractSlider INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  hasTracking()
    METHOD  invertedAppearance()
@@ -108,19 +103,6 @@ METHOD QAbstractSlider:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractSlider( ... )
    RETURN Self
-
-
-METHOD QAbstractSlider:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractSlider:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractSlider:hasTracking()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  currentFont()
    METHOD  options()
@@ -96,19 +91,6 @@ METHOD QFontDialog:new( ... )
    NEXT
    ::pPtr := Qt_QFontDialog( ... )
    RETURN Self
-
-
-METHOD QFontDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFontDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontDialog:currentFont()

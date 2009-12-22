@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  closable()
    METHOD  floatable()
@@ -88,19 +83,6 @@ METHOD QStyleOptionDockWidget:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionDockWidget( ... )
    RETURN Self
-
-
-METHOD QStyleOptionDockWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionDockWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionDockWidget:closable()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextFrame INHERIT QTextObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, QTextObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  firstCursorPosition()
    METHOD  firstPosition()
@@ -91,19 +86,6 @@ METHOD QTextFrame:new( ... )
    NEXT
    ::pPtr := Qt_QTextFrame( ... )
    RETURN Self
-
-
-METHOD QTextFrame:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextFrame:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFrame:firstCursorPosition()

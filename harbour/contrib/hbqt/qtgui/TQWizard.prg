@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWizard INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QWizard INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addPage( pPage )
    METHOD  button( nWhich )
@@ -117,19 +112,6 @@ METHOD QWizard:new( ... )
    NEXT
    ::pPtr := Qt_QWizard( ... )
    RETURN Self
-
-
-METHOD QWizard:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QWizard:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWizard:addPage( pPage )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocumentWriter
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  codec()
    METHOD  device()
@@ -94,19 +89,6 @@ METHOD QTextDocumentWriter:new( ... )
    NEXT
    ::pPtr := Qt_QTextDocumentWriter( ... )
    RETURN Self
-
-
-METHOD QTextDocumentWriter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextDocumentWriter:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDocumentWriter:codec()

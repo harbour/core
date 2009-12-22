@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemSelection INHERIT QList
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QItemSelection INHERIT HbQtObjectHandler, QList
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  contains( pIndex )
    METHOD  merge( pOther, nCommand )
@@ -87,19 +82,6 @@ METHOD QItemSelection:new( ... )
    NEXT
    ::pPtr := Qt_QItemSelection( ... )
    RETURN Self
-
-
-METHOD QItemSelection:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QItemSelection:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QItemSelection:contains( pIndex )

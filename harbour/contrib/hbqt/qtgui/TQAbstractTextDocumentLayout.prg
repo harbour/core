@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  anchorAt( pPosition )
    METHOD  blockBoundingRect( pBlock )
@@ -95,19 +90,6 @@ METHOD QAbstractTextDocumentLayout:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractTextDocumentLayout( ... )
    RETURN Self
-
-
-METHOD QAbstractTextDocumentLayout:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractTextDocumentLayout:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractTextDocumentLayout:anchorAt( pPosition )

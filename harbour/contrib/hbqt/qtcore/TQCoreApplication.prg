@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCoreApplication INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  notify( pReceiver, pEvent )
    METHOD  addLibraryPath( cPath )
@@ -124,19 +119,6 @@ METHOD QCoreApplication:new( ... )
    NEXT
    ::pPtr := Qt_QCoreApplication( ... )
    RETURN Self
-
-
-METHOD QCoreApplication:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCoreApplication:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCoreApplication:notify( pReceiver, pEvent )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPushButton INHERIT QAbstractButton
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPushButton INHERIT HbQtObjectHandler, QAbstractButton
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  autoDefault()
    METHOD  isDefault()
@@ -93,19 +88,6 @@ METHOD QPushButton:new( ... )
    NEXT
    ::pPtr := Qt_QPushButton( ... )
    RETURN Self
-
-
-METHOD QPushButton:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPushButton:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPushButton:autoDefault()

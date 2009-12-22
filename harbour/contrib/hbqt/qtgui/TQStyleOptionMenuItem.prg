@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionMenuItem INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  checkType()
    METHOD  checked()
@@ -94,19 +89,6 @@ METHOD QStyleOptionMenuItem:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionMenuItem( ... )
    RETURN Self
-
-
-METHOD QStyleOptionMenuItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionMenuItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionMenuItem:checkType()

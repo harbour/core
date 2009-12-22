@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLine
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLine INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  p1()
    METHOD  p2()
@@ -101,19 +96,6 @@ METHOD QLine:new( ... )
    NEXT
    ::pPtr := Qt_QLine( ... )
    RETURN Self
-
-
-METHOD QLine:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLine:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLine:p1()

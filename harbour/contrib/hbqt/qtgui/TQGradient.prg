@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGradient
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QGradient INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  coordinateMode()
    METHOD  setColorAt( nPosition, pColor )
@@ -90,19 +85,6 @@ METHOD QGradient:new( ... )
    NEXT
    ::pPtr := Qt_QGradient( ... )
    RETURN Self
-
-
-METHOD QGradient:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QGradient:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QGradient:coordinateMode()

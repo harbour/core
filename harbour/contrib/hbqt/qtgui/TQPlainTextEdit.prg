@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPlainTextEdit INHERIT QAbstractScrollArea
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPlainTextEdit INHERIT HbQtObjectHandler, QAbstractScrollArea
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  backgroundVisible()
    METHOD  blockCount()
@@ -141,19 +136,6 @@ METHOD QPlainTextEdit:new( ... )
    NEXT
    ::pPtr := Qt_QPlainTextEdit( ... )
    RETURN Self
-
-
-METHOD QPlainTextEdit:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPlainTextEdit:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPlainTextEdit:backgroundVisible()

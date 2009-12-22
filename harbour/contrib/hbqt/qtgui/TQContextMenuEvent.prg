@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QContextMenuEvent INHERIT QInputEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, QInputEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  globalPos()
    METHOD  globalX()
@@ -91,19 +86,6 @@ METHOD QContextMenuEvent:new( ... )
    NEXT
    ::pPtr := Qt_QContextMenuEvent( ... )
    RETURN Self
-
-
-METHOD QContextMenuEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QContextMenuEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QContextMenuEvent:globalPos()

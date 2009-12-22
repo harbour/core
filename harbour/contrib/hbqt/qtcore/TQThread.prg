@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QThread INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QThread INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  exit( nReturnCode )
    METHOD  isFinished()
@@ -98,19 +93,6 @@ METHOD QThread:new( ... )
    NEXT
    ::pPtr := Qt_QThread( ... )
    RETURN Self
-
-
-METHOD QThread:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QThread:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QThread:exit( nReturnCode )

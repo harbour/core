@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRect
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QRect INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  adjust( nDx1, nDy1, nDx2, nDy2 )
    METHOD  adjusted( nDx1, nDy1, nDx2, nDy2 )
@@ -143,19 +138,6 @@ METHOD QRect:new( ... )
    NEXT
    ::pPtr := Qt_QRect( ... )
    RETURN Self
-
-
-METHOD QRect:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QRect:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QRect:adjust( nDx1, nDy1, nDx2, nDy2 )

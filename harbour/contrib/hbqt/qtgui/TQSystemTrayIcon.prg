@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSystemTrayIcon INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  contextMenu()
    METHOD  geometry()
@@ -98,19 +93,6 @@ METHOD QSystemTrayIcon:new( ... )
    NEXT
    ::pPtr := Qt_QSystemTrayIcon( ... )
    RETURN Self
-
-
-METHOD QSystemTrayIcon:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSystemTrayIcon:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSystemTrayIcon:contextMenu()

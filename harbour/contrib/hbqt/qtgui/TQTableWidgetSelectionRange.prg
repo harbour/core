@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableWidgetSelectionRange
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bottomRow()
    METHOD  columnCount()
@@ -90,19 +85,6 @@ METHOD QTableWidgetSelectionRange:new( ... )
    NEXT
    ::pPtr := Qt_QTableWidgetSelectionRange( ... )
    RETURN Self
-
-
-METHOD QTableWidgetSelectionRange:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTableWidgetSelectionRange:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTableWidgetSelectionRange:bottomRow()

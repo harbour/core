@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractItemModel INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractItemModel INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  buddy( pIndex )
    METHOD  canFetchMore( pParent )
@@ -116,19 +111,6 @@ METHOD QAbstractItemModel:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractItemModel( ... )
    RETURN Self
-
-
-METHOD QAbstractItemModel:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractItemModel:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractItemModel:buddy( pIndex )

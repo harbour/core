@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPageSetupDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  exec()
    METHOD  open( pReceiver, pMember )
@@ -92,19 +87,6 @@ METHOD QPageSetupDialog:new( ... )
    NEXT
    ::pPtr := Qt_QPageSetupDialog( ... )
    RETURN Self
-
-
-METHOD QPageSetupDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPageSetupDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPageSetupDialog:exec()

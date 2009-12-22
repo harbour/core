@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolBox INHERIT QFrame
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QToolBox INHERIT HbQtObjectHandler, QFrame
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addItem( pWidget, cIconSet, cText )
    METHOD  addItem_1( pW, cText )
@@ -104,19 +99,6 @@ METHOD QToolBox:new( ... )
    NEXT
    ::pPtr := Qt_QToolBox( ... )
    RETURN Self
-
-
-METHOD QToolBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QToolBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QToolBox:addItem( pWidget, cIconSet, cText )

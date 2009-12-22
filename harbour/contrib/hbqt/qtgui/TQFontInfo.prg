@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontInfo
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFontInfo INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bold()
    METHOD  exactMatch()
@@ -96,19 +91,6 @@ METHOD QFontInfo:new( ... )
    NEXT
    ::pPtr := Qt_QFontInfo( ... )
    RETURN Self
-
-
-METHOD QFontInfo:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFontInfo:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontInfo:bold()

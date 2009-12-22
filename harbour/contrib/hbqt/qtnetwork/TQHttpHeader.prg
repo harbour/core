@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHttpHeader
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addValue( cKey, cValue )
    METHOD  allValues( cKey )
@@ -102,19 +97,6 @@ METHOD QHttpHeader:new( ... )
    NEXT
    ::pPtr := Qt_QHttpHeader( ... )
    RETURN Self
-
-
-METHOD QHttpHeader:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QHttpHeader:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHttpHeader:addValue( cKey, cValue )

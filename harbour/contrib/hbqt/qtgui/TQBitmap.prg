@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBitmap INHERIT QPixmap
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QBitmap INHERIT HbQtObjectHandler, QPixmap
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  clear()
    METHOD  transformed( pMatrix )
@@ -88,19 +83,6 @@ METHOD QBitmap:new( ... )
    NEXT
    ::pPtr := Qt_QBitmap( ... )
    RETURN Self
-
-
-METHOD QBitmap:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QBitmap:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QBitmap:clear()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSizePolicy
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  controlType()
    METHOD  expandingDirections()
@@ -98,19 +93,6 @@ METHOD QSizePolicy:new( ... )
    NEXT
    ::pPtr := Qt_QSizePolicy( ... )
    RETURN Self
-
-
-METHOD QSizePolicy:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSizePolicy:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSizePolicy:controlType()

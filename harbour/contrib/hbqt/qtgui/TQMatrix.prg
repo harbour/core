@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMatrix
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMatrix INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  m11()
    METHOD  m12()
@@ -113,19 +108,6 @@ METHOD QMatrix:new( ... )
    NEXT
    ::pPtr := Qt_QMatrix( ... )
    RETURN Self
-
-
-METHOD QMatrix:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMatrix:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMatrix:m11()

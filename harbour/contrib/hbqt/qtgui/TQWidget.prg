@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWidget INHERIT QObject, QPaintDevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  acceptDrops()
    METHOD  accessibleDescription()
@@ -295,19 +290,6 @@ METHOD QWidget:new( ... )
    NEXT
    ::pPtr := Qt_QWidget( ... )
    RETURN Self
-
-
-METHOD QWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QWidget:acceptDrops()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextInlineObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  descent()
@@ -97,19 +92,6 @@ METHOD QTextInlineObject:new( ... )
    NEXT
    ::pPtr := Qt_QTextInlineObject( ... )
    RETURN Self
-
-
-METHOD QTextInlineObject:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextInlineObject:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextInlineObject:ascent()

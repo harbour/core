@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOption INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  initFrom( pWidget )
    METHOD  direction()
@@ -92,19 +87,6 @@ METHOD QStyleOption:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOption( ... )
    RETURN Self
-
-
-METHOD QStyleOption:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOption:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOption:initFrom( pWidget )

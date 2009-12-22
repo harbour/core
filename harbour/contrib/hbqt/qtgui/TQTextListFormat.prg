@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextListFormat INHERIT QTextFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, QTextFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  indent()
    METHOD  isValid()
@@ -89,19 +84,6 @@ METHOD QTextListFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextListFormat( ... )
    RETURN Self
-
-
-METHOD QTextListFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextListFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextListFormat:indent()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBlockFormat INHERIT QTextFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextBlockFormat INHERIT HbQtObjectHandler, QTextFormat
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  bottomMargin()
@@ -103,19 +98,6 @@ METHOD QTextBlockFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextBlockFormat( ... )
    RETURN Self
-
-
-METHOD QTextBlockFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextBlockFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBlockFormat:alignment()

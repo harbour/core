@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFileIconProvider
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  icon( nType )
    METHOD  icon_1( pInfo )
@@ -87,19 +82,6 @@ METHOD QFileIconProvider:new( ... )
    NEXT
    ::pPtr := Qt_QFileIconProvider( ... )
    RETURN Self
-
-
-METHOD QFileIconProvider:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFileIconProvider:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFileIconProvider:icon( nType )

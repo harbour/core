@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QImage
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QImage INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  allGray()
    METHOD  alphaChannel()
@@ -144,19 +139,6 @@ METHOD QImage:new( ... )
    NEXT
    ::pPtr := Qt_QImage( ... )
    RETURN Self
-
-
-METHOD QImage:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QImage:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QImage:allGray()

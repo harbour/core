@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSlider INHERIT QAbstractSlider
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSlider INHERIT HbQtObjectHandler, QAbstractSlider
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  setTickInterval( nTi )
    METHOD  setTickPosition( nPosition )
@@ -88,19 +83,6 @@ METHOD QSlider:new( ... )
    NEXT
    ::pPtr := Qt_QSlider( ... )
    RETURN Self
-
-
-METHOD QSlider:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSlider:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSlider:setTickInterval( nTi )

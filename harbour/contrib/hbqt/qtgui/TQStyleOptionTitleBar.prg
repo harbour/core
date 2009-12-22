@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, QStyleOptionComplex
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  icon()
    METHOD  text()
@@ -88,19 +83,6 @@ METHOD QStyleOptionTitleBar:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionTitleBar( ... )
    RETURN Self
-
-
-METHOD QStyleOptionTitleBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionTitleBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTitleBar:icon()

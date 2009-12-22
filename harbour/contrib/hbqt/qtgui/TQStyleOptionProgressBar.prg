@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  maximum()
    METHOD  minimum()
@@ -90,19 +85,6 @@ METHOD QStyleOptionProgressBar:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionProgressBar( ... )
    RETURN Self
-
-
-METHOD QStyleOptionProgressBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionProgressBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionProgressBar:maximum()

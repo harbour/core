@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QVariant
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QVariant INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  canConvert( nT )
    METHOD  canConvert_1( nT )
@@ -120,19 +115,6 @@ METHOD QVariant:new( ... )
    NEXT
    ::pPtr := Qt_QVariant( ... )
    RETURN Self
-
-
-METHOD QVariant:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QVariant:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QVariant:canConvert( nT )

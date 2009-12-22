@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDate
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDate INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addDays( nNdays )
    METHOD  addMonths( nNmonths )
@@ -103,19 +98,6 @@ METHOD QDate:new( ... )
    NEXT
    ::pPtr := Qt_QDate( ... )
    RETURN Self
-
-
-METHOD QDate:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDate:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDate:addDays( nNdays )

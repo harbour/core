@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QErrorMessage INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  showMessage( cMessage )
    METHOD  showMessage_1( cMessage, cType )
@@ -86,19 +81,6 @@ METHOD QErrorMessage:new( ... )
    NEXT
    ::pPtr := Qt_QErrorMessage( ... )
    RETURN Self
-
-
-METHOD QErrorMessage:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QErrorMessage:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QErrorMessage:showMessage( cMessage )

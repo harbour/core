@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLayout INHERIT QObject, QLayoutItem
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLayout INHERIT HbQtObjectHandler, QObject, QLayoutItem
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  activate()
    METHOD  addItem( pItem )
@@ -113,19 +108,6 @@ METHOD QLayout:new( ... )
    NEXT
    ::pPtr := Qt_QLayout( ... )
    RETURN Self
-
-
-METHOD QLayout:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLayout:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLayout:activate()

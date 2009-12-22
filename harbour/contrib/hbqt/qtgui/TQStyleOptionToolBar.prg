@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionToolBar INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  features()
    METHOD  lineWidth()
@@ -90,19 +85,6 @@ METHOD QStyleOptionToolBar:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionToolBar( ... )
    RETURN Self
-
-
-METHOD QStyleOptionToolBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionToolBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionToolBar:features()

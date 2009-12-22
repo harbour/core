@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleHintReturnVariant INHERIT QStyleHintReturn
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleHintReturnVariant INHERIT HbQtObjectHandler, QStyleHintReturn
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QStyleHintReturnVariant:new( ... )
    NEXT
    ::pPtr := Qt_QStyleHintReturnVariant( ... )
    RETURN Self
-
-
-METHOD QStyleHintReturnVariant:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleHintReturnVariant:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

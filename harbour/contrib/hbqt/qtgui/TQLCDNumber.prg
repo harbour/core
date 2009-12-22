@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLCDNumber INHERIT QFrame
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, QFrame
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  checkOverflow( nNum )
    METHOD  checkOverflow_1( nNum )
@@ -103,19 +98,6 @@ METHOD QLCDNumber:new( ... )
    NEXT
    ::pPtr := Qt_QLCDNumber( ... )
    RETURN Self
-
-
-METHOD QLCDNumber:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLCDNumber:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLCDNumber:checkOverflow( nNum )

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDateEdit INHERIT QDateTimeEdit
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDateEdit INHERIT HbQtObjectHandler, QDateTimeEdit
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QDateEdit:new( ... )
    NEXT
    ::pPtr := Qt_QDateEdit( ... )
    RETURN Self
-
-
-METHOD QDateEdit:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDateEdit:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

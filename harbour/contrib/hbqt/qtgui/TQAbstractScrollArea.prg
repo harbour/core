@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractScrollArea INHERIT QFrame
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractScrollArea INHERIT HbQtObjectHandler, QFrame
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addScrollBarWidget( pWidget, nAlignment )
    METHOD  cornerWidget()
@@ -98,19 +93,6 @@ METHOD QAbstractScrollArea:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractScrollArea( ... )
    RETURN Self
-
-
-METHOD QAbstractScrollArea:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractScrollArea:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractScrollArea:addScrollBarWidget( pWidget, nAlignment )

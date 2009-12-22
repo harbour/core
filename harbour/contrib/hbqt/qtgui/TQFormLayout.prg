@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFormLayout INHERIT QLayout
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, QLayout
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addRow( pLabel, pField )
    METHOD  addRow_1( pLabel, pField )
@@ -120,19 +115,6 @@ METHOD QFormLayout:new( ... )
    NEXT
    ::pPtr := Qt_QFormLayout( ... )
    RETURN Self
-
-
-METHOD QFormLayout:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFormLayout:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFormLayout:addRow( pLabel, pField )

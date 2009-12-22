@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHeaderView INHERIT QAbstractItemView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, QAbstractItemView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cascadingSectionResizes()
    METHOD  count()
@@ -141,19 +136,6 @@ METHOD QHeaderView:new( ... )
    NEXT
    ::pPtr := Qt_QHeaderView( ... )
    RETURN Self
-
-
-METHOD QHeaderView:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QHeaderView:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QHeaderView:cascadingSectionResizes()

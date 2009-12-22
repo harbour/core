@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSizeF
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSizeF INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  boundedTo( pOtherSize )
    METHOD  expandedTo( pOtherSize )
@@ -99,19 +94,6 @@ METHOD QSizeF:new( ... )
    NEXT
    ::pPtr := Qt_QSizeF( ... )
    RETURN Self
-
-
-METHOD QSizeF:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSizeF:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSizeF:boundedTo( pOtherSize )

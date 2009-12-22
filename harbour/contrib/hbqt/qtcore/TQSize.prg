@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSize
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSize INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  height()
    METHOD  isEmpty()
@@ -98,19 +93,6 @@ METHOD QSize:new( ... )
    NEXT
    ::pPtr := Qt_QSize( ... )
    RETURN Self
-
-
-METHOD QSize:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSize:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSize:height()

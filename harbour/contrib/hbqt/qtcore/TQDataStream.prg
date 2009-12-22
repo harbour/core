@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDataStream
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDataStream INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  byteOrder()
@@ -97,19 +92,6 @@ METHOD QDataStream:new( ... )
    NEXT
    ::pPtr := Qt_QDataStream( ... )
    RETURN Self
-
-
-METHOD QDataStream:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDataStream:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDataStream:atEnd()

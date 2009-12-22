@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLatin1Char
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  toLatin1()
    METHOD  unicode()
@@ -86,19 +81,6 @@ METHOD QLatin1Char:new( ... )
    NEXT
    ::pPtr := Qt_QLatin1Char( ... )
    RETURN Self
-
-
-METHOD QLatin1Char:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QLatin1Char:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QLatin1Char:toLatin1()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMovie INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMovie INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  backgroundColor()
    METHOD  cacheMode()
@@ -112,19 +107,6 @@ METHOD QMovie:new( ... )
    NEXT
    ::pPtr := Qt_QMovie( ... )
    RETURN Self
-
-
-METHOD QMovie:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMovie:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMovie:backgroundColor()

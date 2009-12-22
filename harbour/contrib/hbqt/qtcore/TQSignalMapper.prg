@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSignalMapper INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  mapping( nId )
    METHOD  mapping_1( cId )
@@ -95,19 +90,6 @@ METHOD QSignalMapper:new( ... )
    NEXT
    ::pPtr := Qt_QSignalMapper( ... )
    RETURN Self
-
-
-METHOD QSignalMapper:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSignalMapper:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSignalMapper:mapping( nId )

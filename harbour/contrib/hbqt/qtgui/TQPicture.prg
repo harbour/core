@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPicture INHERIT QPaintDevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPicture INHERIT HbQtObjectHandler, QPaintDevice
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  boundingRect()
    METHOD  data()
@@ -95,19 +90,6 @@ METHOD QPicture:new( ... )
    NEXT
    ::pPtr := Qt_QPicture( ... )
    RETURN Self
-
-
-METHOD QPicture:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPicture:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPicture:boundingRect()

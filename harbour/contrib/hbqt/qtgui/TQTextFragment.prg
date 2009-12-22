@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextFragment
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextFragment INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  charFormat()
    METHOD  charFormatIndex()
@@ -91,19 +86,6 @@ METHOD QTextFragment:new( ... )
    NEXT
    ::pPtr := Qt_QTextFragment( ... )
    RETURN Self
-
-
-METHOD QTextFragment:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextFragment:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFragment:charFormat()

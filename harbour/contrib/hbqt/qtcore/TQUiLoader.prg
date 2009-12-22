@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QUiLoader INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addPluginPath( cPath )
    METHOD  availableLayouts()
@@ -98,19 +93,6 @@ METHOD QUiLoader:new( ... )
    NEXT
    ::pPtr := Qt_QUiLoader( ... )
    RETURN Self
-
-
-METHOD QUiLoader:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QUiLoader:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QUiLoader:addPluginPath( cPath )

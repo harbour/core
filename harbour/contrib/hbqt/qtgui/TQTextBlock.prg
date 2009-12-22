@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBlock
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextBlock INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  blockFormat()
    METHOD  blockFormatIndex()
@@ -109,19 +104,6 @@ METHOD QTextBlock:new( ... )
    NEXT
    ::pPtr := Qt_QTextBlock( ... )
    RETURN Self
-
-
-METHOD QTextBlock:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextBlock:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextBlock:blockFormat()

@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QListWidget INHERIT QListView
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QListWidget INHERIT HbQtObjectHandler, QListView
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addItem( cLabel )
    METHOD  addItem_1( pItem )
@@ -114,19 +109,6 @@ METHOD QListWidget:new( ... )
    NEXT
    ::pPtr := Qt_QListWidget( ... )
    RETURN Self
-
-
-METHOD QListWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QListWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QListWidget:addItem( cLabel )

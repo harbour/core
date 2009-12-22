@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStylePainter INHERIT QPainter
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, QPainter
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  begin( pWidget )
    METHOD  begin_1( pPd, pWidget )
@@ -92,19 +87,6 @@ METHOD QStylePainter:new( ... )
    NEXT
    ::pPtr := Qt_QStylePainter( ... )
    RETURN Self
-
-
-METHOD QStylePainter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStylePainter:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStylePainter:begin( pWidget )

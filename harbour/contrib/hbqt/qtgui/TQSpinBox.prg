@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QSpinBox INHERIT HbQtObjectHandler, QAbstractSpinBox
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  cleanText()
    METHOD  maximum()
@@ -98,19 +93,6 @@ METHOD QSpinBox:new( ... )
    NEXT
    ::pPtr := Qt_QSpinBox( ... )
    RETURN Self
-
-
-METHOD QSpinBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QSpinBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QSpinBox:cleanText()

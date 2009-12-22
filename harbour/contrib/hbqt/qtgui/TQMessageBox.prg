@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMessageBox INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addButton( pButton, nRole )
    METHOD  addButton_1( cText, nRole )
@@ -122,19 +117,6 @@ METHOD QMessageBox:new( ... )
    NEXT
    ::pPtr := Qt_QMessageBox( ... )
    RETURN Self
-
-
-METHOD QMessageBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMessageBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMessageBox:addButton( pButton, nRole )

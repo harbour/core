@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionTabWidgetFrame INHERIT HbQtObjectHandler, QStyleOption
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  leftCornerWidgetSize()
    METHOD  lineWidth()
@@ -90,19 +85,6 @@ METHOD QStyleOptionTabWidgetFrame:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionTabWidgetFrame( ... )
    RETURN Self
-
-
-METHOD QStyleOptionTabWidgetFrame:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionTabWidgetFrame:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionTabWidgetFrame:leftCornerWidgetSize()

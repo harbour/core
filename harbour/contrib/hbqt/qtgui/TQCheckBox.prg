@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCheckBox INHERIT QAbstractButton
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, QAbstractButton
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  checkState()
    METHOD  isTristate()
@@ -88,19 +83,6 @@ METHOD QCheckBox:new( ... )
    NEXT
    ::pPtr := Qt_QCheckBox( ... )
    RETURN Self
-
-
-METHOD QCheckBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCheckBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCheckBox:checkState()

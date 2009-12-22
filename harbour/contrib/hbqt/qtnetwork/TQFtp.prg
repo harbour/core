@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFtp INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFtp INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  bytesAvailable()
    METHOD  cd( cDir )
@@ -110,19 +105,6 @@ METHOD QFtp:new( ... )
    NEXT
    ::pPtr := Qt_QFtp( ... )
    RETURN Self
-
-
-METHOD QFtp:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFtp:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFtp:bytesAvailable()

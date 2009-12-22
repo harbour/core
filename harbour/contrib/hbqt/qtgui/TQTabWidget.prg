@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTabWidget INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addTab( pPage, cLabel )
    METHOD  addTab_1( pPage, cIcon, cLabel )
@@ -125,19 +120,6 @@ METHOD QTabWidget:new( ... )
    NEXT
    ::pPtr := Qt_QTabWidget( ... )
    RETURN Self
-
-
-METHOD QTabWidget:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTabWidget:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTabWidget:addTab( pPage, cLabel )

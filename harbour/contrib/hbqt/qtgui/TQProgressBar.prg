@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProgressBar INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QProgressBar INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  format()
@@ -105,19 +100,6 @@ METHOD QProgressBar:new( ... )
    NEXT
    ::pPtr := Qt_QProgressBar( ... )
    RETURN Self
-
-
-METHOD QProgressBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QProgressBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QProgressBar:alignment()

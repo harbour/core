@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCommonStyle INHERIT QStyle
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, QStyle
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QCommonStyle:new( ... )
    NEXT
    ::pPtr := Qt_QCommonStyle( ... )
    RETURN Self
-
-
-METHOD QCommonStyle:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCommonStyle:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

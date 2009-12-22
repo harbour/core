@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QEventLoop INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  exec( nFlags )
    METHOD  exit( nReturnCode )
@@ -90,19 +85,6 @@ METHOD QEventLoop:new( ... )
    NEXT
    ::pPtr := Qt_QEventLoop( ... )
    RETURN Self
-
-
-METHOD QEventLoop:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QEventLoop:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QEventLoop:exec( nFlags )

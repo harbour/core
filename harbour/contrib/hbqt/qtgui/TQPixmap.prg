@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPixmap INHERIT QPaintDevice
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPixmap INHERIT HbQtObjectHandler, QPaintDevice
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  alphaChannel()
    METHOD  cacheKey()
@@ -124,19 +119,6 @@ METHOD QPixmap:new( ... )
    NEXT
    ::pPtr := Qt_QPixmap( ... )
    RETURN Self
-
-
-METHOD QPixmap:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPixmap:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPixmap:alphaChannel()

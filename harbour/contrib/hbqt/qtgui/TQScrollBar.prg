@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QScrollBar INHERIT QAbstractSlider
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QScrollBar INHERIT HbQtObjectHandler, QAbstractSlider
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QScrollBar:new( ... )
    NEXT
    ::pPtr := Qt_QScrollBar( ... )
    RETURN Self
-
-
-METHOD QScrollBar:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QScrollBar:onError()
-   RETURN hbqt_showError( __GetMessage() )
 

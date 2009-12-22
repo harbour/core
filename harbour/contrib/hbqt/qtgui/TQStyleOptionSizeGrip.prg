@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, QStyleOptionComplex
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  corner()
 
@@ -85,19 +80,6 @@ METHOD QStyleOptionSizeGrip:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionSizeGrip( ... )
    RETURN Self
-
-
-METHOD QStyleOptionSizeGrip:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionSizeGrip:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionSizeGrip:corner()

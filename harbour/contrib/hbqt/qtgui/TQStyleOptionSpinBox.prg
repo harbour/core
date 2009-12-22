@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSpinBox INHERIT QStyleOptionComplex
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, QStyleOptionComplex
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  buttonSymbols()
    METHOD  frame()
@@ -87,19 +82,6 @@ METHOD QStyleOptionSpinBox:new( ... )
    NEXT
    ::pPtr := Qt_QStyleOptionSpinBox( ... )
    RETURN Self
-
-
-METHOD QStyleOptionSpinBox:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleOptionSpinBox:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleOptionSpinBox:buttonSymbols()

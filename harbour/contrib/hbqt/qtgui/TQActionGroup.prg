@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QActionGroup INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )
@@ -96,19 +91,6 @@ METHOD QActionGroup:new( ... )
    NEXT
    ::pPtr := Qt_QActionGroup( ... )
    RETURN Self
-
-
-METHOD QActionGroup:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QActionGroup:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QActionGroup:addAction( pAction )

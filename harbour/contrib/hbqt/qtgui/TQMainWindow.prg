@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMainWindow INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addDockWidget( nArea, pDockwidget )
    METHOD  addDockWidget_1( nArea, pDockwidget, nOrientation )
@@ -132,19 +127,6 @@ METHOD QMainWindow:new( ... )
    NEXT
    ::pPtr := Qt_QMainWindow( ... )
    RETURN Self
-
-
-METHOD QMainWindow:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QMainWindow:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QMainWindow:addDockWidget( nArea, pDockwidget )

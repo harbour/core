@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStandardItem
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStandardItem INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  accessibleDescription()
    METHOD  accessibleText()
@@ -155,19 +150,6 @@ METHOD QStandardItem:new( ... )
    NEXT
    ::pPtr := Qt_QStandardItem( ... )
    RETURN Self
-
-
-METHOD QStandardItem:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStandardItem:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStandardItem:accessibleDescription()

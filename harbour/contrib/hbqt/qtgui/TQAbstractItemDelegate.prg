@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractItemDelegate INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QAbstractItemDelegate INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  editorEvent( pEvent, pModel, pOption, pIndex )
@@ -91,19 +86,6 @@ METHOD QAbstractItemDelegate:new( ... )
    NEXT
    ::pPtr := Qt_QAbstractItemDelegate( ... )
    RETURN Self
-
-
-METHOD QAbstractItemDelegate:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QAbstractItemDelegate:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QAbstractItemDelegate:createEditor( pParent, pOption, pIndex )

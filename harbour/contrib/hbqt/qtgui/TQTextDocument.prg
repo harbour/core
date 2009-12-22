@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocument INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addResource( nType, pName, pResource )
    METHOD  adjustSize()
@@ -150,19 +145,6 @@ METHOD QTextDocument:new( ... )
    NEXT
    ::pPtr := Qt_QTextDocument( ... )
    RETURN Self
-
-
-METHOD QTextDocument:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextDocument:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDocument:addResource( nType, pName, pResource )

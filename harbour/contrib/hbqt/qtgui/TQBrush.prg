@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBrush
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QBrush INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  color()
    METHOD  isOpaque()
@@ -98,19 +93,6 @@ METHOD QBrush:new( ... )
    NEXT
    ::pPtr := Qt_QBrush( ... )
    RETURN Self
-
-
-METHOD QBrush:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QBrush:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QBrush:color()

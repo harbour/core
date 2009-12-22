@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCommandLinkButton INHERIT QPushButton
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, QPushButton
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  description()
    METHOD  setDescription( cDescription )
@@ -86,19 +81,6 @@ METHOD QCommandLinkButton:new( ... )
    NEXT
    ::pPtr := Qt_QCommandLinkButton( ... )
    RETURN Self
-
-
-METHOD QCommandLinkButton:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QCommandLinkButton:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QCommandLinkButton:description()

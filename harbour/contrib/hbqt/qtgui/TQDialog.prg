@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDialog INHERIT QWidget
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDialog INHERIT HbQtObjectHandler, QWidget
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  isSizeGripEnabled()
    METHOD  result()
@@ -94,19 +89,6 @@ METHOD QDialog:new( ... )
    NEXT
    ::pPtr := Qt_QDialog( ... )
    RETURN Self
-
-
-METHOD QDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDialog:isSizeGripEnabled()

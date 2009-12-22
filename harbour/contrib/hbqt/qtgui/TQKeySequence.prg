@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QKeySequence
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QKeySequence INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  count()
    METHOD  isEmpty()
@@ -90,19 +85,6 @@ METHOD QKeySequence:new( ... )
    NEXT
    ::pPtr := Qt_QKeySequence( ... )
    RETURN Self
-
-
-METHOD QKeySequence:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QKeySequence:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QKeySequence:count()

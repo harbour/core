@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextFormat
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextFormat INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  boolProperty( nPropertyId )
@@ -125,19 +120,6 @@ METHOD QTextFormat:new( ... )
    NEXT
    ::pPtr := Qt_QTextFormat( ... )
    RETURN Self
-
-
-METHOD QTextFormat:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextFormat:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextFormat:background()

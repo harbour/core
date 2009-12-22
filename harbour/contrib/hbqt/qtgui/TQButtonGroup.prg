@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QButtonGroup INHERIT QObject
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  addButton( pButton )
    METHOD  addButton_1( pButton, nId )
@@ -94,19 +89,6 @@ METHOD QButtonGroup:new( ... )
    NEXT
    ::pPtr := Qt_QButtonGroup( ... )
    RETURN Self
-
-
-METHOD QButtonGroup:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QButtonGroup:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QButtonGroup:addButton( pButton )

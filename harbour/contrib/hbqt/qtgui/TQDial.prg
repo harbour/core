@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDial INHERIT QAbstractSlider
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDial INHERIT HbQtObjectHandler, QAbstractSlider
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  notchSize()
    METHOD  notchTarget()
@@ -91,19 +86,6 @@ METHOD QDial:new( ... )
    NEXT
    ::pPtr := Qt_QDial( ... )
    RETURN Self
-
-
-METHOD QDial:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDial:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDial:notchSize()

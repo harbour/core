@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFileDialog INHERIT QDialog
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, QDialog
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  acceptMode()
    METHOD  confirmOverwrite()
@@ -129,19 +124,6 @@ METHOD QFileDialog:new( ... )
    NEXT
    ::pPtr := Qt_QFileDialog( ... )
    RETURN Self
-
-
-METHOD QFileDialog:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFileDialog:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFileDialog:acceptMode()

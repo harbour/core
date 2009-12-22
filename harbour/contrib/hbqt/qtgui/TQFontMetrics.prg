@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontMetrics
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QFontMetrics INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  averageCharWidth()
@@ -110,19 +105,6 @@ METHOD QFontMetrics:new( ... )
    NEXT
    ::pPtr := Qt_QFontMetrics( ... )
    RETURN Self
-
-
-METHOD QFontMetrics:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QFontMetrics:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QFontMetrics:ascent()

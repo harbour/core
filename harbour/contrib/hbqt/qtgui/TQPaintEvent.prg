@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPaintEvent INHERIT QEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, QEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  rect()
    METHOD  region()
@@ -86,19 +81,6 @@ METHOD QPaintEvent:new( ... )
    NEXT
    ::pPtr := Qt_QPaintEvent( ... )
    RETURN Self
-
-
-METHOD QPaintEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QPaintEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QPaintEvent:rect()

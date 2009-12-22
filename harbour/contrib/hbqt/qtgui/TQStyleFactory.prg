@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleFactory
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QStyleFactory INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  create( cKey )
    METHOD  keys()
@@ -86,19 +81,6 @@ METHOD QStyleFactory:new( ... )
    NEXT
    ::pPtr := Qt_QStyleFactory( ... )
    RETURN Self
-
-
-METHOD QStyleFactory:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QStyleFactory:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QStyleFactory:create( cKey )

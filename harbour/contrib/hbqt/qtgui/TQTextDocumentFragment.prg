@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocumentFragment
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  isEmpty()
    METHOD  toHtml( pEncoding )
@@ -91,19 +86,6 @@ METHOD QTextDocumentFragment:new( ... )
    NEXT
    ::pPtr := Qt_QTextDocumentFragment( ... )
    RETURN Self
-
-
-METHOD QTextDocumentFragment:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QTextDocumentFragment:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QTextDocumentFragment:isEmpty()

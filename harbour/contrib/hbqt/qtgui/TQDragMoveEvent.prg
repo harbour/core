@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDragMoveEvent INHERIT QDropEvent
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, QDropEvent
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  accept( pRectangle )
    METHOD  accept_1()
@@ -89,19 +84,6 @@ METHOD QDragMoveEvent:new( ... )
    NEXT
    ::pPtr := Qt_QDragMoveEvent( ... )
    RETURN Self
-
-
-METHOD QDragMoveEvent:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QDragMoveEvent:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
 
 METHOD QDragMoveEvent:accept( pRectangle )

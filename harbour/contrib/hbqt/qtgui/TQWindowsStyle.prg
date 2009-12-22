@@ -63,14 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWindowsStyle INHERIT QCommonStyle
-
-   VAR     pPtr
-
-   ERROR HANDLER onError()
+CREATE CLASS QWindowsStyle INHERIT HbQtObjectHandler, QCommonStyle
 
    METHOD  new()
-   METHOD  configure( xObject )
 
 
    ENDCLASS
@@ -84,17 +79,4 @@ METHOD QWindowsStyle:new( ... )
    NEXT
    ::pPtr := Qt_QWindowsStyle( ... )
    RETURN Self
-
-
-METHOD QWindowsStyle:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD QWindowsStyle:onError()
-   RETURN hbqt_showError( __GetMessage() )
 
