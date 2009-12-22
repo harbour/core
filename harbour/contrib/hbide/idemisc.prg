@@ -140,6 +140,25 @@ FUNCTION PosAndSize( qWidget )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION ShowWarning( cMsg, cInfo, cTitle )
+   LOCAL oMB
+
+   DEFAULT cTitle TO "Information"
+
+   oMB := QMessageBox():new()
+   oMB:setText( cMsg )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( QMessageBox_Critical )
+   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+
+   RETURN oMB:exec()
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION GetYesNo( cMsg, cInfo, cTitle )
    LOCAL oMB
 

@@ -229,9 +229,12 @@ CLASS HbIde
    METHOD createTags()
 
    DATA   oProps
-   DATA   oFindRepl
+   DATA   oFR
    METHOD find()
+   METHOD onClickFind()
    METHOD replace()
+   METHOD replaceSelection()
+   METHOD onClickReplace()
    METHOD findReplace()
    METHOD updateFindReplaceData()
 
@@ -386,8 +389,8 @@ METHOD HbIde:create( cProjIni )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
-   IF !empty( ::oFindRepl )
-      ::oFindRepl:destroy()
+   IF !empty( ::oFR )
+      ::oFR:destroy()
    ENDIF
 
    /* Very important - destroy resources */
@@ -1889,7 +1892,6 @@ METHOD HbIde:buildProjectViaQt( cProject )
    qStringList:append( cHbpPath )
 
    ::qProcess := QProcess():new()
-   ::qProcess:setReadChannelMode( 0 )
    ::qProcess:setReadChannel( 0 )
 
    Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
@@ -1945,13 +1947,51 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
 //                            Find / Replace
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:onClickReplace()
+
+   ::updateFindReplaceData( "replace" )
+
+   IF ::oFR:qObj[ "comboReplaceWith" ]:enabled()
+      ::replace()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:replaceSelection( cReplWith )
+   LOCAL nB, nL, cBuffer
+
+   DEFAULT cReplWith TO ""
+
+   ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
+      nL := len( cBuffer )
+      nB := ::qCursor:position() - nL
+
+      ::qCursor:beginEditBlock()
+      ::qCursor:removeSelectedText()
+      ::qCursor:insertText( cReplWith )
+      ::qCursor:setPosition( nB )
+      ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, len( cReplWith ) )
+      ::qCurEdit:setTextCursor( ::qCursor )
+      ::qCursor:endEditBlock()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:replace()
-   LOCAL cReplWith, nB, nL, cBuffer
+   LOCAL cReplWith//, nB, nL, cBuffer
 
    IF !empty( ::qCurEdit )
+      cReplWith := QLineEdit():configure( ::oFR:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
+      ::replaceSelection( cReplWith )
+      #if 0
       ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
       IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
-         cReplWith := QLineEdit():configure( ::oFindRepl:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
+         cReplWith := QLineEdit():configure( ::oFR:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
 
          nL := len( cBuffer )
          nB := ::qCursor:position() - nL
@@ -1964,8 +2004,33 @@ METHOD HbIde:replace()
          ::qCurEdit:setTextCursor( ::qCursor )
          ::qCursor:endEditBlock()
       ENDIF
+      #endif
 
-      ::find()
+      IF ::oFR:qObj[ "checkGlobal" ]:isChecked()
+         ::find()
+         IF ::oFR:qObj[ "checkNoPrompting" ]:isChecked()
+            DO WHILE ::find()
+               ::replaceSelection( cReplWith )
+            ENDDO
+            ::oFR:qObj[ "checkGlobal" ]:setChecked( .f. )
+            ::oFR:qObj[ "checkNoPrompting" ]:setChecked( .f. )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:onClickFind()
+
+   ::updateFindReplaceData( "find" )
+   IF ::find()
+      ::oFR:qObj[ "checkGlobal" ]:setEnabled( .t. )
+      ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .t. )
+   ELSE
+      ::oFR:qObj[ "checkGlobal" ]:setEnabled( .f. )
+      ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .f. )
    ENDIF
 
    RETURN Self
@@ -1974,17 +2039,20 @@ METHOD HbIde:replace()
 
 METHOD HbIde:find()
    LOCAL nFlags
-   LOCAL cText := QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text()
+   LOCAL cText := QLineEdit():configure( ::oFR:qObj[ "comboFindWhat" ]:lineEdit() ):text()
+   LOCAL lFound := .f.
 
    IF !empty( cText )
       nFlags := 0
-      nFlags += iif( ::oFindRepl:qObj[ "checkMatchCase" ]:isChecked(), QTextDocument_FindCaseSensitively, 0 )
-      nFlags += iif( ::oFindRepl:qObj[ "radioUp" ]:isChecked(), QTextDocument_FindBackward, 0 )
+      nFlags += iif( ::oFR:qObj[ "checkMatchCase" ]:isChecked(), QTextDocument_FindCaseSensitively, 0 )
+      nFlags += iif( ::oFR:qObj[ "radioUp" ]:isChecked(), QTextDocument_FindBackward, 0 )
 
-      ::qCurEdit:find( cText, nFlags )
+      IF !( lFound := ::qCurEdit:find( cText, nFlags ) )
+         ShowWarning( "Cannot find : " + cText )
+      ENDIF
    ENDIF
 
-   RETURN Self
+   RETURN lFound
 
 /*----------------------------------------------------------------------*/
 
@@ -1992,21 +2060,21 @@ METHOD HbIde:updateFindReplaceData( cMode )
    LOCAL cData
 
    IF cMode == "find"
-      cData := QLineEdit():configure( ::oFindRepl:qObj[ "comboFindWhat" ]:lineEdit() ):text()
+      cData := QLineEdit():configure( ::oFR:qObj[ "comboFindWhat" ]:lineEdit() ):text()
       IF !empty( cData )
-         IF ascan( ::aIni[ INI_FIND ], {|e| cData = e } ) == 0
+         IF ascan( ::aIni[ INI_FIND ], {|e| e == cData } ) == 0
             hb_ains( ::aIni[ INI_FIND ], 1, cData, .t. )
-            ::oFindRepl:qObj[ "comboFindWhat" ]:insertItem( 0, cData )
+            ::oFR:qObj[ "comboFindWhat" ]:insertItem( 0, cData )
          ENDIF
       ENDIF
       //
       ::oSBar:getItem( 11 ):caption := "FIND: " + cData
    ELSE
-      cData := QLineEdit():configure( ::oFindRepl:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
+      cData := QLineEdit():configure( ::oFR:qObj[ "comboReplaceWith" ]:lineEdit() ):text()
       IF !empty( cData )
          IF ascan( ::aIni[ INI_REPLACE ], cData ) == 0
             hb_ains( ::aIni[ INI_REPLACE ], 1, cData, .t. )
-            ::oFindRepl:qObj[ "comboReplaceWith" ]:insertItem( 0, cData )
+            ::oFR:qObj[ "comboReplaceWith" ]:insertItem( 0, cData )
          ENDIF
       ENDIF
    ENDIF
@@ -2016,31 +2084,39 @@ METHOD HbIde:updateFindReplaceData( cMode )
 
 METHOD HbIde:findReplace( lShow )
 
-   IF empty( ::oFindRepl )
-      ::oFindRepl := XbpQtUiLoader():new( ::oDlg )
-      ::oFindRepl:file := s_resPath + "finddialog.ui"
-      ::oFindRepl:create()
-      ::oFindRepl:setWindowFlags( Qt_Sheet )
+   IF empty( ::oFR )
+      ::oFR := XbpQtUiLoader():new( ::oDlg )
+      ::oFR:file := s_resPath + "finddialog.ui"
+      ::oFR:create()
+      ::oFR:setWindowFlags( Qt_Sheet )
 
-      aeval( ::aIni[ INI_FIND    ], {|e| ::oFindRepl:qObj[ "comboFindWhat"    ]:addItem( e ) } )
-      aeval( ::aIni[ INI_REPLACE ], {|e| ::oFindRepl:qObj[ "comboReplaceWith" ]:addItem( e ) } )
+      aeval( ::aIni[ INI_FIND    ], {|e| ::oFR:qObj[ "comboFindWhat"    ]:addItem( e ) } )
+      aeval( ::aIni[ INI_REPLACE ], {|e| ::oFR:qObj[ "comboReplaceWith" ]:addItem( e ) } )
 
-      ::oFindRepl:signal( "buttonFind"   , "clicked()", {|| ::updateFindReplaceData( "find" ), ::find() } )
-      ::oFindRepl:signal( "buttonReplace", "clicked()", {|| ::updateFindReplaceData( "replace" ), ::replace() } )
-      ::oFindRepl:signal( "buttonClose"  , "clicked()", ;
-            {|| ::aIni[ INI_HBIDE, FindDialogGeometry ] := PosAndSize( ::oFindRepl:oWidget ), ::oFindRepl:hide() } )
+      ::oFR:qObj[ "radioFromCursor" ]:setChecked( .t. )
+      ::oFR:qObj[ "radioDown" ]:setChecked( .t. )
 
-      ::oFindRepl:signal( "comboFindWhat"   , "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
-      #if 0
-      ::oFindRepl:signal( "comboFindWhat"   , "editTextChanged(text)"    , {|o,p| o := o, ::updateFindReplaceData( "find", p ) } )
-      ::oFindRepl:signal( "comboReplaceWith", "editTextChanged(text)"    , {|o,p| o := o, ::updateFindReplaceData( "replace", p ) } )
-      #endif
+      ::oFR:signal( "buttonFind"   , "clicked()", {|| ::onClickFind() } )
+      ::oFR:signal( "buttonReplace", "clicked()", {|| ::onClickReplace() } )
+      ::oFR:signal( "buttonClose"  , "clicked()", ;
+            {|| ::aIni[ INI_HBIDE, FindDialogGeometry ] := PosAndSize( ::oFR:oWidget ), ::oFR:hide() } )
+
+      ::oFR:signal( "comboFindWhat"   , "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
+
+      ::oFR:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ::oFR:qObj[ "comboReplaceWith" ]:setEnabled( p == 0 ) } )
+
+      // Generate run-time error
+      ::oFR:qObj[ "checkGlobal" ]:seteEnabled( .f. )
+
    ENDIF
 
    IF lShow
-      ::setPosByIni( ::oFindRepl:oWidget, FindDialogGeometry )
-      ::oFindRepl:qObj[ "comboFindWhat" ]:setFocus()
-      ::oFindRepl:show()
+      ::oFR:qObj[ "checkGlobal" ]:setEnabled( .f. )
+      ::oFR:qObj[ "checkNoPrompting" ]:setEnabled( .f. )
+      ::oFR:qObj[ "checkListOnly" ]:setChecked( .f. )
+      ::setPosByIni( ::oFR:oWidget, FindDialogGeometry )
+      ::oFR:qObj[ "comboFindWhat" ]:setFocus()
+      ::oFR:show()
    ENDIF
    RETURN Nil
 
