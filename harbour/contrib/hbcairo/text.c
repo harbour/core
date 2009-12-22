@@ -53,6 +53,7 @@
 
 #include "hbcairo.h"
 #include "hbapistr.h"
+#include "hbapierr.h"
 
 
 HB_FUNC( CAIRO_FONT_EXTENTS )
@@ -111,17 +112,21 @@ HB_FUNC( CAIRO_SET_FONT_MATRIX )
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
    {
-      PHB_ITEM  pItem = hb_stackReturnItem();
-      cairo_matrix_t  m;
-
-      cairo_set_font_matrix( pCairo, &m );
-      hb_arrayNew( pItem, 6 );
-      hb_arraySetND( pItem, 1, m.xx );
-      hb_arraySetND( pItem, 2, m.yx );
-      hb_arraySetND( pItem, 3, m.xy );
-      hb_arraySetND( pItem, 4, m.yy );
-      hb_arraySetND( pItem, 5, m.x0 );
-      hb_arraySetND( pItem, 6, m.y0 );
+      PHB_ITEM pItem;
+      if( ( pItem = hb_param( 2, HB_IT_ARRAY ) ) != NULL && hb_arrayLen( pItem ) == 6 )
+      {
+         cairo_matrix_t  m;
+    
+         m.xx = hb_arrayGetND( pItem, 1 );
+         m.yx = hb_arrayGetND( pItem, 2 );
+         m.xy = hb_arrayGetND( pItem, 3 );
+         m.yy = hb_arrayGetND( pItem, 4 );
+         m.x0 = hb_arrayGetND( pItem, 5 );
+         m.y0 = hb_arrayGetND( pItem, 6 );
+         cairo_set_font_matrix( pCairo, &m );
+      }
+      else
+         hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
 

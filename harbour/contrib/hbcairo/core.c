@@ -50,12 +50,6 @@
  *
  */
 
-#define HB_USE_ITEM
-
-#ifndef HB_USE_ITEM
-   #define _HB_API_INTERNAL_
-#endif
-
 #include "hbcairo.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -271,11 +265,7 @@ HB_FUNC( CAIRO_PATH_DESTROY )
 
 typedef struct
 {
-#ifdef HB_USE_ITEM
-   PHB_ITEM        pPath;
-#else
-   cairo_path_t *  pPath;
-#endif
+   cairo_path_t ** ppPath;
    int             iPos;
 } HB_CAIRO_PATH_ITERATOR, * PHB_CAIRO_PATH_ITERATOR;
 
@@ -284,14 +274,10 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_destructor )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) Cargo;
 
-   if( pIterator->pPath )
+   if( pIterator->ppPath )
    {
-#ifdef HB_USE_ITEM
-      hb_itemRelease( pIterator->pPath );
-#else
-      hb_gcRefFree( pIterator->pPath );
-#endif
-      pIterator->pPath = NULL;
+      hb_gcRefFree( pIterator->ppPath );
+      pIterator->ppPath = NULL;
    }
 }
 
@@ -300,8 +286,8 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_mark )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) Cargo;
 
-   if( pIterator->pPath )
-      hb_gcMark( pIterator->pPath );
+   if( pIterator->ppPath )
+      hb_gcMark( pIterator->ppPath );
 }
 
 
@@ -314,21 +300,18 @@ static const HB_GC_FUNCS s_gcIteratorFuncs =
 
 HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
 {
-   cairo_path_t *           pPath = hb_cairo_path_param( 1 );
+   cairo_path_t ** ppPath = ( cairo_path_t ** ) hb_parptrGC( &s_gcPathFuncs, 1 );
 
-   if( pPath )
+   if( ppPath && *ppPath )
    {
       PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( PHB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
-#ifdef HB_USE_ITEM
-      pIterator->pPath = hb_itemNew( hb_param( 1, HB_IT_POINTER ) );
-      hb_gcUnlock( pIterator->pPath );
-#else
-      pIterator->pPath = pPath;
-      hb_gcRefInc( pPath );
-#endif
+      pIterator->ppPath = ppPath;
+      hb_gcRefInc( ppPath );
       pIterator->iPos = -1;
       hb_itemPutPtrGC( hb_stackReturnItem(), pIterator );
    }
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -336,14 +319,10 @@ HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
 
-   if( pIterator && pIterator->pPath )
+   if( pIterator && pIterator->ppPath )
    {
-#ifdef HB_USE_ITEM
-      hb_itemRelease( pIterator->pPath );
-#else
-      hb_gcRefFree( pIterator->pPath );
-#endif
-      pIterator->pPath = NULL;
+      hb_gcRefFree( pIterator->ppPath );
+      pIterator->ppPath = NULL;
    }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -353,17 +332,10 @@ HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
 HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
+   cairo_path_t * pPath;
 
-   if( pIterator )
+   if( pIterator && pIterator->ppPath && ( pPath = * ( pIterator->ppPath ) ) != NULL )
    {
-      cairo_path_t *      pPath;
-
-#ifdef HB_USE_ITEM
-      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
-#else
-      pPath = pIterator->pPath;
-#endif
-
       /* Skip */
       if( pIterator->iPos == -1 )
          pIterator->iPos = 0;
@@ -384,17 +356,12 @@ HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
 HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
+   cairo_path_t * pPath;
 
-   if( pIterator )
+   if( pIterator && pIterator->ppPath && ( pPath = * ( pIterator->ppPath ) ) != NULL )
    {
-      cairo_path_t *      pPath;
       cairo_path_data_t * pData;
 
-#ifdef HB_USE_ITEM
-      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
-#else
-      pPath = pIterator->pPath;
-#endif
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 )
       {
          PHB_ITEM  pItem, pArray;
@@ -422,18 +389,12 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
 {
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
    PHB_ITEM                 pArray = hb_param( 2, HB_IT_ARRAY );
+   cairo_path_t *           pPath;
 
-   if( pIterator && pArray )
+   if( pIterator && pIterator->ppPath && ( pPath = * ( pIterator->ppPath ) ) != NULL && pArray )
    {
-      cairo_path_t *      pPath;
       cairo_path_data_t * pData;
       ULONG               ulLen;
-
-#ifdef HB_USE_ITEM
-      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
-#else
-      pPath = pIterator->pPath;
-#endif
 
       ulLen = hb_arrayLen( pArray );
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 &&
