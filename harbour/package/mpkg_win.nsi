@@ -26,6 +26,8 @@ SetDateSave on
 SetDatablockOptimize on
 CRCCheck on
 
+RequestExecutionLevel user
+
 ; The name of the installer
 Name "Harbour Project"
 
