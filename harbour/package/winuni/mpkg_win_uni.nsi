@@ -25,6 +25,8 @@ SetDateSave on
 SetDatablockOptimize on
 CRCCheck on
 
+!define PKG_NODJGPP
+
 !define /date NOW "%Y%m%d"
 
 !ifdef PKG_FULL
@@ -250,6 +252,15 @@ Section "Libs for Open Watcom OS/2" hb_lib_os2
 SectionEnd
 !endif
 
+!ifndef PKG_NODOS
+Section "Libs for Open Watcom MS-DOS" hb_lib_dos
+  SetOutPath $INSTDIR\lib\dos\watcom
+  File "hb20\lib\dos\watcom\*.*"
+  SetOutPath $INSTDIR\comp\watcom
+  File "hb20\comp\watcom\HARBOUR_README_WATCOM"
+SectionEnd
+!endif
+
 !ifndef PKG_NODJGPP
 Section "Libs for DJGPP MS-DOS" hb_lib_djgpp
   SetOutPath $INSTDIR\lib\dos\djgpp
@@ -275,8 +286,18 @@ SectionEnd
 !ifndef PKG_NOOS2
 Section /o "Dlls for OS/2" hb_dlls_os2
   SetOutPath $INSTDIR\bin
-  File "hb20\bin\harbour-20-os2.dll"
-  File "hb20\bin\harbourmt-20-os2.dll"
+  ; TOFIX: .dll name collision with MS-DOS
+  File "hb20\bin\harbour.dll"
+  File "hb20\bin\harbourm.dll"
+SectionEnd
+!endif
+
+!ifndef PKG_NODOS
+Section /o "Dlls for MS-DOS" hb_dlls_dos
+  SetOutPath $INSTDIR\bin
+  ; TOFIX: .dll name collision with OS/2
+  File "hb20\bin\harbour.dll"
+  File "hb20\bin\harbourm.dll"
 SectionEnd
 !endif
 !endif
@@ -323,8 +344,13 @@ SectionEnd
   LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour shared x64 tools"
   LangString DESC_hb_dlls_x64     ${LANG_ENGLISH} "Harbour dlls for x64"
   LangString DESC_hb_dlls_arm     ${LANG_ENGLISH} "Harbour dlls for WinCE/ARM"
+!ifdef _NEVER_
 !ifndef PKG_NOOS2
   LangString DESC_hb_dlls_os2     ${LANG_ENGLISH} "Harbour dlls for OS/2"
+!endif
+!ifndef PKG_NODOS
+  LangString DESC_hb_dlls_dos     ${LANG_ENGLISH} "Harbour dlls for MS-DOS"
+!endif
 !endif
   LangString DESC_hb_mingw        ${LANG_ENGLISH} "MinGW compiler"
 !ifdef PKG_FULL
@@ -348,6 +374,9 @@ SectionEnd
 !endif
 !ifndef PKG_NOOS2
   LangString DESC_hb_lib_os2      ${LANG_ENGLISH} "Harbour libs for Open Watcom OS/2"
+!endif
+!ifndef PKG_NODOS
+  LangString DESC_hb_lib_dos      ${LANG_ENGLISH} "Harbour libs for Open Watcom MS-DOS"
 !endif
 !ifndef PKG_NODJGPP
   LangString DESC_hb_lib_djgpp    ${LANG_ENGLISH} "Harbour libs for DJGPP MS-DOS"
@@ -384,6 +413,9 @@ SectionEnd
 !endif
 !ifndef PKG_NOOS2
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_os2}      $(DESC_hb_lib_os2)
+!endif
+!ifndef PKG_NODOS
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_dos}      $(DESC_hb_lib_dos)
 !endif
 !ifndef PKG_NODJGPP
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_djgpp}    $(DESC_hb_lib_djgpp)

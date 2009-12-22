@@ -42,13 +42,14 @@ echo "hb20\lib\win\mingw\*.*"                     >> _hbfiles
 echo "hb20\lib\win\mingw64\*.*"                   >> _hbfiles
 echo "hb20\lib\wce\mingwarm\*.*"                  >> _hbfiles
 echo "hb20\addons\HARBOUR_README_ADDONS"          >> _hbfiles
-echo "hb20\comp\djgpp\HARBOUR_README_DJGPP"       >> _hbfiles
+rem echo "hb20\comp\djgpp\HARBOUR_README_DJGPP"       >> _hbfiles
 echo "hb20\comp\watcom\HARBOUR_README_WATCOM"     >> _hbfiles
 echo "hb20\comp\pocc\HARBOUR_README_POCC"         >> _hbfiles
 echo "hb20\comp\mingw\HARBOUR_README_MINGW"       >> _hbfiles
 echo "hb20\comp\mingw64\HARBOUR_README_MINGW64"   >> _hbfiles
 echo "hb20\comp\mingwarm\HARBOUR_README_MINGWARM" >> _hbfiles
-echo "hb20\lib\dos\djgpp\*.*"                     >> _hbfiles
+rem echo "hb20\lib\dos\djgpp\*.*"                     >> _hbfiles
+echo "hb20\lib\dos\watcom\*.*"                    >> _hbfiles
 echo "hb20\lib\linux\watcom\*.*"                  >> _hbfiles
 echo "hb20\lib\os2\watcom\*.*"                    >> _hbfiles
 echo "hb20\lib\win\msvc\*.*"                      >> _hbfiles
