@@ -47,7 +47,7 @@
 %define name     harbour
 %define dname    Harbour
 %define version  2.0.0
-%define releasen rc1
+%define releasen 0
 %define hb_pref  hb
 %define hb_etcdir /etc/%{name}
 %define hb_plat  export HB_PLATFORM=linux

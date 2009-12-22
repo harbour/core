@@ -1,6 +1,6 @@
 Hi All,
 
-Harbour 2.0.0rc1 (r133??) source archives and Windows binary
+Harbour 2.0.0 (r13372) source archives and Windows binary
 releases are available for download on sourceforge.net.
 
 Make sure to check INSTALL doc "QUICK START" section and visit
@@ -12,28 +12,28 @@ Release notes:
 Unified Windows release for most supported compilers and
 x86, x64, WinCE/ARM, MS-DOS, OS/2, Linux target platforms.
 
-Installed size: 247MB (54MB - 337MB)
+Installed size: 214MB (54MB - 339MB)
 
 The default installation will install MinGW compiler + x86 static and
 shared libs, MSVC and BCC x86 libs and examples.
 
 Options: x86 shared tools, x64 shared tools, MinGW x64 and
 WinCE-ARM libs, MSVC x64 libs, Open Watcom x86 libs,
-shared x64/WinCE-ARM libs, MS-DOS (watcom), OS/2 (watcom) libs,
-Linux (watcom) libs.
+shared x64/WinCE-ARM libs, MS-DOS (watcom) libs, OS/2 (watcom)
+libs, Linux (watcom) libs.
 
 Usage:
 1) install/unpack to any directory (C:\hb20)
 2) go to bin dir (optional if you specify path for hbmk2)
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'
-   [needs mingw64 to be installed into 'comp/mingw64' dir beforehand]
+   [needs mingw64 to be installed in 'comp/mingw64' dir beforehand]
 5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -platform=wce'
-   [needs cegcc to be installed into 'comp/mingwarm' dir beforehand]
+   [needs cegcc to be installed in 'comp/mingwarm' dir beforehand]
 6) For MS-DOS executable, type: 'hbmk2 ../tests/hello.prg -platform=dos'
-   [needs DJGPP to be installed into 'comp/djgpp' dir beforehand]
+   [needs OpenWatcom to be installed in 'comp/watcom' dir beforehand]
 7) For Linux executable, type: 'hbmk2 ../tests/hello.prg -platform=linux'
-   [needs OpenWatcom to be installed into 'comp/watcom' dir beforehand]
+   [needs OpenWatcom to be installed in 'comp/watcom' dir beforehand]
 
 Tool/lib versions used to create this package:
 -----------------------------------------------------------------------
@@ -73,7 +73,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - upx updated to 3.04.
 - MinGW 4.4.1 updated to TDM-2 release fixing a performance problem.
 - MinGW w64 updated to latest binary release.
-- DJGPP build replaced with OpenWatcom MS-DOS build.
+- DJGPP build in unified release replaced with OpenWatcom MS-DOS build.
 - External libs updated (except OpenSSL and libcurl).
 - hbwin cleanups/fixes (printer handling) and improvements (mutex, MAPI, misc)
 - hbwin OLE2, ActiveX support improved and finalized.

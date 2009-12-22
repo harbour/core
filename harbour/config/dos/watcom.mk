@@ -71,7 +71,7 @@ ifneq ($(HB_LINKING_RTL),)
    endif
 endif
 
-ifeq ($(HB_BUILD_DLL),yes)
+ifeq ($(HB_BUILD_DLL),dostest)
 
    DY := $(LD)
    DFLAGS += OP quiet SYS cwdllr

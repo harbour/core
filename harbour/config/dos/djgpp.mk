@@ -104,7 +104,7 @@ AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
-ifeq ($(HB_BUILD_DLL),yes)
+ifeq ($(HB_BUILD_DLL),dostest)
 
    DY := dxe3gen
    DFLAGS += $(LIBPATHS)

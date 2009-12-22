@@ -25,6 +25,8 @@ SetDateSave on
 SetDatablockOptimize on
 CRCCheck on
 
+RequestExecutionLevel user
+
 !define PKG_NODJGPP
 
 !define /date NOW "%Y%m%d"
@@ -235,7 +237,7 @@ SectionEnd
 !endif
 
 !ifndef PKG_NOLINUX
-Section "Libs for Open Watcom Linux" hb_lib_linux
+Section /o "Libs for Open Watcom Linux" hb_lib_linux
   SetOutPath $INSTDIR\lib\linux\watcom
   File "$%HB_ROOT%hb20\lib\linux\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
@@ -244,7 +246,7 @@ SectionEnd
 !endif
 
 !ifndef PKG_NOOS2
-Section "Libs for Open Watcom OS/2" hb_lib_os2
+Section /o "Libs for Open Watcom OS/2" hb_lib_os2
   SetOutPath $INSTDIR\lib\os2\watcom
   File "$%HB_ROOT%hb20\lib\os2\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
@@ -253,7 +255,7 @@ SectionEnd
 !endif
 
 !ifndef PKG_NODOS
-Section "Libs for Open Watcom MS-DOS" hb_lib_dos
+Section /o "Libs for Open Watcom MS-DOS" hb_lib_dos
   SetOutPath $INSTDIR\lib\dos\watcom
   File "$%HB_ROOT%hb20\lib\dos\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
@@ -262,7 +264,7 @@ SectionEnd
 !endif
 
 !ifndef PKG_NODJGPP
-Section "Libs for DJGPP MS-DOS" hb_lib_djgpp
+Section /o "Libs for DJGPP MS-DOS" hb_lib_djgpp
   SetOutPath $INSTDIR\lib\dos\djgpp
   File "$%HB_ROOT%hb20\lib\dos\djgpp\*.*"
   SetOutPath $INSTDIR\comp\djgpp
