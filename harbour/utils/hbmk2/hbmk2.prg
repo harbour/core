@@ -2236,7 +2236,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ELSE
                cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
             ENDIF
-            IF hbmk[ _HBMK_cPLAT ] == "sunos"
+            IF hbmk[ _HBMK_cPLAT ] $ "hpux|sunos"
                cOpt_Lib := "{FA} rc {OL} {LO}"
             ELSE
                cOpt_Lib := "{FA} rcs {OL} {LO}"
