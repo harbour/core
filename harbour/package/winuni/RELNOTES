@@ -1,6 +1,6 @@
 Hi All,
 
-Harbour 2.0.0rc1 (r13???) source archives and Windows binary
+Harbour 2.0.0rc1 (r133??) source archives and Windows binary
 releases are available for download on sourceforge.net.
 
 Make sure to check INSTALL doc "QUICK START" section and visit
@@ -72,6 +72,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - MinGW CEGCC updated to 4.4.0
 - upx updated to 3.04.
 - MinGW 4.4.1 updated to TDM-2 release fixing a performance problem.
+- MinGW w64 updated to latest binary release.
 - DJGPP build replaced with OpenWatcom MS-DOS build.
 - External libs updated (except OpenSSL and libcurl).
 - hbwin cleanups/fixes (printer handling) and improvements (mutex, MAPI, misc)
@@ -115,7 +116,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - Generalized the way zlib and pcre embedded sources are handled.
 - Finalized new pure GNU Make based build system.
 - Embedded libharu made available for MS-DOS Harbour builds,
-  plus many other levelling of MS-DOS port.
+  plus many other leveling of MS-DOS port.
 - Added Blowfish encryption functions to core.
 - Added experimental win64 binary build of GNU Make.
 - Synced with some new features that appeared in xhb, plus some missing
