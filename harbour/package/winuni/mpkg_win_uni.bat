@@ -8,10 +8,10 @@ pushd
 
 cd F:\hb\hb20\..
 
-if exist harbour-2.0.0-win-log.txt del harbour-2.0.0-win-log.txt
+if exist %~dp0harbour-2.0.0-win-log.txt del %~dp0harbour-2.0.0-win-log.txt
 
 set HB_ROOT=F:\hb\
-"%HB_DIR_NSIS%makensis.exe" %~dp0mpkg_win_uni.nsi >> harbour-2.0.0-win-log.txt
+"%HB_DIR_NSIS%makensis.exe" %~dp0mpkg_win_uni.nsi >> %~dp0harbour-2.0.0-win-log.txt
 
 echo.> _hbfiles
 echo "hb20\RELNOTES"                              >> _hbfiles
@@ -80,8 +80,8 @@ echo "hb20\comp\mingw\*"                          >> _hbfiles
 echo "hb20\examples\*.*"                          >> _hbfiles
 echo "hb20\contrib\*.*"                           >> _hbfiles
 
-if exist harbour-2.0.0-win.7z del harbour-2.0.0-win.7z
-7za a -r harbour-2.0.0-win.7z @_hbfiles >> harbour-2.0.0-win-log.txt
+if exist %~dp0harbour-2.0.0-win.7z del %~dp0harbour-2.0.0-win.7z
+7za a -r %~dp0harbour-2.0.0-win.7z @_hbfiles >> %~dp0harbour-2.0.0-win-log.txt
 
 del _hbfiles
 
