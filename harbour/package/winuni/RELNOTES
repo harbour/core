@@ -19,8 +19,8 @@ shared libs, MSVC and BCC x86 libs and examples.
 
 Options: x86 shared tools, x64 shared tools, MinGW x64 and
 WinCE-ARM libs, MSVC x64 libs, Open Watcom x86 libs,
-shared x64/WinCE-ARM libs, MS-DOS 32-bit DJGPP libs,
-OS/2 (watcom) libs, Linux (watcom) libs.
+shared x64/WinCE-ARM libs, MS-DOS (watcom), OS/2 (watcom) libs,
+Linux (watcom) libs.
 
 Usage:
 1) install/unpack to any directory (C:\hb20)
@@ -41,13 +41,12 @@ Tool/lib versions used to create this package:
    Compiler tools
    --------------
 
-   MinGW 4.4.1 TDM-2 (included)
-   MinGW w64 4.5.0-20091118
+   MinGW GNU C 4.4.1 TDM-2 (included)
+   MinGW w64 GNU C 4.5.0-20091118
    MinGW CEGCC 4.4.0
-   DJGPP 4.4.1 (2.04b1)
-   MSVC 2008 (bundled with MS Windows SDK 7)
-   Open Watcom C++ 1.8
-   Borland C++ 5.5.1
+   MSVC 2008 (version bundled with MS Windows SDK 7)
+   Open Watcom C 1.8
+   Borland C/C++ 5.5.1
 
    External lib dependencies
    -------------------------
@@ -69,9 +68,18 @@ Tool/lib versions used to create this package:
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------
 
+- Harbour updated to r13359 (from r12422)
+  (too many changes to list here)
 - MinGW CEGCC updated to 4.4.0
 - upx updated to 3.04.
 - MinGW 4.4.1 updated to TDM-2 release fixing a performance problem.
+- DJGPP build replaced with OpenWatcom MS-DOS build.
+- hbide (early development stage).
+- hbqt improvements.
+- hbwin full UNICODE support.
+- Rudimentary port of GTWVW (find it in examples)
+- new hbcairo wrapper for cairo lib.
+- improved code portability for startup code.
 
 Changes since previous (2.0.0beta2 20090624) release:
 -----------------------------------------------------------------------

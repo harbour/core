@@ -604,17 +604,17 @@ static void HeaderWrite( struct hb_BTree * pBTree )
    hb_xmemset( TmpHeader, '\0', sizeof( TmpHeader ) );
 
    hb_xmemcpy( pHeader, HEADER_ID, sizeof( HEADER_ID ) - 1 ); pHeader += sizeof( HEADER_ID ) - 1;
-   HB_PUT_LE_UINT32( uiHeaderSize      , pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->usPageSize, pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->usKeySize , pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->usMaxKeys , pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->usMinKeys , pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->ulFlags   , pHeader );
+   HB_PUT_LE_UINT32( pHeader, uiHeaderSize       ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usPageSize ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usKeySize  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usMaxKeys  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usMinKeys  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, pBTree->ulFlags    );
 
    pHeader = &TmpHeader[ 64 ];
-   HB_PUT_LE_UINT32( pBTree->ulRootPage, pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->ulFreePage, pHeader ); pHeader += 4;
-   HB_PUT_LE_UINT32( pBTree->ulKeyCount, pHeader );
+   HB_PUT_LE_UINT32( pHeader, pBTree->ulRootPage ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, pBTree->ulFreePage ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, pBTree->ulKeyCount );
 
    hb_fsSeek( pBTree->hFile, 0, FS_SET );
    if ( hb_fsWrite( pBTree->hFile, TmpHeader, sizeof( TmpHeader ) ) != sizeof( TmpHeader ) )
