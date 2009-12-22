@@ -542,7 +542,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       }
    }
 
-   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
+   if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
