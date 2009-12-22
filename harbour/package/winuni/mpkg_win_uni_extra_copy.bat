@@ -4,7 +4,12 @@
 
 @echo off
 
-@rem has to be run from contrib root. Adjust target dir.
+@rem - Adjust target dir.
+@rem - Run this from vanilla official source tree only.
+
+xcopy /y /s ..\..\examples\*.* F:\hb\hb20\examples\
+xcopy /y /s ..\..\tests\*.*    F:\hb\hb20\tests\
+xcopy RELNOTES                 F:\hb\hb20\
 
 pushd
 
