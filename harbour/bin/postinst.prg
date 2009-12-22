@@ -45,7 +45,7 @@ PROCEDURE Main()
       cFile += "{dos}libpaths=${WATT_ROOT}/lib" + hb_osNewLine()
    ENDIF
 
-   hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + hb_osPathSeparator() + "hbmk.cfg" )
+   hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + hb_osPathSeparator() + "hbmk.cfg", cFile )
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
       ! Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
@@ -65,4 +65,4 @@ PROCEDURE Main()
 
    ErrorLevel( nErrorLevel )
 
-   RETURN 
+   RETURN
