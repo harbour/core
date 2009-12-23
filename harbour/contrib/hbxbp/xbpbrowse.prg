@@ -750,15 +750,6 @@ METHOD XbpBrowse:destroy()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ShowMem( lYes )
-   IF lYes
-      HBXBP_DEBUG( "    ." )
-   ENDIF
-   HBXBP_DEBUG( "       Mem Used "+IF( lYes, "1001", "    " ), memory( 1001 ) )
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 

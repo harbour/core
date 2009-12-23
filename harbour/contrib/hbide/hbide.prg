@@ -257,6 +257,9 @@ CLASS HbIde
    METHOD readProcessInfo()
    METHOD goto()
 
+
+   METHOD testBuildDialog()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1582,6 +1585,7 @@ METHOD HbIde:executeAction( cKey )
       ::lDockRVisible := !( ::lDockRVisible )
 
    CASE cKey == "Compile"
+      ::testBuildDialog()
 
    CASE cKey == "CompilePPO"
 
@@ -2164,5 +2168,37 @@ METHOD HbIde:goto()
 
 
    RETURN nLine
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:testBuildDialog()
+   LOCAL oUI, oDlg
+   LOCAL mp1, mp2, oXbp, nEvent
+
+   oUI := XbpQtUiLoader():new()
+   oUI:file := s_resPath + "mainWindow.ui"
+   oUI:create()
+
+   oDlg := XbpDialog():new()
+   oDlg:hbCreateFromQtPtr( ::oDlg, , , , , , oUI:oWidget:pPtr )
+   //oDlg:drawingArea := oUI:qObj[ "drawingArea" ]
+
+   oDlg:show()
+   DO WHILE .t.
+      nEvent := AppEvent( @mp1, @mp2, @oXbp )
+
+      IF nEvent == xbeP_Keyboard
+         DO CASE
+
+         CASE mp1 == xbeK_ESC
+            EXIT
+
+         ENDCASE
+      ENDIF
+
+      oXbp:handleEvent( nEvent, mp1, mp2 )
+   ENDDO
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
