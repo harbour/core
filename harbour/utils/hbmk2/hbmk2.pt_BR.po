@@ -380,7 +380,7 @@ msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour "
 #: hbmk2.prg:7787
 #, c-format
 msgid "cdp=EN"
-msgstr "cdp=PTISO"
+msgstr "cdp=PT850"
 
 #: hbmk2.prg:7946
 #, c-format
