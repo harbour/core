@@ -865,21 +865,62 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
       srWin.Bottom = ( SHORT ) ( iRows - 1 );
       srWin.Right  = ( SHORT ) ( iCols - 1 );
 
-      /* if the current buffer is larger than what we want, resize the */
-      /* console window first, then the buffer */
-      if( ( DWORD ) _GetScreenWidth() * _GetScreenHeight() > ( DWORD ) iCols * iRows )
+      if( ( int ) _GetScreenWidth() >= iCols &&
+          ( int ) _GetScreenHeight() >= iRows )
       {
+         /* the new dimensions do not exceed the current buffer dimensions so
+          * we can safely resize the console window first, then the buffer
+          */
          if( SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
          {
             SetConsoleScreenBufferSize( s_HOutput, coBuf );
             fRet = TRUE;
          }
       }
-      else
+      else if( ( int ) _GetScreenWidth() <= iCols &&
+               ( int ) _GetScreenHeight() <= iRows )
       {
+         /* none of the current buffer dimensions is larger then the
+          * new dimensions so we can safely enlarge the buffer to new
+          * dimensions then adjust the console window dimensions
+          */
          if( SetConsoleScreenBufferSize( s_HOutput, coBuf ) )
          {
             SetConsoleWindowInfo( s_HOutput, TRUE, &srWin );
+            fRet = TRUE;
+         }
+      }
+      else
+      {
+         /* one of the new dimensions is smaller and second larger then the
+          * current buffer dimensions. Windows API needs to keep the buffer
+          * dimensions not smaller then console window size and there is
+          * no single API call which allow to change both buffer and console
+          * window dimensions. It means that we have to resize one of the
+          * above objects in two steps. We can temporary enlarge the buffer
+          * dimensions or reduce the console window dimensions.
+          * To reduce the possibility that we will exploit some WIN API
+          * limits for the maximum buffer size instead of enlarging it we
+          * decrease the one of console window dimensions which is larger
+          * then the corresponding new one.
+          */
+         if( ( int ) _GetScreenWidth() < iCols )
+            srWin.Right  = ( SHORT ) ( _GetScreenWidth() - 1 );
+         else
+            srWin.Bottom = ( SHORT ) ( _GetScreenHeight() - 1 );
+         if( SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
+         {
+            /* now we can safely set the new buffer dimensions because
+             * none of them is smaller then corresponding dimensions of
+             * just reduced console window and then we set final console
+             * window size.
+             */
+            if( SetConsoleScreenBufferSize( s_HOutput, coBuf ) )
+            {
+               srWin.Bottom = ( SHORT ) ( iRows - 1 );
+               srWin.Right  = ( SHORT ) ( iCols - 1 );
+               SetConsoleWindowInfo( s_HOutput, TRUE, &srWin );
+            }
             fRet = TRUE;
          }
       }
