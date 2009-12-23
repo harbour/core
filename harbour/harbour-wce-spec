@@ -127,6 +127,7 @@ make install %{?_smp_mflags}
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
+rm -fR ${HB_BIN_INSTALL}/{hb,%{hb_pref}}mk.cfg
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
@@ -251,7 +252,6 @@ rm -fR $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}cmp
 %{_bindir}/%{hb_pref}lnk
 %{_bindir}/%{hb_pref}mk
-%{_bindir}/%{hb_pref}mk.cfg
 
 %defattr(644,root,root,755)
 %dir %{_includedir}/%{name}
