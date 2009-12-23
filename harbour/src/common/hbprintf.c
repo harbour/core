@@ -174,7 +174,7 @@ optimized.
  * platform then it can be replaced by 'value < 0' but in such case
  * -0.0 will be shown as 0.0
  */
-#if defined( __GNUC__ ) && defined( _ISOC99_SOURCE )
+#if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 )
    /* use C99 macros */
 #  define hb_signbit( d )     signbit( d )
 
@@ -190,7 +190,7 @@ optimized.
 #endif
 
 
-#if defined( __GNUC__ ) && ( defined( _ISOC99_SOURCE ) || defined( __MINGW32__ ) )
+#if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || defined( __MINGW32__ )
 
    /* use C99 macros */
 #  define HB_NUMTYPE( v, d )  do { \

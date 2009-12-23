@@ -74,7 +74,7 @@
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
     ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
-      ( defined( _ISOC99_SOURCE ) || \
+      ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
         ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
         ( defined( __DJGPP__ ) && \
           ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) || \
