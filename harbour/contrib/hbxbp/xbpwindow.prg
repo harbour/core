@@ -78,6 +78,8 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
 
    CLASSDATA nProperty                            INIT  0
    DATA     qtProperty                            INIT  ""
+   DATA     qtObject
+
    /* Called in the initializer - Unique in the application */
    METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
    /* After object is physically created, set unique property to 1 */
@@ -1204,14 +1206,16 @@ METHOD XbpWindow:setPos( aPos, lPaint )
 
 METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
 
-   DEFAULT aPos  TO ::aPos
-   DEFAULT aSize TO ::aSize
+   IF empty( ::qtObject )
+      DEFAULT aPos  TO ::aPos
+      DEFAULT aSize TO ::aSize
 
-   IF hb_isArray( aPos ) .and. hb_isArray( aSize )
-      DEFAULT lPaint TO .T.
+      IF hb_isArray( aPos ) .and. hb_isArray( aSize )
+         DEFAULT lPaint TO .T.
 
-      ::oWidget:resize( aSize[ 1 ], aSize[ 2 ] )
-      ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
+         ::oWidget:resize( aSize[ 1 ], aSize[ 2 ] )
+         ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
+      ENDIF
    ENDIF
 
    RETURN Self

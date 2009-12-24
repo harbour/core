@@ -123,12 +123,18 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::cargo := hb_threadId()                               /* To Be Removed */
 
-   #ifdef __QMAINWINDOW__
-   ::oWidget := QMainWindow():new()
-   //::oWidget:setMouseTracking( .t. )
-   #else
-   ::oWidget := QMainWindow():configure( QT_HBQMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
-   #endif
+   IF !empty( ::qtObject )
+      ::oWidget := QMainWindow()
+      ::oWidget:pPtr := hbqt_ptr( ::qtObject )
+
+   ELSE
+      #ifdef __QMAINWINDOW__
+      ::oWidget := QMainWindow():new()
+      //::oWidget:setMouseTracking( .t. )
+      #else
+      ::oWidget := QMainWindow():configure( QT_HBQMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
+      #endif
+   ENDIF
 
    IF !empty( ::title )
       ::oWidget:setWindowTitle( ::title )
@@ -137,11 +143,16 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setWindowIcon( ::icon )
    ENDIF
 
-   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
-   ::oWidget:setCentralWidget( ::drawingArea:oWidget )
+   IF !empty( ::qtObject )
+      ::drawingArea := XbpDrawingArea():new( self )
+      ::drawingArea:qtObject := ::oWidget:centralWidget()
+      ::drawingArea:create( self, , {0,0}, ::aSize, , .t. )
+   ELSE
+      ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
+      ::oWidget:setCentralWidget( ::drawingArea:oWidget )
+   ENDIF
 
    //::setQtProperty()
-
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -189,12 +200,10 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
       ::oWidget:setWindowIcon( ::icon )
    ENDIF
 
-   #if 0
    ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
    ::oWidget:setCentralWidget( ::drawingArea:oWidget )
 
    SetAppWindow( Self )
-   #endif
 
    /* Thread specific event buffer */
    hbxbp_InitializeEventBuffer()
@@ -324,7 +333,7 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
 METHOD XbpDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   ::visible     := .t.
+   ::visible := .t.
 
    RETURN Self
 
@@ -336,16 +345,19 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
-   ::oWidget := QWidget():new()
+   IF !empty( ::qtObject )
+      ::oWidget := QWidget()
+      ::oWidget:pPtr := hbqt_ptr( ::qtObject )
+   ELSE
+      ::oWidget := QWidget():new()
+   ENDIF
+
    ::oWidget:setMouseTracking( .T. )
    ::oWidget:setFocusPolicy( Qt_StrongFocus )
 
    ::setQtProperty()  /* Using it for one-to-one style sheet management */
 
    ::oParent:addChild( SELF )
-
-   /* Connects All Event Handlers */
-   //::connectWindowEvents()
 
    RETURN Self
 

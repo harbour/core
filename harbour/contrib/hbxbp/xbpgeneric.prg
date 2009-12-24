@@ -263,7 +263,9 @@ FUNCTION MsgBox( cMsg, cTitle )
    oMB := QMessageBox():new()
    oMB:setText( /* "<b>" + */ cMsg /* + "</b>" */ )
    oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():pWidget )
+   IF hb_isObject( SetAppWindow() )
+      oMB:setParent( SetAppWindow():pWidget )
+   ENDIF
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
 

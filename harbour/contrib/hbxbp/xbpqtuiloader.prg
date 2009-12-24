@@ -210,6 +210,7 @@ METHOD XbpQtUiLoader:loadContents( cUiFull )
 
       n := at( ">", cBuffer )
       cWidget := alltrim( strtran( substr( cBuffer, 1, n-1 ), '"', "" ) )
+      cWidget := strtran( cWidget, "/", "" )
 
       HBXBP_DEBUG( pad( cClass,30 ), cWidget )
 

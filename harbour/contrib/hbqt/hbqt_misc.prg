@@ -51,6 +51,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbclass.ch"
+#include "common.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -103,16 +104,19 @@ FUNCTION hbqt_ptr( xParam )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbqt_messageBox( cMsg, cInfo )
+FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    LOCAL oMB
+
+   DEFAULT cTitle TO "Information"
+   DEFAULT nIcon  TO QMessageBox_Information
 
    oMB := QMessageBox():new()
    oMB:setText( cMsg )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
    ENDIF
-   oMB:setIcon( QMessageBox_Information )
-   oMB:setWindowTitle( "Information" )
+   oMB:setIcon( nIcon )
+   oMB:setWindowTitle( cTitle )
 
    oMB:exec()
 
@@ -121,11 +125,18 @@ FUNCTION hbqt_messageBox( cMsg, cInfo )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbqt_showError( cMsg )
+   LOCAL s
 
-   IF SubStr( cMsg, 1, 1 ) == "_"
-      cMsg := SubStr( cMsg, 2 )
+   IF hb_isArray( cMsg )
+      s := ""
+      aeval( cMsg, {|e| s += e + chr( 13 ) } )
+      hbqt_messageBox( s, NIL, "Run-time Error!", QMessageBox_Critical )
+   ELSE
+      IF SubStr( cMsg, 1, 1 ) == "_"
+         s := SubStr( cMsg, 2 )
+      ENDIF
+      hbqt_messageBox( ":" + s, "Message not found - " + ProcName( 2 ) + ":" + hb_ntos( ProcLine( 2 ) ) )
    ENDIF
-   hbqt_messageBox( ":" + cMsg, "Message not found - " + ProcName( 2 ) + ":" + hb_ntos( ProcLine( 2 ) ) )
 
    RETURN nil
 

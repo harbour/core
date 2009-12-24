@@ -257,7 +257,7 @@ CLASS HbIde
    METHOD readProcessInfo()
    METHOD goto()
 
-
+   DATA   oMW
    METHOD testBuildDialog()
 
    ENDCLASS
@@ -283,6 +283,8 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
+
+   hbqt_errorsys()
 
    ::loadConfig( cProjIni )
 
@@ -1235,12 +1237,23 @@ METHOD HbIde:dispEditInfo()
 
 METHOD HbIde:buildDialog()
 
-   ::oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
+   #if 1
+   LOCAL oUI
+   oUI := XbpQtUiLoader():new()
+   oUI:file := s_resPath + "mainWindow.ui"
+   oUI:create()
 
+   ::oDlg := XbpDialog():new()
    ::oDlg:icon := s_resPath + "vr.png" // "hbide.png"
    ::oDlg:title := "Harbour-Qt IDE"
-
+   ::oDlg:qtObject := oUI:oWidget
    ::oDlg:create()
+   #else
+   ::oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
+   ::oDlg:icon := s_resPath + "vr.png" // "hbide.png"
+   ::oDlg:title := "Harbour-Qt IDE"
+   ::oDlg:create()
+   #endif
 
    ::setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
 
@@ -2172,18 +2185,18 @@ METHOD HbIde:goto()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:testBuildDialog()
-   LOCAL oUI, oDlg
-   LOCAL mp1, mp2, oXbp, nEvent
+   LOCAL oUI
+   //LOCAL mp1, mp2, oXbp, nEvent
 
    oUI := XbpQtUiLoader():new()
    oUI:file := s_resPath + "mainWindow.ui"
    oUI:create()
 
-   oDlg := XbpDialog():new()
-   oDlg:hbCreateFromQtPtr( ::oDlg, , , , , , oUI:oWidget:pPtr )
-   //oDlg:drawingArea := oUI:qObj[ "drawingArea" ]
+   ::oMW := XbpDialog():new()
+   ::oMW:hbCreateFromQtPtr( , , , , , , oUI:oWidget:pPtr )
+   ::oMW:show()
 
-   oDlg:show()
+   #if 0
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
@@ -2198,6 +2211,7 @@ METHOD HbIde:testBuildDialog()
 
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
+   #endif
 
    RETURN Self
 
