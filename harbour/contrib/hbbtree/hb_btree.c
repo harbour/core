@@ -1705,7 +1705,7 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
   index = hb_parni( 1 );
-  if ( index < 1 || index > s_BTree_List_Count || s_BTree_List[ index ] == NULL ) \
+  if ( index < 1 || index > s_BTree_List_Count || s_BTree_List[ index - 1 ] == NULL ) \
   {
     hb_RaiseError( HB_BTree_TreeHandle_EC, "Bad BTree handle", GetSource, 1 );
     return NULL;
