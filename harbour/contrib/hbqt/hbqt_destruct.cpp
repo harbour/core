@@ -59,6 +59,8 @@
 
 #if QT_VERSION >= 0x040500
 
+#include <QTextCodec>
+
 static int s_iObjectReleaseMethod = HBQT_RELEASE_WITH_DELETE_LATER;
 
 /*----------------------------------------------------------------------*/
@@ -123,6 +125,12 @@ HB_FUNC( HBQT_SET_RELEASE_METHOD )
 
    if( HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= HBQT_RELEASE_WITH_DELETE_LATER )
       s_iObjectReleaseMethod = hb_parni( 1 );
+}
+
+HB_FUNC( HBQT_SETCODECFORCSTRINGS )
+{
+   QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
+   QTextCodec::setCodecForCStrings( codec );
 }
 
 /*----------------------------------------------------------------------*/

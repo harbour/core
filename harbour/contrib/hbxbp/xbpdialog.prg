@@ -124,13 +124,16 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::cargo := hb_threadId()                               /* To Be Removed */
 
    IF !empty( ::qtObject )
-      ::oWidget := QMainWindow()
-      ::oWidget:pPtr := hbqt_ptr( ::qtObject )
-
+      IF hb_isObject( ::qtObject )
+         ::oWidget := ::qtObject
+      ELSE
+         ::oWidget := QMainWindow()
+         ::oWidget:pPtr := hbqt_ptr( ::qtObject )
+      ENDIF
+      ::oWidget:setMouseTracking( .t. )
    ELSE
       #ifdef __QMAINWINDOW__
       ::oWidget := QMainWindow():new()
-      //::oWidget:setMouseTracking( .t. )
       #else
       ::oWidget := QMainWindow():configure( QT_HBQMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
       #endif
@@ -182,44 +185,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
 
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::qtObjects := pQtObject
 
-   IF !hb_isPointer( pQtObject )
-      RETURN Self
-   ENDIF
-
-   ::cargo := hb_threadId()                               /* To Be Removed */
-
-   ::oWidget := QMainWindow()
-   ::oWidget:pPtr := pQtObject
-
-   IF !empty( ::title )
-      ::oWidget:setWindowTitle( ::title )
-   ENDIF
-   IF hb_isChar( ::icon )
-      ::oWidget:setWindowIcon( ::icon )
-   ENDIF
-
-   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
-   ::oWidget:setCentralWidget( ::drawingArea:oWidget )
-
-   SetAppWindow( Self )
-
-   /* Thread specific event buffer */
-   hbxbp_InitializeEventBuffer()
-
-   /* Install Event Loop per Dialog Basis */
-   ::oEventLoop := QEventLoop():new( ::pWidget )
-   hbxbp_SetEventLoop( ::oEventLoop )
-
-   /* Instal Event Filter */
-   ::oWidget:installEventFilter( QT_GetEventFilter() )
-
-   ::connectWindowEvents()
-   //
-   ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
+   ::create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 

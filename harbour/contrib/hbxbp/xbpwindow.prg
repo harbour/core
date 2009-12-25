@@ -416,11 +416,9 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
 METHOD XbpWindow:connectWindowEvents()
 
-   //::oWidget:installEventFilter( QT_GetEventFilter() )
-
-   ::connectEvent( ::pWidget, QEvent_MouseMove          , {|o,e| ::grabEvent( QEvent_MouseMove          , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|o,e| ::grabEvent( QEvent_MouseButtonPress   , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_MouseButtonRelease , {|o,e| ::grabEvent( QEvent_MouseButtonRelease , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_MouseMove          , {|o,e| ::grabEvent( QEvent_MouseMove          , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_MouseButtonDblClick, {|o,e| ::grabEvent( QEvent_MouseButtonDblClick, e, o ) } )
    ::connectEvent( ::pWidget, QEvent_Enter              , {|o,e| ::grabEvent( QEvent_Enter              , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_Leave              , {|o,e| ::grabEvent( QEvent_Leave              , e, o ) } )
@@ -460,6 +458,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
    CASE QEvent_MouseMove                     // :motion()
       oEvent      := QMouseEvent():configure( pEvent )
       SetAppEvent( xbeM_Motion, { oEvent:x(), oEvent:y() }, NIL, self )
+      lRet := .f.
       EXIT
    CASE QEvent_MouseButtonPress              // :lbClick() :mbClick() :rbClick()
                                              // :lbDown() :mbDown() :rbDown()
@@ -472,6 +471,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       CASE oEvent:button() == Qt_RightButton
          SetAppEvent( xbeM_RbDown, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDCASE
+      lRet := .f.
       EXIT
    CASE QEvent_MouseButtonRelease            // :mbUp() :rbUp() :lbUp()
       oEvent      := QMouseEvent():configure( pEvent )
@@ -483,6 +483,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       CASE oEvent:button() == Qt_RightButton
          SetAppEvent( xbeM_RbUp, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDCASE
+      lRet := .f.
       EXIT
    CASE QEvent_MouseButtonDblClick           // :lbDblClick() :mbDblClick() :rbDblClick()
       oEvent      := QMouseEvent():configure( pEvent )
@@ -494,6 +495,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       CASE oEvent:button() == Qt_RightButton
          SetAppEvent( xbeM_RbDblClick, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDCASE
+      lRet := .f.
       EXIT
    CASE QEvent_ContextMenu                   //
       oEvent      := QContextMenuEvent():configure( pEvent )
@@ -517,6 +519,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
    CASE QEvent_Wheel                         // :wheel()
       oEvent      := QWheelEvent():configure( pEvent )
       SetAppEvent( xbeM_Wheel, { oEvent:x(), oEvent:y() }, { oEvent:buttons(), oEvent:delta() }, self )
+      lRet := .f.
       EXIT
    CASE QEvent_FocusIn                       // :setInputFocus()
       SetAppEvent( xbeP_SetInputFocus, NIL, NIL, Self )
@@ -537,12 +540,14 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       oP0         := QPoint():configure( oEvent:oldPos() )
       oP1         := QPoint():configure( oEvent:pos() )
       SetAppEvent( xbeP_Move, { oP0:x(), oP0:y() }, { oP1:x(), oP1:y() }, Self )
+      lRet := .f.
       EXIT
    CASE QEvent_Resize                        // :resize()
       oEvent      := QResizeEvent():configure( pEvent )
       oObj_O      := QSize():configure( oEvent:oldSize() )
       oObj_N      := QSize():configure( oEvent:size() )
       SetAppEvent( xbeP_Resize, { oObj_O:width(), oObj_O:height() }, { oObj_N:width(), oObj_N:height() }, Self )
+      lRet := .f.
       EXIT
    CASE QEvent_DragEnter                     // :dragEnter()
       oEvent      := QDragEnterEvent():configure( pEvent )

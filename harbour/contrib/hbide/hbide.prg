@@ -114,20 +114,9 @@ CLASS HbIde
    DATA   aIni                                    INIT {}
 
    /* HBQT Objects */
-   DATA   qLeftArea
-   DATA   qMidArea
-   DATA   qRightArea
-   DATA   qLeftLayout
-   DATA   qMidLayout
-   DATA   qRightLayout
    DATA   qLayout
-   DATA   qSplitter
-   DATA   qSplitterL
-   DATA   qSplitterR
    DATA   qTabWidget
    DATA   qFindDlg
-   DATA   qSBLine
-   DATA   qSBCol
 
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
    ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 6 ], NIL )
@@ -142,10 +131,13 @@ CLASS HbIde
    DATA   oTBar
    DATA   oFont
    DATA   oProjTree
+   DATA   oEditTree
    DATA   oDockR
    DATA   oDockB
    DATA   oDockB1
    DATA   oDockB2
+   DATA   oDockPT
+   DATA   oDockED
    DATA   oFuncList
    DATA   oOutputResult
    DATA   oCompileResult
@@ -187,7 +179,7 @@ CLASS HbIde
    METHOD executeAction()
    METHOD buildTabPage()
    METHOD buildProjectTree()
-
+   METHOD buildEditorTree()
    METHOD manageFuncContext()
    METHOD manageProjectContext()
 
@@ -257,9 +249,6 @@ CLASS HbIde
    METHOD readProcessInfo()
    METHOD goto()
 
-   DATA   oMW
-   METHOD testBuildDialog()
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -286,6 +275,9 @@ METHOD HbIde:create( cProjIni )
 
    hbqt_errorsys()
 
+   /* It is my mother tongue but do not know how to check - Pritpal */
+   HbXbp_SetCodec( "Iscii-Pnj" )
+
    ::loadConfig( cProjIni )
 
    ::BuildDialog()
@@ -300,6 +292,7 @@ METHOD HbIde:create( cProjIni )
    ::qTabWidget := ::oDa:oTabWidget:oWidget
 
    ::buildProjectTree()
+   ::buildEditorTree()
    ::buildFuncList()
    ::buildBottomArea()
 
@@ -310,14 +303,7 @@ METHOD HbIde:create( cProjIni )
 
    ::oDa:oWidget:setLayout( ::qLayout )
 
-   ::qSplitter := QSplitter():new( ::oDa:oWidget )
-
-   ::qLayout:addWidget_1( ::qSplitter, 0, 0, 1, 1 )
-
-   ::qSplitter:addWidget( ::oProjTree:oWidget )
-   ::qSplitter:addWidget( ::oDa:oTabWidget:oWidget )
-
-   ::qSplitter:show()
+   ::qLayout:addWidget_1( ::oDa:oTabWidget:oWidget, 0, 0, 1, 1 )
 
    ::qCursor := QTextCursor():new()
 
@@ -331,7 +317,7 @@ METHOD HbIde:create( cProjIni )
 
    ::buildStatusBar()
 
-   ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
+   //::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
 
    ::findReplace( .f. )
 
@@ -934,8 +920,56 @@ METHOD HbIde:getCurrentTab()
 //                            Project Tree
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:buildEditorTree()
+
+   ::oDockED := XbpWindow():new( ::oDa )
+   ::oDockED:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDlg:addChild( ::oDockED )
+   ::oDockED:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
+   ::oDockED:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
+   ::oDockED:oWidget:setWindowTitle( "Editor Tabs" )
+   ::oDockED:oWidget:setFocusPolicy( Qt_NoFocus )
+
+   ::oEditTree := XbpTreeView():new()
+   ::oEditTree:hasLines   := .T.
+   ::oEditTree:hasButtons := .T.
+   ::oEditTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
+   ::oEditTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+
+   //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
+   ::oEditTree:itemMarked    := {|oItem| ::oCurProjItem := oItem, ::manageFocusInEditor() }
+   ::oEditTree:itemSelected  := {|oItem| ::manageItemSelected( oItem ) }
+   ::oEditTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
+
+   ::oOpenedSources := ::oEditTree:rootItem:addItem( "Editor" )
+
+   ::oOpenedSources:expand( .t. )
+
+   /* Insert Project Tree Into Dock Widget */
+   ::oDockED:oWidget:setWidget( ::oEditTree:oWidget )
+
+   /* Add dock widget to Main Window */
+   ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
+
+   IF ::aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
+      ::lProjTreeVisible := .f.
+      ::oDockED:hide()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildProjectTree()
    LOCAL i
+
+   ::oDockPT := XbpWindow():new( ::oDa )
+   ::oDockPT:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDlg:addChild( ::oDockPT )
+   ::oDockPT:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
+   ::oDockPT:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
+   ::oDockPT:oWidget:setWindowTitle( "Projects" )
+   ::oDockPT:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oProjTree := XbpTreeView():new()
    ::oProjTree:hasLines   := .T.
@@ -948,27 +982,28 @@ METHOD HbIde:buildProjectTree()
    ::oProjTree:itemSelected  := {|oItem| ::manageItemSelected( oItem ) }
    ::oProjTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
 
-   ::oProjTree:oWidget:setMaximumWidth( 200 )
-
-   ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
-
    ::oProjRoot      := ::oProjTree:rootItem:addItem( "Projects" )
-   ::oOpenedSources := ::oProjTree:rootItem:addItem( "Editor" )
 
    aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL, NIL } )
    aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL, NIL } )
    aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL, NIL } )
 
    ::oProjRoot:expand( .t. )
-
-   IF ::aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
-      ::lProjTreeVisible := .f.
-      ::oProjTree:hide()
-   ENDIF
-
+   //
    FOR i := 1 TO len( ::aProjects )
       ::appendProjectInTree( ::aProjects[ i, 3 ] )
    NEXT
+
+   /* Insert Project Tree Into Dock Widget */
+   ::oDockPT:oWidget:setWidget( ::oProjTree:oWidget )
+
+   /* Add dock widget to Main Window */
+   ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
+
+   IF ::aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
+      ::lProjTreeVisible := .f.
+      ::oDockPT:hide()
+   ENDIF
 
    RETURN Self
 
@@ -1255,16 +1290,18 @@ METHOD HbIde:buildDialog()
    ::oDlg:create()
    #endif
 
+   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
+
    ::setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
 
-   ::oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
+   ::oDlg:close := {|| MsgBox( "HbIDE is about to be closed!" ), .T. }
    ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
    ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//                          Function List
+//                            Function List
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildFuncList()
@@ -1274,9 +1311,7 @@ METHOD HbIde:buildFuncList()
    ::oDlg:addChild( ::oDockR )
    ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oDockR:oWidget:setWindowTitle( "Module Function List" )
-   ::oDockR:oWidget:setMinimumWidth( 100 )
-   ::oDockR:oWidget:setMaximumWidth( 150 )
+   ::oDockR:oWidget:setWindowTitle( "Functions List" )
    ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
@@ -1291,7 +1326,7 @@ METHOD HbIde:buildFuncList()
 
    ::oDockR:oWidget:setWidget( ::oFuncList:oWidget )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockR:oWidget, Qt_Horizontal )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockR:oWidget, Qt_Vertical )
 
    IF ::aIni[ INI_HBIDE, FunctionListVisible ] == "YES"
       ::lDockRVisible := .t.
@@ -1311,9 +1346,6 @@ METHOD HbIde:updateFuncList()
    ::oFuncList:clear()
    IF !empty( ::aTags )
       aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
-   ELSE
-      ::lDockRVisible := .f.
-      ::oDockR:hide()
    ENDIF
 
    RETURN Self
@@ -1412,14 +1444,12 @@ METHOD HbIde:buildCompileResults()
    ::oDockB:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
    ::oDockB:oWidget:setWindowTitle( "Compile Results" )
-   ::oDockB:oWidget:setMinimumHeight(  75 )
-   ::oDockB:oWidget:setMaximumHeight( 100 )
    ::oDockB:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oCompileResult := XbpMLE():new( ::oDockB ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oDockB:oWidget:setWidget( ::oCompileResult:oWidget )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB:oWidget, Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB:oWidget, Qt_Horizontal )
    ::oDockB:hide()
 
    RETURN Self
@@ -1434,14 +1464,12 @@ METHOD HbIde:buildLinkResults()
    ::oDockB1:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB1:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
    ::oDockB1:oWidget:setWindowTitle( "Link Results" )
-   ::oDockB1:oWidget:setMinimumHeight(  75 )
-   ::oDockB1:oWidget:setMaximumHeight( 100 )
    ::oDockB1:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oLinkResult := XbpMLE():new( ::oDockB1 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
    ::oDockB1:oWidget:setWidget( ::oLinkResult:oWidget )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB1:oWidget, Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB1:oWidget, Qt_Horizontal )
    ::oDockB1:hide()
 
    RETURN Self
@@ -1456,8 +1484,6 @@ METHOD HbIde:buildOutputResults()
    ::oDockB2:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
    ::oDockB2:oWidget:setWindowTitle( "Output Console" )
-   ::oDockB2:oWidget:setMinimumHeight(  75 )
-   ::oDockB2:oWidget:setMaximumHeight( 100 )
    ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
@@ -1466,7 +1492,7 @@ METHOD HbIde:buildOutputResults()
 
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
    ::oDockB2:hide()
 
    RETURN Self
@@ -1598,7 +1624,6 @@ METHOD HbIde:executeAction( cKey )
       ::lDockRVisible := !( ::lDockRVisible )
 
    CASE cKey == "Compile"
-      ::testBuildDialog()
 
    CASE cKey == "CompilePPO"
 
@@ -2179,40 +2204,7 @@ METHOD HbIde:goto()
    ENDIF
    ::qCurEdit:setTextCursor( qCursor )
 
-
    RETURN nLine
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:testBuildDialog()
-   LOCAL oUI
-   //LOCAL mp1, mp2, oXbp, nEvent
-
-   oUI := XbpQtUiLoader():new()
-   oUI:file := s_resPath + "mainWindow.ui"
-   oUI:create()
-
-   ::oMW := XbpDialog():new()
-   ::oMW:hbCreateFromQtPtr( , , , , , , oUI:oWidget:pPtr )
-   ::oMW:show()
-
-   #if 0
-   DO WHILE .t.
-      nEvent := AppEvent( @mp1, @mp2, @oXbp )
-
-      IF nEvent == xbeP_Keyboard
-         DO CASE
-
-         CASE mp1 == xbeK_ESC
-            EXIT
-
-         ENDCASE
-      ENDIF
-
-      oXbp:handleEvent( nEvent, mp1, mp2 )
-   ENDDO
-   #endif
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/

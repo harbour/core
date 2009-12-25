@@ -136,6 +136,17 @@ FUNCTION GetStyleSheet( cWidget )
              "           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));" +;
              "}"
 
+   CASE cWidget == "QMainWindow"
+
+      s +=   "QMainWindow::separator {"                                               +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
+             "       stop: 0 rgba(123, 123, 123, 255), stop:1 rgba(255, 255, 255, 255));" +;
+             "    width: 6px; /* when vertical */"                                    +;
+             "    height: 6px; /* when horizontal */"                                 +;
+             "}"                                                                      +;
+             "QMainWindow::separator:hover {"                                         +;
+             "    background: red;"                                                   +;
+             "}"
    ENDCASE
 
    RETURN s
