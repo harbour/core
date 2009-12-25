@@ -40,6 +40,7 @@ CPP_SOURCES := \
    QRectF.cpp \
    QRegExp.cpp \
    QResource.cpp \
+   QSettings.cpp \
    QSignalMapper.cpp \
    QSize.cpp \
    QSizeF.cpp \
@@ -91,6 +92,7 @@ PRG_SOURCES := \
    TQRectF.prg \
    TQRegExp.prg \
    TQResource.prg \
+   TQSettings.prg \
    TQSignalMapper.prg \
    TQSize.prg \
    TQSizeF.prg \

@@ -251,6 +251,7 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QScrollArea( n )                   ( ( QScrollArea                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QScrollBar( n )                    ( ( QScrollBar                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSessionManager( n )               ( ( QSessionManager             * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QSettings( n )                     ( ( QSettings                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSignalMapper( n )                 ( ( QSignalMapper               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSize( n )                         ( ( QSize                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSizeF( n )                        ( ( QSizeF                      * ) hbqt_gcpointer( n ) )

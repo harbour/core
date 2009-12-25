@@ -168,6 +168,7 @@ QResource.qth
 QScrollArea.qth
 QScrollBar.qth
 QSessionManager.qth
+QSettings.qth
 QSignalMapper.qth
 QSize.qth
 QSizeF.qth

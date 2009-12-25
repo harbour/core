@@ -248,6 +248,7 @@ CLASS HbIde
    METHOD buildProjectViaQt()
    METHOD readProcessInfo()
    METHOD goto()
+   METHOD setCodec()
 
    ENDCLASS
 
@@ -272,11 +273,9 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
+   //LOCAL qSet
 
    hbqt_errorsys()
-
-   /* It is my mother tongue but do not know how to check - Pritpal */
-   HbXbp_SetCodec( "Iscii-Pnj" )
 
    ::loadConfig( cProjIni )
 
@@ -320,6 +319,13 @@ METHOD HbIde:create( cProjIni )
    //::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
 
    ::findReplace( .f. )
+
+   #if 0
+   qSet := QSettings():new( "Harbour", "HbIde" )
+   IF !qSet:isNull()
+      ::oDlg:oWidget:restoreState( qSet:value( "state" ) )
+   ENDIF
+   #endif
 
    ::oDlg:Show()
 
@@ -411,7 +417,7 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:saveConfig()
-   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr
+   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qBArray, qSet
    LOCAL nTabs := ::qTabWidget:count()
 
    txt_:= {}
@@ -427,6 +433,14 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "GotoDialogGeometry     = " + ::aIni[ INI_HBIDE, GotoDialogGeometry  ] )
    aadd( txt_, "PropsDialogGeometry    = " + ::aIni[ INI_HBIDE, PropsDialogGeometry ] )
    aadd( txt_, "FindDialogGeometry     = " + ::aIni[ INI_HBIDE, FindDialogGeometry  ] )
+
+   qSet := QSettings():new( "Harbour", "HbIde" )
+   qSet:setValue( "state", ::oDlg:oWidget:saveState() )
+
+   qBArray := QByteArray()
+   qBArray:pPtr := ::oDlg:oWidget:saveState()
+HB_TRACE( HB_TR_ALWAYS, qBArray:size(), qBArray:constData(), qBArray:isNull(), len( qBArray:constData() ) )
+   aadd( txt_, "State                  = " + qBArray:data_1() )
    aadd( txt_, " " )
 
    //    Projects
@@ -924,6 +938,7 @@ METHOD HbIde:buildEditorTree()
 
    ::oDockED := XbpWindow():new( ::oDa )
    ::oDockED:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockED:oWidget:setObjectName( "dockEditorTabs" )
    ::oDlg:addChild( ::oDockED )
    ::oDockED:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockED:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
@@ -965,6 +980,7 @@ METHOD HbIde:buildProjectTree()
 
    ::oDockPT := XbpWindow():new( ::oDa )
    ::oDockPT:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockPT:oWidget:setObjectName( "dockProjectTree" )
    ::oDlg:addChild( ::oDockPT )
    ::oDockPT:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockPT:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
@@ -1220,6 +1236,7 @@ METHOD HbIde:buildStatusBar()
    ::oSBar:addItem( "", , , , "Stream" ):oWidget:setMinimumWidth( 20 )
    ::oSBar:addItem( "", , , , "Edit"   ):oWidget:setMinimumWidth( 20 )
    ::oSBar:addItem( "", , , , "Search" ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Codec"  ):oWidget:setMinimumWidth( 20 )
 
    RETURN Self
 
@@ -1238,17 +1255,13 @@ METHOD HbIde:dispEditInfo()
 
       s := "<b>Line "+ hb_ntos( ::qCursor:blockNumber()+1 ) + " of " + ;
                        hb_ntos( qDoc:blockCount() ) + "</b>"
-      ::oSBar:getItem( 3 ):caption := s
-
-      ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
-
-      ::oSBar:getItem( 5 ):caption := IIF( qEdit:overwriteMode(), " ", "Ins" )
-
-      ::oSBar:getItem( 7 ):caption := IIF( qDoc:isModified(), "Modified", " " )
-
-      ::oSBar:getItem( 9  ):caption := "Stream"
+      ::oSBar:getItem(  3 ):caption := s
+      ::oSBar:getItem(  4 ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
+      ::oSBar:getItem(  5 ):caption := IIF( qEdit:overwriteMode(), " ", "Ins" )
+      ::oSBar:getItem(  7 ):caption := IIF( qDoc:isModified(), "Modified", " " )
+      ::oSBar:getItem(  9 ):caption := "Stream"
       ::oSBar:getItem( 10 ):caption := "Edit"
-      ::oSBar:getItem( 1  ):caption := "Success"
+      ::oSBar:getItem(  1 ):caption := "Success"
 
    ELSE
       ::oSBar:getItem(  2 ):caption := " "
@@ -1259,6 +1272,7 @@ METHOD HbIde:dispEditInfo()
       ::oSBar:getItem(  7 ):caption := " "
       ::oSBar:getItem(  8 ):caption := " "
       ::oSBar:getItem(  9 ):caption := " "
+      ::oSBar:getItem( 10 ):caption := " "
       ::oSBar:getItem( 10 ):caption := " "
       ::oSBar:getItem(  1 ):caption := " "
 
@@ -1308,6 +1322,7 @@ METHOD HbIde:buildFuncList()
 
    ::oDockR := XbpWindow():new( ::oDa )
    ::oDockR:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockR:oWidget:setObjectName( "dockFuncList" )
    ::oDlg:addChild( ::oDockR )
    ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
@@ -1440,6 +1455,7 @@ METHOD HbIde:buildCompileResults()
 
    ::oDockB := XbpWindow():new( ::oDa )
    ::oDockB:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockB:oWidget:setObjectName( "dockCompileResults" )
    ::oDlg:addChild( ::oDockB )
    ::oDockB:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -1460,6 +1476,7 @@ METHOD HbIde:buildLinkResults()
 
    ::oDockB1 := XbpWindow():new( ::oDa )
    ::oDockB1:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockB1:oWidget:setObjectName( "dockLinkResults" )
    ::oDlg:addChild( ::oDockB1 )
    ::oDockB1:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB1:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -1480,6 +1497,7 @@ METHOD HbIde:buildOutputResults()
 
    ::oDockB2 := XbpWindow():new( ::oDa )
    ::oDockB2:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockB2:oWidget:setObjectName( "dockOutputResults" )
    ::oDlg:addChild( ::oDockB2 )
    ::oDockB2:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -2153,7 +2171,7 @@ METHOD HbIde:findReplace( lShow )
       ::oFR:signal( "buttonClose"  , "clicked()", ;
             {|| ::aIni[ INI_HBIDE, FindDialogGeometry ] := PosAndSize( ::oFR:oWidget ), ::oFR:hide() } )
 
-      ::oFR:signal( "comboFindWhat"   , "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
+      ::oFR:signal( "comboFindWhat", "currentIndexChanged(text)", {|o,p| o := o, ::oSBar:getItem( 11 ):caption := "FIND: " + p } )
 
       ::oFR:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ;
                                            ::oFR:qObj[ "comboReplaceWith" ]:setEnabled( p == 0 ), ;
@@ -2208,3 +2226,11 @@ METHOD HbIde:goto()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:setCodec( cCodec )
+
+   HbXbp_SetCodec( cCodec )
+   ::oSBar:getItem( 12 ):caption := cCodec
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/

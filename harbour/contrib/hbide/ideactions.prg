@@ -134,7 +134,7 @@ FUNCTION buildToolBar( oWnd, oIde )
 /*----------------------------------------------------------------------*/
 
 FUNCTION buildMainMenu( oWnd, oIde )
-   LOCAL oMenuBar, oSubMenu
+   LOCAL oMenuBar, oSubMenu, oSub1
 
    oMenuBar := oWnd:MenuBar()
 
@@ -159,7 +159,90 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:addItem( { "Save and Create PPO Output"   , {|| oIde:executeAction( "SavePPO"            ) } } )
    MenuAddSep( oSubMenu )
    oSubMenu:addItem( { "Project Properties"           , {|| oIde:executeAction( "Properties"         ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~CodePage"
+   oSubMenu:addItem( { "Apple Roman " , {|| oIde:setCodec( "Apple Roman" ) } } )
+   oSubMenu:addItem( { "Big5        " , {|| oIde:setCodec( "Big5"        ) } } )
+   oSubMenu:addItem( { "Big5-HKSCS  " , {|| oIde:setCodec( "Big5-HKSCS"  ) } } )
+   oSubMenu:addItem( { "CP949       " , {|| oIde:setCodec( "CP949"       ) } } )
+   oSubMenu:addItem( { "EUC-JP      " , {|| oIde:setCodec( "EUC-JP"      ) } } )
+   oSubMenu:addItem( { "EUC-KR      " , {|| oIde:setCodec( "EUC-KR"      ) } } )
+   oSubMenu:addItem( { "GB18030-0   " , {|| oIde:setCodec( "GB18030-0"   ) } } )
+   oSubMenu:addItem( { "IBM 850     " , {|| oIde:setCodec( "IBM 850"     ) } } )
+   oSubMenu:addItem( { "IBM 866     " , {|| oIde:setCodec( "IBM 866"     ) } } )
+   oSubMenu:addItem( { "IBM 874     " , {|| oIde:setCodec( "IBM 874"     ) } } )
+   oSubMenu:addItem( { "ISO 2022-JP " , {|| oIde:setCodec( "ISO 2022-JP" ) } } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "ISO 8859-1 to 10"
+   oSub1:addItem( { "-1"  , {|| oIde:setCodec( "ISO 8859-1"  ) } } )
+   oSub1:addItem( { "-2"  , {|| oIde:setCodec( "ISO 8859-2"  ) } } )
+   oSub1:addItem( { "-3"  , {|| oIde:setCodec( "ISO 8859-3"  ) } } )
+   oSub1:addItem( { "-4"  , {|| oIde:setCodec( "ISO 8859-4"  ) } } )
+   oSub1:addItem( { "-5"  , {|| oIde:setCodec( "ISO 8859-5"  ) } } )
+   oSub1:addItem( { "-6"  , {|| oIde:setCodec( "ISO 8859-6"  ) } } )
+   oSub1:addItem( { "-7"  , {|| oIde:setCodec( "ISO 8859-7"  ) } } )
+   oSub1:addItem( { "-8"  , {|| oIde:setCodec( "ISO 8859-8"  ) } } )
+   oSub1:addItem( { "-9"  , {|| oIde:setCodec( "ISO 8859-9"  ) } } )
+   oSub1:addItem( { "-10" , {|| oIde:setCodec( "ISO 8859-10" ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "ISO 8859-13 to 16"
+   oSub1:addItem( { "-13" , {|| oIde:setCodec( "ISO 8859-13" ) } } )
+   oSub1:addItem( { "-14" , {|| oIde:setCodec( "ISO 8859-14" ) } } )
+   oSub1:addItem( { "-15" , {|| oIde:setCodec( "ISO 8859-15" ) } } )
+   oSub1:addItem( { "-16" , {|| oIde:setCodec( "ISO 8859-16" ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   //oSubMenu:addItem( { "Iscii       " , {|| oIde:setCodec( "Iscii" ) } } )  //-Bng, Dev, Gjr, Knd, Mlm, Ori, Pnj, Tlg, Tml
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "Iscii"
+   oSub1:addItem( { "-Bng" , {|| oIde:setCodec( "Iscii-Bng" ) } } )
+   oSub1:addItem( { "-Dev" , {|| oIde:setCodec( "Iscii-Dev" ) } } )
+   oSub1:addItem( { "-Gjr" , {|| oIde:setCodec( "Iscii-Gjr" ) } } )
+   oSub1:addItem( { "-Knd" , {|| oIde:setCodec( "Iscii-Knd" ) } } )
+   oSub1:addItem( { "-Mlm" , {|| oIde:setCodec( "Iscii-Mlm" ) } } )
+   oSub1:addItem( { "-Ori" , {|| oIde:setCodec( "Iscii-Ori" ) } } )
+   oSub1:addItem( { "-Pnj" , {|| oIde:setCodec( "Iscii-Pnj" ) } } )
+   oSub1:addItem( { "-Tlg" , {|| oIde:setCodec( "Iscii-Tlg" ) } } )
+   oSub1:addItem( { "-Tml" , {|| oIde:setCodec( "Iscii-Tml" ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSubMenu:addItem( { "JIS X 0201  " , {|| oIde:setCodec( "JIS X 0201"  ) } } )
+   oSubMenu:addItem( { "JIS X 0208  " , {|| oIde:setCodec( "JIS X 0208"  ) } } )
+   oSubMenu:addItem( { "KOI8-R      " , {|| oIde:setCodec( "KOI8-R"      ) } } )
+   oSubMenu:addItem( { "KOI8-U      " , {|| oIde:setCodec( "KOI8-U"      ) } } )
+   oSubMenu:addItem( { "MuleLao-1   " , {|| oIde:setCodec( "MuleLao-1"   ) } } )
+   oSubMenu:addItem( { "ROMAN8      " , {|| oIde:setCodec( "ROMAN8"      ) } } )
+   oSubMenu:addItem( { "Shift-JIS   " , {|| oIde:setCodec( "Shift-JIS"   ) } } )
+   oSubMenu:addItem( { "TIS-620     " , {|| oIde:setCodec( "TIS-620"     ) } } )
+   oSubMenu:addItem( { "TSCII       " , {|| oIde:setCodec( "TSCII"       ) } } )
+   oSubMenu:addItem( { "UTF-8       " , {|| oIde:setCodec( "UTF-8"       ) } } )
+   oSubMenu:addItem( { "UTF-16      " , {|| oIde:setCodec( "UTF-16"      ) } } )
+   oSubMenu:addItem( { "UTF-16BE    " , {|| oIde:setCodec( "UTF-16BE"    ) } } )
+   oSubMenu:addItem( { "UTF-16LE    " , {|| oIde:setCodec( "UTF-16LE"    ) } } )
+   oSubMenu:addItem( { "UTF-32      " , {|| oIde:setCodec( "UTF-32"      ) } } )
+   oSubMenu:addItem( { "UTF-32BE    " , {|| oIde:setCodec( "UTF-32BE"    ) } } )
+   oSubMenu:addItem( { "UTF-32LE    " , {|| oIde:setCodec( "UTF-32LE"    ) } } )
+
+   //oSubMenu:addItem( { "Windows     " , {|| oIde:setCodec( "Windows"     ) } } )  //-1250 to 1258
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "Windows-1250 to 1258"
+   oSub1:addItem( { "-1250" , {|| oIde:setCodec( "Windows-1250" ) } } )
+   oSub1:addItem( { "-1251" , {|| oIde:setCodec( "Windows-1251" ) } } )
+   oSub1:addItem( { "-1252" , {|| oIde:setCodec( "Windows-1252" ) } } )
+   oSub1:addItem( { "-1253" , {|| oIde:setCodec( "Windows-1253" ) } } )
+   oSub1:addItem( { "-1254" , {|| oIde:setCodec( "Windows-1254" ) } } )
+   oSub1:addItem( { "-1255" , {|| oIde:setCodec( "Windows-1255" ) } } )
+   oSub1:addItem( { "-1256" , {|| oIde:setCodec( "Windows-1256" ) } } )
+   oSub1:addItem( { "-1257" , {|| oIde:setCodec( "Windows-1257" ) } } )
+   oSub1:addItem( { "-1258" , {|| oIde:setCodec( "Windows-1258" ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSubMenu:addItem( { "WINSAMI2    " , {|| oIde:setCodec( "WINSAMI2"    ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return Nil

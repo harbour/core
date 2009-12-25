@@ -336,8 +336,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setShortcut( oKey )
       ENDIF
 
-      ::Connect( oAction:pPtr, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      ::Connect( oAction:pPtr, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
@@ -474,11 +474,15 @@ METHOD xbpMenuBar:exeBlock( nMenuItemID )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:exeHovered( nMenuItemID )
-   LOCAL nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == nMenuItemID } )
+   LOCAL nIndex
 
-   IF nIndex > 0
-      IF hb_isBlock( ::sl_itemMarked )
-         eval( ::sl_itemMarked, nIndex, NIL, Self )
+   IF !empty( nMenuItemID )
+      nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == nMenuItemID, .f. ) } )
+
+      IF nIndex > 0
+         IF hb_isBlock( ::sl_itemMarked )
+            eval( ::sl_itemMarked, nIndex, NIL, Self )
+         ENDIF
       ENDIF
    ENDIF
    RETURN nil
