@@ -53,6 +53,7 @@
  */
 
 #include "ct.h"
+#include "ctmath.h"
 
 /* ---------------- */
 /*  initialization  */

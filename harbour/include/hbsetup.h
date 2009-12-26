@@ -469,7 +469,7 @@
 /* ***********************************************************************
  * See also the following files for task specific definitions/settings
  *
- * hbmath.h    - math errors handling
+ * hbmather.h    - math errors handling
  */
 
 /* ***********************************************************************

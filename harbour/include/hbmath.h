@@ -54,89 +54,17 @@
 #ifndef HB_MATH_H_
 #define HB_MATH_H_
 
-#include "hbapi.h"
-
 #if defined( __DJGPP__ )
 #include <libm/math.h>
 #else
 #include <math.h>
 #endif
 
-HB_EXTERN_BEGIN
-
-#if defined( __WATCOMC__ )
-   #define HB_MATH_HANDLER
-   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
-      #define exception _exception
-   #endif
-#elif defined( __BORLANDC__ )
-   #if ( __BORLANDC__ == 1328 ) && defined( __cplusplus )
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if ( __BORLANDC__ >= 1360 )
-         #define exception _exception
-      #endif
-   #endif
-#elif defined( __MINGW32CE__ )
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-/* it seems that MinGW has some problem with MATH HANDLER
-   use HB_MATH_ERRNO instead */
-#elif defined( __MINGW32__ ) && 0
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-#elif defined( __DJGPP__ )
-   #if !defined( __cplusplus )
-      #define HB_MATH_HANDLER
-   #endif
-#elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
-   /* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL)
-            in '-Tarm-coff' mode. [vszakats] */
+/* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL)
+         in '-Tarm-coff' mode. [vszakats] */
+#if defined( __POCC__ ) && defined( HB_OS_WIN_CE )
    #undef HUGE_VAL
    #define HUGE_VAL   ( 1.0 / ( 1.0, 0.0 ) )
 #endif
-
-#if !defined( HB_MATH_HANDLER ) && \
-    ( defined( __GNUC__ ) || defined( HB_OS_UNIX ) )
-   #define HB_MATH_ERRNO
-#endif
-
-typedef struct _HB_MATH_EXCEPTION
-{
-   int            type;
-   const char *   funcname;
-   const char *   error;
-   double         arg1;
-   double         arg2;
-   double         retval;
-   int            retvalwidth;
-   int            retvaldec;
-   int            handled;
-} HB_MATH_EXCEPTION;
-
-typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
-
-extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
-extern HB_EXPORT BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
-
-extern HB_EXPORT int hb_mathSetErrMode( int imode );
-extern HB_EXPORT int hb_mathGetErrMode( void );
-
-extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc );
-extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathGetHandler( void );
-
-extern HB_EXPORT double hb_random_num( void );
-
-/* include defines from hbmath.ch */
-#include "hbmath.ch"
-
-HB_EXTERN_END
 
 #endif /* HB_MATH_H_ */

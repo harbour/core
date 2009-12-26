@@ -61,10 +61,8 @@
 #include "hbapicdp.h"
 #include "hbapierr.h"
 #include "error.ch"
-#include "hbmath.h"
 
 #include "ctstr.h"
-#include "ctmath.h"
 #include "ctset.h"
 
 #include "cterror.ch"

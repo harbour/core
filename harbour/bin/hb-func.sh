@@ -789,7 +789,7 @@ EOF
 
 mk_hblibso()
 {
-    local LIBS LIBSMT l lm ll dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options linker_mtoptions gpm lib_ext lib_pref lib_suff
+    local LIBS LIBSMT l lm ll ld dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options linker_mtoptions gpm lib_ext lib_pref lib_suff
 
     dir=`pwd`
     name=`get_solibname`
@@ -874,10 +874,10 @@ mk_hblibso()
                     elif [ "${l}" = gtsln ]; then
                         linker_options="$linker_options -lslang"
                     elif [ "${l}" = gtxwc ]; then
-                        [ -d "/usr/X11R6/lib" ] && \
-                           linker_options="$linker_options -L/usr/X11R6/lib"
                         [ -d "/usr/X11R6/lib64" ] && \
                            linker_options="$linker_options -L/usr/X11R6/lib64"
+                        [ -d "/usr/X11R6/lib" ] && \
+                           linker_options="$linker_options -L/usr/X11R6/lib"
                         linker_options="$linker_options -lX11"
                     fi
                     if [ -n "${gpm}" ] && ( [ "${l}" = gtcrs ] || \
@@ -937,14 +937,24 @@ mk_hblibso()
                         ln -sf ${name}/$l ../$ll
                         ln -sf ${name}/$l ../$l
                         ;;
-                    /usr/local/${name})
-                        mkdir -p ../../lib
-                        ln -sf ../${name}/lib/$l ../../lib/$ll
-                        ln -sf ../${name}/lib/$l ../../lib/$l
+                    /usr/local/${name}/lib)
+                        ld="/usr/lib"
+                        if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
+                        then
+                            mkdir -p ${HB_INST_PKGPREF}$ld
+                            ln -sf ../local/${name}/lib/$l ${HB_INST_PKGPREF}$ld/$ll
+                            ln -sf ../local/${name}/lib/$l ${HB_INST_PKGPREF}$ld/$l
+                        fi
                         ;;
                     *)
                         ;;
                 esac
+                ld="/etc/ld.so.conf.d"
+                if [ -d $ld ] && ( [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ] )
+                then
+                    mkdir -p ${HB_INST_PKGPREF}$ld
+                    echo "$HB_LIB_INSTALL" > ${HB_INST_PKGPREF}/$ld/${name}.conf
+                fi
             fi
         fi
     done

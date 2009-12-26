@@ -59,7 +59,6 @@
 #include "hbapilng.h"
 #include "hbset.h"
 #include "hbdate.h"
-#include "hbmath.h"
 #include "hbsxfunc.h"
 #include "hbstack.h"
 #include "hbvm.h"

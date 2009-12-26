@@ -50,12 +50,11 @@
  *
  */
 
-#include "hbmath.h"
+#include "hbapi.h"
 #include "hbdate.h"
 
 #include <stdlib.h>
-
-#if !defined( HB_OS_WIN )
+#if !defined( HB_OS_WIN )     /* for DBL_EPSILON */
    #include <float.h>
 #endif
 
@@ -141,6 +140,7 @@ double hb_random_num()
    d1 = ( double ) rand();
    d2 = ( double ) RAND_MAX;
 #if defined( HB_OS_WIN )
+   /* TOFIX: it breaks the range of random values */
    /* It seems that on Windows platform there some weirdness about EPSILON value so
       that a float division using an epsilon smaller than 1e-10 may be rounded.
       Must dig if it's a borland lib bug or a windows problem.

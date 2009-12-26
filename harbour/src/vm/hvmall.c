@@ -79,6 +79,9 @@
  * due to macros used to overload some functions
  */
 
+#include "hbvmopt.h"
+#include "hbfloat.h"
+
 #include "hvm.c"
 #include "itemapi.c"
 #include "hashes.c"

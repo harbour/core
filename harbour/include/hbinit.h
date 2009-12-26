@@ -121,6 +121,12 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
+   #if defined( _M_COFF )
+      #define HB_STARTUP_INITSEGMENT   ".init, \"x\""
+   #else
+      #define HB_STARTUP_INITSEGMENT   ".init"
+   #endif
+
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {
 
@@ -140,9 +146,13 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       } \
       HB_INIT_FUNCTION_REF( func ) \
       HB_EXTERN_END \
-      asm ( ".section .init\n\tcall " HB_MACRO2STRING( func ) "\n\t.section .text\n\t" );
+      asm ( ".section " HB_STARTUP_INITSEGMENT \
+            "\n\tcall " HB_MACRO2STRING( func ) \
+            "\n\t.section .text\n\t" );
 
-
+   /* TODO: if possible use other way without public symbols to mark function
+    *       as used so it's not removed by C compiler optimization logic
+    */
    #define HB_INIT_FUNCTION_REF( func )    \
       extern void * func##_ref_( void ); \
       void * func##_ref_( void ) \

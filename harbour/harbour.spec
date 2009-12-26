@@ -43,31 +43,32 @@
 %endif
 %endif
 
+%define hb_ldconf %([ -d /etc/ld.so.conf.d ] && echo /etc/ld.so.conf.d)
 
-%define name     harbour
-%define dname    Harbour
-%define version  2.0.1
-%define releasen dev
-%define hb_pref  hb
+%define name      harbour
+%define dname     Harbour
+%define version   2.0.1
+%define releasen  dev
+%define hb_pref   hb
 %define hb_etcdir /etc/%{name}
-%define hb_plat  export HB_PLATFORM=linux
-%define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export HB_USER_CFLAGS=
-%define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
-%define hb_gpm   export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
-%define hb_crs   export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
-%define hb_sln   export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
-%define hb_x11   export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
-%define hb_local export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
-%define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
-%define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
-%define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
-%define hb_edir  export HB_ETC_INSTALL=%{hb_etcdir}
-%define hb_cmrc  export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql hbnf %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_firebird:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
-%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
-%define hb_host  www.harbour-project.org
-%define readme   README.RPM
+%define hb_plat   export HB_PLATFORM=linux
+%define hb_cc     export HB_COMPILER=gcc
+%define hb_cflag  export HB_USER_CFLAGS=
+%define hb_lflag  export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
+%define hb_gpm    export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
+%define hb_crs    export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
+%define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
+%define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
+%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_bdir   export HB_BIN_INSTALL=%{_bindir}
+%define hb_idir   export HB_INC_INSTALL=%{_includedir}/%{name}
+%define hb_ldir   export HB_LIB_INSTALL=%{_libdir}/%{name}
+%define hb_edir   export HB_ETC_INSTALL=%{hb_etcdir}
+%define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
+%define hb_ctrb   export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql hbnf %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_firebird:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
+%define hb_host   www.harbour-project.org
+%define readme    README.RPM
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -616,6 +617,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
 %{_libdir}/*.so
+%{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %{?_with_curl:%files curl}
 %{?_with_curl:%defattr(644,root,root,755)}

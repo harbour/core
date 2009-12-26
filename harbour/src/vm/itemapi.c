@@ -86,7 +86,9 @@
  */
 
 #include "hbvmopt.h"
-#include "hbapi.h"
+/* hbfloat.h have to be included before other header files */
+#include "hbfloat.h"
+
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbapicls.h"
@@ -95,15 +97,7 @@
 #include "hbapierr.h"
 #include "hbdate.h"
 #include "hbset.h"
-#include "hbmath.h"
 #include "hbapicdp.h"
-
-#if defined( HB_OS_SUNOS )
-#  include <ieeefp.h>
-#elif defined( _MSC_VER ) || defined( __BORLANDC__ ) || \
-      defined( __WATCOMC__ ) || defined( __IBMCPP__ )
-#  include <float.h>  /* for _finite() and _isnan() */
-#endif
 
 PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {
@@ -2244,41 +2238,7 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
    {
       double dNumber = hb_itemGetND( pNumber );
 
-/* TODO: look if finite()/_finite() or isinf()/_isinf and isnan()/_isnan
-   does exist for your compiler and add this to the check below */
-
-#if defined( __RSXNT__ ) || defined( __EMX__ ) || \
-    defined( __XCC__ ) || defined( __POCC__ ) || \
-    defined( __MINGW32__ ) || defined( HB_OS_HPUX )
-#  define HB_FINITE_DBL(d)    ( isfinite(d)!=0 )
-#elif defined( __WATCOMC__ ) || defined( __BORLANDC__ ) || defined( _MSC_VER )
-#  define HB_FINITE_DBL(d)    ( _finite(d)!=0 )
-#elif defined( __GNUC__ ) || defined( __DJGPP__ ) || defined( __LCC__ ) || \
-      defined( HB_OS_SUNOS )
-#  define HB_FINITE_DBL(d)    ( finite(d)!=0 )
-#else
-      int iTODO;
-
-      /* added infinity check for Borland C [martin vogel] */
-      /* Borland C 5.5 has _finite() function, if it's necessary
-         we can reenable this code for older DOS BCC versions
-         Now this code is for generic C compilers undefined above
-         [druzus] */
-      static BOOL s_bInfinityInit = FALSE;
-      static double s_dInfinity = 0;
-
-      if( ! s_bInfinityInit )
-      {
-         /* set math handler to NULL for evaluating log(0),
-            to avoid error messages [martin vogel]*/
-         HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL);
-         s_dInfinity = -log( ( double ) 0 );
-         hb_mathSetHandler (fOldMathHandler);
-         s_bInfinityInit = TRUE;
-      }
-#  define HB_FINITE_DBL(d)    ( (d) != s_dInfinity && (d) != -s_dInfinity )
-#endif
-      if( pNumber->item.asDouble.length == 99 || !HB_FINITE_DBL( dNumber ) )
+      if( pNumber->item.asDouble.length == 99 || !hb_isfinite( dNumber ) )
       {
          /* Numeric overflow */
          iPos = -1;

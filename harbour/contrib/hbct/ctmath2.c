@@ -64,6 +64,8 @@
 
 
 #include "ct.h"
+#include "ctmath.h"
+#include "hbmather.h"
 
 
 /*  $DOC$

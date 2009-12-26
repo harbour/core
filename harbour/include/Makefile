@@ -21,6 +21,7 @@ C_HEADERS := \
    hbassert.h \
    hbatomic.h \
    hbbfish.h \
+   hbfloat.h \
    hbcdpreg.h \
    hbchksum.h \
    hbcomp.h \
@@ -39,6 +40,7 @@ C_HEADERS := \
    hbinit.h \
    hbmacro.h \
    hbmath.h \
+   hbmather.h \
    hbmsgreg.h \
    hbpcode.h \
    hbpp.h \

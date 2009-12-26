@@ -2484,6 +2484,9 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
       if( err > 0 )
       {
          mreq.ipv6mr_interface = 0;
+#if !defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
+#  define IPV6_JOIN_GROUP  IPV6_ADD_MEMBERSHIP
+#endif
          ret = setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
          hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
          return ret;

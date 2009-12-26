@@ -63,7 +63,8 @@
 
 
 #include "ct.h"
-
+#include "ctmath.h"
+#include <float.h>
 
 /*  $DOC$
  *  $FUNCNAME$

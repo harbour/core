@@ -55,25 +55,20 @@
  *
  */
 
-#if defined( __DJGPP__ )
-#   include <libm/math.h>
-_LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
-#else
-#   include <math.h>
-#endif
-
-#include "hbapi.h"
+/* hbfloat.h have to be included first */
+#include "hbfloat.h"
+#include "hbmather.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
 #include "hbstack.h"
-#include "hbmath.h"
+
+#if defined( __DJGPP__ )
+_LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
+#endif
 
 #if defined( HB_MATH_ERRNO )
 #   include <errno.h>
-#endif
-#if defined( HB_OS_SUNOS )
-#   include <ieeefp.h>
 #endif
 
 typedef struct
@@ -312,7 +307,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
 {
 #if defined( HB_MATH_ERRNO )
 
-   int errCode;
+   int errCode, v;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathGetError(%p,%s,%lf,%lf,%lf)", phb_exc, szFunc, arg1, arg2, dResult ) );
 
@@ -329,15 +324,10 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
          break;
 
       default:
-         if( isnan( dResult ) )
+         HB_NUMTYPE( v, dResult );
+         if( ( v & _HB_NUM_NAN ) != 0 )
             errCode = EDOM;
-#   if defined( HB_OS_SUNOS )
-         else if( !finite( dResult ) )
-#   elif defined( HB_OS_OS2 )
-         else if( !isfinite( dResult ) )
-#   else
-         else if( isinf( dResult ) )
-#   endif
+         else if( ( v & ( _HB_NUM_NINF | _HB_NUM_PINF ) ) != 0 )
             errCode = ERANGE;
          else
             errCode = errno;

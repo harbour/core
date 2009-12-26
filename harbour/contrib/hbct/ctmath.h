@@ -55,10 +55,12 @@
 #define _CTMATH_H
 
 #include "hbmath.h"
-#include <float.h>
-#include <limits.h>
 
 HB_EXTERN_BEGIN
+
+#define CT_PI     3.14159265358979323846
+#define CT_PI_2   1.57079632679489661923
+#define CT_PI_RAD 0.0174532925199432957692   /* 3.14159265358979323846 / 180.0 */
 
 /* initialization */
 extern int ct_math_init( void );
@@ -67,10 +69,6 @@ extern int ct_math_exit( void );
 /* set & get precision */
 extern void ct_setprecision( int iPrecision );
 extern int ct_getprecision( void );
-
-#define CT_PI     3.14159265358979323846
-#define CT_PI_2   1.57079632679489661923
-#define CT_PI_RAD 0.0174532925199432957692   /* 3.14159265358979323846 / 180.0 */
 
 HB_EXTERN_END
 

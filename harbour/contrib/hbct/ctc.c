@@ -54,6 +54,7 @@
 
 
 #include "ct.h"
+#include "ctmath.h"
 #include "hbvm.h"
 #include "hbstack.h"
 

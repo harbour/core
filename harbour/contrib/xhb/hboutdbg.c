@@ -64,8 +64,6 @@
 
 #if defined( HB_OS_UNIX )
 
-#include "hbmath.h"
-
 #include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>

@@ -86,40 +86,16 @@ allocations or stack size is not a problem then some parts can be easy
 optimized.
 */
 
+
 /* #define __NO_DOUBLE__ */
 /* #define __NO_LONGDOUBLE__ */
 /* #define __NO_LONGLONG__ */
 /* #define __NO_ARGPOS__ */
 
-#ifndef _GNU_SOURCE
-#  define _GNU_SOURCE
-#endif
 
-#ifndef __EXTENSIONS__
-#  define __EXTENSIONS__
-#endif
-
-/* workaround for some missing C99 math macros in SunOS GCC
- * used in C++ mode
- */
-#if !defined( __C99FEATURES__ ) && defined( __GNUC__ ) && defined( __sun__ )
-#  define __C99FEATURES__
-#endif
-
+/* hbfloat.h have to be included first */
+#include "hbfloat.h"
 #include <stddef.h>
-
-#include "hbapi.h"
-#include "hbmath.h"
-
-#if ! defined( HB_USE_CRTL_SNPRINTF )
-
-#if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
-#  include <float.h>
-#elif defined( __DJGPP__ )
-   /* _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_; */
-#elif defined( HB_OS_SUNOS )
-#  include <ieeefp.h>    /* for finite() */
-#endif
 
 #if defined( HB_LONG_DOUBLE_OFF ) && !defined( __NO_LONGDOUBLE__ )
 #  define __NO_LONGDOUBLE__
@@ -129,31 +105,10 @@ optimized.
 #  define __NO_LONGLONG__
 #endif
 
-#ifndef va_copy
-#  ifdef __va_copy
-#     define va_copy( dst, src )    __va_copy( dst, src )
-#  else
-#     define va_copy( dst, src )    ( (dst) = (src) )
-#  endif
-#endif
+
+#if ! defined( HB_USE_CRTL_SNPRINTF )
 
 /* few macros for some platform dependent floating point functions/macros */
-
-#define _HB_NUM_NAN     1
-#define _HB_NUM_PINF    2
-#define _HB_NUM_NINF    4
-
-#if defined( __BORLANDC__ ) && 0
-   /* do not use Borland C _fpclass[l]() function.
-    * it switches internal logic used for floating point calculation
-    * in this compiler reducing the precision to 'float' type.
-    */
-#  ifdef __NO_LONGDOUBLE__
-#     define hb_fpclassify( d )     _fpclass( d )
-#  else
-#     define hb_fpclassify( d )     _fpclassl( d )
-#  endif
-#endif
 
 #if ( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 ) || \
@@ -170,89 +125,13 @@ optimized.
 #  define uintmax_t     _x_ulonglong
 #endif
 
-/* signbit() needs _GNU_SOURCE defined. If it's not available on given
- * platform then it can be replaced by 'value < 0' but in such case
- * -0.0 will be shown as 0.0
- */
-#if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 )
-   /* use C99 macros */
-#  define hb_signbit( d )     signbit( d )
 
-#elif defined( __BORLANDC__ ) && defined( hb_fpclassify )
-
-#  define hb_signbit( d )     ( ( hb_fpclassify( d ) & ( _FPCLASS_NINF | _FPCLASS_NZ ) ) != 0 )
-
-#elif 0 /* TODO: add other C compilers here (check their version number) */
-#else
-
-#  define hb_signbit( d )     ( d < 0 )
-
-#endif
-
-
-#if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || defined( __MINGW32__ )
-
-   /* use C99 macros */
-#  define HB_NUMTYPE( v, d )  do { \
-                                 v = ( isfinite( d ) ? 0 : \
-                                       ( isnan( d ) ? _HB_NUM_NAN : \
-                                         ( isinf( d ) < 0 ? _HB_NUM_NINF : \
-                                           _HB_NUM_PINF ) ) ); \
-                              } while( 0 )
-
-#elif ( defined( __GNUC__ ) || \
-        defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
-      ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
-        defined( _XOPEN_SOURCE ) )
-
-   /* use BSD floating point functions */
-#  if defined( __NO_LONGDOUBLE__ ) || defined( HB_OS_SUNOS )
-#     define HB_NUMTYPE( v, d )  do { \
-                                    v = ( finite( d ) ? 0 : \
-                                          ( isnan( d ) ? _HB_NUM_NAN : \
-                                            ( isinf( d ) < 0 ? _HB_NUM_NINF : \
-                                              _HB_NUM_PINF ) ) ); \
-                                 } while( 0 )
+#ifndef va_copy
+#  ifdef __va_copy
+#     define va_copy( dst, src )    __va_copy( dst, src )
 #  else
-#     define HB_NUMTYPE( v, d )  do { \
-                                    v = ( finitel( d ) ? 0 : \
-                                          ( isnanl( d ) ? _HB_NUM_NAN : \
-                                            ( isinfl( d ) < 0 ? _HB_NUM_NINF : \
-                                              _HB_NUM_PINF ) ) ); \
-                                 } while( 0 )
+#     define va_copy( dst, src )    ( (dst) = (src) )
 #  endif
-
-#elif defined( __BORLANDC__ ) && defined( hb_fpclassify )
-
-#  define HB_NUMTYPE( v, d )  do { \
-                                 int t = hb_fpclassify( d ); \
-                                 v = ( ( t & ( _FPCLASS_UNSUP | _FPCLASS_SNAN | _FPCLASS_QNAN ) ) ? _HB_NUM_NAN : \
-                                       ( ( t & _FPCLASS_NINF ) ? _HB_NUM_NINF : \
-                                         ( ( t & _FPCLASS_PINF ) ? _HB_NUM_PINF : 0 ) ) ); \
-                              } while( 0 )
-#elif 0 /* TODO: add other C compilers here (check their version number) */
-#else
-
-#  if defined( __RSXNT__ ) || defined( __EMX__ ) || \
-      defined( __XCC__ ) || defined( __POCC__ ) || \
-      defined( __MINGW32__ ) || defined( HB_OS_HPUX )
-#     define hb_isfinite( d )       isfinite( d )
-#  elif !defined( __NO_LONGDOUBLE__ ) && defined( __BORLANDC__ )
-#     define hb_isfinite( d )       _finitel( d )
-#  elif defined( _MSC_VER )
-#     define hb_isfinite( d )       _finite( ( double ) d )
-#  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ )
-#     define hb_isfinite( d )       _finite( d )
-#  elif defined( __GNUC__ ) || defined( __DJGPP__ ) || defined( __LCC__ )
-#     define hb_isfinite( d )       finite( d )
-#  else
-#     define hb_isfinite( d )       FALSE
-#  endif
-
-#  define HB_NUMTYPE( v, d )  do { \
-                                 v = hb_isfinite( d ) ? 0 : _HB_NUM_NAN ; \
-                              } while( 0 )
-
 #endif
 
 
@@ -1073,10 +952,17 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                   case 'f':   /* double decimal notation */
                   case 'F':   /* double decimal notation */
                      if( length == _L_LONGDOUBLE_ )
+                     {
                         argval.value.as_x_long_dbl = va_arg_n( args, _x_long_dbl, param );
+                        HB_NUMTYPEL( value, argval.value.as_x_long_dbl );
+                     }
                      else
-                        argval.value.as_x_long_dbl = va_arg_n( args, _x_double, param );
-                     HB_NUMTYPE( value, argval.value.as_x_long_dbl );
+                     {
+                        double d = va_arg_n( args, _x_double, param );
+                        HB_NUMTYPE( value, d );
+                        argval.value.as_x_long_dbl =
+                           ( value & ( _HB_NUM_NAN | _HB_NUM_PINF | _HB_NUM_NINF ) ) == 0 ? d : 0;
+                     }
                      if( value & _HB_NUM_NAN )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ?
