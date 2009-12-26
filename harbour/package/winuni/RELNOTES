@@ -1,10 +1,13 @@
 Hi All,
 
-Harbour 2.0.0 (r13372) source archives and Windows binary
-releases are available for download on sourceforge.net.
+Harbour 2.x (r?????) source archives and Windows binary
+releases are available for download on sourceforge.net:
+
+   http://sourceforge.net/projects/harbour-project/files/
 
 Make sure to check INSTALL doc "QUICK START" section and visit
 our user forums at:
+
    http://sourceforge.net/apps/phpbb/harbour-project/
 
 Release notes:
@@ -64,6 +67,15 @@ Tool/lib versions used to create this package:
    PostgreSQL 8.4.2-1
    QT 4.5.3
    WATTCP 2.2.10
+
+Changes since previous (2.0.0) release:
+-----------------------------------------------------------------------
+
+- HBQT libs built against static QT libs are not part anymore
+  of default Harbour binary package. Such libs can only be useful
+  for users who obtained commercial license for QT, which means
+  for majority of users, it isn't. It can easily be built from
+  source though.
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------

@@ -19,6 +19,8 @@ xcopy /y HARBOUR_README_MINGWARM                                                
 xcopy /y HARBOUR_README_POCC                                                    F:\hb\hb20\comp\pocc\
 xcopy /y HARBOUR_README_WATCOM                                                  F:\hb\hb20\comp\watcom\
 
+xcopy /y /s ..\..\contrib\hbide\*.*                                             F:\hb\hb20\contrib\hbide\
+
 xcopy /y /s ..\..\pkg\win\mingw\harbour-2.0.0-win-mingw                         F:\hb\hb20\
 
 xcopy /y /s ..\..\pkg\linux\watcom\harbour-2.0.0-linux-watcom\lib               F:\hb\hb20\lib\linux\watcom\
