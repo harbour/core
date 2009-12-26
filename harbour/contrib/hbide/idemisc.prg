@@ -197,9 +197,34 @@ FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir )
    RETURN cFile
 
 /*----------------------------------------------------------------------*/
+/* Function to user select a existing folder
+ * 25/12/2009 - 19:10:41 - vailtom
+ */
+FUNCTION FetchADir( oWnd, cTitle, cDftDir )
+   LOCAL oDlg, cFile
+
+   DEFAULT cTitle  TO "Please Select a Folder"
+   DEFAULT cDftDir TO hb_dirBase()
+
+   oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
+
+   oDlg:title  := cTitle
+   oDlg:center := .t.
+   oDlg:oWidget:setFileMode( 4 )
+
+   cFile := oDlg:open( cDftDir, , .f. )
+
+   IF hb_isChar( cFile )
+      //cFile := strtran( cFile, "/", HB_OSPATHSEPARATOR() )
+      RETURN cFile
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
 
 FUNCTION ReadSource( cTxtFile )
-   LOCAL cFileBody := MemoRead( cTxtFile )
+   LOCAL cFileBody := hb_MemoRead( cTxtFile )
 
    cFileBody := StrTran( cFileBody, Chr( 13 ) )
 
@@ -392,13 +417,30 @@ FUNCTION MemoToArray( s )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION IsValidPath( cPath, cPathDescr )
+
+   DEFAULT cPathDescr TO ''
+
+   IF hb_dirExists( cPath )
+      RETURN .T.
+   End
+
+   IF empty( cPathDescr )
+      MsgBox( 'The specified path is invalid "' + cPath + '"' )
+   ELSE
+      MsgBox( 'The specified path is invalid for ' + cPathDescr + ': "' + cPath + '"' )
+   End
+   RETURN .F.
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION IsValidText( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
-   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env" )
+   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo" )
 
 /*----------------------------------------------------------------------*/
 

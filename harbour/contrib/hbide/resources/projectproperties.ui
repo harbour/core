@@ -134,7 +134,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>80</y>
-       <width>221</width>
+       <width>191</width>
        <height>20</height>
       </rect>
      </property>
@@ -167,7 +167,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>112</y>
-       <width>221</width>
+       <width>191</width>
        <height>20</height>
       </rect>
      </property>
@@ -200,7 +200,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>144</y>
-       <width>221</width>
+       <width>191</width>
        <height>20</height>
       </rect>
      </property>
@@ -234,7 +234,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>176</y>
-       <width>221</width>
+       <width>191</width>
        <height>20</height>
       </rect>
      </property>
@@ -335,6 +335,66 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonChooseWd">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>110</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>21</width>
+       <height>20</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonChoosePrjLoc">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>78</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>21</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonChooseDest">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>141</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>21</width>
+       <height>20</height>
+      </size>
      </property>
     </widget>
    </widget>
@@ -575,6 +635,30 @@ p, li { white-space: pre-wrap; }
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>comboPrjType</tabstop>
+  <tabstop>editPrjTitle</tabstop>
+  <tabstop>editPrjLoctn</tabstop>
+  <tabstop>buttonChoosePrjLoc</tabstop>
+  <tabstop>editWrkFolder</tabstop>
+  <tabstop>buttonChooseWd</tabstop>
+  <tabstop>editDstFolder</tabstop>
+  <tabstop>buttonChooseDest</tabstop>
+  <tabstop>editOutName</tabstop>
+  <tabstop>editFlags</tabstop>
+  <tabstop>editLaunchParams</tabstop>
+  <tabstop>editLaunchExe</tabstop>
+  <tabstop>buttonSelect</tabstop>
+  <tabstop>editSources</tabstop>
+  <tabstop>editMetaData</tabstop>
+  <tabstop>editMetaHelp</tabstop>
+  <tabstop>editHbp</tabstop>
+  <tabstop>editCompilers</tabstop>
+  <tabstop>buttonCn</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>buttonSaveExit</tabstop>
+  <tabstop>buttonSave</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

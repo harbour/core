@@ -112,6 +112,19 @@
 #define E_oPrjHbp                                12
 #define E_oPrjCmp                                13
 
+#define SB_PNL_MAIN                               1
+#define SB_PNL_READY                              2
+#define SB_PNL_LINE                               3
+#define SB_PNL_COLUMN                             4
+#define SB_PNL_INS                                5
+#define SB_PNL_M_1                                6
+#define SB_PNL_MODIFIED                           7
+#define SB_PNL_M_2                                8
+#define SB_PNL_STREAM                             9
+#define SB_PNL_EDIT                              10
+#define SB_PNL_SEARCH                            11
+#define SB_PNL_CODEC                             12
+#define SB_PNL_PROJECT                           13
 
 
 #endif
