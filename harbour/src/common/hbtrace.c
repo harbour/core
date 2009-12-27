@@ -210,7 +210,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     * Print the name and arguments for the function.
     */
    vfprintf( s_fp, fmt, ap );
-   va_end( ap );
+   /* va_end( ap ); Generates access violation in the subsequent hb_vsnprintf */
 
    /*
     * Print a new-line.
@@ -226,15 +226,38 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    {
       char buffer1[ 1024 ];
       char buffer2[ 1024 ];
+      char *p;
+      int  n;
+
+      /*
+       *  Stop nested trace calls avoiding the stack overflow events
+       */
+      s_winout = 0;
 
       hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
 
+      /*
+       *  sizeof( buffer2 ) - 3 is room for CR/LF/NUL
+       */
       if( proc )
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s",
-                      file, line, proc, pszLevel, buffer1 );
+         n = hb_snprintf( buffer2, sizeof( buffer2 ) - 3, "%s:%d:%s() %s %s",
+                          file, line, proc, pszLevel, buffer1 );
       else
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s",
-                      file, line, pszLevel, buffer1 );
+         n = hb_snprintf( buffer2, sizeof( buffer2 ) - 3, "%s:%d: %s %s",
+                          file, line, pszLevel, buffer1 );
+
+      /*
+       *  Normalize buffer2 with ending CR/LF/NUL
+       */
+      p = buffer2;
+      p += (n < 0) ? sizeof( buffer2 ) - 3 : n;
+      while ( p > buffer2  &&  isspace( p[-1] ) )
+      {
+         *--p = '\0';
+      }
+      *p++ = '\r';
+      *p++ = '\n';
+      *p   = '\0';
 
       #if defined( UNICODE )
       {
@@ -245,6 +268,9 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       #else
          OutputDebugString( buffer2 );
       #endif
+
+      s_winout = 1;
+
    }
 
 #endif
@@ -258,10 +284,17 @@ void hb_tracelog( int level, const char * file, int line, const char * proc,
     */
    if( s_enabled && level <= hb_tr_level() )
    {
+      /*
+       *  Stop nested trace calls avoiding the stack overflow events
+       */
+      s_enabled = 0;
+
       va_list ap;
       va_start( ap, fmt );
       hb_tracelog_( level, file, line, proc, fmt, ap );
       va_end( ap );
+
+      s_enabled = 1;
    }
 }
 
@@ -276,6 +309,11 @@ void hb_tr_trace( const char * fmt, ... )
     */
    if( s_enabled )
    {
+      /*
+       *  Stop nested trace calls avoiding the stack overflow events
+       */
+      s_enabled = 0;
+
       va_list ap;
       va_start( ap, fmt );
       hb_tracelog_( hb_tr_level_, hb_tr_file_, hb_tr_line_, NULL, fmt, ap );
@@ -294,5 +332,7 @@ void hb_tr_trace( const char * fmt, ... )
          hb_tr_file_ = "";
          hb_tr_line_ = -1;
       }
+
+      s_enabled = 1;
    }
 }
