@@ -226,7 +226,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    {
       char buffer1[ 1024 ];
       char buffer2[ 1024 ];
-      char *p;
+      char * p;
       int  n;
 
       /*
@@ -250,11 +250,10 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
        *  Normalize buffer2 with ending CR/LF/NUL
        */
       p = buffer2;
-      p += (n < 0) ? sizeof( buffer2 ) - 3 : n;
-      while ( p > buffer2  &&  isspace( p[-1] ) )
-      {
+      p += ( n < 0 ) ? sizeof( buffer2 ) - 3 : n;
+      while( p > buffer2 && HB_ISSPACE( p[ -1 ] ) )
          *--p = '\0';
-      }
+
       *p++ = '\r';
       *p++ = '\n';
       *p   = '\0';
@@ -270,7 +269,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       #endif
 
       s_winout = 1;
-
    }
 
 #endif
@@ -285,7 +283,7 @@ void hb_tracelog( int level, const char * file, int line, const char * proc,
    if( s_enabled && level <= hb_tr_level() )
    {
       /*
-       *  Stop nested trace calls avoiding the stack overflow events
+       *  Stop nested trace calls to avoid stack overflow events
        */
       s_enabled = 0;
 
