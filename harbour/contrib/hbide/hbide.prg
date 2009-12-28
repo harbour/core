@@ -182,16 +182,10 @@ CLASS HbIde
    METHOD buildDialog()
    METHOD buildStatusBar()
    METHOD executeAction()
-   METHOD buildProjectTree()
-   METHOD buildEditorTree()
+   //METHOD buildProjectTree()
+   //METHOD buildEditorTree()
    METHOD manageFuncContext()
    METHOD manageProjectContext()
-
-   METHOD buildFuncList()
-   METHOD buildBottomArea()
-   METHOD buildCompileResults()
-   METHOD buildLinkResults()
-   METHOD buildOutputResults()
 
    METHOD loadSources()
    METHOD editSource()
@@ -291,10 +285,10 @@ METHOD HbIde:create( cProjIni )
    ::oTabWidget := ::oDa:oTabWidget
    ::qTabWidget := ::oDa:oTabWidget:oWidget
 
-   ::buildProjectTree()
-   ::buildEditorTree()
-   ::buildFuncList()
-   ::buildBottomArea()
+   //::buildProjectTree()
+   //::buildEditorTree()
+
+   IdeDocks():new():create( Self )
 
    ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
@@ -883,7 +877,7 @@ METHOD HbIde:getCurrentTab()
 /*----------------------------------------------------------------------*/
 //                            Project Tree
 /*----------------------------------------------------------------------*/
-
+#if 0
 METHOD HbIde:buildEditorTree()
 
    ::oDockED := XbpWindow():new( ::oDa )
@@ -972,7 +966,7 @@ METHOD HbIde:buildProjectTree()
    ENDIF
 
    RETURN Self
-
+#endif
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:appendProjectInTree( aPrj )
@@ -1231,45 +1225,6 @@ METHOD HbIde:buildDialog()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//                            Function List
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildFuncList()
-
-   ::oDockR := XbpWindow():new( ::oDa )
-   ::oDockR:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockR:oWidget:setObjectName( "dockFuncList" )
-   ::oDlg:addChild( ::oDockR )
-   ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
-   ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oDockR:oWidget:setWindowTitle( "Functions List" )
-   ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
-   ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
-
-   //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
-   ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
-   /* Harbour Extension : prefixed with "hb" */
-   ::oFuncList:hbContextMenu := {|mp1, mp2, oXbp| ::manageFuncContext( mp1, mp2, oXbp ) }
-
-   ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
-
-   ::oDockR:oWidget:setWidget( ::oFuncList:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockR:oWidget, Qt_Vertical )
-
-   IF ::aIni[ INI_HBIDE, FunctionListVisible ] == "YES"
-      ::lDockRVisible := .t.
-      //::setSizeAndPosByIni( ::oDockR:oWidget, FunctionListGeometry )
-   ELSE
-      ::lDockRVisible := .f.
-      ::oDockR:hide()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateFuncList()
    LOCAL o
@@ -1351,87 +1306,6 @@ METHOD HbIde:CreateTags()
    RETURN ( NIL )
 
 //----------------------------------------------------------------------//
-//                            Dock Widgets
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildBottomArea()
-
-   ::buildCompileResults()
-   ::buildLinkResults()
-   ::buildOutputResults()
-
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildCompileResults()
-
-   ::oDockB := XbpWindow():new( ::oDa )
-   ::oDockB:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockB:oWidget:setObjectName( "dockCompileResults" )
-   ::oDlg:addChild( ::oDockB )
-   ::oDockB:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oDockB:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
-   ::oDockB:oWidget:setWindowTitle( "Compile Results" )
-   ::oDockB:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oCompileResult := XbpMLE():new( ::oDockB ):create( , , { 0,0 }, { 100,400 }, , .t. )
-   ::oDockB:oWidget:setWidget( ::oCompileResult:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB:oWidget, Qt_Horizontal )
-   ::oDockB:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildLinkResults()
-
-   ::oDockB1 := XbpWindow():new( ::oDa )
-   ::oDockB1:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockB1:oWidget:setObjectName( "dockLinkResults" )
-   ::oDlg:addChild( ::oDockB1 )
-   ::oDockB1:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oDockB1:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
-   ::oDockB1:oWidget:setWindowTitle( "Link Results" )
-   ::oDockB1:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oLinkResult := XbpMLE():new( ::oDockB1 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
-   ::oDockB1:oWidget:setWidget( ::oLinkResult:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB1:oWidget, Qt_Horizontal )
-   ::oDockB1:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildOutputResults()
-
-   ::oDockB2 := XbpWindow():new( ::oDa )
-   ::oDockB2:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockB2:oWidget:setObjectName( "dockOutputResults" )
-   ::oDlg:addChild( ::oDockB2 )
-   ::oDockB2:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
-   ::oDockB2:oWidget:setWindowTitle( "Output Console" )
-   ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
-   ::oOutputResult:wordWrap := .f.
-   //::oOutputResult:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
-
-   ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
-   ::oDockB2:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 //                               Printing
 /*----------------------------------------------------------------------*/
 
