@@ -210,6 +210,9 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     * Print the name and arguments for the function.
     */
    vfprintf( s_fp, fmt, ap );
+
+   if( s_winout )
+   /* TOFIX: va_end() is _required_ here according to all available documentation. */
    /* va_end( ap ); Generates access violation in the subsequent hb_vsnprintf */
 
    /*
@@ -226,49 +229,26 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    {
       char buffer1[ 1024 ];
       char buffer2[ 1024 ];
-      char * p;
-      int  n;
-
-      /*
-       *  Stop nested trace calls avoiding the stack overflow events
-       */
-      s_winout = 0;
 
       hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
 
-      /*
-       *  sizeof( buffer2 ) - 3 is room for CR/LF/NUL
-       */
+      /* We add \r\n at the end of the buffer to make WinDbg display look readable. */
       if( proc )
-         n = hb_snprintf( buffer2, sizeof( buffer2 ) - 3, "%s:%d:%s() %s %s",
-                          file, line, proc, pszLevel, buffer1 );
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s\r\n",
+                      file, line, proc, pszLevel, buffer1 );
       else
-         n = hb_snprintf( buffer2, sizeof( buffer2 ) - 3, "%s:%d: %s %s",
-                          file, line, pszLevel, buffer1 );
-
-      /*
-       *  Normalize buffer2 with ending CR/LF/NUL
-       */
-      p = buffer2;
-      p += ( n < 0 ) ? sizeof( buffer2 ) - 3 : n;
-      while( p > buffer2 && HB_ISSPACE( p[ -1 ] ) )
-         *--p = '\0';
-
-      *p++ = '\r';
-      *p++ = '\n';
-      *p   = '\0';
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s\r\n",
+                      file, line, pszLevel, buffer1 );
 
       #if defined( UNICODE )
       {
-         LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer2 );
+         TCHAR lpOutputString[ 2048 ];
+         MultiByteToWideChar( CP_ACP, 0, buffer2, -1, lpOutputString, sizeof( lpOutputString ) );
          OutputDebugString( lpOutputString );
-         HB_TCHAR_FREE( lpOutputString );
       }
       #else
          OutputDebugString( buffer2 );
       #endif
-
-      s_winout = 1;
    }
 
 #endif
@@ -282,17 +262,10 @@ void hb_tracelog( int level, const char * file, int line, const char * proc,
     */
    if( s_enabled && level <= hb_tr_level() )
    {
-      /*
-       *  Stop nested trace calls to avoid stack overflow events
-       */
-      s_enabled = 0;
-
       va_list ap;
       va_start( ap, fmt );
       hb_tracelog_( level, file, line, proc, fmt, ap );
       va_end( ap );
-
-      s_enabled = 1;
    }
 }
 
@@ -307,11 +280,6 @@ void hb_tr_trace( const char * fmt, ... )
     */
    if( s_enabled )
    {
-      /*
-       *  Stop nested trace calls avoiding the stack overflow events
-       */
-      s_enabled = 0;
-
       va_list ap;
       va_start( ap, fmt );
       hb_tracelog_( hb_tr_level_, hb_tr_file_, hb_tr_line_, NULL, fmt, ap );
@@ -330,7 +298,5 @@ void hb_tr_trace( const char * fmt, ... )
          hb_tr_file_ = "";
          hb_tr_line_ = -1;
       }
-
-      s_enabled = 1;
    }
 }
