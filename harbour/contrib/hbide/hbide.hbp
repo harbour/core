@@ -6,7 +6,7 @@
 
 -inc
 
--w3 -es2
+-w3 -es2 -gc3
 
 -ohbide
 
@@ -19,5 +19,5 @@ idestylesheets.prg
 idetags.prg
 idemisc.prg
 ideactions.prg
-
+ideeditor.prg
 ideparseexpr.c

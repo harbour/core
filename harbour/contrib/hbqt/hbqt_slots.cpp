@@ -316,6 +316,26 @@ static void hbqt_SlotsExecFont( QObject * object, const char * pszEvent, const Q
    }
 }
 
+static void hbqt_SlotsExecQTextCursor( QObject * object, const char * pszEvent, const QTextCursor & cursor )
+{
+   if( object )
+   {
+      Slots * t_slots = qt_getEventSlots();
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCursor( cursor ) );
+         //PHB_ITEM p1 = hb_itemPutPtr( NULL, *cursor );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
+         hb_itemRelease( pObject );
+         delete ( ( QTextCursor * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
 static void hbqt_SlotsExecStringList( QObject * object, const char * pszEvent, const QStringList & stringList )
 {
    if( object )
@@ -505,6 +525,14 @@ void Slots::activated( const QString & text )                                   
 void Slots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentIndexChanged(text)", text ); }
 void Slots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "editTextChanged(text)", text ); }
 void Slots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "highlighted(text)", text ); }
+/* QTextDocument */
+void Slots::blockCountChanged( int newBlockCount )                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "blockCountChanged(int)", newBlockCount ); }
+void Slots::contentsChange( int position, int charsRemoved, int charsAdded )                             { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "contentsChange(int,int,int)", position, charsRemoved, charsAdded ); }
+void Slots::contentsChanged()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "contentsChanged()" ); }
+void Slots::cursorPositionChanged( const QTextCursor & cursor )                                          { hbqt_SlotsExecQTextCursor(    qobject_cast<QObject *>( sender() ), "cursorPositionChanged(QTextCursor)", cursor ); }
+void Slots::documentLayoutChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "documentLayoutChanged()" ); }
+void Slots::modificationChanged( bool changed )                                                          { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "modificationChanged(bool)", changed ); }
+void Slots::undoCommandAdded()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "undoCommandAdded()" ); }
 /**/
 
 /*----------------------------------------------------------------------*/
@@ -527,116 +555,124 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
    Slots * t_slots = qt_getEventSlots();
 
-   if(      signal == ( QString ) "clicked()" )                                 ret = object->connect( object, SIGNAL( clicked() )                                                 , t_slots, SLOT( clicked() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , t_slots, SLOT( returnPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "triggered()" )                               ret = object->connect( object, SIGNAL( triggered() )                                               , t_slots, SLOT( triggered() )                                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "hovered()" )                                 ret = object->connect( object, SIGNAL( hovered() )                                                 , t_slots, SLOT( hovered() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "viewportEntered()" )                         ret = object->connect( object, SIGNAL( viewportEntered() )                                         , t_slots, SLOT( viewportEntered() )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "pressed()" )                                 ret = object->connect( object, SIGNAL( pressed() )                                                 , t_slots, SLOT( pressed() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "released()" )                                ret = object->connect( object, SIGNAL( released() )                                                , t_slots, SLOT( released() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , t_slots, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "activated(int)" )                            ret = object->connect( object, SIGNAL( activated( int ) )                                          , t_slots, SLOT( activated( int ) )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentIndexChanged(int)" )                  ret = object->connect( object, SIGNAL( currentIndexChanged( int ) )                                , t_slots, SLOT( currentIndexChanged( int ) )                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "highlighted(int)" )                          ret = object->connect( object, SIGNAL( highlighted( int ) )                                        , t_slots, SLOT( highlighted( int ) )                                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "triggered(bool)" )                           ret = object->connect( object, SIGNAL( triggered( bool ) )                                         , t_slots, SLOT( triggered( bool ) )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "clicked(QModelIndex)" )                      ret = object->connect( object, SIGNAL( clicked( const QModelIndex & ) )                            , t_slots, SLOT( clicked( const QModelIndex & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "doubleClicked(QModelIndex)" )                ret = object->connect( object, SIGNAL( doubleClicked( const QModelIndex & ) )                      , t_slots, SLOT( doubleClicked( const QModelIndex & ) )                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "entered(QModelIndex)" )                      ret = object->connect( object, SIGNAL( entered( const QModelIndex & ) )                            , t_slots, SLOT( entered( const QModelIndex & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "hovered(action)" )                           ret = object->connect( object, SIGNAL( hovered( QAction * ) )                                      , t_slots, SLOT( hovered( QAction * ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentChanged(int)" )                       ret = object->connect( object, SIGNAL( currentChanged( int ) )                                     , t_slots, SLOT( currentChanged( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "actionTriggered(int)" )                      ret = object->connect( object, SIGNAL( actionTriggered(int) )                                      , t_slots, SLOT( actionTriggered(int) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "rangeChanged(int,int)" )                     ret = object->connect( object, SIGNAL( rangeChanged(int,int) )                                     , t_slots, SLOT( rangeChanged(int,int) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderMoved(int)" )                          ret = object->connect( object, SIGNAL( sliderMoved(int) )                                          , t_slots, SLOT( sliderMoved(int) )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderPressed()" )                           ret = object->connect( object, SIGNAL( sliderPressed() )                                           , t_slots, SLOT( sliderPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderReleased()" )                          ret = object->connect( object, SIGNAL( sliderReleased() )                                          , t_slots, SLOT( sliderReleased() )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "valueChanged(int)" )                         ret = object->connect( object, SIGNAL( valueChanged(int) )                                         , t_slots, SLOT( valueChanged(int) )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "cursorPositionChanged(int,int)" )            ret = object->connect( object, SIGNAL( cursorPositionChanged(int,int) )                            , t_slots, SLOT( cursorPositionChanged(int,int) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "editingFinished()" )                         ret = object->connect( object, SIGNAL( editingFinished() )                                         , t_slots, SLOT( editingFinished() )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , t_slots, SLOT( returnPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "selectionChanged()" )                        ret = object->connect( object, SIGNAL( selectionChanged() )                                        , t_slots, SLOT( selectionChanged() )                                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "textChanged(QString)" )                      ret = object->connect( object, SIGNAL( textChanged( const QString &) )                             , t_slots, SLOT( textChanged( const QString & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "textEdited(QString)" )                       ret = object->connect( object, SIGNAL( textEdited( const QString &) )                              , t_slots, SLOT( textEdited( const QString & ) )                             , Qt::AutoConnection );
+   if(      signal == ( QString ) "clicked()"                                 ) ret = object->connect( object, SIGNAL( clicked()                                                  ), t_slots, SLOT( clicked()                                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "returnPressed()"                           ) ret = object->connect( object, SIGNAL( returnPressed()                                            ), t_slots, SLOT( returnPressed()                                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "triggered()"                               ) ret = object->connect( object, SIGNAL( triggered()                                                ), t_slots, SLOT( triggered()                                                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "hovered()"                                 ) ret = object->connect( object, SIGNAL( hovered()                                                  ), t_slots, SLOT( hovered()                                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "viewportEntered()"                         ) ret = object->connect( object, SIGNAL( viewportEntered()                                          ), t_slots, SLOT( viewportEntered()                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "pressed()"                                 ) ret = object->connect( object, SIGNAL( pressed()                                                  ), t_slots, SLOT( pressed()                                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "released()"                                ) ret = object->connect( object, SIGNAL( released()                                                 ), t_slots, SLOT( released()                                                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "stateChanged(int)"                         ) ret = object->connect( object, SIGNAL( stateChanged( int )                                        ), t_slots, SLOT( stateChanged( int )                                        ), Qt::AutoConnection );
+   else if( signal == ( QString ) "activated(int)"                            ) ret = object->connect( object, SIGNAL( activated( int )                                           ), t_slots, SLOT( activated( int )                                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentIndexChanged(int)"                  ) ret = object->connect( object, SIGNAL( currentIndexChanged( int )                                 ), t_slots, SLOT( currentIndexChanged( int )                                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "highlighted(int)"                          ) ret = object->connect( object, SIGNAL( highlighted( int )                                         ), t_slots, SLOT( highlighted( int )                                         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "triggered(bool)"                           ) ret = object->connect( object, SIGNAL( triggered( bool )                                          ), t_slots, SLOT( triggered( bool )                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "clicked(QModelIndex)"                      ) ret = object->connect( object, SIGNAL( clicked( const QModelIndex & )                             ), t_slots, SLOT( clicked( const QModelIndex & )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "doubleClicked(QModelIndex)"                ) ret = object->connect( object, SIGNAL( doubleClicked( const QModelIndex & )                       ), t_slots, SLOT( doubleClicked( const QModelIndex & )                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "entered(QModelIndex)"                      ) ret = object->connect( object, SIGNAL( entered( const QModelIndex & )                             ), t_slots, SLOT( entered( const QModelIndex & )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "hovered(action)"                           ) ret = object->connect( object, SIGNAL( hovered( QAction * )                                       ), t_slots, SLOT( hovered( QAction * )                                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentChanged(int)"                       ) ret = object->connect( object, SIGNAL( currentChanged( int )                                      ), t_slots, SLOT( currentChanged( int )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "actionTriggered(int)"                      ) ret = object->connect( object, SIGNAL( actionTriggered(int)                                       ), t_slots, SLOT( actionTriggered(int)                                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "rangeChanged(int,int)"                     ) ret = object->connect( object, SIGNAL( rangeChanged(int,int)                                      ), t_slots, SLOT( rangeChanged(int,int)                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderMoved(int)"                          ) ret = object->connect( object, SIGNAL( sliderMoved(int)                                           ), t_slots, SLOT( sliderMoved(int)                                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderPressed()"                           ) ret = object->connect( object, SIGNAL( sliderPressed()                                            ), t_slots, SLOT( sliderPressed()                                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderReleased()"                          ) ret = object->connect( object, SIGNAL( sliderReleased()                                           ), t_slots, SLOT( sliderReleased()                                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "valueChanged(int)"                         ) ret = object->connect( object, SIGNAL( valueChanged(int)                                          ), t_slots, SLOT( valueChanged(int)                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cursorPositionChanged(int,int)"            ) ret = object->connect( object, SIGNAL( cursorPositionChanged(int,int)                             ), t_slots, SLOT( cursorPositionChanged(int,int)                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "editingFinished()"                         ) ret = object->connect( object, SIGNAL( editingFinished()                                          ), t_slots, SLOT( editingFinished()                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "returnPressed()"                           ) ret = object->connect( object, SIGNAL( returnPressed()                                            ), t_slots, SLOT( returnPressed()                                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "selectionChanged()"                        ) ret = object->connect( object, SIGNAL( selectionChanged()                                         ), t_slots, SLOT( selectionChanged()                                         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "textChanged(QString)"                      ) ret = object->connect( object, SIGNAL( textChanged( const QString & )                             ), t_slots, SLOT( textChanged( const QString & )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "textEdited(QString)"                       ) ret = object->connect( object, SIGNAL( textEdited( const QString & )                              ), t_slots, SLOT( textEdited( const QString & )                              ), Qt::AutoConnection );
    /* QTreeViewWidget */
-   else if( signal == ( QString ) "currentItemChanged(QTWItem)" )               ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), t_slots, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemActivated(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int ) )                   , t_slots, SLOT( itemActivated( QTreeWidgetItem *, int ) )                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemChanged(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemChanged( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemClicked(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemClicked( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemClicked( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemCollapsed(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemCollapsed( QTreeWidgetItem * ) )                        , t_slots, SLOT( itemCollapsed( QTreeWidgetItem * ) )                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )                ret = object->connect( object, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) )               , t_slots, SLOT( itemDoubleClicked( QTreeWidgetItem *, int ) )               , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemEntered(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemEntered( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemEntered( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemExpanded(QTWItem)" )                     ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * ) )                         , t_slots, SLOT( itemExpanded( QTreeWidgetItem * ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemPressed(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemPressed( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemSelectionChanged()" )                    ret = object->connect( object, SIGNAL( itemSelectionChanged() )                                    , t_slots, SLOT( itemSelectionChanged() )                                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentItemChanged(QTWItem)"               ) ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), t_slots, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemActivated(QTWItem)"                    ) ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int )                    ), t_slots, SLOT( itemActivated( QTreeWidgetItem *, int )                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemChanged(QTWItem)"                      ) ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int )                      ), t_slots, SLOT( itemChanged( QTreeWidgetItem *, int )                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemClicked(QTWItem)"                      ) ret = object->connect( object, SIGNAL( itemClicked( QTreeWidgetItem *, int )                      ), t_slots, SLOT( itemClicked( QTreeWidgetItem *, int )                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemCollapsed(QTWItem)"                    ) ret = object->connect( object, SIGNAL( itemCollapsed( QTreeWidgetItem * )                         ), t_slots, SLOT( itemCollapsed( QTreeWidgetItem * )                         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)"                ) ret = object->connect( object, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int )                ), t_slots, SLOT( itemDoubleClicked( QTreeWidgetItem *, int )                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemEntered(QTWItem)"                      ) ret = object->connect( object, SIGNAL( itemEntered( QTreeWidgetItem *, int )                      ), t_slots, SLOT( itemEntered( QTreeWidgetItem *, int )                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemExpanded(QTWItem)"                     ) ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * )                          ), t_slots, SLOT( itemExpanded( QTreeWidgetItem * )                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemPressed(QTWItem)"                      ) ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int )                      ), t_slots, SLOT( itemPressed( QTreeWidgetItem *, int )                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemSelectionChanged()"                    ) ret = object->connect( object, SIGNAL( itemSelectionChanged()                                     ), t_slots, SLOT( itemSelectionChanged()                                     ), Qt::AutoConnection );
    /* QDialog (s) QFontDialog, QFileDialog */
-   else if( signal == ( QString ) "currentFontChanged(QFont)" )                 ret = object->connect( object, SIGNAL( currentFontChanged( const QFont & ) )                       , t_slots, SLOT( currentFontChanged( const QFont & ) )                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "fontSelected(QFont)" )                       ret = object->connect( object, SIGNAL( fontSelected( const QFont & ) )                             , t_slots, SLOT( fontSelected( const QFont & ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "accepted()" )                                ret = object->connect( object, SIGNAL( accepted() )                                                , t_slots, SLOT( accepted() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "finished(int)" )                             ret = object->connect( object, SIGNAL( finished( int ) )                                           , t_slots, SLOT( finished( int ) )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "rejected()" )                                ret = object->connect( object, SIGNAL( rejected() )                                                , t_slots, SLOT( rejected() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentChanged(QString)" )                   ret = object->connect( object, SIGNAL( currentChanged( const QString & ) )                         , t_slots, SLOT( currentChanged( const QString & ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "directoryEntered(QString)" )                 ret = object->connect( object, SIGNAL( directoryEntered( const QString & ) )                       , t_slots, SLOT( directoryEntered( const QString & ) )                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "fileSelected(QString)" )                     ret = object->connect( object, SIGNAL( fileSelected( const QString & ) )                           , t_slots, SLOT( fileSelected( const QString & ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "filesSelected(QStringList)" )                ret = object->connect( object, SIGNAL( filesSelected( const QStringList & ) )                      , t_slots, SLOT( filesSelected( const QStringList & ) )                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "filterSelected(QString)" )                   ret = object->connect( object, SIGNAL( filterSelected( const QString & ) )                         , t_slots, SLOT( filterSelected( const QString & ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "accepted(QPrinter)" )                        ret = object->connect( object, SIGNAL( accepted( QPrinter * ) )                                    , t_slots, SLOT( accepted( QPrinter * ) )                                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "copyAvailable(bool)" )                       ret = object->connect( object, SIGNAL( copyAvailable( bool ) )                                     , t_slots, SLOT( copyAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) ret = object->connect( object, SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) )       , t_slots, SLOT( currentCharFormatChanged( const QTextCharFormat & ) )       , Qt::AutoConnection );
-   else if( signal == ( QString ) "cursorPositionChanged()" )                   ret = object->connect( object, SIGNAL( cursorPositionChanged() )                                   , t_slots, SLOT( cursorPositionChanged() )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "redoAvailable(bool)" )                       ret = object->connect( object, SIGNAL( redoAvailable( bool ) )                                     , t_slots, SLOT( redoAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "textChanged()" )                             ret = object->connect( object, SIGNAL( textChanged() )                                             , t_slots, SLOT( textChanged() )                                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "undoAvailable(available)" )                  ret = object->connect( object, SIGNAL( undoAvailable( bool ) )                                     , t_slots, SLOT( undoAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "timeout()" )                                 ret = object->connect( object, SIGNAL( timeout() )                                                 , t_slots, SLOT( timeout() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentFontChanged(QFont)"                 ) ret = object->connect( object, SIGNAL( currentFontChanged( const QFont & )                        ), t_slots, SLOT( currentFontChanged( const QFont & )                        ), Qt::AutoConnection );
+   else if( signal == ( QString ) "fontSelected(QFont)"                       ) ret = object->connect( object, SIGNAL( fontSelected( const QFont & )                              ), t_slots, SLOT( fontSelected( const QFont & )                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "accepted()"                                ) ret = object->connect( object, SIGNAL( accepted()                                                 ), t_slots, SLOT( accepted()                                                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "finished(int)"                             ) ret = object->connect( object, SIGNAL( finished( int )                                            ), t_slots, SLOT( finished( int )                                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "rejected()"                                ) ret = object->connect( object, SIGNAL( rejected()                                                 ), t_slots, SLOT( rejected()                                                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentChanged(QString)"                   ) ret = object->connect( object, SIGNAL( currentChanged( const QString & )                          ), t_slots, SLOT( currentChanged( const QString & )                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "directoryEntered(QString)"                 ) ret = object->connect( object, SIGNAL( directoryEntered( const QString & )                        ), t_slots, SLOT( directoryEntered( const QString & )                        ), Qt::AutoConnection );
+   else if( signal == ( QString ) "fileSelected(QString)"                     ) ret = object->connect( object, SIGNAL( fileSelected( const QString & )                            ), t_slots, SLOT( fileSelected( const QString & )                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "filesSelected(QStringList)"                ) ret = object->connect( object, SIGNAL( filesSelected( const QStringList & )                       ), t_slots, SLOT( filesSelected( const QStringList & )                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "filterSelected(QString)"                   ) ret = object->connect( object, SIGNAL( filterSelected( const QString & )                          ), t_slots, SLOT( filterSelected( const QString & )                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "accepted(QPrinter)"                        ) ret = object->connect( object, SIGNAL( accepted( QPrinter * )                                     ), t_slots, SLOT( accepted( QPrinter * )                                     ), Qt::AutoConnection );
+   else if( signal == ( QString ) "copyAvailable(bool)"                       ) ret = object->connect( object, SIGNAL( copyAvailable( bool )                                      ), t_slots, SLOT( copyAvailable( bool )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) ret = object->connect( object, SIGNAL( currentCharFormatChanged( const QTextCharFormat & )        ), t_slots, SLOT( currentCharFormatChanged( const QTextCharFormat & )        ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cursorPositionChanged()"                   ) ret = object->connect( object, SIGNAL( cursorPositionChanged()                                    ), t_slots, SLOT( cursorPositionChanged()                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "redoAvailable(bool)"                       ) ret = object->connect( object, SIGNAL( redoAvailable( bool )                                      ), t_slots, SLOT( redoAvailable( bool )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "textChanged()"                             ) ret = object->connect( object, SIGNAL( textChanged()                                              ), t_slots, SLOT( textChanged()                                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "undoAvailable(available)"                  ) ret = object->connect( object, SIGNAL( undoAvailable( bool )                                      ), t_slots, SLOT( undoAvailable( bool )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "timeout()"                                 ) ret = object->connect( object, SIGNAL( timeout()                                                  ), t_slots, SLOT( timeout()                                                  ), Qt::AutoConnection );
    /* Generic purpose mechanism to receive key and mouse events off subclasses */
-   else if( signal == ( QString ) "keyPressEvent()" )                           ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * ) )                           , t_slots, SLOT( keyPressEvent( QKeyEvent * ) )                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "keyReleaseEvent()" )                         ret = object->connect( object, SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) )                         , t_slots, SLOT( keyReleaseEvent( QKeyEvent * ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseMoveEvent()" )                          ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) )                        , t_slots, SLOT( mouseMoveEvent( QMouseEvent * ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseDoubleClickEvent()" )                   ret = object->connect( object, SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) )                 , t_slots, SLOT( mouseDoubleClickEvent( QMouseEvent * ) )                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "mousePressEvent()" )                         ret = object->connect( object, SIGNAL( sg_mousePressEvent( QMouseEvent * ) )                       , t_slots, SLOT( mousePressEvent( QMouseEvent * ) )                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseReleaseEvent()" )                       ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) )                     , t_slots, SLOT( mouseReleaseEvent( QMouseEvent * ) )                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "wheelEvent()" )                              ret = object->connect( object, SIGNAL( sg_wheelEvent( QWheelEvent * ) )                            , t_slots, SLOT( wheelEvent( QWheelEvent * ) )                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "resizeEvent()" )                             ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) )                          , t_slots, SLOT( resizeEvent( QResizeEvent * ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "scrollContentsBy(int,int)" )                 ret = object->connect( object, SIGNAL( sg_scrollContentsBy( int, int ) )                           , t_slots, SLOT( scrollContentsBy( int, int ) )                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "geometriesChanged()" )                       ret = object->connect( object, SIGNAL( geometriesChanged() )                                       , t_slots, SLOT( geometriesChanged() )                                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionAutoResize(int,int)" )                ret = object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , t_slots, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionClicked(int)" )                       ret = object->connect( object, SIGNAL( sectionClicked( int ) )                                     , t_slots, SLOT( sectionClicked( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionCountChanged(int,int)" )              ret = object->connect( object, SIGNAL( sectionCountChanged( int, int ) )                           , t_slots, SLOT( sectionCountChanged( int, int ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionDoubleClicked(int)" )                 ret = object->connect( object, SIGNAL( sectionDoubleClicked( int ) )                               , t_slots, SLOT( sectionDoubleClicked( int ) )                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionEntered(int)" )                       ret = object->connect( object, SIGNAL( sectionEntered( int ) )                                     , t_slots, SLOT( sectionEntered( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )           ret = object->connect( object, SIGNAL( sectionHandleDoubleClicked( int ) )                         , t_slots, SLOT( sectionHandleDoubleClicked( int ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionMoved(int,int,int)" )                 ret = object->connect( object, SIGNAL( sectionMoved( int, int, int ) )                             , t_slots, SLOT( sectionMoved( int, int, int ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionPressed(int)" )                       ret = object->connect( object, SIGNAL( sectionPressed( int ) )                                     , t_slots, SLOT( sectionPressed( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionResized(int,int,int)" )               ret = object->connect( object, SIGNAL( sectionResized( int, int, int ) )                           , t_slots, SLOT( sectionResized( int, int, int ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sortIndicatorChanged(int,int)" )             ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) )                , t_slots, SLOT( sortIndicatorChanged( int, Qt::SortOrder ) )                , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonClicked(int)" )                        ret = object->connect( object, SIGNAL( buttonClicked( int ) )                                      , t_slots, SLOT( buttonClicked( int ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonPressed(int)" )                        ret = object->connect( object, SIGNAL( buttonPressed( int ) )                                      , t_slots, SLOT( buttonPressed( int ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonReleased(int)" )                       ret = object->connect( object, SIGNAL( buttonReleased( int ) )                                     , t_slots, SLOT( buttonReleased( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "linkActivated(QString)" )                    ret = object->connect( object, SIGNAL( linkActivated( const QString & ) )                          , t_slots, SLOT( linkActivated( const QString & ) )                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "linkHovered(QString)" )                      ret = object->connect( object, SIGNAL( linkHovered( const QString & ) )                            , t_slots, SLOT( linkHovered( const QString & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellActivated(int,int)" )                    ret = object->connect( object, SIGNAL( cellActivated( int, int ) )                                 , t_slots, SLOT( cellActivated( int, int ) )                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellChanged(int,int)" )                      ret = object->connect( object, SIGNAL( cellChanged( int, int ) )                                   , t_slots, SLOT( cellChanged( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellClicked(int,int)" )                      ret = object->connect( object, SIGNAL( cellClicked( int, int ) )                                   , t_slots, SLOT( cellClicked( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellDoubleClicked(int,int)" )                ret = object->connect( object, SIGNAL( cellDoubleClicked( int, int ) )                             , t_slots, SLOT( cellDoubleClicked( int, int ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellEntered(int,int)" )                      ret = object->connect( object, SIGNAL( cellEntered( int, int ) )                                   , t_slots, SLOT( cellEntered( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellPressed(int,int)" )                      ret = object->connect( object, SIGNAL( cellPressed( int, int ) )                                   , t_slots, SLOT( cellPressed( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) )                  , t_slots, SLOT( currentCellChanged( int, int, int, int ) )                  , Qt::AutoConnection );
-   else if( signal == ( QString ) "tabCloseRequested(int)" )                    ret = object->connect( object, SIGNAL( tabCloseRequested( int ) )                                  , t_slots, SLOT( tabCloseRequested( int ) )                                  , Qt::AutoConnection );
-   else if( signal == ( QString ) "paintRequested(QPrinter)" )                  ret = object->connect( object, SIGNAL( paintRequested( QPrinter * ) )                              , t_slots, SLOT( paintRequested( QPrinter * ) )                              , Qt::AutoConnection );
+   else if( signal == ( QString ) "keyPressEvent()"                           ) ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * )                            ), t_slots, SLOT( keyPressEvent( QKeyEvent * )                               ), Qt::AutoConnection );
+   else if( signal == ( QString ) "keyReleaseEvent()"                         ) ret = object->connect( object, SIGNAL( sg_keyReleaseEvent( QKeyEvent * )                          ), t_slots, SLOT( keyReleaseEvent( QKeyEvent * )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseMoveEvent()"                          ) ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * )                         ), t_slots, SLOT( mouseMoveEvent( QMouseEvent * )                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseDoubleClickEvent()"                   ) ret = object->connect( object, SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * )                  ), t_slots, SLOT( mouseDoubleClickEvent( QMouseEvent * )                     ), Qt::AutoConnection );
+   else if( signal == ( QString ) "mousePressEvent()"                         ) ret = object->connect( object, SIGNAL( sg_mousePressEvent( QMouseEvent * )                        ), t_slots, SLOT( mousePressEvent( QMouseEvent * )                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseReleaseEvent()"                       ) ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * )                      ), t_slots, SLOT( mouseReleaseEvent( QMouseEvent * )                         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "wheelEvent()"                              ) ret = object->connect( object, SIGNAL( sg_wheelEvent( QWheelEvent * )                             ), t_slots, SLOT( wheelEvent( QWheelEvent * )                                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "resizeEvent()"                             ) ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * )                           ), t_slots, SLOT( resizeEvent( QResizeEvent * )                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "scrollContentsBy(int,int)"                 ) ret = object->connect( object, SIGNAL( sg_scrollContentsBy( int, int )                            ), t_slots, SLOT( scrollContentsBy( int, int )                               ), Qt::AutoConnection );
+   else if( signal == ( QString ) "geometriesChanged()"                       ) ret = object->connect( object, SIGNAL( geometriesChanged()                                        ), t_slots, SLOT( geometriesChanged()                                        ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionAutoResize(int,int)"                ) ret = object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode )          ), t_slots, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode )          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionClicked(int)"                       ) ret = object->connect( object, SIGNAL( sectionClicked( int )                                      ), t_slots, SLOT( sectionClicked( int )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionCountChanged(int,int)"              ) ret = object->connect( object, SIGNAL( sectionCountChanged( int, int )                            ), t_slots, SLOT( sectionCountChanged( int, int )                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionDoubleClicked(int)"                 ) ret = object->connect( object, SIGNAL( sectionDoubleClicked( int )                                ), t_slots, SLOT( sectionDoubleClicked( int )                                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionEntered(int)"                       ) ret = object->connect( object, SIGNAL( sectionEntered( int )                                      ), t_slots, SLOT( sectionEntered( int )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)"           ) ret = object->connect( object, SIGNAL( sectionHandleDoubleClicked( int )                          ), t_slots, SLOT( sectionHandleDoubleClicked( int )                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionMoved(int,int,int)"                 ) ret = object->connect( object, SIGNAL( sectionMoved( int, int, int )                              ), t_slots, SLOT( sectionMoved( int, int, int )                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionPressed(int)"                       ) ret = object->connect( object, SIGNAL( sectionPressed( int )                                      ), t_slots, SLOT( sectionPressed( int )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionResized(int,int,int)"               ) ret = object->connect( object, SIGNAL( sectionResized( int, int, int )                            ), t_slots, SLOT( sectionResized( int, int, int )                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sortIndicatorChanged(int,int)"             ) ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder )                 ), t_slots, SLOT( sortIndicatorChanged( int, Qt::SortOrder )                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonClicked(int)"                        ) ret = object->connect( object, SIGNAL( buttonClicked( int )                                       ), t_slots, SLOT( buttonClicked( int )                                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonPressed(int)"                        ) ret = object->connect( object, SIGNAL( buttonPressed( int )                                       ), t_slots, SLOT( buttonPressed( int )                                       ), Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonReleased(int)"                       ) ret = object->connect( object, SIGNAL( buttonReleased( int )                                      ), t_slots, SLOT( buttonReleased( int )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "linkActivated(QString)"                    ) ret = object->connect( object, SIGNAL( linkActivated( const QString & )                           ), t_slots, SLOT( linkActivated( const QString & )                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "linkHovered(QString)"                      ) ret = object->connect( object, SIGNAL( linkHovered( const QString & )                             ), t_slots, SLOT( linkHovered( const QString & )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellActivated(int,int)"                    ) ret = object->connect( object, SIGNAL( cellActivated( int, int )                                  ), t_slots, SLOT( cellActivated( int, int )                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellChanged(int,int)"                      ) ret = object->connect( object, SIGNAL( cellChanged( int, int )                                    ), t_slots, SLOT( cellChanged( int, int )                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellClicked(int,int)"                      ) ret = object->connect( object, SIGNAL( cellClicked( int, int )                                    ), t_slots, SLOT( cellClicked( int, int )                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellDoubleClicked(int,int)"                ) ret = object->connect( object, SIGNAL( cellDoubleClicked( int, int )                              ), t_slots, SLOT( cellDoubleClicked( int, int )                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellEntered(int,int)"                      ) ret = object->connect( object, SIGNAL( cellEntered( int, int )                                    ), t_slots, SLOT( cellEntered( int, int )                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cellPressed(int,int)"                      ) ret = object->connect( object, SIGNAL( cellPressed( int, int )                                    ), t_slots, SLOT( cellPressed( int, int )                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)"       ) ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int )                   ), t_slots, SLOT( currentCellChanged( int, int, int, int )                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "tabCloseRequested(int)"                    ) ret = object->connect( object, SIGNAL( tabCloseRequested( int )                                   ), t_slots, SLOT( tabCloseRequested( int )                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "paintRequested(QPrinter)"                  ) ret = object->connect( object, SIGNAL( paintRequested( QPrinter * )                               ), t_slots, SLOT( paintRequested( QPrinter * )                               ), Qt::AutoConnection );
    /* QIODevice & QProcess */
-   else if( signal == ( QString ) "aboutToClose()" )                            ret = object->connect( object, SIGNAL( aboutToClose() )                                            , t_slots, SLOT( aboutToClose() )                                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "bytesWritten(int)" )                         ret = object->connect( object, SIGNAL( bytesWritten( qint64 ) )                                    , t_slots, SLOT( bytesWritten( qint64 ) )                                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "readChannelFinished()" )                     ret = object->connect( object, SIGNAL( readChannelFinished() )                                     , t_slots, SLOT( readChannelFinished() )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "readyRead()" )                               ret = object->connect( object, SIGNAL( readyRead() )                                               , t_slots, SLOT( readyRead() )                                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "error(int)" )                                ret = object->connect( object, SIGNAL( error( int ) )                                              , t_slots, SLOT( error( int ) )                                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "finished(int,int)" )                         ret = object->connect( object, SIGNAL( finished( int, QProcess::ExitStatus ) )                     , t_slots, SLOT( finished( int, QProcess::ExitStatus ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "readyReadStandardError()" )                  ret = object->connect( object, SIGNAL( readyReadStandardError() )                                  , t_slots, SLOT( readyReadStandardError() )                                  , Qt::AutoConnection );
-   else if( signal == ( QString ) "readyReadStandardOutput()" )                 ret = object->connect( object, SIGNAL( readyReadStandardOutput() )                                 , t_slots, SLOT( readyReadStandardOutput() )                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "started()" )                                 ret = object->connect( object, SIGNAL( started() )                                                 , t_slots, SLOT( started() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , t_slots, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
+   else if( signal == ( QString ) "aboutToClose()"                            ) ret = object->connect( object, SIGNAL( aboutToClose()                                             ), t_slots, SLOT( aboutToClose()                                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "bytesWritten(int)"                         ) ret = object->connect( object, SIGNAL( bytesWritten( qint64 )                                     ), t_slots, SLOT( bytesWritten( qint64 )                                     ), Qt::AutoConnection );
+   else if( signal == ( QString ) "readChannelFinished()"                     ) ret = object->connect( object, SIGNAL( readChannelFinished()                                      ), t_slots, SLOT( readChannelFinished()                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "readyRead()"                               ) ret = object->connect( object, SIGNAL( readyRead()                                                ), t_slots, SLOT( readyRead()                                                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "error(int)"                                ) ret = object->connect( object, SIGNAL( error( int )                                               ), t_slots, SLOT( error( int )                                               ), Qt::AutoConnection );
+   else if( signal == ( QString ) "finished(int,int)"                         ) ret = object->connect( object, SIGNAL( finished( int, QProcess::ExitStatus )                      ), t_slots, SLOT( finished( int, QProcess::ExitStatus )                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "readyReadStandardError()"                  ) ret = object->connect( object, SIGNAL( readyReadStandardError()                                   ), t_slots, SLOT( readyReadStandardError()                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "readyReadStandardOutput()"                 ) ret = object->connect( object, SIGNAL( readyReadStandardOutput()                                  ), t_slots, SLOT( readyReadStandardOutput()                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "started()"                                 ) ret = object->connect( object, SIGNAL( started()                                                  ), t_slots, SLOT( started()                                                  ), Qt::AutoConnection );
+   else if( signal == ( QString ) "stateChanged(int)"                         ) ret = object->connect( object, SIGNAL( stateChanged( int )                                        ), t_slots, SLOT( stateChanged( int )                                        ), Qt::AutoConnection );
    /* QComboBox */
-   else if( signal == ( QString ) "activated(text)" )                           ret = object->connect( object, SIGNAL( activated( const QString & ) )                              , t_slots, SLOT( activated( const QString & ) )                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentIndexChanged(text)" )                 ret = object->connect( object, SIGNAL( currentIndexChanged( const QString & ) )                    , t_slots, SLOT( currentIndexChanged( const QString & ) )                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "editTextChanged(text)" )                     ret = object->connect( object, SIGNAL( editTextChanged( const QString & ) )                        , t_slots, SLOT( editTextChanged( const QString & ) )                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "highlighted(text)" )                         ret = object->connect( object, SIGNAL( highlighted( const QString & ) )                            , t_slots, SLOT( highlighted( const QString & ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "activated(text)"                           ) ret = object->connect( object, SIGNAL( activated( const QString & )                               ), t_slots, SLOT( activated( const QString & )                               ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentIndexChanged(text)"                 ) ret = object->connect( object, SIGNAL( currentIndexChanged( const QString & )                     ), t_slots, SLOT( currentIndexChanged( const QString & )                     ), Qt::AutoConnection );
+   else if( signal == ( QString ) "editTextChanged(text)"                     ) ret = object->connect( object, SIGNAL( editTextChanged( const QString & )                         ), t_slots, SLOT( editTextChanged( const QString & )                         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "highlighted(text)"                         ) ret = object->connect( object, SIGNAL( highlighted( const QString & )                             ), t_slots, SLOT( highlighted( const QString & )                             ), Qt::AutoConnection );
+   /* QTextDocument */
+   else if( signal == ( QString ) "blockCountChanged(int)"                    ) ret = object->connect( object, SIGNAL( blockCountChanged( int )                                   ), t_slots, SLOT( blockCountChanged( int )                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "contentsChange(int,int,int)"               ) ret = object->connect( object, SIGNAL( contentsChange( int, int, int )                            ), t_slots, SLOT( contentsChange( int, int, int )                            ), Qt::AutoConnection );
+   else if( signal == ( QString ) "contentsChanged()"                         ) ret = object->connect( object, SIGNAL( contentsChanged()                                          ), t_slots, SLOT( contentsChanged()                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "cursorPositionChanged(QTextCursor)"        ) ret = object->connect( object, SIGNAL( cursorPositionChanged( const QTextCursor & )               ), t_slots, SLOT( cursorPositionChanged( const QTextCursor & )               ), Qt::AutoConnection );
+   else if( signal == ( QString ) "documentLayoutChanged()"                   ) ret = object->connect( object, SIGNAL( documentLayoutChanged()                                    ), t_slots, SLOT( documentLayoutChanged()                                    ), Qt::AutoConnection );
+   else if( signal == ( QString ) "modificationChanged(bool)"                 ) ret = object->connect( object, SIGNAL( modificationChanged( bool )                                ), t_slots, SLOT( modificationChanged( bool )                                ), Qt::AutoConnection );
+   else if( signal == ( QString ) "undoCommandAdded()"                        ) ret = object->connect( object, SIGNAL( undoCommandAdded()                                         ), t_slots, SLOT( undoCommandAdded()                                         ), Qt::AutoConnection );
    else ret = false;
 
    if( ret == true )
@@ -650,116 +686,124 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
 static bool disconnect_signal( QObject * object, const char * signal )
 {
-   if(      signal == ( QString ) "clicked()" )                                 return object->disconnect( SIGNAL( clicked() ) );
-   else if( signal == ( QString ) "returnPressed()" )                           return object->disconnect( SIGNAL( returnPressed() ) );
-   else if( signal == ( QString ) "triggered()" )                               return object->disconnect( SIGNAL( triggered() ) );
-   else if( signal == ( QString ) "hovered()" )                                 return object->disconnect( SIGNAL( hovered() ) );
-   else if( signal == ( QString ) "viewportEntered()" )                         return object->disconnect( SIGNAL( viewportEntered() ) );
-   else if( signal == ( QString ) "pressed()" )                                 return object->disconnect( SIGNAL( pressed() ) );
-   else if( signal == ( QString ) "released()" )                                return object->disconnect( SIGNAL( released() ) );
-   else if( signal == ( QString ) "stateChanged(int)" )                         return object->disconnect( SIGNAL( stateChanged( int ) ) );
-   else if( signal == ( QString ) "activated(int)" )                            return object->disconnect( SIGNAL( activated( int ) ) );
-   else if( signal == ( QString ) "currentIndexChanged(int)" )                  return object->disconnect( SIGNAL( currentIndexChanged( int ) ) );
-   else if( signal == ( QString ) "highlighted(int)" )                          return object->disconnect( SIGNAL( highlighted( int ) ) );
-   else if( signal == ( QString ) "triggered(bool)" )                           return object->disconnect( SIGNAL( triggered( bool ) ) );
-   else if( signal == ( QString ) "clicked(QModelIndex)" )                      return object->disconnect( SIGNAL( clicked( const QModelIndex & ) ) );
-   else if( signal == ( QString ) "doubleClicked(QModelIndex)" )                return object->disconnect( SIGNAL( doubleClicked( const QModelIndex & ) ) );
-   else if( signal == ( QString ) "entered(QModelIndex)" )                      return object->disconnect( SIGNAL( entered( const QModelIndex & ) ) );
-   else if( signal == ( QString ) "hovered(action)" )                           return object->disconnect( SIGNAL( hovered( QAction * ) ) );
-   else if( signal == ( QString ) "currentChanged(int)" )                       return object->disconnect( SIGNAL( currentChanged( int ) ) );
-   else if( signal == ( QString ) "actionTriggered(int)" )                      return object->disconnect( SIGNAL( actionTriggered(int) ) );
-   else if( signal == ( QString ) "rangeChanged(int,int)" )                     return object->disconnect( SIGNAL( rangeChanged(int,int) ) );
-   else if( signal == ( QString ) "sliderMoved(int)" )                          return object->disconnect( SIGNAL( sliderMoved(int) ) );
-   else if( signal == ( QString ) "sliderPressed()" )                           return object->disconnect( SIGNAL( sliderPressed() ) );
-   else if( signal == ( QString ) "sliderReleased()" )                          return object->disconnect( SIGNAL( sliderReleased() ) );
-   else if( signal == ( QString ) "valueChanged(int)" )                         return object->disconnect( SIGNAL( valueChanged(int) ) );
-   else if( signal == ( QString ) "cursorPositionChanged(int,int)" )            return object->disconnect( SIGNAL( cursorPositionChanged(int,int) ) );
-   else if( signal == ( QString ) "editingFinished()" )                         return object->disconnect( SIGNAL( editingFinished() ) );
-   else if( signal == ( QString ) "returnPressed()" )                           return object->disconnect( SIGNAL( returnPressed() ) );
-   else if( signal == ( QString ) "selectionChanged()" )                        return object->disconnect( SIGNAL( selectionChanged() ) );
-   else if( signal == ( QString ) "textChanged(QString)" )                      return object->disconnect( SIGNAL( textChanged( const QString &) ) );
-   else if( signal == ( QString ) "textEdited(QString)" )                       return object->disconnect( SIGNAL( textEdited( const QString &) ) );
-   else if( signal == ( QString ) "currentItemChanged(QTWItem)" )               return object->disconnect( SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ) );
-   else if( signal == ( QString ) "itemActivated(QTWItem)" )                    return object->disconnect( SIGNAL( itemActivated( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemChanged(QTWItem)" )                      return object->disconnect( SIGNAL( itemChanged( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemClicked(QTWItem)" )                      return object->disconnect( SIGNAL( itemClicked( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemCollapsed(QTWItem)" )                    return object->disconnect( SIGNAL( itemCollapsed( QTreeWidgetItem * ) ) );
-   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )                return object->disconnect( SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemEntered(QTWItem)" )                      return object->disconnect( SIGNAL( itemEntered( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemExpanded(QTWItem)" )                     return object->disconnect( SIGNAL( itemExpanded( QTreeWidgetItem * ) ) );
-   else if( signal == ( QString ) "itemPressed(QTWItem)" )                      return object->disconnect( SIGNAL( itemPressed( QTreeWidgetItem *, int ) ) );
-   else if( signal == ( QString ) "itemSelectionChanged()" )                    return object->disconnect( SIGNAL( itemSelectionChanged() ) );
-   else if( signal == ( QString ) "iconChanged()" )                             return object->disconnect( SIGNAL( iconChanged() ) );
-   else if( signal == ( QString ) "titleChanged(QString)" )                     return object->disconnect( SIGNAL( titleChanged( const QString & ) ) );
-   else if( signal == ( QString ) "urlChanged(QUrl)" )                          return object->disconnect( SIGNAL( urlChanged( const QUrl & ) ) );
-   else if( signal == ( QString ) "currentFontChanged(QFont)" )                 return object->disconnect( SIGNAL( currentFontChanged( const QFont & ) ) );
-   else if( signal == ( QString ) "fontSelected(QFont)" )                       return object->disconnect( SIGNAL( fontSelected( const QFont & ) ) );
-   else if( signal == ( QString ) "accepted()" )                                return object->disconnect( SIGNAL( accepted() ) );
-   else if( signal == ( QString ) "finished(int)" )                             return object->disconnect( SIGNAL( finished( int ) ) );
-   else if( signal == ( QString ) "rejected()" )                                return object->disconnect( SIGNAL( rejected() ) );
-   else if( signal == ( QString ) "currentChanged(QString)" )                   return object->disconnect( SIGNAL( currentChanged( const QString & ) ) );
-   else if( signal == ( QString ) "directoryEntered(QString)" )                 return object->disconnect( SIGNAL( directoryEntered( const QString & ) ) );
-   else if( signal == ( QString ) "fileSelected(QString)" )                     return object->disconnect( SIGNAL( fileSelected( const QString & ) ) );
-   else if( signal == ( QString ) "filesSelected(QStringList)" )                return object->disconnect( SIGNAL( filesSelected( const QStringList & ) ) );
-   else if( signal == ( QString ) "filterSelected(QString)" )                   return object->disconnect( SIGNAL( filterSelected( const QString & ) ) );
-   else if( signal == ( QString ) "accepted(QPrinter)" )                        return object->disconnect( SIGNAL( accepted( QPrinter * ) ) );
-   else if( signal == ( QString ) "copyAvailable(bool)" )                       return object->disconnect( SIGNAL( copyAvailable( bool ) ) );
-   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) return object->disconnect( SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) ) );
-   else if( signal == ( QString ) "cursorPositionChanged()" )                   return object->disconnect( SIGNAL( cursorPositionChanged() ) );
-   else if( signal == ( QString ) "redoAvailable(bool)" )                       return object->disconnect( SIGNAL( redoAvailable( bool ) ) );
-   else if( signal == ( QString ) "textChanged()" )                             return object->disconnect( SIGNAL( textChanged() ) );
-   else if( signal == ( QString ) "undoAvailable(available)" )                  return object->disconnect( SIGNAL( undoAvailable( bool ) ) );
-   else if( signal == ( QString ) "timeout()" )                                 return object->disconnect( SIGNAL( timeout() ) );
-   else if( signal == ( QString ) "keyPressEvent()" )                           return object->disconnect( SIGNAL( sg_keyPressEvent( QKeyEvent * ) ) );
-   else if( signal == ( QString ) "keyReleaseEvent()" )                         return object->disconnect( SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) ) );
-   else if( signal == ( QString ) "mouseMoveEvent()" )                          return object->disconnect( SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ) );
-   else if( signal == ( QString ) "mouseDoubleClickEvent()" )                   return object->disconnect( SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) ) );
-   else if( signal == ( QString ) "mousePressEvent()" )                         return object->disconnect( SIGNAL( sg_mousePressEvent( QMouseEvent * ) ) );
-   else if( signal == ( QString ) "mouseReleaseEvent()" )                       return object->disconnect( SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) ) );
-   else if( signal == ( QString ) "wheelEvent()" )                              return object->disconnect( SIGNAL( sg_wheelEvent( QWheelEvent * ) ) );
-   else if( signal == ( QString ) "resizeEvent()" )                             return object->disconnect( SIGNAL( sg_resizeEvent( QResizeEvent * ) ) );
-   else if( signal == ( QString ) "scrollContentsBy(int,int)" )                 return object->disconnect( SIGNAL( sg_scrollContentsBy( int, int ) ) );
-   else if( signal == ( QString ) "geometriesChanged()" )                       return object->disconnect( SIGNAL( geometriesChanged() ) );
-   else if( signal == ( QString ) "sectionAutoResize(int,int)" )                return object->disconnect( SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) ) );
-   else if( signal == ( QString ) "sectionClicked(int)" )                       return object->disconnect( SIGNAL( sectionClicked( int ) ) );
-   else if( signal == ( QString ) "sectionCountChanged(int,int)" )              return object->disconnect( SIGNAL( sectionCountChanged( int, int ) ) );
-   else if( signal == ( QString ) "sectionDoubleClicked(int)" )                 return object->disconnect( SIGNAL( sectionDoubleClicked( int ) ) );
-   else if( signal == ( QString ) "sectionEntered(int)" )                       return object->disconnect( SIGNAL( sectionEntered( int ) ) );
-   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )           return object->disconnect( SIGNAL( sectionHandleDoubleClicked( int ) ) );
-   else if( signal == ( QString ) "sectionMoved(int,int,int)" )                 return object->disconnect( SIGNAL( sectionMoved( int, int, int ) ) );
-   else if( signal == ( QString ) "sectionPressed(int)" )                       return object->disconnect( SIGNAL( sectionPressed( int ) ) );
-   else if( signal == ( QString ) "sectionResized(int,int,int)" )               return object->disconnect( SIGNAL( sectionResized( int, int, int ) ) );
-   else if( signal == ( QString ) "sortIndicatorChanged(int,int)" )             return object->disconnect( SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ) );
-   else if( signal == ( QString ) "buttonClicked(int)" )                        return object->disconnect( SIGNAL( buttonClicked( int ) ) );
-   else if( signal == ( QString ) "buttonPressed(int)" )                        return object->disconnect( SIGNAL( buttonPressed( int ) ) );
-   else if( signal == ( QString ) "buttonReleased(int)" )                       return object->disconnect( SIGNAL( buttonReleased( int ) ) );
-   else if( signal == ( QString ) "linkActivated(QString)" )                    return object->disconnect( SIGNAL( linkActivated( const QString & ) ) );
-   else if( signal == ( QString ) "linkHovered(QString)" )                      return object->disconnect( SIGNAL( linkHovered( const QString & ) ) );
-   else if( signal == ( QString ) "cellActivated(int,int)" )                    return object->disconnect( SIGNAL( cellActivated( int, int ) ) );
-   else if( signal == ( QString ) "cellChanged(int,int)" )                      return object->disconnect( SIGNAL( cellChanged( int, int ) ) );
-   else if( signal == ( QString ) "cellClicked(int,int)" )                      return object->disconnect( SIGNAL( cellClicked( int, int ) ) );
-   else if( signal == ( QString ) "cellDoubleClicked(int,int)" )                return object->disconnect( SIGNAL( cellDoubleClicked( int, int ) ) );
-   else if( signal == ( QString ) "cellEntered(int,int)" )                      return object->disconnect( SIGNAL( cellEntered( int, int ) ) );
-   else if( signal == ( QString ) "cellPressed(int,int)" )                      return object->disconnect( SIGNAL( cellPressed( int, int ) ) );
-   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       return object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) ) );
-   else if( signal == ( QString ) "tabCloseRequested(int)" )                    return object->disconnect( SIGNAL( tabCloseRequested( int ) ) );
-   else if( signal == ( QString ) "paintRequested(QPrinter)" )                  return object->disconnect( SIGNAL( paintRequested( QPrinter * ) ) );
+   if(      signal == ( QString ) "clicked()"                                 ) return object->disconnect( SIGNAL( clicked() )                                                  );
+   else if( signal == ( QString ) "returnPressed()"                           ) return object->disconnect( SIGNAL( returnPressed() )                                            );
+   else if( signal == ( QString ) "triggered()"                               ) return object->disconnect( SIGNAL( triggered() )                                                );
+   else if( signal == ( QString ) "hovered()"                                 ) return object->disconnect( SIGNAL( hovered() )                                                  );
+   else if( signal == ( QString ) "viewportEntered()"                         ) return object->disconnect( SIGNAL( viewportEntered() )                                          );
+   else if( signal == ( QString ) "pressed()"                                 ) return object->disconnect( SIGNAL( pressed() )                                                  );
+   else if( signal == ( QString ) "released()"                                ) return object->disconnect( SIGNAL( released() )                                                 );
+   else if( signal == ( QString ) "stateChanged(int)"                         ) return object->disconnect( SIGNAL( stateChanged( int ) )                                        );
+   else if( signal == ( QString ) "activated(int)"                            ) return object->disconnect( SIGNAL( activated( int ) )                                           );
+   else if( signal == ( QString ) "currentIndexChanged(int)"                  ) return object->disconnect( SIGNAL( currentIndexChanged( int ) )                                 );
+   else if( signal == ( QString ) "highlighted(int)"                          ) return object->disconnect( SIGNAL( highlighted( int ) )                                         );
+   else if( signal == ( QString ) "triggered(bool)"                           ) return object->disconnect( SIGNAL( triggered( bool ) )                                          );
+   else if( signal == ( QString ) "clicked(QModelIndex)"                      ) return object->disconnect( SIGNAL( clicked( const QModelIndex & ) )                             );
+   else if( signal == ( QString ) "doubleClicked(QModelIndex)"                ) return object->disconnect( SIGNAL( doubleClicked( const QModelIndex & ) )                       );
+   else if( signal == ( QString ) "entered(QModelIndex)"                      ) return object->disconnect( SIGNAL( entered( const QModelIndex & ) )                             );
+   else if( signal == ( QString ) "hovered(action)"                           ) return object->disconnect( SIGNAL( hovered( QAction * ) )                                       );
+   else if( signal == ( QString ) "currentChanged(int)"                       ) return object->disconnect( SIGNAL( currentChanged( int ) )                                      );
+   else if( signal == ( QString ) "actionTriggered(int)"                      ) return object->disconnect( SIGNAL( actionTriggered(int) )                                       );
+   else if( signal == ( QString ) "rangeChanged(int,int)"                     ) return object->disconnect( SIGNAL( rangeChanged(int,int) )                                      );
+   else if( signal == ( QString ) "sliderMoved(int)"                          ) return object->disconnect( SIGNAL( sliderMoved(int) )                                           );
+   else if( signal == ( QString ) "sliderPressed()"                           ) return object->disconnect( SIGNAL( sliderPressed() )                                            );
+   else if( signal == ( QString ) "sliderReleased()"                          ) return object->disconnect( SIGNAL( sliderReleased() )                                           );
+   else if( signal == ( QString ) "valueChanged(int)"                         ) return object->disconnect( SIGNAL( valueChanged(int) )                                          );
+   else if( signal == ( QString ) "cursorPositionChanged(int,int)"            ) return object->disconnect( SIGNAL( cursorPositionChanged(int,int) )                             );
+   else if( signal == ( QString ) "editingFinished()"                         ) return object->disconnect( SIGNAL( editingFinished() )                                          );
+   else if( signal == ( QString ) "returnPressed()"                           ) return object->disconnect( SIGNAL( returnPressed() )                                            );
+   else if( signal == ( QString ) "selectionChanged()"                        ) return object->disconnect( SIGNAL( selectionChanged() )                                         );
+   else if( signal == ( QString ) "textChanged(QString)"                      ) return object->disconnect( SIGNAL( textChanged( const QString &) )                              );
+   else if( signal == ( QString ) "textEdited(QString)"                       ) return object->disconnect( SIGNAL( textEdited( const QString &) )                               );
+   else if( signal == ( QString ) "currentItemChanged(QTWItem)"               ) return object->disconnect( SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ) );
+   else if( signal == ( QString ) "itemActivated(QTWItem)"                    ) return object->disconnect( SIGNAL( itemActivated( QTreeWidgetItem *, int ) )                    );
+   else if( signal == ( QString ) "itemChanged(QTWItem)"                      ) return object->disconnect( SIGNAL( itemChanged( QTreeWidgetItem *, int ) )                      );
+   else if( signal == ( QString ) "itemClicked(QTWItem)"                      ) return object->disconnect( SIGNAL( itemClicked( QTreeWidgetItem *, int ) )                      );
+   else if( signal == ( QString ) "itemCollapsed(QTWItem)"                    ) return object->disconnect( SIGNAL( itemCollapsed( QTreeWidgetItem * ) )                         );
+   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)"                ) return object->disconnect( SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) )                );
+   else if( signal == ( QString ) "itemEntered(QTWItem)"                      ) return object->disconnect( SIGNAL( itemEntered( QTreeWidgetItem *, int ) )                      );
+   else if( signal == ( QString ) "itemExpanded(QTWItem)"                     ) return object->disconnect( SIGNAL( itemExpanded( QTreeWidgetItem * ) )                          );
+   else if( signal == ( QString ) "itemPressed(QTWItem)"                      ) return object->disconnect( SIGNAL( itemPressed( QTreeWidgetItem *, int ) )                      );
+   else if( signal == ( QString ) "itemSelectionChanged()"                    ) return object->disconnect( SIGNAL( itemSelectionChanged() )                                     );
+   else if( signal == ( QString ) "iconChanged()"                             ) return object->disconnect( SIGNAL( iconChanged() )                                              );
+   else if( signal == ( QString ) "titleChanged(QString)"                     ) return object->disconnect( SIGNAL( titleChanged( const QString & ) )                            );
+   else if( signal == ( QString ) "urlChanged(QUrl)"                          ) return object->disconnect( SIGNAL( urlChanged( const QUrl & ) )                                 );
+   else if( signal == ( QString ) "currentFontChanged(QFont)"                 ) return object->disconnect( SIGNAL( currentFontChanged( const QFont & ) )                        );
+   else if( signal == ( QString ) "fontSelected(QFont)"                       ) return object->disconnect( SIGNAL( fontSelected( const QFont & ) )                              );
+   else if( signal == ( QString ) "accepted()"                                ) return object->disconnect( SIGNAL( accepted() )                                                 );
+   else if( signal == ( QString ) "finished(int)"                             ) return object->disconnect( SIGNAL( finished( int ) )                                            );
+   else if( signal == ( QString ) "rejected()"                                ) return object->disconnect( SIGNAL( rejected() )                                                 );
+   else if( signal == ( QString ) "currentChanged(QString)"                   ) return object->disconnect( SIGNAL( currentChanged( const QString & ) )                          );
+   else if( signal == ( QString ) "directoryEntered(QString)"                 ) return object->disconnect( SIGNAL( directoryEntered( const QString & ) )                        );
+   else if( signal == ( QString ) "fileSelected(QString)"                     ) return object->disconnect( SIGNAL( fileSelected( const QString & ) )                            );
+   else if( signal == ( QString ) "filesSelected(QStringList)"                ) return object->disconnect( SIGNAL( filesSelected( const QStringList & ) )                       );
+   else if( signal == ( QString ) "filterSelected(QString)"                   ) return object->disconnect( SIGNAL( filterSelected( const QString & ) )                          );
+   else if( signal == ( QString ) "accepted(QPrinter)"                        ) return object->disconnect( SIGNAL( accepted( QPrinter * ) )                                     );
+   else if( signal == ( QString ) "copyAvailable(bool)"                       ) return object->disconnect( SIGNAL( copyAvailable( bool ) )                                      );
+   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) return object->disconnect( SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) )        );
+   else if( signal == ( QString ) "cursorPositionChanged()"                   ) return object->disconnect( SIGNAL( cursorPositionChanged() )                                    );
+   else if( signal == ( QString ) "redoAvailable(bool)"                       ) return object->disconnect( SIGNAL( redoAvailable( bool ) )                                      );
+   else if( signal == ( QString ) "textChanged()"                             ) return object->disconnect( SIGNAL( textChanged() )                                              );
+   else if( signal == ( QString ) "undoAvailable(available)"                  ) return object->disconnect( SIGNAL( undoAvailable( bool ) )                                      );
+   else if( signal == ( QString ) "timeout()"                                 ) return object->disconnect( SIGNAL( timeout() )                                                  );
+   else if( signal == ( QString ) "keyPressEvent()"                           ) return object->disconnect( SIGNAL( sg_keyPressEvent( QKeyEvent * ) )                            );
+   else if( signal == ( QString ) "keyReleaseEvent()"                         ) return object->disconnect( SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) )                          );
+   else if( signal == ( QString ) "mouseMoveEvent()"                          ) return object->disconnect( SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) )                         );
+   else if( signal == ( QString ) "mouseDoubleClickEvent()"                   ) return object->disconnect( SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) )                  );
+   else if( signal == ( QString ) "mousePressEvent()"                         ) return object->disconnect( SIGNAL( sg_mousePressEvent( QMouseEvent * ) )                        );
+   else if( signal == ( QString ) "mouseReleaseEvent()"                       ) return object->disconnect( SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) )                      );
+   else if( signal == ( QString ) "wheelEvent()"                              ) return object->disconnect( SIGNAL( sg_wheelEvent( QWheelEvent * ) )                             );
+   else if( signal == ( QString ) "resizeEvent()"                             ) return object->disconnect( SIGNAL( sg_resizeEvent( QResizeEvent * ) )                           );
+   else if( signal == ( QString ) "scrollContentsBy(int,int)"                 ) return object->disconnect( SIGNAL( sg_scrollContentsBy( int, int ) )                            );
+   else if( signal == ( QString ) "geometriesChanged()"                       ) return object->disconnect( SIGNAL( geometriesChanged() )                                        );
+   else if( signal == ( QString ) "sectionAutoResize(int,int)"                ) return object->disconnect( SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) )          );
+   else if( signal == ( QString ) "sectionClicked(int)"                       ) return object->disconnect( SIGNAL( sectionClicked( int ) )                                      );
+   else if( signal == ( QString ) "sectionCountChanged(int,int)"              ) return object->disconnect( SIGNAL( sectionCountChanged( int, int ) )                            );
+   else if( signal == ( QString ) "sectionDoubleClicked(int)"                 ) return object->disconnect( SIGNAL( sectionDoubleClicked( int ) )                                );
+   else if( signal == ( QString ) "sectionEntered(int)"                       ) return object->disconnect( SIGNAL( sectionEntered( int ) )                                      );
+   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)"           ) return object->disconnect( SIGNAL( sectionHandleDoubleClicked( int ) )                          );
+   else if( signal == ( QString ) "sectionMoved(int,int,int)"                 ) return object->disconnect( SIGNAL( sectionMoved( int, int, int ) )                              );
+   else if( signal == ( QString ) "sectionPressed(int)"                       ) return object->disconnect( SIGNAL( sectionPressed( int ) )                                      );
+   else if( signal == ( QString ) "sectionResized(int,int,int)"               ) return object->disconnect( SIGNAL( sectionResized( int, int, int ) )                            );
+   else if( signal == ( QString ) "sortIndicatorChanged(int,int)"             ) return object->disconnect( SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) )                 );
+   else if( signal == ( QString ) "buttonClicked(int)"                        ) return object->disconnect( SIGNAL( buttonClicked( int ) )                                       );
+   else if( signal == ( QString ) "buttonPressed(int)"                        ) return object->disconnect( SIGNAL( buttonPressed( int ) )                                       );
+   else if( signal == ( QString ) "buttonReleased(int)"                       ) return object->disconnect( SIGNAL( buttonReleased( int ) )                                      );
+   else if( signal == ( QString ) "linkActivated(QString)"                    ) return object->disconnect( SIGNAL( linkActivated( const QString & ) )                           );
+   else if( signal == ( QString ) "linkHovered(QString)"                      ) return object->disconnect( SIGNAL( linkHovered( const QString & ) )                             );
+   else if( signal == ( QString ) "cellActivated(int,int)"                    ) return object->disconnect( SIGNAL( cellActivated( int, int ) )                                  );
+   else if( signal == ( QString ) "cellChanged(int,int)"                      ) return object->disconnect( SIGNAL( cellChanged( int, int ) )                                    );
+   else if( signal == ( QString ) "cellClicked(int,int)"                      ) return object->disconnect( SIGNAL( cellClicked( int, int ) )                                    );
+   else if( signal == ( QString ) "cellDoubleClicked(int,int)"                ) return object->disconnect( SIGNAL( cellDoubleClicked( int, int ) )                              );
+   else if( signal == ( QString ) "cellEntered(int,int)"                      ) return object->disconnect( SIGNAL( cellEntered( int, int ) )                                    );
+   else if( signal == ( QString ) "cellPressed(int,int)"                      ) return object->disconnect( SIGNAL( cellPressed( int, int ) )                                    );
+   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)"       ) return object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) )                   );
+   else if( signal == ( QString ) "tabCloseRequested(int)"                    ) return object->disconnect( SIGNAL( tabCloseRequested( int ) )                                   );
+   else if( signal == ( QString ) "paintRequested(QPrinter)"                  ) return object->disconnect( SIGNAL( paintRequested( QPrinter * ) )                               );
    /* QIODevice & QProcess */
-   else if( signal == ( QString ) "aboutToClose()" )                            return object->disconnect( SIGNAL( aboutToClose() ) );
-   else if( signal == ( QString ) "bytesWritten(int)" )                         return object->disconnect( SIGNAL( bytesWritten( qint64 ) ) );
-   else if( signal == ( QString ) "readChannelFinished()" )                     return object->disconnect( SIGNAL( readChannelFinished() ) );
-   else if( signal == ( QString ) "readyRead()" )                               return object->disconnect( SIGNAL( readyRead() ) );
-   else if( signal == ( QString ) "error(int)" )                                return object->disconnect( SIGNAL( error( int ) ) );
-   else if( signal == ( QString ) "finished(int,int)" )                         return object->disconnect( SIGNAL( finished( int, QProcess::ExitStatus ) ) );
-   else if( signal == ( QString ) "readyReadStandardError()" )                  return object->disconnect( SIGNAL( readyReadStandardError() ) );
-   else if( signal == ( QString ) "readyReadStandardOutput()" )                 return object->disconnect( SIGNAL( readyReadStandardOutput() ) );
-   else if( signal == ( QString ) "started()" )                                 return object->disconnect( SIGNAL( started() ) );
-   else if( signal == ( QString ) "stateChanged(int)" )                         return object->disconnect( SIGNAL( stateChanged( int ) ) );
+   else if( signal == ( QString ) "aboutToClose()"                            ) return object->disconnect( SIGNAL( aboutToClose() )                                             );
+   else if( signal == ( QString ) "bytesWritten(int)"                         ) return object->disconnect( SIGNAL( bytesWritten( qint64 ) )                                     );
+   else if( signal == ( QString ) "readChannelFinished()"                     ) return object->disconnect( SIGNAL( readChannelFinished() )                                      );
+   else if( signal == ( QString ) "readyRead()"                               ) return object->disconnect( SIGNAL( readyRead() )                                                );
+   else if( signal == ( QString ) "error(int)"                                ) return object->disconnect( SIGNAL( error( int ) )                                               );
+   else if( signal == ( QString ) "finished(int,int)"                         ) return object->disconnect( SIGNAL( finished( int, QProcess::ExitStatus ) )                      );
+   else if( signal == ( QString ) "readyReadStandardError()"                  ) return object->disconnect( SIGNAL( readyReadStandardError() )                                   );
+   else if( signal == ( QString ) "readyReadStandardOutput()"                 ) return object->disconnect( SIGNAL( readyReadStandardOutput() )                                  );
+   else if( signal == ( QString ) "started()"                                 ) return object->disconnect( SIGNAL( started() )                                                  );
+   else if( signal == ( QString ) "stateChanged(int)"                         ) return object->disconnect( SIGNAL( stateChanged( int ) )                                        );
    /* QComboBox */
-   else if( signal == ( QString ) "activated(text)" )                           return object->disconnect( SIGNAL( activated( const QString & ) ) );
-   else if( signal == ( QString ) "currentIndexChanged(text)" )                 return object->disconnect( SIGNAL( currentIndexChanged( const QString & ) ) );
-   else if( signal == ( QString ) "editTextChanged(text)" )                     return object->disconnect( SIGNAL( editTextChanged( const QString & ) ) );
-   else if( signal == ( QString ) "highlighted(text)" )                         return object->disconnect( SIGNAL( highlighted( const QString & ) ) );
+   else if( signal == ( QString ) "activated(text)"                           ) return object->disconnect( SIGNAL( activated( const QString & ) )                               );
+   else if( signal == ( QString ) "currentIndexChanged(text)"                 ) return object->disconnect( SIGNAL( currentIndexChanged( const QString & ) )                     );
+   else if( signal == ( QString ) "editTextChanged(text)"                     ) return object->disconnect( SIGNAL( editTextChanged( const QString & ) )                         );
+   else if( signal == ( QString ) "highlighted(text)"                         ) return object->disconnect( SIGNAL( highlighted( const QString & ) )                             );
+   /* QTextDocument */
+   else if( signal == ( QString ) "blockCountChanged(int)"                    ) return object->disconnect( SIGNAL( blockCountChanged( int )                                   ) );
+   else if( signal == ( QString ) "contentsChange(int,int,int)"               ) return object->disconnect( SIGNAL( contentsChange( int, int, int )                            ) );
+   else if( signal == ( QString ) "contentsChanged()"                         ) return object->disconnect( SIGNAL( contentsChanged()                                          ) );
+   else if( signal == ( QString ) "cursorPositionChanged(QTextCursor)"        ) return object->disconnect( SIGNAL( cursorPositionChanged( const QTextCursor & )               ) );
+   else if( signal == ( QString ) "documentLayoutChanged()"                   ) return object->disconnect( SIGNAL( documentLayoutChanged()                                    ) );
+   else if( signal == ( QString ) "modificationChanged(bool)"                 ) return object->disconnect( SIGNAL( modificationChanged( bool )                                ) );
+   else if( signal == ( QString ) "undoCommandAdded()"                        ) return object->disconnect( SIGNAL( undoCommandAdded()                                         ) );
 
    return false;
 }
@@ -785,7 +829,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
 
          bFreed = disconnect_signal( object, signal );
 
-         HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal ) );
+         //HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal ) );
       }
    }
    hb_retl( bFreed );

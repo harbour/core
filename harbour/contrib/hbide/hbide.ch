@@ -126,6 +126,13 @@
 #define SB_PNL_CODEC                             12
 #define SB_PNL_PROJECT                           13
 
+#define TAB_OTAB                                  1
+#define TAB_QEDIT                                 2
+#define TAB_QHILIGHTER                            3
+#define TAB_QLAYOUT                               4
+#define TAB_SOURCEFILE                            5
+#define TAB_QDOCUMENT                             6
+#define TAB_OEDITOR                               7
 
 #endif
 

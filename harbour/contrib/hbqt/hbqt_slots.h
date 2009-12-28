@@ -57,6 +57,7 @@
 
 #include "hbapiitm.h"
 
+#include <QTextCursor>
 #include <QTextCharFormat>
 #include <QTreeWidgetItem>
 //#include <QWebFrame>
@@ -218,6 +219,14 @@ public slots:
    void currentIndexChanged( const QString & text );
    void editTextChanged( const QString & text );
    void highlighted( const QString & text );
+   /* QTextDocument */
+   void blockCountChanged( int newBlockCount );
+   void contentsChange( int position, int charsRemoved, int charsAdded );
+   void contentsChanged();
+   void cursorPositionChanged( const QTextCursor & cursor );
+   void documentLayoutChanged();
+   void modificationChanged( bool changed );
+   void undoCommandAdded();
    /*  */
 };
 

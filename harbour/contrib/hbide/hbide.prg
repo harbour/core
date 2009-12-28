@@ -121,8 +121,9 @@ CLASS HbIde
    DATA   qTabWidget
    DATA   qFindDlg
 
-   ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
-   ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 6 ], NIL )
+   ACCESS oCurEditor                              INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_OEDITOR ], NIL )
+   ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QEDIT ], NIL )
+   ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QDOCUMENT ], NIL )
    ACCESS qCurCursor                              INLINE ::getCurCursor()
    DATA   qCursor
 
@@ -168,6 +169,8 @@ CLASS HbIde
    DATA   cSaveTo                                 INIT ""
    DATA   oOpenedSources
 
+   DATA   resPath                                 INIT hb_DirBase() + "resources" + hb_OsPathSeparator()
+
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
    METHOD destroy()
@@ -180,7 +183,6 @@ CLASS HbIde
    METHOD buildDialog()
    METHOD buildStatusBar()
    METHOD executeAction()
-   METHOD buildTabPage()
    METHOD buildProjectTree()
    METHOD buildEditorTree()
    METHOD manageFuncContext()
@@ -206,10 +208,7 @@ CLASS HbIde
    METHOD appendProjectInTree()
    METHOD manageItemSelected()
    METHOD addSourceInTree()
-   METHOD closeTab()
-   METHOD activateTab()
    METHOD getCurrentTab()
-   METHOD dispEditInfo()
    METHOD getCurCursor()
 
    DATA   aTags                                   INIT {}
@@ -238,7 +237,6 @@ CLASS HbIde
    METHOD convertSelection()
    METHOD printPreview()
    METHOD paintRequested()
-   METHOD setTabImage()
    METHOD loadUI()
    METHOD updateHbp()
    METHOD saveProject()
@@ -258,6 +256,8 @@ CLASS HbIde
    METHOD setCodec()
 
    METHOD PromptForPath( cObjName, cTitle, cObjPath2, cObjPath3 )
+
+   DATA   aEdits                                  INIT {}
 
    ENDCLASS
 
@@ -331,9 +331,8 @@ METHOD HbIde:create( cProjIni )
 
    #if 0
    qSet := QSettings():new( "Harbour", "HbIde" )
-   IF !qSet:isNull()
-      ::oDlg:oWidget:restoreState( qSet:value( "state" ) )
-   ENDIF
+HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state" ) )
+   ::oDlg:oWidget:restoreState( QByteArray():configure( qSet:value( "state" ) ) )
    #endif
 
    ::oDlg:Show()
@@ -362,7 +361,7 @@ METHOD HbIde:create( cProjIni )
          CASE ::mp1 == xbeK_INS
             IF !empty( ::qCurEdit )
                ::qCurEdit:setOverwriteMode( ! ::qCurEdit:overwriteMode() )
-               ::dispEditInfo()
+               ::oCurEditor:dispEditInfo()
             ENDIF
 
          CASE ::mp1 == xbeK_ESC
@@ -387,6 +386,10 @@ METHOD HbIde:create( cProjIni )
          CASE ::mp1 == xbeK_CTRL_R
             IF !empty( ::qCurEdit )
                ::replace()
+            ENDIF
+         CASE ::mp1 == xbeK_TAB
+            IF !empty( ::qCurEdit )
+               ::qCurEdit:insertText( "   " )
             ENDIF
 
          ENDCASE
@@ -426,8 +429,9 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:saveConfig()
-   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qBArray, qSet
+   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qSet
    LOCAL nTabs := ::qTabWidget:count()
+   //LOCAL qBArray
 
    txt_:= {}
    //    Properties
@@ -446,10 +450,16 @@ METHOD HbIde:saveConfig()
    qSet := QSettings():new( "Harbour", "HbIde" )
    qSet:setValue( "state", ::oDlg:oWidget:saveState() )
 
+   #if 0
    qBArray := QByteArray()
    qBArray:pPtr := ::oDlg:oWidget:saveState()
-HB_TRACE( HB_TR_ALWAYS, qBArray:size(), qBArray:constData(), qBArray:isNull(), len( qBArray:constData() ) )
+   HB_TRACE( HB_TR_ALWAYS, "QByteArray", 1 )
+   HB_TRACE( HB_TR_ALWAYS, "QByteArray", qBArray:size(), qBArray:isNull() )
+   HB_TRACE( HB_TR_ALWAYS, "QByteArray", 2, qBArray:constData() )
+
    aadd( txt_, "State                  = " + qBArray:data_1() )
+   #endif
+
    aadd( txt_, " " )
 
    //    Projects
@@ -464,12 +474,12 @@ HB_TRACE( HB_TR_ALWAYS, qBArray:size(), qBArray:constData(), qBArray:isNull(), l
    FOR n := 1 TO nTabs
       pTab      := ::qTabWidget:widget( n-1 )
       nTab      := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
-      qEdit     := ::aTabs[ nTab, 2 ]
+      qEdit     := ::aTabs[ nTab, TAB_QEDIT ]
       qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
       ::qCursor := QTextCursor():configure( qEdit:textCursor() )
 
-      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ ;
+      aadd( txt_, ::aTabs[ nTab, TAB_SOURCEFILE ] +","+ ;
                   hb_ntos( ::qCursor:position() ) +","+ ;
                   hb_ntos( qHScr:value() ) + "," + ;
                   hb_ntos( qVScr:value() ) + ","   ;
@@ -648,7 +658,7 @@ METHOD HbIde:setPosByIni( qWidget, nPart )
 METHOD HbIde:manageFocusInEditor()
 
    IF ::getCurrentTab() > 0
-      ::aTabs[ ::getCurrentTab(), 2 ]:setFocus()
+      ::aTabs[ ::getCurrentTab(), TAB_QEDIT ]:setFocus()
    ENDIF
 
    RETURN self
@@ -659,7 +669,7 @@ METHOD HbIde:getCurCursor()
    LOCAL iTab
 
    IF ( iTab := ::getCurrentTab() ) > 0
-      ::qCursor:configure( ::aTabs[ iTab, 1 ]:textCutsor() )
+      ::qCursor:configure( ::aTabs[ iTab, TAB_OTAB ]:textCutsor() )
    ENDIF
 
    RETURN ::qCursor
@@ -669,9 +679,11 @@ METHOD HbIde:getCurCursor()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
+   LOCAL n
+   #if 0
    LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr
    LOCAL lFirst := .t.
-   LOCAL n
+   #endif
 
    IF !Empty( cSourceFile ) .AND. !( IsValidText( cSourceFile ) )
       RETURN Self
@@ -683,108 +695,23 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
    DEFAULT nVPos       TO 0
    DEFAULT lPPO        TO .F.
 
- * An empty filename is a request to create a new empty file...
+   * An empty filename is a request to create a new empty file...
    IF Empty( cSourceFile )
       n := 0
    ELSE
-      n := aScan( ::aTabs, {|a| a[5] == cSourceFile })
+      n := aScan( ::aTabs, {|a| a[ TAB_SOURCEFILE ] == cSourceFile })
    End
 
    IF n > 0
-      ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n,1 ]:oWidget ) )
+      ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       IF lPPO
-         ::aTabs[ n, 2 ]:setPlainText( hb_memoRead( cSourceFile ) )
+         ::aTabs[ n, TAB_QEDIT ]:setPlainText( hb_memoRead( cSourceFile ) )
       END
 
       RETURN Self
    END
 
-   oTab := ::buildTabPage( ::oDa, cSourceFile )
-
-   qEdit := QPlainTextEdit():new( oTab:oWidget )
-HB_TRACE( HB_TR_ALWAYS, cSourceFile, PathNormalized( cSourceFile ) )
-   qEdit:setPlainText( hb_memoRead( cSourceFile ) )
-   qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   qEdit:setFont( ::oFont:oWidget )
-   qEdit:ensureCursorVisible()
-
-   qDocument := QTextDocument():configure( qEdit:document() )
-
-   qLayout := QBoxLayout():new()
-   qLayout:setDirection( 0 )
-   qLayout:setContentsMargins( 0,0,0,0 )
-   qLayout:addWidget( qEdit )
-
-   oTab:oWidget:setLayout( qLayout )
-
-   qHiliter := QSyntaxHighlighter():new( qEdit:document() )
-
-   qEdit:show()
-
-   ::qCursor := QTextCursor():configure( qEdit:textCursor() )
-   ::qCursor:setPosition( nPos )
-   //
-   qHScr := QScrollBar():configure( qEdit:horizontalScrollBar() )
-   qHScr:setValue( nHPos )
-   //
-   qVScr := QScrollBar():configure( qEdit:verticalScrollBar() )
-   qVScr:setValue( nVPos )
-
-   aadd( ::aTabs, { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument } )
-
-   ::nCurTab := len( ::aTabs )
-
-   ::aSources := { cSourceFile }
-   ::createTags()
-   ::updateFuncList()
-   ::addSourceInTree( cSourceFile )
-   ::manageFocusInEditor()
-   ::dispEditInfo()
-
-   Qt_Connect_Signal( qEdit, "textChanged()", ;
-                          {|| ::setTabImage( oTab, qEdit, nPos, @lFirst, qDocument ) } )
-
-   Qt_Connect_Signal( qEdit, "cursorPositionChanged()", {|| ::dispEditInfo() } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildTabPage( oWnd, cSource )
-   LOCAL oTab, cPath, cFile, cExt
-
-   hb_fNameSplit( cSource, @cPath, @cFile, @cExt )
-
-   oTab := XbpTabPage():new( oWnd, , { 5,5 }, { 700,400 }, , .t. )
-   oTab:caption   := cFile + cExt
-   oTab:minimized := .F.
-
-   oTab:create()
-
-   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( oTab:oWidget ) )
-   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( oTab:oWidget ), cSource )
-
-   oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
-   oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
-
-   RETURN oTab
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
-   LOCAL nIndex    := ::qTabWidget:indexOf( oTab:oWidget )
-   LOCAL lModified := qDocument:isModified()
-
-   ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
-
-   ::oSBar:getItem( SB_PNL_MODIFIED ):caption := IIF( lModified, "Modified", " " )
-
-   IF lFirst
-      lFirst := .f.
-      ::qCursor:configure( qEdit:textCursor() )
-      ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
-      qEdit:setTextCursor( ::qCursor )
-   ENDIF
+   aadd( ::aEdits, IdeEditor():new():create( Self, cSourceFile, nPos, nHPos, nVPos ) )
 
    RETURN Self
 
@@ -812,23 +739,23 @@ METHOD HbIde:closeSource( nTab )
    IF !empty( nTab  )
       ::oFuncList:clear()
       ::saveSource( nTab )
-      ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::aTabs[ nTab,1 ]:oWidget ) )
+      ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::aTabs[ nTab, TAB_OTAB ]:oWidget ) )
 
-      cSource := ::aTabs[ nTab, 5 ]
+      cSource := ::aTabs[ nTab, TAB_SOURCEFILE ]
 
       /* Destroy all objects */
       // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
       //
-      Qt_DisConnect_Signal( ::aTabs[ nTab, 2 ], "textChanged()" )
-      Qt_DisConnect_Signal( ::aTabs[ nTab, 2 ], "cursorPositionChanged()" )
+      Qt_DisConnect_Signal( ::aTabs[ nTab, TAB_QEDIT ], "textChanged()" )
+      Qt_DisConnect_Signal( ::aTabs[ nTab, TAB_QEDIT ], "cursorPositionChanged()" )
 
-      ::aTabs[ nTab, 6 ]:pPtr := 0
-      ::aTabs[ nTab, 4 ]:pPtr := 0
-      ::aTabs[ nTab, 3 ]:pPtr := 0
-      ::aTabs[ nTab, 2 ]:pPtr := 0
+      ::aTabs[ nTab, TAB_QDOCUMENT  ]:pPtr := 0
+      ::aTabs[ nTab, TAB_QLAYOUT    ]:pPtr := 0
+      ::aTabs[ nTab, TAB_QHILIGHTER ]:pPtr := 0
+      ::aTabs[ nTab, TAB_QEDIT      ]:pPtr := 0
 
       //::aTabs[ nTab, 1 ] := NIL
-      ::aTabs[ nTab, 5 ] := ""
+      ::aTabs[ nTab, TAB_SOURCEFILE ] := ""
 
       IF ( n := ascan( ::aProjData, {|e_| e_[ 4 ] == cSource } ) ) > 0
          ::aProjData[ n,3 ]:delItem( ::aProjData[ n,1 ] )
@@ -869,15 +796,15 @@ METHOD HbIde:saveSource( nTab, lConfirm )
       RETURN Self
    End
 
-   qDocument := ::aTabs[ nTab, 6 ]
-   cSource   := ::aTabs[ nTab, 5 ]
-   nIndex    := ::qTabWidget:indexOf( ::aTabs[ nTab, 1 ]:oWidget )
+   qDocument := ::aTabs[ nTab, TAB_QDOCUMENT ]
+   cSource   := ::aTabs[ nTab, TAB_SOURCEFILE ]
+   nIndex    := ::qTabWidget:indexOf( ::aTabs[ nTab, TAB_OTAB ]:oWidget )
    lSave     := qDocument:isModified() .OR. Empty( cSource )
 
    IF lSave
 
-      IF lConfirm .and. !GetYesNo( iif( Empty(::aTabs[ nTab, 5 ]), 'Untitled',;
-                cSource ),  "Has been modified, save this source ?" )
+      IF lConfirm .and. !GetYesNo( iif( Empty(::aTabs[ nTab, TAB_SOURCEFILE ] ), 'Untitled',;
+                                          cSource ),  "Has been modified, save this source ?" )
          lSave := .f.
       ENDIF
 
@@ -891,7 +818,7 @@ METHOD HbIde:saveSource( nTab, lConfirm )
             lSave   := !Empty( cSource )
 
             IF lSave
-               ::aTabs[ nTab, 5 ] := cSource
+               ::aTabs[ nTab, TAB_SOURCEFILE ] := cSource
                hb_fNameSplit( cSource, , @cFile, @cExt )
 
                ::qTabWidget:setTabText( nIndex, cFile + cExt )
@@ -901,8 +828,8 @@ METHOD HbIde:saveSource( nTab, lConfirm )
             End
          End
 
-         cBuffer := ::aTabs[ nTab, 2 ]:toPlainText()
-         hb_memowrit( ::aTabs[ nTab, 5 ], cBuffer )
+         cBuffer := ::aTabs[ nTab, TAB_QEDIT ]:toPlainText()
+         hb_memowrit( ::aTabs[ nTab, TAB_SOURCEFILE ], cBuffer )
          qDocument:setModified( .f. )
          ::createTags()
          ::updateFuncList()
@@ -952,35 +879,6 @@ METHOD HbIde:selectSource( cMode )
    ENDIF
 
    RETURN cFile
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:closeTab( mp1, mp2, oXbp )
-
-   HB_SYMBOL_UNUSED( mp1 )
-
-   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
-      ::closeSource( mp2, .t. )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:activateTab( mp1, mp2, oXbp )
-
-   HB_SYMBOL_UNUSED( mp1 )
-
-   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
-      ::nCurTab  := mp2
-      ::aSources := { ::aTabs[ ::nCurTab, 5 ] }
-      ::createTags()
-      ::updateFuncList()
-      ::dispEditInfo()
-      ::manageFocusInEditor()
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1194,13 +1092,13 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
       IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) == 0
          ::editSource( cSource )
       ELSE
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n,1 ]:oWidget ) )
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       ENDIF
 
    CASE ::aProjData[ n, 2 ] == "Opened Source"
       cSource := ::aProjData[ n, 5 ]
       IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) > 0
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n,1 ]:oWidget ) )
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       ENDIF
 
    CASE ::aProjData[ n, 2 ] == "Path"
@@ -1309,45 +1207,6 @@ METHOD HbIde:buildStatusBar()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-METHOD HbIde:dispEditInfo()
-   LOCAL s, qEdit, qDoc
-
-   IF !empty( ::qCurEdit )
-      qEdit := ::qCurEdit
-      qDoc  := ::qCurDocument
-
-      ::qCursor := QTextCursor():configure( qEdit:textCursor() )
-
-      s := "<b>Line "+ hb_ntos( ::qCursor:blockNumber()+1 ) + " of " + ;
-                       hb_ntos( qDoc:blockCount() ) + "</b>"
-
-      ::oSBar:getItem( SB_PNL_MAIN     ):caption := "Success"
-      ::oSBar:getItem( SB_PNL_READY    ):caption := "Ready"
-      ::oSBar:getItem( SB_PNL_LINE     ):caption := s
-      ::oSBar:getItem( SB_PNL_COLUMN   ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
-      ::oSBar:getItem( SB_PNL_INS      ):caption := IIF( qEdit:overwriteMode(), " ", "Ins" )
-      ::oSBar:getItem( SB_PNL_MODIFIED ):caption := IIF( qDoc:isModified(), "Modified", " " )
-      ::oSBar:getItem( SB_PNL_STREAM   ):caption := "Stream"
-      ::oSBar:getItem( SB_PNL_EDIT     ):caption := "Edit"
-
-   ELSE
-      ::oSBar:getItem( SB_PNL_READY    ):caption := " "
-      ::oSBar:getItem( SB_PNL_LINE     ):caption := " "
-      ::oSBar:getItem( SB_PNL_COLUMN   ):caption := " "
-      ::oSBar:getItem( SB_PNL_INS      ):caption := " "
-      ::oSBar:getItem( SB_PNL_M_1      ):caption := " "
-      ::oSBar:getItem( SB_PNL_MODIFIED ):caption := " "
-      ::oSBar:getItem( SB_PNL_M_2      ):caption := " "
-      ::oSBar:getItem( SB_PNL_STREAM   ):caption := " "
-      ::oSBar:getItem( SB_PNL_EDIT     ):caption := " "
-      ::oSBar:getItem( SB_PNL_MAIN     ):caption := " "
-
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 //                              Main Window
 /*----------------------------------------------------------------------*/
 
@@ -1442,8 +1301,8 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
-      IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
-         ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+      IF !( ::aTabs[ ::nCurTab, TAB_QEDIT ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+         ::aTabs[ ::nCurTab, TAB_QEDIT ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
 
       ENDIF
    ENDIF
@@ -2093,7 +1952,7 @@ METHOD HbIde:setCurrentProject( cProjectName )
       aPrjProps     := ::aProjects[ n, 3 ]
       ::cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
 
-      ::oDlg:Title := "Harbour-Qt IDE - Project " + ::cWrkProject
+      ::oDlg:Title := "Harbour-Qt IDE [ " + ::cWrkProject + " ]"
       ::oDlg:oWidget:setWindowTitle( ::oDlg:Title )
       ::oSBar:getItem( SB_PNL_PROJECT ):caption := ::cWrkProject
    ELSE
@@ -2218,7 +2077,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
 
       n := ::getCurrentTab()
 
-      hb_FNameSplit( ::aTabs[ n, 5 ], @cPath, @cFileName, @cTmp )
+      hb_FNameSplit( ::aTabs[ n, TAB_SOURCEFILE ], @cPath, @cFileName, @cTmp )
 
       IF !( lower( cTmp ) $ ".prg,?" )
          MsgBox( 'Operation not supported for this file type: "'+cTmp+'"' )
@@ -2229,7 +2088,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
 
       // TODO: We have to test if the current file is part of a project, and we
       // pull your settings, even though this is not the active project - vailtom
-      aadd( aHbp, ::aTabs[ n, 5 ] )
+      aadd( aHbp, ::aTabs[ n, TAB_SOURCEFILE ] )
 
       FErase( cFileName )
    End
@@ -2246,7 +2105,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
               CRLF + ;
               'Started at ' + time() + CRLF + ;
               '-----------------------------------------------------------------' + CRLF
-      cCmd := "hbmk2.exe " + cHbpPath
+      cCmd := "hbmk2.exe " + cHbpPath + " //gtnul"
 
       nseconds := seconds()  // time elapsed
       nResult  := hb_processRun( cCmd, , @cOutput, @cErrors )
