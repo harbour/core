@@ -16,7 +16,7 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
-CFLAGS += -q -tWM
+CFLAGS += -q -tWM -CP437
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w -w-sig- -Q

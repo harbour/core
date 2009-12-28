@@ -211,7 +211,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     */
    vfprintf( s_fp, fmt, ap );
 
-   if( s_winout )
    /* TOFIX: va_end() is _required_ here according to all available documentation. */
    /* va_end( ap ); Generates access violation in the subsequent hb_vsnprintf */
 
@@ -239,10 +238,10 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
       /* We add \r\n at the end of the buffer to make WinDbg display look readable. */
       if( proc )
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s\r\n",
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s\n",
                       file, line, proc, pszLevel, buffer1 );
       else
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s\r\n",
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s\n",
                       file, line, pszLevel, buffer1 );
 
       #if defined( UNICODE )
