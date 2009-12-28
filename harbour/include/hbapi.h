@@ -484,16 +484,17 @@ typedef unsigned int HB_ERRCODE;
 
 extern HB_SYMB  hb_symEval;
 
-extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
-extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
-extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
-extern HB_EXPORT void * hb_xgrab( ULONG ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
-extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees memory */
-extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
-extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
-extern HB_EXPORT ULONG  hb_xquery( int iMode );                     /* Query different types of memory information */
-extern HB_EXPORT void   hb_xsetfilename( const char * szValue );
-extern HB_EXPORT void   hb_xsetinfo( const char * szValue );
+extern HB_EXPORT void    hb_xinit( void );                           /* Initialize fixed memory subsystem */
+extern HB_EXPORT void    hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
+extern HB_EXPORT void *  hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
+extern HB_EXPORT void *  hb_xgrab( ULONG ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
+extern HB_EXPORT void    hb_xfree( void * pMem );                    /* frees memory */
+extern HB_EXPORT void *  hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
+extern HB_EXPORT ULONG   hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
+extern HB_EXPORT ULONG   hb_xquery( int iMode );                     /* Query different types of memory information */
+extern HB_EXPORT HB_BOOL hb_xtraced( void );
+extern HB_EXPORT void    hb_xsetfilename( const char * szValue );
+extern HB_EXPORT void    hb_xsetinfo( const char * szValue );
 #ifdef _HB_API_INTERNAL_
 extern void hb_xinit_thread( void );
 extern void hb_xexit_thread( void );

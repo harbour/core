@@ -1387,6 +1387,15 @@ ULONG hb_xquery( int iMode )
    return ulResult;
 }
 
+HB_BOOL hb_xtraced( void )
+{
+#if HB_TR_LEVEL >= HB_TR_DEBUG
+   return HB_TRUE;
+#else
+   return HB_FALSE;
+#endif
+}
+
 #if defined( __cplusplus ) && defined( HB_FM_STATISTICS )
 void * operator new( size_t nSize )
 {
