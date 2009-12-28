@@ -230,6 +230,11 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       char buffer1[ 1024 ];
       char buffer2[ 1024 ];
 
+      /* NOTE: Hack to avoid reentrancy when hb_[v]snprintf() happens to
+               make a call to hb_xgrab() (or other Harbour APIs) which in
+               turn call trace engine again. */
+      s_winout = 0;
+
       hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
 
       /* We add \r\n at the end of the buffer to make WinDbg display look readable. */
@@ -249,6 +254,8 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       #else
          OutputDebugString( buffer2 );
       #endif
+
+      s_winout = 1;
    }
 
 #endif
