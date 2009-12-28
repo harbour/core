@@ -211,9 +211,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     */
    vfprintf( s_fp, fmt, ap );
 
-   /* TOFIX: va_end() is _required_ here according to all available documentation. */
-   /* va_end( ap ); Generates access violation in the subsequent hb_vsnprintf */
-
    /*
     * Print a new-line.
     */
