@@ -700,7 +700,7 @@ METHOD XbpRtf:textRTF( ... )                                // ""
    LOCAL aP := hb_aParams()
 
    IF len( aP ) == 1 .and. hb_isChar( aP[ 1 ] )
-      ::oWidget:setHtmlText( aP[ 1 ] )
+      ::oWidget:setHTML( aP[ 1 ] )
    ENDIF
 
    IF len( aP ) >= 1

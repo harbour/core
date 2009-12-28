@@ -134,6 +134,8 @@ FUNCTION hbqt_showError( cMsg )
    ELSE
       IF SubStr( cMsg, 1, 1 ) == "_"
          s := SubStr( cMsg, 2 )
+      ELSE
+         s := cMsg
       ENDIF
       hbqt_messageBox( ":" + s, "Message not found - " + ProcName( 2 ) + ":" + hb_ntos( ProcLine( 2 ) ) )
    ENDIF

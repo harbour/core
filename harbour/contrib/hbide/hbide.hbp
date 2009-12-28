@@ -20,4 +20,5 @@ idetags.prg
 idemisc.prg
 ideactions.prg
 ideeditor.prg
+idefindreplace.prg
 ideparseexpr.c
