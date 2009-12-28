@@ -22,4 +22,5 @@ ideactions.prg
 ideeditor.prg
 idefindreplace.prg
 idedocks.prg
+idesaveload.prg
 ideparseexpr.c

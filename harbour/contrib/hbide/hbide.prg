@@ -174,16 +174,12 @@ CLASS HbIde
    METHOD create( cProjectOrSource )
    METHOD destroy()
 
-   METHOD loadConfig()
-   METHOD saveConfig()
    METHOD setPosAndSizeByIni()
    METHOD setPosByIni()
 
    METHOD buildDialog()
    METHOD buildStatusBar()
    METHOD executeAction()
-   //METHOD buildProjectTree()
-   //METHOD buildEditorTree()
    METHOD manageFuncContext()
    METHOD manageProjectContext()
 
@@ -272,7 +268,7 @@ METHOD HbIde:create( cProjIni )
 
    hbqt_errorsys()
 
-   ::loadConfig( cProjIni )
+   LoadINI( Self, cProjIni )
 
    ::BuildDialog()
    ::oDa := ::oDlg:drawingArea
@@ -284,9 +280,6 @@ METHOD HbIde:create( cProjIni )
    ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    ::oTabWidget := ::oDa:oTabWidget
    ::qTabWidget := ::oDa:oTabWidget:oWidget
-
-   //::buildProjectTree()
-   //::buildEditorTree()
 
    IdeDocks():new():create( Self )
 
@@ -337,7 +330,8 @@ HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state"
       // HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
 
       IF ::nEvent == xbeP_Close
-         ::saveConfig()
+         //::saveConfig()
+         SaveINI( Self )
          ::closeAllSources()
          EXIT
 
@@ -412,163 +406,151 @@ HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state"
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:saveConfig()
-   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qSet
-   LOCAL nTabs := ::qTabWidget:count()
-   //LOCAL qBArray
+METHOD HbIde:executeAction( cKey )
+   LOCAL cFile
+   LOCAL aPrj, cHbi, Tmp, n
 
-   txt_:= {}
-   //    Properties
-   aadd( txt_, "[HBIDE]" )
-   aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )             )
-   aadd( txt_, "ProjectTreeVisible     = " + IIF( ::lProjTreeVisible, "YES", "NO" )   )
-   aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( ::oProjTree:oWidget )        )
-   aadd( txt_, "FunctionListVisible    = " + IIF( ::lDockRVisible, "YES", "NO" )      )
-   aadd( txt_, "FunctionListGeometry   = " + PosAndSize( ::oFuncList:oWidget )        )
-   aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() )   )
-   aadd( txt_, "CurrentProject         = " + ""                                       )
-   aadd( txt_, "GotoDialogGeometry     = " + ::aIni[ INI_HBIDE, GotoDialogGeometry  ] )
-   aadd( txt_, "PropsDialogGeometry    = " + ::aIni[ INI_HBIDE, PropsDialogGeometry ] )
-   aadd( txt_, "FindDialogGeometry     = " + ::aIni[ INI_HBIDE, FindDialogGeometry  ] )
+   DO CASE
+   CASE cKey == "Exit"
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+   CASE cKey == "ToggleProjectTree"
+      ::lProjTreeVisible := !::lProjTreeVisible
+      IF !( ::lProjTreeVisible )
+         ::oProjTree:hide()
+      ELSE
+         ::oProjTree:show()
+      ENDIF
 
-   qSet := QSettings():new( "Harbour", "HbIde" )
-   qSet:setValue( "state", ::oDlg:oWidget:saveState() )
+   CASE cKey == "NewProject"
+      ::loadProjectProperties( , .t., .t., .t. )
+   CASE cKey == "LoadProject"
+      ::loadProjectProperties( , .f., .f., .t. )
 
-   #if 0
-   qBArray := QByteArray()
-   qBArray:pPtr := ::oDlg:oWidget:saveState()
-   HB_TRACE( HB_TR_ALWAYS, "QByteArray", 1 )
-   HB_TRACE( HB_TR_ALWAYS, "QByteArray", qBArray:size(), qBArray:isNull() )
-   HB_TRACE( HB_TR_ALWAYS, "QByteArray", 2, qBArray:constData() )
+   CASE cKey == "SaveBuild"
+      ::buildProject( '', .F., .F. )
+   CASE cKey == "SaveBuildLaunch"
+      ::buildProject( '', .T., .F. )
 
-   aadd( txt_, "State                  = " + qBArray:data_1() )
-   #endif
+   CASE cKey == "SaveRebuild"
+      ::buildProject( '', .F., .T. )
+   CASE cKey == "SaveRebuildLaunch"
+      ::buildProject( '', .T., .T. )
 
-   aadd( txt_, " " )
+   CASE cKey == "CompilePPO"
+      ::buildProject( '', .F., .F., .T. )
 
-   //    Projects
-   aadd( txt_, "[PROJECTS]" )
-   FOR n := 1 TO len( ::aProjects )
-      aadd( txt_, ::aProjects[ n, 2 ] )
-   NEXT
-   aadd( txt_, " " )
+   CASE cKey == "Properties"
 
-   //    Files
-   aadd( txt_, "[FILES]" )
-   FOR n := 1 TO nTabs
-      pTab      := ::qTabWidget:widget( n-1 )
-      nTab      := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
-      qEdit     := ::aTabs[ nTab, TAB_QEDIT ]
-      qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
-      qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
-      ::qCursor := QTextCursor():configure( qEdit:textCursor() )
+      IF Empty( ::cWrkProject )
+         MsgBox( 'No active project detected!' )
+      End
 
-      aadd( txt_, ::aTabs[ nTab, TAB_SOURCEFILE ] +","+ ;
-                  hb_ntos( ::qCursor:position() ) +","+ ;
-                  hb_ntos( qHScr:value() ) + "," + ;
-                  hb_ntos( qVScr:value() ) + ","   ;
-           )
-   NEXT
-   aadd( txt_, " " )
+      Tmp  := ::getCurrentProject()
 
-   //    Find
-   aadd( txt_, "[FIND]" )
-   FOR n := 1 TO len( ::aIni[ INI_FIND ] )
-      aadd( txt_, ::aIni[ INI_FIND, n ] )
-   NEXT
-   aadd( txt_, " " )
+      IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == Tmp } ) ) > 0
+         aPrj := ::aProjects[ n, 3 ]
+         cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+                 aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
 
-   //    Replace
-   aadd( txt_, "[REPLACE]" )
-   FOR n := 1 TO len( ::aIni[ INI_REPLACE ] )
-      aadd( txt_, ::aIni[ INI_REPLACE, n ] )
-   NEXT
-   aadd( txt_, " " )
+         ::loadProjectProperties( cHbi, .f., .t., .t. )
+      ELSE
+         MsgBox( 'Invalid project: ' + Tmp )
+      End
 
-   RETURN CreateTarget( ::cProjIni, txt_ )
+   CASE cKey == "New"
+      ::editSource( '' )
 
-/*----------------------------------------------------------------------*/
+   CASE cKey == "Open"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::editSource( cFile )
+      ENDIF
+   CASE cKey == "Save"
+      ::saveSource( ::getCurrentTab(), .f. )
+   CASE cKey == "Close"
+      ::closeSource()
+   CASE cKey == "CloseAll"
+      ::closeAllSources()
+   CASE cKey == "Print"
+      IF !empty( ::qCurEdit )
+         ::printPreview()
+      ENDIF
+   CASE cKey == "Undo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:undo()
+      ENDIF
+   CASE cKey == "Redo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:redo()
+      ENDIF
+   CASE cKey == "Cut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:cut()
+      ENDIF
+   CASE cKey == "Copy"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:copy()
+      ENDIF
+   CASE cKey == "Paste"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:paste()
+      ENDIF
+   CASE cKey == "SelectAll"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:selectAll()
+      ENDIF
+   CASE cKey == "Find"
+      IF !empty( ::qCurEdit )
+         ::oFR:show()
+      ENDIF
+   CASE cKey == "SetMark"
+   CASE cKey == "GotoMark"
+   CASE cKey == "Goto"
+      IF !empty( ::qCurEdit )
+         ::goto()
+      ENDIF
+   CASE cKey == "ToUpper"
+      ::convertSelection( cKey )
+   CASE cKey == "ToLower"
+      ::convertSelection( cKey )
+   CASE cKey == "Invert"
+      ::convertSelection( cKey )
+   CASE cKey == "ZoomIn"
+      IF !empty( ::qCurEdit )
+         //::qCurEdit:zoomIn()
+      ENDIF
+   CASE cKey == "ZoomOut"
+      IF !empty( ::qCurEdit )
+         //::qCurEdit:zoomOut()
+      ENDIF
+   CASE cKey == "11"
+      IF ::lDockBVisible
+         ::oDockB:hide()
+         ::oDockB1:hide()
+         ::oDockB2:hide()
+         ::lDockBVisible := .f.
+      ELSEIF ::qTabWidget:count() > 0
+         ::oDockB:show()
+         ::oDockB1:show()
+         ::oDockB2:show()
+         ::lDockBVisible := .t.
+      ENDIF
+   CASE cKey == "12"
+      IF ::lDockRVisible
+         ::oDockR:hide()
+      ELSE
+         ::oDockR:show()
+      ENDIF
+      ::lDockRVisible := !( ::lDockRVisible )
 
-METHOD HbIde:loadConfig( cHbideIni )
-   LOCAL aElem, s, n, nPart, cKey, cVal, a_
-   LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
-                      "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
-                      "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
-                      "finddialoggeometry" }
+   CASE cKey == "Compile"
 
-   DEFAULT cHbideIni TO "hbide.ini"
+   CASE cKey == "CompilePPO"
 
-   cHbideIni := lower( cHbideIni )
+   ENDCASE
 
-   IF !file( cHbideIni )
-      cHbideIni := hb_dirBase() + "hbide.ini"
-   ENDIF
+   ::manageFocusInEditor()
 
-   IF !file( cHbideIni )
-      cHbideIni := hb_dirBase() + "hbide.ini"
-   ENDIF
-
-   ::cProjIni := cHbideIni
-
-   ::aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {}, {}, {} }
-
-   IF file( ::cProjIni )
-      aElem := ReadSource( ::cProjIni )
-
-      FOR EACH s IN aElem
-         s := alltrim( s )
-         IF !empty( s )
-            DO CASE
-            CASE s == "[HBIDE]"
-               nPart := INI_HBIDE
-            CASE s == "[PROJECTS]"
-               nPart := INI_PROJECTS
-            CASE s == "[FILES]"
-               nPart := INI_FILES
-            CASE s == "[FIND]"
-               nPart := INI_FIND
-            CASE s == "[REPLACE]"
-               nPart := INI_REPLACE
-            OTHERWISE
-               DO CASE
-               CASE nPart == INI_HBIDE
-                  IF ( n := at( "=", s ) ) > 0
-                     cKey := alltrim( substr( s, 1, n-1 ) )
-                     cVal := alltrim( substr( s, n+1 ) )
-                     cKey := lower( cKey )
-                     IF ( n := ascan( aIdeEle, cKey ) ) > 0
-                        ::aIni[ nPart, n ] := cVal  /* Further process */
-                     ENDIF
-                  ENDIF
-
-               CASE nPart == INI_PROJECTS
-                  aadd( ::aIni[ nPart ], s )
-                  ::loadProjectProperties( s, .f., .f., .f. )
-
-               CASE nPart == INI_FILES
-                  a_:= hb_atokens( s, "," )
-                  asize( a_, 4 )
-                  DEFAULT a_[ 1 ] TO ""
-                  DEFAULT a_[ 2 ] TO ""
-                  DEFAULT a_[ 3 ] TO ""
-                  DEFAULT a_[ 4 ] TO ""
-                  //
-                  a_[ 2 ] := val( a_[ 2 ] )
-                  a_[ 3 ] := val( a_[ 3 ] )
-                  a_[ 4 ] := val( a_[ 4 ] )
-                  aadd( ::aIni[ nPart ], a_ )
-
-               CASE nPart == INI_FIND
-                  aadd( ::aIni[ nPart ], s )
-               CASE nPart == INI_REPLACE
-                  aadd( ::aIni[ nPart ], s )
-               ENDCASE
-            ENDCASE
-         ENDIF
-      NEXT
-   ENDIF
-
-   RETURN Self
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -874,99 +856,6 @@ METHOD HbIde:getCurrentTab()
 
    RETURN nTab
 
-/*----------------------------------------------------------------------*/
-//                            Project Tree
-/*----------------------------------------------------------------------*/
-#if 0
-METHOD HbIde:buildEditorTree()
-
-   ::oDockED := XbpWindow():new( ::oDa )
-   ::oDockED:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockED:oWidget:setObjectName( "dockEditorTabs" )
-   ::oDlg:addChild( ::oDockED )
-   ::oDockED:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
-   ::oDockED:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
-   ::oDockED:oWidget:setWindowTitle( "Editor Tabs" )
-   ::oDockED:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oEditTree := XbpTreeView():new()
-   ::oEditTree:hasLines   := .T.
-   ::oEditTree:hasButtons := .T.
-   ::oEditTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oEditTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
-
-   //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
-   ::oEditTree:itemMarked    := {|oItem| ::oCurProjItem := oItem, ::manageFocusInEditor() }
-   ::oEditTree:itemSelected  := {|oItem| ::manageItemSelected( oItem ) }
-   ::oEditTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
-
-   ::oOpenedSources := ::oEditTree:rootItem:addItem( "Editor" )
-
-   ::oOpenedSources:expand( .t. )
-
-   /* Insert Project Tree Into Dock Widget */
-   ::oDockED:oWidget:setWidget( ::oEditTree:oWidget )
-
-   /* Add dock widget to Main Window */
-   ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
-
-   IF ::aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
-      ::lProjTreeVisible := .f.
-      ::oDockED:hide()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildProjectTree()
-   LOCAL i
-
-   ::oDockPT := XbpWindow():new( ::oDa )
-   ::oDockPT:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockPT:oWidget:setObjectName( "dockProjectTree" )
-   ::oDlg:addChild( ::oDockPT )
-   ::oDockPT:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
-   ::oDockPT:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
-   ::oDockPT:oWidget:setWindowTitle( "Projects" )
-   ::oDockPT:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oProjTree := XbpTreeView():new()
-   ::oProjTree:hasLines   := .T.
-   ::oProjTree:hasButtons := .T.
-   ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
-
-   //::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
-   ::oProjTree:itemMarked    := {|oItem| ::oCurProjItem := oItem, ::manageFocusInEditor() }
-   ::oProjTree:itemSelected  := {|oItem| ::manageItemSelected( oItem ) }
-   ::oProjTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
-
-   ::oProjRoot      := ::oProjTree:rootItem:addItem( "Projects" )
-
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL, NIL } )
-
-   ::oProjRoot:expand( .t. )
-   //
-   FOR i := 1 TO len( ::aProjects )
-      ::appendProjectInTree( ::aProjects[ i, 3 ] )
-   NEXT
-
-   /* Insert Project Tree Into Dock Widget */
-   ::oDockPT:oWidget:setWidget( ::oProjTree:oWidget )
-
-   /* Add dock widget to Main Window */
-   ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
-
-   IF ::aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
-      ::lProjTreeVisible := .f.
-      ::oDockPT:hide()
-   ENDIF
-
-   RETURN Self
-#endif
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:appendProjectInTree( aPrj )
@@ -1333,154 +1222,6 @@ METHOD HbIde:paintRequested( pPrinter )
 
 /*----------------------------------------------------------------------*/
 //                       Menu and Toolbar Actions
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:executeAction( cKey )
-   LOCAL cFile
-   LOCAL aPrj, cHbi, Tmp, n
-
-   DO CASE
-   CASE cKey == "Exit"
-      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-   CASE cKey == "ToggleProjectTree"
-      ::lProjTreeVisible := !::lProjTreeVisible
-      IF !( ::lProjTreeVisible )
-         ::oProjTree:hide()
-      ELSE
-         ::oProjTree:show()
-      ENDIF
-
-   CASE cKey == "NewProject"
-      ::loadProjectProperties( , .t., .t., .t. )
-   CASE cKey == "LoadProject"
-      ::loadProjectProperties( , .f., .f., .t. )
-
-   CASE cKey == "SaveBuild"
-      ::buildProject( '', .F., .F. )
-   CASE cKey == "SaveBuildLaunch"
-      ::buildProject( '', .T., .F. )
-
-   CASE cKey == "SaveRebuild"
-      ::buildProject( '', .F., .T. )
-   CASE cKey == "SaveRebuildLaunch"
-      ::buildProject( '', .T., .T. )
-
-   CASE cKey == "CompilePPO"
-      ::buildProject( '', .F., .F., .T. )
-
-   CASE cKey == "Properties"
-
-      IF Empty( ::cWrkProject )
-         MsgBox( 'No active project detected!' )
-      End
-
-      Tmp  := ::getCurrentProject()
-
-      IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == Tmp } ) ) > 0
-         aPrj := ::aProjects[ n, 3 ]
-         cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-                 aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
-
-         ::loadProjectProperties( cHbi, .f., .t., .t. )
-      ELSE
-         MsgBox( 'Invalid project: ' + Tmp )
-      End
-
-   CASE cKey == "New"
-      ::editSource( '' )
-
-   CASE cKey == "Open"
-      IF !empty( cFile := ::selectSource( "open" ) )
-         ::editSource( cFile )
-      ENDIF
-   CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), .f. )
-   CASE cKey == "Close"
-      ::closeSource()
-   CASE cKey == "CloseAll"
-      ::closeAllSources()
-   CASE cKey == "Print"
-      IF !empty( ::qCurEdit )
-         ::printPreview()
-      ENDIF
-   CASE cKey == "Undo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:undo()
-      ENDIF
-   CASE cKey == "Redo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:redo()
-      ENDIF
-   CASE cKey == "Cut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:cut()
-      ENDIF
-   CASE cKey == "Copy"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:copy()
-      ENDIF
-   CASE cKey == "Paste"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:paste()
-      ENDIF
-   CASE cKey == "SelectAll"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:selectAll()
-      ENDIF
-   CASE cKey == "Find"
-      IF !empty( ::qCurEdit )
-         ::oFR:show()
-      ENDIF
-   CASE cKey == "SetMark"
-   CASE cKey == "GotoMark"
-   CASE cKey == "Goto"
-      IF !empty( ::qCurEdit )
-         ::goto()
-      ENDIF
-   CASE cKey == "ToUpper"
-      ::convertSelection( cKey )
-   CASE cKey == "ToLower"
-      ::convertSelection( cKey )
-   CASE cKey == "Invert"
-      ::convertSelection( cKey )
-   CASE cKey == "ZoomIn"
-      IF !empty( ::qCurEdit )
-         //::qCurEdit:zoomIn()
-      ENDIF
-   CASE cKey == "ZoomOut"
-      IF !empty( ::qCurEdit )
-         //::qCurEdit:zoomOut()
-      ENDIF
-   CASE cKey == "11"
-      IF ::lDockBVisible
-         ::oDockB:hide()
-         ::oDockB1:hide()
-         ::oDockB2:hide()
-         ::lDockBVisible := .f.
-      ELSEIF ::qTabWidget:count() > 0
-         ::oDockB:show()
-         ::oDockB1:show()
-         ::oDockB2:show()
-         ::lDockBVisible := .t.
-      ENDIF
-   CASE cKey == "12"
-      IF ::lDockRVisible
-         ::oDockR:hide()
-      ELSE
-         ::oDockR:show()
-      ENDIF
-      ::lDockRVisible := !( ::lDockRVisible )
-
-   CASE cKey == "Compile"
-
-   CASE cKey == "CompilePPO"
-
-   ENDCASE
-
-   ::manageFocusInEditor()
-
-   RETURN nil
-
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:loadUI( cUi )
