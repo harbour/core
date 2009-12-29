@@ -304,13 +304,11 @@ METHOD HbIde:create( cProjIni )
 
    ::buildStatusBar()
 
-   //::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
-
    ::oFR := IdeFindReplace():new():create( Self )
 
    #if 0
    qSet := QSettings():new( "Harbour", "HbIde" )
-HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state" ) )
+   HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state" ) )
    ::oDlg:oWidget:restoreState( QByteArray():configure( qSet:value( "state" ) ) )
    #endif
 
@@ -318,7 +316,6 @@ HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state"
 
    ::loadSources()
 
-   /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
@@ -327,10 +324,7 @@ HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state"
          EXIT
       ENDIF
 
-      // HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
-
       IF ::nEvent == xbeP_Close
-         //::saveConfig()
          SaveINI( Self )
          ::closeAllSources()
          EXIT
@@ -396,12 +390,6 @@ HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state"
 
    HBXBP_DEBUG( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 
-   /*  A NOTE:
-
-       ::qSplitter and ::qLayout are released automatically
-       when ~MainWindow() is called and GC engine reports it as relaesed.
-       This is a good testimony that all the memory is recaptured properly.
-   */
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -500,7 +488,7 @@ METHOD HbIde:executeAction( cKey )
       ENDIF
    CASE cKey == "Find"
       IF !empty( ::qCurEdit )
-         ::oFR:show()
+         ::findReplace( .t. )
       ENDIF
    CASE cKey == "SetMark"
    CASE cKey == "GotoMark"
@@ -1682,7 +1670,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
 
       n := ::getCurrentTab()
 
-      hb_FNameSplit( ::aTabs[ n, TAB_SOURCEFILE ], @cPath, @cFileName, @cTmp )
+      hb_FNameSplit( ::aTabs[ n, 5 ], @cPath, @cFileName, @cTmp )
 
       IF !( lower( cTmp ) $ ".prg,?" )
          MsgBox( 'Operation not supported for this file type: "'+cTmp+'"' )
@@ -1693,7 +1681,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
 
       // TODO: We have to test if the current file is part of a project, and we
       // pull your settings, even though this is not the active project - vailtom
-      aadd( aHbp, ::aTabs[ n, TAB_SOURCEFILE ] )
+      aadd( aHbp, ::aTabs[ n, 5 ] )
 
       FErase( cFileName )
    End
@@ -1710,7 +1698,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
               CRLF + ;
               'Started at ' + time() + CRLF + ;
               '-----------------------------------------------------------------' + CRLF
-      cCmd := "hbmk2.exe " + cHbpPath + " //gtnul"
+      cCmd := "hbmk2.exe " + cHbpPath
 
       nseconds := seconds()  // time elapsed
       nResult  := hb_processRun( cCmd, , @cOutput, @cErrors )
@@ -1721,7 +1709,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
       cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
       cTmp += '-----------------------------------------------------------------' + CRLF
       cTmp += 'Finished at ' + time() + CRLF
-      cTmp += "Done in " + ltrim(str(seconds()-nseconds)) +" seconds."  + CRLF
+      cTmp += "Done in " + ltrim( str( seconds() - nseconds ) ) +" seconds."  + CRLF
 
       IF (nResult == 0) .AND. (lLaunch)
          cTmp += CRLF
@@ -1744,8 +1732,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
       End
    End
 
-   ::oOutputResult:oWidget:clear()
-   ::oOutputResult:oWidget:appendPlainText( cTmp )
+   ::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
 
    IF lDelHbp
       FErase( cHbpPath )

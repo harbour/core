@@ -464,6 +464,59 @@ FUNCTION PathNormalized( cPath, lLower )
    RETURN IF( lLower, lower( s ), s )
 
 /*----------------------------------------------------------------------*/
+/*
+ * This function parses compiler result and hightlight errors & warnings using
+ * regular expressions.
+ *
+ * More about Qt Color names:
+ *  http://www.w3.org/TR/SVG/types.html#ColorKeywords
+ *
+ * 28/12/2009 - 16:17:37
+ */
+FUNCTION ConvertBuildStatusMsgToHtml( cText )
+   LOCAL aLines
+   LOCAL cLine
+   LOCAL aRegWarns  := {}
+   LOCAL aRegErrors := {}
+
+   cText  := StrTran( cText, Chr(13)+Chr(10), Chr(10) )
+   cText  := StrTran( cText, Chr(13), Chr(10) )
+   cText  := StrTran( cText, Chr(10)+Chr(10), Chr(10) )
+
+   /* Convert some chars to valid HTML chars */
+   DO WHILE "<" $ cText
+      cText := StrTran( cText, "<", "&lt;" )
+   ENDDO
+
+   DO WHILE ">" $ cText
+      cText := StrTran( cText, ">", "&gt;" )
+   ENDDO
+
+   aLines := hb_aTokens( cText, Chr(10) )
+   cText  := '<pre><code>'
+
+   AAdd( aRegWarns, hb_RegexComp( ".*: warning.*" ) )
+   AAdd( aRegWarns, hb_RegexComp( ".*\) Warning W.*" ) )
+
+   AAdd( aRegErrors, hb_RegexComp( ".*: error.*" ) )
+   AAdd( aRegErrors, hb_RegexComp( ".*\) Error E.*" ) )
+   
+   FOR EACH cLine IN aLines
+       IF Empty( cLine )
+          *
+       ELSEIF aScan( aRegWarns,   {| reg | !Empty(hb_RegEx( reg, cLine )) } ) > 0
+          cLine := '<font color=blue>' + cLine + '</font>'
+
+       ELSEIF aScan( aRegErrors, {| reg | !Empty(hb_RegEx( reg, cLine )) } ) > 0
+          cLine := '<font color=red>' + cLine + '</font>'
+       End
+       cText += cLine + '<br>'
+   End
+
+   cText  += '</code></pre>'
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
 
 FUNCTION FilesToSources( aFiles )
    LOCAL aSrc := {}

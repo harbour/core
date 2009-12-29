@@ -66,6 +66,7 @@
 
 #include "common.ch"
 #include "xbp.ch"
+#include "inkey.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -82,7 +83,7 @@ FUNCTION buildToolBar( oWnd, oIde )
    oTBar:oWidget:setMaximumHeight( 30 )
 
    oTBar:addItem( "Exit"                       , cResPath + "exit.png"           , , , , , "Exit"       )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Toggle Project Tree"        , cResPath + "properties.png"     , , , , , "ToggleProjectTree" )
    oTBar:addItem( "New"                        , cResPath + "new.png"            , , , , , "New"        )
    oTBar:addItem( "Open"                       , cResPath + "open.png"           , , , , , "Open"       )
@@ -90,7 +91,7 @@ FUNCTION buildToolBar( oWnd, oIde )
    oTBar:addItem( "Close"                      , cResPath + "close.png"          , , , , , "Close"      )
  * oTBar:addItem( "Close all"                  , cResPath + "close.png"          , , , , , "Close all"  )
    oTBar:addItem( "Print"                      , cResPath + "print.png"          , , , , , "Print"      )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Compile"                    , cResPath + "compile.png"        , , , , , "Compile"    )
    oTBar:addItem( "Compile to PPO"             , cResPath + "ppo.png"            , , , , , "CompilePPO" )
    oTBar:addItem( "Build Project"              , cResPath + "build.png"          , , , , , "SaveBuild"  )
@@ -100,32 +101,32 @@ FUNCTION buildToolBar( oWnd, oIde )
    oTBar:addItem( "Show/Hide Build Error Info" , cResPath + "builderror.png"     , , , , , "11" )
    oTBar:addItem( "Module Function List"       , cResPath + "modulelist.png"     , , , , , "12" )
    //
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Undo"                       , cResPath + "undo.png"           , , , , , "Undo" )
    oTBar:addItem( "Redo"                       , cResPath + "redo.png"           , , , , , "Redo" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Cut"                        , cResPath + "cut.png"            , , , , , "Cut" )
    oTBar:addItem( "Copy"                       , cResPath + "copy.png"           , , , , , "Copy" )
    oTBar:addItem( "Paste"                      , cResPath + "paste.png"          , , , , , "Paste" )
    oTBar:addItem( "Select All"                 , cResPath + "selectall.png"      , , , , , "SelectAll" )
    oTBar:addItem( "Column/Stream Selection"    , cResPath + "stream.png"         , , , , , "19" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Find"                       , cResPath + "find.png"           , , , , , "Find" )
    oTBar:addItem( "Search"                     , cResPath + "search.png"         , , , , , "Search" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Place/Remove Mark"          , cResPath + "placeremovemark.png", , , , , "SetMark" )
    oTBar:addItem( "Goto Mark"                  , cResPath + "gotomark.png"       , , , , , "GotoMark" )
    oTBar:addItem( "Goto Line"                  , cResPath + "gotoline.png"       , , , , , "Goto" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "To Upper"                   , cResPath + "toupper.png"        , , , , , "ToUpper" )
    oTBar:addItem( "To Lower"                   , cResPath + "tolower.png"        , , , , , "ToLower" )
    oTBar:addItem( "Invert Case"                , cResPath + "invertcase.png"     , , , , , "Invert" )
    oTBar:addItem( "Match Pairs"                , cResPath + "matchobj.png"       , , , , , "28" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    #if 0
    oTBar:addItem( "ZoomIn"                     , cResPath + "zoomin.png"         , , , , , "ZoomIn" )
    oTBar:addItem( "ZoomOut"                    , cResPath + "zoomout.png"        , , , , , "ZoomOut" )
-   oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   oTBar:addItem(                              ,                                 , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    #endif
 
    oTBar:transparentColor := GraMakeRGBColor( { 0,255,255 } ) // GRA_CLR_INVALID
@@ -135,6 +136,66 @@ FUNCTION buildToolBar( oWnd, oIde )
 
 /*----------------------------------------------------------------------*/
 
+/*
+ * Normalizes a caption for an menu item with shortcut (or not).
+ * TODO: add support for translation of menu items AND support changing shortcuts
+ *       loading from a text file for customing hotkeys AND icons. (vailtom)
+ * 27/12/2009 - 16:05:32 - vailtom
+ */
+STATIC;
+FUNCTION mnuNormalizeItem( cCaption )
+   LOCAL cKey
+   LOCAL cIco
+   LOCAL p
+
+   /* Retrieve and update the ICON name for this menu item */
+   IF ( (p := Rat( '|', cCaption )) != 00 )
+      cIco := Substr( cCaption, p+1 )
+      cIco := alltrim( cIco )
+
+      cCaption := Substr( cCaption, 1, p-1 )
+      cCaption := Alltrim( cCaption )
+
+    * cIco := s_resPath + Alltrim( cIco ) ---> "s_resPath" is need here!
+      IF !Empty( cIco )
+         cIco := StrTran( cIco, '/', hb_OsPathSeparator() )
+         cIco := StrTran( cIco, '\', hb_OsPathSeparator() )
+
+         IF !( hb_OsPathSeparator() $ cIco )
+            cIco := hb_DirBase() + "resources" + hb_OsPathSeparator() + cIco + "|"
+         ELSE
+            cIco := cIco + "|"
+         Endif
+      Endif
+   ELSE
+      cIco := ''
+   ENDIF
+
+   /* Update the key shortcut for this menu item */
+   IF ( (p := Rat( ',', cCaption )) != 00 )
+      cKey := Substr( cCaption, p+1 )
+      cCaption := Substr( cCaption, 1, p-1 )
+      cCaption := alltrim( cCaption )
+
+      cKey := alltrim( cKey )
+      cKey := StrTran( cKey, '^', 'Ctrl+' )
+      cKey := StrTran( cKey, 'Sh+', 'Shift+' )
+
+      IF !Empty( cKey )
+         cKey := Chr( K_TAB ) + cKey
+      End
+   ELSE
+      cKey := ''
+   ENDIF
+
+   cCaption := cIco + cCaption + cKey
+   RETURN cCaption
+
+/* This pseudo function helps to create is a menu item with text and shortcut.*/
+#define _T( x )  ( mnuNormalizeItem(x) )
+
+/* This functions build the main menu for hbide.
+ */
 FUNCTION buildMainMenu( oWnd, oIde )
    LOCAL oMenuBar, oSubMenu, oSub1
 
@@ -142,32 +203,76 @@ FUNCTION buildMainMenu( oWnd, oIde )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~File"
-   oSubMenu:addItem( { "New"                          , {|| oIde:executeAction( "New"                ) } } )
-   oSubMenu:addItem( { "Open"                         , {|| oIde:executeAction( "Open"               ) } } )
-   oSubMenu:addItem( { "Save"                         , {|| oIde:executeAction( "Save"               ) } } )
-   oSubMenu:addItem( { "Close"                        , {|| oIde:executeAction( "Close"              ) } } )
-   oSubMenu:addItem( { "Close all"                    , {|| oIde:executeAction( "CloseAll"           ) } } )
+   oSubMenu:addItem( { _T( "New, ^N | new.png" )            , {|| oIde:executeAction( "New"            ) } } )
+   oSubMenu:addItem( { _T( "Open, ^O | open.png" )          , {|| oIde:executeAction( "Open"           ) } } )
+   oSubMenu:addItem( { _T( "Recent Files*" )                , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Recent Projects*" )             , {|| oIde:executeAction( ""               ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Print"                        , {|| oIde:executeAction( "Print"              ) } } )
+
+   oSubMenu:addItem( { _T( "Save, ^S | save.png" )          , {|| oIde:executeAction( "Save"           ) } } )
+   oSubMenu:addItem( { _T( "Save As*" )                     , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Save All*, Sh+^S" )             , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Close, ^W | close.png" )        , {|| oIde:executeAction( "Close"          ) } } )
+   oSubMenu:addItem( { _T( "Close All" )                    , {|| oIde:executeAction( "CloseAll"       ) } } )
+   oSubMenu:addItem( { _T( "Close Other*" )                 , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Revert to Saved*, Sh+^R" )      , {|| oIde:executeAction( ""               ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Exit"                         , {|| oIde:executeAction( "Exit"               ) } } )
+
+   oSubMenu:addItem( { _T( "Export as HTML*" )              , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Print*, ^P | print.png" )       , {|| oIde:executeAction( ""               ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Save and Exit*, Sh+^W" )        , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Exit | exit.png" )              , {|| oIde:executeAction( "Exit"           ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Edit"
+   oSubMenu:addItem( { _T( "Undo*" )                        , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Redo*" )                        , {|| oIde:executeAction( ""    ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Cut*" )                         , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Copy*" )                        , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Paste*" )                       , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Duplicate Line*" )              , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Select All*" )                  , {|| oIde:executeAction( ""    ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Find/Replace*" )                , {|| oIde:executeAction( ""    ) } } )
+   oSubMenu:addItem( { _T( "Go To Line...*" )               , {|| oIde:executeAction( ""    ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Insert*" )                      , {|| oIde:executeAction( ""    ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Set as Readonly*" )             , {|| oIde:executeAction( ""    ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Project"
-   oSubMenu:addItem( { "New"                          , {|| oIde:executeAction( "NewProject"         ) } } )
-   oSubMenu:addItem( { "Load Project..."              , {|| oIde:executeAction( "LoadProject"        ) } } )
-   oSubMenu:addItem( { "Close Project"                , {|| oIde:executeAction( "CloseProject"       ) } } )
+   oSubMenu:addItem( { _T( "Add to Project...*" )           , {|| oIde:executeAction( ""     ) } } )
+   oSubMenu:addItem( { _T( "Remove from Project...*" )      , {|| oIde:executeAction( ""     ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Save and Build"               , {|| oIde:executeAction( "SaveBuild"          ) } } )
-   oSubMenu:addItem( { "Save, Build and Launch"       , {|| oIde:executeAction( "SaveBuildLaunch"    ) } } )
-   oSubMenu:addItem( { "Save and Re-build"            , {|| oIde:executeAction( "SaveRebuild"        ) } } )
-   oSubMenu:addItem( { "Save, Re-build and Launch"    , {|| oIde:executeAction( "SaveRebuildLaunch"  ) } } )
+   oSubMenu:addItem( { _T( "New" )                          , {|| oIde:executeAction( "NewProject"     ) } } )
+   oSubMenu:addItem( { _T( "Load" )                         , {|| oIde:executeAction( "LoadProject"    ) } } )
+   oSubMenu:addItem( { _T( "Close" )                        , {|| oIde:executeAction( "CloseProject"   ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Save and Compile Current File", {|| oIde:executeAction( "SaveCompileCurrent" ) } } )
-   oSubMenu:addItem( { "Save and Compile to PPO"      , {|| oIde:executeAction( "CompilePPO"         ) } } )
+   oSubMenu:addItem( { _T( "Select Main Module...*" )       , {|| oIde:executeAction( ""     ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Project Properties"           , {|| oIde:executeAction( "Properties"         ) } } )
+   oSubMenu:addItem( { _T( "Project Properties" )           , {|| oIde:executeAction( "Properties"     ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Select Current Project*" )      , {|| oIde:executeAction( ""     ) } } )
+   oSubMenu:addItem( { _T( "Drop Current from Tree*" )      , {|| oIde:executeAction( ""     ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Build"
+   oSubMenu:addItem( { _T( "Build,^F9" )                    , {|| oIde:executeAction( "SaveBuild"          ) } } )
+   oSubMenu:addItem( { _T( "Build and Launch, F9" )         , {|| oIde:executeAction( "SaveBuildLaunch"    ) } } )
+   oSubMenu:addItem( { _T( "Re-build" )                     , {|| oIde:executeAction( "SaveRebuild"        ) } } )
+   oSubMenu:addItem( { _T( "Re-build and Launch, Sh+^F9" )  , {|| oIde:executeAction( "SaveRebuildLaunch"  ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Save and Compile Current File") , {|| oIde:executeAction( "SaveCompileCurrent" ) } } )
+   oSubMenu:addItem( { _T( "Save and Compile to PPO" )      , {|| oIde:executeAction( "CompilePPO"         ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Run*, ^F10" )                   , {|| oIde:executeAction( ""      ) } } )
+   oSubMenu:addItem( { _T( "Run without Debug*, Sh+^F10" )  , {|| oIde:executeAction( ""      ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
@@ -252,6 +357,23 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:addItem( { oSub1, NIL } )
 
    oSubMenu:addItem( { "WINSAMI2    " , {|| oIde:setCodec( "WINSAMI2"    ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Tools"
+   oSubMenu:addItem( { _T( "Configure Tools...*" )        , {|| oIde:executeAction( ""         ) } } )
+   MenuAddSep( oSubMenu )
+   // TODO: Load custom TOOLS LINK from .INI file
+#ifdef __PLATFORM__WINDOWS
+   oSubMenu:addItem( { _T( "Command Prompt...*" )         , {|| oIde:executeAction( ""         ) } } )
+#else
+   oSubMenu:addItem( { _T( "Terminal" )                   , {|| oIde:executeAction( ""         ) } } )
+#endif
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Help"
+   oSubMenu:addItem( { _T( "About...*" )                  , {|| oIde:executeAction( ""         ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return Nil

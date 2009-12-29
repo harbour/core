@@ -330,9 +330,9 @@ METHOD IdeDocks:buildOutputResults()
    ::oDockB2:oWidget:setWindowTitle( "Output Console" )
    ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
 
-   ::oIde:oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
-   ::oOutputResult:wordWrap := .f.
-   //::oOutputResult:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+   ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
+   ::oOutputResult:oWidget:setAcceptRichText( .t. )
+   ::oOutputResult:oWidget:setReadOnly( .T. )
 
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
 
