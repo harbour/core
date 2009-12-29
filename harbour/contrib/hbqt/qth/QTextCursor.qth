@@ -70,6 +70,7 @@ oTextCursor := QTextCursor():new( "QTextFrame"   , pQTextFrame    )
 </DOC>
 
 <CODE>
+#include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocumentFragment>
 
@@ -130,7 +131,7 @@ bool atEnd () const
 bool atStart () const
 void beginEditBlock ()
 #
-//QTextBlock block () const
+QTextBlock block () const
 #
 QTextCharFormat blockCharFormat () const
 QTextBlockFormat blockFormat () const

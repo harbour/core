@@ -350,18 +350,38 @@ METHOD IdeDocks:buildOutputResults()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:outputDoubleClicked( lSelected )
-   LOCAL qCursor
+   LOCAL qCursor, cText, n, cSource, nLine, cLine
 
    IF lSelected
       ::nPass++
       IF ::nPass == 1
          qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
-         HB_TRACE( HB_TR_ALWAYS, "METHOD IdeDocks:outputDoubleClicked()", lSelected, qCursor:blockNumber() )
+         cText := QTextBlock():configure( qCursor:block() ):text()
+         IF ( n := at( "Error", cText ) ) > 0
+            cLine := alltrim( substr( cText, 1, n - 1 ) )
+         ELSEIF ( n := at( "Warning", cText ) ) > 0
+            cLine := alltrim( substr( cText, 1, n - 1 ) )
+         ENDIF
+         IF !empty( cLine )
+            IF ( n := at( "(", cLine ) ) > 0
+               cSource := alltrim( substr( cLine, 1, n - 1 ) )
+               cLine := substr( cLine, n + 1 )
+               n := at( ")", cLine )
+               nLine := val( substr( cLine, 1, n - 1 ) )
+               ::oIde:editSource( cSource )
+               qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+               qCursor:setPosition( 0 )
+               qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
+               ::oIde:qCurEdit:setTextCursor( qCursor )
+            ELSE
+               nLine := 0
+            ENDIF
+         ENDIF
       ENDIF
       IF ::nPass >= 2
          ::nPass := 0
       ENDIF
    ENDIF
-   RETURN Self
+   RETURN nLine
 
 /*----------------------------------------------------------------------*/

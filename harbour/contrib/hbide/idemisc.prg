@@ -473,15 +473,17 @@ FUNCTION PathNormalized( cPath, lLower )
  *
  * 28/12/2009 - 16:17:37
  */
-FUNCTION ConvertBuildStatusMsgToHtml( cText )
+FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
    LOCAL aLines
    LOCAL cLine
    LOCAL aRegWarns  := {}
    LOCAL aRegErrors := {}
 
-   cText  := StrTran( cText, Chr(13)+Chr(10), Chr(10) )
-   cText  := StrTran( cText, Chr(13), Chr(10) )
-   cText  := StrTran( cText, Chr(10)+Chr(10), Chr(10) )
+   oWidget:clear()
+
+   cText := StrTran( cText, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cText := StrTran( cText, Chr( 13 )            , Chr( 10 ) )
+   cText := StrTran( cText, Chr( 10 ) + Chr( 10 ), Chr( 10 ) )
 
    /* Convert some chars to valid HTML chars */
    DO WHILE "<" $ cText
@@ -492,28 +494,35 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText )
       cText := StrTran( cText, ">", "&gt;" )
    ENDDO
 
-   aLines := hb_aTokens( cText, Chr(10) )
+   aLines := hb_aTokens( cText, Chr( 10 ) )
+
    cText  := '<pre><code>'
+   oWidget:insertHTML( cText )
 
    AAdd( aRegWarns, hb_RegexComp( ".*: warning.*" ) )
    AAdd( aRegWarns, hb_RegexComp( ".*\) Warning W.*" ) )
 
    AAdd( aRegErrors, hb_RegexComp( ".*: error.*" ) )
    AAdd( aRegErrors, hb_RegexComp( ".*\) Error E.*" ) )
-   
+
    FOR EACH cLine IN aLines
-       IF Empty( cLine )
-          *
-       ELSEIF aScan( aRegWarns,   {| reg | !Empty(hb_RegEx( reg, cLine )) } ) > 0
-          cLine := '<font color=blue>' + cLine + '</font>'
+      IF Empty( cLine )
+         *
+      ELSEIF aScan( aRegWarns,   {| reg | !Empty( hb_RegEx( reg, cLine ) ) } ) > 0
+         cLine := '<font color=blue>' + cLine + '</font>'
 
-       ELSEIF aScan( aRegErrors, {| reg | !Empty(hb_RegEx( reg, cLine )) } ) > 0
-          cLine := '<font color=red>' + cLine + '</font>'
-       End
-       cText += cLine + '<br>'
-   End
+      ELSEIF aScan( aRegErrors, {| reg | !Empty( hb_RegEx( reg, cLine ) ) } ) > 0
+         cLine := '<font color=red>' + cLine + '</font>'
 
-   cText  += '</code></pre>'
+      ENDIF
+
+      oWidget:append( cLine )
+
+      cText += cLine + '<br>'
+   NEXT
+
+   cText += '</code></pre>'
+
    RETURN cText
 
 /*----------------------------------------------------------------------*/

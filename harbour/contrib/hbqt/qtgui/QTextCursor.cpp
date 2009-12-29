@@ -74,6 +74,7 @@
 
 #include <QtCore/QPointer>
 
+#include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocumentFragment>
 
@@ -87,22 +88,22 @@
  * ~QTextCursor ()
  */
 
-QT_G_FUNC( hbqt_gcRelease_QTextCursor )
+QT_G_FUNC( release_QTextCursor )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextCursor                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextCursor                 ph=%p", p->ph ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                 ph=%p", p->ph ) );
 
    if( p && p->ph )
    {
       delete ( ( QTextCursor * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextCursor                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextCursor                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextCursor                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextCursor                 Object Already deleted!" ) );
    }
 }
 
@@ -111,7 +112,7 @@ void * hbqt_gcAllocate_QTextCursor( void * pObj )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = hbqt_gcRelease_QTextCursor;
+   p->func = release_QTextCursor;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
@@ -198,6 +199,14 @@ HB_FUNC( QT_QTEXTCURSOR_ATSTART )
 HB_FUNC( QT_QTEXTCURSOR_BEGINEDITBLOCK )
 {
    hbqt_par_QTextCursor( 1 )->beginEditBlock();
+}
+
+/*
+ * QTextBlock block () const
+ */
+HB_FUNC( QT_QTEXTCURSOR_BLOCK )
+{
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextCursor( 1 )->block() ) ) );
 }
 
 /*

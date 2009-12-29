@@ -634,10 +634,6 @@ METHOD HbIde:getCurCursor()
 
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
    LOCAL n
-   #if 0
-   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr
-   LOCAL lFirst := .t.
-   #endif
 
    IF !Empty( cSourceFile ) .AND. !( IsValidText( cSourceFile ) )
       RETURN Self
@@ -653,7 +649,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
    IF Empty( cSourceFile )
       n := 0
    ELSE
-      n := aScan( ::aTabs, {|a| a[ TAB_SOURCEFILE ] == cSourceFile })
+      n := aScan( ::aTabs, {|a_| PathNormalized( a_[ TAB_SOURCEFILE ] ) == PathNormalized( cSourceFile ) } )
    End
 
    IF n > 0
@@ -661,7 +657,6 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
       IF lPPO
          ::aTabs[ n, TAB_QEDIT ]:setPlainText( hb_memoRead( cSourceFile ) )
       END
-
       RETURN Self
    END
 
@@ -1732,7 +1727,8 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
       End
    End
 
-   ::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
+   //::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
+   ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
 
    IF lDelHbp
       FErase( cHbpPath )
