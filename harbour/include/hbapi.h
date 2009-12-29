@@ -935,6 +935,7 @@ extern HB_EXPORT BOOL      hb_strToNum( const char * szNum, HB_LONG * plVal, dou
 extern HB_EXPORT BOOL      hb_strnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
 extern HB_EXPORT int       hb_snprintf( char * buffer, size_t bufsize, const char * format, ... ) HB_PRINTF_FORMAT( 3, 4 ); /* snprintf() equivalent */
 extern HB_EXPORT int       hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap ); /* vsnprintf() equivalent */
+extern HB_EXPORT int       hb_printf_params( const char * format );
 
 extern HB_EXPORT BOOL      hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
 extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */

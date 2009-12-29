@@ -223,30 +223,33 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
    if( s_winout )
    {
-      char buffer1[ 1024 ];
-      char buffer2[ 1024 ];
+      char message[ 1024 ];
+      union
+      {
+         char  psz[ 1024 ];
+         TCHAR lp[ 1024 ];
+      } buf;
 
-      /* TOFIX: This might invoke recursive call to tracee engine when
-                there is more than 16 format strings. */
-      hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
-
-      /* We add \r\n at the end of the buffer to make WinDbg display look readable. */
-      if( proc )
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d:%s() %s %s\n",
-                      file, line, proc, pszLevel, buffer1 );
+      /* NOTE: This is protection against recursive call to trace engine when
+               there is more than 16 parameters in format string */
+      if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
+         hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
       else
-         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s\n",
-                      file, line, pszLevel, buffer1 );
+         hb_vsnprintf( message, sizeof( message ), fmt, ap );
+
+      /* We add \n at the end of the buffer to make WinDbg display look readable. */
+      if( proc )
+         hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d:%s() %s %s\n",
+                      file, line, proc, pszLevel, message );
+      else
+         hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d: %s %s\n",
+                      file, line, pszLevel, message );
 
       #if defined( UNICODE )
-      {
-         TCHAR lpOutputString[ 2048 ];
-         MultiByteToWideChar( CP_ACP, 0, buffer2, -1, lpOutputString, HB_SIZEOFARRAY( lpOutputString ) );
-         OutputDebugString( lpOutputString );
-      }
-      #else
-         OutputDebugString( buffer2 );
+         memcpy( message, buf.psz, sizeof( message ) );
+         MultiByteToWideChar( CP_ACP, 0, message, -1, buf.lp, HB_SIZEOFARRAY( buf.lp ) );
       #endif
+      OutputDebugString( buf.lp );
    }
 
 #endif

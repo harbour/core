@@ -728,6 +728,187 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    return size;
 }
 
+int hb_printf_params( const char * format )
+{
+   int iParam = 0, iMax = 0;
+   char c;
+
+   do
+   {
+      c = *format++;
+      if( c == '%' )
+      {
+         const char * pattern = format;
+         int value, param = 0;
+
+         c = *format++;
+         if( c != 0 && c != '%' )
+         {
+            /* parameter position */
+            if( c >= '0' && c <= '9' )
+            {
+               c = get_decimal( c, &format, &param );
+               if( c != '$' )
+                  format = pattern;
+               c = *format++;
+            }
+
+            /* flags */
+            value = 0;
+            while( !value ) switch( c )
+            {
+               case '#':
+               case '0':
+               case '-':
+               case ' ':
+               case '+':
+#ifdef _SUSV2_COMPAT_
+               case '\'':  /* group with locale thousands' grouping characters */
+#endif
+                  c = *format++;
+                  break;
+               default:
+                  value = 1;
+                  break;
+            }
+
+            /* field width */
+            if( c == '*' )
+            {
+               c = *format++;
+               if( c >= '0' && c <= '9' )
+               {
+                  c = get_decimal( c, &format, &value );
+                  if( c == '$' )
+                  {
+                     if( value > iMax )
+                        iMax = value;
+                     c = *format++;
+                  }
+                  /* else error, wrong format */
+               }
+               else
+                  ++iParam;
+            }
+            else if( c >= '0' && c <= '9' )
+               c = get_decimal( c, &format, &value );
+
+            /* precision */
+            if( c == '.' )
+            {
+               c = *format++;
+               if( c == '*' )
+               {
+                  c = *format++;
+                  if( c >= '0' && c <= '9' )
+                  {
+                     c = get_decimal( c, &format, &value );
+                     if( c == '$' )
+                     {
+                        if( value > iMax )
+                           iMax = value;
+                        c = *format++;
+                     }
+                     /* else error, wrong format */
+                  }
+                  else
+                     ++iParam;
+               }
+               else if( c >= '0' && c <= '9' )
+                  c = get_decimal( c, &format, &value );
+            }
+
+            /* length modifier */
+            switch( c )
+            {
+               case 'h':
+                  c = *format++;
+                  if( c == 'h' )
+                     c = *format++;
+                  break;
+               case 'l':
+                  c = *format++;
+                  if( c == 'l' )
+                     c = *format++;
+                  break;
+               case 'L':
+                  c = *format++;
+                  break;
+               case 'j':
+                  c = *format++;
+                  break;
+               case 'z':
+                  c = *format++;
+                  break;
+               case 't':
+                  c = *format++;
+                  break;
+               case 'I':   /* MS-Windows extension */
+                  if( format[ 0 ] == '6' && format[ 1 ] == '4' )
+                  {
+                     format += 2;
+                     c = *format++;
+                     break;
+                  }
+                  else if( format[ 0 ] == '1' && format[ 1 ] == '6' )
+                  {
+                     format += 2;
+                     c = *format++;
+                     break;
+                  }
+                  else if( format[ 0 ] == '3' && format[ 1 ] == '2' )
+                  {
+                     format += 2;
+                     c = *format++;
+                  }
+                  /* no break; */
+               default:
+                  break;
+            }
+
+            /* conversion specifier */
+            switch( c )
+            {
+#ifndef __NO_DOUBLE__
+               case 'a':
+               case 'A':
+               case 'e':
+               case 'E':
+               case 'g':
+               case 'G':
+               case 'f':   /* double decimal notation */
+               case 'F':   /* double decimal notation */
+#endif
+               case 'd':
+               case 'i':   /* signed int decimal conversion */
+               case 'o':   /* unsigned int octal conversion */
+               case 'u':   /* unsigned int decimal conversion */
+               case 'x':   /* unsigned int hexadecimal conversion */
+               case 'X':   /* unsigned int hexadecimal conversion */
+               case 'p':   /* void * pointer */
+               case 'c':   /* signed int casted to unsigned char */
+               case 's':   /* const char * */
+               case 'n':   /* store current result size in int * arg */
+                  if( param == 0 )
+                     ++iParam;
+                  else if( param > iMax )
+                     iMax = param;
+                  break;
+               case '%':   /* store % consuming arguments % */
+                  break;
+               default:    /* error, wrong format, store pattern */
+                  format = pattern;
+                  c = '%';
+                  break;
+            }
+         }
+      }
+   }
+   while( c );
+
+   return iParam > iMax ? iParam : iMax;
+}
+
 int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap )
 {
    va_list args;
@@ -779,15 +960,10 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                {
                   c = get_decimal( c, &format, &value );
                   if( c == '$' )
-                  {
                      param = value;
-                     c = *format++;
-                  }
                   else
-                  {
                      format = pattern;
-                     c = *format++;
-                  }
+                  c = *format++;
                }
 
                /* flags */
@@ -934,7 +1110,6 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                }
 
                /* conversion specifier */
-
                switch( c )
                {
 #ifndef __NO_DOUBLE__
