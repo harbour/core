@@ -73,6 +73,8 @@
 
 CLASS IdeDocks
 
+   DATA   nPass                                   INIT   0
+
    DATA   oIde
 
    ACCESS oDlg                                    INLINE ::oIde:oDlg
@@ -110,6 +112,8 @@ CLASS IdeDocks
    METHOD buildCompileResults()
    METHOD buildLinkResults()
    METHOD buildOutputResults()
+
+   METHOD outputDoubleClicked()
 
    ENDCLASS
 
@@ -339,7 +343,25 @@ METHOD IdeDocks:buildOutputResults()
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
    ::oDockB2:hide()
 
+   Qt_Connect_Signal( ::oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:outputDoubleClicked( lSelected )
+   LOCAL qCursor
+
+   IF lSelected
+      ::nPass++
+      IF ::nPass == 1
+         qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
+         HB_TRACE( HB_TR_ALWAYS, "METHOD IdeDocks:outputDoubleClicked()", lSelected, qCursor:blockNumber() )
+      ENDIF
+      IF ::nPass >= 2
+         ::nPass := 0
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
