@@ -187,6 +187,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos )
    ::nBlock := ::qCursor:blockNumber()
    ::nColumn := ::qCursor:columnNumber()
 
+   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

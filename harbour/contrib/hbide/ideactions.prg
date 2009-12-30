@@ -78,7 +78,7 @@ FUNCTION buildToolBar( oWnd, oIde )
    oTBar:imageWidth  := 22
    oTBar:imageHeight := 22
    oTBar:create( , , { 0, oWnd:currentSize()[ 2 ]-60 }, { oWnd:currentSize()[ 1 ], 60 } )
- * oTBar:setStyleSheet( GetStyleSheet( "QToolBar" ) )
+   oTBar:setStyleSheet( GetStyleSheet( "QToolBar" ) )
 
    oTBar:oWidget:setMaximumHeight( 28 )
 
