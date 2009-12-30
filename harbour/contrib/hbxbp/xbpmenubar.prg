@@ -196,8 +196,6 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
       ::oParent:oMenu := Self
    endif
 
-   ::setStyle()
-
    ::oParent:addChild( self )
    RETURN Self
 
@@ -735,7 +733,6 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::oWidget := QMenu():new( ::pParent )
    ::oParent:oWidget:addMenu( ::pWidget )
 
-   ::setStyle()
    ::oParent:addChild( self )
    RETURN Self
 

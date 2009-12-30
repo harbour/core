@@ -153,6 +153,10 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget := QToolBar():new( oPar:oWidget )
    oPar:oWidget:addToolBar_1( ::pWidget )
 
+   IF ::imageWidth > 0 .and. ::imageHeight > 0
+      ::oWidget:setIconSize( QSize():new( ::imageWidth, ::imageHeight ) )
+   ENDIF
+
    #if 0
    /* Assign attributes */
    IF ::style == XBPTOOLBAR_STYLE_FLAT
@@ -269,7 +273,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ENDIF
 
       /* Attach codeblock to be triggered */
-      ::Connect( oBtn:oAction:pPtr, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+      ::Connect( oBtn:oAction, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
 
       /* Attach Action with Toolbar */
       ::oWidget:addAction( oBtn:oAction )
