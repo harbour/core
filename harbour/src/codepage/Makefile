@@ -150,6 +150,7 @@ C_SOURCES := \
    ucmacrom.c \
    ucmactrk.c \
    ucnext.c \
+   ucyuscii.c \
 
 LIBNAME := hbcpage
 

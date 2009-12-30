@@ -323,6 +323,11 @@ void hb_xexit( void )
 #endif
 }
 
+HB_BOOL hb_xtraced( void )
+{
+   return HB_FALSE;
+}
+
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
 void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 )

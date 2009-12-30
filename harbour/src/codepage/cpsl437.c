@@ -52,8 +52,8 @@
  */
 
 #define HB_CP_ID        SL437
-#define HB_CP_INFO      "Slovenian CP-437"
-#define HB_CP_UNITB     HB_UNITB_437
+#define HB_CP_INFO      "Slovenian YUSCII"
+#define HB_CP_UNITB     HB_UNITB_YUSCII
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY"
 #define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwz`xy"

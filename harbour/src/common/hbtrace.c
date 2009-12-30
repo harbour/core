@@ -246,8 +246,8 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                       file, line, pszLevel, message );
 
       #if defined( UNICODE )
-         memcpy( message, buf.psz, sizeof( message ) );
-         MultiByteToWideChar( CP_ACP, 0, message, -1, buf.lp, HB_SIZEOFARRAY( buf.lp ) );
+         MultiByteToWideChar( CP_ACP, 0, hb_strncpy( message, buf.psz, sizeof( message ) - 1 ), -1,
+                              buf.lp, HB_SIZEOFARRAY( buf.lp ) );
       #endif
       OutputDebugString( buf.lp );
    }

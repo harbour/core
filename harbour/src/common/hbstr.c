@@ -804,9 +804,6 @@ char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
    while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
       ulLen--;
 
-   while( ulLen-- )
-      *pDest++ = '\0';
-
    return pBuf;
 }
 
@@ -832,12 +829,6 @@ char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
    while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
       ulLen--;
 
-/* if someone will need this then please uncomment the cleaning the rest of
-   buffer. */
-/*
-   while(ulLen--)
-      *pDest++ = '\0';
-*/
    return pBuf;
 }
 
@@ -861,9 +852,6 @@ char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
       ulLen--;
       pSource++;
    }
-
-   while( ulLen-- )
-      *pDest++ = '\0';
 
    return pBuf;
 }
@@ -889,9 +877,6 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
       pSource++;
    }
 
-   while( ulLen-- )
-      *pDest++ = '\0';
-
    return pBuf;
 }
 
@@ -916,8 +901,6 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
    while( ulSLen && pSource[ ulSLen - 1 ] == ' ')
       ulSLen--;
 
-   pDest[ ulLen ] = '\0';
-
    while( ulLen && ulSLen &&
           ( *pDest++ = ( char ) HB_TOUPPER( ( UCHAR ) *pSource ) ) != '\0' )
    {
@@ -926,8 +909,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
       pSource++;
    }
 
-   while( ulLen-- )
-      *pDest++ = '\0';
+   *pDest = '\0';
 
    return pBuf;
 }
@@ -951,16 +933,13 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
    while( ulSLen && pSource[ ulSLen - 1 ] == ' ' )
       ulSLen--;
 
-   pDest[ ulLen ] = '\0';
-
    while( ulLen && ulSLen && ( *pDest++ = *pSource++ ) != '\0' )
    {
       ulSLen--;
       ulLen--;
    }
 
-   while( ulLen-- )
-      *pDest++ = '\0';
+   *pDest = '\0';
 
    return pBuf;
 }

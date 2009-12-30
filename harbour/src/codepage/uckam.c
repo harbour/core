@@ -55,8 +55,6 @@
 
 #define NUMBER_OF_CHARS    256
 
-/* TOFIX: it's Mazovia CP not Kamenicky */
-
 static const HB_WCHAR s_uniCodes[ NUMBER_OF_CHARS ] =
 {
    0x0020, 0x263A, 0x263B, 0x2665, 0x2666, 0x2663, 0x2660, 0x2022,
