@@ -401,14 +401,6 @@ METHOD HbIde:executeAction( cKey )
    DO CASE
    CASE cKey == "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-   CASE cKey == "ToggleProjectTree"
-      ::lProjTreeVisible := !::lProjTreeVisible
-      IF !( ::lProjTreeVisible )
-         ::oProjTree:hide()
-      ELSE
-         ::oProjTree:show()
-      ENDIF
-
    CASE cKey == "NewProject"
       ::loadProjectProperties( , .t., .t., .t. )
    CASE cKey == "LoadProject"
@@ -510,7 +502,17 @@ METHOD HbIde:executeAction( cKey )
       IF !empty( ::qCurEdit )
          //::qCurEdit:zoomOut()
       ENDIF
-   CASE cKey == "11"
+
+   CASE cKey == "ToggleProjectTree"
+      ::lProjTreeVisible := !::lProjTreeVisible
+      IF !( ::lProjTreeVisible )
+         ::oDockPT:hide()
+         ::oDockED:hide()
+      ELSE
+         ::oDockPT:show()
+         ::oDockED:show()
+      ENDIF
+   CASE cKey == "ToggleBuildInfo"
       IF ::lDockBVisible
          ::oDockB:hide()
          ::oDockB1:hide()
@@ -522,7 +524,7 @@ METHOD HbIde:executeAction( cKey )
          ::oDockB2:show()
          ::lDockBVisible := .t.
       ENDIF
-   CASE cKey == "12"
+   CASE cKey == "ToggleFuncList"
       IF ::lDockRVisible
          ::oDockR:hide()
       ELSE
@@ -636,6 +638,11 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
    LOCAL n
 
    IF !Empty( cSourceFile ) .AND. !( IsValidText( cSourceFile ) )
+      RETURN Self
+   ENDIF
+
+   IF !Empty( cSourceFile ) .AND. !File( cSourceFile )
+      MsgBox( 'File not found: ' + cSourceFile )
       RETURN Self
    ENDIF
 
@@ -1553,6 +1560,7 @@ METHOD HbIde:setCurrentProject( cProjectName )
 
 METHOD HbIde:getCurrentProject()
    LOCAL oDlg
+   LOCAL i, p, t
 
    IF !Empty( ::cWrkProject )
       RETURN ::cWrkProject
@@ -1571,7 +1579,15 @@ METHOD HbIde:getCurrentProject()
    oDlg:file := s_resPath + "selectproject.ui"
    oDlg:create()
 
-   aEval( ::aProjects, {|e_| oDlg:qObj[ "cbProjects" ]:addItem( e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] ) } )
+ * Fill ComboBox with current project names
+   FOR i := 1 TO Len( ::aProjects )
+       p := ::aProjects[i]
+       t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
+
+       IF !Empty( t )
+          oDlg:qObj[ "cbProjects" ]:addItem( t )
+       End
+   End
 
    oDlg:signal( "btnOk"      , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), oDlg:oWidget:close() } )
    oDlg:signal( "btnCancel"  , "clicked()", {|| oDlg:oWidget:close() } )
@@ -1587,8 +1603,8 @@ METHOD HbIde:getCurrentProject()
 /*----------------------------------------------------------------------*/
 /* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], [ <lDetach> ] ) -> <nResult> */
 
-METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
-   LOCAL cCmd, cOutput, cErrors, n, aPrj, cHbpPath, aHbp
+METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
+   LOCAL cCmd, cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
    LOCAL cTmp, nResult
    LOCAL nseconds
    LOCAL cTargetFN
@@ -1600,7 +1616,9 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
    DEFAULT lPPO      TO .F.
-   DEFAULT lDelHbp   TO lPPO
+   DEFAULT lViaQt    TO .f.
+
+   lDelHbp := lPPO
 
    IF lPPO .AND. ::getCurrentTab()  == 0
       MsgBox( 'No file open issue to be compiled!' )
@@ -1658,8 +1676,9 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
 
    aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
 
-   IF !lPPO
+   IF !( lPPO )
       aeval( FilesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
+
    ELSE
       aadd( aHbp, "-hbcmp -s -p" )
 
@@ -1670,7 +1689,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
       IF !( lower( cTmp ) $ ".prg,?" )
          MsgBox( 'Operation not supported for this file type: "'+cTmp+'"' )
          RETURN Self
-      End
+      ENDIF
 
       cFileName := cPath + cFileName + '.ppo'
 
@@ -1679,10 +1698,11 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
       aadd( aHbp, ::aTabs[ n, 5 ] )
 
       FErase( cFileName )
-   End
+   ENDIF
 
    IF !CreateTarget( cHbpPath, aHbp )
       cTmp := 'Error saving: ' + cHbpPath
+
    ELSE
       ::lDockBVisible := .t.
       ::oDockB2:show()
@@ -1695,54 +1715,84 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO )
               '-----------------------------------------------------------------' + CRLF
       cCmd := "hbmk2.exe " + cHbpPath
 
-      nseconds := seconds()  // time elapsed
-      nResult  := hb_processRun( cCmd, , @cOutput, @cErrors )
+      nSeconds := seconds()  // time elapsed
 
-    * Show detailed status about compile process...
-      cTmp += cOutput + CRLF
-      cTmp += IF( empty( cErrors ), "", cErrors ) + CRLF
-      cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
-      cTmp += '-----------------------------------------------------------------' + CRLF
-      cTmp += 'Finished at ' + time() + CRLF
-      cTmp += "Done in " + ltrim( str( seconds() - nseconds ) ) +" seconds."  + CRLF
+      IF lViaQt
+         ::lDockBVisible := .t.
+         ::oDockB2:show()
 
-      IF (nResult == 0) .AND. (lLaunch)
-         cTmp += CRLF
+         ::cProcessInfo := ""
 
-         IF !File( cTargetFN )
-            cTmp += "Launch application error: file not found " + cTargetFN + "!"
+         qStringList := QStringList():new()
+         qStringList:append( cHbpPath )
 
-         ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
-            cTmp += "Launch application " + cTargetFN + "... "
+         ::qProcess := QProcess():new()
+         ::qProcess:setProcessChannelMode( 0 )
+         ::qProcess:setReadChannel( 0 )
+         //::qProcess:setStandardOutputFile( "c:\temp\out.out" )
+         //::qProcess:setStandardErrorFile( "c:\temp\err.out" )
 
-            qProcess := QProcess():new()
-            qProcess:startDetached_2( cTargetFN )
-            qProcess:waitForStarted()
-            qProcess:pPtr := 0
-            qProcess := NIL
+         Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
+         Qt_Connect_Signal( ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
+         Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
-         ELSE
-            cTmp += "Launch application " + cTargetFN + "... (not applicable)" + CRLF
-         End
-      End
-   End
+         ::oOutputResult:oWidget:clear()
+         ::qProcess:start( "hbmk2.exe", qStringList )
 
-   //::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
-   ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
+      ELSE
+         nResult  := hb_processRun( cCmd, , @cOutput, @cErrors )
+
+       * Show detailed status about compile process...
+         cTmp += cOutput + CRLF
+         cTmp += IF( empty( cErrors ), "", cErrors ) + CRLF
+         cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
+         cTmp += '-----------------------------------------------------------------' + CRLF
+         cTmp += 'Finished at ' + time() + CRLF
+         cTmp += "Done in " + ltrim( str( seconds() - nseconds ) ) +" seconds."  + CRLF
+
+         IF ( nResult == 0 ) .AND. ( lLaunch )
+            cTmp += CRLF
+
+            IF !File( cTargetFN )
+               cTmp += "Launch application error: file not found " + cTargetFN + "!"
+
+            ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
+               cTmp += "Launch application " + cTargetFN + "... "
+
+               qProcess := QProcess():new()
+               qProcess:startDetached_2( cTargetFN )
+               qProcess:waitForStarted()
+               qProcess:pPtr := 0
+               qProcess := NIL
+
+            ELSE
+               cTmp += "Launch application " + cTargetFN + "... (not applicable)" + CRLF
+
+            ENDIF
+         ENDIF
+      ENDIF
+
+      //::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
+      ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
+   ENDIF
 
    IF lDelHbp
       FErase( cHbpPath )
-   End
+   ENDIF
 
    IF lPPO .AND. File( cFileName )
       ::editSource( cFileName, nil, nil, nil, .T. )
-   End
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildProjectViaQt( cProject )
+
+   ::buildProject( cProject, , , , .t. )
+
+   #if 0
    LOCAL n, aPrj, cHbpPath, aHbp, qStringList
 
    n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
@@ -1764,14 +1814,15 @@ METHOD HbIde:buildProjectViaQt( cProject )
    qStringList:append( cHbpPath )
 
    ::qProcess := QProcess():new()
-   ::qProcess:setReadChannel( 0 )
+   ::qProcess:setReadChannel( 1 )
 
    Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
    Qt_Connect_Signal( ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
    Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
+   ::oOutputResult:oWidget:clear()
    ::qProcess:start( "hbmk2.exe", qStringList )
-
+   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1787,10 +1838,12 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    CASE nMode == 2
       ::qProcess:setReadChannel( 0 ) // QProcess_StandardOutput )
       cLine := space( 1024 )
-      ::qProcess:readLine( @cLine, 1024 )
+      //::qProcess:readLine( @cLine, 1024 )
+      cLine := QByteArray():configure( ::qProcess:readAllStandardOutput() ):constData()
       IF !empty( cLine )
          ::cProcessInfo += CRLF + trim( cLine )
-         ::oOutputResult:oWidget:appendPlainText( cLine )
+         //::oOutputResult:oWidget:append( '<font color=blue>' + cLine  + '</font>' )
+         ::oOutputResult:oWidget:append( cLine )
       ENDIF
 
    CASE nMode == 3
@@ -1799,10 +1852,19 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
       ::qProcess:readLine( @cLine, 1024 )
       IF !empty( cLine )
          ::cProcessInfo += CRLF + trim( cLine )
-         ::oOutputResult:oWidget:appendPlainText( cLine )
+         IF ( "Warning" $ cLine )
+            cLine := '<font color=blue>' + cLine + '</font>'
+         ELSEIF ( "Error" $ cLine )
+            cLine := '<font color=red>' + cLine + '</font>'
+         ENDIF
+         //::oOutputResult:oWidget:appendPlainText( cLine )
+         ::oOutputResult:oWidget:append( cLine )
       ENDIF
 
    CASE nMode == 4
+      ::oOutputResult:oWidget:append( '-----------------------------------------------------------------' )
+      ::oOutputResult:oWidget:append( 'Finished at ' + time() )
+
       Qt_DisConnect_Signal( ::qProcess, "finished(int,int)"         )
       Qt_DisConnect_Signal( ::qProcess, "readyReadStandardOutput()" )
       Qt_DisConnect_Signal( ::qProcess, "readyReadStandardError()"  )

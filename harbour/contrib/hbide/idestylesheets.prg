@@ -69,85 +69,172 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetStyleSheet( cWidget )
-   LOCAL s := ""
+   LOCAL txt_:= {}
+   LOCAL s   := ""
 
    DO CASE
 
+   CASE cWidget == "QMenu"
+
+      aadd( txt_, ' QMenu {                                                                     ' )
+      aadd( txt_, '     background-color: white;                                                ' )
+      aadd( txt_, '     margin: 2px; /* some spacing around the menu */                         ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::item {                                                               ' )
+      aadd( txt_, '     padding: 2px 25px 2px 20px;                                             ' )
+      aadd( txt_, '     border: 1px solid transparent; /* reserve space for selection border */ ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::item:selected {                                                      ' )
+      aadd( txt_, '     border-color: darkblue;                                                 ' )
+      aadd( txt_, '     background: rgba(100, 100, 100, 150);                                   ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::icon:checked { /* appearance of a "checked" icon */                  ' )
+      aadd( txt_, '     background: gray;                                                       ' )
+      aadd( txt_, '     border: 1px inset gray;                                                 ' )
+      aadd( txt_, '     position: absolute;                                                     ' )
+      aadd( txt_, '     top: 1px;                                                               ' )
+      aadd( txt_, '     right: 1px;                                                             ' )
+      aadd( txt_, '     bottom: 1px;                                                            ' )
+      aadd( txt_, '     left: 1px;                                                              ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::separator {                                                          ' )
+      aadd( txt_, '     height: 2px;                                                            ' )
+      aadd( txt_, '     background: lightblue;                                                  ' )
+      aadd( txt_, '     margin-left: 10px;                                                      ' )
+      aadd( txt_, '     margin-right: 5px;                                                      ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator {                                                          ' )
+      aadd( txt_, '     width: 13px;                                                            ' )
+      aadd( txt_, '     height: 13px;                                                           ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:non-exclusive:unchecked {                                  ' )
+      aadd( txt_, '     image: url(:/images/checkbox_unchecked.png);                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:non-exclusive:unchecked:selected {                         ' )
+      aadd( txt_, '     image: url(:/images/checkbox_unchecked_hover.png);                      ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:non-exclusive:checked {                                    ' )
+      aadd( txt_, '     image: url(:/images/checkbox_checked.png);                              ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:non-exclusive:checked:selected {                           ' )
+      aadd( txt_, '     image: url(:/images/checkbox_checked_hover.png);                        ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:exclusive:unchecked {                                      ' )
+      aadd( txt_, '     image: url(:/images/radiobutton_unchecked.png);                         ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:exclusive:unchecked:selected {                             ' )
+      aadd( txt_, '     image: url(:/images/radiobutton_unchecked_hover.png);                   ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:exclusive:checked {                                        ' )
+      aadd( txt_, '     image: url(:/images/radiobutton_checked.png);                           ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QMenu::indicator:exclusive:checked:selected {                               ' )
+      aadd( txt_, '     image: url(:/images/radiobutton_checked_hover.png);                     ' )
+      aadd( txt_, ' }                                                                           ' )
+
+   CASE cWidget == "QMenuBar"
+
+      aadd( txt_, 'QMenuBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMenuBar::item {                                                             ' )
+      aadd( txt_, '    spacing: 3px; /* spacing between menu bar items */                       ' )
+      aadd( txt_, '    padding: 1px 4px;                                                        ' )
+      aadd( txt_, '    background: transparent;                                                 ' )
+      aadd( txt_, '    border-radius: 4px;                                                      ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMenuBar::item:selected { /* when selected using mouse or keyboard */        ' )
+      aadd( txt_, '    background: #a8a8a8;                                                     ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMenuBar::item:pressed {                                                     ' )
+      aadd( txt_, '    background: #888888;                                                     ' )
+      aadd( txt_, '}                                                                            ' )
+
+   CASE cWidget == "QToolBar"
+
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, '     height: 24;                                                             ' )
+      aadd( txt_, '     spacing: 3px; /* spacing between items in the tool bar */               ' )
+      aadd( txt_, ' }                                                                           ' )
+
    CASE cWidget == "QTreeWidget"
 
-      s +=   " QTreeWidget {"                                                         +;
-             "     alternate-background-color: yellow;"                               +;
-             " }"                                                                     +;
-             " QTreeWidget {"                                                         +;
-             "     show-decoration-selected: 1;"                                      +;
-             " }"                                                                     +;
-             " QTreeWidget::item:alternate {"                                         +;
-             "     background: #EEEEEE;"                                              +;
-             " }"                                                                     +;
-             " QTreeWidget::item:selected {"                                          +;
-             "     border: 1px solid #6a6ea9;"                                        +;
-             " }"                                                                     +;
-             " QTreeWidget::item:selected:!active {"                                  +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);"    +;
-             " }"                                                                     +;
-             " QTreeWidget::item:selected:active {"                                   +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);"    +;
-             " }"                                                                     +;
-             " QTreeWidget::item:hover {"                                             +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);"    +;
-             "}"                                                                      +;
-             " QTreeWidget {"                                                         +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
-             "       stop: 0 rgba(173, 173, 173, 255), stop:1 rgba(255, 255, 255, 255));"    +;
-             "}"
+      aadd( txt_, ' QTreeWidget {                                                               ' )
+      aadd( txt_, '     alternate-background-color: yellow;                                     ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget {                                                               ' )
+      aadd( txt_, '     show-decoration-selected: 1;                                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:alternate {                                               ' )
+      aadd( txt_, '     background: #EEEEEE;                                                    ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected {                                                ' )
+      aadd( txt_, '     border: 1px solid #6a6ea9;                                              ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected:!active {                                        ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #ABAFE5, stop: 1 #8588B2);          ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected:active {                                         ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #6a6ea9, stop: 1 #888dd9);          ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:hover {                                                   ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);          ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, ' QTreeWidget {                                                               ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,                 ' )
+      aadd( txt_, '       stop: 0 rgba(173, 173, 173, 255), stop:1 rgba(255, 255, 255, 255));   ' )
+      aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QListView"
 
-      s +=   ""                                                                       +;
-             " QListView {"                                                           +;
-             "     alternate-background-color: yellow;"                               +;
-             " }"                                                                     +;
-             " QListView {"                                                           +;
-             "     show-decoration-selected: 1;"                                      +;
-             " }"                                                                     +;
-             " QListView::item:alternate {"                                           +;
-             "     background: #EEEEEE;"                                              +;
-             " }"                                                                     +;
-             " QListView::item:selected {"                                            +;
-             "     border: 1px solid #6a6ea9;"                                        +;
-             " }"                                                                     +;
-             " QListView::item:selected:!active {"                                    +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);"    +;
-             " }"                                                                     +;
-             " QListView::item:selected:active {"                                     +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);"    +;
-             " }"                                                                     +;
-             " QListView::item:hover {"                                               +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
-             "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);"    +;
-             "}"                                                                      +;
-             " QListView {"                                                           +;
-             "   background: qlineargradient(spread:pad, x1:0.755727, y1:0.864, x2:1, y2:0," +;
-             "           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));" +;
-             "}"
+      aadd( txt_, ' QListView {                                                                 ' )
+      aadd( txt_, '     alternate-background-color: yellow;                                     ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView {                                                                 ' )
+      aadd( txt_, '     show-decoration-selected: 1;                                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView::item:alternate {                                                 ' )
+      aadd( txt_, '     background: #EEEEEE;                                                    ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView::item:selected {                                                  ' )
+      aadd( txt_, '     border: 1px solid #6a6ea9;                                              ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView::item:selected:!active {                                          ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #ABAFE5, stop: 1 #8588B2);          ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView::item:selected:active {                                           ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #6a6ea9, stop: 1 #888dd9);          ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QListView::item:hover {                                                     ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
+      aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);          ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, ' QListView {                                                                 ' )
+      aadd( txt_, '   background: qlineargradient(spread:pad, x1:0.755727, y1:0.864, x2:1, y2:0,' )
+      aadd( txt_, '           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));' )
+      aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QMainWindow"
 
-      s +=   "QMainWindow::separator {"                                               +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
-             "       stop: 0 rgba(123, 123, 123, 255), stop:1 rgba(255, 255, 255, 255));" +;
-             "    width: 6px; /* when vertical */"                                    +;
-             "    height: 6px; /* when horizontal */"                                 +;
-             "}"                                                                      +;
-             "QMainWindow::separator:hover {"                                         +;
-             "    background: red;"                                                   +;
-             "}"
+      aadd( txt_, 'QMainWindow::separator {                                                     ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,                 ' )
+      aadd( txt_, '       stop: 0 rgba(123, 123, 123, 255), stop:1 rgba(255, 255, 255, 255));   ' )
+      aadd( txt_, '    width: 6px; /* when vertical */                                          ' )
+      aadd( txt_, '    height: 6px; /* when horizontal */                                       ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMainWindow::separator:hover {                                               ' )
+      aadd( txt_, '    background: red;                                                         ' )
+      aadd( txt_, '}                                                                            ' )
+
    ENDCASE
+
+   aeval( txt_, {|e| s += trim( e ) + chr( 13 ) + chr( 10 ) } )
 
    RETURN s
 

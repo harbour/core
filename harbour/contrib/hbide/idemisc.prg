@@ -71,6 +71,8 @@
 
 #include "hbide.ch"
 
+STATIC aRegList
+
 /*----------------------------------------------------------------------*/
 
 PROCEDURE AppSys()
@@ -465,8 +467,119 @@ FUNCTION PathNormalized( cPath, lLower )
 
 /*----------------------------------------------------------------------*/
 /*
+ * This function fills an array with the list of regular expressions that will
+ * identify the errors messages retrieved from during the build process.
+ * 29/12/2009 - 12:43:26 - vailtom
+ */
+#define MSG_TYPE_ERR    1
+#define MSG_TYPE_INFO   2
+#define MSG_TYPE_WARN   3
+
+#define CLR_MSG_ERR     'red'
+#define CLR_MSG_INFO    'brown'
+#define CLR_MSG_WARN    'blue'
+
+STATIC ;
+FUNCTION BuildRegExpressList( aRegList )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*" ) })
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*" ) })
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*" ) })
+
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: error.*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*\) Error E.*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error E([0-9]+).*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error: ." ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:([0-9]+):([\w|\s]*)error.*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:\(\.\w+\+.*\):.*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: fatal\s.*" ) })
+
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: note.*" ) })
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: In function '.*" ) })
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( "^(\s*).*\s: see.*" ) })
+   RETURN NIL
+
+/*
+ * Catch source file name & line error from an msg status from compiler result.
+ * 29/12/2009 - 13:22:29 - vailtom
+ */
+FUNCTION ParseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
+   LOCAL regLineN := hb_RegexComp( ".*(\(([0-9]+)\)|:([0-9]+):|\s([0-9]+):).*" )
+   LOCAL aList
+   LOCAL nPos
+
+   DEFAULT lValidText TO .T.
+
+   cFileName := ''
+   nLine     := 0
+
+ * Validate if current text is a error/warning/info message.
+ * 29/12/2009 - 22:51:39 - vailtom
+   IF lValidText
+      nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cText ) ) } )
+
+      IF ( nPos <= 0 )
+         RETURN .F.
+      End
+   End
+
+   aList     := hb_RegEx( regLineN, cText )
+
+   IF !Empty(aList)
+      nLine := alltrim( aList[2] )
+      cText := Substr( cText, 1, At( nLine, cText ) -1 )
+      cText := alltrim( cText ) + '('
+
+      nLine := strtran( nLine, ":", "" )
+      nLine := strtran( nLine, "(", "" )
+      nLine := strtran( nLine, ")", "" )
+      nLine := VAL( alltrim( nLine ) )
+   End
+
+   IF (nPos := hb_At( '(', cText )) > 0
+      cFileName := alltrim( Subst( cText, 1, nPos -1 ) )
+   ELSE
+      IF (nPos := At( 'referenced from', Lower( cText ) )) <> 00
+         cFileName := Subst( cText, nPos + Len( 'referenced from' ) )
+      ELSE
+       * GCC & MSVC filename detect...
+         IF Subst( cText, 2, 1 ) == ':'
+            nPos := hb_At( ':', cText, 3 )
+         ELSE
+            nPos := hb_At( ':', cText )
+         End
+         IF nPos <> 00
+            cFileName := Subst( cText, 1, nPos-1 )
+         End
+      End
+   End
+
+   cFileName := strtran( cFileName, "(", "" )
+   cFileName := strtran( cFileName, ")", "" )
+   cFileName := alltrim( cFileName )
+
+   cFileName := strtran( cFileName, "\\", "/" )        && Fix for the BCC
+   cFileName := strtran( cFileName, "\" , "/" )
+
+   IF (nPos := Rat( ' ', cFileName )) <> 00
+      cFileName := Subst( cFileName, nPos+1 )
+   End
+
+   IF Subst( cFileName, 2, 1 ) == ':'
+      nPos := hb_At( ':', cFileName, 3 )
+   ELSE
+      nPos := hb_At( ':', cFileName )
+   End
+
+   IF nPos <> 00
+      cFileName := Subst( cFileName, 1, nPos-1 )
+   End
+
+   cFileName := alltrim( cFileName )
+   RETURN !Empty( cFileName )
+
+/*
  * This function parses compiler result and hightlight errors & warnings using
- * regular expressions.
+ * regular expressions. (vailtom)
  *
  * More about Qt Color names:
  *  http://www.w3.org/TR/SVG/types.html#ColorKeywords
@@ -474,10 +587,15 @@ FUNCTION PathNormalized( cPath, lLower )
  * 28/12/2009 - 16:17:37
  */
 FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
+   LOCAL aColors  := { CLR_MSG_ERR, CLR_MSG_INFO, CLR_MSG_WARN }
    LOCAL aLines
    LOCAL cLine
-   LOCAL aRegWarns  := {}
-   LOCAL aRegErrors := {}
+   LOCAL nPos
+
+   IF aRegList == NIL
+      aRegList := {}
+      BuildRegExpressList( aRegList )
+   End
 
    oWidget:clear()
 
@@ -499,21 +617,16 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
    cText  := '<pre><code>'
    oWidget:insertHTML( cText )
 
-   AAdd( aRegWarns, hb_RegexComp( ".*: warning.*" ) )
-   AAdd( aRegWarns, hb_RegexComp( ".*\) Warning W.*" ) )
-
-   AAdd( aRegErrors, hb_RegexComp( ".*: error.*" ) )
-   AAdd( aRegErrors, hb_RegexComp( ".*\) Error E.*" ) )
 
    FOR EACH cLine IN aLines
-      IF Empty( cLine )
-         *
-      ELSEIF aScan( aRegWarns,   {| reg | !Empty( hb_RegEx( reg, cLine ) ) } ) > 0
-         cLine := '<font color=blue>' + cLine + '</font>'
 
-      ELSEIF aScan( aRegErrors, {| reg | !Empty( hb_RegEx( reg, cLine ) ) } ) > 0
-         cLine := '<font color=red>' + cLine + '</font>'
+      IF !Empty( cLine )
+         nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } )
 
+         IF ( nPos > 0 )
+            cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' +;
+                      cLine + '</font>'
+         End
       ENDIF
 
       oWidget:append( cLine )
@@ -523,6 +636,7 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
 
    cText += '</code></pre>'
 
+   oWidget:insertHTML( '</code></pre>' )
    RETURN cText
 
 /*----------------------------------------------------------------------*/
