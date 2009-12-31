@@ -123,6 +123,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::cargo := hb_threadId()                               /* To Be Removed */
 
+   /* Thread specific event buffer */
+   hbxbp_InitializeEventBuffer()
+
    IF !empty( ::qtObject )
       IF hb_isObject( ::qtObject )
          ::oWidget := ::qtObject
@@ -162,9 +165,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    SetAppWindow( Self )
-
-   /* Thread specific event buffer */
-   hbxbp_InitializeEventBuffer()
 
    /* Install Event Loop per Dialog Basis */
    ::oEventLoop := QEventLoop():new( ::pWidget )
