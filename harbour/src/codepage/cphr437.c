@@ -51,8 +51,8 @@
  */
 
 #define HB_CP_ID        HR437
-#define HB_CP_INFO      "Croatian YUSCII"
-#define HB_CP_UNITB     HB_UNITB_YUSCII
+#define HB_CP_INFO      "Croatian ISO-646 (CROSCII)"
+#define HB_CP_UNITB     HB_UNITB_646YU
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY"
 #define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwz`xy"

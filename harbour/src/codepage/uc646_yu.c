@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * YUSCII <-> Unicode conversion table
+ * ISO-646-YU / YUSCII / CROSCII / SLOSCII <-> Unicode conversion table
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -90,4 +90,4 @@ static const HB_WCHAR s_uniCodes[ NUMBER_OF_CHARS ] =
    0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0
 };
 
-HB_UNITABLE hb_uniTbl_YUSCII = { HB_CPID_YUSCII, s_uniCodes, NULL, 0 };
+HB_UNITABLE hb_uniTbl_646YU = { HB_CPID_646YU, s_uniCodes, NULL, 0 };

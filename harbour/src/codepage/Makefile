@@ -98,6 +98,7 @@ C_SOURCES := \
    uc1256.c \
    uc1257.c \
    uc1258.c \
+   uc646_yu.c \
    uc737.c \
    uc775.c \
    uc850.c \
@@ -150,7 +151,6 @@ C_SOURCES := \
    ucmacrom.c \
    ucmactrk.c \
    ucnext.c \
-   ucyuscii.c \
 
 LIBNAME := hbcpage
 
