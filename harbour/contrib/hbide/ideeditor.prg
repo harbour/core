@@ -144,6 +144,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos )
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:setFont( ::oIde:oFont:oWidget )
    ::qEdit:ensureCursorVisible()
+ * ::qEdit:setStyleSheet( GetStyleSheet( "QPlainTextEdit" ) )
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
 
@@ -154,7 +155,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos )
 
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::qHiliter := QSyntaxHighlighter():new( ::qEdit:document() )
+   ::qHiliter := HBQSyntaxHighlighter():new( ::qEdit:document() )
+   SetSyntaxHilighting( ::qEdit, ::qHiliter )
 
    Qt_Connect_Signal( ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
    Qt_Connect_Signal( ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )

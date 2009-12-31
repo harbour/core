@@ -63,9 +63,12 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, QObject
+CREATE CLASS QSyntaxHighlighter INHERIT QObject
+
+   VAR     pPtr
 
    METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  document()
    METHOD  setDocument( pDoc )
@@ -73,6 +76,7 @@ CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, QObject
 
    ENDCLASS
 
+/*----------------------------------------------------------------------*/
 
 METHOD QSyntaxHighlighter:new( ... )
    LOCAL p
@@ -81,6 +85,15 @@ METHOD QSyntaxHighlighter:new( ... )
       hb_pvalue( p:__enumIndex(), p )
    NEXT
    ::pPtr := Qt_QSyntaxHighlighter( ... )
+   RETURN Self
+
+
+METHOD QSyntaxHighlighter:configure( xObject )
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
    RETURN Self
 
 
@@ -94,4 +107,43 @@ METHOD QSyntaxHighlighter:setDocument( pDoc )
 
 METHOD QSyntaxHighlighter:rehighlight()
    RETURN Qt_QSyntaxHighlighter_rehighlight( ::pPtr )
+
+
+
+
+CREATE CLASS HBQSyntaxHighlighter INHERIT QSyntaxHighlighter
+
+   METHOD new()
+   METHOD configure( xObject )
+   METHOD setHBCompilerDirectives( pDirectives, pFormat, pFont )
+   METHOD setHBMultiLineCommentFormat( pFormat )
+
+   ENDCLASS
+
+METHOD HBQSyntaxHighlighter:new( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
+   NEXT
+   ::pPtr := Qt_QSyntaxHighlighter( ... )
+   RETURN Self
+
+
+METHOD HBQSyntaxHighlighter:configure( xObject )
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
+   RETURN Self
+
+
+METHOD HBQSyntaxHighlighter:setHBCompilerDirectives( pDirectives, pFormat )
+   RETURN Qt_HBQSyntaxHighlighter_setHBCompilerDirectives( ::pPtr, hbqt_ptr( pDirectives ), hbqt_ptr( pFormat ) )
+
+
+METHOD HBQSyntaxHighlighter:setHBMultiLineCommentFormat( pFormat )
+   RETURN Qt_HBQSyntaxHighlighter_setHBMultiLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
+
 

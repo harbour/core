@@ -479,27 +479,27 @@ FUNCTION PathNormalized( cPath, lLower )
 #define CLR_MSG_INFO    'brown'
 #define CLR_MSG_WARN    'blue'
 
-STATIC ;
-FUNCTION BuildRegExpressList( aRegList )
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*" ) })
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*" ) })
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*" ) })
+STATIC FUNCTION BuildRegExpressList( aRegList )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*" )                 } )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*" )              } )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*" )          } )
 
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: error.*" ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*\) Error E.*" ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error E([0-9]+).*" ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error: ." ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:([0-9]+):([\w|\s]*)error.*" ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:\(\.\w+\+.*\):.*" ) })
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: fatal\s.*" ) })
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: error.*" )                   } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*\) Error E.*" )                } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error E([0-9]+).*" )            } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error: ." )                     } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:([0-9]+):([\w|\s]*)error.*" ) } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:\(\.\w+\+.*\):.*" )           } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: fatal\s.*" )                 } )
 
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: note.*" ) })
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: In function '.*" ) })
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( "^(\s*).*\s: see.*" ) })
-   RETURN NIL
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: note.*" )                    } )
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: In function '.*" )           } )
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( "^(\s*).*\s: see.*" )             } )
 
-/*
- * Catch source file name & line error from an msg status from compiler result.
+   RETURN aRegList
+
+/*----------------------------------------------------------------------*//*
+* Catch source file name & line error from an msg status from compiler result.
  * 29/12/2009 - 13:22:29 - vailtom
  */
 FUNCTION ParseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
@@ -577,6 +577,7 @@ FUNCTION ParseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    cFileName := alltrim( cFileName )
    RETURN !Empty( cFileName )
 
+/*----------------------------------------------------------------------*/
 /*
  * This function parses compiler result and hightlight errors & warnings using
  * regular expressions. (vailtom)
@@ -607,16 +608,12 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
    DO WHILE "<" $ cText
       cText := StrTran( cText, "<", "&lt;" )
    ENDDO
-
    DO WHILE ">" $ cText
       cText := StrTran( cText, ">", "&gt;" )
    ENDDO
-
    aLines := hb_aTokens( cText, Chr( 10 ) )
 
-   cText  := '<pre><code>'
    oWidget:insertHTML( cText )
-
 
    FOR EACH cLine IN aLines
 
@@ -630,13 +627,8 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
       ENDIF
 
       oWidget:append( cLine )
-
-      cText += cLine + '<br>'
    NEXT
 
-   cText += '</code></pre>'
-
-   oWidget:insertHTML( '</code></pre>' )
    RETURN cText
 
 /*----------------------------------------------------------------------*/
@@ -654,185 +646,90 @@ FUNCTION FilesToSources( aFiles )
    RETURN aSrc
 
 /*----------------------------------------------------------------------*/
+/*
+ * TODO: Load setting from user source
+ *       Separate syntax highliters for different type of files.
+ */
+FUNCTION SetSyntaxHilighting( qEdit, qHiliter )
+   LOCAL a_, b_, qFormat
 
-FUNCTION RequestModules()
+   HB_SYMBOL_UNUSED( qEdit )
 
-   hbxbp_just( QAbstractButton():new()             )
-   hbxbp_just( QAbstractItemModel():new()          )
-   hbxbp_just( QAbstractItemView():new()           )
-   hbxbp_just( QAbstractListModel():new()          )
-   hbxbp_just( QAbstractPrintDialog():new()        )
-   hbxbp_just( QAbstractScrollArea():new()         )
-   hbxbp_just( QAbstractSlider():new()             )
-   hbxbp_just( QAbstractSpinBox():new()            )
-   hbxbp_just( QAbstractTableModel():new()         )
-   hbxbp_just( QAction():new()                     )
-   hbxbp_just( QApplication():new()                )
-   hbxbp_just( QBitmap():new()                     )
-   hbxbp_just( QBoxLayout():new()                  )
-   hbxbp_just( QBrush():new()                      )
-   hbxbp_just( QButtonGroup():new()                )
-   hbxbp_just( QCalendarWidget():new()             )
-   hbxbp_just( QCheckBox():new()                   )
-   hbxbp_just( QClipboard():new()                  )
-   hbxbp_just( QColor():new()                      )
-   hbxbp_just( QColorDialog():new()                )
-   hbxbp_just( QComboBox():new()                   )
-   hbxbp_just( QCommandLinkButton():new()          )
-   hbxbp_just( QCommonStyle():new()                )
-   hbxbp_just( QConicalGradient():new()            )
-   hbxbp_just( QCoreApplication():new()            )
-   hbxbp_just( QCursor():new()                     )
-   hbxbp_just( QDateEdit():new()                   )
-   hbxbp_just( QDateTime():new()                   )
-   hbxbp_just( QDateTimeEdit():new()               )
-   hbxbp_just( QDesktopWidget():new()              )
-   hbxbp_just( QDial():new()                       )
-   hbxbp_just( QDialog():new()                     )
-   hbxbp_just( QDir():new()                        )
-   hbxbp_just( QDirModel():new()                   )
-   hbxbp_just( QDockWidget():new()                 )
-   hbxbp_just( QDoubleSpinBox():new()              )
-   hbxbp_just( QDropEvent():new()                  )
-   hbxbp_just( QDragMoveEvent():new()              )
-   hbxbp_just( QDragEnterEvent():new()             )
-   hbxbp_just( QDragLeaveEvent():new()             )
-   hbxbp_just( QErrorMessage():new()               )
-   hbxbp_just( QEvent():new()                      )
-   hbxbp_just( QEventLoop():new()                  )
-   hbxbp_just( QFileDialog():new()                 )
-   hbxbp_just( QFileSystemModel():new()            )
-   hbxbp_just( QFocusEvent():new()                 )
-   hbxbp_just( QFocusFrame():new()                 )
-   hbxbp_just( QFont():new()                       )
-   hbxbp_just( QFontComboBox():new()               )
-   hbxbp_just( QFontDatabase():new()               )
-   hbxbp_just( QFontDialog():new()                 )
-   hbxbp_just( QFontInfo():new()                   )
-   hbxbp_just( QFontMetrics():new()                )
-   hbxbp_just( QFontMetricsF():new()               )
-   hbxbp_just( QFormLayout():new()                 )
-   hbxbp_just( QFrame():new()                      )
-   hbxbp_just( QFtp():new()                        )
-   hbxbp_just( QGradient():new()                   )
-   hbxbp_just( QGridLayout():new()                 )
-   hbxbp_just( QGroupBox():new()                   )
-   hbxbp_just( QHBoxLayout():new()                 )
-   hbxbp_just( QHeaderView():new()                 )
-   hbxbp_just( QHttp():new()                       )
-   hbxbp_just( QIcon():new()                       )
-   hbxbp_just( QImage():new()                      )
-   hbxbp_just( QImageReader():new()                )
-   hbxbp_just( QImageWriter():new()                )
-   hbxbp_just( QInputDialog():new()                )
-   hbxbp_just( QInputEvent():new()                 )
-   hbxbp_just( QIODevice():new()                   )
-   hbxbp_just( QKeyEvent():new()                   )
-   hbxbp_just( QKeySequence():new()                )
-   hbxbp_just( QLabel():new()                      )
-   hbxbp_just( QLatin1Char():new()                 )
-   hbxbp_just( QLatin1String():new()               )
-   hbxbp_just( QLayout():new()                     )
-   hbxbp_just( QLayoutItem():new()                 )
-   hbxbp_just( QLCDNumber():new()                  )
-   hbxbp_just( QLine():new()                       )
-   hbxbp_just( QLinearGradient():new()             )
-   hbxbp_just( QLineEdit():new()                   )
-   hbxbp_just( QList():new()                       )
-   hbxbp_just( QListView():new()                   )
-   hbxbp_just( QListWidget():new()                 )
-   hbxbp_just( QListWidgetItem():new()             )
-   hbxbp_just( QMainWindow():new()                 )
-   hbxbp_just( QMenu():new()                       )
-   hbxbp_just( QMenuBar():new()                    )
-   hbxbp_just( QMessageBox():new()                 )
-   hbxbp_just( QModelIndex():new()                 )
-   hbxbp_just( QMouseEvent():new()                 )
-   hbxbp_just( QMoveEvent():new()                  )
-   hbxbp_just( QObject():new()                     )
-   hbxbp_just( QPaintDevice():new()                )
-   hbxbp_just( QPageSetupDialog():new()            )
-   hbxbp_just( QPainter():new()                    )
-   hbxbp_just( QPaintEvent():new()                 )
-   hbxbp_just( QPalette():new()                    )
-   hbxbp_just( QPen():new()                        )
-   hbxbp_just( QPicture():new()                    )
-   hbxbp_just( QPixmap():new()                     )
-   hbxbp_just( QPoint():new()                      )
-   hbxbp_just( QPointF():new()                     )
-   hbxbp_just( QPrintDialog():new()                )
-   hbxbp_just( QPrintEngine():new()                )
-   hbxbp_just( QPrinter():new()                    )
-   hbxbp_just( QPrintPreviewDialog():new()         )
-   hbxbp_just( QProcess():new()                    )
-   hbxbp_just( QProgressBar():new()                )
-   hbxbp_just( QProgressDialog():new()             )
-   hbxbp_just( QPushButton():new()                 )
-   hbxbp_just( QRadialGradient():new()             )
-   hbxbp_just( QRadioButton():new()                )
-   hbxbp_just( QRect():new()                       )
-   hbxbp_just( QRectF():new()                      )
-   hbxbp_just( QRegion():new()                     )
-   hbxbp_just( QResizeEvent():new()                )
-   hbxbp_just( QResource():new()                   )
-   hbxbp_just( QScrollArea():new()                 )
-   hbxbp_just( QScrollBar():new()                  )
-   hbxbp_just( QSignalMapper():new()               )
-   hbxbp_just( QSize():new()                       )
-   hbxbp_just( QSizeF():new()                      )
-   hbxbp_just( QSizeGrip():new()                   )
-   hbxbp_just( QSizePolicy():new()                 )
-   hbxbp_just( QSlider():new()                     )
-   hbxbp_just( QSound():new()                      )
-   hbxbp_just( QSpinBox():new()                    )
-   hbxbp_just( QSplashScreen():new()               )
-   hbxbp_just( QSplitter():new()                   )
-   hbxbp_just( QStandardItem():new()               )
-   hbxbp_just( QStandardItemModel():new()          )
-   hbxbp_just( QStatusBar():new()                  )
-   hbxbp_just( QStringList():new()                 )
-   hbxbp_just( QStringListModel():new()            )
-   hbxbp_just( QSystemTrayIcon():new()             )
-   hbxbp_just( QTabBar():new()                     )
-   hbxbp_just( QTableView():new()                  )
-   hbxbp_just( QTableWidget():new()                )
-   hbxbp_just( QTableWidgetItem():new()            )
-   hbxbp_just( QTabWidget():new()                  )
-   hbxbp_just( QTextBlock():new()                  )
-   hbxbp_just( QTextBlockFormat():new()            )
-   hbxbp_just( QTextBlockGroup():new()             )
-   hbxbp_just( QTextBrowser():new()                )
-   hbxbp_just( QTextBoundaryFinder():new()         )
-   hbxbp_just( QTextCharFormat():new()             )
-   hbxbp_just( QTextCodec():new()                  )
-   hbxbp_just( QTextCursor():new()                 )
-   hbxbp_just( QTextDecoder():new()                )
-   hbxbp_just( QTextDocument():new()               )
-   hbxbp_just( QTextDocumentFragment():new()       )
-   hbxbp_just( QTextDocumentWriter():new()         )
-   hbxbp_just( QTextEdit():new()                   )
-   hbxbp_just( QTextFrame():new()                  )
-   hbxbp_just( QTextItem():new()                   )
-   hbxbp_just( QTextLayout():new()                 )
-   hbxbp_just( QTextLength():new()                 )
-   hbxbp_just( QTextLine():new()                   )
-   hbxbp_just( QTextObject():new()                 )
-   hbxbp_just( QTextStream():new()                 )
-   hbxbp_just( QTimeEdit():new()                   )
-   hbxbp_just( QTimer():new()                      )
-   hbxbp_just( QToolBar():new()                    )
-   hbxbp_just( QToolBox():new()                    )
-   hbxbp_just( QToolButton():new()                 )
-   hbxbp_just( QTreeView():new()                   )
-   hbxbp_just( QTreeWidget():new()                 )
-   hbxbp_just( QTreeWidgetItem():new()             )
-   hbxbp_just( QUrl():new()                        )
-   hbxbp_just( QVariant():new()                    )
-   hbxbp_just( QVBoxLayout():new()                 )
-   hbxbp_just( QWheelEvent():new()                 )
-   hbxbp_just( QWidget():new()                     )
-   hbxbp_just( QWidgetItem():new()                 )
+   /* Compiler Directives */
+   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
+   a_:= {}; aeval( b_, {|e| aadd( a_, "#" + upper( e ) + "\b|#" + e + "\b" ) } )
+   SetSyntaxAttrbs( qHiliter, a_, { 120, 26,213 }, .t., .t., .f. )
 
-   RETURN NIL
+   /* Operators */
+   a_:= { "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\." }
+   SetSyntaxAttrbs( qHiliter, a_, { 255,120,  0 }, .f., .f., .f. )
+
+   /* Numerics */
+   a_:= { "\b[0-9.]+\b" }
+   SetSyntaxAttrbs( qHiliter, a_, { 127,127,127 }, .f., .f., .f. )
+
+   /* Parenthesis and Braces */
+   a_:= { "\(|\)|\{|\}|\[|\]|\|" }
+   SetSyntaxAttrbs( qHiliter, a_, { 255,127,200 }, .f., .f., .f. )
+
+   /* Harbour Keywords */
+   b_:= { 'function','return','static','local', ;
+          'if','else','elseif','endif','end', ;
+          'docase','case','endcase','otherwise', ;
+          'do','while','exit',;
+          'for','each','next','step','to',;
+          'class','endclass','method','data','var','destructor','inline','assign','access','inherit','init','create',;
+          'begin','sequence','try','catch','always','recover','default','hb_symbol_unused' }
+   a_:= {}; aeval( b_, {|e| aadd( a_, "\b" + upper( e ) + "\b|\b" + e + "\b" ) } )
+   SetSyntaxAttrbs( qHiliter, a_, { 40,120,240 }, .f., .t., .f. )
+
+   /* Functions in General */
+   a_:= { "\b[A-Za-z0-9_]+(?=\()" }
+   SetSyntaxAttrbs( qHiliter, a_, { 128,0,64 }, .f., .f., .f. )
+
+   /* Strings */
+   a_:= {}
+   aadd( a_, '\".*\"' )
+   aadd( a_, "\'.*\'" )
+   SetSyntaxAttrbs( qHiliter, a_, { 64,128,128 }, .f., .f., .f. )
+
+   /* Single Line Comments */
+   a_:= { "//[^\n]*" }
+   SetSyntaxAttrbs( qHiliter, a_, { 255,  0,  0 }, .f., .f., .f. )
+
+   qFormat := QTextCharFormat():new()
+   qFormat:setFontItalic( .t. )
+   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( 190,190,190 ) ) )
+   qHiliter:setHBMultiLineCommentFormat( qFormat )
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION SetSyntaxAttrbs( qHiliter, aRegExp, aRGB, lItalic, lBold, lUnderline )
+   LOCAL qStrList, qFormat
+
+   qStrList := QStringList():new()
+   aeval( aRegExp, {|e| qStrList:append( e ) } )
+
+   qFormat  := QTextCharFormat():new()
+
+   IF hb_isLogical( lItalic )
+      qFormat:setFontItalic( lItalic )
+   ENDIF
+   IF hb_isLogical( lBold ) .and. lBold
+      qFormat:setFontWeight( 1000 )
+   ENDIF
+   IF hb_isLogical( lUnderline )
+      qFormat:setFontUnderline( lUnderline )
+   ENDIF
+   IF hb_isArray( aRGB )
+      qFormat:setForeGround( QBrush():new( "QColor", QColor():new( aRgb[ 1 ], aRgb[ 2 ], aRgb[ 3 ] ) ) )
+   ENDIF
+
+   qHiliter:setHBCompilerDirectives( qStrList, qFormat )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+

@@ -384,6 +384,7 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQTableView( n )                  ( ( HBQTableView                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBQSyntaxHighlighter( n )          ( ( HBQSyntaxHighlighter        * ) hbqt_gcpointer( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )

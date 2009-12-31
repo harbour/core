@@ -6,8 +6,6 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
@@ -68,6 +66,9 @@ class HBQSyntaxHighlighter : public QSyntaxHighlighter
 public:
    HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
+   void setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format );
+   void setHBMultiLineCommentFormat( const QTextCharFormat & format );
+
 protected:
    void highlightBlock( const QString &text );
 
@@ -88,8 +89,45 @@ private:
    QTextCharFormat multiLineCommentFormat;
    QTextCharFormat quotationFormat;
    QTextCharFormat functionFormat;
+   QTextCharFormat directivesFormat;
 };
 
 /*----------------------------------------------------------------------*/
+/*
+class Highlighter : public QSyntaxHighlighter
+{    Q_OBJECT
 
+   public:
+      Highlighter(QTextDocument *parent = 0);
+      void SetRule(QString name,QString pattern,QTextCharFormat format);
+
+   protected:
+      void highlightBlock(const QString &text);
+      struct HighlightingRule
+      {
+         HighlightingRule() {}
+         HighlightingRule(QRegExp _pattern,QTextCharFormat _format) {pattern = _pattern;format = _format;}
+         QRegExp pattern;
+         QTextCharFormat format;
+      };
+      QMap<QString,HighlightingRule> highlightingRules;
+};
+
+class MultiLineCommentHighlighter : public Highlighter
+{     Q_OBJECT
+   public:
+      MultiLineCommentHighlighter(QTextDocument *parent = 0);
+   protected:
+      void highlightBlock(const QString &text);
+      QRegExp commentStartExpression;
+      QRegExp commentEndExpression;
+      QTextCharFormat multiLineCommentFormat;
+};
+
+class CppHighlighter : public MultiLineCommentHighlighter
+{     Q_OBJECT
+   public:
+      CppHighlighter(QTextDocument *parent = 0);
+};    l
+*/
 #endif

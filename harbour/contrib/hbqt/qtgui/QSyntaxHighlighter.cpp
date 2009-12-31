@@ -85,12 +85,12 @@ typedef struct
   QPointer< QSyntaxHighlighter > pq;
 } QGC_POINTER_QSyntaxHighlighter;
 
-QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
+QT_G_FUNC( release_QSyntaxHighlighter )
 {
    QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter           p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter          ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter           p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -110,16 +110,16 @@ QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSyntaxHighlighter          Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSyntaxHighlighter          Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSyntaxHighlighter          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSyntaxHighlighter          Object Already deleted!" ) );
    }
 }
 
@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj )
    QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = hbqt_gcRelease_QSyntaxHighlighter;
+   p->func = release_QSyntaxHighlighter;
    new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
