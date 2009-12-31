@@ -1058,33 +1058,29 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
 
    if( bFindLast )
    {
-      AdsSeekLast( pArea->hOrdCurrent,
-                   pszKey, u16KeyLen, u16KeyType, &u16Found );
-      if( bSoftSeek && ! u16Found )
+      u32RetVal = AdsSeekLast( pArea->hOrdCurrent,
+                               pszKey, u16KeyLen, u16KeyType, &u16Found );
+      if( u32RetVal == AE_SUCCESS && bSoftSeek && ! u16Found )
       {
-         UNSIGNED16 u16Eof;
-
          /* in such case ADS set record at EOF position so we
             should make normal soft seek and then skip -1 to emulate
             Clipper behavior, Druzus */
-         AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
-                  u16KeyType, u16SeekType, &u16Found );
+         u32RetVal = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
+                              u16KeyType, u16SeekType, &u16Found );
 
-         AdsAtEOF( pArea->hTable, &u16Eof );
-         if( !u16Eof )
-         {
+         if( u32RetVal == AE_SUCCESS )
             u32RetVal = AdsSkip( pArea->hOrdCurrent, -1 );
-            if( u32RetVal != AE_SUCCESS )
-            {
-               commonError( pArea, EG_CORRUPTION, ( HB_ERRCODE ) u32RetVal, 0, NULL, EF_CANDEFAULT, NULL );
-               return HB_FAILURE;
-            }
-         }
       }
    }
    else
-      AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
-               u16KeyType, u16SeekType, &u16Found );
+      u32RetVal = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
+                           u16KeyType, u16SeekType, &u16Found );
+
+   if( u32RetVal != AE_SUCCESS )
+   {
+      commonError( pArea, EG_CORRUPTION, ( HB_ERRCODE ) u32RetVal, 0, NULL, EF_CANDEFAULT, NULL );
+      return HB_FAILURE;
+   }
 
    hb_adsUpdateAreaFlags( pArea );
 
