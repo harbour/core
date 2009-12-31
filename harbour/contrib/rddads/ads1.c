@@ -626,9 +626,7 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, 
       return HB_SUCCESS;
    }
    else
-   {
       return HB_FAILURE;
-   }
 }
 
 static double adsGetRelPos( ADSAREAP pArea, ADSHANDLE hOrder )
