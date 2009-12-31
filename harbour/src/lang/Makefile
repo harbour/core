@@ -28,7 +28,7 @@ C_SOURCES := \
    msggl.c \
    msghe862.c \
    msghewin.c \
-   msghr437.c \
+   msghr646.c \
    msghr852.c \
    msghriso.c \
    msghrwin.c \
@@ -56,7 +56,7 @@ C_SOURCES := \
    msgskwin.c \
    msgskkam.c \
    msgsk852.c \
-   msgsl437.c \
+   msgsl646.c \
    msgsl852.c \
    msgsliso.c \
    msgslwin.c \

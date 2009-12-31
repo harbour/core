@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (HR437)
+ * Language Support Module (HR646)
  *
  * Copyright 2004 Vladimir Miholic <vmiholic@sk.hinet.hr>
  * www - http://www.harbour-project.org
@@ -52,7 +52,7 @@
 
 /* Language name: CROATIAN */
 /* ISO language code (2 chars): HR */
-/* Codepage: 437 */
+/* Codepage: ISO-646-YU (CROSCII) */
 
 #include "hbapilng.h"
 
@@ -61,11 +61,11 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HR437",                     /* ID */
+      "HR646",                     /* ID */
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "ISO-646-YU",                /* Codepage */
       "",                          /* Version */
 
       /* Month names */
@@ -200,5 +200,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      HR437
+#define HB_LANG_ID      HR646
 #include "hbmsgreg.h"

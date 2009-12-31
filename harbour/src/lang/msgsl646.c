@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SL437)
+ * Language Support Module (SL646)
  *
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * Copyright 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
@@ -53,7 +53,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: 437 */
+/* Codepage: ISO-646-YU (SLOSCII) */
 
 #include "hbapilng.h"
 
@@ -62,11 +62,11 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SL437",                     /* ID */
+      "SL646",                     /* ID */
       "Slovenian",                 /* Name (in English) */
       "Sloven{~ina",               /* Name (in native language) */
       "SL",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "ISO-646-YU",                /* Codepage */
       "",                          /* Version */
 
       /* Month names */
@@ -201,5 +201,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SL437
+#define HB_LANG_ID      SL646
 #include "hbmsgreg.h"

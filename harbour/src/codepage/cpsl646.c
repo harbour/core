@@ -4,10 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( HR437 )
+ * National Collation Support Module ( SL646 )
  *
- * Copyright 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
+ * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
+ * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,12 +51,12 @@
  *
  */
 
-#define HB_CP_ID        HR437
-#define HB_CP_INFO      "Croatian ISO-646 (CROSCII)"
+#define HB_CP_ID        SL646
+#define HB_CP_INFO      "Slovenian ISO-646 (SLOSCII)"
 #define HB_CP_UNITB     HB_UNITB_646YU
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY"
-#define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwz`xy"
+#define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWXYZ@"
+#define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwxyz`"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

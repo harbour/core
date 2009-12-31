@@ -55,8 +55,8 @@
 #define HB_CP_INFO      "Slovenian ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWZ®XY"
-#define HB_CP_LOWER     "abcèædðefghijklmnopqrs¹tuvwz¾xy"
+#define HB_CP_UPPER     "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWXYZ®"
+#define HB_CP_LOWER     "abcèædðefghijklmnopqrs¹tuvwxyz¾"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

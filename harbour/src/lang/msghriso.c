@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "HRISO",                     /* ID */
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
-      "CS",                        /* RFC ID */
+      "HR",                        /* RFC ID */
       "ISO-8859-2",                /* Codepage */
       "",                          /* Version */
 

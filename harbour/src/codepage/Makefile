@@ -33,7 +33,7 @@ C_SOURCES := \
    cpfr850m.c \
    cpfriso.c \
    cpfrwin.c \
-   cphr437.c \
+   cphr646.c \
    cphr852.c \
    cphrwin.c \
    cphu852.c \
@@ -70,7 +70,7 @@ C_SOURCES := \
    cpskiso.c \
    cpskkam.c \
    cpskwin.c \
-   cpsl437.c \
+   cpsl646.c \
    cpsl852.c \
    cpsliso.c \
    cpslwin.c \
