@@ -35,6 +35,7 @@ C_SOURCES := \
    cpfrwin.c \
    cphr646.c \
    cphr852.c \
+   cphriso.c \
    cphrwin.c \
    cphu852.c \
    cphu852c.c \
