@@ -480,21 +480,21 @@ FUNCTION PathNormalized( cPath, lLower )
 #define CLR_MSG_WARN    'blue'
 
 STATIC FUNCTION BuildRegExpressList( aRegList )
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*" )                 } )
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*" )              } )
-   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*" )          } )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*"                 ) } )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*"              ) } )
+   AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*"          ) } )
 
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: error.*" )                   } )
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*\) Error E.*" )                } )
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error E([0-9]+).*" )            } )
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error: ." )                     } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: error.*"                   ) } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*\) Error E.*"                ) } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error E([0-9]+).*"            ) } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( "^Error: ."                     ) } )
    AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:([0-9]+):([\w|\s]*)error.*" ) } )
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:\(\.\w+\+.*\):.*" )           } )
-   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: fatal\s.*" )                 } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*:\(\.\w+\+.*\):.*"           ) } )
+   AAdd( aRegList, { MSG_TYPE_ERR , hb_RegexComp( ".*: fatal\s.*"                 ) } )
 
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: note.*" )                    } )
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: In function '.*" )           } )
-   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( "^(\s*).*\s: see.*" )             } )
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: note.*"                    ) } )
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( ".*: In function '.*"           ) } )
+   AAdd( aRegList, { MSG_TYPE_INFO, hb_RegexComp( "^(\s*).*\s: see.*"             ) } )
 
    RETURN aRegList
 
@@ -613,16 +613,13 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
    ENDDO
    aLines := hb_aTokens( cText, Chr( 10 ) )
 
-   oWidget:insertHTML( cText )
-
    FOR EACH cLine IN aLines
 
       IF !Empty( cLine )
          nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } )
 
          IF ( nPos > 0 )
-            cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' +;
-                      cLine + '</font>'
+            cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
          End
       ENDIF
 
@@ -646,90 +643,17 @@ FUNCTION FilesToSources( aFiles )
    RETURN aSrc
 
 /*----------------------------------------------------------------------*/
-/*
- * TODO: Load setting from user source
- *       Separate syntax highliters for different type of files.
- */
-FUNCTION SetSyntaxHilighting( qEdit, qHiliter )
-   LOCAL a_, b_, qFormat
 
-   HB_SYMBOL_UNUSED( qEdit )
+FUNCTION ParseKeyValPair( s, cKey, cVal )
+   LOCAL n, lYes := .f.
 
-   /* Compiler Directives */
-   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
-   a_:= {}; aeval( b_, {|e| aadd( a_, "#" + upper( e ) + "\b|#" + e + "\b" ) } )
-   SetSyntaxAttrbs( qHiliter, a_, { 120, 26,213 }, .t., .t., .f. )
-
-   /* Operators */
-   a_:= { "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\." }
-   SetSyntaxAttrbs( qHiliter, a_, { 255,120,  0 }, .f., .f., .f. )
-
-   /* Numerics */
-   a_:= { "\b[0-9.]+\b" }
-   SetSyntaxAttrbs( qHiliter, a_, { 127,127,127 }, .f., .f., .f. )
-
-   /* Parenthesis and Braces */
-   a_:= { "\(|\)|\{|\}|\[|\]|\|" }
-   SetSyntaxAttrbs( qHiliter, a_, { 255,127,200 }, .f., .f., .f. )
-
-   /* Harbour Keywords */
-   b_:= { 'function','return','static','local', ;
-          'if','else','elseif','endif','end', ;
-          'docase','case','endcase','otherwise', ;
-          'do','while','exit',;
-          'for','each','next','step','to',;
-          'class','endclass','method','data','var','destructor','inline','assign','access','inherit','init','create',;
-          'begin','sequence','try','catch','always','recover','default','hb_symbol_unused' }
-   a_:= {}; aeval( b_, {|e| aadd( a_, "\b" + upper( e ) + "\b|\b" + e + "\b" ) } )
-   SetSyntaxAttrbs( qHiliter, a_, { 40,120,240 }, .f., .t., .f. )
-
-   /* Functions in General */
-   a_:= { "\b[A-Za-z0-9_]+(?=\()" }
-   SetSyntaxAttrbs( qHiliter, a_, { 128,0,64 }, .f., .f., .f. )
-
-   /* Strings */
-   a_:= {}
-   aadd( a_, '\".*\"' )
-   aadd( a_, "\'.*\'" )
-   SetSyntaxAttrbs( qHiliter, a_, { 64,128,128 }, .f., .f., .f. )
-
-   /* Single Line Comments */
-   a_:= { "//[^\n]*" }
-   SetSyntaxAttrbs( qHiliter, a_, { 255,  0,  0 }, .f., .f., .f. )
-
-   qFormat := QTextCharFormat():new()
-   qFormat:setFontItalic( .t. )
-   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( 190,190,190 ) ) )
-   qHiliter:setHBMultiLineCommentFormat( qFormat )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION SetSyntaxAttrbs( qHiliter, aRegExp, aRGB, lItalic, lBold, lUnderline )
-   LOCAL qStrList, qFormat
-
-   qStrList := QStringList():new()
-   aeval( aRegExp, {|e| qStrList:append( e ) } )
-
-   qFormat  := QTextCharFormat():new()
-
-   IF hb_isLogical( lItalic )
-      qFormat:setFontItalic( lItalic )
-   ENDIF
-   IF hb_isLogical( lBold ) .and. lBold
-      qFormat:setFontWeight( 1000 )
-   ENDIF
-   IF hb_isLogical( lUnderline )
-      qFormat:setFontUnderline( lUnderline )
-   ENDIF
-   IF hb_isArray( aRGB )
-      qFormat:setForeGround( QBrush():new( "QColor", QColor():new( aRgb[ 1 ], aRgb[ 2 ], aRgb[ 3 ] ) ) )
+   IF ( n := at( "=", s ) ) > 0
+      cKey := alltrim( substr( s, 1, n - 1 ) )
+      cVal := alltrim( substr( s, n + 1 ) )
+      lYes := ( !empty( cKey ) .and. !empty( cVal ) )
    ENDIF
 
-   qHiliter:setHBCompilerDirectives( qStrList, qFormat )
-
-   RETURN nil
+   RETURN ( lYes )
 
 /*----------------------------------------------------------------------*/
 

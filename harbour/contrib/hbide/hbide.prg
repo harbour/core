@@ -241,6 +241,9 @@ CLASS HbIde
 
    DATA   aEdits                                  INIT {}
 
+   DATA   cIniThemes
+   DATA   oThemes
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -274,6 +277,9 @@ METHOD HbIde:create( cProjIni )
    ::oDa := ::oDlg:drawingArea
    SetAppWindow( ::oDlg )
    ::oDlg:Show()
+
+   /* Load HBIDE define | User Defined Themes */
+   LoadThemes( Self )
 
    ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
    //   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
@@ -1604,7 +1610,7 @@ METHOD HbIde:getCurrentProject()
 /* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], [ <lDetach> ] ) -> <nResult> */
 
 METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cCmd, cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
+   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
    LOCAL cTmp, nResult
    LOCAL nseconds
    LOCAL cTargetFN
@@ -1707,20 +1713,9 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::lDockBVisible := .t.
       ::oDockB2:show()
 
-      cTmp := "Project: " + cProject + CRLF + ;
-              "Launch.: " + iif( lLaunch, 'Yes', 'No' )  + CRLF + ;
-              "Rebuild: " + iif( lRebuild, 'Yes', 'No' ) + CRLF + ;
-              CRLF + ;
-              'Started at ' + time() + CRLF + ;
-              '-----------------------------------------------------------------' + CRLF
-      cCmd := "hbmk2.exe " + cHbpPath
-
       nSeconds := seconds()  // time elapsed
 
       IF lViaQt
-         ::lDockBVisible := .t.
-         ::oDockB2:show()
-
          ::cProcessInfo := ""
 
          qStringList := QStringList():new()
@@ -1740,7 +1735,15 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::qProcess:start( "hbmk2.exe", qStringList )
 
       ELSE
-         nResult  := hb_processRun( cCmd, , @cOutput, @cErrors )
+         cTmp := "Project: " + cProject + CRLF + ;
+                 "Launch.: " + iif( lLaunch, 'Yes', 'No' )  + CRLF + ;
+                 "Rebuild: " + iif( lRebuild, 'Yes', 'No' ) + CRLF + ;
+                 CRLF + ;
+                 'Started at ' + time() + CRLF + ;
+                 '-----------------------------------------------------------------' + CRLF
+
+         cOutput := "" ; cErrors := ""
+         nResult := hb_processRun( ( "hbmk2.exe " + cHbpPath ), , @cOutput, @cErrors )
 
        * Show detailed status about compile process...
          cTmp += cOutput + CRLF
@@ -1770,10 +1773,10 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
             ENDIF
          ENDIF
+
+         ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
       ENDIF
 
-      //::oOutputResult:oWidget:setHtml( ConvertBuildStatusMsgToHtml( cTmp ) )
-      ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
    ENDIF
 
    IF lDelHbp
@@ -1792,64 +1795,30 @@ METHOD HbIde:buildProjectViaQt( cProject )
 
    ::buildProject( cProject, , , , .t. )
 
-   #if 0
-   LOCAL n, aPrj, cHbpPath, aHbp, qStringList
-
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
-   aPrj := ::aProjects[ n,3 ]
-   cHbpPath := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ] + ".hbp"
-
-   aHbp := {}
-   aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
-   aeval( FilesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
-
-   CreateTarget( cHbpPath, aHbp )
-
-   ::lDockBVisible := .t.
-   ::oDockB2:show()
-
-   ::cProcessInfo := ""
-
-   qStringList := QStringList():new()
-   qStringList:append( cHbpPath )
-
-   ::qProcess := QProcess():new()
-   ::qProcess:setReadChannel( 1 )
-
-   Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
-   Qt_Connect_Signal( ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
-   Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
-
-   ::oOutputResult:oWidget:clear()
-   ::qProcess:start( "hbmk2.exe", qStringList )
-   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:readProcessInfo( nMode, iBytes )
+METHOD HbIde:readProcessInfo( nMode )
    LOCAL cLine
 
    DO CASE
    CASE nMode == 1
-      ::cProcessInfo += ::qProcess:read( iBytes )
-      ::oOutputResult:setData( ::cProcessInfo )
+
 
    CASE nMode == 2
-      ::qProcess:setReadChannel( 0 ) // QProcess_StandardOutput )
-      cLine := space( 1024 )
-      //::qProcess:readLine( @cLine, 1024 )
-      cLine := QByteArray():configure( ::qProcess:readAllStandardOutput() ):constData()
+      ::qProcess:setReadChannel( 0 )
+      cLine := space( 4096 )
+      ::qProcess:readLine( @cLine, 4096 )
       IF !empty( cLine )
-         ::cProcessInfo += CRLF + trim( cLine )
-         //::oOutputResult:oWidget:append( '<font color=blue>' + cLine  + '</font>' )
          ::oOutputResult:oWidget:append( cLine )
       ENDIF
 
    CASE nMode == 3
-      ::qProcess:setReadChannel( 1 ) // QProcess_StandardError )
-      cLine := space( 1024 )
-      ::qProcess:readLine( @cLine, 1024 )
+      ::qProcess:setReadChannel( 1 )
+      cLine := space( 4096 )
+      ::qProcess:readLine( @cLine, 4096 )
+
       IF !empty( cLine )
          ::cProcessInfo += CRLF + trim( cLine )
          IF ( "Warning" $ cLine )
@@ -1857,7 +1826,7 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
          ELSEIF ( "Error" $ cLine )
             cLine := '<font color=red>' + cLine + '</font>'
          ENDIF
-         //::oOutputResult:oWidget:appendPlainText( cLine )
+
          ::oOutputResult:oWidget:append( cLine )
       ENDIF
 

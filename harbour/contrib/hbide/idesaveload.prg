@@ -78,16 +78,17 @@ FUNCTION saveINI( oIde )
    txt_:= {}
    //    Properties
    aadd( txt_, "[HBIDE]" )
-   aadd( txt_, "MainWindowGeometry     = " + PosAndSize( oIde:oDlg:oWidget )             )
-   aadd( txt_, "ProjectTreeVisible     = " + IIF( oIde:lProjTreeVisible, "YES", "NO" )   )
-   aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( oIde:oProjTree:oWidget )        )
-   aadd( txt_, "FunctionListVisible    = " + IIF( oIde:lDockRVisible, "YES", "NO" )      )
-   aadd( txt_, "FunctionListGeometry   = " + PosAndSize( oIde:oFuncList:oWidget )        )
-   aadd( txt_, "RecentTabIndex         = " + hb_ntos( oIde:qTabWidget:currentIndex() )   )
-   aadd( txt_, "CurrentProject         = " + ""                                       )
-   aadd( txt_, "GotoDialogGeometry     = " + oIde:aIni[ INI_HBIDE, GotoDialogGeometry  ] )
-   aadd( txt_, "PropsDialogGeometry    = " + oIde:aIni[ INI_HBIDE, PropsDialogGeometry ] )
-   aadd( txt_, "FindDialogGeometry     = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry  ] )
+   aadd( txt_, "MainWindowGeometry     = " + PosAndSize( oIde:oDlg:oWidget )              )
+   aadd( txt_, "ProjectTreeVisible     = " + IIF( oIde:lProjTreeVisible, "YES", "NO" )    )
+   aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( oIde:oProjTree:oWidget )         )
+   aadd( txt_, "FunctionListVisible    = " + IIF( oIde:lDockRVisible, "YES", "NO" )       )
+   aadd( txt_, "FunctionListGeometry   = " + PosAndSize( oIde:oFuncList:oWidget )         )
+   aadd( txt_, "RecentTabIndex         = " + hb_ntos( oIde:qTabWidget:currentIndex() )    )
+   aadd( txt_, "CurrentProject         = " + ""                                           )
+   aadd( txt_, "GotoDialogGeometry     = " + oIde:aIni[ INI_HBIDE, GotoDialogGeometry   ] )
+   aadd( txt_, "PropsDialogGeometry    = " + oIde:aIni[ INI_HBIDE, PropsDialogGeometry  ] )
+   aadd( txt_, "FindDialogGeometry     = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry   ] )
+   aadd( txt_, "ThemesDialogGeometry   = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] )
 
    qSet := QSettings():new( "Harbour", "HbIde" )
    qSet:setValue( "state", oIde:oDlg:oWidget:saveState() )
@@ -152,7 +153,7 @@ FUNCTION loadINI( oIde, cHbideIni )
    LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
                       "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
                       "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
-                      "finddialoggeometry" }
+                      "finddialoggeometry" , "themesdialoggeometry" }
 
    DEFAULT cHbideIni TO "hbide.ini"
 

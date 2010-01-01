@@ -311,7 +311,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~CodePage"
+   oSubMenu:title := "~Codec"
    oSubMenu:addItem( { "Apple Roman "                          , {|| oIde:setCodec( "Apple Roman"         ) } } )
    oSubMenu:addItem( { "Big5        "                          , {|| oIde:setCodec( "Big5"                ) } } )
    oSubMenu:addItem( { "Big5-HKSCS  "                          , {|| oIde:setCodec( "Big5-HKSCS"          ) } } )
@@ -394,6 +394,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:addItem( { "WINSAMI2    "                          , {|| oIde:setCodec( "WINSAMI2"            ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   /*   Tools   */
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Tools"
    oSubMenu:addItem( { _T( "Configure Tools...*" )             , {|| oIde:executeAction( ""               ) } } )
@@ -406,6 +407,13 @@ FUNCTION buildMainMenu( oWnd, oIde )
 #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   /*   Options  */
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Options"
+   oSubMenu:addItem( { _T( "Themes" )                          , {|| oIde:oThemes:fetch()                   } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   /*   Help   */
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Help"
    oSubMenu:addItem( { _T( "About...*" )                       , {|| oIde:executeAction( ""               ) } } )

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>dialogThemes</class>
+ <widget class="QDialog" name="dialogThemes">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>HBIDE - Source Syntax Highlighting</string>
   </property>
   <widget class="QPlainTextEdit" name="plainTextEdit">
    <property name="geometry">
@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="labelItem">
    <property name="geometry">
     <rect>
      <x>12</x>
@@ -36,7 +36,7 @@
     <string>Item</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="labelTheme">
    <property name="geometry">
     <rect>
      <x>12</x>
@@ -49,7 +49,7 @@
     <string>Theme</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="comboItems">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -59,7 +59,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="buttonColor">
    <property name="geometry">
     <rect>
      <x>308</x>
@@ -72,7 +72,7 @@
     <string>Color</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox_2">
+  <widget class="QComboBox" name="comboThemes">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -82,11 +82,11 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="buttonSave">
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>340</y>
+     <y>344</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -95,11 +95,11 @@
     <string>Save</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="buttonSaveAs">
    <property name="geometry">
     <rect>
      <x>112</x>
-     <y>340</y>
+     <y>344</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -108,11 +108,11 @@
     <string>Save As</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
+  <widget class="QPushButton" name="buttonApply">
    <property name="geometry">
     <rect>
      <x>212</x>
-     <y>340</y>
+     <y>344</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -121,20 +121,20 @@
     <string>Apply</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_5">
+  <widget class="QPushButton" name="buttonClose">
    <property name="geometry">
     <rect>
      <x>308</x>
-     <y>340</y>
+     <y>344</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Cancel</string>
+    <string>Close</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="checkItalic">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -147,7 +147,7 @@
     <string>Italic</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_2">
+  <widget class="QCheckBox" name="checkBold">
    <property name="geometry">
     <rect>
      <x>144</x>
@@ -160,7 +160,7 @@
     <string>Bold</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_3">
+  <widget class="QCheckBox" name="checkUnderline">
    <property name="geometry">
     <rect>
      <x>216</x>
@@ -171,6 +171,19 @@
    </property>
    <property name="text">
     <string>Underline</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>324</y>
+     <width>397</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>
