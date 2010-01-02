@@ -65,7 +65,7 @@
 %define hb_ldir   export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_edir   export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql hbnf %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_firebird:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
+%define hb_ctrb   export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql} %{?_with_odbc:hbodbc} %{?_with_pgsql:hbpgsql} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
@@ -427,7 +427,6 @@ export LD_LIBRARY_PATH=$HB_INST_PKGPREF$HB_LIB_INSTALL
 
 make install %{?_smp_mflags}
 
-[ "%{?_with_allegro:1}" ]  || rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_without_curses:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtcrs.a
 [ "%{?_without_slang:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtsln.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibhpdf.a
