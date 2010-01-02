@@ -53,8 +53,6 @@
 #ifndef HB_EXTCDP_CH_
 #define HB_EXTCDP_CH_
 
-#include "hbextcdp.ch"
-
 /* Codepage support */
 EXTERNAL HB_CODEPAGE_BG866
 EXTERNAL HB_CODEPAGE_BGISO
