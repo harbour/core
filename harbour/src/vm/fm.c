@@ -1102,10 +1102,6 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_snprintf( buffer, sizeof( buffer ), HB_I_("Total memory allocated: %li bytes (%li block(s))"), s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %li bytes (%li block(s))"), s_lMemoryConsumed, s_lMemoryBlocks );
-      hb_conOutErr( buffer, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
 
       if( s_lMemoryBlocks )
       {
@@ -1124,9 +1120,23 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             fprintf( hLog, "%s\n", buffer );
          }
 
+         hb_conOutErr( hb_conNewLine(), 0 );
+         hb_snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %li bytes (%li block(s))"), s_lMemoryConsumed, s_lMemoryBlocks );
+         hb_conOutErr( buffer, 0 );
+
          if( hLog )
             fprintf( hLog, "%s\n", buffer );
       }
+      else
+      {
+#ifdef HB_FM_STATISTICS
+         hb_conOutErr( hb_conNewLine(), 0 );
+         hb_snprintf( buffer, sizeof( buffer ), HB_I_("Memory allocated but not released: none") );
+         hb_conOutErr( buffer, 0 );
+#endif
+      }
+
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock, ++ui )
       {
