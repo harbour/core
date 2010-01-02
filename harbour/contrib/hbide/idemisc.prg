@@ -48,6 +48,18 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ *    hbide_PathProc()
+ *
+ * See COPYING for licensing terms.
+ *
+ */
+
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -442,7 +454,7 @@ FUNCTION IsValidText( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
-   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo" )
+   RETURN cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo"
 
 /*----------------------------------------------------------------------*/
 
@@ -452,7 +464,7 @@ FUNCTION IsValidSource( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
-   RETURN ( cExt $ ".c,.cpp,.prg,.res,.rc" )
+   RETURN cExt $ ".c,.cpp,.prg,.res,.rc"
 
 /*----------------------------------------------------------------------*/
 
@@ -463,7 +475,7 @@ FUNCTION PathNormalized( cPath, lLower )
 
    s := strtran( cPath, "\", "/" )
 
-   RETURN IF( lLower, lower( s ), s )
+   RETURN IIF( lLower, lower( s ), s )
 
 /*----------------------------------------------------------------------*/
 /*
@@ -653,7 +665,28 @@ FUNCTION ParseKeyValPair( s, cKey, cVal )
       lYes := ( !empty( cKey ) .and. !empty( cVal ) )
    ENDIF
 
-   RETURN ( lYes )
+   RETURN lYes
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_PathProc( cPathR, cPathA )
+   LOCAL cDirA
+   LOCAL cDirR, cDriveR, cNameR, cExtR
+
+   IF Empty( cPathA )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
+
+   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathA, @cDirA )
+
+   IF Empty( cDirA )
+      RETURN cPathR
+   ENDIF
+
+   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )

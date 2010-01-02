@@ -507,10 +507,10 @@ ifeq ($(HB_COMPILER),)
 
             # try to detect MinGW cross-compiler location using some default platform settings
             ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
-               ifneq ($(call find_in_path_raw,debian_version,/etc),)
+               ifneq ($(wildcard /etc/debian_version),)
                   HB_CCPREFIX := i586-mingw32msvc-
                else
-                  ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
+                  ifneq ($(wildcard /etc/gentoo-release),)
                      ifneq ($(call find_in_path_par,i386-mingw32msvc-gcc,/opt/xmingw/bin),)
                         HB_CCPATH := /opt/xmingw/
                         HB_CCPREFIX := i386-mingw32msvc-
