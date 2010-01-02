@@ -81,6 +81,10 @@ if test_reqrpm "allegro-devel"
 then
     INST_PARAM="${INST_PARAM} --with allegro"
 fi
+if test_reqrpm "cairo-devel"
+then
+    INST_PARAM="${INST_PARAM} --with cairo"
+fi
 if test_reqrpm "curl-devel"
 then
     INST_PARAM="${INST_PARAM} --with curl"
