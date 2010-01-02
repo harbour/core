@@ -51,17 +51,10 @@ substpat := !@!@
 
 .PHONY: all clean install
 
-need := 3.81
-ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
-
-ifeq ($(ok),)
-
-$(error ! Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour)
-
-else
-
-need := 3.81
-MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
+_make_ver_min := 3.81
+ifeq ($(filter $(_make_ver_min),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_min)))),)
+   $(error ! Error: GNU Make version $(MAKE_VERSION) found, $(_make_ver_min) or upper needed for Harbour)
+endif
 
 find_in_path     = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 find_in_path_par = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
@@ -247,102 +240,100 @@ else
 endif
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
 
-      # Some additional ones to be given a standard name:
-      #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
-      #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
-      #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)
-      #   HB_TOOLS_PREF               -> ?
-      # Macros:
-      #   -DHB_GT_LIB=
+   # Some additional ones to be given a standard name:
+   #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
+   #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
+   #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)
+   #   HB_TOOLS_PREF               -> ?
+   # Macros:
+   #   -DHB_GT_LIB=
 
-      $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://www.harbour-project.org)
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
-      ifneq ($(HB_USER_PRGFLAGS),)
-         $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
-      endif
-      ifneq ($(HB_USER_CFLAGS),)
-         $(info ! HB_USER_CFLAGS: $(HB_USER_CFLAGS))
-      endif
-      ifneq ($(HB_USER_LDFLAGS),)
-         $(info ! HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
-      endif
-      ifneq ($(HB_USER_AFLAGS),)
-         $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
-      endif
-      ifneq ($(HB_USER_DFLAGS),)
-         $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
-      endif
-      ifneq ($(HB_USER_LIBS),)
-         $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
-      endif
-      ifneq ($(HB_INSTALL_PREFIX),)
-         $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
-      endif
-      ifneq ($(HB_BIN_INSTALL),)
-         $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
-      endif
-      ifneq ($(HB_LIB_INSTALL),)
-         $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
-      endif
-      ifneq ($(HB_DYN_INSTALL),)
-         $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
-      endif
-      ifneq ($(HB_INC_INSTALL),)
-         $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
-      endif
-      ifneq ($(HB_DOC_INSTALL),)
-         $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
-      endif
-      ifneq ($(HB_BUILD_NAME),)
-         $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
-      endif
-      ifneq ($(HB_BUILD_PKG),)
-         $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
-      endif
-      ifneq ($(HB_BUILD_DLL),)
-         $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
-      endif
-      ifneq ($(HB_BUILD_SHARED),)
-         $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
-      endif
-      ifneq ($(HB_BUILD_DEBUG),)
-         $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
-      endif
-      ifneq ($(HB_BUILD_STRIP),)
-         $(info ! HB_BUILD_STRIP: $(HB_BUILD_STRIP))
-      endif
-      ifneq ($(HB_BUILD_OPTIM),)
-         $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
-      endif
-      ifneq ($(HB_BUILD_UNICODE),)
-         $(info ! HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
-      endif
-      ifneq ($(HB_BUILD_MODE),)
-         $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
-      endif
-      ifneq ($(HB_BUILD_EXTDEF),)
-         $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
-      endif
-      ifneq ($(HB_BUILD_PARTS),)
-         $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
-      endif
-      ifneq ($(HB_CONTRIBLIBS),)
-         $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
-      endif
-      ifneq ($(HB_CONTRIB_ADDONS),)
-         $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
-      endif
-      ifneq ($(HB_EXTERNALLIBS),)
-         $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
-      endif
-      ifneq ($(HB_EXTERNAL_ADDONS),)
-         $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
-      endif
-      ifneq ($(HB_REBUILD_PARSER),)
-         $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
-      endif
+   $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://www.harbour-project.org)
+   $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
+   ifneq ($(HB_USER_PRGFLAGS),)
+      $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
+   endif
+   ifneq ($(HB_USER_CFLAGS),)
+      $(info ! HB_USER_CFLAGS: $(HB_USER_CFLAGS))
+   endif
+   ifneq ($(HB_USER_LDFLAGS),)
+      $(info ! HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
+   endif
+   ifneq ($(HB_USER_AFLAGS),)
+      $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
+   endif
+   ifneq ($(HB_USER_DFLAGS),)
+      $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
+   endif
+   ifneq ($(HB_USER_LIBS),)
+      $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
+   endif
+   ifneq ($(HB_INSTALL_PREFIX),)
+      $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
+   endif
+   ifneq ($(HB_BIN_INSTALL),)
+      $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
+   endif
+   ifneq ($(HB_LIB_INSTALL),)
+      $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
+   endif
+   ifneq ($(HB_DYN_INSTALL),)
+      $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
+   endif
+   ifneq ($(HB_INC_INSTALL),)
+      $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
+   endif
+   ifneq ($(HB_DOC_INSTALL),)
+      $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
+   endif
+   ifneq ($(HB_BUILD_NAME),)
+      $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
+   endif
+   ifneq ($(HB_BUILD_PKG),)
+      $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
+   endif
+   ifneq ($(HB_BUILD_DLL),)
+      $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
+   endif
+   ifneq ($(HB_BUILD_SHARED),)
+      $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
+   endif
+   ifneq ($(HB_BUILD_DEBUG),)
+      $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
+   endif
+   ifneq ($(HB_BUILD_STRIP),)
+      $(info ! HB_BUILD_STRIP: $(HB_BUILD_STRIP))
+   endif
+   ifneq ($(HB_BUILD_OPTIM),)
+      $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
+   endif
+   ifneq ($(HB_BUILD_UNICODE),)
+      $(info ! HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
+   endif
+   ifneq ($(HB_BUILD_MODE),)
+      $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
+   endif
+   ifneq ($(HB_BUILD_EXTDEF),)
+      $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
+   endif
+   ifneq ($(HB_BUILD_PARTS),)
+      $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
+   endif
+   ifneq ($(HB_CONTRIBLIBS),)
+      $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
+   endif
+   ifneq ($(HB_CONTRIB_ADDONS),)
+      $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
+   endif
+   ifneq ($(HB_EXTERNALLIBS),)
+      $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
+   endif
+   ifneq ($(HB_EXTERNAL_ADDONS),)
+      $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
+   endif
+   ifneq ($(HB_REBUILD_PARSER),)
+      $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
    endif
 endif
 
@@ -462,9 +453,7 @@ else
 endif
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
-   endif
+   $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
 endif
 
 HB_PLAT_AUTO :=
@@ -1039,10 +1028,8 @@ ifeq ($(HB_INIT_DONE),)
          $(warning !          Please use the Windows build of GNU Make.)
       endif
    endif
-   ifneq ($(MAKE_381),)
-      $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
-      $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
-   endif
+   $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
+   $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
 endif
 
 ifeq ($(HB_HOST_PKGM),)
@@ -1064,10 +1051,8 @@ endif
 export HB_HOST_PKGM
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
-      ifneq ($(HB_HOST_PKGM),)
-         $(info ! HB_HOST_PKGM: $(HB_HOST_PKGM))
-      endif
+   ifneq ($(HB_HOST_PKGM),)
+      $(info ! HB_HOST_PKGM: $(HB_HOST_PKGM))
    endif
 endif
 
@@ -1106,9 +1091,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
             ifeq ($(HB_BIN_COMPILE),)
                $(warning ! Warning: HB_BIN_COMPILE not specified. Could not find native build.)
             else
-               ifneq ($(MAKE_381),)
-                  $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
-               endif
+               $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
             endif
          endif
       endif
@@ -1244,14 +1227,12 @@ endif
 export HB_INSTALL_PREFIX
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
-      ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
-         $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
-      endif
-      ifeq ($(ROOT),./)
-         ifneq ($(call find_in_path,svnversion),)
-            $(info ! REVISION: $(shell svnversion .))
-         endif
+   ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
+      $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
+   endif
+   ifeq ($(ROOT),./)
+      ifneq ($(call find_in_path,svnversion),)
+         $(info ! REVISION: $(shell svnversion .))
       endif
    endif
 endif
@@ -1434,7 +1415,5 @@ export HB_INIT_DONE := yes
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/global.mk
 include $(TOP)$(ROOT)config/globsh.mk
-
-endif
 
 endif # GLOBAL_MK_
