@@ -1,14 +1,3 @@
-         --with ads         - build components dependent on ads (rddads)
-         --with allegro     - build components dependent on allegro (gtalleg)
-         --with cairo       - build components dependent on cairo (hbcairo)
-         --with curl        - build components dependent on libcurl (hbcurl)
-         --with firebird    - build components dependent on firebird (hbfbird, sddfb)
-         --with freeimage   - build components dependent on freeimage (hbfimage) [TOFIX]
-         --with gd          - build components dependent on gd (hbgd)
-         --with mysql       - build components dependent on mysql (hbmysql, sddmy)
-         --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
-         --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
-         --with qt          - build components dependent on qt (hbqt, hbxbp)
 #
 # $Id$
 #
