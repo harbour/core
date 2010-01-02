@@ -1054,14 +1054,7 @@ ifeq ($(HB_HOST_PKGM),)
          HB_HOST_PKGM += macports
       endif
    else ifeq ($(HB_PLATFORM),linux)
-      _UNAME_V := $(shell uname -v)
-      ifneq      ($(findstring Ubuntu,$(_UNAME_V)),)
-         HB_HOST_PKGM += deb
-      else ifneq ($(findstring ubuntu,$(_UNAME_V)),)
-         HB_HOST_PKGM += deb
-      else ifneq ($(findstring Debian,$(_UNAME_V)),)
-         HB_HOST_PKGM += deb
-      else ifneq ($(findstring debian,$(_UNAME_V)),)
+      ifneq ($(wildcard /etc/debian_version),)
          HB_HOST_PKGM += deb
       else
          HB_HOST_PKGM += rpm
