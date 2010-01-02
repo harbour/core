@@ -1622,7 +1622,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
    DEFAULT lPPO      TO .F.
-   DEFAULT lViaQt    TO .f.
+   DEFAULT lViaQt    TO .F.
 
    lDelHbp := lPPO
 
@@ -1658,17 +1658,10 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    End
 
    DO CASE
-   CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
-      cTargetFN += '.exe'
-
    CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-      cTargetFN += '.lib'
       aadd( aHbp, "-hblib" )
-
    CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-      cTargetFN += '.dll'
       aadd( aHbp, "-hbdyn" )
-
    ENDCASE
 
    aadd( aHbp, "-o" + cTargetFN )
@@ -1732,7 +1725,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
          ::oOutputResult:oWidget:clear()
-         ::qProcess:start( "hbmk2.exe", qStringList )
+         ::qProcess:start( "hbmk2", qStringList )
 
       ELSE
          cTmp := "Project: " + cProject + CRLF + ;
@@ -1743,11 +1736,11 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
                  '-----------------------------------------------------------------' + CRLF
 
          cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ( "hbmk2.exe " + cHbpPath ), , @cOutput, @cErrors )
+         nResult := hb_processRun( ( "hbmk2 " + cHbpPath ), , @cOutput, @cErrors )
 
        * Show detailed status about compile process...
          cTmp += cOutput + CRLF
-         cTmp += IF( empty( cErrors ), "", cErrors ) + CRLF
+         cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
          cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
          cTmp += '-----------------------------------------------------------------' + CRLF
          cTmp += 'Finished at ' + time() + CRLF
