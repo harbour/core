@@ -1045,6 +1045,39 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
+ifeq ($(HB_HOST_PKGM),)
+   ifeq ($(HB_PLATFORM),darwin)
+      ifneq ($(wildcard /sw/bin/fink),)
+         HB_HOST_PKGM += fink
+      endif
+      ifneq ($(wildcard /opt/local/bin/port),)
+         HB_HOST_PKGM += macports
+      endif
+   else ifeq ($(HB_PLATFORM),linux)
+      _UNAME_V := $(shell uname -v)
+      ifneq      ($(findstring Ubuntu,$(_UNAME_V)),)
+         HB_HOST_PKGM += deb
+      else ifneq ($(findstring ubuntu,$(_UNAME_V)),)
+         HB_HOST_PKGM += deb
+      else ifneq ($(findstring Debian,$(_UNAME_V)),)
+         HB_HOST_PKGM += deb
+      else ifneq ($(findstring debian,$(_UNAME_V)),)
+         HB_HOST_PKGM += deb
+      else
+         HB_HOST_PKGM += rpm
+      endif
+   endif
+endif
+export HB_HOST_PKGM
+
+ifeq ($(HB_INIT_DONE),)
+   ifneq ($(MAKE_381),)
+      ifneq ($(HB_HOST_PKGM),)
+         $(info ! HB_HOST_PKGM: $(HB_HOST_PKGM))
+      endif
+   endif
+endif
+
 # Reserve variables for local compiler flags. Makefiles
 # should only modify these instead of HB_USER_* variables
 # as these can have bad side effects (doubly added values)
