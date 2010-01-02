@@ -224,14 +224,16 @@ HARBOUR
 
       You can fine-tune the build with these options:
          --with static      - link all binaries with static libs
-         --with mysql       - build components dependent on mysql (hbmysql, sddmy)
-         --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
-         --with gd          - build components dependent on gd (hbgd)
-         --with allegro     - build components dependent on allegro (gtalleg)
          --with ads         - build components dependent on ads (rddads)
-         --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
-         --with firebird    - build components dependent on firebird (hbfbird, sddfb)
+         --with allegro     - build components dependent on allegro (gtalleg)
+         --with cairo       - build components dependent on cairo (hbcairo)
          --with curl        - build components dependent on libcurl (hbcurl)
+         --with firebird    - build components dependent on firebird (hbfbird, sddfb)
+         --with freeimage   - build components dependent on freeimage (hbfimage) [TOFIX]
+         --with gd          - build components dependent on gd (hbgd)
+         --with mysql       - build components dependent on mysql (hbmysql, sddmy)
+         --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
+         --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
          --with qt          - build components dependent on qt (hbqt, hbxbp)
          --with localzlib   - build local copy of zlib library
          --with localpcre   - build local copy of pcre library
@@ -356,7 +358,7 @@ HARBOUR
       Download and install 'Advantage Client Engine API for Linux' package
       (f.e. aceapi-9.10.0.0.tar.gz)
 
-      For contrib/hbhpdf lib:
+      For contrib/hbhpdf lib (if you don't wish to use locally hosted version):
       Download libharu from http://libharu.org/ -> './configure' -> 'make install'
 
    Linux (Debian, Ubuntu, .deb based distros)
@@ -826,7 +828,6 @@ HARBOUR
       rem   also Cygwin drive notation for Cygwin.
       set HB_WITH_ADS=C:\ads\acesdk
       set HB_WITH_ALLEGRO=C:\allegro\include
-      set HB_WITH_APOLLO=C:\Apollo\include
       set HB_WITH_BLAT=C:\blat\full\source
       set HB_WITH_CAIRO=C:\cairo\include\cairo
       set HB_WITH_CURL=C:\curl\include

@@ -1,3 +1,14 @@
+         --with ads         - build components dependent on ads (rddads)
+         --with allegro     - build components dependent on allegro (gtalleg)
+         --with cairo       - build components dependent on cairo (hbcairo)
+         --with curl        - build components dependent on libcurl (hbcurl)
+         --with firebird    - build components dependent on firebird (hbfbird, sddfb)
+         --with freeimage   - build components dependent on freeimage (hbfimage) [TOFIX]
+         --with gd          - build components dependent on gd (hbgd)
+         --with mysql       - build components dependent on mysql (hbmysql, sddmy)
+         --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
+         --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
+         --with qt          - build components dependent on qt (hbqt, hbxbp)
 #
 # $Id$
 #
@@ -228,36 +239,6 @@ A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
 Ez a csomag kiegészítõ (contrib) könyvtárakat biztosít
 statikus szerkesztéshez.
 
-## odbc library
-%{?_with_odbc:%package odbc}
-%{?_with_odbc:Summary:        ODBC libarary for %{dname} compiler}
-%{?_with_odbc:Summary(pl):    Bilioteka ODBC dla kompilatora %{dname}}
-%{?_with_odbc:Group:          Development/Languages}
-%{?_with_odbc:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
-
-%{?_with_odbc:%description odbc}
-%{?_with_odbc:%{dname} is a Clipper compatible compiler.}
-%{?_with_odbc:This package provides %{dname} ODBC library for program linking.}
-
-%{?_with_odbc:%description -l pl odbc}
-%{?_with_odbc:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_odbc:Ten pakiet udostêpnia statyczn+ biliotekê ODBC dla kompilatora %{dname}.}
-
-## CURL library
-%{?_with_curl:%package curl}
-%{?_with_curl:Summary:        CURL libarary for %{dname} compiler}
-%{?_with_curl:Summary(pl):    Bilioteka CURL dla kompilatora %{dname}}
-%{?_with_curl:Group:          Development/Languages}
-%{?_with_curl:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
-
-%{?_with_curl:%description curl}
-%{?_with_curl:%{dname} is a Clipper compatible compiler.}
-%{?_with_curl:This package provides %{dname} CURL library for program linking.}
-
-%{?_with_curl:%description -l pl curl}
-%{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_curl:Ten pakiet udostêpnia statyczn+ biliotekê CURL dla kompilatora %{dname}.}
-
 ## ADS RDD
 %{?_with_ads:%package ads}
 %{?_with_ads:Summary:        ADS RDDs for %{dname} compiler}
@@ -273,39 +254,54 @@ statikus szerkesztéshez.
 %{?_with_ads:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_ads:Ten pakiet udostêpnia sterowniki (RDD) ADS dla kompilatora %{dname}.}
 
-## mysql library
-%{?_with_mysql:%package mysql}
-%{?_with_mysql:Summary:        MYSQL libarary for %{dname} compiler}
-%{?_with_mysql:Summary(pl):    Bilioteka MYSQL dla kompilatora %{dname}}
-%{?_with_mysql:Group:          Development/Languages}
-%{?_with_mysql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+## allegro library
+%{?_with_allegro:%package allegro}
+%{?_with_allegro:Summary:        Allegro GT for %{dname} compiler}
+%{?_with_allegro:Summary(pl):    Allegro GT dla kompilatora %{dname}}
+%{?_with_allegro:Group:          Development/Languages}
+%{?_with_allegro:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
-%{?_with_mysql:%description mysql}
-%{?_with_mysql:%{dname} is a Clipper compatible compiler.}
-%{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
+%{?_with_allegro:%description allegro}
+%{?_with_allegro:%{dname} is a Clipper compatible compiler.}
+%{?_with_allegro:This package provides %{dname} Allegro GT library for program linking.}
 
-%{?_with_mysql:%description -l pl mysql}
-%{?_with_mysql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_mysql:Ten pakiet udostêpnia statyczn+ biliotekê MYSQL dla kompilatora %{dname}.}
+%{?_with_allegro:%description -l pl allegro}
+%{?_with_allegro:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_allegro:Ten pakiet udostêpnia statyczn+ biliotekê Allegro GT dla kompilatora %{dname}.}
 
-## pgsql library
-%{?_with_pgsql:%package pgsql}
-%{?_with_pgsql:Summary:        PGSQL libarary for %{dname} compiler}
-%{?_with_pgsql:Summary(pl):    Bilioteka PGSQL dla kompilatora %{dname}}
-%{?_with_pgsql:Group:          Development/Languages}
-%{?_with_pgsql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+## cairo library
+%{?_with_cairo:%package cairo}
+%{?_with_cairo:Summary:        Cairo library bindings for %{dname} compiler}
+%{?_with_cairo:Summary(pl):    Bilioteka Cairo dla kompilatora %{dname}}
+%{?_with_cairo:Group:          Development/Languages}
+%{?_with_cairo:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
-%{?_with_pgsql:%description pgsql}
-%{?_with_pgsql:%{dname} is a Clipper compatible compiler.}
-%{?_with_pgsql:This package provides %{dname} PGSQL library for program linking.}
+%{?_with_cairo:%description cairo}
+%{?_with_cairo:%{dname} is a Clipper compatible compiler.}
+%{?_with_cairo:This package provides %{dname} Cairo library for program linking.}
 
-%{?_with_pgsql:%description -l pl pgsql}
-%{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_pgsql:Ten pakiet udostêpnia statyczn+ biliotekê PGSQL dla kompilatora %{dname}.}
+%{?_with_cairo:%description -l pl cairo}
+%{?_with_cairo:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_cairo:Ten pakiet udostêpnia statyczn+ biliotekê Cairo dla kompilatora %{dname}.}
+
+## curl library
+%{?_with_curl:%package curl}
+%{?_with_curl:Summary:        CURL library bindings for %{dname} compiler}
+%{?_with_curl:Summary(pl):    Bilioteka CURL dla kompilatora %{dname}}
+%{?_with_curl:Group:          Development/Languages}
+%{?_with_curl:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_curl:%description curl}
+%{?_with_curl:%{dname} is a Clipper compatible compiler.}
+%{?_with_curl:This package provides %{dname} CURL library for program linking.}
+
+%{?_with_curl:%description -l pl curl}
+%{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_curl:Ten pakiet udostêpnia statyczn+ biliotekê CURL dla kompilatora %{dname}.}
 
 ## firebird library
 %{?_with_firebird:%package firebird}
-%{?_with_firebird:Summary:        FireBird libarary for %{dname} compiler}
+%{?_with_firebird:Summary:        FireBird library bindings for %{dname} compiler}
 %{?_with_firebird:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
 %{?_with_firebird:Group:          Development/Languages}
 %{?_with_firebird:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
@@ -318,9 +314,24 @@ statikus szerkesztéshez.
 %{?_with_firebird:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_firebird:Ten pakiet udostêpnia statyczn+ biliotekê FireBird dla kompilatora %{dname}.}
 
+## freeimage library
+#%{?_with_freeimage:%package freeimage}
+#%{?_with_freeimage:Summary:        FreeImage library bindings for %{dname} compiler}
+#%{?_with_freeimage:Summary(pl):    Bilioteka FreeImage dla kompilatora %{dname}}
+#%{?_with_freeimage:Group:          Development/Languages}
+#%{?_with_freeimage:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+#%{?_with_freeimage:%description freeimage}
+#%{?_with_freeimage:%{dname} is a Clipper compatible compiler.}
+#%{?_with_freeimage:This package provides %{dname} FreeImage library for program linking.}
+
+#%{?_with_freeimage:%description -l pl freeimage}
+#%{?_with_freeimage:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+#%{?_with_freeimage:Ten pakiet udostêpnia statyczn+ biliotekê FreeImage dla kompilatora %{dname}.}
+
 ## gd library
 %{?_with_gd:%package gd}
-%{?_with_gd:Summary:        GD libarary for %{dname} compiler}
+%{?_with_gd:Summary:        GD library bindings for %{dname} compiler}
 %{?_with_gd:Summary(pl):    Bilioteka GD dla kompilatora %{dname}}
 %{?_with_gd:Group:          Development/Languages}
 %{?_with_gd:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
@@ -332,6 +343,51 @@ statikus szerkesztéshez.
 %{?_with_gd:%description -l pl gd}
 %{?_with_gd:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_gd:Ten pakiet udostêpnia statyczn+ biliotekê GD dla kompilatora %{dname}.}
+
+## mysql library
+%{?_with_mysql:%package mysql}
+%{?_with_mysql:Summary:        MYSQL library bindings for %{dname} compiler}
+%{?_with_mysql:Summary(pl):    Bilioteka MYSQL dla kompilatora %{dname}}
+%{?_with_mysql:Group:          Development/Languages}
+%{?_with_mysql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_mysql:%description mysql}
+%{?_with_mysql:%{dname} is a Clipper compatible compiler.}
+%{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
+
+%{?_with_mysql:%description -l pl mysql}
+%{?_with_mysql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_mysql:Ten pakiet udostêpnia statyczn+ biliotekê MYSQL dla kompilatora %{dname}.}
+
+## odbc library
+%{?_with_odbc:%package odbc}
+%{?_with_odbc:Summary:        ODBC library bindings for %{dname} compiler}
+%{?_with_odbc:Summary(pl):    Bilioteka ODBC dla kompilatora %{dname}}
+%{?_with_odbc:Group:          Development/Languages}
+%{?_with_odbc:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_odbc:%description odbc}
+%{?_with_odbc:%{dname} is a Clipper compatible compiler.}
+%{?_with_odbc:This package provides %{dname} ODBC library for program linking.}
+
+%{?_with_odbc:%description -l pl odbc}
+%{?_with_odbc:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_odbc:Ten pakiet udostêpnia statyczn+ biliotekê ODBC dla kompilatora %{dname}.}
+
+## pgsql library
+%{?_with_pgsql:%package pgsql}
+%{?_with_pgsql:Summary:        PGSQL library bindings for %{dname} compiler}
+%{?_with_pgsql:Summary(pl):    Bilioteka PGSQL dla kompilatora %{dname}}
+%{?_with_pgsql:Group:          Development/Languages}
+%{?_with_pgsql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_pgsql:%description pgsql}
+%{?_with_pgsql:%{dname} is a Clipper compatible compiler.}
+%{?_with_pgsql:This package provides %{dname} PGSQL library for program linking.}
+
+%{?_with_pgsql:%description -l pl pgsql}
+%{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_pgsql:Ten pakiet udostêpnia statyczn+ biliotekê PGSQL dla kompilatora %{dname}.}
 
 ## qt library
 %{?_with_qt:%package qt}
@@ -619,33 +675,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 %{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
-%{?_with_curl:%files curl}
-%{?_with_curl:%defattr(644,root,root,755)}
-%{?_with_curl:%dir %{_libdir}/%{name}}
-%{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
-
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
 %{?_with_ads:%dir %{_libdir}/%{name}}
 %{?_with_ads:%{_libdir}/%{name}/librddads.a}
 
-%{?_with_odbc:%files odbc}
-%{?_with_odbc:%defattr(644,root,root,755)}
-%{?_with_odbc:%dir %{_libdir}/%{name}}
-%{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
-%{?_with_odbc:%{_libdir}/%{name}/libsddodbc.a}
+%{?_with_allegro:%files allegro}
+%{?_with_allegro:%defattr(644,root,root,755)}
+%{?_with_allegro:%dir %{_libdir}/%{name}}
+%{?_with_allegro:%{_libdir}/%{name}/libgtalleg.a}
 
-%{?_with_mysql:%files mysql}
-%{?_with_mysql:%defattr(644,root,root,755)}
-%{?_with_mysql:%dir %{_libdir}/%{name}}
-%{?_with_mysql:%{_libdir}/%{name}/libhbmysql.a}
-%{?_with_mysql:%{_libdir}/%{name}/libsddmy.a}
+%{?_with_cairo:%files cairo}
+%{?_with_cairo:%defattr(644,root,root,755)}
+%{?_with_cairo:%dir %{_libdir}/%{name}}
+%{?_with_cairo:%{_libdir}/%{name}/libhbcairo.a}
 
-%{?_with_pgsql:%files pgsql}
-%{?_with_pgsql:%defattr(644,root,root,755)}
-%{?_with_pgsql:%dir %{_libdir}/%{name}}
-%{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
-%{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
+%{?_with_curl:%files curl}
+%{?_with_curl:%defattr(644,root,root,755)}
+%{?_with_curl:%dir %{_libdir}/%{name}}
+%{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
 
 %{?_with_firebird:%files firebird}
 %{?_with_firebird:%defattr(644,root,root,755)}
@@ -653,10 +701,33 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_firebird:%{_libdir}/%{name}/libhbfbird.a}
 %{?_with_firebird:%{_libdir}/%{name}/libsddfb.a}
 
+#%{?_with_freeimage:%files freeimage}
+#%{?_with_freeimage:%defattr(644,root,root,755)}
+#%{?_with_freeimage:%dir %{_libdir}/%{name}}
+#%{?_with_freeimage:%{_libdir}/%{name}/libhbfimage.a}
+
 %{?_with_gd:%files gd}
 %{?_with_gd:%defattr(644,root,root,755)}
 %{?_with_gd:%dir %{_libdir}/%{name}}
 %{?_with_gd:%{_libdir}/%{name}/libhbgd.a}
+
+%{?_with_mysql:%files mysql}
+%{?_with_mysql:%defattr(644,root,root,755)}
+%{?_with_mysql:%dir %{_libdir}/%{name}}
+%{?_with_mysql:%{_libdir}/%{name}/libhbmysql.a}
+%{?_with_mysql:%{_libdir}/%{name}/libsddmy.a}
+
+%{?_with_odbc:%files odbc}
+%{?_with_odbc:%defattr(644,root,root,755)}
+%{?_with_odbc:%dir %{_libdir}/%{name}}
+%{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
+%{?_with_odbc:%{_libdir}/%{name}/libsddodbc.a}
+
+%{?_with_pgsql:%files pgsql}
+%{?_with_pgsql:%defattr(644,root,root,755)}
+%{?_with_pgsql:%dir %{_libdir}/%{name}}
+%{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
+%{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
 
 %{?_with_qt:%files qt}
 %{?_with_qt:%defattr(644,root,root,755)}
