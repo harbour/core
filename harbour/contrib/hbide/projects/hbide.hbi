@@ -10,8 +10,8 @@ LaunchProgram     =
 
 [ FLAGS ]
 ../../hbxbp/hbxbp.hbc
--w3
 -inc
+-w3
 -gui
 -es2
 -lhbwin
@@ -21,18 +21,26 @@ LaunchProgram     =
 -workdir=<IdeSrc>projects/${hb_plat}/${hb_comp}/hbide
 
 [ SOURCES ]
-#  "Not Equal To == #" is a comment line as is accepted in .hbp
-#  So you can exploit this feature to visualize project source files
-#  in a graspable way.
+# PRG Sources
 #
 <IdeSrc>hbide.prg
-<IdeSrc>ideactions.prg
-<IdeSrc>idemisc.prg
 <IdeSrc>idestylesheets.prg
 <IdeSrc>idetags.prg
+<IdeSrc>idemisc.prg
+<IdeSrc>ideactions.prg
+<IdeSrc>ideeditor.prg
+<IdeSrc>idefindreplace.prg
+<IdeSrc>idedocks.prg
+<IdeSrc>idesaveload.prg
+<IdeSrc>iderequests.prg
+<IdeSrc>idethemes.prg
 
+# C Sources
+#
 <IdeSrc>ideparseexpr.c
 
+# Miscellaneous Files
+#
 <IdeSrc>hbide.ch
 <IdeSrc>hbide.ini
 
