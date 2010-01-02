@@ -59,7 +59,9 @@
 
 #include <qglobal.h>
 
-#if QT_VERSION >= 0x040500
+#if !( QT_VERSION >= 0x040500 )
+   #error QT library version 4.5.0 or upper is required for hbqt.
+#endif
 
 #define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
 typedef QT_G_FUNC( QT_G_FUNC_ );
@@ -399,7 +401,5 @@ extern void * hbqt_pPtrFromObj( int iParam );
 /* Declarations which will not be generated auto */
 extern QT_G_FUNC( hbqt_release_HBDbfModel );
 extern void * hbqt_gcAllocate_HBDbfModel( void * pObj );
-
-#endif
 
 #endif /* __HBQT_H */
