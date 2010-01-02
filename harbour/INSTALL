@@ -396,13 +396,14 @@ HARBOUR
       - xorg-x11-devel OR XFree86-devel
       - postgresql-devel
       - firebird-devel
-      - gtk2-devel
+      - freeimage-devel
       - ncurses-devel AND ncurses
       - slang-devel AND slang
       - unixodbc-devel OR unixODBC-devel
       - gd-devel
       - libmysqlclient-devel OR mysql-devel OR MySQL-devel
       - allegro-devel
+      - cairo-devel
       - curl-devel
       - gpm-devel
 

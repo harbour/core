@@ -73,26 +73,9 @@ do
     shift
 done
 
-if test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel"
+if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then
-    INST_PARAM="${INST_PARAM} --with mysql"
-fi
-if test_reqrpm "postgresql-devel"
-then
-    INST_PARAM="${INST_PARAM} --with pgsql"
-fi
-if test_reqrpm "firebird-devel"
-then
-    INST_PARAM="${INST_PARAM} --with firebird"
-fi
-if test_reqrpm "gd-devel"
-then
-    v=`rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
-    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
-fi
-if test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel"
-then
-    INST_PARAM="${INST_PARAM} --with odbc"
+    INST_PARAM="${INST_PARAM} --with ads"
 fi
 if test_reqrpm "allegro-devel"
 then
@@ -102,15 +85,37 @@ if test_reqrpm "curl-devel"
 then
     INST_PARAM="${INST_PARAM} --with curl"
 fi
+if test_reqrpm "firebird-devel"
+then
+    INST_PARAM="${INST_PARAM} --with firebird"
+fi
+if test_reqrpm "freeimage-devel"
+then
+    INST_PARAM="${INST_PARAM} --with freeimage"
+fi
+if test_reqrpm "gd-devel"
+then
+    v=`rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
+    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
+fi
+if test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel"
+then
+    INST_PARAM="${INST_PARAM} --with mysql"
+fi
+if test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel"
+then
+    INST_PARAM="${INST_PARAM} --with odbc"
+fi
+if test_reqrpm "postgresql-devel"
+then
+    INST_PARAM="${INST_PARAM} --with pgsql"
+fi
 if test_reqrpm "libqt4-devel"
 then
    v=` rpm -q --whatprovides libqt4-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*[0-9]*.\([0-9]*\).*/\1/g"`
    [ "$v" -ge 5 ] && INST_PARAM="${INST_PARAM} --with qt"
 fi
-if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
-then
-    INST_PARAM="${INST_PARAM} --with ads"
-fi
+
 if [ "${HB_BUILD_NOGPLLIB}" = "yes" ]
 then
     INST_PARAM="${INST_PARAM} --without gpllib"

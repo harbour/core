@@ -5,9 +5,9 @@ Location          = <IdeSrc>projects
 WorkingFolder     = <IdeSrc>projects
 DestinationFolder = <IdeSrc>projects
 Output            = hbide
-LaunchParams      = 
-LaunchProgram     = 
- 
+LaunchParams      =
+LaunchProgram     =
+
 [ FLAGS ]
 ../../hbxbp/hbxbp.hbc
 -w3
@@ -16,10 +16,10 @@ LaunchProgram     =
 -es2
 -lhbwin
 -lpsapi
--Lc:\qt\2009.01\qt\lib
--o<IdeSrc>projects\hbides.exe
--workdir=<IdeSrc>projects/${hb_comp}/hbide
- 
+-LC:\qt\2009.01\qt\lib
+-o<IdeSrc>projects\hbides
+-workdir=<IdeSrc>projects/${hb_plat}/${hb_comp}/hbide
+
 [ SOURCES ]
 #  "Not Equal To == #" is a comment line as is accepted in .hbp
 #  So you can exploit this feature to visualize project source files
@@ -35,7 +35,7 @@ LaunchProgram     =
 
 <IdeSrc>hbide.ch
 <IdeSrc>hbide.ini
- 
+
 [ METADATA ]
 #  Meta Key/Value pair accepts any valid Harbour defined
 #  function call returning a string value, thus making meta-data
@@ -45,4 +45,3 @@ LaunchProgram     =
 #  will  return the same string as <SomeValue>
 #
 IdeSrc  =  hb_dirBase()
- 
