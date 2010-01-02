@@ -54,7 +54,7 @@
 %define hb_plat   export HB_PLATFORM=linux
 %define hb_cc     export HB_COMPILER=gcc
 %define hb_cflag  export HB_USER_CFLAGS=
-%define hb_lflag  export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
+%define hb_lflag  export HB_USER_LDFLAGS=
 %define hb_gpm    export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
 %define hb_crs    export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
@@ -726,7 +726,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_qt:%{_libdir}/%{name}/libhbqtnetwork.a}
 %{?_with_qt:%{_libdir}/%{name}/libhbxbp.a}
 
-####################################################################
+######################################################################
 ## Spec file Changelog.
 ######################################################################
 
