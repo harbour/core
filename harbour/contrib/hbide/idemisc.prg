@@ -193,6 +193,26 @@ FUNCTION GetYesNo( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION GetYesNoCancel( cMsg, cInfo, cTitle )
+   LOCAL oMB
+
+   DEFAULT cTitle TO "Option Please!"
+
+   oMB := QMessageBox():new()
+   oMB:setText( "<b>"+ cMsg +"</b>" )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( QMessageBox_Information )
+   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+   oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No + QMessageBox_Cancel )
+
+   RETURN oMB:exec()
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    LOCAL oDlg, cFile
 
@@ -477,7 +497,8 @@ FUNCTION IsValidText( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
-   RETURN cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo"
+   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,"+;
+                   ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh" )
 
 /*----------------------------------------------------------------------*/
 
@@ -487,7 +508,7 @@ FUNCTION IsValidSource( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
-   RETURN cExt $ ".c,.cpp,.prg,.res,.rc"
+   RETURN ( cExt $ ".c,.cpp,.prg,.res,.rc" )
 
 /*----------------------------------------------------------------------*/
 
@@ -688,13 +709,51 @@ FUNCTION ParseKeyValPair( s, cKey, cVal )
       lYes := ( !empty( cKey ) .and. !empty( cVal ) )
    ENDIF
 
-   RETURN lYes
+   RETURN ( lYes )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION IdeDbg( ... )
    HB_TRACE( HB_TR_ALWAYS, ... )
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+/*
+ * Return the next untitled filename available.
+ * 01/01/2010 - 19:40:17 - vailtom
+ */
+FUNCTION GetNextUntitled()
+   STATIC nCount := 0
+      nCount ++
+   RETURN nCount
+
+/*----------------------------------------------------------------------*/
+
+/*
+ * Return the next TAB_ID or IDE_ID available.
+ * 02/01/2010 - 10:47:16 - vailtom
+ */
+FUNCTION GetNextUniqueID()
+   STATIC nCount := 0
+   
+   IF nCount > 4294967295
+      nCount := 0
+   ENDIF
+   RETURN ++nCount
+
+/*----------------------------------------------------------------------*/
+/*
+ * Check if cFilename has a extension... and add cDefaultExt if not exist.
+ * 01/01/2010 - 20:48:10 - vailtom
+ */
+FUNCTION CheckDefaultExtension( cFileName, cDefaultExt )
+   LOCAL cPath, cFile, cExt
+   hb_fNameSplit( cFileName, @cPath, @cFile, @cExt )
+   IF Empty( cExt )
+      cExt := cDefaultExt
+   End
+   RETURN cPath + HB_OSPATHSEPARATOR() + cFile + HB_OSPATHSEPARATOR() + cExt
 
 /*----------------------------------------------------------------------*/
 

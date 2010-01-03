@@ -67,6 +67,7 @@
 #include "common.ch"
 #include "xbp.ch"
 #include "inkey.ch"
+#include "hbide.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -209,6 +210,7 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
 
 FUNCTION buildMainMenu( oWnd, oIde )
    LOCAL oMenuBar, oSubMenu, oSub1, oSubMenu2
+   LOCAL n, f, lEmpty
 
    oMenuBar := oWnd:MenuBar()
 
@@ -216,56 +218,89 @@ FUNCTION buildMainMenu( oWnd, oIde )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~File"
-   oSubMenu:addItem( { _T( "New, ^N | new.png" )               , {|| oIde:executeAction( "New"            ) } } )
-   oSubMenu:addItem( { _T( "Open, ^O | open.png" )             , {|| oIde:executeAction( "Open"           ) } } )
+
+ oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+ oSubMenu2:addItem( { _T( "~Source, ^N | new.png" )            , {|| oIde:executeAction( "New"            ) } } )
+ oSubMenu2:addItem( { _T( "~Project | project.png" )           , {|| oIde:executeAction( "NewProject"     ) } } )
+ oMenuBar:addItem( { oSubMenu2,  _T( "~New" ) } )
+ oMenuBar:aMenuItems[ oMenuBar:numItems(), 2 ]:seticon( oIde:resPath + 'new.png' )
+
+// oSubMenu:addItem( { _T( "~New File, ^N | new.png" )           , {|| oIde:executeAction( "New"            ) } } )
+// oSubMenu:addItem( { _T( "New Pro~ject, Sh+^N | project.png" ) , {|| oIde:executeAction( "NewProject"     ) } } )
+   oSubMenu:addItem( { _T( "~Open, ^O | open.png" )              , {|| oIde:executeAction( "Open"           ) } } )
+   oSubMenu:addItem( { _T( "Open Projec~t" )                     , {|| oIde:executeAction( "LoadProject"    ) } } )
 
    MenuAddSep( oSubMenu )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:addItem( { _T( "Recent File 1*" )                 , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent File 2*" )                 , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent File 3*" )                 , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent File 4*" )                 , {|| oIde:executeAction( ""               ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files*" ) } )
+   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTFILES, nIndex ], ;
+                                                oIde:editSource( cFile ) }
+   lEmpty := .T.
+   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
+       f := PathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
+       lEmpty := .F.
+       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
+       IF !File(f)
+          oSubMenu2:disableItem( n )
+       ENDIF
+   NEXT
+   IF lEmpty
+      oSubMenu2:addItem( { _T( "** No recent files found **" )          , nil } )
+      oSubMenu2:disableItem( 1 )
+   ENDIF
+   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files" ) } )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:addItem( { _T( "Recent Project 1*" )              , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent Project 2*" )              , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent Project 3*" )              , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu2:addItem( { _T( "Recent Project 4*" )              , {|| oIde:executeAction( ""               ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Projects*" ) } )
+   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTPROJECTS, nIndex ], ;
+                                                oIde:loadProjectProperties( cFile, .F., .F., .T. ) }
+
+   lEmpty := .T.
+   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTPROJECTS ] )
+       f := PathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
+       lEmpty := .F.
+       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
+       IF !File(f)
+          oSubMenu2:disableItem( n )
+       ENDIF
+   NEXT
+   IF lEmpty
+      oSubMenu2:addItem( { _T( "** No recent projects found **" )   , nil } )
+      oSubMenu2:disableItem( 1 )
+   ENDIF
+   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Projects" ) } )
 
    MenuAddSep( oSubMenu )
 
-   oSubMenu:addItem( { _T( "Save, ^S | save.png" )             , {|| oIde:executeAction( "Save"           ) } } )
-   oSubMenu:addItem( { _T( "Save As* | saveas.png" )           , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Save All*, Sh+^S | saveall.png")   , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Close, ^W | close.png" )           , {|| oIde:executeAction( "Close"          ) } } )
-   oSubMenu:addItem( { _T( "Close All | closeall.png" )        , {|| oIde:executeAction( "CloseAll"       ) } } )
-   oSubMenu:addItem( { _T( "Close Other*| closeexcept.png" )   , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Revert to Saved*, Sh+^R" )         , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "~Save, ^S | save.png" )             , {|| oIde:executeAction( "Save"           ) } } )
+   oSubMenu:addItem( { _T( "Save ~As | saveas.png" )            , {|| oIde:executeAction( "SaveAs"         ) } } )
+   oSubMenu:addItem( { _T( "Save A~ll, Sh+^S | saveall.png")    , {|| oIde:executeAction( "SaveAll"        ) } } )
+   oSubMenu:addItem( { _T( "~Close, ^W | close.png" )           , {|| oIde:executeAction( "Close"          ) } } )
+   oSubMenu:addItem( { _T( "Clos~e All | closeall.png" )        , {|| oIde:executeAction( "CloseAll"       ) } } )
+   oSubMenu:addItem( { _T( "Close ~Others| closeexcept.png" )   , {|| oIde:executeAction( "CloseOther"     ) } } )
+   oSubMenu:addItem( { _T( "~Revert to Saved, Sh+^R" )          , {|| oIde:executeAction( "Revert"         ) } } )
    MenuAddSep( oSubMenu )
 
-   oSubMenu:addItem( { _T( "Export as HTML* | exporthtml.png" ), {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Print*, ^P | print.png" )          , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "~Export as HTML* | exporthtml.png" ), {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:disableItem( oSubMenu:numItems )
+   oSubMenu:addItem( { _T( "~Print, ^P | print.png" )           , {|| oIde:executeAction( "Print"          ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Save and Exit*, Sh+^W" )           , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Exit | exit.png" )                 , {|| oIde:executeAction( "Exit"           ) } } )
+   oSubMenu:addItem( { _T( "Sa~ve and Exit, Sh+^W" )            , {|| oIde:executeAction( "SaveExit"       ) } } )
+   oSubMenu:addItem( { _T( "E~xit | exit.png" )                 , {|| oIde:executeAction( "Exit"           ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Edit"
-   oSubMenu:addItem( { _T( "Undo* | undo.png" )                , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Redo* | redo.png" )                , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Undo | undo.png" )                 , {|| oIde:executeAction( "Undo"           ) } } )
+   oSubMenu:addItem( { _T( "Redo | redo.png" )                 , {|| oIde:executeAction( "Redo"           ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Cut*  | cut.png" )                 , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Copy* | copy.png" )                , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Paste*| paste.png" )               , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Cut  | cut.png" )                  , {|| oIde:executeAction( "Cut"            ) } } )
+   oSubMenu:addItem( { _T( "Copy | copy.png" )                 , {|| oIde:executeAction( "Copy"           ) } } )
+   oSubMenu:addItem( { _T( "Paste| paste.png" )                , {|| oIde:executeAction( "Paste"          ) } } )
    oSubMenu:addItem( { _T( "Duplicate Line*" )                 , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Select All*" )                     , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Select All | selectall.png" )      , {|| oIde:executeAction( "SelectAll"      ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Find/Replace* | find.png" )        , {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "Go To Line...*| gotoline.png" )    , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Find/Replace, ^F | find.png" )         , {|| oIde:executeAction( "Find"           ) } } )
+   oSubMenu:addItem( { _T( "Go To Line..., ^G| gotoline.png" )     , {|| oIde:executeAction( "Goto"           ) } } )
    MenuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Insert*" )                         , {|| oIde:executeAction( ""               ) } } )
    MenuAddSep( oSubMenu )
@@ -277,12 +312,9 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:addItem( { _T( "Add to Project...*| projectadd.png" ), {|| oIde:executeAction( ""             ) } } )
    oSubMenu:addItem( { _T( "Remove from Project...* | projectdel.png" ), {|| oIde:executeAction( ""       ) } } )
    MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "New" )                             , {|| oIde:executeAction( "NewProject"     ) } } )
-   oSubMenu:addItem( { _T( "Load" )                            , {|| oIde:executeAction( "LoadProject"    ) } } )
    oSubMenu:addItem( { _T( "Close" )                           , {|| oIde:executeAction( "CloseProject"   ) } } )
    MenuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Select Main Module...* | setmain.png" ), {|| oIde:executeAction( ""           ) } } )
-   MenuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Project Properties" )              , {|| oIde:executeAction( "Properties"     ) } } )
    MenuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Select Current Project*" )         , {|| oIde:executeAction( ""               ) } } )
@@ -416,10 +448,111 @@ FUNCTION buildMainMenu( oWnd, oIde )
    /*   Help   */
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Help"
-   oSubMenu:addItem( { _T( "About...*" )                       , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "About hbIDE   | vr-16x16.png" )    , {|| oIde:Help( 1 ) } } )
+   oSubMenu:addItem( { _T( "About Harbour | hb-16x16.png" )    , {|| oIde:Help(4) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { _T( "Harbour Users (Mailing Lists)   | list-users.png" )     , {|| oIde:Help(3) } } )
+   oSubMenu:addItem( { _T( "Harbour Developers (Mailing Lists) | list-developers.png" ), {|| oIde:Help(2) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return Nil
 
 /*----------------------------------------------------------------------*/
+/*
+ *
+ * 02/01/2010 - 22:44:19
+ */
+#define QMF_POPUP  1
 
+STATIC FUNCTION mnuUpdateMRUpopup( oIde, nType )
+   LOCAL oMenuBar
+   LOCAL lEmpty
+   LOCAL oItem
+   LOCAL cFindStr
+   LOCAL nPos
+   LOCAL n, c
+
+   IF Empty(oIde:oDlg )
+      RETURN NIL
+   ENDIF
+
+   oMenuBar := oIde:oDlg:MenuBar()
+   lEmpty   := .T.
+   nPos     := 0
+   cFindStr := IIF( nType == INI_RECENTFILES, 'RECENT FILES', 'RECENT PROJECTS')
+
+   FOR n := 1 TO oMenuBar:numItems()
+
+       IF oMenuBar:aMenuItems[ n, 1 ] != QMF_POPUP
+          LOOP
+       ENDIF
+
+//     msgbox( ToString( oMenuBar:aMenuItems[ n ] ))
+
+       oItem := oMenuBar:aMenuItems[ n ]
+       c := Upper( oItem[3] )
+       c := StrTran( c, '~', '' )
+       c := StrTran( c, '&', '' )
+
+       IF cFindStr == alltrim( c )
+          nPos := n
+          EXIT
+       ENDIF
+   NEXT
+
+   IF nPos == 0
+      RETURN nil
+   ENDIF
+
+   oItem[4]:delAllItems()
+
+   FOR n := 1 TO Len( oIde:aIni[ nType ] )
+       c := PathNormalized( oIde:aIni[ nType , n ], .F. )
+       lEmpty := .F.
+
+       oItem[4]:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + c )   , nil } )
+
+       IF !File(c)
+          oItem[4]:disableItem( n )
+       ENDIF
+   NEXT
+   IF lEmpty
+      IF nType == INI_RECENTFILES
+         oItem[4]:addAction( "** No recent files found **" )
+      ELSE
+         oItem[4]:addAction( "** No recent projects found **" )
+      ENDIF
+      oItem[4]:disableItem( 1 )
+   ENDIF
+   RETURN nil
+
+/*
+ * Add a file name to MRU menu item.
+ * 02/01/2010 - 23:23:22 - vailtom
+ */
+FUNCTION mnuAddFileToMRU( oIde, cFileName, nType )
+   LOCAL nPos
+
+   IF nType != INI_RECENTPROJECTS .AND. nType != INI_RECENTFILES
+      RETURN nil
+   ENDIF
+
+   cFileName := PathNormalized( cFileName )
+
+   nPos := aScan( oIde:aIni[ nType ], {|f| PathNormalized( f ) == cFileName } )
+
+   IF nPos > 0
+      hb_aDel( oIde:aIni[ nType ], nPos, .T. )
+   ENDIF
+
+   AAdd( oIde:aIni[ nType ], '' )
+   AIns( oIde:aIni[ nType ], 1 )
+
+   oIde:aIni[ nType,1 ] := cFileName
+
+   IF Len( oIde:aIni[ nType ] ) > 15
+      aSize( oIde:aIni[ nType ], 15 )
+   ENDIF
+
+   mnuUpdateMRUpopup( oIde, nType )
+   RETURN nil

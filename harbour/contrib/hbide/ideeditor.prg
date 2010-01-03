@@ -96,6 +96,7 @@ CLASS IdeEditor
    DATA   nPos                                    INIT   0
    DATA   nHPos                                   INIT   0
    DATA   nVPos                                   INIT   0
+   DATA   nID
 
    ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
 
@@ -106,6 +107,7 @@ CLASS IdeEditor
    METHOD destroy()
 
    METHOD buildTabPage()
+   METHOD removeTabPage()
    METHOD activateTab()
    METHOD closeTab()
    METHOD dispEditInfo()
@@ -127,7 +129,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nHPos      := nHPos
    ::nVPos      := nVPos
    ::cTheme     := cTheme
-
+   ::nID        := GetNextUniqueID()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -142,7 +144,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    DEFAULT cTheme      TO ::cTheme
 
    ::oIde       := oIde
-   ::SourceFile := cSourceFile
+   ::SourceFile := PathNormalized( cSourceFile, .F. )
    ::nPos       := nPos
    ::nHPos      := nHPos
    ::nVPos      := nVPos
@@ -200,10 +202,10 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::oIde:createTags()
    ::oIde:updateFuncList()
    ::oIde:addSourceInTree( ::sourceFile )
-
+   ::oIde:updateTitleBar()
    ::oIde:manageFocusInEditor()
 
-   ::nBlock := ::qCursor:blockNumber()
+   ::nBlock  := ::qCursor:blockNumber()
    ::nColumn := ::qCursor:columnNumber()
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
@@ -214,6 +216,98 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
 METHOD IdeEditor:destroy()
 
+   ::RemoveTabPage()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+/*
+ * Remove the tab of the main screen and clean the objects from memory.Note that
+ * this function does not question the User if he wants to save or not the
+ * content combined with this TAB if you want to confirm the action use
+ * HbIde:closeSource() instead.
+ * 02/01/2010 - 12:58:53 - vailtom
+ */
+METHOD IdeEditor:removeTabPage()
+   LOCAL cSource := ::sourceFile
+   LOCAL n
+   
+   n := aScan( ::oIde:aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
+
+   IF n > 0
+      hb_aDel( ::oIde:aTabs, n, .T. )
+   ENDIF
+
+   n := ::oIde:qTabWidget:indexOf( ::oTab:oWidget )
+   ::oIde:qTabWidget:removeTab( n  )
+
+   /* Destroy all objects */
+   // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
+   //
+   IF !Empty( ::qEdit )
+      Qt_DisConnect_Signal( ::qEdit, "textChanged()" )
+      Qt_DisConnect_Signal( ::qEdit, "cursorPositionChanged()" )
+      /* To avoid recursive calls on invalid pointers */
+   ENDIF
+   
+   IF !Empty( ::qDocument )
+      Qt_DisConnect_Signal( ::qDocument, "blockCountChanged(int)" )
+      ::qDocument:pPtr := 0
+      ::qDocument      := nil
+   ENDIF
+
+   IF !Empty( ::qLayout )
+      ::qLayout:pPtr := 0
+      ::qLayout      := nil
+   ENDIF
+
+   IF !Empty( ::qHiliter )
+      ::qHiliter:pPtr := 0
+      ::qHiliter      := nil
+   ENDIF
+
+   IF !Empty( ::qEdit )
+      ::qEdit:pPtr := 0
+      ::qEdit      := nil
+      
+      ::oIde:oFuncList:clear()
+   ENDIF
+
+   IF !Empty( ::oTab )
+//      ::oTab:Destroy()
+//      ::oTab:pPtr := 0
+//      ::oTab      := nil
+   ENDIF
+
+   n := aScan( ::oIde:aProjData, {|e_| e_[ 4 ] == cSource } )
+   
+   IF ( n > 0 )
+      ::oIde:aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
+
+      hb_aDel( ::oIde:aProjData, n, .T. )
+   ENDIF
+   
+   n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } )
+
+   IF ( n > 0 )
+      hb_aDel( ::oIde:aEdits, n, .T. )
+   ENDIF
+
+   /*
+    * TOFIX: Release memory from these objects & arrays
+    *
+    *  aTabs     - OK
+    *  aSources
+    *  aEdits    - OK
+    *
+    */
+   IF ::oIde:qTabWidget:count() == 0
+      IF ::oIde:lDockRVisible
+         ::oIde:oDockR:hide()
+         ::oIde:lDockRVisible := .f.
+      End
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -221,7 +315,13 @@ METHOD IdeEditor:destroy()
 METHOD IdeEditor:buildTabPage( cSource )
 
    ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
-   ::oTab:caption   := ::cFile + ::cExt
+   
+   IF Empty( cSource )
+      ::oTab:caption   := "Untitled " + hb_ntos( GetNextUntitled() )
+   ELSE
+      ::oTab:caption   := ::cFile + ::cExt
+   ENDIF
+   
    ::oTab:minimized := .F.
 
    ::oTab:create()
@@ -246,6 +346,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       ::oIde:createTags()
       ::oIde:updateFuncList()
       ::oIde:aTabs[ mp2, TAB_OEDITOR ]:dispEditInfo()
+      ::oIde:updateTitleBar()
       ::oIde:manageFocusInEditor()
    ENDIF
 
@@ -255,10 +356,16 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
 
 METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
 
-   HB_SYMBOL_UNUSED( mp1 )
+   IF PCount() == 00
+      mp1 := ::nID
+      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == mp1  } )
+   ELSE
+      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oXbp } )
+   ENDIF
 
-   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
-      ::oIde:closeSource( mp2, .t. )
+ * Requested tab exists?
+   IF !Empty( mp2 )
+      ::oIde:closeSource( mp2 )
    ENDIF
 
    RETURN Self

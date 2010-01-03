@@ -117,6 +117,12 @@ FUNCTION saveINI( oIde )
    FOR n := 1 TO nTabs
       pTab      := oIde:qTabWidget:widget( n-1 )
       nTab      := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
+      
+    * Ignores untitled or temporary files...
+      IF Empty( oIde:aTabs[ nTab, TAB_SOURCEFILE ] )
+         LOOP
+      ENDIF
+   
       qEdit     := oIde:aTabs[ nTab, TAB_QEDIT ]
       qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
@@ -147,12 +153,35 @@ FUNCTION saveINI( oIde )
    NEXT
    aadd( txt_, " " )
 
+   //    RecentFiles
+   aadd( txt_, "[RecentFiles]" )
+   FOR n := 1 TO len( oIde:aIni[ INI_RECENTFILES ] )
+      aadd( txt_, oIde:aIni[ INI_RECENTFILES, n ] )
+   NEXT
+   aadd( txt_, " " )
+
+   //    RecentProjects
+   aadd( txt_, "[RecentProjects]" )
+   FOR n := 1 TO len( oIde:aIni[ INI_RECENTPROJECTS ] )
+      aadd( txt_, oIde:aIni[ INI_RECENTPROJECTS , n ] )
+   NEXT
+   aadd( txt_, " " )
+
+//[RecentFiles]
+//j:/hbide.2/projects/samples/sample1.prg
+//j:/hbide.2/projects/samples/sample2.prg
+//j:/hbide.2/projects/samples/sample3.prg
+
+//[RecentPROJECTS]
+//C:/harbour/contrib/hbide/projects/hbide.hbi
+//J:/hbide.2/projects/samples/sample1.hbi
+
    RETURN CreateTarget( oIde:cProjIni, txt_ )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION loadINI( oIde, cHbideIni )
-   LOCAL aElem, s, n, nPart, cKey, cVal, a_
+   LOCAL aElem, s, n, nPart, cKey, cVal, a_, lValid, nPos
    LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
                       "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
                       "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
@@ -161,6 +190,7 @@ FUNCTION loadINI( oIde, cHbideIni )
    DEFAULT cHbideIni TO "hbide.ini"
 
    cHbideIni := lower( cHbideIni )
+   lValid  := .F.
 
    IF !file( cHbideIni )
       cHbideIni := hb_dirBase() + "hbide.ini"
@@ -172,7 +202,12 @@ FUNCTION loadINI( oIde, cHbideIni )
 
    oIde:cProjIni := cHbideIni
 
-   oIde:aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {}, {}, {} }
+   oIde:aIni := Array( INI_SECTIONS_COUNT )
+   oIde:aIni[1] := afill( array( INI_HBIDE_VRBLS ), "" )
+
+   FOR n := 2 TO INI_SECTIONS_COUNT
+       oIde:aIni[n] := Array(0)
+   NEXT
 
    IF file( oIde:cProjIni )
       aElem := ReadSource( oIde:cProjIni )
@@ -180,19 +215,59 @@ FUNCTION loadINI( oIde, cHbideIni )
       FOR EACH s IN aElem
          s := alltrim( s )
          IF !empty( s )
-            DO CASE
-            CASE s == "[HBIDE]"
+            /*
+             * OPT: Optimizations using SWITCH and converting section name to
+             * Uppercase - if the user change the name of the section in the file
+             * .INI manually, this ensures that the HBIDE continue finding the
+             * section.
+             * 01/01/2010 - 16:38:22 - vailtom
+             */
+            SWITCH Upper(s)
+            CASE "[HBIDE]"
                nPart := INI_HBIDE
-            CASE s == "[PROJECTS]"
+               lValid := .T.
+               EXIT
+            CASE "[PROJECTS]"
                nPart := INI_PROJECTS
-            CASE s == "[FILES]"
+               lValid := .T.
+               EXIT
+            CASE "[FILES]"
                nPart := INI_FILES
-            CASE s == "[FIND]"
+               lValid := .T.
+               EXIT
+            CASE "[FIND]"
                nPart := INI_FIND
-            CASE s == "[REPLACE]"
+               lValid := .T.
+               EXIT
+            CASE "[REPLACE]"
                nPart := INI_REPLACE
+               lValid := .T.
+               EXIT
+            CASE "[RECENTFILES]"
+               nPart := INI_RECENTFILES
+               lValid := .T.
+               EXIT
+            CASE "[RECENTPROJECTS]"
+               nPart := INI_RECENTPROJECTS
+               lValid := .T.
+               EXIT
             OTHERWISE
+
+               /*
+                * If none of the previous sections are valid, do not let it
+                * process. This prevents the HBIDE read a section that is
+                * commented out or is invalid in the file .ini - For example,
+                * open the file .ini file and change the name of the [PROJECTS]
+                * for '[* PROJECTS]' and see how it behaves incorrectly.
+                * 01/01/2010 - 18:09:40 - vailtom
+                */
+               IF Left( s, 1 ) == '['
+                  lValid := .F.
+               End
+               
                DO CASE
+               CASE !lValid
+                  * Nothing todo!
                CASE nPart == INI_HBIDE
                   IF ( n := at( "=", s ) ) > 0
                      cKey := alltrim( substr( s, 1, n-1 ) )
@@ -202,6 +277,7 @@ FUNCTION loadINI( oIde, cHbideIni )
                         oIde:aIni[ nPart, n ] := cVal  /* Further process */
                      ENDIF
                   ENDIF
+               EXIT
 
                CASE nPart == INI_PROJECTS
                   aadd( oIde:aIni[ nPart ], s )
@@ -219,15 +295,32 @@ FUNCTION loadINI( oIde, cHbideIni )
                   a_[ 2 ] := val( a_[ 2 ] )
                   a_[ 3 ] := val( a_[ 3 ] )
                   a_[ 4 ] := val( a_[ 4 ] )
-                  a_[ 5 ] := a_[ 5 ]                  /* Just for reference */
-                  aadd( oIde:aIni[ nPart ], a_ )
+                  a_[ 5 ] := a_[ 5 ]
+                  
+                * Ignores invalid filenames...
+                  IF !Empty( a_[1] )
+                     aadd( oIde:aIni[ nPart ], a_ )
+                  ENDIF
 
                CASE nPart == INI_FIND
                   aadd( oIde:aIni[ nPart ], s )
                CASE nPart == INI_REPLACE
                   aadd( oIde:aIni[ nPart ], s )
+
+               CASE nPart == INI_RECENTPROJECTS        .OR. ;
+                    nPart == INI_RECENTFILES
+                  
+                  IF Len( oIde:aIni[ nPart ] ) < 15
+                     s := PathNormalized(s)
+                     nPos := aScan( oIde:aIni[ nPart ], {|f| PathNormalized( f ) == s } )
+                     
+                     IF nPos < 0
+                        AAdd( oIde:aIni[ nPart ], s )
+                     ENDIF
+                  ENDIF
+                  
                ENDCASE
-            ENDCASE
+            ENDSWITCH
          ENDIF
       NEXT
    ENDIF

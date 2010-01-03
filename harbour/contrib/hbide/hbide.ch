@@ -62,6 +62,10 @@
 #define INI_FILES                                 3
 #define INI_FIND                                  4
 #define INI_REPLACE                               5
+#define INI_RECENTFILES                           6
+#define INI_RECENTPROJECTS                        7
+
+#define INI_SECTIONS_COUNT                        7
 
 
 /* INI_HBIDE */
