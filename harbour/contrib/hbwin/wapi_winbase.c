@@ -151,12 +151,13 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
 
 HB_FUNC( WAPI_GETLASTERROR )
 {
-   hb_retnl( ( long ) GetLastError() );
+   hb_retnl( ( long ) hbwin_GetLastError() );
 }
 
 HB_FUNC( WAPI_SETLASTERROR )
 {
    SetLastError( ( DWORD ) hb_parnl( 1 ) );
+   hbwin_SetLastError();
 }
 
 HB_FUNC( WAPI_SETERRORMODE )

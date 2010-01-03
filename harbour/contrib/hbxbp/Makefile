@@ -51,7 +51,7 @@ PRG_HEADERS := \
 
 # Try to be in sync with hbqt, but not too hard, since this
 # lib doesn't need QT external component directly.
-ifeq ($(filter $(HB_PLATFORM),dos os2),)
+ifeq ($(filter $(HB_PLATFORM),dos),)
    ifeq ($(filter $(HB_COMPILER),mingw64 watcom bcc pocc pocc64 poccarm),)
       ifneq ($(HB_WITH_QT),no)
 
@@ -59,7 +59,6 @@ ifeq ($(filter $(HB_PLATFORM),dos os2),)
 
          include $(TOP)$(ROOT)config/header.mk
          include $(TOP)$(ROOT)config/lib.mk
-
       else
          HB_SKIP_REASON := component explicitly disabled
          include $(TOP)$(ROOT)config/none.mk

@@ -1650,16 +1650,15 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    LOCAL txt_ := {}
    LOCAL s
 
-   aadd( txt_, "/*" )
-   aadd( txt_, " * $Id$" )
-   aadd( txt_, " * " )
-   aadd( txt_, " * " )
-   aadd( txt_, " * --------------------------------------------------------------------" )
-   aadd( txt_, " * WARNING: Automatically generated source file. DO NOT EDIT!          " )
-   aadd( txt_, " *          Instead, edit corresponding .qth file,                     " )
-   aadd( txt_, " *          or the generator tool itself, and run regenarate.          " )
-   aadd( txt_, " * --------------------------------------------------------------------" )
-   aadd( txt_, " */" )
+   aadd( txt_, "/*"                                                                            )
+   aadd( txt_, " * $Id$"                     )
+   aadd( txt_, " */"                                                                           )
+   aadd( txt_, ""                                                                              )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
+   aadd( txt_, "/*          Instead, edit corresponding .qth file,                      */"    )
+   aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
    aadd( txt_, " " )
 
    FOR EACH s IN cpp_

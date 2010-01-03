@@ -63,7 +63,7 @@
 #include <QHash>
 #include <QTextCharFormat>
 
-HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
+HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    : QSyntaxHighlighter( parent )
 {
    HighlightingRule rule;
@@ -81,7 +81,7 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
                    << "\\btemplate\\b" << "\\btypedef\\b"   << "\\btypename\\b"
                    << "\\bunion\\b"    << "\\bunsigned\\b"  << "\\bvirtual\\b"
                    << "\\bvoid\\b"     << "\\bvolatile\\b";
-   foreach ( const QString &pattern, keywordPatterns )
+   foreach( const QString &pattern, keywordPatterns )
    {
       rule.pattern = QRegExp( pattern );
       rule.format = keywordFormat;
@@ -96,8 +96,8 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
 
    multiLineCommentFormat.setForeground( Qt::red );
 
-   commentStartExpression = QRegExp("/\\*");
-   commentEndExpression = QRegExp("\\*/");
+   commentStartExpression = QRegExp( "/\\*" );
+   commentEndExpression = QRegExp( "\\*/" );
 }
 
 void HBQSyntaxHighlighter::setHBRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -128,7 +128,7 @@ void HBQSyntaxHighlighter::setHBCompilerDirectives( const QStringList & directiv
    HighlightingRule rule;
 
    directivesFormat = format;
-   foreach ( const QString &pattern, directives )
+   foreach( const QString &pattern, directives )
    {
       rule.pattern = QRegExp( pattern );
       rule.format = directivesFormat;
@@ -143,15 +143,15 @@ void HBQSyntaxHighlighter::setHBMultiLineCommentFormat( const QTextCharFormat & 
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
-   int index( 0 );
    QRegExp expression;
 
    #if 0
-   foreach ( const HighlightingRule &rule, highlightingRules )
+   int index( 0 );
+   foreach( const HighlightingRule &rule, highlightingRules )
    {
       expression = QRegExp( rule.pattern );
       index = expression.indexIn( text );
-      while ( index >= 0 )
+      while( index >= 0 )
       {
          int length = expression.matchedLength();
          setFormat( index, length, rule.format );
@@ -159,11 +159,11 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
    #else
-   foreach ( const hHighlightingRule &rule, hhighlightingRules )
+   foreach( const hHighlightingRule &rule, hhighlightingRules )
    {
       QRegExp expression( rule.pattern );
       int index = expression.indexIn( text );
-      while ( index >= 0 )
+      while( index >= 0 )
       {
          int length = expression.matchedLength();
          setFormat( index, length, rule.format );
@@ -175,22 +175,21 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    setCurrentBlockState( 0 );
 
    int startIndex = 0;
-   if ( previousBlockState() != 1 )
+   if( previousBlockState() != 1 )
       startIndex = commentStartExpression.indexIn( text );
 
-   while ( startIndex >= 0 )
+   while( startIndex >= 0 )
    {
       int endIndex = commentEndExpression.indexIn( text, startIndex );
       int commentLength;
-      if ( endIndex == -1 )
+      if( endIndex == -1 )
       {
          setCurrentBlockState( 1 );
          commentLength = text.length() - startIndex;
       }
       else
-      {
          commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
-      }
+
       setFormat( startIndex, commentLength, multiLineCommentFormat );
       startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
    }
@@ -203,7 +202,7 @@ typedef struct
   QPointer< HBQSyntaxHighlighter > pq;
 } QGC_POINTER_HBQSyntaxHighlighter;
 
-QT_G_FUNC( release_HBQSyntaxHighlighter )
+static QT_G_FUNC( release_HBQSyntaxHighlighter )
 {
    QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) Cargo;
 
@@ -241,7 +240,7 @@ QT_G_FUNC( release_HBQSyntaxHighlighter )
    }
 }
 
-void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj )
+static void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj )
 {
    QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
 
@@ -257,9 +256,7 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
-   {
       pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
-   }
 
    hb_retptrGC( hbqt_gcAllocate_HBQSyntaxHighlighter( pObj ) );
 }

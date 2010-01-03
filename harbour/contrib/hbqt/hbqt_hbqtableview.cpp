@@ -135,7 +135,7 @@ typedef struct
   QPointer< HBQTableView > pq;
 } QGC_POINTER_HBQTableView;
 
-QT_G_FUNC( release_HBQTableView )
+static QT_G_FUNC( release_HBQTableView )
 {
    QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) Cargo;
 
@@ -173,7 +173,7 @@ QT_G_FUNC( release_HBQTableView )
    }
 }
 
-void * hbqt_gcAllocate_HBQTableView( void * pObj )
+static void * hbqt_gcAllocate_HBQTableView( void * pObj )
 {
    QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), hbqt_gcFuncs() );
 

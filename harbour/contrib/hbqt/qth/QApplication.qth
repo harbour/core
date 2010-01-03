@@ -86,6 +86,8 @@ static bool s_hbqtinit = false;
 static int s_argc;
 static char ** s_argv;
 
+HB_FUNC( HB_QT ) {;}
+
 /*
  * QApplication ( int & argc, char ** argv )
  * QApplication ( int & argc, char ** argv, bool GUIenabled )

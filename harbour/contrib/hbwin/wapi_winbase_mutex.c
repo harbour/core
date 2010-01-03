@@ -53,6 +53,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwapi.h"
 #include "hbwinuni.h"
 
 static HB_GARBAGE_FUNC( wapi_mutex_release )
@@ -98,6 +99,8 @@ HB_FUNC( WAPI_CREATEMUTEX )
    void * hName;
    HANDLE hMutex = CreateMutex( ( LPSECURITY_ATTRIBUTES ) hb_parptr( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
+   hbwin_SetLastError();
+
    wapi_mutex_ret( hMutex );
    hb_strfree( hName );
 }
@@ -108,6 +111,8 @@ HB_FUNC( WAPI_OPENMUTEX )
 #if ! defined( HB_OS_WIN_CE )
    void * hName;
    HANDLE hMutex = OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
+
+   hbwin_SetLastError();
 
    wapi_mutex_ret( hMutex );
    hb_strfree( hName );
@@ -121,5 +126,12 @@ HB_FUNC( WAPI_RELEASEMUTEX )
 {
    HANDLE hMutex = wapi_mutex_par( 1 );
 
-   hb_retl( hMutex ? ReleaseMutex( hMutex ) : HB_FALSE );
+   if( hMutex )
+   {
+      BOOL bResult = ReleaseMutex( hMutex );
+      hbwin_SetLastError();
+      hb_retl( bResult );
+   }
+   else
+      hb_retl( HB_FALSE );
 }

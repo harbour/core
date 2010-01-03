@@ -22,6 +22,7 @@ C_SOURCES := \
    wce_smsc.c \
    win_com.c \
    win_dll.c \
+   win_err.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \

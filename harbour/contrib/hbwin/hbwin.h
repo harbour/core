@@ -50,6 +50,9 @@
  *
  */
 
+#ifndef __HBWIN_H
+#define __HBWIN_H
+
 #define WIN_COM_FUN_CREATEFILE               1
 #define WIN_COM_FUN_GETCOMMSTATE             2
 #define WIN_COM_FUN_SETCOMMSTATE             3
@@ -73,3 +76,12 @@
 #define WIN_COM_DBGTIMEOUTS                  0x10
 #define WIN_COM_DBGQUEUE                     0x20
 #define WIN_COM_DBGALL                       0x3F
+
+HB_EXTERN_BEGIN
+
+HB_EXPORT void  hbwin_SetLastError( void );
+HB_EXPORT DWORD hbwin_GetLastError( void );
+
+HB_EXTERN_END
+
+#endif /* __HBWIN_H */

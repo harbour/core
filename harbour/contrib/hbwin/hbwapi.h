@@ -53,6 +53,8 @@
 #ifndef __HBWAPI_H
 #define __HBWAPI_H
 
+#include "hbwin.h"
+
 #define wapi_par_WNDPROC( n )         ( ( WNDPROC          ) hb_parptr( n ) )
 #define wapi_par_WPARAM( n )          ( ( WPARAM           ) hb_parptr( n ) )
 #define wapi_par_LPARAM( n )          ( ( LPARAM           ) hb_parptr( n ) )

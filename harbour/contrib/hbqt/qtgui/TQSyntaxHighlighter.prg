@@ -63,12 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSyntaxHighlighter INHERIT QObject
-
-   VAR     pPtr
+CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  document()
    METHOD  setDocument( pDoc )
@@ -76,7 +73,6 @@ CREATE CLASS QSyntaxHighlighter INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSyntaxHighlighter:new( ... )
    LOCAL p
@@ -85,15 +81,6 @@ METHOD QSyntaxHighlighter:new( ... )
       hb_pvalue( p:__enumIndex(), p )
    NEXT
    ::pPtr := Qt_QSyntaxHighlighter( ... )
-   RETURN Self
-
-
-METHOD QSyntaxHighlighter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
    RETURN Self
 
 

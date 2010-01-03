@@ -63,12 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCursor
-
-   VAR     pPtr
+CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  anchor()
    METHOD  atBlockEnd()
@@ -134,7 +131,6 @@ CREATE CLASS QTextCursor
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QTextCursor:new( ... )
    LOCAL p
@@ -143,15 +139,6 @@ METHOD QTextCursor:new( ... )
       hb_pvalue( p:__enumIndex(), p )
    NEXT
    ::pPtr := Qt_QTextCursor( ... )
-   RETURN Self
-
-
-METHOD QTextCursor:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
    RETURN Self
 
 

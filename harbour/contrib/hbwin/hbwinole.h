@@ -50,6 +50,9 @@
  *
  */
 
+#ifndef __HBWINOLE_H
+#define __HBWINOLE_H
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapicls.h"
@@ -118,3 +121,5 @@ HB_EXPORT HB_BOOL    hb_oleAxInit( void );
 HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END
+
+#endif /* __HBWINOLE_H */
