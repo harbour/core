@@ -1286,7 +1286,7 @@ HARBOUR
          http://www.postgresql.org/
       HB_WITH_PNG - libpng [multiplatform, free, open-source]
          http://www.libpng.org/pub/png/libpng.html
-      HB_WITH_QT - Nokia QT (GUI) [win, wce, darwin, linux, free, open-source]
+      HB_WITH_QT - Nokia QT (GUI) [win, wce, os2, darwin, linux, free, open-source]
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
          Currently supported Windows binary package:

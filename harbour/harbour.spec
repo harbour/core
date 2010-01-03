@@ -88,7 +88,7 @@ Source:         %{name}-%{version}.src.tar.gz
 Packager:       PrzemysЁaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
 BuildPrereq:    gcc binutils bash %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:       %{name} harbour
+Provides:       %{name} harbour lib%{name}.so lib%{name}mt.so
 BuildRoot:      /tmp/%{name}-%{version}-root
 
 %define         _noautoreq    'libharbour.*'
@@ -122,79 +122,8 @@ fordМtСprogram. A csomag rИsze a fordМtС maga, az elУfordМtС, fejlИc
 АllomАnyok, a virtuАlis gИp Иs fЭggvИnykЖnyvtАrak, valamint a dokumentАciС.
 
 ######################################################################
-## main shared lib
+## contrib libs (without package requirements)
 ######################################################################
-
-%package lib
-Summary:        Shared runtime libaries for %{dname} compiler
-Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
-Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
-Summary(hu):    Megosztott kЖnyvtАrak a(z) %{dname} fordМtСhoz
-Group:          Development/Languages
-Provides:       lib%{name}.so lib%{name}mt.so
-
-%description lib
-%{dname} is a Clipper compatible compiler.
-This package provides %{dname} runtime shared libraries for programs
-linked dynamically.
-
-%description -l pl lib
-%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
-Ten pakiet udostЙpnia dzielone bilioteki kompilatora %{dname}
-dla programСw konsolidowanych dynamicznie.
-
-%description -l pt_BR lib
-%{dname} И um compilador compativel com o Clipper.
-Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
-linkados dinamicamente.
-
-%description -l ru lib
-%{dname} - компилятор, совместимый с языком CA-Cl*pper.
-Этот пакет содержит совместно используемые библиотеки %{dname},
-необходимые для работы динамически скомпонованных программ.
-
-%description -l hu lib
-A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
-Ez a csomag biztosМtja a dinamikusan szerkesztett %{dname}
-programokhoz szЭksИges megosztott (dinamikus) futtatСkЖnyvtАrakat.
-
-######################################################################
-## static libs
-######################################################################
-
-%package static
-Summary:        Static runtime libaries for %{dname} compiler
-Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
-Summary(ru):    Статические библиотеки для компилятора %{dname}
-Summary(hu):    Statikus kЖnyvtАrak a(z) %{dname} fordМtСhoz
-Group:          Development/Languages
-Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-
-%description static
-%{dname} is a Clipper compatible compiler.
-This package provides %{dname} static runtime libraries for static
-program linking.
-
-%description -l pl static
-%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
-Ten pakiet udostЙpnia statyczne bilioteki dla kompilatora %{dname}
-niezbЙdne do statycznej konsolidacji programСw.
-
-%description -l pt_BR static
-%{dname} И um compilador compativel com o clippe.
-Esse pacote %{dname} provem as bibliotecas  de run time staticas para linkagem
-dos os programas
-
-%description -l ru static
-%{dname} - компилятор, совместимый с языком CA-Cl*pper.
-Этот пакет содержит статические библиотеки компилятора %{dname},
-необходимые для статической компоновки программ.
-
-%description -l hu lib
-A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
-Ez a csomag biztosМtja a statikusan szerkesztett %{dname}
-programokhoz szЭksИges statikus futtatСkЖnyvtАrakat.
-
 
 %package contrib
 Summary:        Contrib runtime libaries for %{dname} compiler
@@ -223,10 +152,14 @@ dos programas.
 %{dname} - компилятор, совместимый с языком CA-Cl*pper.
 Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
 
-%description -l hu lib
+%description -l hu contrib
 A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
 Ez a csomag kiegИszМtУ (contrib) kЖnyvtАrakat biztosМt
 statikus szerkesztИshez.
+
+######################################################################
+## contrib libs (with package requirements)
+######################################################################
 
 ## ADS RDD
 %{?_with_ads:%package ads}
@@ -559,13 +492,13 @@ EOF
 ######################################################################
 ## Post install
 ######################################################################
-#%post lib
+#%post
 #/sbin/ldconfig
 
 ######################################################################
 ## Post uninstall
 ######################################################################
-#%postun lib
+#%postun
 #/sbin/ldconfig
 
 ######################################################################
@@ -607,7 +540,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
 
-%files static
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libhbcpage.a
@@ -636,6 +568,12 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
+%defattr(755,root,root,755)
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/*.so
+%{_libdir}/*.so
+%{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
+
 %files contrib
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
@@ -655,13 +593,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbsms.a
 %{_libdir}/%{name}/libhbtpathy.a
 %{_libdir}/%{name}/libhbziparc.a
-
-%files lib
-%defattr(755,root,root,755)
-%dir %{_libdir}/%{name}
-%{_libdir}/%{name}/*.so
-%{_libdir}/*.so
-%{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
