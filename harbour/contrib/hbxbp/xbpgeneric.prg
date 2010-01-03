@@ -89,6 +89,9 @@ THREAD STATIC t_oAppWindow
 
 THREAD STATIC t_oEventLoop
 
+THREAD STATIC t_qtSlots
+THREAD STATIC t_qtEvents
+
 THREAD STATIC t_oXbpInFocus
 
 /*----------------------------------------------------------------------*/
@@ -114,10 +117,28 @@ EXIT PROCEDURE hbxbp_End()
    RETURN
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_getSlotsPtr()
+   RETURN t_qtSlots
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_getEventsPtr()
+   RETURN t_qtEvents
+
+/*----------------------------------------------------------------------*/
 /*
  * Will be called from XbpDialog() | XbpCRT()
  */
 FUNCTION hbxbp_InitializeEventBuffer()
+
+   IF empty( t_qtSlots )
+      t_qtSlots := Qt_Slots_New()
+   ENDIF
+
+   IF empty( t_qtEvents )
+      t_qtEvents := Qt_Events_New()
+   ENDIF
 
    IF empty( t_events )
       t_events := array( EVENT_BUFFER )

@@ -73,6 +73,9 @@
 
 CLASS IdeDocks
 
+   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
+   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+
    DATA   nPass                                   INIT   0
 
    DATA   oIde
@@ -343,7 +346,7 @@ METHOD IdeDocks:buildOutputResults()
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
    ::oDockB2:hide()
 
-   Qt_Connect_Signal( ::oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
 
    RETURN Self
 
@@ -363,7 +366,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
             ::oIde:editSource( cSource )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             nLine   := iif( nLine < 1, 0, nLine - 1 )
-            
+
             qCursor:setPosition( 0 )
             qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
             ::oIde:qCurEdit:setTextCursor( qCursor )

@@ -75,6 +75,9 @@
 
 CLASS IdeEditor
 
+   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
+   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+
    DATA   oIde
 
    DATA   oTab
@@ -177,10 +180,10 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
       ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
    ENDIF
 
-   Qt_Connect_Signal( ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
-   Qt_Connect_Signal( ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
+   Qt_Slots_Connect( ::pSlots, ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
+   Qt_Slots_Connect( ::pSlots, ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
 
-   Qt_Connect_Signal( ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
 
    ::qEdit:show()
 
@@ -231,7 +234,7 @@ METHOD IdeEditor:destroy()
 METHOD IdeEditor:removeTabPage()
    LOCAL cSource := ::sourceFile
    LOCAL n
-   
+
    n := aScan( ::oIde:aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
 
    IF n > 0
@@ -245,13 +248,13 @@ METHOD IdeEditor:removeTabPage()
    // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
    //
    IF !Empty( ::qEdit )
-      Qt_DisConnect_Signal( ::qEdit, "textChanged()" )
-      Qt_DisConnect_Signal( ::qEdit, "cursorPositionChanged()" )
+      Qt_Slots_disConnect( ::pSlots, ::qEdit, "textChanged()" )
+      Qt_Slots_disConnect( ::pSlots, ::qEdit, "cursorPositionChanged()" )
       /* To avoid recursive calls on invalid pointers */
    ENDIF
-   
+
    IF !Empty( ::qDocument )
-      Qt_DisConnect_Signal( ::qDocument, "blockCountChanged(int)" )
+      Qt_Slots_disConnect( ::pSlots, ::qDocument, "blockCountChanged(int)" )
       ::qDocument:pPtr := 0
       ::qDocument      := nil
    ENDIF
@@ -269,7 +272,7 @@ METHOD IdeEditor:removeTabPage()
    IF !Empty( ::qEdit )
       ::qEdit:pPtr := 0
       ::qEdit      := nil
-      
+
       ::oIde:oFuncList:clear()
    ENDIF
 
@@ -280,13 +283,13 @@ METHOD IdeEditor:removeTabPage()
    ENDIF
 
    n := aScan( ::oIde:aProjData, {|e_| e_[ 4 ] == cSource } )
-   
+
    IF ( n > 0 )
       ::oIde:aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
 
       hb_aDel( ::oIde:aProjData, n, .T. )
    ENDIF
-   
+
    n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } )
 
    IF ( n > 0 )
@@ -315,13 +318,13 @@ METHOD IdeEditor:removeTabPage()
 METHOD IdeEditor:buildTabPage( cSource )
 
    ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
-   
+
    IF Empty( cSource )
       ::oTab:caption   := "Untitled " + hb_ntos( GetNextUntitled() )
    ELSE
       ::oTab:caption   := ::cFile + ::cExt
    ENDIF
-   
+
    ::oTab:minimized := .F.
 
    ::oTab:create()

@@ -132,11 +132,11 @@ METHOD XbpQtUiLoader:destroy()
    LOCAL a_
 
    FOR EACH a_ IN ::aSignals
-      Qt_DisConnect_Signal( a_[ 1 ], a_[ 2 ] )
+      Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
    NEXT
 
    FOR EACH a_ IN ::aEvents
-      Qt_DisConnect_Event( a_[ 1 ], a_[ 2 ] )
+      Qt_Events_disConnect( ::pEvents, a_[ 1 ], a_[ 2 ] )
    NEXT
 
    ::oWidget:hide()
@@ -149,7 +149,7 @@ METHOD XbpQtUiLoader:destroy()
 METHOD XbpQtUiLoader:event( cWidget, nEvent, bBlock )
 
    IF hb_hHasKey( ::qObj, cWidget )
-      IF Qt_Connect_Signal( ::qObj[ cWidget ], nEvent, bBlock )
+      IF Qt_Events_Connect( ::pEvents, ::qObj[ cWidget ], nEvent, bBlock )
          aadd( ::aEvents, { ::qObj[ cWidget ], nEvent } )
       ENDIF
    ENDIF
@@ -161,7 +161,7 @@ METHOD XbpQtUiLoader:event( cWidget, nEvent, bBlock )
 METHOD XbpQtUiLoader:signal( cWidget, cSignal, bBlock )
 
    IF hb_hHasKey( ::qObj, cWidget )
-      IF Qt_Connect_Signal( ::qObj[ cWidget ], cSignal, bBlock )
+      IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
          aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
       ENDIF
    ENDIF

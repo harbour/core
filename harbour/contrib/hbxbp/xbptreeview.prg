@@ -169,7 +169,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oRootItem:oWidget  := oW
 
    /* Window Events */
-   ::oWidget:installEventFilter( QT_GetEventFilter() )
+   ::oWidget:installEventFilter( ::pEvents )
    ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
 
    //::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|o,p1,p2| ::exeBlock(  1, p1, p2, o ) } )

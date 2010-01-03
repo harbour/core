@@ -171,7 +171,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
-   ::oWidget:installEventFilter( QT_GetEventFilter() )
+   ::oWidget:installEventFilter( ::pEvents )
 
    ::connectWindowEvents()
    //

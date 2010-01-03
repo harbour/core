@@ -255,7 +255,7 @@ EXPORTED:
    DATA     nWndProc
 
    DATA     oMenu
-   METHOD   HandleEvent()
+   METHOD   handleEvent()
    METHOD   grabEvent()
 
    METHOD   isDerivedFrom()
@@ -283,6 +283,9 @@ EXPORTED:
    DATA     aPP
 
    METHOD   hbContextMenu                         SETGET
+
+   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
+   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
 
    ENDCLASS
 
@@ -395,18 +398,36 @@ METHOD XbpWindow:setQtProperty( cProperty )
 METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Signal( pWidget, cSignal, bBlock ) )
+   IF ( lSuccess := Qt_Slots_Connect( ::pSlots, pWidget, cSignal, bBlock ) )
       aadd( ::aConnections, { pWidget, cSignal } )
+   ELSE
+      // HB_TRACE( HB_TR_ALWAYS, ( "                         Connection failed %s", cSignal ) )
+      HB_TRACE( HB_TR_ALWAYS, ( "                " + cSignal ) )
    ENDIF
 
    RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:disconnect()
+   LOCAL e_
+
+   IF len( ::aConnections ) > 0
+      FOR EACH e_ IN ::aConnections
+         ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
+         // HBXBP_DEBUG( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+      NEXT
+      ::aConnections := {}
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Event( pWidget, nEvent, bBlock ) )
+   IF ( lSuccess := Qt_Events_Connect( ::pEvents, hbqt_ptr( pWidget ), nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
    ENDIF
 
@@ -442,9 +463,117 @@ METHOD XbpWindow:connectWindowEvents()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/*
-:quit()
-*/
+
+METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   DEFAULT oParent     TO ::oParent
+   DEFAULT oOwner      TO ::oOwner
+   DEFAULT aPos        TO ::aPos
+   DEFAULT aSize       TO ::sSize
+   DEFAULT aPresParams TO ::aPresParams
+   DEFAULT lVisible    TO ::visible
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:destroy()
+   LOCAL e_
+   LOCAL cXbp := __ObjGetClsName( self )
+
+//HBXBP_DEBUG( ".   " )
+//HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+
+   IF cXbp == "XBPDIALOG"
+      hbxbp_SetEventLoop( NIL )
+      ::oEventLoop:exit( 0 )
+      ::oEventLoop:pPtr := 0
+      SetAppWindow( XbpObject():new() )
+      ::oMenu := NIL
+   ENDIF
+
+   ::disconnect()
+
+   IF len( ::aEConnections ) > 0
+      FOR EACH e_ IN ::aEConnections
+         ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
+//         HBXBP_DEBUG( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+      NEXT
+      ::aEConnections := {}
+      ::oWidget:removeEventFilter( QT_GetEventFilter() )
+   ENDIF
+
+   IF Len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+      ::aChildren := {}
+   ENDIF
+
+   ::XbpPartHandler:destroy()
+   ::clearSlots()
+
+   IF cXbp == "XBPDIALOG"
+      hbxbp_ClearEventBuffer()
+   ENDIF
+
+   ::oWidget:pPtr := 0
+   ::oWidget := NIL
+
+//HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:clearSlots()
+   LOCAL i
+
+   ::sl_enter              := NIL
+   ::sl_leave              := NIL
+   ::sl_lbClick            := NIL
+   ::sl_lbDblClick         := NIL
+   ::sl_lbDown             := NIL
+   ::sl_lbUp               := NIL
+   ::sl_mbClick            := NIL
+   ::sl_mbDblClick         := NIL
+   ::sl_mbDown             := NIL
+   ::sl_mbUp               := NIL
+   ::sl_motion             := NIL
+   ::sl_rbClick            := NIL
+   ::sl_rbDblClick         := NIL
+   ::sl_rbDown             := NIL
+   ::sl_rbUp               := NIL
+   ::sl_wheel              := NIL
+
+   ::sl_helpRequest        := NIL
+   ::sl_keyboard           := NIL
+   ::sl_killInputFocus     := NIL
+   ::sl_move               := NIL
+   ::sl_paint              := NIL
+   ::sl_quit               := NIL
+   ::sl_resize             := NIL
+   ::sl_setInputFocus      := NIL
+   ::sl_dragEnter          := NIL
+   ::sl_dragMotion         := NIL
+   ::sl_dragLeave          := NIL
+   ::sl_dragDrop           := NIL
+
+   ::sl_close              := NIL
+   ::sl_setDisplayFocus    := NIL
+   ::sl_killDisplayFocus   := NIL
+
+   IF !empty( ::aPresParams )
+      FOR i := 1 TO len( ::aPresParams )
+         ::aPresParams[ i,1 ] := NIL
+         ::aPresParams[ i,2 ] := NIL
+         ::aPresParams[ i ]   := NIL
+      NEXT
+   ENDIF
+   ::aPresParams           := NIL
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
    LOCAL oEvent, nXbpKey, oP0, oP1, oObj_O, oObj_N
    LOCAL lRet := .t.
@@ -723,133 +852,6 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
    END SWITCH
 
    RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::sSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:destroy()
-   LOCAL e_
-   LOCAL cXbp := __ObjGetClsName( self )
-
-//HBXBP_DEBUG( ".   " )
-//HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
-
-   IF cXbp == "XBPDIALOG"
-      hbxbp_SetEventLoop( NIL )
-      ::oEventLoop:exit( 0 )
-      ::oEventLoop:pPtr := 0
-      SetAppWindow( XbpObject():new() )
-      ::oMenu := NIL
-   ENDIF
-
-   ::disconnect()
-
-   IF len( ::aEConnections ) > 0
-      FOR EACH e_ IN ::aEConnections
-         ::xDummy := Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] )
-//         HBXBP_DEBUG( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
-      NEXT
-      ::aEConnections := {}
-      ::oWidget:removeEventFilter( QT_GetEventFilter() )
-   ENDIF
-
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-      ::aChildren := {}
-   ENDIF
-
-   ::XbpPartHandler:destroy()
-   ::clearSlots()
-
-   IF cXbp == "XBPDIALOG"
-      hbxbp_ClearEventBuffer()
-      Qt_Slots_Destroy()
-      Qt_Events_Destroy()
-   ENDIF
-
-   ::oWidget:pPtr := 0
-   ::oWidget := NIL
-
-//HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:disconnect()
-   LOCAL e_
-
-   IF len( ::aConnections ) > 0
-      FOR EACH e_ IN ::aConnections
-         ::xDummy := Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] )
-//         HBXBP_DEBUG( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
-      NEXT
-      ::aConnections := {}
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:clearSlots()
-   LOCAL i
-
-   ::sl_enter              := NIL
-   ::sl_leave              := NIL
-   ::sl_lbClick            := NIL
-   ::sl_lbDblClick         := NIL
-   ::sl_lbDown             := NIL
-   ::sl_lbUp               := NIL
-   ::sl_mbClick            := NIL
-   ::sl_mbDblClick         := NIL
-   ::sl_mbDown             := NIL
-   ::sl_mbUp               := NIL
-   ::sl_motion             := NIL
-   ::sl_rbClick            := NIL
-   ::sl_rbDblClick         := NIL
-   ::sl_rbDown             := NIL
-   ::sl_rbUp               := NIL
-   ::sl_wheel              := NIL
-
-   ::sl_helpRequest        := NIL
-   ::sl_keyboard           := NIL
-   ::sl_killInputFocus     := NIL
-   ::sl_move               := NIL
-   ::sl_paint              := NIL
-   ::sl_quit               := NIL
-   ::sl_resize             := NIL
-   ::sl_setInputFocus      := NIL
-   ::sl_dragEnter          := NIL
-   ::sl_dragMotion         := NIL
-   ::sl_dragLeave          := NIL
-   ::sl_dragDrop           := NIL
-
-   ::sl_close              := NIL
-   ::sl_setDisplayFocus    := NIL
-   ::sl_killDisplayFocus   := NIL
-
-   IF !empty( ::aPresParams )
-      FOR i := 1 TO len( ::aPresParams )
-         ::aPresParams[ i,1 ] := NIL
-         ::aPresParams[ i,2 ] := NIL
-         ::aPresParams[ i ]   := NIL
-      NEXT
-   ENDIF
-   ::aPresParams           := NIL
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

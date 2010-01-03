@@ -179,7 +179,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setMouseTracking( .t. )
 
    /* Window Events */
-   ::oWidget:installEventFilter( QT_GetEventFilter() )
+   ::oWidget:installEventFilter( ::pEvents )
    ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
 
    /* Signal-slots */

@@ -107,6 +107,9 @@ PROCEDURE Main( cProjIni )
 
 CLASS HbIde
 
+   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
+   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+
    DATA   mp1, mp2, oXbp, nEvent
    DATA   aTabs                                   INIT {}
    DATA   cProjIni
@@ -1396,9 +1399,9 @@ METHOD HbIde:printPreview()
 
    qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Connect_Signal( qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
    qDlg:exec()
-   Qt_DisConnect_Signal( qDlg, "paintRequested(QPrinter)" )
+   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
 
    RETURN self
 
@@ -1945,9 +1948,9 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          //::qProcess:setStandardOutputFile( "c:\temp\out.out" )
          //::qProcess:setStandardErrorFile( "c:\temp\err.out" )
 
-         Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
-         Qt_Connect_Signal( ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
-         Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
          ::oOutputResult:oWidget:clear()
          ::qProcess:start( "hbmk2", qStringList )
@@ -2052,9 +2055,9 @@ METHOD HbIde:readProcessInfo( nMode )
       ::oOutputResult:oWidget:append( '-----------------------------------------------------------------' )
       ::oOutputResult:oWidget:append( 'Finished at ' + time() )
 
-      Qt_DisConnect_Signal( ::qProcess, "finished(int,int)"         )
-      Qt_DisConnect_Signal( ::qProcess, "readyReadStandardOutput()" )
-      Qt_DisConnect_Signal( ::qProcess, "readyReadStandardError()"  )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
 
       ::qProcess:kill()
       ::qProcess:pPtr := 0
