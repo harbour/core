@@ -91,10 +91,7 @@
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
 
-//void release_codeblocks();
-
 static QApplication * s_app = NULL;
-static bool s_hbqtinit = false;
 
 static int s_argc;
 static char ** s_argv;
@@ -114,8 +111,6 @@ HB_FUNC( HB_QT ) {;}
 static void hbqt_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-   //release_codeblocks();
 }
 
 static void hbqt_Init( void * cargo )
@@ -127,19 +122,15 @@ static void hbqt_Init( void * cargo )
 
    s_app = new QApplication( s_argc, s_argv );
 
-   if( s_app )
-      s_hbqtinit = true;
-
-   if( ! s_hbqtinit )
+   if( ! s_app )
       hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
-
-   hb_vmAtExit( hbqt_Exit, NULL );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_hbqt_init_ )
    hb_vmAtInit( hbqt_Init, NULL );
+   hb_vmAtExit( hbqt_Exit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )

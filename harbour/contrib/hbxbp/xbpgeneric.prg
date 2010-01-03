@@ -78,27 +78,24 @@
 /*----------------------------------------------------------------------*/
 
 STATIC s_oDeskTop
-STATIC s_mutex := hb_mutexCreate()
 STATIC s_oApp
-
-THREAD STATIC t_aEventLoop
 
 THREAD STATIC t_events
 
 THREAD STATIC t_nEventIn  := 0
 THREAD STATIC t_nEventOut := 0
-THREAD STATIC t_oDummy
 
 THREAD STATIC t_oAppWindow
 
 THREAD STATIC t_oEventLoop
 
+THREAD STATIC t_oXbpInFocus
+
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE hbxbp_Start()
 
-   t_oDummy := XbpObject():new()
-   s_oApp   := QApplication():new()
+   s_oApp := QApplication():new()
 
    RETURN
 
@@ -106,17 +103,13 @@ INIT PROCEDURE hbxbp_Start()
 
 EXIT PROCEDURE hbxbp_End()
 
-   t_oDummy      := NIL
-   t_oAppWindow  := NIL
+   t_oAppWindow := NIL
 
    IF hb_isObject( s_oDeskTop )
       s_oDeskTop:oWidget:pPtr := 0
    endif
 
    s_oApp:quit()
-   #if 0
-   s_oApp:oWidget:pPtr := 0
-   #endif
 
    RETURN
 
@@ -226,8 +219,6 @@ FUNCTION SetAppWindow( oXbp )
 
 FUNCTION SetAppFocus( oXbp )
    LOCAL oldXbpInFocus
-
-   THREAD STATIC t_oXbpInFocus
 
    oldXbpInFocus := t_oXbpInFocus
 

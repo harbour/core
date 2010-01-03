@@ -1,13 +1,12 @@
 /*
  * $Id$
- *
- *
- * --------------------------------------------------------------------
- * WARNING: Automatically generated source file. DO NOT EDIT!
- *          Instead, edit corresponding .qth file,
- *          or the generator tool itself, and run regenarate.
- * --------------------------------------------------------------------
  */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated source file. DO NOT EDIT!           */
+/*          Instead, edit corresponding .qth file,                      */
+/*          or the generator tool itself, and run regenarate.           */
+/* -------------------------------------------------------------------- */
 
 extern QT_G_FUNC( hbqt_gcRelease_QAbstractButton );
 extern QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate );
