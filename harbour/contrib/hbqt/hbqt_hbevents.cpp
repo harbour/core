@@ -62,7 +62,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_events.h"
+#include "hbqt_hbevents.h"
 
 #include <QVariant>
 
@@ -70,7 +70,7 @@
 
 typedef struct
 {
-   Events * t_events;
+   HBEvents * t_events;
 } HB_EVENTS, * PHB_EVENTS;
 
 static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
@@ -79,12 +79,12 @@ static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
 
 /*----------------------------------------------------------------------*/
 
-static Events * qt_getEventFilter( void )
+static HBEvents * qt_getEventFilter( void )
 {
    PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
 
    if( ! p_events->t_events )
-      p_events->t_events = new Events();
+      p_events->t_events = new HBEvents();
 
    return p_events->t_events;
 }
@@ -102,20 +102,20 @@ HB_FUNC( QT_EVENTS_DESTROY )
 
    if( p_events->t_events )
    {
-      p_events->t_events->~Events();
+      p_events->t_events->~HBEvents();
       p_events->t_events = NULL;
    }
 }
 
 /*----------------------------------------------------------------------*/
 
-Events::Events( QObject * parent ) : QObject( parent )
+HBEvents::HBEvents( QObject * parent ) : QObject( parent )
 {
 }
 
-Events::~Events()
+HBEvents::~HBEvents()
 {
-   HB_TRACE( HB_TR_DEBUG, ( "      Events::~Events()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "      HBEvents::~HBEvents()" ) );
    int i;
 
    for( i = 0; i < listBlock.size(); i++ )
@@ -131,7 +131,7 @@ Events::~Events()
    listBlock.clear();
 }
 
-bool Events::eventFilter( QObject * object, QEvent * event )
+bool HBEvents::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
 
@@ -171,9 +171,9 @@ HB_FUNC( QT_CONNECT_EVENT )
 
    if( object )
    {
-      int       type      = hb_parni( 2 );
-      PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-      Events  * t_events  = qt_getEventFilter();
+      int        type      = hb_parni( 2 );
+      PHB_ITEM   codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+      HBEvents * t_events  = qt_getEventFilter();
 
       char prop[ 20 ];
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -197,8 +197,8 @@ HB_FUNC( QT_DISCONNECT_EVENT )
 
    if( object )
    {
-      int       type     = hb_parni( 2 );
-      Events  * t_events = qt_getEventFilter();
+      int        type     = hb_parni( 2 );
+      HBEvents * t_events = qt_getEventFilter();
 
       char prop[ 20 ];
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */

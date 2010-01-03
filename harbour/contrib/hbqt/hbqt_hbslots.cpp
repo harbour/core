@@ -62,13 +62,13 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_slots.h"
+#include "hbqt_hbslots.h"
 
 /*----------------------------------------------------------------------*/
 
 typedef struct
 {
-   Slots * t_slots;
+   HBSlots * t_slots;
 } HB_SLOTS, * PHB_SLOTS;
 
 static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
@@ -77,12 +77,12 @@ static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 
 /*----------------------------------------------------------------------*/
 
-static Slots * qt_getEventSlots( void )
+static HBSlots * qt_getEventSlots( void )
 {
    PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
 
    if( ! p_slots->t_slots )
-      p_slots->t_slots = new Slots();
+      p_slots->t_slots = new HBSlots();
 
    return p_slots->t_slots;
 }
@@ -94,18 +94,18 @@ HB_FUNC( QT_SLOTS_DESTROY )
 
    if( p_slots->t_slots )
    {
-      p_slots->t_slots->~Slots();
+      p_slots->t_slots->~HBSlots();
       p_slots->t_slots = NULL;
    }
 }
 
 /*----------------------------------------------------------------------*/
 
-Slots::Slots( QObject* parent ) : QObject( parent )
+HBSlots::HBSlots( QObject* parent ) : QObject( parent )
 {
 }
 
-Slots::~Slots()
+HBSlots::~HBSlots()
 {
    int i;
 
@@ -127,7 +127,7 @@ static void hbqt_SlotsExec( QObject * object, const char * pszEvent )
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -143,7 +143,7 @@ static void hbqt_SlotsExecBool( QObject * object, const char * pszEvent, bool bB
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -161,7 +161,7 @@ static void hbqt_SlotsExecInt( QObject * object, const char * pszEvent, int iVal
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -179,7 +179,7 @@ static void hbqt_SlotsExecIntInt( QObject * object, const char * pszEvent, int i
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -199,7 +199,7 @@ static void hbqt_SlotsExecIntIntInt( QObject * object, const char * pszEvent, in
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -221,7 +221,7 @@ static void hbqt_SlotsExecIntIntIntInt( QObject * object, const char * pszEvent,
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -245,7 +245,7 @@ static void hbqt_SlotsExecString( QObject * object, const char * pszEvent, const
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -263,7 +263,7 @@ static void hbqt_SlotsExecModel( QObject * object, const char * pszEvent, const 
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -282,7 +282,7 @@ static void hbqt_SlotsExecTextCharFormat( QObject * object, const char * pszEven
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -301,7 +301,7 @@ static void hbqt_SlotsExecFont( QObject * object, const char * pszEvent, const Q
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -320,7 +320,7 @@ static void hbqt_SlotsExecQTextCursor( QObject * object, const char * pszEvent, 
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -340,7 +340,7 @@ static void hbqt_SlotsExecStringList( QObject * object, const char * pszEvent, c
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -359,7 +359,7 @@ static void hbqt_SlotsExecPointer( QObject * object, const char * pszEvent, void
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -377,7 +377,7 @@ static void hbqt_SlotsExecPointerInt( QObject * object, const char * pszEvent, v
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -397,7 +397,7 @@ static void hbqt_SlotsExecPointerPointer( QObject * object, const char * pszEven
 {
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -414,125 +414,125 @@ static void hbqt_SlotsExecPointerPointer( QObject * object, const char * pszEven
 }
 
 /* Generic Key and Mouse Events emitted by subclass objects */
-void Slots::keyPressEvent( QKeyEvent * event )                                                           { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyPressEvent()", event ); }
-void Slots::keyReleaseEvent( QKeyEvent * event )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyReleaseEvent()", event ); }
-void Slots::mouseMoveEvent( QMouseEvent * event )                                                        { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseMoveEvent()", event ); }
-void Slots::mouseDoubleClickEvent( QMouseEvent * event )                                                 { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseDoubleClickEvent()", event ); }
-void Slots::mousePressEvent( QMouseEvent * event )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mousePressEvent()", event ); }
-void Slots::mouseReleaseEvent( QMouseEvent * event )                                                     { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseReleaseEvent()", event ); }
-void Slots::wheelEvent( QWheelEvent * event )                                                            { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "wheelEvent()", event ); }
-void Slots::resizeEvent( QResizeEvent * event )                                                          { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "resizeEvent()", event ); }
-void Slots::triggered( bool checked )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "triggered(bool)", checked ); }
-void Slots::hovered( QAction * action )                                                                  { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "hovered(action)", action ); }
-void Slots::clicked()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "clicked()" ); }
-void Slots::returnPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "returnPressed()" ); }
-void Slots::viewportEntered()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "viewportEntered()" ); }
-void Slots::pressed()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "pressed()" ); }
-void Slots::released()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "released()" ); }
-void Slots::triggered()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "triggered()" ); }
-void Slots::hovered()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "hovered()" ); }
-void Slots::stateChanged( int state )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", state ); }
-void Slots::activated( int index )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "activated(int)", index ); }
-void Slots::currentIndexChanged( int index )                                                             { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentIndexChanged(int)", index ); }
-void Slots::currentChanged( int index )                                                                  { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentChanged(int)", index ); }
-void Slots::highlighted( int index )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "highlighted(int)", index ); }
-void Slots::clicked( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "clicked(QModelIndex)", index ); }
-void Slots::doubleClicked( const QModelIndex & index )                                                   { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "doubleClicked(QModelIndex)", index ); }
-void Slots::entered( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "entered(QModelIndex)", index ); }
-void Slots::actionTriggered( int action )                                                                { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "actionTriggered(int)", action ); }
-void Slots::rangeChanged( int min, int max )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "rangeChanged(int)", min, max ); }
-void Slots::sliderMoved( int value )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sliderMoved(int)", value ); }
-void Slots::sliderPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderPressed()" ); }
-void Slots::sliderReleased()                                                                             { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderReleased()" ); }
-void Slots::valueChanged( int value )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "valueChanged(int)", value ); }
-void Slots::cursorPositionChanged( int iOld, int iNew )                                                  { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cursorPositionChanged(int,int)", iOld, iNew ); }
-void Slots::editingFinished()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "editingFinished()" ); }
-void Slots::selectionChanged()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "selectionChanged()" ); }
-void Slots::textChanged( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textChanged(QString)", text ); }
-void Slots::textEdited( const QString & text )                                                           { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textEdited(QString)", text ); }
+void HBSlots::keyPressEvent( QKeyEvent * event )                                                           { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyPressEvent()", event ); }
+void HBSlots::keyReleaseEvent( QKeyEvent * event )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyReleaseEvent()", event ); }
+void HBSlots::mouseMoveEvent( QMouseEvent * event )                                                        { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseMoveEvent()", event ); }
+void HBSlots::mouseDoubleClickEvent( QMouseEvent * event )                                                 { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseDoubleClickEvent()", event ); }
+void HBSlots::mousePressEvent( QMouseEvent * event )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mousePressEvent()", event ); }
+void HBSlots::mouseReleaseEvent( QMouseEvent * event )                                                     { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseReleaseEvent()", event ); }
+void HBSlots::wheelEvent( QWheelEvent * event )                                                            { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "wheelEvent()", event ); }
+void HBSlots::resizeEvent( QResizeEvent * event )                                                          { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "resizeEvent()", event ); }
+void HBSlots::triggered( bool checked )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "triggered(bool)", checked ); }
+void HBSlots::hovered( QAction * action )                                                                  { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "hovered(action)", action ); }
+void HBSlots::clicked()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "clicked()" ); }
+void HBSlots::returnPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "returnPressed()" ); }
+void HBSlots::viewportEntered()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "viewportEntered()" ); }
+void HBSlots::pressed()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "pressed()" ); }
+void HBSlots::released()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "released()" ); }
+void HBSlots::triggered()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "triggered()" ); }
+void HBSlots::hovered()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "hovered()" ); }
+void HBSlots::stateChanged( int state )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", state ); }
+void HBSlots::activated( int index )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "activated(int)", index ); }
+void HBSlots::currentIndexChanged( int index )                                                             { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentIndexChanged(int)", index ); }
+void HBSlots::currentChanged( int index )                                                                  { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentChanged(int)", index ); }
+void HBSlots::highlighted( int index )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "highlighted(int)", index ); }
+void HBSlots::clicked( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "clicked(QModelIndex)", index ); }
+void HBSlots::doubleClicked( const QModelIndex & index )                                                   { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "doubleClicked(QModelIndex)", index ); }
+void HBSlots::entered( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "entered(QModelIndex)", index ); }
+void HBSlots::actionTriggered( int action )                                                                { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "actionTriggered(int)", action ); }
+void HBSlots::rangeChanged( int min, int max )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "rangeChanged(int)", min, max ); }
+void HBSlots::sliderMoved( int value )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sliderMoved(int)", value ); }
+void HBSlots::sliderPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderPressed()" ); }
+void HBSlots::sliderReleased()                                                                             { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderReleased()" ); }
+void HBSlots::valueChanged( int value )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "valueChanged(int)", value ); }
+void HBSlots::cursorPositionChanged( int iOld, int iNew )                                                  { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cursorPositionChanged(int,int)", iOld, iNew ); }
+void HBSlots::editingFinished()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "editingFinished()" ); }
+void HBSlots::selectionChanged()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "selectionChanged()" ); }
+void HBSlots::textChanged( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textChanged(QString)", text ); }
+void HBSlots::textEdited( const QString & text )                                                           { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textEdited(QString)", text ); }
 /*  TreeViewobject */
-void Slots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )                  { hbqt_SlotsExecPointerPointer( qobject_cast<QObject *>( sender() ), "currentItemChanged(QTWItem)", current, previous ); }
-void Slots::itemActivated( QTreeWidgetItem * item, int column )                                          { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemActivated(QTWItem)", item, column ); }
-void Slots::itemChanged( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemChanged(QTWItem)", item, column ); }
-void Slots::itemClicked( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemClicked(QTWItem)", item, column ); }
-void Slots::itemDoubleClicked( QTreeWidgetItem * item, int column )                                      { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QTWItem)", item, column ); }
-void Slots::itemEntered( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemEntered(QTWItem)", item, column ); }
-void Slots::itemPressed( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemPressed(QTWItem)", item, column ); }
-void Slots::itemExpanded( QTreeWidgetItem * item )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemExpanded(QTWItem)", item ); }
-void Slots::itemCollapsed( QTreeWidgetItem * item )                                                      { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemCollapsed(QTWItem)", item ); }
-void Slots::itemSelectionChanged()                                                                       { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "itemSelectionChanged()" ); }
+void HBSlots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )                  { hbqt_SlotsExecPointerPointer( qobject_cast<QObject *>( sender() ), "currentItemChanged(QTWItem)", current, previous ); }
+void HBSlots::itemActivated( QTreeWidgetItem * item, int column )                                          { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemActivated(QTWItem)", item, column ); }
+void HBSlots::itemChanged( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemChanged(QTWItem)", item, column ); }
+void HBSlots::itemClicked( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemClicked(QTWItem)", item, column ); }
+void HBSlots::itemDoubleClicked( QTreeWidgetItem * item, int column )                                      { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QTWItem)", item, column ); }
+void HBSlots::itemEntered( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemEntered(QTWItem)", item, column ); }
+void HBSlots::itemPressed( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemPressed(QTWItem)", item, column ); }
+void HBSlots::itemExpanded( QTreeWidgetItem * item )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemExpanded(QTWItem)", item ); }
+void HBSlots::itemCollapsed( QTreeWidgetItem * item )                                                      { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemCollapsed(QTWItem)", item ); }
+void HBSlots::itemSelectionChanged()                                                                       { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "itemSelectionChanged()" ); }
 /* QDialog (s)*/
-void Slots::currentFontChanged( const QFont & font )                                                     { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "currentFontChanged(QFont)", font ); }
-void Slots::fontSelected( const QFont & font )                                                           { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "fontSelected(QFont)", font ); }
-void Slots::accepted()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "accepted()" ); }
-void Slots::finished( int result )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "finished(int)", result ); }
-void Slots::rejected()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "rejected()" ); }
-void Slots::currentChanged( const QString & path )                                                       { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentChanged(QString)", path ); }
-void Slots::directoryEntered( const QString & directory )                                                { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "directoryEntered(QString)", directory ); }
-void Slots::fileSelected( const QString & file )                                                         { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "fileSelected(QString)", file ); }
-void Slots::filesSelected( const QStringList & selected )                                                { hbqt_SlotsExecStringList(     qobject_cast<QObject *>( sender() ), "filesSelected(QStringList)", selected ); }
-void Slots::filterSelected( const QString & filter )                                                     { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "filterSelected(QString)", filter ); }
+void HBSlots::currentFontChanged( const QFont & font )                                                     { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "currentFontChanged(QFont)", font ); }
+void HBSlots::fontSelected( const QFont & font )                                                           { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "fontSelected(QFont)", font ); }
+void HBSlots::accepted()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "accepted()" ); }
+void HBSlots::finished( int result )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "finished(int)", result ); }
+void HBSlots::rejected()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "rejected()" ); }
+void HBSlots::currentChanged( const QString & path )                                                       { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentChanged(QString)", path ); }
+void HBSlots::directoryEntered( const QString & directory )                                                { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "directoryEntered(QString)", directory ); }
+void HBSlots::fileSelected( const QString & file )                                                         { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "fileSelected(QString)", file ); }
+void HBSlots::filesSelected( const QStringList & selected )                                                { hbqt_SlotsExecStringList(     qobject_cast<QObject *>( sender() ), "filesSelected(QStringList)", selected ); }
+void HBSlots::filterSelected( const QString & filter )                                                     { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "filterSelected(QString)", filter ); }
 /* QPrintDialog */
-void Slots::accepted( QPrinter * printer )                                                               { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "accepted(QPrinter)", printer ); }
+void HBSlots::accepted( QPrinter * printer )                                                               { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "accepted(QPrinter)", printer ); }
 /* QTextEdit */
-void Slots::copyAvailable( bool yes )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "copyAvailable(bool)", yes ); }
-void Slots::currentCharFormatChanged( const QTextCharFormat & f )                                        { hbqt_SlotsExecTextCharFormat( qobject_cast<QObject *>( sender() ), "currentCharFormatChanged(QTextCharFormat)", f ); }
-void Slots::cursorPositionChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "cursorPositionChanged()" ); }
-void Slots::redoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "redoAvailable(bool)", available ); }
-void Slots::textChanged()                                                                                { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "textChanged()" ); }
-void Slots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "undoAvailable(available)", available ); }
-void Slots::timeout()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "timeout()" ); }
-void Slots::scrollContentsBy( int x, int y )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "scrollContentsBy(int,int)", x, y ); }
-void Slots::geometriesChanged()                                                                          { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "geometriesChanged()" ); }
-void Slots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )                          { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,int)", logicalIndex, mode ); }
-void Slots::sectionClicked( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionClicked(int)", logicalIndex ); }
-void Slots::sectionCountChanged( int oldCount, int newCount )                                            { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionCountChanged(int,int)", oldCount, newCount ); }
-void Slots::sectionDoubleClicked( int logicalIndex )                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionDoubleClicked(int)", logicalIndex ); }
-void Slots::sectionEntered( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionEntered(int)", logicalIndex ); }
-void Slots::sectionHandleDoubleClicked( int logicalIndex )                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionHandleDoubleClicked(int)", logicalIndex ); }
-void Slots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )                     { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex ); }
-void Slots::sectionPressed( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionPressed(int)", logicalIndex ); }
-void Slots::sectionResized( int logicalIndex, int oldSize, int newSize )                                 { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionResized(int,int,int)", logicalIndex, oldSize, newSize ); }
-void Slots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )                                { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,int)", logicalIndex, order ); }
-void Slots::buttonClicked( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonClicked(int)", id ); }
-void Slots::buttonPressed( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonPressed(int)", id ); }
-void Slots::buttonReleased( int id )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonReleased(int)", id ); }
-void Slots::linkActivated( const QString & link )                                                        { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkActivated(QString)", link ); }
-void Slots::linkHovered( const QString & link )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkHovered(QString)", link ); }
-void Slots::cellActivated( int row, int column )                                                         { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellActivated(int,int)", row, column ); }
-void Slots::cellChanged( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellChanged(int,int)", row, column ); }
-void Slots::cellClicked( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellClicked(int,int)", row, column ); }
-void Slots::cellDoubleClicked( int row, int column )                                                     { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellDoubleClicked(int,int)", row, column ); }
-void Slots::cellEntered( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
-void Slots::cellPressed( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
-void Slots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn ) { hbqt_SlotsExecIntIntIntInt(   qobject_cast<QObject *>( sender() ), "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn ); }
-void Slots::tabCloseRequested( int index )                                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "tabCloseRequested(int)", index ); }
-void Slots::paintRequested( QPrinter * printer )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer ); }
+void HBSlots::copyAvailable( bool yes )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "copyAvailable(bool)", yes ); }
+void HBSlots::currentCharFormatChanged( const QTextCharFormat & f )                                        { hbqt_SlotsExecTextCharFormat( qobject_cast<QObject *>( sender() ), "currentCharFormatChanged(QTextCharFormat)", f ); }
+void HBSlots::cursorPositionChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "cursorPositionChanged()" ); }
+void HBSlots::redoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "redoAvailable(bool)", available ); }
+void HBSlots::textChanged()                                                                                { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "textChanged()" ); }
+void HBSlots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "undoAvailable(available)", available ); }
+void HBSlots::timeout()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "timeout()" ); }
+void HBSlots::scrollContentsBy( int x, int y )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "scrollContentsBy(int,int)", x, y ); }
+void HBSlots::geometriesChanged()                                                                          { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "geometriesChanged()" ); }
+void HBSlots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )                          { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,int)", logicalIndex, mode ); }
+void HBSlots::sectionClicked( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionClicked(int)", logicalIndex ); }
+void HBSlots::sectionCountChanged( int oldCount, int newCount )                                            { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionCountChanged(int,int)", oldCount, newCount ); }
+void HBSlots::sectionDoubleClicked( int logicalIndex )                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionDoubleClicked(int)", logicalIndex ); }
+void HBSlots::sectionEntered( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionEntered(int)", logicalIndex ); }
+void HBSlots::sectionHandleDoubleClicked( int logicalIndex )                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionHandleDoubleClicked(int)", logicalIndex ); }
+void HBSlots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )                     { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex ); }
+void HBSlots::sectionPressed( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionPressed(int)", logicalIndex ); }
+void HBSlots::sectionResized( int logicalIndex, int oldSize, int newSize )                                 { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionResized(int,int,int)", logicalIndex, oldSize, newSize ); }
+void HBSlots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )                                { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,int)", logicalIndex, order ); }
+void HBSlots::buttonClicked( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonClicked(int)", id ); }
+void HBSlots::buttonPressed( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonPressed(int)", id ); }
+void HBSlots::buttonReleased( int id )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonReleased(int)", id ); }
+void HBSlots::linkActivated( const QString & link )                                                        { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkActivated(QString)", link ); }
+void HBSlots::linkHovered( const QString & link )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkHovered(QString)", link ); }
+void HBSlots::cellActivated( int row, int column )                                                         { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellActivated(int,int)", row, column ); }
+void HBSlots::cellChanged( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellChanged(int,int)", row, column ); }
+void HBSlots::cellClicked( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellClicked(int,int)", row, column ); }
+void HBSlots::cellDoubleClicked( int row, int column )                                                     { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellDoubleClicked(int,int)", row, column ); }
+void HBSlots::cellEntered( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
+void HBSlots::cellPressed( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
+void HBSlots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn ) { hbqt_SlotsExecIntIntIntInt(   qobject_cast<QObject *>( sender() ), "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn ); }
+void HBSlots::tabCloseRequested( int index )                                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "tabCloseRequested(int)", index ); }
+void HBSlots::paintRequested( QPrinter * printer )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer ); }
 /* QIODevice */
-void Slots::aboutToClose()                                                                               { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "aboutToClose()" ); }
-void Slots::bytesWritten( qint64 bytes )                                                                 { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "bytesWritten(int)", bytes ); }
-void Slots::readChannelFinished()                                                                        { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readChannelFinished()" ); }
-void Slots::readyRead()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyRead()" ); }
+void HBSlots::aboutToClose()                                                                               { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "aboutToClose()" ); }
+void HBSlots::bytesWritten( qint64 bytes )                                                                 { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "bytesWritten(int)", bytes ); }
+void HBSlots::readChannelFinished()                                                                        { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readChannelFinished()" ); }
+void HBSlots::readyRead()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyRead()" ); }
 /* QProcess */
-void Slots::error( QProcess::ProcessError error )                                                        { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "error(error)", error ); }
-void Slots::finished( int exitCode, QProcess::ExitStatus exitStatus )                                    { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "finished(int,int)", exitCode, exitStatus ); }
-void Slots::readyReadStandardError()                                                                     { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardError()" ); }
-void Slots::readyReadStandardOutput()                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardOutput()" ); }
-void Slots::started()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "started()" ); }
-void Slots::stateChanged( QProcess::ProcessState newState )                                              { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", newState ); }
+void HBSlots::error( QProcess::ProcessError error )                                                        { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "error(error)", error ); }
+void HBSlots::finished( int exitCode, QProcess::ExitStatus exitStatus )                                    { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "finished(int,int)", exitCode, exitStatus ); }
+void HBSlots::readyReadStandardError()                                                                     { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardError()" ); }
+void HBSlots::readyReadStandardOutput()                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardOutput()" ); }
+void HBSlots::started()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "started()" ); }
+void HBSlots::stateChanged( QProcess::ProcessState newState )                                              { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", newState ); }
 /* QComboBox */
-void Slots::activated( const QString & text )                                                            { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "activated(text)", text ); }
-void Slots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentIndexChanged(text)", text ); }
-void Slots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "editTextChanged(text)", text ); }
-void Slots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "highlighted(text)", text ); }
+void HBSlots::activated( const QString & text )                                                            { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "activated(text)", text ); }
+void HBSlots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentIndexChanged(text)", text ); }
+void HBSlots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "editTextChanged(text)", text ); }
+void HBSlots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "highlighted(text)", text ); }
 /* QTextDocument */
-void Slots::blockCountChanged( int newBlockCount )                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "blockCountChanged(int)", newBlockCount ); }
-void Slots::contentsChange( int position, int charsRemoved, int charsAdded )                             { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "contentsChange(int,int,int)", position, charsRemoved, charsAdded ); }
-void Slots::contentsChanged()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "contentsChanged()" ); }
-void Slots::cursorPositionChanged( const QTextCursor & cursor )                                          { hbqt_SlotsExecQTextCursor(    qobject_cast<QObject *>( sender() ), "cursorPositionChanged(QTextCursor)", cursor ); }
-void Slots::documentLayoutChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "documentLayoutChanged()" ); }
-void Slots::modificationChanged( bool changed )                                                          { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "modificationChanged(bool)", changed ); }
-void Slots::undoCommandAdded()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "undoCommandAdded()" ); }
+void HBSlots::blockCountChanged( int newBlockCount )                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "blockCountChanged(int)", newBlockCount ); }
+void HBSlots::contentsChange( int position, int charsRemoved, int charsAdded )                             { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "contentsChange(int,int,int)", position, charsRemoved, charsAdded ); }
+void HBSlots::contentsChanged()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "contentsChanged()" ); }
+void HBSlots::cursorPositionChanged( const QTextCursor & cursor )                                          { hbqt_SlotsExecQTextCursor(    qobject_cast<QObject *>( sender() ), "cursorPositionChanged(QTextCursor)", cursor ); }
+void HBSlots::documentLayoutChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "documentLayoutChanged()" ); }
+void HBSlots::modificationChanged( bool changed )                                                          { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "modificationChanged(bool)", changed ); }
+void HBSlots::undoCommandAdded()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "undoCommandAdded()" ); }
 /**/
 
 /*----------------------------------------------------------------------*/
@@ -553,7 +553,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    PHB_ITEM  pBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret;
 
-   Slots * t_slots = qt_getEventSlots();
+   HBSlots * t_slots = qt_getEventSlots();
 
    if(      signal == ( QString ) "clicked()"                                 ) ret = object->connect( object, SIGNAL( clicked()                                                  ), t_slots, SLOT( clicked()                                                  ), Qt::AutoConnection );
    else if( signal == ( QString ) "returnPressed()"                           ) ret = object->connect( object, SIGNAL( returnPressed()                                            ), t_slots, SLOT( returnPressed()                                            ), Qt::AutoConnection );
@@ -818,7 +818,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
 
    if( object )
    {
-      Slots * t_slots = qt_getEventSlots();
+      HBSlots * t_slots = qt_getEventSlots();
       const char * signal = hb_parcx( 2 );
       int i = object->property( signal ).toInt();
 

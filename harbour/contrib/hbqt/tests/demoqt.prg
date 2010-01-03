@@ -177,6 +177,9 @@ HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
 
 HBQT_DEBUG( "-------------------- exit -------------------" )
 
+   QT_EVENTS_DESTROY()
+   QT_SLOTS_DESTROY()
+
    RETURN
 
 /*----------------------------------------------------------------------*/

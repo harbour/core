@@ -66,13 +66,13 @@
 
 /*----------------------------------------------------------------------*/
 
-class Slots: public QObject
+class HBSlots: public QObject
 {
    Q_OBJECT
 
 public:
-   Slots( QObject *parent = 0 );
-   ~Slots();
+   HBSlots( QObject *parent = 0 );
+   ~HBSlots();
    QList<PHB_ITEM>  listBlock;
 
 public slots:

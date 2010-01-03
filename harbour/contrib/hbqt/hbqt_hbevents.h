@@ -63,13 +63,13 @@
 #include <QEvent>
 #include <QList>
 
-class Events: public QObject
+class HBEvents: public QObject
 {
    Q_OBJECT
 
 public:
-   Events( QObject *parent = 0 );
-   ~Events();
+   HBEvents( QObject *parent = 0 );
+   ~HBEvents();
    QList<PHB_ITEM>     listBlock;
    QList<bool>         listActv;
    QList<QObject*>     listObj;
