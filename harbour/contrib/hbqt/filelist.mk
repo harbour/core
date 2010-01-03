@@ -16,10 +16,12 @@ CPP_SOURCES := \
    hbqt_destruct.cpp \
    hbqt_hbdbfmodel.cpp \
    hbqt_hbevents.cpp \
+   hbqt_hbevents2.cpp \
    hbqt_hbqmainwindow.cpp \
    hbqt_hbqsyntaxhighlighter.cpp \
    hbqt_hbqtableview.cpp \
    hbqt_hbslots.cpp \
+   hbqt_hbslots2.cpp \
 
 PRG_SOURCES := \
    hbqt_misc.prg \

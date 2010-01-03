@@ -384,9 +384,11 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QWSEvent( n )                      ( ( QWSEvent                    * ) hbqt_gcpointer( n ) )
 
 #define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBEvents( n )                      ( ( HBEvents                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQTableView( n )                  ( ( HBQTableView                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQSyntaxHighlighter( n )          ( ( HBQSyntaxHighlighter        * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBSlots( n )                       ( ( HBSlots                     * ) hbqt_gcpointer( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
@@ -397,9 +399,5 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_ret_QAbstractItemDelegate( p )         ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
 #define hbqt_ret_QAbstractItemModel( p )            ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )                      ( hb_retptr( ( QPrinter* ) p ) )
-
-/* Declarations which will not be generated auto */
-extern QT_G_FUNC( hbqt_release_HBDbfModel );
-extern void * hbqt_gcAllocate_HBDbfModel( void * pObj );
 
 #endif /* __HBQT_H */

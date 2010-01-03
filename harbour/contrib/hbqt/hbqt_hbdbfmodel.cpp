@@ -313,7 +313,7 @@ typedef struct
   QPointer< HBDbfModel > pq;
 } QGC_POINTER_HBDbfModel;
 
-QT_G_FUNC( hbqt_release_HBDbfModel )
+static QT_G_FUNC( hbqt_release_HBDbfModel )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) Cargo;
 
@@ -351,7 +351,7 @@ QT_G_FUNC( hbqt_release_HBDbfModel )
    }
 }
 
-void * hbqt_gcAllocate_HBDbfModel( void * pObj )
+static void * hbqt_gcAllocate_HBDbfModel( void * pObj )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), hbqt_gcFuncs() );
 
