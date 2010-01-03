@@ -169,7 +169,7 @@ STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
 
 METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    LOCAL cFiles := NIL
-   LOCAL i, oList, nResult
+   LOCAL i, oList, nResult, cPath, cFile, cExt
 
    HB_SYMBOL_UNUSED( lCreateNewFiles )
 
@@ -194,6 +194,8 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    ENDIF
 
    IF hb_isChar( cDefaultFile )
+      hb_fNameSplit( cDefaultFile, @cPath, @cFile, @cExt )
+      //::oWidget:setDirectory( cFile )
       ::oWidget:setDirectory( cDefaultFile )
    ENDIF
 
@@ -226,7 +228,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
-   LOCAL nResult
+   LOCAL nResult, i, oList
 
    DEFAULT lFileList TO .T.
 
@@ -248,9 +250,19 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
       ::oWidget:setDirectory( cDefaultFile )
    ENDIF
 
-//   oStyle := QApplication():style()
-//   ::oWidget:setStyle( oStyle )
-   ::setStyle()
+   IF empty( ::fileFilters )
+      ::oWidget:setNameFilter( "All File (*.*)" )
+   ELSE
+      IF len( ::fileFilters ) == 1
+         ::oWidget:setNameFilter( Xbp_ArrayToFileFilter( ::fileFilters[ 1 ] ) )
+      ELSE
+         oList := QStringList():new()
+         FOR i := 1 TO len( ::fileFilters )
+            oList:append( Xbp_ArrayToFileFilter( ::fileFilters[ i ] ) )
+         NEXT
+         ::oWidget:setNameFilters( oList )
+      ENDIF
+   ENDIF
 
    IF !( lCenter )
       ::setPos()
