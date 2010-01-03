@@ -735,6 +735,8 @@ METHOD HbIde:closeSource( nTab, lCanCancel, lCanceled )
 
    IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
       * File has not changed, ignore the question to User
+      lSave := .f.
+
    ELSEIF lCanCancel
       n := GetYesNoCancel( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
                           "Has been modified, save this source?", 'Save?' )
@@ -772,11 +774,6 @@ METHOD HbIde:closeAllSources()
 
  * Finally now we will close all tabs.
    DO WHILE ( ++i <= Len( ::aTabs ) )
-
-       IF !::aTabs[ i, TAB_QDOCUMENT ]:isModified()
-          Loop
-       End
-
        IF ::closeSource( i, .T., @lCanceled )
           i --
           Loop
