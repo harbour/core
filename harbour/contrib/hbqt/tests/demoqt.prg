@@ -85,9 +85,9 @@
 
 #include "common.ch"
 
-STATIC qApp
-
 REQUEST HB_QT
+
+STATIC s_qApp
 
 STATIC s_events
 STATIC s_slots
@@ -95,11 +95,11 @@ STATIC s_slots
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()
-   qApp := QApplication():new()
+   s_qApp := QApplication():new()
    RETURN
 
 EXIT PROCEDURE Qt_End()
-   qApp:quit()
+   s_qApp:quit()
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -172,9 +172,9 @@ HBQT_DEBUG( "-----------------b-----------------" )
 
    oWnd:Show()
 
-   qApp:exec()
+   s_qApp:exec()
 
-HBQT_DEBUG( "----------------- qApp:exec -----------------" )
+HBQT_DEBUG( "----------------- s_qApp:exec -----------------" )
 
    HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
 HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
