@@ -78,6 +78,11 @@ CLASS IdeEditor
    DATA   oIde
 
    DATA   oTab
+   DATA   cPath
+   DATA   cFile
+   DATA   cExt
+   DATA   cType
+   DATA   cTheme
    DATA   qEdit
    DATA   qDocument
    DATA   qHiliter
@@ -106,36 +111,47 @@ CLASS IdeEditor
    METHOD dispEditInfo()
    METHOD onBlockCountChanged()
    METHOD setTabImage()
+   METHOD applyTheme()
+   METHOD showPPO()
+   METHOD closePPO()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos )
+METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    ::oIde       := oIde
    ::sourceFile := cSourceFile
    ::nPos       := nPos
    ::nHPos      := nHPos
    ::nVPos      := nVPos
+   ::cTheme     := cTheme
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos )
+METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    DEFAULT oIde        TO ::oIde
    DEFAULT cSourceFile TO ::sourceFile
    DEFAULT nPos        TO ::nPos
    DEFAULT nHPos       TO ::nHPos
    DEFAULT nVPos       TO ::nVPos
+   DEFAULT cTheme      TO ::cTheme
 
    ::oIde       := oIde
    ::SourceFile := cSourceFile
    ::nPos       := nPos
    ::nHPos      := nHPos
    ::nVPos      := nVPos
+   ::cTheme     := cTheme
+
+   hb_fNameSplit( cSourceFile, @::cPath, @::cFile, @::cExt )
+
+   ::cType := upper( strtran( ::cExt, ".", "" ) )
+   ::cType := iif( ::cType $ "PRG,C,CPP,H,CH", ::cType, "U" )
 
    ::buildTabPage( ::sourceFile )
 
@@ -155,8 +171,9 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos )
 
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::qHiliter := HBQSyntaxHighlighter():new( ::qEdit:document() )
-   SetSyntaxHilighting( ::qEdit, ::qHiliter )
+   IF ::cType != "U"
+      ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
+   ENDIF
 
    Qt_Connect_Signal( ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
    Qt_Connect_Signal( ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
@@ -202,12 +219,9 @@ METHOD IdeEditor:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:buildTabPage( cSource )
-   LOCAL cPath, cFile, cExt
-
-   hb_fNameSplit( cSource, @cPath, @cFile, @cExt )
 
    ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
-   ::oTab:caption   := cFile + cExt
+   ::oTab:caption   := ::cFile + ::cExt
    ::oTab:minimized := .F.
 
    ::oTab:create()
@@ -297,3 +311,59 @@ METHOD IdeEditor:setTabImage()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:showPPO( cFile )
+   LOCAL qEdit, qHiliter
+
+   IF file( cFile )
+      qEdit := QPlainTextEdit():new()
+      qEdit:setPlainText( hb_memoRead( cFile ) )
+      qEdit:setLineWrapMode( QTextEdit_NoWrap )
+      qEdit:setFont( ::oIde:oFont:oWidget )
+      qEdit:ensureCursorVisible()
+
+      qEdit:setWindowTitle( cFile )
+      qEdit:resize( 600, 400 )
+
+      qHiliter := ::oIde:oThemes:SetSyntaxHilighting( qEdit )
+
+      Qt_Connect_Event( qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
+
+      qEdit:show()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:closePPO( qEdit, qHiliter, cFile, lDel )
+
+   Qt_DisConnect_Event( qEdit, QEvent_Close )
+
+   qHiliter:pPtr := 0
+   qEdit:close()
+   qEdit:pPtr := 0
+
+   IF lDel
+      ferase( cFile )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:applyTheme( cTheme )
+
+   IF ::cType != "U"
+      IF empty( cTheme )
+         cTheme := ::oIde:oThemes:selectTheme()
+      ENDIF
+
+      IF ::oIde:oThemes:contains( cTheme )
+         ::cTheme := cTheme
+         ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

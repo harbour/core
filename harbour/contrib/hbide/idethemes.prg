@@ -71,10 +71,21 @@
 
 /*----------------------------------------------------------------------*/
 
+#define THM_ATR_R                                 1
+#define THM_ATR_G                                 2
+#define THM_ATR_B                                 3
+#define THM_ATR_ITALIC                            4
+#define THM_ATR_BOLD                              5
+#define THM_ATR_ULINE                             6
+
+#define THM_NUM_ATTRBS                            6
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION LoadThemes( oIde )
 
    IF empty( oIde:cIniThemes )
-      oIde:cIniThemes := hb_dirBase() + "projects" + hb_OsPathSeparator() + "hbide.thm"
+      oIde:cIniThemes := hb_dirBase() + "hbide.hbt"
    ENDIF
 
    oIde:oThemes := IdeThemes():new( oIde, oIde:cIniThemes ):create()
@@ -86,23 +97,48 @@ FUNCTION LoadThemes( oIde )
 CLASS IdeThemes
 
    VAR    oIde
-   VAR    lEdited                                 INIT .f.
-   VAR    cIniFile                                INIT ""
-   VAR    ini_                                    INIT {}
-   VAR    thm_                                    INIT {}
-   VAR    hControls                               INIT hb_hash()
-   VAR    hItems                                  INIT hb_hash()
-   VAR    oThemes
    VAR    oUI
+   VAR    lDefault                                INIT .t.
+   VAR    cIniFile                                INIT ""
+
+   VAR    aIni                                    INIT {}
+   VAR    aThemes                                 INIT {}
+   VAR    aControls                               INIT {}
+   VAR    aItems                                  INIT {}
+   VAR    aPatterns                               INIT {}
+
+   VAR    nCurTheme                               INIT 1
+   VAR    nCurItem                                INIT 1
+
+   VAR    qEdit
+   VAR    qHiliter
+
+   VAR    lCreating                               INIT .f.
 
    METHOD new()
    METHOD create()
    METHOD destroy()
+   METHOD contains( cTheme )
+   METHOD copy()
    METHOD load()
    METHOD save()
    METHOD fetch()
-   METHOD apply()
-   METHOD parse()
+   METHOD selectTheme()
+   METHOD parseINI()
+   METHOD buildINI()
+
+   METHOD setSyntaxHilighting()
+   METHOD setTheme()
+   METHOD setAttributes()
+   METHOD setForeBackGround()
+   METHOD setSyntaxRule()
+   METHOD setSyntaxFormat()
+   METHOD buildSyntaxFormat()
+   METHOD setMultiLineCommentRule()
+   METHOD getThemeAttribute()
+   METHOD updateAttribute()
+   METHOD updateColor()
+   METHOD selectThemeProc()
 
    ENDCLASS
 
@@ -118,6 +154,7 @@ METHOD IdeThemes:new( oIde, cIniFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:create( oIde, cIniFile )
+   LOCAL s, b_
 
    DEFAULT oIde     TO ::oIde
    DEFAULT cIniFile TO ::cIniFile
@@ -125,8 +162,52 @@ METHOD IdeThemes:create( oIde, cIniFile )
    ::oIde  := oIde
    ::cIniFile := cIniFile
 
+   /* next always load default themes */
+   ::aIni := LoadDefaultThemes()
+   ::parseINI()
+
+   /* first load user defined themes */
    ::load( ::cIniFile )
-   ::parse()
+
+   /* These are the supported patterns - rest will be ignore until implemented */
+
+   /* Compiler Directives */
+   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + upper( e ) + "\b|#" + e + "\b" } )
+   aadd( ::aPatterns, { "PreprocessorDirectives", s } )
+
+   /* Harbour Keywords */
+   b_:= { 'function','return','static','local','default', ;
+          'if','else','elseif','endif','end', ;
+          'docase','case','endcase','otherwise', ;
+          'do','while','exit',;
+          'for','each','next','step','to',;
+          'class','endclass','method','data','var','destructor','inline','assign','access',;
+          'inherit','init','create','virtual',;
+          'begin','sequence','try','catch','always','recover','hb_symbol_unused' }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
+   aadd( ::aPatterns, { "HarbourKeywords"   , s } )
+
+   /* C Language Keywords - Only for C or CPP sources - mutually exclusive with Harbour Sources */
+   b_:= { "char", "class", "const", "double", "enum", "explicit", "friend", "inline", ;
+          "int",  "long", "namespace", "operator", "private", "protected", "public", ;
+          "short", "signals", "signed", "slots", "static", "struct", "template", ;
+          "typedef", "typename", "union", "unsigned", "virtual", "void", "volatile" }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + e + "\b" } )
+   aadd( ::aPatterns, { "CLanguageKeywords" , s                       } )
+
+   s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
+   aadd( ::aPatterns, { "Operators"         , s                       } )
+
+   aadd( ::aPatterns, { "NumericalConstants", "\b[0-9.]+\b"           } )
+
+   aadd( ::aPatterns, { "BracketsAndBraces" , "\(|\)|\{|\}|\[|\]|\|"  } )
+
+   aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" } )
+
+   aadd( ::aPatterns, { "TerminatedStrings" , [\".*\"|\'.*\']         } )
+
+   aadd( ::aPatterns, { "CommentsAndRemarks", "//[^\n]*"              } )
 
    RETURN Self
 
@@ -141,44 +222,212 @@ METHOD IdeThemes:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeThemes:contains( cTheme )
+
+   RETURN ascan( ::aThemes, {|a_| a_[ 1 ] == cTheme } ) > 0
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeThemes:load( cFile )
 
    IF hb_isChar( cFile ) .AND. !empty( cFile ) .AND. file( cFile )
-      ::ini_:= ReadSource( cFile )
-   ENDIF
-   IF empty( ::ini_ )
-      ::ini_:= LoadDefaultThemes()
+      ::aIni:= ReadSource( cFile )
+      ::parseINI()
+      ::lDefault := .f.
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:save( lAs )
+METHOD IdeThemes:save( lAsk )
+   LOCAL cFile, cINI
 
-   DEFAULT lAs TO .f.
+   DEFAULT lAsk TO .f.
+
+   IF ::lDefault
+      lAsk := .t.
+   ENDIF
+
+   IF lAsk
+      cFile := SaveAFile( ::oIde:oDlg, ;
+                          "Select a File to Save Themes (.hbt)", ;
+                          { { "Harbour IDE Themes", "*.hbt" } }, ;
+                          ::cIniFile, ;
+                          "hbt"  )
+   ELSE
+      cFile := ::cIniFile
+   ENDIF
+
+   IF !empty( cFile )
+      cINI := ::buildINI()
+      hb_memowrit( cFile, cINI )
+      IF file( cFile )
+         ::oIde:cIniThemes := cFile
+         ::cIniFile := cFile
+      ENDIF
+   ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:getThemeAttribute( cAttr, cTheme )
+   LOCAL nTheme, aAttr
+
+   IF !empty( cAttr )
+      IF !empty( cTheme ) .and. hb_isChar( cTheme ) .and. ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cTheme } ) ) > 0
+         aAttr := GetKeyValue( ::aThemes[ nTheme, 2 ], cAttr )
+      ENDIF
+   ENDIF
+
+   RETURN aAttr
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:buildSyntaxFormat( aAttr )
+   LOCAL qFormat
+
+   qFormat := QTextCharFormat():new()
+   //
+   qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
+   IF aAttr[ THM_ATR_BOLD ]
+      qFormat:setFontWeight( 1000 )
+   ENDIF
+   qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
+   //
+   qFormat:setForeground( QBrush():new( "QColor", QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+
+   RETURN qFormat
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setForeBackGround( qEdit, cTheme )
+   LOCAL aAttr, s
+
+   IF !empty( aAttr := ::getThemeAttribute( "Background", cTheme ) )
+      s := 'QPlainTextEdit { background-color: rgba( ' + Attr2StrRGB( aAttr ) +", 255 ); "
+      aAttr := ::getThemeAttribute( "UnrecognizedText", cTheme )
+      s += ' color: rgba( ' +  Attr2StrRGB( aAttr ) + ", 255 ); }"
+      qEdit:setStyleSheet( s )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
+   LOCAL aAttr
+
+   IF !empty( aAttr := ::getThemeAttribute( "CommentsAndRemarks", cTheme ) )
+      idedbg( "                     CommentsAndRemarks               " )
+      qHiliter:setHBMultiLineCommentFormat( ::buildSyntaxFormat( aAttr ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
+
+   qHiliter:setHBRule( cName, cPattern, ::buildSyntaxFormat( aAttr ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setSyntaxFormat( qHiliter, cName, aAttr )
+
+   qHiliter:setHBFormat( cName, ::buildSyntaxFormat( aAttr ) )
+   qHiliter:rehighlight()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
+   LOCAL a_, aAttr, qHiliter
+
+   IF empty( cTheme )
+      cTheme := "Pritpal's Favourite"
+   ENDIF
+   DEFAULT lNew   TO .f.           /* Apply one which is already formed */
+
+   HB_SYMBOL_UNUSED( lNew )
+
+   qHiliter := HBQSyntaxHighlighter():new( qEdit:document() )
+
+   FOR EACH a_ IN ::aPatterns
+      IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
+         ::setSyntaxRule( qHiliter, a_[ 1 ], a_[ 2 ], aAttr )
+      ENDIF
+   NEXT
+   ::setMultiLineCommentRule( qHiliter, cTheme )
+   ::setForeBackGround( qEdit, cTheme )
+
+   RETURN qHiliter
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:fetch()
 
    IF empty( ::oUI )
+      ::lCreating := .t.
+
       ::oUI := XbpQtUiLoader():new( ::oIde:oDlg )
       ::oUI:file := ::oIde:resPath + "themes.ui"
       ::oUI:create()
       ::oUI:setWindowFlags( Qt_Sheet )
 
-      ::oUI:signal( "buttonClose", "clicked()", ;
+      ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|o,i| ::nCurTheme := i+1, ::setTheme( i,o ) } )
+      ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|o,i| ::nCurItem  := i+1, ::setAttributes( i, o ) } )
+
+      ::oUI:signal( "buttonColor"   , "clicked()"               , {|| ::updateColor() } )
+      ::oUI:signal( "buttonSave"    , "clicked()"               , {|| ::save( .f. ) } )
+      ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {|| ::save( .t. ) } )
+      ::oUI:signal( "buttonCopy"    , "clicked()"               , {|| ::copy( .t. ) } )
+
+      ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_ITALIC, i, o ) } )
+      ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_BOLD  , i, o ) } )
+      ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_ULINE , i, o ) } )
+
+      ::oUI:signal( "buttonClose"   , "clicked()", ;
             {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := PosAndSize( ::oUI:oWidget ), ::oUI:hide() } )
 
-      ::oIde:setPosByIni( ::oUI:oWidget, ThemesDialogGeometry )
+      ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
 
-      /* Insert Themes */
-      aeval( ::thm_  , {|e| ::oUI:qObj[ "comboThemes" ]:addItem( e[ 1 ] ) } )
-      hb_heval( ::hItems, {|e| ::oUI:qObj[ "comboItems" ]:addItem( e ) } )
+      /* Fill Themes Dialog Values */
+      ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
+      //
+      ::oUI:qObj[ "labelItem"      ]:setText( GetKeyValue( ::aControls, "labelItem"     , "Item"      ) )
+      ::oUI:qObj[ "labelTheme"     ]:setText( GetKeyValue( ::aControls, "labelTheme"    , "Theme"     ) )
+      //
+      ::oUI:qObj[ "checkItalic"    ]:setText( GetKeyValue( ::aControls, "checkItalic"   , "Italic"    ) )
+      ::oUI:qObj[ "checkBold"      ]:setText( GetKeyValue( ::aControls, "checkBold"     , "Bold"      ) )
+      ::oUI:qObj[ "checkUnderline" ]:setText( GetKeyValue( ::aControls, "checkUnderline", "Underline" ) )
+      //
+      ::oUI:qObj[ "buttonColor"    ]:setText( GetKeyValue( ::aControls, "buttonColor"   , "Color"     ) )
+      ::oUI:qObj[ "buttonSave"     ]:setText( GetKeyValue( ::aControls, "buttonSave"    , "Save"      ) )
+      ::oUI:qObj[ "buttonSaveAs"   ]:setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
+      ::oUI:qObj[ "buttonClose"    ]:setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
+      ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
 
+      aeval( ::aThemes, {|e_| ::oUI:qObj[ "comboThemes" ]:addItem( e_[ 1 ] ) } )
+      aeval( ::aItems , {|e_| ::oUI:qObj[ "comboItems"  ]:addItem( e_[ 2 ] ) } )
+
+      ::qEdit := ::oUI:qObj[ "plainTextEdit"  ]
+      ::qEdit:setPlainText( GetSource() )
+      ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
+      ::qEdit:setFont( ::oIde:oFont:oWidget )
+      ::qEdit:ensureCursorVisible()
+
+      ::lCreating := .f.
+
+      ::nCurTheme := 1
+      ::nCurItem  := 1
+
+      ::setTheme()
+      ::setAttributes()
    ENDIF
 
    ::oUI:show()
@@ -187,20 +436,213 @@ METHOD IdeThemes:fetch()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:apply()
+METHOD IdeThemes:copy()
+   LOCAL aItems, qGo, cTheme
+
+   qGo := QInputDialog():new( ::oUI )
+   qGo:setTextValue( ::aThemes[ ::nCurTheme, 1 ] )
+   qGo:setLabelText( "Name of new Theme?" )
+   qGo:setWindowTitle( "Harbour-Qt [ Get a Value ]" )
+
+   qGo:exec()
+
+   cTheme := qGo:textValue()
+
+   IF !empty( cTheme ) .and. ( cTheme != ::aThemes[ ::nCurTheme, 1 ] )
+      aItems := aclone( ::aThemes[ ::nCurTheme ] )
+      aItems[ 1 ] := cTheme
+      aadd( ::aThemes, aItems )
+      ::oUI:qObj[ "comboThemes" ]:addItem( cTheme )
+      ::oUI:qObj[ "comboThemes" ]:setCurrentIndex( len( ::aThemes ) - 1 )
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:parse()
-   LOCAL s, n, cKey, cVal, nPart, nTheme, hTheme
+METHOD IdeThemes:setTheme()
 
-   IF empty( ::ini_ )
+   IF !::lCreating
+      ::qHiliter := ::setSyntaxHilighting( ::qEdit, ::aThemes[ ::nCurTheme, 1 ], .t. )
+      ::setAttributes()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setAttributes()
+   LOCAL aAttr
+
+   IF !::lCreating
+      aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2 ]
+      //
+      ::oUI:qObj[ "checkItalic"    ]:setChecked( aAttr[ THM_ATR_ITALIC ] )
+      ::oUI:qObj[ "checkBold"      ]:setChecked( aAttr[ THM_ATR_BOLD   ] )
+      ::oUI:qObj[ "checkUnderline" ]:setChecked( aAttr[ THM_ATR_ULINE  ] )
+
+      ::oUI:qObj[ "buttonColor" ]:setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
+                                                 "background-color: " + Attr2RGBfn( aAttr ) + ";" )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:updateColor()
+   LOCAL aAttr, oDlg, qColor, s, aF, aB
+
+   aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem ]
+
+   qColor := QColor():new( aAttr[ 2, THM_ATR_R ], aAttr[ 2, THM_ATR_G ], aAttr[ 2, THM_ATR_B ] )
+
+   oDlg := QColorDialog():new( ::oUI:oWidget )
+   oDlg:setWindowTitle( "Select a Color" )
+   oDlg:setCurrentColor( qColor )
+   oDlg:exec()
+
+   qColor:configure( oDlg:currentColor() )
+
+   ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, THM_ATR_R ] := qColor:red()
+   ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, THM_ATR_G ] := qColor:green()
+   ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, THM_ATR_B ] := qColor:blue()
+
+   IF aAttr[ 1 ] $ "Background,UnrecognizedText"
+      aF := GetKeyValue( ::aThemes[ ::nCurTheme, 2 ], "UnrecognizedText" )
+      aB := GetKeyValue( ::aThemes[ ::nCurTheme, 2 ], "Background"       )
+      //
+      s := "QPlainTextEdit { "
+      s += "           color: rgba( " + Attr2StrRGB( aF ) + ", 255 );  "
+      s += "background-color: rgba( " + Attr2StrRGB( aB ) + ", 255 ); }"
+      //
+      ::qEdit:setStyleSheet( s )
+
+   ELSEIF aAttr[ 1 ] == "CommentsAndRemarks"
+      ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
+      ::setMultiLineCommentRule( ::qHiliter, ::aThemes[ ::nCurTheme, 1 ] )
+
+   ELSE
+      ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
+
+   ENDIF
+
+   ::qHiliter:rehighlight()
+   ::setAttributes()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:updateAttribute( nAttr, iState )
+   LOCAL aAttr
+
+   aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem ]
+
+   ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, nAttr ] := ( iState == 2 )
+
+   ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:selectTheme()
+   LOCAL cTheme := ""
+   LOCAL oSL, oStrList, oStrModel, a_, nDone
+
+   oSL := XbpQtUiLoader():new( ::oIde:oDlg )
+   oSL:file := ::oIde:resPath + "selectionlist.ui"
+   oSL:create()
+   oSL:setWindowTitle( "Available Themes" )
+
+   oStrList := QStringList():new()
+   FOR EACH a_ IN ::aThemes
+      oStrList:append( a_[ 1 ] )
+   NEXT
+
+   oStrModel := QStringListModel():new()
+   oStrModel:setStringList( oStrList )
+
+   oSL:qObj[ "listOptions" ]:setModel( oStrModel )
+
+   Qt_Connect_Signal( oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( p, oSL, @cTheme, o ) } )
+
+   nDone := oSL:exec()
+
+   Qt_DisConnect_Signal( oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)" )
+
+   RETURN iif( nDone == 1, cTheme, "" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:selectThemeProc( p, oSL, cTheme )
+   LOCAL nRow, qModalIndex := QModelIndex():configure( p )
+
+   nRow := qModalIndex:row() + 1
+
+   cTheme := ::aThemes[ nRow, 1 ]
+
+   oSL:done( 1 )
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:buildINI()
+   LOCAL a_, b_
+   LOCAL txt_ := {}
+   LOCAL cINI := ""
+
+   aadd( txt_, "#  " )
+   aadd( txt_, "#  Harbour IDE Editor Themes" )
+   aadd( txt_, "#  Version 0.7" )
+   aadd( txt_, "#  Generated on " + dtoc( date() ) + "  " + time() )
+   aadd( txt_, "#  " )
+   aadd( txt_, "   " )
+   aadd( txt_, "[ Controls ]" )
+   aadd( txt_, "   " )
+   FOR EACH a_ IN ::aControls
+      aadd( txt_, pad( a_[ 1 ], 30 ) + " = " + a_[ 2 ] )
+   NEXT
+   aadd( txt_, "   " )
+   aadd( txt_, "   " )
+   aadd( txt_, "[ Items ]" )
+   aadd( txt_, "   " )
+   FOR EACH a_ IN ::aItems
+      aadd( txt_, pad( a_[ 1 ], 30 ) + " = " + a_[ 2 ] )
+   NEXT
+   FOR EACH a_ IN ::aThemes
+      aadd( txt_, "   " )
+      aadd( txt_, "   " )
+      aadd( txt_, "[ Theme : " + a_[ 1 ] + " ]" )
+      aadd( txt_, "   " )
+      FOR EACH b_ IN a_[ 2 ]
+          aadd( txt_, pad( b_[ 1 ], 30 ) + " = " + Attr2Str( b_[ 2 ] ) )
+      NEXT
+   NEXT
+   aadd( txt_, "   " )
+
+   aeval( txt_, {|e| cINI += e + CRLF } )
+
+   RETURN cINI
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:parseINI( lAppend )
+   LOCAL s, n, cKey, cVal, nPart, nTheme, aVal, aV
+
+   IF empty( ::aIni )
       RETURN Self
    ENDIF
 
-   FOR EACH s IN ::ini_
+   DEFAULT lAppend TO .t.
+
+   IF !( lAppend )
+      ::aControls := {}
+      ::aThemes   := {}
+      ::aItems    := {}
+   ENDIF
+
+   FOR EACH s IN ::aIni
       IF !empty( s := alltrim( s ) ) .and. !left( s, 1 ) == "#" /* Comment */
          DO case
          CASE s == "[ Controls ]"
@@ -214,28 +656,48 @@ METHOD IdeThemes:parse()
             HB_TRACE( HB_TR_ALWAYS, cKey )
             IF !empty( cKey )
                nPart := 3
-               IF ( nTheme := ascan( ::thm_, {|e_| e_[ 1 ] == cKey } ) ) == 0
-                  aadd( ::thm_, { cKey, hb_hash() } )
-                  nTheme := len( ::thm_ )
+               IF ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cKey } ) ) == 0
+                  aadd( ::aThemes, { cKey, {} } )
+                  nTheme := len( ::aThemes )
                ENDIF
             ELSE
                nPart := 0
-               nTheme := 0
             ENDIF
          OTHERWISE
             DO CASE
             CASE nPart == 1 /* Controls */
                IF ParseKeyValPair( s, @cKey, @cVal )
-                  ::hControls[ cKey ] := cVal
+                  IF ( n := ascan( ::aControls, cKey ) ) > 0
+                     ::aControls[ n, 2 ] := cVal
+                  ELSE
+                     aadd( ::aControls, { cKey, cVal } )
+                  ENDIF
                ENDIF
             CASE nPart == 2 /* Items   */
                IF ParseKeyValPair( s, @cKey, @cVal )
-                  ::hItems[ cKey ] := cVal
+                  IF ( n := ascan( ::aThemes, cKey ) ) > 0
+                     ::aThemes[ n, 2 ] := cVal
+                  ELSE
+                     aadd( ::aItems, { cKey, cVal } )
+                  ENDIF
                ENDIF
-            CASE nPart == 3 /* Themes  */
-               hTheme := ::thm_[ nTheme, 2 ]
+            CASE nPart == 3 /* Theams  */
                IF ParseKeyValPair( s, @cKey, @cVal )
-                  hTheme[ cKey ] := cVal
+                  aV   := FillAttrbs()
+                  aVal := hb_aTokens( cVal, "," )
+                  FOR n := 1 TO THM_NUM_ATTRBS
+                     s := alltrim( aVal[ n ] )
+                     IF n <= 3
+                        aV[ n ] := val( s )
+                     ELSE
+                        aV[ n ] := lower( s ) == "yes"
+                     ENDIF
+                  NEXT
+                  IF ( n := ascan( ::aThemes[ nTheme, 2 ], {|e_| e_[ 1 ] == cKey } ) ) > 0
+                     ::aThemes[ nTheme, 2, n, 2 ] := aV
+                  ELSE
+                     aadd( ::aThemes[ nTheme, 2 ], { cKey, aV } )
+                  ENDIF
                ENDIF
             ENDCASE
          ENDCASE
@@ -246,67 +708,97 @@ METHOD IdeThemes:parse()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetSyntaxHilighting( qEdit, qHiliter )
-   LOCAL a_, b_, qFormat
-
-   HB_SYMBOL_UNUSED( qEdit )
-
-   /* Compiler Directives */
-   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
-   a_:= {}; aeval( b_, {|e| aadd( a_, "#" + upper( e ) + "\b|#" + e + "\b" ) } )
-   SetSyntaxAttrbs( qHiliter, a_, { 120, 26,213 }, .t., .t., .f. )
-
-   /* Operators */
-   a_:= { "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\." }
-   SetSyntaxAttrbs( qHiliter, a_, { 255,120,  0 }, .f., .f., .f. )
-
-   /* Numerics */
-   a_:= { "\b[0-9.]+\b" }
-   SetSyntaxAttrbs( qHiliter, a_, { 127,127,127 }, .f., .f., .f. )
-
-   /* Parenthesis and Braces */
-   a_:= { "\(|\)|\{|\}|\[|\]|\|" }
-   SetSyntaxAttrbs( qHiliter, a_, { 255,127,200 }, .f., .f., .f. )
-
-   /* Harbour Keywords */
-   b_:= { 'function','return','static','local', ;
-          'if','else','elseif','endif','end', ;
-          'docase','case','endcase','otherwise', ;
-          'do','while','exit',;
-          'for','each','next','step','to',;
-          'class','endclass','method','data','var','destructor','inline','assign','access','inherit','init','create',;
-          'begin','sequence','try','catch','always','recover','default','hb_symbol_unused' }
-   a_:= {}; aeval( b_, {|e| aadd( a_, "\b" + upper( e ) + "\b|\b" + e + "\b" ) } )
-   SetSyntaxAttrbs( qHiliter, a_, { 40,120,240 }, .f., .t., .f. )
-
-   /* Functions in General */
-   a_:= { "\b[A-Za-z0-9_]+(?=\()" }
-   SetSyntaxAttrbs( qHiliter, a_, { 128,0,64 }, .f., .f., .f. )
-
-   /* Strings */
-   a_:= {}
-   aadd( a_, '\".*\"' )
-   aadd( a_, "\'.*\'" )
-   SetSyntaxAttrbs( qHiliter, a_, { 64,128,128 }, .f., .f., .f. )
-
-   /* Single Line Comments */
-   a_:= { "//[^\n]*" }
-   SetSyntaxAttrbs( qHiliter, a_, { 190,190,190 }, .f., .f., .f. )
-
-   qFormat := QTextCharFormat():new()
-   qFormat:setFontItalic( .t. )
-   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( 190,190,190 ) ) )
-   qHiliter:setHBMultiLineCommentFormat( qFormat )
-
-   RETURN nil
+STATIC FUNCTION FillAttrbs()
+   RETURN { 0, 0, 0, .f., .f., .f. }
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION SetSyntaxAttrbs( qHiliter, aRegExp, aRGB, lItalic, lBold, lUnderline )
-   LOCAL qStrList, qFormat
+STATIC FUNCTION Attr2RGBfn( a_ )
+   RETURN "rgba( " + Attr2StrRGB( a_ ) + ", 255 )"
 
-   qStrList := QStringList():new()
-   aeval( aRegExp, {|e| qStrList:append( e ) } )
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Attr2RGBfnRev( a_ )
+   LOCAL b_:= { ( a_[ THM_ATR_R ] + 255 ) % 256, ( a_[ THM_ATR_G ] + 255 ) % 256, ( a_[ THM_ATR_B ] + 255 ) % 256 }
+   RETURN "rgba( " + Attr2StrRGB( b_ ) + ", 255 )"
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Attr2StrRGB( a_ )
+   RETURN hb_ntos( a_[ THM_ATR_R ] ) +","+ hb_ntos( a_[ THM_ATR_G ] ) +","+ hb_ntos( a_[ THM_ATR_B ] )
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Attr2Str( a_ )
+
+   RETURN padl( hb_ntos( a_[ 1 ] ), 4 ) + "," +;
+          padl( hb_ntos( a_[ 2 ] ), 4 ) + "," +;
+          padl( hb_ntos( a_[ 3 ] ), 4 ) + "," +;
+          IF( a_[ 4 ], " Yes", "  No" ) + "," +;
+          IF( a_[ 5 ], " Yes", "  No" ) + "," +;
+          IF( a_[ 6 ], " Yes", "  No" ) + ","
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION GetKeyValue( aKeys, cKey, cDef )
+   LOCAL xVal, n
+
+   DEFAULT cDef TO ""
+
+   IF ( n := ascan( aKeys, {|e_| e_[ 1 ] == cKey } ) ) > 0
+      xVal := aKeys[ n, 2 ]
+   ELSE
+      xVal := cDef
+   ENDIF
+
+   RETURN xVal
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION GetSource()
+   LOCAL s := ""
+   LOCAL txt_:= {}
+
+   aadd( txt_, '/* Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>                 ' )
+   aadd( txt_, ' *                                                                         ' )
+   aadd( txt_, ' * This program is free software; you can redistribute it and/or modify    ' )
+   aadd( txt_, '*/                                                                         ' )
+   aadd( txt_, '#include "hbide.ch"                                                        ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, 'CLASS IdeThemes                                                            ' )
+   aadd( txt_, '   VAR    oIde                                                             ' )
+   aadd( txt_, '   METHOD new()                                                            ' )
+   aadd( txt_, '   ENDCLASS                                                                ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+   aadd( txt_, 'METHOD IdeThemes:new( oIde, cIniFile )                                     ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   ::oIde  := oIde                                                         ' )
+   aadd( txt_, '   ::cIniFile := cIniFile                                                  ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   RETURN Self                                                             ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+   aadd( txt_, '// This function is used to retrieve value given a key ...                 ' )
+   aadd( txt_, 'STATIC FUNCTION GetKeyValue( aKeys, cKey, cDef )                           ' )
+   aadd( txt_, '   LOCAL xVal                                                              ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   DEFAULT cDef TO ""                                                      ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   IF ( n := ascan( aKeys, {|e_| e_[ 1 ] == cKey } ) ) > 0                 ' )
+   aadd( txt_, '      xVal := aKeys[ n, 2 ]                                                ' )
+   aadd( txt_, '   ELSE                                                                    ' )
+   aadd( txt_, '      xVal := cDef                                                         ' )
+   aadd( txt_, '   ENDIF                                                                   ' )
+   aadd( txt_, '   RETURN xVal                                                             ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+
+   aeval( txt_, {|e| s += trim( e ) + CRLF } )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION SetSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic, lBold, lUnderline )
+   LOCAL qFormat
 
    qFormat  := QTextCharFormat():new()
 
@@ -319,293 +811,250 @@ STATIC FUNCTION SetSyntaxAttrbs( qHiliter, aRegExp, aRGB, lItalic, lBold, lUnder
    IF hb_isLogical( lUnderline )
       qFormat:setFontUnderline( lUnderline )
    ENDIF
-   IF hb_isArray( aRGB )
-      qFormat:setForeGround( QBrush():new( "QColor", QColor():new( aRgb[ 1 ], aRgb[ 2 ], aRgb[ 3 ] ) ) )
-   ENDIF
+   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( nR, nG, nB ) ) )
 
-   qHiliter:setHBCompilerDirectives( qStrList, qFormat )
+   qHiliter:setHBRule( cName, cPattern, qFormat )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION SetSyntaxHilighting( qEdit, qHiliter )
+   LOCAL b_, qFormat, s
+
+   HB_SYMBOL_UNUSED( qEdit )
+
+   /* Compiler Directives */
+   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + upper( e ) + "\b|#" + e + "\b" } )
+   SetSyntaxAttrbs( qHiliter, s, "PreprocessorDirectives", 120,  26, 213, .t., .t., .f. )
+
+   /* Harbour Keywords */
+   b_:= { 'function','return','static','local','default', ;
+          'if','else','elseif','endif','end', ;
+          'docase','case','endcase','otherwise', ;
+          'do','while','exit',;
+          'for','each','next','step','to',;
+          'class','endclass','method','data','var','destructor','inline','assign','access',;
+          'inherit','init','create','virtual',;
+          'begin','sequence','try','catch','always','recover','hb_symbol_unused' }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
+   //SetSyntaxAttrbs( qHiliter, s, "HarbourKeywords"     ,  40, 120, 240, .f., .t., .f. )
+   SetSyntaxAttrbs( qHiliter, s, "HarbourKeywords"     , 192,   0,   0, .f., .t., .f. )
+
+   #if 0
+   /* C Language Keywords - Only for C or CPP sources - mutually exclusive with Harbour Sources */
+   b_:= { "char", "class", "const", "double", "enum", "explicit", "friend", "inline", ;
+          "int",  "long", "namespace", "operator", "private", "protected", "public", ;
+          "short", "signals", "signed", "slots", "static", "struct", "template", ;
+          "typedef", "typename", "union", "unsigned", "virtual", "void", "volatile" }
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" } )
+   SetSyntaxAttrbs( qHiliter, s, "CLanguageKeywords"   ,  40, 120, 240, .f., .t., .f. )
+   #endif
+
+   /* Operators */
+   s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
+   SetSyntaxAttrbs( qHiliter, s, "Operators"           , 255, 120,   0, .f., .f., .f. )
+
+   /* Numerics */
+   s := "\b[0-9.]+\b"
+   SetSyntaxAttrbs( qHiliter, s, "NumericConstants"    , 127, 127, 127, .f., .f., .f. )
+
+   /* Brackets and Braces */
+   s := "\(|\)|\{|\}|\[|\]|\|"
+   SetSyntaxAttrbs( qHiliter, s, "BracketsAndBraces"   ,   0,   0, 192, .f., .f., .f. )
+
+   /* Functions in General */
+   s := "\b[A-Za-z0-9_]+(?=\()"
+   SetSyntaxAttrbs( qHiliter, s, "FunctionsBody"       ,   0,   0, 255, .f., .f., .f. )
+
+   /* Strings */
+   s := [\".*\"|\'.*\']
+   SetSyntaxAttrbs( qHiliter, s, "TerminatedStrings"   ,   0, 127,   0, .f., .f., .f. )
+
+   /* Single Line Comments */
+   s := "//[^\n]*"
+   SetSyntaxAttrbs( qHiliter, s, "CommentsAndRemarks"  , 190, 190, 190, .f., .f., .f. )
+
+   /* Multiline comments */
+   qFormat := QTextCharFormat():new()
+   qFormat:setFontItalic( .t. )
+   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( 190,190,190 ) ) )
+   qHiliter:setHBMultiLineCommentFormat( qFormat )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION LoadDefaultThemes()
-   LOCAL ini_:= {}
+   LOCAL aIni := {}
 
    IF .t.
-      aadd( ini_, "[ Controls ]                                                        " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Dialog_Title               = HBIDE - Source Syntax Highlighting     " )
-      aadd( ini_, "Label_Items                = Items                                  " )
-      aadd( ini_, "Label_Theme                = Theme                                  " )
-      aadd( ini_, "Label_Color                = Color                                  " )
-      aadd( ini_, "Check_Italic               = Italic                                 " )
-      aadd( ini_, "Check_Bold                 = Bold                                   " )
-      aadd( ini_, "Check_Underline            = Underline                              " )
-      aadd( ini_, "Button_Text_Save           = Save                                   " )
-      aadd( ini_, "Button_Text_SaveAs         = Save As                                " )
-      aadd( ini_, "Button_Text_Apply          = Apply                                  " )
-      aadd( ini_, "Button_Text_Close          = Close                                  " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "[ Items ]                                                           " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Background                 = Background                             " )
-      aadd( ini_, "BookMarkLineBackground     = Bookmark Line Background               " )
-      aadd( ini_, "BracketsAndBraces          = Brackets and Braces                    " )
-      aadd( ini_, "CommentsAndRemarks         = Comments and Remarks                   " )
-      aadd( ini_, "NumericalConstants         = Numerical Constants                    " )
-      aadd( ini_, "Operators                  = Operators                              " )
-      aadd( ini_, "PreprocessorDirectives     = Preprocessor Directives                " )
-      aadd( ini_, "SelectionBackground        = Selected Text Background               " )
-      aadd( ini_, "TerminatedStringConstants  = Terminated String Constants            " )
-      aadd( ini_, "UnrecognizedText           = Unrecognized Text                      " )
-      aadd( ini_, "UnterminatedStrings        = Unterminated Strings                   " )
-      aadd( ini_, "CurrentLineBackColor       = Current Line Background                " )
-      aadd( ini_, "FunctionsNotInDictionaries = Functions not in Dictionaries          " )
-      aadd( ini_, "ConstantsDictionary        = Constants Dictionary                   " )
-      aadd( ini_, "WAPIDictionary             = WAPI Dictionary                        " )
-      aadd( ini_, "HashDictionary             = Hash Dictionary                        " )
-      aadd( ini_, "CLanguageDictionary        = C-CPP Language Dictionary              " )
-      aadd( ini_, "UserDictionary             = User Dictionary                        " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "[ Theme : Classic ]                                                 " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Background                 = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "BookMarkLineBackground     = 0,255,255     , No, No, No,            " )
-      aadd( ini_, "BracketsAndBraces          = 64,0,0        , No, No, No,            " )
-      aadd( ini_, "CommentsAndRemarks         = 0,128,255     , No, No, No,            " )
-      aadd( ini_, "NumericalConstants         = 0,128,0       , No, No, No,            " )
-      aadd( ini_, "Operators                  = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "PreprocessorDirectives     = 128,128,0     , No, No, No,            " )
-      aadd( ini_, "SelectionBackground        = 255,128,255   , No, No, No,            " )
-      aadd( ini_, "TerminatedStringConstants  = 255,0,0       , No, No, No,            " )
-      aadd( ini_, "UnrecognizedText           = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "UnterminatedStrings        = 255,128,128   , No, No, No,            " )
-      aadd( ini_, "CurrentLineBackColor       = 128,0,0       , No, No, No,            " )
-      aadd( ini_, "FunctionsNotInDictionaries = 0,0,192       , No, No, No,            " )
-      aadd( ini_, "ConstantsDictionary        = 128,0,128     , No, No, No,            " )
-      aadd( ini_, "WAPIDictionary             = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "HashDictionary             = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "CLanguageDictionary        = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "UserDictionary             = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "[ Theme : City Lights ]                                             " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Background                 = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "BookMarkLineBackground     = 128,128,128   , No, No, No,            " )
-      aadd( ini_, "BracketsAndBraces          = 255,128,128   , No, No, No,            " )
-      aadd( ini_, "CommentsAndRemarks         = 255,255,0     , No, No, No,            " )
-      aadd( ini_, "NumericalConstants         = 0,255,255     , No, No, No,            " )
-      aadd( ini_, "Operators                  = 128,255,0     , No, No, No,            " )
-      aadd( ini_, "PreprocessorDirectives     = 255,0,0       , No, No, No,            " )
-      aadd( ini_, "SelectionBackground        = 255,128,255   , No, No, No,            " )
-      aadd( ini_, "TerminatedStringConstants  = 0,255,0       , No, No, No,            " )
-      aadd( ini_, "UnrecognizedText           = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "UnterminatedStrings        = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "CurrentLineBackColor       = 0,0,255       , No, No, No,            " )
-      aadd( ini_, "FunctionsNotInDictionaries = 0,0,192       , No, No, No,            " )
-      aadd( ini_, "ConstantsDictionary        = 128,0,128     , No, No, No,            " )
-      aadd( ini_, "WAPIDictionary             = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "HashDictionary             = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "CLanguageDictionary        = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "UserDictionary             = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "[ Theme : Evening Glamour ]                                         " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Background                 = 0,64,128      , No, No, No,            " )
-      aadd( ini_, "BookMarkLineBackground     = 128,0,255     , No, No, No,            " )
-      aadd( ini_, "BracketsAndBraces          = 128,255,255   , No, No, No,            " )
-      aadd( ini_, "CommentsAndRemarks         = 192,192,192   , No, No, No,            " )
-      aadd( ini_, "NumericalConstants         = 0,255,0       , No, No, No,            " )
-      aadd( ini_, "Operators                  = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "PreprocessorDirectives     = 255,128,192   , No, No, No,            " )
-      aadd( ini_, "SelectionBackground        = 0,128,255     , No, No, No,            " )
-      aadd( ini_, "TerminatedStringConstants  = 255,255,128   , No, No, No,            " )
-      aadd( ini_, "UnrecognizedText           = 255,255,255   , No, No, No,            " )
-      aadd( ini_, "UnterminatedStrings        = 255,128,64    , No, No, No,            " )
-      aadd( ini_, "CurrentLineBackColor       = 128,255,255   , No, No, No,            " )
-      aadd( ini_, "FunctionsNotInDictionaries = 128,255,128   , No, No, No,            " )
-      aadd( ini_, "ConstantsDictionary        = 255,128,192   , No, No, No,            " )
-      aadd( ini_, "WAPIDictionary             = 128,128,64    , No, No, No,            " )
-      aadd( ini_, "HashDictionary             = 0,64,128      , No, No, No,            " )
-      aadd( ini_, "CLanguageDictionary        = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "UserDictionary             = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "[ Theme : Sand Storm ]                                              " )
-      aadd( ini_, "                                                                    " )
-      aadd( ini_, "Background                 = 255,255,192   , No, No, No,            " )
-      aadd( ini_, "BookMarkLineBackground     = 0,255,255     , No, No, No,            " )
-      aadd( ini_, "BracketsAndBraces          = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "CommentsAndRemarks         = 128,128,128   , No, No, No,            " )
-      aadd( ini_, "NumericalConstants         = 0,128,128     , No, No, No,            " )
-      aadd( ini_, "Operators                  = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "PreprocessorDirectives     = 255,0,0       , No, No, No,            " )
-      aadd( ini_, "SelectionBackground        = 255,0,255     , No, No, No,            " )
-      aadd( ini_, "TerminatedStringConstants  = 0,128,0       , No, No, No,            " )
-      aadd( ini_, "UnrecognizedText           = 0,0,0         , No, No, No,            " )
-      aadd( ini_, "UnterminatedStrings        = 128,128,0     , No, No, No,            " )
-      aadd( ini_, "CurrentLineBackColor       = 128,0,0       , No, No, No,            " )
-      aadd( ini_, "FunctionsNotInDictionaries = 0,0,192       , No, No, No,            " )
-      aadd( ini_, "ConstantsDictionary        = 128,0,128     , No, No, No,            " )
-      aadd( ini_, "WAPIDictionary             = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "HashDictionary             = 255,255,192   , No, No, No,            " )
-      aadd( ini_, "CLanguageDictionary        = 0,0,128       , No, No, No,            " )
-      aadd( ini_, "UserDictionary             = 0,0,0         , No, No, No,            " )
-      //
-      aadd( ini_, "                                                                    " )
+      aadd( aIni, "[ Controls ]                                                         " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "dialogTitle                    = HBIDE - Source Syntax Highlighting  " )
+      aadd( aIni, "labelItem                      = Item                                " )
+      aadd( aIni, "labelTheme                     = Theme                               " )
+      aadd( aIni, "checkItalic                    = Italic                              " )
+      aadd( aIni, "checkBold                      = Bold                                " )
+      aadd( aIni, "checkUnderline                 = Underline                           " )
+      aadd( aIni, "buttonColor                    = Color                               " )
+      aadd( aIni, "buttonSave                     = Save                                " )
+      aadd( aIni, "buttonSaveAs                   = Save As                             " )
+      aadd( aIni, "buttonApply                    = Apply                               " )
+      aadd( aIni, "buttonCancel                   = Cancel                              " )
+      aadd( aIni, "buttonCopy                     = Copy                                " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Items ]                                                            " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     = Background                          " )
+      aadd( aIni, "PreprocessorDirectives         = Preprocessor Directives             " )
+      aadd( aIni, "HarbourKeywords                = Harbour Keywords                    " )
+      aadd( aIni, "CLanguageKeywords              = C-CPP Language Keywords             " )
+      aadd( aIni, "Operators                      = Operators                           " )
+      aadd( aIni, "NumericalConstants             = Numerical Constants                 " )
+      aadd( aIni, "BracketsAndBraces              = Brackets and Braces                 " )
+      aadd( aIni, "FunctionsBody                  = Functions Body                      " )
+      aadd( aIni, "TerminatedStrings              = Terminated Strings                  " )
+      aadd( aIni, "CommentsAndRemarks             = Comments and Remarks                " )
+      aadd( aIni, "UnrecognizedText               = Unrecognized Text                   " )
+      aadd( aIni, "BookMarkLineBackground         = BookMark Line Background            " )
+      aadd( aIni, "SelectionBackground            = Selection Background                " )
+      aadd( aIni, "CurrentLineBackground          = Current Line Background             " )
+      aadd( aIni, "UnterminatedStrings            = Unterminated Strings                " )
+      aadd( aIni, "WAPIDictionary                 = WAPIDictionary                      " )
+      aadd( aIni, "UserDictionary                 = UserDictionary                      " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Theme : Pritpal's Favourite ]                                      " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     =  245, 255, 216,  No,  No,  No,      " )
+      aadd( aIni, "PreprocessorDirectives         =   69, 138,   0,  No, Yes,  No,      " )
+      aadd( aIni, "HarbourKeywords                =   54,   0, 162,  No, Yes,  No,      " )
+      aadd( aIni, "CLanguageKeywords              =    0,   0, 128,  No,  No,  No,      " )
+      aadd( aIni, "Operators                      =  172,  39, 255,  No, Yes,  No,      " )
+      aadd( aIni, "NumericalConstants             =    0, 128,   0,  No,  No,  No,      " )
+      aadd( aIni, "BracketsAndBraces              =  255,  85,   0,  No,  No,  No,      " )
+      aadd( aIni, "FunctionsBody                  =   15, 122, 255,  No, Yes,  No,      " )
+      aadd( aIni, "TerminatedStrings              =  255,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "CommentsAndRemarks             =  165, 165, 165,  No,  No,  No,      " )
+      aadd( aIni, "UnrecognizedText               =    0,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "BookMarkLineBackground         =    0, 255, 255,  No,  No,  No,      " )
+      aadd( aIni, "SelectionBackground            =  255, 128, 255,  No,  No,  No,      " )
+      aadd( aIni, "CurrentLineBackground          =  128,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "UnterminatedStrings            =  255, 128, 128,  No,  No,  No,      " )
+      aadd( aIni, "WAPIDictionary                 =    0,   0, 128,  No,  No,  No,      " )
+      aadd( aIni, "UserDictionary                 =    0,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Theme : Classic ]                                                  " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     = 255,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "PreprocessorDirectives         = 128,128,0      ,  No,  No,  No,     " )
+      aadd( aIni, "HarbourKeywords                = 128,0,128      ,  No,  No,  No,     " )
+      aadd( aIni, "CLanguageKeywords              = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "Operators                      = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "NumericalConstants             = 0,128,0        ,  No,  No,  No,     " )
+      aadd( aIni, "BracketsAndBraces              = 64,0,0         ,  No,  No,  No,     " )
+      aadd( aIni, "FunctionsBody                  = 0,0,192        ,  No,  No,  No,     " )
+      aadd( aIni, "TerminatedStrings              = 255,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "CommentsAndRemarks             = 0,128,255      ,  No,  No,  No,     " )
+      aadd( aIni, "UnrecognizedText               = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "BookMarkLineBackground         = 0,255,255      ,  No,  No,  No,     " )
+      aadd( aIni, "SelectionBackground            = 255,128,255    ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 128,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "UnterminatedStrings            = 255,128,128    ,  No,  No,  No,     " )
+      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Theme : City Lights ]                                              " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "PreprocessorDirectives         = 255,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "HarbourKeywords                = 128,0,128      ,  No,  No,  No,     " )
+      aadd( aIni, "CLanguageKeywords              = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "Operators                      = 128,255,0      ,  No,  No,  No,     " )
+      aadd( aIni, "NumericalConstants             = 0,255,255      ,  No,  No,  No,     " )
+      aadd( aIni, "BracketsAndBraces              = 255,128,128    ,  No,  No,  No,     " )
+      aadd( aIni, "FunctionsBody                  = 128,128,255    ,  No,  No,  No,     " )
+      aadd( aIni, "TerminatedStrings              = 0,255,0        ,  No,  No,  No,     " )
+      aadd( aIni, "CommentsAndRemarks             = 255,255,0      ,  No,  No,  No,     " )
+      aadd( aIni, "UnrecognizedText               = 255,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "BookMarkLineBackground         = 128,128,128    ,  No,  No,  No,     " )
+      aadd( aIni, "SelectionBackground            = 255,128,255    ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 0,0,255        ,  No,  No,  No,     " )
+      aadd( aIni, "UnterminatedStrings            = 255,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Theme : Evening Glamour ]                                          " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     = 0,64,128       ,  No,  No,  No,     " )
+      aadd( aIni, "PreprocessorDirectives         = 255,128,192    ,  No,  No,  No,     " )
+      aadd( aIni, "HarbourKeywords                = 255,128,192    ,  No,  No,  No,     " )
+      aadd( aIni, "CLanguageKeywords              = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "Operators                      = 255,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "NumericalConstants             = 0,255,0        ,  No,  No,  No,     " )
+      aadd( aIni, "BracketsAndBraces              = 128,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "FunctionsBody                  = 128,255,128    ,  No,  No,  No,     " )
+      aadd( aIni, "TerminatedStrings              = 255,255,128    ,  No,  No,  No,     " )
+      aadd( aIni, "CommentsAndRemarks             = 192,192,192    ,  No,  No,  No,     " )
+      aadd( aIni, "UnrecognizedText               = 255,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "BookMarkLineBackground         = 128,0,255      ,  No,  No,  No,     " )
+      aadd( aIni, "SelectionBackground            = 0,128,255      ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 128,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "UnterminatedStrings            = 255,128,64     ,  No,  No,  No,     " )
+      aadd( aIni, "WAPIDictionary                 = 128,128,64     ,  No,  No,  No,     " )
+      aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "[ Theme : Sand Storm ]                                               " )
+      aadd( aIni, "                                                                     " )
+      aadd( aIni, "Background                     = 255,255,192    ,  No,  No,  No,     " )
+      aadd( aIni, "PreprocessorDirectives         = 255,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "HarbourKeywords                = 128,0,128      ,  No,  No,  No,     " )
+      aadd( aIni, "CLanguageKeywords              = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "Operators                      = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "NumericalConstants             = 0,128,128      ,  No,  No,  No,     " )
+      aadd( aIni, "BracketsAndBraces              = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "FunctionsBody                  = 0,0,192        ,  No,  No,  No,     " )
+      aadd( aIni, "TerminatedStrings              = 0,128,0        ,  No,  No,  No,     " )
+      aadd( aIni, "CommentsAndRemarks             = 128,128,128    ,  No,  No,  No,     " )
+      aadd( aIni, "UnrecognizedText               = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "BookMarkLineBackground         = 0,255,255      ,  No,  No,  No,     " )
+      aadd( aIni, "SelectionBackground            = 255,0,255      ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 128,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "UnterminatedStrings            = 128,128,0      ,  No,  No,  No,     " )
+      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
+      aadd( aIni, "                                                                     " )
    ENDIF
-   RETURN ini_
+
+   RETURN aIni
 
 /*----------------------------------------------------------------------*/
 #if 0
-                            [Classic]      [CityLights]  [Evening]     [SandStorm]
+                                                       [Classic]      [CityLights]  [Evening]     [SandStorm]
 
-Background                 = 255,255,255   0,0,0         0,64,128      255,255,192
-BookMarkLineBackground     = 0,255,255     128,128,128   128,0,255     0,255,255
-BracketsAndBraces          = 64,0,0        255,128,128   128,255,255   0,0,0
-CommentsAndRemarks         = 0,128,255     255,255,0     192,192,192   128,128,128
-NumericalConstants         = 0,128,0       0,255,255     0,255,0       0,128,128
-Operators                  = 0,0,0         128,255,0     255,255,255   0,0,0
-PreprocessorDirectives     = 128,128,0     255,0,0       255,128,192   255,0,0
-SelectionBackground        = 255,128,255   255,128,255   0,128,255     255,0,255
-TerminatedStringConstants  = 255,0,0       0,255,0       255,255,128   0,128,0
-UnrecognizedText           = 0,0,0         255,255,255   255,255,255   0,0,0
-UnterminatedStrings        = 255,128,128   255,255,255   255,128,64    128,128,0
-CurrentLineBackColor       = 128,0,0       0,0,255       128,255,255   128,0,0
-FunctionsNotInDictionaries = 0,0,192       0,0,192       128,255,128   0,0,192
-ConstantsDictionary        = 128,0,128     128,0,128     255,128,192   128,0,128
-WAPIDictionary             = 0,0,128       0,0,128       128,128,64    0,0,128
-HashDictionary             = 255,255,255   0,0,0         0,64,128      255,255,192
-CLanguageDictionary        = 0,0,128       0,0,128       0,0,128       0,0,128
-UserDictionary             = 0,0,0         0,0,0         0,0,0         0,0,0
-
-
-[Controls]
-
-Dialog_Title               = HBIDE - Source Syntax Highlighting
-Label_Items                = Items
-Label_Theme                = Theme
-Label_Color                = Color
-Check_Italic               = Italic
-Check_Bold                 = Bold
-Check_Underline            = Underline
-Button_Text_Save           = Save
-Button_Text_SaveAs         = Save As
-Button_Text_Apply          = Apply
-Button_Text_Cancel         = Cancel
-
-[Items]
-
-Background                 = Background
-BookMarkLineBackground     = Bookmark Line Background
-BracketsAndBraces          = Brackets and Braces
-CommentsAndRemarks         = Comments and Remarks
-NumericalConstants         = Numerical Constants
-Operators                  = Operators
-PreprocessorDirectives     = Preprocessor Directives
-SelectionBackground        = Selected Text Background
-TerminatedStringConstants  = Terminated String Constants
-UnrecognizedText           = Unrecognized Text
-UnterminatedStrings        = Unterminated Strings
-CurrentLineBackColor       = Current Line Background
-FunctionsNotInDictionaries = Functions not in Dictionaries
-ConstantsDictionary        = Constants Dictionary
-WAPIDictionary             = WAPI Dictionary
-HashDictionary             = Hash Dictionary
-CLanguageDictionary        = C-CPP Language Dictionary
-UserDictionary             = User Dictionary
-
-
-[Theme : Classic]
-
-Background                 = 255,255,255   , No, No, No,
-BookMarkLineBackground     = 0,255,255     , No, No, No,
-BracketsAndBraces          = 64,0,0        , No, No, No,
-CommentsAndRemarks         = 0,128,255     , No, No, No,
-NumericalConstants         = 0,128,0       , No, No, No,
-Operators                  = 0,0,0         , No, No, No,
-PreprocessorDirectives     = 128,128,0     , No, No, No,
-SelectionBackground        = 255,128,255   , No, No, No,
-TerminatedStringConstants  = 255,0,0       , No, No, No,
-UnrecognizedText           = 0,0,0         , No, No, No,
-UnterminatedStrings        = 255,128,128   , No, No, No,
-CurrentLineBackColor       = 128,0,0       , No, No, No,
-FunctionsNotInDictionaries = 0,0,192       , No, No, No,
-ConstantsDictionary        = 128,0,128     , No, No, No,
-WAPIDictionary             = 0,0,128       , No, No, No,
-HashDictionary             = 255,255,255   , No, No, No,
-CLanguageDictionary        = 0,0,128       , No, No, No,
-UserDictionary             = 0,0,0         , No, No, No,
-
-
-[Theme : City Lights]
-
-Background                 = 0,0,0         , No, No, No,
-BookMarkLineBackground     = 128,128,128   , No, No, No,
-BracketsAndBraces          = 255,128,128   , No, No, No,
-CommentsAndRemarks         = 255,255,0     , No, No, No,
-NumericalConstants         = 0,255,255     , No, No, No,
-Operators                  = 128,255,0     , No, No, No,
-PreprocessorDirectives     = 255,0,0       , No, No, No,
-SelectionBackground        = 255,128,255   , No, No, No,
-TerminatedStringConstants  = 0,255,0       , No, No, No,
-UnrecognizedText           = 255,255,255   , No, No, No,
-UnterminatedStrings        = 255,255,255   , No, No, No,
-CurrentLineBackColor       = 0,0,255       , No, No, No,
-FunctionsNotInDictionaries = 0,0,192       , No, No, No,
-ConstantsDictionary        = 128,0,128     , No, No, No,
-WAPIDictionary             = 0,0,128       , No, No, No,
-HashDictionary             = 0,0,0         , No, No, No,
-CLanguageDictionary        = 0,0,128       , No, No, No,
-UserDictionary             = 0,0,0         , No, No, No,
-
-
-[Theme : Evening Glamour]
-
-Background                 = 0,64,128      , No, No, No,
-BookMarkLineBackground     = 128,0,255     , No, No, No,
-BracketsAndBraces          = 128,255,255   , No, No, No,
-CommentsAndRemarks         = 192,192,192   , No, No, No,
-NumericalConstants         = 0,255,0       , No, No, No,
-Operators                  = 255,255,255   , No, No, No,
-PreprocessorDirectives     = 255,128,192   , No, No, No,
-SelectionBackground        = 0,128,255     , No, No, No,
-TerminatedStringConstants  = 255,255,128   , No, No, No,
-UnrecognizedText           = 255,255,255   , No, No, No,
-UnterminatedStrings        = 255,128,64    , No, No, No,
-CurrentLineBackColor       = 128,255,255   , No, No, No,
-FunctionsNotInDictionaries = 128,255,128   , No, No, No,
-ConstantsDictionary        = 255,128,192   , No, No, No,
-WAPIDictionary             = 128,128,64    , No, No, No,
-HashDictionary             = 0,64,128      , No, No, No,
-CLanguageDictionary        = 0,0,128       , No, No, No,
-UserDictionary             = 0,0,0         , No, No, No,
-
-
-[Theme : Sand Storm]
-
-Background                 = 255,255,192   , No, No, No,
-BookMarkLineBackground     = 0,255,255     , No, No, No,
-BracketsAndBraces          = 0,0,0         , No, No, No,
-CommentsAndRemarks         = 128,128,128   , No, No, No,
-NumericalConstants         = 0,128,128     , No, No, No,
-Operators                  = 0,0,0         , No, No, No,
-PreprocessorDirectives     = 255,0,0       , No, No, No,
-SelectionBackground        = 255,0,255     , No, No, No,
-TerminatedStringConstants  = 0,128,0       , No, No, No,
-UnrecognizedText           = 0,0,0         , No, No, No,
-UnterminatedStrings        = 128,128,0     , No, No, No,
-CurrentLineBackColor       = 128,0,0       , No, No, No,
-FunctionsNotInDictionaries = 0,0,192       , No, No, No,
-ConstantsDictionary        = 128,0,128     , No, No, No,
-WAPIDictionary             = 0,0,128       , No, No, No,
-HashDictionary             = 255,255,192   , No, No, No,
-CLanguageDictionary        = 0,0,128       , No, No, No,
-UserDictionary             = 0,0,0         , No, No, No,
+Background                 = Background                255,255,255   0,0,0         0,64,128      255,255,192
+PreprocessorDirectives     = Preprocessor Directives   128,128,0     255,0,0       255,128,192   255,0,0
+HarbourKeywords            = Harbour Keywords          128,0,128     128,0,128     255,128,192   128,0,128
+CLanguageKeywords          = C-CPP Language Keywords   0,0,128       0,0,128       0,0,128       0,0,128
+Operators                  = Operators                 0,0,0         128,255,0     255,255,255   0,0,0
+NumericalConstants         = Numerical Constants       0,128,0       0,255,255     0,255,0       0,128,128
+BracketsAndBraces          = Brackets and Braces       64,0,0        255,128,128   128,255,255   0,0,0
+FunctionsBody              = Functions Body            0,0,192       128,128,255   128,255,128   0,0,192
+TerminatedStrings          = Terminated Strings        255,0,0       0,255,0       255,255,128   0,128,0
+CommentsAndRemarks         = Comments and Remarks      0,128,255     255,255,0     192,192,192   128,128,128
+BookMarkLineBackground     = BookMark Line Background  0,255,255     128,128,128   128,0,255     0,255,255
+SelectionBackground        = Selection Background      255,128,255   255,128,255   0,128,255     255,0,255
+CurrentLineBackground      = Current Line Background   128,0,0       0,0,255       128,255,255   128,0,0
+UnrecognizedText           = Unrecognized Text         0,0,0         255,255,255   255,255,255   0,0,0
+UnterminatedStrings        = Unterminated Strings      255,128,128   255,255,255   255,128,64    128,128,0
+WAPIDictionary             = WAPIDictionary            0,0,128       0,0,128       128,128,64    0,0,128
+UserDictionary             = UserDictionary            0,0,0         0,0,0         0,0,0         0,0,0
 
 #endif
 

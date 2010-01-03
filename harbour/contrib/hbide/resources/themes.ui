@@ -6,186 +6,198 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>375</height>
+    <width>430</width>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>HBIDE - Source Syntax Highlighting</string>
   </property>
-  <widget class="QPlainTextEdit" name="plainTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>40</y>
-     <width>373</width>
-     <height>229</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelItem">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>284</y>
-     <width>46</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Item</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelTheme">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>12</y>
-     <width>46</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Theme</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboItems">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>280</y>
-     <width>221</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonColor">
-   <property name="geometry">
-    <rect>
-     <x>308</x>
-     <y>280</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Color</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboThemes">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>8</y>
-     <width>221</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonSave">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>344</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonSaveAs">
-   <property name="geometry">
-    <rect>
-     <x>112</x>
-     <y>344</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save As</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonApply">
-   <property name="geometry">
-    <rect>
-     <x>212</x>
-     <y>344</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Apply</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonClose">
-   <property name="geometry">
-    <rect>
-     <x>308</x>
-     <y>344</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkItalic">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>308</y>
-     <width>53</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Italic</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBold">
-   <property name="geometry">
-    <rect>
-     <x>144</x>
-     <y>308</y>
-     <width>53</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Bold</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkUnderline">
-   <property name="geometry">
-    <rect>
-     <x>216</x>
-     <y>308</y>
-     <width>71</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Underline</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>324</y>
-     <width>397</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0,0,0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="labelTheme">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Theme</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboThemes"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="labelItem">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Item</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboItems"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonColor">
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Color</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>50</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBold">
+         <property name="text">
+          <string>Bold</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkItalic">
+         <property name="text">
+          <string>Italic</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkUnderline">
+         <property name="text">
+          <string>Underline</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>120</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="buttonSave">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSaveAs">
+         <property name="text">
+          <string>Save As</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonCopy">
+         <property name="text">
+          <string>Copy</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonApply">
+         <property name="text">
+          <string>Apply</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonClose">
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

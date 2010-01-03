@@ -640,7 +640,7 @@ METHOD HbIde:getCurCursor()
 //                          Source Editor
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
+METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
    LOCAL n
 
    IF !Empty( cSourceFile ) .AND. !( IsValidText( cSourceFile ) )
@@ -656,7 +656,6 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
    DEFAULT nPos        TO 0
    DEFAULT nHPos       TO 0
    DEFAULT nVPos       TO 0
-   DEFAULT lPPO        TO .F.
 
    * An empty filename is a request to create a new empty file...
    IF Empty( cSourceFile )
@@ -667,13 +666,10 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, lPPO )
 
    IF n > 0
       ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
-      IF lPPO
-         ::aTabs[ n, TAB_QEDIT ]:setPlainText( hb_memoRead( cSourceFile ) )
-      END
       RETURN Self
    END
 
-   aadd( ::aEdits, IdeEditor():new():create( Self, cSourceFile, nPos, nHPos, nVPos ) )
+   aadd( ::aEdits, IdeEditor():new():create( Self, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
 
    RETURN Self
 
@@ -684,7 +680,8 @@ METHOD HbIde:loadSources()
 
    IF !empty( ::aIni[ INI_FILES ] )
       FOR i := 1 TO len( ::aIni[ INI_FILES ] )
-         ::editSource( ::aIni[ INI_FILES, i, 1 ], ::aIni[ INI_FILES, i, 2 ], ::aIni[ INI_FILES, i, 3 ], ::aIni[ INI_FILES, i, 4 ] )
+         ::editSource( ::aIni[ INI_FILES, i, 1 ], ::aIni[ INI_FILES, i, 2 ], ;
+                       ::aIni[ INI_FILES, i, 3 ], ::aIni[ INI_FILES, i, 4 ], ::aIni[ INI_FILES, i, 5 ] )
       NEXT
       ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
    ENDIF
@@ -1035,9 +1032,11 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       cSource := ::aProjData[ n, 5 ]
       n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } )
       //
-      aadd( aPops, { "Save" , {|| ::saveSource( n, .f. ) } } )
+      aadd( aPops, { "Save"       , {|| ::saveSource( n, .f. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close", {|| ::closeSource( n ) } } )
+      aadd( aPops, { "Close"      , {|| ::closeSource( n ) } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Apply Theme", {|| ::aTabs[ n, TAB_OEDITOR ]:applyTheme() } } )
       //
       ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
@@ -1777,7 +1776,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ENDIF
 
    IF lPPO .AND. File( cFileName )
-      ::editSource( cFileName, nil, nil, nil, .T. )
+      ::aEdits[ 1 ]:showPPO( cFileName )
    ENDIF
 
    RETURN Self

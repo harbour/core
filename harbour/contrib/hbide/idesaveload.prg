@@ -71,7 +71,7 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION saveINI( oIde )
-   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qSet
+   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr, qSet, cTheme
    LOCAL nTabs := oIde:qTabWidget:count()
    //LOCAL qBArray
 
@@ -122,10 +122,13 @@ FUNCTION saveINI( oIde )
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
       oIde:qCursor := QTextCursor():configure( qEdit:textCursor() )
 
+      cTheme := oIde:aTabs[ nTab, TAB_OEDITOR ]:cTheme
+
       aadd( txt_, oIde:aTabs[ nTab, TAB_SOURCEFILE ] +","+ ;
                   hb_ntos( oIde:qCursor:position() ) +","+ ;
                   hb_ntos( qHScr:value() ) + "," + ;
-                  hb_ntos( qVScr:value() ) + ","   ;
+                  hb_ntos( qVScr:value() ) + "," + ;
+                  cTheme + "," ;
            )
    NEXT
    aadd( txt_, " " )
@@ -206,15 +209,17 @@ FUNCTION loadINI( oIde, cHbideIni )
 
                CASE nPart == INI_FILES
                   a_:= hb_atokens( s, "," )
-                  asize( a_, 4 )
+                  asize( a_, 5 )
                   DEFAULT a_[ 1 ] TO ""
                   DEFAULT a_[ 2 ] TO ""
                   DEFAULT a_[ 3 ] TO ""
                   DEFAULT a_[ 4 ] TO ""
+                  DEFAULT a_[ 5 ] TO ""
                   //
                   a_[ 2 ] := val( a_[ 2 ] )
                   a_[ 3 ] := val( a_[ 3 ] )
                   a_[ 4 ] := val( a_[ 4 ] )
+                  a_[ 5 ] := a_[ 5 ]                  /* Just for reference */
                   aadd( oIde:aIni[ nPart ], a_ )
 
                CASE nPart == INI_FIND

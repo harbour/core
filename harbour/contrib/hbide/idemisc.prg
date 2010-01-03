@@ -193,7 +193,7 @@ FUNCTION GetYesNo( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir )
+FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a File"
@@ -205,8 +205,31 @@ FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir )
    oDlg:title       := cTitle
    oDlg:center      := .t.
    oDlg:fileFilters := aFlt
+   IF hb_isChar( cDftSuffix )
+      oDlg:oWidget:setDefaultSuffix( cDftSuffix )
+   ENDIF
 
    cFile := oDlg:open( cDftDir, , .f. )
+
+   RETURN cFile
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION SaveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
+   LOCAL oDlg, cFile
+
+   DEFAULT cTitle  TO "Please Select a File"
+
+   oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
+
+   oDlg:title       := cTitle
+   oDlg:center      := .t.
+   oDlg:fileFilters := aFlt
+   IF hb_isChar( cDftSuffix )
+      oDlg:oWidget:setDefaultSuffix( cDftSuffix )
+   ENDIF
+
+   cFile := oDlg:saveAs( cDftFile, .f., .t. )
 
    RETURN cFile
 
@@ -669,6 +692,12 @@ FUNCTION ParseKeyValPair( s, cKey, cVal )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION IdeDbg( ... )
+   HB_TRACE( HB_TR_ALWAYS, ... )
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_PathProc( cPathR, cPathA )
    LOCAL cDirA
    LOCAL cDirR, cDriveR, cNameR, cExtR
@@ -690,3 +719,6 @@ FUNCTION hbide_PathProc( cPathR, cPathA )
    ENDIF
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
+/*----------------------------------------------------------------------*/
+
