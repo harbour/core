@@ -230,7 +230,7 @@ METHOD IdeThemes:contains( cTheme )
 
 METHOD IdeThemes:load( cFile )
 
-   IF hb_isChar( cFile ) .AND. !empty( cFile ) .AND. file( cFile )
+   IF hb_isChar( cFile ) .AND. !empty( cFile ) .AND. hb_FileExists( cFile )
       ::aIni:= ReadSource( cFile )
       ::parseINI()
       ::lDefault := .f.
@@ -262,7 +262,7 @@ METHOD IdeThemes:save( lAsk )
    IF !empty( cFile )
       cINI := ::buildINI()
       hb_memowrit( cFile, cINI )
-      IF file( cFile )
+      IF hb_FileExists( cFile )
          ::oIde:cIniThemes := cFile
          ::cIniFile := cFile
       ENDIF

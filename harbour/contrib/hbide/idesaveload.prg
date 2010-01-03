@@ -189,14 +189,9 @@ FUNCTION loadINI( oIde, cHbideIni )
 
    DEFAULT cHbideIni TO "hbide.ini"
 
-   cHbideIni := lower( cHbideIni )
    lValid  := .F.
 
-   IF !file( cHbideIni )
-      cHbideIni := hb_dirBase() + "hbide.ini"
-   ENDIF
-
-   IF !file( cHbideIni )
+   IF ! hb_FileExists( cHbideIni )
       cHbideIni := hb_dirBase() + "hbide.ini"
    ENDIF
 
@@ -209,7 +204,7 @@ FUNCTION loadINI( oIde, cHbideIni )
        oIde:aIni[n] := Array(0)
    NEXT
 
-   IF file( oIde:cProjIni )
+   IF hb_FileExists( oIde:cProjIni )
       aElem := ReadSource( oIde:cProjIni )
 
       FOR EACH s IN aElem

@@ -7,8 +7,8 @@
  * QT wrapper main header
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -63,107 +63,6 @@
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbevents.h"
-
-#include <QVariant>
-
-/*----------------------------------------------------------------------*/
-
-typedef struct
-{
-   HBEvents * t_events;
-} HB_EVENTS, * PHB_EVENTS;
-
-static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
-
-#define HB_QTTHREAD_EVENTS()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
-
-/*----------------------------------------------------------------------*/
-
-static HBEvents * qt_getEventFilter( void )
-{
-   PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
-
-   if( ! p_events->t_events )
-      p_events->t_events = new HBEvents();
-
-   return p_events->t_events;
-}
-
-/* TOFIX: Possible GPF is below pointer is used by .prg after release. */
-HB_FUNC( QT_GETEVENTFILTER )
-{
-   hb_retptr( qt_getEventFilter() );
-}
-
-/* TOFIX: Leak if .prg code doesn't call this explicitly. */
-HB_FUNC( QT_EVENTS_DESTROY )
-{
-   PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
-
-   if( p_events->t_events )
-   {
-      p_events->t_events->~HBEvents();
-      p_events->t_events = NULL;
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( QT_CONNECT_EVENT )
-{
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );          /* get sender    */
-
-   if( object )
-   {
-      int        type      = hb_parni( 2 );
-      PHB_ITEM   codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-      HBEvents * t_events  = qt_getEventFilter();
-
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-      t_events->listBlock << codeblock;
-      /* TOFIX: Reference to GC collected pointer is stored. */
-      t_events->listObj   << object;
-
-      object->setProperty( prop, ( int ) t_events->listBlock.size() );
-
-      hb_retl( HB_TRUE );
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
-HB_FUNC( QT_DISCONNECT_EVENT )
-{
-   HB_BOOL   bRet   = HB_FALSE;
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
-
-   if( object )
-   {
-      int        type     = hb_parni( 2 );
-      HBEvents * t_events = qt_getEventFilter();
-
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-      int i = object->property( prop ).toInt();
-      if( i > 0 && i <= t_events->listBlock.size() )
-      {
-         hb_itemRelease( t_events->listBlock.at( i - 1 ) );
-         t_events->listBlock[ i - 1 ] = NULL;
-         t_events->listObj[ i - 1 ]   = NULL;
-         object->setProperty( prop, QVariant() );
-         bRet = HB_TRUE;
-
-         HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_EVENT: %i", type ) );
-      }
-   }
-
-   hb_retl( bRet );
-}
-
-/*----------------------------------------------------------------------*/
 
 #include <QPointer>
 #include <QVariant>
@@ -222,14 +121,6 @@ static void * hbqt_gcAllocate_HBEvents( void * pObj )
    new( & p->pq ) QPointer< HBEvents >( ( HBEvents * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBEvents                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
-}
-
-/*----------------------------------------------------------------------*/
-
-/* TOFIX: Possible GPF is below pointer is used by .prg after release. */
-HB_FUNC( QT_EVENTS_PTR )
-{
-   hb_retptr( hbqt_par_HBEvents( 1 ) );
 }
 
 /*----------------------------------------------------------------------*/

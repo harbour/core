@@ -143,7 +143,7 @@ FUNCTION CreateTarget( cFile, txt_ )
       fClose( hHandle )
    ENDIF
 
-   RETURN file( cFile )
+   RETURN hb_FileExists( cFile )
 
 /*----------------------------------------------------------------------*/
 

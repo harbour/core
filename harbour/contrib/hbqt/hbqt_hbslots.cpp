@@ -7,8 +7,8 @@
  * QT wrapper main header
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,40 +64,9 @@
 
 #include "hbqt_hbslots.h"
 
-/*----------------------------------------------------------------------*/
-
-typedef struct
-{
-   HBSlots * t_slots;
-} HB_SLOTS, * PHB_SLOTS;
-
-static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
-
-#define HB_QTTHREAD_SLOTS()       ( ( PHB_SLOTS ) hb_stackGetTSD( &s_slots ) )
+#include <QPointer>
 
 /*----------------------------------------------------------------------*/
-
-static HBSlots * qt_getEventSlots( void )
-{
-   PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
-
-   if( ! p_slots->t_slots )
-      p_slots->t_slots = new HBSlots();
-
-   return p_slots->t_slots;
-}
-
-/* TOFIX: Leak if .prg code doesn't call this explicitly. */
-HB_FUNC( QT_SLOTS_DESTROY )
-{
-   PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
-
-   if( p_slots->t_slots )
-   {
-      p_slots->t_slots->~HBSlots();
-      p_slots->t_slots = NULL;
-   }
-}
 
 static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots )
 {
@@ -351,62 +320,6 @@ static bool disconnect_signal( QObject * object, const char * signal )
 }
 
 /*----------------------------------------------------------------------*/
-/*
- * Harbour function to connect signals with slots
- */
-HB_FUNC( QT_CONNECT_SIGNAL )
-{
-   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );          /* get sender    */
-
-   if( object )
-   {
-      QString   signal = hb_parcx( 2 );                             /* get signal    */
-      HBSlots * t_slots = qt_getEventSlots();
-
-      if( connect_signal( signal, object, t_slots ) )
-      {
-         PHB_ITEM  pBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
-         t_slots->listBlock << pBlock;
-         object->setProperty( hb_parcx( 2 ), ( int ) t_slots->listBlock.size() );
-         hb_retl( HB_TRUE );
-      }
-      else
-         hb_retl( HB_FALSE );
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
-/*
- * harbour function to disconnect signals
- */
-HB_FUNC( QT_DISCONNECT_SIGNAL )
-{
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
-   bool bFreed = false;
-
-   if( object )
-   {
-      HBSlots * t_slots = qt_getEventSlots();
-      const char * signal = hb_parcx( 2 );
-      int i = object->property( signal ).toInt();
-
-      if( i > 0 && i <= t_slots->listBlock.size() )
-      {
-         hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
-         t_slots->listBlock[ i - 1 ] = NULL;
-
-         bFreed = disconnect_signal( object, signal );
-
-         //HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal ) );
-      }
-   }
-   hb_retl( bFreed );
-}
-
-/*----------------------------------------------------------------------*/
-
-#include <QPointer>
 
 typedef struct
 {

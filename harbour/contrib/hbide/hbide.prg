@@ -674,7 +674,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
       RETURN Self
    ENDIF
 
-   IF !Empty( cSourceFile ) .AND. !File( cSourceFile )
+   IF !Empty( cSourceFile ) .AND. !hb_FileExists( cSourceFile )
       MsgBox( 'File not found: ' + cSourceFile )
       RETURN Self
    ENDIF
@@ -1078,7 +1078,7 @@ METHOD HbIde:appendProjectInTree( aPrj )
          aSrc := aPrj[ PRJ_PRP_SOURCES, 2 ]
          FOR j := 1 TO len( aSrc )
             hb_fNameSplit( aSrc[ j ], @cPath, @cFile, @cExt )
-            cPathA := lower( strtran( cPath, "\", "/" ) )
+            cPathA := strtran( cPath, "\", "/" )
             IF ( nPath := ascan( aPath, {|e_| e_[ 1 ] == cPathA } ) ) == 0
                oPP := oParent:addItem( cPath )
                aadd( ::aProjData, { oPP, "Path", oParent, cPathA, cProject } )
@@ -1424,7 +1424,7 @@ METHOD HbIde:loadUI( cUi )
    LOCAL cUiFull := s_resPath + cUi + ".ui"
    LOCAL qDialog, qUiLoader, qFile
 
-   IF file( cUiFull )
+   IF hb_FileExists( cUiFull )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
@@ -1487,7 +1487,7 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch, lUpdateTree )
    IF lFetch
       ::cSaveTo := ""
       ::fetchProjectProperties()
-      IF !empty( ::cSaveTo ) .and. file( ::cSaveTo )
+      IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
          cProject := ::cSaveTo
          /* Reload from file */
          ::aPrjProps := fetchHbiStructFromFile( cProject )
@@ -1977,7 +1977,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          IF ( nResult == 0 ) .AND. ( lLaunch )
             cTmp += CRLF
 
-            IF !File( cTargetFN )
+            IF !hb_FileExists( cTargetFN )
                cTmp += "Launch application error: file not found " + cTargetFN + "!"
 
             ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
@@ -2004,7 +2004,7 @@ METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       FErase( cHbpPath )
    ENDIF
 
-   IF lPPO .AND. File( cFileName )
+   IF lPPO .AND. hb_FileExists( cFileName )
       ::aEdits[ 1 ]:showPPO( cFileName )
    ENDIF
 
