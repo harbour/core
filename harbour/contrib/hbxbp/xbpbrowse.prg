@@ -593,7 +593,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connect( ::oTableView, "mousePressEvent()"         , {|o,p   | ::exeBlock( 2, p, o ) } )
    ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|o,p   | ::exeBlock( 3, p, o ) } )
    ::connect( ::oTableView, "wheelEvent()"              , {|o,p   | ::exeBlock( 4, p, o ) } )
-   ::connect( ::oTableView:pPtr, "scrollContentsBy(int,int)" , {|o,p,p1| ::exeBlock(11, p, p1, o ) } )
+   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|o,p,p1| ::exeBlock(11, p, p1, o ) } )
 
    /* Finetune Horizontal Scrollbar */
    ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )

@@ -401,8 +401,7 @@ METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
    IF ( lSuccess := Qt_Slots_Connect( ::pSlots, pWidget, cSignal, bBlock ) )
       aadd( ::aConnections, { pWidget, cSignal } )
    ELSE
-      // HB_TRACE( HB_TR_ALWAYS, ( "                         Connection failed %s", cSignal ) )
-      HB_TRACE( HB_TR_ALWAYS, ( "                " + cSignal ) )
+      HB_TRACE( HB_TR_ALWAYS, ( "                " + cSignal + " : Failed!" ) )
    ENDIF
 
    RETURN lSuccess
@@ -415,7 +414,6 @@ METHOD XbpWindow:disconnect()
    IF len( ::aConnections ) > 0
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
-         // HBXBP_DEBUG( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aConnections := {}
    ENDIF
@@ -427,7 +425,7 @@ METHOD XbpWindow:disconnect()
 METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Events_Connect( ::pEvents, hbqt_ptr( pWidget ), nEvent, bBlock ) )
+   IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
    ENDIF
 
@@ -497,7 +495,6 @@ METHOD XbpWindow:destroy()
    IF len( ::aEConnections ) > 0
       FOR EACH e_ IN ::aEConnections
          ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
-//         HBXBP_DEBUG( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aEConnections := {}
       ::oWidget:removeEventFilter( QT_GetEventFilter() )
