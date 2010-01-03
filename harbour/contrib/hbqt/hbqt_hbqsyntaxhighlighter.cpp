@@ -67,27 +67,27 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
    : QSyntaxHighlighter( parent )
 {
    HighlightingRule rule;
-
+   #if 0
    keywordFormat.setForeground( Qt::darkBlue );
    keywordFormat.setFontWeight( QFont::Bold );
    QStringList keywordPatterns;
-   keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
-                   << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
-                   << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
-                   << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
-                   << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
-                   << "\\bshort\\b" << "\\bsignals\\b" << "\\bsigned\\b"
-                   << "\\bslots\\b" << "\\bstatic\\b" << "\\bstruct\\b"
-                   << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
-                   << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
-                   << "\\bvoid\\b" << "\\bvolatile\\b";
+   keywordPatterns << "\\bchar\\b"     << "\\bclass\\b"     << "\\bconst\\b"
+                   << "\\bdouble\\b"   << "\\benum\\b"      << "\\bexplicit\\b"
+                   << "\\bfriend\\b"   << "\\binline\\b"    << "\\bint\\b"
+                   << "\\blong\\b"     << "\\bnamespace\\b" << "\\boperator\\b"
+                   << "\\bprivate\\b"  << "\\bprotected\\b" << "\\bpublic\\b"
+                   << "\\bshort\\b"    << "\\bsignals\\b"   << "\\bsigned\\b"
+                   << "\\bslots\\b"    << "\\bstatic\\b"    << "\\bstruct\\b"
+                   << "\\btemplate\\b" << "\\btypedef\\b"   << "\\btypename\\b"
+                   << "\\bunion\\b"    << "\\bunsigned\\b"  << "\\bvirtual\\b"
+                   << "\\bvoid\\b"     << "\\bvolatile\\b";
    foreach ( const QString &pattern, keywordPatterns )
    {
       rule.pattern = QRegExp( pattern );
       rule.format = keywordFormat;
       highlightingRules.append( rule );
    }
-
+   #endif
    classFormat.setFontWeight( QFont::Bold );
    classFormat.setForeground( Qt::darkMagenta );
    rule.pattern = QRegExp( "\\bQ[A-Za-z]+\\b" );
@@ -98,6 +98,29 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
 
    commentStartExpression = QRegExp("/\\*");
    commentEndExpression = QRegExp("\\*/");
+}
+
+void HBQSyntaxHighlighter::setHBRule( QString name, QString pattern, const QTextCharFormat & format )
+{
+   if( pattern != "" )
+      hhighlightingRules.insert( name, hHighlightingRule( QRegExp( pattern ), format ) );
+   else
+      hhighlightingRules.remove( name );
+}
+
+void HBQSyntaxHighlighter::setHBFormat( QString name, const QTextCharFormat & format )
+{
+   if( hhighlightingRules.contains( name ) )
+   {
+      hHighlightingRule rule = hhighlightingRules.value( name );
+      QRegExp reg = rule.pattern;
+
+      hhighlightingRules.insert( name, hHighlightingRule( reg, format ) );
+   }
+   else
+   {
+      hhighlightingRules.remove( name );
+   }
 }
 
 void HBQSyntaxHighlighter::setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format )
@@ -123,6 +146,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    int index( 0 );
    QRegExp expression;
 
+   #if 0
    foreach ( const HighlightingRule &rule, highlightingRules )
    {
       expression = QRegExp( rule.pattern );
@@ -134,6 +158,19 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
          index = expression.indexIn( text, index + length );
       }
    }
+   #else
+   foreach ( const hHighlightingRule &rule, hhighlightingRules )
+   {
+      QRegExp expression( rule.pattern );
+      int index = expression.indexIn( text );
+      while ( index >= 0 )
+      {
+         int length = expression.matchedLength();
+         setFormat( index, length, rule.format );
+         index = expression.indexIn( text, index + length );
+      }
+   }
+   #endif
 
    setCurrentBlockState( 0 );
 
@@ -259,11 +296,27 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBCOMPILERDIRECTIVES )
 }
 
 /*
- * void setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format )
+ * void setHBMultiLineCommentFormat( const QTextCharFormat & format )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBMULTILINECOMMENTFORMAT )
 {
    hbqt_par_HBQSyntaxHighlighter( 1 )->setHBMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+}
+
+/*
+ * void setRule( QString name, QString pattern, QTextCharFormat format );
+ */
+HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBRULE )
+{
+   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBRule( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), *hbqt_par_QTextCharFormat( 4 ) );
+}
+
+/*
+ * void setFormat( QString name, const QTextCharFormat & format );
+ */
+HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBFORMAT )
+{
+   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBFormat( hbqt_par_QString( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
 }
 
 #endif

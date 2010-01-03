@@ -117,6 +117,8 @@ CREATE CLASS HBQSyntaxHighlighter INHERIT QSyntaxHighlighter
    METHOD configure( xObject )
    METHOD setHBCompilerDirectives( pDirectives, pFormat, pFont )
    METHOD setHBMultiLineCommentFormat( pFormat )
+   METHOD setHBRule( cName, cPattern, pFormat )
+   METHOD setHBFormat( cName, pFormat )
 
    ENDCLASS
 
@@ -141,6 +143,14 @@ METHOD HBQSyntaxHighlighter:configure( xObject )
 
 METHOD HBQSyntaxHighlighter:setHBCompilerDirectives( pDirectives, pFormat )
    RETURN Qt_HBQSyntaxHighlighter_setHBCompilerDirectives( ::pPtr, hbqt_ptr( pDirectives ), hbqt_ptr( pFormat ) )
+
+
+METHOD HBQSyntaxHighlighter:setHBRule( cName, cPattern, pFormat )
+   RETURN Qt_HBQSyntaxHighlighter_setHBRule( ::pPtr, cName, cPattern, hbqt_ptr( pFormat ) )
+
+
+METHOD HBQSyntaxHighlighter:setHBFormat( cName, pFormat )
+   RETURN Qt_HBQSyntaxHighlighter_setHBFormat( ::pPtr, cName, hbqt_ptr( pFormat ) )
 
 
 METHOD HBQSyntaxHighlighter:setHBMultiLineCommentFormat( pFormat )

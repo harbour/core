@@ -68,9 +68,27 @@ public:
 
    void setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format );
    void setHBMultiLineCommentFormat( const QTextCharFormat & format );
+   void setHBRule( QString name, QString pattern, const QTextCharFormat & format );
+   void setHBFormat( QString name, const QTextCharFormat & format );
 
 protected:
    void highlightBlock( const QString &text );
+
+
+   struct hHighlightingRule
+   {
+      hHighlightingRule()
+      {
+      }
+      hHighlightingRule( QRegExp _pattern, const QTextCharFormat & _format )
+      {
+         pattern = _pattern;
+         format = _format;
+      }
+      QRegExp pattern;
+      QTextCharFormat format;
+   };
+   QMap< QString, hHighlightingRule > hhighlightingRules;
 
 private:
    struct HighlightingRule
@@ -79,6 +97,8 @@ private:
       QTextCharFormat format;
    };
    QVector<HighlightingRule> highlightingRules;
+
+protected:
 
    QRegExp commentStartExpression;
    QRegExp commentEndExpression;
