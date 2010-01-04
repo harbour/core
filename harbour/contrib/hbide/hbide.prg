@@ -114,6 +114,9 @@ CLASS HbIde
    ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
 
    DATA   oPM
+   DATA   oFR
+   DATA   oDK
+   DATA   oED
 
    DATA   mp1, mp2, oXbp, nEvent
    DATA   aTabs                                   INIT {}
@@ -188,7 +191,6 @@ CLASS HbIde
    DATA   aProjects                               INIT {}
    DATA   cWrkProject                             INIT ''
    DATA   oProps
-   DATA   oFR
 
    DATA   cProcessInfo
    DATA   qProcess
@@ -206,9 +208,7 @@ CLASS HbIde
    METHOD setPosAndSizeByIni()
    METHOD setPosByIni()
 
-   METHOD buildDialog()
-   METHOD buildStatusBar()
-   METHOD executeAction()
+   METHOD execAction()
    METHOD manageFuncContext()
    METHOD manageProjectContext()
 
@@ -240,11 +240,8 @@ CLASS HbIde
    METHOD manageFocusInEditor()
    METHOD convertSelection()
    METHOD insertText()
-   METHOD printPreview()
-   METHOD paintRequested()
    METHOD loadUI()
 
-   METHOD goto()
    METHOD setCodec()
 
    METHOD findEditByFileName()
@@ -283,8 +280,20 @@ METHOD HbIde:create( cProjIni )
    /* Load IDE Settings */
    hbide_loadINI( Self, cProjIni )
 
+   /* Setup DOCKing windows and ancilliary windows */
+   ::oDK := IdeDocks():new():create( Self )
    /* Build IDE's Main Window */
-   ::BuildDialog() ; ::oDa := ::oDlg:drawingArea ; SetAppWindow( ::oDlg ) ; ::oDlg:Show()
+   ::oDK:buildDialog()
+   ::oDK:buildMainMenu()
+   ::oDK:buildToolBar()
+   ::oDK:buildStatusBar()
+   ::oDK:buildDockWidgets()
+
+   /* Once create Find/Replace dialog */
+   ::oFR := IdeFindReplace():new():create( Self )
+
+   /* Edits Manager */
+   ::oED := IdeEditsManager():new( Self ):create()
 
    /* Load IDE|User defined Themes */
    hbide_loadThemes( Self )
@@ -294,9 +303,6 @@ METHOD HbIde:create( cProjIni )
    ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    ::oTabWidget := ::oDa:oTabWidget
    ::qTabWidget := ::oDa:oTabWidget:oWidget
-
-   /* Setup DOCKing windows */
-   IdeDocks():new():create( Self )
 
    /* Attach GRID Layout to Editor Area - Futuristic */
    ::qLayout := QGridLayout():new()
@@ -311,22 +317,10 @@ METHOD HbIde:create( cProjIni )
    /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
 
-   /* Editor's Font */
+   /* Editor's Font - TODO: User Managed Interface */
    ::oFont := XbpFont():new()
    ::oFont:fixed := .t.
    ::oFont:create( "10.Courier" )
-
-   /* Build Main Menu */
-   buildMainMenu( ::oDlg, Self )
-
-   /* Setup Toolbar */
-   ::oTBar := buildToolBar( ::oDlg, Self )
-
-   /* Setup Statusbar and Panels */
-   ::buildStatusBar()
-
-   /* Once create Find/Replace dialog */
-   ::oFR := IdeFindReplace():new():create( Self )
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -364,9 +358,7 @@ METHOD HbIde:create( cProjIni )
             ::closeSource()
 
          CASE ::mp1 == xbeK_CTRL_G
-            IF !empty( ::qCurEdit )
-               ::goto()
-            ENDIF
+            ::oED:goto()
 
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
@@ -390,26 +382,26 @@ METHOD HbIde:create( cProjIni )
    ::oFR:destroy()
 
    /* Very important - destroy resources */
-   HBXBP_DEBUG( "======================================================" )
-   HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "                                                      " )
+   hbide_dbg( "======================================================" )
+   hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   hbide_dbg( "                                                      " )
 
    ::oDlg:destroy()
 
-   HBXBP_DEBUG( "                                                      " )
-   HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "======================================================" )
+   hbide_dbg( "                                                      " )
+   hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   hbide_dbg( "======================================================" )
 
    ::qCursor:pPtr := 0
    ::oFont        := NIL
 
-   HBXBP_DEBUG( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
+   hbide_dbg( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:executeAction( cKey )
+METHOD HbIde:execAction( cKey )
    LOCAL aPrj, cHbi, Tmp, n
 
    DO CASE
@@ -483,9 +475,7 @@ METHOD HbIde:executeAction( cKey )
    CASE cKey == "CloseOther"
       ::closeAllOthers()
    CASE cKey == "Print"
-      IF !empty( ::qCurEdit )
-         ::printPreview()
-      ENDIF
+      ::oED:printPreview()
    CASE cKey == "Undo"
       IF !empty( ::qCurEdit )
          ::qCurEdit:undo()
@@ -523,9 +513,7 @@ METHOD HbIde:executeAction( cKey )
    CASE cKey == "SetMark"
    CASE cKey == "GotoMark"
    CASE cKey == "Goto"
-      IF !empty( ::qCurEdit )
-         ::goto()
-      ENDIF
+      ::oED:goto()
    CASE cKey == "ToUpper"
       ::convertSelection( cKey )
    CASE cKey == "ToLower"
@@ -927,7 +915,7 @@ METHOD HbIde:saveAllSources()
 METHOD HbIde:saveAndExit()
 
    IF ::saveSource()
-      ::executeAction( "Exit" )
+      ::execAction( "Exit" )
    ENDIF
 
    RETURN Self
@@ -1416,67 +1404,6 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//                             Status Bar
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildStatusBar()
-
-   ::oSBar := XbpStatusBar():new()
-   ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[ 1 ], 30 } )
-   ::oSBar:oWidget:showMessage( "" )
-
-   ::oSBar:getItem( SB_PNL_MAIN ):autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
-
-   ::oSBar:addItem( "", , , , "Ready"    ):oWidget:setMinimumWidth(  80 )
-   ::oSBar:addItem( "", , , , "Line"     ):oWidget:setMinimumWidth( 110 )
-   ::oSBar:addItem( "", , , , "Column"   ):oWidget:setMinimumWidth(  40 )
-   ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  30 )
-   ::oSBar:addItem( "", , , , "M_1"      ):oWidget:setMinimumWidth(  30 )
-   ::oSBar:addItem( "", , , , "Modified" ):oWidget:setMinimumWidth(  50 )
-   ::oSBar:addItem( "", , , , "M_2"      ):oWidget:setMinimumWidth(  30 )
-   ::oSBar:addItem( "", , , , "Stream"   ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Edit"     ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-//                              Main Window
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildDialog()
-
-   #if 1
-   LOCAL oUI
-   oUI := XbpQtUiLoader():new()
-   oUI:file := s_resPath + "mainWindow.ui"
-   oUI:create()
-
-   ::oDlg := XbpDialog():new()
-   ::oDlg:icon := s_resPath + "vr.png" // "hbide.png"
-   ::oDlg:title := "Harbour-Qt IDE"
-   ::oDlg:qtObject := oUI:oWidget
-   ::oDlg:create()
-   #else
-   ::oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
-   ::oDlg:icon := s_resPath + "vr.png" // "hbide.png"
-   ::oDlg:title := "Harbour-Qt IDE"
-   ::oDlg:create()
-   #endif
-
-   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
-
-   ::setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
-
-   ::oDlg:close := {|| MsgBox( "HbIDE is about to be closed!" ), .T. }
-   ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
-   ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateFuncList()
    LOCAL o
@@ -1558,32 +1485,6 @@ METHOD HbIde:CreateTags()
    RETURN ( NIL )
 
 //----------------------------------------------------------------------//
-//                               Printing
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:printPreview()
-   LOCAL qDlg
-
-   qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
-   qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
-   qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
-
-   RETURN self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:paintRequested( pPrinter )
-   LOCAL qPrinter
-
-   qPrinter := QPrinter():configure( pPrinter )
-
-   ::qCurEdit:print( qPrinter )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 
 METHOD HbIde:loadUI( cUi )
    LOCAL cUiFull := s_resPath + cUi + ".ui"
@@ -1616,11 +1517,11 @@ METHOD HbIde:updateProjectMenu()
 *  msgbox( ToString( oMenuBar:aMenuItems[ n ] ))
 
    IF Empty( ::cWrkProject )
-      oItem[2]:setDisabled(.T.)
+      oItem[ 2 ]:setDisabled( .T. )
       RETURN Self
    ENDIF
 
-   oItem[2]:setEnabled( .T.)
+   oItem[ 2 ]:setEnabled( .T. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1637,52 +1538,21 @@ METHOD HbIde:updateTitleBar()
    ENDIF
 
    IF !Empty( ::cWrkProject )
-      cTitle += ' - ' + ::cWrkProject + ''
+      cTitle += " - " + ::cWrkProject + ""
    ENDIF
 
    IF ::nCurTab > 0 .AND. ::nCurTab <= Len( ::aTabs )
       IF Empty( ::aTabs[ ::nCurTab, TAB_SOURCEFILE ] )
-         cTitle += ' - [' + ::aTabs[ ::nCurTab, TAB_OTAB ]:Caption + ']'
+         cTitle += " - [" + ::aTabs[ ::nCurTab, TAB_OTAB ]:Caption + "]"
       ELSE
-         cTitle += ' - [' + ::aTabs[ ::nCurTab, TAB_SOURCEFILE ] + ']'
+         cTitle += " - [" + ::aTabs[ ::nCurTab, TAB_SOURCEFILE ] + "]"
       ENDIF
    ENDIF
 
    ::oDlg:Title := cTitle
    ::oDlg:oWidget:setWindowTitle( ::oDlg:Title )
+
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:goto()
-   LOCAL qGo, nLine
-   LOCAL qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-
-   nLine := qCursor:blockNumber()
-
-   qGo := QInputDialog():new( ::oDlg:oWidget )
-   qGo:setIntMinimum( 1 )
-   qGo:setIntMaximum( ::qCurDocument:blockCount() )
-   qGo:setIntValue( nLine + 1 )
-   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( ::qCurDocument:blockCount() ) + "]" )
-   qGo:setWindowTitle( "Harbour-Qt" )
-
-   ::setPosByIni( qGo, GotoDialogGeometry )
-   qGo:exec()
-   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
-
-   nLine := qGo:intValue() -  nLine
-
-   qGo:pPtr := 0
-
-   IF nLine < 0
-      qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
-   ELSEIF nLine > 0
-      qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
-   ENDIF
-   ::qCurEdit:setTextCursor( qCursor )
-
-   RETURN nLine
 
 /*----------------------------------------------------------------------*/
 

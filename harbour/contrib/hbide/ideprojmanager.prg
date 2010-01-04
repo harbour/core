@@ -444,11 +444,11 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
    LOCAL lValid      := .T.
 
    IF Empty( cProjectName )
-      ::cWrkProject := ''
+      ::oIde:cWrkProject := ''
 
    ELSEIF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cProjectName } ) ) > 0
       aPrjProps     := ::aProjects[ n, 3 ]
-      ::cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
+      ::oIde:cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
 
    ELSE
       MsgBox( 'Invalid project selected: "' + cProjectName + '"' )
@@ -480,6 +480,7 @@ METHOD IdeProjManager:getCurrentProject()
    ENDIF
 
    IF Len( ::aProjects ) == 1
+      ::setCurrentProject( ::aProjects[ 1, 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
       RETURN ::aProjects[ 1, 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
    ENDIF
 
@@ -509,7 +510,8 @@ METHOD IdeProjManager:selectCurrentProject()
        ENDIF
    NEXT
 
-   oDlg:signal( "btnOk"    , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), oDlg:oWidget:close() } )
+   oDlg:signal( "btnOk"    , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
+                                                                                       oDlg:oWidget:close() } )
    oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:close() } )
 
    oDlg:exec()
@@ -616,26 +618,27 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    lDelHbp := lPPO
 
-   IF lPPO .AND. ::getCurrentTab()  == 0
+   IF lPPO .AND. ::getCurrentTab() == 0
       MsgBox( 'No file open issue to be compiled!' )
       RETURN Self
    End
 
    IF empty( cProject )
-      cProject := ::oPM:getCurrentProject()
+      cProject := ::getCurrentProject()
    ENDIF
 
    IF empty( cProject )
       RETURN Self
    ENDIF
 
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
-   aPrj := ::aProjects[ n,3 ]
+   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } )
+   aPrj := ::aProjects[ n, 3 ]
    aHbp := {}
 
    cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
-   cTargetFN := StrTran( cTargetFN, '/', ::pathSep )
-   cTargetFN := StrTran( cTargetFN, '\', ::pathSep )
+   cTargetFN := hbide_pathToOSPath( cTargetFN )
+//   cTargetFN := StrTran( cTargetFN, '/', ::pathSep )
+//   cTargetFN := StrTran( cTargetFN, '\', ::pathSep )
 
    /*
     * Creates a temporary file to avoid erase the file. Hbp correct this project.
@@ -658,7 +661,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-q" )
    aadd( aHbp, "-trace" )
    aadd( aHbp, "-info" )
-
+hbide_dbg( cTargetFN )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    End
@@ -699,11 +702,12 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
       nSeconds := seconds()  // time elapsed
 
-      cTmp := "Project    : " + cProject + CRLF + ;
-              "Launch     : " + iif( lLaunch, 'Yes', 'No' )  + CRLF + ;
-              "Rebuild    : " + iif( lRebuild, 'Yes', 'No' ) + CRLF + ;
-              "Started at : " + time() + CRLF + ;
-              '-----------------------------------------------------------------' + CRLF
+      cTmp := hbide_outputLine() + CRLF + ;
+              "Project [ " + cProject                     + " ]    " + ;
+              "Launch [ "  + iif( lLaunch , 'Yes', 'No' ) + " ]    " + ;
+              "Rebuild [ " + iif( lRebuild, 'Yes', 'No' ) + " ]    " + ;
+              "Started [ " + time() + " ]" + CRLF + ;
+              hbide_outputLine() + CRLF
 
       IF lViaQt
          qStringList := QStringList():new()
@@ -755,7 +759,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ENDIF
 
    IF lPPO .AND. hb_FileExists( cFileName )
-      ::aEdits[ 1 ]:showPPO( cFileName )
+      ::oED:showPPO( cFileName )
    ENDIF
 
    RETURN Self
@@ -798,10 +802,10 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
       cTmp := memoread( ::cFileErr )
       hbide_convertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
 
-      cTmp := '-----------------------------------------------------------------' + CRLF
-      cTmp += "Exit Code   : " + hb_ntos( i ) + "      Exit Status : " + hb_ntos( ii ) + CRLF
-      cTmp += '-----------------------------------------------------------------' + CRLF
-      cTmp += 'Finished at : ' + time() + "      Done in : " + hb_ntos( seconds() - ::nStarted ) +" seconds."  + CRLF
+      cTmp := hbide_outputLine() + CRLF
+      cTmp += "Exit Code [ " + hb_ntos( i ) + " ]    Exit Status [ " + hb_ntos( ii ) + " ]    " +;
+              "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - ::nStarted ) +" Secs ]" + CRLF
+      cTmp += hbide_outputLine() + CRLF
 
       ::oOutputResult:oWidget:append( cTmp )
 
@@ -869,3 +873,13 @@ METHOD IdeProjManager:LaunchProject( cProject )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_outputLine( cLine, nOccur )
+
+   DEFAULT cLine  TO "-"
+   DEFAULT nOccur TO 100
+
+   RETURN replicate( cLine, nOccur )
+
+/*----------------------------------------------------------------------*/
+

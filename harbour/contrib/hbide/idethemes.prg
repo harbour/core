@@ -170,7 +170,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
    /* These are the supported patterns - rest will be ignore until implemented */
 
    /* Compiler Directives */
-   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
+   b_:= { "include","define","ifndef","ifdef","else","endif","command","xcommand","translate","xtranslate" }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + upper( e ) + "\b|#" + e + "\b" } )
    aadd( ::aPatterns, { "PreprocessorDirectives", s } )
 

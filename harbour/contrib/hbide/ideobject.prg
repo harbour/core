@@ -78,6 +78,11 @@ CLASS IdeObject
    DATA   oIde
    DATA   oUI
 
+   ACCESS oFR                                     INLINE ::oIde:oFR
+   ACCESS oED                                     INLINE ::oIde:oED
+   ACCESS oPM                                     INLINE ::oIde:oPM
+   ACCESS oDK                                     INLINE ::oIde:oDK
+
    ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
    ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
 

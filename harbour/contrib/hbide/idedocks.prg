@@ -67,6 +67,7 @@
 #include "hbide.ch"
 #include "common.ch"
 #include "hbclass.ch"
+#include "xbp.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -78,6 +79,14 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD new()
    METHOD create()
    METHOD destroy()
+
+   METHOD buildDialog()
+
+   METHOD buildMainMenu()
+   METHOD buildToolBar()
+   METHOD buildStatusBar()
+
+   METHOD buildDockWidgets()
 
    METHOD buildProjectTree()
    METHOD buildEditorTree()
@@ -106,6 +115,71 @@ METHOD IdeDocks:create( oIde )
 
    ::oIde := oIde
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildDialog()
+
+   #if 1
+   LOCAL oUI
+   oUI := XbpQtUiLoader():new()
+   oUI:file := ::resPath + "mainWindow.ui"
+   oUI:create()
+
+   ::oIde:oDlg := XbpDialog():new()
+   ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
+   ::oDlg:title := "Harbour-Qt IDE"
+   ::oDlg:qtObject := oUI:oWidget
+   ::oDlg:create()
+   #else
+   ::oIde:oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
+   ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
+   ::oDlg:title := "Harbour-Qt IDE"
+   ::oDlg:create()
+   #endif
+
+   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
+
+   ::oDlg:close := {|| MsgBox( "HbIDE is about to be closed!" ), .T. }
+   ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
+
+   ::oIde:oDa := ::oDlg:drawingArea
+
+   SetAppWindow( ::oDlg )
+
+   ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
+   ::oDlg:Show()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildMainMenu()
+
+   buildMainMenu( ::oDlg, ::oIde )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildToolBar()
+
+   ::oIde:oTBar := buildToolBar( ::oDlg, ::oIde )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildDockWidgets()
+
    ::buildProjectTree()
    ::buildEditorTree()
    ::buildFuncList()
@@ -115,12 +189,6 @@ METHOD IdeDocks:create( oIde )
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:destroy()
 
    RETURN Self
 
@@ -350,3 +418,29 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
    RETURN nLine
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildStatusBar()
+
+   ::oIde:oSBar := XbpStatusBar():new()
+   ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[ 1 ], 30 } )
+   ::oSBar:oWidget:showMessage( "" )
+
+   ::oSBar:getItem( SB_PNL_MAIN ):autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+
+   ::oSBar:addItem( "", , , , "Ready"    ):oWidget:setMinimumWidth(  80 )
+   ::oSBar:addItem( "", , , , "Line"     ):oWidget:setMinimumWidth( 110 )
+   ::oSBar:addItem( "", , , , "Column"   ):oWidget:setMinimumWidth(  40 )
+   ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  30 )
+   ::oSBar:addItem( "", , , , "M_1"      ):oWidget:setMinimumWidth(  30 )
+   ::oSBar:addItem( "", , , , "Modified" ):oWidget:setMinimumWidth(  50 )
+   ::oSBar:addItem( "", , , , "M_2"      ):oWidget:setMinimumWidth(  30 )
+   ::oSBar:addItem( "", , , , "Stream"   ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Edit"     ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

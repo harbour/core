@@ -73,6 +73,146 @@
 
 /*----------------------------------------------------------------------*/
 
+CLASS IdeEditsManager INHERIT IdeObject
+
+   METHOD new()
+   METHOD create()
+
+   METHOD goto()
+   METHOD printPreview()
+   METHOD paintRequested()
+   METHOD showPPO()
+   METHOD closePPO()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:printPreview()
+   LOCAL qDlg
+
+   IF empty( ::qCurEdit )
+      RETURN Self
+   ENDIF
+
+   qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
+   qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
+   qDlg:exec()
+   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:paintRequested( pPrinter )
+   LOCAL qPrinter
+
+   qPrinter := QPrinter():configure( pPrinter )
+
+   ::qCurEdit:print( qPrinter )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:goto()
+   LOCAL qGo, nLine, qCursor
+
+   IF empty( ::qCurEdit )
+      RETURN Self
+   ENDIF
+
+   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   nLine := qCursor:blockNumber()
+
+   qGo := QInputDialog():new( ::oDlg:oWidget )
+   qGo:setIntMinimum( 1 )
+   qGo:setIntMaximum( ::qCurDocument:blockCount() )
+   qGo:setIntValue( nLine + 1 )
+   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( ::qCurDocument:blockCount() ) + "]" )
+   qGo:setWindowTitle( "Harbour-Qt" )
+
+   ::setPosByIni( qGo, GotoDialogGeometry )
+   qGo:exec()
+   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
+
+   nLine := qGo:intValue() -  nLine
+
+   qGo:pPtr := 0
+
+   IF nLine < 0
+      qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
+   ELSEIF nLine > 0
+      qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+   ENDIF
+   ::qCurEdit:setTextCursor( qCursor )
+
+   RETURN nLine
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:showPPO( cFile )
+   LOCAL qEdit, qHiliter
+
+   IF hb_fileExists( cFile )
+      qEdit := QPlainTextEdit():new()
+      qEdit:setPlainText( hb_memoRead( cFile ) )
+      qEdit:setLineWrapMode( QTextEdit_NoWrap )
+      qEdit:setFont( ::oIde:oFont:oWidget )
+      qEdit:ensureCursorVisible()
+
+      qEdit:setWindowTitle( cFile )
+      qEdit:resize( 600, 400 )
+
+      qHiliter := ::oIde:oThemes:SetSyntaxHilighting( qEdit )
+
+      Qt_Events_Connect( ::pEvents, qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
+
+      qEdit:show()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:closePPO( qEdit, qHiliter, cFile, lDel )
+
+   Qt_Events_DisConnect( ::pEvents, qEdit, QEvent_Close )
+
+   qHiliter:pPtr := 0
+   qEdit:close()
+   qEdit:pPtr := 0
+
+   IF lDel
+      ferase( cFile )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//
+//                            CLASS IdeEditor
+//
+/*----------------------------------------------------------------------*/
+
 CLASS IdeEditor INHERIT IdeObject
 
    DATA   oTab
@@ -110,8 +250,6 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD onBlockCountChanged()
    METHOD setTabImage()
    METHOD applyTheme()
-   METHOD showPPO()
-   METHOD closePPO()
 
    ENDCLASS
 
@@ -175,7 +313,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    Qt_Slots_Connect( ::pSlots, ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
    Qt_Slots_Connect( ::pSlots, ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
-
    Qt_Slots_Connect( ::pSlots, ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
 
    ::qEdit:show()
@@ -309,11 +446,10 @@ METHOD IdeEditor:buildTabPage( cSource )
    ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
 
    IF Empty( cSource )
-      ::oTab:caption   := "Untitled " + hb_ntos( hbide_getNextUntitled() )
+      ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )
    ELSE
-      ::oTab:caption   := ::cFile + ::cExt
+      ::oTab:caption := ::cFile + ::cExt
    ENDIF
-
    ::oTab:minimized := .F.
 
    ::oTab:create()
@@ -416,45 +552,6 @@ METHOD IdeEditor:setTabImage()
 
    ::qTabWidget:setTabIcon( nIndex, ::resPath + cIcon )
    ::oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:showPPO( cFile )
-   LOCAL qEdit, qHiliter
-
-   IF file( cFile )
-      qEdit := QPlainTextEdit():new()
-      qEdit:setPlainText( hb_memoRead( cFile ) )
-      qEdit:setLineWrapMode( QTextEdit_NoWrap )
-      qEdit:setFont( ::oIde:oFont:oWidget )
-      qEdit:ensureCursorVisible()
-
-      qEdit:setWindowTitle( cFile )
-      qEdit:resize( 600, 400 )
-
-      qHiliter := ::oIde:oThemes:SetSyntaxHilighting( qEdit )
-
-      Qt_Events_Connect( ::pEvents, qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
-
-      qEdit:show()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:closePPO( qEdit, qHiliter, cFile, lDel )
-
-   Qt_Events_DisConnect( ::pEvents, qEdit, QEvent_Close )
-
-   qHiliter:pPtr := 0
-   qEdit:close()
-   qEdit:pPtr := 0
-
-   IF lDel
-      ferase( cFile )
-   ENDIF
 
    RETURN Self
 

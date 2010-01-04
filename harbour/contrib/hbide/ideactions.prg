@@ -143,7 +143,7 @@ FUNCTION buildToolBar( oWnd, oIde )
    #endif
 
    oTBar:transparentColor := GraMakeRGBColor( { 0,255,255 } ) // GRA_CLR_INVALID
-   oTBar:buttonClick := {|oButton| oIde:executeAction( oButton:key ) }
+   oTBar:buttonClick := {|oButton| oIde:execAction( oButton:key ) }
 
    RETURN oTBar
 
@@ -207,27 +207,31 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
  */
 #define _T( x )  ( mnuNormalizeItem( x ) )
 
+/*----------------------------------------------------------------------*/
+
 FUNCTION buildMainMenu( oWnd, oIde )
-   LOCAL oMenuBar, oSubMenu, oSub1, oSubMenu2
-   LOCAL n, f, lEmpty
+   LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f, lEmpty
 
    oMenuBar := oWnd:MenuBar()
 
    oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar" ) )
 
+   /*----------------------------------------------------------------------------*/
+   /*                                   File                                     */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~File"
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:addItem( { _T( "~Source, ^N | new.png" )            , {|| oIde:executeAction( "New"            ) } } )
-   oSubMenu2:addItem( { _T( "~Project | project.png" )           , {|| oIde:executeAction( "NewProject"     ) } } )
+   oSubMenu2:addItem( { _T( "~Source, ^N | new.png" )            , {|| oIde:execAction( "New"            ) } } )
+   oSubMenu2:addItem( { _T( "~Project | project.png" )           , {|| oIde:execAction( "NewProject"     ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~New" ) } )
    oMenuBar:aMenuItems[ oMenuBar:numItems(), 2 ]:seticon( oIde:resPath + 'new.png' )
 
-// oSubMenu:addItem( { _T( "~New File, ^N | new.png" )           , {|| oIde:executeAction( "New"            ) } } )
-// oSubMenu:addItem( { _T( "New Pro~ject, Sh+^N | project.png" ) , {|| oIde:executeAction( "NewProject"     ) } } )
-   oSubMenu:addItem( { _T( "~Open, ^O | open.png" )              , {|| oIde:executeAction( "Open"           ) } } )
-   oSubMenu:addItem( { _T( "Open Projec~t" )                     , {|| oIde:executeAction( "LoadProject"    ) } } )
+// oSubMenu:addItem( { _T( "~New File, ^N | new.png" )           , {|| oIde:execAction( "New"            ) } } )
+// oSubMenu:addItem( { _T( "New Pro~ject, Sh+^N | project.png" ) , {|| oIde:execAction( "NewProject"     ) } } )
+   oSubMenu:addItem( { _T( "~Open, ^O | open.png" )              , {|| oIde:execAction( "Open"           ) } } )
+   oSubMenu:addItem( { _T( "Open Projec~t" )                     , {|| oIde:execAction( "LoadProject"    ) } } )
 
    hbide_menuAddSep( oSubMenu )
 
@@ -238,13 +242,13 @@ FUNCTION buildMainMenu( oWnd, oIde )
    FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
        f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
        lEmpty := .F.
-       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
+       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f ), nil } )
        IF !hb_FileExists(f)
           oSubMenu2:disableItem( n )
        ENDIF
    NEXT
    IF lEmpty
-      oSubMenu2:addItem( { _T( "** No recent files found **" )          , nil } )
+      oSubMenu2:addItem( { _T( "** No recent files found **" )   , nil } )
       oSubMenu2:disableItem( 1 )
    ENDIF
    oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files" ) } )
@@ -270,178 +274,114 @@ FUNCTION buildMainMenu( oWnd, oIde )
 
    hbide_menuAddSep( oSubMenu )
 
-   oSubMenu:addItem( { _T( "~Save, ^S | save.png" )             , {|| oIde:executeAction( "Save"           ) } } )
-   oSubMenu:addItem( { _T( "Save ~As | saveas.png" )            , {|| oIde:executeAction( "SaveAs"         ) } } )
-   oSubMenu:addItem( { _T( "Save A~ll, Sh+^S | saveall.png")    , {|| oIde:executeAction( "SaveAll"        ) } } )
-   oSubMenu:addItem( { _T( "~Close, ^W | close.png" )           , {|| oIde:executeAction( "Close"          ) } } )
-   oSubMenu:addItem( { _T( "Clos~e All | closeall.png" )        , {|| oIde:executeAction( "CloseAll"       ) } } )
-   oSubMenu:addItem( { _T( "Close ~Others| closeexcept.png" )   , {|| oIde:executeAction( "CloseOther"     ) } } )
-   oSubMenu:addItem( { _T( "~Revert to Saved, Sh+^R" )          , {|| oIde:executeAction( "Revert"         ) } } )
+   oSubMenu:addItem( { _T( "~Save, ^S | save.png" )             , {|| oIde:execAction( "Save"           ) } } )
+   oSubMenu:addItem( { _T( "Save ~As | saveas.png" )            , {|| oIde:execAction( "SaveAs"         ) } } )
+   oSubMenu:addItem( { _T( "Save A~ll, Sh+^S | saveall.png")    , {|| oIde:execAction( "SaveAll"        ) } } )
+   oSubMenu:addItem( { _T( "~Close, ^W | close.png" )           , {|| oIde:execAction( "Close"          ) } } )
+   oSubMenu:addItem( { _T( "Clos~e All | closeall.png" )        , {|| oIde:execAction( "CloseAll"       ) } } )
+   oSubMenu:addItem( { _T( "Close ~Others| closeexcept.png" )   , {|| oIde:execAction( "CloseOther"     ) } } )
+   oSubMenu:addItem( { _T( "~Revert to Saved, Sh+^R" )          , {|| oIde:execAction( "Revert"         ) } } )
    hbide_menuAddSep( oSubMenu )
 
- * oSubMenu:addItem( { _T( "~Export as HTML* | exporthtml.png" ), {|| oIde:executeAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "~Print, ^P | print.png" )           , {|| oIde:executeAction( "Print"          ) } } )
+ * oSubMenu:addItem( { _T( "~Export as HTML* | exporthtml.png" ), {|| oIde:execAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "~Print, ^P | print.png" )           , {|| oIde:execAction( "Print"          ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Sa~ve and Exit, Sh+^W" )            , {|| oIde:executeAction( "SaveExit"       ) } } )
-   oSubMenu:addItem( { _T( "E~xit | exit.png" )                 , {|| oIde:executeAction( "Exit"           ) } } )
+   oSubMenu:addItem( { _T( "Sa~ve and Exit, Sh+^W" )            , {|| oIde:execAction( "SaveExit"       ) } } )
+   oSubMenu:addItem( { _T( "E~xit | exit.png" )                 , {|| oIde:execAction( "Exit"           ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   /*----------------------------------------------------------------------------*/
+   /*                                   Edit                                     */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Edit"
-   oSubMenu:addItem( { _T( "~Undo | undo.png" )                 , {|| oIde:executeAction( "Undo"           ) } } )
-   oSubMenu:addItem( { _T( "~Redo | redo.png" )                 , {|| oIde:executeAction( "Redo"           ) } } )
+   oSubMenu:addItem( { _T( "~Undo | undo.png" )                 , {|| oIde:execAction( "Undo"           ) } } )
+   oSubMenu:addItem( { _T( "~Redo | redo.png" )                 , {|| oIde:execAction( "Redo"           ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "C~ut  | cut.png" )                  , {|| oIde:executeAction( "Cut"            ) } } )
-   oSubMenu:addItem( { _T( "~Copy | copy.png" )                 , {|| oIde:executeAction( "Copy"           ) } } )
-   oSubMenu:addItem( { _T( "~Paste| paste.png" )                , {|| oIde:executeAction( "Paste"          ) } } )
-   oSubMenu:addItem( { _T( "Select ~All | selectall.png" )      , {|| oIde:executeAction( "SelectAll"      ) } } )
+   oSubMenu:addItem( { _T( "C~ut  | cut.png" )                  , {|| oIde:execAction( "Cut"            ) } } )
+   oSubMenu:addItem( { _T( "~Copy | copy.png" )                 , {|| oIde:execAction( "Copy"           ) } } )
+   oSubMenu:addItem( { _T( "~Paste| paste.png" )                , {|| oIde:execAction( "Paste"          ) } } )
+   oSubMenu:addItem( { _T( "Select ~All | selectall.png" )      , {|| oIde:execAction( "SelectAll"      ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "~Find/Replace, ^F | find.png" )     , {|| oIde:executeAction( "Find"           ) } } )
-   oSubMenu:addItem( { _T( "~Go To Line..., ^G| gotoline.png" ) , {|| oIde:executeAction( "Goto"           ) } } )
+   oSubMenu:addItem( { _T( "~Find/Replace, ^F | find.png" )     , {|| oIde:execAction( "Find"           ) } } )
+   oSubMenu:addItem( { _T( "~Go To Line..., ^G| gotoline.png" ) , {|| oIde:execAction( "Goto"           ) } } )
    hbide_menuAddSep( oSubMenu )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:addItem( { _T( "~Date && Time, Sh+F7| insert-datetime.png" )           , {|| oIde:executeAction( "InsertDateTime"     ) } } )
-   oSubMenu2:addItem( { _T( "~Random Function Name, Sh+^F8| insert-procname.png" )  , {|| oIde:executeAction( "InsertRandomName"   ) } } )
-   oSubMenu2:addItem( { _T( "~External File at cursor| insert-external-file.png" )  , {|| oIde:executeAction( "InsertExternalFile" ) } } )
+   oSubMenu2:addItem( { _T( "~Date && Time, Sh+F7| insert-datetime.png" )           , {|| oIde:execAction( "InsertDateTime"     ) } } )
+   oSubMenu2:addItem( { _T( "~Random Function Name, Sh+^F8| insert-procname.png" )  , {|| oIde:execAction( "InsertRandomName"   ) } } )
+   oSubMenu2:addItem( { _T( "~External File at cursor| insert-external-file.png" )  , {|| oIde:execAction( "InsertExternalFile" ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
 
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Switch Read~Only Mode | readonly.png" )                 , {|| oIde:executeAction( "switchReadOnly" ) } } )
+   oSubMenu:addItem( { _T( "Switch Read~Only Mode | readonly.png" )                 , {|| oIde:execAction( "switchReadOnly" ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   /*----------------------------------------------------------------------------*/
+   /*                                   Project                                  */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Project"
-   oSubMenu:addItem( { _T( "Properties" )                                     , {|| oIde:executeAction( "Properties"     ) } } )
+   oSubMenu:addItem( { _T( "Properties" )                                     , {|| oIde:execAction( "Properties"     ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Add File* | projectadd.png" )                     , {|| oIde:executeAction( "" ) } } )
-   oSubMenu:addItem( { _T( "Remove File* | projectdel.png" )                  , {|| oIde:executeAction( "" ) } } )
-   oSubMenu:addItem( { _T( "Select Main Module | setmain.png" )               , {|| oIde:executeAction( "" ) } } )
+   oSubMenu:addItem( { _T( "Add File* | projectadd.png" )                     , {|| oIde:execAction( "" ) } } )
+   oSubMenu:addItem( { _T( "Remove File* | projectdel.png" )                  , {|| oIde:execAction( "" ) } } )
+   oSubMenu:addItem( { _T( "Select Main Module | setmain.png" )               , {|| oIde:execAction( "" ) } } )
    oSubMenu:disableItem( oSubMenu:numItems )
    hbide_menuAddSep( oSubMenu )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Change Current Project" )                         , {|| oIde:executeAction( "SelectProject" ) } } )
-   oSubMenu:addItem( { _T( "Close Current Project" )                          , {|| oIde:executeAction( "CloseProject"   ) } } )
+   oSubMenu:addItem( { _T( "Change Current Project" )                         , {|| oIde:execAction( "SelectProject" ) } } )
+   oSubMenu:addItem( { _T( "Close Current Project" )                          , {|| oIde:execAction( "CloseProject"   ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   /*----------------------------------------------------------------------------*/
+   /*                                   Build                                    */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Build"
-   oSubMenu:addItem( { _T( "Build, ^F9 | build.png" )          , {|| oIde:executeAction( "SaveBuild"          ) } } )
-   oSubMenu:addItem( { _T( "Build and Launch, F9 | buildlaunch.png" ), {|| oIde:executeAction( "SaveBuildLaunch"    ) } } )
-   oSubMenu:addItem( { _T( "Re-build | rebuild.png" )          , {|| oIde:executeAction( "SaveRebuild"        ) } } )
-   oSubMenu:addItem( { _T( "Re-build and Launch, Sh+^F9 | rebuildlaunch.png" ), {|| oIde:executeAction( "SaveRebuildLaunch"  ) } } )
+   oSubMenu:addItem( { _T( "Build, ^F9 | build.png" )                         , {|| oIde:execAction( "SaveBuild"          ) } } )
+   oSubMenu:addItem( { _T( "Build and Launch, F9 | buildlaunch.png" )         , {|| oIde:execAction( "SaveBuildLaunch"    ) } } )
+   oSubMenu:addItem( { _T( "Re-build | rebuild.png" )                         , {|| oIde:execAction( "SaveRebuild"        ) } } )
+   oSubMenu:addItem( { _T( "Re-build and Launch, Sh+^F9 | rebuildlaunch.png" ), {|| oIde:execAction( "SaveRebuildLaunch"  ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Save and Compile Current File | compile.png"), {|| oIde:executeAction( "SaveCompileCurrent" ) } } )
-   oSubMenu:addItem( { _T( "Save and Compile to PPO | ppo.png" ), {|| oIde:executeAction( "CompilePPO"        ) } } )
+   oSubMenu:addItem( { _T( "Save and Compile Current File | compile.png")     , {|| oIde:execAction( "SaveCompileCurrent" ) } } )
+   oSubMenu:addItem( { _T( "Save and Compile to PPO | ppo.png" )              , {|| oIde:execAction( "CompilePPO"        ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Launch, ^F10" )                     , {|| oIde:executeAction( "LaunchProject"      ) } } )
- * oSubMenu:addItem( { _T( "Run without Debug*, Sh+^F10 | runnodebug.png" ), {|| oIde:executeAction( "" ) } } )
+   oSubMenu:addItem( { _T( "Launch, ^F10" )                                   , {|| oIde:execAction( "LaunchProject"      ) } } )
+ * oSubMenu:addItem( { _T( "Run without Debug*, Sh+^F10 | runnodebug.png" ), {|| oIde:execAction( "" ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Codec"
-   oSubMenu:addItem( { "Apple Roman "                          , {|| oIde:setCodec( "Apple Roman"         ) } } )
-   oSubMenu:addItem( { "Big5        "                          , {|| oIde:setCodec( "Big5"                ) } } )
-   oSubMenu:addItem( { "Big5-HKSCS  "                          , {|| oIde:setCodec( "Big5-HKSCS"          ) } } )
-   oSubMenu:addItem( { "CP949       "                          , {|| oIde:setCodec( "CP949"               ) } } )
-   oSubMenu:addItem( { "EUC-JP      "                          , {|| oIde:setCodec( "EUC-JP"              ) } } )
-   oSubMenu:addItem( { "EUC-KR      "                          , {|| oIde:setCodec( "EUC-KR"              ) } } )
-   oSubMenu:addItem( { "GB18030-0   "                          , {|| oIde:setCodec( "GB18030-0"           ) } } )
-   oSubMenu:addItem( { "IBM 850     "                          , {|| oIde:setCodec( "IBM 850"             ) } } )
-   oSubMenu:addItem( { "IBM 866     "                          , {|| oIde:setCodec( "IBM 866"             ) } } )
-   oSubMenu:addItem( { "IBM 874     "                          , {|| oIde:setCodec( "IBM 874"             ) } } )
-   oSubMenu:addItem( { "ISO 2022-JP "                          , {|| oIde:setCodec( "ISO 2022-JP"         ) } } )
-
-   oSub1 := XbpMenu():new( oSubMenu ):create()
-   oSub1:title := "ISO 8859-1 to 10"
-   oSub1:addItem( { "-1"                                       , {|| oIde:setCodec( "ISO 8859-1"          ) } } )
-   oSub1:addItem( { "-2"                                       , {|| oIde:setCodec( "ISO 8859-2"          ) } } )
-   oSub1:addItem( { "-3"                                       , {|| oIde:setCodec( "ISO 8859-3"          ) } } )
-   oSub1:addItem( { "-4"                                       , {|| oIde:setCodec( "ISO 8859-4"          ) } } )
-   oSub1:addItem( { "-5"                                       , {|| oIde:setCodec( "ISO 8859-5"          ) } } )
-   oSub1:addItem( { "-6"                                       , {|| oIde:setCodec( "ISO 8859-6"          ) } } )
-   oSub1:addItem( { "-7"                                       , {|| oIde:setCodec( "ISO 8859-7"          ) } } )
-   oSub1:addItem( { "-8"                                       , {|| oIde:setCodec( "ISO 8859-8"          ) } } )
-   oSub1:addItem( { "-9"                                       , {|| oIde:setCodec( "ISO 8859-9"          ) } } )
-   oSub1:addItem( { "-10"                                      , {|| oIde:setCodec( "ISO 8859-10"         ) } } )
-   oSubMenu:addItem( { oSub1, NIL } )
-
-   oSub1 := XbpMenu():new( oSubMenu ):create()
-   oSub1:title := "ISO 8859-13 to 16"
-   oSub1:addItem( { "-13"                                      , {|| oIde:setCodec( "ISO 8859-13"         ) } } )
-   oSub1:addItem( { "-14"                                      , {|| oIde:setCodec( "ISO 8859-14"         ) } } )
-   oSub1:addItem( { "-15"                                      , {|| oIde:setCodec( "ISO 8859-15"         ) } } )
-   oSub1:addItem( { "-16"                                      , {|| oIde:setCodec( "ISO 8859-16"         ) } } )
-   oSubMenu:addItem( { oSub1, NIL } )
-
-   //oSubMenu:addItem( { "Iscii       " , {|| oIde:setCodec( "Iscii" ) } } )  //-Bng, Dev, Gjr, Knd, Mlm, Ori, Pnj, Tlg, Tml
-   oSub1 := XbpMenu():new( oSubMenu ):create()
-   oSub1:title := "Iscii"
-   oSub1:addItem( { "-Bng"                                     , {|| oIde:setCodec( "Iscii-Bng"           ) } } )
-   oSub1:addItem( { "-Dev"                                     , {|| oIde:setCodec( "Iscii-Dev"           ) } } )
-   oSub1:addItem( { "-Gjr"                                     , {|| oIde:setCodec( "Iscii-Gjr"           ) } } )
-   oSub1:addItem( { "-Knd"                                     , {|| oIde:setCodec( "Iscii-Knd"           ) } } )
-   oSub1:addItem( { "-Mlm"                                     , {|| oIde:setCodec( "Iscii-Mlm"           ) } } )
-   oSub1:addItem( { "-Ori"                                     , {|| oIde:setCodec( "Iscii-Ori"           ) } } )
-   oSub1:addItem( { "-Pnj"                                     , {|| oIde:setCodec( "Iscii-Pnj"           ) } } )
-   oSub1:addItem( { "-Tlg"                                     , {|| oIde:setCodec( "Iscii-Tlg"           ) } } )
-   oSub1:addItem( { "-Tml"                                     , {|| oIde:setCodec( "Iscii-Tml"           ) } } )
-   oSubMenu:addItem( { oSub1, NIL } )
-
-   oSubMenu:addItem( { "JIS X 0201  "                          , {|| oIde:setCodec( "JIS X 0201"          ) } } )
-   oSubMenu:addItem( { "JIS X 0208  "                          , {|| oIde:setCodec( "JIS X 0208"          ) } } )
-   oSubMenu:addItem( { "KOI8-R      "                          , {|| oIde:setCodec( "KOI8-R"              ) } } )
-   oSubMenu:addItem( { "KOI8-U      "                          , {|| oIde:setCodec( "KOI8-U"              ) } } )
-   oSubMenu:addItem( { "MuleLao-1   "                          , {|| oIde:setCodec( "MuleLao-1"           ) } } )
-   oSubMenu:addItem( { "ROMAN8      "                          , {|| oIde:setCodec( "ROMAN8"              ) } } )
-   oSubMenu:addItem( { "Shift-JIS   "                          , {|| oIde:setCodec( "Shift-JIS"           ) } } )
-   oSubMenu:addItem( { "TIS-620     "                          , {|| oIde:setCodec( "TIS-620"             ) } } )
-   oSubMenu:addItem( { "TSCII       "                          , {|| oIde:setCodec( "TSCII"               ) } } )
-   oSubMenu:addItem( { "UTF-8       "                          , {|| oIde:setCodec( "UTF-8"               ) } } )
-   oSubMenu:addItem( { "UTF-16      "                          , {|| oIde:setCodec( "UTF-16"              ) } } )
-   oSubMenu:addItem( { "UTF-16BE    "                          , {|| oIde:setCodec( "UTF-16BE"            ) } } )
-   oSubMenu:addItem( { "UTF-16LE    "                          , {|| oIde:setCodec( "UTF-16LE"            ) } } )
-   oSubMenu:addItem( { "UTF-32      "                          , {|| oIde:setCodec( "UTF-32"              ) } } )
-   oSubMenu:addItem( { "UTF-32BE    "                          , {|| oIde:setCodec( "UTF-32BE"            ) } } )
-   oSubMenu:addItem( { "UTF-32LE    "                          , {|| oIde:setCodec( "UTF-32LE"            ) } } )
-
-   //oSubMenu:addItem( { "Windows     " , {|| oIde:setCodec( "Windows"     ) } } )  //-1250 to 1258
-   oSub1 := XbpMenu():new( oSubMenu ):create()
-   oSub1:title := "Windows-1250 to 1258"
-   oSub1:addItem( { "-1250"                                    , {|| oIde:setCodec( "Windows-1250"        ) } } )
-   oSub1:addItem( { "-1251"                                    , {|| oIde:setCodec( "Windows-1251"        ) } } )
-   oSub1:addItem( { "-1252"                                    , {|| oIde:setCodec( "Windows-1252"        ) } } )
-   oSub1:addItem( { "-1253"                                    , {|| oIde:setCodec( "Windows-1253"        ) } } )
-   oSub1:addItem( { "-1254"                                    , {|| oIde:setCodec( "Windows-1254"        ) } } )
-   oSub1:addItem( { "-1255"                                    , {|| oIde:setCodec( "Windows-1255"        ) } } )
-   oSub1:addItem( { "-1256"                                    , {|| oIde:setCodec( "Windows-1256"        ) } } )
-   oSub1:addItem( { "-1257"                                    , {|| oIde:setCodec( "Windows-1257"        ) } } )
-   oSub1:addItem( { "-1258"                                    , {|| oIde:setCodec( "Windows-1258"        ) } } )
-   oSubMenu:addItem( { oSub1, NIL } )
-
-   oSubMenu:addItem( { "WINSAMI2    "                          , {|| oIde:setCodec( "WINSAMI2"            ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*   Tools   */
+   /*----------------------------------------------------------------------------*/
+   /*                                   Tools                                    */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Tools"
-   oSubMenu:addItem( { _T( "Configure Tools...*" )             , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Configure Tools...*" )             , {|| oIde:execAction( ""               ) } } )
    hbide_menuAddSep( oSubMenu )
    // TODO: Load custom TOOLS LINK from .INI file
 #ifdef __PLATFORM__WINDOWS
-   oSubMenu:addItem( { _T( "Command Prompt...*" )              , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Command Prompt...*" )              , {|| oIde:execAction( ""               ) } } )
 #else
-   oSubMenu:addItem( { _T( "Terminal" )                        , {|| oIde:executeAction( ""               ) } } )
+   oSubMenu:addItem( { _T( "Terminal" )                        , {|| oIde:execAction( ""               ) } } )
 #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   /*   Options  */
+   /*----------------------------------------------------------------------------*/
+   /*                                   Options                                  */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Options"
    oSubMenu:addItem( { _T( "Themes" )                          , {|| oIde:oThemes:fetch()                   } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   /*   Help   */
+   /*----------------------------------------------------------------------------*/
+   /*                                   Codec                                    */
+   /*----------------------------------------------------------------------------*/
+   oSubMenu := hbide_buildCodecMenu( oIde, oMenuBar )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   /*----------------------------------------------------------------------------*/
+   /*                                   Help                                     */
+   /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Help"
    oSubMenu:addItem( { _T( "About hbIDE   | vr-16x16.png" )    , {|| hbide_help( 1 ) } } )
@@ -452,6 +392,94 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return Nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenuBar )
+   LOCAL oSubMenu, oSub1
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Codec"
+   oSubMenu:addItem( { "Apple Roman "         , {|| oIde:setCodec( "Apple Roman"         ) } } )
+   oSubMenu:addItem( { "Big5        "         , {|| oIde:setCodec( "Big5"                ) } } )
+   oSubMenu:addItem( { "Big5-HKSCS  "         , {|| oIde:setCodec( "Big5-HKSCS"          ) } } )
+   oSubMenu:addItem( { "CP949       "         , {|| oIde:setCodec( "CP949"               ) } } )
+   oSubMenu:addItem( { "EUC-JP      "         , {|| oIde:setCodec( "EUC-JP"              ) } } )
+   oSubMenu:addItem( { "EUC-KR      "         , {|| oIde:setCodec( "EUC-KR"              ) } } )
+   oSubMenu:addItem( { "GB18030-0   "         , {|| oIde:setCodec( "GB18030-0"           ) } } )
+   oSubMenu:addItem( { "IBM 850     "         , {|| oIde:setCodec( "IBM 850"             ) } } )
+   oSubMenu:addItem( { "IBM 866     "         , {|| oIde:setCodec( "IBM 866"             ) } } )
+   oSubMenu:addItem( { "IBM 874     "         , {|| oIde:setCodec( "IBM 874"             ) } } )
+   oSubMenu:addItem( { "ISO 2022-JP "         , {|| oIde:setCodec( "ISO 2022-JP"         ) } } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "ISO 8859-1 to 10"
+   oSub1:addItem( { "-1"                      , {|| oIde:setCodec( "ISO 8859-1"          ) } } )
+   oSub1:addItem( { "-2"                      , {|| oIde:setCodec( "ISO 8859-2"          ) } } )
+   oSub1:addItem( { "-3"                      , {|| oIde:setCodec( "ISO 8859-3"          ) } } )
+   oSub1:addItem( { "-4"                      , {|| oIde:setCodec( "ISO 8859-4"          ) } } )
+   oSub1:addItem( { "-5"                      , {|| oIde:setCodec( "ISO 8859-5"          ) } } )
+   oSub1:addItem( { "-6"                      , {|| oIde:setCodec( "ISO 8859-6"          ) } } )
+   oSub1:addItem( { "-7"                      , {|| oIde:setCodec( "ISO 8859-7"          ) } } )
+   oSub1:addItem( { "-8"                      , {|| oIde:setCodec( "ISO 8859-8"          ) } } )
+   oSub1:addItem( { "-9"                      , {|| oIde:setCodec( "ISO 8859-9"          ) } } )
+   oSub1:addItem( { "-10"                     , {|| oIde:setCodec( "ISO 8859-10"         ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "ISO 8859-13 to 16"
+   oSub1:addItem( { "-13"                     , {|| oIde:setCodec( "ISO 8859-13"         ) } } )
+   oSub1:addItem( { "-14"                     , {|| oIde:setCodec( "ISO 8859-14"         ) } } )
+   oSub1:addItem( { "-15"                     , {|| oIde:setCodec( "ISO 8859-15"         ) } } )
+   oSub1:addItem( { "-16"                     , {|| oIde:setCodec( "ISO 8859-16"         ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "Iscii"
+   oSub1:addItem( { "-Bng"                    , {|| oIde:setCodec( "Iscii-Bng"           ) } } )
+   oSub1:addItem( { "-Dev"                    , {|| oIde:setCodec( "Iscii-Dev"           ) } } )
+   oSub1:addItem( { "-Gjr"                    , {|| oIde:setCodec( "Iscii-Gjr"           ) } } )
+   oSub1:addItem( { "-Knd"                    , {|| oIde:setCodec( "Iscii-Knd"           ) } } )
+   oSub1:addItem( { "-Mlm"                    , {|| oIde:setCodec( "Iscii-Mlm"           ) } } )
+   oSub1:addItem( { "-Ori"                    , {|| oIde:setCodec( "Iscii-Ori"           ) } } )
+   oSub1:addItem( { "-Pnj"                    , {|| oIde:setCodec( "Iscii-Pnj"           ) } } )
+   oSub1:addItem( { "-Tlg"                    , {|| oIde:setCodec( "Iscii-Tlg"           ) } } )
+   oSub1:addItem( { "-Tml"                    , {|| oIde:setCodec( "Iscii-Tml"           ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSubMenu:addItem( { "JIS X 0201  "         , {|| oIde:setCodec( "JIS X 0201"          ) } } )
+   oSubMenu:addItem( { "JIS X 0208  "         , {|| oIde:setCodec( "JIS X 0208"          ) } } )
+   oSubMenu:addItem( { "KOI8-R      "         , {|| oIde:setCodec( "KOI8-R"              ) } } )
+   oSubMenu:addItem( { "KOI8-U      "         , {|| oIde:setCodec( "KOI8-U"              ) } } )
+   oSubMenu:addItem( { "MuleLao-1   "         , {|| oIde:setCodec( "MuleLao-1"           ) } } )
+   oSubMenu:addItem( { "ROMAN8      "         , {|| oIde:setCodec( "ROMAN8"              ) } } )
+   oSubMenu:addItem( { "Shift-JIS   "         , {|| oIde:setCodec( "Shift-JIS"           ) } } )
+   oSubMenu:addItem( { "TIS-620     "         , {|| oIde:setCodec( "TIS-620"             ) } } )
+   oSubMenu:addItem( { "TSCII       "         , {|| oIde:setCodec( "TSCII"               ) } } )
+   oSubMenu:addItem( { "UTF-8       "         , {|| oIde:setCodec( "UTF-8"               ) } } )
+   oSubMenu:addItem( { "UTF-16      "         , {|| oIde:setCodec( "UTF-16"              ) } } )
+   oSubMenu:addItem( { "UTF-16BE    "         , {|| oIde:setCodec( "UTF-16BE"            ) } } )
+   oSubMenu:addItem( { "UTF-16LE    "         , {|| oIde:setCodec( "UTF-16LE"            ) } } )
+   oSubMenu:addItem( { "UTF-32      "         , {|| oIde:setCodec( "UTF-32"              ) } } )
+   oSubMenu:addItem( { "UTF-32BE    "         , {|| oIde:setCodec( "UTF-32BE"            ) } } )
+   oSubMenu:addItem( { "UTF-32LE    "         , {|| oIde:setCodec( "UTF-32LE"            ) } } )
+
+   oSub1 := XbpMenu():new( oSubMenu ):create()
+   oSub1:title := "Windows-1250 to 1258"
+   oSub1:addItem( { "-1250"                   , {|| oIde:setCodec( "Windows-1250"        ) } } )
+   oSub1:addItem( { "-1251"                   , {|| oIde:setCodec( "Windows-1251"        ) } } )
+   oSub1:addItem( { "-1252"                   , {|| oIde:setCodec( "Windows-1252"        ) } } )
+   oSub1:addItem( { "-1253"                   , {|| oIde:setCodec( "Windows-1253"        ) } } )
+   oSub1:addItem( { "-1254"                   , {|| oIde:setCodec( "Windows-1254"        ) } } )
+   oSub1:addItem( { "-1255"                   , {|| oIde:setCodec( "Windows-1255"        ) } } )
+   oSub1:addItem( { "-1256"                   , {|| oIde:setCodec( "Windows-1256"        ) } } )
+   oSub1:addItem( { "-1257"                   , {|| oIde:setCodec( "Windows-1257"        ) } } )
+   oSub1:addItem( { "-1258"                   , {|| oIde:setCodec( "Windows-1258"        ) } } )
+   oSubMenu:addItem( { oSub1, NIL } )
+
+   oSubMenu:addItem( { "WINSAMI2    "         , {|| oIde:setCodec( "WINSAMI2"            ) } } )
+
+   RETURN oSubMenu
 
 /*----------------------------------------------------------------------*/
 /*
@@ -485,7 +513,7 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
 //     msgbox( ToString( oMenuBar:aMenuItems[ n ] ))
 
        oItem := oMenuBar:aMenuItems[ n ]
-       c := Upper( oItem[3] )
+       c := Upper( oItem[ 3 ] )
        c := StrTran( c, '~', '' )
        c := StrTran( c, '&', '' )
 
@@ -499,25 +527,25 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
       RETURN nil
    ENDIF
 
-   oItem[4]:delAllItems()
+   oItem[ 4 ]:delAllItems()
 
    FOR n := 1 TO Len( oIde:aIni[ nType ] )
        c := hbide_pathNormalized( oIde:aIni[ nType , n ], .F. )
        lEmpty := .F.
 
-       oItem[4]:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + c )   , nil } )
+       oItem[ 4 ]:addItem( { _T( '~' + hb_NumToHex( n ) + '. ' + c )   , nil } )
 
        IF !hb_FileExists(c)
-          oItem[4]:disableItem( n )
+          oItem[ 4 ]:disableItem( n )
        ENDIF
    NEXT
    IF lEmpty
       IF nType == INI_RECENTFILES
-         oItem[4]:addAction( "** No recent files found **" )
+         oItem[ 4 ]:addAction( "** No recent files found **" )
       ELSE
-         oItem[4]:addAction( "** No recent projects found **" )
+         oItem[ 4 ]:addAction( "** No recent projects found **" )
       ENDIF
-      oItem[4]:disableItem( 1 )
+      oItem[ 4 ]:disableItem( 1 )
    ENDIF
    RETURN nil
 
@@ -563,7 +591,7 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
    LOCAL oItem
    LOCAL n, c
 
-   IF Empty(oIde:oDlg )
+   IF Empty( oIde:oDlg )
       RETURN nil
    ENDIF
 
@@ -573,7 +601,7 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
    FOR n := 1 TO oMenuBar:numItems()
 
        oItem := oMenuBar:aMenuItems[ n ]
-       c := Upper( oItem[3] )
+       c := Upper( oItem[ 3 ] )
        c := StrTran( c, '~', '' )
        c := StrTran( c, '&', '' )
 
