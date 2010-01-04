@@ -497,7 +497,7 @@ METHOD XbpWindow:destroy()
          ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aEConnections := {}
-      ::oWidget:removeEventFilter( QT_GetEventFilter() )
+      ::oWidget:removeEventFilter( ::pEvents )
    ENDIF
 
    IF Len( ::aChildren ) > 0

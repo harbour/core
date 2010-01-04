@@ -278,8 +278,8 @@ METHOD xbpMenuBar:delItem( nItemIndex )
          //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
          oAction := ::aMenuItems[ nItemIndex, 5 ]
-         QT_DISCONNECT_SIGNAL( oAction:pPtr, "triggered(bool)" )
-         QT_DISCONNECT_SIGNAL( oAction:pPtr, "hovered()"       )
+         Qt_Events_disConnect( ::pEvents, oAction, "triggered(bool)" )
+         Qt_Slots_disConnect( ::pSlots, oAction, "hovered()" )
          oAction:pPtr := 0
       ENDIF
       ADEL( ::aMenuItems, nItemIndex )

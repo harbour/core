@@ -424,7 +424,7 @@ METHOD IdeEditor:setTabImage()
 METHOD IdeEditor:showPPO( cFile )
    LOCAL qEdit, qHiliter
 
-   IF hb_FileExists( cFile )
+   IF file( cFile )
       qEdit := QPlainTextEdit():new()
       qEdit:setPlainText( hb_memoRead( cFile ) )
       qEdit:setLineWrapMode( QTextEdit_NoWrap )
@@ -475,3 +475,4 @@ METHOD IdeEditor:applyTheme( cTheme )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

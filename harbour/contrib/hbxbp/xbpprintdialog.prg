@@ -122,7 +122,7 @@ METHOD XbpPrintDialog:create( oParent, oOwner )
 METHOD XbpPrintDialog:destroy()
 
    IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
+      aeval( ::aConnections, {|e_| Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
       ::aConnections := {}
    ENDIF
 
