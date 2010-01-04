@@ -2,6 +2,5 @@
 # $Id$
 #
 
-@uhttpd.hbp
+@modules.hbp
 hbgd.hbc -DGD_SUPPORT
-hbct.hbc

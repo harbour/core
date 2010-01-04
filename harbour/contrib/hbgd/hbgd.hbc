@@ -7,3 +7,6 @@ incpaths=.
 libs=hbgd
 {win}libs=bgd
 {linux}libs=gdlib png jpeg freetype m
+{darwin}libs=gd
+
+-L/opt/local/lib{darwin}
