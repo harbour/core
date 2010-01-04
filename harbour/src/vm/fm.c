@@ -1130,8 +1130,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       else
       {
          hb_conOutErr( hb_conNewLine(), 0 );
-         hb_snprintf( buffer, sizeof( buffer ), HB_I_("Memory allocated but not released: none") );
-         hb_conOutErr( buffer, 0 );
+         hb_conOutErr( HB_I_("Memory allocated but not released: none"), 0 );
       }
 
       hb_conOutErr( hb_conNewLine(), 0 );
