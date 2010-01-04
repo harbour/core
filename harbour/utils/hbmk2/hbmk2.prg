@@ -1113,14 +1113,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator()
       /* Detect special multi-host dir layout */
       ELSEIF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + "include" +;
-                                       hb_osPathSeparator() + "hbvm.h" )
+                                           hb_osPathSeparator() + "hbvm.h" )
          l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator()
       ENDIF
 
       /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                         hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
-                                         hb_osPathSeparator() + "hbvm.h" )
+                                       hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
+                                       hb_osPathSeparator() + "hbvm.h" )
          IF Empty( l_cHB_BIN_INSTALL )
             l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
          ENDIF
@@ -2205,6 +2205,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          hbmk[ _HBMK_aLIBCOREGT ] := {}
       ENDIF
 
+      #define _HBLIB_FULLPATH( cName ) ( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cName + cLibLibExt )
+
       DO CASE
       /* GCC family */
       CASE ( hbmk[ _HBMK_cPLAT ] == "bsd"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -2385,11 +2387,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                AAdd( l_aLIBSYS, "network" )
             ENDCASE
 
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL
             ENDIF
-            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, "z" )
                cLIB_BASE_ZLIB := NIL
             ENDIF
@@ -3309,11 +3311,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                AAdd( l_aLIBSYS, "resolv" )
             ENDCASE
 
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL
             ENDIF
-            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, "z" )
                cLIB_BASE_ZLIB := NIL
             ENDIF
@@ -3787,19 +3789,27 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
 
          IF ! hbmk[ _HBMK_lSHARED ]
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
             ENDIF
-            IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
             ENDIF
          ENDIF
 
          /* Library list assembly */
          IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
-            l_aLIBHB := ArrayAJoin( { l_aLIBSHAREDPOST,;
-                                      aLIB_BASE_CPLR,;
-                                      aLIB_BASE_DEBUG } )
+            l_aLIBHB := AClone( l_aLIBSHAREDPOST )
+            /* NOTE: Make sure to add these static libs only if they can be found.
+                     This will ensure that hbmk2 can be used to build shared mode binaries
+                     even when static libs are not installed (typically on *nix systems).
+                     [vszakats] */
+            FOR EACH tmp IN ArrayAJoin( { aLIB_BASE_CPLR,;
+                                          aLIB_BASE_DEBUG } )
+               IF hb_FileExists( _HBLIB_FULLPATH( tmp ) )
+                  AAdd( l_aLIBHB, tmp )
+               ENDIF
+            NEXT
          ELSE
             l_aLIBHB := ArrayAJoin( { aLIB_BASE_EXTERN,;
                                       aLIB_BASE_DEBUG,;
