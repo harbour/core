@@ -82,7 +82,7 @@
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION LoadThemes( oIde )
+FUNCTION hbide_loadThemes( oIde )
 
    IF empty( oIde:cIniThemes )
       oIde:cIniThemes := hb_dirBase() + "hbide.hbt"
@@ -94,10 +94,8 @@ FUNCTION LoadThemes( oIde )
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeThemes
+CLASS IdeThemes INHERIT IdeObject
 
-   VAR    oIde
-   VAR    oUI
    VAR    lDefault                                INIT .t.
    VAR    cIniFile                                INIT ""
 
@@ -163,7 +161,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
    ::cIniFile := cIniFile
 
    /* next always load default themes */
-   ::aIni := LoadDefaultThemes()
+   ::aIni := hbide_loadDefaultThemes()
    ::parseINI()
 
    /* first load user defined themes */
@@ -231,7 +229,7 @@ METHOD IdeThemes:contains( cTheme )
 METHOD IdeThemes:load( cFile )
 
    IF hb_isChar( cFile ) .AND. !empty( cFile ) .AND. hb_FileExists( cFile )
-      ::aIni:= ReadSource( cFile )
+      ::aIni:= hbide_readSource( cFile )
       ::parseINI()
       ::lDefault := .f.
    ENDIF
@@ -250,7 +248,7 @@ METHOD IdeThemes:save( lAsk )
    ENDIF
 
    IF lAsk
-      cFile := SaveAFile( ::oIde:oDlg, ;
+      cFile := hbide_saveAFile( ::oIde:oDlg, ;
                           "Select a File to Save Themes (.hbt)", ;
                           { { "Harbour IDE Themes", "*.hbt" } }, ;
                           ::cIniFile, ;
@@ -320,7 +318,6 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
    LOCAL aAttr
 
    IF !empty( aAttr := ::getThemeAttribute( "CommentsAndRemarks", cTheme ) )
-      idedbg( "                     CommentsAndRemarks               " )
       qHiliter:setHBMultiLineCommentFormat( ::buildSyntaxFormat( aAttr ) )
    ENDIF
 
@@ -392,7 +389,7 @@ METHOD IdeThemes:fetch()
       ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_ULINE , i, o ) } )
 
       ::oUI:signal( "buttonClose"   , "clicked()", ;
-            {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := PosAndSize( ::oUI:oWidget ), ::oUI:hide() } )
+            {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
 
       ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
 
@@ -653,7 +650,7 @@ METHOD IdeThemes:parseINI( lAppend )
             IF ( n := at( ":", s ) ) > 0
                cKey := alltrim( strtran( substr( s, n+1 ), "]" ) )
             ENDIF
-            HB_TRACE( HB_TR_ALWAYS, cKey )
+//            HB_TRACE( HB_TR_ALWAYS, cKey )
             IF !empty( cKey )
                nPart := 3
                IF ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cKey } ) ) == 0
@@ -666,7 +663,7 @@ METHOD IdeThemes:parseINI( lAppend )
          OTHERWISE
             DO CASE
             CASE nPart == 1 /* Controls */
-               IF ParseKeyValPair( s, @cKey, @cVal )
+               IF hbide_parseKeyValPair( s, @cKey, @cVal )
                   IF ( n := ascan( ::aControls, cKey ) ) > 0
                      ::aControls[ n, 2 ] := cVal
                   ELSE
@@ -674,7 +671,7 @@ METHOD IdeThemes:parseINI( lAppend )
                   ENDIF
                ENDIF
             CASE nPart == 2 /* Items   */
-               IF ParseKeyValPair( s, @cKey, @cVal )
+               IF hbide_parseKeyValPair( s, @cKey, @cVal )
                   IF ( n := ascan( ::aThemes, cKey ) ) > 0
                      ::aThemes[ n, 2 ] := cVal
                   ELSE
@@ -682,7 +679,7 @@ METHOD IdeThemes:parseINI( lAppend )
                   ENDIF
                ENDIF
             CASE nPart == 3 /* Theams  */
-               IF ParseKeyValPair( s, @cKey, @cVal )
+               IF hbide_parseKeyValPair( s, @cKey, @cVal )
                   aV   := FillAttrbs()
                   aVal := hb_aTokens( cVal, "," )
                   FOR n := 1 TO THM_NUM_ATTRBS
@@ -797,7 +794,7 @@ STATIC FUNCTION GetSource()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION SetSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic, lBold, lUnderline )
+STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic, lBold, lUnderline )
    LOCAL qFormat
 
    qFormat  := QTextCharFormat():new()
@@ -819,74 +816,7 @@ STATIC FUNCTION SetSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic,
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetSyntaxHilighting( qEdit, qHiliter )
-   LOCAL b_, qFormat, s
-
-   HB_SYMBOL_UNUSED( qEdit )
-
-   /* Compiler Directives */
-   b_:= { "include","ifdef","else","endif","command","xcommand","translate","xtranslate" }
-   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + upper( e ) + "\b|#" + e + "\b" } )
-   SetSyntaxAttrbs( qHiliter, s, "PreprocessorDirectives", 120,  26, 213, .t., .t., .f. )
-
-   /* Harbour Keywords */
-   b_:= { 'function','return','static','local','default', ;
-          'if','else','elseif','endif','end', ;
-          'docase','case','endcase','otherwise', ;
-          'do','while','exit',;
-          'for','each','next','step','to',;
-          'class','endclass','method','data','var','destructor','inline','assign','access',;
-          'inherit','init','create','virtual',;
-          'begin','sequence','try','catch','always','recover','hb_symbol_unused' }
-   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
-   //SetSyntaxAttrbs( qHiliter, s, "HarbourKeywords"     ,  40, 120, 240, .f., .t., .f. )
-   SetSyntaxAttrbs( qHiliter, s, "HarbourKeywords"     , 192,   0,   0, .f., .t., .f. )
-
-   #if 0
-   /* C Language Keywords - Only for C or CPP sources - mutually exclusive with Harbour Sources */
-   b_:= { "char", "class", "const", "double", "enum", "explicit", "friend", "inline", ;
-          "int",  "long", "namespace", "operator", "private", "protected", "public", ;
-          "short", "signals", "signed", "slots", "static", "struct", "template", ;
-          "typedef", "typename", "union", "unsigned", "virtual", "void", "volatile" }
-   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" } )
-   SetSyntaxAttrbs( qHiliter, s, "CLanguageKeywords"   ,  40, 120, 240, .f., .t., .f. )
-   #endif
-
-   /* Operators */
-   s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
-   SetSyntaxAttrbs( qHiliter, s, "Operators"           , 255, 120,   0, .f., .f., .f. )
-
-   /* Numerics */
-   s := "\b[0-9.]+\b"
-   SetSyntaxAttrbs( qHiliter, s, "NumericConstants"    , 127, 127, 127, .f., .f., .f. )
-
-   /* Brackets and Braces */
-   s := "\(|\)|\{|\}|\[|\]|\|"
-   SetSyntaxAttrbs( qHiliter, s, "BracketsAndBraces"   ,   0,   0, 192, .f., .f., .f. )
-
-   /* Functions in General */
-   s := "\b[A-Za-z0-9_]+(?=\()"
-   SetSyntaxAttrbs( qHiliter, s, "FunctionsBody"       ,   0,   0, 255, .f., .f., .f. )
-
-   /* Strings */
-   s := [\".*\"|\'.*\']
-   SetSyntaxAttrbs( qHiliter, s, "TerminatedStrings"   ,   0, 127,   0, .f., .f., .f. )
-
-   /* Single Line Comments */
-   s := "//[^\n]*"
-   SetSyntaxAttrbs( qHiliter, s, "CommentsAndRemarks"  , 190, 190, 190, .f., .f., .f. )
-
-   /* Multiline comments */
-   qFormat := QTextCharFormat():new()
-   qFormat:setFontItalic( .t. )
-   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( 190,190,190 ) ) )
-   qHiliter:setHBMultiLineCommentFormat( qFormat )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION LoadDefaultThemes()
+STATIC FUNCTION hbide_loadDefaultThemes()
    LOCAL aIni := {}
 
    IF .t.

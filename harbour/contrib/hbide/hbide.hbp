@@ -15,6 +15,7 @@
 -ldflag={msvc}-defaultlib:libcmt.lib
 
 hbide.prg
+ideobject.prg
 idestylesheets.prg
 idetags.prg
 idemisc.prg
@@ -25,5 +26,6 @@ idedocks.prg
 idesaveload.prg
 iderequests.prg
 idethemes.prg
+ideprojmanager.prg
 
 ideparseexpr.c

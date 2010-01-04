@@ -115,6 +115,8 @@ METHOD XbpQtUiLoader:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF !empty( ::file ) .and. file( ::file )
+      hb_hCaseMatch( ::qObj, .f. )
+
       ::loadContents( ::file )
 
       ::oWidget := ::loadUI( ::file )
@@ -122,6 +124,7 @@ METHOD XbpQtUiLoader:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       IF !empty( ::oWidget )
          ::loadWidgets()
       ENDIF
+
    ENDIF
 
    RETURN Self
@@ -256,7 +259,11 @@ METHOD OnError( ... )
 
    HBXBP_DEBUG( "OnError", cMsg )
 
-   xReturn := ::oWidget:&cMsg( ... )
+   IF left( cMsg, 2 ) == "Q_"
+      xReturn := ::qObj[ substr( cMsg, 3 ) ]
+   ELSE
+      xReturn := ::oWidget:&cMsg( ... )
+   ENDIF
 
    RETURN xReturn
 

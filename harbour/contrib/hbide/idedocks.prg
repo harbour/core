@@ -71,39 +71,9 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeDocks
-
-   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
-   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+CLASS IdeDockS INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
-
-   DATA   oIde
-
-   ACCESS oDlg                                    INLINE ::oIde:oDlg
-   ACCESS oDA                                     INLINE ::oIde:oDA
-
-   ACCESS oDockPT                                 INLINE ::oIde:oDockPT
-   ACCESS oProjTree                               INLINE ::oIde:oProjTree
-   ACCESS oProjRoot                               INLINE ::oIde:oProjRoot
-   ACCESS aProjData                               INLINE ::oIde:aProjData
-   ACCESS aProjects                               INLINE ::oIde:aProjects
-
-   ACCESS oDockED                                 INLINE ::oIde:oDockED
-   ACCESS oEditTree                               INLINE ::oIde:oEditTree
-   ACCESS oOpenedSources                          INLINE ::oIde:oOpenedSources
-
-   ACCESS oDockR                                  INLINE ::oIde:oDockR
-   ACCESS oFuncList                               INLINE ::oIde:oFuncList
-
-   ACCESS oDockB                                  INLINE ::oIde:oDockB
-   ACCESS oCompileResult                          INLINE ::oIde:oCompileResult
-
-   ACCESS oDockB1                                 INLINE ::oIde:oDockB1
-   ACCESS oLinkResult                             INLINE ::oIde:oLinkResult
-
-   ACCESS oDockB2                                 INLINE ::oIde:oDockB2
-   ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
 
    METHOD new()
    METHOD create()
@@ -188,7 +158,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjRoot:expand( .t. )
    //
    FOR i := 1 TO len( ::aProjects )
-      ::oIde:appendProjectInTree( ::aProjects[ i, 3 ] )
+      ::oIde:updateProjectTree( ::aProjects[ i, 3 ] )
    NEXT
 
    /* Insert Project Tree Into Dock Widget */
@@ -362,7 +332,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
          qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
          cText := QTextBlock():configure( qCursor:block() ):text()
 
-         IF ParseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
+         IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
             ::oIde:editSource( cSource )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             nLine   := iif( nLine < 1, 0, nLine - 1 )

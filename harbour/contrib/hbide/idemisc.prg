@@ -92,12 +92,12 @@ PROCEDURE AppSys()
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE JustACall()
+PROCEDURE hbide_justACall()
    RETURN
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ExecPopup( aPops, aPos, qParent )
+FUNCTION hbide_execPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
 
    qPop := QMenu():new( IIF( hb_isObject( qParent ), qParent, NIL ) )
@@ -126,7 +126,7 @@ FUNCTION ExecPopup( aPops, aPos, qParent )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION MenuAddSep( oMenu )
+FUNCTION hbide_menuAddSep( oMenu )
 
    oMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
 
@@ -134,7 +134,7 @@ FUNCTION MenuAddSep( oMenu )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION CreateTarget( cFile, txt_ )
+FUNCTION hbide_createTarget( cFile, txt_ )
    LOCAL hHandle := fcreate( cFile )
    LOCAL cNewLine := hb_OsNewLine()
 
@@ -147,14 +147,14 @@ FUNCTION CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION PosAndSize( qWidget )
+FUNCTION hbide_posAndSize( qWidget )
 
    RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
           hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ShowWarning( cMsg, cInfo, cTitle )
+FUNCTION hbide_showWarning( cMsg, cInfo, cTitle )
    LOCAL oMB
 
    DEFAULT cTitle TO "Information"
@@ -173,7 +173,7 @@ FUNCTION ShowWarning( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION GetYesNo( cMsg, cInfo, cTitle )
+FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
    LOCAL oMB
 
    DEFAULT cTitle TO "Option Please!"
@@ -193,7 +193,7 @@ FUNCTION GetYesNo( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION GetYesNoCancel( cMsg, cInfo, cTitle )
+FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
    LOCAL oMB
 
    DEFAULT cTitle TO "Option Please!"
@@ -213,7 +213,7 @@ FUNCTION GetYesNoCancel( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
+FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a File"
@@ -235,7 +235,7 @@ FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SaveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
+FUNCTION hbide_saveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a File"
@@ -257,7 +257,7 @@ FUNCTION SaveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
 /* Function to user select a existing folder
  * 25/12/2009 - 19:10:41 - vailtom
  */
-FUNCTION FetchADir( oWnd, cTitle, cDftDir )
+FUNCTION hbide_fetchADir( oWnd, cTitle, cDftDir )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a Folder"
@@ -280,8 +280,10 @@ FUNCTION FetchADir( oWnd, cTitle, cDftDir )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ReadSource( cTxtFile )
+FUNCTION hbide_readSource( cTxtFile )
    LOCAL cFileBody := hb_MemoRead( cTxtFile )
+
+   HB_TRACE( HB_TR_DEBUG, cFileBody )
 
    cFileBody := StrTran( cFileBody, Chr( 13 ) )
 
@@ -289,7 +291,7 @@ FUNCTION ReadSource( cTxtFile )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION EvalAsString( cExp )
+FUNCTION hbide_evalAsString( cExp )
    LOCAL cValue
 
    BEGIN SEQUENCE WITH { || break() }
@@ -306,17 +308,17 @@ FUNCTION EvalAsString( cExp )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION FetchHbiStructFromBuffer( cBuffer )
-   RETURN PullHbiStruct( hb_atokens( cBuffer, _EOL ) )
+FUNCTION hbide_fetchHbiStructFromBuffer( cBuffer )
+   RETURN hbide_pullHbiStruct( hb_atokens( cBuffer, _EOL ) )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION FetchHbiStructFromFile( cProject )
-   RETURN PullHbiStruct( ReadSource( cProject ) )
+FUNCTION hbide_fetchHbiStructFromFile( cProject )
+   RETURN hbide_pullHbiStruct( hbide_readSource( cProject ) )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION PullHbiStruct( a_ )
+STATIC FUNCTION hbide_pullHbiStruct( a_ )
    LOCAL n, s, nPart, cKey, cVal, ss
    LOCAL aPrp := { "Type", "Title", "Location", "WorkingFolder", "DestinationFolder", ;
                                             "Output", "LaunchParams", "LaunchProgram" }
@@ -334,7 +336,7 @@ STATIC FUNCTION PullHbiStruct( a_ )
       FOR EACH ss IN a_
          s := alltrim( ss )
 
-         IF .t.
+         IF !empty( s )
             DO CASE
             CASE s == "[ PROPERTIES ]"
                nPart := PRJ_PRP_PROPERTIES
@@ -359,13 +361,13 @@ STATIC FUNCTION PullHbiStruct( a_ )
 
                CASE nPart == PRJ_PRP_SOURCES
                   aadd( a3_0, s )
-
+//HB_TRACE( HB_TR_ALWAYS, s )
                CASE nPart == PRJ_PRP_METADATA
                   aadd( a4_0, s )
                   IF !( "#" == left( s,1 ) )
                      IF ( n := at( "=", s ) ) > 0
                         cKey := alltrim( substr( s, 1, n-1 ) )
-                        cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
+                        cVal := hbide_evalAsString( alltrim( substr( s, n+1 ) ) )
                         aadd( a4_1, { "<"+ cKey +">", cVal } )
                      ENDIF
                   ENDIF
@@ -376,21 +378,22 @@ STATIC FUNCTION PullHbiStruct( a_ )
 
       /* General Properties */
       FOR EACH s IN a1_0
-         aadd( a1_1, ParseWithMetaData( s, a4_1 ) )
+         aadd( a1_1, hbide_parseWithMetaData( s, a4_1 ) )
       NEXT
 
       /* Parse Flags */
       IF !empty( a2_0 )
          FOR EACH s IN a2_0
-            aadd( a2_1, ParseWithMetaData( s, a4_1 ) )
+            aadd( a2_1, hbide_parseWithMetaData( s, a4_1 ) )
          NEXT
       ENDIF
 
       /* Parse Files */
       IF !empty( a3_0 )
          FOR EACH s IN a3_0
+//HB_TRACE( HB_TR_ALWAYS, "Files            ", s )
             IF !( "#" == left( s,1 ) ) .and. !empty( s )
-               aadd( a3_1, ParseWithMetaData( s, a4_1 ) )
+               aadd( a3_1, hbide_parseWithMetaData( s, a4_1 ) )
             ENDIF
          NEXT
       ENDIF
@@ -401,7 +404,7 @@ STATIC FUNCTION PullHbiStruct( a_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetupMetaKeys( a_ )
+FUNCTION hbide_setupMetaKeys( a_ )
    LOCAL s, n, cKey, cVal
    LOCAL a4_1 := {}
 
@@ -409,7 +412,7 @@ FUNCTION SetupMetaKeys( a_ )
       IF !( "#" == left( s,1 ) )
          IF ( n := at( "=", s ) ) > 0
             cKey := alltrim( substr( s, 1, n-1 ) )
-            cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
+            cVal := hbide_evalAsString( alltrim( substr( s, n+1 ) ) )
             aadd( a4_1, { "<"+ cKey +">", cVal } )
          ENDIF
       ENDIF
@@ -419,12 +422,12 @@ FUNCTION SetupMetaKeys( a_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ApplyMetaData( s, a_ )
+FUNCTION hbide_applyMetaData( s, a_ )
    LOCAL k
 
    IF ! Empty( a_ )
       FOR EACH k IN a_
-         s := StrTran( s, PathNormalized( k[ 2 ], .f. ), k[ 1 ] )
+         s := StrTran( s, hbide_pathNormalized( k[ 2 ], .f. ), k[ 1 ] )
       NEXT
    ENDIF
 
@@ -432,7 +435,7 @@ FUNCTION ApplyMetaData( s, a_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ParseWithMetaData( s, a_ )
+FUNCTION hbide_parseWithMetaData( s, a_ )
    LOCAL k
 
    IF ! Empty( a_ )
@@ -445,7 +448,7 @@ FUNCTION ParseWithMetaData( s, a_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ArrayToMemo( a_ )
+FUNCTION hbide_arrayToMemo( a_ )
    LOCAL s := ""
 
    aeval( a_, {|e| s += e + CRLF } )
@@ -456,7 +459,7 @@ FUNCTION ArrayToMemo( a_ )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION MemoToArray( s )
+FUNCTION hbide_memoToArray( s )
    LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), CRLF, _EOL ), _EOL )
    LOCAL nNewSize := 0
    LOCAL line
@@ -474,7 +477,7 @@ FUNCTION MemoToArray( s )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION IsValidPath( cPath, cPathDescr )
+FUNCTION hbide_isValidPath( cPath, cPathDescr )
 
    DEFAULT cPathDescr TO ''
 
@@ -491,18 +494,18 @@ FUNCTION IsValidPath( cPath, cPathDescr )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION IsValidText( cSourceFile )
+FUNCTION hbide_isValidText( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
    RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,"+;
-                   ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh" )
+                   ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc" )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION IsValidSource( cSourceFile )
+FUNCTION hbide_isValidSource( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
@@ -512,7 +515,7 @@ FUNCTION IsValidSource( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION PathNormalized( cPath, lLower )
+FUNCTION hbide_pathNormalized( cPath, lLower )
    LOCAL S
 
    DEFAULT lLower TO .T.
@@ -520,6 +523,15 @@ FUNCTION PathNormalized( cPath, lLower )
    s := strtran( cPath, "\", "/" )
 
    RETURN IIF( lLower, lower( s ), s )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_pathToOSPath( cPath )
+
+   cPath := strtran( cPath, "/", hb_osPathSeparator() )
+   cPath := strtran( cPath, "\", hb_osPathSeparator() )
+
+   RETURN cPath
 
 /*----------------------------------------------------------------------*/
 /*
@@ -535,7 +547,8 @@ FUNCTION PathNormalized( cPath, lLower )
 #define CLR_MSG_INFO    'brown'
 #define CLR_MSG_WARN    'blue'
 
-STATIC FUNCTION BuildRegExpressList( aRegList )
+STATIC FUNCTION hbide_buildRegExpressList( aRegList )
+
    AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*: warning.*"                 ) } )
    AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( ".*\) Warning W.*"              ) } )
    AAdd( aRegList, { MSG_TYPE_WARN, hb_RegexComp( "^Warning W([0-9]+).*"          ) } )
@@ -558,7 +571,7 @@ STATIC FUNCTION BuildRegExpressList( aRegList )
 * Catch source file name & line error from an msg status from compiler result.
  * 29/12/2009 - 13:22:29 - vailtom
  */
-FUNCTION ParseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
+FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    LOCAL regLineN := hb_RegexComp( ".*(\(([0-9]+)\)|:([0-9]+):|\s([0-9]+):).*" )
    LOCAL aList
    LOCAL nPos
@@ -643,7 +656,7 @@ FUNCTION ParseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
  *
  * 28/12/2009 - 16:17:37
  */
-FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
+FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
    LOCAL aColors  := { CLR_MSG_ERR, CLR_MSG_INFO, CLR_MSG_WARN }
    LOCAL aLines
    LOCAL cLine
@@ -651,10 +664,8 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
 
    IF aRegList == NIL
       aRegList := {}
-      BuildRegExpressList( aRegList )
+      hbide_BuildRegExpressList( aRegList )
    End
-
-   oWidget:clear()
 
    cText := StrTran( cText, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cText := StrTran( cText, Chr( 13 )            , Chr( 10 ) )
@@ -686,12 +697,12 @@ FUNCTION ConvertBuildStatusMsgToHtml( cText, oWidget )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION FilesToSources( aFiles )
+FUNCTION hbide_filesToSources( aFiles )
    LOCAL aSrc := {}
    LOCAL s
 
    FOR EACH s IN aFiles
-      IF IsValidSource( s )
+      IF hbide_isValidSource( s )
          aadd( aSrc, s )
       ENDIF
    NEXT
@@ -700,7 +711,7 @@ FUNCTION FilesToSources( aFiles )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ParseKeyValPair( s, cKey, cVal )
+FUNCTION hbide_parseKeyValPair( s, cKey, cVal )
    LOCAL n, lYes := .f.
 
    IF ( n := at( "=", s ) ) > 0
@@ -713,30 +724,28 @@ FUNCTION ParseKeyValPair( s, cKey, cVal )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION IdeDbg( ... )
+FUNCTION hbide_dbg( ... )
    HB_TRACE( HB_TR_ALWAYS, ... )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-
 /*
  * Return the next untitled filename available.
  * 01/01/2010 - 19:40:17 - vailtom
  */
-FUNCTION GetNextUntitled()
+FUNCTION hbide_getNextUntitled()
    STATIC nCount := 0
       nCount ++
    RETURN nCount
 
 /*----------------------------------------------------------------------*/
-
 /*
  * Return the next TAB_ID or IDE_ID available.
  * 02/01/2010 - 10:47:16 - vailtom
  */
-FUNCTION GetNextUniqueID()
+FUNCTION hbide_getNextUniqueID()
    STATIC nCount := 0
-   
+
    IF nCount > 4294967295
       nCount := 0
    ENDIF
@@ -747,7 +756,7 @@ FUNCTION GetNextUniqueID()
  * Check if cFilename has a extension... and add cDefaultExt if not exist.
  * 01/01/2010 - 20:48:10 - vailtom
  */
-FUNCTION CheckDefaultExtension( cFileName, cDefaultExt )
+FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
    LOCAL cPath, cFile, cExt
    hb_fNameSplit( cFileName, @cPath, @cFile, @cExt )
    IF Empty( cExt )
@@ -757,7 +766,7 @@ FUNCTION CheckDefaultExtension( cFileName, cDefaultExt )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_PathProc( cPathR, cPathA )
+FUNCTION hbide_pathProc( cPathR, cPathA )
    LOCAL cDirA
    LOCAL cDirR, cDriveR, cNameR, cExtR
 
@@ -778,6 +787,129 @@ FUNCTION hbide_PathProc( cPathR, cPathA )
    ENDIF
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
+/*----------------------------------------------------------------------*/
+
+function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed )
+   LOCAL s := ''
+   LOCAL t := valtype( x )
+   LOCAL i, j
+
+   DEFAULT lLineFeed      TO .T.
+   DEFAULT lInherited     TO .F.
+   DEFAULT lType          TO .F.
+   DEFAULT cFile          TO ""
+   DEFAULT lForceLineFeed TO .F.
+
+   do case
+   case ( t == "C" )
+      s := iif( lType, "[C]=", "" ) + '"' + x + '"'
+   case ( t == "N" )
+      s := iif( lType, "[N]=", "" ) + alltrim(str( x ))
+   case ( t == "D" )
+      s := iif( lType, "[D]=", "" ) + "ctod('"+ dtoc(x) +"')"
+   case ( t == "L" )
+      s := iif( lType, "[L]=", "" ) + iif( x, '.T.', '.F.' )
+   case ( t == "M" )
+      s := iif( lType, "[M]=", "" ) + '"' + x + '"'
+   case ( t == "B" )
+      s := iif( lType, "[B]=", "" ) + '{|| ... }'
+   case ( t == "U" )
+      s := iif( lType, "[U]=", "" ) + 'NIL'
+   case ( t == "A" )
+      s := iif( lType, "[A]=", "" ) + "{"
+      if len(x) = 0
+         s += " "
+      else
+         s += iif( valtype( x[1] ) = "A" .or. lForceLineFeed, CRLF, "" )
+         j := len(x)
+
+         for i := 1 to j
+             s += iif( valtype( x[i] ) == "A", "  ", " " ) + iif( lForceLineFeed, " ", "" ) + hbide_toString( x[i], .F. )
+             s += iif( i <> j, ",", "" )
+             if lLineFeed
+                if !lInherited .and. ( valtype( x[i] ) == "A" .or. lForceLineFeed )
+                   s += CRLF
+                endif
+             endif
+         next
+      endif
+      s += iif( !lForceLineFeed, " ", "" ) + "}"
+
+   case ( t == "O" )
+      if lInherited
+         && É necessário linkar \harbour\lib\xhb.lib
+         **s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, CRLF, "" )
+         s := '' + iif( lLineFeed, CRLF, "" )
+      else
+         s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, CRLF, "" )
+      endif
+   endcase
+
+   if !empty( cFile )
+      memowrit( cFile, s )
+   endif
+
+   return s
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_help( nOption )
+   LOCAL txt_  := {}
+   LOCAL tit_  := ''
+
+   SWITCH nOption
+   CASE 1
+      tit_ := 'About hbIde'
+      AAdd( txt_, "<b>Harbour IDE ( hbIDE )</b>" )
+      AAdd( txt_, "Developed by" )
+      AAdd( txt_, "Pritpal Bedi ( pritpal@vouchcac.com )" )
+      AAdd( txt_, "" )
+      AAdd( txt_, "built with:" )
+      AAdd( txt_, HB_VERSION() )
+      AAdd( txt_, HB_COMPILER() )
+      AAdd( txt_, "Qt " + QT_VERSION_STR() )
+      AAdd( txt_, "" )
+      AAdd( txt_, "Visit the project website at:" )
+      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
+      EXIT
+
+   CASE 2
+      tit_ := 'Mailing List'
+      AAdd( txt_, "<b>Harbour Developers Mailing List</b>" )
+      AAdd( txt_, "" )
+      AAdd( txt_, "Please visit the home page:" )
+      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
+      EXIT
+
+   CASE 3
+      tit_ := 'Mailing List'
+      AAdd( txt_, "<b>Harbour Users Mailing List</b>" )
+      AAdd( txt_, "" )
+      AAdd( txt_, "Please visit the home page:" )
+      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
+      EXIT
+
+   CASE 4
+      tit_ := 'About Harbour'
+      AAdd( txt_, "<b>About Harbour</b>" )
+      AAdd( txt_, "" )
+      AAdd( txt_, '"The Harbour Project is a Free Open Source Software effort to build' )
+      AAdd( txt_, 'a multiplatform Clipper language compiler. Harbour consists of the' )
+      AAdd( txt_, 'xBase language compiler and the runtime libraries with different' )
+      AAdd( txt_, 'terminal plugins and different databases (not just DBF)"' )
+      AAdd( txt_, "" )
+      AAdd( txt_, "Get downloads, samples, contribs and much more at:" )
+      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
+      EXIT
+
+   END
+
+   IF !Empty( txt_ )
+      MsgBox( hbide_arrayToMemo( txt_ ), tit_ )
+   ENDIF
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

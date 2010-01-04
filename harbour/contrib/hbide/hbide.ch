@@ -139,5 +139,11 @@
 #define TAB_QDOCUMENT                             6
 #define TAB_OEDITOR                               7
 
+#define TRE_OITEM                                 1
+#define TRE_TYPE                                  2  // Path | Source File | Project | Opened File
+#define TRE_OPARENT                               3
+#define TRE_ORIGINAL                              4
+#define TRE_DATA                                  5
+
 #endif
 

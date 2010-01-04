@@ -91,6 +91,9 @@ STATIC s_pathSep
 PROCEDURE Main( cProjIni )
    LOCAL oIde
 
+   SET CENTURY ON
+   SET EPOCH TO 1970
+
    HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DESTRUTOR )             // Exits cleanly
    //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE )                // Exits cleanly
    //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE_LATER )          // Exits cleanly
@@ -107,8 +110,10 @@ PROCEDURE Main( cProjIni )
 
 CLASS HbIde
 
-   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
-   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+   ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
+   ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
+
+   DATA   oPM
 
    DATA   mp1, mp2, oXbp, nEvent
    DATA   aTabs                                   INIT {}
@@ -172,6 +177,27 @@ CLASS HbIde
    DATA   oOpenedSources
 
    DATA   resPath                                 INIT hb_DirBase() + "resources" + hb_OsPathSeparator()
+   DATA   pathSep                                 INIT hb_OsPathSeparator()
+
+   DATA   aTags                                   INIT {}
+   DATA   aText                                   INIT {}
+   DATA   aSources                                INIT {}
+   DATA   aFuncList                               INIT {}
+   DATA   aLines                                  INIT {}
+   DATA   aComments                               INIT {}
+   DATA   aProjects                               INIT {}
+   DATA   cWrkProject                             INIT ''
+   DATA   oProps
+   DATA   oFR
+
+   DATA   cProcessInfo
+   DATA   qProcess
+
+   DATA   aEdits                                  INIT {}
+
+   DATA   cIniThemes
+   DATA   oThemes
+
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -200,62 +226,30 @@ CLASS HbIde
 
    METHOD updateFuncList()
    METHOD gotoFunction()
-   METHOD fetchProjectProperties()
-   METHOD loadProjectProperties()
-   METHOD appendProjectInTree()
+
+   METHOD updateProjectMenu()
+   METHOD updateProjectTree()
+
    METHOD manageItemSelected()
-   METHOD addSourceInTree()
    METHOD getCurrentTab()
    METHOD getCurCursor()
-
-   DATA   aTags                                   INIT {}
-   DATA   aText                                   INIT {}
-   DATA   aSources                                INIT {}
-   DATA   aFuncList                               INIT {}
-   DATA   aLines                                  INIT {}
-   DATA   aComments                               INIT {}
-   DATA   aPrjProps                               INIT {}
-   DATA   aProjects                               INIT {}
-   DATA   cWrkProject                             INIT ''
+   METHOD addSourceInTree()
 
    METHOD createTags()
 
-   DATA   oProps
-   DATA   oFR
-
    METHOD manageFocusInEditor()
    METHOD convertSelection()
+   METHOD insertText()
    METHOD printPreview()
    METHOD paintRequested()
    METHOD loadUI()
-   METHOD updateHbp()
-   METHOD saveProject()
-   METHOD addSourcesToProject()
 
-   /* Project Build and Launch Methods */
-   DATA   cProcessInfo
-   DATA   qProcess
-
-   METHOD setCurrentProject()
-   METHOD getCurrentProject()
-
-   METHOD buildProject()
-   METHOD buildProjectViaQt()
-   METHOD readProcessInfo()
-   METHOD Help()
    METHOD goto()
    METHOD setCodec()
-
-   METHOD PromptForPath( cObjName, cTitle, cObjPath2, cObjPath3 )
-
-   DATA   aEdits                                  INIT {}
 
    METHOD findEditByFileName()
    METHOD findEditByID()
    METHOD updateTitleBar()
-
-   DATA   cIniThemes
-   DATA   oThemes
 
    ENDCLASS
 
@@ -280,37 +274,41 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
-   //LOCAL qSet
-
+   /* Setup GUI Error Reporting System*/
    hbqt_errorsys()
 
-   LoadINI( Self, cProjIni )
+   /* Initialte Project Manager */
+   ::oPM := IdeProjManager():new( Self ):create()
 
-   ::BuildDialog()
-   ::oDa := ::oDlg:drawingArea
-   SetAppWindow( ::oDlg )
-   ::oDlg:Show()
+   /* Load IDE Settings */
+   hbide_loadINI( Self, cProjIni )
 
-   /* Load HBIDE define | User Defined Themes */
-   LoadThemes( Self )
+   /* Build IDE's Main Window */
+   ::BuildDialog() ; ::oDa := ::oDlg:drawingArea ; SetAppWindow( ::oDlg ) ; ::oDlg:Show()
 
+   /* Load IDE|User defined Themes */
+   hbide_loadThemes( Self )
+
+   /* Prepare Editor's Tabs */
    ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-   //   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
    ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    ::oTabWidget := ::oDa:oTabWidget
    ::qTabWidget := ::oDa:oTabWidget:oWidget
 
+   /* Setup DOCKing windows */
    IdeDocks():new():create( Self )
 
+   /* Attach GRID Layout to Editor Area - Futuristic */
    ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setHorizontalSpacing( 0 )
    ::qLayout:setVerticalSpacing( 0 )
-
+   //
    ::oDa:oWidget:setLayout( ::qLayout )
-
+   //
    ::qLayout:addWidget_1( ::oDa:oTabWidget:oWidget, 0, 0, 1, 1 )
 
+   /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
 
    /* Editor's Font */
@@ -318,34 +316,38 @@ METHOD HbIde:create( cProjIni )
    ::oFont:fixed := .t.
    ::oFont:create( "10.Courier" )
 
+   /* Build Main Menu */
    buildMainMenu( ::oDlg, Self )
+
+   /* Setup Toolbar */
    ::oTBar := buildToolBar( ::oDlg, Self )
 
+   /* Setup Statusbar and Panels */
    ::buildStatusBar()
 
+   /* Once create Find/Replace dialog */
    ::oFR := IdeFindReplace():new():create( Self )
 
-   #if 0
-   qSet := QSettings():new( "Harbour", "HbIde" )
-   HB_TRACE( HB_TR_ALWAYS, "QSettings", qSet:applicationName(), qSet:value( "state" ) )
-   ::oDlg:oWidget:restoreState( QByteArray():configure( qSet:value( "state" ) ) )
-   #endif
-
+   /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
 
+   /* Fill various elements of the IDE */
+   ::oPM:populate()
    ::loadSources()
+   ::updateProjectMenu()
+   ::updateTitleBar()
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
          HBXBP_DEBUG( "xbeP_Quit" )
-         SaveINI( Self )
+         hbide_saveINI( Self )
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
-         SaveINI( Self )
+         hbide_saveINI( Self )
          ::closeAllSources()
          EXIT
 
@@ -360,9 +362,6 @@ METHOD HbIde:create( cProjIni )
 
          CASE ::mp1 == xbeK_ESC
             ::closeSource()
-
-//         CASE ::mp1 == xbeK_CTRL_S
-//            ::saveSource( ::getCurrentTab(), .f. )
 
          CASE ::mp1 == xbeK_CTRL_G
             IF !empty( ::qCurEdit )
@@ -380,10 +379,6 @@ METHOD HbIde:create( cProjIni )
          CASE ::mp1 == xbeK_CTRL_R
             IF !empty( ::qCurEdit )
                ::oFR:replace()
-            ENDIF
-         CASE ::mp1 == xbeK_TAB
-            IF !empty( ::qCurEdit )
-               ::qCurEdit:insertText( "   " )
             ENDIF
 
          ENDCASE
@@ -421,22 +416,24 @@ METHOD HbIde:executeAction( cKey )
    CASE cKey == "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
    CASE cKey == "NewProject"
-      ::loadProjectProperties( , .t., .t., .t. )
+      ::oPM:loadProperties( , .t., .t., .t. )
    CASE cKey == "LoadProject"
-      ::loadProjectProperties( , .f., .f., .t. )
+      ::oPM:loadProperties( , .f., .f., .t. )
+   CASE cKey == "LaunchProject"
+      ::oPM:launchProject()
 
    CASE cKey == "SaveBuild"
-      ::buildProject( '', .F., .F. )
+      ::oPM:buildProject( '', .F., .F. )
    CASE cKey == "SaveBuildLaunch"
-      ::buildProject( '', .T., .F. )
+      ::oPM:buildProject( '', .T., .F. )
 
    CASE cKey == "SaveRebuild"
-      ::buildProject( '', .F., .T. )
+      ::oPM:buildProject( '', .F., .T. )
    CASE cKey == "SaveRebuildLaunch"
-      ::buildProject( '', .T., .T. )
+      ::oPM:buildProject( '', .T., .T. )
 
    CASE cKey == "CompilePPO"
-      ::buildProject( '', .F., .F., .T. )
+      ::oPM:buildProject( '', .F., .F., .T. )
 
    CASE cKey == "Properties"
 
@@ -444,28 +441,31 @@ METHOD HbIde:executeAction( cKey )
          MsgBox( 'No active project detected!' )
       End
 
-      Tmp  := ::getCurrentProject()
+      Tmp  := ::oPM:getCurrentProject()
 
       IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == Tmp } ) ) > 0
          aPrj := ::aProjects[ n, 3 ]
          cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
                  aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
 
-         ::loadProjectProperties( cHbi, .f., .t., .t. )
+         ::oPM:loadProperties( cHbi, .f., .t., .t. )
       ELSE
          MsgBox( 'Invalid project: ' + Tmp )
       End
 
+   CASE cKey == "SelectProject"
+      ::oPM:selectCurrentProject()
+   CASE cKey == "CloseProject"
+      ::oPM:closeProject()
+
    CASE cKey == "New"
       ::editSource( '' )
-
    CASE cKey == "Open"
       Tmp := ::selectSource( "openmany" )
 
       IF !Empty( Tmp )
          aEval( Tmp, {|f| ::editSource( f ) })
       ENDIF
-
    CASE cKey == "Save"
       ::saveSource( ::getCurrentTab() )
    CASE cKey == "SaveAs"
@@ -510,6 +510,12 @@ METHOD HbIde:executeAction( cKey )
       IF !empty( ::qCurEdit )
          ::qCurEdit:selectAll()
       ENDIF
+
+   CASE cKey == "switchReadOnly"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:setReadOnly( !::qCurEdit:isReadOnly() )
+         ::oCurEditor:setTabImage()
+      ENDIF
    CASE cKey == "Find"
       IF !Empty( ::qCurEdit )
          ::oFR:show()
@@ -526,6 +532,12 @@ METHOD HbIde:executeAction( cKey )
       ::convertSelection( cKey )
    CASE cKey == "Invert"
       ::convertSelection( cKey )
+   CASE cKey == "InsertDateTime"
+      ::insertText( cKey )
+   CASE cKey == "InsertRandomName"
+      ::insertText( cKey )
+   CASE cKey == "InsertExternalFile"
+      ::insertText( cKey )
    CASE cKey == "ZoomIn"
       IF !empty( ::qCurEdit )
          //::qCurEdit:zoomIn()
@@ -614,6 +626,73 @@ METHOD HbIde:convertSelection( cKey )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:insertText( cKey )
+   LOCAL b, c, t, n
+   LOCAL nB, nL
+
+   IF Empty( ::qCurEdit )
+      RETURN Self
+   ENDIF
+
+   ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+
+   DO CASE
+   CASE cKey == "InsertDateTime"
+      b := DTOC( Date() ) + ' - ' + Time()
+   CASE cKey == "InsertRandomName"
+
+      b := ''
+      t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+      WHILE Len(b) <> 10
+          c := Subst( t, HB_RANDOMINT( 1, Len(t) ), 1 )
+
+          IF !( c $ b )
+             IF Empty(b) .AND. IsDigit(c)
+                LOOP
+             ENDIF
+             b += c
+          ENDIF
+      End
+
+      b += '('
+
+   CASE cKey == "InsertExternalFile"
+
+      n := ::selectSource( "open" )
+
+      IF Empty(n) .OR. !File( n )
+         RETURN Self
+      ENDIF
+
+      msgbox(n)
+
+      IF !( hbide_isValidText( n ) )
+         MsgBox( 'File type unknown or unsupported: ' + n )
+         RETURN Self
+      ENDIF
+
+      b := hb_memoread( n )
+
+   OTHERWISE
+      RETURN Self
+   ENDCASE
+
+   IF !Empty( b )
+      nL := len( b )
+      nB := ::qCursor:position() + nL
+
+      ::qCursor:beginEditBlock()
+      ::qCursor:removeSelectedText()
+      ::qCursor:insertText( b )
+      ::qCursor:setPosition( nB )
+      ::qCursor:endEditBlock()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
    LOCAL aRect
 
@@ -669,12 +748,12 @@ METHOD HbIde:getCurCursor()
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
    LOCAL n
 
-   IF !Empty( cSourceFile ) .AND. !( IsValidText( cSourceFile ) )
+   IF !Empty( cSourceFile ) .AND. !( hbide_isValidText( cSourceFile ) )
       MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
       RETURN Self
    ENDIF
 
-   IF !Empty( cSourceFile ) .AND. !hb_FileExists( cSourceFile )
+   IF !Empty( cSourceFile ) .AND. !File( cSourceFile )
       MsgBox( 'File not found: ' + cSourceFile )
       RETURN Self
    ENDIF
@@ -688,7 +767,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
    IF Empty( cSourceFile )
       n := 0
    ELSE
-      n := aScan( ::aTabs, {|a_| PathNormalized( a_[ TAB_SOURCEFILE ] ) == PathNormalized( cSourceFile ) } )
+      n := aScan( ::aTabs, {|a_| hbide_pathNormalized( a_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSourceFile ) } )
    End
 
    IF n > 0
@@ -699,7 +778,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
    aadd( ::aEdits, IdeEditor():new():create( Self, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
 
    IF !Empty( cSourceFile )
-      mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
+      hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
    ENDIF
    RETURN Self
 
@@ -738,10 +817,9 @@ METHOD HbIde:closeSource( nTab, lCanCancel, lCanceled )
 
    IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
       * File has not changed, ignore the question to User
-      lSave := .f.
-
+      lSave := .F.
    ELSEIF lCanCancel
-      n := GetYesNoCancel( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
+      n := hbide_getYesNoCancel( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
                           "Has been modified, save this source?", 'Save?' )
 
       lCanceled := ( n == QMessageBox_Cancel )
@@ -751,7 +829,7 @@ METHOD HbIde:closeSource( nTab, lCanCancel, lCanceled )
          RETURN .F.
       End
    ELSE
-      IF !GetYesNo( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
+      IF !hbide_getYesNo( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
                     "Has been modified, save this source?", 'Save?' )
          lSave := .F.
       ENDIF
@@ -777,6 +855,7 @@ METHOD HbIde:closeAllSources()
 
  * Finally now we will close all tabs.
    DO WHILE ( ++i <= Len( ::aTabs ) )
+
        IF ::closeSource( i, .T., @lCanceled )
           i --
           Loop
@@ -869,7 +948,7 @@ METHOD HbIde:revertSource( nTab )
    IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
       * File has not changed, ignore the question to User
    ELSE
-      IF !GetYesNo( 'Revert ' + ::aTabs[ nTab, TAB_OTAB ]:Caption + '?',  ;
+      IF !hbide_getYesNo( 'Revert ' + ::aTabs[ nTab, TAB_OTAB ]:Caption + '?',  ;
                     'The file ' + ::aTabs[ nTab, TAB_SOURCEFILE ] + ' has changed. '+;
                     'Discard current changes and revert contents to the previously saved on disk?', 'Revert file?' )
          RETURN Self
@@ -910,7 +989,7 @@ METHOD HbIde:saveSourceAs( nTab, lCancel )
    End
 
    IF ::saveSource( nTab, cSource, @lCancel )
-      mnuAddFileToMRU( Self, cSource, INI_RECENTFILES )
+      hbide_mnuAddFileToMRU( Self, cSource, INI_RECENTFILES )
       RETURN .T.
    ENDIF
 
@@ -1050,48 +1129,139 @@ METHOD HbIde:getCurrentTab()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:appendProjectInTree( aPrj )
+METHOD HbIde:updateProjectTree( aPrj, lRemove )
    LOCAL cType, oParent, oP, aSrc, j, cProject, nPath
-   LOCAL aPath, cPath, cFile, cExt, oPP, cPathA
+   LOCAL aPath, aInUse, cPath, cFile, cExt, oPP, cPathA, nPos
 
-   IF !empty( aPrj ) .and. !empty( cProject := aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
-      IF ascan( ::aProjData, {|e_| e_[ 2 ] == "Project Name" .and. e_[ 4 ] == cProject } ) == 0
+   DEFAULT lRemove TO .F.
 
-         cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
+   IF Empty( aPrj )
+      RETURN Self
+   ENDIF
 
-         DO CASE
-         CASE cType == "Executable"
-            oParent := ::aProjData[ 1, 1 ]
-         CASE cType == "Lib"
-            oParent := ::aProjData[ 2, 1 ]
-         CASE cType == "Dll"
-            oParent := ::aProjData[ 3, 1 ]
-         ENDCASE
+   cProject := aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
 
+   IF Empty( cProject )
+      RETURN Self
+   ENDIF
+
+   nPos  := aScan( ::aProjData, {|e_| e_[ 2 ] == "Project Name" .and. e_[ 4 ] == cProject } )
+   cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
+
+   DO CASE
+   CASE cType == "Executable"
+      oParent := ::aProjData[ 1, 1 ]
+   CASE cType == "Lib"
+      oParent := ::aProjData[ 2, 1 ]
+   CASE cType == "Dll"
+      oParent := ::aProjData[ 3, 1 ]
+   ENDCASE
+
+   IF !( lRemove )
+
+    * It is a new node?
+      IF nPos == 0
          oParent:expand( .t. )
 
          oP := oParent:addItem( cProject )
          aadd( ::aProjData, { oP, "Project Name", oParent, cProject, aPrj } )
          oParent := oP
 
-         aPath := {}
-         aSrc := aPrj[ PRJ_PRP_SOURCES, 2 ]
-         FOR j := 1 TO len( aSrc )
-            hb_fNameSplit( aSrc[ j ], @cPath, @cFile, @cExt )
-            cPathA := strtran( cPath, "\", "/" )
-            IF ( nPath := ascan( aPath, {|e_| e_[ 1 ] == cPathA } ) ) == 0
-               oPP := oParent:addItem( cPath )
-               aadd( ::aProjData, { oPP, "Path", oParent, cPathA, cProject } )
-               aadd( aPath, { cPathA, oPP } )
-               nPath := len( aPath )
-            ENDIF
-
-            oPP := aPath[ nPath,2 ]
-            aadd( ::aProjData, { oPP:addItem( cFile+cExt ), "Source File", oPP, aSrc[ j ], PathNormalized( aSrc[ j ] ) } )
-         NEXT
+    * Need to be an update?
       ELSE
-         // Handle duplicate opening
+         nPos := aScan( oParent:aChilds, {|o| o:caption == cProject } )
 
+         IF nPos <> 00
+            oParent := oParent:aChilds[ nPos ]
+         ENDIF
+      ENDIF
+
+      aSrc  := aClone( aPrj[ PRJ_PRP_SOURCES, 2 ] )
+      aSrc  := ASort( aSrc )
+      aPath := {}
+      aInUse:= {}
+
+    * Load previous aPath used to fill ::aProjData
+    * 03/01/2010 - 16:08:25 - vailtom
+      FOR j := 1 TO LEN( ::aProjData )
+          IF !hb_isChar( ::aProjData[ j, 5 ] ).OR. ;  // It is not a char?
+             ::aProjData[ j, 2 ] != 'Path'    .OR. ;  // Is not an path?
+             ::aProjData[ j, 5 ] != cProject          // Is not from same project?
+             LOOP
+          ENDIF
+          AAdd( aPath, { ::aProjData[ j, 4 ], ::aProjData[ j, 1 ]} )
+      NEXT
+
+    * Add new nodes with file names to tree...
+      FOR j := 1 TO len( aSrc )
+         hb_fNameSplit( aSrc[ j ], @cPath, @cFile, @cExt )
+
+         cPathA := hbide_pathNormalized( cPath, .T. )
+         nPath  := aScan( aPath, {|e_|  e_[ 1 ] == cPathA } )
+
+         AAdd( aInUse, cPathA )
+
+       * Find an node with Caption == cPathA
+         IF ( nPath == 0 )
+            oPP := oParent:addItem( hbide_pathNormalized( cPath, .f. ) )
+            aadd( ::aProjData, { oPP, "Path", oParent, cPathA, cProject } )
+            aadd( aPath, { cPathA, oPP } )
+            nPath := len( aPath )
+         ENDIF
+
+         oPP   := aPath[ nPath,2 ]
+         cFile := cFile + cExt
+         nPos  := aScan( ::aProjData, {|e_| e_[ 2 ] == "Source File" .AND. ;
+                                            e_[ 4 ] == aSrc[ j ] } )
+         IF nPos == 00
+            aadd( ::aProjData, { oPP:addItem( cFile ), "Source File", oPP, aSrc[ j ], cProject } )
+         ENDIF
+      NEXT
+
+    * Remove deleted nodes from tree
+      FOR j := 1 TO LEN( ::aProjData )
+
+        * Is not from same project?
+          IF !hb_isChar( ::aProjData[ j, 5 ] ) .OR. ;
+             ::aProjData[ j, 5 ] != cProject
+             LOOP
+          ENDIF
+
+        * It is a path?
+          IF ::aProjData[ j, 2 ] == 'Path'
+             cPathA := ::aProjData[ j, 4 ]
+             nPath  := aScan( aInUse, {|e_|  e_ == cPathA } )
+
+             IF nPath == 00
+                ::aProjData[ j, 3 ]:delItem( ::aProjData[ j, 1 ] )
+                hb_aDel( ::aProjData, j, .T. )
+             ENDIF
+
+             LOOP
+          ENDIF
+
+        * It is a filename?
+          IF ::aProjData[ j, 2 ] == 'Source File'
+             cFile := ::aProjData[ j, 4 ]
+             nPos  := aScan( aSrc, {|e_|  e_ == cFile } )
+
+             IF nPos == 00
+                ::aProjData[ j, 3 ]:delItem( ::aProjData[ j, 1 ] )
+                hb_aDel( ::aProjData, j, .T. )
+             ENDIF
+
+             LOOP
+          ENDIF
+      NEXT
+
+   ELSE
+
+      IF nPos != 0
+         nPos := aScan( oParent:aChilds, {|e_| e_:Caption == cProject } )
+
+         IF nPos > 0
+            oParent:delItem( oParent:aChilds[ nPos ] )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -1103,12 +1273,12 @@ METHOD HbIde:addSourceInTree( cSourceFile )
    LOCAL cPath, cPathA, cFile, cExt, n, oParent
    LOCAL oGrand := ::oOpenedSources
 
-   IF Empty(cSourceFile)
+   IF Empty( cSourceFile )
       RETURN nil
    End
 
    hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
-   cPathA := PathNormalized( cPath )
+   cPathA := hbide_pathNormalized( cPath )
 
    n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } )
 
@@ -1121,7 +1291,7 @@ METHOD HbIde:addSourceInTree( cSourceFile )
    ENDIF
 
    aadd( ::aProjData, { oParent:addItem( cFile+cExt ), "Opened Source", oParent, ;
-                                                        cSourceFile, PathNormalized( cSourceFile ) } )
+                                                        cSourceFile, hbide_pathNormalized( cSourceFile ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1137,36 +1307,33 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
       n := ascan( ::aProjData, {|e_| e_[ 1 ] == oXbpTreeItem } )
    ENDIF
 
-   ::aPrjProps := {}
-
    DO CASE
-
    CASE n ==  0  // Source File - nothing to do
    CASE n == -2  // "Files"
    CASE n == -1
-   CASE ::aProjData[ n, 2 ] == "Project Name"
+   CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
       aPrj := ::aProjData[ n, 5 ]
 
       cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
 
-      ::loadProjectProperties( cHbi, .f., .t., .f. )
+      ::oPM:loadProperties( cHbi, .f., .t., .f. )
 
-   CASE ::aProjData[ n, 2 ] == "Source File"
-      cSource := ::aProjData[ n, 5 ]
-      IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) == 0
+   CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
+      cSource := ::aProjData[ n, TRE_ORIGINAL ]
+      IF ( n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSource ) } ) ) == 0
          ::editSource( cSource )
       ELSE
          ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       ENDIF
 
-   CASE ::aProjData[ n, 2 ] == "Opened Source"
-      cSource := ::aProjData[ n, 5 ]
-      IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) > 0
+   CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
+      cSource := ::aProjData[ n, TRE_DATA ]
+      IF ( n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSource ) } ) ) > 0
          ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       ENDIF
 
-   CASE ::aProjData[ n, 2 ] == "Path"
+   CASE ::aProjData[ n, TRE_TYPE ] == "Path"
 
    ENDCASE
 
@@ -1180,8 +1347,6 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( mp2 )
-
-   ::aPrjProps := {}
 
    oXbpTreeItem := ::oCurProjItem
 
@@ -1197,10 +1362,10 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n ==  0  // Source File - nothing to do
    CASE n == -2  // "Files"
    CASE n == -1  // Project Root
-      aadd( aPops, { "New Project" , {|| ::loadProjectProperties( , .t., .t., .t. ) } } )
+      aadd( aPops, { "New Project"              , {|| ::oPM:loadProperties( , .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Load Project", {|| ::loadProjectProperties( , .f., .f., .t. ) } } )
-      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+      aadd( aPops, { "Load Project"             , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
+      hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Project Name"
       aPrj := ::aProjData[ n, 5 ]
@@ -1208,38 +1373,40 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
       //
       IF Alltrim( Upper( ::cWrkProject )) != Alltrim( Upper( oXbpTreeItem:caption ))
-         aadd( aPops, { "Set as Current"        , {|| ::setCurrentProject( oXbpTreeItem:caption ) } } )
+         aadd( aPops, { "Set as Current"        , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
 
-      aadd( aPops, { "Properties"               , {|| ::loadProjectProperties( cHbi, .f., .t., .t. ) } } )
+      aadd( aPops, { "Properties"               , {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Save and Build"           , {|| ::buildProject( oXbpTreeItem:caption, .F. ) } } )
-      aadd( aPops, { "Save and Build (Qt)"      , {|| ::buildProjectViaQt( oXbpTreeItem:caption ) } } )
-      aadd( aPops, { "Save, Build and Launch"   , {|| ::buildProject( oXbpTreeItem:caption, .T. ) } } )
+      aadd( aPops, { "Save and Build"           , {|| ::oPM:buildProject( oXbpTreeItem:caption, .F. ) } } )
+      aadd( aPops, { "Save and Build (Qt)"      , {|| ::oPM:buildProjectViaQt( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Save, Build and Launch"   , {|| ::oPM:buildProject( oXbpTreeItem:caption, .T. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Save and Re-Build"        , {|| ::buildProject( oXbpTreeItem:caption, .F., .T. ) } } )
-      aadd( aPops, { "Save, Re-Build and Launch", {|| ::buildProject( oXbpTreeItem:caption, .T., .T. ) } } )
+      aadd( aPops, { "Save and Re-Build"        , {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T. ) } } )
+      aadd( aPops, { "Save, Re-Build and Launch", {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "CloseDrop Project        ", {|| NIL } } )
+      aadd( aPops, { "Launch"                   , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Close This Project"       , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
       //
-      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+      hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Source File"
       //
 
    CASE ::aProjData[ n, 2 ] == "Opened Source"
       cSource := ::aProjData[ n, 5 ]
-      n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } )
+      n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ 5 ] ) == cSource } )
       //
-      aadd( aPops, { "~Save"           , {|| ::saveSource( n ) } } )
-      aadd( aPops, { "Save ~As"        , {|| ::saveSourceAs( n ) } } )
+      aadd( aPops, { "Save"                     , {|| ::saveSource( n ) } } )
+      aadd( aPops, { "Save As"                  , {|| ::saveSourceAs( n ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "~Close"          , {|| ::closeSource( n ) } } )
-      aadd( aPops, { "Close ~Others"   , {|| ::closeAllOthers( n ) } } )
+      aadd( aPops, { "Close"                    , {|| ::closeSource( n ) } } )
+      aadd( aPops, { "Close Others"             , {|| ::closeAllOthers( n ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Apply Theme", {|| ::aTabs[ n, TAB_OEDITOR ]:applyTheme() } } )
       //
-      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+      hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Path"
 
@@ -1351,7 +1518,7 @@ METHOD HbIde:manageFuncContext( mp1 )
       aadd( aPops, { 'Delete'                , {|| NIL } } )
       aadd( aPops, { 'Move to another source', {|| NIL } } )
 
-      ExecPopup( aPops, mp1, ::oFuncList:oWidget )
+      hbide_ExecPopup( aPops, mp1, ::oFuncList:oWidget )
 
       ::manageFocusInEditor()
    ENDIF
@@ -1369,7 +1536,7 @@ METHOD HbIde:CreateTags()
       HB_FNameSplit( ::aSources[ i ], @cPath, @cSource, @cExt )
 
       IF Upper( cExt ) $ ".PRG.CPP"
-         IF !empty( ::aText := ReadSource( ::aSources[ i ] ) )
+         IF !empty( ::aText := hbide_readSource( ::aSources[ i ] ) )
             aSumData  := {}
 
             cComments := CheckComments( ::aText )
@@ -1417,14 +1584,12 @@ METHOD HbIde:paintRequested( pPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//                       Menu and Toolbar Actions
-/*----------------------------------------------------------------------*/
 
 METHOD HbIde:loadUI( cUi )
    LOCAL cUiFull := s_resPath + cUi + ".ui"
    LOCAL qDialog, qUiLoader, qFile
 
-   IF hb_FileExists( cUiFull )
+   IF file( cUiFull )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
@@ -1436,312 +1601,26 @@ METHOD HbIde:loadUI( cUi )
    RETURN qDialog
 
 /*----------------------------------------------------------------------*/
-//                           Project Properties
-/*----------------------------------------------------------------------*/
-
 /*
- * Create an empty project or loading an existing from cFileName
+ * Update the project menu to show current info.
+ * 03/01/2010 - 12:48:18 - vailtom
  */
-METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch, lUpdateTree )
-   LOCAL cWrkProject
-   LOCAL n := 0
-   LOCAL t
+METHOD HbIde:updateProjectMenu()
 
-   DEFAULT cProject TO ""
-   DEFAULT lNew     TO .F.
-   DEFAULT lFetch   TO .T.
-   DEFAULT lUpdateTree TO .F.
+   LOCAL oItem := hbide_mnuFindItem( Self, 'Project' )
 
-   ::aPrjProps := {}
-
-   cProject := StrTran( cProject, '\', '/' )
-
-   IF lNew
-      lFetch := .t.
+   IF Empty( oItem )
+      RETURN Self
    ENDIF
 
-   IF !( lNew )
-      IF empty( cProject )
-         cProject := fetchAFile( ::oDlg, "Load Project...", { { "Harbour IDE Projects (*.hbi)", "*.hbi" } } )
-      ENDIF
-      IF empty( cProject )
-         RETURN Self
-      ENDIF
+*  msgbox( ToString( oMenuBar:aMenuItems[ n ] ))
+
+   IF Empty( ::cWrkProject )
+      oItem[2]:setDisabled(.T.)
+      RETURN Self
    ENDIF
 
-   IF !empty( cProject )
-      cWrkProject := PathNormalized( cProject )  // normalized
-
-      n := ascan( ::aProjects, {|e_| PathNormalized( e_[ 1 ] ) == cWrkProject } )
-
-      IF n > 0
-         ::aPrjProps := ::aProjects[ n, 3 ]
-         t := ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
-      ENDIF
-
-      IF empty( ::aPrjProps )
-         ::aPrjProps := fetchHbiStructFromFile( cProject )
-      ENDIF
-   ENDIF
-
-   IF lFetch
-      ::cSaveTo := ""
-      ::fetchProjectProperties()
-      IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
-         cProject := ::cSaveTo
-         /* Reload from file */
-         ::aPrjProps := fetchHbiStructFromFile( cProject )
-      ENDIF
-   ENDIF
-
-   IF n == 0
-      aadd( ::aProjects, { lower( cProject ), cProject, aclone( ::aPrjProps ) } )
-
-      IF lUpdateTree
-         ::appendProjectInTree( ::aPrjProps )
-      End
-
-      mnuAddFileToMRU( Self, cProject, INI_RECENTPROJECTS )
-   ELSE
-      ::aProjects[ n,3 ] := aclone( ::aPrjProps )
-
-      IF lUpdateTree .AND. ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] <> t
-         MsgBox( '::removeProjectFromTree( ::aPrjProps )' )
-      End
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:fetchProjectProperties()
-   LOCAL cPrjLoc := hb_dirBase() + "projects"
-
-   ::oProps := XbpQtUiLoader():new( ::oDlg )
-   ::oProps:file := s_resPath + "projectproperties.ui"
-   ::oProps:create()
-
-   ::oProps:qObj[ "comboPrjType" ]:addItem( "Executable" )
-   ::oProps:qObj[ "comboPrjType" ]:addItem( "Library"    )
-   ::oProps:qObj[ "comboPrjType" ]:addItem( "Dll"        )
-
-   DO CASE
-   CASE empty( ::aPrjProps )
-      ::oProps:qObj[ "comboPrjType"     ]:setCurrentIndex(0)
-   CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-      ::oProps:qObj[ "comboPrjType"     ]:setCurrentIndex(1)
-   CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-      ::oProps:qObj[ "comboPrjType"     ]:setCurrentIndex(2)
-   OTHERWISE
-      ::oProps:qObj[ "comboPrjType"     ]:setCurrentIndex(0)
-   ENDCASE
-
-   ::oProps:signal( "buttonCn"      , "clicked()", {|| ::oProps:oWidget:close() } )
-   ::oProps:signal( "buttonSave"    , "clicked()", {|| ::saveProject( .F. ) } )
-   ::oProps:signal( "buttonSaveExit", "clicked()", {|| ::saveProject( .T. ) } )
-   ::oProps:signal( "buttonSelect"  , "clicked()", {|| ::addSourcesToProject() } )
-   ::oProps:signal( "tabWidget"     , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
-
-   // TODO: Loading lookup.png inside these buttons...
-   ::oProps:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn',  'Choose the Project Location...', 'editOutName', "editWrkFolder", "editDstFolder" ) } )
-   ::oProps:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose a Working Folder...' ) } )
-   ::oProps:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose a Destination Folder...' ) } )
-
-   IF empty( ::aPrjProps )
-      /*
-       * When they click on the button to confirm the name of the project, we
-       * will adjust the other parameters. (vailtoms)
-       * 25/12/2009 - 20:40:22
-       */
-    * ::oProps:qObj[ "editPrjTitle"  ]:setText( "untitled"   )
-      ::oProps:qObj[ "editPrjLoctn"  ]:setText( StrTran( cPrjLoc, '\', '/' ) )
-    * ::oProps:qObj[ "editWrkFolder" ]:setText( hb_dirBase() )
-    * ::oProps:qObj[ "editDstFolder" ]:setText( cPrjLoc      )
-    * ::oProps:qObj[ "editOutName"   ]:setText( "untitled"   )
-
-   ELSE
-      ::oProps:qObj[ "editPrjTitle"  ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
-      ::oProps:qObj[ "editPrjLoctn"  ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
-      ::oProps:qObj[ "editWrkFolder" ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
-      ::oProps:qObj[ "editDstFolder" ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
-      ::oProps:qObj[ "editOutName"   ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
-
-      ::oProps:qObj[ "editFlags"     ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-      ::oProps:qObj[ "editSources"   ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
-      ::oProps:qObj[ "editMetaData"  ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
-      ::oProps:qObj[ "editCompilers" ]:setPlainText( memoread( hb_dirBase() + "hbide.env" ) )
-
-      #if 0
-      ::oProps:qObj[ "editLaunchParams" ]:setText()
-      ::oProps:qObj[ "editLaunchExe"    ]:setText()
-      ::oProps:qObj[ "editHbp"          ]:setPlainText()
-      #endif
-   ENDIF
-
-   IF empty( ::aPrjProps )
-      ::oProps:oWidget:setWindowTitle( 'New Project...' )
-   ELSE
-      ::oProps:oWidget:setWindowTitle( 'Properties for "' + ::oProps:qObj[ "editPrjTitle"  ]:Text() + '"' )
-   End
-
-   ::setPosByIni( ::oProps:oWidget, PropsDialogGeometry )
-   ::oProps:exec()
-   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := PosAndSize( ::oProps:oWidget )
-   ::oProps:destroy()
-   ::oProps := NIL
-
-   ::manageFocusInEditor()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:saveProject( lCanClose )
-   LOCAL a_, a4_1
-   LOCAL typ_:= { "Executable", "Lib", "Dll" }
-   LOCAL txt_:= {}
-   LOCAL lOk
-
-   * Validate certain parameters before continuing ... (vailtom)
-   IF Empty( ::oProps:qObj[ "editOutName" ]:text() )
-      IF Empty( ::oProps:qObj[ "editPrjTitle" ]:text() )
-         MsgBox( 'Invalid Output FileName!' )
-         ::oProps:qObj[ "editOutName" ]:setFocus()
-         RETURN .F.
-      End
-
-      ::oProps:qObj[ "editOutName" ]:setText( ::oProps:qObj[ "editPrjTitle" ]:text() )
-   End
-
-   IF Empty( ::oProps:qObj[ "editPrjTitle" ]:text() )
-      ::oProps:qObj[ "editPrjTitle" ]:setText( ::oProps:qObj[ "editOutName" ]:text() )
-   End
-
-   IF !IsValidPath( ::oProps:qObj[ "editPrjLoctn" ]:text(), 'Project Location' )
-      ::oProps:qObj[ "editPrjLoctn" ]:setFocus()
-      RETURN .F.
-   End
-
-   IF !IsValidPath( ::oProps:qObj[ "editWrkFolder" ]:text(), 'Working Folder' )
-      ::oProps:qObj[ "editWrkFolder" ]:setText( ::oProps:qObj[ "editPrjLoctn" ]:text() )
-      RETURN .F.
-   End
-
-   IF !IsValidPath( ::oProps:qObj[ "editDstFolder" ]:text(), 'Destination Folder' )
-      ::oProps:qObj[ "editDstFolder" ]:setText( ::oProps:qObj[ "editPrjLoctn" ]:text() )
-      RETURN .F.
-   End
-
-   aadd( txt_, "[ PROPERTIES ]" )
-   aadd( txt_, "Type              = " + typ_[ ::oProps:qObj[ "comboPrjType" ]:currentIndex()+1 ] )
-   aadd( txt_, "Title             = " + ::oProps:qObj[ "editPrjTitle"     ]:text() )
-   aadd( txt_, "Location          = " + ::oProps:qObj[ "editPrjLoctn"     ]:text() )
-   aadd( txt_, "WorkingFolder     = " + ::oProps:qObj[ "editWrkFolder"    ]:text() )
-   aadd( txt_, "DestinationFolder = " + ::oProps:qObj[ "editDstFolder"    ]:text() )
-   aadd( txt_, "Output            = " + ::oProps:qObj[ "editOutName"      ]:text() )
-   aadd( txt_, "LaunchParams      = " + ::oProps:qObj[ "editLaunchParams" ]:text() )
-   aadd( txt_, "LaunchProgram     = " + ::oProps:qObj[ "editLaunchExe"    ]:text() )
-   aadd( txt_, " " )
-
-   aadd( txt_, "[ FLAGS ]" )
-   a_:= MemoToArray( ::oProps:qObj[ "editFlags"     ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ SOURCES ]" )
-   a_:= MemoToArray( ::oProps:qObj[ "editSources"   ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ METADATA ]" )
-   a_:= MemoToArray( ::oProps:qObj[ "editMetaData"  ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-
-   /* Setup Meta Keys */
-   a4_1 := SetupMetaKeys( a_ )
-
-   ::cSaveTo := ParseWithMetaData( ::oProps:qObj[ "editPrjLoctn" ]:text(), a4_1 ) + ;
-                      s_pathSep + ;
-                ParseWithMetaData( ::oProps:qObj[ "editOutName"  ]:text(), a4_1 ) + ;
-                      ".hbi"
-
-   IF ( lOk := CreateTarget( ::cSaveTo, txt_ ) )
-      *MsgBox( 'The project file was saved successfully: ' + ::cSaveTo, 'Saving project ...' )
-      hb_MemoWrit( hb_dirBase() + "hbide.env", ::oProps:qObj[ "editCompilers" ]:toPlainText() )
-   ELSE
-      MsgBox( 'Error saving project file: ' + ::cSaveTo, 'Error saving project ...' )
-   ENDIF
-
-   IF lCanClose .AND. lOk
-      ::oProps:oWidget:close()
-   End
-   RETURN lOk
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:updateHbp( iIndex )
-   LOCAL a_, a4_1, txt_, s
-   LOCAL cExt
-
-   IF iIndex != 3
-      RETURN nil
-   ENDIF
-
-   a_:= hb_atokens( strtran( ::oProps:qObj[ "editMetaData"  ]:toPlainText(), chr( 13 ) ), _EOL )
-   a4_1 := SetupMetaKeys( a_ )
-
-   txt_:= {}
-   /* This block will be absent when submitting to hbmk engine */
-   aadd( txt_, "#   " + ParseWithMetaData( ::oProps:qObj[ "editWrkFolder" ]:text(), a4_1 ) + s_pathSep + ;
-                        ParseWithMetaData( ::oProps:qObj[ "editOutName"   ]:text(), a4_1 ) + ".hbp" )
-   aadd( txt_, " " )
-
-   /* Flags */
-   a_:= hb_atokens( ::oProps:qObj[ "editFlags" ]:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         s := ParseWithMetaData( s, a4_1 )
-         aadd( txt_, s )
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
-
-   /* Sources */
-   a_:= hb_atokens( ::oProps:qObj[ "editSources" ]:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         s := ParseWithMetaData( s, a4_1 )
-         hb_FNameSplit( s, , , @cExt )
-         IF lower( cExt ) $ ".c,.cpp,.prg,.rc,.res"
-            aadd( txt_, s )
-         ENDIF
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
-
-   /* Final assault */
-   ::oProps:qObj[ "editHbp" ]:setPlainText( ArrayToMemo( txt_ ) )
-
-   RETURN txt_
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:addSourcesToProject()
-   LOCAL aFiles, a_, b_, a4_1, s
-
-   IF !empty( aFiles := ::selectSource( "openmany" ) )
-      a_:= MemoToArray( ::oProps:qObj[ "editMetaData" ]:toPlainText() )
-      a4_1 := SetupMetaKeys( a_ )
-
-      a_:= MemoToArray( ::oProps:qObj[ "editSources" ]:toPlainText() )
-
-      b_:={}
-      aeval( aFiles, {|e| aadd( b_, ApplyMetaData( e, a4_1 ) ) } )
-
-      FOR EACH s IN b_
-         IF ascan( a_, s ) == 0
-            aadd( a_, s )
-         ENDIF
-      NEXT
-
-      ::oProps:qObj[ "editSources" ]:setPlainText( ArrayToMemo( a_ ) )
-   ENDIF
-
+   oItem[2]:setEnabled( .T.)
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1752,6 +1631,10 @@ METHOD HbIde:addSourcesToProject()
  */
 METHOD HbIde:updateTitleBar()
    LOCAL cTitle := "Harbour-Qt IDE"
+
+   IF Empty( ::oDlg )
+      RETURN Self
+   ENDIF
 
    IF !Empty( ::cWrkProject )
       cTitle += ' - ' + ::cWrkProject + ''
@@ -1767,362 +1650,6 @@ METHOD HbIde:updateTitleBar()
 
    ::oDlg:Title := cTitle
    ::oDlg:oWidget:setWindowTitle( ::oDlg:Title )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-/* Set current project for build - vailtom
- * 26/12/2009 - 02:19:38
- */
-METHOD HbIde:setCurrentProject( cProjectName )
-   LOCAL cOldProject := ::cWrkProject
-   LOCAL aPrjProps
-   LOCAL n
-
-   IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cProjectName } ) ) > 0
-      aPrjProps     := ::aProjects[ n, 3 ]
-      ::cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
-
-      ::oSBar:getItem( SB_PNL_PROJECT ):caption := ::cWrkProject
-      ::updateTitleBar()
-   ELSE
-      MsgBox( 'Invalid project selected: ' + cProjectName )
-   End
-
-   RETURN cOldProject
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:getCurrentProject()
-   LOCAL oDlg
-   LOCAL i, p, t
-
-   IF !Empty( ::cWrkProject )
-      RETURN ::cWrkProject
-   End
-
-   IF Empty( ::aProjects )
-      MsgBox( "No longer available projects!" )
-      RETURN ::cWrkProject
-   End
-
-   IF Len( ::aProjects ) == 1
-      RETURN ::aProjects[ 1, 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
-   End
-
-   oDlg := XbpQtUiLoader():new( ::oDlg )
-   oDlg:file := s_resPath + "selectproject.ui"
-   oDlg:create()
-
- * Fill ComboBox with current project names
-   FOR i := 1 TO Len( ::aProjects )
-       p := ::aProjects[i]
-       t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
-
-       IF !Empty( t )
-          oDlg:qObj[ "cbProjects" ]:addItem( t )
-       End
-   End
-
-   oDlg:signal( "btnOk"      , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), oDlg:oWidget:close() } )
-   oDlg:signal( "btnCancel"  , "clicked()", {|| oDlg:oWidget:close() } )
-
-   oDlg:exec()
-   oDlg:destroy()
-   oDlg := NIL
-
-   RETURN ::cWrkProject
-
-/*----------------------------------------------------------------------*/
-//                          Project Builds
-/*----------------------------------------------------------------------*/
-/* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], [ <lDetach> ] ) -> <nResult> */
-
-METHOD HbIde:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
-   LOCAL cTmp, nResult
-   LOCAL nseconds
-   LOCAL cTargetFN
-   LOCAL qProcess
-   LOCAL cPath
-   LOCAL cFileName
-   LOCAL lDelHbp
-
-   DEFAULT lLaunch   TO .F.
-   DEFAULT lRebuild  TO .F.
-   DEFAULT lPPO      TO .F.
-   DEFAULT lViaQt    TO .F.
-
-   lDelHbp := lPPO
-
-   IF lPPO .AND. ::getCurrentTab()  == 0
-      MsgBox( 'No file open issue to be compiled!' )
-      RETURN Self
-   End
-
-   IF empty( cProject )
-      cProject := ::getCurrentProject()
-   ENDIF
-
-   IF empty( cProject )
-      RETURN Self
-   ENDIF
-
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
-   aPrj := ::aProjects[ n,3 ]
-   aHbp := {}
-
-   cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
-   cTargetFN := StrTran( cTargetFN, '/', s_pathSep )
-   cTargetFN := StrTran( cTargetFN, '\', s_pathSep )
-
-   /*
-    * Creates a temporary file to avoid erase the file. Hbp correct this project.
-    * 26/12/2009 - 04:17:56 - vailtom
-    */
-   IF lDelHbp
-      cHbpPath  := cTargetFN + '.' + hb_md5( alltrim(str( seconds() ))) + ".hbp"
-   ELSE
-      cHbpPath  := cTargetFN + ".hbp"
-   End
-
-   DO CASE
-   CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-      aadd( aHbp, "-hblib" )
-   CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-      aadd( aHbp, "-hbdyn" )
-   ENDCASE
-
-   aadd( aHbp, "-o" + cTargetFN )
-   aadd( aHbp, "-q" )
-   aadd( aHbp, "-trace" )
-   aadd( aHbp, "-info" )
-
-   IF lRebuild
-      aadd( aHbp, "-rebuild" )
-   End
-
-   aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
-
-   IF !( lPPO )
-      aeval( FilesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
-
-   ELSE
-      aadd( aHbp, "-hbcmp -s -p" )
-
-      n := ::getCurrentTab()
-
-      hb_FNameSplit( ::aTabs[ n, 5 ], @cPath, @cFileName, @cTmp )
-
-      IF !( lower( cTmp ) $ ".prg,?" )
-         MsgBox( 'Operation not supported for this file type: "'+cTmp+'"' )
-         RETURN Self
-      ENDIF
-
-      cFileName := cPath + cFileName + '.ppo'
-
-      // TODO: We have to test if the current file is part of a project, and we
-      // pull your settings, even though this is not the active project - vailtom
-      aadd( aHbp, ::aTabs[ n, 5 ] )
-
-      FErase( cFileName )
-   ENDIF
-
-   IF !CreateTarget( cHbpPath, aHbp )
-      cTmp := 'Error saving: ' + cHbpPath
-
-   ELSE
-      ::lDockBVisible := .t.
-      ::oDockB2:show()
-
-      nSeconds := seconds()  // time elapsed
-
-      IF lViaQt
-         ::cProcessInfo := ""
-
-         qStringList := QStringList():new()
-         qStringList:append( cHbpPath )
-
-         ::qProcess := QProcess():new()
-         ::qProcess:setProcessChannelMode( 0 )
-         ::qProcess:setReadChannel( 0 )
-         //::qProcess:setStandardOutputFile( "c:\temp\out.out" )
-         //::qProcess:setStandardErrorFile( "c:\temp\err.out" )
-
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
-
-         ::oOutputResult:oWidget:clear()
-         ::qProcess:start( "hbmk2", qStringList )
-
-      ELSE
-         cTmp := "Project: " + cProject + CRLF + ;
-                 "Launch.: " + iif( lLaunch, 'Yes', 'No' )  + CRLF + ;
-                 "Rebuild: " + iif( lRebuild, 'Yes', 'No' ) + CRLF + ;
-                 CRLF + ;
-                 'Started at ' + time() + CRLF + ;
-                 '-----------------------------------------------------------------' + CRLF
-
-         cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ( "hbmk2 " + cHbpPath ), , @cOutput, @cErrors )
-
-       * Show detailed status about compile process...
-         cTmp += cOutput + CRLF
-         cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
-         cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
-         cTmp += '-----------------------------------------------------------------' + CRLF
-         cTmp += 'Finished at ' + time() + CRLF
-         cTmp += "Done in " + ltrim( str( seconds() - nseconds ) ) +" seconds."  + CRLF
-
-         IF ( nResult == 0 ) .AND. ( lLaunch )
-            cTmp += CRLF
-
-            IF !hb_FileExists( cTargetFN )
-               cTmp += "Launch application error: file not found " + cTargetFN + "!"
-
-            ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
-               cTmp += "Launch application " + cTargetFN + "... "
-
-               qProcess := QProcess():new()
-               qProcess:startDetached_2( cTargetFN )
-               qProcess:waitForStarted()
-               qProcess:pPtr := 0
-               qProcess := NIL
-
-            ELSE
-               cTmp += "Launch application " + cTargetFN + "... (not applicable)" + CRLF
-
-            ENDIF
-         ENDIF
-
-         ConvertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
-      ENDIF
-
-   ENDIF
-
-   IF lDelHbp
-      FErase( cHbpPath )
-   ENDIF
-
-   IF lPPO .AND. hb_FileExists( cFileName )
-      ::aEdits[ 1 ]:showPPO( cFileName )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildProjectViaQt( cProject )
-
-   ::buildProject( cProject, , , , .t. )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:readProcessInfo( nMode )
-   LOCAL cLine
-
-   DO CASE
-   CASE nMode == 1
-
-
-   CASE nMode == 2
-      ::qProcess:setReadChannel( 0 )
-      cLine := space( 4096 )
-      ::qProcess:readLine( @cLine, 4096 )
-      IF !empty( cLine )
-         ::oOutputResult:oWidget:append( cLine )
-      ENDIF
-
-   CASE nMode == 3
-      ::qProcess:setReadChannel( 1 )
-      cLine := space( 4096 )
-      ::qProcess:readLine( @cLine, 4096 )
-
-      IF !empty( cLine )
-         ::cProcessInfo += CRLF + trim( cLine )
-         IF ( "Warning" $ cLine )
-            cLine := '<font color=blue>' + cLine + '</font>'
-         ELSEIF ( "Error" $ cLine )
-            cLine := '<font color=red>' + cLine + '</font>'
-         ENDIF
-
-         ::oOutputResult:oWidget:append( cLine )
-      ENDIF
-
-   CASE nMode == 4
-      ::oOutputResult:oWidget:append( '-----------------------------------------------------------------' )
-      ::oOutputResult:oWidget:append( 'Finished at ' + time() )
-
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
-
-      ::qProcess:kill()
-      ::qProcess:pPtr := 0
-      ::qProcess := NIL
-
-   ENDCASE
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-METHOD HbIde:Help( nOption )
-   LOCAL txt_  := {}
-   LOCAL tit_  := ''
-
-   SWITCH nOption
-   CASE 1
-      tit_ := 'About hbIde'
-      AAdd( txt_, "<b>Harbour-QT IDE (hbide)</b>" )
-      AAdd( txt_, "Developed by" )
-      AAdd( txt_, "Pritpal Bedi - pritpal@vouchcac.com" )
-      AAdd( txt_, "" )
-      AAdd( txt_, "built with:" )
-      AAdd( txt_, HB_VERSION() )
-      AAdd( txt_, HB_COMPILER() )
-      AAdd( txt_, "Qt " + QT_VERSION_STR() )
-      AAdd( txt_, "" )
-      AAdd( txt_, "Visit the project website at:" )
-      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
-      EXIT
-
-   CASE 2
-      tit_ := 'Mailing List'
-      AAdd( txt_, "<b>Harbour Developers Mailing List</b>" )
-      AAdd( txt_, "" )
-      AAdd( txt_, "Please visit the home page:" )
-      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
-      EXIT
-
-   CASE 3
-      tit_ := 'Mailing List'
-      AAdd( txt_, "<b>Harbour Users Mailing List</b>" )
-      AAdd( txt_, "" )
-      AAdd( txt_, "Please visit the home page:" )
-      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
-      EXIT
-
-   CASE 4
-      tit_ := 'About Harbour'
-      AAdd( txt_, "<b>About Harbour</b>" )
-      AAdd( txt_, "" )
-      AAdd( txt_, '"The Harbour Project is a Free Open Source Software effort to build' )
-      AAdd( txt_, 'a multiplatform Clipper language compiler. Harbour consists of the' )
-      AAdd( txt_, 'xBase language compiler and the runtime libraries with different' )
-      AAdd( txt_, 'terminal plugins and different databases (not just DBF)"' )
-      AAdd( txt_, "" )
-      AAdd( txt_, "Get downloads, samples, contribs and much more at:" )
-      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
-      EXIT
-
-   END
-
-   IF !Empty( txt_ )
-      MsgBox( ArrayToMemo( txt_ ), tit_ )
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2142,7 +1669,7 @@ METHOD HbIde:goto()
 
    ::setPosByIni( qGo, GotoDialogGeometry )
    qGo:exec()
-   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := PosAndSize( qGo )
+   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
 
    nLine := qGo:intValue() -  nLine
 
@@ -2167,49 +1694,6 @@ METHOD HbIde:setCodec( cCodec )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/* Prompt for user to select a existing folder
- * 25/12/2009 - 19:03:09 - vailtom
- */
-METHOD HbIde:PromptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
-   LOCAL cTemp, cPath, cFile
-
-   IF !hb_isChar( cObjFileName )
-      cTemp := ::oProps:qObj[ cObjPathName ]:Text()
-      cPath := FetchADir( ::oDlg, cTitle, cTemp )
-      cPath := StrTran( cPath, "\", "/" )
-
-   ELSE
-      cTemp := ::oProps:qObj[ cObjPathName ]:Text()
-      cTemp := FetchAFile( ::oDlg, cTitle, { { "Harbour IDE Projects", "*.hbi" } }, cTemp )
-
-      IF !Empty( cTemp )
-         cTemp := strtran( cTemp, "\", '/' )
-
-         hb_fNameSplit( cTemp, @cPath, @cFile )
-
-         ::oProps:qObj[ cObjFileName ]:setText( cFile )
-      ENDIF
-   ENDIF
-
-   IF !Empty( cPath )
-      IF Right( cPath, 1 ) == '/'
-         cPath := Left( cPath, Len( cPath ) - 1 )
-      ENDIF
-      ::oProps:qObj[ cObjPathName ]:setText( cPath )
-
-      IF hb_isChar( cObjPath2 ) .AND. Empty( ::oProps:qObj[ cObjPath2 ]:Text() )
-         ::oProps:qObj[ cObjPath2 ]:setText( cPath )
-      ENDIF
-
-      IF hb_isChar( cObjPath3 ) .AND. Empty( ::oProps:qObj[ cObjPath3 ]:Text() )
-         ::oProps:qObj[ cObjPath3 ]:setText( cPath )
-      ENDIF
-   ENDIF
-
-   ::oProps:qObj[ cObjPathName ]:setFocus()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 /*
  * Find an item in aEdits[] based on the file name passed as argument.
  * 02/01/2010 - 10:02:51 - vailtom
@@ -2217,7 +1701,7 @@ METHOD HbIde:PromptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjP
 METHOD HbIde:findEditByFileName( cSource )
    LOCAL myEdit
 
-   cSource := PathNormalized( cSource, .F. )
+   cSource := hbide_pathNormalized( cSource, .F. )
 
    FOR EACH myEdit IN ::aEdits
 

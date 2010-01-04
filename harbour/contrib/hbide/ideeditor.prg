@@ -73,12 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeEditor
-
-   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
-   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
-
-   DATA   oIde
+CLASS IdeEditor INHERIT IdeObject
 
    DATA   oTab
    DATA   cPath
@@ -100,8 +95,6 @@ CLASS IdeEditor
    DATA   nHPos                                   INIT   0
    DATA   nVPos                                   INIT   0
    DATA   nID
-
-   ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
 
    DATA   qCursor
 
@@ -132,7 +125,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nHPos      := nHPos
    ::nVPos      := nVPos
    ::cTheme     := cTheme
-   ::nID        := GetNextUniqueID()
+   ::nID        := hbide_getNextUniqueID()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -147,7 +140,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    DEFAULT cTheme      TO ::cTheme
 
    ::oIde       := oIde
-   ::SourceFile := PathNormalized( cSourceFile, .F. )
+   ::SourceFile := hbide_pathNormalized( cSourceFile, .F. )
    ::nPos       := nPos
    ::nHPos      := nHPos
    ::nVPos      := nVPos
@@ -163,7 +156,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qEdit := QPlainTextEdit():new( ::oTab:oWidget )
    ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   ::qEdit:setFont( ::oIde:oFont:oWidget )
+   ::qEdit:setFont( ::oFont:oWidget )
    ::qEdit:ensureCursorVisible()
  * ::qEdit:setStyleSheet( GetStyleSheet( "QPlainTextEdit" ) )
 
@@ -177,7 +170,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::oTab:oWidget:setLayout( ::qLayout )
 
    IF ::cType != "U"
-      ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
+      ::qHiliter := ::oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
    ENDIF
 
    Qt_Slots_Connect( ::pSlots, ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
@@ -197,7 +190,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
 
    /* Populate Tabs Array */
-   aadd( ::oIde:aTabs, { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self } )
+   aadd( ::aTabs, { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self } )
 
    ::oIde:nCurTab := len( ::oIde:aTabs )
 
@@ -212,6 +205,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nColumn := ::qCursor:columnNumber()
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
+   ::setTabImage()
 
    RETURN Self
 
@@ -282,17 +276,12 @@ METHOD IdeEditor:removeTabPage()
 //      ::oTab      := nil
    ENDIF
 
-   n := aScan( ::oIde:aProjData, {|e_| e_[ 4 ] == cSource } )
-
-   IF ( n > 0 )
-      ::oIde:aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
-
-      hb_aDel( ::oIde:aProjData, n, .T. )
+   IF ( n := aScan( ::oIde:aProjData, {|e_| e_[ 4 ] == cSource } ) ) > 0
+      ::aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
+      hb_aDel( ::aProjData, n, .T. )
    ENDIF
 
-   n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } )
-
-   IF ( n > 0 )
+   IF ( n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } ) ) > 0
       hb_aDel( ::oIde:aEdits, n, .T. )
    ENDIF
 
@@ -304,11 +293,11 @@ METHOD IdeEditor:removeTabPage()
     *  aEdits    - OK
     *
     */
-   IF ::oIde:qTabWidget:count() == 0
-      IF ::oIde:lDockRVisible
-         ::oIde:oDockR:hide()
-         ::oIde:lDockRVisible := .f.
-      End
+   IF ::qTabWidget:count() == 0
+      IF ::lDockRVisible
+         ::oDockR:hide()
+         ::lDockRVisible := .f.
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -320,7 +309,7 @@ METHOD IdeEditor:buildTabPage( cSource )
    ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
 
    IF Empty( cSource )
-      ::oTab:caption   := "Untitled " + hb_ntos( GetNextUntitled() )
+      ::oTab:caption   := "Untitled " + hb_ntos( hbide_getNextUntitled() )
    ELSE
       ::oTab:caption   := ::cFile + ::cExt
    ENDIF
@@ -348,7 +337,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       ::oIde:aSources := { ::oIde:aTabs[ ::oIde:nCurTab, TAB_SOURCEFILE ] }
       ::oIde:createTags()
       ::oIde:updateFuncList()
-      ::oIde:aTabs[ mp2, TAB_OEDITOR ]:dispEditInfo()
+      ::aTabs[ mp2, TAB_OEDITOR ]:dispEditInfo()
       ::oIde:updateTitleBar()
       ::oIde:manageFocusInEditor()
    ENDIF
@@ -402,7 +391,8 @@ METHOD IdeEditor:dispEditInfo()
    ::oIde:oSBar:getItem( SB_PNL_LINE     ):caption := s
    ::oIde:oSBar:getItem( SB_PNL_COLUMN   ):caption := "Col " + hb_ntos( ::qCursor:columnNumber() + 1 )
    ::oIde:oSBar:getItem( SB_PNL_INS      ):caption := iif( ::qEdit:overwriteMode() , " ", "Ins" )
-   ::oIde:oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( ::qDocument:isModified(), "Modified", " " )
+   ::oIde:oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( ::qDocument:isModified(), "Modified", iif( ::qEdit:isReadOnly(), "ReadOnly", " " ) )
+
    ::oIde:oSBar:getItem( SB_PNL_STREAM   ):caption := "Stream"
    ::oIde:oSBar:getItem( SB_PNL_EDIT     ):caption := "Edit"
 
@@ -413,10 +403,19 @@ METHOD IdeEditor:dispEditInfo()
 METHOD IdeEditor:setTabImage()
    LOCAL nIndex    := ::qTabWidget:indexOf( ::oTab:oWidget )
    LOCAL lModified := ::qDocument:isModified()
+   LOCAL lReadOnly := ::qEdit:isReadOnly()
+   LOCAL cIcon
 
-   ::qTabWidget:setTabIcon( nIndex, ::oIde:resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
+   IF lModified
+      cIcon := "tabmodified.png"
+   ELSEIF lReadOnly
+      cIcon := "tabreadonly.png"
+   ELSE
+      cIcon := "tabunmodified.png"
+   ENDIF
 
-   ::oIde:oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( lModified, "Modified", " " )
+   ::qTabWidget:setTabIcon( nIndex, ::resPath + cIcon )
+   ::oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) )
 
    RETURN Self
 
@@ -465,10 +464,10 @@ METHOD IdeEditor:applyTheme( cTheme )
 
    IF ::cType != "U"
       IF empty( cTheme )
-         cTheme := ::oIde:oThemes:selectTheme()
+         cTheme := ::oThemes:selectTheme()
       ENDIF
 
-      IF ::oIde:oThemes:contains( cTheme )
+      IF ::oThemes:contains( cTheme )
          ::cTheme := cTheme
          ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
       ENDIF

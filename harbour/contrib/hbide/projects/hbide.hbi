@@ -21,9 +21,9 @@ LaunchProgram     =
 -workdir=<IdeSrc>projects/${hb_plat}/${hb_comp}/hbide
 
 [ SOURCES ]
-# PRG Sources
 #
 <IdeSrc>hbide.prg
+<IdeSrc>ideobject.prg
 <IdeSrc>idestylesheets.prg
 <IdeSrc>idetags.prg
 <IdeSrc>idemisc.prg
@@ -34,22 +34,13 @@ LaunchProgram     =
 <IdeSrc>idesaveload.prg
 <IdeSrc>iderequests.prg
 <IdeSrc>idethemes.prg
-
-# C Sources
+<IdeSrc>ideprojmanager.prg
 #
 <IdeSrc>ideparseexpr.c
-
-# Miscellaneous Files
 #
 <IdeSrc>hbide.ch
 <IdeSrc>hbide.ini
 
 [ METADATA ]
-#  Meta Key/Value pair accepts any valid Harbour defined
-#  function call returning a string value, thus making meta-data
-#  protocol extremely powerful. In case of any error in evaluating
-#  value expression will return itself as string value.
-#  So    <SomeKey = "SomeValue" > OR <SomeKey = SomeValue>
-#  will  return the same string as <SomeValue>
 #
 IdeSrc  =  hb_dirBase()
