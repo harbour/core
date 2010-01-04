@@ -271,8 +271,6 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
-   /* Setup GUI Error Reporting System*/
-   hbqt_errorsys()
 
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()

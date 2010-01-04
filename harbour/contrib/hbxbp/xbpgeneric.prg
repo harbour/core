@@ -98,6 +98,8 @@ THREAD STATIC t_oXbpInFocus
 
 INIT PROCEDURE hbxbp_Start()
 
+   hbqt_errorsys()
+
    s_oApp := QApplication():new()
 
    RETURN

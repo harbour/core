@@ -95,6 +95,9 @@ STATIC s_slots
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()
+
+   hbqt_errorsys()
+
    s_qApp := QApplication():new()
    RETURN
 
