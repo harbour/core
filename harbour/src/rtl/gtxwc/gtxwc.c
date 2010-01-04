@@ -55,7 +55,12 @@
 /* NOTE: User programs should never call this layer directly! */
 
 /* #define XWC_DEBUG */
+/* #define HB_XWC_USE_LOCALE */
+
 #include "gtxwc.h"
+#ifdef HB_XWC_USE_LOCALE
+#  include <locale.h>
+#endif
 
 static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;
@@ -340,6 +345,8 @@ typedef struct tag_x_wnddef
       using build in font ones */
    BOOL fDrawBox;
 
+   /* locale set to UTF-8 */
+   BOOL fUTF8;
    /* CodePage support */
    PHB_CODEPAGE hostCDP;
    /* PHB_CODEPAGE outCDP; */
@@ -368,13 +375,13 @@ typedef struct tag_x_wnddef
    int mouseGotoRow;
    int mouseNumButtons;
    int mouseButtonsState;
-   BYTE mouseButtonsMap[XWC_MAX_BUTTONS];
+   unsigned char mouseButtonsMap[XWC_MAX_BUTTONS];
    Time mouseButtonsTime[XWC_MAX_BUTTONS];
 
    /* current screen contents (attr<<24)|(color<<16)|char */
    ULONG *pCurrScr;
 
-   /* character translation table, it changes BYTES in screen buffer into UNICODE or graphs primitives */
+   /* character translation table, it changes characters in screen buffer into UNICODE or graphs primitives */
    XWC_CharTrans charTrans[256];
 
    BOOL fInvalidChr;
@@ -1537,7 +1544,7 @@ static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
 
    for( i = 0; i < 256; i++ )
    {
-      usCh16 = hb_cdpGetU16( wnd->hostCDP, TRUE, ( BYTE ) i );
+      usCh16 = hb_cdpGetU16( wnd->hostCDP, TRUE, ( unsigned char ) i );
 
       wnd->charTrans[ i ].type = CH_CHAR;
       wnd->charTrans[ i ].u.ch16 = usCh16;
@@ -1668,8 +1675,8 @@ static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
 
 static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
 {
-   unsigned char buf[5];
-   KeySym outISO, out = XLookupKeysym( evt, 0 );
+   unsigned char buf[ 16 ];
+   KeySym outISO = 0, out = XLookupKeysym( evt, 0 );
    int ikey = 0, n, i;
 
 #ifdef XWC_DEBUG
@@ -1809,27 +1816,37 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
       we not check all modifiers in all possible keyboards */
    if( ( n = XLookupString( evt, ( char * ) buf, sizeof(buf), &outISO, NULL ) ) <= 0 )
    {
+#ifndef HB_XWC_USE_LOCALE
       /*
        * This is a temporary hack for Latin-x input see gt_SetKeyCP
        */
       if( outISO >= 0x0100 && outISO <= 0x0fff && ( outISO & 0x80 ) == 0x80 )
       {
-         buf[0] = (BYTE) (outISO & 0xff);
+         buf[0] = ( unsigned char ) ( outISO & 0xff );
          n = 1;
       }
-      if ( outISO == 0x20ac )
+      /* hack for euro sign */
+      else if( outISO == 0x20ac )
       {
-         buf[0] = (BYTE) 0x80;
-         n = 1;
+         ikey = hb_cdpGetChar( wnd->hostCDP, FALSE, ( HB_WCHAR ) outISO );
+         hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
+         return;
       }
+#endif
    }
+
    if( n > 0 )
    {
       unsigned char keystr[ 32 ];
       ULONG u = sizeof( keystr );
 
+#ifndef HB_XWC_USE_LOCALE
       hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
                    wnd->inCDP, wnd->hostCDP );
+#else
+      hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
+                   wnd->fUTF8 ? wnd->utf8CDP : wnd->inCDP, wnd->hostCDP );
+#endif
       n = ( int ) u;
 
 #ifdef XWC_DEBUG
@@ -1901,9 +1918,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
          break;
    }
    if( ikey )
-   {
       hb_gt_xwc_TranslateKey( wnd, ikey );
-   }
 }
 
 /* *********************************************************************** */
@@ -2287,7 +2302,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 static int hb_gt_xwc_GetColormapSize( PXWND_DEF wnd )
 {
    XVisualInfo visInfo, *visInfoPtr;
-   int uiCMapSize = -1, nItems;
+   int iCMapSize = -1, nItems;
 
    visInfo.visualid = XVisualIDFromVisual( DefaultVisual( wnd->dpy,
                                            DefaultScreen( wnd->dpy ) ) );
@@ -2295,11 +2310,11 @@ static int hb_gt_xwc_GetColormapSize( PXWND_DEF wnd )
                                 &visInfo, &nItems);
    if( nItems >= 1 )
    {
-      uiCMapSize = visInfoPtr->colormap_size;
+      iCMapSize = visInfoPtr->colormap_size;
    }
    XFree( ( char * ) visInfoPtr );
 
-   return uiCMapSize;
+   return iCMapSize;
 }
 
 /* *********************************************************************** */
@@ -2307,14 +2322,14 @@ static int hb_gt_xwc_GetColormapSize( PXWND_DEF wnd )
 static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
 {
    BOOL fOK = FALSE;
-   int uiCMapSize;
+   int iCMapSize;
 
    if( XAllocColor( wnd->dpy, wnd->colorsmap, pColor ) != 0 )
    {
       /* the exact color allocated */
       fOK = TRUE;
    }
-   else if( ( uiCMapSize = hb_gt_xwc_GetColormapSize( wnd ) ) > 0 )
+   else if( ( iCMapSize = hb_gt_xwc_GetColormapSize( wnd ) ) > 0 )
    {
       /* try to find the best approximation of chosen color in
        * already allocated colors
@@ -2322,23 +2337,23 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
        * Monish Shah's "find_closest_color()" for Vim 6.0, modified
        * with ideas from David Tong's "noflash" library ;-)
        */
-      int     i, uiClosestColor;
+      int     i, iClosestColor;
       double  dDiff, dDistance, dClosestColorDist = 0;
       XColor *colorTable;
       BYTE   *checkTable;
 
-      colorTable = ( XColor * ) hb_xgrab( uiCMapSize * sizeof( XColor ) );
-      checkTable = ( BYTE * ) hb_xgrab( uiCMapSize * sizeof( BYTE ) );
-      for( i = 0; i  < uiCMapSize; i++ )
+      colorTable = ( XColor * ) hb_xgrab( iCMapSize * sizeof( XColor ) );
+      checkTable = ( BYTE * ) hb_xgrab( iCMapSize * sizeof( BYTE ) );
+      for( i = 0; i  < iCMapSize; i++ )
       {
          colorTable[i].pixel = (HB_GT_PIXELTYPE) i;
          checkTable[i] = FALSE;
       }
-      XQueryColors ( wnd->dpy, wnd->colorsmap, colorTable, uiCMapSize );
+      XQueryColors ( wnd->dpy, wnd->colorsmap, colorTable, iCMapSize );
 
       do
       {
-         uiClosestColor = -1;
+         iClosestColor = -1;
          /*
           * Look for the color that best approximates the desired one
           * and has not been checked so far and try to allocate it.
@@ -2351,9 +2366,9 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
           * now we accept any valid color MAX_INT * MAX_INT * 3 < 1e20
           */
          dClosestColorDist = 1e20;
-         for( i = 0; i < uiCMapSize; i++ )
+         for( i = 0; i < iCMapSize; i++ )
          {
-            if( ! checkTable[uiClosestColor] )
+            if( ! checkTable[iClosestColor] )
             {
                /*
                 * Use Euclidean distance in RGB space, weighted by Y (of YIQ)
@@ -2368,23 +2383,23 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
                dDistance += dDiff * dDiff;
                if( dDistance < dClosestColorDist )
                {
-                  uiClosestColor = i;
+                  iClosestColor = i;
                   dClosestColorDist = dDistance;
                }
             }
          }
-         if( uiClosestColor > 0 )
+         if( iClosestColor > 0 )
          {
-            if( XAllocColor( wnd->dpy, wnd->colorsmap, &colorTable[uiClosestColor] ) != 0 )
+            if( XAllocColor( wnd->dpy, wnd->colorsmap, &colorTable[iClosestColor] ) != 0 )
             {
-               *pColor = colorTable[uiClosestColor];
+               *pColor = colorTable[iClosestColor];
                fOK = TRUE;
                break;
             }
-            checkTable[uiClosestColor] = TRUE;
+            checkTable[iClosestColor] = TRUE;
          }
       }
-      while( uiClosestColor > 0 );
+      while( iClosestColor > 0 );
 
       hb_xfree( colorTable );
       hb_xfree( checkTable );
@@ -3166,6 +3181,28 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
+static BOOL hb_gt_xwc_isUTF8( void )
+{
+   BOOL fUTF8 = FALSE;
+   const char * szLang = getenv( "LANG" );
+
+   if( szLang )
+   {
+      int i = ( int ) strlen( szLang );
+
+      if( i > 5 )
+      {
+         fUTF8 = hb_stricmp( szLang + i - 5, ".UTF8" ) ||
+                 hb_stricmp( szLang + i - 6, ".UTF-8" );
+      }
+   }
+
+   return fUTF8;
+
+}
+
+/* *********************************************************************** */
+
 static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
    PHB_FNAME pFileName;
@@ -3182,6 +3219,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fResizable = TRUE;
    wnd->fClosable = TRUE;
    wnd->fWinResize = FALSE;
+   wnd->fUTF8 = hb_gt_xwc_isUTF8();
    wnd->hostCDP = hb_vmCDP();
    wnd->utf8CDP = hb_cdpFindExt( "UTF8" );
    wnd->boxCDP = hb_cdpFind( "EN" );
@@ -3488,6 +3526,10 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    PXWND_DEF wnd;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
+
+#ifdef HB_XWC_USE_LOCALE
+   setlocale( LC_CTYPE, "" );
+#endif
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
