@@ -239,7 +239,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
        f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
        lEmpty := .F.
        oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
-       IF !File(f)
+       IF !hb_FileExists(f)
           oSubMenu2:disableItem( n )
        ENDIF
    NEXT
@@ -258,7 +258,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
        f := hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
        lEmpty := .F.
        oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
-       IF !File(f)
+       IF !hb_FileExists(f)
           oSubMenu2:disableItem( n )
        ENDIF
    NEXT
@@ -507,7 +507,7 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
 
        oItem[4]:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + c )   , nil } )
 
-       IF !File(c)
+       IF !hb_FileExists(c)
           oItem[4]:disableItem( n )
        ENDIF
    NEXT

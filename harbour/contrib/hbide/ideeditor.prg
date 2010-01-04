@@ -436,7 +436,7 @@ METHOD IdeEditor:showPPO( cFile )
 
       qHiliter := ::oIde:oThemes:SetSyntaxHilighting( qEdit )
 
-      Qt_Connect_Event( qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
+      Qt_Events_Connect( ::pEvents, qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
 
       qEdit:show()
    ENDIF
@@ -446,7 +446,7 @@ METHOD IdeEditor:showPPO( cFile )
 
 METHOD IdeEditor:closePPO( qEdit, qHiliter, cFile, lDel )
 
-   Qt_DisConnect_Event( qEdit, QEvent_Close )
+   Qt_Events_DisConnect( ::pEvents, qEdit, QEvent_Close )
 
    qHiliter:pPtr := 0
    qEdit:close()
@@ -475,4 +475,3 @@ METHOD IdeEditor:applyTheme( cTheme )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

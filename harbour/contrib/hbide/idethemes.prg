@@ -545,6 +545,7 @@ METHOD IdeThemes:updateAttribute( nAttr, iState )
 METHOD IdeThemes:selectTheme()
    LOCAL cTheme := ""
    LOCAL oSL, oStrList, oStrModel, a_, nDone
+   LOCAL pSlots := Qt_Slots_New()
 
    oSL := XbpQtUiLoader():new( ::oIde:oDlg )
    oSL:file := ::oIde:resPath + "selectionlist.ui"
@@ -561,11 +562,11 @@ METHOD IdeThemes:selectTheme()
 
    oSL:qObj[ "listOptions" ]:setModel( oStrModel )
 
-   Qt_Connect_Signal( oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( p, oSL, @cTheme, o ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( p, oSL, @cTheme, o ) } )
 
    nDone := oSL:exec()
 
-   Qt_DisConnect_Signal( oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)" )
+   Qt_Slots_Disconnect( pSlots, oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)" )
 
    RETURN iif( nDone == 1, cTheme, "" )
 
@@ -989,4 +990,3 @@ UserDictionary             = UserDictionary            0,0,0         0,0,0      
 #endif
 
 /*----------------------------------------------------------------------*/
-

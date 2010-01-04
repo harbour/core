@@ -178,7 +178,7 @@ METHOD IdeProjManager:loadProperties( cProject, lNew, lFetch, lUpdateTree )
 
    IF lFetch
       ::fetchProperties()
-      IF !empty( ::cSaveTo ) .and. file( ::cSaveTo )
+      IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
          cProject := ::cSaveTo
          ::aPrjProps := hbide_fetchHbiStructFromFile( hbide_pathToOSPath( cProject ) ) /* Reload from file */
       ENDIF
@@ -754,7 +754,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       FErase( cHbpPath )
    ENDIF
 
-   IF lPPO .AND. File( cFileName )
+   IF lPPO .AND. hb_FileExists( cFileName )
       ::aEdits[ 1 ]:showPPO( cFileName )
    ENDIF
 
@@ -850,7 +850,7 @@ METHOD IdeProjManager:LaunchProject( cProject )
    ENDIF
 #endif
 
-   IF !File( cTargetFN )
+   IF !hb_FileExists( cTargetFN )
       cTmp := "Launch application error: file not found " + cTargetFN + "!"
 
    ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
@@ -869,4 +869,3 @@ METHOD IdeProjManager:LaunchProject( cProject )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

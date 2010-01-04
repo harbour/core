@@ -661,7 +661,7 @@ METHOD HbIde:insertText( cKey )
 
       n := ::selectSource( "open" )
 
-      IF Empty(n) .OR. !File( n )
+      IF Empty(n) .OR. !hb_FileExists( n )
          RETURN Self
       ENDIF
 
@@ -753,7 +753,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
       RETURN Self
    ENDIF
 
-   IF !Empty( cSourceFile ) .AND. !File( cSourceFile )
+   IF !Empty( cSourceFile ) .AND. !hb_FileExists( cSourceFile )
       MsgBox( 'File not found: ' + cSourceFile )
       RETURN Self
    ENDIF
@@ -1589,7 +1589,7 @@ METHOD HbIde:loadUI( cUi )
    LOCAL cUiFull := s_resPath + cUi + ".ui"
    LOCAL qDialog, qUiLoader, qFile
 
-   IF file( cUiFull )
+   IF hb_FileExists( cUiFull )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
