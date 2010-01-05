@@ -3874,6 +3874,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         ''                                                                        + Chr( 10 ) +;
                         '#if defined( __cplusplus )'                                              + Chr( 10 ) +;
                         ''                                                                        + Chr( 10 ) +;
+                        'const char * __hbmk2_hbcppmm( void )'                                    + Chr( 10 ) +;
+                        '{'                                                                       + Chr( 10 ) +;
+                        '   return "HBCPPMM";'                                                    + Chr( 10 ) +;
+                        '}'                                                                       + Chr( 10 ) +;
+                        ''                                                                        + Chr( 10 ) +;
                         'void * operator new[]( size_t nSize )'                                   + Chr( 10 ) +;
                         '{'                                                                       + Chr( 10 ) +;
                         '   return hb_xgrab( nSize );'                                            + Chr( 10 ) +;
