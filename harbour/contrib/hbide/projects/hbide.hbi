@@ -12,11 +12,7 @@ LaunchProgram     =
 ../../hbxbp/hbxbp.hbc
 -inc
 -w3
--gui
 -es2
--lhbwin
--lpsapi
--LC:\qt\2009.01\qt\lib
 -o<IdeSrc>projects\hbides
 -workdir=<IdeSrc>projects/${hb_plat}/${hb_comp}/hbide
 
