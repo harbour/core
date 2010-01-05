@@ -604,12 +604,7 @@ METHOD IdeProjManager:buildProjectViaQt( cProject )
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
-   LOCAL cTmp, nResult
-   LOCAL nseconds
-   LOCAL cTargetFN
-   LOCAL cPath
-   LOCAL cFileName
-   LOCAL lDelHbp
+   LOCAL cTmp, nResult, nSeconds, cTargetFN, cPath, cFileName, lDelHbp
 
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
@@ -637,9 +632,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
    cTargetFN := hbide_pathToOSPath( cTargetFN )
-//   cTargetFN := StrTran( cTargetFN, '/', ::pathSep )
-//   cTargetFN := StrTran( cTargetFN, '\', ::pathSep )
-
    /*
     * Creates a temporary file to avoid erase the file. Hbp correct this project.
     * 26/12/2009 - 04:17:56 - vailtom
@@ -648,7 +640,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       cHbpPath  := cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".hbp"
    ELSE
       cHbpPath  := cTargetFN + ".hbp"
-   End
+   ENDIF
 
    DO CASE
    CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
@@ -658,13 +650,13 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ENDCASE
 
    aadd( aHbp, "-o" + cTargetFN )
-   aadd( aHbp, "-q" )
-   aadd( aHbp, "-trace" )
-   aadd( aHbp, "-info" )
-hbide_dbg( cTargetFN )
+   aadd( aHbp, "-q"             )
+   aadd( aHbp, "-trace"         )
+   aadd( aHbp, "-info"          )
+
    IF lRebuild
       aadd( aHbp, "-rebuild" )
-   End
+   ENDIF
 
    aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
 
@@ -676,10 +668,10 @@ hbide_dbg( cTargetFN )
 
       n := ::getCurrentTab()
 
-      hb_FNameSplit( ::aTabs[ n, 5 ], @cPath, @cFileName, @cTmp )
+      hb_FNameSplit( ::aTabs[ n, TAB_SOURCEFILE ], @cPath, @cFileName, @cTmp )
 
       IF !( lower( cTmp ) $ ".prg,?" )
-         MsgBox( 'Operation not supported for this file type: "'+cTmp+'"' )
+         MsgBox( 'Operation not supported for this file type: "' + cTmp + '"' )
          RETURN Self
       ENDIF
 
@@ -687,7 +679,7 @@ hbide_dbg( cTargetFN )
 
       // TODO: We have to test if the current file is part of a project, and we
       // pull your settings, even though this is not the active project - vailtom
-      aadd( aHbp, ::aTabs[ n, 5 ] )
+      aadd( aHbp, ::aTabs[ n, TAB_SOURCEFILE ] )
 
       FErase( cFileName )
    ENDIF
@@ -714,8 +706,6 @@ hbide_dbg( cTargetFN )
          qStringList:append( cHbpPath )
 
          ::qProcess := QProcess():new()
-         //::qProcess:setProcessChannelMode( 0 )
-         //::qProcess:setReadChannel( 0 )
 
          ::cFileOut := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".out" )
          ::cFileErr := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".err" )

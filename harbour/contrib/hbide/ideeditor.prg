@@ -79,10 +79,24 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD create()
 
    METHOD goto()
+   METHOD undo()
+   METHOD redo()
+   METHOD cut()
+   METHOD copy()
+   METHOD paste()
+   METHOD selectAll()
+   METHOD switchToReadOnly()
+   METHOD insertText()
+
    METHOD printPreview()
    METHOD paintRequested()
+
    METHOD showPPO()
    METHOD closePPO()
+
+   METHOD convertSelection()
+
+   METHOD zoom()
 
    ENDCLASS
 
@@ -104,6 +118,176 @@ METHOD IdeEditsManager:create( oIde )
 
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:undo()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:undo()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:redo()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:redo()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:cut()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:cut()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:copy()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:copy()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:paste()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:paste()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:selectAll()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:selectAll()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:switchToReadOnly()
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:setReadOnly( !( ::qCurEdit:isReadOnly() ) )
+      ::oCurEditor:setTabImage()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:convertSelection( cKey )
+   LOCAL cBuffer, i, s, nLen, c, nB, nL, qCursor
+
+   IF !empty( ::qCurEdit )
+      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
+         DO CASE
+         CASE cKey == "ToUpper"
+            cBuffer := upper( cBuffer )
+         CASE cKey == "ToLower"
+            cBuffer := lower( cBuffer )
+         CASE cKey == "Invert"
+            s := ""
+            nLen := len( cBuffer )
+            FOR i := 1 TO nLen
+               c := substr( cBuffer, i, 1 )
+               s += iif( isUpper( c ), lower( c ), upper( c ) )
+            NEXT
+            cBuffer := s
+         ENDCASE
+         nL := len( cBuffer )
+         nB := qCursor:position() - nL
+
+         qCursor:beginEditBlock()
+         qCursor:removeSelectedText()
+         qCursor:insertText( cBuffer )
+         qCursor:setPosition( nB )
+         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
+
+         ::qCurEdit:setTextCursor( qCursor )
+
+         qCursor:endEditBlock()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:insertText( cKey )
+   LOCAL nB, nL, qCursor, cFile, cText
+
+   IF Empty( ::qCurEdit )
+      RETURN Self
+   ENDIF
+
+   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+
+   DO CASE
+
+   CASE cKey == "InsertDateTime"
+      cText := DTOC( Date() ) + ' - ' + Time()
+
+   CASE cKey == "InsertRandomName"
+      cText := hbide_getUniqueFuncName()
+
+   CASE cKey == "InsertExternalFile"
+      cFile := ::selectSource( "open" )
+      IF Empty( cFile ) .OR. !hb_FileExists( cFile )
+         RETURN Self
+      ENDIF
+      IF !( hbide_isValidText( cFile ) )
+         MsgBox( 'File type unknown or unsupported: ' + cFile )
+         RETURN Self
+      ENDIF
+      cText := hb_memoread( cFile )
+
+   OTHERWISE
+      RETURN Self
+
+   ENDCASE
+
+   IF !Empty( cText )
+      nL := len( cText )
+      nB := qCursor:position() + nL
+
+      qCursor:beginEditBlock()
+      qCursor:removeSelectedText()
+      qCursor:insertText( cText )
+      qCursor:setPosition( nB )
+      qCursor:endEditBlock()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:zoom( cKey )
+
+   IF empty( ::qCurEdit )
+      RETURN Self
+   ENDIF
+
+   IF     upper( cKey ) == "ZOOMIN"
+   ELSEIF upper( cKey ) == "ZOOMOUT"
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+#if 0
+METHOD IdeEditsManager:()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:()
+
+   RETURN Self
+#endif
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:printPreview()

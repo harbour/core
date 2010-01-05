@@ -322,7 +322,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Project"
-   oSubMenu:addItem( { _T( "Properties" )                                     , {|| oIde:execAction( "Properties"     ) } } )
+   oSubMenu:addItem( { _T( "Properties" )                                     , {|| oIde:execAction( "Properties"    ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Add File* | projectadd.png" )                     , {|| oIde:execAction( "" ) } } )
    oSubMenu:addItem( { _T( "Remove File* | projectdel.png" )                  , {|| oIde:execAction( "" ) } } )
@@ -330,7 +330,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:disableItem( oSubMenu:numItems )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Change Current Project" )                         , {|| oIde:execAction( "SelectProject" ) } } )
-   oSubMenu:addItem( { _T( "Close Current Project" )                          , {|| oIde:execAction( "CloseProject"   ) } } )
+   oSubMenu:addItem( { _T( "Close Current Project" )                          , {|| oIde:execAction( "CloseProject"  ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
@@ -344,7 +344,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    oSubMenu:addItem( { _T( "Re-build and Launch, Sh+^F9 | rebuildlaunch.png" ), {|| oIde:execAction( "SaveRebuildLaunch"  ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Save and Compile Current File | compile.png")     , {|| oIde:execAction( "SaveCompileCurrent" ) } } )
-   oSubMenu:addItem( { _T( "Save and Compile to PPO | ppo.png" )              , {|| oIde:execAction( "CompilePPO"        ) } } )
+   oSubMenu:addItem( { _T( "Save and Compile to PPO | ppo.png" )              , {|| oIde:execAction( "CompilePPO"         ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { _T( "Launch, ^F10" )                                   , {|| oIde:execAction( "LaunchProject"      ) } } )
  * oSubMenu:addItem( { _T( "Run without Debug*, Sh+^F10 | runnodebug.png" ), {|| oIde:execAction( "" ) } } )
@@ -370,7 +370,7 @@ FUNCTION buildMainMenu( oWnd, oIde )
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Options"
-   oSubMenu:addItem( { _T( "Themes" )                          , {|| oIde:oThemes:fetch()                   } } )
+   oSubMenu:addItem( { _T( "Themes" )                          , {|| oIde:oThemes:fetch()              } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/

@@ -238,8 +238,6 @@ CLASS HbIde
    METHOD createTags()
 
    METHOD manageFocusInEditor()
-   METHOD convertSelection()
-   METHOD insertText()
    METHOD loadUI()
 
    METHOD setCodec()
@@ -324,6 +322,7 @@ METHOD HbIde:create( cProjIni )
    ::oDlg:Show()
 
    /* Fill various elements of the IDE */
+   ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
    ::loadSources()
    ::updateProjectMenu()
@@ -400,7 +399,7 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:execAction( cKey )
-   LOCAL aPrj, cHbi, Tmp, n
+   LOCAL aPrj, cHbi, cTmp, n, aSrc
 
    DO CASE
    CASE cKey == "Exit"
@@ -422,25 +421,24 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "SaveRebuildLaunch"
       ::oPM:buildProject( '', .T., .T. )
 
+   CASE cKey == "Compile"
+      //
    CASE cKey == "CompilePPO"
       ::oPM:buildProject( '', .F., .F., .T. )
 
    CASE cKey == "Properties"
-
       IF Empty( ::cWrkProject )
          MsgBox( 'No active project detected!' )
       End
-
-      Tmp  := ::oPM:getCurrentProject()
-
-      IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == Tmp } ) ) > 0
+      cTmp  := ::oPM:getCurrentProject()
+      IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
          aPrj := ::aProjects[ n, 3 ]
-         cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+         cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + ;
                  aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
 
          ::oPM:loadProperties( cHbi, .f., .t., .t. )
       ELSE
-         MsgBox( 'Invalid project: ' + Tmp )
+         MsgBox( 'Invalid project: ' + cTmp )
       End
 
    CASE cKey == "SelectProject"
@@ -451,10 +449,8 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "New"
       ::editSource( '' )
    CASE cKey == "Open"
-      Tmp := ::selectSource( "openmany" )
-
-      IF !Empty( Tmp )
-         aEval( Tmp, {|f| ::editSource( f ) })
+      IF !empty( aSrc := ::selectSource( "openmany" ) )
+         aEval( aSrc, {|e| ::editSource( e ) } )
       ENDIF
    CASE cKey == "Save"
       ::saveSource( ::getCurrentTab() )
@@ -472,38 +468,24 @@ METHOD HbIde:execAction( cKey )
       ::closeAllSources()
    CASE cKey == "CloseOther"
       ::closeAllOthers()
+
    CASE cKey == "Print"
       ::oED:printPreview()
    CASE cKey == "Undo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:undo()
-      ENDIF
+      ::oED:undo()
    CASE cKey == "Redo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:redo()
-      ENDIF
+      ::oED:redo()
    CASE cKey == "Cut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:cut()
-      ENDIF
+      ::oED:cut()
    CASE cKey == "Copy"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:copy()
-      ENDIF
+      ::oED:copy()
    CASE cKey == "Paste"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:paste()
-      ENDIF
+      ::oED:paste()
    CASE cKey == "SelectAll"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:selectAll()
-      ENDIF
+      ::oED:selectAll()
 
    CASE cKey == "switchReadOnly"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:setReadOnly( !::qCurEdit:isReadOnly() )
-         ::oCurEditor:setTabImage()
-      ENDIF
+      ::oED:switchToReadOnly()
    CASE cKey == "Find"
       IF !Empty( ::qCurEdit )
          ::oFR:show()
@@ -513,25 +495,21 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "Goto"
       ::oED:goto()
    CASE cKey == "ToUpper"
-      ::convertSelection( cKey )
+      ::oED:convertSelection( cKey )
    CASE cKey == "ToLower"
-      ::convertSelection( cKey )
+      ::oED:convertSelection( cKey )
    CASE cKey == "Invert"
-      ::convertSelection( cKey )
+      ::oED:convertSelection( cKey )
    CASE cKey == "InsertDateTime"
-      ::insertText( cKey )
+      ::oED:insertText( cKey )
    CASE cKey == "InsertRandomName"
-      ::insertText( cKey )
+      ::oED:insertText( cKey )
    CASE cKey == "InsertExternalFile"
-      ::insertText( cKey )
+      ::oED:insertText( cKey )
    CASE cKey == "ZoomIn"
-      IF !empty( ::qCurEdit )
-         //::qCurEdit:zoomIn()
-      ENDIF
+      ::oED:zoom( cKey )
    CASE cKey == "ZoomOut"
-      IF !empty( ::qCurEdit )
-         //::qCurEdit:zoomOut()
-      ENDIF
+      ::oED:zoom( cKey )
 
    CASE cKey == "ToggleProjectTree"
       ::lProjTreeVisible := !::lProjTreeVisible
@@ -562,120 +540,11 @@ METHOD HbIde:execAction( cKey )
       ENDIF
       ::lDockRVisible := !( ::lDockRVisible )
 
-   CASE cKey == "Compile"
-
-   CASE cKey == "CompilePPO"
-
    ENDCASE
 
    ::manageFocusInEditor()
 
    RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:convertSelection( cKey )
-   LOCAL cBuffer, i, s, nLen, c
-   LOCAL nB, nL
-
-   IF !empty( ::qCurEdit )
-      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-      IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
-         DO CASE
-         CASE cKey == "ToUpper"
-            cBuffer := upper( cBuffer )
-         CASE cKey == "ToLower"
-            cBuffer := lower( cBuffer )
-         CASE cKey == "Invert"
-            s := ""
-            nLen := len( cBuffer )
-            FOR i := 1 TO nLen
-               c := substr( cBuffer, i, 1 )
-               s += IIF( isUpper( c ), lower( c ), upper( c ) )
-            NEXT
-            cBuffer := s
-         ENDCASE
-         nL := len( cBuffer )
-         nB := ::qCursor:position() - nL
-
-         ::qCursor:beginEditBlock()
-         ::qCursor:removeSelectedText()
-         ::qCursor:insertText( cBuffer )
-         ::qCursor:setPosition( nB )
-         ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         ::qCurEdit:setTextCursor( ::qCursor )
-         ::qCursor:endEditBlock()
-      ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:insertText( cKey )
-   LOCAL b, c, t, n
-   LOCAL nB, nL
-
-   IF Empty( ::qCurEdit )
-      RETURN Self
-   ENDIF
-
-   ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-
-   DO CASE
-   CASE cKey == "InsertDateTime"
-      b := DTOC( Date() ) + ' - ' + Time()
-   CASE cKey == "InsertRandomName"
-
-      b := ''
-      t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
-      WHILE Len(b) <> 10
-          c := Subst( t, HB_RANDOMINT( 1, Len(t) ), 1 )
-
-          IF !( c $ b )
-             IF Empty(b) .AND. IsDigit(c)
-                LOOP
-             ENDIF
-             b += c
-          ENDIF
-      End
-
-      b += '('
-
-   CASE cKey == "InsertExternalFile"
-
-      n := ::selectSource( "open" )
-
-      IF Empty(n) .OR. !hb_FileExists( n )
-         RETURN Self
-      ENDIF
-
-      msgbox(n)
-
-      IF !( hbide_isValidText( n ) )
-         MsgBox( 'File type unknown or unsupported: ' + n )
-         RETURN Self
-      ENDIF
-
-      b := hb_memoread( n )
-
-   OTHERWISE
-      RETURN Self
-   ENDCASE
-
-   IF !Empty( b )
-      nL := len( b )
-      nB := ::qCursor:position() + nL
-
-      ::qCursor:beginEditBlock()
-      ::qCursor:removeSelectedText()
-      ::qCursor:insertText( b )
-      ::qCursor:setPosition( nB )
-      ::qCursor:endEditBlock()
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

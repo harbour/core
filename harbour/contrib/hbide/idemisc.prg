@@ -913,3 +913,24 @@ FUNCTION hbide_help( nOption )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getUniqueFuncName()
+   LOCAL t, b, c, n
+
+   t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+   n := len( t )
+   b := ''
+   WHILE Len( b ) <> 10
+      c := Substr( t, HB_RANDOMINT( 1, n ), 1 )
+
+      IF !( c $ b )
+         IF Empty( b ) .AND. IsDigit( c )
+            LOOP
+         ENDIF
+         b += c
+      ENDIF
+   End
+   b += '( '
+
+   RETURN b
+
+/*----------------------------------------------------------------------*/
