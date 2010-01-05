@@ -135,7 +135,10 @@ CLASS HbIde
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QEDIT ], NIL )
    ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QDOCUMENT ], NIL )
    ACCESS qCurCursor                              INLINE ::getCurCursor()
+
    DATA   qCursor
+   DATA   qFontWrkProject
+   DATA   qBrushWrkProject
 
    /* XBP Objects */
    DATA   oDlg
@@ -190,6 +193,7 @@ CLASS HbIde
    DATA   aComments                               INIT {}
    DATA   aProjects                               INIT {}
    DATA   cWrkProject                             INIT ''
+   DATA   cWrkTheme                               INIT ''
    DATA   oProps
 
    DATA   cProcessInfo
@@ -269,6 +273,8 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
+   /* Setup GUI Error Reporting System*/
+   hbqt_errorsys()
 
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
@@ -312,6 +318,7 @@ METHOD HbIde:create( cProjIni )
 
    /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
+   ::qBrushWrkProject := QBrush():new( "QColor", QColor():new( 255,0,0 ) )
 
    /* Editor's Font - TODO: User Managed Interface */
    ::oFont := XbpFont():new()
@@ -327,6 +334,9 @@ METHOD HbIde:create( cProjIni )
    ::loadSources()
    ::updateProjectMenu()
    ::updateTitleBar()
+   /* Set some last settings */
+   ::oPM:setCurrentProject( ::cWrkProject, .f. )
+   ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -429,8 +439,8 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "Properties"
       IF Empty( ::cWrkProject )
          MsgBox( 'No active project detected!' )
-      End
-      cTmp  := ::oPM:getCurrentProject()
+      ENDIF
+      cTmp := ::oPM:getCurrentProject()
       IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
          aPrj := ::aProjects[ n, 3 ]
          cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + ;
@@ -439,13 +449,12 @@ METHOD HbIde:execAction( cKey )
          ::oPM:loadProperties( cHbi, .f., .t., .t. )
       ELSE
          MsgBox( 'Invalid project: ' + cTmp )
-      End
+      ENDIF
 
    CASE cKey == "SelectProject"
       ::oPM:selectCurrentProject()
    CASE cKey == "CloseProject"
       ::oPM:closeProject()
-
    CASE cKey == "New"
       ::editSource( '' )
    CASE cKey == "Open"
@@ -491,7 +500,9 @@ METHOD HbIde:execAction( cKey )
          ::oFR:show()
       ENDIF
    CASE cKey == "SetMark"
+      //
    CASE cKey == "GotoMark"
+      //
    CASE cKey == "Goto"
       ::oED:goto()
    CASE cKey == "ToUpper"
@@ -512,34 +523,11 @@ METHOD HbIde:execAction( cKey )
       ::oED:zoom( cKey )
 
    CASE cKey == "ToggleProjectTree"
-      ::lProjTreeVisible := !::lProjTreeVisible
-      IF !( ::lProjTreeVisible )
-         ::oDockPT:hide()
-         ::oDockED:hide()
-      ELSE
-         ::oDockPT:show()
-         ::oDockED:show()
-      ENDIF
+      ::oDK:toggleLeftDocks()
    CASE cKey == "ToggleBuildInfo"
-      IF ::lDockBVisible
-         ::oDockB:hide()
-         ::oDockB1:hide()
-         ::oDockB2:hide()
-         ::lDockBVisible := .f.
-      ELSEIF ::qTabWidget:count() > 0
-         ::oDockB:show()
-         ::oDockB1:show()
-         ::oDockB2:show()
-         ::lDockBVisible := .t.
-      ENDIF
+      ::oDK:toggleBottomDocks()
    CASE cKey == "ToggleFuncList"
-      IF ::lDockRVisible
-         ::oDockR:hide()
-      ELSE
-         ::oDockR:show()
-      ENDIF
-      ::lDockRVisible := !( ::lDockRVisible )
-
+      ::oDK:toggleRightDocks()
    ENDCASE
 
    ::manageFocusInEditor()
@@ -1227,7 +1215,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
       //
-      IF Alltrim( Upper( ::cWrkProject )) != Alltrim( Upper( oXbpTreeItem:caption ))
+      IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
          aadd( aPops, { "Set as Current"        , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
 
@@ -1374,7 +1362,6 @@ METHOD HbIde:loadUI( cUi )
  * 03/01/2010 - 12:48:18 - vailtom
  */
 METHOD HbIde:updateProjectMenu()
-
    LOCAL oItem := hbide_mnuFindItem( Self, 'Project' )
 
    IF Empty( oItem )

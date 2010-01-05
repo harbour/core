@@ -80,8 +80,9 @@
 #define PropsDialogGeometry                       9
 #define FindDialogGeometry                        10
 #define ThemesDialogGeometry                      11
+#define CurrentTheme                              12
 
-#define INI_HBIDE_VRBLS                           11
+#define INI_HBIDE_VRBLS                           12
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

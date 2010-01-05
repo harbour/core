@@ -439,7 +439,7 @@ METHOD IdeProjManager:addSources()
  * 26/12/2009 - 02:19:38
  */
 METHOD IdeProjManager:setCurrentProject( cProjectName )
-   LOCAL aPrjProps, n
+   LOCAL aPrjProps, n, oItem
    LOCAL cOldProject := ::cWrkProject
    LOCAL lValid      := .T.
 
@@ -451,8 +451,9 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       ::oIde:cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
 
    ELSE
-      MsgBox( 'Invalid project selected: "' + cProjectName + '"' )
+    * MsgBox( 'Invalid project selected: "' + cProjectName + '"' )
       lValid := .F.
+
    ENDIF
 
    IF lValid
@@ -462,6 +463,19 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
 
       ::oIde:updateTitleBar()
       ::oIde:updateProjectMenu()
+
+      /* Reset Old Color */
+      IF !empty( cOldProject )
+         IF !empty( oItem := hbide_findProjTreeItem( ::oIde, cOldProject, "Project Name" ) )
+            oItem:oWidget:setForeground( 0, QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
+         ENDIF
+      ENDIF
+      /* Set New Color */
+      IF !empty( ::cWrkProject )
+         IF !empty( oItem := hbide_findProjTreeItem( ::oIde, ::cWrkProject, "Project Name" ) )
+            oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
+         ENDIF
+      ENDIF
    ENDIF
 
    RETURN cOldProject

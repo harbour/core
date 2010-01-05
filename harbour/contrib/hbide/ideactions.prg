@@ -370,7 +370,8 @@ FUNCTION buildMainMenu( oWnd, oIde )
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Options"
-   oSubMenu:addItem( { _T( "Themes" )                          , {|| oIde:oThemes:fetch()              } } )
+   oSubMenu:addItem( { _T( "Manage Themes" )                   , {|| oIde:oThemes:fetch()              } } )
+   oSubMenu:addItem( { _T( "Default Theme" )                   , {|| oIde:oThemes:setWrkTheme()        } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/

@@ -137,6 +137,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD updateAttribute()
    METHOD updateColor()
    METHOD selectThemeProc()
+   METHOD setWrkTheme()
 
    ENDCLASS
 
@@ -216,6 +217,19 @@ METHOD IdeThemes:destroy()
    IF !empty( ::oThemes )
 
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:setWrkTheme( cTheme )
+
+   IF empty( cTheme )
+      cTheme := ::selectTheme()
+   ENDIF
+   IF !empty( cTheme )
+      ::oIde:cWrkTheme := cTheme
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -346,9 +360,12 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    LOCAL a_, aAttr, qHiliter
 
    IF empty( cTheme )
+      cTheme := ::cWrkTheme
+   ENDIF
+   IF empty( cTheme )
       cTheme := "Pritpal's Favourite"
    ENDIF
-   DEFAULT lNew   TO .f.           /* Apply one which is already formed */
+   DEFAULT lNew TO .f.           /* Apply one which is already formed */
 
    HB_SYMBOL_UNUSED( lNew )
 

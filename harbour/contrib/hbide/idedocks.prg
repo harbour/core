@@ -96,6 +96,9 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD buildOutputResults()
 
    METHOD outputDoubleClicked()
+   METHOD toggleLeftDocks()
+   METHOD toggleRightDocks()
+   METHOD toggleBottomDocks()
 
    ENDCLASS
 
@@ -444,3 +447,47 @@ METHOD IdeDocks:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:toggleLeftDocks()
+
+   IF ::lProjTreeVisible
+      ::oDockPT:hide()
+      ::oDockED:hide()
+   ELSE
+      ::oDockPT:show()
+      ::oDockED:show()
+   ENDIF
+   ::oIde:lProjTreeVisible := !( ::lProjTreeVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:toggleRightDocks()
+
+   IF ::lDockRVisible
+      ::oDockR:hide()
+   ELSE
+      ::oDockR:show()
+   ENDIF
+   ::oIde:lDockRVisible := !( ::lDockRVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:toggleBottomDocks()
+
+   IF ::lDockBVisible
+      ::oDockB:hide()
+      ::oDockB1:hide()
+      ::oDockB2:hide()
+   ELSEIF ::qTabWidget:count() > 0
+      ::oDockB:show()
+      ::oDockB1:show()
+      ::oDockB2:show()
+   ENDIF
+   ::oIde:lDockBVisible := !( ::oIde:lDockBVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/

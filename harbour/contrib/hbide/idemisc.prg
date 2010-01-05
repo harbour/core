@@ -934,3 +934,17 @@ FUNCTION hbide_getUniqueFuncName()
    RETURN b
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_findProjTreeItem( oIde, cNodeText, cType )
+   LOCAL oItem, a_
+
+   FOR EACH a_ IN oIde:aProjData
+      IF a_[ TRE_TYPE ] == cType .AND. a_[ TRE_OITEM ]:caption == cNodeText
+         oItem := a_[ TRE_OITEM ]
+         EXIT
+      ENDIF
+   NEXT
+   RETURN oItem
+
+/*----------------------------------------------------------------------*/
+

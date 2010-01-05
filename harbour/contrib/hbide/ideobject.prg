@@ -87,7 +87,10 @@ CLASS IdeObject
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
    ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
 
+   ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
+
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
+   ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aINI                                    INLINE ::oIde:aINI
 
