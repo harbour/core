@@ -246,7 +246,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                       file, line, pszLevel, message );
 
       #if defined( UNICODE )
-         MultiByteToWideChar( CP_ACP, 0, memcpy( message, buf.psz, sizeof( message ) ), -1,
+         MultiByteToWideChar( CP_ACP, 0, ( LPCSTR ) memcpy( message, buf.psz, sizeof( message ) ), -1,
                               buf.lp, HB_SIZEOFARRAY( buf.lp ) );
       #endif
       OutputDebugString( buf.lp );
