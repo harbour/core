@@ -654,16 +654,16 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                ELSE
                   aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
                ENDIF
-               aadd( cpp_, " " )
+               aadd( cpp_, "" )
                aadd( cpp_, "   p->ph = pObj;" )
-               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget +";" )
+               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget + ";" )
                IF lObject
                   aadd( cpp_, "   new( & p->pq ) QPointer< "+ cWidget +" >( ( " + cWidget + " * ) pObj );" )
                ENDIF
                aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "          new_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
-               aadd( cpp_, "   return( p ); " )
-               aadd( cpp_, "}               " )
-               aadd( cpp_, " " )
+               aadd( cpp_, "   return p;" )
+               aadd( cpp_, "}" )
+               aadd( cpp_, "" )
             ENDIF
          ENDIF
 

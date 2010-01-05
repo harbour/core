@@ -66,10 +66,14 @@ ifneq ($(HB_HAS_QT),)
                endif
             endif
          endif
-         $(info ! Using QT 'moc' bin: $(MOC_BIN) (autodetected))
+         $(info ! Using QT 'moc' executable: $(MOC_BIN) (autodetected))
       else
-         MOC_BIN := $(HB_QT_MOC_BIN)
-         $(info ! Using QT 'moc' bin: $(MOC_BIN))
+         ifneq ($(wildcard $(HB_QT_MOC_BIN)),)
+            MOC_BIN := $(HB_QT_MOC_BIN)
+            $(info ! Using QT 'moc' executable: $(MOC_BIN))
+         else
+            $(error ! HB_QT_MOC_BIN points to non-existent file. Make sure to set it to full path and filename of moc executable.)
+         endif
       endif
       export MOC_BIN
    endif
