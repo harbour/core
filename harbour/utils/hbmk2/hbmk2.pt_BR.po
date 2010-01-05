@@ -147,8 +147,8 @@ msgstr "Processando script local: %1$s"
 
 #: hbmk2.prg:4127
 #, c-format
-msgid "Warning: C compiler script couldn't be created, continuing in command line."
-msgstr "Atenção: Script para o compilador C não pode ser criado, continuando com a linha de comando."
+msgid "Warning: C/C++ compiler script couldn't be created, continuing in command line."
+msgstr "Atenção: Script para o compilador C/C++ não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:4457
 #, c-format
@@ -243,8 +243,8 @@ msgstr "Criando cabeçalho com data e hora: %1$s"
 #: hbmk2.prg:4175
 #: hbmk2.prg:4707
 #, c-format
-msgid "Error: Running C compiler job #%1$s. %2$s"
-msgstr "Erro: Executando o compilador C - tarefa #%1$s. %2$s"
+msgid "Error: Running C/C++ compiler job #%1$s. %2$s"
+msgstr "Erro: Executando o compilador C/C++ - tarefa #%1$s. %2$s"
 
 #: hbmk2.prg:3515
 #, c-format
@@ -294,8 +294,8 @@ msgstr "Compilando..."
 #: hbmk2.prg:4136
 #: hbmk2.prg:4697
 #, c-format
-msgid "C compiler command job #%1$s:"
-msgstr "Comando do Compilador C - tarefa #%1$s:"
+msgid "C/C++ compiler command job #%1$s:"
+msgstr "Comando do Compilador C/C++ - tarefa #%1$s:"
 
 #: hbmk2.prg:4412
 #, c-format
@@ -399,8 +399,8 @@ msgstr "copiar o alvo para <path>. Se <path> for um diretório, deve terminar com
 #: hbmk2.prg:4138
 #: hbmk2.prg:4699
 #, c-format
-msgid "C compiler command:"
-msgstr "Comando do compilador C:"
+msgid "C/C++ compiler command:"
+msgstr "Comando do compilador C/C++:"
 
 #: hbmk2.prg:7960
 #, c-format
@@ -521,10 +521,10 @@ msgstr "arquivos .hbc na pasta corrente serão automaticamente processados."
 #: hbmk2.prg:7960
 #, c-format
 msgid ""
-".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
+".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
 "Lines starting with '#' char are ignored"
 msgstr ""
-"As opções em um arquivo .hbc devem estar em linhas separadas e são: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[módulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
+"As opções em um arquivo .hbc devem estar em linhas separadas e são: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[módulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
 "Linhas iniciadas com '#' são interpretadas como comentários e serão ignoradas"
 
 #: hbmk2.prg:7942
@@ -852,15 +852,15 @@ msgstr "criar (ou não) uma 'import library' (no modo -hbdyn)"
 
 #: hbmk2.prg:4143
 #, c-format
-msgid "C compiler script:"
-msgstr "Script do compilador C:"
+msgid "C/C++ compiler script:"
+msgstr "Script do compilador C/C++:"
 
 #: hbmk2.prg:4153
 #: hbmk2.prg:4177
 #: hbmk2.prg:4709
 #, c-format
-msgid "Error: Running C compiler. %1$s"
-msgstr "Erro: Executando compilador C. %1$s"
+msgid "Error: Running C/C++ compiler. %1$s"
+msgstr "Erro: Executando compilador C/C++. %1$s"
 
 #: hbmk2.prg:4190
 #, c-format

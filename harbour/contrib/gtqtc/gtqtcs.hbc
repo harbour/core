@@ -6,5 +6,8 @@
 
 libs=QtCore QtGui QtNetwork QtWebKit
 {allgcc}libs=supc++
+
+hbcppmm=yes
+
 gui=yes
 gt=gtqtcs

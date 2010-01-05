@@ -98,8 +98,7 @@ CREATE CLASS QHttp INHERIT HbQtObjectHandler, QObject
 METHOD QHttp:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttp( ... )
    RETURN Self

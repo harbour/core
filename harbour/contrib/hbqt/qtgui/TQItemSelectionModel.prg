@@ -89,8 +89,7 @@ CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, QObject
 METHOD QItemSelectionModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemSelectionModel( ... )
    RETURN Self

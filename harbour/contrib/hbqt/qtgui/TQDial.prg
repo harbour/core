@@ -81,8 +81,7 @@ CREATE CLASS QDial INHERIT HbQtObjectHandler, QAbstractSlider
 METHOD QDial:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDial( ... )
    RETURN Self

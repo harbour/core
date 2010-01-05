@@ -94,8 +94,7 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
 METHOD QFontDatabase:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontDatabase( ... )
    RETURN Self

@@ -19,5 +19,7 @@ libs=hbqtcore hbqtgui hbqtnetwork
 {darwin}libs=QtUiTools
 {allgcc}libs=supc++
 
+hbcppmm=yes
+
 gui=yes
 gt=gtnul

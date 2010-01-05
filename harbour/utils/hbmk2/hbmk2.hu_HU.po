@@ -104,8 +104,8 @@ msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támo
 
 #: hbmk2.prg:4128
 #, c-format
-msgid "Warning: C compiler script couldn't be created, continuing in command line."
-msgstr "Figyelem: C fordító parancsállománya ne hozható létre, folytatás parancssorban."
+msgid "Warning: C/C++ compiler script couldn't be created, continuing in command line."
+msgstr "Figyelem: C/C++ fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941
 #, c-format
@@ -169,13 +169,13 @@ msgstr "Erõforrás fordító parancsa:"
 
 #: hbmk2.prg:4137 hbmk2.prg:4698
 #, c-format
-msgid "C compiler command job #%1$s:"
-msgstr "C fordító parancs. %1$s. szál:"
+msgid "C/C++ compiler command job #%1$s:"
+msgstr "C/C++ fordító parancs. %1$s. szál:"
 
 #: hbmk2.prg:4154 hbmk2.prg:4178 hbmk2.prg:4710
 #, c-format
-msgid "Error: Running C compiler. %1$s"
-msgstr "Hiba: C fordító futtatásakor. %1$s"
+msgid "Error: Running C/C++ compiler. %1$s"
+msgstr "Hiba: C/C++ fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:7082
 #, c-format
@@ -254,8 +254,8 @@ msgstr "%1$s"
 
 #: hbmk2.prg:4139 hbmk2.prg:4700
 #, c-format
-msgid "C compiler command:"
-msgstr "C fordító parancsa:"
+msgid "C/C++ compiler command:"
+msgstr "C/C++ fordító parancsa:"
 
 #: hbmk2.prg:1381
 #, c-format
@@ -269,8 +269,8 @@ msgstr "Erõforrások fordítása..."
 
 #: hbmk2.prg:4144
 #, c-format
-msgid "C compiler script:"
-msgstr "C fordító parancsállomány:"
+msgid "C/C++ compiler script:"
+msgstr "C/C++ fordító parancsállomány:"
 
 #: hbmk2.prg:5858
 #, c-format
@@ -529,8 +529,8 @@ msgstr "Hiba: Harbour fordító futtatásakor. %1$s. szál. %2$s"
 
 #: hbmk2.prg:4176 hbmk2.prg:4708
 #, c-format
-msgid "Error: Running C compiler job #%1$s. %2$s"
-msgstr "Hiba: C fordító futtatásakor. %1$s. szál. %2$s"
+msgid "Error: Running C/C++ compiler job #%1$s. %2$s"
+msgstr "Hiba: C/C++ fordító futtatásakor. %1$s. szál. %2$s"
 
 #: hbmk2.prg:4251
 #, c-format
@@ -1019,5 +1019,5 @@ msgstr "cél futtatása"
 
 #: hbmk2.prg:7959
 #, c-format
-msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], instpaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], instpaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"

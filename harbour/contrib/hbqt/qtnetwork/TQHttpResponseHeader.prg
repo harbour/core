@@ -79,8 +79,7 @@ CREATE CLASS QHttpResponseHeader INHERIT HbQtObjectHandler, QHttpHeader
 METHOD QHttpResponseHeader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttpResponseHeader( ... )
    RETURN Self

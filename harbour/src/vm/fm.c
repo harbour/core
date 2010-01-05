@@ -1404,35 +1404,3 @@ HB_BOOL hb_xtraced( void )
    return HB_FALSE;
 #endif
 }
-
-#if defined( __cplusplus ) && defined( HB_FM_STATISTICS )
-void * operator new[]( size_t nSize )
-{
-   return hb_xgrab( nSize );
-}
-
-void * operator new( size_t nSize )
-{
-   return hb_xgrab( nSize );
-}
-
-void operator delete[]( void * ptr )
-{
-   hb_xfree( ptr );
-}
-
-void operator delete[]( void * ptr, size_t )
-{
-   hb_xfree( ptr );
-}
-
-void operator delete( void * ptr )
-{
-   hb_xfree( ptr );
-}
-
-void operator delete( void * ptr, size_t )
-{
-   hb_xfree( ptr );
-}
-#endif
