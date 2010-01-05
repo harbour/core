@@ -98,7 +98,8 @@ PROCEDURE hbide_justACall()
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_execPopup( aPops, aPos, qParent )
-   LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
+   LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_
+   //, nAct
 
    qPop := QMenu():new( IIF( hb_isObject( qParent ), qParent, NIL ) )
 
@@ -106,7 +107,11 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
       IF empty( aPops[ i,1 ] )
          qPop:addSeparator()
       ELSE
-         qPop:addAction( aPops[ i, 1 ] )
+         IF hb_isObject( aPops[ i, 1 ] )
+            qPop:addAction_4( aPops[ i, 1 ] )
+         ELSE
+            qPop:addAction( aPops[ i, 1 ] )
+         ENDIF
       ENDIF
    NEXT
 
@@ -115,9 +120,30 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
    qAct   := QAction():configure( pAct )
 
    IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
-      IF ( nAct := ascan( aPops, {|e_| e_[ 1 ] == cAct } ) ) > 0
-         xRet := eval( aPops[ nAct,2 ] )
+      FOR EACH a_ IN aPops
+         IF hb_isObject( a_[ 1 ] )
+            IF a_[ 1 ]:text() == cAct
+               xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
+               EXIT
+            ENDIF
+         ELSE
+            IF a_[ 1 ] == cAct
+               xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT
+      #if 0
+      IF hb_isObject( aPops[ i, 1 ] )
+         IF ( nAct := ascan( aPops, {|e_| e_[ 1 ]:text() == cAct } ) ) > 0
+            xRet := eval( aPops[ nAct,2 ] )
+         ENDIF
+      ELSE
+         IF ( nAct := ascan( aPops, {|e_| e_[ 1 ] == cAct } ) ) > 0
+            xRet := eval( aPops[ nAct,2 ] )
+         ENDIF
       ENDIF
+      #endif
    ENDIF
 
    qPop:pPtr := 0
@@ -945,6 +971,46 @@ FUNCTION hbide_findProjTreeItem( oIde, cNodeText, cType )
       ENDIF
    NEXT
    RETURN oItem
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_expandChildren( oIde, oItem )
+   LOCAL a_
+
+   oItem:expand( .t. )
+   FOR EACH a_ IN oIde:aProjData
+      IF a_[ TRE_OPARENT ] == oItem
+         a_[ TRE_OITEM ]:expand( .t. )
+      ENDIF
+   NEXT
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_collapseProjects( oIde )
+   LOCAL a_
+
+   FOR EACH a_ IN oIde:aProjData
+      IF a_[ TRE_TYPE ] == "Project Name"
+         a_[ TRE_OITEM ]:expand( .f. )
+      ENDIF
+   NEXT
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_expandProjects( oIde )
+   LOCAL a_
+
+   FOR EACH a_ IN oIde:aProjData
+      IF a_[ TRE_TYPE ] == "Project Name"
+         hbide_expandChildren( oIde, a_[ TRE_OITEM ] )
+      ENDIF
+   NEXT
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

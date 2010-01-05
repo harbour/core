@@ -474,6 +474,7 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       IF !empty( ::cWrkProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIde, ::cWrkProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
+            hbide_expandChildren( ::oIde, oItem )
          ENDIF
       ENDIF
    ENDIF

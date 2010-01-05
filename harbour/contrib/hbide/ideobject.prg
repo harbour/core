@@ -82,6 +82,7 @@ CLASS IdeObject
    ACCESS oED                                     INLINE ::oIde:oED
    ACCESS oPM                                     INLINE ::oIde:oPM
    ACCESS oDK                                     INLINE ::oIde:oDK
+   ACCESS oAC                                     INLINE ::oIde:oAC
 
    ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
@@ -95,6 +96,7 @@ CLASS IdeObject
    ACCESS aINI                                    INLINE ::oIde:aINI
 
    ACCESS oDlg                                    INLINE ::oIde:oDlg
+   ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
    ACCESS oDA                                     INLINE ::oIde:oDA
 
    ACCESS oDockPT                                 INLINE ::oIde:oDockPT

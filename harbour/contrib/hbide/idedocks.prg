@@ -83,7 +83,6 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD buildDialog()
 
    METHOD buildMainMenu()
-   METHOD buildToolBar()
    METHOD buildStatusBar()
 
    METHOD buildDockWidgets()
@@ -168,14 +167,6 @@ METHOD IdeDocks:buildDialog()
 METHOD IdeDocks:buildMainMenu()
 
    buildMainMenu( ::oDlg, ::oIde )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildToolBar()
-
-   ::oIde:oTBar := buildToolBar( ::oDlg, ::oIde )
 
    RETURN Self
 

@@ -146,5 +146,12 @@
 #define TRE_ORIGINAL                              4
 #define TRE_DATA                                  5
 
+#define ACT_NAME                                  1
+#define ACT_TEXT                                  2
+#define ACT_IMAGE                                 3
+#define ACT_SHORTCUT                              4
+#define ACT_CHECKABLE                             5
+#define ACT_VISINMENU                             6
+
 #endif
 

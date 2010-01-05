@@ -247,6 +247,7 @@ METHOD XbpToolbar:sendToolbarMessage()
 
 METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    LOCAL oBtn
+   LOCAL isAction := hb_isObject( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
@@ -255,7 +256,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    DEFAULT nStyle TO XBPTOOLBAR_BUTTON_DEFAULT
 
-   oBtn := XbpToolbarButton():new( cCaption, nStyle, cKey )
+   oBtn := XbpToolbarButton():new( iif( isAction, cCaption:text(), cCaption ), nStyle, cKey )
 
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
@@ -264,12 +265,18 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ::oWidget:addSeparator()
 
    ELSE
-      /* Create an action */
-      oBtn:oAction := QAction():new( ::oWidget )
-      oBtn:oAction:setText( cCaption )
+      IF isAction
+         oBtn:oAction := cCaption
 
-      IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
-         oBtn:oAction:setIcon( xImage )
+      ELSE
+         /* Create an action */
+         oBtn:oAction := QAction():new( ::oWidget )
+         oBtn:oAction:setText( cCaption )
+
+         IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
+            oBtn:oAction:setIcon( xImage )
+         ENDIF
+
       ENDIF
 
       /* Attach codeblock to be triggered */

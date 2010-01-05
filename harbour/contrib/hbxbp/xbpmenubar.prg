@@ -305,7 +305,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 
    cType := valtype( xCaption )
    DO CASE
-   CASE cType == "U" .or. empty( xCaption ) .or. nStyle == XBPMENUBAR_MIS_SEPARATOR
+   CASE cType == "U" .OR. empty( xCaption ) .OR. nStyle == XBPMENUBAR_MIS_SEPARATOR
       oAction := QAction()
       IF lInsert
          oAction:pPtr := ::oWidget:insertSeparator()
@@ -341,22 +341,15 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
          oAction:setCheckable( .t. )
          oAction:setChecked( .t. )
-
       CASE nAttrb == XBPMENUBAR_MIA_DISABLED
          oAction:setDisabled( .t. )
-
       CASE nAttrb == XBPMENUBAR_MIA_HILITED
          ::oWidget:setActiveAction( oAction )
-
       CASE nAttrb == XBPMENUBAR_MIA_DEFAULT
          ::oWidget:setDefaultAction( oAction )
-
       CASE nAttrb == XBPMENUBAR_MIA_FRAMED
-
       CASE nAttrb == XBPMENUBAR_MIA_OWNERDRAW
-
       CASE nAttrb == XBPMENUBAR_MIA_NODISMISS
-
       ENDCASE
 
       IF nStyle == XBPMENUBAR_MIS_STATIC
@@ -370,6 +363,40 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
 
       aItem := { QMF_STRING, nMenuItemID, xCaption, bAction, oAction }
+
+   CASE cType == "O" .AND. __ObjGetClsName( xCaption ) == "QACTION"
+
+      oAction := xCaption
+
+      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+
+      DO CASE
+      CASE nAttrb == XBPMENUBAR_MIA_CHECKED
+         oAction:setCheckable( .t. )
+         oAction:setChecked( .t. )
+      CASE nAttrb == XBPMENUBAR_MIA_DISABLED
+         oAction:setDisabled( .t. )
+      CASE nAttrb == XBPMENUBAR_MIA_HILITED
+         ::oWidget:setActiveAction( oAction )
+      CASE nAttrb == XBPMENUBAR_MIA_DEFAULT
+         ::oWidget:setDefaultAction( oAction )
+      CASE nAttrb == XBPMENUBAR_MIA_FRAMED
+      CASE nAttrb == XBPMENUBAR_MIA_OWNERDRAW
+      CASE nAttrb == XBPMENUBAR_MIA_NODISMISS
+      ENDCASE
+
+      IF nStyle == XBPMENUBAR_MIS_STATIC
+         oAction:setDisabled( .t. )
+      ENDIF
+
+      IF nMode == QTC_MENUITEM_ADD
+         ::oWidget:addAction_4( oAction )
+      ELSE
+         ::oWidget:insertAction( pOldAct, oAction )
+      ENDIF
+
+      aItem := { QMF_STRING, nMenuItemID, oAction:text(), bAction, oAction }
 
    CASE cType == "O"
       cCaption := IF( bAction == NIL, xCaption:title, bAction )

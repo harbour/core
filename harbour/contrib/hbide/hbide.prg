@@ -117,6 +117,7 @@ CLASS HbIde
    DATA   oFR
    DATA   oDK
    DATA   oED
+   DATA   oAC
 
    DATA   mp1, mp2, oXbp, nEvent
    DATA   aTabs                                   INIT {}
@@ -286,8 +287,13 @@ METHOD HbIde:create( cProjIni )
    ::oDK := IdeDocks():new():create( Self )
    /* Build IDE's Main Window */
    ::oDK:buildDialog()
-   ::oDK:buildMainMenu()
-   ::oDK:buildToolBar()
+   /* Build Actions */
+   ::oAC := IdeActions():new( Self ):create()
+   /* Build Toolbar */
+   ::oAC:buildToolBar()
+   /* Build Main Menu */
+   ::oAC:buildMainMenu()
+   //::oDK:buildMainMenu()
    ::oDK:buildStatusBar()
    ::oDK:buildDockWidgets()
 
@@ -421,14 +427,14 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "LaunchProject"
       ::oPM:launchProject()
 
-   CASE cKey == "SaveBuild"
+   CASE cKey == "Build"
       ::oPM:buildProject( '', .F., .F. )
-   CASE cKey == "SaveBuildLaunch"
+   CASE cKey == "BuildLaunch"
       ::oPM:buildProject( '', .T., .F. )
 
-   CASE cKey == "SaveRebuild"
+   CASE cKey == "Rebuild"
       ::oPM:buildProject( '', .F., .T. )
-   CASE cKey == "SaveRebuildLaunch"
+   CASE cKey == "RebuildLaunch"
       ::oPM:buildProject( '', .T., .T. )
 
    CASE cKey == "Compile"
@@ -988,7 +994,7 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
       RETURN Self
    ENDIF
 
-   nPos  := aScan( ::aProjData, {|e_| e_[ 2 ] == "Project Name" .and. e_[ 4 ] == cProject } )
+   nPos  := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Project Name" .and. e_[ TRE_ORIGINAL ] == cProject } )
    cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
 
    DO CASE
@@ -1028,11 +1034,11 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
     * 03/01/2010 - 16:08:25 - vailtom
       FOR j := 1 TO LEN( ::aProjData )
           IF !hb_isChar( ::aProjData[ j, 5 ] ).OR. ;  // It is not a char?
-             ::aProjData[ j, 2 ] != 'Path'    .OR. ;  // Is not an path?
-             ::aProjData[ j, 5 ] != cProject          // Is not from same project?
+             ::aProjData[ j, TRE_TYPE ] != 'Path'    .OR. ;  // Is not an path?
+             ::aProjData[ j, TRE_DATA ] != cProject          // Is not from same project?
              LOOP
           ENDIF
-          AAdd( aPath, { ::aProjData[ j, 4 ], ::aProjData[ j, 1 ]} )
+          AAdd( aPath, { ::aProjData[ j, TRE_ORIGINAL ], ::aProjData[ j, 1 ]} )
       NEXT
 
     * Add new nodes with file names to tree...
@@ -1054,8 +1060,8 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
 
          oPP   := aPath[ nPath,2 ]
          cFile := cFile + cExt
-         nPos  := aScan( ::aProjData, {|e_| e_[ 2 ] == "Source File" .AND. ;
-                                            e_[ 4 ] == aSrc[ j ] } )
+         nPos  := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Source File" .AND. ;
+                                            e_[ TRE_ORIGINAL ] == aSrc[ j ] } )
          IF nPos == 00
             aadd( ::aProjData, { oPP:addItem( cFile ), "Source File", oPP, aSrc[ j ], cProject } )
          ENDIF
@@ -1065,18 +1071,18 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
       FOR j := 1 TO LEN( ::aProjData )
 
         * Is not from same project?
-          IF !hb_isChar( ::aProjData[ j, 5 ] ) .OR. ;
-             ::aProjData[ j, 5 ] != cProject
+          IF !hb_isChar( ::aProjData[ j, TRE_DATA ] ) .OR. ;
+                ::aProjData[ j, TRE_DATA ] != cProject
              LOOP
           ENDIF
 
         * It is a path?
           IF ::aProjData[ j, 2 ] == 'Path'
-             cPathA := ::aProjData[ j, 4 ]
+             cPathA := ::aProjData[ j, TRE_ORIGINAL ]
              nPath  := aScan( aInUse, {|e_|  e_ == cPathA } )
 
              IF nPath == 00
-                ::aProjData[ j, 3 ]:delItem( ::aProjData[ j, 1 ] )
+                ::aProjData[ j, TRE_OPARENT ]:delItem( ::aProjData[ j, 1 ] )
                 hb_aDel( ::aProjData, j, .T. )
              ENDIF
 
@@ -1085,11 +1091,11 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
 
         * It is a filename?
           IF ::aProjData[ j, 2 ] == 'Source File'
-             cFile := ::aProjData[ j, 4 ]
+             cFile := ::aProjData[ j, TRE_ORIGINAL ]
              nPos  := aScan( aSrc, {|e_|  e_ == cFile } )
 
              IF nPos == 00
-                ::aProjData[ j, 3 ]:delItem( ::aProjData[ j, 1 ] )
+                ::aProjData[ j, TRE_OPARENT ]:delItem( ::aProjData[ j, TRE_OITEM ] )
                 hb_aDel( ::aProjData, j, .T. )
              ENDIF
 
@@ -1134,7 +1140,7 @@ METHOD HbIde:addSourceInTree( cSourceFile )
    ENDIF
 
    aadd( ::aProjData, { oParent:addItem( cFile+cExt ), "Opened Source", oParent, ;
-                                                        cSourceFile, hbide_pathNormalized( cSourceFile ) } )
+                                   cSourceFile, hbide_pathNormalized( cSourceFile ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1216,21 +1222,20 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
       //
       IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
-         aadd( aPops, { "Set as Current"        , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
+         aadd( aPops, { "Set as Current"               , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
-
-      aadd( aPops, { "Properties"               , {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
+      aadd( aPops, { ::oAC:getAction( "Properties"    ), {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Save and Build"           , {|| ::oPM:buildProject( oXbpTreeItem:caption, .F. ) } } )
-      aadd( aPops, { "Save and Build (Qt)"      , {|| ::oPM:buildProjectViaQt( oXbpTreeItem:caption ) } } )
-      aadd( aPops, { "Save, Build and Launch"   , {|| ::oPM:buildProject( oXbpTreeItem:caption, .T. ) } } )
+//      aadd( aPops, { "Save and Build ( Qt )"         , {|| ::oPM:buildProjectViaQt( oXbpTreeItem:caption ) } } )
+//      aadd( aPops, { "" } )
+      aadd( aPops, { ::oAC:getAction( "Build"         ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F.,    , , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "BuildLaunch"   ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T.,    , , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "ReBuild"       ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T., , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "ReBuildLaunch" ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T., , .T. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Save and Re-Build"        , {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T. ) } } )
-      aadd( aPops, { "Save, Re-Build and Launch", {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T. ) } } )
+      aadd( aPops, { "Launch"                          , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Launch"                   , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
-      aadd( aPops, { "" } )
-      aadd( aPops, { "Close This Project"       , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Close This Project"              , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
       //
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
