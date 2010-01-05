@@ -2524,6 +2524,12 @@ static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, ULONG ulLen
       memcpy( pGT->StrBuffer, szText, ulLen );
       pGT->StrBufferSize = ulLen;
       pGT->StrBufferPos = 0;
+      do
+      {
+         if( pGT->StrBuffer[ --ulLen ] == ';' )
+            pGT->StrBuffer[ ulLen ] = HB_CHAR_CR;
+      }
+      while( ulLen );
    }
 }
 

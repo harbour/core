@@ -57,6 +57,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
 
 #if defined( HB_OS_DOS )
 
@@ -147,7 +148,7 @@ HB_FUNC( VGAPALETTE )
 {
    const char *color_string;
    char red, green, blue;
-   char attr = 0;
+   char attr;
 
    if( hb_pcount() < 4 )
    {
@@ -155,57 +156,16 @@ HB_FUNC( VGAPALETTE )
       hb_retl( FALSE );
       return;
    }
-   if( HB_ISNUM( 1 ) && hb_parni( 1 ) < 16 )
-   {
-      attr = hb_parni( 1 );
-   }
-   else if( HB_ISCHAR( 1 ) )
-   {
-      const char *s;
 
-      color_string = hb_parcx( 1 );
-      for( s = color_string; *s; s++ )
-      {
-         switch ( *s )
-         {
-            case 'N':
-            case 'n':
-               attr |= 0;
-               break;
-            case 'B':
-            case 'b':
-               attr |= 1;
-               break;
-            case 'G':
-            case 'g':
-               attr |= 2;
-               break;
-            case 'R':
-            case 'r':
-               attr |= 4;
-               break;
-            case 'W':
-            case 'w':
-               attr |= 7;
-               break;
-            case '+':
-               attr |= 8;
-               break;
-            case 'U':
-            case 'u':
-            case 'I':
-            case 'i':
-            case 'X':
-            case 'x':
-               /* these seem to be used only in mono */
-               break;
-            default:
-               hb_retl( FALSE );
-               return;
-         }
-      }
-   }
+   color_string = hb_parc( 1 );
+   if( color_string )
+      attr = hb_gtColorToN( color_string );
+   else if( HB_ISNUM( 1 ) )
+      attr = hb_parni( 1 );
    else
+      attr = -1;
+
+   if( attr < 0 || attr >= 16 )
    {
       /* An invalid argument */
       hb_retl( FALSE );
@@ -352,9 +312,8 @@ HB_FUNC( SETFONT )
       offset = hb_parni( 3 );
    if( HB_ISNUM( 4 ) )
       count = hb_parni( 4 );
-   if( HB_ISLOG( 3 ) )
-      if( hb_parl( 3 ) && count != 0 )
-         height = len / count;
+   if( HB_ISLOG( 3 ) && hb_parl( 3 ) && count != 0 )
+      height = len / count;
 
 #   ifdef __DJGPP__
    {
@@ -367,12 +326,13 @@ HB_FUNC( SETFONT )
       r.x.dx = offset;
       r.x.es = __tb >> 4;
       r.x.bp = __tb & 0xF;
-      dosmemput( font, len, __tb );
+      dosmemput( font, HB_MIN( len, __tb_size ), __tb );
       __dpmi_int( 0x10, &r );
+      hb_retni( 0 );
    }
+#   else
+   hb_retni( -2 );
 #   endif
-
-   hb_retni( 0 );
 }
 
 #endif /* HB_OS_DOS */
