@@ -10,7 +10,7 @@
 
 -ohbide
 
-# Trick to make QT 4.6 link using default Harbour builds
+# Trick to make QT 4.6 link using default Harbour build
 -ldflag={msvc}-nodefaultlib:msvcrt.lib
 -ldflag={msvc}-defaultlib:libcmt.lib
 

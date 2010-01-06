@@ -3883,14 +3883,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         'void * operator new[]( size_t nSize )'                                   + Chr( 10 ) +;
                         '{'                                                                       + Chr( 10 ) +;
                         '   if( nSize == 0 )'                                                     + Chr( 10 ) +;
-                        '      nSize++;'                                                          + Chr( 10 ) +;
+                        '      nSize = 1;'                                                        + Chr( 10 ) +;
                         '   return hb_xgrab( nSize );'                                            + Chr( 10 ) +;
                         '}'                                                                       + Chr( 10 ) +;
                         ''                                                                        + Chr( 10 ) +;
                         'void * operator new( size_t nSize )'                                     + Chr( 10 ) +;
                         '{'                                                                       + Chr( 10 ) +;
                         '   if( nSize == 0 )'                                                     + Chr( 10 ) +;
-                        '      nSize++;'                                                          + Chr( 10 ) +;
+                        '      nSize = 1;'                                                        + Chr( 10 ) +;
                         '   return hb_xgrab( nSize );'                                            + Chr( 10 ) +;
                         '}'                                                                       + Chr( 10 ) +;
                         ''                                                                        + Chr( 10 ) +;
