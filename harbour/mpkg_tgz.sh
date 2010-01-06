@@ -22,7 +22,6 @@ hb_platform=`get_hbplatform`
 [ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}${HB_BUILDSUF}"
 [ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
-# disabled self extracting shell envelop
 hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
 hb_pref="hb"
 hb_sysdir="yes"
@@ -100,6 +99,14 @@ if gtar --version >/dev/null 2>&1; then
 elif ! tar --version >/dev/null 2>&1; then
     hb_gnutar=no
     echo "Warning!!! Cannot find GNU TAR"
+else
+    # tar is mapped to bsdtar starting OS X 10.6
+    case `tar --version` in
+        *bsdtar*)
+            hb_gnutar=no
+            TAR=bsdtar
+            ;;
+    esac
 fi
 if gmake --version >/dev/null 2>&1; then
     MAKE=gmake
@@ -124,6 +131,9 @@ fi
 CURDIR=$(pwd)
 if [ $hb_gnutar = yes ]; then
     (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
+    UNTAR_OPT=xvpf
+elif [ $TAR = bsdtar ]; then
+    (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" .)
     UNTAR_OPT=xvpf
 else
     (cd "${HB_INST_PKGPREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
