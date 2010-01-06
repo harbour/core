@@ -669,7 +669,7 @@ HARBOUR
 7. DEBUGGING OPTIONS
 ====================
 
-   Tracing (all targets)
+   Tracing
    -------
       Build Harbour with:
          HB_USER_CFLAGS=-DHB_TR_LEVEL_DEBUG
@@ -677,7 +677,7 @@ HARBOUR
          HB_TR_LEVEL=debug
          HB_TR_WINOUT=yes (for additional OutputDebugString() output on Windows systems only)
 
-   Memory statistics (all targets)
+   Memory statistics
    -----------------
       Build Harbour with:
          HB_USER_CFLAGS=-DHB_FM_STATISTICS
@@ -690,7 +690,7 @@ HARBOUR
       Build app with:
          $ hbmk2 myapp -debug
 
-      Runn app using:
+      Run app with:
          $ valgrind --tool=memcheck --leak-check=yes -v ./myapp 2> myapp.log
 
    CodeGuard (on win/bcc target only)
