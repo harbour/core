@@ -99,7 +99,6 @@ PROCEDURE hbide_justACall()
 
 FUNCTION hbide_execPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_
-   //, nAct
 
    qPop := QMenu():new( IIF( hb_isObject( qParent ), qParent, NIL ) )
 
@@ -114,12 +113,12 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
          ENDIF
       ENDIF
    NEXT
-hbide_dbg( 1001 )
+
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
    pAct   := qPop:exec_1( qPoint )
-hbide_dbg( 1002 )
+
    qAct   := QAction():configure( pAct )
-hbide_dbg( 1003 )
+
    IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
       FOR EACH a_ IN aPops
          IF hb_isObject( a_[ 1 ] )
@@ -135,7 +134,7 @@ hbide_dbg( 1003 )
          ENDIF
       NEXT
    ENDIF
-hbide_dbg( 1004 )
+
    qPop:pPtr := 0
 
    RETURN xRet
@@ -699,11 +698,11 @@ FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
    FOR EACH cLine IN aLines
 
       IF !Empty( cLine )
-         nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } )
-
-         IF ( nPos > 0 )
+         IF ( nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } ) ) > 0
             cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
-         End
+         ELSE
+            cLine := "<font color = black>" + cLine + "</font>"
+         ENDIF
       ENDIF
 
       oWidget:append( cLine )

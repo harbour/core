@@ -675,7 +675,9 @@ METHOD HbIde:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
+METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert )
+
+   DEFAULT lAlert TO .T.
 
    IF !Empty( cSourceFile )
       IF !( hbide_isValidText( cSourceFile ) )
@@ -686,9 +688,11 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
          RETURN Self
       ENDIF
       IF ::oED:isOpen( cSourceFile )
-         IF hbide_getYesNo( cSourceFile + " is already open.", ;
-                                     "Want to re-load it again ?", "File Open Info!" )
-            ::oED:reLoad( cSourceFile )
+         IF lAlert
+            IF hbide_getYesNo( cSourceFile + " is already open.", ;
+                                        "Want to re-load it again ?", "File Open Info!" )
+               ::oED:reLoad( cSourceFile )
+            ENDIF
          ENDIF
          ::oED:setSourceVisible( cSourceFile )
          RETURN Self
@@ -1100,20 +1104,9 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
       cSource := ::aProjData[ n, TRE_ORIGINAL ]
       ::editSource( cSource )
-      #if 0
-      cSource := ::aProjData[ n, TRE_ORIGINAL ]
-      IF ( n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSource ) } ) ) == 0
-         ::editSource( cSource )
-      ELSE
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
-      ENDIF
-      #endif
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
-      cSource := ::aProjData[ n, TRE_DATA ]
-      IF ( n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSource ) } ) ) > 0
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
-      ENDIF
+      ::oED:setSourceVisible( ::aProjData[ n, TRE_DATA ] )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Path"
 

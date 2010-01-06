@@ -78,8 +78,6 @@ CLASS IdeProjManager INHERIT IdeObject
 
    DATA   qProcess
    DATA   nStarted                                INIT 0
-   DATA   cFileOut
-   DATA   cFileErr
 
    METHOD new()
    METHOD create()
@@ -721,18 +719,30 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          qStringList:append( cHbpPath )
 
          ::qProcess := QProcess():new()
+         ::qProcess:setReadChannel( 1 )
 
-         //::cFileOut := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".out" )
-         ::cFileOut := "xxx"
-         //::cFileErr := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".err" )
-         ::cFileErr := "yyy"
+         #define CHN_BGN 1
+         #define CHN_OUT 2
+         #define CHN_ERR 3
+         #define CHN_FIN 4
+         #define CHN_STT 5
+         #define CHN_ERE 6
+         #define CHN_CLO 7
+         #define CHN_BYT 8
+         #define CHN_RCF 9
+         #define CHN_REA 10
 
-         ::qProcess:setStandardOutputFile( ::cFileOut )
-         ::qProcess:setStandardErrorFile( ::cFileErr )
+         //Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::readProcessInfo( CHN_RCF, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::readProcessInfo( CHN_CLO, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::readProcessInfo( CHN_BYT, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::readProcessInfo( CHN_STT, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::readProcessInfo( CHN_ERE, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i|   ::readProcessInfo( CHN_BGN, o, i ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( CHN_OUT, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( CHN_ERR, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( CHN_FIN, i, ii, o ) } )
 
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( 4, i, ii, o ) } )
 
          ::oOutputResult:oWidget:clear()
          ::oOutputResult:oWidget:append( cTmp )
@@ -774,41 +784,30 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
-   LOCAL cLine, cTmp
+   LOCAL cLine, cTmp, nSize
+
+   nSize := 16384
 
    DO CASE
-   CASE nMode == 1
+   CASE nMode == CHN_BGN
 
-
-   CASE nMode == 2
+   CASE nMode == CHN_OUT
       ::qProcess:setReadChannel( 0 )
-      cLine := space( 4096 )
-      ::qProcess:readLine( @cLine, 4096 )
+      cLine := space( nSize )
+      ::qProcess:read( @cLine, nSize )
       IF !empty( cLine )
-         ::oOutputResult:oWidget:append( cLine )
+         hbide_convertBuildStatusMsgToHtml( trim( cLine ), ::oOutputResult:oWidget )
       ENDIF
 
-   CASE nMode == 3
+   CASE nMode == CHN_ERR
       ::qProcess:setReadChannel( 1 )
-      cLine := space( 4096 )
-      ::qProcess:readLine( @cLine, 4096 )
-
+      cLine := space( nSize )
+      ::qProcess:read( @cLine, nSize )
       IF !empty( cLine )
-         IF ( "Warning" $ cLine )
-            cLine := '<font color=blue>' + cLine + '</font>'
-         ELSEIF ( "Error" $ cLine )
-            cLine := '<font color=red>' + cLine + '</font>'
-         ENDIF
-
-         ::oOutputResult:oWidget:append( cLine )
+         hbide_convertBuildStatusMsgToHtml( trim( cLine ), ::oOutputResult:oWidget )
       ENDIF
 
-   CASE nMode == 4
-      cTmp := memoread( ::cFileOut )
-      hbide_convertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
-      cTmp := memoread( ::cFileErr )
-      hbide_convertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
-
+   CASE nMode == CHN_FIN
       cTmp := hbide_outputLine() + CRLF
       cTmp += "Exit Code [ " + hb_ntos( i ) + " ]    Exit Status [ " + hb_ntos( ii ) + " ]    " +;
               "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - ::nStarted ) +" Secs ]" + CRLF
@@ -824,8 +823,6 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
       ::qProcess:pPtr := 0
       ::qProcess := NIL
 
-      ferase( ::cFileOut )
-      ferase( ::cFileErr )
    ENDCASE
 
    RETURN nil

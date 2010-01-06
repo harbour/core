@@ -147,7 +147,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
 
-   ::oDlg:close := {|| MsgBox( "HbIDE is about to be closed!" ), .T. }
+   ::oDlg:close := {|| hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) }
    ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
    ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
 
@@ -194,7 +194,8 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:hasLines   := .T.
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+
+ * ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
 
    //::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oProjTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
@@ -243,7 +244,8 @@ METHOD IdeDocks:buildEditorTree()
    ::oEditTree:hasLines   := .T.
    ::oEditTree:hasButtons := .T.
    ::oEditTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oEditTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+
+ * ::oEditTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
 
    //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
@@ -281,7 +283,7 @@ METHOD IdeDocks:buildFuncList()
    ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oIde:oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
-   ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
+ * ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
 
    //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
    ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::oIde:gotoFunction( mp1, mp2, oXbp ) }
@@ -385,7 +387,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
          cText := QTextBlock():configure( qCursor:block() ):text()
 
          IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-            ::oIde:editSource( cSource )
+            ::oIde:editSource( cSource, 0, 0, 0, NIL, .f. )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             nLine   := iif( nLine < 1, 0, nLine - 1 )
 
