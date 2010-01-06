@@ -226,7 +226,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "ManageThemes"      , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"      , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "AboutIDE"          , "About Harbour IDE"            , "vr-16x16"       , ""     , "No", "Yes" } )
-   aadd( aAct, { "AboutHarbour"      , "Abouthb Harbour"              , "hb-16x16"       , ""     , "No", "Yes" } )
+   aadd( aAct, { "AboutHarbour"      , "About Harbour"                , "hb-16x16"       , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourUsersList"  , "Harbour Users (Mailing Lists)", "list-users"     , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourDevList"    , "Harbour Developers (Mailing Lists)", "list-developers", "", "No", "Yes" } )
 

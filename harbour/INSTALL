@@ -666,7 +666,41 @@ HARBOUR
    executables are required for a cross-build process to succeed.
 
 
-7. EXAMPLES
+7. DEBUGGING OPTIONS
+====================
+
+   Tracing (all targets)
+   -------
+      Build Harbour with:
+         HB_USER_CFLAGS=-DHB_TR_LEVEL_DEBUG
+      Run app with:
+         HB_TR_LEVEL=debug
+         HB_TR_WINOUT=yes (for additional OutputDebugString() output on Windows systems only)
+
+   Memory statistics (all targets)
+   -----------------
+      Build Harbour with:
+         HB_USER_CFLAGS=-DHB_FM_STATISTICS
+
+   Valgrind (on linux and darwin targets only)
+   --------
+      Build Harbour with:
+         HB_USER_DEBUG=yes
+
+      Build app with:
+         $ hbmk2 myapp -debug
+
+      Runn app using:
+         $ valgrind --tool=memcheck --leak-check=yes -v ./myapp 2> myapp.log
+
+   CodeGuard (on win/bcc target only)
+   ---------
+      Build Harbour with:
+         HB_USER_CFLAGS=-vG
+         HB_USER_LIBS=cg32
+
+
+8. EXAMPLES
 ===========
 
    for Windows hosts
@@ -980,7 +1014,7 @@ HARBOUR
       gmake OR make HB_PLATFORM=wce
       ---
 
-8. HOW TO GET THE HARBOUR SOURCES
+9. HOW TO GET THE HARBOUR SOURCES
 =================================
 
    1.) It's possible you're reading this file as part of the Harbour
@@ -1008,8 +1042,8 @@ HARBOUR
           http://sourceforge.net/project/showfiles.php?group_id=681&package_id=192305
 
 
-9. TROUBLESHOOTING
-==================
+10. TROUBLESHOOTING
+===================
 
    Please evaluate these points before reporting an issue on the developers'
    mailing list.
@@ -1040,7 +1074,7 @@ HARBOUR
      examples as is.
 
 
-10. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
 ======================================================
 
    For all platforms you'll need two things:
@@ -1111,7 +1145,7 @@ HARBOUR
             to build a Harbour application with above methods.
 
 
-11. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
+12. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
 =============================================================================
 
      host      target        target
@@ -1207,7 +1241,7 @@ HARBOUR
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
-12. LINKS TO EXTERNAL COMPONENTS
+13. LINKS TO EXTERNAL COMPONENTS
 ================================
 
    C/C++ Compilers/Shells:
@@ -1315,6 +1349,8 @@ HARBOUR
       GNU Sed (stream editor) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/sed.htm
+      Valgrind (dynamic executable analysis tool) [linux, darwin, free, open-source]
+         http://valgrind.org/
       UPX (executable compressor) [win, dos, *nix, free, open-source]
          http://upx.sourceforge.net/
       Nullsoft Installer [win, free, open-source]
@@ -1364,7 +1400,7 @@ HARBOUR
          http://tools.ietf.org/html/rfc1855
 
 
-13. HOW TO PARTICIPATE
+14. HOW TO PARTICIPATE
 ======================
 
    There are several ways to help making Harbour better:
@@ -1387,7 +1423,7 @@ HARBOUR
      various environments, etc.
 
 
-14. FOR MORE INFORMATION
+15. FOR MORE INFORMATION
 ========================
 
    Homepage:

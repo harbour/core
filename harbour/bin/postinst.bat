@@ -50,8 +50,9 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    if "%HB_BUILD_DLL%" == "no" goto _NO_DLL_BIN
 
    set HBMK_OPTIONS=
-   if "%HB_BUILD_MODE%" == "cpp" set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=yes
-   if "%HB_BUILD_MODE%" == "c"   set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=no
+   if "%HB_BUILD_MODE%" == "cpp"  set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=yes
+   if "%HB_BUILD_MODE%" == "c"    set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=no
+   if "%HB_BUILD_DEBUG%" == "yes" set HBMK_OPTIONS=%HBMK_OPTIONS% -debug
 
    echo ! Making shared version of Harbour binaries...
    "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
