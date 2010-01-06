@@ -675,7 +675,8 @@ HARBOUR
          HB_USER_CFLAGS=-DHB_TR_LEVEL_DEBUG
       Run app with:
          HB_TR_LEVEL=debug
-         HB_TR_WINOUT=yes (for additional OutputDebugString() output on Windows systems only)
+         HB_TR_OUTPUT=<filename> (to override default stderr output)
+         HB_TR_WINOUT=yes (to enable additional OutputDebugString() output on Windows systems only)
 
    Memory statistics
    -----------------
@@ -706,8 +707,8 @@ HARBOUR
    for Windows hosts
    -----------------
 
-      NOTES: - All code below should be copied to batch files or typed at NT
-               command line.
+      NOTES: - All code below should be copied to batch files or typed at command
+               line.
              - Naturally, you'll need to adapt dirs to valid ones on your system.
                Don't use spaces in dirs.
              - You can use additional 'clean', 'install' or 'clean install'
