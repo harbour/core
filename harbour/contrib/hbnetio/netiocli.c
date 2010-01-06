@@ -468,6 +468,8 @@ static void s_netio_init( void )
    }
 }
 
+/* NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>] ) -> <lOK>
+ */
 HB_FUNC( NETIO_CONNECT )
 {
    const char * pszServer = hb_parc( 1 );
@@ -489,6 +491,133 @@ HB_FUNC( NETIO_CONNECT )
    }
 
    hb_retl( conn != NULL );
+}
+
+static const char * s_netio_params( int iMsg, const char * pszName, UINT32 * pSize, char ** pFree )
+{
+   int iPCount = iMsg == NETIO_PROCIS ? 0 : hb_pcount(), i;
+   char * data = NULL, * itmData;
+   ULONG size = 0, itmSize;
+
+   size = ( ULONG ) strlen( pszName ) + 1;
+
+   for( i = 2; i <= iPCount; ++i )
+   {
+      itmData = hb_itemSerialize( hb_param( i, HB_IT_ANY ), TRUE, &itmSize );
+      if( data == NULL )
+         data = ( char * ) memcpy( hb_xgrab( size + itmSize ), pszName, size );
+      else
+         data = ( char * ) hb_xrealloc( data, size + itmSize );
+      memcpy( data + size, itmData, itmSize );
+      size += itmSize;
+      hb_xfree( itmData );
+   }
+
+   *pFree = data;
+   *pSize = ( UINT32 ) size;
+
+   return data ? data : pszName;
+}
+
+static BOOL s_netio_procexec( const char * pszProcName, int iMsg )
+{
+   BOOL fResult = FALSE;
+
+   if( pszProcName )
+   {
+      PHB_CONCLI conn = s_fileConnect( &pszProcName, NULL, 0, 0 );
+      if( conn )
+      {
+         if( s_fileConLock( conn ) )
+         {
+            BYTE msgbuf[ NETIO_MSGLEN ];
+            const char * data;
+            char * buffer;
+            UINT32 size;
+
+            data = s_netio_params( iMsg, pszProcName, &size, &buffer );
+            HB_PUT_LE_UINT32( &msgbuf[ 0 ], iMsg );
+            HB_PUT_LE_UINT32( &msgbuf[ 4 ], size );
+            memset( msgbuf + 8, '\0', sizeof( msgbuf ) - 8 );
+            fResult = s_fileSendMsg( conn, msgbuf, data, size, iMsg != NETIO_PROC );
+            if( fResult && iMsg == NETIO_FUNC )
+            {
+               ULONG ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
+
+               if( ulResult > 0 )
+               {
+                  PHB_ITEM pItem;
+
+                  if( ulResult > size && buffer )
+                  {
+                     hb_xfree( buffer );
+                     buffer = NULL;
+                  }
+                  if( buffer == NULL )
+                     buffer = ( char * ) hb_xgrab( ulResult );
+                  ulResult = s_fileRecvAll( conn, buffer, ulResult );
+                  data = buffer;
+                  pItem = hb_itemDeserialize( &data, &ulResult );
+                  if( pItem )
+                     hb_itemReturnRelease( pItem );
+                  /* else TODO: RTE */
+               }
+            }
+            if( buffer )
+               hb_xfree( buffer );
+            s_fileConUnlock( conn );
+         }
+         s_fileConClose( conn );
+      }
+   }
+
+   return fResult;
+}
+
+/* check if function/procedure exists on the server side:
+ *
+ * NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
+ */
+HB_FUNC( NETIO_PROCEXISTS )
+{
+   const char * pszProcName = hb_parc( 1 );
+
+   hb_retl( s_netio_procexec( pszProcName, NETIO_PROCIS ) );
+}
+
+/* execute function/procedure on server the side,
+ * do not wait for confirmation:
+ *
+ * NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
+ */
+HB_FUNC( NETIO_PROCEXEC )
+{
+   const char * pszProcName = hb_parc( 1 );
+
+   hb_retl( s_netio_procexec( pszProcName, NETIO_PROC ) );
+}
+
+/* execute function/procedure on the server side and wait for
+ * confirmation:
+ *
+ * NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
+ */
+HB_FUNC( NETIO_PROCEXECW )
+{
+   const char * pszProcName = hb_parc( 1 );
+
+   hb_retl( s_netio_procexec( pszProcName, NETIO_PROCW ) );
+}
+
+/* execute function on the server side and wait for its return value:
+ *
+ * NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+ */
+HB_FUNC( NETIO_FUNCEXEC )
+{
+   const char * pszProcName = hb_parc( 1 );
+
+   s_netio_procexec( pszProcName, NETIO_FUNC );
 }
 
 /* Client methods

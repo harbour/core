@@ -60,7 +60,6 @@
 #include "hbzlib.ch"
 
 #include <zlib.h>
-#include <zutil.h>
 
 typedef struct _HB_ZNETSTREAM
 {
@@ -73,6 +72,12 @@ typedef struct _HB_ZNETSTREAM
 HB_ZNETSTREAM;
 
 #define HB_ZNET_BUFSIZE 16384
+
+#if MAX_MEM_LEVEL >= 8
+#  define HB_ZNET_MEM_LEVEL   8
+#else
+#  define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
+#endif
 
 /* return status of last compression/decompression operation */
 int hb_znetError( PHB_ZNETSTREAM pStream )
@@ -105,7 +110,7 @@ PHB_ZNETSTREAM hb_znetOpen( int level, int strategy )
    memset( pStream, 0, sizeof( HB_ZNETSTREAM ) );
 
    if( deflateInit2( &pStream->wr, level,
-                     Z_DEFLATED, -MAX_WBITS, DEF_MEM_LEVEL, strategy ) == Z_OK )
+                     Z_DEFLATED, -MAX_WBITS, HB_ZNET_MEM_LEVEL, strategy ) == Z_OK )
    {
       pStream->wr.next_out = pStream->outbuf = ( Bytef * ) hb_xgrab( HB_ZNET_BUFSIZE );
       pStream->wr.avail_out = HB_ZNET_BUFSIZE;

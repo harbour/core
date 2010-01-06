@@ -73,7 +73,7 @@
 #define NETIO_SERVERNAME_MAX  256
 
 /* login string */
-#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\005"
+#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\006"
 
 /* messages */
 #define NETIO_LOGIN           1
@@ -91,6 +91,10 @@
 #define NETIO_CLOSE           13
 #define NETIO_ERROR           14
 #define NETIO_SYNC            15
+#define NETIO_PROCIS          16
+#define NETIO_PROC            17
+#define NETIO_PROCW           18
+#define NETIO_FUNC            19
 #define NETIO_CONNECTED       0x4321DEAD
 
 /* messages format */
@@ -104,9 +108,13 @@
 /* { NETIO_LOCK,   file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_LOCK, ... } */
 /* { NETIO_TRUNC,  file_no[2], offset[ 8 ], ... } -> { NETIO_TRUNC, ... } */
 /* { NETIO_SIZE,   file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 4 ], ... } */
-/* { NETIO_COMMIT, file_no[2], ... } -> { NETIO_SYNC, ... } */
+/* { NETIO_COMMIT, file_no[2], ... } -> { NETIO_SYNC, ... } | NULL */
 /* { NETIO_CLOSE,  file_no[2], ... } -> { NETIO_CLOSE, ... } */
-/* { NETIO_UNLOCK, file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } */
+/* { NETIO_UNLOCK, file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_PROCIS, size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROCIS, ... } */
+/* { NETIO_PROC,   size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_PROCW,  size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROC, ... } */
+/* { NETIO_FUNC,   size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_FUNC, size[ 4 ] } + data[ size ] */
 /* { NETIO_SYNC, ... } -> NULL */
 /* alternative answer for all messages: -> { NETIO_ERROR,  err[ 4 ], ... } */
 
@@ -118,3 +126,5 @@
 #define NETIO_ERR_FILES_MAX         0xff05
 #define NETIO_ERR_READ              0xff06
 #define NETIO_ERR_FILE_IO           0xff07
+#define NETIO_ERR_NOT_EXISTS        0xff08
+#define NETIO_ERR_UNSUPPORTED       0xff09

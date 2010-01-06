@@ -61,11 +61,13 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbsocket.h"
 #include "hbinit.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbthread.h"
 #include "netio.h"
 
@@ -81,6 +83,7 @@ typedef struct _HB_CONSRV
    int            filesCount;
    int            firstFree;
    BOOL           stop;
+   BOOL           rpc;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -90,6 +93,7 @@ typedef struct _HB_LISTENSD
 {
    HB_SOCKET      sd;
    BOOL           stop;
+   BOOL           rpc;
    char           rootPath[ HB_PATH_MAX ];
 }
 HB_LISTENSD, * PHB_LISTENSD;
@@ -263,11 +267,12 @@ static void s_consrvRet( PHB_CONSRV conn )
       hb_ret();
 }
 
-static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath )
+static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, BOOL rpc )
 {
    PHB_CONSRV conn = ( PHB_CONSRV ) memset( hb_xgrab( sizeof( HB_CONSRV ) ),
                                             0, sizeof( HB_CONSRV ) );
    conn->sd = connsd;
+   conn->rpc = rpc;
    if( szRootPath )
    {
       hb_strncpy( conn->rootPath, szRootPath, sizeof( conn->rootPath ) - 1 );
@@ -355,7 +360,7 @@ static PHB_LISTENSD s_listenParam( int iParam, BOOL fError )
    return NULL;
 }
 
-static void s_listenRet( HB_SOCKET sd, const char * szRootPath )
+static void s_listenRet( HB_SOCKET sd, const char * szRootPath, BOOL rpc )
 {
    if( sd != HB_NO_SOCKET )
    {
@@ -365,6 +370,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath )
       lsd = ( PHB_LISTENSD ) memset( hb_xgrab( sizeof( HB_LISTENSD ) ),
                                             0, sizeof( HB_LISTENSD ) );
       lsd->sd = sd;
+      lsd->rpc = rpc;
       if( szRootPath )
          hb_strncpy( lsd->rootPath, szRootPath, sizeof( lsd->rootPath ) - 1 );
       else
@@ -389,6 +395,29 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath )
 }
 
 
+HB_FUNC( NETIO_RPC )
+{
+   PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
+   BOOL fRPC = FALSE;
+
+   if( lsd )
+   {
+      fRPC = lsd->rpc;
+      if( HB_ISLOG( 2 ) )
+         lsd->rpc = hb_parl( 2 );
+   }
+   else
+   {
+      PHB_CONSRV conn = s_consrvParam( 1 );
+      if( conn )
+      {
+         fRPC = conn->rpc;
+         if( HB_ISLOG( 2 ) )
+            conn->rpc = hb_parl( 2 );
+      }
+   }
+}
+
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
@@ -400,7 +429,7 @@ HB_FUNC( NETIO_SERVERSTOP )
    {
       PHB_CONSRV conn = s_consrvParam( 1 );
       if( conn )
-         lsd->stop = fStop;
+         conn->stop = fStop;
    }
 }
 
@@ -411,6 +440,7 @@ HB_FUNC( NETIO_LISTEN )
    int iPort = hb_parnidef( 1, NETIO_DEFAULT_PORT );
    const char * szAddress = hb_parc( 2 );
    const char * szRootPath = hb_parc( 3 );
+   BOOL fRPC = hb_parl( 4 );
    void * pSockAddr;
    unsigned uiLen;
    HB_SOCKET sd = HB_NO_SOCKET;
@@ -436,7 +466,7 @@ HB_FUNC( NETIO_LISTEN )
       hb_xfree( pSockAddr );
    }
 
-   s_listenRet( sd, szRootPath );
+   s_listenRet( sd, szRootPath, fRPC );
 }
 
 HB_FUNC( NETIO_ACCEPT )
@@ -461,7 +491,7 @@ HB_FUNC( NETIO_ACCEPT )
          BYTE msgbuf[ NETIO_MSGLEN * 2 ];
 
          hb_socketSetNoDelay( connsd, TRUE );
-         conn = s_consrvNew( connsd, lsd->rootPath );
+         conn = s_consrvNew( connsd, lsd->rootPath, lsd->rpc );
 
          if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN &&
              HB_GET_LE_INT32( msgbuf ) == NETIO_LOGIN )
@@ -507,6 +537,7 @@ HB_FUNC( NETIO_SERVER )
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
          int iFileNo;
+         UINT32 uiMsg;
          USHORT uiFalgs;
          char * szExt;
          PHB_FILE pFile;
@@ -517,7 +548,8 @@ HB_FUNC( NETIO_SERVER )
          if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) != NETIO_MSGLEN )
             break;
 
-         switch( HB_GET_LE_UINT32( msgbuf ) )
+         uiMsg = HB_GET_LE_UINT32( msgbuf );
+         switch( uiMsg )
          {
             case NETIO_EXISTS:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
@@ -737,7 +769,6 @@ HB_FUNC( NETIO_SERVER )
                   errCode = s_srvFsError();
                else if( !fNoAnswer )
                {
-                  UINT32 uiMsg = HB_GET_LE_UINT32( msgbuf );
                   HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
                   memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
                }
@@ -795,6 +826,95 @@ HB_FUNC( NETIO_SERVER )
                fNoAnswer = TRUE;
                break;
 
+            case NETIO_PROC:
+               fNoAnswer = TRUE;
+            case NETIO_PROCIS:
+            case NETIO_PROCW:
+            case NETIO_FUNC:
+               if( !conn->rpc )
+               {
+                  errCode = NETIO_ERR_UNSUPPORTED;
+                  break;
+               }
+               size = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
+               if( size < 2 )
+                  errCode = NETIO_ERR_WRONG_PARAM;
+               else
+               {
+                  if( size >= ( long ) sizeof( buffer ) )
+                     ptr = msg = ( BYTE * ) hb_xgrab( size );
+                  if( s_srvRecvAll( conn, msg, size ) != size )
+                     errCode = NETIO_ERR_READ;
+                  else
+                  {
+                     const char * data = ( const char * ) msg;
+                     size2 = ( long ) hb_strnlen( data, size ) + 1;
+                     if( size2 > size )
+                        errCode = NETIO_ERR_WRONG_PARAM;
+                     else
+                     {
+                        PHB_DYNS pDynSym = hb_dynsymFindName( data );
+                        if( !pDynSym || !hb_dynsymIsFunction( pDynSym ) )
+                           errCode = NETIO_ERR_NOT_EXISTS;
+                        else if( uiMsg != NETIO_PROCIS )
+                        {
+                           ULONG ulSize = size - size2;
+                           USHORT uiPCount = 0;
+
+                           data += size2;
+
+                           hb_vmPushDynSym( pDynSym );
+                           hb_vmPushNil();
+                           while( ulSize )
+                           {
+                              PHB_ITEM pItem = hb_itemDeserialize( &data, &ulSize );
+                              if( !pItem )
+                              {
+                                 ulSize = 1;
+                                 break;
+                              }
+                              ++uiPCount;
+                              hb_vmPush( pItem );
+                              hb_itemRelease( pItem );
+                           }
+                           if( ulSize )
+                           {
+                              errCode = NETIO_ERR_WRONG_PARAM;
+                              uiPCount += 2;
+                              do
+                                 hb_stackPop();
+                              while( --uiPCount );
+                           }
+                           else
+                              hb_vmProc( uiPCount );
+                        }
+                     }
+                     if( errCode == 0 && !fNoAnswer )
+                     {
+                        if( uiMsg == NETIO_FUNC )
+                        {
+                           ULONG itmSize;
+                           char * itmData = hb_itemSerialize( hb_stackReturnItem(), TRUE, &itmSize );
+                           if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
+                              msg = buffer;
+                           else if( !ptr || itmSize > ( ULONG ) size - NETIO_MSGLEN )
+                           {
+                              if( ptr )
+                                 hb_xfree( ptr );
+                              ptr = msg = ( BYTE * ) hb_xgrab( itmSize + NETIO_MSGLEN );
+                           }
+                           memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
+                           hb_xfree( itmData );
+                           len = itmSize;
+                        }
+                        HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
+                        HB_PUT_LE_UINT32( &msg[ 4 ], len );
+                        memset( msg + 8, '\0', NETIO_MSGLEN - 8 );
+                     }
+                  }
+               }
+               break;
+
             case NETIO_SYNC:
                continue;
 
@@ -805,6 +925,7 @@ HB_FUNC( NETIO_SERVER )
 
          if( fNoAnswer )
          {
+            /* continue; */ /* do not send dummy record */
             HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SYNC );
             memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
             len = NETIO_MSGLEN;
