@@ -2997,8 +2997,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
          /* ; Not enabled yet, because it would cause a lot of 3rd party code to
-              break due to sloppy type conversions and other trivial coding errors
-              usually not noticed with C compilers. [vszakats] */
+              break due to sloppy type conversions and other trivial coding mistakes
+              usually not noticed with C compilers. The other side-effect, is
+              much slower compilation process. [vszakats] */
 #if 0
          IF hbmk[ _HBMK_lCPP ] == NIL
             hbmk[ _HBMK_lCPP ] := .T.
