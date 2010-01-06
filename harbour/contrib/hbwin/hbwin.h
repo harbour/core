@@ -79,7 +79,7 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT void  hbwin_SetLastError( void );
+HB_EXPORT void  hbwin_SetLastError( DWORD dwLastError );
 HB_EXPORT DWORD hbwin_GetLastError( void );
 
 HB_EXTERN_END

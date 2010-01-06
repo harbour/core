@@ -62,9 +62,8 @@ typedef struct
 
 static HB_TSD_NEW( s_winerrData, sizeof( HB_WINERRDATA ), NULL, NULL );
 
-void hbwin_SetLastError( void )
+void hbwin_SetLastError( DWORD dwLastError )
 {
-   DWORD dwLastError = GetLastError();
    PHB_WINERRDATA pWinErrData = ( PHB_WINERRDATA ) hb_stackGetTSD( &s_winerrData );
 
    pWinErrData->dwLastError = dwLastError;

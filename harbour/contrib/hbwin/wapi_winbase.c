@@ -79,16 +79,26 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
 
 HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 {
-   hb_retnl( WaitForSingleObject( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) ) );
+   DWORD dwResult = WaitForSingleObject( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retnl( dwResult );
 }
 
 HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
 {
-#if ! defined( HB_OS_WIN_CE )
-   hb_retnl( WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) ) );
+   DWORD dwResult;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   dwResult = 0;
+   dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   hb_retnl( 0 );
+   dwResult = WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) );
+   dwLastError = GetLastError();
 #endif
+
+   hbwin_SetLastError( dwLastError );
+   hb_retnl( dwResult );
 }
 
 HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
@@ -100,11 +110,15 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
    {
       HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
       HB_SIZE nPos;
+      DWORD dwResult;
 
       for( nPos = 0; nPos < nLen; ++nPos )
          handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
 
-      hb_retnl( WaitForMultipleObjects( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) ) );
+      dwResult = WaitForMultipleObjects( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) );
+
+      hbwin_SetLastError( GetLastError() );
+      hb_retnl( dwResult );
 
       hb_xfree( handles );
    }
@@ -122,31 +136,44 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
    {
       HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
       HB_SIZE nPos;
+      DWORD dwResult;
 
       for( nPos = 0; nPos < nLen; ++nPos )
          handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
 
-      hb_retnl( WaitForMultipleObjectsEx( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) ) );
+      dwResult = WaitForMultipleObjectsEx( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) );
+
+      hbwin_SetLastError( GetLastError() );
+      hb_retnl( dwResult );
 
       hb_xfree( handles );
    }
    else
       hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
+   hbwin_SetLastError( ERROR_INVALID_FUNCTION );
    hb_retnl( 0 );
 #endif
 }
 
 HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
 {
-#if ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( SetProcessWorkingSetSize(
+   BOOL bResult;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   bResult = FALSE;
+   dwLastError = ERROR_INVALID_FUNCTION;
+#else
+   bResult = SetProcessWorkingSetSize(
       wapi_par_HANDLE( 1 ) /* hProcess */,
       ( SIZE_T ) hb_parnint( 2 ) /* dwMinimumWorkingSetSize */,
-      ( SIZE_T ) hb_parnint( 3 ) /* dwMaximumWorkingSetSize */ ) );
-#else
-   wapi_ret_L( FALSE );
+      ( SIZE_T ) hb_parnint( 3 ) /* dwMaximumWorkingSetSize */ );
+   dwLastError = GetLastError();
 #endif
+
+   hbwin_SetLastError( dwLastError );
+   wapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETLASTERROR )
@@ -156,8 +183,9 @@ HB_FUNC( WAPI_GETLASTERROR )
 
 HB_FUNC( WAPI_SETLASTERROR )
 {
-   SetLastError( ( DWORD ) hb_parnl( 1 ) );
-   hbwin_SetLastError();
+   DWORD dwLastError = ( DWORD ) hb_parnl( 1 );
+   SetLastError( dwLastError );
+   hbwin_SetLastError( dwLastError );
 }
 
 HB_FUNC( WAPI_SETERRORMODE )
@@ -168,32 +196,44 @@ HB_FUNC( WAPI_SETERRORMODE )
 HB_FUNC( WAPI_LOADLIBRARY )
 {
    void * hFileName;
+   HMODULE hResult = LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) );
 
-   hb_retptr( LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retptr( hResult );
 
    hb_strfree( hFileName );
 }
 
 HB_FUNC( WAPI_FREELIBRARY )
 {
-   hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
+   BOOL bResult = FreeLibrary( ( HMODULE ) hb_parptr( 1 ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retl( bResult );
 }
 
 HB_FUNC( WAPI_GETPROCADDRESS )
 {
+   FARPROC pProc;
+   DWORD dwLastError;
 #if defined( HB_OS_WIN_CE )
-   hb_retptr( NULL );
+   pProc = NULL;
+   dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   hb_retptr( ( void * ) GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
+   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+   dwLastError = GetLastError();
 #endif
+   hbwin_SetLastError( dwLastError );
+   hb_retptr( ( void * ) pProc );
 }
 
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
 HB_FUNC( WAPI_GETMODULEHANDLE )
 {
    void * hModuleName;
+   HMODULE hResult = GetModuleHandle( HB_PARSTR( 1, &hModuleName, NULL ) );
 
-   wapi_ret_HANDLE( GetModuleHandle( HB_PARSTR( 1, &hModuleName, NULL ) ) );
+   hbwin_SetLastError( GetLastError() );
+   wapi_ret_HANDLE( hResult );
 
    hb_strfree( hModuleName );
 }

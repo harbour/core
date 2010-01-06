@@ -73,7 +73,9 @@ HB_FUNC( WAPI_MESSAGEBOX )
 {
    void * hStr1;
    void * hStr2;
-   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), HB_PARSTR( 2, &hStr1, NULL ), HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) ) );
+   int iResult = MessageBox( ( HWND ) hb_parptr( 1 ), HB_PARSTR( 2, &hStr1, NULL ), HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retni( iResult );
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
@@ -83,7 +85,7 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
    void * hClassName;
    void * hWindowName;
 
-   hb_retptr( CreateWindowEx(
+   HWND hResult = CreateWindowEx(
       ( DWORD )     hb_parnl( 1 ) /* dwExStyle */,
       HB_PARSTRDEF( 2, &hClassName, NULL ),
       HB_PARSTRDEF( 3, &hWindowName, NULL ),
@@ -95,7 +97,10 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
       HB_ISPOINTER( 9 ) ? ( HWND ) hb_parptr( 9 ) : HWND_DESKTOP /* hWndParent */,
       ( HMENU )     hb_parptr( 10 ) /* hMenu */,
       ( HINSTANCE ) hb_parptr( 11 ) /* hInstance */,
-      ( LPVOID )    hb_parptr( 12 ) /* lpParam */ ) );
+      ( LPVOID )    hb_parptr( 12 ) /* lpParam */ );
+
+   hbwin_SetLastError( GetLastError() );
+   hb_retptr( hResult );
 
    hb_strfree( hClassName );
    hb_strfree( hWindowName );
@@ -103,7 +108,9 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
 
 HB_FUNC( WAPI_DESTROYWINDOW )
 {
-   hb_retl( DestroyWindow( ( HWND ) hb_parptr( 1 ) ) );
+   BOOL bResult = DestroyWindow( ( HWND ) hb_parptr( 1 ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retl( bResult );
 }
 
 /*-----------------------------------------------------------------------/
@@ -114,13 +121,21 @@ BOOL EnableScrollBar( HWND hWnd, UINT wSBflags, UINT wArrows );
 */
 HB_FUNC( WAPI_ENABLESCROLLBAR )
 {
-#if ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( EnableScrollBar( wapi_par_HWND( 1 ),
-                                wapi_par_UINT( 2 ),
-                                wapi_par_UINT( 3 ) ) );
+   BOOL bResult;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   bResult = FALSE;
+   dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   wapi_ret_L( FALSE );
+   bResult = EnableScrollBar( wapi_par_HWND( 1 ),
+                              wapi_par_UINT( 2 ),
+                              wapi_par_UINT( 3 ) );
+   dwLastError = GetLastError();
 #endif
+
+   hbwin_SetLastError( dwLastError );
+   wapi_ret_L( bResult );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -148,6 +163,9 @@ HB_FUNC( WAPI_GETSCROLLBARINFO )
    bSuccess = GetScrollBarInfo( wapi_par_HWND( 1 ),
                                 wapi_par_LONG( 2 ),
                                 sbi );
+
+   hbwin_SetLastError( GetLastError() );
+
    if( bSuccess )
       hb_storclen( ( char * ) &sbi, sizeof( SCROLLBARINFO ), 3 );
 
@@ -166,6 +184,9 @@ HB_FUNC( WAPI_GETSCROLLINFO )
    bSuccess = GetScrollInfo( wapi_par_HWND( 1 ),
                              wapi_par_INT( 2 ),
                              si );
+
+   hbwin_SetLastError( GetLastError() );
+
    if( bSuccess )
       hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
 
@@ -177,12 +198,20 @@ int GetScrollPos( HWND hWnd, int nBar );
 */
 HB_FUNC( WAPI_GETSCROLLPOS )
 {
-#if ! defined( HB_OS_WIN_CE )
-   wapi_ret_NI( GetScrollPos( wapi_par_HWND( 1 ),
-                              wapi_par_INT( 2 ) ) );
+   int iResult;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   iResult = 0;
+   dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   wapi_ret_NI( 0 );
+   iResult = GetScrollPos( wapi_par_HWND( 1 ),
+                           wapi_par_INT( 2 ) );
+   dwLastError = GetLastError();
 #endif
+
+   hbwin_SetLastError( dwLastError );
+   wapi_ret_NI( iResult );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -190,25 +219,30 @@ BOOL GetScrollRange( HWND hWnd, int nBar, LPINT lpMinPos, LPINT lpMaxPos );
 */
 HB_FUNC( WAPI_GETSCROLLRANGE )
 {
-#if ! defined( HB_OS_WIN_CE )
+   BOOL bSuccess;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   bSuccess = FALSE;
+   dwLastError = ERROR_INVALID_FUNCTION;
+#else
    {
       int minPos, maxPos;
 
-      if( GetScrollRange( wapi_par_HWND( 1 ),
-                          wapi_par_INT( 2 ),
-                          &minPos,
-                          &maxPos ) )
-      {
-         hb_storni( minPos, 3 );
-         hb_storni( maxPos, 4 );
+      bSuccess = GetScrollRange( wapi_par_HWND( 1 ),
+                                 wapi_par_INT( 2 ),
+                                 &minPos,
+                                 &maxPos );
 
-         wapi_ret_L( HB_TRUE );
-         return;
-      }
+      dwLastError = GetLastError();
+
+      hb_storni( minPos, 3 );
+      hb_storni( maxPos, 4 );
    }
 #endif
 
-   wapi_ret_L( HB_FALSE );
+   hbwin_SetLastError( dwLastError );
+   wapi_ret_L( bSuccess );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -258,10 +292,12 @@ int SetScrollPos( HWND hWnd, int nBar, int nPos, BOOL bRedraw );
 */
 HB_FUNC( WAPI_SETSCROLLPOS )
 {
-   wapi_ret_NI( SetScrollPos( wapi_par_HWND( 1 ),
-                              wapi_par_INT( 2 ),
-                              wapi_par_INT( 3 ),
-                              wapi_par_BOOL( 4 ) ) );
+   int iResult = SetScrollPos( wapi_par_HWND( 1 ),
+                               wapi_par_INT( 2 ),
+                               wapi_par_INT( 3 ),
+                               wapi_par_BOOL( 4 ) );
+   hbwin_SetLastError( GetLastError() );
+   wapi_ret_NI( iResult );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -269,11 +305,13 @@ BOOL SetScrollRange( HWND hWnd, int nBar, int nMinPos, int nMaxPos, BOOL bRedraw
 */
 HB_FUNC( WAPI_SETSCROLLRANGE )
 {
-   wapi_ret_L( SetScrollRange( wapi_par_HWND( 1 ),
-                               wapi_par_INT( 2 ),
-                               wapi_par_INT( 3 ),
-                               wapi_par_INT( 4 ),
-                               HB_ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE ) );
+   BOOL bResult = SetScrollRange( wapi_par_HWND( 1 ),
+                                  wapi_par_INT( 2 ),
+                                  wapi_par_INT( 3 ),
+                                  wapi_par_INT( 4 ),
+                                  HB_ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE );
+   hbwin_SetLastError( GetLastError() );
+   wapi_ret_L( bResult );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -281,13 +319,21 @@ BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow );
 */
 HB_FUNC( WAPI_SHOWSCROLLBAR )
 {
-#if ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( ShowScrollBar( wapi_par_HWND( 1 ),
-                              wapi_par_INT( 2 ),
-                              wapi_par_BOOL( 3 ) ) );
+   BOOL bResult;
+   DWORD dwLastError;
+
+#if defined( HB_OS_WIN_CE )
+   bResult = FALSE;
+   dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   wapi_ret_L( FALSE );
+   bResult = ShowScrollBar( wapi_par_HWND( 1 ),
+                            wapi_par_INT( 2 ),
+                            wapi_par_BOOL( 3 ) );
+   dwLastError = GetLastError();
 #endif
+
+   hbwin_SetLastError( dwLastError );
+   wapi_ret_L( bResult );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -295,7 +341,9 @@ HWND SetFocus( HWND hWnd );
 */
 HB_FUNC( WAPI_SETFOCUS )
 {
-   wapi_ret_HANDLE( SetFocus( wapi_par_HWND( 1 ) ) );
+   HWND hResult = SetFocus( wapi_par_HWND( 1 ) );
+   hbwin_SetLastError( GetLastError() );
+   wapi_ret_HANDLE( hResult );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -319,5 +367,7 @@ HB_FUNC( WAPI_GETACTIVEWINDOW )
 /*----------------------------------------------------------------------*/
 HB_FUNC( WAPI_SETACTIVEWINDOW )
 {
-   hb_retptr( SetActiveWindow( wapi_par_HWND( 1 ) ) );
+   HWND hResult = SetActiveWindow( wapi_par_HWND( 1 ) );
+   hbwin_SetLastError( GetLastError() );
+   hb_retptr( hResult );
 }
