@@ -1628,6 +1628,14 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
+      case HB_GTI_ISUNICODE:
+#if defined( UNICODE )
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+#else
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
+#endif
+         break;
+
       case HB_GTI_CODEPAGE:
       {
          UINT uiCodePage = GetConsoleCP();

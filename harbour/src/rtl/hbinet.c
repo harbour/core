@@ -66,6 +66,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 #include "hbthread.h"
+#include "hbznet.h"
 
 #define HB_INET_ERR_OK           0
 #define HB_INET_ERR_TIMEOUT      ( -1 )
@@ -87,6 +88,11 @@ typedef struct
    int       iTimeout;
    int       iTimeLimit;
    PHB_ITEM  pPeriodicBlock;
+   PHB_ZNETSTREAM stream;
+   HB_INET_RFUNC recvFunc;
+   HB_INET_SFUNC sendFunc;
+   HB_INET_FFUNC flushFunc;
+   HB_INET_CFUNC cleanFunc;
 } HB_SOCKET_STRUCT, * PHB_SOCKET_STRUCT;
 
 #define HB_INET_BUFFER_LEN    256
@@ -148,6 +154,18 @@ static int hb_inetCloseSocket( PHB_SOCKET_STRUCT socket )
    return ret;
 }
 
+static void hb_inetCloseStream( PHB_SOCKET_STRUCT socket )
+{
+   if( socket->cleanFunc )
+      socket->cleanFunc( socket->stream );
+
+   socket->recvFunc = NULL;
+   socket->sendFunc = NULL;
+   socket->flushFunc = NULL;
+   socket->cleanFunc = NULL;
+   socket->stream = NULL;
+}
+
 static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
 {
    PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) Cargo;
@@ -173,6 +191,7 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
       hb_xfree( socket->buffer );
       socket->buffer = NULL;
    }
+   hb_inetCloseStream( socket );
 }
 
 static HB_GARBAGE_FUNC( hb_inetSocketMark )
@@ -205,6 +224,30 @@ static void hb_inetAutoInit( void )
 #endif
       }
    }
+}
+
+BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
+                            HB_INET_RFUNC recvFunc,
+                            HB_INET_SFUNC sendFunc,
+                            HB_INET_FFUNC flushFunc,
+                            HB_INET_CFUNC cleanFunc )
+{
+   PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) hb_itemGetPtrGC( pItem, &s_gcInetFuncs );
+
+   if( socket )
+   {
+      hb_inetCloseStream( socket );
+
+      socket->recvFunc = recvFunc;
+      socket->sendFunc = sendFunc;
+      socket->flushFunc = flushFunc;
+      socket->cleanFunc = cleanFunc;
+      socket->stream = pStream;
+      return TRUE;
+   }
+
+   hb_inetErrRT();
+   return FALSE;
 }
 
 HB_FUNC( HB_INETINIT )
@@ -568,8 +611,13 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, BOOL
       if( socket->buffer == NULL )
          socket->buffer = ( char * ) hb_xgrab( socket->readahead );
       socket->posbuffer = 0;
-      rec = hb_socketRecv( socket->sd, socket->buffer, socket->readahead,
-                           0, socket->iTimeout );
+      if( socket->recvFunc )
+         rec = socket->recvFunc( socket->stream, socket->sd,
+                                 socket->buffer, socket->readahead,
+                                 socket->iTimeout );
+      else
+         rec = hb_socketRecv( socket->sd, socket->buffer, socket->readahead,
+                              0, socket->iTimeout );
       socket->inbuffer = HB_MAX( 0, rec );
    }
    else
@@ -583,13 +631,25 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, BOOL
       socket->inbuffer -= rec;
       if( size > rec && !readahead )
       {
-         size = hb_socketRecv( socket->sd, buffer + rec, size - rec, 0, 0 );
+         if( socket->recvFunc )
+            rec = socket->recvFunc( socket->stream, socket->sd,
+                                    buffer + rec, size - rec,
+                                    socket->iTimeout );
+         else
+            size = hb_socketRecv( socket->sd, buffer + rec, size - rec, 0, 0 );
+
          if( size > 0 )
             rec += size;
       }
    }
    else if( !readahead )
-      rec = hb_socketRecv( socket->sd, buffer, size, 0, socket->iTimeout );
+   {
+      if( socket->recvFunc )
+         rec = socket->recvFunc( socket->stream, socket->sd,
+                                 buffer, size, socket->iTimeout );
+      else
+         rec = hb_socketRecv( socket->sd, buffer, size, 0, socket->iTimeout );
+   }
 
    return rec;
 }
@@ -926,8 +986,13 @@ static void s_inetSendInternal( BOOL lAll )
       iSent = iLen = 0;
       while( iSent < iSend )
       {
-         iLen = hb_socketSend( socket->sd, buffer + iSent, iSend - iSent, 0,
-                               socket->iTimeout );
+         if( socket->sendFunc )
+            iLen = socket->sendFunc( socket->stream, socket->sd,
+                                     buffer + iSent, iSend - iSent,
+                                     socket->iTimeout );
+         else
+            iLen = hb_socketSend( socket->sd, buffer + iSent, iSend - iSent,
+                                  0, socket->iTimeout );
          if( iLen > 0 )
          {
             iSent += iLen;

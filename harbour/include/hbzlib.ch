@@ -53,12 +53,19 @@
 #ifndef HB_ZLIB_CH_
 #define HB_ZLIB_CH_
 
-#define HB_ZLIB_METHOD_STORE             0
-#define HB_ZLIB_METHOD_DEFLATED          8
+#define HB_ZLIB_METHOD_STORE              0
+#define HB_ZLIB_METHOD_DEFLATED           8
 
-#define HB_ZLIB_COMPRESSION_NONE         0
-#define HB_ZLIB_COMPRESSION_SPEED        1
-#define HB_ZLIB_COMPRESSION_SIZE         9
-#define HB_ZLIB_COMPRESSION_DEFAULT    (-1)
+#define HB_ZLIB_COMPRESSION_NONE          0
+#define HB_ZLIB_COMPRESSION_SPEED         1
+#define HB_ZLIB_COMPRESSION_SIZE          9
+#define HB_ZLIB_COMPRESSION_DEFAULT       (-1)
+#define HB_ZLIB_COMPRESSION_DISABLE       (-2)
 
-#endif
+#define HB_ZLIB_STRATEGY_DEFAULT          0
+#define HB_ZLIB_STRATEGY_FILTERED         1
+#define HB_ZLIB_STRATEGY_HUFFMAN_ONLY     2
+#define HB_ZLIB_STRATEGY_RLE              3
+#define HB_ZLIB_STRATEGY_FIXED            4
+
+#endif /* HB_ZLIB_CH_ */

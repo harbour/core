@@ -69,6 +69,7 @@ C_HEADERS := \
    hbwince.h \
    hbwinuni.h \
    hbzlib.h \
+   hbznet.h \
    hb_io.h \
 
 PRG_HEADERS := \

@@ -97,6 +97,7 @@ C_SOURCES := \
    hbtoken.c \
    hbzlib.c \
    hbzlibgz.c \
+   hbznet.c \
    idle.c \
    idlex.c \
    inkey.c \
