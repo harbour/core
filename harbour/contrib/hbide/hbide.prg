@@ -224,7 +224,6 @@ CLASS HbIde
    METHOD closeAllSources()
    METHOD closeAllOthers()
    METHOD saveSource()
-   METHOD saveSourceAs()
    METHOD saveAllSources()
    METHOD saveAndExit()
    METHOD revertSource()
@@ -247,8 +246,6 @@ CLASS HbIde
 
    METHOD setCodec()
 
-   METHOD findEditByFileName()
-   METHOD findEditByID()
    METHOD updateTitleBar()
 
    ENDCLASS
@@ -400,6 +397,7 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "                                                      " )
 
    ::oDlg:destroy()
+   ::oAC:destroy()
 
    hbide_dbg( "                                                      " )
    hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
@@ -420,28 +418,25 @@ METHOD HbIde:execAction( cKey )
    DO CASE
    CASE cKey == "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+
    CASE cKey == "NewProject"
       ::oPM:loadProperties( , .t., .t., .t. )
    CASE cKey == "LoadProject"
       ::oPM:loadProperties( , .f., .f., .t. )
    CASE cKey == "LaunchProject"
       ::oPM:launchProject()
-
    CASE cKey == "Build"
       ::oPM:buildProject( '', .F., .F. )
    CASE cKey == "BuildLaunch"
       ::oPM:buildProject( '', .T., .F. )
-
    CASE cKey == "Rebuild"
       ::oPM:buildProject( '', .F., .T. )
    CASE cKey == "RebuildLaunch"
       ::oPM:buildProject( '', .T., .T. )
-
    CASE cKey == "Compile"
       //
    CASE cKey == "CompilePPO"
       ::oPM:buildProject( '', .F., .F., .T. )
-
    CASE cKey == "Properties"
       IF Empty( ::cWrkProject )
          MsgBox( 'No active project detected!' )
@@ -456,11 +451,11 @@ METHOD HbIde:execAction( cKey )
       ELSE
          MsgBox( 'Invalid project: ' + cTmp )
       ENDIF
-
    CASE cKey == "SelectProject"
       ::oPM:selectCurrentProject()
    CASE cKey == "CloseProject"
       ::oPM:closeProject()
+
    CASE cKey == "New"
       ::editSource( '' )
    CASE cKey == "Open"
@@ -468,9 +463,9 @@ METHOD HbIde:execAction( cKey )
          aEval( aSrc, {|e| ::editSource( e ) } )
       ENDIF
    CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab() )
+      ::saveSource( ::getCurrentTab(), , .f. )
    CASE cKey == "SaveAs"
-      ::saveSourceAs( ::getCurrentTab() )
+      ::saveSourceAs( ::getCurrentTab(), , .t. )
    CASE cKey == "SaveAll"
       ::saveAllSources()
    CASE cKey == "SaveExit"
@@ -594,103 +589,161 @@ METHOD HbIde:getCurCursor()
 //                          Source Editor
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
-   LOCAL n
-
-   IF !Empty( cSourceFile ) .AND. !( hbide_isValidText( cSourceFile ) )
-      MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
-      RETURN Self
-   ENDIF
-
-   IF !Empty( cSourceFile ) .AND. !hb_FileExists( cSourceFile )
-      MsgBox( 'File not found: ' + cSourceFile )
-      RETURN Self
-   ENDIF
-
-   DEFAULT cSourceFile TO ::cProjIni
-   DEFAULT nPos        TO 0
-   DEFAULT nHPos       TO 0
-   DEFAULT nVPos       TO 0
-
-   * An empty filename is a request to create a new empty file...
-   IF Empty( cSourceFile )
-      n := 0
-   ELSE
-      n := aScan( ::aTabs, {|a_| hbide_pathNormalized( a_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSourceFile ) } )
-   End
-
-   IF n > 0
-      ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
-      RETURN Self
-   END
-
-   aadd( ::aEdits, IdeEditor():new():create( Self, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
-
-   IF !Empty( cSourceFile )
-      hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:loadSources()
-   LOCAL i
+   LOCAL a_
 
    IF !empty( ::aIni[ INI_FILES ] )
-      FOR i := 1 TO len( ::aIni[ INI_FILES ] )
-         ::editSource( ::aIni[ INI_FILES, i, 1 ], ::aIni[ INI_FILES, i, 2 ], ;
-                       ::aIni[ INI_FILES, i, 3 ], ::aIni[ INI_FILES, i, 4 ], ::aIni[ INI_FILES, i, 5 ] )
+      FOR EACH a_ IN ::aIni[ INI_FILES ]
+         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ] )
       NEXT
-      ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+      ::oED:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 /*
- * Close the selected tab. If the user changed the file and has not saved him
- * ask to User if he want to save the contents.
+ *   Save selected Tab on harddisk and return .T. if successfull!
  */
+METHOD HbIde:saveSource( nTab, lCancel, lAs )
+   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFile, cExt, cNewFile
+   LOCAL cFileToSave
+
+   DEFAULT nTab TO ::getCurrentTab()
+   DEFAULT lAs  TO .F.
+
+   lCancel := .F.
+
+   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
+      cSource := oEdit:sourceFile
+      lNew := Empty( cSource ) .OR. lAs
+      IF lNew
+         cNewFile := ::selectSource( 'save', ;
+                                    iif( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
+                                           "Save " + oEdit:oTab:caption + " as..." )
+         IF empty( cNewFile )
+            // will check later what decision to take
+            RETURN .f.
+         ENDIF
+         IF hbide_pathNormalized( cNewFile ) == hbide_pathNormalized( cSource )
+            lNew := .f.
+         ENDIF
+      ENDIF
+
+      cFileToSave := iif( lNew, cNewFile, cSource )
+      qDocument := oEdit:qDocument
+
+      cBuffer := oEdit:qEdit:toPlainText()
+      /*
+       * If the burn process fails, we should change the name of the previous file.
+       * 01/01/2010 - 21:24:41 - vailtom
+       */
+      IF !hb_memowrit( cFileToSave, cBuffer )
+         MsgBox( "Error saving the file " + oEdit:sourceFile + ".",, 'Error saving file!' )
+         lCancel := .T.
+         RETURN .F.
+      ENDIF
+
+      IF lNew
+         hb_fNameSplit( cFileToSave, , @cFile, @cExt )
+
+         ::aTabs[ nTab, TAB_SOURCEFILE ] := cFileToSave
+         oEdit:sourceFile                := cFileToSave
+
+         oEdit:oTab:Caption := cFile + cExt
+         ::qTabWidget:setTabText( nIndex, cFile + cExt )
+         ::qTabWidget:setTabTooltip( nIndex, cSource )
+      ENDIF
+
+      IF empty( cSource )
+         /* The file is not populated in editors tree. Inject */
+         ::addSourceInTree( oEdit:sourceFile )
+      ELSEIF lNew
+         /* Rename the existing nodes in tree */
+      ENDIF
+
+      qDocument:setModified( .f. )
+      ::aSources := { oEdit:sourceFile }
+      ::createTags()
+      ::updateFuncList()
+      nIndex := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
+      ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
+      ::oSBar:getItem( SB_PNL_MODIFIED ):caption := " "
+   ENDIF
+
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme )
+
+   IF !Empty( cSourceFile )
+      IF !( hbide_isValidText( cSourceFile ) )
+         MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
+         RETURN Self
+      ELSEIF !hb_FileExists( cSourceFile )
+         MsgBox( 'File not found: ' + cSourceFile )
+         RETURN Self
+      ENDIF
+      IF ::oED:isOpen( cSourceFile )
+         IF hbide_getYesNo( cSourceFile + " is already open.", ;
+                                     "Want to re-load it again ?", "File Open Info!" )
+            ::oED:reLoad( cSourceFile )
+         ENDIF
+         ::oED:setSourceVisible( cSourceFile )
+         RETURN Self
+      ENDIF
+   ENDIF
+
+   DEFAULT nPos  TO 0
+   DEFAULT nHPos TO 0
+   DEFAULT nVPos TO 0
+
+   ::oED:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+
+   IF !Empty( cSourceFile )
+      hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:closeSource( nTab, lCanCancel, lCanceled )
-   LOCAL lSave := .T.
-   LOCAL n
+   LOCAL lSave, n, oEdit
 
-   DEFAULT nTab         TO ::getCurrentTab()
-   DEFAULT lCanCancel   TO .F.
+   DEFAULT nTab TO ::getCurrentTab()
 
-   lCanceled := .F.
+   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
 
-   IF !( nTab > 0 .AND. nTab <= LEN( ::aTabs ) )
-      RETURN .T.
-   ENDIF
+      DEFAULT lCanCancel TO .F.
+      lCanceled := .F.
 
-   IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
-      * File has not changed, ignore the question to User
-      lSave := .F.
-   ELSEIF lCanCancel
-      n := hbide_getYesNoCancel( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
-                          "Has been modified, save this source?", 'Save?' )
-
-      lCanceled := ( n == QMessageBox_Cancel )
-      lSave     := ( n == QMessageBox_Yes )
-
-      IF lCanceled
-         RETURN .F.
-      End
-   ELSE
-      IF !hbide_getYesNo( ::aTabs[ nTab, TAB_OTAB ]:Caption,  ;
-                    "Has been modified, save this source?", 'Save?' )
+      IF !( oEdit:qDocument:isModified() )
+         * File has not changed, ignore the question to User
          lSave := .F.
+
+      ELSEIF lCanCancel
+         n := hbide_getYesNoCancel( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         IF ( lCanceled := ( n == QMessageBox_Cancel ) )
+            RETURN .F.
+         ENDIF
+         lSave := ( n == QMessageBox_Yes    )
+
+      ELSE
+         lSave := hbide_getYesNo( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+
       ENDIF
+
+      IF lSave .AND. !( ::saveSource( nTab, @lCanceled ) )
+         IF lCanCancel
+            RETURN .F.
+         ENDIF
+      ENDIF
+
+      oEdit:removeTabPage()
    ENDIF
 
-   IF lSave .AND. !::saveSource( nTab, @lCanceled )
-      IF lCanCancel
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   ::aTabs[ nTab, TAB_OEDITOR ]:removeTabPage()
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
@@ -702,7 +755,6 @@ METHOD HbIde:closeAllSources()
    LOCAL lCanceled
    LOCAL i := 0
 
- * Finally now we will close all tabs.
    DO WHILE ( ++i <= Len( ::aTabs ) )
 
        IF ::closeSource( i, .T., @lCanceled )
@@ -723,34 +775,16 @@ METHOD HbIde:closeAllSources()
  * 02/01/2010 - 15:47:19
  */
 METHOD HbIde:closeAllOthers( nTab )
-   LOCAL lCanceled
-   LOCAL nID
+   LOCAL lCanceled, a_
 
-   DEFAULT nTab TO ::getCurrentTab()
-
-   IF !( nTab > 0 .AND. nTab <= LEN( ::aTabs ) )
-      RETURN .F.
-   ENDIF
-
-   nID := ::aTabs[ nTab, TAB_OEDITOR ]:nID
-   nTab:= 0
-
- * Finally now we will close all tabs.
-   DO WHILE ( ++nTab <= Len( ::aTabs ) )
-
-       IF ::aTabs[ nTab, TAB_OEDITOR ]:nID == nID
-          Loop
-       End
-
-       IF ::closeSource( nTab, .T., @lCanceled )
-          nTab --
-          Loop
-       ENDIF
-
-       IF lCanceled
-          RETURN .F.
-       ENDIF
-   ENDDO
+   FOR EACH a_ IN ::aTabs
+      IF a_:__enumIndex() != nTab
+         ::closeSource( a_:__enumIndex(), .T., @lCanceled )
+         IF lCanceled
+            RETURN .f.
+         ENDIF
+      ENDIF
+   NEXT
 
    RETURN .T.
 
@@ -763,7 +797,7 @@ METHOD HbIde:saveAllSources()
    LOCAL n
 
    FOR n := 1 TO Len( ::aTabs )
-       ::saveSource( n )
+      ::saveSource( n )
    NEXT
 
    RETURN Self
@@ -811,115 +845,6 @@ METHOD HbIde:revertSource( nTab )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/*
- * Save selected tab with a new filename...
- * 01/01/2010 - 20:55:24 - vailtom
- */
-METHOD HbIde:saveSourceAs( nTab, lCancel )
-   LOCAL cSource
-
-   DEFAULT nTab TO ::getCurrentTab()
-
-   lCancel := .F.
-
-   IF nTab < 1
-      RETURN .F.
-   End
-
-   cSource := ::aTabs[ nTab, TAB_SOURCEFILE ]
-   cSource := ::selectSource( 'save', ;
-                                 IIF( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
-                               "Save " + ::aTabs[ nTab, TAB_OTAB ]:Caption + " as..." ;
-                             )
-
-   IF Empty( cSource )
-      lCancel := .T.
-      RETURN .F.
-   End
-
-   IF ::saveSource( nTab, cSource, @lCancel )
-      hbide_mnuAddFileToMRU( Self, cSource, INI_RECENTFILES )
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
-/*----------------------------------------------------------------------*/
-/*
- * Save selected Tab on harddisk and return .T. if successfull!
- */
-METHOD HbIde:saveSource( nTab, cNewFileName, lCancel )
-   LOCAL cBuffer, qDocument, nIndex
-   LOCAL cSource, cFile, cExt
-
-   DEFAULT nTab TO ::getCurrentTab()
-
-   lCancel := .F.
-
-   IF nTab < 1
-      RETURN .F.
-   End
-
-   qDocument := ::aTabs[ nTab, TAB_QDOCUMENT ]
-
-//   IF !qDocument:isModified()
-//      RETURN .T.
-//   End
-
-   cSource   := ::aTabs[ nTab, TAB_SOURCEFILE ]
-
-   /* Dont have a valid filename? Call ::SaveAs() to obtain one... */
-   IF Empty( cSource ) .AND. Empty( cNewFileName )
-      RETURN ::saveSourceAs( nTab, @lCancel )
-   ENDIF
-
-   IF !Empty( cNewFileName )
-      cSource := cNewFileName
-  ENDIF
-
-   cBuffer := ::aTabs[ nTab, TAB_QEDIT ]:toPlainText()
-   nIndex  := ::qTabWidget:indexOf( ::aTabs[ nTab, TAB_OTAB ]:oWidget )
-
-   /*
-    * If the burn process fails, we should change the name of the previous file.
-    * 01/01/2010 - 21:24:41 - vailtom
-    */
-   IF !hb_memowrit( cSource, cBuffer )
-      MsgBox( "Error saving the file " + cSource + ".",, 'Error saving file!' )
-      lCancel := .T.
-      RETURN .F.
-// ELSE
-//    MsgBox( "File " + cSource + " save successfuly!",, 'Saving file!' )
-   ENDIF
-
-   hb_fNameSplit( cSource, , @cFile, @cExt )
-
-   IF !Empty( cNewFileName )
-      /*
-       * TOFIX: Remove old filename from treeview...
-       */
-    * ::delSourceInTree( ::aTabs[ nTab, TAB_SOURCEFILE ] )
-
-      ::aTabs[ nTab, TAB_OTAB ]:Caption := cFile + cExt
-      ::aTabs[ nTab, TAB_SOURCEFILE ]   := cNewFileName
-   End
-
-   ::qTabWidget:setTabText( nIndex, cFile + cExt )
-   ::qTabWidget:setTabTooltip( nIndex, cSource )
-
-   ::addSourceInTree( cSource )
-   ::aSources := { cSource }
-
-   qDocument:setModified( .f. )
-   ::createTags()
-   ::updateFuncList()
-
-   ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
-   ::oSBar:getItem( SB_PNL_MODIFIED ):caption := " "
-
-   RETURN .T.
-
-/*----------------------------------------------------------------------*/
 
 METHOD HbIde:selectSource( cMode, cFile, cTitle )
    LOCAL oDlg, cPath
@@ -931,6 +856,7 @@ METHOD HbIde:selectSource( cMode, cFile, cTitle )
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
       cFile := oDlg:open( , , .f. )
+
    ELSEIF cMode == "openmany"
       oDlg:title       := "Select Sources"
       oDlg:center      := .t.
@@ -938,6 +864,7 @@ METHOD HbIde:selectSource( cMode, cFile, cTitle )
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
       cFile := oDlg:open( , , .t. )
+
    ELSEIF cMode == "save"
       oDlg:title       := iif( !hb_isChar(cTitle), "Save as...", cTitle )
       oDlg:center      := .t.
@@ -954,14 +881,16 @@ METHOD HbIde:selectSource( cMode, cFile, cTitle )
       oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
                                                             { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
       cFile := oDlg:saveAs( cPath )
+
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
       cFile := oDlg:saveAs( "myfile.dbf" )
       IF !empty( cFile )
-         HBXBP_DEBUG( cFile )
+         hbide_dbg( cFile )
       ENDIF
+
    ENDIF
 
    RETURN cFile
@@ -1170,11 +1099,15 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
       cSource := ::aProjData[ n, TRE_ORIGINAL ]
+      ::editSource( cSource )
+      #if 0
+      cSource := ::aProjData[ n, TRE_ORIGINAL ]
       IF ( n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ TAB_SOURCEFILE ] ) == hbide_pathNormalized( cSource ) } ) ) == 0
          ::editSource( cSource )
       ELSE
          ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n, TAB_OTAB ]:oWidget ) )
       ENDIF
+      #endif
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
       cSource := ::aProjData[ n, TRE_DATA ]
@@ -1211,9 +1144,9 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n ==  0  // Source File - nothing to do
    CASE n == -2  // "Files"
    CASE n == -1  // Project Root
-      aadd( aPops, { "New Project"              , {|| ::oPM:loadProperties( , .t., .t., .t. ) } } )
+      aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( , .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Load Project"             , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
+      aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Project Name"
@@ -1222,20 +1155,18 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
       //
       IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
-         aadd( aPops, { "Set as Current"               , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
+         aadd( aPops, { "Set as Current"                 , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
-      aadd( aPops, { ::oAC:getAction( "Properties"    ), {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
+      aadd( aPops, { "Properties"                        , {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
       aadd( aPops, { "" } )
-//      aadd( aPops, { "Save and Build ( Qt )"         , {|| ::oPM:buildProjectViaQt( oXbpTreeItem:caption ) } } )
-//      aadd( aPops, { "" } )
-      aadd( aPops, { ::oAC:getAction( "Build"         ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F.,    , , .T. ) } } )
-      aadd( aPops, { ::oAC:getAction( "BuildLaunch"   ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T.,    , , .T. ) } } )
-      aadd( aPops, { ::oAC:getAction( "ReBuild"       ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T., , .T. ) } } )
-      aadd( aPops, { ::oAC:getAction( "ReBuildLaunch" ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T., , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "BuildQt"         ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F.,    , , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "BuildLaunchQt"   ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T.,    , , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "ReBuildQt"       ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T., , .T. ) } } )
+      aadd( aPops, { ::oAC:getAction( "ReBuildLaunchQt" ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T., , .T. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Launch"                          , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close This Project"              , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Close This Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
       //
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
@@ -1246,11 +1177,11 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       cSource := ::aProjData[ n, 5 ]
       n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ 5 ] ) == cSource } )
       //
-      aadd( aPops, { "Save"                     , {|| ::saveSource( n ) } } )
-      aadd( aPops, { "Save As"                  , {|| ::saveSourceAs( n ) } } )
+      aadd( aPops, { "Save"                              , {|| ::saveSource( n ) } } )
+      aadd( aPops, { "Save As"                           , {|| ::saveSource( n, , .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close"                    , {|| ::closeSource( n ) } } )
-      aadd( aPops, { "Close Others"             , {|| ::closeAllOthers( n ) } } )
+      aadd( aPops, { "Close"                             , {|| ::closeSource( n ) } } )
+      aadd( aPops, { "Close Others"                      , {|| ::closeAllOthers( n ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Apply Theme", {|| ::aTabs[ n, TAB_OEDITOR ]:applyTheme() } } )
       //
@@ -1423,41 +1354,4 @@ METHOD HbIde:setCodec( cCodec )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/*
- * Find an item in aEdits[] based on the file name passed as argument.
- * 02/01/2010 - 10:02:51 - vailtom
- */
-METHOD HbIde:findEditByFileName( cSource )
-   LOCAL myEdit
 
-   cSource := hbide_pathNormalized( cSource, .F. )
-
-   FOR EACH myEdit IN ::aEdits
-
-       IF myEdit:SourceFile == cSource
-          RETURN myEdit
-       ENDIF
-
-   NEXT
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-/*
- * Find an item in aEdits[] based on the nID passed as argument.
- * 02/01/2010 - 12:04:01 - vailtom
- */
-METHOD HbIde:findEditByID( nID )
-   LOCAL myEdit
-
-   FOR EACH myEdit IN ::aEdits
-
-       IF myEdit:nID == nID
-          RETURN myEdit
-       ENDIF
-
-   NEXT
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/

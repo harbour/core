@@ -82,6 +82,7 @@ CLASS IdeActions INHERIT IdeObject
 
    METHOD new()
    METHOD create()
+   METHOD destroy()
 
    METHOD buildMainMenu()
    METHOD buildToolBar()
@@ -109,6 +110,16 @@ METHOD IdeActions:create( oIde )
 
    ::buildActions()
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeActions:destroy()
+   LOCAL qAction
+
+   FOR EACH qAction IN ::hActions
+      qAction:pPtr := 0
+   NEXT
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -221,7 +232,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "CommandPrompt"     , "Command Prompt...*"           , ""               , ""     , "No", "Yes" } )
 #else
    aadd( aAct, { "Terminal"          , "Terminal"                     , ""               , ""     , "No", "Yes" } )
-   #endif
+#endif
 
    aadd( aAct, { "ManageThemes"      , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"      , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
@@ -229,6 +240,11 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "AboutHarbour"      , "About Harbour"                , "hb-16x16"       , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourUsersList"  , "Harbour Users (Mailing Lists)", "list-users"     , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourDevList"    , "Harbour Developers (Mailing Lists)", "list-developers", "", "No", "Yes" } )
+
+   aadd( aAct, { "BuildQt"           , "Build Project"                , "build"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "BuildLaunchQt"     , "Build and Launch"             , "buildlaunch"    , ""     , "No", "Yes" } )
+   aadd( aAct, { "RebuildQt"         , "Rebuild Project"              , "rebuild"        , ""     , "No", "Yes" } )
+   aadd( aAct, { "RebuildLaunchQt"   , "Rebuild and Launch"           , "rebuildlaunch"  , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -473,197 +489,6 @@ METHOD IdeActions:buildMainMenu()
 
    RETURN Self
 
-
-/*----------------------------------------------------------------------*/
-//
-/*----------------------------------------------------------------------*/
-
-FUNCTION buildMainMenu( oWnd, oIde )
-   LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f, lEmpty
-
-   oMenuBar := oWnd:MenuBar()
-
-   oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar" ) )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   File                                     */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~File"
-
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-
-   oSubMenu2:addItem( { _T( "~Source, ^N | new.png" )            , {|| oIde:execAction( "New"            ) } } )
-   oSubMenu2:addItem( { _T( "~Project | project.png" )           , {|| oIde:execAction( "NewProject"     ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~New" ) } )
-   oMenuBar:aMenuItems[ oMenuBar:numItems(), 2 ]:setIcon( oIde:resPath + 'new.png' )
-
-// oSubMenu:addItem( { _T( "~New File, ^N | new.png" )           , {|| oIde:execAction( "New"            ) } } )
-// oSubMenu:addItem( { _T( "New Pro~ject, Sh+^N | project.png" ) , {|| oIde:execAction( "NewProject"     ) } } )
-   oSubMenu:addItem( { _T( "~Open, ^O | open.png" )              , {|| oIde:execAction( "Open"           ) } } )
-   oSubMenu:addItem( { _T( "Open Projec~t" )                     , {|| oIde:execAction( "LoadProject"    ) } } )
-
-   hbide_menuAddSep( oSubMenu )
-
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTFILES, nIndex ], ;
-                                                oIde:editSource( cFile ) }
-   lEmpty := .T.
-   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
-       f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
-       lEmpty := .F.
-       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f ), nil } )
-       IF !hb_FileExists(f)
-          oSubMenu2:disableItem( n )
-       ENDIF
-   NEXT
-   IF lEmpty
-      oSubMenu2:addItem( { _T( "** No recent files found **" )   , nil } )
-      oSubMenu2:disableItem( 1 )
-   ENDIF
-   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files" ) } )
-
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTPROJECTS, nIndex ], ;
-                                                oIde:loadProjectProperties( cFile, .F., .F., .T. ) }
-
-   lEmpty := .T.
-   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTPROJECTS ] )
-       f := hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
-       lEmpty := .F.
-       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
-       IF !hb_FileExists(f)
-          oSubMenu2:disableItem( n )
-       ENDIF
-   NEXT
-   IF lEmpty
-      oSubMenu2:addItem( { _T( "** No recent projects found **" )   , nil } )
-      oSubMenu2:disableItem( 1 )
-   ENDIF
-   oMenuBar:addItem( { oSubMenu2,  _T( "Recent Projects" ) } )
-
-   hbide_menuAddSep( oSubMenu )
-
-   oSubMenu:addItem( { _T( "~Save, ^S | save.png" )             , {|| oIde:execAction( "Save"           ) } } )
-   oSubMenu:addItem( { _T( "Save ~As | saveas.png" )            , {|| oIde:execAction( "SaveAs"         ) } } )
-   oSubMenu:addItem( { _T( "Save A~ll, Sh+^S | saveall.png")    , {|| oIde:execAction( "SaveAll"        ) } } )
-   oSubMenu:addItem( { _T( "~Close, ^W | close.png" )           , {|| oIde:execAction( "Close"          ) } } )
-   oSubMenu:addItem( { _T( "Clos~e All | closeall.png" )        , {|| oIde:execAction( "CloseAll"       ) } } )
-   oSubMenu:addItem( { _T( "Close ~Others| closeexcept.png" )   , {|| oIde:execAction( "CloseOther"     ) } } )
-   oSubMenu:addItem( { _T( "~Revert to Saved, Sh+^R" )          , {|| oIde:execAction( "Revert"         ) } } )
-   hbide_menuAddSep( oSubMenu )
-
- * oSubMenu:addItem( { _T( "~Export as HTML* | exporthtml.png" ), {|| oIde:execAction( ""               ) } } )
-   oSubMenu:addItem( { _T( "~Print, ^P | print.png" )           , {|| oIde:execAction( "Print"          ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Sa~ve and Exit, Sh+^W" )            , {|| oIde:execAction( "SaveExit"       ) } } )
-   oSubMenu:addItem( { _T( "E~xit | exit.png" )                 , {|| oIde:execAction( "Exit"           ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Edit                                     */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Edit"
-   oSubMenu:addItem( { _T( "~Undo | undo.png" )                 , {|| oIde:execAction( "Undo"           ) } } )
-   oSubMenu:addItem( { _T( "~Redo | redo.png" )                 , {|| oIde:execAction( "Redo"           ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "C~ut  | cut.png" )                  , {|| oIde:execAction( "Cut"            ) } } )
-   oSubMenu:addItem( { _T( "~Copy | copy.png" )                 , {|| oIde:execAction( "Copy"           ) } } )
-   oSubMenu:addItem( { _T( "~Paste| paste.png" )                , {|| oIde:execAction( "Paste"          ) } } )
-   oSubMenu:addItem( { _T( "Select ~All | selectall.png" )      , {|| oIde:execAction( "SelectAll"      ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "~Find/Replace, ^F | find.png" )     , {|| oIde:execAction( "Find"           ) } } )
-   oSubMenu:addItem( { _T( "~Go To Line..., ^G| gotoline.png" ) , {|| oIde:execAction( "Goto"           ) } } )
-   hbide_menuAddSep( oSubMenu )
-
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:addItem( { _T( "~Date && Time, Sh+F7| insert-datetime.png" )           , {|| oIde:execAction( "InsertDateTime"     ) } } )
-   oSubMenu2:addItem( { _T( "~Random Function Name, Sh+^F8| insert-procname.png" )  , {|| oIde:execAction( "InsertRandomName"   ) } } )
-   oSubMenu2:addItem( { _T( "~External File at cursor| insert-external-file.png" )  , {|| oIde:execAction( "InsertExternalFile" ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
-
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Switch Read~Only Mode | readonly.png" )                 , {|| oIde:execAction( "switchReadOnly" ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Project                                  */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Project"
-   oSubMenu:addItem( { _T( "Properties" )                                     , {|| oIde:execAction( "Properties"    ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Add File* | projectadd.png" )                     , {|| oIde:execAction( "" ) } } )
-   oSubMenu:addItem( { _T( "Remove File* | projectdel.png" )                  , {|| oIde:execAction( "" ) } } )
-   oSubMenu:addItem( { _T( "Select Main Module | setmain.png" )               , {|| oIde:execAction( "" ) } } )
-   oSubMenu:disableItem( oSubMenu:numItems )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Change Current Project" )                         , {|| oIde:execAction( "SelectProject" ) } } )
-   oSubMenu:addItem( { _T( "Close Current Project" )                          , {|| oIde:execAction( "CloseProject"  ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Build                                    */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Build"
-   oSubMenu:addItem( { _T( "Build, ^F9 | build.png" )                         , {|| oIde:execAction( "Build"              ) } } )
-   oSubMenu:addItem( { _T( "Build and Launch, F9 | buildlaunch.png" )         , {|| oIde:execAction( "BuildLaunch"        ) } } )
-   oSubMenu:addItem( { _T( "Re-build | rebuild.png" )                         , {|| oIde:execAction( "Rebuild"            ) } } )
-   oSubMenu:addItem( { _T( "Re-build and Launch, Sh+^F9 | rebuildlaunch.png" ), {|| oIde:execAction( "RebuildLaunch"      ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Save and Compile Current File | compile.png")     , {|| oIde:execAction( "SaveCompileCurrent" ) } } )
-   oSubMenu:addItem( { _T( "Save and Compile to PPO | ppo.png" )              , {|| oIde:execAction( "CompilePPO"         ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Launch, ^F10" )                                   , {|| oIde:execAction( "LaunchProject"      ) } } )
- * oSubMenu:addItem( { _T( "Run without Debug*, Sh+^F10 | runnodebug.png" ), {|| oIde:execAction( "" ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Tools                                    */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Tools"
-   oSubMenu:addItem( { _T( "Configure Tools...*" )             , {|| oIde:execAction( ""               ) } } )
-   hbide_menuAddSep( oSubMenu )
-   // TODO: Load custom TOOLS LINK from .INI file
-#ifdef __PLATFORM__WINDOWS
-   oSubMenu:addItem( { _T( "Command Prompt...*" )              , {|| oIde:execAction( ""               ) } } )
-#else
-   oSubMenu:addItem( { _T( "Terminal" )                        , {|| oIde:execAction( ""               ) } } )
-#endif
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Options                                  */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Options"
-   oSubMenu:addItem( { _T( "Manage Themes" )                   , {|| oIde:oThemes:fetch()              } } )
-   oSubMenu:addItem( { _T( "Default Theme" )                   , {|| oIde:oThemes:setWrkTheme()        } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Codec                                    */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := hbide_buildCodecMenu( oIde, oMenuBar )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Help                                     */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Help"
-   oSubMenu:addItem( { _T( "About hbIDE   | vr-16x16.png" )    , {|| hbide_help( 1 ) } } )
-   oSubMenu:addItem( { _T( "About Harbour | hb-16x16.png" )    , {|| hbide_help( 4 ) } } )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { _T( "Harbour Users (Mailing Lists)   | list-users.png" )        , {|| hbide_help( 3 ) } } )
-   oSubMenu:addItem( { _T( "Harbour Developers (Mailing Lists) | list-developers.png" ), {|| hbide_help( 2 ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   Return Nil
-
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenuBar )
@@ -760,9 +585,7 @@ STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenuBar )
  * 27/12/2009 - 16:05:32 - vailtom
  */
 STATIC FUNCTION mnuNormalizeItem( cCaption )
-   LOCAL cKey
-   LOCAL cIco
-   LOCAL p
+   LOCAL cKey, cIco, p
 
    /* Retrieve and update the ICON name for this menu item */
    IF ( ( p := Rat( '|', cCaption ) ) != 00 )
@@ -789,7 +612,7 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
 
    /* Update the key shortcut for this menu item */
    IF ( ( p := Rat( ',', cCaption ) ) != 00 )
-      cKey := Substr( cCaption, p + 1 )
+      cKey     := Substr( cCaption, p + 1 )
       cCaption := Substr( cCaption, 1, p - 1 )
       cCaption := alltrim( cCaption )
 
@@ -912,9 +735,7 @@ FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
  * 03/01/2010 - 13:12:42
  */
 FUNCTION hbide_mnuFindItem( oIde, cCaption )
-   LOCAL oMenuBar
-   LOCAL oItem
-   LOCAL n, c
+   LOCAL oMenuBar, oItem, n, c
 
    IF Empty( oIde:oDlg )
       RETURN nil
@@ -938,14 +759,3 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_getAction( oIde )
-   LOCAL oAction
-
-   oAction := QAction():new( oIde:oDlg:oWidget )
-   oAction:setText( "Nnnnnew" )
-   oAction:setIcon( hb_DirBase() + "resources" + hb_OsPathSeparator() + "new.png" )
-   oAction:setShortcut( QKeySequence():new( "Ctrl+N" ) )
-
-   RETURN oAction
-
-/*----------------------------------------------------------------------*/

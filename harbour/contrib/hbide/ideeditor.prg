@@ -98,7 +98,106 @@ CLASS IdeEditsManager INHERIT IdeObject
 
    METHOD zoom()
 
+   METHOD isOpen()
+   METHOD reLoad()
+   METHOD buildEditor()
+
+   METHOD setSourceVisible()
+   METHOD setSourceVisibleByIndex()
+
+   METHOD getEditorBySource()
+   METHOD getEditorByTabPosition()
+   METHOD getEditorByIndex()
+
    ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+
+   aadd( ::aEdits, IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
+   LOCAL pTab, a_
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex < ::qTabWidget:count()
+      pTab := ::qTabWidget:widget( nIndex )
+      FOR EACH a_ IN ::aTabs
+         IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqualGcQtPointer( a_[ TAB_OTAB ]:oWidget:pPtr, pTab )
+            RETURN ::aTabs[ a_:__enumIndex(), TAB_OEDITOR ]
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getEditorByTabPosition( nPos )
+
+   IF hb_isNumeric( nPos ) .AND. nPos > 0 .AND. nPos <= len( ::aTabs )
+      IF !empty( ::aTabs[ nPos, TAB_OEDITOR ] )
+         RETURN ::aTabs[ nPos, TAB_OEDITOR ]
+      ENDIF
+   ENDIF
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getEditorBySource( cSource )
+   LOCAL n
+
+   cSource := hbide_pathNormalized( cSource, .t. )
+   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:pathNormalized == cSource } ) ) > 0
+      RETURN ::aTabs[ n, TAB_OEDITOR ]
+   ENDIF
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:reLoad( cSource )
+   LOCAL oEdit
+
+   IF hb_fileExists( cSource ) .AND. hbide_isValidText( cSource )
+      IF !empty( oEdit := ::getEditorBySource( cSource ) )
+         oEdit:qEdit:clear()
+         oEdit:qEdit:setPlainText( hb_memoread( hbide_pathToOSPath( cSource ) ) )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:isOpen( cSource )
+   RETURN !empty( ::getEditorBySource( cSource ) )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:setSourceVisible( cSource )
+   LOCAL oEdit
+
+   IF !empty( oEdit := ::getEditorBySource( cSource ) )
+      ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( oEdit:oTab:oWidget ) )
+      RETURN .t.
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex )
+
+   IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex  /* nIndex is 0 based */
+      ::qTabWidget:setCurrentIndex( nIndex )
+   ENDIF
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
@@ -277,18 +376,6 @@ METHOD IdeEditsManager:zoom( cKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-#if 0
-METHOD IdeEditsManager:()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:()
-
-   RETURN Self
-#endif
-/*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:printPreview()
    LOCAL qDlg
@@ -409,7 +496,9 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qDocument
    DATA   qHiliter
    DATA   sourceFile
+   DATA   pathNormalized
    DATA   qLayout
+
 
    DATA   nBlock                                  INIT   -1
    DATA   nColumn                                 INIT   -1
@@ -448,6 +537,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nVPos      := nVPos
    ::cTheme     := cTheme
    ::nID        := hbide_getNextUniqueID()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -461,12 +551,13 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    DEFAULT nVPos       TO ::nVPos
    DEFAULT cTheme      TO ::cTheme
 
-   ::oIde       := oIde
-   ::SourceFile := hbide_pathNormalized( cSourceFile, .F. )
-   ::nPos       := nPos
-   ::nHPos      := nHPos
-   ::nVPos      := nVPos
-   ::cTheme     := cTheme
+   ::oIde           := oIde
+   ::SourceFile     := hbide_pathNormalized( cSourceFile, .F. )
+   ::nPos           := nPos
+   ::nHPos          := nHPos
+   ::nVPos          := nVPos
+   ::cTheme         := cTheme
+   ::pathNormalized := hbide_pathNormalized( cSourceFile, .t. )
 
    hb_fNameSplit( cSourceFile, @::cPath, @::cFile, @::cExt )
 

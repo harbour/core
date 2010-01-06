@@ -81,8 +81,6 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD destroy()
 
    METHOD buildDialog()
-
-   METHOD buildMainMenu()
    METHOD buildStatusBar()
 
    METHOD buildDockWidgets()
@@ -159,14 +157,6 @@ METHOD IdeDocks:buildDialog()
 
    ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
    ::oDlg:Show()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildMainMenu()
-
-   buildMainMenu( ::oDlg, ::oIde )
 
    RETURN Self
 

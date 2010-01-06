@@ -722,8 +722,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
          ::qProcess := QProcess():new()
 
-         ::cFileOut := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".out" )
-         ::cFileErr := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".err" )
+         //::cFileOut := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".out" )
+         ::cFileOut := "xxx"
+         //::cFileErr := hbide_pathToOSPath( cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".err" )
+         ::cFileErr := "yyy"
 
          ::qProcess:setStandardOutputFile( ::cFileOut )
          ::qProcess:setStandardErrorFile( ::cFileErr )

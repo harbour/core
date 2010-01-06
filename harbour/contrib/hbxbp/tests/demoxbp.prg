@@ -94,8 +94,8 @@ STATIC oMLE
 
 PROCEDURE Main()
 
-   HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DESTRUTOR )            //  Exits cleanly
-   //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE )             //  Exits cleanly
+   //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DESTRUTOR )            //  Exits cleanly
+   HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE )             //  Exits cleanly
    //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE_LATER )       //  Exit with GPF
 
    //hb_threadStart( {|| _BuildADialog() } )

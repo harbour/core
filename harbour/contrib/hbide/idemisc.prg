@@ -114,11 +114,12 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
          ENDIF
       ENDIF
    NEXT
-
+hbide_dbg( 1001 )
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
    pAct   := qPop:exec_1( qPoint )
+hbide_dbg( 1002 )
    qAct   := QAction():configure( pAct )
-
+hbide_dbg( 1003 )
    IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
       FOR EACH a_ IN aPops
          IF hb_isObject( a_[ 1 ] )
@@ -133,19 +134,8 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
             ENDIF
          ENDIF
       NEXT
-      #if 0
-      IF hb_isObject( aPops[ i, 1 ] )
-         IF ( nAct := ascan( aPops, {|e_| e_[ 1 ]:text() == cAct } ) ) > 0
-            xRet := eval( aPops[ nAct,2 ] )
-         ENDIF
-      ELSE
-         IF ( nAct := ascan( aPops, {|e_| e_[ 1 ] == cAct } ) ) > 0
-            xRet := eval( aPops[ nAct,2 ] )
-         ENDIF
-      ENDIF
-      #endif
    ENDIF
-
+hbide_dbg( 1004 )
    qPop:pPtr := 0
 
    RETURN xRet
