@@ -84,6 +84,7 @@ typedef struct _HB_CONSRV
    int            firstFree;
    BOOL           stop;
    BOOL           rpc;
+   PHB_SYMB       rpcFunc;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -415,6 +416,16 @@ HB_FUNC( NETIO_RPC )
          if( HB_ISLOG( 2 ) )
             conn->rpc = hb_parl( 2 );
       }
+   }
+   hb_retl( fRPC );
+}
+
+HB_FUNC( NETIO_RPCFUNC )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+   if( conn )
+   {
+      conn->rpcFunc = hb_itemGetSymbol( hb_param( 2, HB_IT_SYMBOL ) );
    }
 }
 
@@ -858,55 +869,73 @@ HB_FUNC( NETIO_SERVER )
                            errCode = NETIO_ERR_NOT_EXISTS;
                         else if( uiMsg != NETIO_PROCIS )
                         {
-                           ULONG ulSize = size - size2;
-                           USHORT uiPCount = 0;
-
-                           data += size2;
-
-                           hb_vmPushDynSym( pDynSym );
-                           hb_vmPushNil();
-                           while( ulSize )
+                           if( hb_vmRequestReenter() )
                            {
-                              PHB_ITEM pItem = hb_itemDeserialize( &data, &ulSize );
-                              if( !pItem )
+                              ULONG ulSize = size - size2;
+                              USHORT uiPCount = 0;
+
+                              data += size2;
+
+                              if( conn->rpcFunc )
                               {
-                                 ulSize = 1;
-                                 break;
+                                 hb_vmPushSymbol( conn->rpcFunc );
+                                 hb_vmPushNil();
+                                 hb_vmPushDynSym( pDynSym );
+                                 ++uiPCount;
                               }
-                              ++uiPCount;
-                              hb_vmPush( pItem );
-                              hb_itemRelease( pItem );
-                           }
-                           if( ulSize )
-                           {
-                              errCode = NETIO_ERR_WRONG_PARAM;
-                              uiPCount += 2;
-                              do
-                                 hb_stackPop();
-                              while( --uiPCount );
+                              else
+                              {
+                                 hb_vmPushDynSym( pDynSym );
+                                 hb_vmPushNil();
+                              }
+                              while( ulSize )
+                              {
+                                 PHB_ITEM pItem = hb_itemDeserialize( &data, &ulSize );
+                                 if( !pItem )
+                                 {
+                                    ulSize = 1;
+                                    break;
+                                 }
+                                 ++uiPCount;
+                                 hb_vmPush( pItem );
+                                 hb_itemRelease( pItem );
+                              }
+                              if( ulSize )
+                              {
+                                 errCode = NETIO_ERR_WRONG_PARAM;
+                                 uiPCount += 2;
+                                 do
+                                    hb_stackPop();
+                                 while( --uiPCount );
+                              }
+                              else
+                              {
+                                 hb_vmProc( uiPCount );
+                                 if( uiMsg == NETIO_FUNC )
+                                 {
+                                    ULONG itmSize;
+                                    char * itmData = hb_itemSerialize( hb_stackReturnItem(), TRUE, &itmSize );
+                                    if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
+                                       msg = buffer;
+                                    else if( !ptr || itmSize > ( ULONG ) size - NETIO_MSGLEN )
+                                    {
+                                       if( ptr )
+                                          hb_xfree( ptr );
+                                       ptr = msg = ( BYTE * ) hb_xgrab( itmSize + NETIO_MSGLEN );
+                                    }
+                                    memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
+                                    hb_xfree( itmData );
+                                    len = itmSize;
+                                 }
+                              }
+                              hb_vmRequestRestore();
                            }
                            else
-                              hb_vmProc( uiPCount );
+                              errCode = NETIO_ERR_REFUSED;
                         }
                      }
                      if( errCode == 0 && !fNoAnswer )
                      {
-                        if( uiMsg == NETIO_FUNC )
-                        {
-                           ULONG itmSize;
-                           char * itmData = hb_itemSerialize( hb_stackReturnItem(), TRUE, &itmSize );
-                           if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
-                              msg = buffer;
-                           else if( !ptr || itmSize > ( ULONG ) size - NETIO_MSGLEN )
-                           {
-                              if( ptr )
-                                 hb_xfree( ptr );
-                              ptr = msg = ( BYTE * ) hb_xgrab( itmSize + NETIO_MSGLEN );
-                           }
-                           memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
-                           hb_xfree( itmData );
-                           len = itmSize;
-                        }
                         HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
                         HB_PUT_LE_UINT32( &msg[ 4 ], len );
                         memset( msg + 8, '\0', NETIO_MSGLEN - 8 );

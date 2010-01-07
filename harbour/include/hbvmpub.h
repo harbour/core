@@ -119,16 +119,16 @@ struct _HB_SYMB;
                                              ( double ) (p)->item.asLong.value : \
                                                         (p)->item.asDouble.value ) )
 
-#define HB_VM_ISFUNC( pSym ) ( ( pSym )->value.pFunPtr )
+#  define HB_VM_ISFUNC( pSym ) ( ( pSym )->value.pFunPtr )
 
-#define HB_VM_FUNCUNREF( pSym ) \
+#  define HB_VM_FUNCUNREF( pSym ) \
                do { \
                   if( ( ( pSym )->scope.value & HB_FS_DEFERRED ) && \
                       ( pSym )->pDynSym ) \
                      pSym = ( pSym )->pDynSym->pSymbol; \
                } while( 0 )
 
-#define HB_VM_EXECUTE( pSym ) \
+#  define HB_VM_EXECUTE( pSym ) \
                do { \
                   /* Running pCode dynamic function from .hrb? */ \
                   if( ( pSym )->scope.value & HB_FS_PCODEFUNC ) \
@@ -142,16 +142,16 @@ struct _HB_SYMB;
    typedef struct _HB_DYNS
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-#if !defined( HB_MT_VM )
+#  if !defined( HB_MT_VM )
       void *   pMemvar;          /* memvar pointer ( publics & privates ) */
       USHORT   uiArea;           /* Workarea number */
-#endif /* !HB_MT_VM */
+#  endif /* !HB_MT_VM */
       USHORT   uiSymNum;         /* dynamic symbol number */
-#if !defined( HB_NO_PROFILER )
+#  if !defined( HB_NO_PROFILER )
       ULONG    ulCalls;          /* profiler support */
       ULONG    ulTime;           /* profiler support */
       ULONG    ulRecurse;        /* profiler support */
-#endif /* !HB_NO_PROFILER */
+#  endif /* !HB_NO_PROFILER */
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
    /* pCode dynamic function - HRB */

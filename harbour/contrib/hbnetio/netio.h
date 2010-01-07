@@ -128,3 +128,4 @@
 #define NETIO_ERR_FILE_IO           0xff07
 #define NETIO_ERR_NOT_EXISTS        0xff08
 #define NETIO_ERR_UNSUPPORTED       0xff09
+#define NETIO_ERR_REFUSED           0xff10
