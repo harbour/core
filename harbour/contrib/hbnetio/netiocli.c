@@ -439,7 +439,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
    return conn;
 }
 
-static void s_netio_exit( void* cargo )
+static void s_netio_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -457,8 +457,10 @@ static void s_netio_exit( void* cargo )
    }
 }
 
-static void s_netio_init( void )
+static void s_netio_init( void * cargo )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( s_fInit )
    {
       hb_socketInit();
@@ -476,7 +478,7 @@ HB_FUNC( NETIO_CONNECT )
    int iPort = hb_parni( 2 ), iTimeOut = hb_parni( 3 );
    PHB_CONCLI conn;
 
-   s_netio_init();
+   s_netio_init( NULL );
 
    conn = s_fileConnect( NULL, pszServer, iPort, iTimeOut );
    if( conn )
@@ -962,7 +964,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
 #if defined( HB_NETIO_STARTUP_INIT )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_netio_init_ )
-   s_netio_init();
+   hb_vmAtInit( s_netio_init, NULL );
 HB_CALL_ON_STARTUP_END( _hb_file_netio_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
