@@ -58,20 +58,20 @@
 typedef struct
 {
    DWORD dwLastError;
-} HB_WINERRDATA, * PHB_WINERRDATA;
+} HB_WAPIERRDATA, * PHB_WAPIERRDATA;
 
-static HB_TSD_NEW( s_winerrData, sizeof( HB_WINERRDATA ), NULL, NULL );
+static HB_TSD_NEW( s_wapierrData, sizeof( HB_WAPIERRDATA ), NULL, NULL );
 
-void hbwin_SetLastError( DWORD dwLastError )
+void hbwapi_SetLastError( DWORD dwLastError )
 {
-   PHB_WINERRDATA pWinErrData = ( PHB_WINERRDATA ) hb_stackGetTSD( &s_winerrData );
+   PHB_WAPIERRDATA pWinErrData = ( PHB_WAPIERRDATA ) hb_stackGetTSD( &s_wapierrData );
 
    pWinErrData->dwLastError = dwLastError;
 }
 
-DWORD hbwin_GetLastError( void )
+DWORD hbwapi_GetLastError( void )
 {
-   PHB_WINERRDATA pWinErrData = ( PHB_WINERRDATA ) hb_stackGetTSD( &s_winerrData );
+   PHB_WAPIERRDATA pWinErrData = ( PHB_WAPIERRDATA ) hb_stackGetTSD( &s_wapierrData );
 
    return pWinErrData->dwLastError;
 }

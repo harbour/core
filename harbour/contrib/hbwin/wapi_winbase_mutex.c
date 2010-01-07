@@ -99,7 +99,7 @@ HB_FUNC( WAPI_CREATEMUTEX )
    void * hName;
    HANDLE hMutex = CreateMutex( ( LPSECURITY_ATTRIBUTES ) hb_parptr( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    wapi_mutex_ret( hMutex );
 
    hb_strfree( hName );
@@ -112,7 +112,7 @@ HB_FUNC( WAPI_OPENMUTEX )
    void * hName;
    HANDLE hMutex = OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    wapi_mutex_ret( hMutex );
 
    hb_strfree( hName );
@@ -129,7 +129,7 @@ HB_FUNC( WAPI_RELEASEMUTEX )
    if( hMutex )
    {
       BOOL bResult = ReleaseMutex( hMutex );
-      hbwin_SetLastError( GetLastError() );
+      hbwapi_SetLastError( GetLastError() );
       hb_retl( bResult );
    }
    else

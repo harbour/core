@@ -77,11 +77,4 @@
 #define WIN_COM_DBGQUEUE                     0x20
 #define WIN_COM_DBGALL                       0x3F
 
-HB_EXTERN_BEGIN
-
-HB_EXPORT void  hbwin_SetLastError( DWORD dwLastError );
-HB_EXPORT DWORD hbwin_GetLastError( void );
-
-HB_EXTERN_END
-
 #endif /* __HBWIN_H */

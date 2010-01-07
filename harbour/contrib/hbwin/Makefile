@@ -22,7 +22,6 @@ C_SOURCES := \
    wce_smsc.c \
    win_com.c \
    win_dll.c \
-   win_err.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \
@@ -30,6 +29,7 @@ C_SOURCES := \
    win_prn3.c \
    win_regc.c \
    wapi_commctrl.c \
+   wapi_err.c \
    wapi_shellapi.c \
    wapi_winbase.c \
    wapi_winbase_mutex.c \

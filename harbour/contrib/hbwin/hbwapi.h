@@ -53,8 +53,6 @@
 #ifndef __HBWAPI_H
 #define __HBWAPI_H
 
-#include "hbwin.h"
-
 #define wapi_par_WNDPROC( n )         ( ( WNDPROC          ) hb_parptr( n ) )
 #define wapi_par_WPARAM( n )          ( ( WPARAM           ) hb_parptr( n ) )
 #define wapi_par_LPARAM( n )          ( ( LPARAM           ) hb_parptr( n ) )
@@ -98,5 +96,12 @@
 #define wapi_ret_HRESULT( hr )        ( hb_retnint( hr ) )
 #define wapi_ret_LRESULT( hr )        ( hb_retnint( hr ) )
 #define wapi_ret_COLORREF( cr )       ( hb_retnint( cr ) )
+
+HB_EXTERN_BEGIN
+
+HB_EXPORT void  hbwapi_SetLastError( DWORD dwLastError );
+HB_EXPORT DWORD hbwapi_GetLastError( void );
+
+HB_EXTERN_END
 
 #endif /* __HBWAPI_H */

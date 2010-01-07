@@ -80,7 +80,7 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
 HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 {
    DWORD dwResult = WaitForSingleObject( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    hb_retnl( dwResult );
 }
 
@@ -97,7 +97,7 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
    dwLastError = GetLastError();
 #endif
 
-   hbwin_SetLastError( dwLastError );
+   hbwapi_SetLastError( dwLastError );
    hb_retnl( dwResult );
 }
 
@@ -117,7 +117,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
 
       dwResult = WaitForMultipleObjects( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) );
 
-      hbwin_SetLastError( GetLastError() );
+      hbwapi_SetLastError( GetLastError() );
       hb_retnl( dwResult );
 
       hb_xfree( handles );
@@ -143,7 +143,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
 
       dwResult = WaitForMultipleObjectsEx( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) );
 
-      hbwin_SetLastError( GetLastError() );
+      hbwapi_SetLastError( GetLastError() );
       hb_retnl( dwResult );
 
       hb_xfree( handles );
@@ -151,7 +151,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
    else
       hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
-   hbwin_SetLastError( ERROR_INVALID_FUNCTION );
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    hb_retnl( 0 );
 #endif
 }
@@ -172,20 +172,20 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
    dwLastError = GetLastError();
 #endif
 
-   hbwin_SetLastError( dwLastError );
+   hbwapi_SetLastError( dwLastError );
    wapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETLASTERROR )
 {
-   hb_retnl( ( long ) hbwin_GetLastError() );
+   hb_retnl( ( long ) hbwapi_GetLastError() );
 }
 
 HB_FUNC( WAPI_SETLASTERROR )
 {
    DWORD dwLastError = ( DWORD ) hb_parnl( 1 );
    SetLastError( dwLastError );
-   hbwin_SetLastError( dwLastError );
+   hbwapi_SetLastError( dwLastError );
 }
 
 HB_FUNC( WAPI_SETERRORMODE )
@@ -198,7 +198,7 @@ HB_FUNC( WAPI_LOADLIBRARY )
    void * hFileName;
    HMODULE hResult = LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) );
 
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    hb_retptr( hResult );
 
    hb_strfree( hFileName );
@@ -207,7 +207,7 @@ HB_FUNC( WAPI_LOADLIBRARY )
 HB_FUNC( WAPI_FREELIBRARY )
 {
    BOOL bResult = FreeLibrary( ( HMODULE ) hb_parptr( 1 ) );
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    hb_retl( bResult );
 }
 
@@ -222,7 +222,7 @@ HB_FUNC( WAPI_GETPROCADDRESS )
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
 #endif
-   hbwin_SetLastError( dwLastError );
+   hbwapi_SetLastError( dwLastError );
    hb_retptr( ( void * ) pProc );
 }
 
@@ -232,7 +232,7 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
    void * hModuleName;
    HMODULE hResult = GetModuleHandle( HB_PARSTR( 1, &hModuleName, NULL ) );
 
-   hbwin_SetLastError( GetLastError() );
+   hbwapi_SetLastError( GetLastError() );
    wapi_ret_HANDLE( hResult );
 
    hb_strfree( hModuleName );
