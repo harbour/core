@@ -159,6 +159,25 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
    return len == 0 ? rec : len;
 }
 
+static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
+{
+   long tosnd = HB_ZNET_BUFSIZE - pStream->wr.avail_out;
+   long snd = 0;
+
+   if( tosnd > 0 )
+   {
+      snd = hb_socketSend( sd, pStream->outbuf, tosnd, 0, timeout );
+      if( snd > 0 )
+      {
+         if( snd < tosnd )
+            memmove( pStream->outbuf, pStream->outbuf + snd, tosnd - snd );
+         pStream->wr.avail_out += ( uInt ) snd;
+         pStream->wr.next_out = pStream->outbuf + tosnd - snd;
+      }
+   }
+   return snd;
+}
+
 /* flush data in stream structure - return number of bytes left in the
  * buffer which were not sent
  */
@@ -171,14 +190,8 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
 
    while( pStream->wr.avail_out < HB_ZNET_BUFSIZE )
    {
-      long tosnd = HB_ZNET_BUFSIZE - pStream->wr.avail_out;
-      long snd = hb_socketSend( sd, pStream->outbuf, tosnd, 0, timeout );
-      if( snd <= 0 )
+      if( hb_znetStreamWrite( pStream, sd, timeout ) <= 0 )
          break;
-      if( snd < tosnd )
-         memmove( pStream->outbuf, pStream->outbuf + snd, tosnd - snd );
-      pStream->wr.avail_out += ( uInt ) snd;
-      pStream->wr.next_out = pStream->outbuf + tosnd - snd;
 
       if( pStream->err == Z_OK )
          pStream->err = deflate( &pStream->wr, Z_SYNC_FLUSH );
@@ -189,7 +202,7 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
 
 /* write data using stream structure
  */
-long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout )
+long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout, long * plast )
 {
    long snd = 0;
 
@@ -201,23 +214,17 @@ long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, lo
    {
       if( pStream->wr.avail_out == 0 )
       {
-         snd = hb_socketSend( sd, pStream->outbuf, HB_ZNET_BUFSIZE, 0, timeout );
+         snd = hb_znetStreamWrite( pStream, sd, timeout );
+         if( plast )
+            *plast = snd;
          if( snd <= 0 )
             break;
-         if( snd < HB_ZNET_BUFSIZE )
-            memmove( pStream->outbuf, pStream->outbuf + snd, HB_ZNET_BUFSIZE - snd );
-         pStream->wr.avail_out += ( uInt ) snd;
-         pStream->wr.next_out = pStream->outbuf + HB_ZNET_BUFSIZE - snd;
          snd = 0;
       }
       pStream->err = deflate( &pStream->wr, Z_NO_FLUSH );
       if( pStream->err != Z_OK )
          break;
    }
-
-   if( pStream->wr.avail_in == 0 || ( timeout >= 0 && timeout < 10000 &&
-       ( pStream->err == Z_OK || pStream->err == Z_STREAM_END ) ) )
-      hb_znetFlush( pStream, sd, timeout < 0 ? timeout : HB_MAX( timeout, 10000 ) );
 
    len -= pStream->wr.avail_in;
 
@@ -255,7 +262,7 @@ HB_FUNC( HB_INETCOMPRESS )
    {
       PHB_ZNETSTREAM pStream = hb_znetOpen( iLevel, iStrategy );
       if( pStream == NULL )
-         pItem = NULL;
+         pItem = NULL; /* to force RTE */
       if( ! hb_znetInetInitialize( pItem, pStream, hb_znetRead, hb_znetWrite,
                                    hb_znetFlush, hb_znetClose ) )
       {

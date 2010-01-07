@@ -64,7 +64,7 @@ HB_EXTERN_BEGIN
    typedef void * PHB_ZNETSTREAM;
 #endif
 
-typedef long ( * HB_INET_SFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, const void *, long, HB_LONG );
+typedef long ( * HB_INET_SFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, const void *, long, HB_LONG, long * );
 typedef long ( * HB_INET_RFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, void *, long, HB_LONG );
 typedef long ( * HB_INET_FFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, HB_LONG );
 typedef void ( * HB_INET_CFUNC ) ( PHB_ZNETSTREAM );
@@ -76,7 +76,7 @@ extern HB_EXPORT void   hb_znetClose( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT int    hb_znetError( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT long   hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_LONG timeout );
 extern HB_EXPORT long   hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout );
-extern HB_EXPORT long   hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout );
+extern HB_EXPORT long   hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout, long * plast );
 
 extern HB_EXPORT BOOL   hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
                                                HB_INET_RFUNC,

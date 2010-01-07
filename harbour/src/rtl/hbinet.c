@@ -723,10 +723,9 @@ static void s_inetRecvInternal( int iMode )
          socket->iError = HB_INET_ERR_CLOSEDCONN;
       else if( iLen < 0 )
       {
-         if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+         socket->iError = hb_socketGetError();
+         if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
             socket->iError = HB_INET_ERR_TIMEOUT;
-         else
-            socket->iError = hb_socketGetError();
       }
       hb_retni( iReceived > 0 ? iReceived : iLen );
    }
@@ -841,10 +840,9 @@ static void s_inetRecvPattern( const char ** patterns, int * patternsizes,
          socket->iError = HB_INET_ERR_CLOSEDCONN;
       else if( iLen < 0 )
       {
-         if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+         socket->iError = hb_socketGetError();
+         if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
             socket->iError = HB_INET_ERR_TIMEOUT;
-         else
-            socket->iError = hb_socketGetError();
       }
       else
       {
@@ -965,6 +963,7 @@ static void s_inetSendInternal( BOOL lAll )
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    const char * buffer;
    int iLen, iSent, iSend;
+   long lLastSnd = 1;
 
    if( socket == NULL || pBuffer == NULL )
       hb_inetErrRT();
@@ -987,9 +986,16 @@ static void s_inetSendInternal( BOOL lAll )
       while( iSent < iSend )
       {
          if( socket->sendFunc )
+         {
             iLen = socket->sendFunc( socket->stream, socket->sd,
                                      buffer + iSent, iSend - iSent,
-                                     socket->iTimeout );
+                                     socket->iTimeout, &lLastSnd );
+            if( lLastSnd <= 0 && iLen > 0 )
+            {
+               iSent += iLen;
+               iLen = ( int ) lLastSnd;
+            }
+         }
          else
             iLen = hb_socketSend( socket->sd, buffer + iSent, iSend - iSent,
                                   0, socket->iTimeout );
@@ -1001,14 +1007,24 @@ static void s_inetSendInternal( BOOL lAll )
          }
          else
          {
-            if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+            socket->iError = hb_socketGetError();
+            if( iLen == -1 && socket->iError == HB_SOCKET_ERR_TIMEOUT )
                socket->iError = HB_INET_ERR_TIMEOUT;
-            else
-               socket->iError = hb_socketGetError();
             break;
          }
       }
       socket->iCount = iSent;
+
+      if( socket->flushFunc && ( lLastSnd > 0 || ( lLastSnd == -1 &&
+             socket->iTimeout >= 0 && socket->iTimeout < 10000 &&
+             hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT ) ) )
+      {
+         /* TODO: safe information about unflushed data and try to call
+                  flush before entering receive wait sate */
+         socket->flushFunc( socket->stream, socket->sd, socket->iTimeout < 0 ?
+                            socket->iTimeout : HB_MAX( socket->iTimeout, 10000 ) );
+      }
+
       hb_retni( iSent > 0 ? iSent : iLen );
    }
 }
@@ -1127,10 +1143,9 @@ HB_FUNC( HB_INETACCEPT )
 
       if( incoming == HB_NO_SOCKET )
       {
-         if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+         socket->iError = hb_socketGetError();
+         if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
             socket->iError = HB_INET_ERR_TIMEOUT;
-         else
-            socket->iError = hb_socketGetError();
       }
       else
       {
@@ -1331,10 +1346,9 @@ HB_FUNC( HB_INETDGRAMSEND )
                                  socket->iTimeout );
          if( iLen == -1 )
          {
-            if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+            socket->iError = hb_socketGetError();
+            if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
                socket->iError = HB_INET_ERR_TIMEOUT;
-            else
-               socket->iError = hb_socketGetError();
          }
          else
          {
@@ -1398,10 +1412,9 @@ HB_FUNC( HB_INETDGRAMRECV )
          socket->iError = HB_INET_ERR_CLOSEDCONN;
       else if( iMax < 0 )
       {
-         if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+         socket->iError = hb_socketGetError();
+         if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
             socket->iError = HB_INET_ERR_TIMEOUT;
-         else
-            socket->iError = hb_socketGetError();
       }
       else
          socket->iError = HB_INET_ERR_OK;
