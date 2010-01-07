@@ -1,21 +1,20 @@
 [ PROPERTIES ]
 Type              = Executable
 Title             = Harbour-Qt IDE
-Location          = <IdeSrc>projects
-WorkingFolder     = <IdeSrc>projects
-DestinationFolder = <IdeSrc>projects
+Location          = E:/harbour/contrib/hbide/projects
+WorkingFolder     = E:/harbour/contrib/hbide/projects
+DestinationFolder = E:/harbour/contrib/hbide/projects
 Output            = hbide
-LaunchParams      =
-LaunchProgram     =
-
+LaunchParams      = 
+LaunchProgram     = 
+ 
 [ FLAGS ]
 ../../hbxbp/hbxbp.hbc
 -inc
 -w3
 -es2
--o<IdeSrc>projects\hbides
 -workdir=<IdeSrc>projects/${hb_plat}/${hb_comp}/hbide
-
+ 
 [ SOURCES ]
 #
 <IdeSrc>hbide.prg
@@ -36,7 +35,8 @@ LaunchProgram     =
 #
 <IdeSrc>hbide.ch
 <IdeSrc>hbide.ini
-
+ 
 [ METADATA ]
 #
 IdeSrc  =  hb_dirBase()
+ 

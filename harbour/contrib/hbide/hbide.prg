@@ -119,6 +119,8 @@ CLASS HbIde
    DATA   oED
    DATA   oAC
 
+   DATA   aMeta                                   INIT {}  /* Holds current definition only */
+
    DATA   mp1, mp2, oXbp, nEvent
    DATA   aTabs                                   INIT {}
    DATA   cProjIni
@@ -1142,10 +1144,11 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
-   CASE ::aProjData[ n, 2 ] == "Project Name"
-      aPrj := ::aProjData[ n, 5 ]
+   CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
+      aPrj := ::aProjData[ n, TRE_DATA ]
       cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+      cHbi := hbide_pathToOSPath( cHbi )
       //
       IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
          aadd( aPops, { "Set as Current"                 , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
@@ -1163,10 +1166,10 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       //
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
-   CASE ::aProjData[ n, 2 ] == "Source File"
+   CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
       //
 
-   CASE ::aProjData[ n, 2 ] == "Opened Source"
+   CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
       cSource := ::aProjData[ n, 5 ]
       n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ 5 ] ) == cSource } )
       //
@@ -1202,19 +1205,21 @@ METHOD HbIde:updateFuncList()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
-   LOCAL n, cAnchor
+   LOCAL n, cAnchor, oEdit
 
    mp1 := oListBox:getData()
    mp2 := oListBox:getItem( mp1 )
 
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
-      IF !( ::aTabs[ ::nCurTab, TAB_QEDIT ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
-         ::aTabs[ ::nCurTab, TAB_QEDIT ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
-
+      IF !empty( oEdit := ::oED:getEditorCurrent() )
+         IF !( oEdit:qEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+            oEdit:qEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+         ENDIF
       ENDIF
    ENDIF
    ::manageFocusInEditor()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1315,20 +1320,21 @@ METHOD HbIde:updateProjectMenu()
  */
 METHOD HbIde:updateTitleBar()
    LOCAL cTitle := "Harbour-Qt IDE"
+   LOCAL oEdit
 
    IF Empty( ::oDlg )
       RETURN Self
    ENDIF
 
    IF !Empty( ::cWrkProject )
-      cTitle += " - " + ::cWrkProject + ""
+      cTitle += " [" + ::cWrkProject + "] "
    ENDIF
 
-   IF ::nCurTab > 0 .AND. ::nCurTab <= Len( ::aTabs )
-      IF Empty( ::aTabs[ ::nCurTab, TAB_SOURCEFILE ] )
-         cTitle += " - [" + ::aTabs[ ::nCurTab, TAB_OTAB ]:Caption + "]"
+   IF !empty( oEdit := ::oED:getEditorCurrent() )
+      IF Empty( oEdit:sourceFile )
+         cTitle += "[" + oEdit:oTab:caption + "]"
       ELSE
-         cTitle += " - [" + ::aTabs[ ::nCurTab, TAB_SOURCEFILE ] + "]"
+         cTitle += "[" + oEdit:sourceFile + "]"
       ENDIF
    ENDIF
 

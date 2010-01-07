@@ -159,6 +159,30 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '     /*spacing: 3px;  spacing between items in the tool bar */               ' )
       aadd( txt_, ' }                                                                           ' )
 
+   CASE cWidget == "QTreeWidgetHB"
+
+      aadd( txt_, ' QTreeWidget {                                                               ' )
+      aadd( txt_, '     alternate-background-color: yellow;                                     ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget {                                                               ' )
+      aadd( txt_, '     show-decoration-selected: 1;                                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:alternate {                                               ' )
+      aadd( txt_, '     background: #EEEEEE;                                                    ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected {                                                ' )
+      aadd( txt_, '     border: 1px solid #6a6ea9;                                              ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected:!active {                                        ' )
+      aadd( txt_, '     background: rgba( 255, 127, 127, 255 );                                 ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:selected:active {                                         ' )
+      aadd( txt_, '     background: rgba( 127,127,255, 255 );                                   ' )
+      aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, ' QTreeWidget::item:hover {                                                   ' )
+      aadd( txt_, '     background: rgba( 210,201,210,255 );                                    ' )
+      aadd( txt_, '}                                                                            ' )
+
    CASE cWidget == "QTreeWidget"
 
       aadd( txt_, ' QTreeWidget {                                                               ' )

@@ -112,10 +112,10 @@ FUNCTION hbide_saveINI( oIde )
          qVScr     := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
          qCursor   := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
-         aadd( txt_, oIde:aTabs[ nTab, TAB_SOURCEFILE ] + "," + ;
-                     hb_ntos( qCursor:position() )      + "," + ;
-                     hb_ntos( qHScr:value() )           + "," + ;
-                     hb_ntos( qVScr:value() )           + "," + ;
+         aadd( txt_, oEdit:sourceFile + "," + ;
+                     hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos ) )+ "," + ;
+                     hb_ntos( iif( oEdit:lLoaded, qHScr:value(), oEdit:nHPos ) )    + "," + ;
+                     hb_ntos( iif( oEdit:lLoaded, qVScr:value(), oEdit:nVPos ) )    + "," + ;
                      oEdit:cTheme                       + ","   )
       ENDIF
    NEXT

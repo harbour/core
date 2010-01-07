@@ -71,6 +71,19 @@
 
 /*----------------------------------------------------------------------*/
 
+#define CHN_BGN                                   1
+#define CHN_OUT                                   2
+#define CHN_ERR                                   3
+#define CHN_FIN                                   4
+#define CHN_STT                                   5
+#define CHN_ERE                                   6
+#define CHN_CLO                                   7
+#define CHN_BYT                                   8
+#define CHN_RCF                                   9
+#define CHN_REA                                   10
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeProjManager INHERIT IdeObject
 
    DATA   cSaveTo
@@ -78,6 +91,9 @@ CLASS IdeProjManager INHERIT IdeObject
 
    DATA   qProcess
    DATA   nStarted                                INIT 0
+
+   DATA   lLaunch                                 INIT .f.
+   DATA   cProjectInProcess                       INIT ""
 
    METHOD new()
    METHOD create()
@@ -138,15 +154,15 @@ METHOD IdeProjManager:populate()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:loadProperties( cProject, lNew, lFetch, lUpdateTree )
+METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    LOCAL n, t, cWrkProject
 
-   DEFAULT cProject    TO ""
-   DEFAULT lNew        TO .F.
-   DEFAULT lFetch      TO .T.
-   DEFAULT lUpdateTree TO .F.
+   DEFAULT cProjFileName TO ""
+   DEFAULT lNew          TO .F.
+   DEFAULT lFetch        TO .T.
+   DEFAULT lUpdateTree   TO .F.
 
-   /* Never touch original project file sent */
+   /* Never touch original project file name */
 
    ::aPrjProps := {}
    ::cSaveTo   := ""
@@ -154,40 +170,41 @@ METHOD IdeProjManager:loadProperties( cProject, lNew, lFetch, lUpdateTree )
    IF lNew
       lFetch := .t.
    ELSE
-      IF empty( cProject )
-         cProject := hbide_fetchAFile( ::oDlg, "Load Project...", { { "Harbour IDE Projects (*.hbi)", "*.hbi" } } )
+      IF empty( cProjFileName )
+         cProjFileName := hbide_fetchAFile( ::oDlg, "Load Project...", { { "Harbour IDE Projects (*.hbi)", "*.hbi" } } )
       ENDIF
-      IF empty( cProject )
+      IF empty( cProjFileName )
          RETURN Self
       ENDIF
    ENDIF
 
    n := 0
-   IF !empty( cProject )
-      cWrkProject := hbide_pathNormalized( cProject )                                 /* normalize project name */
+   IF !empty( cProjFileName )
+      cWrkProject := hbide_pathNormalized( cProjFileName )                                 /* normalize project name */
       IF ( n := ascan( ::aProjects, {|e_| hbide_pathNormalized( e_[ 1 ] ) == cWrkProject } ) ) > 0
          ::aPrjProps := ::aProjects[ n, 3 ]
          t := ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
       ENDIF
       IF empty( ::aPrjProps )
-         ::aPrjProps := hbide_fetchHbiStructFromFile( hbide_pathToOSPath( cProject ) )
+         ::aPrjProps := hbide_fetchHbiStructFromFile( hbide_pathToOSPath( cProjFileName ) )
       ENDIF
+      ::oIde:aMeta := ::aPrjProps[ PRJ_PRP_METADATA, 2 ]
    ENDIF
 
    IF lFetch
       ::fetchProperties()
       IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
-         cProject := ::cSaveTo
-         ::aPrjProps := hbide_fetchHbiStructFromFile( hbide_pathToOSPath( cProject ) ) /* Reload from file */
+         cProjFileName := ::cSaveTo
+         ::aPrjProps := hbide_fetchHbiStructFromFile( hbide_pathToOSPath( cProjFileName ) ) /* Reload from file */
       ENDIF
    ENDIF
 
    IF n == 0
-      aadd( ::oIde:aProjects, { lower( cProject ), cProject, aclone( ::aPrjProps ) } )
+      aadd( ::oIde:aProjects, { lower( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
       IF lUpdateTree
          ::updateProjectTree( ::aPrjProps )
       ENDIF
-      hbide_mnuAddFileToMRU( ::oIde, cProject, INI_RECENTPROJECTS )
+      hbide_mnuAddFileToMRU( ::oIde, cProjFileName, INI_RECENTPROJECTS )
    ELSE
       ::aProjects[ n, 3 ] := aclone( ::aPrjProps )
       IF lUpdateTree
@@ -473,6 +490,7 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIde, ::cWrkProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
             hbide_expandChildren( ::oIde, oItem )
+            ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
       ENDIF
    ENDIF
@@ -616,13 +634,16 @@ METHOD IdeProjManager:buildProjectViaQt( cProject )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList
+   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList, qListSets
    LOCAL cTmp, nResult, nSeconds, cTargetFN, cPath, cFileName, lDelHbp
 
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
    DEFAULT lPPO      TO .F.
    DEFAULT lViaQt    TO .F.
+
+   ::lLaunch := lLaunch
+   ::cProjectInProcess := cProject
 
    lDelHbp := lPPO
 
@@ -721,32 +742,32 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::qProcess := QProcess():new()
          ::qProcess:setReadChannel( 1 )
 
-         #define CHN_BGN 1
-         #define CHN_OUT 2
-         #define CHN_ERR 3
-         #define CHN_FIN 4
-         #define CHN_STT 5
-         #define CHN_ERE 6
-         #define CHN_CLO 7
-         #define CHN_BYT 8
-         #define CHN_RCF 9
-         #define CHN_REA 10
-
-         //Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::readProcessInfo( CHN_RCF, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::readProcessInfo( CHN_CLO, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::readProcessInfo( CHN_BYT, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::readProcessInfo( CHN_STT, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::readProcessInfo( CHN_ERE, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i|   ::readProcessInfo( CHN_BGN, o, i ) } )
+         Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::readProcessInfo( CHN_BGN, o, i ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( CHN_OUT, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( CHN_ERR, i, o ) } )
          Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( CHN_FIN, i, ii, o ) } )
 
-
          ::oOutputResult:oWidget:clear()
          ::oOutputResult:oWidget:append( cTmp )
          ::nStarted := seconds()
+
+         #if 0  /* Mechanism to supply environment variables to called process */
+                /* I do not know nixes but assume that Qt must be issueing proper */
+                /* shell command for the target OS to set them. */
+                /* If I am not wrong, HBMK2 can have these variables alread set */
+                /* and hence developer can choose any compiler of his choice. */
+                /*                                                                */
+                /* Actually, this was the intension in hbIDE.env I commited in IDE root */
+         qListSets := QStringList():new()
+         qListSets:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
+         ::qProcess:setEnvironment( qListSets )
+         #endif
 
          ::qProcess:start( "hbmk2", qStringList )
 
@@ -789,7 +810,7 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
    nSize := 16384
 
    DO CASE
-   CASE nMode == CHN_BGN
+   CASE nMode == CHN_REA   // ReadReady()
 
    CASE nMode == CHN_OUT
       ::qProcess:setReadChannel( 0 )
@@ -823,6 +844,9 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
       ::qProcess:pPtr := 0
       ::qProcess := NIL
 
+      IF ::lLaunch
+         ::launchProject( ::cProjectInProcess )
+      ENDIF
    ENDCASE
 
    RETURN nil
@@ -833,25 +857,20 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:LaunchProject( cProject )
-   LOCAL qProcess
-   LOCAL cTargetFN
-   LOCAL cTmp, aPrj, n
+   LOCAL qProcess, cTargetFN, cTmp, aPrj, n
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
    ENDIF
-
    IF empty( cProject )
       RETURN Self
    ENDIF
 
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
+   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } )
    aPrj := ::aProjects[ n,3 ]
 
    cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
-   cTargetFN := StrTran( cTargetFN, '/', ::pathSep )
-   cTargetFN := StrTran( cTargetFN, '\', ::pathSep )
-
+   cTargetFN := hbide_pathToOSPath( cTargetFN )
 #ifdef __PLATFORM__WINDOWS
    IF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
       cTargetFN += '.exe'
@@ -869,8 +888,10 @@ METHOD IdeProjManager:LaunchProject( cProject )
       qProcess:waitForStarted()
       qProcess:pPtr := 0
       qProcess := NIL
+
    ELSE
       cTmp := "Launch application " + cTargetFN + "... (not applicable)"
+
    ENDIF
 
    ::oOutputResult:oWidget:append( cTmp )

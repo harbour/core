@@ -105,8 +105,10 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD setSourceVisible()
    METHOD setSourceVisibleByIndex()
 
+   METHOD getEditorCurrent()
    METHOD getEditorBySource()
    METHOD getEditorByTabPosition()
+   METHOD getEditorByTabObject()
    METHOD getEditorByIndex()
 
    ENDCLASS
@@ -121,6 +123,20 @@ METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:getEditorCurrent()
+   LOCAL qTab, nTab
+
+   IF ::qTabWidget:count() > 0
+      qTab := ::qTabWidget:currentWidget()
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+         RETURN ::aTabs[ nTab, TAB_OEDITOR ]
+      ENDIF
+   ENDIF
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
    LOCAL pTab, a_
 
@@ -131,6 +147,19 @@ METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
             RETURN ::aTabs[ a_:__enumIndex(), TAB_OEDITOR ]
          ENDIF
       NEXT
+   ENDIF
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getEditorByTabObject( oTab )
+   LOCAL nPos
+
+   IF hb_isObject( oTab )
+      IF ( nPos := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oTab } ) ) > 0
+         RETURN ::aTabs[ nPos, TAB_OEDITOR ]
+      ENDIF
    ENDIF
 
    RETURN Nil
@@ -180,10 +209,15 @@ METHOD IdeEditsManager:isOpen( cSource )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:setSourceVisible( cSource )
-   LOCAL oEdit
+   LOCAL oEdit, nIndex
 
    IF !empty( oEdit := ::getEditorBySource( cSource ) )
-      ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( oEdit:oTab:oWidget ) )
+      nIndex := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
+      IF ::qTabWidget:currentIndex() != nIndex
+         ::qTabWidget:setCurrentIndex( nIndex )
+      ELSE
+         oEdit:setDocumentProperties()
+      ENDIF
       RETURN .t.
    ENDIF
 
@@ -194,7 +228,11 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
 METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex )
 
    IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex  /* nIndex is 0 based */
-      ::qTabWidget:setCurrentIndex( nIndex )
+      IF ::qTabWidget:currentIndex() != nIndex
+         ::qTabWidget:setCurrentIndex( nIndex )
+      ELSE
+         ::getEditorByIndex( nIndex ):setDocumentProperties()
+      ENDIF
    ENDIF
 
    RETURN .f.
@@ -498,7 +536,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   sourceFile
    DATA   pathNormalized
    DATA   qLayout
-
+   DATA   lLoaded                                 INIT   .F.
 
    DATA   nBlock                                  INIT   -1
    DATA   nColumn                                 INIT   -1
@@ -523,6 +561,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD onBlockCountChanged()
    METHOD setTabImage()
    METHOD applyTheme()
+   METHOD setDocumentProperties()
 
    ENDCLASS
 
@@ -567,7 +606,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::buildTabPage( ::sourceFile )
 
    ::qEdit := QPlainTextEdit():new( ::oTab:oWidget )
-   ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:setFont( ::oFont:oWidget )
    ::qEdit:ensureCursorVisible()
@@ -591,33 +629,65 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    Qt_Slots_Connect( ::pSlots, ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
 
    ::qEdit:show()
-
-   /* Restore State */
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-   ::qCursor:setPosition( ::nPos )
-   ::qEdit:setTextCursor( ::qCursor )
-   //
-   QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
-   //
-   QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
 
    /* Populate Tabs Array */
    aadd( ::aTabs, { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self } )
 
    ::oIde:nCurTab := len( ::oIde:aTabs )
 
-   ::oIde:aSources := { ::sourceFile }
-   ::oIde:createTags()
-   ::oIde:updateFuncList()
+   /* Populate right at creation */
    ::oIde:addSourceInTree( ::sourceFile )
-   ::oIde:updateTitleBar()
-   ::oIde:manageFocusInEditor()
-
-   ::nBlock  := ::qCursor:blockNumber()
-   ::nColumn := ::qCursor:columnNumber()
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
    ::setTabImage()
+
+   hbide_dbg( "   ." )
+   hbide_dbg( ".......................................", cSourceFile )
+   hbide_dbg( "   ." )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:setDocumentProperties()
+   LOCAL qCursor
+
+   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   IF !( ::lLoaded )       /* First Time */
+      ::lLoaded := .T.
+      ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+      qCursor:setPosition( ::nPos )
+      ::qEdit:setTextCursor( qCursor )
+      QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
+      QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
+   ENDIF
+
+   ::nBlock  := qCursor:blockNumber()
+   ::nColumn := qCursor:columnNumber()
+
+   ::oIde:aSources := { ::sourceFile }
+   ::oIde:createTags()
+   ::oIde:updateFuncList()
+   ::oIde:updateTitleBar()
+   ::dispEditInfo()
+
+   ::oIde:manageFocusInEditor()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
+   LOCAL oEdit
+
+   HB_SYMBOL_UNUSED( mp1 )
+
+   IF !empty( oEdit := ::oED:getEditorByTabObject( oXbp ) )
+      ::oIde:nCurTab := mp2
+      oEdit:setDocumentProperties()
+   ENDIF
 
    RETURN Self
 
@@ -734,24 +804,6 @@ METHOD IdeEditor:buildTabPage( cSource )
 
    ::oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
    ::oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
-
-   HB_SYMBOL_UNUSED( mp1 )
-
-   IF ( mp2 := ascan( ::oIde:aTabs, {|e_| e_[ TAB_OTAB ] == oXbp } ) ) > 0
-      ::oIde:nCurTab  := mp2
-      ::oIde:aSources := { ::oIde:aTabs[ ::oIde:nCurTab, TAB_SOURCEFILE ] }
-      ::oIde:createTags()
-      ::oIde:updateFuncList()
-      ::aTabs[ mp2, TAB_OEDITOR ]:dispEditInfo()
-      ::oIde:updateTitleBar()
-      ::oIde:manageFocusInEditor()
-   ENDIF
 
    RETURN Self
 

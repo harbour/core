@@ -195,7 +195,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
 
- * ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
 
    //::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oProjTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }

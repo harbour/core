@@ -84,6 +84,8 @@ CLASS IdeObject
    ACCESS oDK                                     INLINE ::oIde:oDK
    ACCESS oAC                                     INLINE ::oIde:oAC
 
+   ACCESS aMeta                                   INLINE ::oIde:aMeta
+
    ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
    ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget

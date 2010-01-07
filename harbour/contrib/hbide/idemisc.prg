@@ -543,8 +543,8 @@ FUNCTION hbide_pathNormalized( cPath, lLower )
 
 FUNCTION hbide_pathToOSPath( cPath )
 
-   cPath := strtran( cPath, "/", hb_osPathSeparator() )
-   cPath := strtran( cPath, "\", hb_osPathSeparator() )
+   cPath := strtran( cPath, "/" , hb_osPathSeparator() )
+   cPath := strtran( cPath, "\" , hb_osPathSeparator() )
 
    RETURN cPath
 
