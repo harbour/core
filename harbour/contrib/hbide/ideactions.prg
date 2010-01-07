@@ -309,7 +309,7 @@ METHOD IdeActions:buildToolBar()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeActions:buildMainMenu()
-   LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f, lEmpty
+   LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f
    LOCAL oIde := ::oIde
 
    oMenuBar := ::oDlg:MenuBar()
@@ -336,16 +336,15 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
    oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTFILES, nIndex ], ;
                                                 oIde:editSource( cFile ) }
-   lEmpty := .T.
-   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
-       f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
-       lEmpty := .F.
-       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f ), nil } )
-       IF !hb_FileExists(f)
-          oSubMenu2:disableItem( n )
-       ENDIF
-   NEXT
-   IF lEmpty
+   IF !empty( oIde:aIni[ INI_RECENTFILES ] )
+      FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
+         f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
+         oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f ), nil } )
+         IF !hb_FileExists( f )
+            oSubMenu2:disableItem( n )
+         ENDIF
+      NEXT
+   ELSE
       oSubMenu2:addItem( { _T( "** No recent files found **" )   , nil } )
       oSubMenu2:disableItem( 1 )
    ENDIF
@@ -354,16 +353,15 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
    oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTPROJECTS, nIndex ], ;
                                                 ::oPM:loadProperties( cFile, .F., .F., .T. ) }
-   lEmpty := .T.
-   FOR n := 1 TO Len( oIde:aIni[ INI_RECENTPROJECTS ] )
-       f := hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
-       lEmpty := .F.
-       oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f )   , nil } )
-       IF !hb_FileExists(f)
-          oSubMenu2:disableItem( n )
-       ENDIF
-   NEXT
-   IF lEmpty
+   IF !empty( oIde:aIni[ INI_RECENTPROJECTS ] )
+      FOR n := 1 TO Len( oIde:aIni[ INI_RECENTPROJECTS ] )
+          f := hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
+          oSubMenu2:addItem( { _T( '~' + hb_NumToHex( n ) + '. ' + f )   , nil } )
+          IF !hb_FileExists( f )
+             oSubMenu2:disableItem( n )
+          ENDIF
+      NEXT
+   ELSE
       oSubMenu2:addItem( { _T( "** No recent projects found **" )   , nil } )
       oSubMenu2:disableItem( 1 )
    ENDIF

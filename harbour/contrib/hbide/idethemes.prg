@@ -350,12 +350,12 @@ METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
 METHOD IdeThemes:setSyntaxFormat( qHiliter, cName, aAttr )
 
    qHiliter:setHBFormat( cName, ::buildSyntaxFormat( aAttr ) )
-   qHiliter:rehighlight()
+//   qHiliter:rehighlight()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+/*                         setSyntaxHilighting                          */
 METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    LOCAL a_, aAttr, qHiliter
 
@@ -369,6 +369,8 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    HB_SYMBOL_UNUSED( lNew )
 
+   ::setForeBackGround( qEdit, cTheme )
+
    qHiliter := HBQSyntaxHighlighter():new( qEdit:document() )
 
    FOR EACH a_ IN ::aPatterns
@@ -377,7 +379,6 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
       ENDIF
    NEXT
    ::setMultiLineCommentRule( qHiliter, cTheme )
-   ::setForeBackGround( qEdit, cTheme )
 
    RETURN qHiliter
 
@@ -532,8 +533,8 @@ METHOD IdeThemes:updateColor()
       ::qEdit:setStyleSheet( s )
 
    ELSEIF aAttr[ 1 ] == "CommentsAndRemarks"
-      ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
       ::setMultiLineCommentRule( ::qHiliter, ::aThemes[ ::nCurTheme, 1 ] )
+      ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
 
    ELSE
       ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
@@ -554,6 +555,7 @@ METHOD IdeThemes:updateAttribute( nAttr, iState )
    ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, nAttr ] := ( iState == 2 )
 
    ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
+   ::qHiliter:rehighlight()
 
    RETURN Self
 

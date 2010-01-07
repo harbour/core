@@ -220,6 +220,7 @@ CLASS HbIde
    METHOD manageProjectContext()
 
    METHOD loadSources()
+   METHOD openSource()
    METHOD editSource()
    METHOD selectSource()
    METHOD closeSource()
@@ -415,7 +416,7 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:execAction( cKey )
-   LOCAL aPrj, cHbi, cTmp, n, aSrc
+   LOCAL aPrj, cHbi, cTmp, n
 
    DO CASE
    CASE cKey == "Exit"
@@ -461,13 +462,11 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "New"
       ::editSource( '' )
    CASE cKey == "Open"
-      IF !empty( aSrc := ::selectSource( "openmany" ) )
-         aEval( aSrc, {|e| ::editSource( e ) } )
-      ENDIF
+      ::openSource()
    CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), , .f. )
+      ::saveSource( ::getCurrentTab(), .f., .f. )
    CASE cKey == "SaveAs"
-      ::saveSourceAs( ::getCurrentTab(), , .t. )
+      ::saveSource( ::getCurrentTab(), .t., .t. )
    CASE cKey == "SaveAll"
       ::saveAllSources()
    CASE cKey == "SaveExit"
@@ -596,7 +595,8 @@ METHOD HbIde:loadSources()
 
    IF !empty( ::aIni[ INI_FILES ] )
       FOR EACH a_ IN ::aIni[ INI_FILES ]
-         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ] )
+         /*            File     nPos     nVPos    nHPos    cTheme  lAlert lVisible */
+         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], .t., .f. )
       NEXT
       ::oED:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
    ENDIF
@@ -677,9 +677,10 @@ METHOD HbIde:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert )
+METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisible )
 
-   DEFAULT lAlert TO .T.
+   DEFAULT lAlert   TO .T.
+   DEFAULT lVisible TO .T.
 
    IF !Empty( cSourceFile )
       IF !( hbide_isValidText( cSourceFile ) )
@@ -706,6 +707,9 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert )
    DEFAULT nVPos TO 0
 
    ::oED:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   IF lVisible
+      ::oED:setSourceVisible( cSourceFile )
+   ENDIF
 
    IF !Empty( cSourceFile )
       hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
@@ -852,6 +856,21 @@ METHOD HbIde:revertSource( nTab )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:openSource()
+   LOCAL aSrc, cSource
+
+   hbide_dbg( "openSource()" )
+
+   IF !empty( aSrc := ::selectSource( "openmany" ) )
+      FOR EACH cSource IN aSrc
+         ::editSource( cSource )
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:selectSource( cMode, cFile, cTitle )
    LOCAL oDlg, cPath
 
@@ -872,7 +891,7 @@ METHOD HbIde:selectSource( cMode, cFile, cTitle )
       cFile := oDlg:open( , , .t. )
 
    ELSEIF cMode == "save"
-      oDlg:title       := iif( !hb_isChar(cTitle), "Save as...", cTitle )
+      oDlg:title       := iif( !hb_isChar( cTitle ), "Save as...", cTitle )
       oDlg:center      := .t.
       oDlg:defExtension:= 'prg'
 

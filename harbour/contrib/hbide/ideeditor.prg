@@ -140,7 +140,7 @@ METHOD IdeEditsManager:getEditorCurrent()
 METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
    LOCAL pTab, a_
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex < ::qTabWidget:count()
+   IF hb_isNumeric( nIndex ) .AND. nIndex >= 0 .AND. nIndex < ::qTabWidget:count()
       pTab := ::qTabWidget:widget( nIndex )
       FOR EACH a_ IN ::aTabs
          IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqualGcQtPointer( a_[ TAB_OTAB ]:oWidget:pPtr, pTab )
@@ -225,14 +225,11 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex )
+METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
 
-   IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex  /* nIndex is 0 based */
-      IF ::qTabWidget:currentIndex() != nIndex
-         ::qTabWidget:setCurrentIndex( nIndex )
-      ELSE
-         ::getEditorByIndex( nIndex ):setDocumentProperties()
-      ENDIF
+   IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex
+      ::qTabWidget:setCurrentIndex( nIndex )
+      ::getEditorByIndex( nIndex ):setDocumentProperties()
    ENDIF
 
    RETURN .f.
@@ -559,6 +556,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD closeTab()
    METHOD dispEditInfo()
    METHOD onBlockCountChanged()
+   METHOD onContentsChanged()
    METHOD setTabImage()
    METHOD applyTheme()
    METHOD setDocumentProperties()
@@ -627,6 +625,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    Qt_Slots_Connect( ::pSlots, ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
    Qt_Slots_Connect( ::pSlots, ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
    Qt_Slots_Connect( ::pSlots, ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qDocument, "contentsChanged()"      , {|| ::onContentsChanged() } )
 
    ::qEdit:show()
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
@@ -642,10 +641,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
    ::setTabImage()
 
-   hbide_dbg( "   ." )
-   hbide_dbg( ".......................................", cSourceFile )
-   hbide_dbg( "   ." )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -653,15 +648,22 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 METHOD IdeEditor:setDocumentProperties()
    LOCAL qCursor
 
+   hbide_dbg( "   ." )
+
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
+   hbide_dbg( "......................................." )
+
       ::lLoaded := .T.
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
       QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
       QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
+
+   hbide_dbg( "........................................................" )
+
    ENDIF
 
    ::nBlock  := qCursor:blockNumber()
@@ -674,6 +676,8 @@ METHOD IdeEditor:setDocumentProperties()
    ::dispEditInfo()
 
    ::oIde:manageFocusInEditor()
+
+   hbide_dbg( "   ." )
 
    RETURN Self
 
@@ -822,6 +826,14 @@ METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
    IF !Empty( mp2 )
       ::oIde:closeSource( mp2 )
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:onContentsChanged()
+
+hbide_dbg( "onContentsChanged()" )
 
    RETURN Self
 
