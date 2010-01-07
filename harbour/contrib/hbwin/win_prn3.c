@@ -204,6 +204,9 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             return HB_FALSE;
          }
 
+         /* TOFIX: Use safe string functions instead of lstrlen(), lstrcpy() and lstrcat().
+                   [vszakats] */
+
          /* Allocate buffer big enough for concatenated string.
             String will be in form "printername,drivername,portname". */
          pBuffer = ( LPTSTR ) hb_xgrab( ( lstrlen( lpPrinterName ) +
@@ -217,8 +220,10 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          }
 
          /* Build string in form "printername,drivername,portname". */
-         lstrcpy( pBuffer, lpPrinterName );  lstrcat( pBuffer, TEXT( "," ) );
-         lstrcat( pBuffer, ppi2->pDriverName );  lstrcat( pBuffer, TEXT( "," ) );
+         lstrcpy( pBuffer, lpPrinterName );
+         lstrcat( pBuffer, TEXT( "," ) );
+         lstrcat( pBuffer, ppi2->pDriverName );
+         lstrcat( pBuffer, TEXT( "," ) );
          lstrcat( pBuffer, ppi2->pPortName );
 
          /* Set the default printer in Win.ini and registry. */

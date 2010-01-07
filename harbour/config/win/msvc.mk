@@ -22,7 +22,7 @@ CC_OUT := -Fo
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
-CFLAGS += -nologo -Gs
+CFLAGS += -nologo
 
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC

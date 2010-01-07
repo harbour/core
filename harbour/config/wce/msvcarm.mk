@@ -50,7 +50,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
       CFLAGS += -Oxsb1 -EHsc -YX -GF
    else
-      CFLAGS += -Od -Os -Gy -GS- -EHsc-
+      CFLAGS += -Od -Os -Gy -EHsc-
    endif
 endif
 

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OEM <-> ANSI string conversion functions (Windows specific, Xbase++ ext.)
  *
- * Copyright 1999-2007 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,12 +65,23 @@ HB_FUNC( HB_ANSITOOEM )
    if( pString )
 #if defined( HB_OS_WIN )
    {
-      DWORD ulLen = hb_itemGetCLen( pString );
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
+      int nLen = hb_itemGetCLen( pString );
+      const char * pszSrc = hb_itemGetCPtr( pString );
 
-      CharToOemBuffA( hb_itemGetCPtr( pString ), pszDst, ulLen );
+      int nWideLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
 
-      hb_retclen_buffer( pszDst, ulLen );
+      char * pszDst;
+
+      MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+	  WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+      hb_retclen_buffer( pszDst, nLen );
    }
 #else
       hb_itemReturn( pString );
@@ -86,12 +97,23 @@ HB_FUNC( HB_OEMTOANSI )
    if( pString )
 #if defined( HB_OS_WIN )
    {
-      DWORD ulLen = hb_itemGetCLen( pString );
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
+      int nLen = hb_itemGetCLen( pString );
+      const char * pszSrc = hb_itemGetCPtr( pString );
 
-      OemToCharBuffA( hb_itemGetCPtr( pString ), pszDst, ulLen );
+      int nWideLen = MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
 
-      hb_retclen_buffer( pszDst, ulLen );
+      char * pszDst;
+
+      MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+	  WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+      hb_retclen_buffer( pszDst, nLen );
    }
 #else
       hb_itemReturn( pString );

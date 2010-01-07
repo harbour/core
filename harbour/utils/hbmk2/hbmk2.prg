@@ -3057,11 +3057,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          nCmd_Esc := _ESC_DBLQUOTE
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
-         cOpt_CompC := "-nologo -c -Gs"
+         cOpt_CompC := "-nologo -c"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
                IF nCCompVer >= 800
-                  cOpt_CompC += " -Od -Os -Gy -GS- -Gm -Zi -GR-"
+                  cOpt_CompC += " -Od -Os -Gy -Gm -Zi -GR-"
                ELSE
                   cOpt_CompC += " -Oxsb1 -YX -GF"
                ENDIF

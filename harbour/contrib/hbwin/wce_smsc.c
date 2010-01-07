@@ -69,40 +69,39 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 
    if( hr == ERROR_SUCCESS )
    {
+      SMS_ADDRESS smsaDestination;
+
       void * hMessage;
       void * hPhoneNumber;
 
+      HB_SIZE nMessageLen;
       HB_SIZE nPhoneNumberLen;
 
-      LPCTSTR sztMessage     = HB_PARSTRDEF( 1, &hMessage    , NULL );
+      LPCTSTR sztMessage     = HB_PARSTRDEF( 1, &hMessage    , &nMessageLen );
       LPCTSTR sztPhoneNumber = HB_PARSTRDEF( 2, &hPhoneNumber, &nPhoneNumberLen );
 
-      if( nPhoneNumberLen <= SMS_MAX_ADDRESS_LENGTH )
+      if( nPhoneNumberLen <= HB_SIZEOFARRAY( smsaDestination.ptsAddress ) )
       {
-         SMS_ADDRESS smsaDestination;
          TEXT_PROVIDER_SPECIFIC_DATA tpsd;
          SMS_MESSAGE_ID smsmidMessageID = 0;
 
          /* Create the destination address */
          memset( &smsaDestination, 0, sizeof( smsaDestination ) );
          smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
-         /* TOFIX: lstrcpy() unsafe and may cause buffer overrun.
-                   Worked around using length check against SMS_MAX_ADDRESS_LENGTH.
-                   [vszakats]. */
-         lstrcpy( smsaDestination.ptsAddress, sztPhoneNumber );
-         
+         memcpy( smsaDestination.ptsAddress, sztPhoneNumber, HB_SIZEOFARRAY( smsaDestination.ptsAddress ) );
+
          /* Set up provider specific data */
          tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
          tpsd.psMessageClass = PS_MESSAGE_CLASS0;
          tpsd.psReplaceOption = PSRO_NONE;
-         
+
          /* Send the message, indicating success or failure */
          hb_retnl( SmsSendMessage( smshHandle,
                                    NULL,
                                    &smsaDestination,
                                    NULL,
                                    ( PBYTE ) sztMessage,
-                                   _tcslen( sztMessage ) * sizeof( wchar_t ),
+                                   nMessageLen * sizeof( TCHAR ),
                                    ( PBYTE ) &tpsd, 12,
                                    SMSDE_OPTIMAL,
                                    SMS_OPTION_DELIVERY_NONE,
