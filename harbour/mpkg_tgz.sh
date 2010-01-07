@@ -102,10 +102,7 @@ elif ! tar --version >/dev/null 2>&1; then
 else
     # tar is mapped to bsdtar starting OS X 10.6
     case `tar --version` in
-        *bsdtar*)
-            hb_gnutar=no
-            TAR=bsdtar
-            ;;
+        *bsdtar*) hb_gnutar=no ;;
     esac
 fi
 if gmake --version >/dev/null 2>&1; then
