@@ -18,6 +18,15 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
+# Equivalent to MSVC -GS (default) option, available in GCC 4.1 and upper:
+#    -fstack-protector
+# Equivalent to -dynamicbase MSVC linker option:
+#    peflags --dynamicbase=true
+# Equivalent to -nxcompat MSVC linker option:
+#    peflags --nxcompat=true
+# Equivalent to -tsaware MSVC linker option:
+#    peflags --tsaware=true
+
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
 endif

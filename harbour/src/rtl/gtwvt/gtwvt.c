@@ -557,14 +557,19 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
 
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
+   BYTE pszSrc[ 2 ];
+   wchar_t pszWide[ 1 ];
+   BYTE pszDst[ 2 ];
 
-   pszAnsi[ 0 ] = ( CHAR ) c;
-   pszAnsi[ 1 ] = 0;
-   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
+   pszSrc[ 0 ] = ( CHAR ) c;
+   pszSrc[ 1 ] =
+   pszDst[ 0 ] =
+   pszDst[ 1 ] = 0;
 
-   return * pszOem;
+   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 );
+   WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL );
+
+   return pszDst[ 0 ];
 }
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )

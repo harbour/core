@@ -510,20 +510,6 @@ BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr )
    return b;
 }
 
-BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len )
-{
-   if( len )
-      hb_strncpy( dst, src, len - 1 );
-   return TRUE;
-}
-
-BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len )
-{
-   if( len )
-      hb_strncpy( dst, src, len - 1 );
-   return TRUE;
-}
-
 HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data )
 {
    DWORD dwError;

@@ -98,7 +98,7 @@
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
 
-LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
+static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
    char errmsg[ 8192 ];
    int errmsglen = sizeof( errmsg ) - 1;
@@ -288,10 +288,10 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
 
 static EXCEPTIONREGISTRATIONRECORD s_regRec; /* Exception Registration Record */
 
-ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
-                                      PEXCEPTIONREGISTRATIONRECORD p2,
-                                      PCONTEXTRECORD               p3,
-                                      PVOID                        pv )
+static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
+                                             PEXCEPTIONREGISTRATIONRECORD p2,
+                                             PCONTEXTRECORD               p3,
+                                             PVOID                        pv )
 {
    HB_SYMBOL_UNUSED( p1 );
    HB_SYMBOL_UNUSED( p2 );

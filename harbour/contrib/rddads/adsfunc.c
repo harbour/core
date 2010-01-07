@@ -82,34 +82,58 @@ ADSHANDLE hb_ads_hConnect = 0;
 
 BOOL hb_ads_bOEM = FALSE;
 
-char * hb_adsOemToAnsi( const char * pcString, ULONG ulLen )
+char * hb_adsOemToAnsi( const char * pszSrc, ULONG nLen )
 {
    if( hb_ads_bOEM )
    {
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-      OemToCharBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
-      pszDst[ ulLen ] = '\0';
+      int nWideLen = MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
+
+      char * pszDst;
+
+      MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+      WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+
+      pszDst[ nLen ] = '\0';
       return pszDst;
    }
-   return ( char * ) pcString;
+   return ( char * ) pszSrc;
 }
 
-char * hb_adsAnsiToOem( const char * pcString, ULONG ulLen )
+char * hb_adsAnsiToOem( const char * pszSrc, ULONG nLen )
 {
    if( hb_ads_bOEM )
    {
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-      CharToOemBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
-      pszDst[ ulLen ] = '\0';
+      int nWideLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
+
+      char * pszDst;
+
+      MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+      WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+
+      pszDst[ nLen ] = '\0';
       return pszDst;
    }
-   return ( char * ) pcString;
+   return ( char * ) pszSrc;
 }
 
-void hb_adsOemAnsiFree( char * pcString )
+void hb_adsOemAnsiFree( char * pszSrc )
 {
    if( hb_ads_bOEM )
-      hb_xfree( pcString );
+      hb_xfree( pszSrc );
 }
 
 #endif

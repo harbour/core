@@ -78,7 +78,7 @@ HB_FUNC( HB_ANSITOOEM )
       nLen = WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
       pszDst = ( char * ) hb_xgrab( nLen + 1 );
 
-	  WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+      WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
 
       hb_xfree( pszWide );
       hb_retclen_buffer( pszDst, nLen );
@@ -110,7 +110,7 @@ HB_FUNC( HB_OEMTOANSI )
       nLen = WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
       pszDst = ( char * ) hb_xgrab( nLen + 1 );
 
-	  WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+      WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
 
       hb_xfree( pszWide );
       hb_retclen_buffer( pszDst, nLen );
