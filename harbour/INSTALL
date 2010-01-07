@@ -683,7 +683,7 @@ HARBOUR
       Build Harbour with:
          HB_USER_CFLAGS=-DHB_FM_STATISTICS
 
-   Valgrind (on linux and darwin targets only)
+   Valgrind (on linux and darwin-x86 targets only)
    --------
       Build Harbour with:
          HB_USER_DEBUG=yes
@@ -1350,7 +1350,7 @@ HARBOUR
       GNU Sed (stream editor) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/sed.htm
-      Valgrind (dynamic executable analysis tool) [linux, darwin, free, open-source]
+      Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
          http://valgrind.org/
       UPX (executable compressor) [win, dos, *nix, free, open-source]
          http://upx.sourceforge.net/
