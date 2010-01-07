@@ -581,7 +581,9 @@ METHOD IdeThemes:selectTheme()
 
    oSL:qObj[ "listOptions" ]:setModel( oStrModel )
 
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( p, oSL, @cTheme, o ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( 1, p, oSL, @cTheme, o ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|o,p| ::selectThemeProc( 2, p, oSL, @cTheme, o ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|o,p| ::selectThemeProc( 3, p, oSL, o ) } )
 
    nDone := oSL:exec()
 
@@ -591,14 +593,24 @@ METHOD IdeThemes:selectTheme()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:selectThemeProc( p, oSL, cTheme )
-   LOCAL nRow, qModalIndex := QModelIndex():configure( p )
+METHOD IdeThemes:selectThemeProc( nMode, p, oSL, cTheme )
+   LOCAL qModalIndex
 
-   nRow := qModalIndex:row() + 1
+   DO CASE
+   CASE nMode == 1
+      qModalIndex := QModelIndex():configure( p )
+      cTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
+      oSL:done( 1 )
 
-   cTheme := ::aThemes[ nRow, 1 ]
+   CASE nMode == 2
+      qModalIndex := QModelIndex():configure( oSL:qObj[ "listOptions" ]:currentIndex() )
+      cTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
+      oSL:done( 1 )
 
-   oSL:done( 1 )
+   CASE nMode == 3
+      oSL:done( 0 )
+
+   ENDCASE
 
    RETURN Nil
 
@@ -670,7 +682,6 @@ METHOD IdeThemes:parseINI( lAppend )
             IF ( n := at( ":", s ) ) > 0
                cKey := alltrim( strtran( substr( s, n+1 ), "]" ) )
             ENDIF
-//            HB_TRACE( HB_TR_ALWAYS, cKey )
             IF !empty( cKey )
                nPart := 3
                IF ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cKey } ) ) == 0
