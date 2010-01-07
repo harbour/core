@@ -757,6 +757,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::oOutputResult:oWidget:append( cTmp )
          ::nStarted := seconds()
 
+         qListSets := QStringList():new()
+         qListSets:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
+
          #if 0  /* Mechanism to supply environment variables to called process */
                 /* I do not know nixes but assume that Qt must be issueing proper */
                 /* shell command for the target OS to set them. */
@@ -764,8 +767,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
                 /* and hence developer can choose any compiler of his choice. */
                 /*                                                                */
                 /* Actually, this was the intension in hbIDE.env I commited in IDE root */
-         qListSets := QStringList():new()
-         qListSets:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
          ::qProcess:setEnvironment( qListSets )
          #endif
 
