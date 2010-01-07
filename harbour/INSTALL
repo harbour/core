@@ -692,7 +692,7 @@ HARBOUR
          $ hbmk2 myapp -debug
 
       Run app with:
-         $ valgrind --tool=memcheck --leak-check=yes -v ./myapp 2> myapp.log
+         $ valgrind --tool=memcheck --leak-check=yes --num-callers=16 -v ./myapp 2> myapp.log
 
    CodeGuard (on win/bcc target only)
    ---------
