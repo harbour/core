@@ -6,6 +6,7 @@
 
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase
+-ldflag={allmsvc}-fixed:no
 
 -nulrdd
 hbi18n.prg

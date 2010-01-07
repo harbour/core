@@ -73,7 +73,7 @@ LD_OUT := -out:
 LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo -nxcompat -dynamicbase $(LIBPATHS)
+LDFLAGS += -nologo -nxcompat -dynamicbase -fixed:no $(LIBPATHS)
 
 AR := lib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@

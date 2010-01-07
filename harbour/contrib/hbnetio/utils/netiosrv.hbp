@@ -9,3 +9,4 @@ netiosrv.prg
 
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase
+-ldflag={allmsvc}-fixed:no
