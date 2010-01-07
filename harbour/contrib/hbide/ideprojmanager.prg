@@ -483,12 +483,14 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       IF !empty( cOldProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIde, cOldProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
+            //oItem:oWidget:setBackground( 0, QBrush():new( "QColor", QColor():new( 255,255,255 ) ) )
          ENDIF
       ENDIF
       /* Set New Color */
       IF !empty( ::cWrkProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIde, ::cWrkProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
+            //oItem:oWidget:setBackground( 0, ::qBrushWrkProject )
             hbide_expandChildren( ::oIde, oItem )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
