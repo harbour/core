@@ -859,8 +859,6 @@ METHOD HbIde:revertSource( nTab )
 METHOD HbIde:openSource()
    LOCAL aSrc, cSource
 
-   hbide_dbg( "openSource()" )
-
    IF !empty( aSrc := ::selectSource( "openmany" ) )
       FOR EACH cSource IN aSrc
          ::editSource( cSource )
@@ -1319,8 +1317,6 @@ METHOD HbIde:updateProjectMenu()
    IF Empty( oItem )
       RETURN Self
    ENDIF
-
-*  msgbox( ToString( oMenuBar:aMenuItems[ n ] ))
 
    IF Empty( ::cWrkProject )
       oItem[ 2 ]:setDisabled( .T. )

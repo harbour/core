@@ -808,7 +808,7 @@ bool signal_already_connected( HBSlots * t_slots, QObject * object, const char *
    {
       if( t_slots->listBlock[ i ] != NULL && t_slots->listObj[ i ] == object )
       {
-         if( object->property( signal ).toInt() == i )
+         if( object->property( signal ).toInt() == i + 1 )
          {
             return true;
          }

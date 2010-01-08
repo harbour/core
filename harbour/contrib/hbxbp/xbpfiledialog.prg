@@ -278,8 +278,7 @@ METHOD XbpFileDialog:extractFileNames( lAllowMultiple )
 
    DEFAULT lAllowMultiple TO .F.
 
-   oFiles := QStringList()
-   oFiles:pPtr := ::oWidget:selectedFiles()
+   oFiles := QStringList():configure( ::oWidget:selectedFiles() )
    FOR i := 1 TO oFiles:size()
       aadd( f_, oFiles:at( i-1 ) )
    NEXT
