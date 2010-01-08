@@ -629,6 +629,38 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
 
 /*----------------------------------------------------------------------*/
 /*
+ * Add a file name to MRU menu item.
+ * 02/01/2010 - 23:23:22 - vailtom
+ */
+FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
+   LOCAL nPos
+
+   IF nType != INI_RECENTPROJECTS .AND. nType != INI_RECENTFILES
+      RETURN nil
+   ENDIF
+
+   cFileName := hbide_pathNormalized( cFileName )
+
+   IF ( nPos := aScan( oIde:aIni[ nType ], {|f| hbide_pathNormalized( f ) == cFileName } ) ) > 0
+      hb_aDel( oIde:aIni[ nType ], nPos, .T. )
+   ENDIF
+
+   ASize( oIde:aIni[ nType ], len( oIde:aIni[ nType ] ) + 1 )
+   AIns( oIde:aIni[ nType ], 1 )
+
+   oIde:aIni[ nType,1 ] := cFileName
+
+   IF Len( oIde:aIni[ nType ] ) > 25
+      aSize( oIde:aIni[ nType ], 25 )
+   ENDIF
+
+   IF nPos == 0
+      hbide_mnuUpdateMRUpopup( oIde, nType )
+   ENDIF
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+/*
  * 02/01/2010 - 22:44:19
  */
 #define QMF_POPUP  1
@@ -689,39 +721,6 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
 
 /*----------------------------------------------------------------------*/
 /*
- * Add a file name to MRU menu item.
- * 02/01/2010 - 23:23:22 - vailtom
- */
-FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
-   LOCAL nPos
-
-   IF nType != INI_RECENTPROJECTS .AND. nType != INI_RECENTFILES
-      RETURN nil
-   ENDIF
-
-   cFileName := hbide_pathNormalized( cFileName )
-
-   IF ( nPos := aScan( oIde:aIni[ nType ], {|f| hbide_pathNormalized( f ) == cFileName } ) ) > 0
-      hb_aDel( oIde:aIni[ nType ], nPos, .T. )
-   ENDIF
-
-   ASize( oIde:aIni[ nType ], len( oIde:aIni[ nType ] ) + 1 )
-   AIns( oIde:aIni[ nType ], 1 )
-
-   oIde:aIni[ nType,1 ] := cFileName
-
-   IF Len( oIde:aIni[ nType ] ) > 25
-      aSize( oIde:aIni[ nType ], 25 )
-   ENDIF
-
-hbide_dbg( nPos, cFileName )
-   IF nPos == 0
-      hbide_mnuUpdateMRUpopup( oIde, nType )
-   ENDIF
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-/*
  * Find a menu item with same caption as passed on argument.
  * 03/01/2010 - 13:12:42
  */
@@ -737,15 +736,16 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
 
    FOR n := 1 TO oMenuBar:numItems()
 
-       oItem := oMenuBar:aMenuItems[ n ]
-       c := Upper( oItem[ 3 ] )
-       c := StrTran( c, '~', '' )
-       c := StrTran( c, '&', '' )
+      oItem := oMenuBar:aMenuItems[ n ]
+      c := Upper( oItem[ 3 ] )
+      c := StrTran( c, '~', '' )
+      c := StrTran( c, '&', '' )
 
-       IF cCaption == alltrim( c )
-          RETURN oItem
-       ENDIF
+      IF cCaption == alltrim( c )
+         RETURN oItem
+      ENDIF
    NEXT
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/

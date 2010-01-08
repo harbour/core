@@ -833,21 +833,15 @@ METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
 
 METHOD IdeEditor:onContentsChanged()
 
-hbide_dbg( "onContentsChanged()" )
+   // hbide_dbg( "onContentsChanged()" )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:onBlockCountChanged( nNewBlocks )
-   LOCAL nLine
+METHOD IdeEditor:onBlockCountChanged()
 
-   ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-   nLine := ::qCursor:blockNumber()
-   IF ::nBlock != nLine
-      HB_TRACE( HB_TR_ALWAYS, nNewBlocks, nLine, ::nBlock )
-   ENDIF
-   ::nBlock := nLine
+   ::nBlock := ::qCursor := QTextCursor():configure( ::qEdit:textCursor() ):blockNumber()
 
    RETURN Self
 

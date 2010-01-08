@@ -232,23 +232,7 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 METHOD xbpMenuBar:destroy()
    LOCAL i
 
-   FOR i := 1 TO len( ::aMenuItems )
-      IF !empty( ::aMenuItems[ i,5 ] )
-         ::aMenuItems[ i, 5 ]:pPtr := 0
-         ::aMenuItems[ i, 5 ] := NIL
-      ENDIF
-   NEXT
-
-   ::sl_beginMenu            := NIL
-   ::sl_endMenu              := NIL
-   ::sl_itemMarked           := NIL
-   ::sl_itemSelected         := NIL
-   ::sl_drawItem             := NIL
-   ::sl_measureItem          := NIL
-   ::sl_onMenuKey            := NIL
-
-   ::aMenuItems              := {}
-   ::aOrgItems               := {}
+   ::delAllItems()
 
    ::xbpWindow:destroy()
 
@@ -261,7 +245,7 @@ METHOD xbpMenuBar:delAllItems()
 
    nItems := ::numItems()
    DO WHILE nItems > 0 .AND. lResult
-      lResult := ::DelItem( nItems )
+      lResult := ::delItem( nItems )
       nItems--
    ENDDO
 
@@ -278,12 +262,16 @@ METHOD xbpMenuBar:delItem( nItemIndex )
          //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
          oAction := ::aMenuItems[ nItemIndex, 5 ]
-         Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
-         Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
-         oAction:pPtr := 0
       ENDIF
       ADEL( ::aMenuItems, nItemIndex )
       ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
+      IF hb_isObject( oAction )
+         Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
+         Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
+         ::oWidget:removeAction( oAction )
+         oAction:pPtr := 0
+         oAction := NIL
+      ENDIF
    ENDIF
 
    RETURN lResult

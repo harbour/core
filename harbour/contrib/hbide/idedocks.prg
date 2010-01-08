@@ -137,7 +137,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
    ::oDlg:title := "Harbour-Qt IDE"
    ::oDlg:qtObject := oUI:oWidget
-   ::oDlg:create()
+   ::oDlg:create( , , , , , .f. )
    #else
    ::oIde:oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
    ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"

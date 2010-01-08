@@ -603,8 +603,8 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
 
       IF ( nPos <= 0 )
          RETURN .F.
-      End
-   End
+      ENDIF
+   ENDIF
 
    aList     := hb_RegEx( regLineN, cText )
 
@@ -617,7 +617,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
       nLine := strtran( nLine, "(", "" )
       nLine := strtran( nLine, ")", "" )
       nLine := VAL( alltrim( nLine ) )
-   End
+   ENDIF
 
    IF (nPos := hb_At( '(', cText )) > 0
       cFileName := alltrim( Subst( cText, 1, nPos -1 ) )
@@ -630,12 +630,12 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
             nPos := hb_At( ':', cText, 3 )
          ELSE
             nPos := hb_At( ':', cText )
-         End
+         ENDIF
          IF nPos <> 00
             cFileName := Subst( cText, 1, nPos-1 )
-         End
-      End
-   End
+         ENDIF
+      ENDIF
+   ENDIF
 
    cFileName := strtran( cFileName, "(", "" )
    cFileName := strtran( cFileName, ")", "" )
@@ -646,17 +646,17 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
 
    IF (nPos := Rat( ' ', cFileName )) <> 00
       cFileName := Subst( cFileName, nPos+1 )
-   End
+   ENDIF
 
    IF Subst( cFileName, 2, 1 ) == ':'
       nPos := hb_At( ':', cFileName, 3 )
    ELSE
       nPos := hb_At( ':', cFileName )
-   End
+   ENDIF
 
    IF nPos <> 00
       cFileName := Subst( cFileName, 1, nPos-1 )
-   End
+   ENDIF
 
    cFileName := alltrim( cFileName )
    RETURN !Empty( cFileName )
@@ -680,7 +680,7 @@ FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
    IF aRegList == NIL
       aRegList := {}
       hbide_BuildRegExpressList( aRegList )
-   End
+   ENDIF
 
    cText := StrTran( cText, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cText := StrTran( cText, Chr( 13 )            , Chr( 10 ) )
@@ -776,7 +776,7 @@ FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
    hb_fNameSplit( cFileName, @cPath, @cFile, @cExt )
    IF Empty( cExt )
       cExt := cDefaultExt
-   End
+   ENDIF
    RETURN cPath + HB_OSPATHSEPARATOR() + cFile + HB_OSPATHSEPARATOR() + cExt
 
 /*----------------------------------------------------------------------*/
@@ -816,56 +816,56 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
    DEFAULT cFile          TO ""
    DEFAULT lForceLineFeed TO .F.
 
-   do case
-   case ( t == "C" )
+   DO CASE
+   CASE ( t == "C" )
       s := iif( lType, "[C]=", "" ) + '"' + x + '"'
-   case ( t == "N" )
+   CASE ( t == "N" )
       s := iif( lType, "[N]=", "" ) + alltrim(str( x ))
-   case ( t == "D" )
+   CASE ( t == "D" )
       s := iif( lType, "[D]=", "" ) + "ctod('"+ dtoc(x) +"')"
-   case ( t == "L" )
+   CASE ( t == "L" )
       s := iif( lType, "[L]=", "" ) + iif( x, '.T.', '.F.' )
-   case ( t == "M" )
+   CASE ( t == "M" )
       s := iif( lType, "[M]=", "" ) + '"' + x + '"'
-   case ( t == "B" )
+   CASE ( t == "B" )
       s := iif( lType, "[B]=", "" ) + '{|| ... }'
-   case ( t == "U" )
+   CASE ( t == "U" )
       s := iif( lType, "[U]=", "" ) + 'NIL'
-   case ( t == "A" )
+   CASE ( t == "A" )
       s := iif( lType, "[A]=", "" ) + "{"
-      if len(x) = 0
+      IF len( x ) = 0
          s += " "
-      else
+      ELSE
          s += iif( valtype( x[1] ) = "A" .or. lForceLineFeed, CRLF, "" )
-         j := len(x)
+         j := len( x )
 
-         for i := 1 to j
+         FOR i := 1 TO j
              s += iif( valtype( x[i] ) == "A", "  ", " " ) + iif( lForceLineFeed, " ", "" ) + hbide_toString( x[i], .F. )
              s += iif( i <> j, ",", "" )
-             if lLineFeed
-                if !lInherited .and. ( valtype( x[i] ) == "A" .or. lForceLineFeed )
+             IF lLineFeed
+                IF !lInherited .and. ( valtype( x[i] ) == "A" .or. lForceLineFeed )
                    s += CRLF
-                endif
-             endif
-         next
-      endif
+                ENDIF
+             ENDIF
+         NEXT
+      ENDIF
       s += iif( !lForceLineFeed, " ", "" ) + "}"
 
-   case ( t == "O" )
-      if lInherited
+   CASE ( t == "O" )
+      IF lInherited
          && É necessário linkar \harbour\lib\xhb.lib
          **s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, CRLF, "" )
          s := '' + iif( lLineFeed, CRLF, "" )
-      else
+      ELSE
          s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, CRLF, "" )
-      endif
-   endcase
+      ENDIF
+   ENDCASE
 
-   if !empty( cFile )
+   IF !empty( cFile )
       memowrit( cFile, s )
-   endif
+   ENDIF
 
-   return s
+   RETURN s
 
 /*----------------------------------------------------------------------*/
 

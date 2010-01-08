@@ -331,9 +331,6 @@ METHOD HbIde:create( cProjIni )
    ::oFont:fixed := .t.
    ::oFont:create( "10.Courier" )
 
-   /* Request Main Window to Appear on the Screen */
-   ::oDlg:Show()
-
    /* Fill various elements of the IDE */
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
@@ -343,6 +340,9 @@ METHOD HbIde:create( cProjIni )
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
    ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
+
+   /* Request Main Window to Appear on the Screen */
+   ::oDlg:Show()
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -1100,7 +1100,7 @@ METHOD HbIde:addSourceInTree( cSourceFile )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageItemSelected( oXbpTreeItem )
-   LOCAL n, cHbi, aPrj, cSource
+   LOCAL n, cHbi, aPrj
 
    IF     oXbpTreeItem == ::oProjRoot
       n  := -1
@@ -1117,14 +1117,13 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
       aPrj := ::aProjData[ n, 5 ]
 
-      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+      cHbi := hbide_pathToOSPath( aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+                                       aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi" )
 
       ::oPM:loadProperties( cHbi, .f., .t., .f. )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
-      cSource := ::aProjData[ n, TRE_ORIGINAL ]
-      ::editSource( cSource )
+      ::editSource( ::aProjData[ n, TRE_ORIGINAL ] )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
       ::oED:setSourceVisible( ::aProjData[ n, TRE_DATA ] )

@@ -738,9 +738,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
               hbide_outputLine() + CRLF
 
       IF lViaQt
-         qStringList := QStringList():new()
-         qStringList:append( cHbpPath )
-
          ::qProcess := QProcess():new()
          ::qProcess:setReadChannel( 1 )
 
@@ -759,6 +756,15 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::oOutputResult:oWidget:append( cTmp )
          ::nStarted := seconds()
 
+         #if 0  /* Experiment */
+         qStringList := QStringList():new()
+         qStringList:append( "/k" )
+         qStringList:append( "c:\batches\SetMinGW-harbour-E.bat" )
+         qStringList:append( "hbMK2.exe -help" )
+         ::qProcess:startDetached_1( "cmd.exe", qStringList )
+         #endif
+
+
          qListSets := QStringList():new()
          qListSets:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
 
@@ -772,6 +778,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::qProcess:setEnvironment( qListSets )
          #endif
 
+         qStringList := QStringList():new()
+         qStringList:append( cHbpPath )
+         //
          ::qProcess:start( "hbmk2", qStringList )
 
       ELSE
@@ -839,9 +848,16 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
 
       ::oOutputResult:oWidget:append( cTmp )
 
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyRead()"               )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readChannelFinished()"     )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "aboutToClose()"            )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "bytesWritten(int)"         )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "stateChanged(int)"         )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "error(int)"                )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "started()"                 )
       Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
       Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
+      Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
 
       ::qProcess:kill()
       ::qProcess:pPtr := 0

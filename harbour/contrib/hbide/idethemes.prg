@@ -363,7 +363,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
       cTheme := ::cWrkTheme
    ENDIF
    IF empty( cTheme )
-      cTheme := "Pritpal's Favourite"
+      cTheme := "Bare Minimum"   /* "Pritpal's Favourite" */
    ENDIF
    DEFAULT lNew TO .f.           /* Apply one which is already formed */
 
@@ -587,7 +587,9 @@ METHOD IdeThemes:selectTheme()
 
    nDone := oSL:exec()
 
-   Qt_Slots_Disconnect( pSlots, oSL:qObj[ "listOptions" ], "doubleClicked(QModelIndex)" )
+   Qt_Slots_disConnect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
+   Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()" )
+   Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()" )
 
    RETURN iif( nDone == 1, cTheme, "" )
 
