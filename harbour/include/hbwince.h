@@ -159,20 +159,20 @@ extern char * strerror( int errnum );
       #define SetEnvironmentVariable SetEnvironmentVariableW
    #endif
    #if !defined( SetCurrentDirectory )
-      #define SetCurrentDirectory SetCurrentDirectoryW
       BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
+      #define SetCurrentDirectory SetCurrentDirectoryW
    #endif
    #if !defined( GetCurrentDirectory )
-      #define GetCurrentDirectory GetCurrentDirectoryW
       DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
+      #define GetCurrentDirectory GetCurrentDirectoryW
    #endif
    #if !defined( GetComputerName )
-      #define GetComputerName GetComputerNameW
       BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
+      #define GetComputerName GetComputerNameW
    #endif
    #if !defined( GetUserName )
-      #define GetUserName GetUserNameW
       BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
+      #define GetUserName GetUserNameW
    #endif
 
 #endif /* HB_OS_WIN_USED */

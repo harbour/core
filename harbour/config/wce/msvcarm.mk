@@ -31,6 +31,12 @@ else ifeq ($(HB_COMPILER),msvc)
    CFLAGS += -D_X86_ -D_M_IX86
 endif
 
+# MSVS 2005 SP1 also supports it, but we only enable it for 2008 and upper.
+ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
+   LDFLAGS += -nxcompat -dynamicbase -fixed:no
+   DFLAGS += -nxcompat -dynamicbase
+endif
+
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC
 endif
@@ -68,7 +74,7 @@ SYSLIBS += corelibc
 LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo -nxcompat -dynamicbase -fixed:no -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
+LDFLAGS += -nologo -fixed:no -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
 ifeq ($(filter $(HB_COMPILER_VER),600 700 710),)
    LDFLAGS += -manifest:no
 endif
