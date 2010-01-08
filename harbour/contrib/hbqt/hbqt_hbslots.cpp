@@ -799,6 +799,24 @@ void HBSlots::undoCommandAdded()                                                
 /**/
 
 /*----------------------------------------------------------------------*/
+
+bool signal_already_connected( HBSlots * t_slots, QObject * object, const char * signal )
+{
+   int i;
+
+   for( i = 0; i < t_slots->listBlock.size(); i++ )
+   {
+      if( t_slots->listBlock[ i ] != NULL && t_slots->listObj[ i ] == object )
+      {
+         if( object->property( signal ).toInt() == i )
+         {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
 /*
  * Harbour function to connect signals with slots
  */
@@ -815,12 +833,16 @@ HB_FUNC( QT_SLOTS_CONNECT )
       {
          QString signal = hb_parcx( 3 );                              /* get signal    */
 
-         if( connect_signal( signal, object, t_slots ) )
+         if( !signal_already_connected( t_slots, object, hb_parcx( 3 ) ) )
          {
-            PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
-            t_slots->listBlock << pBlock;
-            object->setProperty( hb_parcx( 3 ), ( int ) t_slots->listBlock.size() );
-            bRet = HB_TRUE;
+            if( connect_signal( signal, object, t_slots ) )
+            {
+               PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
+               t_slots->listBlock << pBlock;
+               t_slots->listObj << object;
+               object->setProperty( hb_parcx( 3 ), ( int ) t_slots->listBlock.size() );
+               bRet = HB_TRUE;
+            }
          }
       }
    }
@@ -849,6 +871,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
          {
             hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
             t_slots->listBlock[ i - 1 ] = NULL;
+            t_slots->listObj[ i - 1 ] = NULL;
 
             bRet = ( disconnect_signal( object, signal ) == true );
 

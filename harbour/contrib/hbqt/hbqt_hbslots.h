@@ -74,6 +74,7 @@ public:
    HBSlots( QObject *parent = 0 );
    ~HBSlots();
    QList<PHB_ITEM>  listBlock;
+   QList<QObject *> listObj;
 
 public slots:
    void clicked();

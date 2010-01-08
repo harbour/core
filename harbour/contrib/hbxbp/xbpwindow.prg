@@ -677,18 +677,21 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       EXIT
    CASE QEvent_DragEnter                     // :dragEnter()
       oEvent      := QDragEnterEvent():configure( pEvent )
-      SetAppEvent( xbeP_DragEnter, { oEvent:mouseButtons(), { oEvent:pos():x(), oEvent:pos():y() } }, /* oDragObj */, Self )
+      oObj_O      := QPoint():configure( oEvent:pos() )
+      SetAppEvent( xbeP_DragEnter, { oEvent:mouseButtons(), { oObj_O:x(), oObj_O:y() } }, /* oDragObj */, Self )
       EXIT
    CASE QEvent_DragLeave                     // :dragLeave()
       SetAppEvent( xbeP_DragLeave, NIL, NIL, Self )
       EXIT
    CASE QEvent_DragMove                      // :dragMotion()
       oEvent      := QDragEnterEvent():configure( pEvent )
-      SetAppEvent( xbeP_DragMotion, { oEvent:mouseButtons(), { oEvent:pos():x(), oEvent:pos():y() } }, NIL, Self )
+      oObj_O      := QPoint():configure( oEvent:pos() )
+      SetAppEvent( xbeP_DragMotion, { oEvent:mouseButtons(), { oObj_O:x(), oObj_O:y() } }, NIL, Self )
       EXIT
    CASE QEvent_Drop                          // :dragDrop()
       oEvent      := QDragEnterEvent():configure( pEvent )
-      SetAppEvent( xbeP_DragDrop, { oEvent:mouseButtons(), { oEvent:pos():x(), oEvent:pos():y() } }, /* oDragObj */, Self )
+      oObj_O      := QPoint():configure( oEvent:pos() )
+      SetAppEvent( xbeP_DragDrop, { oEvent:mouseButtons()  , { oObj_O:x(), oObj_O:y() } }, /* oDragObj */, Self )
       EXIT
    CASE QEvent_WhatsThis                     // :helpRequest()
       SetAppEvent( xbeP_HelpRequest, NIL, NIL, Self )

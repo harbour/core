@@ -140,22 +140,25 @@ METHOD IdeActions:buildActions()
    aAct := ::loadActions()
 
    FOR EACH a_ IN aAct
-      qAction := QAction():new( ::qDlg )
+      IF !hb_hHasKey( ::hActions, a_[ ACT_NAME ] )
 
-      qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
-      IF !empty( a_[ ACT_IMAGE ] )
-         qAction:setIcon( ::resPath + a_[ ACT_IMAGE ] + ".png" )
-      ENDIF
-      IF !empty( a_[ ACT_SHORTCUT ] )
-         k := a_[ ACT_SHORTCUT ]
-         k := strtran( k, "Sh+", "Shift+" )
-         k := strtran( k, "SH+", "Shift+" )
-         k := strtran( k, "^"  , "Ctrl+"  )
-         qAction:setShortcut( QKeySequence():new( k ) )
-      ENDIF
-      qAction:setTooltip( strtran( a_[ ACT_TEXT ], "~", "" ) )
+         qAction := QAction():new( ::qDlg )
+         qAction:setCheckable( .f. )
+         qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
+         IF !empty( a_[ ACT_IMAGE ] )
+            qAction:setIcon( ::resPath + a_[ ACT_IMAGE ] + ".png" )
+         ENDIF
+         IF !empty( a_[ ACT_SHORTCUT ] )
+            k := a_[ ACT_SHORTCUT ]
+            k := strtran( k, "Sh+", "Shift+" )
+            k := strtran( k, "SH+", "Shift+" )
+            k := strtran( k, "^"  , "Ctrl+"  )
+            qAction:setShortcut( QKeySequence():new( k ) )
+         ENDIF
+         qAction:setTooltip( strtran( a_[ ACT_TEXT ], "~", "" ) )
 
-      ::hActions[ a_[ ACT_NAME ] ] := qAction
+         ::hActions[ a_[ ACT_NAME ] ] := qAction
+      ENDIF
    NEXT
 
    RETURN Self
@@ -263,7 +266,7 @@ METHOD IdeActions:buildToolBar()
 
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
-   oTBar:addItem( ::getAction( "Exit"              ), , , , , , "Exit"  )
+   oTBar:addItem( ::getAction( "Exit"              ), , , , , , "Exit"              )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "New"               ), , , , , , "New"               )
    oTBar:addItem( ::getAction( "Open"              ), , , , , , "Open"              )

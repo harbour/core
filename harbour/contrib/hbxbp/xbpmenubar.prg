@@ -264,7 +264,7 @@ METHOD xbpMenuBar:delItem( nItemIndex )
       ENDIF
       ADEL( ::aMenuItems, nItemIndex )
       ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
-      IF hb_isObject( oAction )
+      IF hb_isObject( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
          Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
          Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
          ::oWidget:removeAction( oAction )

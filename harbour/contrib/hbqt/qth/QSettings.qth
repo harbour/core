@@ -78,6 +78,10 @@ HB_FUNC( QT_QSETTINGS )
    {
       hb_retptr( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), 0 ) );
    }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ) ) );
+   }
    else
    {
       hb_retptr( new QSettings() );
@@ -120,6 +124,11 @@ void setValue ( const QString & key, const QVariant & value )
 Status status () const
 void sync ()
 QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const
+
+Format defaultFormat ()
+//Format registerFormat ( const QString & extension, ReadFunc readFunc, WriteFunc writeFunc, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive )
+void setDefaultFormat ( Format format )
+void setPath ( Format format, Scope scope, const QString & path )
 </PROTOS>
 
 <SLOTS>

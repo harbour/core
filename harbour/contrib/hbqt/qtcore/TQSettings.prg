@@ -63,9 +63,12 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSettings INHERIT HbQtObjectHandler, QObject
+CREATE CLASS QSettings INHERIT QObject
+
+   VAR     pPtr
 
    METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  allKeys()
    METHOD  applicationName()
@@ -95,16 +98,30 @@ CREATE CLASS QSettings INHERIT HbQtObjectHandler, QObject
    METHOD  status()
    METHOD  sync()
    METHOD  value( cKey, pDefaultValue )
+   METHOD  defaultFormat()
+   METHOD  setDefaultFormat( nFormat )
+   METHOD  setPath( nFormat, nScope, cPath )
 
    ENDCLASS
 
+/*----------------------------------------------------------------------*/
 
 METHOD QSettings:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      p := hbqt_ptr( p )
+      hb_pvalue( p:__enumIndex(), p )
    NEXT
    ::pPtr := Qt_QSettings( ... )
+   RETURN Self
+
+
+METHOD QSettings:configure( xObject )
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
    RETURN Self
 
 
@@ -218,4 +235,16 @@ METHOD QSettings:sync()
 
 METHOD QSettings:value( cKey, pDefaultValue )
    RETURN Qt_QSettings_value( ::pPtr, cKey, hbqt_ptr( pDefaultValue ) )
+
+
+METHOD QSettings:defaultFormat()
+   RETURN Qt_QSettings_defaultFormat( ::pPtr )
+
+
+METHOD QSettings:setDefaultFormat( nFormat )
+   RETURN Qt_QSettings_setDefaultFormat( ::pPtr, nFormat )
+
+
+METHOD QSettings:setPath( nFormat, nScope, cPath )
+   RETURN Qt_QSettings_setPath( ::pPtr, nFormat, nScope, cPath )
 

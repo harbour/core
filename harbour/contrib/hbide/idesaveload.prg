@@ -113,10 +113,10 @@ FUNCTION hbide_saveINI( oIde )
          qCursor   := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
          aadd( txt_, oEdit:sourceFile + "," + ;
-                     hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos ) )+ "," + ;
-                     hb_ntos( iif( oEdit:lLoaded, qHScr:value(), oEdit:nHPos ) )    + "," + ;
-                     hb_ntos( iif( oEdit:lLoaded, qVScr:value(), oEdit:nVPos ) )    + "," + ;
-                     oEdit:cTheme                       + ","   )
+                     hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos  ) ) +  ","  + ;
+                     hb_ntos( iif( oEdit:lLoaded, qHScr:value()     , oEdit:nHPos ) ) +  ","  + ;
+                     hb_ntos( iif( oEdit:lLoaded, qVScr:value()     , oEdit:nVPos ) ) +  ","  + ;
+                     oEdit:cTheme                                                     + ","   )
       ENDIF
    NEXT
    aadd( txt_, " " )
@@ -148,6 +148,8 @@ FUNCTION hbide_saveINI( oIde )
       aadd( txt_, oIde:aIni[ INI_RECENTPROJECTS , n ] )
    NEXT
    aadd( txt_, " " )
+
+   hbide_saveSettings( oIde )
 
    RETURN hbide_createTarget( oIde:cProjIni, txt_ )
 
@@ -283,3 +285,16 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_saveSettings( oIde )
+   LOCAL qSet, qWidget
+
+   qWidget := oIde:oDlg:oWidget
+
+   qSet := QSettings():new( hb_dirBase() + "idesettings.ini", 1 )
+
+   qSet:setValue( "hbIDE"  , qWidget:saveState() )
+   qSet:setValue( "hbIDE-g", qWidget:geometry() )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

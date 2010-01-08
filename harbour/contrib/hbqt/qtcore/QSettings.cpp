@@ -93,12 +93,12 @@ typedef struct
   QPointer< QSettings > pq;
 } QGC_POINTER_QSettings;
 
-QT_G_FUNC( hbqt_gcRelease_QSettings )
+QT_G_FUNC( release_QSettings )
 {
    QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSettings                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSettings                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSettings                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSettings                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
 
    if( p && p->ph && p->pq )
    {
@@ -118,16 +118,16 @@ QT_G_FUNC( hbqt_gcRelease_QSettings )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSettings                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSettings                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSettings                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSettings                   Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSettings                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSettings                   Object Already deleted!" ) );
    }
 }
 
@@ -136,7 +136,7 @@ void * hbqt_gcAllocate_QSettings( void * pObj )
    QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) hb_gcAllocate( sizeof( QGC_POINTER_QSettings ), hbqt_gcFuncs() );
 
    p->ph = pObj;
-   p->func = hbqt_gcRelease_QSettings;
+   p->func = release_QSettings;
    new( & p->pq ) QPointer< QSettings >( ( QSettings * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSettings                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
@@ -149,6 +149,10 @@ HB_FUNC( QT_QSETTINGS )
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       pObj = new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), 0 ) ;
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
+   {
+      pObj = new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ) ) ;
    }
    else
    {
@@ -379,6 +383,30 @@ HB_FUNC( QT_QSETTINGS_SYNC )
 HB_FUNC( QT_QSETTINGS_VALUE )
 {
    hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QSettings( 1 )->value( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ) ) );
+}
+
+/*
+ * Format defaultFormat ()
+ */
+HB_FUNC( QT_QSETTINGS_DEFAULTFORMAT )
+{
+   hb_retni( ( QSettings::Format ) hbqt_par_QSettings( 1 )->defaultFormat() );
+}
+
+/*
+ * void setDefaultFormat ( Format format )
+ */
+HB_FUNC( QT_QSETTINGS_SETDEFAULTFORMAT )
+{
+   hbqt_par_QSettings( 1 )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) );
+}
+
+/*
+ * void setPath ( Format format, Scope scope, const QString & path )
+ */
+HB_FUNC( QT_QSETTINGS_SETPATH )
+{
+   hbqt_par_QSettings( 1 )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), hbqt_par_QString( 4 ) );
 }
 
 

@@ -523,14 +523,14 @@ CLASS IdeEditor INHERIT IdeObject
 
    DATA   oTab
    DATA   cPath
-   DATA   cFile
-   DATA   cExt
-   DATA   cType
-   DATA   cTheme
+   DATA   cFile                                   INIT   ""
+   DATA   cExt                                    INIT   ""
+   DATA   cType                                   INIT   ""
+   DATA   cTheme                                  INIT   ""
    DATA   qEdit
    DATA   qDocument
    DATA   qHiliter
-   DATA   sourceFile
+   DATA   sourceFile                              INIT   ""
    DATA   pathNormalized
    DATA   qLayout
    DATA   lLoaded                                 INIT   .F.
