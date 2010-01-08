@@ -230,7 +230,6 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:destroy()
-   LOCAL i
 
    ::delAllItems()
 
