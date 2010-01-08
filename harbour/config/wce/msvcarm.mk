@@ -74,7 +74,7 @@ SYSLIBS += corelibc
 LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo -fixed:no -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
+LDFLAGS += -nologo -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
 ifeq ($(filter $(HB_COMPILER_VER),600 700 710),)
    LDFLAGS += -manifest:no
 endif
