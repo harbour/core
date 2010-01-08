@@ -499,7 +499,7 @@ static const char * s_netio_params( int iMsg, const char * pszName, UINT32 * pSi
 {
    int iPCount = iMsg == NETIO_PROCIS ? 0 : hb_pcount(), i;
    char * data = NULL, * itmData;
-   ULONG size = 0, itmSize;
+   ULONG size, itmSize;
 
    size = ( ULONG ) strlen( pszName ) + 1;
 

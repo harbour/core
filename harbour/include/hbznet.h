@@ -72,6 +72,7 @@ typedef void ( * HB_INET_CFUNC ) ( PHB_ZNETSTREAM );
 extern HB_EXPORT int    hb_znetError( PHB_ZNETSTREAM pStream );
 
 extern HB_EXPORT PHB_ZNETSTREAM hb_znetOpen( int level, int strategy );
+extern HB_EXPORT void   hb_znetEncryptKey( PHB_ZNETSTREAM pStream, const void * keydata, int keylen );
 extern HB_EXPORT void   hb_znetClose( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT int    hb_znetError( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT long   hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_LONG timeout );
