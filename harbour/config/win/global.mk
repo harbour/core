@@ -15,7 +15,7 @@ ifneq ($(HB_CPU),x86)
 endif
 
 # kernel32: needed by some compilers (pocc/watcom)
-# user32: *Clipboard*(), MessageBox(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
+# user32: *Clipboard*(), GetKeyState(), GetKeyboardState(), SetKeyboardState(), gtwvt stuff
 # ws2_32: hbsocket
 # advapi32: GetUserName()
 # gdi32: gtwvt

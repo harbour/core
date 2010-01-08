@@ -190,8 +190,14 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 BOOL hb_setenv( const char * szName, const char * szValue )
 {
 #if defined( HB_OS_WIN )
-
-   return SetEnvironmentVariableA( szName, szValue ) != 0;
+   {
+      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
+      LPTSTR lpValue = HB_TCHAR_CONVTO( szValue );
+      BOOL bResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
+      HB_TCHAR_FREE( lpValue );
+      HB_TCHAR_FREE( lpName );
+      return bResult;
+   }
 
 #elif defined( _BSD_SOURCE ) || _POSIX_C_SOURCE >= 200112L || \
       _XOPEN_SOURCE >= 600 || \

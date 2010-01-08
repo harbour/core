@@ -24,6 +24,12 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 CFLAGS += -nologo
 
+# MSVS 2005 SP1 also supports it, but we only enable it for 2008 and upper.
+ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
+   LDFLAGS += -nxcompat -dynamicbase -fixed:no
+   DFLAGS += -nxcompat -dynamicbase
+endif
+
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC
 endif
@@ -73,7 +79,7 @@ LD_OUT := -out:
 LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo -nxcompat -dynamicbase -fixed:no $(LIBPATHS)
+LDFLAGS += -nologo $(LIBPATHS)
 
 AR := lib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
