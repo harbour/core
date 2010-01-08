@@ -638,7 +638,9 @@ HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure point
                           given its symbol index */
 {
    HB_STACK_TLS_PRELOAD
-   PHB_DYNS pDynSym = hb_dynsymGetByIndex( hb_parnl( 1 ) );
+   const char * szName = hb_parc( 1 );
+   PHB_DYNS pDynSym = szName ? hb_dynsymFindName( szName ) :
+                               hb_dynsymGetByIndex( hb_parnl( 1 ) );
 
    hb_retl( pDynSym && hb_dynsymIsFunction( pDynSym ) );
 }

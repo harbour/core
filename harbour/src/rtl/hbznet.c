@@ -244,7 +244,7 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
                for( l = 0; l < rec; l += 8 )
                   hb_znetDecrypt( pStream, pStream->rd.next_in + pStream->rd.avail_in + l );
                pStream->crypt_in -= rec;
-               if( rec > pStream->crypt_size )
+               if( ( uInt ) rec > pStream->crypt_size )
                {
                   pStream->skip_in = rec - pStream->crypt_size;
                   rec = pStream->crypt_size;
@@ -283,7 +283,7 @@ static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG ti
          UINT16 uiLen = ( UINT16 ) ( size - 2 );
          HB_PUT_BE_UINT16( pStream->crypt_out, uiLen );
          uiLen = ( UINT16 ) ( ( ( size + 7 ) ^ 0x07 ) & 0x07 );
-         if( uiLen > pStream->wr.avail_out )
+         if( ( uInt ) uiLen > pStream->wr.avail_out )
          {
             /* it may happen only if encryption was enabled in non empty
              * buffer and the unencrypted part has not been flushed yet.
