@@ -681,6 +681,7 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
   else
   {
     hb_fsSeek( pBTree->hFile, ulNode, FS_SET );
+    /* TOFIX: Should convert ULONG value to portable binary format with HB_PUT_LE_UINT32() before writing it to disk. */
     if ( hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
     {
       raiseError( EG_WRITE, HB_BTREE_EC_WRITEERROR, "write error", "Prune*", 0 );
@@ -1593,7 +1594,7 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
   }
 
   pHeader += sizeof( HEADER_ID ) - 1;
-  pHeader += sizeof( ( UINT32 ) HB_BTREE_HEADERSIZE );
+  pHeader += sizeof( ( UINT32 ) HB_BTREE_HEADERSIZE ); /* TOFIX: This looks suspicious, is it really what's intended? */
   pBTree->usPageSize = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->usKeySize  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->usMaxKeys  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;

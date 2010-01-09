@@ -53,6 +53,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwapi.h"
 #include "hbstack.h"
 
 typedef struct

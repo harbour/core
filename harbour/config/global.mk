@@ -1043,6 +1043,8 @@ ifeq ($(HB_HOST_PKGM),)
    else ifeq ($(HB_PLATFORM),linux)
       ifneq ($(wildcard /etc/debian_version),)
          HB_HOST_PKGM += deb
+      else ifneq ($(wildcard /etc/gentoo-release),)
+         HB_HOST_PKGM += portage
       else
          HB_HOST_PKGM += rpm
       endif

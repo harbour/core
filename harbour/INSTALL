@@ -355,15 +355,19 @@ HARBOUR
    ---------------
 
       For contrib/rddads lib:
-      Download and install 'Advantage Client Engine API for Linux' package
-      (f.e. aceapi-9.10.0.0.tar.gz)
+         Download and install 'Advantage Client Engine API for Linux' package
+         (f.e. aceapi-9.10.0.0.tar.gz)
 
-      For contrib/hbhpdf lib (if you don't wish to use locally hosted version):
-      Download libharu from http://libharu.org/ -> './configure' -> 'make install'
+      For contrib/hbhpdf lib, if you don't wish to use locally hosted version:
+         Download libharu from http://libharu.org/ -> './configure' -> 'make install'
 
-   Linux (Debian, Ubuntu, .deb based distros)
+   Linux (.deb based distros: Debian, Ubuntu)
    ------------------------------------------
    (tested with Ubuntu 7.04, 8.04, 9.04, 9.10)
+
+      You'll need these base packages to build/package/test/use Harbour:
+
+         $ sudo apt-get install bash subversion gcc binutils fakeroot debhelper valgrind upx
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -393,43 +397,48 @@ HARBOUR
       for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
       for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev
 
-   Linux (openSUSE, .rpm based distros)
-   ------------------------------------
+   Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
+   --------------------------------------------------------------
 
-      [ THIS NEEDS REVIEW BY REAL OPENSUSE USER, PACKAGE NAMES
-        AND COMMANDS MAY HAVE MISTAKES. ]
+      You'll need these base packages to build/package/test/use Harbour:
+
+         bash subversion gcc make glibc-devel rpm valgrind
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
-      for gtcrs terminal lib:    $ sudo zypper install ncurses-devel ncurses
-      for gtsln terminal lib:    $ sudo zypper install slang-devel slang
-      for gtxwc terminal lib:    $ sudo zypper install xorg-x11-devel
-                                 $ sudo zypper install XFree86-devel
-      for console mouse support: $ sudo zypper install gpm-devel OR
-                                   sudo zypper install gpm
-      for contrib/gtalleg lib:   $ sudo zypper install allegro-devel
-      for contrib/hbcairo lib:   $ sudo zypper install cairo-devel
-      for contrib/hbcurl lib:    $ sudo zypper install curl-devel
-      for contrib/hbfbird lib:   $ sudo zypper install firebird-devel
-      for contrib/hbfimage lib:  $ sudo zypper install freeimage-devel
-      for contrib/hbgd lib:      $ sudo zypper install gd-devel
-      for contrib/hbmysql lib:   $ sudo zypper install libmysqlclient-devel OR
-                                 $ sudo zypper install mysql-devel OR
-                                 $ sudo zypper install MySQL-devel
-      for contrib/hbodbc lib:    $ sudo zypper install unixodbc-devel OR
-                                 $ sudo zypper install unixODBC-devel
-      for contrib/hbpgsql lib:   $ sudo zypper install postgresql-devel
-      for contrib/hbqt lib:      $ sudo zypper install qt45-devel
+      for gtcrs terminal lib:    ncurses-devel ncurses
+      for gtsln terminal lib:    slang-devel slang
+      for gtxwc terminal lib:    xorg-x11-devel
+                                 XFree86-devel
+      for console mouse support: gpm-devel OR
+                                 gpm
+      for contrib/gtalleg lib:   allegro-devel
+      for contrib/hbcairo lib:   cairo-devel
+      for contrib/hbcurl lib:    curl-devel
+      for contrib/hbfbird lib:   firebird-devel
+      for contrib/hbfimage lib:  freeimage-devel
+      for contrib/hbgd lib:      gd-devel
+      for contrib/hbmysql lib:   libmysqlclient-devel OR
+                                 mysql-devel OR
+                                 MySQL-devel
+      for contrib/hbodbc lib:    unixodbc-devel OR
+                                 unixODBC-devel
+      for contrib/hbpgsql lib:   postgresql-devel
+      for contrib/hbqt lib:      qt45-devel
 
-      NOTES: - On non-openSUSE rpm based distros, use appropriate command instead of
-               'zypper', f.e. 'rpm -i <name>.rpm'.
-             - If you want to build 32-bit Harbour on a 64-bit host, install above
-               packages with '-32bit' appended to their names, f.e. 'slang-devel-32bit'
+      NOTES: - You can use following commands on different distros to install packages:
+                   openSUSE:       $ sudo zypper install <pkg>
+                   Fedora, CentOS: $ sudo yum install <pkg>
+                   Mandriva:       $ sudo urpmi <pkg>
+               Check this link for more:
+                   http://distrowatch.com/dwres.php?resource=package-management
+             - On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
+               above packages with '-32bit' appended to their names, f.e. 'slang-devel-32bit'
 
    OpenSolaris
    -----------
 
-      - $ pkg install SUNWgmake
+      - $ pkg install SUNWgmake SUNWsvn
 
    FreeBSD
    -------
