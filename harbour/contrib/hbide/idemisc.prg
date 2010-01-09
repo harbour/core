@@ -100,7 +100,7 @@ PROCEDURE hbide_justACall()
 FUNCTION hbide_execPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_
 
-   qPop := QMenu():new( IIF( hb_isObject( qParent ), qParent, NIL ) )
+   qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
 
    FOR i := 1 TO len( aPops )
       IF empty( aPops[ i,1 ] )
@@ -117,9 +117,10 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
    pAct   := qPop:exec_1( qPoint )
 
-   qAct   := QAction():configure( pAct )
-
-   IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
+   //IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
+   IF !empty( pAct )
+      qAct := QAction():configure( pAct )
+      cAct := qAct:text()
       FOR EACH a_ IN aPops
          IF hb_isObject( a_[ 1 ] )
             IF a_[ 1 ]:text() == cAct
@@ -163,6 +164,9 @@ FUNCTION hbide_createTarget( cFile, txt_ )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_posAndSize( qWidget )
+   LOCAL qRect := QRect():configure( qWidget:geometry() )
+
+   hbide_dbg( qRect:x(), qRect:y(), qRect:width(), qRect:height() )
 
    RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
           hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","

@@ -77,6 +77,7 @@ CLASS IdeObject
 
    DATA   oIde
    DATA   oUI
+   DATA   qContextMenu
 
    ACCESS oFR                                     INLINE ::oIde:oFR
    ACCESS oED                                     INLINE ::oIde:oED
@@ -138,11 +139,28 @@ CLASS IdeObject
    METHOD create()                                VIRTUAL
    METHOD destroy()                               VIRTUAL
 
+   DATA   aSlots                                  INIT   {}
+   DATA   aEvents                                 INIT   {}
+   METHOD connect()
+
    ERROR HANDLER OnError()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeObject:connect( qWidget, cSlot, bBlock )
+
+   IF Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock )
+      aadd( ::aSlots, { qWidget, cSlot } )
+   ELSE
+      hbide_dbg( "FAILED:", cSlot )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 
 METHOD IdeObject:onError( ... )
    LOCAL cMsg

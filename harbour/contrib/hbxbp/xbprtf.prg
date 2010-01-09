@@ -173,7 +173,7 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connect( ::pWidget, "currentCharFormatChanged(QTextCharFormat)", {|o,p| ::exeBlock( 2, p, o ) } )
    ::connect( ::pWidget, "cursorPositionChanged()"                  , {|o,p| ::exeBlock( 3, p, o ) } )
    ::connect( ::pWidget, "redoAvailable(bool)"                      , {|o,p| ::exeBlock( 4, p, o ) } )
-   ::connect( ::pWidget, "undoAvailable(available)"                 , {|o,p| ::exeBlock( 5, p, o ) } )
+   ::connect( ::pWidget, "undoAvailable(bool)"                      , {|o,p| ::exeBlock( 5, p, o ) } )
    ::connect( ::pWidget, "textChanged()"                            , {|o,p| ::exeBlock( 6, p, o ) } )
    ::connect( ::pWidget, "selectionChanged()"                       , {|o,p| ::exeBlock( 7, p, o ) } )
 

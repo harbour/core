@@ -77,6 +77,8 @@ public:
    QList<QObject *> listObj;
 
 public slots:
+   /* QWidget */
+   void customContextMenuRequested( const QPoint & pos );
    void clicked();
    void triggered();
    void triggered( bool checked );
@@ -228,6 +230,8 @@ public slots:
    void documentLayoutChanged();
    void modificationChanged( bool changed );
    void undoCommandAdded();
+   /* QPlainTextEdit */
+   void updateRequest( const QRect & rect, int dy );
    /*  */
 };
 

@@ -214,6 +214,7 @@ CLASS HbIde
 
    METHOD setPosAndSizeByIni()
    METHOD setPosByIni()
+   METHOD setSizeByIni()
 
    METHOD execAction()
    METHOD manageFuncContext()
@@ -307,10 +308,7 @@ METHOD HbIde:create( cProjIni )
    hbide_loadThemes( Self )
 
    /* Prepare Editor's Tabs */
-   ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-   ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
-   ::oTabWidget := ::oDa:oTabWidget
-   ::qTabWidget := ::oDa:oTabWidget:oWidget
+   ::oED:prepareTabWidget()
 
    /* Attach GRID Layout to Editor Area - Futuristic */
    ::qLayout := QGridLayout():new()
@@ -340,6 +338,10 @@ METHOD HbIde:create( cProjIni )
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
    ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
+
+   /* Set components Sizes */
+   ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
+   ::setSizeByIni( ::oEditTree:oWidget, ProjectTreeGeometry )
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -561,6 +563,19 @@ METHOD HbIde:setPosByIni( qWidget, nPart )
       aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
       qWidget:move( aRect[ 1 ], aRect[ 2 ] )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:setSizeByIni( qWidget, nPart )
+   LOCAL aRect
+
+   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
+      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
    ENDIF
 
    RETURN Self

@@ -140,7 +140,7 @@ METHOD IdeActions:buildActions()
    aAct := ::loadActions()
 
    FOR EACH a_ IN aAct
-      IF !hb_hHasKey( ::hActions, a_[ ACT_NAME ] )
+      IF !( hb_hHasKey( ::hActions, a_[ ACT_NAME ] ) )
 
          qAction := QAction():new( ::qDlg )
          qAction:setCheckable( iif( empty( a_[ ACT_CHECKABLE ] ), .F., ;
@@ -159,6 +159,7 @@ METHOD IdeActions:buildActions()
          qAction:setTooltip( strtran( a_[ ACT_TEXT ], "~", "" ) )
 
          ::hActions[ a_[ ACT_NAME ] ] := qAction
+
       ENDIF
    NEXT
 
@@ -517,6 +518,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Help"
    oSubMenu:addItem( { ::getAction( "AboutIDE"            ), {|| hbide_help( 1 ) } } )
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "AboutHarbour"        ), {|| hbide_help( 4 ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "HarbourUsersList"    ), {|| hbide_help( 3 ) } } )

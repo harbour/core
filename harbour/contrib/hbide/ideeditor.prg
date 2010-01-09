@@ -75,6 +75,9 @@
 
 CLASS IdeEditsManager INHERIT IdeObject
 
+   DATA   qContextMenu
+   DATA   aActions                                INIT  {}
+
    METHOD new()
    METHOD create()
 
@@ -111,7 +114,82 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD getEditorByTabObject()
    METHOD getEditorByIndex()
 
+   METHOD prepareTabWidget()
+   METHOD exeBlock()
+
    ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   ::qContextMenu := QMenu():new()
+
+   aadd( ::aActions, { "TB_Cut"       , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Cut"        ) ) } )
+   aadd( ::aActions, { "TB_Copy"      , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Copy"       ) ) } )
+   aadd( ::aActions, { "TB_Paste"     , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Paste"      ) ) } )
+   aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
+   aadd( ::aActions, { "TB_Undo"      , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Undo"       ) ) } )
+   aadd( ::aActions, { "TB_Redo"      , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Redo"       ) ) } )
+   aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
+   aadd( ::aActions, { "TB_Save"      , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Save"       ) ) } )
+   aadd( ::aActions, { "TB_Close"     , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Close"      ) ) } )
+   aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
+   aadd( ::aActions, { "TB_Compile"   , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Compile"    ) ) } )
+   aadd( ::aActions, { "TB_CompilePPO", ::qContextMenu:addAction_4( ::oAC:getAction( "TB_CompilePPO" ) ) } )
+   aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
+   aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                        ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:prepareTabWidget()
+
+   ::oIde:oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
+   ::oIde:oTabWidget := ::oDa:oTabWidget
+   ::oIde:qTabWidget := ::oDa:oTabWidget:oWidget
+
+   ::qTabWidget:setUsesScrollButtons( .f. )
+   ::qTabWidget:setMovable( .t. )
+
+   ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|o,p| ::exeBlock( 1, p, o ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:exeBlock( nMode, p )
+   //LOCAL qObj
+
+   HB_SYMBOL_UNUSED( p )
+
+   DO CASE
+   CASE nMode == 1  // "customContextMenuRequested(QPoint)"
+      #if 0
+      qObj := QWidget():configure( ::qTabWidget:childAt_1( QPoint():configure( p ) ) )
+      IF !e
+      hbide_dbg( qObj:x(), qObj:y() )
+      #endif
+   CASE nMode == 2
+   CASE nMode == 3
+   ENDCASE
+
+
+   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -234,24 +312,6 @@ METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
    ::getEditorByIndex( 0 ):setDocumentProperties()
 
    RETURN .f.
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:new( oIde )
-
-   ::oIde := oIde
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:create( oIde )
-
-   DEFAULT oIde TO ::oIde
-
-   ::oIde := oIde
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -556,11 +616,10 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD activateTab()
    METHOD closeTab()
    METHOD dispEditInfo()
-   METHOD onBlockCountChanged()
-   METHOD onContentsChanged()
    METHOD setTabImage()
    METHOD applyTheme()
    METHOD setDocumentProperties()
+   METHOD exeBlock()
 
    ENDCLASS
 
@@ -623,10 +682,22 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
       ::qHiliter := ::oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
    ENDIF
 
-   Qt_Slots_Connect( ::pSlots, ::qEdit    , "textChanged()"          , {|| ::setTabImage() } )
-   Qt_Slots_Connect( ::pSlots, ::qEdit    , "cursorPositionChanged()", {|| ::dispEditInfo() } )
-   Qt_Slots_Connect( ::pSlots, ::qDocument, "blockCountChanged(int)" , {|o,i| ::onBlockCountChanged( i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qDocument, "contentsChanged()"      , {|| ::onContentsChanged() } )
+   ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::connect( ::qEdit    , "customContextMenuRequested(QPoint)", {|o,p| ::exeBlock( 1, p, o ) } )
+
+   /* QPlainTextEdit */
+   ::Connect( ::qEdit    , "textChanged()"            , {|      | ::setTabImage()           } )
+   ::Connect( ::qEdit    , "cursorPositionChanged()"  , {|      | ::dispEditInfo()          } )
+   ::Connect( ::qEdit    , "copyAvailable(bool)"      , {|o,p   | ::exeBlock( 3, p, o     ) } )
+   ::Connect( ::qEdit    , "modificationChanged(bool)", {|o,p   | ::exeBlock( 4, p, o     ) } )
+   ::Connect( ::qEdit    , "redoAvailable(bool)"      , {|o,p   | ::exeBlock( 5, p, o     ) } )
+   ::Connect( ::qEdit    , "selectionChanged()"       , {|o,p   | ::exeBlock( 6, p, o     ) } )
+   ::Connect( ::qEdit    , "undoAvailable(bool)"      , {|o,p   | ::exeBlock( 7, p, o     ) } )
+   ::Connect( ::qEdit    , "updateRequest(QRect,int)" , {|o,p,p1| ::exeBlock( 8, p, p1, o ) } )
+   /* QTextDocument */
+   ::Connect( ::qDocument, "blockCountChanged(int)"   , {|o,p   | ::exeBlock( 21, p, o     ) } )
+   ::Connect( ::qDocument, "contentsChanged()"        , {|      | ::exeBlock( 22 ) } )
+
 
    ::qEdit:show()
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
@@ -643,6 +714,67 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::setTabImage()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:exeBlock( nMode, p, p1 )
+   LOCAL pAct, qAct
+   //LOCAL qRect
+
+   HB_SYMBOL_UNUSED( p  )
+   HB_SYMBOL_UNUSED( p1 )
+
+   SWITCH nMode
+   /* QPlainTextEdit */
+   CASE 1        // "customContextMenuRequested(QPoint)"
+      IF !empty( pAct := ::oED:qContextMenu:exec_1( ::qEdit:mapToGlobal( p ) ) )
+         qAct := QAction():configure( pAct )
+         DO CASE
+         CASE qAct:text() == "Apply Theme"
+            ::applyTheme()
+         ENDCASE
+      ENDIF
+      EXIT
+   CASE 2
+      EXIT
+   CASE 3        // "copyAvailable(bool)"
+      hbide_dbg( "copyAvailable(bool)" )
+      EXIT
+   CASE 4        // "modificationChanged(bool)"
+      hbide_dbg( "modificationChanged(bool)" )
+      EXIT
+   CASE 5        // "redoAvailable(bool)"
+      hbide_dbg( "redoAvailable(bool)" )
+      EXIT
+   CASE 6        // "selectionChanged()"
+      hbide_dbg( "selectionChanged()" )
+      EXIT
+   CASE 7        // "undoAvailable(bool)"
+      hbide_dbg( "undoAvailable(bool)" )
+      EXIT
+   CASE 8        // "updateRequest(QRect,int)"
+      //qRect := QRect():configure( p )
+      //hbide_dbg( "updateRequest(QRect,int)", qRect:x(), qRect:y(), qRect:width(), qRect:height(), p1 )
+      EXIT
+   /* QTabPage */
+   CASE 11       // QEvent_ContextMenu
+      hbide_dbg( "QEvent_ContextMenu" )
+      EXIT
+   CASE 12       // QEvent_ContextMenu
+      hbide_dbg( "QEvent_ContextMenu" )
+      EXIT
+   /* QTextDocument */
+   CASE 21       // "blockCountChanged(int)"
+      ::nBlock := QTextCursor():configure( ::qEdit:textCursor() ):blockNumber()
+      EXIT
+   CASE 22       // "contentsChanged()"
+      hbide_dbg( "contentsChanged()" )
+      EXIT
+
+
+   ENDSWITCH
+
+   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -701,6 +833,51 @@ METHOD IdeEditor:destroy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:buildTabPage( cSource )
+
+   ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
+
+   IF Empty( cSource )
+      ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )
+   ELSE
+      ::oTab:caption := ::cFile + ::cExt
+   ENDIF
+   ::oTab:minimized := .F.
+
+   ::oTab:create()
+
+   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::oTab:oWidget ) )
+   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
+
+   ::oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
+   ::oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
+
+   ::oTab:oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::connect( ::oTab:oWidget, "customContextMenuRequested(QPoint)", {|o,e| ::exeBlock( 11, e, o ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
+
+   IF PCount() == 00
+      mp1 := ::nID
+      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == mp1  } )
+   ELSE
+      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oXbp } )
+   ENDIF
+
+ * Requested tab exists?
+   IF !Empty( mp2 )
+      ::oIde:closeSource( mp2 )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 /*
  * Remove the tab of the main screen and clean the objects from memory.Note that
  * this function does not question the User if he wants to save or not the
@@ -782,63 +959,6 @@ METHOD IdeEditor:removeTabPage()
          ::lDockRVisible := .f.
       ENDIF
    ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:buildTabPage( cSource )
-
-   ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
-
-   IF Empty( cSource )
-      ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )
-   ELSE
-      ::oTab:caption := ::cFile + ::cExt
-   ENDIF
-   ::oTab:minimized := .F.
-
-   ::oTab:create()
-
-   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::oTab:oWidget ) )
-   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
-
-   ::oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
-   ::oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
-
-   IF PCount() == 00
-      mp1 := ::nID
-      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == mp1  } )
-   ELSE
-      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oXbp } )
-   ENDIF
-
- * Requested tab exists?
-   IF !Empty( mp2 )
-      ::oIde:closeSource( mp2 )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:onContentsChanged()
-
-   // hbide_dbg( "onContentsChanged()" )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:onBlockCountChanged()
-
-   ::nBlock := ::qCursor := QTextCursor():configure( ::qEdit:textCursor() ):blockNumber()
 
    RETURN Self
 
