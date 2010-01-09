@@ -1075,7 +1075,9 @@ HB_CROSS_BUILD :=
 ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
    ifeq ($(HB_BIN_COMPILE),)
       # Not required in these combinations: [vszakats]
-      ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_PLATFORM)-$(HB_CPU),win-x86_64-win-x86)
+      # 'Same platform, x86_64 host, x86 target'
+      ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_CPU),$(HB_PLATFORM)-x86_64-x86)
+         # 'Windows x86 host, MS-DOS target'
          ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_PLATFORM)-$(HB_CPU),win-x86-dos-x86)
             HB_CROSS_BUILD := yes
             # Try to autosetup

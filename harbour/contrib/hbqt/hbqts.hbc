@@ -14,7 +14,7 @@ libs=hbqtcores hbqtguis hbqtnetworks hbqtwebkits
 {allwin}libs=psapi
 {allgcc}libs=supc++
 
-hbcppmm=yes
+{win|os2}hbcppmm=yes
 
 gui=yes
 gt=gtnul

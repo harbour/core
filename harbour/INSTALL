@@ -396,26 +396,35 @@ HARBOUR
    Linux (openSUSE, .rpm based distros)
    ------------------------------------
 
+      [ THIS NEEDS REVIEW BY REAL OPENSUSE USER, PACKAGE NAMES
+        AND COMMANDS MAY HAVE MISTAKES. ]
+
       You'll need these packages to compile certain contribs and optional Harbour features:
 
-      for gtcrs terminal lib:    $ sudo rpm -i ncurses-devel ncurses
-      for gtsln terminal lib:    $ sudo rpm -i slang-devel slang
-      for gtxwc terminal lib:    $ sudo rpm -i xorg-x11-devel OR
-                                 $ sudo rpm -i XFree86-devel
-      for console mouse support: $ sudo rpm -i gpm-devel
-      for contrib/gtalleg lib:   $ sudo rpm -i allegro-devel
-      for contrib/hbcairo lib:   $ sudo rpm -i cairo-devel
-      for contrib/hbcurl lib:    $ sudo rpm -i curl-devel
-      for contrib/hbfbird lib:   $ sudo rpm -i firebird-devel
-      for contrib/hbfimage lib:  $ sudo rpm -i freeimage-devel
-      for contrib/hbgd lib:      $ sudo rpm -i gd-devel
-      for contrib/hbmysql lib:   $ sudo rpm -i libmysqlclient-devel OR
-                                 $ sudo rpm -i mysql-devel OR
-                                 $ sudo rpm -i MySQL-devel
-      for contrib/hbodbc lib:    $ sudo rpm -i unixodbc-devel OR
-                                 $ sudo rpm -i unixODBC-devel
-      for contrib/hbpgsql lib:   $ sudo rpm -i postgresql-devel
-      for contrib/hbqt lib:      $ sudo rpm -i qt45-devel
+      for gtcrs terminal lib:    $ sudo zypper install ncurses-devel ncurses
+      for gtsln terminal lib:    $ sudo zypper install slang-devel slang
+      for gtxwc terminal lib:    $ sudo zypper install xorg-x11-devel
+                                 $ sudo zypper install XFree86-devel
+      for console mouse support: $ sudo zypper install gpm-devel OR
+                                   sudo zypper install gpm
+      for contrib/gtalleg lib:   $ sudo zypper install allegro-devel
+      for contrib/hbcairo lib:   $ sudo zypper install cairo-devel
+      for contrib/hbcurl lib:    $ sudo zypper install curl-devel
+      for contrib/hbfbird lib:   $ sudo zypper install firebird-devel
+      for contrib/hbfimage lib:  $ sudo zypper install freeimage-devel
+      for contrib/hbgd lib:      $ sudo zypper install gd-devel
+      for contrib/hbmysql lib:   $ sudo zypper install libmysqlclient-devel OR
+                                 $ sudo zypper install mysql-devel OR
+                                 $ sudo zypper install MySQL-devel
+      for contrib/hbodbc lib:    $ sudo zypper install unixodbc-devel OR
+                                 $ sudo zypper install unixODBC-devel
+      for contrib/hbpgsql lib:   $ sudo zypper install postgresql-devel
+      for contrib/hbqt lib:      $ sudo zypper install qt45-devel
+
+      NOTES: - On non-openSUSE rpm based distros, use appropriate command instead of
+               'zypper', f.e. 'rpm -i <name>.rpm'.
+             - If you want to build 32-bit Harbour on a 64-bit host, install above
+               packages with '-32bit' appended to their names, f.e. 'slang-devel-32bit'
 
    OpenSolaris
    -----------
