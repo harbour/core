@@ -94,6 +94,8 @@ CLASS IdeProjManager INHERIT IdeObject
 
    DATA   lLaunch                                 INIT .f.
    DATA   cProjectInProcess                       INIT ""
+   DATA   cPPO                                    INIT ""
+   DATA   lPPO                                    INIT .f.
 
    METHOD new()
    METHOD create()
@@ -636,14 +638,15 @@ METHOD IdeProjManager:buildProjectViaQt( cProject )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList, qListSets
-   LOCAL cTmp, nResult, nSeconds, cTargetFN, cPath, cFileName, lDelHbp
+   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList, oEdit
+   LOCAL cTmp, nResult, nSeconds, cTargetFN, lDelHbp
 
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
    DEFAULT lPPO      TO .F.
    DEFAULT lViaQt    TO .F.
 
+   ::lPPO    := lPPO
    ::lLaunch := lLaunch
    ::cProjectInProcess := cProject
 
@@ -653,11 +656,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       MsgBox( 'No file open issue to be compiled!' )
       RETURN Self
    End
-
    IF empty( cProject )
       cProject := ::getCurrentProject()
    ENDIF
-
    IF empty( cProject )
       RETURN Self
    ENDIF
@@ -696,28 +697,29 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
 
-   IF !( lPPO )
+   IF !( ::lPPO )
       aeval( hbide_filesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
 
    ELSE
-      aadd( aHbp, "-hbcmp -s -p" )
+      IF !empty( oEdit := ::oED:getEditorCurrent() )
+         IF hbide_isSourcePRG( oEdit:sourceFile )
+            aadd( aHbp, "-hbcmp -s -p" )
 
-      n := ::getCurrentTab()
+            // TODO: We have to test if the current file is part of a project, and we
+            // pull your settings, even though this is not the active project - vailtom
+            aadd( aHbp, hbide_pathToOSPath( oEdit:sourceFile ) )
 
-      hb_FNameSplit( ::aTabs[ n, TAB_SOURCEFILE ], @cPath, @cFileName, @cTmp )
+            ::cPPO := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + '.ppo' )
+            FErase( ::cPPO )
 
-      IF !( lower( cTmp ) $ ".prg,?" )
-         MsgBox( 'Operation not supported for this file type: "' + cTmp + '"' )
-         RETURN Self
+         ELSE
+            MsgBox( 'Operation not supported for this file type: "' + cTmp + '"' )
+            RETURN Self
+
+         ENDIF
+
+         lViaQt := .t.   /* Donot know why it fails with Qt */
       ENDIF
-
-      cFileName := cPath + cFileName + '.ppo'
-
-      // TODO: We have to test if the current file is part of a project, and we
-      // pull your settings, even though this is not the active project - vailtom
-      aadd( aHbp, ::aTabs[ n, TAB_SOURCEFILE ] )
-
-      FErase( cFileName )
    ENDIF
 
    IF !hbide_createTarget( cHbpPath, aHbp )
@@ -756,18 +758,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ::oOutputResult:oWidget:append( cTmp )
          ::nStarted := seconds()
 
-         #if 0  /* Experiment */
-         qStringList := QStringList():new()
-         qStringList:append( "/k" )
-         qStringList:append( "c:\batches\SetMinGW-harbour-E.bat" )
-         qStringList:append( "hbMK2.exe -help" )
-         ::qProcess:startDetached_1( "cmd.exe", qStringList )
-         #endif
-
-
-         qListSets := QStringList():new()
-         qListSets:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
-
          #if 0  /* Mechanism to supply environment variables to called process */
                 /* I do not know nixes but assume that Qt must be issueing proper */
                 /* shell command for the target OS to set them. */
@@ -775,14 +765,20 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
                 /* and hence developer can choose any compiler of his choice. */
                 /*                                                                */
                 /* Actually, this was the intension in hbIDE.env I commited in IDE root */
-         ::qProcess:setEnvironment( qListSets )
-         #endif
+         qStringList := QStringList():new()
+         qStringList:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
+         ::qProcess:setEnvironment( qStringList )
+
+         qStringList := QStringList():new()
+         qStringList:append( [/c  c:\batches\SetMinGW-harbour-E.bat && hbMK2.exe ] + cHbpPath )
+         ::qProcess:start( "cmd.exe", qStringList )
+         #else
 
          qStringList := QStringList():new()
          qStringList:append( cHbpPath )
          //
          ::qProcess:start( "hbmk2", qStringList )
-
+         #endif
       ELSE
          cOutput := "" ; cErrors := ""
          nResult := hb_processRun( ( "hbmk2 " + cHbpPath ), , @cOutput, @cErrors )
@@ -800,16 +796,16 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          IF ( nResult == 0 ) .AND. ( lLaunch )
             ::LaunchProject( cProject )
          ENDIF
+
+         IF ::lPPO .AND. hb_FileExists( ::cPPO )
+            ::oIde:editSource( ::cPPO )
+         ENDIF
       ENDIF
 
    ENDIF
 
    IF lDelHbp
       FErase( cHbpPath )
-   ENDIF
-
-   IF lPPO .AND. hb_FileExists( cFileName )
-      ::oED:showPPO( cFileName )
    ENDIF
 
    RETURN Self
@@ -865,6 +861,9 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
 
       IF ::lLaunch
          ::launchProject( ::cProjectInProcess )
+      ENDIF
+      IF ::lPPO .AND. hb_FileExists( ::cPPO )
+         ::oIde:editSource( ::cPPO )
       ENDIF
    ENDCASE
 

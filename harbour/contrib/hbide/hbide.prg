@@ -439,7 +439,7 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "Compile"
       //
    CASE cKey == "CompilePPO"
-      ::oPM:buildProject( '', .F., .F., .T. )
+      ::oPM:buildProject( '', .F., .F., .T., .T. )
    CASE cKey == "Properties"
       IF Empty( ::cWrkProject )
          MsgBox( 'No active project detected!' )
@@ -711,7 +711,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisib
       ::oED:setSourceVisible( cSourceFile )
    ENDIF
 
-   IF !Empty( cSourceFile )
+   IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
       hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
    ENDIF
 

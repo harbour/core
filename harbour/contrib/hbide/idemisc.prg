@@ -513,10 +513,9 @@ FUNCTION hbide_isValidText( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
-   cExt := lower( cExt )
 
-   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,"+;
-                   ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc" )
+   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
+                                     ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc" )
 
 /*----------------------------------------------------------------------*/
 
@@ -524,9 +523,26 @@ FUNCTION hbide_isValidSource( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
-   cExt := lower( cExt )
 
-   RETURN ( cExt $ ".c,.cpp,.prg,.res,.rc" )
+   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc" )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isSourcePPO( cSourceFile )
+   LOCAL cExt
+
+   hb_fNameSplit( cSourceFile, , , @cExt )
+
+   RETURN ( lower( cExt ) == ".ppo" )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isSourcePRG( cSourceFile )
+   LOCAL cExt
+
+   hb_fNameSplit( cSourceFile, , , @cExt )
+
+   RETURN ( lower( cExt ) == ".prg" )
 
 /*----------------------------------------------------------------------*/
 

@@ -228,9 +228,10 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
 METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
 
    IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex
-      ::qTabWidget:setCurrentIndex( nIndex )
-      ::getEditorByIndex( nIndex ):setDocumentProperties()
+      nIndex := 0
    ENDIF
+   ::qTabWidget:setCurrentIndex( 0 )
+   ::getEditorByIndex( 0 ):setDocumentProperties()
 
    RETURN .f.
 
@@ -599,7 +600,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    hb_fNameSplit( cSourceFile, @::cPath, @::cFile, @::cExt )
 
    ::cType := upper( strtran( ::cExt, ".", "" ) )
-   ::cType := iif( ::cType $ "PRG,C,CPP,H,CH", ::cType, "U" )
+   ::cType := iif( ::cType $ "PRG,C,CPP,H,CH,PPO", ::cType, "U" )
 
    ::buildTabPage( ::sourceFile )
 
@@ -648,8 +649,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 METHOD IdeEditor:setDocumentProperties()
    LOCAL qCursor
 
-   hbide_dbg( "   ." )
-
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
@@ -676,8 +675,6 @@ METHOD IdeEditor:setDocumentProperties()
    ::dispEditInfo()
 
    ::oIde:manageFocusInEditor()
-
-   hbide_dbg( "   ." )
 
    RETURN Self
 
