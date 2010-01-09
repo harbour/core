@@ -27,5 +27,6 @@ idesaveload.prg
 iderequests.prg
 idethemes.prg
 ideprojmanager.prg
+idesources.prg
 
 ideparseexpr.c

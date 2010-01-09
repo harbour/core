@@ -89,7 +89,7 @@
 #define PRJ_PRP_FLAGS                             2
 #define PRJ_PRP_SOURCES                           3
 #define PRJ_PRP_METADATA                          4
-
+//
 #define PRJ_PRP_SECTIONS                          4
 
 #define PRJ_PRP_TYPE                              1
@@ -100,7 +100,7 @@
 #define PRJ_PRP_OUTPUT                            6
 #define PRJ_PRP_LPARAMS                           7
 #define PRJ_PRP_LPROGRAM                          8
-
+//
 #define PRJ_PRP_PRP_VRBLS                         8
 
 /* Project Properties array elements */

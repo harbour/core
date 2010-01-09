@@ -84,6 +84,67 @@
 
 /*----------------------------------------------------------------------*/
 
+CLASS IdeProject
+
+   DATA   aProjProps                              INIT {}
+
+   DATA   fileName                                INIT ""
+   DATA   normalizedName                          INIT ""
+
+   DATA   type                                    INIT "Executable"
+   DATA   title                                   INIT ""
+   DATA   location                                INIT hb_dirBase() + "projects"
+   DATA   wrkDirectory                            INIT hb_dirBase() + "projects"
+   DATA   destination                             INIT hb_dirBase() + "projects"
+   DATA   outputName                              INIT hb_dirBase() + "projects"
+   DATA   launchParams                            INIT ""
+   DATA   launchProgram                           INIT ""
+   DATA   hbpFlags                                INIT ""
+   DATA   sources                                 INIT {}
+   DATA   metaData                                INIT {}
+   DATA   dotHbp                                  INIT ""
+   DATA   compilers                               INIT ""
+
+   METHOD new()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProject:new( aProps )
+   LOCAL b_, a_
+
+   IF hb_isArray( aProps )
+      ::aProjProps := aProps
+
+      b_:= aProps[ 3 ]
+
+      ::normalizedName := b_[ 1 ]
+      ::fileName       := b_[ 2 ]
+
+      a_:= b_[ PRJ_PRP_PROPERTIES, 2 ]
+
+      ::type           := a_[ E_qPrjType ]
+      ::title          := a_[ E_oPrjTtl  ]
+      ::location       := a_[ E_oPrjLoc  ]
+      ::wrkDirectory   := a_[ E_oPrjWrk  ]
+      ::destination    := a_[ E_oPrjDst  ]
+      ::outputName     := a_[ E_oPrjOut  ]
+      ::launchParams   := a_[ E_oPrjLau  ]
+      ::launchProgram  := a_[ E_oPrjLEx  ]
+
+      ::hbpFlags       := b_[ PRJ_PRP_FLAGS   , 2 ]
+      ::sources        := b_[ PRJ_PRP_SOURCES , 2 ]
+      ::metaData       := b_[ PRJ_PRP_METADATA, 2 ]
+      ::dotHbp         := ""
+      ::compilers      := ""
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeProjManager INHERIT IdeObject
 
    DATA   cSaveTo
@@ -96,6 +157,7 @@ CLASS IdeProjManager INHERIT IdeObject
    DATA   cProjectInProcess                       INIT ""
    DATA   cPPO                                    INIT ""
    DATA   lPPO                                    INIT .f.
+   DATA   oProject
 
    METHOD new()
    METHOD create()
@@ -114,8 +176,10 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD promptForPath()
    METHOD launchProject()
    METHOD buildProject()
-   METHOD buildProjectViaQt()
    METHOD readProcessInfo()
+   METHOD getProjectProperties()
+   METHOD getProject()
+   METHOD buildProcess()
 
    ENDCLASS
 
@@ -503,15 +567,19 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:getCurrentProject()
+METHOD IdeProjManager:getCurrentProject( lAlert )
+
+   DEFAULT lAlert TO .t.
 
    IF !Empty( ::cWrkProject )
       RETURN ::cWrkProject
    ENDIF
 
    IF Empty( ::aProjects )
-      MsgBox( "No longer available projects!" )
-      RETURN ::cWrkProject
+      IF lAlert
+         MsgBox( "No Projects Available" )
+      ENDIF
+      RETURN ""
    ENDIF
 
    IF Len( ::aProjects ) == 1
@@ -527,7 +595,7 @@ METHOD IdeProjManager:selectCurrentProject()
    LOCAL oDlg, i, p, t
 
    IF Empty( ::aProjects )
-      MsgBox( "No longer available projects!" )
+      MsgBox( "No Projects Available" )
       RETURN ::cWrkProject
    ENDIF
 
@@ -557,11 +625,33 @@ METHOD IdeProjManager:selectCurrentProject()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:getProjectProperties( cProject )
+   LOCAL n
+
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } ) ) > 0
+      RETURN ::aProjects[ n, 3 ]
+   ENDIF
+
+   RETURN {}
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getProject( cProject )
+   LOCAL n, aProj
+
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } ) ) > 0
+      aProj := ::aProjects[ n ]
+   ENDIF
+
+   RETURN IdeProject():new( aProj )
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:closeProject( cProject )
    LOCAL nPos
 
    IF Empty( ::aProjects )
-      MsgBox( "No longer available projects!" )
+      MsgBox( "No Projects Available" )
       RETURN Self
    ENDIF
 
@@ -629,17 +719,10 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:buildProjectViaQt( cProject )
-
-   ::buildProject( cProject, , , , .t. )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, n, aPrj, cHbpPath, aHbp, qStringList, oEdit
-   LOCAL cTmp, nResult, nSeconds, cTargetFN, lDelHbp
+   LOCAL cOutput, cErrors, cHbpPath, qStringList, oEdit
+   LOCAL cTmp, nResult, cTargetFN
+   LOCAL aHbp := {}
 
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
@@ -650,60 +733,71 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ::lLaunch := lLaunch
    ::cProjectInProcess := cProject
 
-   lDelHbp := lPPO
-
-   IF lPPO .AND. ::getCurrentTab() == 0
-      MsgBox( 'No file open issue to be compiled!' )
-      RETURN Self
-   End
-   IF empty( cProject )
-      cProject := ::getCurrentProject()
-   ENDIF
-   IF empty( cProject )
+   IF ::lPPO .AND. ::getCurrentTab() == 0
+      MsgBox( 'No source available to be compiled' )
       RETURN Self
    ENDIF
+   IF empty( cProject )
+      cProject := ::getCurrentProject( .f. )
+   ENDIF
+   IF empty( cProject ) .AND. !( ::lPPO )
+      RETURN Self
+   ENDIF
+   IF ::lPPO
+      lRebuild := .t.
+   ENDIF
 
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } )
-   aPrj := ::aProjects[ n, 3 ]
-   aHbp := {}
+   ::oProject := ::getProject( cProject )
 
-   cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
-   cTargetFN := hbide_pathToOSPath( cTargetFN )
+   //cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
+   cTargetFN := hbide_pathToOSPath( ::oProject:location + ::pathSep + ;
+                                  iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
    /*
     * Creates a temporary file to avoid erase the file. Hbp correct this project.
     * 26/12/2009 - 04:17:56 - vailtom
     */
-   IF lDelHbp
-      cHbpPath  := cTargetFN + '.' + hb_md5( alltrim( str( seconds() ) ) ) + ".hbp"
-   ELSE
-      cHbpPath  := cTargetFN + ".hbp"
+   //cHbpPath  := cTargetFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
+   cHbpPath  := cTargetFN + iif( ::lPPO, '._tmp', "" ) + ".hbp"
+
+   IF !( ::lPPO )
+      IF     ::oProject:type == "Lib"
+         aadd( aHbp, "-hblib" )
+      ELSEIF ::oProject:type == "Dll"
+         aadd( aHbp, "-hbdyn" )
+      ENDIF
    ENDIF
 
-   DO CASE
-   CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-      aadd( aHbp, "-hblib" )
-   CASE aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-      aadd( aHbp, "-hbdyn" )
-   ENDCASE
-
-   aadd( aHbp, "-o" + cTargetFN )
+   aadd( aHbp, "# User Supplied Flags" )
+   aadd( aHbp, " " )
+   aeval( ::oProject:hbpFlags, {|e| aadd( aHbp, e ) } )
+   aadd( aHbp, " " )
+   aadd( aHbp, "# hbIDE Supplied Flags" )
+   aadd( aHbp, " " )
+   IF !( ::lPPO )
+      aadd( aHbp, "-o" + cTargetFN )
+   ENDIF
    aadd( aHbp, "-q"             )
    aadd( aHbp, "-trace"         )
    aadd( aHbp, "-info"          )
-
    IF lRebuild
-      aadd( aHbp, "-rebuild" )
+      aadd( aHbp, "-rebuild"    )
    ENDIF
-
-   aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
+   aadd( aHbp, " " )
 
    IF !( ::lPPO )
-      aeval( hbide_filesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
+      aadd( aHbp, "# Source Files" )
+      aadd( aHbp, " " )
+      aeval( hbide_filesToSources( ::oProject:sources ), {|e| aadd( aHbp, e ) } )
 
    ELSE
       IF !empty( oEdit := ::oED:getEditorCurrent() )
          IF hbide_isSourcePRG( oEdit:sourceFile )
-            aadd( aHbp, "-hbcmp -s -p" )
+            aadd( aHbp, "-hbcmp" )
+            aadd( aHbp, "-s"     )
+            aadd( aHbp, "-p"     )
+            aadd( aHbp, "  "     )
+            aadd( aHbp, "# Source File - PPO" )
+            aadd( aHbp, " " )
 
             // TODO: We have to test if the current file is part of a project, and we
             // pull your settings, even though this is not the active project - vailtom
@@ -713,7 +807,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
             FErase( ::cPPO )
 
          ELSE
-            MsgBox( 'Operation not supported for this file type: "' + cTmp + '"' )
+            MsgBox( 'Operation not supported for this file type: "' + oEdit:sourceFile + '"' )
             RETURN Self
 
          ENDIF
@@ -722,15 +816,15 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ENDIF
    ENDIF
 
+   ::lDockBVisible := .t.
+   ::oDockB2:show()
+   ::oOutputResult:oWidget:clear()
+
    IF !hbide_createTarget( cHbpPath, aHbp )
-      cTmp := 'Error saving: ' + cHbpPath
+      ::oOutputResult:oWidget:append( 'Error saving: ' + cHbpPath )
 
    ELSE
-      ::lDockBVisible := .t.
-      ::oDockB2:show()
-      ::oOutputResult:oWidget:clear()
-
-      nSeconds := seconds()  // time elapsed
+      ::nStarted := seconds()
 
       cTmp := hbide_outputLine() + CRLF + ;
               "Project [ " + cProject                     + " ]    " + ;
@@ -738,25 +832,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
               "Rebuild [ " + iif( lRebuild, 'Yes', 'No' ) + " ]    " + ;
               "Started [ " + time() + " ]" + CRLF + ;
               hbide_outputLine() + CRLF
+      ::oOutputResult:oWidget:append( cTmp )
 
       IF lViaQt
-         ::qProcess := QProcess():new()
-         ::qProcess:setReadChannel( 1 )
-
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::readProcessInfo( CHN_RCF, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::readProcessInfo( CHN_CLO, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::readProcessInfo( CHN_BYT, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::readProcessInfo( CHN_STT, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::readProcessInfo( CHN_ERE, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::readProcessInfo( CHN_BGN, o, i ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( CHN_OUT, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( CHN_ERR, i, o ) } )
-         Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( CHN_FIN, i, ii, o ) } )
-
-         ::oOutputResult:oWidget:clear()
-         ::oOutputResult:oWidget:append( cTmp )
-         ::nStarted := seconds()
+         ::buildProcess()
 
          #if 0  /* Mechanism to supply environment variables to called process */
                 /* I do not know nixes but assume that Qt must be issueing proper */
@@ -777,19 +856,21 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          qStringList := QStringList():new()
          qStringList:append( cHbpPath )
          //
+         ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory() )
+         //
          ::qProcess:start( "hbmk2", qStringList )
          #endif
       ELSE
          cOutput := "" ; cErrors := ""
          nResult := hb_processRun( ( "hbmk2 " + cHbpPath ), , @cOutput, @cErrors )
 
-       * Show detailed status about compile process...
-         cTmp += cOutput + CRLF
+         cTmp := cOutput + CRLF
          cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
-         cTmp += "errorlevel: " + hb_ntos( nResult ) + CRLF
-         cTmp += '-----------------------------------------------------------------' + CRLF
-         cTmp += 'Finished at ' + time() + CRLF
-         cTmp += "Done in " + ltrim( str( seconds() - nseconds ) ) +" seconds."  + CRLF
+         cTmp += hbide_outputLine() + CRLF
+         cTmp += "Exit Code [ " + hb_ntos( nResult ) + " ]    " + ;
+                 "Finished at [ " + time() + " ]    " + ;
+                 "Done in [ " + hb_ntos( seconds() - ::nStarted ) + " Secs ]" + CRLF
+         cTmp += hbide_outputLine() + CRLF
 
          hbide_convertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
 
@@ -798,15 +879,35 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ENDIF
 
          IF ::lPPO .AND. hb_FileExists( ::cPPO )
-            ::oIde:editSource( ::cPPO )
+            ::editSource( ::cPPO )
          ENDIF
       ENDIF
 
    ENDIF
 
-   IF lDelHbp
+   IF ::lPPO
       FErase( cHbpPath )
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:buildProcess()
+
+   ::qProcess := QProcess():new()
+   ::qProcess:setReadChannel( 1 )
+
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::readProcessInfo( CHN_RCF, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::readProcessInfo( CHN_CLO, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::readProcessInfo( CHN_BYT, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::readProcessInfo( CHN_STT, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::readProcessInfo( CHN_ERE, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::readProcessInfo( CHN_BGN, o, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( CHN_OUT, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( CHN_ERR, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( CHN_FIN, i, ii, o ) } )
 
    RETURN Self
 
@@ -863,7 +964,7 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
          ::launchProject( ::cProjectInProcess )
       ENDIF
       IF ::lPPO .AND. hb_FileExists( ::cPPO )
-         ::oIde:editSource( ::cPPO )
+         ::editSource( ::cPPO )
       ENDIF
    ENDCASE
 
@@ -874,7 +975,7 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
  * Launch selected project.
  * 03/01/2010 - 09:24:50
  */
-METHOD IdeProjManager:LaunchProject( cProject )
+METHOD IdeProjManager:launchProject( cProject )
    LOCAL qProcess, cTargetFN, cTmp, aPrj, n
 
    IF empty( cProject )

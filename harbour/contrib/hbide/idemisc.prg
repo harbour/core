@@ -380,7 +380,7 @@ STATIC FUNCTION hbide_pullHbiStruct( a_ )
 
                CASE nPart == PRJ_PRP_SOURCES
                   aadd( a3_0, s )
-//HB_TRACE( HB_TR_ALWAYS, s )
+
                CASE nPart == PRJ_PRP_METADATA
                   aadd( a4_0, s )
                   IF !( "#" == left( s,1 ) )
@@ -410,7 +410,6 @@ STATIC FUNCTION hbide_pullHbiStruct( a_ )
       /* Parse Files */
       IF !empty( a3_0 )
          FOR EACH s IN a3_0
-//HB_TRACE( HB_TR_ALWAYS, "Files            ", s )
             IF !( "#" == left( s,1 ) ) .and. !empty( s )
                aadd( a3_1, hbide_parseWithMetaData( s, a4_1 ) )
             ENDIF

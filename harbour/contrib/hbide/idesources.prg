@@ -1,0 +1,444 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ *
+ * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                            Harbour-Qt IDE
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               09Jan2010
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+
+#include "common.ch"
+#include "hbclass.ch"
+#include "hbqt.ch"
+#include "hbide.ch"
+
+/*----------------------------------------------------------------------*/
+
+CLASS IdeSourcesManager INHERIT IdeObject
+
+   METHOD new()
+   METHOD create()
+
+   METHOD loadSources()
+   METHOD openSource()
+   METHOD editSource()
+   METHOD selectSource()
+   METHOD closeSource()
+   METHOD closeAllSources()
+   METHOD closeAllOthers()
+   METHOD saveSource()
+   METHOD saveAllSources()
+   METHOD saveAndExit()
+   METHOD revertSource()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:loadSources()
+   LOCAL a_
+
+   IF !empty( ::aIni[ INI_FILES ] )
+      FOR EACH a_ IN ::aIni[ INI_FILES ]
+         /*            File     nPos     nVPos    nHPos    cTheme  lAlert lVisible */
+         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], .t., .f. )
+      NEXT
+      ::oED:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+/*
+ *   Save selected Tab on harddisk and return .T. if successfull!
+ */
+METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
+   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFile, cExt, cNewFile
+   LOCAL cFileToSave
+
+   DEFAULT nTab TO ::getCurrentTab()
+   DEFAULT lAs  TO .F.
+
+   lCancel := .F.
+
+   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
+      cSource := oEdit:sourceFile
+      lNew := Empty( cSource ) .OR. lAs
+      IF lNew
+         cNewFile := ::selectSource( 'save', ;
+                                    iif( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
+                                           "Save " + oEdit:oTab:caption + " as..." )
+         IF empty( cNewFile )
+            // will check later what decision to take
+            RETURN .f.
+         ENDIF
+         IF hbide_pathNormalized( cNewFile ) == hbide_pathNormalized( cSource )
+            lNew := .f.
+         ENDIF
+      ENDIF
+
+      cFileToSave := iif( lNew, cNewFile, cSource )
+      qDocument := oEdit:qDocument
+
+      cBuffer := oEdit:qEdit:toPlainText()
+      /*
+       * If the burn process fails, we should change the name of the previous file.
+       * 01/01/2010 - 21:24:41 - vailtom
+       */
+      IF !hb_memowrit( cFileToSave, cBuffer )
+         MsgBox( "Error saving the file " + oEdit:sourceFile + ".",, 'Error saving file!' )
+         lCancel := .T.
+         RETURN .F.
+      ENDIF
+
+      IF lNew
+         hb_fNameSplit( cFileToSave, , @cFile, @cExt )
+
+         ::aTabs[ nTab, TAB_SOURCEFILE ] := cFileToSave
+         oEdit:sourceFile                := cFileToSave
+
+         oEdit:oTab:Caption := cFile + cExt
+         ::qTabWidget:setTabText( nIndex, cFile + cExt )
+         ::qTabWidget:setTabTooltip( nIndex, cSource )
+      ENDIF
+
+      IF empty( cSource )
+         /* The file is not populated in editors tree. Inject */
+         ::addSourceInTree( oEdit:sourceFile )
+      ELSEIF lNew
+         /* Rename the existing nodes in tree */
+      ENDIF
+
+      qDocument:setModified( .f. )
+      ::aSources := { oEdit:sourceFile }
+      ::createTags()
+      ::updateFuncList()
+      nIndex := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
+      ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
+      ::oSBar:getItem( SB_PNL_MODIFIED ):caption := " "
+   ENDIF
+
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisible )
+
+   DEFAULT lAlert   TO .T.
+   DEFAULT lVisible TO .T.
+
+   IF !Empty( cSourceFile )
+      IF !( hbide_isValidText( cSourceFile ) )
+         MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
+         RETURN Self
+      ELSEIF !hb_FileExists( cSourceFile )
+         MsgBox( 'File not found: ' + cSourceFile )
+         RETURN Self
+      ENDIF
+      IF ::oED:isOpen( cSourceFile )
+         IF lAlert
+            IF hbide_getYesNo( cSourceFile + " is already open.", ;
+                                        "Want to re-load it again ?", "File Open Info!" )
+               ::oED:reLoad( cSourceFile )
+            ENDIF
+         ENDIF
+         ::oED:setSourceVisible( cSourceFile )
+         RETURN Self
+      ENDIF
+   ENDIF
+
+   DEFAULT nPos  TO 0
+   DEFAULT nHPos TO 0
+   DEFAULT nVPos TO 0
+
+   ::oED:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   IF lVisible
+      ::oED:setSourceVisible( cSourceFile )
+   ENDIF
+
+   IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
+      hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
+   LOCAL lSave, n, oEdit
+
+   DEFAULT nTab TO ::getCurrentTab()
+
+   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
+
+      DEFAULT lCanCancel TO .F.
+      lCanceled := .F.
+
+      IF !( oEdit:qDocument:isModified() )
+         * File has not changed, ignore the question to User
+         lSave := .F.
+
+      ELSEIF lCanCancel
+         n := hbide_getYesNoCancel( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         IF ( lCanceled := ( n == QMessageBox_Cancel ) )
+            RETURN .F.
+         ENDIF
+         lSave := ( n == QMessageBox_Yes    )
+
+      ELSE
+         lSave := hbide_getYesNo( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+
+      ENDIF
+
+      IF lSave .AND. !( ::saveSource( nTab, @lCanceled ) )
+         IF lCanCancel
+            RETURN .F.
+         ENDIF
+      ENDIF
+
+      oEdit:removeTabPage()
+   ENDIF
+
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+/*
+ * Close all opened files.
+ * 02/01/2010 - 15:31:44
+ */
+METHOD IdeSourcesManager:closeAllSources()
+   LOCAL lCanceled
+   LOCAL i := 0
+
+   DO WHILE ( ++i <= Len( ::aTabs ) )
+
+       IF ::closeSource( i, .T., @lCanceled )
+          i --
+          Loop
+       ENDIF
+
+       IF lCanceled
+          RETURN .F.
+       ENDIF
+   ENDDO
+
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+/*
+ * Close all opened files except current.
+ * 02/01/2010 - 15:47:19
+ */
+METHOD IdeSourcesManager:closeAllOthers( nTab )
+   LOCAL lCanceled, a_
+
+   FOR EACH a_ IN ::aTabs
+      IF a_:__enumIndex() != nTab
+         ::closeSource( a_:__enumIndex(), .T., @lCanceled )
+         IF lCanceled
+            RETURN .f.
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+/*
+ * Save all opened files...
+ * 01/01/2010 - 22:44:36 - vailtom
+ */
+METHOD IdeSourcesManager:saveAllSources()
+   LOCAL n
+
+   FOR n := 1 TO Len( ::aTabs )
+      ::saveSource( n )
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+/*
+ * Save current file and exits HBIDE
+ * 02/01/2010 - 18:45:06 - vailtom
+ */
+METHOD IdeSourcesManager:saveAndExit()
+
+   IF ::saveSource()
+      ::execAction( "Exit" )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+/*
+ * Revert current file to a previous saved file.
+ * 02/01/2010 - 19:45:34
+ */
+METHOD IdeSourcesManager:revertSource( nTab )
+
+   DEFAULT nTab TO ::getCurrentTab()
+
+   IF nTab < 1
+      RETURN .F.
+   End
+
+   IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
+      * File has not changed, ignore the question to User
+   ELSE
+      IF !hbide_getYesNo( 'Revert ' + ::aTabs[ nTab, TAB_OTAB ]:Caption + '?',  ;
+                    'The file ' + ::aTabs[ nTab, TAB_SOURCEFILE ] + ' has changed. '+;
+                    'Discard current changes and revert contents to the previously saved on disk?', 'Revert file?' )
+         RETURN Self
+      ENDIF
+   ENDIF
+
+   ::aTabs[ nTab, TAB_QEDIT ]:setPlainText( hb_memoRead( ::aTabs[ nTab, TAB_SOURCEFILE ] ) )
+   ::aTabs[ nTab, TAB_QEDIT ]:ensureCursorVisible()
+   ::manageFocusInEditor()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:openSource()
+   LOCAL aSrc, cSource
+
+   IF !empty( aSrc := ::selectSource( "openmany" ) )
+      FOR EACH cSource IN aSrc
+         ::editSource( cSource )
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
+   LOCAL oDlg, cPath
+
+   oDlg := XbpFileDialog():new():create( ::oDa, , { 10,10 } )
+
+   IF cMode == "open"
+      oDlg:title       := "Select a Source File"
+      oDlg:center      := .t.
+      oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
+                            { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
+      cFile := oDlg:open( , , .f. )
+
+   ELSEIF cMode == "openmany"
+      oDlg:title       := "Select Sources"
+      oDlg:center      := .t.
+      oDlg:defExtension:= 'prg'
+      oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
+                            { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
+      cFile := oDlg:open( , , .t. )
+
+   ELSEIF cMode == "save"
+      oDlg:title       := iif( !hb_isChar( cTitle ), "Save as...", cTitle )
+      oDlg:center      := .t.
+      oDlg:defExtension:= 'prg'
+
+      IF hb_isChar( cFile ) .AND. !Empty( cFile )
+         IF Right( cFile, 1 ) $ '/\'
+            cPath := cFile
+         ELSE
+            hb_fNameSplit( cFile, @cPath )
+         Endif
+      Endif
+
+      oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
+                                                            { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
+      cFile := oDlg:saveAs( cPath )
+
+   ELSE
+      oDlg:title       := "Save this Database"
+      oDlg:fileFilters := { { "Database Files", "*.dbf" } }
+      oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
+      cFile := oDlg:saveAs( "myfile.dbf" )
+      IF !empty( cFile )
+         hbide_dbg( cFile )
+      ENDIF
+
+   ENDIF
+
+   RETURN cFile
+
+/*----------------------------------------------------------------------*/
+
+

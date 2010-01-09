@@ -1,9 +1,9 @@
 [ PROPERTIES ]
 Type              = Executable
 Title             = Harbour-Qt IDE
-Location          = E:/harbour/contrib/hbide/projects
-WorkingFolder     = E:/harbour/contrib/hbide/projects
-DestinationFolder = E:/harbour/contrib/hbide/projects
+Location          = <IdeSrc>projects
+WorkingFolder     = <IdeSrc>projects
+DestinationFolder = <IdeSrc>projects
 Output            = hbide
 LaunchParams      = 
 LaunchProgram     = 
@@ -30,6 +30,7 @@ LaunchProgram     =
 <IdeSrc>iderequests.prg
 <IdeSrc>idethemes.prg
 <IdeSrc>ideprojmanager.prg
+<IdeSrc>idesources.prg
 #
 <IdeSrc>ideparseexpr.c
 #

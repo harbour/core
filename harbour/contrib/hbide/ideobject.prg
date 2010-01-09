@@ -84,6 +84,7 @@ CLASS IdeObject
    ACCESS oPM                                     INLINE ::oIde:oPM
    ACCESS oDK                                     INLINE ::oIde:oDK
    ACCESS oAC                                     INLINE ::oIde:oAC
+   ACCESS oSM                                     INLINE ::oIde:oSC
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
 
@@ -144,6 +145,9 @@ CLASS IdeObject
    METHOD connect()
 
    ERROR HANDLER OnError()
+
+   METHOD getCurrentTab()                        INLINE ::oIde:getCurrentTab()
+   METHOD editSource( ... )                      INLINE ::oIde:oSM:editSource( ... )
 
    ENDCLASS
 
