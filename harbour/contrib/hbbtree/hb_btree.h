@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree Harbour C API header.
  *
- * Copyright 2002 April White <april@users.sourceforge.net>
+ * Copyright 2002-2010 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,23 +33,6 @@
  *
  */
 
-/* Changelog
-
-  * Changed, bla-bla
-  ! Fixed
-  % Optimized
-  + Added
-  - Removed
-  ; Comment
-
-  * contrib/btree/hb_btree.api
-    + extern "C"
-    * rename nFlags to ulFlags
-    + declaration for hb_BTreeDataItem()
-    * declaration for hb_BTreeInsert() to use a PHB_ITEM vs LONG
-
-*/
-
 #ifndef HB_BTREE_API
 #define HB_BTREE_API
 
@@ -59,15 +42,15 @@ HB_EXTERN_BEGIN
 
 struct hb_BTree;
 
-struct hb_BTree * hb_BTreeNew( const char *FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers );
-struct hb_BTree * hb_BTreeOpen( const char *FileName, ULONG lFlags, ULONG ulBuffers );
+struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers );
+struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
-BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
-BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, LONG lData );
+HB_BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
+HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, LONG lData );
 void hb_BTreeGoTop( struct hb_BTree * pBTree );
 void hb_BTreeGoBottom( struct hb_BTree * pBTree );
-BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char * szKey, LONG lData, BOOL bSoftSeek );
-LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG nRecords );
+HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, LONG lData, HB_BOOL bSoftSeek );
+LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records );
 const char * hb_BTreeKey( struct hb_BTree * pBTree );
 LONG hb_BTreeData( struct hb_BTree * pBTree );
 PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree );

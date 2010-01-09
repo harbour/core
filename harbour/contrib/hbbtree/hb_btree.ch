@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree Harbour API header.
  *
- * Copyright 2002 April White <april@users.sourceforge.net>
+ * Copyright 2002-2010 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,27 +33,13 @@
  *
  */
 
-/* Changelog
-
-  * Changed, bla-bla
-  ! Fixed
-  % Optimized
-  + Added
-  - Removed
-  ; Comment
-
-  * contrib/btree/hb_btree.ch
-    - comments from around 'inmemory' definition
-
-*/
-
 #ifndef HB_BTREE_CH
 #define HB_BTREE_CH
 
 /* NOTE: This file is also used by C code. */
 
 /* creation/open control flags */
-#define HB_BTREE_READONLY    1  /* for open: creates file w/ RO attrib; for create: opens file for read */
+#define HB_BTREE_READONLY    1  /* for new: creates file w/ RO attrib; for create: opens file for read */
 #define HB_BTREE_EXCLUSIVE   2
 #define HB_BTREE_SHARED      4
 
@@ -71,6 +57,14 @@
 #define HB_BTREEINFO_KEYCOUNT  7
 #define HB_BTREEINFO__SIZE     7  /*  do not use!  */
 
-/* todo: commands/translates */
+/* error codes (SubCode) */
+#define HB_BTREE_EC_UNKNOWN      1
+#define HB_BTREE_EC_INVALIDARG   2
+#define HB_BTREE_EC_TREEHANDLE   3
+#define HB_BTREE_EC_WRITEERROR   4
+#define HB_BTREE_EC_STACKSKIP    5
+
+
+/* TODO: add commands/translates */
 
 #endif

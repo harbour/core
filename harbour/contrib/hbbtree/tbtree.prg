@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree class.
  *
- * Copyright 2002 April White <april@users.sourceforge.net>
+ * Copyright 2002-2010 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,41 +39,41 @@
 
 CLASS TBTree STATIC
 
-  HIDDEN:
-    DATA nHandle  /* hb_btree handle */
-    METHOD Open( cFileName, nFlags, nBuffers )
+   HIDDEN:
+      DATA nHandle  /* hb_btree handle */
+      METHOD Open( cFileName, nFlags, nBuffers )
+      METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers ) CONSTRUCTOR
 
-  EXPORTED:
-    METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers )
-    METHOD Close() INLINE hb_BTreeClose( ::nHandle ) , ::nHandle := 0
-    METHOD Insert( cKey, lData ) INLINE hb_BTreeInsert( ::nHandle, cKey, lData )
-    METHOD Delete( cKey, lData ) INLINE hb_BTreeDelete( ::nHandle, cKey, lData )
-    METHOD Key() INLINE hb_BTreeKey( ::nHandle )
-    METHOD Data() INLINE hb_BTreeData( ::nHandle )
-    METHOD GoTop() INLINE hb_BTreeGoTop( ::nHandle )
-    METHOD GoBottom() INLINE hb_BTreeGoBottom( ::nHandle )
-    METHOD Skip( nRecords ) INLINE hb_BTreeSkip( ::nHandle, nRecords )
-    METHOD Seek( cKey, lData, lSoftSeek ) INLINE hb_BTreeSeek( ::nHandle, cKey, lData, lSoftSeek )
-    METHOD Info( nIndex ) INLINE hb_BTreeInfo( ::nHandle, nIndex )
+   EXPORTED:
+      METHOD Close() INLINE hb_BTreeClose( ::nHandle ) , ::nHandle := 0
+      METHOD Insert( cKey, lData ) INLINE hb_BTreeInsert( ::nHandle, cKey, lData )
+      METHOD Delete( cKey, lData ) INLINE hb_BTreeDelete( ::nHandle, cKey, lData )
+      METHOD Key() INLINE hb_BTreeKey( ::nHandle )
+      METHOD Data() INLINE hb_BTreeData( ::nHandle )
+      METHOD GoTop() INLINE hb_BTreeGoTop( ::nHandle )
+      METHOD GoBottom() INLINE hb_BTreeGoBottom( ::nHandle )
+      METHOD Skip( nRecords ) INLINE hb_BTreeSkip( ::nHandle, nRecords )
+      METHOD Seek( cKey, lData, lSoftSeek ) INLINE hb_BTreeSeek( ::nHandle, cKey, lData, lSoftSeek )
+      METHOD Info( nIndex ) INLINE hb_BTreeInfo( ::nHandle, nIndex )
 
 ENDCLASS
 
 METHOD New( FileName, PageSize, KeySize, nFlags, Buffers ) CLASS TBTree
-  ::nHandle := hb_btreenew( FileName, PageSize, KeySize, nFlags, Buffers )
-  if ::nHandle >= 1
-    return SELF
-  endif
-return NIL
+   ::nHandle := hb_btreenew( FileName, PageSize, KeySize, nFlags, Buffers )
+   IF ::nHandle >= 1
+      RETURN SELF
+   ENDIF
+   RETURN NIL
 
 METHOD Open( FileName, nFlags, Buffers ) CLASS TBTree
   ::nHandle := hb_btreeopen( FileName, nFlags, Buffers )
-  if ::nHandle >= 1
-    return SELF
-  endif
-return NIL
+   IF ::nHandle >= 1
+      RETURN SELF
+   ENDIF
+   RETURN NIL
 
-function TBTreeNew( FileName, PageSize, KeySize, nFlags, Buffers )
-return TBTree():New( FileName, PageSize, KeySize, nFlags, Buffers )
+FUNCTION TBTreeNew( FileName, PageSize, KeySize, nFlags, Buffers )
+   RETURN TBTree():New( FileName, PageSize, KeySize, nFlags, Buffers )
 
-function TBTreeOpen( FileName, nFlags, Buffers )
-return TBTree():Open( FileName, nFlags, Buffers )
+FUNCTION TBTreeOpen( FileName, nFlags, Buffers )
+   RETURN TBTree():Open( FileName, nFlags, Buffers )
