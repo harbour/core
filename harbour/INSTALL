@@ -438,7 +438,7 @@ HARBOUR
    OpenSolaris
    -----------
 
-      - $ pkg install SUNWgmake SUNWsvn
+      - $ pkg install SUNWsvn SUNWgcc SUNWgmake
 
    FreeBSD
    -------

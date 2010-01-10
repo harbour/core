@@ -8105,9 +8105,11 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file (available on command line only)" ) },;
-      { "-target"           , I_( "marks beginning of options belonging to a new build target (available on command line only)" ) },;
-      { "-alltarget"        , I_( "marks beginning of common options belonging to all targets (available on command line only)" ) },;
+      { "Options below are available on command line only:" },;
+      NIL,;
+      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file" ) },;
+      { "-target"           , I_( "marks beginning of options belonging to a new build target" ) },;
+      { "-alltarget"        , I_( "marks beginning of common options belonging to all targets" ) },;
       NIL,;
       { "-hbrun"            , I_( "run target" ) },;
       { "-hbraw"            , I_( "stop after running Harbour compiler" ) },;
@@ -8180,18 +8182,22 @@ STATIC PROCEDURE OutOpt( aOpt )
    IF Empty( aOpt )
       OutStd( _OUT_EOL )
    ELSE
-      aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
-      nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
-      FOR nLine := 1 TO nLines
-         IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) ) )
-            IF nLine == 1
-               OutStd( PadR( Space( 2 ) + aOpt[ 1 ], 21 ) )
-            ELSE
-               OutStd( Space( 21 ) )
+      IF Len( aOpt ) > 1
+         aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
+         nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
+         FOR nLine := 1 TO nLines
+            IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) ) )
+               IF nLine == 1
+                  OutStd( PadR( Space( 2 ) + aOpt[ 1 ], 21 ) )
+               ELSE
+                  OutStd( Space( 21 ) )
+               ENDIF
+               OutStd( tmp + _OUT_EOL )
             ENDIF
-            OutStd( tmp + _OUT_EOL )
-         ENDIF
-      NEXT
+         NEXT
+      ELSE
+         OutStd( Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
+      ENDIF
    ENDIF
 
    RETURN

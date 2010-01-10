@@ -569,8 +569,8 @@ msgstr "Recompilar tudo (em modo de compilação incremental)"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "marks beginning of options belonging to a new build target (available on command line only)"
-msgstr "marca o início de opções pertencentes à um novo alvo (disponível apenas em linha de comando)"
+msgid "marks beginning of options belonging to a new build target"
+msgstr "marca o início de opções pertencentes à um novo alvo"
 
 #: hbmk2.prg:7854
 #, c-format
@@ -792,8 +792,8 @@ msgstr "nome-de-arquivo .hbl resultante. A macro %1$s é aceita no nome-de-arquiv
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "specify a new build target. <script> can be .prg (or no extension) or .hbm file (available on command line only)"
-msgstr "especifique um novo alvo para compilação. <script> pode ser módulo .prg (com ou sem extensão) ou .hbm (somente para linha de comando)"
+msgid "specify a new build target. <script> can be .prg (or no extension) or .hbm file"
+msgstr "especifique um novo alvo para compilação. <script> pode ser módulo .prg (com ou sem extensão) ou .hbm"
 
 #: hbmk2.prg:7960
 #, c-format
@@ -1081,8 +1081,8 @@ msgstr "Translation (%1$s): Vailton Renato <vailtom@gmail.com>"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "marks beginning of common options belonging to all targets (available on command line only)"
-msgstr "denota o início de opções comuns pertencentes à todos os alvos (disponível apenas em linha de comando)"
+msgid "marks beginning of common options belonging to all targets"
+msgstr "denota o início de opções comuns pertencentes à todos os alvos"
 
 #: hbmk2.prg:7851
 #, c-format

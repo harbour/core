@@ -359,12 +359,12 @@ msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "marks beginning of options belonging to a new build target (available on command line only)"
+msgid "marks beginning of options belonging to a new build target"
 msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "marks beginning of common options belonging to all targets (available on command line only)"
+msgid "marks beginning of common options belonging to all targets"
 msgstr ""
 
 #: hbmk2.prg:7941
@@ -809,7 +809,7 @@ msgstr "használjon a szerkesztéskor dinamikus függvénykönyvtárakat közvetlen hiv
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "specify a new build target. <script> can be .prg (or no extension) or .hbm file (available on command line only)"
+msgid "specify a new build target. <script> can be .prg (or no extension) or .hbm file"
 msgstr ""
 
 #: hbmk2.prg:7850
