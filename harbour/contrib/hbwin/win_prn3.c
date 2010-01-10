@@ -104,11 +104,6 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
       /* Allocate enough space for PRINTER_INFO_2. */
       ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
-      if( ! ppi2 )
-      {
-         ClosePrinter( hPrinter );
-         return HB_FALSE;
-      }
 
       /* The second GetPrinter() will fill in all the current information
          so that all you have to do is modify what you are interested in. */
@@ -188,11 +183,6 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
          /* Allocate enough space for PRINTER_INFO_2. */
          ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
-         if( ! ppi2 )
-         {
-            ClosePrinter( hPrinter );
-            return HB_FALSE;
-         }
 
          /* The second GetPrinter() fills in all the current
             information. */
@@ -204,7 +194,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             return HB_FALSE;
          }
 
-         /* TOFIX: Use safe string functions instead of lstrlen(), lstrcpy() and lstrcat().
+         /* TOFIX: Use safe string functions instead of lstrlen() and lstrcat().
                    [vszakats] */
 
          /* Allocate buffer big enough for concatenated string.
@@ -212,21 +202,17 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          pBuffer = ( LPTSTR ) hb_xgrab( ( lstrlen( lpPrinterName ) +
                                           lstrlen( ppi2->pDriverName ) +
                                           lstrlen( ppi2->pPortName ) + 3 ) * sizeof( TCHAR ) );
-         if( ! pBuffer )
-         {
-            ClosePrinter( hPrinter );
-            hb_xfree( ppi2 );
-            return HB_FALSE;
-         }
+
+         pBuffer[ 0 ] = '\0';
 
          /* Build string in form "printername,drivername,portname". */
-         lstrcpy( pBuffer, lpPrinterName );
+         lstrcat( pBuffer, lpPrinterName );
          lstrcat( pBuffer, TEXT( "," ) );
          lstrcat( pBuffer, ppi2->pDriverName );
          lstrcat( pBuffer, TEXT( "," ) );
          lstrcat( pBuffer, ppi2->pPortName );
 
-         /* Set the default printer in Win.ini and registry. */
+         /* Set the default printer in win.ini and registry. */
          bFlag = WriteProfileString( TEXT( "windows" ), TEXT( "device" ), pBuffer );
          if( ! bFlag )
          {
