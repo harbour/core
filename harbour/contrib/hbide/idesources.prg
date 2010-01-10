@@ -274,6 +274,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
       ENDIF
 
       oEdit:removeTabPage()
+      ::oIde:updateTitleBar()
    ENDIF
 
    RETURN .T.
