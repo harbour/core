@@ -84,7 +84,7 @@ CLASS IdeObject
    ACCESS oPM                                     INLINE ::oIde:oPM
    ACCESS oDK                                     INLINE ::oIde:oDK
    ACCESS oAC                                     INLINE ::oIde:oAC
-   ACCESS oSM                                     INLINE ::oIde:oSC
+   ACCESS oSM                                     INLINE ::oIde:oSM
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
 

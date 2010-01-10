@@ -387,7 +387,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
          cText := QTextBlock():configure( qCursor:block() ):text()
 
          IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-            ::oEM:editSource( cSource, 0, 0, 0, NIL, .f. )
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             nLine   := iif( nLine < 1, 0, nLine - 1 )
 

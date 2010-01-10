@@ -169,7 +169,7 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTextEdit():new( ::pParent )
 
-   ::connect( ::pWidget, "copyAvailable(bool)"                      , {|o,p| ::exeBlock( 1, p, o ) } )
+   //::connect( ::pWidget, "copyAvailable(bool)"                      , {|o,p| ::exeBlock( 1, p, o ) } )
    ::connect( ::pWidget, "currentCharFormatChanged(QTextCharFormat)", {|o,p| ::exeBlock( 2, p, o ) } )
    ::connect( ::pWidget, "cursorPositionChanged()"                  , {|o,p| ::exeBlock( 3, p, o ) } )
    ::connect( ::pWidget, "redoAvailable(bool)"                      , {|o,p| ::exeBlock( 4, p, o ) } )
