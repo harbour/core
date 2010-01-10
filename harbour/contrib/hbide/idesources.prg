@@ -305,19 +305,40 @@ METHOD IdeSourcesManager:closeAllSources()
 /*----------------------------------------------------------------------*/
 /*
  * Close all opened files except current.
- * 02/01/2010 - 15:47:19
+ * 02/01/2010 - 15:47:19 - vailtom
  */
 METHOD IdeSourcesManager:closeAllOthers( nTab )
-   LOCAL lCanceled, a_
+   LOCAL lCanceled
+   LOCAL oEdit
+   LOCAL nID
 
-   FOR EACH a_ IN ::aTabs
-      IF a_:__enumIndex() != nTab
-         ::closeSource( a_:__enumIndex(), .T., @lCanceled )
-         IF lCanceled
-            RETURN .f.
-         ENDIF
-      ENDIF
-   NEXT
+   DEFAULT nTab TO ::oIde:getCurrentTab()
+
+   IF empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
+      RETURN .F.
+   ENDIF
+
+   nID := oEdit:nID
+   nTab:= 0
+
+ * Finally now we will close all tabs.
+   DO WHILE ( ++nTab <= Len( ::aTabs ) )
+
+	    oEdit := ::oEM:getEditorByTabPosition( nTab ) 
+	    
+       IF empty(oEdit) .OR. oEdit:nID == nID
+          LOOP
+       ENDIF
+
+       IF ::closeSource( nTab, .T., @lCanceled )
+          nTab --
+          LOOP
+       ENDIF
+
+       IF lCanceled
+          RETURN .F.
+       ENDIF
+   ENDDO
 
    RETURN .T.
 
