@@ -116,19 +116,19 @@ CLASS HbIde
    DATA   oPM                                              /* Project Manager                */
    DATA   oDK                                              /* Main Window Components Manager */
    DATA   oAC                                              /* Actions Manager                */
-   DATA   oED                                              /* Editor Tabs Manager            */
+   DATA   oEM                                              /* Editor Tabs Manager            */
    DATA   oSM                                              /* Souces Manager                 */
    DATA   oFR                                              /* Find Replace Manager           */
 
-   DATA   aMeta                                   INIT {}  /* Holds current definition only  */
+   DATA   aMeta                                   INIT   {}  /* Holds current definition only  */
 
    DATA   mp1, mp2, oXbp, nEvent
-   DATA   aTabs                                   INIT {}
+   DATA   aTabs                                   INIT   {}
    DATA   cProjIni
 
-   DATA   oCurTab                                 INIT NIL
-   DATA   nCurTab                                 INIT 0
-   DATA   aIni                                    INIT {}
+   DATA   oCurTab                                 INIT   NIL
+   DATA   nCurTab                                 INIT   0
+   DATA   aIni                                    INIT   {}
 
    /* HBQT Objects */
    DATA   qLayout
@@ -174,40 +174,39 @@ CLASS HbIde
    DATA   oExes
    DATA   oLibs
    DATA   oDlls
-   DATA   aProjData                               INIT {}
-   DATA   aPrpObjs                                INIT {}
-   DATA   aEditorPath                             INIT {}
+   DATA   aProjData                               INIT   {}
+   DATA   aPrpObjs                                INIT   {}
+   DATA   aEditorPath                             INIT   {}
 
-   DATA   lProjTreeVisible                        INIT .t.
-   DATA   lDockRVisible                           INIT .f.
-   DATA   lDockBVisible                           INIT .f.
-   DATA   lTabCloseRequested                      INIT .f.
+   DATA   lProjTreeVisible                        INIT   .t.
+   DATA   lDockRVisible                           INIT   .f.
+   DATA   lDockBVisible                           INIT   .f.
+   DATA   lTabCloseRequested                      INIT   .f.
 
-   DATA   cSaveTo                                 INIT ""
+   DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
 
-   DATA   resPath                                 INIT hb_DirBase() + "resources" + hb_OsPathSeparator()
-   DATA   pathSep                                 INIT hb_OsPathSeparator()
+   DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
+   DATA   pathSep                                 INIT   hb_OsPathSeparator()
 
-   DATA   aTags                                   INIT {}
-   DATA   aText                                   INIT {}
-   DATA   aSources                                INIT {}
-   DATA   aFuncList                               INIT {}
-   DATA   aLines                                  INIT {}
-   DATA   aComments                               INIT {}
-   DATA   aProjects                               INIT {}
-   DATA   cWrkProject                             INIT ''
-   DATA   cWrkTheme                               INIT ''
+   DATA   aTags                                   INIT   {}
+   DATA   aText                                   INIT   {}
+   DATA   aSources                                INIT   {}
+   DATA   aFuncList                               INIT   {}
+   DATA   aLines                                  INIT   {}
+   DATA   aComments                               INIT   {}
+   DATA   aProjects                               INIT   {}
+   DATA   cWrkProject                             INIT   ''
+   DATA   cWrkTheme                               INIT   ''
    DATA   oProps
 
    DATA   cProcessInfo
    DATA   qProcess
 
-   DATA   aEdits                                  INIT {}
+   DATA   aEdits                                  INIT   {}
 
    DATA   cIniThemes
    DATA   oThemes
-
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -216,29 +215,21 @@ CLASS HbIde
    METHOD setPosAndSizeByIni()
    METHOD setPosByIni()
    METHOD setSizeByIni()
-
    METHOD execAction()
    METHOD manageFuncContext()
    METHOD manageProjectContext()
-
    METHOD updateFuncList()
    METHOD gotoFunction()
-
    METHOD updateProjectMenu()
    METHOD updateProjectTree()
-
    METHOD manageItemSelected()
    METHOD getCurrentTab()
    METHOD getCurCursor()
    METHOD addSourceInTree()
-
    METHOD createTags()
-
    METHOD manageFocusInEditor()
    METHOD loadUI()
-
    METHOD setCodec()
-
    METHOD updateTitleBar()
 
    ENDCLASS
@@ -273,34 +264,35 @@ METHOD HbIde:create( cProjIni )
    /* Load IDE Settings */
    hbide_loadINI( Self, cProjIni )
 
-   /* Setup DOCKing windows and ancilliary windows */
+   /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )
-   /* Build IDE's Main Window */
+   /* IDE's Main Window */
    ::oDK:buildDialog()
-   /* Build Actions */
+   /* Actions */
    ::oAC := IdeActions():new( Self ):create()
-   /* Build Toolbar */
+   /* Toolbar */
    ::oAC:buildToolBar()
-   /* Build Main Menu */
+   /* Main Menu */
    ::oAC:buildMainMenu()
-   //::oDK:buildMainMenu()
+   /* StatusBar */
    ::oDK:buildStatusBar()
+   /* Docking Widgets */
    ::oDK:buildDockWidgets()
 
    /* Once create Find/Replace dialog */
-   ::oFR := IdeFindReplace():new():create( Self )
+   ::oFR := IdeFindReplace():new( Self ):create()
 
    /* Sources Manager */
    ::oSM := IdeSourcesManager():new( Self ):create()
 
    /* Edits Manager */
-   ::oED := IdeEditsManager():new( Self ):create()
+   ::oEM := IdeEditsManager():new( Self ):create()
 
    /* Load IDE|User defined Themes */
    hbide_loadThemes( Self )
 
    /* Prepare Editor's Tabs */
-   ::oED:prepareTabWidget()
+   ::oEM:prepareTabWidget()
 
    /* Attach GRID Layout to Editor Area - Futuristic */
    ::qLayout := QGridLayout():new()
@@ -365,7 +357,7 @@ METHOD HbIde:create( cProjIni )
             ::oSM:closeSource()
 
          CASE ::mp1 == xbeK_CTRL_G
-            ::oED:goto()
+            ::oEM:goto()
 
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
@@ -436,7 +428,7 @@ METHOD HbIde:execAction( cKey )
       ::oPM:buildProject( '', .F., .F., .T., .T. )
    CASE cKey == "Properties"
       IF Empty( ::cWrkProject )
-         MsgBox( 'No active project detected!' )
+         MsgBox( 'No active project detected' )
       ENDIF
       cTmp := ::oPM:getCurrentProject()
       IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
@@ -458,7 +450,7 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "Open"
       ::oSM:openSource()
    CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), .f., .f. )
+      ::oSM:saveSource( ::getCurrentTab(), .f., .f. )
    CASE cKey == "SaveAs"
       ::oSM:saveSource( ::getCurrentTab(), .t., .t. )
    CASE cKey == "SaveAll"
@@ -475,22 +467,22 @@ METHOD HbIde:execAction( cKey )
       ::oSM:closeAllOthers()
 
    CASE cKey == "Print"
-      ::oED:printPreview()
+      ::oEM:printPreview()
    CASE cKey == "Undo"
-      ::oED:undo()
+      ::oEM:undo()
    CASE cKey == "Redo"
-      ::oED:redo()
+      ::oEM:redo()
    CASE cKey == "Cut"
-      ::oED:cut()
+      ::oEM:cut()
    CASE cKey == "Copy"
-      ::oED:copy()
+      ::oEM:copy()
    CASE cKey == "Paste"
-      ::oED:paste()
+      ::oEM:paste()
    CASE cKey == "SelectAll"
-      ::oED:selectAll()
+      ::oEM:selectAll()
 
    CASE cKey == "switchReadOnly"
-      ::oED:switchToReadOnly()
+      ::oEM:switchToReadOnly()
    CASE cKey == "Find"
       IF !Empty( ::qCurEdit )
          ::oFR:show()
@@ -500,23 +492,23 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "GotoMark"
       //
    CASE cKey == "Goto"
-      ::oED:goto()
+      ::oEM:goto()
    CASE cKey == "ToUpper"
-      ::oED:convertSelection( cKey )
+      ::oEM:convertSelection( cKey )
    CASE cKey == "ToLower"
-      ::oED:convertSelection( cKey )
+      ::oEM:convertSelection( cKey )
    CASE cKey == "Invert"
-      ::oED:convertSelection( cKey )
+      ::oEM:convertSelection( cKey )
    CASE cKey == "InsertDateTime"
-      ::oED:insertText( cKey )
+      ::oEM:insertText( cKey )
    CASE cKey == "InsertRandomName"
-      ::oED:insertText( cKey )
+      ::oEM:insertText( cKey )
    CASE cKey == "InsertExternalFile"
-      ::oED:insertText( cKey )
+      ::oEM:insertText( cKey )
    CASE cKey == "ZoomIn"
-      ::oED:zoom( cKey )
+      ::oEM:zoom( cKey )
    CASE cKey == "ZoomOut"
-      ::oED:zoom( cKey )
+      ::oEM:zoom( cKey )
 
    CASE cKey == "ToggleProjectTree"
       ::oDK:toggleLeftDocks()
@@ -796,10 +788,10 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
       ::oPM:loadProperties( cHbi, .f., .t., .f. )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
-      ::editSource( ::aProjData[ n, TRE_ORIGINAL ] )
+      ::oSM:editSource( ::aProjData[ n, TRE_ORIGINAL ] )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
-      ::oED:setSourceVisible( ::aProjData[ n, TRE_DATA ] )
+      ::oEM:setSourceVisible( ::aProjData[ n, TRE_DATA ] )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Path"
 
@@ -864,11 +856,11 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       cSource := ::aProjData[ n, 5 ]
       n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ 5 ] ) == cSource } )
       //
-      aadd( aPops, { "Save"                              , {|| ::saveSource( n ) } } )
-      aadd( aPops, { "Save As"                           , {|| ::saveSource( n, , .t. ) } } )
+      aadd( aPops, { "Save"                              , {|| ::oSM:saveSource( n ) } } )
+      aadd( aPops, { "Save As"                           , {|| ::oSM:saveSource( n, , .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close"                             , {|| ::closeSource( n ) } } )
-      aadd( aPops, { "Close Others"                      , {|| ::closeAllOthers( n ) } } )
+      aadd( aPops, { "Close"                             , {|| ::oSM:closeSource( n ) } } )
+      aadd( aPops, { "Close Others"                      , {|| ::oSM:closeAllOthers( n ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Apply Theme"                       , {|| ::aTabs[ n, TAB_OEDITOR ]:applyTheme() } } )
       //
@@ -903,7 +895,7 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
-      IF !empty( oEdit := ::oED:getEditorCurrent() )
+      IF !empty( oEdit := ::oEM:getEditorCurrent() )
          IF !( oEdit:qEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
             oEdit:qEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
          ENDIF
@@ -947,7 +939,7 @@ METHOD HbIde:CreateTags()
             aSumData  := {}
 
             cComments := CheckComments( ::aText )
-            aSummary  := Summarize( ::aText, cComments, @aSumData , IIf( Upper( cExt ) == ".PRG", 9, 1 ) )
+            aSummary  := Summarize( ::aText, cComments, @aSumData , iif( Upper( cExt ) == ".PRG", 9, 1 ) )
             ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines )
 
             #if 0
@@ -1019,7 +1011,7 @@ METHOD HbIde:updateTitleBar()
       cTitle += " [" + ::cWrkProject + "] "
    ENDIF
 
-   IF !empty( oEdit := ::oED:getEditorCurrent() )
+   IF !empty( oEdit := ::oEM:getEditorCurrent() )
       IF Empty( oEdit:sourceFile )
          cTitle += "[" + oEdit:oTab:caption + "]"
       ELSE

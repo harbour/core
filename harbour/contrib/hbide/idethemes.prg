@@ -182,8 +182,9 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'do','while','exit',;
           'for','each','next','step','to',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
-          'inherit','init','create','virtual',;
-          'begin','sequence','try','catch','always','recover','hb_symbol_unused' }
+          'inherit','init','create','virtual','message',;
+          'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
+          'error','handler' }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
    aadd( ::aPatterns, { "HarbourKeywords"   , s } )
 

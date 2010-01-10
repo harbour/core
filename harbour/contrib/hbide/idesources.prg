@@ -118,7 +118,8 @@ METHOD IdeSourcesManager:loadSources()
          /*            File     nPos     nVPos    nHPos    cTheme  lAlert lVisible */
          ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], .t., .f. )
       NEXT
-      ::oED:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+
+      ::oEM:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
    ENDIF
 
    RETURN Self
@@ -128,16 +129,17 @@ METHOD IdeSourcesManager:loadSources()
  *   Save selected Tab on harddisk and return .T. if successfull!
  */
 METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
-   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFile, cExt, cNewFile
-   LOCAL cFileToSave
+   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource
+   LOCAL cFileToSave, cFile, cExt, cNewFile
 
-   DEFAULT nTab TO ::getCurrentTab()
+   DEFAULT nTab TO ::oIde:getCurrentTab()
    DEFAULT lAs  TO .F.
 
    lCancel := .F.
 
-   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
+   IF !empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
       cSource := oEdit:sourceFile
+
       lNew := Empty( cSource ) .OR. lAs
       IF lNew
          cNewFile := ::selectSource( 'save', ;
@@ -185,7 +187,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       ENDIF
 
       qDocument:setModified( .f. )
-      ::aSources := { oEdit:sourceFile }
+      ::oIde:aSources := { oEdit:sourceFile }
       ::createTags()
       ::updateFuncList()
       nIndex := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
@@ -210,14 +212,14 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
          MsgBox( 'File not found: ' + cSourceFile )
          RETURN Self
       ENDIF
-      IF ::oED:isOpen( cSourceFile )
+      IF ::oEM:isOpen( cSourceFile )
          IF lAlert
             IF hbide_getYesNo( cSourceFile + " is already open.", ;
                                         "Want to re-load it again ?", "File Open Info!" )
-               ::oED:reLoad( cSourceFile )
+               ::oEM:reLoad( cSourceFile )
             ENDIF
          ENDIF
-         ::oED:setSourceVisible( cSourceFile )
+         ::oEM:setSourceVisible( cSourceFile )
          RETURN Self
       ENDIF
    ENDIF
@@ -226,9 +228,9 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
    DEFAULT nHPos TO 0
    DEFAULT nVPos TO 0
 
-   ::oED:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
    IF lVisible
-      ::oED:setSourceVisible( cSourceFile )
+      ::oEM:setSourceVisible( cSourceFile )
    ENDIF
 
    IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
@@ -242,9 +244,9 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
 METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEdit
 
-   DEFAULT nTab TO ::getCurrentTab()
+   DEFAULT nTab TO ::oIde:getCurrentTab()
 
-   IF !empty( oEdit := ::oED:getEditorByTabPosition( nTab ) )
+   IF !empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
       lCanceled := .F.
@@ -352,7 +354,7 @@ METHOD IdeSourcesManager:saveAndExit()
  */
 METHOD IdeSourcesManager:revertSource( nTab )
 
-   DEFAULT nTab TO ::getCurrentTab()
+   DEFAULT nTab TO ::oIde:getCurrentTab()
 
    IF nTab < 1
       RETURN .F.

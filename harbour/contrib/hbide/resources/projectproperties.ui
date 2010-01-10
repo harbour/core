@@ -134,7 +134,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>80</y>
-       <width>191</width>
+       <width>181</width>
        <height>20</height>
       </rect>
      </property>
@@ -167,7 +167,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>112</y>
-       <width>191</width>
+       <width>181</width>
        <height>20</height>
       </rect>
      </property>
@@ -200,7 +200,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>144</y>
-       <width>191</width>
+       <width>181</width>
        <height>20</height>
       </rect>
      </property>
@@ -234,7 +234,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>124</x>
        <y>176</y>
-       <width>191</width>
+       <width>181</width>
        <height>20</height>
       </rect>
      </property>
@@ -340,14 +340,14 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="buttonChooseWd">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>316</x>
        <y>110</y>
-       <width>24</width>
+       <width>29</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
-      <string>...</string>
+      <string/>
      </property>
      <property name="iconSize">
       <size>
@@ -359,14 +359,14 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="buttonChoosePrjLoc">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>316</x>
        <y>78</y>
-       <width>24</width>
+       <width>29</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
-      <string>...</string>
+      <string/>
      </property>
      <property name="iconSize">
       <size>
@@ -381,14 +381,14 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="buttonChooseDest">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>316</x>
        <y>141</y>
-       <width>24</width>
+       <width>29</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
-      <string>...</string>
+      <string/>
      </property>
      <property name="iconSize">
       <size>

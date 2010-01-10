@@ -80,7 +80,7 @@ CLASS IdeObject
    DATA   qContextMenu
 
    ACCESS oFR                                     INLINE ::oIde:oFR
-   ACCESS oED                                     INLINE ::oIde:oED
+   ACCESS oEM                                     INLINE ::oIde:oEM
    ACCESS oPM                                     INLINE ::oIde:oPM
    ACCESS oDK                                     INLINE ::oIde:oDK
    ACCESS oAC                                     INLINE ::oIde:oAC
@@ -98,6 +98,8 @@ CLASS IdeObject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aINI                                    INLINE ::oIde:aINI
+   ACCESS aEdits                                  INLINE ::oIde:aEdits
+   ACCESS aSources                                INLINE ::oIde:aSources
 
    ACCESS oDlg                                    INLINE ::oIde:oDlg
    ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
@@ -136,18 +138,32 @@ CLASS IdeObject
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
    ACCESS oSBar                                   INLINE ::oIde:oSBar
 
-   METHOD new()                                   VIRTUAL
-   METHOD create()                                VIRTUAL
-   METHOD destroy()                               VIRTUAL
-
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}
    METHOD connect()
 
-   ERROR HANDLER OnError()
+   METHOD getCurrentTab( ... )                    INLINE ::oIde:getCurrentTab( ... )
+   METHOD getCurCursor( ... )                     INLINE ::oIde:getCurCursor( ... )
+   METHOD createTags( ... )                       INLINE ::oIde:createTags( ... )
+   METHOD addSourceInTree( ... )                  INLINE ::oIde:addSourceInTree( ... )
+   METHOD setPosAndSizeByIni( ... )               INLINE ::oIde:setPosAndSizeByIni( ... )
+   METHOD setPosByIni( ... )                      INLINE ::oIde:setPosByIni( ... )
+   METHOD setSizeByIni( ... )                     INLINE ::oIde:setSizeByIni( ... )
+   METHOD execAction( ... )                       INLINE ::oIde:execAction( ... )
+   METHOD manageFuncContext( ... )                INLINE ::oIde:manageFuncContext( ... )
+   METHOD manageProjectContext( ... )             INLINE ::oIde:manageProjectContext( ... )
+   METHOD updateFuncList( ... )                   INLINE ::oIde:updateFuncList( ... )
+   METHOD gotoFunction( ... )                     INLINE ::oIde:gotoFunction( ... )
+   METHOD updateProjectMenu( ... )                INLINE ::oIde:updateProjectMenu( ... )
+   METHOD updateProjectTree( ... )                INLINE ::oIde:updateProjectTree( ... )
+   METHOD manageItemSelected( ... )               INLINE ::oIde:manageItemSelected( ... )
+   METHOD manageFocusInEditor( ... )              INLINE ::oIde:manageFocusInEditor( ... )
+   METHOD loadUI( ... )                           INLINE ::oIde:loadUI( ... )
+   METHOD setCodec( ... )                         INLINE ::oIde:setCodec( ... )
+   METHOD updateTitleBar( ... )                   INLINE ::oIde:updateTitleBar( ... )
 
-   METHOD getCurrentTab()                        INLINE ::oIde:getCurrentTab()
-   METHOD editSource( ... )                      INLINE ::oIde:oSM:editSource( ... )
+   METHOD editSource( ... )                       INLINE ::oSM:editSource( ... )
+   METHOD getEditorByIndex( ... )                 INLINE ::oSM:getEditorByIndex( ... )
 
    ENDCLASS
 
@@ -162,24 +178,5 @@ METHOD IdeObject:connect( qWidget, cSlot, bBlock )
    ENDIF
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-
-METHOD IdeObject:onError( ... )
-   LOCAL cMsg
-
-   cMsg := __GetMessage()
-   IF SubStr( cMsg, 1, 1 ) == "_"
-      cMsg := SubStr( cMsg, 2 )
-   ENDIF
-
-   IF left( cMsg, 2 ) == "Q_"
-      RETURN ::oUI:&cMsg( ... )
-   ELSE
-      RETURN ::oIde:&cMsg( ... )
-   ENDIF
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/

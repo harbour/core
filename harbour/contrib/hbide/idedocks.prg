@@ -370,7 +370,7 @@ METHOD IdeDocks:buildOutputResults()
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
    ::oDockB2:hide()
 
-   Qt_Slots_Connect( ::pSlots, ::oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
+   ::connect( ::oIde:oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
 
    RETURN Self
 
@@ -387,7 +387,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
          cText := QTextBlock():configure( qCursor:block() ):text()
 
          IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-            ::oIde:editSource( cSource, 0, 0, 0, NIL, .f. )
+            ::oEM:editSource( cSource, 0, 0, 0, NIL, .f. )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             nLine   := iif( nLine < 1, 0, nLine - 1 )
 
@@ -395,6 +395,8 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
             qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
             ::oIde:qCurEdit:setTextCursor( qCursor )
             ::oIde:manageFocusInEditor()
+
+hbide_dbg( "............", cSource, cText )
          ENDIF
       ENDIF
       IF ::nPass >= 2

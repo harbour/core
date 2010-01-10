@@ -268,13 +268,13 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    IF n == 0
       aadd( ::oIde:aProjects, { lower( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
       IF lUpdateTree
-         ::updateProjectTree( ::aPrjProps )
+         ::oIde:updateProjectTree( ::aPrjProps )
       ENDIF
       hbide_mnuAddFileToMRU( ::oIde, cProjFileName, INI_RECENTPROJECTS )
    ELSE
       ::aProjects[ n, 3 ] := aclone( ::aPrjProps )
       IF lUpdateTree
-         ::updateProjectTree( ::aPrjProps )
+         ::oIde:updateProjectTree( ::aPrjProps )
       ENDIF
       IF lUpdateTree .AND. ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] <> t
          MsgBox( "::removeProjectFromTree( ::aPrjProps )" )
@@ -307,13 +307,16 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_comboPrjType:setCurrentIndex( 0 )
    ENDCASE
 
-   ::oUI:signal( "buttonCn"      , "clicked()", {|| ::oUI:oWidget:close() } )
-   ::oUI:signal( "buttonSave"    , "clicked()", {|| ::save( .F. ) } )
-   ::oUI:signal( "buttonSaveExit", "clicked()", {|| ::save( .T. ) } )
-   ::oUI:signal( "buttonSelect"  , "clicked()", {|| ::addSources() } )
-   ::oUI:signal( "tabWidget"     , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
+   ::oUI:q_buttonChoosePrjLoc:setIcon( ::resPath + "lookup.png" )
+   ::oUI:q_buttonChooseWd:setIcon( ::resPath + "lookup.png" )
+   ::oUI:q_buttonChooseDest:setIcon( ::resPath + "lookup.png" )
 
-   // TODO: Loading lookup.png inside these buttons...
+   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close() } )
+   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::save( .F. )         } )
+   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::save( .T. )         } )
+   ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()        } )
+   ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
+
    ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn',  'Choose the Project Location...', 'editOutName', "editWrkFolder", "editDstFolder" ) } )
    ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose a Working Folder...' ) } )
    ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose a Destination Folder...' ) } )
@@ -367,10 +370,9 @@ METHOD IdeProjManager:fetchProperties()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:save( lCanClose )
-   LOCAL a_, a4_1
+   LOCAL a_, a4_1, lOk
    LOCAL typ_:= { "Executable", "Lib", "Dll" }
    LOCAL txt_:= {}
-   LOCAL lOk
 
    * Validate certain parameters before continuing ... (vailtom)
    IF Empty( ::oUI:q_editOutName:text() )
@@ -733,7 +735,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ::lLaunch := lLaunch
    ::cProjectInProcess := cProject
 
-   IF ::lPPO .AND. ::getCurrentTab() == 0
+   IF ::lPPO .AND. ::oIde:getCurrentTab() == 0
       MsgBox( 'No source available to be compiled' )
       RETURN Self
    ENDIF
@@ -790,7 +792,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       aeval( hbide_filesToSources( ::oProject:sources ), {|e| aadd( aHbp, e ) } )
 
    ELSE
-      IF !empty( oEdit := ::oED:getEditorCurrent() )
+      IF !empty( oEdit := ::oEM:getEditorCurrent() )
          IF hbide_isSourcePRG( oEdit:sourceFile )
             aadd( aHbp, "-hbcmp" )
             aadd( aHbp, "-s"     )
@@ -816,7 +818,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ENDIF
    ENDIF
 
-   ::lDockBVisible := .t.
+   ::oIde:lDockBVisible := .t.
    ::oDockB2:show()
    ::oOutputResult:oWidget:clear()
 
@@ -854,6 +856,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          #else
 
          qStringList := QStringList():new()
+         IF ::lPPO
+            qStringList:append( "-hbraw" )
+         ENDIF
          qStringList:append( cHbpPath )
          //
          ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory() )
@@ -862,7 +867,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          #endif
       ELSE
          cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ( "hbmk2 " + cHbpPath ), , @cOutput, @cErrors )
+         nResult := hb_processRun( ( "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath ), , @cOutput, @cErrors )
 
          cTmp := cOutput + CRLF
          cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF

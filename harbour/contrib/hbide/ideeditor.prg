@@ -305,11 +305,11 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
 
 METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
 
-   IF ::qTabWidget:count() > 0 .AND. ::qTabWidget:count() > nIndex
+   IF ::qTabWidget:count() == 0 .OR. nIndex >= ::qTabWidget:count()
       nIndex := 0
    ENDIF
-   ::qTabWidget:setCurrentIndex( 0 )
-   ::getEditorByIndex( 0 ):setDocumentProperties()
+   ::qTabWidget:setCurrentIndex( nIndex )
+   ::getEditorByIndex( nIndex ):setDocumentProperties()
 
    RETURN .f.
 
@@ -727,7 +727,7 @@ METHOD IdeEditor:exeBlock( nMode, p, p1 )
    SWITCH nMode
    /* QPlainTextEdit */
    CASE 1        // "customContextMenuRequested(QPoint)"
-      IF !empty( pAct := ::oED:qContextMenu:exec_1( ::qEdit:mapToGlobal( p ) ) )
+      IF !empty( pAct := ::oEM:qContextMenu:exec_1( ::qEdit:mapToGlobal( p ) ) )
          qAct := QAction():configure( pAct )
          DO CASE
          CASE qAct:text() == "Apply Theme"
@@ -784,17 +784,13 @@ METHOD IdeEditor:setDocumentProperties()
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
-   hbide_dbg( "......................................." )
-
       ::lLoaded := .T.
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
       QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
       QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
-
-   hbide_dbg( "........................................................" )
-
+      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
    ENDIF
 
    ::nBlock  := qCursor:blockNumber()
@@ -804,6 +800,7 @@ METHOD IdeEditor:setDocumentProperties()
    ::oIde:createTags()
    ::oIde:updateFuncList()
    ::oIde:updateTitleBar()
+
    ::dispEditInfo()
 
    ::oIde:manageFocusInEditor()
@@ -817,7 +814,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
 
    HB_SYMBOL_UNUSED( mp1 )
 
-   IF !empty( oEdit := ::oED:getEditorByTabObject( oXbp ) )
+   IF !empty( oEdit := ::oEM:getEditorByTabObject( oXbp ) )
       ::oIde:nCurTab := mp2
       oEdit:setDocumentProperties()
    ENDIF
@@ -956,7 +953,7 @@ METHOD IdeEditor:removeTabPage()
    IF ::qTabWidget:count() == 0
       IF ::lDockRVisible
          ::oDockR:hide()
-         ::lDockRVisible := .f.
+         ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
 
