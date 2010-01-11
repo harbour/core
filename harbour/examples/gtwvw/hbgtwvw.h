@@ -1,5 +1,5 @@
 /*
- * $Id: hbgtwvw.h,v 1.19 2009/12/21 05:18:58 andijahja Exp $
+ * $Id$
  */
 
 /*

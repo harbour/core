@@ -1,5 +1,5 @@
 /*
- * $Id: hbole.h,v 1.2 2009/11/09 09:38:44 marchuet Exp $
+ * $Id$
  */
 
 /*

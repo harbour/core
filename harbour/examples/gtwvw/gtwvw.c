@@ -8020,7 +8020,7 @@ WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin )
 
 char * hb_gt_wvw_GetAppName( void )
 {
-	return s_pWvwData->szAppName;
+   return s_pWvwData->szAppName;
 }
 
 APP_DATA *hb_gt_wvwGetAppData( void )

@@ -66,6 +66,10 @@ proc main()
    ? "table exists:", dbExists( DBNAME )
    wait
 
+   ? "NETIO_DISCONNECT():", netio_disconnect( DBSERVER, DBPORT )
+
+   ?
+   ? "stopping the server..."
    netio_serverstop( pSockSrv, .t. )
 return
 
