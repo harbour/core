@@ -646,6 +646,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nVPos                                   INIT   0
    DATA   nID
 
+   DATA   aTab                                    INIT   {}
    DATA   qCursor
 
    METHOD new()
@@ -667,6 +668,13 @@ CLASS IdeEditor INHERIT IdeObject
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+
+   DEFAULT oIde        TO ::oIde
+   DEFAULT cSourceFile TO ::sourceFile
+   DEFAULT nPos        TO ::nPos
+   DEFAULT nHPos       TO ::nHPos
+   DEFAULT nVPos       TO ::nVPos
+   DEFAULT cTheme      TO ::cTheme
 
    ::oIde       := oIde
    ::sourceFile := cSourceFile
@@ -744,12 +752,12 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    /* Populate Tabs Array */
-   aadd( ::aTabs, { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self } )
+   ::aTab := { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self }
+   aadd( ::aTabs, ::aTab )
 
    ::oIde:nCurTab := len( ::oIde:aTabs )
 
    /* Populate right at creation */
-   //::oIde:addSourceInTree( ::sourceFile )
    ::oEM:addSourceInTree( ::sourceFile )
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
@@ -910,7 +918,7 @@ METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
 
  * Requested tab exists?
    IF !Empty( mp2 )
-      ::oIde:closeSource( mp2 )
+      ::oSM:closeSource( mp2 )
    ENDIF
 
    RETURN Self
