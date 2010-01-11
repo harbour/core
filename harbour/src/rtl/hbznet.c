@@ -120,6 +120,16 @@ PHB_ZNETSTREAM hb_znetOpen( int level, int strategy )
 
    memset( pStream, 0, sizeof( HB_ZNETSTREAM ) );
 
+   if( level != Z_DEFAULT_COMPRESSION &&
+       !( level >= Z_NO_COMPRESSION && level <= Z_BEST_COMPRESSION ) )
+      level = Z_DEFAULT_COMPRESSION;
+
+   if( strategy != Z_FILTERED     &&
+       strategy != Z_HUFFMAN_ONLY &&
+       strategy != Z_RLE          &&
+       strategy != Z_FIXED )
+      strategy = Z_DEFAULT_STRATEGY;
+
    if( deflateInit2( &pStream->wr, level,
                      Z_DEFLATED, -MAX_WBITS, HB_ZNET_MEM_LEVEL, strategy ) == Z_OK )
    {
@@ -403,24 +413,8 @@ long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, lo
 HB_FUNC( HB_INETCOMPRESS )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_POINTER );
-   int iLevel = Z_DEFAULT_COMPRESSION, iStrategy = Z_DEFAULT_STRATEGY, i;
-
-   if( HB_ISNUM( 2 ) )
-   {
-      i = hb_parni( 2 );
-      if( i >= Z_NO_COMPRESSION && i <= Z_BEST_COMPRESSION )
-         iLevel = i;
-   }
-
-   if( HB_ISNUM( 3 ) )
-   {
-      i = hb_parni( 3 );
-      if( i == Z_FILTERED     ||
-          i == Z_HUFFMAN_ONLY ||
-          i == Z_RLE          ||
-          i == Z_FIXED )
-         iStrategy = i;
-   }
+   int iLevel = hb_parnidef( 2, HB_ZLIB_COMPRESSION_DEFAULT ),
+       iStrategy = hb_parnidef( 3, HB_ZLIB_STRATEGY_DEFAULT );
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
       hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL );

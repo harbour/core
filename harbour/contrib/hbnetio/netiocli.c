@@ -65,6 +65,8 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbsocket.h"
+#include "hbznet.h"
+#include "hbzlib.ch"
 #include "hbinit.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -78,11 +80,17 @@
 typedef struct _HB_CONCLI
 {
    HB_COUNTER     used;
+   HB_COUNTER     usrcount;
    PHB_ITEM       mutex;
    int            timeout;
    int            port;
    HB_SOCKET      sd;
+   PHB_ZNETSTREAM zstream;
    struct _HB_CONCLI * next;
+   int            level;
+   int            strategy;
+   int            passlen;
+   char           passwd[ NETIO_PASSWD_MAX ];
    char           server[ 1 ];
 }
 HB_CONCLI, * PHB_CONCLI;
@@ -99,7 +107,11 @@ typedef struct
 {
    int      timeout;
    int      port;
+   int      level;
+   int      strategy;
+   int      passlen;
    char     server[ NETIO_SERVERNAME_MAX ];
+   char     passwd[ NETIO_PASSWD_MAX ];
 } HB_CONDATA, * PHB_CONDATA;
 
 /* MT macros */
@@ -112,12 +124,17 @@ static HB_TSD_NEW( s_conData, sizeof( HB_CONDATA ), NULL, NULL );
 static PHB_CONCLI s_connections = NULL;
 
 static BOOL s_defaultInit = TRUE;
-static char s_defaultServer[ NETIO_SERVERNAME_MAX ] = NETIO_DEFAULT_SERVER;
-static int  s_defaultPort = NETIO_DEFAULT_PORT;
-static int  s_defaultTimeOut = NETIO_DEFAULT_TIMEOUT;
+static HB_CONDATA s_defaultConn = {
+   NETIO_DEFAULT_TIMEOUT,
+   NETIO_DEFAULT_PORT,
+   HB_ZLIB_COMPRESSION_DISABLE,
+   HB_ZLIB_STRATEGY_DEFAULT,
+   0,
+   NETIO_DEFAULT_SERVER,
+   ""
+};
 
 static BOOL s_fInit = TRUE;
-
 
 static const HB_FILE_FUNCS * s_fileMethods( void );
 
@@ -130,7 +147,10 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
 
    while( lRead < len )
    {
-      l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, NETIO_TIMEOUT );
+      if( conn->zstream )
+         l = hb_znetRead( conn->zstream, conn->sd, ptr + lRead, len - lRead, NETIO_TIMEOUT );
+      else
+         l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, NETIO_TIMEOUT );
       if( l <= 0 )
          break;
       lRead += l;
@@ -143,7 +163,7 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
 {
    BYTE buffer[ 2048 ];
    BYTE * msg, * ptr = NULL;
-   LONG lSent = 0, l;
+   LONG lSent = 0, lLast = 1, l;
    BOOL fResult = FALSE;
 
    if( len == 0 )
@@ -164,10 +184,14 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
 
    while( lSent < len )
    {
-      l = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, NETIO_TIMEOUT );
-      if( l <= 0 )
+      if( conn->zstream )
+         l = hb_znetWrite( conn->zstream, conn->sd, msg + lSent, len - lSent, NETIO_TIMEOUT, &lLast );
+      else
+         l = lLast = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, NETIO_TIMEOUT );
+      if( l > 0 )
+         lSent += l;
+      if( lLast <= 0 )
          break;
-      lSent += l;
    }
 
    if( ptr )
@@ -175,6 +199,9 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
 
    if( lSent == len )
    {
+      if( conn->zstream )
+         hb_znetFlush( conn->zstream, conn->sd, NETIO_TIMEOUT );
+
       if( fWait )
       {
          int iMsg = HB_GET_LE_INT32( msgbuf );
@@ -201,7 +228,9 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
 }
 
 static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
-                                int iPort, int iTimeOut )
+                                int iPort, int iTimeOut,
+                                const char * pszPasswd, int iPassLen,
+                                int iLevel, int iStrategy )
 {
    PHB_CONCLI conn;
    int iLen;
@@ -209,12 +238,19 @@ static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
    iLen = ( int ) strlen( pszServer );
    conn = ( PHB_CONCLI ) hb_xgrab( sizeof( HB_CONCLI ) + iLen );
    hb_atomic_set( &conn->used, 1 );
+   hb_atomic_set( &conn->usrcount, 0 );
    conn->mutex = hb_threadMutexCreate();
    conn->sd = sd;
+   conn->zstream = NULL;
    conn->next = NULL;
    conn->timeout = iTimeOut;
    conn->port = iPort;
    memcpy( conn->server, pszServer, iLen + 1 );
+   conn->level = iLevel;
+   conn->strategy = iStrategy;
+   conn->passlen = iPassLen;
+   if( iPassLen )
+      memcpy( conn->passwd, pszPasswd, iPassLen );
 
    return conn;
 }
@@ -223,6 +259,8 @@ static void s_fileConFree( PHB_CONCLI conn )
 {
    hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
    hb_socketClose( conn->sd );
+   if( conn->zstream )
+      hb_znetClose( conn->zstream );
    if( conn->mutex )
       hb_itemRelease( conn->mutex );
    hb_xfree( conn );
@@ -287,6 +325,39 @@ static PHB_CONCLI s_fileConFind( const char * pszServer, int iPort )
    return conn;
 }
 
+static BOOL s_fileUsrDisconnect( const char * pszServer, int iPort )
+{
+   PHB_CONCLI conn, connClose = NULL;
+
+   HB_NETIO_LOCK
+   conn = s_connections;
+   while( conn )
+   {
+      if( conn->port == iPort &&
+          hb_stricmp( conn->server, pszServer ) == 0 )
+      {
+         if( hb_atomic_get( &conn->usrcount ) )
+         {
+            if( hb_atomic_dec( &conn->usrcount ) )
+               connClose = conn;
+         }
+         break;
+      }
+      conn = conn->next;
+   }
+   HB_NETIO_UNLOCK
+
+   if( connClose )
+      s_fileConClose( connClose );
+
+   return conn != NULL;
+}
+
+static void s_fileUsrConnect( PHB_CONCLI conn )
+{
+   hb_atomic_inc( &conn->usrcount );
+}
+
 static BOOL s_fileConLock( PHB_CONCLI conn )
 {
    return !conn->mutex || hb_threadMutexLock( conn->mutex );
@@ -298,46 +369,72 @@ static void s_fileConUnlock( PHB_CONCLI conn )
       hb_threadMutexUnlock( conn->mutex );
 }
 
+static void s_fileGetConnParam( const char ** pszServer, int * piPort, int * piTimeOut,
+                                const char ** pszPasswd, int * piPassLen )
+{
+   PHB_CONDATA pConData = ( PHB_CONDATA ) hb_stackTestTSD( &s_conData );
+
+
+   if( pConData == NULL )
+      pConData = &s_defaultConn;
+
+   if( *pszServer == NULL )
+      *pszServer = pConData->server;
+   if( *piPort == 0 )
+      *piPort = pConData->port;
+   if( piTimeOut && ( *piTimeOut == 0 || *piTimeOut < -1 ) )
+      *piTimeOut = pConData->timeout;
+   if( piPassLen && *piPassLen == 0 && pConData->passlen != 0 )
+   {
+      *piPassLen = pConData->passlen;
+      *pszPasswd = pConData->passwd;
+   }
+}
+
 static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                                  const char * pszServer,
-                                 int iPort, int iTimeOut )
+                                 int iPort, int iTimeOut,
+                                 const char * pszPasswd, int iPassLen,
+                                 int iLevel, int iStrategy )
 {
    PHB_CONCLI conn;
    HB_SOCKET sd;
-   PHB_CONDATA pConData = ( PHB_CONDATA ) hb_stackGetTSD( &s_conData );
    char server[ NETIO_SERVERNAME_MAX ];
    char * pszIpAddres;
 
-   if( pConData->port )
-   {
-      pszServer = pConData->server;
-      iPort = pConData->port;
-      iTimeOut = pConData->timeout;
-   }
-   else
-   {
-      if( !pszServer )
-         pszServer = s_defaultServer;
-      if( !iPort )
-         iPort = s_defaultPort;
-      if( iTimeOut == 0 || iTimeOut < -1 )
-         iTimeOut = s_defaultTimeOut;
-   }
+   s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
 
    if( pszFilename )
    {
       /* decode server address and port if given as part of file name
        * in format like:
        *          "192.168.0.1:2941:path/to/file"
+       * or:
+       *          "192.168.0.1:2941:passwd:path/to/file"
+       * or:
+       *          "//192.168.0.1:2941/path/to/file"
        */
-      const char * psz = strchr( *pszFilename, ':' );
+      const char * psz, * tmp;
+
+      if( ( ( *pszFilename )[ 0 ] == '/' || ( *pszFilename )[ 0 ] == '\\' ) &&
+          ( *pszFilename )[ 0 ] == ( *pszFilename )[ 1 ] )
+      {
+         *pszFilename += 2;
+         psz = strchr( *pszFilename, '/' );
+         tmp = strchr( *pszFilename, '\\' );
+         if( tmp < psz )
+            psz = tmp;
+      }
+      else
+         psz = strchr( *pszFilename, ':' );
+
       if( psz )
       {
          int iLen = ( int ) ( psz - *pszFilename );
 
          if( iLen == 0 || iLen > 1 )
          {
-            char port_buf[ 10 ];
+            char port_buf[ 10 ], c;
             if( iLen >= ( int ) sizeof( server ) )
                iLen = ( int ) sizeof( server ) - 1;
             if( iLen > 0 )
@@ -353,11 +450,10 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                port_buf[ iLen ] = ( *pszFilename )[ iLen ];
                ++iLen;
             }
-            if( ( *pszFilename )[ iLen ] == ':' )
+            c = ( *pszFilename )[ iLen ];
+            if( c == ':' || c == '/' || c == '\\' )
             {
-               if( iLen == 0 )
-                  ++( *pszFilename );
-               else if( iLen > 0 )
+               if( iLen > 0 )
                {
                   int iOverflow;
                   HB_LONG llPort;
@@ -367,14 +463,33 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
 
                   if( !iOverflow && llPort > 0 && llPort < 0x10000 )
                   {
-                     *pszFilename += iLen + 1;
+                     *pszFilename += iLen;
                      iPort = ( int ) llPort;
+                  }
+               }
+               if( c == ':' )
+               {
+                  ++( *pszFilename );
+                  iLen = 0;
+                  while( ( *pszFilename )[ iLen ] &&
+                         ( *pszFilename )[ iLen ] != ':' )
+                     ++iLen;
+                  if( ( *pszFilename )[ iLen ] == ':' )
+                  {
+                     pszPasswd = *pszFilename;
+                     *pszFilename += iLen + 1;
+                     iPassLen = iLen;
+                     if( iPassLen > NETIO_PASSWD_MAX )
+                        iPassLen = NETIO_PASSWD_MAX;
                   }
                }
             }
          }
       }
    }
+
+   if( iLevel == HB_ZLIB_COMPRESSION_DISABLE && iPassLen )
+      iLevel = HB_ZLIB_COMPRESSION_DEFAULT;
 
    pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
    if( pszIpAddres == NULL )
@@ -402,21 +517,40 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
 
                hb_socketSetNoDelay( sd, TRUE );
-               conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut );
+               conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut,
+                                    pszPasswd, iPassLen, iLevel, iStrategy );
                sd = HB_NO_SOCKET;
 
-               if( !s_fileSendMsg( conn, msgbuf, NETIO_LOGINSTRID, len, TRUE ) ||
-                   HB_GET_LE_UINT32( &msgbuf[ 4 ] ) != NETIO_CONNECTED )
+               if( iLevel != HB_ZLIB_COMPRESSION_DISABLE )
                {
-                  s_fileConFree( conn );
-                  conn = NULL;
+                  conn->zstream = hb_znetOpen( iLevel, iStrategy );
+                  if( conn->zstream != NULL )
+                  {
+                     if( iPassLen )
+                        hb_znetEncryptKey( conn->zstream, pszPasswd, iPassLen );
+                  }
+                  else
+                  {
+                     s_fileConFree( conn );
+                     conn = NULL;
+                  }
                }
-               else
-                  s_fileConRegister( conn );
+
+               if( conn )
+               {
+                  if( !s_fileSendMsg( conn, msgbuf, NETIO_LOGINSTRID, len, TRUE ) ||
+                      HB_GET_LE_UINT32( &msgbuf[ 4 ] ) != NETIO_CONNECTED )
+                  {
+                     s_fileConFree( conn );
+                     conn = NULL;
+                  }
+                  else
+                     s_fileConRegister( conn );
+               }
             }
             hb_xfree( pSockAddr );
          }
-         if( !conn && sd != HB_NO_SOCKET )
+         if( sd != HB_NO_SOCKET )
             hb_socketClose( sd );
       }
    }
@@ -426,9 +560,15 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
       HB_NETIO_LOCK
       if( s_defaultInit )
       {
-         hb_strncpy( s_defaultServer, pszIpAddres, sizeof( s_defaultServer ) - 1 );
-         s_defaultPort = iPort;
-         s_defaultTimeOut = iTimeOut;
+         hb_strncpy( s_defaultConn.server, pszIpAddres,
+                     sizeof( s_defaultConn.server ) - 1 );
+         s_defaultConn.port = iPort;
+         s_defaultConn.timeout = iTimeOut;
+         s_defaultConn.level = iLevel;
+         s_defaultConn.strategy = iStrategy;
+         s_defaultConn.passlen = iPassLen;
+         if( iPassLen )
+            memcpy( s_defaultConn.passwd, pszPasswd, iPassLen );
          s_defaultInit = FALSE;
       }
       HB_NETIO_UNLOCK
@@ -470,17 +610,27 @@ static void s_netio_init( void * cargo )
    }
 }
 
-/* NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>] ) -> <lOK>
+/* NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>], ;
+ *                [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] ) -> <lOK>
  */
 HB_FUNC( NETIO_CONNECT )
 {
-   const char * pszServer = hb_parc( 1 );
-   int iPort = hb_parni( 2 ), iTimeOut = hb_parni( 3 );
+   const char * pszServer = hb_parc( 1 ),
+              * pszPasswd = hb_parc( 4 );
+   int iPort = hb_parni( 2 ),
+       iTimeOut = hb_parni( 3 ),
+       iPassLen = ( int ) hb_parclen( 4 ),
+       iLevel = hb_parnidef( 5, HB_ZLIB_COMPRESSION_DISABLE ),
+       iStrategy = hb_parnidef( 6, HB_ZLIB_STRATEGY_DEFAULT );
    PHB_CONCLI conn;
+
+   if( iPassLen > NETIO_PASSWD_MAX )
+      iPassLen = NETIO_PASSWD_MAX;
 
    s_netio_init( NULL );
 
-   conn = s_fileConnect( NULL, pszServer, iPort, iTimeOut );
+   conn = s_fileConnect( NULL, pszServer, iPort, iTimeOut, pszPasswd, iPassLen,
+                         iLevel, iStrategy );
    if( conn )
    {
       PHB_CONDATA pConData = ( PHB_CONDATA ) hb_stackGetTSD( &s_conData );
@@ -488,11 +638,35 @@ HB_FUNC( NETIO_CONNECT )
       pConData->timeout = conn->timeout;
       pConData->port = conn->port;
       hb_strncpy( pConData->server, conn->server, sizeof( pConData->server ) - 1 );
+      pConData->level = conn->level;
+      pConData->strategy = conn->strategy;
+      pConData->passlen = conn->passlen;
+      if( conn->passlen )
+         memcpy( pConData->passwd, conn->passwd, conn->passlen );
 
-      s_fileConClose( conn );
+      s_fileUsrConnect( conn );
    }
 
    hb_retl( conn != NULL );
+}
+
+/* NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+ */
+HB_FUNC( NETIO_DISCONNECT )
+{
+   const char * pszServer = hb_parc( 1 );
+   char * pszIpAddres;
+   int iPort = hb_parni( 2 );
+   BOOL fDisconnected = FALSE;
+
+   s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
+   pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
+   if( pszIpAddres != NULL )
+   {
+      fDisconnected = s_fileUsrDisconnect( pszIpAddres, iPort );
+      hb_xfree( pszIpAddres );
+   }
+   hb_retl( fDisconnected );
 }
 
 static const char * s_netio_params( int iMsg, const char * pszName, UINT32 * pSize, char ** pFree )
@@ -527,7 +701,8 @@ static BOOL s_netio_procexec( const char * pszProcName, int iMsg )
 
    if( pszProcName )
    {
-      PHB_CONCLI conn = s_fileConnect( &pszProcName, NULL, 0, 0 );
+      PHB_CONCLI conn = s_fileConnect( &pszProcName, NULL, 0, 0, NULL, 0,
+                                       HB_ZLIB_COMPRESSION_DISABLE, 0 );
       if( conn )
       {
          if( s_fileConLock( conn ) )
@@ -639,7 +814,8 @@ static BOOL s_fileExists( const char * pFilename, char * pRetPath )
 
    pFilename += NETIO_FILE_PREFIX_LEN;
 
-   conn = s_fileConnect( &pFilename, NULL, 0, 0 );
+   conn = s_fileConnect( &pFilename, NULL, 0, 0, NULL, 0,
+                         HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
       if( s_fileConLock( conn ) )
@@ -666,7 +842,8 @@ static BOOL s_fileDelete( const char * pFilename )
 
    pFilename += NETIO_FILE_PREFIX_LEN;
 
-   conn = s_fileConnect( &pFilename, NULL, 0, 0 );
+   conn = s_fileConnect( &pFilename, NULL, 0, 0, NULL, 0,
+                         HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
       if( s_fileConLock( conn ) )
@@ -695,7 +872,8 @@ static BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
    if( s_fileAccept( pszNewName ) )
       pszNewName += NETIO_FILE_PREFIX_LEN;
 
-   conn = s_fileConnect( &pszFileName, NULL, 0, 0 );
+   conn = s_fileConnect( &pszFileName, NULL, 0, 0, NULL, 0,
+                         HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
       if( s_fileConLock( conn ) )
@@ -730,7 +908,8 @@ static PHB_FILE s_fileOpen( const char * pFilename, const char * pDefExt,
 
    HB_SYMBOL_UNUSED( pPaths );
 
-   conn = s_fileConnect( &pszFile, NULL, 0, 0 );
+   conn = s_fileConnect( &pszFile, NULL, 0, 0, NULL, 0,
+                         HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
       if( s_fileConLock( conn ) )

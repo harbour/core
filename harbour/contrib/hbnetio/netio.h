@@ -72,6 +72,9 @@
 /* maximal length of server name */
 #define NETIO_SERVERNAME_MAX  256
 
+/* maximal length of password */
+#define NETIO_PASSWD_MAX      64
+
 /* login string */
 #define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\006"
 

@@ -57,22 +57,22 @@
  *
  */
 
-FUNCTION NETIO_MTSERVER( ... )
+FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, lRPC, ... )
    LOCAL pListenSocket
 
    IF hb_mtvm()
-      pListenSocket := netio_listen( ... )
+      pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
       IF !Empty( pListenSocket )
-         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket ) )
+         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ... ) )
       ENDIF
    ENDIF
    RETURN pListenSocket
 
-STATIC FUNCTION NETIO_SRVLOOP( pListenSocket )
+STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, ... )
    LOCAL pConnectionSocket
 
    WHILE .T.
-      pConnectionSocket := netio_accept( pListenSocket )
+      pConnectionSocket := netio_accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT
       ENDIF

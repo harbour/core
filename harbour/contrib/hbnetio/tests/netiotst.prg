@@ -12,17 +12,26 @@
  *
  */
 
-#define DBNAME    "net:127.0.0.1:2941:data/_tst_"
+/* net:127.0.0.1:2941:topsecret:data/_tst_ */
+
+#define DBSERVER  "127.0.0.1"
+#define DBPORT    2941
+#define DBPASSWD  "topsecret"
+#define DBDIR     "data"
+#define DBFILE    "_tst_"
+
+#define DBNAME    "net:" + DBSERVER + ":" + hb_ntos( DBPORT ) + ":" + ;
+                  DBPASSWD + ":" + DBDIR + "/" + DBFILE
 
 request DBFCDX
 
 proc main()
-   local pSockSrv
+   local pSockSrv, lExists
 
    set exclusive off
    rddSetDefault( "DBFCDX" )
 
-   pSockSrv := netio_mtserver()
+   pSockSrv := netio_mtserver( DBPORT,,, /* RPC */ .T., DBPASSWD )
    if empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
       wait "Press any key to exit..."
@@ -34,8 +43,15 @@ proc main()
    wait
 
    ?
-   ? "NETIO_CONNECT():", netio_connect()
+   ? "NETIO_CONNECT():", netio_connect( DBSERVER, DBPORT, , DBPASSWD )
    ?
+
+   lExists := netio_funcexec( "HB_DirExists", "./data" )
+   ? "Directory './data'", iif( !lExists, "not exists", "exists" )
+   if !lExists
+      ? "Creating directory './data' ->", ;
+       iif( netio_funcexec( "MakeDir", "./data" ) == -1, "error", "OK" )
+   endif
 
    createdb( DBNAME )
    testdb( DBNAME )

@@ -18,7 +18,7 @@ REQUEST HB_MT
 /* enable this if you need all core functions in RPC support */
 //REQUEST __HB_EXTERN__
 
-PROCEDURE Main( port, ifaddr, rootdir, rpc )
+PROCEDURE Main( port, ifaddr, rootdir, rpc, passwd )
    LOCAL pListenSocket
 
    HB_Logo()
@@ -31,17 +31,21 @@ PROCEDURE Main( port, ifaddr, rootdir, rpc )
       rootdir := hb_dirBase()
    ENDIF
    rpc := !Empty( rpc )
+   IF !Empty( passwd ) .AND. Len( passwd ) == 0
+      passwd := NIL
+   ENDIF
 
    IF port == 0
       HB_Usage()
    ELSE
-      pListenSocket := netio_mtserver( port, ifaddr, rootdir, rpc )
+      pListenSocket := netio_mtserver( port, ifaddr, rootdir, rpc, passwd )
       IF Empty( pListenSocket )
          OutStd( "Cannot start server." + hb_osNewLine() )
       ELSE
          OutStd( "Listening on: " + ifaddr + ":" + hb_ntos( port ) + hb_osNewLine() )
          OutStd( "Root filesystem: " + rootdir + hb_osNewLine() )
          OutStd( "RPC support: " + iif( rpc, "enabled", "disabled" ) + hb_osNewLine() )
+         OutStd( "Encryption: " + iif( passwd != NIL, "enabled", "disabled" ) + hb_osNewLine() )
 
          OutStd( hb_osNewLine() )
          OutStd( "Press any key to stop NETIO server." + hb_osNewLine() )
@@ -65,7 +69,7 @@ STATIC PROCEDURE HB_Logo()
 
 STATIC PROCEDURE HB_Usage()
 
-   OutStd( "Syntax:  netiosrv [<port>] [<inetaddr>] [<rootdir>] [<rpc>]" + hb_osNewLine() )
+   OutStd( "Syntax: netiosrv [<port>] [<inetaddr>] [<rootdir>] [<rpc>] [<passwd>]" + hb_osNewLine() )
 
    RETURN
 
