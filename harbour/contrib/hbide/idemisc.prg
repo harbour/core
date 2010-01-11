@@ -501,13 +501,14 @@ FUNCTION hbide_isValidPath( cPath, cPathDescr )
 
    IF hb_dirExists( cPath )
       RETURN .T.
-   End
+   ENDIF
 
    IF empty( cPathDescr )
       MsgBox( 'The specified path is invalid "' + cPath + '"' )
    ELSE
-      MsgBox( 'The specified path is invalid for ' + cPathDescr + ': "' + cPath + '"' )
-   End
+      //MsgBox( 'The specified path is invalid for ' + cPathDescr + ': "' + cPath + '"' )
+      MsgBox( 'The specified path is invalid for : "' + cPath + '"', cPathDescr )
+   ENDIF
    RETURN .F.
 
 /*----------------------------------------------------------------------*/

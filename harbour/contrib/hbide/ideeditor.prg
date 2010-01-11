@@ -116,6 +116,8 @@ CLASS IdeEditsManager INHERIT IdeObject
 
    METHOD prepareTabWidget()
    METHOD exeBlock()
+   METHOD addSourceInTree()
+   METHOD removeSourceInTree()
 
    ENDCLASS
 
@@ -168,6 +170,45 @@ METHOD IdeEditsManager:prepareTabWidget()
    ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|o,p| ::exeBlock( 1, p, o ) } )
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:removeSourceInTree( cSourceFile )
+   LOCAL n
+
+   IF !Empty( cSourceFile )
+      IF ( n := aScan( ::aProjData, {|e_| e_[ TRE_ORIGINAL ] == cSourceFile .AND. e_[ 2 ] == "Opened Source" } ) ) > 0
+         ::aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
+         hb_adel( ::aProjData, n, .T. )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:addSourceInTree( cSourceFile )
+   LOCAL cPath, cPathA, cFile, cExt, n, oParent
+   LOCAL oGrand := ::oOpenedSources
+
+   IF Empty( cSourceFile )
+      RETURN nil
+   End
+
+   hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
+   cPathA := hbide_pathNormalized( cPath )
+
+   IF ( n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } ) ) == 0
+      oParent := oGrand:addItem( cPath )
+      aadd( ::aProjData, { oParent, "Editor Path", oGrand, cPathA, cSourceFile } )
+      aadd( ::aEditorPath, { oParent, cPathA } )
+   ELSE
+      oParent := ::aEditorPath[ n,1 ]
+   ENDIF
+
+   aadd( ::aProjData, { oParent:addItem( cFile + cExt ), "Opened Source", oParent, ;
+                                   cSourceFile, hbide_pathNormalized( cSourceFile ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -708,7 +749,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::oIde:nCurTab := len( ::oIde:aTabs )
 
    /* Populate right at creation */
-   ::oIde:addSourceInTree( ::sourceFile )
+   //::oIde:addSourceInTree( ::sourceFile )
+   ::oEM:addSourceInTree( ::sourceFile )
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
    ::setTabImage()
@@ -874,7 +916,6 @@ METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
 /*
  * Remove the tab of the main screen and clean the objects from memory.Note that
  * this function does not question the User if he wants to save or not the
@@ -887,7 +928,6 @@ METHOD IdeEditor:removeTabPage()
    LOCAL n
 
    n := aScan( ::oIde:aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
-
    IF n > 0
       hb_aDel( ::oIde:aTabs, n, .T. )
    ENDIF
@@ -895,13 +935,11 @@ METHOD IdeEditor:removeTabPage()
    n := ::oIde:qTabWidget:indexOf( ::oTab:oWidget )
    ::oIde:qTabWidget:removeTab( n  )
 
-   /* Destroy all objects */
    // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
    //
    IF !Empty( ::qEdit )
       Qt_Slots_disConnect( ::pSlots, ::qEdit, "textChanged()" )
       Qt_Slots_disConnect( ::pSlots, ::qEdit, "cursorPositionChanged()" )
-      /* To avoid recursive calls on invalid pointers */
    ENDIF
 
    IF !Empty( ::qDocument )
@@ -927,29 +965,12 @@ METHOD IdeEditor:removeTabPage()
       ::oIde:oFuncList:clear()
    ENDIF
 
-   IF !Empty( ::oTab )
-//      ::oTab:Destroy()
-//      ::oTab:pPtr := 0
-//      ::oTab      := nil
-   ENDIF
-
-   IF ( n := aScan( ::oIde:aProjData, {|e_| e_[ 4 ] == cSource } ) ) > 0
-      ::aProjData[ n,3 ]:delItem( ::oIde:aProjData[ n,1 ] )
-      hb_aDel( ::aProjData, n, .T. )
-   ENDIF
+   ::oEM:removeSourceInTree( cSource )
 
    IF ( n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } ) ) > 0
       hb_aDel( ::oIde:aEdits, n, .T. )
    ENDIF
 
-   /*
-    * TOFIX: Release memory from these objects & arrays
-    *
-    *  aTabs     - OK
-    *  aSources
-    *  aEdits    - OK
-    *
-    */
    IF ::qTabWidget:count() == 0
       IF ::lDockRVisible
          ::oDockR:hide()

@@ -318,15 +318,15 @@ METHOD IdeSourcesManager:closeAllOthers( nTab )
       RETURN .F.
    ENDIF
 
-   nID := oEdit:nID
-   nTab:= 0
+   nID  := oEdit:nID
+   nTab := 0
 
  * Finally now we will close all tabs.
    DO WHILE ( ++nTab <= Len( ::aTabs ) )
 
-	    oEdit := ::oEM:getEditorByTabPosition( nTab ) 
-	    
-       IF empty(oEdit) .OR. oEdit:nID == nID
+       oEdit := ::oEM:getEditorByTabPosition( nTab )
+
+       IF empty( oEdit ) .OR. oEdit:nID == nID
           LOOP
        ENDIF
 
@@ -380,7 +380,7 @@ METHOD IdeSourcesManager:revertSource( nTab )
 
    IF nTab < 1
       RETURN .F.
-   End
+   ENDIF
 
    IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
       * File has not changed, ignore the question to User

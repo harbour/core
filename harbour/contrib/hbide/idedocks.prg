@@ -381,28 +381,21 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
    LOCAL cSource, nLine
 
    IF lSelected
-      ::nPass++
-      IF ::nPass == 1
-         qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
-         cText := QTextBlock():configure( qCursor:block() ):text()
+      qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
+      cText := QTextBlock():configure( qCursor:block() ):text()
 
-         IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-            ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
-            qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
-            nLine   := iif( nLine < 1, 0, nLine - 1 )
+      IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
+         ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
+         qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+         nLine   := iif( nLine < 1, 0, nLine - 1 )
 
-            qCursor:setPosition( 0 )
-            qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
-            ::oIde:qCurEdit:setTextCursor( qCursor )
-            ::oIde:manageFocusInEditor()
-
-hbide_dbg( "............", cSource, cText )
-         ENDIF
-      ENDIF
-      IF ::nPass >= 2
-         ::nPass := 0
+         qCursor:setPosition( 0 )
+         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
+         ::oIde:qCurEdit:setTextCursor( qCursor )
+         ::oIde:manageFocusInEditor()
       ENDIF
    ENDIF
+
    RETURN nLine
 
 /*----------------------------------------------------------------------*/

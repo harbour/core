@@ -88,55 +88,50 @@ CLASS IdeObject
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
 
-   ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
-   ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
-   ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
-
-   ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
-
-   ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
-   ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
-   ACCESS aProjects                               INLINE ::oIde:aProjects
-   ACCESS aINI                                    INLINE ::oIde:aINI
-   ACCESS aEdits                                  INLINE ::oIde:aEdits
-   ACCESS aSources                                INLINE ::oIde:aSources
-
+   ACCESS oFont                                   INLINE ::oIde:oFont
+   ACCESS oThemes                                 INLINE ::oIde:oThemes
+   ACCESS oSBar                                   INLINE ::oIde:oSBar
    ACCESS oDlg                                    INLINE ::oIde:oDlg
    ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
    ACCESS oDA                                     INLINE ::oIde:oDA
 
+   ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
+   ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
+   ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
+   ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
+
+   ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
+   ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
+   ACCESS resPath                                 INLINE ::oIde:resPath
+   ACCESS pathSep                                 INLINE ::oIde:pathSep
+
+   ACCESS aProjects                               INLINE ::oIde:aProjects
+   ACCESS aINI                                    INLINE ::oIde:aINI
+   ACCESS aEdits                                  INLINE ::oIde:aEdits
+   ACCESS aSources                                INLINE ::oIde:aSources
+   ACCESS aEditorPath                             INLINE ::oIde:aEditorPath
+   ACCESS aProjData                               INLINE ::oIde:aProjData
+   ACCESS aTabs                                   INLINE ::oIde:aTabs
+
    ACCESS oDockPT                                 INLINE ::oIde:oDockPT
    ACCESS oProjTree                               INLINE ::oIde:oProjTree
    ACCESS oProjRoot                               INLINE ::oIde:oProjRoot
-   ACCESS aProjData                               INLINE ::oIde:aProjData
-
    ACCESS oDockED                                 INLINE ::oIde:oDockED
    ACCESS oEditTree                               INLINE ::oIde:oEditTree
    ACCESS oOpenedSources                          INLINE ::oIde:oOpenedSources
-
    ACCESS oDockR                                  INLINE ::oIde:oDockR
    ACCESS oFuncList                               INLINE ::oIde:oFuncList
-
    ACCESS oDockB                                  INLINE ::oIde:oDockB
    ACCESS oCompileResult                          INLINE ::oIde:oCompileResult
-
    ACCESS oDockB1                                 INLINE ::oIde:oDockB1
    ACCESS oLinkResult                             INLINE ::oIde:oLinkResult
-
    ACCESS oDockB2                                 INLINE ::oIde:oDockB2
    ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
-
-   ACCESS resPath                                 INLINE ::oIde:resPath
-   ACCESS pathSep                                 INLINE ::oIde:pathSep
-   ACCESS oFont                                   INLINE ::oIde:oFont
-   ACCESS oThemes                                 INLINE ::oIde:oThemes
-   ACCESS aTabs                                   INLINE ::oIde:aTabs
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible
    ACCESS lDockBVisible                           INLINE ::oIde:lDockBVisible
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
-   ACCESS oSBar                                   INLINE ::oIde:oSBar
 
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}

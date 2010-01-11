@@ -106,21 +106,53 @@ CLASS IdeProject
    DATA   compilers                               INIT ""
 
    METHOD new()
+   METHOD applyMeta( s )
+   METHOD expandMeta( s )
 
    ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProject:expandMeta( s )
+   LOCAL k
+   LOCAL a_:= ::metaData
+
+   IF ! Empty( a_ )
+      FOR EACH k IN a_ DESCEND
+         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 1 ], k[ 2 ] )
+      NEXT
+   ENDIF
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProject:applyMeta( s )
+   LOCAL k
+   LOCAL a_:= ::metaData
+   //LOCAL ss := s
+
+   IF ! Empty( a_ )
+      FOR EACH k IN a_
+         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 2 ],  k[ 1 ] )
+      NEXT
+   ENDIF
+
+   //MsgBox( ss + " => " + s )
+   RETURN s
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProject:new( aProps )
    LOCAL b_, a_
 
-   IF hb_isArray( aProps )
+   IF hb_isArray( aProps ) .AND. !empty( aProps )
       ::aProjProps := aProps
 
-      b_:= aProps[ 3 ]
+      b_:= aProps
 
-      ::normalizedName := b_[ 1 ]
-      ::fileName       := b_[ 2 ]
+      //::normalizedName := b_[ 1 ]
+      //::fileName       := b_[ 2 ]
 
       a_:= b_[ PRJ_PRP_PROPERTIES, 2 ]
 
@@ -133,16 +165,21 @@ METHOD IdeProject:new( aProps )
       ::launchParams   := a_[ E_oPrjLau  ]
       ::launchProgram  := a_[ E_oPrjLEx  ]
 
-      ::hbpFlags       := b_[ PRJ_PRP_FLAGS   , 2 ]
-      ::sources        := b_[ PRJ_PRP_SOURCES , 2 ]
-      ::metaData       := b_[ PRJ_PRP_METADATA, 2 ]
+      ::hbpFlags       := aclone( b_[ PRJ_PRP_FLAGS   , 2 ] )
+      ::sources        := aclone( b_[ PRJ_PRP_SOURCES , 2 ] )
+      ::metaData       := aclone( b_[ PRJ_PRP_METADATA, 2 ] )
       ::dotHbp         := ""
       ::compilers      := ""
 
+      FOR EACH a_ IN ::metaData
+         a_[ 2 ] := hbide_pathNormalized( a_[ 2 ], .f. )
+      NEXT
    ENDIF
 
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+//                            IdeProjectManager
 /*----------------------------------------------------------------------*/
 
 CLASS IdeProjManager INHERIT IdeObject
@@ -178,8 +215,10 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD buildProject()
    METHOD readProcessInfo()
    METHOD getProjectProperties()
-   METHOD getProject()
+   METHOD getProjectByTitle()
+   METHOD getProjectByFile()
    METHOD buildProcess()
+   METHOD updateMetaData()
 
    ENDCLASS
 
@@ -258,6 +297,9 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    ENDIF
 
    IF lFetch
+      /* Access/Assign via this object */
+      ::oProject := IdeProject():new( ::aPrjProps )
+      //
       ::fetchProperties()
       IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
          cProjFileName := ::cSaveTo
@@ -266,7 +308,7 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    ENDIF
 
    IF n == 0
-      aadd( ::oIde:aProjects, { lower( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
+      aadd( ::oIde:aProjects, { hbide_pathNormalized( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
       IF lUpdateTree
          ::oIde:updateProjectTree( ::aPrjProps )
       ENDIF
@@ -286,6 +328,7 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:fetchProperties()
+   LOCAL cLukupPng
    LOCAL cPrjLoc := hb_dirBase() + "projects"
 
    ::oUI := XbpQtUiLoader():new( ::oDlg )
@@ -307,18 +350,21 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_comboPrjType:setCurrentIndex( 0 )
    ENDCASE
 
-   ::oUI:q_buttonChoosePrjLoc:setIcon( ::resPath + "lookup.png" )
-   ::oUI:q_buttonChooseWd:setIcon( ::resPath + "lookup.png" )
-   ::oUI:q_buttonChooseDest:setIcon( ::resPath + "lookup.png" )
+   cLukupPng := ::resPath + "folder.png"
+   ::oUI:q_buttonChoosePrjLoc:setIcon( cLukupPng )
+   ::oUI:q_buttonChooseWd:setIcon( cLukupPng )
+   ::oUI:q_buttonChooseDest:setIcon( cLukupPng )
 
    ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close() } )
    ::oUI:signal( "buttonSave"        , "clicked()", {|| ::save( .F. )         } )
    ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::save( .T. )         } )
    ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()        } )
    ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
+   ::oUI:signal( "editMetaData"      , "textChanged()", {|o| ::updateMetaData( o ) } )
 
-   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn',  'Choose the Project Location...', 'editOutName', "editWrkFolder", "editDstFolder" ) } )
-   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose a Working Folder...' ) } )
+   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn',  'Choose the Project Location...'  ) } )//, ;
+                       //                                                       'editOutName', "editWrkFolder", "editDstFolder" ) } )
+   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose a Working Folder...'     ) } )
    ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose a Destination Folder...' ) } )
 
    IF empty( ::aPrjProps )
@@ -327,14 +373,14 @@ METHOD IdeProjManager:fetchProperties()
        * will adjust the other parameters. (vailtoms)
        * 25/12/2009 - 20:40:22
        */
-      ::oUI:q_editPrjLoctn:setText( StrTran( cPrjLoc, '\', '/' ) )
+      ::oUI:q_editPrjLoctn:setText( hbide_pathNormalized( cPrjLoc, .F. ) )
 
    ELSE
-      ::oUI:q_editPrjTitle:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
-      ::oUI:q_editPrjLoctn:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
-      ::oUI:q_editWrkFolder:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
-      ::oUI:q_editDstFolder:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
-      ::oUI:q_editOutName:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
+      ::oUI:q_editPrjTitle:setText( ::oProject:applyMeta( ::oProject:title ) )
+      ::oUI:q_editPrjLoctn:setText( ::oProject:applyMeta( ::oProject:location ) )
+      ::oUI:q_editWrkFolder:setText( ::oProject:applyMeta( ::oProject:wrkDirectory ) )
+      ::oUI:q_editDstFolder:setText( ::oProject:applyMeta( ::oProject:destination ) )
+      ::oUI:q_editOutName:setText( ::oProject:outputName )
 
       ::oUI:q_editFlags:setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
       ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
@@ -354,7 +400,7 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:oWidget:setWindowTitle( 'Properties for "' + ::oUI:q_editPrjTitle:Text() + '"' )
    ENDIF
 
-   ::setPosByIni( ::oUI:oWidget, PropsDialogGeometry )
+   ::setPosAndSizeByIni( ::oUI:oWidget, PropsDialogGeometry )
    //
    ::oUI:exec()
    //
@@ -369,42 +415,74 @@ METHOD IdeProjManager:fetchProperties()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:updateMetaData()
+   LOCAL a_, s, n, cKey, cVal
+   LOCAL a4_1 := {}
+hbide_dbg( "updateMetaData" )
+   a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() )
+
+   FOR EACH s IN a_
+      IF !( "#" == left( s,1 ) )
+         IF ( n := at( "=", s ) ) > 0
+            cKey := alltrim( substr( s, 1, n-1 ) )
+            cVal := hbide_evalAsString( alltrim( substr( s, n+1 ) ) )
+            aadd( a4_1, { "<"+ cKey +">", cVal } )
+         ENDIF
+      ENDIF
+   NEXT
+
+   ::oProject:metaData := a4_1
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:save( lCanClose )
-   LOCAL a_, a4_1, lOk
-   LOCAL typ_:= { "Executable", "Lib", "Dll" }
-   LOCAL txt_:= {}
+   LOCAL a_, lOk, cPath, txt_
 
    * Validate certain parameters before continuing ... (vailtom)
-   IF Empty( ::oUI:q_editOutName:text() )
-      IF Empty( ::oUI:q_editPrjTitle:text() )
-         MsgBox( 'Invalid Output FileName!' )
-         ::oUI:q_editOutName:setFocus()
-         RETURN .F.
-      ENDIF
-      ::oUI:q_editOutName:setText( ::oUI:q_editPrjTitle:text() )
-   ENDIF
 
+   /*   Title cannot be the output name, but reverse is possible
+        --------------------------------------------------------
+        We must also consider that user may be building the project in parts
+        OR may be basic definition must be in place
+    */
    IF Empty( ::oUI:q_editPrjTitle:text() )
       ::oUI:q_editPrjTitle:setText( ::oUI:q_editOutName:text() )
    ENDIF
 
-   IF !hbide_isValidPath( ::oUI:q_editPrjLoctn:text(), 'Project Location' )
+   IF Empty( ::oUI:q_editOutName:text() )
+      MsgBox( 'Invalid Output FileName' )
+      ::oUI:q_editOutName:setFocus()
+      RETURN .F.
+   ENDIF
+
+   /* This must be valid, we cannot skip */
+   IF !hbide_isValidPath( ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ), 'Project Location' )
       ::oUI:q_editPrjLoctn:setFocus()
       RETURN .F.
    ENDIF
 
-   IF !hbide_isValidPath( ::oUI:q_editWrkFolder:text(), 'Working Folder' )
-      ::oUI:q_editWrkFolder:setText( ::oUI:q_editPrjLoctn:text() )
-      RETURN .F.
+   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
+   IF !empty( cPath := ::oUI:q_editWrkFolder:text() )
+      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Working Folder' )
+         // ::oUI:q_editWrkFolder:setText( ::oUI:q_editPrjLoctn:text() )
+         RETURN .F.
+      ENDIF
    ENDIF
 
-   IF !hbide_isValidPath( ::oUI:q_editDstFolder:text(), 'Destination Folder' )
-      ::oUI:q_editDstFolder:setText( ::oUI:q_editPrjLoctn:text() )
-      RETURN .F.
+   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
+   IF !empty( cPath := ::oUI:q_editDstFolder:text() )
+      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Destination Folder' )
+         // ::oUI:q_editDstFolder:setText( ::oUI:q_editPrjLoctn:text() )
+         RETURN .F.
+      ENDIF
    ENDIF
 
+   txt_:= {}
+   //
    aadd( txt_, "[ PROPERTIES ]" )
-   aadd( txt_, "Type              = " + typ_[ ::oUI:q_comboPrjType:currentIndex()+1 ] )
+   aadd( txt_, "Type              = " + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex()+1 ] )
    aadd( txt_, "Title             = " + ::oUI:q_editPrjTitle:text() )
    aadd( txt_, "Location          = " + ::oUI:q_editPrjLoctn:text() )
    aadd( txt_, "WorkingFolder     = " + ::oUI:q_editWrkFolder:text() )
@@ -413,20 +491,28 @@ METHOD IdeProjManager:save( lCanClose )
    aadd( txt_, "LaunchParams      = " + ::oUI:q_editLaunchParams:text() )
    aadd( txt_, "LaunchProgram     = " + ::oUI:q_editLaunchExe:text() )
    aadd( txt_, " " )
-
+   //
    aadd( txt_, "[ FLAGS ]" )
-   a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
    aadd( txt_, "[ SOURCES ]" )
-   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
    aadd( txt_, "[ METADATA ]" )
    a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
 
+   #if 0
    /* Setup Meta Keys */
    a4_1 := hbide_setupMetaKeys( a_ )
 
    ::cSaveTo := hbide_parseWithMetaData( ::oUI:q_editPrjLoctn:text(), a4_1 ) + ;
                       ::pathSep + ;
                 hbide_parseWithMetaData( ::oUI:q_editOutName:text(), a4_1 ) + ;
+                      ".hbi"
+   ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
+   #endif
+
+   ::cSaveTo := ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ) + ;
+                      ::pathSep + ;
+                ::oProject:expandMeta( ::oUI:q_editOutName:text() ) + ;
                       ".hbi"
    ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
 
@@ -497,7 +583,7 @@ METHOD IdeProjManager:updateHbp( iIndex )
 METHOD IdeProjManager:addSources()
    LOCAL aFiles, a_, b_, a4_1, s
 
-   IF !empty( aFiles := ::selectSource( "openmany" ) )
+   IF !empty( aFiles := ::oSM:selectSource( "openmany" ) )
       a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() )
       a4_1 := hbide_setupMetaKeys( a_ )
 
@@ -627,10 +713,10 @@ METHOD IdeProjManager:selectCurrentProject()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:getProjectProperties( cProject )
+METHOD IdeProjManager:getProjectProperties( cProjectTitle )
    LOCAL n
 
-   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } ) ) > 0
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProjectTitle } ) ) > 0
       RETURN ::aProjects[ n, 3 ]
    ENDIF
 
@@ -638,11 +724,24 @@ METHOD IdeProjManager:getProjectProperties( cProject )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:getProject( cProject )
+METHOD IdeProjManager:getProjectByFile( cProjectFile )
    LOCAL n, aProj
 
-   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } ) ) > 0
+   cProjectFile := hbide_pathNormalized( cProjectFile )
+
+   IF ( n := ascan( ::aProjects, {|e_| e_[ 1 ] == cProjectFile } ) ) > 0
       aProj := ::aProjects[ n ]
+   ENDIF
+
+   RETURN IdeProject():new( aProj )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getProjectByTitle( cProjectTitle )
+   LOCAL n, aProj
+
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProjectTitle } ) ) > 0
+      aProj := ::aProjects[ n, 3 ]
    ENDIF
 
    RETURN IdeProject():new( aProj )
@@ -660,13 +759,10 @@ METHOD IdeProjManager:closeProject( cProject )
    DEFAULT cProject TO ::getCurrentProject()
 
    nPos := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cProject } )
-
    IF ( nPos < 0 )
       MsgBox( 'Invalid project: "' + cProject + '"' )
       RETURN Self
    ENDIF
-
- * aadd( ::aProjects, { lower( cProject ), cProject, aclone( ::aPrjProps ) } )
 
    ::aPrjProps := {}
    ::updateProjectTree( ::aProjects[ nPos, 3 ], .T. )
@@ -682,28 +778,28 @@ METHOD IdeProjManager:closeProject( cProject )
 METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
    LOCAL cTemp, cPath, cFile
 
+   cTemp := ::oProject:expandMeta( ::oUI:qObj[ cObjPathName ]:Text() )
+
    IF !hb_isChar( cObjFileName )
-      cTemp := ::oUI:qObj[ cObjPathName ]:Text()
       cPath := hbide_fetchADir( ::oDlg, cTitle, cTemp )
-      cPath := StrTran( cPath, "\", "/" )
 
    ELSE
-      cTemp := ::oUI:qObj[ cObjPathName ]:Text()
       cTemp := hbide_fetchAFile( ::oDlg, cTitle, { { "Harbour IDE Projects", "*.hbi" } }, cTemp )
 
       IF !Empty( cTemp )
-         cTemp := strtran( cTemp, "\", '/' )
-
-         hb_fNameSplit( cTemp, @cPath, @cFile )
+         hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile )
 
          ::oUI:qObj[ cObjFileName ]:setText( cFile )
       ENDIF
    ENDIF
 
    IF !Empty( cPath )
-      IF Right( cPath, 1 ) == '/'
+      IF Right( cPath, 1 ) $ '/\'
          cPath := Left( cPath, Len( cPath ) - 1 )
       ENDIF
+
+      cPath := ::oProject:applyMeta( cPath )
+
       ::oUI:qObj[ cObjPathName ]:setText( cPath )
 
       IF hb_isChar( cObjPath2 ) .AND. Empty( ::oUI:qObj[ cObjPath2 ]:Text() )
@@ -749,7 +845,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       lRebuild := .t.
    ENDIF
 
-   ::oProject := ::getProject( cProject )
+   ::oProject := ::getProjectByTitle( cProject )
 
    //cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
    cTargetFN := hbide_pathToOSPath( ::oProject:location + ::pathSep + ;

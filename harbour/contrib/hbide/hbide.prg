@@ -225,7 +225,6 @@ CLASS HbIde
    METHOD manageItemSelected()
    METHOD getCurrentTab()
    METHOD getCurCursor()
-   METHOD addSourceInTree()
    METHOD createTags()
    METHOD manageFocusInEditor()
    METHOD loadUI()
@@ -652,9 +651,9 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
     * Load previous aPath used to fill ::aProjData
     * 03/01/2010 - 16:08:25 - vailtom
       FOR j := 1 TO LEN( ::aProjData )
-          IF !hb_isChar( ::aProjData[ j, 5 ] ).OR. ;  // It is not a char?
-             ::aProjData[ j, TRE_TYPE ] != 'Path'    .OR. ;  // Is not an path?
-             ::aProjData[ j, TRE_DATA ] != cProject          // Is not from same project?
+          IF !hb_isChar( ::aProjData[ j, 5 ] )        .OR. ;  // It is not a char?
+                ::aProjData[ j, TRE_TYPE ] != 'Path'  .OR. ;  // Is not an path?
+                ::aProjData[ j, TRE_DATA ] != cProject        // Is not from same project?
              LOOP
           ENDIF
           AAdd( aPath, { ::aProjData[ j, TRE_ORIGINAL ], ::aProjData[ j, 1 ]} )
@@ -733,33 +732,6 @@ METHOD HbIde:updateProjectTree( aPrj, lRemove )
       ENDIF
    ENDIF
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:addSourceInTree( cSourceFile )
-   LOCAL cPath, cPathA, cFile, cExt, n, oParent
-   LOCAL oGrand := ::oOpenedSources
-
-   IF Empty( cSourceFile )
-      RETURN nil
-   End
-
-   hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
-   cPathA := hbide_pathNormalized( cPath )
-
-   n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } )
-
-   IF n == 0
-      oParent := oGrand:addItem( cPath )
-      aadd( ::aProjData, { oParent, "Editor Path", oGrand, cPathA, cSourceFile } )
-      aadd( ::aEditorPath, { oParent, cPathA } )
-   ELSE
-      oParent := ::aEditorPath[ n,1 ]
-   ENDIF
-
-   aadd( ::aProjData, { oParent:addItem( cFile+cExt ), "Opened Source", oParent, ;
-                                   cSourceFile, hbide_pathNormalized( cSourceFile ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
