@@ -5,11 +5,12 @@
 /*
  * Harbour Project source code:
  *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server.
+ *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is code for simple MT server which is activated by:
- *       NETIO_MTSERVER( [<nPort>], [<cAddress>], [<cRootDir>] )
-                                                -> <pListenSocket> | NIL
+ *       NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>],
+ *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                              -> <pListenSocket> | NIL
  *    and can be stopped by:
  *       NETIO_SERVERSTOP( <pListenSocket>, .T. )
  *

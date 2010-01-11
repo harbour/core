@@ -5,13 +5,21 @@
 /*
  * Harbour Project source code:
  *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server.
+ *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is client code with
- *       NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>] ) -> <lOK>
+ *       NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>],
+ *                      [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+ *             -> <lOK>
  *    function which register alternative RDD IO API, sets server
  *    address and port and connection timeout parameter.
  *    Then it tries to connect to the server and returns .T. on success.
+ *    This code also provides the following .prg functions:
+ *       NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+ *       NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
+ *       NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
+ *       NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
+ *       NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

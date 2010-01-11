@@ -7919,7 +7919,7 @@ HB_EXPORT void hb_gt_wvwDrawOutline( UINT usWinNum, int iTop, int iLeft, int iBo
 //static void gtFnInit( PHB_GT_FUNCS gt_funcs )
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", gt_funcs ) );
+    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", pFuncTable ) );
 
     pFuncTable->Init                  = hb_gt_wvw_Init;
     pFuncTable->Exit                  = hb_gt_wvw_Exit;

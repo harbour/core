@@ -5,16 +5,23 @@
 /*
  * Harbour Project source code:
  *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server.
+ *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is server code giving the following .prg functions:
- *       NETIO_LISTEN( [<nPort>], [<cAddress>], [<cRootDir>] )
+ *       NETIO_LISTEN( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
  *                                              -> <pListenSocket> | NIL
- *       NETIO_ACCEPT( <pListenSocket> [, <nTimeOut>] )
+ *       NETIO_ACCEPT( <pListenSocket>, [<nTimeOut>],
+ *                     [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *                                              -> <pConnectionSocket> | NIL
- *       NETIO_SERVER( <pConnectionSocket> ) -> NIL
- *       NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket>, <lStop> )
+ *       NETIO_COMPRESS( <pConnectionSocket>,
+ *                       [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *                                              -> NIL
+ *       NETIO_SERVER( <pConnectionSocket> ) -> NIL
+ *       NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
+ *                                              -> NIL
+ *       NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
+ *                                              -> <lPrev>
+ *       NETIO_RPCFUNC( <pConnectionSocket>, <sFuncSym> ) -> NIL
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -426,6 +433,8 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, BOOL rpc )
 }
 
 
+/* NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+ */
 HB_FUNC( NETIO_RPC )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
@@ -450,6 +459,8 @@ HB_FUNC( NETIO_RPC )
    hb_retl( fRPC );
 }
 
+/* NETIO_RPCFUNC( <pConnectionSocket>, <sFuncSym> ) -> NIL
+ */
 HB_FUNC( NETIO_RPCFUNC )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
@@ -459,6 +470,8 @@ HB_FUNC( NETIO_RPCFUNC )
    }
 }
 
+/* NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+ */
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
