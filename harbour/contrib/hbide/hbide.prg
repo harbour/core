@@ -326,6 +326,9 @@ METHOD HbIde:create( cProjIni )
    ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
    ::setSizeByIni( ::oEditTree:oWidget, ProjectTreeGeometry )
 
+   /* Restore Settings */
+   hbide_restSettings( Self )
+
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
 
@@ -348,8 +351,8 @@ METHOD HbIde:create( cProjIni )
 
          CASE ::mp1 == xbeK_INS
             IF !empty( ::qCurEdit )
-               ::qCurEdit:setOverwriteMode( ! ::qCurEdit:overwriteMode() )
-               ::oCurEditor:dispEditInfo()
+               ::qCurEdit:setOverwriteMode( !::qCurEdit:overwriteMode() )
+               ::oCurEditor:dispEditInfo( ::qCurEdit )
             ENDIF
 
          CASE ::mp1 == xbeK_ESC
@@ -498,6 +501,8 @@ METHOD HbIde:execAction( cKey )
       ::oEM:convertSelection( cKey )
    CASE cKey == "Invert"
       ::oEM:convertSelection( cKey )
+   CASE cKey == "MatchPairs"
+      //
    CASE cKey == "InsertDateTime"
       ::oEM:insertText( cKey )
    CASE cKey == "InsertRandomName"

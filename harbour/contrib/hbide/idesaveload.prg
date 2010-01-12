@@ -286,14 +286,16 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_saveSettings( oIde )
-   LOCAL qSet, qWidget
 
-   qWidget := oIde:oDlg:oWidget
+   hbqt_QMainWindow_saveSettings( hb_dirBase() + "idesettings.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
-   qSet := QSettings():new( hb_dirBase() + "idesettings.ini", 1 )
+   RETURN nil
 
-   qSet:setValue( "hbIDE"  , qWidget:saveState() )
-   qSet:setValue( "hbIDE-g", qWidget:geometry() )
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_restSettings( oIde )
+
+   hbqt_QMainWindow_restSettings( hb_dirBase() + "idesettings.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
 
