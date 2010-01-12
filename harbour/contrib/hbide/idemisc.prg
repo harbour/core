@@ -550,6 +550,15 @@ FUNCTION hbide_isSourcePRG( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_sourceType( cSourceFile )
+   LOCAL cExt
+
+   hb_fNameSplit( cSourceFile, , , @cExt )
+
+   RETURN lower( cExt )
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_pathNormalized( cPath, lLower )
    LOCAL S
 

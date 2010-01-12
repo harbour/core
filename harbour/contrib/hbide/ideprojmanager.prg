@@ -219,6 +219,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD getProjectByFile()
    METHOD buildProcess()
    METHOD updateMetaData()
+   METHOD sortSources()
 
    ENDCLASS
 
@@ -355,10 +356,19 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:q_buttonChooseWd:setIcon( cLukupPng )
    ::oUI:q_buttonChooseDest:setIcon( cLukupPng )
 
-   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close() } )
-   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::save( .F. )         } )
-   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::save( .T. )         } )
-   ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()        } )
+   ::oUI:q_buttonSelect:setIcon( ::resPath + "open.png" )
+   ::oUI:q_buttonSort:setIcon( ::resPath + "toupper.png" )     // TODO: toupper.png => atoz.png
+   ::oUI:q_buttonSortZA:setIcon( ::resPath + "tolower.png" )   //       tolower.png => ztoa.png
+   ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
+
+   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close()  } )
+   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::save( .F. )          } )
+   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::save( .T. )          } )
+   ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()         } )
+   ::oUI:signal( "buttonSort"        , "clicked()", {|| ::sortSources( "az"  ) } )
+   ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
+   ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
+   //
    ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
    ::oUI:signal( "editMetaData"      , "textChanged()", {|o| ::updateMetaData( o ) } )
 
@@ -415,10 +425,66 @@ METHOD IdeProjManager:fetchProperties()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:sortSources( cMode )
+   LOCAL a_, cTyp, s, d_, n
+   LOCAL aSrc := { ".ch", ".prg", ".c", ".cpp", ".h", ".obj", ".o", ".lib", ".a", ".rc", ".res" }
+   LOCAL aTxt := { {}   , {}    , {}  , {}    , {}  , {}    , {}  , {}   , {} , {}, {}    }
+   LOCAL aRst := {}
+
+   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
+
+   IF     cMode == "az"
+      asort( a_, , , {|e,f| lower( e ) < lower( f ) } )
+   ELSEIF cMode == "za"
+      asort( a_, , , {|e,f| lower( f ) < lower( e ) } )
+   ELSEIF cMode == "org"
+      asort( a_, , , {|e,f| lower( e ) < lower( f ) } )
+
+      FOR EACH s IN a_
+         s := alltrim( s )
+         IF left( s, 1 ) != "#"
+            cTyp := hbide_sourceType( s )
+
+            IF ( n := ascan( aSrc, {|e| cTyp == e } ) ) > 0
+               aadd( aTxt[ n ], s )
+            ELSE
+               aadd( aRst, s )
+            ENDIF
+         ENDIF
+      NEXT
+
+      a_:= {}
+      FOR EACH d_ IN aTxt
+         IF !empty( d_ )
+            aadd( a_, " # " )
+            aadd( a_, " # " + aSrc[ d_:__enumIndex() ] )
+            aadd( a_, " # " )
+            FOR EACH s IN d_
+               aadd( a_, s )
+            NEXT
+         ENDIF
+      NEXT
+      IF !empty( aRst )
+         aadd( a_, " # " )
+         aadd( a_, " # " + "Unrecognized..." )
+         aadd( a_, " # " )
+         FOR EACH s IN aRst
+            aadd( a_, s )
+         NEXT
+      ENDIF
+   ENDIF
+
+   ::oUI:q_editSources:clear()
+   ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( a_ ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:updateMetaData()
    LOCAL a_, s, n, cKey, cVal
    LOCAL a4_1 := {}
-hbide_dbg( "updateMetaData" )
+
    a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() )
 
    FOR EACH s IN a_

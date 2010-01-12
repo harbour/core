@@ -271,33 +271,7 @@ p, li { white-space: pre-wrap; }
        <string>Sources</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Source Files List ( use meta paths in angled brackets )</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="buttonSelect">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>90</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item row="1" column="1" colspan="11">
         <widget class="QPlainTextEdit" name="editSources">
          <property name="toolTip">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -314,6 +288,46 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::NoWrap</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QToolButton" name="buttonSelect">
+         <property name="toolTip">
+          <string>Select Sources</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QToolButton" name="buttonSort">
+         <property name="toolTip">
+          <string>Sort by Ascending Order</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QToolButton" name="buttonSortZA">
+         <property name="toolTip">
+          <string>Sort by Descending Order</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QToolButton" name="buttonSortOrg">
+         <property name="toolTip">
+          <string>Organize by Type and Sort Ascending</string>
+         </property>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
@@ -488,7 +502,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>editFlags</tabstop>
   <tabstop>editLaunchParams</tabstop>
   <tabstop>editLaunchExe</tabstop>
-  <tabstop>buttonSelect</tabstop>
   <tabstop>editSources</tabstop>
   <tabstop>editMetaData</tabstop>
   <tabstop>editMetaHelp</tabstop>
