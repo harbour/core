@@ -227,7 +227,7 @@ ULONG hb_strlentrim( const char * pszText )
    while( pszText[ 0 ] == ' ' )
       ++pszText;
 
-   while( pszText[ ul] )
+   while( pszText[ ul ] )
       ++ul;
 
    while( ul && pszText[ ul - 1 ] == ' ' )
@@ -795,7 +795,7 @@ char * hb_numToStr( char * szBuf, ULONG ulSize, HB_LONG lNumber )
  */
 char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -814,7 +814,7 @@ char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -841,7 +841,7 @@ char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -865,7 +865,7 @@ char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -889,7 +889,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
    ULONG ulSLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %s, %lu)", pDest, pSource, ulLen));
@@ -921,7 +921,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   char * pBuf = pDest;
    ULONG ulSLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %s, %lu)", pDest, pSource, ulLen));
@@ -946,8 +946,8 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
 
 char * hb_strRemEscSeq( char *str, ULONG *pLen )
 {
-   ULONG ul = *pLen, ulStripped = 0;
-   char *ptr, *dst, ch;
+   ULONG ul = * pLen, ulStripped = 0;
+   char * ptr, * dst, ch;
 
    ptr = dst = str;
    while( ul )

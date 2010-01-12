@@ -64,7 +64,7 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 {
    int retsize = 0;
 
-   if( size > 0 && userdata )
+   if( size > 0 && userdata && hb_vmRequestReenter() )
    {
       PHB_ITEM p = hb_itemPutL( NULL, rwflag );
       PHB_ITEM r = hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 1, p );
@@ -82,6 +82,8 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 
          memcpy( buf, hb_itemGetCPtr( r ), retsize );
       }
+
+      hb_vmRequestRestore();
    }
 
    return retsize;

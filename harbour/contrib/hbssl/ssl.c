@@ -1478,7 +1478,7 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
 {
    HB_SYMBOL_UNUSED( ssl );
 
-   if( userdata )
+   if( userdata && hb_vmRequestReenter() )
    {
       PHB_ITEM p1 = hb_itemPutL( NULL, write_p );
       PHB_ITEM p2 = hb_itemPutNI( NULL, version );
@@ -1491,6 +1491,8 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
       hb_itemRelease( p3 );
       hb_itemRelease( p2 );
       hb_itemRelease( p1 );
+
+      hb_vmRequestRestore();
    }
 }
 

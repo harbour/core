@@ -53,6 +53,9 @@
 
 proc main()
 
+   SET DATE ANSI
+   SET CENTURY ON
+
    /* connect to the server */
    ? "CONNECTING..."
    ? "NETIO_CONNECT():", netio_connect( NETSERVER, NETPORT,, NETPASSWD )

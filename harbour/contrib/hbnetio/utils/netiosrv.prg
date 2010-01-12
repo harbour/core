@@ -34,8 +34,8 @@ PROCEDURE Main( ... )
       DO CASE
       CASE Lower( Left( cParam, 6 ) ) == "-port="
          port := Val( SubStr( cParam, 7 ) )
-      CASE Lower( Left( cParam, 6 ) ) == "-addr="
-         ifaddr := SubStr( cParam, 7 )
+      CASE Lower( Left( cParam, 7 ) ) == "-iface="
+         ifaddr := SubStr( cParam, 8 )
       CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
          rootdir := SubStr( cParam, 10 )
       CASE Lower( Left( cParam, 6 ) ) == "-pass="
@@ -46,6 +46,8 @@ PROCEDURE Main( ... )
            Lower( cParam ) == "--help"
          HB_Usage()
          RETURN
+      OTHERWISE
+         OutStd( "Warning: Unkown parameter ignored: " + cParam + hb_osNewLine() )
       ENDCASE
    NEXT
 
@@ -79,7 +81,7 @@ STATIC PROCEDURE HB_Logo()
 
 STATIC PROCEDURE HB_Usage()
 
-   OutStd( "Syntax: netiosrv [-port=<port>] [-addr=<inetaddr>] [-rootdir=<rootdir>] [-rpc] [-pass=<passwd>]" + hb_osNewLine() )
+   OutStd( "Syntax: netiosrv [-port=<port>] [-iface=<ipaddr>] [-rootdir=<rootdir>] [-rpc] [-pass=<passwd>]" + hb_osNewLine() )
 
    RETURN
 

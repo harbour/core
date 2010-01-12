@@ -66,6 +66,39 @@
 #include "hbapi.h"
 #include "hbwinuni.h"
 
+/* NOTE: Based on hb_strncat() */
+static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, ULONG ulLen )
+{
+   TCHAR * pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %lu)", pDest, pSource, ulLen));
+
+   pDest[ ulLen ] = '\0';
+
+   while( ulLen && *pDest )
+   {
+      pDest++;
+      ulLen--;
+   }
+
+   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
+      ulLen--;
+
+   return pBuf;
+}
+
+static ULONG hb_tstrlen( const TCHAR * pText )
+{
+   ULONG ul = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_tstrlen(%p)", pText));
+
+   while( pText[ ul ] )
+      ++ul;
+
+   return ul;
+}
+
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 {
    BOOL bFlag;
@@ -161,6 +194,8 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
       }
       else /* NT4.0 or earlier */
       {
+         int nStrLen;
+
          /* Open this printer so you can get information about it. */
          bFlag = OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL );
          if( ! bFlag || ! hPrinter )
@@ -194,23 +229,22 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             return HB_FALSE;
          }
 
-         /* TOFIX: Use safe string functions instead of lstrlen() and lstrcat().
-                   [vszakats] */
+         nStrLen = hb_tstrlen( lpPrinterName ) +
+                   hb_tstrlen( ppi2->pDriverName ) +
+                   hb_tstrlen( ppi2->pPortName ) + 2;
 
          /* Allocate buffer big enough for concatenated string.
             String will be in form "printername,drivername,portname". */
-         pBuffer = ( LPTSTR ) hb_xgrab( ( lstrlen( lpPrinterName ) +
-                                          lstrlen( ppi2->pDriverName ) +
-                                          lstrlen( ppi2->pPortName ) + 3 ) * sizeof( TCHAR ) );
+         pBuffer = ( LPTSTR ) hb_xgrab( ( nStrLen + 1 ) * sizeof( TCHAR ) );
 
          pBuffer[ 0 ] = '\0';
 
          /* Build string in form "printername,drivername,portname". */
-         lstrcat( pBuffer, lpPrinterName );
-         lstrcat( pBuffer, TEXT( "," ) );
-         lstrcat( pBuffer, ppi2->pDriverName );
-         lstrcat( pBuffer, TEXT( "," ) );
-         lstrcat( pBuffer, ppi2->pPortName );
+         hb_tstrncat( pBuffer, lpPrinterName, nStrLen );
+         hb_tstrncat( pBuffer, TEXT( "," ), nStrLen );
+         hb_tstrncat( pBuffer, ppi2->pDriverName, nStrLen );
+         hb_tstrncat( pBuffer, TEXT( "," ), nStrLen );
+         hb_tstrncat( pBuffer, ppi2->pPortName, nStrLen );
 
          /* Set the default printer in win.ini and registry. */
          bFlag = WriteProfileString( TEXT( "windows" ), TEXT( "device" ), pBuffer );
