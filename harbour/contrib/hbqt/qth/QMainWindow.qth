@@ -61,6 +61,7 @@ New      = pParent, nFlags
 
 <CODE>
 #include <QtGui/QMainWindow>
+#include <QtCore/QSettings>
 
 
 /*
@@ -70,6 +71,20 @@ New      = pParent, nFlags
 HB_FUNC( QT_QMAINWINDOW )
 {
    hb_retptr( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+
+HB_FUNC( HBQT_QMAINWINDOW_SAVESETTINGS )
+{
+   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
+
+   qSet.setValue( hbqt_par_QString( 2 ), hbqt_par_QMainWindow( 3 )->saveState() );
+}
+
+HB_FUNC( HBQT_QMAINWINDOW_RESTSETTINGS )
+{
+   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
+
+   hbqt_par_QMainWindow( 3 )->restoreState( qSet.value( hbqt_par_QString( 2 ) ).toByteArray() );
 }
 </CODE>
 

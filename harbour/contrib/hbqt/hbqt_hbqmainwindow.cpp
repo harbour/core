@@ -85,6 +85,7 @@ HBQMainWindow::~HBQMainWindow( void )
 
    if( block )
    {
+      HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::~HBQMainWindow: MID" ) );
       hb_itemRelease( block );
       block = NULL;
    }

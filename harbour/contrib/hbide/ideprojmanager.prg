@@ -99,7 +99,7 @@ CLASS IdeProject
    DATA   outputName                              INIT hb_dirBase() + "projects"
    DATA   launchParams                            INIT ""
    DATA   launchProgram                           INIT ""
-   DATA   hbpFlags                                INIT ""
+   DATA   hbpFlags                                INIT {}
    DATA   sources                                 INIT {}
    DATA   metaData                                INIT {}
    DATA   dotHbp                                  INIT ""
@@ -933,7 +933,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    aadd( aHbp, "# User Supplied Flags" )
    aadd( aHbp, " " )
-   aeval( ::oProject:hbpFlags, {|e| aadd( aHbp, e ) } )
+   IF !empty( ::oProject:hbpFlags )
+      aeval( ::oProject:hbpFlags, {|e| aadd( aHbp, e ) } )
+   ENDIF
+
    aadd( aHbp, " " )
    aadd( aHbp, "# hbIDE Supplied Flags" )
    aadd( aHbp, " " )

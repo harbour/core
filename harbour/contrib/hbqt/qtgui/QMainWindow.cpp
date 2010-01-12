@@ -83,12 +83,27 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QMainWindow>
+#include <QtCore/QSettings>
 
 
 /*
  * QMainWindow ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QMainWindow ()
  */
+
+HB_FUNC( HBQT_QMAINWINDOW_SAVESETTINGS )
+{
+   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
+
+   qSet.setValue( hbqt_par_QString( 2 ), hbqt_par_QMainWindow( 3 )->saveState() );
+}
+
+HB_FUNC( HBQT_QMAINWINDOW_RESTSETTINGS )
+{
+   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
+
+   hbqt_par_QMainWindow( 3 )->restoreState( qSet.value( hbqt_par_QString( 2 ) ).toByteArray() );
+}
 
 typedef struct
 {
@@ -143,7 +158,7 @@ void * hbqt_gcAllocate_QMainWindow( void * pObj )
    p->func = hbqt_gcRelease_QMainWindow;
    new( & p->pq ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMAINWINDOW )
