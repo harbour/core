@@ -133,6 +133,12 @@ HB_FUNC( HBQT_SETCODECFORCSTRINGS )
    QTextCodec::setCodecForCStrings( codec );
 }
 
+HB_FUNC( HBQT_SETCODECFORTR )
+{
+   QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
+   QTextCodec::setCodecForTr( codec );
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500

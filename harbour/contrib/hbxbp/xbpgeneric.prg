@@ -388,3 +388,11 @@ FUNCTION HbXbp_SetCodec( cCodec )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION HbXbp_SetCodecForTr( cCodec )
+   IF !empty( cCodec )
+      hbqt_SetCodecForTr( cCodec )
+   ENDIF
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
