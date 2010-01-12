@@ -2,6 +2,9 @@
 # $Id$
 #
 
+# Add it explicitly to allow calling this .hbp from other dirs.
+hbmk.hbm
+
 netiosrv.prg
 -o{!dos&x86}hbnetio_${hb_plat}
 -o{!dos&!x86}hbnetio_${hb_plat}_${hb_cpu}
