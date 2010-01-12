@@ -253,7 +253,7 @@ static int callback( void *Cargo, int argc, char **argv, char **azColName )
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       PHB_ITEM pArrayValue = hb_itemArrayNew( argc );
       PHB_ITEM pArrayColName = hb_itemArrayNew( argc );
@@ -277,6 +277,8 @@ static int callback( void *Cargo, int argc, char **argv, char **azColName )
       hb_itemRelease( pArrayValue );
       hb_itemRelease( pArrayColName );
 
+      hb_vmRequestRestore();
+
       return iRes;
    }
 
@@ -287,7 +289,7 @@ static int authorizer( void *Cargo, int iAction, const char *sName1, const char 
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       int      iRes;
       PHB_ITEM pItem1 = hb_itemPutCConst( NULL, sName1 );
@@ -311,6 +313,8 @@ static int authorizer( void *Cargo, int iAction, const char *sName1, const char 
       hb_itemRelease( pItem3 );
       hb_itemRelease( pItem4 );
 
+      hb_vmRequestRestore();
+
       return iRes;
    }
 
@@ -321,7 +325,7 @@ static int busy_handler( void *Cargo, int iNumberOfTimes )
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       int   iRes;
 
@@ -331,6 +335,8 @@ static int busy_handler( void *Cargo, int iNumberOfTimes )
       hb_vmDo( 1 );
 
       iRes = hb_parni( -1 );
+
+      hb_vmRequestRestore();
 
       return iRes;
    }
@@ -342,7 +348,7 @@ static int progress_handler( void *Cargo )
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       int   iRes;
 
@@ -351,6 +357,8 @@ static int progress_handler( void *Cargo )
       hb_vmDo( 0 );
 
       iRes = hb_parni( -1 );
+
+      hb_vmRequestRestore();
 
       return iRes;
    }
@@ -362,7 +370,7 @@ static int hook_commit( void *Cargo )
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       int   iRes;
 
@@ -371,6 +379,8 @@ static int hook_commit( void *Cargo )
       hb_vmDo( 0 );
 
       iRes = hb_parni( -1 );
+
+      hb_vmRequestRestore();
 
       return iRes;
    }
@@ -382,11 +392,13 @@ static void hook_rollback( void *Cargo )
 {
    PHB_DYNS pSym = ( PHB_DYNS ) Cargo;
 
-   if( pSym )
+   if( pSym && hb_vmRequestReenter() )
    {
       hb_vmPushDynSym( pSym );
       hb_vmPushNil();
       hb_vmDo( 0 );
+
+      hb_vmRequestRestore();
    }
 }
 

@@ -70,7 +70,7 @@
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 
 /* static for error handler (see below FI_SETOUTPUTMESSAGE ) */
-static void *pErrorHandler = NULL;
+static void * s_pErrorHandler = NULL;
 
 /* -------------------------------------------------------------------------- */
 /* Init / Error routines ---------------------------------------------------- */
@@ -133,42 +133,34 @@ FreeImage error handler
 @param fif Format / Plugin responsible for the error
 @param message Error message
 */
-void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message)
+static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
 {
-   const char * format;
-   PHB_SYMB pSymbol;
-
-   if( ! pErrorHandler )
+   if( s_pErrorHandler )
    {
-      /* Do nothing */
-      return;
+      /*TraceLog( NULL, "ErrorHandle %p\n\r", s_pErrorHandler );*/
+
+      if( hb_vmRequestReenter() )
+      {
+         const char * format = FreeImage_GetFormatFromFIF( fif );
+
+         /* launch error function at prg level */
+         hb_vmPushSymbol( ( PHB_SYMB ) s_pErrorHandler );
+         hb_vmPushNil();
+         hb_vmPushString( format, strlen( format ) );
+         hb_vmPushString( message, strlen( message ) );
+         hb_vmDo( 2 );
+
+         hb_vmRequestRestore();
+      }
+      else
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "FreeImageErrorHandler", 1, hb_paramError( 1 ) );
    }
-
-   pSymbol = (PHB_SYMB) pErrorHandler;
-
-   /*TraceLog( NULL, "ErrorHandle %p\n\r", pErrorHandler );*/
-
-   if( ! pSymbol )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "FreeImageErrorHandler", 1, hb_paramError( 1 ) );
-      return;
-   }
-
-   format = FreeImage_GetFormatFromFIF(fif);
-
-   /* launch error function at prg level */
-   hb_vmPushSymbol( pSymbol );
-   hb_vmPushNil();
-   hb_vmPushString( format, strlen( format ) );
-   hb_vmPushString( message, strlen( message ) );
-   hb_vmDo( 2 );
-
 }
 
 HB_FUNC( FI_SETOUTPUTMESSAGE )
 {
-   pErrorHandler = NULL;
-   FreeImage_SetOutputMessage(FreeImageErrorHandler);
+   s_pErrorHandler = NULL;
+   FreeImage_SetOutputMessage( FreeImageErrorHandler );
 
 /* TraceLog( NULL, "PCount = %i\n\r", hb_pcount() ); */
 
@@ -177,7 +169,7 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
       if( HB_ISPOINTER( 1 ) )
       {
          /* Set the pointer */
-         pErrorHandler = hb_parptr( 1 );
+         s_pErrorHandler = hb_parptr( 1 );
       }
       else if( HB_ISNIL( 1 ) )
       {
