@@ -56,6 +56,9 @@ TODO:
    - make MT safe
 
 TOFIX:
+   - remove UNION's as they hide 32/64 size problems
+   - use UINT32 as the standard data type of file reading/writing
+   - in-memory btree's cause a fatal error; this is a work in progress
 */
 
 #include "hbvm.h"
@@ -647,8 +650,10 @@ static ULONG Grow( struct hb_BTree * pBTree )
     }
     else
     {
+      char buffer[ sizeof( pBTree->ulFreePage ) ];
       pBTree->ioBuffer->xPage.ulPage = hb_fsSeek( pBTree->hFile, pBTree->ulFreePage, FS_SET );
-      hb_fsRead( pBTree->hFile, /*( BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
+      hb_fsRead( pBTree->hFile, buffer, sizeof( pBTree->ulFreePage ) );
+      pBTree->ulFreePage = HB_GET_LE_UINT32( buffer );
     }
     pBTree->ioBuffer->IsDirty = HB_TRUE;
   }
@@ -680,9 +685,10 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
   }
   else
   {
+    char buffer[ sizeof( pBTree->ulFreePage ) ];
     hb_fsSeek( pBTree->hFile, ulNode, FS_SET );
-    /* TOFIX: Should convert ULONG value to portable binary format with HB_PUT_LE_UINT32() before writing it to disk. */
-    if ( hb_fsWrite( pBTree->hFile, /*( const BYTE * )*/ &pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
+    HB_PUT_LE_UINT32( buffer, pBTree->ulFreePage );
+    if ( hb_fsWrite( pBTree->hFile, buffer, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
     {
       raiseError( EG_WRITE, HB_BTREE_EC_WRITEERROR, "write error", "Prune*", 0 );
     }
@@ -1469,7 +1475,6 @@ static int hb_BTstrncmp( const char *s1, const char *s2, size_t n )
 struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
-  int iMaximumKeys;
   int iFileIOmode;
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
@@ -1481,15 +1486,18 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 
   /*
     number of keys is:
-      ( usPageSize - ( sizeof count + sizeof branch[0] ) ) / ( sizeof branch + sizeof key ) - 1
+      ( usPageSize - ( sizeof count + sizeof branch[0] ) ) / ( sizeof branch[0] + sizeof key ) - 1
   */
 
-  iMaximumKeys = ( + usPageSize                                \
-                   - sizeof( *pBTree->ioBuffer->pulPageCount ) \
-                   - sizeof( *pBTree->ioBuffer->pulBranch ) )  \
-                 / ( sizeof( *pBTree->ioBuffer->pulBranch ) +  \
-                     ( ulFlags & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY ? sizeof( *pBTree->ioBuffer->xData.ppData ) : sizeof( *pBTree->ioBuffer->xData.plData )    +  \
-                     usKeySize ) - 1;
+   /* this assumes that the count field and a branch field are UINT32 */
+   #define MAXKEYS( pagesize, keysize, flags ) \
+      ( ( ( pagesize ) - ( sizeof( UINT32 ) + sizeof( UINT32 ) ) ) / \
+        ( sizeof( UINT32 ) \
+          + ( ( ( flags ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY \
+                ? sizeof( PHB_ITEM * ) \
+                : ( keysize ) ) ) - 1 \
+      )
+   #define MINKEYS( maxkeys ) ( ( maxkeys + 1 ) / 2 - ( maxkeys % 2 ) )
 
   if ( ( ulFlags & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY )
   {
@@ -1537,8 +1545,8 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
   pBTree->ulRootPage = NULLPAGE;
   pBTree->usPageSize = usPageSize;
   pBTree->usKeySize  = usKeySize;
-  pBTree->usMaxKeys  = ( USHORT ) iMaximumKeys;
-  pBTree->usMinKeys  = ( USHORT ) ( ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2 );
+  pBTree->usMaxKeys  = ( USHORT ) MAXKEYS( usPageSize, usKeySize, ulFlags );
+  pBTree->usMinKeys  = ( USHORT ) MINKEYS( pBTree->usMaxKeys );
   pBTree->ulFlags    = ulFlags;
   pBTree->ulKeyCount = 0;
   pBTree->pStack     = NULL;
@@ -1593,13 +1601,13 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
     return NULL;
   }
 
-  pHeader += sizeof( HEADER_ID ) - 1;
-  pHeader += sizeof( ( UINT32 ) HB_BTREE_HEADERSIZE ); /* TOFIX: This looks suspicious, is it really what's intended? */
+  pHeader += sizeof( HEADER_ID ) - 1; /* the trailing null byte */
+  pHeader += sizeof( UINT32 ); /* skip over the header size (HB_BTREE_HEADERSIZE) field */
   pBTree->usPageSize = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->usKeySize  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->usMaxKeys  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->usMinKeys  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
-  pBTree->ulFlags    = HB_GET_LE_UINT32( pHeader );
+  pBTree->ulFlags    = HB_GET_LE_UINT32( pHeader ) | ( ulFlags & HB_BTREE_READONLY );
 
   pHeader = &TmpHeader[ 64 ];
   pBTree->ulRootPage = HB_GET_LE_UINT32( pHeader ); pHeader += 4;
@@ -1610,7 +1618,6 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
   CLEARKEYDATA( pBTree );
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
-  pBTree->ulFlags |= (ulFlags & HB_BTREE_READONLY);
   ioBufferAlloc( pBTree, ulBuffers );
 
   RESETFLAG( pBTree, HB_BTREE_INMEMORY ); /* clear this flag */
@@ -1701,7 +1708,7 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
   index = hb_parni( 1 );
   if ( index < 1 || index > s_BTree_List_Count || s_BTree_List[ index - 1 ] == NULL ) \
   {
-    raiseError( EG_ARG, HB_BTREE_EC_TREEHANDLE, "Bad BTree handle", GetSource, 1 );
+    raiseError( EG_ARG, HB_BTREE_EC_TREEHANDLE, "Bad HB_BTree handle", GetSource, 1 );
     return NULL;
   }
   else
@@ -1711,7 +1718,7 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
 HB_FUNC( HB_BTREEOPEN )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( HB_ISCHAR( 1 ) )
+  if ( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
   {
     hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( hb_parc( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) ) );
   }
@@ -1724,11 +1731,19 @@ HB_FUNC( HB_BTREEOPEN )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int 
 
 HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeySize, [ ULONG ulFlags ], [ int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
+   int iPageSize = hb_parni( 2 );
+   int iKeySize = hb_parni( 3 );
+   ULONG ulFlags = hb_parnl( 4 );
+   int iMaxKeys = MAXKEYS( ( UINT32 ) iPageSize, ( UINT32 ) iKeySize, ulFlags );
+   int iMinKeys = MINKEYS( iMaxKeys );
+
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || HB_ISCHAR( 1 ) ) &&
-       HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+  if ( ( ( ulFlags & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ) &&
+       ( HB_ISNUM( 2 ) && iPageSize >= 1024 && iPageSize < ( int )USHRT_MAX ) &&
+       ( ( ulFlags & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ( HB_ISNUM( 3 ) && iKeySize >= 4 && iMinKeys > 0 && iMaxKeys > 2 ) ) &&
+       ( 1 == 1 ) )
   {
-    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 3 ), hb_parnl( 4 ), hb_parnl( 5 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), ( USHORT ) iPageSize, ( USHORT ) iKeySize, ulFlags, hb_parnl( 5 ) ) ) );
   }
   else
   {
@@ -1752,7 +1767,15 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || HB_ISNUM( 3 ) ) )
   {
-    hb_retl( hb_BTreeInsert( /*BTree_GetTreeIndex( "hb_btreeinsert" )*/ pBTree, hb_parc( 2 ), hb_paramError( 3 ) ) );
+    if ( GETFLAG( pBTree, IsReadOnly ) == HB_FALSE )
+    {
+      hb_retl( hb_BTreeInsert( pBTree, hb_parc( 2 ), hb_paramError( 3 ) ) );
+    }
+    else
+    {
+      raiseError( EG_WRITE, HB_BTREE_EC_WRITEERROR, "Cannot insert into a read-only file", HB_ERR_FUNCNAME, hb_pcount() );
+      hb_retl( HB_FALSE );
+    }
   }
   else
   {
@@ -1765,7 +1788,18 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || HB_ISNUM( 3 ) ) )
-    hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), hb_parc( 2 ), hb_parnl( 3 ) ) );
+  {
+    struct hb_BTree * pBTree = BTree_GetTreeIndex( "hb_btreedelete" );
+    if ( GETFLAG( pBTree, IsReadOnly ) == HB_FALSE )
+    {
+      hb_retl( hb_BTreeDelete( pBTree, hb_parc( 2 ), hb_parnl( 3 ) ) );
+    }
+    else
+    {
+      raiseError( EG_WRITE, HB_BTREE_EC_WRITEERROR, "Cannot delete from a read-only file", HB_ERR_FUNCNAME, hb_pcount() );
+      hb_retl( HB_FALSE );
+    }
+  }
   else
   {
     raiseError( EG_ARG, HB_BTREE_EC_INVALIDARG, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1797,7 +1831,6 @@ HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | x
   else
   {
     hb_retnl( pBTree->pThisKeyData->xData.lData );
-
   }
 }
 
@@ -1816,8 +1849,11 @@ HB_FUNC( HB_BTREEGOBOTTOM )  /* hb_BTreeGoBottom( hb_BTree_Handle ) --> NIL */
 HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LONG nRecordsSkipped */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-    hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), hb_parnl( 2 ) ) );
+  if ( HB_ISNUM( 1 ) && ( hb_pcount() == 1 || HB_ISNUM( 2 ) ) )
+  {
+    LONG nSkip = hb_pcount() == 1 ? 1 : hb_parnl( 2 );
+    hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), nSkip ) );
+  }
   else
   {
     raiseError( EG_ARG, HB_BTREE_EC_INVALIDARG, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1851,7 +1887,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
     case HB_BTREEINFO_KEYSIZE:   hb_retni( pBTree->usKeySize ); break;
     case HB_BTREEINFO_MAXKEYS:   hb_retni( pBTree->usMaxKeys ); break;
     case HB_BTREEINFO_MINKEYS:   hb_retni( pBTree->usMinKeys ); break;
-    case HB_BTREEINFO_FLAGS:     hb_retnl( pBTree->ulFlags & ~( HB_BTREE_READONLY ) ); break;
+    case HB_BTREEINFO_FLAGS:     hb_retnl( pBTree->ulFlags ); break;
     case HB_BTREEINFO_KEYCOUNT:  hb_retnl( pBTree->ulKeyCount ); break;
     case HB_BTREEINFO_ALL:
     default:  /* build an array and store all elements from above into it */
@@ -1863,7 +1899,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
         hb_arraySetNI( info, HB_BTREEINFO_KEYSIZE , pBTree->usKeySize );
         hb_arraySetNI( info, HB_BTREEINFO_MAXKEYS , pBTree->usMaxKeys );
         hb_arraySetNI( info, HB_BTREEINFO_MINKEYS , pBTree->usMinKeys );
-        hb_arraySetNL( info, HB_BTREEINFO_FLAGS   , pBTree->ulFlags & ~( HB_BTREE_READONLY ) );
+        hb_arraySetNL( info, HB_BTREEINFO_FLAGS   , pBTree->ulFlags );
         hb_arraySetNL( info, HB_BTREEINFO_KEYCOUNT, pBTree->ulKeyCount );
 
         hb_itemReturnRelease( info );
