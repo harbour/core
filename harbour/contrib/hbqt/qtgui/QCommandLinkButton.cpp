@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QCommandLinkButton( void * pObj )
    p->func = hbqt_gcRelease_QCommandLinkButton;
    new( & p->pq ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QCOMMANDLINKBUTTON )
@@ -154,7 +154,7 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
  */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_SETDESCRIPTION )
 {
-   hbqt_par_QCommandLinkButton( 1 )->setDescription( hbqt_par_QString( 2 ) );
+   hbqt_par_QCommandLinkButton( 1 )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) );
 }
 
 

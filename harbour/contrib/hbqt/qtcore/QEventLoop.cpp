@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QEventLoop( void * pObj )
    p->func = hbqt_gcRelease_QEventLoop;
    new( & p->pq ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QEVENTLOOP )

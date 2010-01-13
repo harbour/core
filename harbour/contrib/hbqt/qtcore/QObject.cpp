@@ -146,7 +146,7 @@ void * hbqt_gcAllocate_QObject( void * pObj )
    p->func = hbqt_gcRelease_QObject;
    new( & p->pq ) QPointer< QObject >( ( QObject * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QOBJECT )
@@ -306,7 +306,7 @@ HB_FUNC( QT_QOBJECT_REMOVEEVENTFILTER )
  */
 HB_FUNC( QT_QOBJECT_SETOBJECTNAME )
 {
-   hbqt_par_QObject( 1 )->setObjectName( hbqt_par_QString( 2 ) );
+   hbqt_par_QObject( 1 )->setObjectName( QObject::tr( hb_parc( 2 ) ) );
 }
 
 /*

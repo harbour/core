@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QLineEdit( void * pObj )
    p->func = hbqt_gcRelease_QLineEdit;
    new( & p->pq ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLINEEDIT )
@@ -336,7 +336,7 @@ HB_FUNC( QT_QLINEEDIT_INPUTMASK )
  */
 HB_FUNC( QT_QLINEEDIT_INSERT )
 {
-   hbqt_par_QLineEdit( 1 )->insert( hbqt_par_QString( 2 ) );
+   hbqt_par_QLineEdit( 1 )->insert( QLineEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -456,7 +456,7 @@ HB_FUNC( QT_QLINEEDIT_SETFRAME )
  */
 HB_FUNC( QT_QLINEEDIT_SETINPUTMASK )
 {
-   hbqt_par_QLineEdit( 1 )->setInputMask( hbqt_par_QString( 2 ) );
+   hbqt_par_QLineEdit( 1 )->setInputMask( QLineEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -584,7 +584,7 @@ HB_FUNC( QT_QLINEEDIT_SELECTALL )
  */
 HB_FUNC( QT_QLINEEDIT_SETTEXT )
 {
-   hbqt_par_QLineEdit( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QLineEdit( 1 )->setText( QLineEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*

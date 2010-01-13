@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QUiLoader( void * pObj )
    p->func = hbqt_gcRelease_QUiLoader;
    new( & p->pq ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QUILOADER )
@@ -153,7 +153,7 @@ HB_FUNC( QT_QUILOADER )
  */
 HB_FUNC( QT_QUILOADER_ADDPLUGINPATH )
 {
-   hbqt_par_QUiLoader( 1 )->addPluginPath( hbqt_par_QString( 2 ) );
+   hbqt_par_QUiLoader( 1 )->addPluginPath( QUiLoader::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QUILOADER_CLEARPLUGINPATHS )
  */
 HB_FUNC( QT_QUILOADER_CREATEACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QUiLoader( 1 )->createAction( hbqt_par_QObject( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QUiLoader( 1 )->createAction( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QUILOADER_CREATEACTION )
  */
 HB_FUNC( QT_QUILOADER_CREATEACTIONGROUP )
 {
-   hb_retptr( ( QActionGroup* ) hbqt_par_QUiLoader( 1 )->createActionGroup( hbqt_par_QObject( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QActionGroup* ) hbqt_par_QUiLoader( 1 )->createActionGroup( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QUILOADER_CREATEACTIONGROUP )
  */
 HB_FUNC( QT_QUILOADER_CREATELAYOUT )
 {
-   hb_retptr( ( QLayout* ) hbqt_par_QUiLoader( 1 )->createLayout( hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ), hbqt_par_QString( 4 ) ) );
+   hb_retptr( ( QLayout* ) hbqt_par_QUiLoader( 1 )->createLayout( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -209,7 +209,7 @@ HB_FUNC( QT_QUILOADER_CREATELAYOUT )
  */
 HB_FUNC( QT_QUILOADER_CREATEWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QUiLoader( 1 )->createWidget( hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ) ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QUiLoader( 1 )->createWidget( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ) );
 }
 
 /*

@@ -145,7 +145,7 @@ void * hbqt_gcAllocate_QTextEdit( void * pObj )
    p->func = hbqt_gcRelease_QTextEdit;
    new( & p->pq ) QPointer< QTextEdit >( ( QTextEdit * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTEXTEDIT )
@@ -292,7 +292,7 @@ HB_FUNC( QT_QTEXTEDIT_ENSURECURSORVISIBLE )
  */
 HB_FUNC( QT_QTEXTEDIT_FIND )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->find( QTextEdit::tr( hb_parc( 2 ) ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -452,7 +452,7 @@ HB_FUNC( QT_QTEXTEDIT_SETDOCUMENT )
  */
 HB_FUNC( QT_QTEXTEDIT_SETDOCUMENTTITLE )
 {
-   hbqt_par_QTextEdit( 1 )->setDocumentTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->setDocumentTitle( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -612,7 +612,7 @@ HB_FUNC( QT_QTEXTEDIT_WORDWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_APPEND )
 {
-   hbqt_par_QTextEdit( 1 )->append( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->append( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -644,7 +644,7 @@ HB_FUNC( QT_QTEXTEDIT_CUT )
  */
 HB_FUNC( QT_QTEXTEDIT_INSERTHTML )
 {
-   hbqt_par_QTextEdit( 1 )->insertHtml( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->insertHtml( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -652,7 +652,7 @@ HB_FUNC( QT_QTEXTEDIT_INSERTHTML )
  */
 HB_FUNC( QT_QTEXTEDIT_INSERTPLAINTEXT )
 {
-   hbqt_par_QTextEdit( 1 )->insertPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->insertPlainText( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -676,7 +676,7 @@ HB_FUNC( QT_QTEXTEDIT_REDO )
  */
 HB_FUNC( QT_QTEXTEDIT_SCROLLTOANCHOR )
 {
-   hbqt_par_QTextEdit( 1 )->scrollToAnchor( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->scrollToAnchor( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -708,7 +708,7 @@ HB_FUNC( QT_QTEXTEDIT_SETCURRENTFONT )
  */
 HB_FUNC( QT_QTEXTEDIT_SETFONTFAMILY )
 {
-   hbqt_par_QTextEdit( 1 )->setFontFamily( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->setFontFamily( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -748,7 +748,7 @@ HB_FUNC( QT_QTEXTEDIT_SETFONTWEIGHT )
  */
 HB_FUNC( QT_QTEXTEDIT_SETHTML )
 {
-   hbqt_par_QTextEdit( 1 )->setHtml( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->setHtml( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -756,7 +756,7 @@ HB_FUNC( QT_QTEXTEDIT_SETHTML )
  */
 HB_FUNC( QT_QTEXTEDIT_SETPLAINTEXT )
 {
-   hbqt_par_QTextEdit( 1 )->setPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->setPlainText( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -764,7 +764,7 @@ HB_FUNC( QT_QTEXTEDIT_SETPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTEDIT_SETTEXT )
 {
-   hbqt_par_QTextEdit( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextEdit( 1 )->setText( QTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*

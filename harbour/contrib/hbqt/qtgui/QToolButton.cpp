@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QToolButton( void * pObj )
    p->func = hbqt_gcRelease_QToolButton;
    new( & p->pq ) QPointer< QToolButton >( ( QToolButton * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QToolButton                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTOOLBUTTON )

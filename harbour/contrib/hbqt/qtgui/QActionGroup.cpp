@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QActionGroup( void * pObj )
    p->func = hbqt_gcRelease_QActionGroup;
    new( & p->pq ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QActionGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QACTIONGROUP )
@@ -164,7 +164,7 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION )
  */
 HB_FUNC( QT_QACTIONGROUP_ADDACTION_1 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QActionGroup( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QActionGroup( 1 )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -172,7 +172,7 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_1 )
  */
 HB_FUNC( QT_QACTIONGROUP_ADDACTION_2 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QActionGroup( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QActionGroup( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ) );
 }
 
 /*

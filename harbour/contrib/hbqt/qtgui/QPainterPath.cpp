@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QPainterPath( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QPainterPath;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPAINTERPATH )

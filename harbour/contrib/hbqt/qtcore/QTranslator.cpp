@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QTranslator( void * pObj )
    p->func = hbqt_gcRelease_QTranslator;
    new( & p->pq ) QPointer< QTranslator >( ( QTranslator * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTranslator                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTRANSLATOR )
@@ -152,7 +152,7 @@ HB_FUNC( QT_QTRANSLATOR_ISEMPTY )
  */
 HB_FUNC( QT_QTRANSLATOR_LOAD )
 {
-   hb_retl( hbqt_par_QTranslator( 1 )->load( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), hbqt_par_QString( 5 ) ) );
+   hb_retl( hbqt_par_QTranslator( 1 )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) );
 }
 
 /*

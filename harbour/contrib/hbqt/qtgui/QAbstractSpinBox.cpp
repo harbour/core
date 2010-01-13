@@ -224,7 +224,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETREADONLY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setSpecialValueText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAbstractSpinBox( 1 )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) );
 }
 
 /*

@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QLatin1String( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QLatin1String;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLatin1String               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLATIN1STRING )

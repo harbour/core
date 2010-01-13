@@ -149,7 +149,7 @@ void * hbqt_gcAllocate_QPlainTextEdit( void * pObj )
    p->func = hbqt_gcRelease_QPlainTextEdit;
    new( & p->pq ) QPointer< QPlainTextEdit >( ( QPlainTextEdit * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPlainTextEdit              %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPLAINTEXTEDIT )
@@ -284,7 +284,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_ENSURECURSORVISIBLE )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_FIND )
 {
-   hb_retl( hbqt_par_QPlainTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QPlainTextEdit( 1 )->find( QPlainTextEdit::tr( hb_parc( 2 ) ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -404,7 +404,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_SETDOCUMENT )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_SETDOCUMENTTITLE )
 {
-   hbqt_par_QPlainTextEdit( 1 )->setDocumentTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QPlainTextEdit( 1 )->setDocumentTitle( QPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -540,7 +540,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_WORDWRAPMODE )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_APPENDHTML )
 {
-   hbqt_par_QPlainTextEdit( 1 )->appendHtml( hbqt_par_QString( 2 ) );
+   hbqt_par_QPlainTextEdit( 1 )->appendHtml( QPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -548,7 +548,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_APPENDHTML )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_APPENDPLAINTEXT )
 {
-   hbqt_par_QPlainTextEdit( 1 )->appendPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QPlainTextEdit( 1 )->appendPlainText( QPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -588,7 +588,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_CUT )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_INSERTPLAINTEXT )
 {
-   hbqt_par_QPlainTextEdit( 1 )->insertPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QPlainTextEdit( 1 )->insertPlainText( QPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -620,7 +620,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT_SELECTALL )
  */
 HB_FUNC( QT_QPLAINTEXTEDIT_SETPLAINTEXT )
 {
-   hbqt_par_QPlainTextEdit( 1 )->setPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QPlainTextEdit( 1 )->setPlainText( QPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*

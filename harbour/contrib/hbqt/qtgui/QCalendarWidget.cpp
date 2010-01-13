@@ -144,7 +144,7 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj )
    p->func = hbqt_gcRelease_QCalendarWidget;
    new( & p->pq ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QCALENDARWIDGET )

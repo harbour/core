@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj )
    p->func = hbqt_gcRelease_QSyntaxHighlighter;
    new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER )

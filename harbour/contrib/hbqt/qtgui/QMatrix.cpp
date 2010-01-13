@@ -103,7 +103,7 @@ void * hbqt_gcAllocate_QMatrix( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QMatrix;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMATRIX )

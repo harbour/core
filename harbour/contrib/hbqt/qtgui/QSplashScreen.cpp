@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QSplashScreen( void * pObj )
    p->func = hbqt_gcRelease_QSplashScreen;
    new( & p->pq ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSplashScreen               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSPLASHSCREEN )
@@ -186,7 +186,7 @@ HB_FUNC( QT_QSPLASHSCREEN_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSPLASHSCREEN_SHOWMESSAGE )
 {
-   hbqt_par_QSplashScreen( 1 )->showMessage( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
+   hbqt_par_QSplashScreen( 1 )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
 }
 
 

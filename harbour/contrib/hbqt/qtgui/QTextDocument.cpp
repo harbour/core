@@ -152,7 +152,7 @@ void * hbqt_gcAllocate_QTextDocument( void * pObj )
    p->func = hbqt_gcRelease_QTextDocument;
    new( & p->pq ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTEXTDOCUMENT )
@@ -280,7 +280,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_END )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( QTextDocument::tr( hb_parc( 2 ) ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -296,7 +296,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( QTextDocument::tr( hb_parc( 2 ) ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -520,7 +520,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTFONT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTSTYLESHEET )
 {
-   hbqt_par_QTextDocument( 1 )->setDefaultStyleSheet( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextDocument( 1 )->setDefaultStyleSheet( QTextDocument::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -552,7 +552,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDOCUMENTMARGIN )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETHTML )
 {
-   hbqt_par_QTextDocument( 1 )->setHtml( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextDocument( 1 )->setHtml( QTextDocument::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -576,7 +576,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETMAXIMUMBLOCKCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETMETAINFORMATION )
 {
-   hbqt_par_QTextDocument( 1 )->setMetaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTextDocument( 1 )->setMetaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ), QTextDocument::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -592,7 +592,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETPAGESIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETPLAINTEXT )
 {
-   hbqt_par_QTextDocument( 1 )->setPlainText( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextDocument( 1 )->setPlainText( QTextDocument::tr( hb_parc( 2 ) ) );
 }
 
 /*

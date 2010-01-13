@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QDockWidget( void * pObj )
    p->func = hbqt_gcRelease_QDockWidget;
    new( & p->pq ) QPointer< QDockWidget >( ( QDockWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDockWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QDOCKWIDGET )

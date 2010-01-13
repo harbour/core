@@ -136,7 +136,7 @@ void * hbqt_gcAllocate_QTabBar( void * pObj )
    p->func = hbqt_gcRelease_QTabBar;
    new( & p->pq ) QPointer< QTabBar >( ( QTabBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTABBAR )
@@ -152,7 +152,7 @@ HB_FUNC( QT_QTABBAR )
  */
 HB_FUNC( QT_QTABBAR_ADDTAB )
 {
-   hb_retni( hbqt_par_QTabBar( 1 )->addTab( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QTabBar( 1 )->addTab( QTabBar::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -216,7 +216,7 @@ HB_FUNC( QT_QTABBAR_ICONSIZE )
  */
 HB_FUNC( QT_QTABBAR_INSERTTAB )
 {
-   hb_retni( hbqt_par_QTabBar( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retni( hbqt_par_QTabBar( 1 )->insertTab( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -352,7 +352,7 @@ HB_FUNC( QT_QTABBAR_SETTABENABLED )
  */
 HB_FUNC( QT_QTABBAR_SETTABTEXT )
 {
-   hbqt_par_QTabBar( 1 )->setTabText( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabBar( 1 )->setTabText( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -368,7 +368,7 @@ HB_FUNC( QT_QTABBAR_SETTABTEXTCOLOR )
  */
 HB_FUNC( QT_QTABBAR_SETTABTOOLTIP )
 {
-   hbqt_par_QTabBar( 1 )->setTabToolTip( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabBar( 1 )->setTabToolTip( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -376,7 +376,7 @@ HB_FUNC( QT_QTABBAR_SETTABTOOLTIP )
  */
 HB_FUNC( QT_QTABBAR_SETTABWHATSTHIS )
 {
-   hbqt_par_QTabBar( 1 )->setTabWhatsThis( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabBar( 1 )->setTabWhatsThis( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
 }
 
 /*

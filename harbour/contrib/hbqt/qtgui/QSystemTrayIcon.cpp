@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj )
    p->func = hbqt_gcRelease_QSystemTrayIcon;
    new( & p->pq ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSystemTrayIcon             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSYSTEMTRAYICON )
@@ -199,7 +199,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETICON )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SETTOOLTIP )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->setToolTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QSystemTrayIcon( 1 )->setToolTip( QSystemTrayIcon::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -207,7 +207,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETTOOLTIP )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SHOWMESSAGE )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->showMessage( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( QSystemTrayIcon::MessageIcon ) hb_parni( 4 ) : ( QSystemTrayIcon::MessageIcon ) QSystemTrayIcon::Information ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 10000 ) );
+   hbqt_par_QSystemTrayIcon( 1 )->showMessage( QSystemTrayIcon::tr( hb_parc( 2 ) ), QSystemTrayIcon::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QSystemTrayIcon::MessageIcon ) hb_parni( 4 ) : ( QSystemTrayIcon::MessageIcon ) QSystemTrayIcon::Information ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 10000 ) );
 }
 
 /*

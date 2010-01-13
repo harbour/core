@@ -140,7 +140,7 @@ void * hbqt_gcAllocate_QProcess( void * pObj )
    p->func = hbqt_gcRelease_QProcess;
    new( & p->pq ) QPointer< QProcess >( ( QProcess * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPROCESS )
@@ -275,7 +275,7 @@ HB_FUNC( QT_QPROCESS_SETREADCHANNEL )
  */
 HB_FUNC( QT_QPROCESS_SETSTANDARDERRORFILE )
 {
-   hbqt_par_QProcess( 1 )->setStandardErrorFile( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::Truncate ) );
+   hbqt_par_QProcess( 1 )->setStandardErrorFile( QProcess::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::Truncate ) );
 }
 
 /*
@@ -283,7 +283,7 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDERRORFILE )
  */
 HB_FUNC( QT_QPROCESS_SETSTANDARDINPUTFILE )
 {
-   hbqt_par_QProcess( 1 )->setStandardInputFile( hbqt_par_QString( 2 ) );
+   hbqt_par_QProcess( 1 )->setStandardInputFile( QProcess::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -291,7 +291,7 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDINPUTFILE )
  */
 HB_FUNC( QT_QPROCESS_SETSTANDARDOUTPUTFILE )
 {
-   hbqt_par_QProcess( 1 )->setStandardOutputFile( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::Truncate ) );
+   hbqt_par_QProcess( 1 )->setStandardOutputFile( QProcess::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::Truncate ) );
 }
 
 /*
@@ -307,7 +307,7 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDOUTPUTPROCESS )
  */
 HB_FUNC( QT_QPROCESS_SETWORKINGDIRECTORY )
 {
-   hbqt_par_QProcess( 1 )->setWorkingDirectory( hbqt_par_QString( 2 ) );
+   hbqt_par_QProcess( 1 )->setWorkingDirectory( QProcess::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -315,7 +315,7 @@ HB_FUNC( QT_QPROCESS_SETWORKINGDIRECTORY )
  */
 HB_FUNC( QT_QPROCESS_START )
 {
-   hbqt_par_QProcess( 1 )->start( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ), ( HB_ISNUM( 4 ) ? ( QProcess::OpenMode ) hb_parni( 4 ) : ( QProcess::OpenMode ) QProcess::ReadWrite ) );
+   hbqt_par_QProcess( 1 )->start( QProcess::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ), ( HB_ISNUM( 4 ) ? ( QProcess::OpenMode ) hb_parni( 4 ) : ( QProcess::OpenMode ) QProcess::ReadWrite ) );
 }
 
 /*
@@ -323,7 +323,7 @@ HB_FUNC( QT_QPROCESS_START )
  */
 HB_FUNC( QT_QPROCESS_START_1 )
 {
-   hbqt_par_QProcess( 1 )->start( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::ReadWrite ) );
+   hbqt_par_QProcess( 1 )->start( QProcess::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QProcess::OpenMode ) hb_parni( 3 ) : ( QProcess::OpenMode ) QProcess::ReadWrite ) );
 }
 
 /*
@@ -363,7 +363,7 @@ HB_FUNC( QT_QPROCESS_WORKINGDIRECTORY )
  */
 HB_FUNC( QT_QPROCESS_EXECUTE )
 {
-   hb_retni( hbqt_par_QProcess( 1 )->execute( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) ) );
+   hb_retni( hbqt_par_QProcess( 1 )->execute( QProcess::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ) ) );
 }
 
 /*
@@ -371,7 +371,7 @@ HB_FUNC( QT_QPROCESS_EXECUTE )
  */
 HB_FUNC( QT_QPROCESS_EXECUTE_1 )
 {
-   hb_retni( hbqt_par_QProcess( 1 )->execute( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QProcess( 1 )->execute( QProcess::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -381,7 +381,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED )
 {
    qint64 iPid = 0;
 
-   hb_retl( hbqt_par_QProcess( 1 )->startDetached( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ), hbqt_par_QString( 4 ), &iPid ) );
+   hb_retl( hbqt_par_QProcess( 1 )->startDetached( QProcess::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ), QProcess::tr( hb_parc( 4 ) ), &iPid ) );
 
    hb_stornint( iPid, 5 );
 }
@@ -391,7 +391,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED )
  */
 HB_FUNC( QT_QPROCESS_STARTDETACHED_1 )
 {
-   hb_retl( hbqt_par_QProcess( 1 )->startDetached( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) ) );
+   hb_retl( hbqt_par_QProcess( 1 )->startDetached( QProcess::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ) ) );
 }
 
 /*
@@ -399,7 +399,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_1 )
  */
 HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
 {
-   hb_retl( hbqt_par_QProcess( 1 )->startDetached( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QProcess( 1 )->startDetached( QProcess::tr( hb_parc( 2 ) ) ) );
 }
 
 /*

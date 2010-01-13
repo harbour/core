@@ -148,7 +148,7 @@ void * hbqt_gcAllocate_QAction( void * pObj )
    p->func = hbqt_gcRelease_QAction;
    new( & p->pq ) QPointer< QAction >( ( QAction * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QACTION )
@@ -345,7 +345,7 @@ HB_FUNC( QT_QACTION_SETICON )
  */
 HB_FUNC( QT_QACTION_SETICONTEXT )
 {
-   hbqt_par_QAction( 1 )->setIconText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setIconText( QAction::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -409,7 +409,7 @@ HB_FUNC( QT_QACTION_SETSHORTCUTS )
  */
 HB_FUNC( QT_QACTION_SETSTATUSTIP )
 {
-   hbqt_par_QAction( 1 )->setStatusTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setStatusTip( QAction::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -417,7 +417,7 @@ HB_FUNC( QT_QACTION_SETSTATUSTIP )
  */
 HB_FUNC( QT_QACTION_SETTEXT )
 {
-   hbqt_par_QAction( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setText( QAction::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -425,7 +425,7 @@ HB_FUNC( QT_QACTION_SETTEXT )
  */
 HB_FUNC( QT_QACTION_SETTOOLTIP )
 {
-   hbqt_par_QAction( 1 )->setToolTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setToolTip( QAction::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -433,7 +433,7 @@ HB_FUNC( QT_QACTION_SETTOOLTIP )
  */
 HB_FUNC( QT_QACTION_SETWHATSTHIS )
 {
-   hbqt_par_QAction( 1 )->setWhatsThis( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setWhatsThis( QAction::tr( hb_parc( 2 ) ) );
 }
 
 /*

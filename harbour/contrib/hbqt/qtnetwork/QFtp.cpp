@@ -152,7 +152,7 @@ void * hbqt_gcAllocate_QFtp( void * pObj )
    p->func = hbqt_gcRelease_QFtp;
    new( & p->pq ) QPointer< QFtp >( ( QFtp * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFtp                        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFTP )
@@ -176,7 +176,7 @@ HB_FUNC( QT_QFTP_BYTESAVAILABLE )
  */
 HB_FUNC( QT_QFTP_CD )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->cd( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->cd( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -200,7 +200,7 @@ HB_FUNC( QT_QFTP_CLOSE )
  */
 HB_FUNC( QT_QFTP_CONNECTTOHOST )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->connectToHost( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 21 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->connectToHost( QFtp::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 21 ) ) );
 }
 
 /*
@@ -248,7 +248,7 @@ HB_FUNC( QT_QFTP_ERRORSTRING )
  */
 HB_FUNC( QT_QFTP_GET )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->get( hbqt_par_QString( 2 ), hbqt_par_QIODevice( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->get( QFtp::tr( hb_parc( 2 ) ), hbqt_par_QIODevice( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*
@@ -264,7 +264,7 @@ HB_FUNC( QT_QFTP_HASPENDINGCOMMANDS )
  */
 HB_FUNC( QT_QFTP_LIST )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->list( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->list( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -272,7 +272,7 @@ HB_FUNC( QT_QFTP_LIST )
  */
 HB_FUNC( QT_QFTP_LOGIN )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->login( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->login( QFtp::tr( hb_parc( 2 ) ), QFtp::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -280,7 +280,7 @@ HB_FUNC( QT_QFTP_LOGIN )
  */
 HB_FUNC( QT_QFTP_MKDIR )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->mkdir( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->mkdir( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -288,7 +288,7 @@ HB_FUNC( QT_QFTP_MKDIR )
  */
 HB_FUNC( QT_QFTP_PUT )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->put( hbqt_par_QIODevice( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->put( hbqt_par_QIODevice( 2 ), QFtp::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*
@@ -296,7 +296,7 @@ HB_FUNC( QT_QFTP_PUT )
  */
 HB_FUNC( QT_QFTP_PUT_1 )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->put( *hbqt_par_QByteArray( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->put( *hbqt_par_QByteArray( 2 ), QFtp::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*
@@ -304,7 +304,7 @@ HB_FUNC( QT_QFTP_PUT_1 )
  */
 HB_FUNC( QT_QFTP_RAWCOMMAND )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->rawCommand( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->rawCommand( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -320,7 +320,7 @@ HB_FUNC( QT_QFTP_READALL )
  */
 HB_FUNC( QT_QFTP_REMOVE )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->remove( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->remove( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -328,7 +328,7 @@ HB_FUNC( QT_QFTP_REMOVE )
  */
 HB_FUNC( QT_QFTP_RENAME )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->rename( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->rename( QFtp::tr( hb_parc( 2 ) ), QFtp::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -336,7 +336,7 @@ HB_FUNC( QT_QFTP_RENAME )
  */
 HB_FUNC( QT_QFTP_RMDIR )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->rmdir( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->rmdir( QFtp::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -344,7 +344,7 @@ HB_FUNC( QT_QFTP_RMDIR )
  */
 HB_FUNC( QT_QFTP_SETPROXY )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->setProxy( hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->setProxy( QFtp::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) );
 }
 
 /*

@@ -108,7 +108,7 @@ void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QStyleOptionProgressBar;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )

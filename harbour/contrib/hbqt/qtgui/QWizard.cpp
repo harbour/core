@@ -149,7 +149,7 @@ void * hbqt_gcAllocate_QWizard( void * pObj )
    p->func = hbqt_gcRelease_QWizard;
    new( & p->pq ) QPointer< QWizard >( ( QWizard * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QWIZARD )
@@ -205,7 +205,7 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_FIELD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( QWizard::tr( hb_parc( 2 ) ) ) ) ) );
 }
 
 /*
@@ -269,7 +269,7 @@ HB_FUNC( QT_QWIZARD_SETBUTTON )
  */
 HB_FUNC( QT_QWIZARD_SETBUTTONTEXT )
 {
-   hbqt_par_QWizard( 1 )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QWizard( 1 )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizard::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -285,7 +285,7 @@ HB_FUNC( QT_QWIZARD_SETDEFAULTPROPERTY )
  */
 HB_FUNC( QT_QWIZARD_SETFIELD )
 {
-   hbqt_par_QWizard( 1 )->setField( hbqt_par_QString( 2 ), *hbqt_par_QVariant( 3 ) );
+   hbqt_par_QWizard( 1 )->setField( QWizard::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) );
 }
 
 /*

@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QColorDialog( void * pObj )
    p->func = hbqt_gcRelease_QColorDialog;
    new( & p->pq ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QCOLORDIALOG )
@@ -245,7 +245,7 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), QColorDialog::tr( hb_parc( 4 ) ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
 }
 
 /*

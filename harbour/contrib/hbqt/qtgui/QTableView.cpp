@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QTableView( void * pObj )
    p->func = hbqt_gcRelease_QTableView;
    new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTABLEVIEW )

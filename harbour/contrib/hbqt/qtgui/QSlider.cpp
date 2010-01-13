@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QSlider( void * pObj )
    p->func = hbqt_gcRelease_QSlider;
    new( & p->pq ) QPointer< QSlider >( ( QSlider * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSlider                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSLIDER )

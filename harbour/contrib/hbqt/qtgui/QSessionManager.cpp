@@ -188,7 +188,7 @@ HB_FUNC( QT_QSESSIONMANAGER_SETDISCARDCOMMAND )
  */
 HB_FUNC( QT_QSESSIONMANAGER_SETMANAGERPROPERTY )
 {
-   hbqt_par_QSessionManager( 1 )->setManagerProperty( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+   hbqt_par_QSessionManager( 1 )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ) );
 }
 
 /*
@@ -196,7 +196,7 @@ HB_FUNC( QT_QSESSIONMANAGER_SETMANAGERPROPERTY )
  */
 HB_FUNC( QT_QSESSIONMANAGER_SETMANAGERPROPERTY_1 )
 {
-   hbqt_par_QSessionManager( 1 )->setManagerProperty( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QSessionManager( 1 )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), QSessionManager::tr( hb_parc( 3 ) ) );
 }
 
 /*

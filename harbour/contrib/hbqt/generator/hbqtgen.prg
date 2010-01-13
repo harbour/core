@@ -69,6 +69,7 @@ STATIC aWebkit  := {}
  * Force new GC and Qt interface
  */
 STATIC lNewGCtoQT := .T.
+STATIC s_isObject := .F.
 
 /*----------------------------------------------------------------------*/
 
@@ -396,6 +397,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    doc_    := {}
    nFuncs  := 0
    nCnvrtd := 0
+
+   s_isObject := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "qobject" .and. lower( e_[ 2 ] ) == "no"} ) == 0
 
    /* Body */
    FOR EACH s IN protos_
@@ -1039,7 +1042,11 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'l' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'QString'
-               aA[ PRT_BODY ] := 'hbqt_par_QString( ' + cHBIdx + ' )'
+               IF !( s_isObject )
+                  aA[ PRT_BODY ] := 'hbqt_par_QString( ' + cHBIdx + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := cWidget+'::tr( hb_parc( ' + cHBIdx + ' ) )'
+               ENDIF
                aA[ PRT_DOC  ] := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'

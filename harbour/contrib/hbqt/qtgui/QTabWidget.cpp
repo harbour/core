@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QTabWidget( void * pObj )
    p->func = hbqt_gcRelease_QTabWidget;
    new( & p->pq ) QPointer< QTabWidget >( ( QTabWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTabWidget                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTABWIDGET )
@@ -150,7 +150,7 @@ HB_FUNC( QT_QTABWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB )
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), hbqt_par_QString( 4 ) ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -238,7 +238,7 @@ HB_FUNC( QT_QTABWIDGET_INDEXOF )
  */
 HB_FUNC( QT_QTABWIDGET_INSERTTAB )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ) ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QTabWidget::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -246,7 +246,7 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB )
  */
 HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), hbqt_par_QString( 5 ) ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) );
 }
 
 /*
@@ -350,7 +350,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABSHAPE )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABTEXT )
 {
-   hbqt_par_QTabWidget( 1 )->setTabText( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabWidget( 1 )->setTabText( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -358,7 +358,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABTEXT )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABTOOLTIP )
 {
-   hbqt_par_QTabWidget( 1 )->setTabToolTip( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabWidget( 1 )->setTabToolTip( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -366,7 +366,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABTOOLTIP )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABWHATSTHIS )
 {
-   hbqt_par_QTabWidget( 1 )->setTabWhatsThis( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QTabWidget( 1 )->setTabWhatsThis( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*

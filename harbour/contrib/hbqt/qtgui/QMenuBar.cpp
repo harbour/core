@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QMenuBar( void * pObj )
    p->func = hbqt_gcRelease_QMenuBar;
    new( & p->pq ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMENUBAR )
@@ -153,7 +153,7 @@ HB_FUNC( QT_QMENUBAR_ACTIVEACTION )
  */
 HB_FUNC( QT_QMENUBAR_ADDACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QMENUBAR_ADDACTION )
  */
 HB_FUNC( QT_QMENUBAR_ADDACTION_1 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QMENUBAR_ADDMENU )
  */
 HB_FUNC( QT_QMENUBAR_ADDMENU_1 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QMenuBar::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QMENUBAR_ADDMENU_1 )
  */
 HB_FUNC( QT_QMENUBAR_ADDMENU_2 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), QMenuBar::tr( hb_parc( 3 ) ) ) );
 }
 
 /*

@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QScrollArea( void * pObj )
    p->func = hbqt_gcRelease_QScrollArea;
    new( & p->pq ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QScrollArea                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSCROLLAREA )

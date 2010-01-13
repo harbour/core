@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QLCDNumber( void * pObj )
    p->func = hbqt_gcRelease_QLCDNumber;
    new( & p->pq ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLCDNumber                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLCDNUMBER )
@@ -239,7 +239,7 @@ HB_FUNC( QT_QLCDNUMBER_VALUE )
  */
 HB_FUNC( QT_QLCDNUMBER_DISPLAY )
 {
-   hbqt_par_QLCDNumber( 1 )->display( hbqt_par_QString( 2 ) );
+   hbqt_par_QLCDNumber( 1 )->display( QLCDNumber::tr( hb_parc( 2 ) ) );
 }
 
 /*

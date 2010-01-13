@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj )
    p->func = hbqt_gcRelease_QProgressDialog;
    new( & p->pq ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPROGRESSDIALOG )
@@ -282,7 +282,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_RESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTONTEXT )
 {
-   hbqt_par_QProgressDialog( 1 )->setCancelButtonText( hbqt_par_QString( 2 ) );
+   hbqt_par_QProgressDialog( 1 )->setCancelButtonText( QProgressDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -290,7 +290,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTONTEXT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETLABELTEXT )
 {
-   hbqt_par_QProgressDialog( 1 )->setLabelText( hbqt_par_QString( 2 ) );
+   hbqt_par_QProgressDialog( 1 )->setLabelText( QProgressDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*

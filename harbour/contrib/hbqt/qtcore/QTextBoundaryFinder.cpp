@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QTextBoundaryFinder( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QTextBoundaryFinder;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBoundaryFinder         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTEXTBOUNDARYFINDER )

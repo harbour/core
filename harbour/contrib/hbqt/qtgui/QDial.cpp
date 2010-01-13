@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QDial( void * pObj )
    p->func = hbqt_gcRelease_QDial;
    new( & p->pq ) QPointer< QDial >( ( QDial * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDial                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QDIAL )

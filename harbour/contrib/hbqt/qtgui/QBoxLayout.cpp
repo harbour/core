@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QBoxLayout( void * pObj )
    p->func = hbqt_gcRelease_QBoxLayout;
    new( & p->pq ) QPointer< QBoxLayout >( ( QBoxLayout * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QBoxLayout                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QBOXLAYOUT )

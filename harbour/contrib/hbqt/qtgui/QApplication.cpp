@@ -203,7 +203,7 @@ void * hbqt_gcAllocate_QApplication( void * pObj )
    p->func = hbqt_gcRelease_QApplication;
    new( & p->pq ) QPointer< QApplication >( ( QApplication * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QAPPLICATION )
@@ -619,7 +619,7 @@ HB_FUNC( QT_QAPPLICATION_SETGLOBALSTRUT )
  */
 HB_FUNC( QT_QAPPLICATION_SETGRAPHICSSYSTEM )
 {
-   hbqt_par_QApplication( 1 )->setGraphicsSystem( hbqt_par_QString( 2 ) );
+   hbqt_par_QApplication( 1 )->setGraphicsSystem( QApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -691,7 +691,7 @@ HB_FUNC( QT_QAPPLICATION_SETSTYLE )
  */
 HB_FUNC( QT_QAPPLICATION_SETSTYLE_1 )
 {
-   hb_retptr( ( QStyle* ) hbqt_par_QApplication( 1 )->setStyle( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QStyle* ) hbqt_par_QApplication( 1 )->setStyle( QApplication::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -819,7 +819,7 @@ HB_FUNC( QT_QAPPLICATION_CLOSEALLWINDOWS )
  */
 HB_FUNC( QT_QAPPLICATION_SETSTYLESHEET )
 {
-   hbqt_par_QApplication( 1 )->setStyleSheet( hbqt_par_QString( 2 ) );
+   hbqt_par_QApplication( 1 )->setStyleSheet( QApplication::tr( hb_parc( 2 ) ) );
 }
 
 

@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QSpinBox( void * pObj )
    p->func = hbqt_gcRelease_QSpinBox;
    new( & p->pq ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSPINBOX )
@@ -192,7 +192,7 @@ HB_FUNC( QT_QSPINBOX_SETMINIMUM )
  */
 HB_FUNC( QT_QSPINBOX_SETPREFIX )
 {
-   hbqt_par_QSpinBox( 1 )->setPrefix( hbqt_par_QString( 2 ) );
+   hbqt_par_QSpinBox( 1 )->setPrefix( QSpinBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -216,7 +216,7 @@ HB_FUNC( QT_QSPINBOX_SETSINGLESTEP )
  */
 HB_FUNC( QT_QSPINBOX_SETSUFFIX )
 {
-   hbqt_par_QSpinBox( 1 )->setSuffix( hbqt_par_QString( 2 ) );
+   hbqt_par_QSpinBox( 1 )->setSuffix( QSpinBox::tr( hb_parc( 2 ) ) );
 }
 
 /*

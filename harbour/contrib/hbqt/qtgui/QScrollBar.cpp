@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QScrollBar( void * pObj )
    p->func = hbqt_gcRelease_QScrollBar;
    new( & p->pq ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QScrollBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSCROLLBAR )

@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QMovie( void * pObj )
    p->func = hbqt_gcRelease_QMovie;
    new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMOVIE )
@@ -297,7 +297,7 @@ HB_FUNC( QT_QMOVIE_SETDEVICE )
  */
 HB_FUNC( QT_QMOVIE_SETFILENAME )
 {
-   hbqt_par_QMovie( 1 )->setFileName( hbqt_par_QString( 2 ) );
+   hbqt_par_QMovie( 1 )->setFileName( QMovie::tr( hb_parc( 2 ) ) );
 }
 
 /*

@@ -102,7 +102,7 @@ HB_FUNC( QT_QCOREAPPLICATION_NOTIFY )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ADDLIBRARYPATH )
 {
-   hbqt_par_QCoreApplication( 1 )->addLibraryPath( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->addLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -270,7 +270,7 @@ HB_FUNC( QT_QCOREAPPLICATION_PROCESSEVENTS_1 )
  */
 HB_FUNC( QT_QCOREAPPLICATION_REMOVELIBRARYPATH )
 {
-   hbqt_par_QCoreApplication( 1 )->removeLibraryPath( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->removeLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -326,7 +326,7 @@ HB_FUNC( QT_QCOREAPPLICATION_SENDPOSTEDEVENTS_1 )
  */
 HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONNAME )
 {
-   hbqt_par_QCoreApplication( 1 )->setApplicationName( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->setApplicationName( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -334,7 +334,7 @@ HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONNAME )
  */
 HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONVERSION )
 {
-   hbqt_par_QCoreApplication( 1 )->setApplicationVersion( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->setApplicationVersion( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -358,7 +358,7 @@ HB_FUNC( QT_QCOREAPPLICATION_SETLIBRARYPATHS )
  */
 HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONDOMAIN )
 {
-   hbqt_par_QCoreApplication( 1 )->setOrganizationDomain( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->setOrganizationDomain( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -366,7 +366,7 @@ HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONDOMAIN )
  */
 HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONNAME )
 {
-   hbqt_par_QCoreApplication( 1 )->setOrganizationName( hbqt_par_QString( 2 ) );
+   hbqt_par_QCoreApplication( 1 )->setOrganizationName( QCoreApplication::tr( hb_parc( 2 ) ) );
 }
 
 /*

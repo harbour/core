@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QErrorMessage( void * pObj )
    p->func = hbqt_gcRelease_QErrorMessage;
    new( & p->pq ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QErrorMessage               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QERRORMESSAGE )
@@ -145,7 +145,7 @@ HB_FUNC( QT_QERRORMESSAGE )
  */
 HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
 {
-   hbqt_par_QErrorMessage( 1 )->showMessage( hbqt_par_QString( 2 ) );
+   hbqt_par_QErrorMessage( 1 )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -153,7 +153,7 @@ HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
  */
 HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE_1 )
 {
-   hbqt_par_QErrorMessage( 1 )->showMessage( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QErrorMessage( 1 )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) );
 }
 
 

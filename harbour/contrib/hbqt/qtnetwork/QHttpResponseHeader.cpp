@@ -103,7 +103,7 @@ void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QHttpResponseHeader;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QHttpResponseHeader         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QHTTPRESPONSEHEADER )

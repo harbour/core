@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QSound( void * pObj )
    p->func = hbqt_gcRelease_QSound;
    new( & p->pq ) QPointer< QSound >( ( QSound * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSOUND )
@@ -193,7 +193,7 @@ HB_FUNC( QT_QSOUND_ISAVAILABLE )
  */
 HB_FUNC( QT_QSOUND_PLAY )
 {
-   hbqt_par_QSound( 1 )->play( hbqt_par_QString( 2 ) );
+   hbqt_par_QSound( 1 )->play( QSound::tr( hb_parc( 2 ) ) );
 }
 
 

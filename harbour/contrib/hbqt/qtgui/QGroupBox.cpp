@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QGroupBox( void * pObj )
    p->func = hbqt_gcRelease_QGroupBox;
    new( & p->pq ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QGroupBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QGROUPBOX )
@@ -202,7 +202,7 @@ HB_FUNC( QT_QGROUPBOX_SETFLAT )
  */
 HB_FUNC( QT_QGROUPBOX_SETTITLE )
 {
-   hbqt_par_QGroupBox( 1 )->setTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QGroupBox( 1 )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) );
 }
 
 /*

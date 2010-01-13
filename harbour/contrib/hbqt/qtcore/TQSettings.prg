@@ -63,12 +63,9 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSettings INHERIT QObject
-
-   VAR     pPtr
+CREATE CLASS QSettings INHERIT HbQtObjectHandler, QObject
 
    METHOD  new()
-   METHOD  configure( xObject )
 
    METHOD  allKeys()
    METHOD  applicationName()
@@ -104,24 +101,13 @@ CREATE CLASS QSettings INHERIT QObject
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
 
 METHOD QSettings:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSettings( ... )
-   RETURN Self
-
-
-METHOD QSettings:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
    RETURN Self
 
 

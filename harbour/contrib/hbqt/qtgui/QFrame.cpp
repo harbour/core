@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QFrame( void * pObj )
    p->func = hbqt_gcRelease_QFrame;
    new( & p->pq ) QPointer< QFrame >( ( QFrame * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFrame                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFRAME )

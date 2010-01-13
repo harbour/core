@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QItemSelectionModel( void * pObj )
    p->func = hbqt_gcRelease_QItemSelectionModel;
    new( & p->pq ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QITEMSELECTIONMODEL )

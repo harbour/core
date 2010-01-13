@@ -139,7 +139,7 @@ void * hbqt_gcAllocate_QFile( void * pObj )
    p->func = hbqt_gcRelease_QFile;
    new( & p->pq ) QPointer< QFile >( ( QFile * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFILE )
@@ -174,7 +174,7 @@ HB_FUNC( QT_QFILE_CLOSE )
  */
 HB_FUNC( QT_QFILE_COPY )
 {
-   hb_retl( hbqt_par_QFile( 1 )->copy( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->copy( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -230,7 +230,7 @@ HB_FUNC( QT_QFILE_ISSEQUENTIAL )
  */
 HB_FUNC( QT_QFILE_LINK )
 {
-   hb_retl( hbqt_par_QFile( 1 )->link( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->link( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -278,7 +278,7 @@ HB_FUNC( QT_QFILE_REMOVE )
  */
 HB_FUNC( QT_QFILE_RENAME )
 {
-   hb_retl( hbqt_par_QFile( 1 )->rename( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->rename( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -294,7 +294,7 @@ HB_FUNC( QT_QFILE_RESIZE )
  */
 HB_FUNC( QT_QFILE_SETFILENAME )
 {
-   hbqt_par_QFile( 1 )->setFileName( hbqt_par_QString( 2 ) );
+   hbqt_par_QFile( 1 )->setFileName( QFile::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -334,7 +334,7 @@ HB_FUNC( QT_QFILE_UNSETERROR )
  */
 HB_FUNC( QT_QFILE_COPY_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->copy( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->copy( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -358,7 +358,7 @@ HB_FUNC( QT_QFILE_DECODENAME_1 )
  */
 HB_FUNC( QT_QFILE_ENCODENAME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QFile( 1 )->encodeName( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QFile( 1 )->encodeName( QFile::tr( hb_parc( 2 ) ) ) ) ) );
 }
 
 /*
@@ -366,7 +366,7 @@ HB_FUNC( QT_QFILE_ENCODENAME )
  */
 HB_FUNC( QT_QFILE_EXISTS_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->exists( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->exists( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -374,7 +374,7 @@ HB_FUNC( QT_QFILE_EXISTS_1 )
  */
 HB_FUNC( QT_QFILE_LINK_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->link( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->link( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -382,7 +382,7 @@ HB_FUNC( QT_QFILE_LINK_1 )
  */
 HB_FUNC( QT_QFILE_PERMISSIONS_1 )
 {
-   hb_retni( ( QFile::Permissions ) hbqt_par_QFile( 1 )->permissions( hbqt_par_QString( 2 ) ) );
+   hb_retni( ( QFile::Permissions ) hbqt_par_QFile( 1 )->permissions( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -390,7 +390,7 @@ HB_FUNC( QT_QFILE_PERMISSIONS_1 )
  */
 HB_FUNC( QT_QFILE_REMOVE_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->remove( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->remove( QFile::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -398,7 +398,7 @@ HB_FUNC( QT_QFILE_REMOVE_1 )
  */
 HB_FUNC( QT_QFILE_RENAME_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->rename( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->rename( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -406,7 +406,7 @@ HB_FUNC( QT_QFILE_RENAME_1 )
  */
 HB_FUNC( QT_QFILE_RESIZE_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->resize( hbqt_par_QString( 2 ), hb_parnint( 3 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->resize( QFile::tr( hb_parc( 2 ) ), hb_parnint( 3 ) ) );
 }
 
 /*
@@ -414,7 +414,7 @@ HB_FUNC( QT_QFILE_RESIZE_1 )
  */
 HB_FUNC( QT_QFILE_SETPERMISSIONS_1 )
 {
-   hb_retl( hbqt_par_QFile( 1 )->setPermissions( hbqt_par_QString( 2 ), ( QFile::Permissions ) hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QFile( 1 )->setPermissions( QFile::tr( hb_parc( 2 ) ), ( QFile::Permissions ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -422,7 +422,7 @@ HB_FUNC( QT_QFILE_SETPERMISSIONS_1 )
  */
 HB_FUNC( QT_QFILE_SYMLINKTARGET_1 )
 {
-   hb_retc( hbqt_par_QFile( 1 )->symLinkTarget( hbqt_par_QString( 2 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QFile( 1 )->symLinkTarget( QFile::tr( hb_parc( 2 ) ) ).toAscii().data() );
 }
 
 

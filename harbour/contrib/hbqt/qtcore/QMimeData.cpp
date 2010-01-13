@@ -139,7 +139,7 @@ void * hbqt_gcAllocate_QMimeData( void * pObj )
    p->func = hbqt_gcRelease_QMimeData;
    new( & p->pq ) QPointer< QMimeData >( ( QMimeData * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMIMEDATA )
@@ -171,7 +171,7 @@ HB_FUNC( QT_QMIMEDATA_COLORDATA )
  */
 HB_FUNC( QT_QMIMEDATA_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMimeData( 1 )->data( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMimeData( 1 )->data( QMimeData::tr( hb_parc( 2 ) ) ) ) ) );
 }
 
 /*
@@ -195,7 +195,7 @@ HB_FUNC( QT_QMIMEDATA_HASCOLOR )
  */
 HB_FUNC( QT_QMIMEDATA_HASFORMAT )
 {
-   hb_retl( hbqt_par_QMimeData( 1 )->hasFormat( hbqt_par_QString( 2 ) ) );
+   hb_retl( hbqt_par_QMimeData( 1 )->hasFormat( QMimeData::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -251,7 +251,7 @@ HB_FUNC( QT_QMIMEDATA_IMAGEDATA )
  */
 HB_FUNC( QT_QMIMEDATA_REMOVEFORMAT )
 {
-   hbqt_par_QMimeData( 1 )->removeFormat( hbqt_par_QString( 2 ) );
+   hbqt_par_QMimeData( 1 )->removeFormat( QMimeData::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -267,7 +267,7 @@ HB_FUNC( QT_QMIMEDATA_SETCOLORDATA )
  */
 HB_FUNC( QT_QMIMEDATA_SETDATA )
 {
-   hbqt_par_QMimeData( 1 )->setData( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) );
+   hbqt_par_QMimeData( 1 )->setData( QMimeData::tr( hb_parc( 2 ) ), *hbqt_par_QByteArray( 3 ) );
 }
 
 /*
@@ -275,7 +275,7 @@ HB_FUNC( QT_QMIMEDATA_SETDATA )
  */
 HB_FUNC( QT_QMIMEDATA_SETHTML )
 {
-   hbqt_par_QMimeData( 1 )->setHtml( hbqt_par_QString( 2 ) );
+   hbqt_par_QMimeData( 1 )->setHtml( QMimeData::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -291,7 +291,7 @@ HB_FUNC( QT_QMIMEDATA_SETIMAGEDATA )
  */
 HB_FUNC( QT_QMIMEDATA_SETTEXT )
 {
-   hbqt_par_QMimeData( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QMimeData( 1 )->setText( QMimeData::tr( hb_parc( 2 ) ) );
 }
 
 /*

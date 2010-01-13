@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QWizardPage( void * pObj )
    p->func = hbqt_gcRelease_QWizardPage;
    new( & p->pq ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QWIZARDPAGE )
@@ -207,7 +207,7 @@ HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETBUTTONTEXT )
 {
-   hbqt_par_QWizardPage( 1 )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QWizardPage( 1 )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizardPage::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -239,7 +239,7 @@ HB_FUNC( QT_QWIZARDPAGE_SETPIXMAP )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
 {
-   hbqt_par_QWizardPage( 1 )->setSubTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QWizardPage( 1 )->setSubTitle( QWizardPage::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -247,7 +247,7 @@ HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETTITLE )
 {
-   hbqt_par_QWizardPage( 1 )->setTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QWizardPage( 1 )->setTitle( QWizardPage::tr( hb_parc( 2 ) ) );
 }
 
 /*

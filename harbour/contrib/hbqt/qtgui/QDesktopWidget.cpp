@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QDesktopWidget( void * pObj )
    p->func = hbqt_gcRelease_QDesktopWidget;
    new( & p->pq ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QDESKTOPWIDGET )

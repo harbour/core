@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QFontDialog( void * pObj )
    p->func = hbqt_gcRelease_QFontDialog;
    new( & p->pq ) QPointer< QFontDialog >( ( QFontDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFONTDIALOG )
@@ -219,7 +219,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT )
 {
    bool iOk = 0;
 
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ), ( QFontDialog::FontDialogOptions ) hb_parni( 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), QFontDialog::tr( hb_parc( 5 ) ), ( QFontDialog::FontDialogOptions ) hb_parni( 6 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -243,7 +243,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_2 )
 {
    bool iOk = 0;
 
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), QFontDialog::tr( hb_parc( 5 ) ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }

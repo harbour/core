@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QProgressBar( void * pObj )
    p->func = hbqt_gcRelease_QProgressBar;
    new( & p->pq ) QPointer< QProgressBar >( ( QProgressBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QProgressBar                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPROGRESSBAR )
@@ -212,7 +212,7 @@ HB_FUNC( QT_QPROGRESSBAR_SETALIGNMENT )
  */
 HB_FUNC( QT_QPROGRESSBAR_SETFORMAT )
 {
-   hbqt_par_QProgressBar( 1 )->setFormat( hbqt_par_QString( 2 ) );
+   hbqt_par_QProgressBar( 1 )->setFormat( QProgressBar::tr( hb_parc( 2 ) ) );
 }
 
 /*

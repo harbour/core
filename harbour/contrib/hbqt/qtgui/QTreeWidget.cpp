@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QTreeWidget( void * pObj )
    p->func = hbqt_gcRelease_QTreeWidget;
    new( & p->pq ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTREEWIDGET )
@@ -349,7 +349,7 @@ HB_FUNC( QT_QTREEWIDGET_SETHEADERITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_SETHEADERLABEL )
 {
-   hbqt_par_QTreeWidget( 1 )->setHeaderLabel( hbqt_par_QString( 2 ) );
+   hbqt_par_QTreeWidget( 1 )->setHeaderLabel( QTreeWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*

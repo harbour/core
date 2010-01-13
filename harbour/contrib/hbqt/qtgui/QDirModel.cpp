@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QDirModel( void * pObj )
    p->func = hbqt_gcRelease_QDirModel;
    new( & p->pq ) QPointer< QDirModel >( ( QDirModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDirModel                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QDIRMODEL )
@@ -254,7 +254,7 @@ HB_FUNC( QT_QDIRMODEL_INDEX )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -294,7 +294,7 @@ HB_FUNC( QT_QDIRMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QDIRMODEL_MKDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ) ) );
 }
 
 /*

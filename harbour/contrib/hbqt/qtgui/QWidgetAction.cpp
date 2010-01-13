@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QWidgetAction( void * pObj )
    p->func = hbqt_gcRelease_QWidgetAction;
    new( & p->pq ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QWIDGETACTION )

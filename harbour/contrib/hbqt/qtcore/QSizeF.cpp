@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QSizeF( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QSizeF;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSIZEF )

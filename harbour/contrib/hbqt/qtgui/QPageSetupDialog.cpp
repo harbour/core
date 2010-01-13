@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QPageSetupDialog( void * pObj )
    p->func = hbqt_gcRelease_QPageSetupDialog;
    new( & p->pq ) QPointer< QPageSetupDialog >( ( QPageSetupDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPageSetupDialog            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPAGESETUPDIALOG )

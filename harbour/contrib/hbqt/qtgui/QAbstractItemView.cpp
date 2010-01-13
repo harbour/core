@@ -235,7 +235,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ITEMDELEGATEFORROW )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_KEYBOARDSEARCH )
 {
-   hbqt_par_QAbstractItemView( 1 )->keyboardSearch( hbqt_par_QString( 2 ) );
+   hbqt_par_QAbstractItemView( 1 )->keyboardSearch( QAbstractItemView::tr( hb_parc( 2 ) ) );
 }
 
 /*

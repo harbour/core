@@ -167,7 +167,7 @@ void * hbqt_gcAllocate_QWidget( void * pObj )
    p->func = hbqt_gcRelease_QWidget;
    new( & p->pq ) QPointer< QWidget >( ( QWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QWidget                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QWIDGET )
@@ -969,7 +969,7 @@ HB_FUNC( QT_QWIDGET_SETACCEPTDROPS )
  */
 HB_FUNC( QT_QWIDGET_SETACCESSIBLEDESCRIPTION )
 {
-   hbqt_par_QWidget( 1 )->setAccessibleDescription( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setAccessibleDescription( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -977,7 +977,7 @@ HB_FUNC( QT_QWIDGET_SETACCESSIBLEDESCRIPTION )
  */
 HB_FUNC( QT_QWIDGET_SETACCESSIBLENAME )
 {
-   hbqt_par_QWidget( 1 )->setAccessibleName( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setAccessibleName( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1321,7 +1321,7 @@ HB_FUNC( QT_QWIDGET_SETSIZEPOLICY )
  */
 HB_FUNC( QT_QWIDGET_SETSTATUSTIP )
 {
-   hbqt_par_QWidget( 1 )->setStatusTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setStatusTip( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1337,7 +1337,7 @@ HB_FUNC( QT_QWIDGET_SETSTYLE )
  */
 HB_FUNC( QT_QWIDGET_SETTOOLTIP )
 {
-   hbqt_par_QWidget( 1 )->setToolTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setToolTip( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1353,7 +1353,7 @@ HB_FUNC( QT_QWIDGET_SETUPDATESENABLED )
  */
 HB_FUNC( QT_QWIDGET_SETWHATSTHIS )
 {
-   hbqt_par_QWidget( 1 )->setWhatsThis( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setWhatsThis( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1361,7 +1361,7 @@ HB_FUNC( QT_QWIDGET_SETWHATSTHIS )
  */
 HB_FUNC( QT_QWIDGET_SETWINDOWFILEPATH )
 {
-   hbqt_par_QWidget( 1 )->setWindowFilePath( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setWindowFilePath( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1385,7 +1385,7 @@ HB_FUNC( QT_QWIDGET_SETWINDOWICON )
  */
 HB_FUNC( QT_QWIDGET_SETWINDOWICONTEXT )
 {
-   hbqt_par_QWidget( 1 )->setWindowIconText( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setWindowIconText( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1409,7 +1409,7 @@ HB_FUNC( QT_QWIDGET_SETWINDOWOPACITY )
  */
 HB_FUNC( QT_QWIDGET_SETWINDOWROLE )
 {
-   hbqt_par_QWidget( 1 )->setWindowRole( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setWindowRole( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1801,7 +1801,7 @@ HB_FUNC( QT_QWIDGET_SETHIDDEN )
  */
 HB_FUNC( QT_QWIDGET_SETSTYLESHEET )
 {
-   hbqt_par_QWidget( 1 )->setStyleSheet( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setStyleSheet( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -1825,7 +1825,7 @@ HB_FUNC( QT_QWIDGET_SETWINDOWMODIFIED )
  */
 HB_FUNC( QT_QWIDGET_SETWINDOWTITLE )
 {
-   hbqt_par_QWidget( 1 )->setWindowTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QWidget( 1 )->setWindowTitle( QWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*

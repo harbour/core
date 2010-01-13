@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj )
    p->func = hbqt_gcRelease_QStyledItemDelegate;
    new( & p->pq ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSTYLEDITEMDELEGATE )

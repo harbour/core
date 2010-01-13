@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QLabel( void * pObj )
    p->func = hbqt_gcRelease_QLabel;
    new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLABEL )
@@ -370,7 +370,7 @@ HB_FUNC( QT_QLABEL_SETPIXMAP )
  */
 HB_FUNC( QT_QLABEL_SETTEXT )
 {
-   hbqt_par_QLabel( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QLabel( 1 )->setText( QLabel::tr( hb_parc( 2 ) ) );
 }
 
 

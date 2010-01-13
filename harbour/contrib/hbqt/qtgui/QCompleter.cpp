@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QCompleter( void * pObj )
    p->func = hbqt_gcRelease_QCompleter;
    new( & p->pq ) QPointer< QCompleter >( ( QCompleter * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QCOMPLETER )
@@ -335,7 +335,7 @@ HB_FUNC( QT_QCOMPLETER_SETWIDGET )
  */
 HB_FUNC( QT_QCOMPLETER_SPLITPATH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( QCompleter::tr( hb_parc( 2 ) ) ) ) ) );
 }
 
 /*
@@ -367,7 +367,7 @@ HB_FUNC( QT_QCOMPLETER_COMPLETE )
  */
 HB_FUNC( QT_QCOMPLETER_SETCOMPLETIONPREFIX )
 {
-   hbqt_par_QCompleter( 1 )->setCompletionPrefix( hbqt_par_QString( 2 ) );
+   hbqt_par_QCompleter( 1 )->setCompletionPrefix( QCompleter::tr( hb_parc( 2 ) ) );
 }
 
 /*

@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QToolBox( void * pObj )
    p->func = hbqt_gcRelease_QToolBox;
    new( & p->pq ) QPointer< QToolBox >( ( QToolBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTOOLBOX )
@@ -145,7 +145,7 @@ HB_FUNC( QT_QTOOLBOX )
  */
 HB_FUNC( QT_QTOOLBOX_ADDITEM )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), hbqt_par_QString( 4 ) ) );
+   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QToolBox::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -153,7 +153,7 @@ HB_FUNC( QT_QTOOLBOX_ADDITEM )
  */
 HB_FUNC( QT_QTOOLBOX_ADDITEM_1 )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) ) );
+   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), QToolBox::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QTOOLBOX_INDEXOF )
  */
 HB_FUNC( QT_QTOOLBOX_INSERTITEM )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), hbqt_par_QString( 5 ) ) );
+   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QToolBox::tr( hb_parc( 5 ) ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QTOOLBOX_INSERTITEM )
  */
 HB_FUNC( QT_QTOOLBOX_INSERTITEM_1 )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ) ) );
+   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QToolBox::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -265,7 +265,7 @@ HB_FUNC( QT_QTOOLBOX_SETITEMICON )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMTEXT )
 {
-   hbqt_par_QToolBox( 1 )->setItemText( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QToolBox( 1 )->setItemText( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -273,7 +273,7 @@ HB_FUNC( QT_QTOOLBOX_SETITEMTEXT )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMTOOLTIP )
 {
-   hbqt_par_QToolBox( 1 )->setItemToolTip( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QToolBox( 1 )->setItemToolTip( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
 }
 
 /*

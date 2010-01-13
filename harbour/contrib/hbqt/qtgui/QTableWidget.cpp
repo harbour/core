@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QTableWidget( void * pObj )
    p->func = hbqt_gcRelease_QTableWidget;
    new( & p->pq ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTableWidget                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTABLEWIDGET )

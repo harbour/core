@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QTreeView( void * pObj )
    p->func = hbqt_gcRelease_QTreeView;
    new( & p->pq ) QPointer< QTreeView >( ( QTreeView * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTREEVIEW )

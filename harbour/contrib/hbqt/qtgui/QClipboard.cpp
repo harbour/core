@@ -179,7 +179,7 @@ HB_FUNC( QT_QCLIPBOARD_SETPIXMAP )
  */
 HB_FUNC( QT_QCLIPBOARD_SETTEXT )
 {
-   hbqt_par_QClipboard( 1 )->setText( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
+   hbqt_par_QClipboard( 1 )->setText( QClipboard::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
 }
 
 /*

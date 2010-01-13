@@ -233,7 +233,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETSHORTCUT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
 {
-   hbqt_par_QAbstractButton( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAbstractButton( 1 )->setText( QAbstractButton::tr( hb_parc( 2 ) ) );
 }
 
 /*

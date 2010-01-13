@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QStatusBar( void * pObj )
    p->func = hbqt_gcRelease_QStatusBar;
    new( & p->pq ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QStatusBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSTATUSBAR )
@@ -217,7 +217,7 @@ HB_FUNC( QT_QSTATUSBAR_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSTATUSBAR_SHOWMESSAGE )
 {
-   hbqt_par_QStatusBar( 1 )->showMessage( hbqt_par_QString( 2 ), hb_parni( 3 ) );
+   hbqt_par_QStatusBar( 1 )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) );
 }
 
 

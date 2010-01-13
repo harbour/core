@@ -146,7 +146,7 @@ void * hbqt_gcAllocate_QMessageBox( void * pObj )
    p->func = hbqt_gcRelease_QMessageBox;
    new( & p->pq ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QMESSAGEBOX )
@@ -170,7 +170,7 @@ HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON_1 )
 {
-   hb_retptr( ( QPushButton* ) hbqt_par_QMessageBox( 1 )->addButton( hbqt_par_QString( 2 ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ) );
+   hb_retptr( ( QPushButton* ) hbqt_par_QMessageBox( 1 )->addButton( QMessageBox::tr( hb_parc( 2 ) ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -290,7 +290,7 @@ HB_FUNC( QT_QMESSAGEBOX_SETDEFAULTBUTTON_1 )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETDETAILEDTEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setDetailedText( hbqt_par_QString( 2 ) );
+   hbqt_par_QMessageBox( 1 )->setDetailedText( QMessageBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -330,7 +330,7 @@ HB_FUNC( QT_QMESSAGEBOX_SETICONPIXMAP )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETINFORMATIVETEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setInformativeText( hbqt_par_QString( 2 ) );
+   hbqt_par_QMessageBox( 1 )->setInformativeText( QMessageBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -346,7 +346,7 @@ HB_FUNC( QT_QMESSAGEBOX_SETSTANDARDBUTTONS )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETTEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QMessageBox( 1 )->setText( QMessageBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -370,7 +370,7 @@ HB_FUNC( QT_QMESSAGEBOX_SETWINDOWMODALITY )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETWINDOWTITLE )
 {
-   hbqt_par_QMessageBox( 1 )->setWindowTitle( hbqt_par_QString( 2 ) );
+   hbqt_par_QMessageBox( 1 )->setWindowTitle( QMessageBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -410,7 +410,7 @@ HB_FUNC( QT_QMESSAGEBOX_TEXTFORMAT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ABOUT )
 {
-   hbqt_par_QMessageBox( 1 )->about( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ) );
+   hbqt_par_QMessageBox( 1 )->about( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ) );
 }
 
 /*
@@ -418,7 +418,7 @@ HB_FUNC( QT_QMESSAGEBOX_ABOUT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ABOUTQT )
 {
-   hbqt_par_QMessageBox( 1 )->aboutQt( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QMessageBox( 1 )->aboutQt( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -426,7 +426,7 @@ HB_FUNC( QT_QMESSAGEBOX_ABOUTQT )
  */
 HB_FUNC( QT_QMESSAGEBOX_CRITICAL )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->critical( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->critical( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
 }
 
 /*
@@ -434,7 +434,7 @@ HB_FUNC( QT_QMESSAGEBOX_CRITICAL )
  */
 HB_FUNC( QT_QMESSAGEBOX_INFORMATION )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->information( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->information( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
 }
 
 /*
@@ -442,7 +442,7 @@ HB_FUNC( QT_QMESSAGEBOX_INFORMATION )
  */
 HB_FUNC( QT_QMESSAGEBOX_QUESTION )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->question( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->question( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
 }
 
 /*
@@ -450,7 +450,7 @@ HB_FUNC( QT_QMESSAGEBOX_QUESTION )
  */
 HB_FUNC( QT_QMESSAGEBOX_WARNING )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->warning( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->warning( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
 }
 
 /*

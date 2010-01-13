@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QToolBar( void * pObj )
    p->func = hbqt_gcRelease_QToolBar;
    new( & p->pq ) QPointer< QToolBar >( ( QToolBar * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QToolBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTOOLBAR )
@@ -173,7 +173,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_1 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QToolBar::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_1 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_2 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ) ) );
 }
 
 /*
@@ -189,7 +189,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_2 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QToolBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_4 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
 }
 
 /*

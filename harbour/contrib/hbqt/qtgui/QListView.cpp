@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QListView( void * pObj )
    p->func = hbqt_gcRelease_QListView;
    new( & p->pq ) QPointer< QListView >( ( QListView * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QListView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLISTVIEW )

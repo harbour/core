@@ -156,7 +156,7 @@ void * hbqt_gcAllocate_QFileDialog( void * pObj )
    p->func = hbqt_gcRelease_QFileDialog;
    new( & p->pq ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFILEDIALOG )
@@ -327,7 +327,7 @@ HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTFILE )
 {
-   hbqt_par_QFileDialog( 1 )->selectFile( hbqt_par_QString( 2 ) );
+   hbqt_par_QFileDialog( 1 )->selectFile( QFileDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -335,7 +335,7 @@ HB_FUNC( QT_QFILEDIALOG_SELECTFILE )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
 {
-   hbqt_par_QFileDialog( 1 )->selectNameFilter( hbqt_par_QString( 2 ) );
+   hbqt_par_QFileDialog( 1 )->selectNameFilter( QFileDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -375,7 +375,7 @@ HB_FUNC( QT_QFILEDIALOG_SETCONFIRMOVERWRITE )
  */
 HB_FUNC( QT_QFILEDIALOG_SETDEFAULTSUFFIX )
 {
-   hbqt_par_QFileDialog( 1 )->setDefaultSuffix( hbqt_par_QString( 2 ) );
+   hbqt_par_QFileDialog( 1 )->setDefaultSuffix( QFileDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -383,7 +383,7 @@ HB_FUNC( QT_QFILEDIALOG_SETDEFAULTSUFFIX )
  */
 HB_FUNC( QT_QFILEDIALOG_SETDIRECTORY )
 {
-   hbqt_par_QFileDialog( 1 )->setDirectory( hbqt_par_QString( 2 ) );
+   hbqt_par_QFileDialog( 1 )->setDirectory( QFileDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -439,7 +439,7 @@ HB_FUNC( QT_QFILEDIALOG_SETITEMDELEGATE )
  */
 HB_FUNC( QT_QFILEDIALOG_SETLABELTEXT )
 {
-   hbqt_par_QFileDialog( 1 )->setLabelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QFileDialog( 1 )->setLabelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ), QFileDialog::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -447,7 +447,7 @@ HB_FUNC( QT_QFILEDIALOG_SETLABELTEXT )
  */
 HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTER )
 {
-   hbqt_par_QFileDialog( 1 )->setNameFilter( hbqt_par_QString( 2 ) );
+   hbqt_par_QFileDialog( 1 )->setNameFilter( QFileDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -535,7 +535,7 @@ HB_FUNC( QT_QFILEDIALOG_VIEWMODE )
  */
 HB_FUNC( QT_QFILEDIALOG_GETEXISTINGDIRECTORY )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->getExistingDirectory( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toAscii().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->getExistingDirectory( hbqt_par_QWidget( 2 ), QFileDialog::tr( hb_parc( 3 ) ), QFileDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toAscii().data() );
 }
 
 

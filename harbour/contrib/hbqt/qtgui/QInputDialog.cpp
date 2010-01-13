@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QInputDialog( void * pObj )
    p->func = hbqt_gcRelease_QInputDialog;
    new( & p->pq ) QPointer< QInputDialog >( ( QInputDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QInputDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QINPUTDIALOG )
@@ -287,7 +287,7 @@ HB_FUNC( QT_QINPUTDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QINPUTDIALOG_SETCANCELBUTTONTEXT )
 {
-   hbqt_par_QInputDialog( 1 )->setCancelButtonText( hbqt_par_QString( 2 ) );
+   hbqt_par_QInputDialog( 1 )->setCancelButtonText( QInputDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -399,7 +399,7 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTVALUE )
  */
 HB_FUNC( QT_QINPUTDIALOG_SETLABELTEXT )
 {
-   hbqt_par_QInputDialog( 1 )->setLabelText( hbqt_par_QString( 2 ) );
+   hbqt_par_QInputDialog( 1 )->setLabelText( QInputDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -407,7 +407,7 @@ HB_FUNC( QT_QINPUTDIALOG_SETLABELTEXT )
  */
 HB_FUNC( QT_QINPUTDIALOG_SETOKBUTTONTEXT )
 {
-   hbqt_par_QInputDialog( 1 )->setOkButtonText( hbqt_par_QString( 2 ) );
+   hbqt_par_QInputDialog( 1 )->setOkButtonText( QInputDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -439,7 +439,7 @@ HB_FUNC( QT_QINPUTDIALOG_SETTEXTECHOMODE )
  */
 HB_FUNC( QT_QINPUTDIALOG_SETTEXTVALUE )
 {
-   hbqt_par_QInputDialog( 1 )->setTextValue( hbqt_par_QString( 2 ) );
+   hbqt_par_QInputDialog( 1 )->setTextValue( QInputDialog::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -473,7 +473,7 @@ HB_FUNC( QT_QINPUTDIALOG_GETDOUBLE )
 {
    bool iOk = 0;
 
-   hb_retnd( hbqt_par_QInputDialog( 1 )->getDouble( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+   hb_retnd( hbqt_par_QInputDialog( 1 )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
 
    hb_stornl( iOk, 9 );
 }
@@ -485,7 +485,7 @@ HB_FUNC( QT_QINPUTDIALOG_GETINT )
 {
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QInputDialog( 1 )->getInt( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -2147483647 ), ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 2147483647 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -2147483647 ), ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 2147483647 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
 
    hb_stornl( iOk, 9 );
 }
@@ -497,7 +497,7 @@ HB_FUNC( QT_QINPUTDIALOG_GETITEM )
 {
    bool iOk = 0;
 
-   hb_retc( hbqt_par_QInputDialog( 1 )->getItem( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->getItem( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toAscii().data() );
 
    hb_stornl( iOk, 8 );
 }
@@ -509,7 +509,7 @@ HB_FUNC( QT_QINPUTDIALOG_GETTEXT )
 {
    bool iOk = 0;
 
-   hb_retc( hbqt_par_QInputDialog( 1 )->getText( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), hbqt_par_QString( 6 ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->getText( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), QInputDialog::tr( hb_parc( 6 ) ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toAscii().data() );
 
    hb_stornl( iOk, 7 );
 }

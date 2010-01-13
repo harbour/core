@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QSignalMapper( void * pObj )
    p->func = hbqt_gcRelease_QSignalMapper;
    new( & p->pq ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSignalMapper               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSIGNALMAPPER )
@@ -153,7 +153,7 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAPPING_1 )
 {
-   hb_retptr( ( QObject* ) hbqt_par_QSignalMapper( 1 )->mapping( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QObject* ) hbqt_par_QSignalMapper( 1 )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING )
  */
 HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_1 )
 {
-   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) );
 }
 
 /*

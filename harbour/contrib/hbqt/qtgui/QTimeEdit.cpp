@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QTimeEdit( void * pObj )
    p->func = hbqt_gcRelease_QTimeEdit;
    new( & p->pq ) QPointer< QTimeEdit >( ( QTimeEdit * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTimeEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTIMEEDIT )

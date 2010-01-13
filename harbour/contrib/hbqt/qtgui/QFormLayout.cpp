@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QFormLayout( void * pObj )
    p->func = hbqt_gcRelease_QFormLayout;
    new( & p->pq ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFORMLAYOUT )
@@ -175,7 +175,7 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
  */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
 {
-   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) );
+   hbqt_par_QFormLayout( 1 )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ) );
 }
 
 /*
@@ -183,7 +183,7 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
  */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_4 )
 {
-   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QString( 2 ), hbqt_par_QLayout( 3 ) );
+   hbqt_par_QFormLayout( 1 )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QLayout( 3 ) );
 }
 
 /*
@@ -289,7 +289,7 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_2 )
  */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
 {
-   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QString( 3 ), hbqt_par_QWidget( 4 ) );
+   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QWidget( 4 ) );
 }
 
 /*
@@ -297,7 +297,7 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
  */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_4 )
 {
-   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QString( 3 ), hbqt_par_QLayout( 4 ) );
+   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QLayout( 4 ) );
 }
 
 /*

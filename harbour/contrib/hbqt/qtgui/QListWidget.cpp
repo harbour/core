@@ -139,7 +139,7 @@ void * hbqt_gcAllocate_QListWidget( void * pObj )
    p->func = hbqt_gcRelease_QListWidget;
    new( & p->pq ) QPointer< QListWidget >( ( QListWidget * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QListWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QLISTWIDGET )
@@ -155,7 +155,7 @@ HB_FUNC( QT_QLISTWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM )
 {
-   hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QString( 2 ) );
+   hbqt_par_QListWidget( 1 )->addItem( QListWidget::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM_1 )
 {
-   hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QString( 3 ) );
+   hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), QListWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*

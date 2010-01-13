@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QPushButton( void * pObj )
    p->func = hbqt_gcRelease_QPushButton;
    new( & p->pq ) QPointer< QPushButton >( ( QPushButton * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPushButton                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPUSHBUTTON )

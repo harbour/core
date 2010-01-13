@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QTextFrameFormat( void * pObj )
    p->ph = pObj;
    p->func = hbqt_gcRelease_QTextFrameFormat;
    HB_TRACE( HB_TR_DEBUG, ( "          new_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QTEXTFRAMEFORMAT )

@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QSizeGrip( void * pObj )
    p->func = hbqt_gcRelease_QSizeGrip;
    new( & p->pq ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QSizeGrip                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QSIZEGRIP )

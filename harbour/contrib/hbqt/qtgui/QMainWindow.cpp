@@ -206,7 +206,7 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_1 )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_2 )
 {
-   hb_retptr( ( QToolBar* ) hbqt_par_QMainWindow( 1 )->addToolBar( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QToolBar* ) hbqt_par_QMainWindow( 1 )->addToolBar( QMainWindow::tr( hb_parc( 2 ) ) ) );
 }
 
 /*

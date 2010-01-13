@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QFocusFrame( void * pObj )
    p->func = hbqt_gcRelease_QFocusFrame;
    new( & p->pq ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QFOCUSFRAME )

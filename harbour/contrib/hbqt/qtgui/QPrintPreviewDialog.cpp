@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj )
    p->func = hbqt_gcRelease_QPrintPreviewDialog;
    new( & p->pq ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )

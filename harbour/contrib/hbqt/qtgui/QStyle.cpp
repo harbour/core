@@ -136,7 +136,7 @@ HB_FUNC( QT_QSTYLE_DRAWITEMPIXMAP )
  */
 HB_FUNC( QT_QSTYLE_DRAWITEMTEXT )
 {
-   hbqt_par_QStyle( 1 )->drawItemText( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), *hbqt_par_QPalette( 5 ), hb_parl( 6 ), hbqt_par_QString( 7 ), ( HB_ISNUM( 8 ) ? ( QPalette::ColorRole ) hb_parni( 8 ) : ( QPalette::ColorRole ) QPalette::NoRole ) );
+   hbqt_par_QStyle( 1 )->drawItemText( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), *hbqt_par_QPalette( 5 ), hb_parl( 6 ), QStyle::tr( hb_parc( 7 ) ), ( HB_ISNUM( 8 ) ? ( QPalette::ColorRole ) hb_parni( 8 ) : ( QPalette::ColorRole ) QPalette::NoRole ) );
 }
 
 /*
@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLE_ITEMPIXMAPRECT )
  */
 HB_FUNC( QT_QSTYLE_ITEMTEXTRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), QStyle::tr( hb_parc( 6 ) ) ) ) ) );
 }
 
 /*

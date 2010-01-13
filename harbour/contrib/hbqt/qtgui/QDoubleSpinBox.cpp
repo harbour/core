@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj )
    p->func = hbqt_gcRelease_QDoubleSpinBox;
    new( & p->pq ) QPointer< QDoubleSpinBox >( ( QDoubleSpinBox * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_QDoubleSpinBox              %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
+   return p;
 }
 
 HB_FUNC( QT_QDOUBLESPINBOX )
@@ -208,7 +208,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETMINIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETPREFIX )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setPrefix( hbqt_par_QString( 2 ) );
+   hbqt_par_QDoubleSpinBox( 1 )->setPrefix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -232,7 +232,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETSINGLESTEP )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETSUFFIX )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setSuffix( hbqt_par_QString( 2 ) );
+   hbqt_par_QDoubleSpinBox( 1 )->setSuffix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
 }
 
 /*
@@ -272,7 +272,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_VALUE )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_VALUEFROMTEXT )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->valueFromText( hbqt_par_QString( 2 ) ) );
+   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->valueFromText( QDoubleSpinBox::tr( hb_parc( 2 ) ) ) );
 }
 
 /*
