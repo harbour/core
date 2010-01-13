@@ -202,8 +202,6 @@ CLASS HbIde
    DATA   cProcessInfo
    DATA   qProcess
 
-   DATA   aEdits                                  INIT   {}
-
    DATA   cIniThemes
    DATA   oThemes
 

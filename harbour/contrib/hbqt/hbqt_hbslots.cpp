@@ -669,7 +669,7 @@ static void hbqt_SlotsExecQRectInt( HBSlots * t_slots, QObject * object, const c
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( r ) );
          PHB_ITEM p2 = hb_itemPutNI( NULL, dy );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1, p2 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, p1, p2 );
          hb_itemRelease( pObject );
          delete ( ( QRect * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );

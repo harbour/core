@@ -1032,3 +1032,13 @@ FUNCTION hbide_expandProjects( oIde )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_buildLinesLabel( nFrom, nTimes, nW )
+   LOCAL i, s := ""
+
+   FOR i := 1 TO nTimes
+      s += padl( hb_ntos( nFrom++ ), nW ) + CRLF
+   NEXT
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/

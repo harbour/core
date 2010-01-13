@@ -75,6 +75,8 @@ CLASS IdeObject
    ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
    ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
 
+   DATA   xD
+
    DATA   oIde
    DATA   oUI
    DATA   qContextMenu
@@ -108,7 +110,6 @@ CLASS IdeObject
 
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aINI                                    INLINE ::oIde:aINI
-   ACCESS aEdits                                  INLINE ::oIde:aEdits
    ACCESS aSources                                INLINE ::oIde:aSources
    ACCESS aEditorPath                             INLINE ::oIde:aEditorPath
    ACCESS aProjData                               INLINE ::oIde:aProjData
@@ -137,6 +138,7 @@ CLASS IdeObject
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}
    METHOD connect()
+   METHOD disConnect()
 
    METHOD createTags( ... )                       INLINE ::oIde:createTags( ... )
    METHOD addSourceInTree( ... )                  INLINE ::oIde:addSourceInTree( ... )
@@ -165,10 +167,22 @@ CLASS IdeObject
 
 METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 
-   IF Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock )
-      aadd( ::aSlots, { qWidget, cSlot } )
+   IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
+      hbide_dbg( "Connection FAILED:", cSlot )
    ELSE
-      hbide_dbg( "FAILED:", cSlot )
+      hbide_dbg( "Connection SUCCEEDED:", cSlot )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeObject:disConnect( qWidget, cSlot )
+
+   IF !( Qt_Slots_disConnect( ::pSlots, qWidget, cSlot ) )
+      hbide_dbg( "Dis-Connection FAILED:", cSlot )
+   ELSE
+      hbide_dbg( "Dis-Connection SUCCEEDED:", cSlot )
    ENDIF
 
    RETURN Self

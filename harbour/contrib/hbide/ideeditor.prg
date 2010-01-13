@@ -107,9 +107,6 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD printPreview()
    METHOD paintRequested()
 
-   METHOD showPPO()
-   METHOD closePPO()
-
    METHOD convertSelection()
 
    METHOD zoom()
@@ -263,7 +260,8 @@ METHOD IdeEditsManager:exeBlock( nMode, p )
 
 METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
 
-   aadd( ::aEdits, IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
+   //aadd( ::aEdits, IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
+   IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    RETURN Self
 
@@ -650,45 +648,6 @@ METHOD IdeEditsManager:goto()
    RETURN nLine
 
 /*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:showPPO( cFile )
-   LOCAL qEdit, qHiliter
-
-   IF hb_fileExists( cFile )
-      qEdit := QPlainTextEdit():new()
-      qEdit:setPlainText( hb_memoRead( cFile ) )
-      qEdit:setLineWrapMode( QTextEdit_NoWrap )
-      qEdit:setFont( ::oIde:oFont:oWidget )
-      qEdit:ensureCursorVisible()
-
-      qEdit:setWindowTitle( cFile )
-      qEdit:resize( 600, 400 )
-
-      qHiliter := ::oIde:oThemes:SetSyntaxHilighting( qEdit )
-
-      Qt_Events_Connect( ::pEvents, qEdit, QEvent_Close, {|| ::closePPO( qEdit, qHiliter, cFile, .t. ) } )
-
-      qEdit:show()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:closePPO( qEdit, qHiliter, cFile, lDel )
-
-   Qt_Events_DisConnect( ::pEvents, qEdit, QEvent_Close )
-
-   qHiliter:pPtr := 0
-   qEdit:close()
-   qEdit:pPtr := 0
-
-   IF lDel
-      ferase( cFile )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 //
 //                            CLASS IdeEditor
 //
@@ -719,9 +678,14 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nVPos                                   INIT   0
    DATA   nID
 
-//   DATA   aTab                                    INIT   {}
    DATA   qCursor
    DATA   aSplits                                 INIT   {}
+
+   DATA   qHLayout
+   DATA   qLineNos
+   DATA   qLabel
+   DATA   nnRow                                   INIT -99
+   DATA   qPoint                                  INIT QPoint():new()
 
    DATA   qCurEditSplit
 
@@ -739,6 +703,8 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD setDocumentProperties()
    METHOD exeBlock()
    METHOD split()
+   METHOD connectEditSlots()
+   METHOD disConnectEditSlots()
 
    ENDCLASS
 
@@ -776,26 +742,63 @@ METHOD IdeEditor:buildEditor( nMode )
    qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
 
    qEdit:setProperty( "SPLITTED", QVariant():new( iif( nMode == 0, "NO", "YES" ) ) )
+   qEdit:setPlainText( " " )
 
+   ::connectEditSlots( qEdit )
+
+   RETURN qEdit
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:disConnectEditSlots( qEdit )
+
+   ::disConnect( qEdit, "customContextMenuRequested(QPoint)" )
+   ::disConnect( qEdit, "textChanged()"                      )
+   ::disConnect( qEdit, "copyAvailable(bool)"                )
+   ::disConnect( qEdit, "modificationChanged(bool)"          )
+   ::disConnect( qEdit, "redoAvailable(bool)"                )
+   ::disConnect( qEdit, "selectionChanged()"                 )
+ * ::disConnect( qEdit, "undoAvailable(bool)"                )
+   ::disConnect( qEdit, "updateRequest(QRect,int)"           )
+   ::disConnect( qEdit, "cursorPositionChanged()"            )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:connectEditSlots( qEdit )
+
+   ::Connect( qEdit, "updateRequest(QRect,int)"          , {|o,p,p1| ::exeBlock( 8, o, p, p1 ) } )
    ::connect( qEdit, "customContextMenuRequested(QPoint)", {|o,p   | ::exeBlock( 1, o, p     ) } )
    ::Connect( qEdit, "textChanged()"                     , {|o     | ::exeBlock( 2, o        ) } )
    ::Connect( qEdit, "copyAvailable(bool)"               , {|o,p   | ::exeBlock( 3, o, p     ) } )
    ::Connect( qEdit, "modificationChanged(bool)"         , {|o,p   | ::exeBlock( 4, o, p     ) } )
    ::Connect( qEdit, "redoAvailable(bool)"               , {|o,p   | ::exeBlock( 5, o, p     ) } )
    ::Connect( qEdit, "selectionChanged()"                , {|o,p   | ::exeBlock( 6, o, p     ) } )
-   ::Connect( qEdit, "undoAvailable(bool)"               , {|o,p   | ::exeBlock( 7, o, p     ) } )
-   ::Connect( qEdit, "updateRequest(QRect,int)"          , {|o,p,p1| ::exeBlock( 8, o, p, p1 ) } )
+ * ::Connect( qEdit, "undoAvailable(bool)"               , {|o,p   | ::exeBlock( 7, o, p     ) } )
    ::Connect( qEdit, "cursorPositionChanged()"           , {|o     | ::exeBlock( 9, o        ) } )
 
-   RETURN qEdit
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:exeBlock( nMode, o, p, p1 )
    LOCAL pAct, qAct, n, qEdit
-   //LOCAL qRect
+   #if 0
+   LOCAL pCursor, qCursor
+   #endif
+
+   STATIC lCont := .t.
 
    HB_SYMBOL_UNUSED( p1 )
+
+   IF !hbqt_IsEqualGcQtPointer( ::qEdit:pPtr, o )
+      RETURN nil
+   ENDIF
+
+   IF lCont
+      lCont := .f.
+   ENDIF
 
    IF nMode <= 9
       qEdit := QPlainTextEdit():configure( o )
@@ -846,8 +849,22 @@ METHOD IdeEditor:exeBlock( nMode, o, p, p1 )
       hbide_dbg( "undoAvailable(bool)" )
       EXIT
    CASE updateRequest
-      //qRect := QRect():configure( p )
-      //hbide_dbg( "updateRequest(QRect,int)", qRect:x(), qRect:y(), qRect:width(), qRect:height(), p1 )
+      #if 0
+hbide_dbg( 11000, p1 )
+      pCursor := qEdit:cursorForPosition( ::qPoint )
+hbide_dbg( 11001, pCursor )
+      IF hb_isPointer( pCursor )
+hbide_dbg( 11002 )
+         qCursor := QTextCursor():configure( pCursor )
+         ::xD := qCursor:blockNumber()
+         IF ::nnRow != ::xD + 1
+            ::nnRow := ::xD + 1
+            ::qLineNos:setText( hbide_buildLinesLabel( ::nnRow, 30, 4 ) )//, ;
+                       // QTextDocument():configure( qEdit:document() ):blockCount() ) )
+         ENDIF
+hbide_dbg( "exit................" )
+      ENDIF
+      #endif
       EXIT
    CASE cursorPositionChanged
       ::dispEditInfo( qEdit )
@@ -863,6 +880,8 @@ METHOD IdeEditor:exeBlock( nMode, o, p, p1 )
    OTHERWISE
       EXIT
    ENDSWITCH
+
+   lCont := .t.
 
    RETURN Nil
 
@@ -907,8 +926,38 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qLayout:setVerticalSpacing( 5 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
+
+#if 0
+   ::qHLayout := QHBoxLayout():new()
+   ::qHLayout:setSpacing( 0 )
    //                           Row Col RSpn CSpn
+   ::qLayout:addLayout( ::qHLayout, 0, 0, 1, 1 )
+   #if 1
+   ::qLineNos := QLabel():new()
+   ::qLineNos:setAlignment( Qt_AlignRight + Qt_AlignTop )
+   ::qLineNos:setFont( ::oFont:oWidget )
+   ::qLineNos:setSizePolicy( QSizePolicy_Fixed, QSizePolicy_Expanding )
+   ::qLineNos:setMinimumWidth( 50 )
+   ::qLineNos:setMaximumWidth( 50 )
+   #else
+   ::qLineNos := QTextEdit():new()
+   ::qLineNos:setTextBackgroundColor( QColor():new( Qt_lightGray ) )
+   ::qLineNos:setAlignment( Qt_AlignRight )
+   ::qLineNos:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::qLineNos:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::qLineNos:setFrameStyle( QFrame_Raised )
+   ::qLineNos:setReadOnly( .t. )
+   ::qLineNos:setLineWrapMode( QTextEdit_NoWrap )
+   ::qLineNos:setFont( ::oFont:oWidget )
+   ::qLineNos:setContextMenuPolicy( Qt_NoContextMenu )
+   ::qLineNos:setMinimumWidth( 70 )
+   ::qLineNos:setMaximumWidth( 70 )
+   #endif
+   ::qHLayout:addWidget( ::qLineNos )
+   ::qHLayout:addWidget( ::qEdit )
+#else
    ::qLayout:addWidget_1( ::qEdit, 0, 1, 1, 1 )
+#endif
 
    IF ::cType != "U"
       ::qHiliter := ::oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
@@ -918,8 +967,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    /* Populate Tabs Array */
-  // ::aTab := { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self }
-//   aadd( ::aTabs, ::aTab )
    aadd( ::aTabs, { ::oTab, Self } )
 
    ::oIde:nCurTab := len( ::oIde:aTabs )
@@ -1044,31 +1091,22 @@ METHOD IdeEditor:removeTabPage()
    LOCAL cSource := ::sourceFile
    LOCAL n, qEdit
 
+
    FOR EACH qEdit IN ::aSplits
+      ::disConnectEditSlots( qEdit )
       ::qLayout:removeWidget( qEdit )
       qEdit:close()
       qEdit:pPtr := 0
       qEdit := NIL
    NEXT
    ::aSplits := {}
+   ::qCurEditSplit := NIL
 
-   n := aScan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
-   IF n > 0
-      hb_aDel( ::oIde:aTabs, n, .T. )
-   ENDIF
-
-   n := ::oIde:qTabWidget:indexOf( ::oTab:oWidget )
-   ::oIde:qTabWidget:removeTab( n  )
-
-   // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
-   //
-   IF !Empty( ::qEdit )
-      Qt_Slots_disConnect( ::pSlots, ::qEdit, "textChanged()" )
-      Qt_Slots_disConnect( ::pSlots, ::qEdit, "cursorPositionChanged()" )
-   ENDIF
+   ::disConnectEditSlots( ::qEdit )
 
    IF !Empty( ::qDocument )
-      Qt_Slots_disConnect( ::pSlots, ::qDocument, "blockCountChanged(int)" )
+      ::disConnect( ::qDocument, "blockCountChanged(int)" )
+      ::disConnect( ::qDocument, "contentsChanged()" )
       ::qDocument:pPtr := 0
       ::qDocument      := nil
    ENDIF
@@ -1086,15 +1124,16 @@ METHOD IdeEditor:removeTabPage()
    IF !Empty( ::qEdit )
       ::qEdit:pPtr := 0
       ::qEdit      := nil
-
       ::oIde:oFuncList:clear()
    ENDIF
 
-   ::oEM:removeSourceInTree( cSource )
-
-   IF ( n := aScan( ::oIde:aEdits, {|e_| e_:nID == ::nID } ) ) > 0
-      hb_aDel( ::oIde:aEdits, n, .T. )
+   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
+      hb_adel( ::oIde:aTabs, n, .T. )
    ENDIF
+
+   ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::oTab:oWidget ) )
+
+   ::oEM:removeSourceInTree( cSource )
 
    IF ::qTabWidget:count() == 0
       IF ::lDockRVisible
