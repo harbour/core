@@ -35,42 +35,51 @@ REQUEST HB_MT
    REQUEST __HB_EXTERN__
 #endif
 
+#define _NETIOSRV_nPort             1
+#define _NETIOSRV_cIFAddr           2
+#define _NETIOSRV_cRootDir          3
+#define _NETIOSRV_lRPC              4
+#define _NETIOSRV_cRPCFFileName     5
+#define _NETIOSRV_cRPCFHRB          6
+#define _NETIOSRV_lEncryption       7
+#define _NETIOSRV_pListenSocket     8
+#define _NETIOSRV_MAX_              8
+
 PROCEDURE Main( ... )
-   LOCAL pListenSocket
+   LOCAL netiosrv[ _NETIOSRV_MAX_ ]
+
    LOCAL cParam
-
-   LOCAL port := 2941
-   LOCAL ifaddr := "0.0.0.0"
-   LOCAL rootdir := hb_dirBase()
-   LOCAL rpc := .F.
-   LOCAL rpc_filename := NIL
-   LOCAL rpc_hrb := NIL
-   LOCAL passwd := NIL
-
    LOCAL cCommand
+   LOCAL cPassword
 
    HB_Logo()
+
+   netiosrv[ _NETIOSRV_nPort ]         := 2941
+   netiosrv[ _NETIOSRV_cIFAddr ]       := "0.0.0.0"
+   netiosrv[ _NETIOSRV_cRootDir ]      :=  hb_dirBase()
+   netiosrv[ _NETIOSRV_lRPC ]          := .F.
+   netiosrv[ _NETIOSRV_lEncryption ]   := .F.
 
    FOR EACH cParam IN hb_AParams()
       DO CASE
       CASE Lower( Left( cParam, 6 ) ) == "-port="
-         port := Val( SubStr( cParam, 7 ) )
+         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
       CASE Lower( Left( cParam, 7 ) ) == "-iface="
-         ifaddr := SubStr( cParam, 8 )
+         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 8 )
       CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
-         rootdir := SubStr( cParam, 10 )
+         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
       CASE Lower( Left( cParam, 6 ) ) == "-pass="
-         passwd := SubStr( cParam, 7 )
+         cPassword := SubStr( cParam, 7 )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
-         rpc_filename := SubStr( cParam, 6 )
-         rpc_hrb := hb_hrbLoad( rpc_filename )
-         rpc := ! Empty( rpc_hrb ) .AND. ! Empty( hb_hrbGetFunSym( rpc_hrb, _RPC_FILTER ) )
-         IF ! rpc
-            rpc_filename := NIL
-            rpc_hrb := NIL
+         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
+         netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( netiosrv[ _NETIOSRV_cRPCFFileName ] )
+         netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) )
+         IF ! netiosrv[ _NETIOSRV_lRPC ]
+            netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL
+            netiosrv[ _NETIOSRV_cRPCFHRB ] := NIL
          ENDIF
       CASE Lower( cParam ) == "-rpc"
-         rpc := .T.
+         netiosrv[ _NETIOSRV_lRPC ] := .T.
       CASE Lower( cParam ) == "--version"
          RETURN
       CASE Lower( cParam ) == "-help" .OR. ;
@@ -84,17 +93,19 @@ PROCEDURE Main( ... )
 
    SetCancel( .F. )
 
-   pListenSocket := netio_mtserver( port, ifaddr, rootdir, iif( Empty( rpc_hrb ), rpc, hb_hrbGetFunSym( rpc_hrb, _RPC_FILTER ) ), passwd )
-   IF Empty( pListenSocket )
+   netiosrv[ _NETIOSRV_pListenSocket ] := netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
+                                          netiosrv[ _NETIOSRV_cIFAddr ],;
+                                          netiosrv[ _NETIOSRV_cRootDir ],;
+                                          iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) ),;
+                                          cPassword )
+
+   netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
+   cPassword := NIL /* Attempt to clear plain text pw from memory */
+
+   IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
       OutStd( "Cannot start server." + hb_osNewLine() )
    ELSE
-      OutStd( "Listening on: " + ifaddr + ":" + hb_ntos( port ) + hb_osNewLine() )
-      OutStd( "Root filesystem: " + rootdir + hb_osNewLine() )
-      OutStd( "RPC support: " + iif( rpc, "enabled", "disabled" ) + hb_osNewLine() )
-      OutStd( "Encryption: " + iif( passwd != NIL, "enabled", "disabled" ) + hb_osNewLine() )
-      IF ! Empty( rpc_hrb )
-         OutStd( "RPC filter module: " + rpc_filename + hb_osNewLine() )
-      ENDIF
+      ShowConfig( netiosrv )
 
       OutStd( hb_osNewLine() )
       OutStd( "hbnetiosrv command prompt:", hb_osNewLine() )
@@ -122,21 +133,34 @@ PROCEDURE Main( ... )
                   - cut/paste support */
 
          DO CASE
-         CASE Lower( cCommand ) == "exit"
+         CASE Lower( cCommand ) == "quit"
             EXIT
+         CASE Lower( cCommand ) == "config"
+            ShowConfig( netiosrv )
          CASE Lower( cCommand ) == "help"
-            OutStd( "EXIT - Stop server and exit", hb_osNewLine() )
+            OutStd( "config - Show server config", hb_osNewLine() )
+            OutStd( "quit   - Stop server and exit", hb_osNewLine() )
          CASE ! Empty( cCommand )
             OutStd( "Error: Unknown command.", hb_osNewLine() )
          ENDCASE
       ENDDO
 
-      netio_serverstop( pListenSocket )
-      pListenSocket := NIL
+      netio_serverstop( netiosrv[ _NETIOSRV_pListenSocket ] )
+      netiosrv[ _NETIOSRV_pListenSocket ] := NIL
 
       OutStd( hb_osNewLine() )
       OutStd( "Server stopped.", hb_osNewLine() )
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE ShowConfig( netiosrv )
+
+   OutStd( "Listening on: " + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ) + hb_osNewLine() )
+   OutStd( "Root filesystem: " + netiosrv[ _NETIOSRV_cRootDir ] + hb_osNewLine() )
+   OutStd( "RPC support: " + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ) + hb_osNewLine() )
+   OutStd( "Encryption: " + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ) + hb_osNewLine() )
+   OutStd( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) + hb_osNewLine() )
 
    RETURN
 
