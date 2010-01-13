@@ -481,6 +481,7 @@ PHB_ITEM hb_hashGetCItemPtr( PHB_ITEM pHash, const char * pszKey )
 
    if( HB_IS_HASH( pHash ) )
    {
+      HB_STACK_TLS_PRELOAD
       /* we will not make any copy of pKey (autoadd is disabled) so it's
        * safe to use hb_itemPutCConst()
        */

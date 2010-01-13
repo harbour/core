@@ -51,9 +51,9 @@
  */
 
 /*
-  TPRINT() was designed to make it easy to emulate Clipper Dot Matrix printing.
+  WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
-  Even though "Mapping Mode" for TPRINT() is MM_TEXT, ::SetFont() accepts the
+  Even though "Mapping Mode" for WIN_PRN() is MM_TEXT, ::SetFont() accepts the
   nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
   6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
   If you do not like this then inherit from the class and override anything you want
@@ -661,7 +661,7 @@ METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
 METHOD Destroy() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN NIL
 
-METHOD Draw( oPrn, aRectangle ) CLASS WIN_BMP // Pass a TPRINT class reference & Rectangle array
+METHOD Draw( oPrn, aRectangle ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array
    ::Rect := aRectangle
    RETURN oPrn:DrawBitMap( Self )
 

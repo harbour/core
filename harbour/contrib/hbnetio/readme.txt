@@ -1,0 +1,103 @@
+/*
+ * $Id$
+ *
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
+ */
+
+HBNETIO is implementation of alternative RDD IO API for Harbour with
+additional RPC support. It contains either client and server code.
+It supports connection stream compression using ZLIB compression and
+encryption using blowfish algorithm.
+After registering on the client side all files used by Harbour native
+RDDs with name starting with "net:" are redirected to the hbnetio server.
+
+Client side functions:
+======================
+   NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>], ;
+                  [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+         -> <lConnected>
+      Register HBNETIO as alternative RDD IO API redirecting all files
+      with name starting with "net:" to HBNETIO server, set default
+      server address, port and connection parameters and tries to set
+      the connection to this server.
+      When executed 1-st time it sets default connection parameters
+      for all threads. Each thread can overwrite these default settings
+      with its own local ones calling NETIO_CONNECT() function.
+      Each successful call to NETIO_CONNECT() increase the reference
+      counter for given connection. NETIO_DISCONNECT() decrease the
+      reference. Connection is closed when the counter reach 0. It
+      means that each NETIO_CONNECT() call needs corresponding call
+      to NETIO_DISCONNECT(). The connections are recognized by IP server
+      address and port number and they are shared between threads. So when
+      more then one thread call NETIO_CONNECT() then only one connection
+      is created. It also means that NETIO_DISCONNECT() does not have to
+      be called by the same thread which called NETIO_CONNECT().
+      On application exist all connections are automatically closed.
+      It possible to open many different connections and keep them open.
+      In RDD IO operations and RPC calls it's possible to specify server
+      address as part of file or procedure/function name, i.e.
+         USE net:192.168.0.2:2942:path/to/file
+         NETIO_PROCEXEC( "192.168.0.2:2942:procname" )
+      or using UNC paths:
+         USE net://192.168.0.2:2942/path/to/file
+         NETIO_PROCEXEC( "//192.168.0.2:2942/procname" )
+      It's also possible to specify the password. The connection string
+      is in format:
+         <server>[:<port>[:<passwd>]]:<filepath|funcname>
+      or:
+         //<server>:<port>:<passwd>:<filepath|funcname>
+      or:
+         //<server>[:<port>]/<filepath|funcname>
+      Backslashes '\' are also supported and can be used instead of '/'.
+      Password is always terminated by ":" and whole connection string
+      is terminated by CHR(0) so it's not possible to use these two
+      characters as part of password. Anyhow when passwords are required
+      then it's recommended to open the connection by NETIO_CONNECT()
+      and then specify only server and port is server is not unique
+      enough to chose from existing connections. If server is not
+      given then default connection is chosen.
+
+
+   NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+      Close the connection created by NETIO_CONNECT()
+
+
+   NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
+      Check if function or procedure exists on the server side.
+
+
+   NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
+      Execute function or procedure on server the side do not wait for
+      confirmation from the server.
+
+
+   NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
+      Execute function or procedure on the server side and wait for
+      confirmation from the server.
+
+
+   NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+      Execute function on the server side and wait for function return
+      value sent by the server.
+
+
+
+Server side functions:
+======================
+   NETIO_LISTEN( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
+            -> <pListenSocket> | NIL
+   NETIO_ACCEPT( <pListenSocket>, [<nTimeOut>],
+                 [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+            -> <pConnectionSocket> | NIL
+   NETIO_COMPRESS( <pConnectionSocket>,
+                   [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
+   NETIO_SERVER( <pConnectionSocket> ) -> NIL
+   NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+   NETIO_RPCFILTER( <pConnectionSocket>,
+                    <sFuncSym> | <hValue> | NIL ) -> NIL
+   NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+   NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>],
+                   [<lRPC> | <sFuncSym> | <hValue>],
+                   [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+            -> <pListenSocket>

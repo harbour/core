@@ -97,7 +97,7 @@ typedef struct _HB_CONSRV
    BOOL           rpc;
    BOOL           login;
    PHB_SYMB       rpcFunc;
-   PHB_SYMB       rpcFilter;
+   PHB_ITEM       rpcFilter;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -491,7 +491,7 @@ HB_FUNC( NETIO_RPCFILTER )
          PHB_ITEM pHash = hb_param( 2, HB_IT_HASH );
          if( pHash )
          {
-            conn->rpcFilter = hb_itemNew( pHash );
+            conn->rpcFilter = ( PHB_ITEM ) hb_itemNew( pHash );
             hb_gcUnlock( conn->rpcFilter );
          }
       }
