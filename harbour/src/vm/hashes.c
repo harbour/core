@@ -475,6 +475,25 @@ PHB_ITEM hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags )
    return NULL;
 }
 
+PHB_ITEM hb_hashGetCItemPtr( PHB_ITEM pHash, const char * pszKey )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetCItemPtr(%p,%s)", pHash, pszKey));
+
+   if( HB_IS_HASH( pHash ) )
+   {
+      /* we will not make any copy of pKey (autoadd is disabled) so it's
+       * safe to use hb_itemPutCConst()
+       */
+      PHB_ITEM pKey = hb_itemPutCConst( hb_stackAllocItem(), pszKey );
+      PHB_ITEM pDest = hb_hashValuePtr( pHash->item.asHash.value, pKey, FALSE );
+      hb_stackPop();
+      if( pDest )
+         return HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest;
+   }
+
+   return NULL;
+}
+
 PHB_ITEM hb_hashGetItemRefPtr( PHB_ITEM pHash, PHB_ITEM pKey )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hashGetItemRefPtr(%p,%p)", pHash, pKey));

@@ -59,9 +59,10 @@
 */
 HB_FUNC( FILEPATH )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szPath = hb_parc( 1 );
+   if( szPath )
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+      PHB_FNAME pFileName = hb_fsFNameSplit( szPath );
       hb_retc( pFileName->szPath );
       hb_xfree( pFileName );
    }
@@ -73,9 +74,10 @@ HB_FUNC( FILEPATH )
 */
 HB_FUNC( FILEBASE )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szPath = hb_parc( 1 );
+   if( szPath )
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+      PHB_FNAME pFileName = hb_fsFNameSplit( szPath );
       hb_retc( pFileName->szName );
       hb_xfree( pFileName );
    }
@@ -87,11 +89,12 @@ HB_FUNC( FILEBASE )
 */
 HB_FUNC( FILEEXT )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szPath = hb_parc( 1 );
+   if( szPath )
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+      PHB_FNAME pFileName = hb_fsFNameSplit( szPath );
       if( pFileName->szExtension != NULL )
-         hb_retc( ( pFileName->szExtension ) + 1 ); /* Skip the dot */
+         hb_retc( pFileName->szExtension + 1 ); /* Skip the dot */
       else
          hb_retc_null();
       hb_xfree( pFileName );
@@ -104,10 +107,14 @@ HB_FUNC( FILEEXT )
 */
 HB_FUNC( FILEDRIVE )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szPath = hb_parc( 1 );
+   if( szPath )
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
-      hb_retclen( pFileName->szDrive, 1 ); /* Only the drive letter */
+      PHB_FNAME pFileName = hb_fsFNameSplit( szPath );
+      if( pFileName->szDrive )
+         hb_retclen( pFileName->szDrive, 1 ); /* Only the drive letter */
+      else
+         hb_retc_null();
       hb_xfree( pFileName );
    }
    else

@@ -58,24 +58,37 @@
  *
  */
 
-FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, lRPC, ... )
-   LOCAL pListenSocket
+FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
+   LOCAL pListenSocket, lRPC
 
    IF hb_mtvm()
+      SWITCH ValType( xRPC )
+         CASE "S"
+         CASE "H"
+            lRPC := .T.
+            EXIT
+         CASE "L"
+            lRPC := xRPC
+         OTHERWISE
+            xRPC := NIL
+      ENDSWITCH
       pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
       IF !Empty( pListenSocket )
-         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ... ) )
+         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, xRPC, ... ) )
       ENDIF
    ENDIF
    RETURN pListenSocket
 
-STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, ... )
+STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, ... )
    LOCAL pConnectionSocket
 
    WHILE .T.
       pConnectionSocket := netio_accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT
+      ENDIF
+      IF xRPC != NIL
+         netio_rpcfilter( pConnectionSocket, xRPC )
       ENDIF
       hb_threadDetach( hb_threadStart( @netio_server(), pConnectionSocket ) )
       pConnectionSocket := NIL

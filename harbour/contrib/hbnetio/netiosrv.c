@@ -21,7 +21,8 @@
  *                                              -> NIL
  *       NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
  *                                              -> <lPrev>
- *       NETIO_RPCFUNC( <pConnectionSocket>, <sFuncSym> ) -> NIL
+ *       NETIO_RPCFILTER( <pConnectionSocket>,
+                          <sFuncSym> | <hValue> | NIL ) -> NIL
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -96,6 +97,7 @@ typedef struct _HB_CONSRV
    BOOL           rpc;
    BOOL           login;
    PHB_SYMB       rpcFunc;
+   PHB_SYMB       rpcFilter;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -232,6 +234,9 @@ static void s_consrv_close( PHB_CONSRV conn )
 {
    int i = 0;
 
+   if( conn->rpcFilter )
+      hb_itemRelease( conn->rpcFilter );
+
    if( conn->sd != HB_NO_SOCKET )
       hb_socketClose( conn->sd );
 
@@ -266,10 +271,18 @@ static HB_GARBAGE_FUNC( s_consrv_destructor )
    }
 }
 
+static HB_GARBAGE_FUNC( s_consrv_mark )
+{
+   PHB_CONSRV * conn_ptr = ( PHB_CONSRV * ) Cargo;
+
+   if( *conn_ptr && ( *conn_ptr )->rpcFilter )
+      hb_gcMark( ( *conn_ptr )->rpcFilter );
+}
+
 static const HB_GC_FUNCS s_gcConSrvFuncs =
 {
    s_consrv_destructor,
-   hb_gcDummyMark
+   s_consrv_mark
 };
 
 static PHB_CONSRV s_consrvParam( int iParam )
@@ -459,14 +472,29 @@ HB_FUNC( NETIO_RPC )
    hb_retl( fRPC );
 }
 
-/* NETIO_RPCFUNC( <pConnectionSocket>, <sFuncSym> ) -> NIL
+/* NETIO_RPCFILTER( <pConnectionSocket>,
+ *                  <sFuncSym> | <hValue> | NIL ) -> NIL
  */
-HB_FUNC( NETIO_RPCFUNC )
+HB_FUNC( NETIO_RPCFILTER )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
    if( conn )
    {
+      if( conn->rpcFilter )
+      {
+         hb_itemRelease( conn->rpcFilter );
+         conn->rpcFilter = NULL;
+      }
       conn->rpcFunc = hb_itemGetSymbol( hb_param( 2, HB_IT_SYMBOL ) );
+      if( !conn->rpcFunc )
+      {
+         PHB_ITEM pHash = hb_param( 2, HB_IT_HASH );
+         if( pHash )
+         {
+            conn->rpcFilter = hb_itemNew( pHash );
+            hb_gcUnlock( conn->rpcFilter );
+         }
+      }
    }
 }
 
@@ -982,19 +1010,40 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_PARAM;
                      else
                      {
-                        PHB_DYNS pDynSym = hb_dynsymFindName( data );
-                        if( !pDynSym || !hb_dynsymIsFunction( pDynSym ) )
-                           errCode = NETIO_ERR_NOT_EXISTS;
-                        else if( uiMsg != NETIO_PROCIS )
+                        PHB_DYNS pDynSym = NULL;
+                        PHB_ITEM pItem = NULL;
+
+                        if( conn->rpcFilter )
+                        {
+                           pItem = hb_hashGetCItemPtr( conn->rpcFilter, data );
+                           if( !pItem )
+                              errCode = NETIO_ERR_NOT_EXISTS;
+                        }
+                        else
+                        {
+                           pDynSym = hb_dynsymFindName( data );
+                           if( !pDynSym || !hb_dynsymIsFunction( pDynSym ) )
+                              errCode = NETIO_ERR_NOT_EXISTS;
+                        }
+
+                        if( uiMsg != NETIO_PROCIS && errCode == 0 )
                         {
                            if( hb_vmRequestReenter() )
                            {
                               ULONG ulSize = size - size2;
                               USHORT uiPCount = 0;
+                              BOOL fSend = FALSE;
 
                               data += size2;
-                              if( conn->rpcFunc )
+                              if( pItem )
                               {
+                                 fSend = TRUE;
+                                 hb_vmPushEvalSym();
+                                 hb_vmPush( pItem );
+                              }
+                              else if( conn->rpcFunc )
+                              {
+                                 fSend = TRUE;
                                  hb_vmPushSymbol( conn->rpcFunc );
                                  hb_vmPushNil();
                                  hb_vmPushDynSym( pDynSym );
@@ -1007,7 +1056,7 @@ HB_FUNC( NETIO_SERVER )
                               }
                               while( ulSize )
                               {
-                                 PHB_ITEM pItem = hb_itemDeserialize( &data, &ulSize );
+                                 pItem = hb_itemDeserialize( &data, &ulSize );
                                  if( !pItem )
                                  {
                                     ulSize = 1;
@@ -1027,7 +1076,10 @@ HB_FUNC( NETIO_SERVER )
                               }
                               else
                               {
-                                 hb_vmProc( uiPCount );
+                                 if( fSend )
+                                    hb_vmSend( uiPCount );
+                                 else
+                                    hb_vmProc( uiPCount );
                                  if( uiMsg == NETIO_FUNC )
                                  {
                                     ULONG itmSize;
