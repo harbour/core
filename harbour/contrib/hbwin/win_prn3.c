@@ -81,6 +81,8 @@ static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, ULONG ulLen )
       ulLen--;
    }
 
+   while( ulLen-- && ( *pDest++ = *pSource++ ) ) {};
+
    return pBuf;
 }
 
