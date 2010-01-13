@@ -52,6 +52,8 @@ PROCEDURE Main( ... )
    LOCAL cCommand
    LOCAL cPassword
 
+   LOCAL aParam
+
    HB_Logo()
 
    netiosrv[ _NETIOSRV_nPort ]         := 2941
@@ -60,7 +62,9 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_lRPC ]          := .F.
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
 
-   FOR EACH cParam IN hb_AParams()
+   aParam := hb_AParams()
+
+   FOR EACH cParam IN aParam
       DO CASE
       CASE Lower( Left( cParam, 6 ) ) == "-port="
          netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
@@ -70,6 +74,8 @@ PROCEDURE Main( ... )
          netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
       CASE Lower( Left( cParam, 6 ) ) == "-pass="
          cPassword := SubStr( cParam, 7 )
+         hb_StrClear( @cParam )
+         hb_StrClear( @aParam[ cParam:__enumIndex() ] )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
          netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( netiosrv[ _NETIOSRV_cRPCFFileName ] )
@@ -97,10 +103,10 @@ PROCEDURE Main( ... )
                                           netiosrv[ _NETIOSRV_cIFAddr ],;
                                           netiosrv[ _NETIOSRV_cRootDir ],;
                                           iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) ),;
-                                          cPassword )
+                                          @cPassword )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
-   cPassword := NIL /* Attempt to clear plain text pw from memory */
+   hb_StrClear( @cPassword ) /* Attempt to clear plain text pw from memory */
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
       OutStd( "Cannot start server." + hb_osNewLine() )

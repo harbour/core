@@ -163,6 +163,7 @@ C_SOURCES := \
    str.c \
    strc.c \
    strcase.c \
+   strclear.c \
    strmatch.c \
    strpeek.c \
    strtoexp.c \

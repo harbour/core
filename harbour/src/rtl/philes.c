@@ -113,11 +113,13 @@ HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    HB_ERRCODE uiError = 0;
-   ULONG ulRead = 0, ulSize;
-   char * buffer;
+   ULONG ulRead = 0;
 
    if( HB_ISNUM( 1 ) && pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
    {
+      char * buffer;
+      ULONG ulSize;
+
       ulRead = hb_parnl( 3 );
 
       /* NOTE: CA-Cl*pper determines the maximum size by calling _parcsiz()
