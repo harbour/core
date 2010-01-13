@@ -855,8 +855,8 @@ HB_FUNC( FI_GETIMAGETYPE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_IsLittleEndian(void); */
 HB_FUNC( FI_ISLITTLEENDIAN )
 {
-      /* run function & return value */
-      hb_retl( FreeImage_IsLittleEndian() );
+   /* run function & return value */
+   hb_retl( FreeImage_IsLittleEndian() );
 }
 
 /* -------------------------------------------------------------------------- */

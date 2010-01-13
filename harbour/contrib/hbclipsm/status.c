@@ -83,7 +83,7 @@ HB_FUNC( STATUSUPDATE )
 
    if( pArray )
    {
-      const char * szDisplay  = "|/-\\";
+      const char * szDisplay = "|/-\\";
       long lCurrent = hb_arrayGetNL( pArray, ST_CURRENT );
       char * szOldColor[ HB_CLRSTR_LEN ];
       PHB_ITEM pCurrent = hb_itemNew( NULL );

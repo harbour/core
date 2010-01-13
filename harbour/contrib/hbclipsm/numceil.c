@@ -59,5 +59,5 @@
 */
 HB_FUNC( CEILING )
 {
-   hb_retnl( (long) ceil( hb_parnd( 1 ) ) );
+   hb_retnl( ( long ) ceil( hb_parnd( 1 ) ) );
 }

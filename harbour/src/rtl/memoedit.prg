@@ -199,9 +199,13 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
 
       // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
       // that user wants to save text
-      IF ( nKey <= 256 .OR. nKey == K_ALT_W )
+      DO CASE
+      CASE nKey == K_ESC
+         ::lSaved := .F.
+         ::lExitEdit := .T.
+      CASE nKey <= 256 .OR. nKey == K_ALT_W
          ::super:Edit( nKey )
-      ENDIF
+      ENDCASE
 
    // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
    CASE ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
@@ -308,8 +312,6 @@ FUNCTION MemoEdit( cString,;
       oEd:Edit()
       IF oEd:Changed()
          cString := oEd:GetText()
-         // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
-         HB_SetLastKey( K_CTRL_END )
       ENDIF
       SetCursor( nOldCursor )
    ENDIF

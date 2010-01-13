@@ -59,5 +59,5 @@
 */
 HB_FUNC( FLOOR )
 {
-   hb_retnl( (long) floor( hb_parnd( 1 ) ) );
+   hb_retnl( ( long ) floor( hb_parnd( 1 ) ) );
 }

@@ -72,9 +72,7 @@ HB_FUNC( DTOR )
 HB_FUNC( NUMASLOG10 )
 {
    if( HB_ISNUM( 1 ) )
-   {
       hb_retnd( log10( hb_parnd(1) ) );
-   }
 }
 
 /* NumGetDecimals( <nNumber> ) --> nDecimals
@@ -85,9 +83,7 @@ HB_FUNC( NUMGETDECIMALS )
    int iDec = 0;
 
    if( HB_ISNUM( 1 ) )
-   {
       hb_itemGetNLen( hb_param( 1, HB_IT_NUMERIC ), NULL, &iDec );
-   }
 
    hb_retnl( iDec );
 }
