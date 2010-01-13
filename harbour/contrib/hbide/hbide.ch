@@ -133,12 +133,7 @@
 #define SB_PNL_PROJECT                           13
 
 #define TAB_OTAB                                  1
-#define TAB_QEDIT                                 2
-#define TAB_QHILIGHTER                            3
-#define TAB_QLAYOUT                               4
-#define TAB_SOURCEFILE                            5
-#define TAB_QDOCUMENT                             6
-#define TAB_OEDITOR                               7
+#define TAB_OEDITOR                               2
 
 #define TRE_OITEM                                 1
 #define TRE_TYPE                                  2  // Path | Source File | Project | Opened File

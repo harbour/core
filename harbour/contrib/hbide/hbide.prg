@@ -135,10 +135,9 @@ CLASS HbIde
    DATA   qTabWidget
    DATA   qFindDlg
 
-   ACCESS oCurEditor                              INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_OEDITOR ], NIL )
-   ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QEDIT ], NIL )
-   ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), TAB_QDOCUMENT ], NIL )
-   ACCESS qCurCursor                              INLINE ::getCurCursor()
+   ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
+   ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
+   ACCESS qCurDocument                            INLINE ::oEM:getDocumentCurrent()
 
    DATA   qCursor
    DATA   qFontWrkProject
@@ -223,8 +222,6 @@ CLASS HbIde
    METHOD updateProjectMenu()
    METHOD updateProjectTree()
    METHOD manageItemSelected()
-   METHOD getCurrentTab()
-   METHOD getCurCursor()
    METHOD createTags()
    METHOD manageFocusInEditor()
    METHOD loadUI()
@@ -452,9 +449,9 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "Open"
       ::oSM:openSource()
    CASE cKey == "Save"
-      ::oSM:saveSource( ::getCurrentTab(), .f., .f. )
+      ::oSM:saveSource( ::oEM:getTabCurrent(), .f., .f. )
    CASE cKey == "SaveAs"
-      ::oSM:saveSource( ::getCurrentTab(), .t., .t. )
+      ::oSM:saveSource( ::oEM:getTabCurrent(), .t., .t. )
    CASE cKey == "SaveAll"
       ::oSM:saveAllSources()
    CASE cKey == "SaveExit"
@@ -571,33 +568,13 @@ METHOD HbIde:setSizeByIni( qWidget, nPart )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageFocusInEditor()
+   LOCAL qEdit
 
-   IF ::getCurrentTab() > 0
-      ::aTabs[ ::getCurrentTab(), TAB_QEDIT ]:setFocus()
+   IF !empty( qEdit := ::oEM:getEditCurrent() )
+      qEdit:setFocus()
    ENDIF
 
    RETURN self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:getCurCursor()
-   LOCAL iTab
-
-   IF ( iTab := ::getCurrentTab() ) > 0
-      ::qCursor:configure( ::aTabs[ iTab, TAB_OTAB ]:textCutsor() )
-   ENDIF
-
-   RETURN ::qCursor
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:getCurrentTab()
-   LOCAL qTab, nTab
-
-   qTab := ::qTabWidget:currentWidget()
-   nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, qTab ) } )
-
-   RETURN nTab
 
 /*----------------------------------------------------------------------*/
 
@@ -780,7 +757,7 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
-   LOCAL n, cHbi, aPrj, cSource
+   LOCAL n, cHbi, aPrj
    LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( mp2 )
@@ -830,16 +807,15 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       //
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
-      cSource := ::aProjData[ n, 5 ]
-      n := ascan( ::aTabs, {|e_| hbide_pathNormalized( e_[ 5 ] ) == cSource } )
+      n := ::oEM:getTabBySource( ::aProjData[ n, 5 ] )
       //
-      aadd( aPops, { "Save"                              , {|| ::oSM:saveSource( n ) } } )
-      aadd( aPops, { "Save As"                           , {|| ::oSM:saveSource( n, , .t. ) } } )
+      aadd( aPops, { "Save"                              , {|| ::oSM:saveSource( n )                 } } )
+      aadd( aPops, { "Save As"                           , {|| ::oSM:saveSource( n, , .t. )          } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close"                             , {|| ::oSM:closeSource( n ) } } )
-      aadd( aPops, { "Close Others"                      , {|| ::oSM:closeAllOthers( n ) } } )
+      aadd( aPops, { "Close"                             , {|| ::oSM:closeSource( n )                } } )
+      aadd( aPops, { "Close Others"                      , {|| ::oSM:closeAllOthers( n )             } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Apply Theme"                       , {|| ::aTabs[ n, TAB_OEDITOR ]:applyTheme() } } )
+      aadd( aPops, { "Apply Theme"                       , {|| ::oEM:getEditorCurrent():applyTheme() } } )
       //
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
@@ -872,9 +848,9 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
-      IF !empty( oEdit := ::oEM:getEditorCurrent() )
-         IF !( oEdit:qEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
-            oEdit:qEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+      IF !empty( oEdit := ::oEM:getEditCurrent() )
+         IF !( oEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+            oEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
          ENDIF
       ENDIF
    ENDIF

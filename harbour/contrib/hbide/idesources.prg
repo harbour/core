@@ -132,7 +132,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
    LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource
    LOCAL cFileToSave, cFile, cExt, cNewFile, oItem
 
-   DEFAULT nTab TO ::oIde:getCurrentTab()
+   DEFAULT nTab TO ::EM:getTabCurrent()
    DEFAULT lAs  TO .F.
 
    lCancel := .F.
@@ -173,8 +173,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       hb_fNameSplit( cFileToSave, , @cFile, @cExt )
 
       IF lNew
-         oEdit:aTab[ TAB_SOURCEFILE ] := cFileToSave
-         oEdit:sourceFile             := cFileToSave
+         oEdit:sourceFile := cFileToSave
 
          oEdit:oTab:Caption := cFile + cExt
 
@@ -249,7 +248,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
 METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEdit
 
-   DEFAULT nTab TO ::oIde:getCurrentTab()
+   DEFAULT nTab TO ::oEM:getTabCurrent()
 
    IF !empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
 
@@ -317,7 +316,7 @@ METHOD IdeSourcesManager:closeAllOthers( nTab )
    LOCAL oEdit
    LOCAL nID
 
-   DEFAULT nTab TO ::oIde:getCurrentTab()
+   DEFAULT nTab TO ::oEM:getTabCurrent()
 
    IF empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
       RETURN .F.
@@ -380,25 +379,26 @@ METHOD IdeSourcesManager:saveAndExit()
  * 02/01/2010 - 19:45:34
  */
 METHOD IdeSourcesManager:revertSource( nTab )
+   LOCAL oEditor
 
-   DEFAULT nTab TO ::oIde:getCurrentTab()
+   DEFAULT nTab TO ::oEM:getTabCurrent()
 
-   IF nTab < 1
+   IF empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
       RETURN .F.
    ENDIF
 
-   IF !::aTabs[ nTab, TAB_QDOCUMENT ]:isModified()
+   IF !( oEditor:qDocument:isModified() )
       * File has not changed, ignore the question to User
    ELSE
-      IF !hbide_getYesNo( 'Revert ' + ::aTabs[ nTab, TAB_OTAB ]:Caption + '?',  ;
-                    'The file ' + ::aTabs[ nTab, TAB_SOURCEFILE ] + ' has changed. '+;
+      IF !hbide_getYesNo( 'Revert ' + oEditor:oTab:Caption + '?',  ;
+                    'The file ' + oEditor:sourceFile + ' has changed. '+;
                     'Discard current changes and revert contents to the previously saved on disk?', 'Revert file?' )
          RETURN Self
       ENDIF
    ENDIF
 
-   ::aTabs[ nTab, TAB_QEDIT ]:setPlainText( hb_memoRead( ::aTabs[ nTab, TAB_SOURCEFILE ] ) )
-   ::aTabs[ nTab, TAB_QEDIT ]:ensureCursorVisible()
+   oEditor:qEdit:setPlainText( hb_memoRead( oEditor:sourceFile ) )
+   oEditor:qEdit:ensureCursorVisible()
    ::manageFocusInEditor()
 
    RETURN Self

@@ -66,10 +66,23 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-
 #include "hbqt.ch"
-
 #include "hbide.ch"
+
+/*----------------------------------------------------------------------*/
+
+#define customContextMenuRequested                1
+#define textChanged                               2
+#define copyAvailable                             3
+#define modificationChanged                       4
+#define redoAvailable                             5
+#define selectionChanged                          6
+#define undoAvailable                             7
+#define updateRequest                             8
+#define cursorPositionChanged                     9
+
+#define blockCountChanged                         21
+#define contentsChanged                           22
 
 /*----------------------------------------------------------------------*/
 
@@ -108,6 +121,13 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD setSourceVisible()
    METHOD setSourceVisibleByIndex()
 
+   METHOD getDocumentCurrent()
+
+   METHOD getTabCurrent()
+   METHOD getTabBySource()
+
+   METHOD getEditCurrent()
+
    METHOD getEditorCurrent()
    METHOD getEditorBySource()
    METHOD getEditorByTabPosition()
@@ -118,7 +138,6 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD exeBlock()
    METHOD addSourceInTree()
    METHOD removeSourceInTree()
-   METHOD splitEdit()
 
    ENDCLASS
 
@@ -158,9 +177,10 @@ METHOD IdeEditsManager:create( oIde )
 
    oSub := QMenu():configure( ::qContextMenu:addMenu_1( "Split" ) )
    //
-   aadd( ::aActions, { "Split H"      , oSub:addAction( "Split Horiz..." ) } )
-   aadd( ::aActions, { "Split V"      , oSub:addAction( "Split Verti..." ) } )
-   aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split"    ) } )
+   aadd( ::aActions, { "Split H"      , oSub:addAction( "Split Horizontally" ) } )
+   aadd( ::aActions, { "Split V"      , oSub:addAction( "Split Vertically"   ) } )
+   aadd( ::aActions, { ""             , oSub:addSeparator() } )
+   aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
 
    RETURN Self
 
@@ -237,19 +257,7 @@ METHOD IdeEditsManager:exeBlock( nMode, p )
    CASE nMode == 3
    ENDCASE
 
-
    RETURN Nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:splitEdit()
-   LOCAL oEdit
-
-   IF !empty( oEdit := ::getEditorCurrent() )
-      oEdit:split()
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -258,6 +266,52 @@ METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
    aadd( ::aEdits, IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme ) )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getTabBySource( cSource )
+
+   cSource := hbide_pathNormalized( cSource, .t. )
+
+   RETURN ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:pathNormalized == cSource } )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getTabCurrent()
+   LOCAL qTab, nTab
+
+   qTab := ::qTabWidget:currentWidget()
+   nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } )
+
+   RETURN nTab
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getDocumentCurrent()
+   LOCAL qTab, nTab
+
+   IF ::qTabWidget:count() > 0
+      qTab := ::qTabWidget:currentWidget()
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+         RETURN QTextDocument():configure( ::aTabs[ nTab, TAB_OEDITOR ]:document() )
+      ENDIF
+   ENDIF
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getEditCurrent()
+   LOCAL qTab, nTab
+
+   IF ::qTabWidget:count() > 0
+      qTab := ::qTabWidget:currentWidget()
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+         RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCurEditSplit
+      ENDIF
+   ENDIF
+
+   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -562,20 +616,20 @@ METHOD IdeEditsManager:paintRequested( pPrinter )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:goto()
-   LOCAL qGo, nLine, qCursor
+   LOCAL qGo, nLine, qCursor, oEdit
 
-   IF empty( ::qCurEdit )
+   IF empty( oEdit := ::oEM:getEditCurrent() )
       RETURN Self
    ENDIF
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   qCursor := QTextCursor():configure( oEdit:textCursor() )
    nLine := qCursor:blockNumber()
 
    qGo := QInputDialog():new( ::oDlg:oWidget )
    qGo:setIntMinimum( 1 )
-   qGo:setIntMaximum( ::qCurDocument:blockCount() )
+   qGo:setIntMaximum( oEdit:blockCount() )
    qGo:setIntValue( nLine + 1 )
-   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( ::qCurDocument:blockCount() ) + "]" )
+   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( oEdit:blockCount() ) + "]" )
    qGo:setWindowTitle( "Harbour-Qt" )
 
    ::setPosByIni( qGo, GotoDialogGeometry )
@@ -591,7 +645,7 @@ METHOD IdeEditsManager:goto()
    ELSEIF nLine > 0
       qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
    ENDIF
-   ::qCurEdit:setTextCursor( qCursor )
+   oEdit:setTextCursor( qCursor )
 
    RETURN nLine
 
@@ -665,9 +719,11 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nVPos                                   INIT   0
    DATA   nID
 
-   DATA   aTab                                    INIT   {}
+//   DATA   aTab                                    INIT   {}
    DATA   qCursor
    DATA   aSplits                                 INIT   {}
+
+   DATA   qCurEditSplit
 
    METHOD new()
    METHOD create()
@@ -677,7 +733,6 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD buildEditor()
    METHOD removeTabPage()
    METHOD activateTab()
-   METHOD closeTab()
    METHOD dispEditInfo()
    METHOD setTabImage()
    METHOD applyTheme()
@@ -710,6 +765,109 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditor:buildEditor( nMode )
+   LOCAL qEdit
+
+   qEdit := QPlainTextEdit():new()
+   //
+   qEdit:setLineWrapMode( QTextEdit_NoWrap )
+   qEdit:setFont( ::oFont:oWidget )
+   qEdit:ensureCursorVisible()
+   qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
+
+   qEdit:setProperty( "SPLITTED", QVariant():new( iif( nMode == 0, "NO", "YES" ) ) )
+
+   ::connect( qEdit, "customContextMenuRequested(QPoint)", {|o,p   | ::exeBlock( 1, o, p     ) } )
+   ::Connect( qEdit, "textChanged()"                     , {|o     | ::exeBlock( 2, o        ) } )
+   ::Connect( qEdit, "copyAvailable(bool)"               , {|o,p   | ::exeBlock( 3, o, p     ) } )
+   ::Connect( qEdit, "modificationChanged(bool)"         , {|o,p   | ::exeBlock( 4, o, p     ) } )
+   ::Connect( qEdit, "redoAvailable(bool)"               , {|o,p   | ::exeBlock( 5, o, p     ) } )
+   ::Connect( qEdit, "selectionChanged()"                , {|o,p   | ::exeBlock( 6, o, p     ) } )
+   ::Connect( qEdit, "undoAvailable(bool)"               , {|o,p   | ::exeBlock( 7, o, p     ) } )
+   ::Connect( qEdit, "updateRequest(QRect,int)"          , {|o,p,p1| ::exeBlock( 8, o, p, p1 ) } )
+   ::Connect( qEdit, "cursorPositionChanged()"           , {|o     | ::exeBlock( 9, o        ) } )
+
+   RETURN qEdit
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:exeBlock( nMode, o, p, p1 )
+   LOCAL pAct, qAct, n, qEdit
+   //LOCAL qRect
+
+   HB_SYMBOL_UNUSED( p1 )
+
+   IF nMode <= 9
+      qEdit := QPlainTextEdit():configure( o )
+   ENDIF
+
+   SWITCH nMode
+
+   /* QPlainTextEdit */
+   CASE customContextMenuRequested
+
+      IF !empty( pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) ) )
+         qAct := QAction():configure( pAct )
+         DO CASE
+         CASE qAct:text() == "Split Horizontally"
+            ::split( 1, qEdit )
+         CASE qAct:text() == "Split Vertically"
+            ::split( 2, qEdit )
+         CASE qAct:text() == "Close Split Window"
+            IF ( n := ascan( ::aSplits, {|oo| hbqt_IsEqualGcQtPointer( oo:pPtr, o ) } ) ) > 0
+               ::qLayout:removeWidget( qEdit )
+               ::aSplits[ n ]:close()
+               ::aSplits[ n ]:pPtr := 0
+               qEdit:pPtr := 0
+               hb_adel( ::aSplits, n, .t. )
+            ENDIF
+         CASE qAct:text() == "Apply Theme"
+            ::applyTheme()
+         ENDCASE
+      ENDIF
+      EXIT
+   CASE textChanged
+      ::setTabImage( qEdit )
+      EXIT
+   CASE copyAvailable
+      hbide_dbg( "copyAvailable(bool)" )
+      EXIT
+   CASE modificationChanged
+      hbide_dbg( "modificationChanged(bool)" )
+      EXIT
+   CASE redoAvailable
+      hbide_dbg( "redoAvailable(bool)" )
+      EXIT
+   CASE selectionChanged
+      ::qCurEditSplit := qEdit
+      hbide_dbg( "selectionChanged()" )
+      EXIT
+   CASE undoAvailable
+      hbide_dbg( "undoAvailable(bool)" )
+      EXIT
+   CASE updateRequest
+      //qRect := QRect():configure( p )
+      //hbide_dbg( "updateRequest(QRect,int)", qRect:x(), qRect:y(), qRect:width(), qRect:height(), p1 )
+      EXIT
+   CASE cursorPositionChanged
+      ::dispEditInfo( qEdit )
+      EXIT
+
+   /* QTextDocument */
+   CASE blockCountChanged
+      ::nBlock := QTextDocument():configure( o ):blockCount()
+      EXIT
+   CASE contentsChanged
+      hbide_dbg( "contentsChanged()" )
+      EXIT
+   OTHERWISE
+      EXIT
+   ENDSWITCH
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    DEFAULT oIde        TO ::oIde
@@ -735,11 +893,13 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::buildTabPage( ::sourceFile )
 
    ::qEdit := ::buildEditor( 0 )  /* Main Editor */
+   //
+   ::qCurEditSplit := ::qEdit
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
    //
-   ::Connect( ::qDocument, "blockCountChanged(int)"   , {|o,p   | ::exeBlock( 21, p, o     ) } )
-   ::Connect( ::qDocument, "contentsChanged()"        , {|      | ::exeBlock( 22 ) } )
+   ::Connect( ::qDocument, "blockCountChanged(int)", {|o,p| ::exeBlock( 21, o, p ) } )
+   ::Connect( ::qDocument, "contentsChanged()"     , {|o  | ::exeBlock( 22, o )    } )
 
    ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
@@ -758,8 +918,9 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    /* Populate Tabs Array */
-   ::aTab := { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self }
-   aadd( ::aTabs, ::aTab )
+  // ::aTab := { ::oTab, ::qEdit, ::qHiliter, ::qLayout, ::sourceFile, ::qDocument, Self }
+//   aadd( ::aTabs, ::aTab )
+   aadd( ::aTabs, { ::oTab, Self } )
 
    ::oIde:nCurTab := len( ::oIde:aTabs )
 
@@ -781,7 +942,7 @@ METHOD IdeEditor:split( nMode, qEditP )
    nRows := ::qLayout:rowCount()
    nCols := ::qlayout:columnCount()
 
-   qEdit := ::buildEditor()
+   qEdit := ::buildEditor( 1 )  /* Split Window */
    IF     nMode == 1  /* Horizontal */
       ::qLayout:addWidget( qEdit, nRows - 1, nCols )
    ELSEIF nMode == 2  /* Vertical   */
@@ -795,106 +956,6 @@ METHOD IdeEditor:split( nMode, qEditP )
    qEdit:show()
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:buildEditor()
-   LOCAL qEdit
-
-   qEdit := QPlainTextEdit():new()
-   qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   qEdit:setFont( ::oFont:oWidget )
-   qEdit:ensureCursorVisible()
-
-   qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::connect( qEdit, "customContextMenuRequested(QPoint)", {|o,p| ::exeBlock( 1, p, o, qEdit ) } )
-
-   ::Connect( qEdit, "textChanged()"            , {|      | ::setTabImage()           } )
-   ::Connect( qEdit, "cursorPositionChanged()"  , {|      | ::dispEditInfo( qEdit )   } )
-   ::Connect( qEdit, "updateRequest(QRect,int)" , {|o,p,p1| ::exeBlock( 8, p, p1, o ) } )
-   ::Connect( qEdit, "copyAvailable(bool)"      , {|o,p   | ::exeBlock( 3, p, o     ) } )
-   ::Connect( qEdit, "modificationChanged(bool)", {|o,p   | ::exeBlock( 4, p, o     ) } )
-   ::Connect( qEdit, "redoAvailable(bool)"      , {|o,p   | ::exeBlock( 5, p, o     ) } )
-   ::Connect( qEdit, "selectionChanged()"       , {|o,p   | ::exeBlock( 6, p, o     ) } )
-   ::Connect( qEdit, "undoAvailable(bool)"      , {|o,p   | ::exeBlock( 7, p, o     ) } )
-   ::Connect( qEdit, "updateRequest(QRect,int)" , {|o,p,p1| ::exeBlock( 8, p, p1, o ) } )
-
-   RETURN qEdit
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:exeBlock( nMode, p, p1, qEdit )
-   LOCAL pAct, qAct, n
-   //LOCAL qRect
-
-   HB_SYMBOL_UNUSED( p  )
-   HB_SYMBOL_UNUSED( p1 )
-
-   SWITCH nMode
-
-   /* QPlainTextEdit */
-   CASE 1        // "customContextMenuRequested(QPoint)"
-      IF !empty( pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) ) )
-         qAct := QAction():configure( pAct )
-         DO CASE
-         CASE qAct:text() == "Split Horiz..."
-            ::split( 1, qEdit )
-         CASE qAct:text() == "Split Verti..."
-            ::split( 2, qEdit )
-         CASE qAct:text() == "Close Split"
-            IF ( n := ascan( ::aSplits, {|o| o == qEdit } ) ) > 0
-               ::qLayout:removeWidget( qEdit )
-               hb_adel( ::aSplits, n, .t. )
-               qEdit:close()
-               qEdit:pPtr := 0
-            ENDIF
-         CASE qAct:text() == "Apply Theme"
-            ::applyTheme()
-         ENDCASE
-      ENDIF
-      EXIT
-   CASE 2
-      EXIT
-   CASE 3        // "copyAvailable(bool)"
-      hbide_dbg( "copyAvailable(bool)" )
-      EXIT
-   CASE 4        // "modificationChanged(bool)"
-      hbide_dbg( "modificationChanged(bool)" )
-      EXIT
-   CASE 5        // "redoAvailable(bool)"
-      hbide_dbg( "redoAvailable(bool)" )
-      EXIT
-   CASE 6        // "selectionChanged()"
-      hbide_dbg( "selectionChanged()" )
-      EXIT
-   CASE 7        // "undoAvailable(bool)"
-      hbide_dbg( "undoAvailable(bool)" )
-      EXIT
-   CASE 8        // "updateRequest(QRect,int)"
-      //qRect := QRect():configure( p )
-      //hbide_dbg( "updateRequest(QRect,int)", qRect:x(), qRect:y(), qRect:width(), qRect:height(), p1 )
-      EXIT
-
-   /* QTabPage */
-   CASE 11       // QEvent_ContextMenu
-      hbide_dbg( "QEvent_ContextMenu" )
-      EXIT
-   CASE 12       // QEvent_ContextMenu
-      hbide_dbg( "QEvent_ContextMenu" )
-      EXIT
-
-   /* QTextDocument */
-   CASE 21       // "blockCountChanged(int)"
-      ::nBlock := QTextCursor():configure( ::qEdit:textCursor() ):blockNumber()
-      EXIT
-   CASE 22       // "contentsChanged()"
-      hbide_dbg( "contentsChanged()" )
-      EXIT
-
-
-   ENDSWITCH
-
-   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -968,28 +1029,6 @@ METHOD IdeEditor:buildTabPage( cSource )
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
 
    ::oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
-   ::oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
-
-   ::oTab:oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::connect( ::oTab:oWidget, "customContextMenuRequested(QPoint)", {|o,e| ::exeBlock( 11, e, o ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:closeTab( mp1, mp2, oXbp )
-
-   IF PCount() == 00
-      mp1 := ::nID
-      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == mp1  } )
-   ELSE
-      mp2 := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oXbp } )
-   ENDIF
-
- * Requested tab exists?
-   IF !Empty( mp2 )
-      ::oSM:closeSource( mp2 )
-   ENDIF
 
    RETURN Self
 
@@ -1013,7 +1052,7 @@ METHOD IdeEditor:removeTabPage()
    NEXT
    ::aSplits := {}
 
-   n := aScan( ::oIde:aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
+   n := aScan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:nID == ::nID } )
    IF n > 0
       hb_aDel( ::oIde:aTabs, n, .T. )
    ENDIF
@@ -1093,11 +1132,14 @@ METHOD IdeEditor:dispEditInfo( qEdit )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:setTabImage()
-   LOCAL nIndex    := ::qTabWidget:indexOf( ::oTab:oWidget )
-   LOCAL lModified := ::qDocument:isModified()
-   LOCAL lReadOnly := ::qEdit:isReadOnly()
-   LOCAL cIcon
+METHOD IdeEditor:setTabImage( qEdit )
+   LOCAL nIndex, lModified, lReadOnly, cIcon
+
+   HB_SYMBOL_UNUSED( qEdit )
+
+   nIndex    := ::qTabWidget:indexOf( ::oTab:oWidget )
+   lModified := ::qDocument:isModified()
+   lReadOnly := ::qEdit:isReadOnly()
 
    IF lModified
       cIcon := "tabmodified.png"

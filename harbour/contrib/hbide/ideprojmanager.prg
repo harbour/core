@@ -897,7 +897,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ::lLaunch := lLaunch
    ::cProjectInProcess := cProject
 
-   IF ::lPPO .AND. ::oIde:getCurrentTab() == 0
+   IF ::lPPO .AND. empty( ::oEM:getEditCurrent() )
       MsgBox( 'No source available to be compiled' )
       RETURN Self
    ENDIF
@@ -913,7 +913,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    ::oProject := ::getProjectByTitle( cProject )
 
-   //cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
    cTargetFN := hbide_pathToOSPath( ::oProject:location + ::pathSep + ;
                                   iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
    /*

@@ -261,7 +261,8 @@ METHOD IdeFindReplace:find( lWarn )
       nFlags += iif( ::oUI:q_checkMatchCase:isChecked(), QTextDocument_FindCaseSensitively, 0 )
       nFlags += iif( ::oUI:q_radioUp:isChecked(), QTextDocument_FindBackward, 0 )
 
-      IF !( lFound := ::qCurEdit:find( cText, nFlags ) ) .and. lWarn
+      //IF !( lFound := ::qCurEdit:find( cText, nFlags ) ) .and. lWarn
+      IF !( lFound := ::oEM:getEditCurrent():find( cText, nFlags ) ) .and. lWarn
          hbide_showWarning( "Cannot find : " + cText )
       ENDIF
    ENDIF

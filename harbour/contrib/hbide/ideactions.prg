@@ -375,7 +375,7 @@ METHOD IdeActions:buildMainMenu()
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
    oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTFILES, nIndex ], ;
-                                                oIde:editSource( cFile ) }
+                                                oIde:oEM:editSource( cFile ) }
    IF !empty( oIde:aIni[ INI_RECENTFILES ] )
       FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
          f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )

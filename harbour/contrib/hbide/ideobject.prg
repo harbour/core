@@ -96,6 +96,7 @@ CLASS IdeObject
    ACCESS oDA                                     INLINE ::oIde:oDA
 
    ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
+   ACCESS qCurDocument                            INLINE ::oIde:qCurDocument
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
    ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
@@ -137,8 +138,6 @@ CLASS IdeObject
    DATA   aEvents                                 INIT   {}
    METHOD connect()
 
-   METHOD getCurrentTab( ... )                    INLINE ::oIde:getCurrentTab( ... )
-   METHOD getCurCursor( ... )                     INLINE ::oIde:getCurCursor( ... )
    METHOD createTags( ... )                       INLINE ::oIde:createTags( ... )
    METHOD addSourceInTree( ... )                  INLINE ::oIde:addSourceInTree( ... )
    METHOD setPosAndSizeByIni( ... )               INLINE ::oIde:setPosAndSizeByIni( ... )
