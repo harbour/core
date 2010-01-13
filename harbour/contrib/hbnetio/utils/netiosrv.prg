@@ -144,7 +144,7 @@ PROCEDURE Main( ... )
          CASE Lower( cCommand ) == "config"
             ShowConfig( netiosrv )
          CASE Lower( cCommand ) == "help"
-            OutStd( "config - Show server config", hb_osNewLine() )
+            OutStd( "config - Show server configuration", hb_osNewLine() )
             OutStd( "quit   - Stop server and exit", hb_osNewLine() )
          CASE ! Empty( cCommand )
             OutStd( "Error: Unknown command.", hb_osNewLine() )
