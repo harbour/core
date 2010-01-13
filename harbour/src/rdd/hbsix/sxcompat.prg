@@ -295,7 +295,7 @@ FUNCTION Sx_SetTag( xTag, xIndex )
       IF nOrder != 0
          nOldOrd := OrdNumber()
          OrdSetFocus( nOrder )
-         lRet := nOrder == OrdSetFocus()
+         lRet := nOrder == OrdNumber()
          IF ! lRet
             OrdSetFocus( nOldOrd )
          ENDIF
