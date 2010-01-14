@@ -73,7 +73,7 @@
 
 typedef struct
 {
-   BOOL        fFree;
+   HB_BOOL     fFree;
    int         iFlags;
    int         iEFlags;
 #if defined( HB_HAS_PCRE )
@@ -106,7 +106,7 @@ typedef int  ( * HB_REG_COMP )( PHB_REGEX, const char * );
 typedef int  ( * HB_REG_EXEC )( PHB_REGEX, const char *, ULONG, int, HB_REGMATCH * );
 
 extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExec );
-extern BOOL hb_regexIs( PHB_ITEM pItem );
+extern HB_BOOL hb_regexIs( PHB_ITEM pItem );
 
 #ifndef REG_EXTENDED
 #  define REG_EXTENDED  0x00
@@ -138,7 +138,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT PHB_REGEX hb_regexCompile( const char * szRegEx, ULONG ulLen, int iFlags );
 extern HB_EXPORT PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags );
 extern HB_EXPORT void      hb_regexFree( PHB_REGEX pRegEx );
-extern HB_EXPORT BOOL      hb_regexMatch( PHB_REGEX pRegEx, const char * szString, ULONG UlLen, BOOL fFull );
+extern HB_EXPORT HB_BOOL   hb_regexMatch( PHB_REGEX pRegEx, const char * szString, ULONG UlLen, HB_BOOL fFull );
 
 HB_EXTERN_END
 

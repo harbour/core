@@ -751,10 +751,10 @@ int hb_storvnd( double dNumber, int iParam, ... )
    return 0;
 }
 
-BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen )  /* creates a new array */
+HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen )  /* creates a new array */
 {
    HB_ARRAYNEW pArrayNew = ( HB_ARRAYNEW ) hb_getProcAddress( HBTEXT( "_hb_arrayNew" ) );
-   return pArrayNew ? pArrayNew( pItem, ulLen ) : FALSE;
+   return pArrayNew ? pArrayNew( pItem, ulLen ) : HB_FALSE;
 }
 
 HB_SIZE hb_arrayLen( PHB_ITEM pArray )  /* retrives the array len */
@@ -763,52 +763,52 @@ HB_SIZE hb_arrayLen( PHB_ITEM pArray )  /* retrives the array len */
    return pArrayLen ? pArrayLen( pArray ) : 0;
 }
 
-BOOL hb_arrayIsObject( PHB_ITEM pArray )  /* retrives if the array is an object */
+HB_BOOL hb_arrayIsObject( PHB_ITEM pArray )  /* retrives if the array is an object */
 {
    HB_ARRAYISOBJECT pArrayIsObject = ( HB_ARRAYISOBJECT ) hb_getProcAddress( HBTEXT( "_hb_arrayIsObject" ) );
-   return pArrayIsObject ? pArrayIsObject( pArray ) : FALSE;
+   return pArrayIsObject ? pArrayIsObject( pArray ) : HB_FALSE;
 }
 
-BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue )  /* add a new item to the end of an array item */
+HB_BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue )  /* add a new item to the end of an array item */
 {
    HB_ARRAYADD pArrayAdd = ( HB_ARRAYADD ) hb_getProcAddress( HBTEXT( "_hb_arrayAdd" ) );
-   return pArrayAdd ? pArrayAdd( pArray, pItemValue ) : FALSE;
+   return pArrayAdd ? pArrayAdd( pArray, pItemValue ) : HB_FALSE;
 }
 
-BOOL hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex )  /* insert a nil item into an array, without changing the length */
+HB_BOOL hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex )  /* insert a nil item into an array, without changing the length */
 {
    HB_ARRAYINS pArrayIns = ( HB_ARRAYINS ) hb_getProcAddress( HBTEXT( "_hb_arrayIns" ) );
-   return pArrayIns ? pArrayIns( pArray, ulIndex ) : FALSE;
+   return pArrayIns ? pArrayIns( pArray, ulIndex ) : HB_FALSE;
 }
 
-BOOL hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex )  /* delete an array item, without changing length */
+HB_BOOL hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex )  /* delete an array item, without changing length */
 {
    HB_ARRAYDEL pArrayDel = ( HB_ARRAYDEL ) hb_getProcAddress( HBTEXT( "_hb_arrayDel" ) );
-   return pArrayDel ? pArrayDel( pArray, ulIndex ) : FALSE;
+   return pArrayDel ? pArrayDel( pArray, ulIndex ) : HB_FALSE;
 }
 
-BOOL hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen )  /* sets the array total length */
+HB_BOOL hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen )  /* sets the array total length */
 {
    HB_ARRAYSIZE pArraySize = ( HB_ARRAYSIZE ) hb_getProcAddress( HBTEXT( "_hb_arraySize" ) );
-   return pArraySize ? pArraySize( pArray, ulLen ) : FALSE;
+   return pArraySize ? pArraySize( pArray, ulLen ) : HB_FALSE;
 }
 
-BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )  /* retrieve last item in an array */
+HB_BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )  /* retrieve last item in an array */
 {
    HB_ARRAYLAST pArrayLast = ( HB_ARRAYLAST ) hb_getProcAddress( HBTEXT( "_hb_arrayLast" ) );
-   return pArrayLast ? pArrayLast( pArray, pResult ) : FALSE;
+   return pArrayLast ? pArrayLast( pArray, pResult ) : HB_FALSE;
 }
 
-BOOL hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* sets an array element */
+HB_BOOL hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* sets an array element */
 {
    HB_ARRAYSET pArraySet = ( HB_ARRAYSET ) hb_getProcAddress( HBTEXT( "_hb_arraySet" ) );
-   return pArraySet ? pArraySet( pArray, ulIndex, pItem ) : FALSE;
+   return pArraySet ? pArraySet( pArray, ulIndex, pItem ) : HB_FALSE;
 }
 
-BOOL hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* retrieves an item */
+HB_BOOL hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* retrieves an item */
 {
    HB_ARRAYGET pArrayGet = ( HB_ARRAYGET ) hb_getProcAddress( HBTEXT( "_hb_arrayGet" ) );
-   return pArrayGet ? pArrayGet( pArray, ulIndex, pItem ) : FALSE;
+   return pArrayGet ? pArrayGet( pArray, ulIndex, pItem ) : HB_FALSE;
 }
 
 void hb_xinit( void )                           /* Initialize fixed memory subsystem */

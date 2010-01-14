@@ -125,8 +125,8 @@ int hb_DeadKey = -1;
    int hb_sln_escDelay = 0;
 #endif
 
-BOOL hb_sln_UnderLinuxConsole = FALSE;
-BOOL hb_sln_UnderXterm = FALSE;
+HB_BOOL hb_sln_UnderLinuxConsole = HB_FALSE;
+HB_BOOL hb_sln_UnderXterm = HB_FALSE;
 
 static int hb_sln_try_get_Kbd_State( void );
 
@@ -309,9 +309,9 @@ int hb_sln_Init_Terminal( int phase )
 
 int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   static int InDeadState = FALSE;
+   static int InDeadState = HB_FALSE;
    unsigned int ch, tmp, kbdflags;
-   BOOL fInput;
+   HB_BOOL fInput;
    int iKey;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_ReadKey(%p,%d)", pGT, (int) iEventMask));
@@ -323,7 +323,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    /* has screen size changed ? */
    if( hb_sln_bScreen_Size_Changed )
    {
-      hb_sln_bScreen_Size_Changed = FALSE;
+      hb_sln_bScreen_Size_Changed = HB_FALSE;
       SLtt_get_screen_size();
 #if SLANG_VERSION > 10202
       SLsmg_reinit_smg();
@@ -381,7 +381,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    /* Dead key handling */
    if( InDeadState )
    {
-      InDeadState = FALSE;
+      InDeadState = HB_FALSE;
       if( (int) ch == hb_DeadKey ) /* double press Dead key */
          return ch;
       if( ch < 256 )  /* is this needed ??? */
@@ -396,7 +396,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    else if( (int) ch == hb_DeadKey )
    {
       /* entering Dead key state */
-      InDeadState = TRUE;
+      InDeadState = HB_TRUE;
       return 0;
    }
 
@@ -406,7 +406,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       if( tmp == SL_KEY_MOU )
       {
          hb_gt_sln_mouse_ProcessTerminalEvent();
-         return hb_gt_sln_mouse_Inkey( iEventMask, FALSE );
+         return hb_gt_sln_mouse_Inkey( iEventMask, HB_FALSE );
       }
 
       if( ( iEventMask & INKEY_RAW ) != 0 )
@@ -428,7 +428,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       int n = 0;
       USHORT uc = 0;
 
-      if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, FALSE, (BYTE) ch, &n, &uc ) )
+      if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, (BYTE) ch, &n, &uc ) )
       {
          unsigned int buf[ 10 ], i = 0;
 
@@ -438,7 +438,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
                                          - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if ( !hb_cdpGetFromUTF8( hb_sln_cdpIN, FALSE, (BYTE) buf[ i - 1 ], &n, &uc ) )
+            if ( !hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, (BYTE) buf[ i - 1 ], &n, &uc ) )
                break;
          }
          if ( n > 0 )

@@ -1050,7 +1050,7 @@ HB_FUNC( HB_ARRAYTOSTRUCTURE )
    }
 }
 
-static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_ITEM aDef, unsigned int uiAlign, BOOL bAdoptNested, PHB_ITEM pRet )
+static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_ITEM aDef, unsigned int uiAlign, HB_BOOL bAdoptNested, PHB_ITEM pRet )
 {
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
    unsigned long ulLen = pBaseDef->ulLen;
@@ -1371,7 +1371,7 @@ HB_FUNC( HB_STRUCTURETOARRAY )
    PHB_ITEM pAlign    = hb_param( 3, HB_IT_INTEGER );
    PHB_ITEM pAdopt    = hb_param( 4, HB_IT_LOGICAL );
    PHB_ITEM pRet      = hb_param( 5, HB_IT_ARRAY );
-   BOOL bAdopt;
+   HB_BOOL bAdopt;
 
    if( Structure && aDef )
    {
@@ -1393,7 +1393,7 @@ HB_FUNC( HB_STRUCTURETOARRAY )
       }
       else
       {
-         bAdopt = FALSE;
+         bAdopt = HB_FALSE;
       }
 
       hb_itemReturnForward( StructureToArray( Buffer, Structure->item.asString.length, aDef, uiAlign, bAdopt, pRet ) );

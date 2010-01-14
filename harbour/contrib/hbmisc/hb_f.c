@@ -66,7 +66,7 @@ static char *     b;
 static char *     c;
 static long       last_off[ 10 ];
 static long       lastbyte[ 10 ];
-static int        isEof[ 10 ];
+static HB_BOOL    isEof[ 10 ];
 
 HB_FUNC( HB_FUSE )
 {
@@ -101,7 +101,7 @@ HB_FUNC( HB_FUSE )
       last_rec[area] = 0L;
       last_off[area] = 0L;
       lastbyte[area] = 0L;
-      isEof[area]    = 0;
+      isEof[area]    = HB_FALSE;
    }
 }
 
@@ -131,17 +131,17 @@ static long hb_hbfskip( int recs )
             }
          }
          if ( (offset[area] + x + 2) < lastbyte[area] ) {
-            isEof[area] = FALSE;
+            isEof[area] = HB_FALSE;
             offset[area] += (x + 2);
             recno[area] += 1;
          }
          else
-            isEof[area] = TRUE;
+            isEof[area] = HB_TRUE;
       }
    }
    else {
       recs = -recs;
-      isEof[area] = FALSE;
+      isEof[area] = HB_FALSE;
 
       if ( (recno[area] - recs) < 1 )
          return( 1 );
@@ -281,7 +281,7 @@ HB_FUNC( HB_FLASTREC )
 {
    long old_rec;
    long old_offset;
-   int  bIsEof;
+   HB_BOOL bIsEof;
 
    old_rec = recno[area];
    old_offset = offset[area];
@@ -292,7 +292,7 @@ HB_FUNC( HB_FLASTREC )
 
    recno[area]  = old_rec;
    offset[area] = old_offset;
-   isEof[area]  = bIsEof  ;
+   isEof[area]  = bIsEof;
 }
 
 HB_FUNC( HB_FSELECT )
@@ -333,7 +333,7 @@ HB_FUNC( HB_FREADANDSKIP )
  --------------------------------------------------*/
    long x =  0;
    long read;
-   BOOL bInField = 0, bHasCRLF = FALSE;
+   HB_BOOL bInField = HB_FALSE, bHasCRLF = HB_FALSE;
 
    hb_fsSeek( handles[area], offset[area], FS_SET );
    read = hb_fsRead( handles[area], b, b_size );
@@ -355,7 +355,7 @@ HB_FUNC( HB_FREADANDSKIP )
            ((*(b + x) == 10) && x < read-1 && (*(b + x + 1) == 13)) )
       {
          x += 2;
-         bHasCRLF = TRUE;
+         bHasCRLF = HB_TRUE;
          break;
       }
       x++;

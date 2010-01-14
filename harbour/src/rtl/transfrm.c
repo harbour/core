@@ -89,10 +89,10 @@ HB_FUNC( TRANSFORM )
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY ); /* Input parameter */
    PHB_ITEM pPic = hb_param( 2, HB_IT_STRING ); /* Picture string */
 
-   BOOL bError = FALSE;
+   HB_BOOL bError = HB_FALSE;
 
    if( pValue == NULL )
-      bError = TRUE;
+      bError = HB_TRUE;
    else if( pPic && hb_itemGetCLen( pPic ) > 0 )
    {
       char szPicDate[ 11 ];
@@ -118,7 +118,7 @@ HB_FUNC( TRANSFORM )
 
       if( *szPic == '@' )
       {
-         BOOL bDone = FALSE;
+         HB_BOOL bDone = HB_FALSE;
 
          /* Skip the "@" char */
 
@@ -134,7 +134,7 @@ HB_FUNC( TRANSFORM )
             {
                case HB_CHAR_HT:
                case ' ':
-                  bDone = TRUE;     /* End of function string */
+                  bDone = HB_TRUE;     /* End of function string */
                   break;
                case '!':
                   uiPicFlags |= PF_UPPER;
@@ -202,8 +202,8 @@ HB_FUNC( TRANSFORM )
          const char * szExp = hb_itemGetCPtr( pValue );
          HB_SIZE  ulExpLen = hb_itemGetCLen( pValue );
          HB_SIZE  ulExpPos = 0;
-         BOOL bAnyPic = FALSE;
-         BOOL bFound  = FALSE;
+         HB_BOOL bAnyPic = HB_FALSE;
+         HB_BOOL bFound  = HB_FALSE;
 
          /* Grab enough */
 
@@ -232,7 +232,7 @@ HB_FUNC( TRANSFORM )
                      {
                         szResult[ ulResultPos++ ] = ( char ) hb_charUpper( szExp[ ulExpPos ] );
                         ulExpPos++;
-                        bAnyPic = TRUE;
+                        bAnyPic = HB_TRUE;
                         break;
                      }
 
@@ -250,7 +250,7 @@ HB_FUNC( TRANSFORM )
                      {
                         szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
                         ulExpPos++;
-                        bAnyPic = TRUE;
+                        bAnyPic = HB_TRUE;
                         break;
                      }
 
@@ -263,7 +263,7 @@ HB_FUNC( TRANSFORM )
                                                       szExp[ ulExpPos ] == 'y' ||
                                                       szExp[ ulExpPos ] == 'Y' ) ? ( char ) 'Y' : ( char ) 'N';
                         ulExpPos++;
-                        bAnyPic = TRUE;
+                        bAnyPic = HB_TRUE;
                         break;
                      }
 
@@ -335,7 +335,7 @@ HB_FUNC( TRANSFORM )
                         if( !bFound && ulResultPos )
                         {
                            szResult[ ulResultPos++ ] = ',';
-                           bFound = TRUE;
+                           bFound = HB_TRUE;
                         }
 
                         break;
@@ -873,8 +873,8 @@ HB_FUNC( TRANSFORM )
 
       else if( HB_IS_LOGICAL( pValue ) )
       {
-         BOOL bDone = FALSE;
-         BOOL bExit = FALSE;
+         HB_BOOL bDone = HB_FALSE;
+         HB_BOOL bExit = HB_FALSE;
          char cPic;
 
          if( uiPicFlags & ( PF_DATE | PF_BRITISH ) )
@@ -894,7 +894,7 @@ HB_FUNC( TRANSFORM )
             else
             {
                cPic  = 'L';
-               bExit = TRUE;
+               bExit = HB_TRUE;
             }
 
             switch( cPic )
@@ -905,7 +905,7 @@ HB_FUNC( TRANSFORM )
                   if( !bDone )
                   {
                      szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
-                     bDone = TRUE;           /* Logical written          */
+                     bDone = HB_TRUE;           /* Logical written          */
                   }
                   else
                      szResult[ ulResultPos ] = ' ';
@@ -920,7 +920,7 @@ HB_FUNC( TRANSFORM )
                   if( !bDone )
                   {
                      szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'T' : 'F';
-                     bDone = TRUE;
+                     bDone = HB_TRUE;
                   }
                   else
                      szResult[ ulResultPos ] = ' ';
@@ -933,7 +933,7 @@ HB_FUNC( TRANSFORM )
             }
 
             if( !( uiPicFlags & PF_REMAIN ) )
-               bExit = TRUE;
+               bExit = HB_TRUE;
          }
       }
 
@@ -943,7 +943,7 @@ HB_FUNC( TRANSFORM )
       {
          szResult = NULL; /* To avoid GCC -O2 warning */
          ulResultPos = 0; /* To avoid GCC -O2 warning */
-         bError = TRUE;
+         bError = HB_TRUE;
       }
 
       if( ! bError )
@@ -990,7 +990,7 @@ HB_FUNC( TRANSFORM )
          else
          {
             HB_SIZE ulLen;
-            BOOL bFreeReq;
+            HB_BOOL bFreeReq;
 
             szStr = hb_itemString( pValue, &ulLen, &bFreeReq );
             if( bFreeReq )
@@ -1019,10 +1019,10 @@ HB_FUNC( TRANSFORM )
          hb_retc_const( hb_itemGetL( pValue ) ? "T" : "F" );
       }
       else
-         bError = TRUE;
+         bError = HB_TRUE;
    }
    else
-      bError = TRUE;
+      bError = HB_TRUE;
 
    /* If there was any parameter error, launch a runtime error */
 

@@ -69,7 +69,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
+HB_BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_evalNew(%p, %p)", pEvalInfo, pItem));
 
@@ -79,10 +79,10 @@ BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
       pEvalInfo->pItems[ 0 ] = pItem;
       pEvalInfo->paramCount = 0;
 
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
@@ -98,7 +98,7 @@ BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
          all, don't release the eval parameter Items explicitly to make both
          Harbour and CA-Cl*pper happy. [vszakats] */
 
-BOOL hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
+HB_BOOL hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_evalPutParam(%p, %p)", pEvalInfo, pItem));
 
@@ -106,10 +106,10 @@ BOOL hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
    {
       pEvalInfo->pItems[ ++pEvalInfo->paramCount ] = pItem;
 
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
@@ -168,7 +168,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
          once and only once before calling hb_evalRelease(). Harbour doesn't
          have these requirements. [vszakats] */
 
-BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
+HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_evalRelease(%p)", pEvalInfo));
 
@@ -184,10 +184,10 @@ BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 
       pEvalInfo->paramCount = 0;
 
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 /* NOTE: Same purpose as hb_evalLaunch(), but simpler, faster and more flexible.
@@ -502,7 +502,7 @@ HB_FUNC( HB_EXECFROMARRAY )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-BOOL hb_execFromArray( PHB_ITEM pParam )
+HB_BOOL hb_execFromArray( PHB_ITEM pParam )
 {
    PHB_SYMB pExecSym = NULL;
    PHB_ITEM pArray = NULL;
@@ -560,13 +560,13 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
          else
             hb_vmProc( ( USHORT ) iPCount );
 
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
    hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* hb_execMsg( <sFuncSym>, <object>, [<params,...>] ) -> <xResult>

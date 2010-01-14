@@ -68,7 +68,7 @@ HB_FUNC( HB_RUN )
       {
 #if defined( HB_OS_WIN_CE )
          iResult = hb_fsProcessRun( pszCommand,
-                                    NULL, 0, NULL, NULL, NULL, NULL, FALSE );
+                                    NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
 #else
          char * pszFree = NULL;
 

@@ -93,7 +93,7 @@ typedef struct _HB_GTCGI
    char *         sLineBuf;
    char *         szCrLf;
    ULONG          ulCrLf;
-   BOOL           fDispTrans;
+   HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;
 } HB_GTCGI, * PHB_GTCGI;
@@ -126,7 +126,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_fsSetDevMode( pGTCGI->hStdout, FD_BINARY );
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, TRUE );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, HB_TRUE );
 }
 
 static void hb_gt_cgi_Exit( PHB_GT pGT )
@@ -165,13 +165,13 @@ static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
    return 13;
 }
 
-static BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_IsColor(%p)", pGT));
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 static void hb_gt_cgi_Bell( PHB_GT pGT )
@@ -225,7 +225,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols );
 }
 
-static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -246,7 +246,7 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
                            pGTCGI->cdpTerm != pGTCGI->cdpHost;
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 #ifdef HB_GT_CGI_RAWOUTPUT
@@ -427,7 +427,7 @@ static void hb_gt_cgi_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -449,7 +449,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->ReadKey                    = hb_gt_cgi_ReadKey;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

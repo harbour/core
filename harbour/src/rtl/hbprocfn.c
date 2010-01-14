@@ -63,7 +63,7 @@ HB_FUNC( HB_PROCESSOPEN )
    PHB_ITEM pStdIn  = hb_param( 2, HB_IT_BYREF );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
-   BOOL fDetach = hb_parl( 5 );
+   HB_BOOL fDetach = hb_parl( 5 );
    HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
    HB_FHANDLE hProcess;
    ULONG ulPID;
@@ -126,7 +126,7 @@ HB_FUNC( HB_PROCESSRUN )
    const char * szStdIn = hb_parc( 2 );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
-   BOOL fDetach = hb_parl( 5 );
+   HB_BOOL fDetach = hb_parl( 5 );
 
    if( szName &&
        ( szStdIn || HB_ISNIL( 2 ) ) &&

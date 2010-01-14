@@ -367,7 +367,7 @@ HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( const char *szValue, ULONG ulLen, BOOL fDealloc, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewString( const char *szValue, ULONG ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -395,7 +395,7 @@ HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
    pArrList->ExprType = HB_ET_ARRAY;   /* change type from ET_LIST */
    pArrList->ValType  = HB_EV_ARRAY;
    pArrList->ulLength = 0;
-   pArrList->value.asList.reference = FALSE;
+   pArrList->value.asList.reference = HB_FALSE;
 
    pExpr = pArrList->value.asList.pExprList;   /* get first element on the list */
    /* Now we need to replace all EO_NONE expressions with ET_NIL expressions
@@ -443,7 +443,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
    }
    pHashList->ValType = HB_EV_HASH;
    pHashList->ulLength = 0;
-   pHashList->value.asList.reference = FALSE;
+   pHashList->value.asList.reference = HB_FALSE;
    pHashList->value.asList.pIndex = NULL;
 
    /*
@@ -708,7 +708,7 @@ HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_LIST );
    pExpr->value.asList.pExprList = pFirstItem;
-   pExpr->value.asList.reference = FALSE;
+   pExpr->value.asList.reference = HB_FALSE;
    return pExpr;
 }
 
@@ -722,7 +722,7 @@ HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ARGLIST );
    pExpr->value.asList.pExprList = pFirstItem;
-   pExpr->value.asList.reference = FALSE;
+   pExpr->value.asList.reference = HB_FALSE;
    return pExpr;
 }
 
@@ -736,7 +736,7 @@ HB_EXPR_PTR hb_compExprNewArgRef( HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ARGLIST );
    pExpr->value.asList.pExprList = NULL;
-   pExpr->value.asList.reference = TRUE;
+   pExpr->value.asList.reference = HB_TRUE;
    return pExpr;
 }
 
@@ -1219,7 +1219,7 @@ ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
    return ulLen;
 }
 
-BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
+HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
 {
    pExpr = pExpr->value.asList.pExprList;
    if( pExpr )
@@ -1234,7 +1234,7 @@ BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
 
       return pExpr == NULL;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /*  Return a number of parameters passed to function or method
@@ -1359,7 +1359,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( const char * szVarName, BYTE bType )
    pVar->szName = szVarName;
    pVar->bType  = bType;
    pVar->pNext  = NULL;
-   pVar->bUsed  = FALSE;
+   pVar->bUsed  = HB_FALSE;
 
    return pVar;
 }

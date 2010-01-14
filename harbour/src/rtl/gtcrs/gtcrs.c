@@ -60,14 +60,14 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static volatile BOOL s_SignalTable[MAX_SIGNO];
+static volatile HB_BOOL s_SignalTable[ MAX_SIGNO ];
 #if defined( SA_NOCLDSTOP ) && defined( SA_RESTART ) && defined( SIGCHLD )
-static volatile BOOL s_SignalFlag = FALSE;
+static volatile HB_BOOL s_SignalFlag = HB_FALSE;
 /* this variable should be global and checked in main VM loop */
-static volatile BOOL s_BreakFlag = FALSE;
-static volatile BOOL s_InetrruptFlag = FALSE;
+static volatile HB_BOOL s_BreakFlag = HB_FALSE;
+static volatile HB_BOOL s_InetrruptFlag = HB_FALSE;
 #endif
-static volatile BOOL s_WinSizeChangeFlag = FALSE;
+static volatile HB_BOOL s_WinSizeChangeFlag = HB_FALSE;
 
 
 static int s_iStdIn, s_iStdOut, s_iStdErr;
@@ -386,8 +386,8 @@ static void sig_handler( int signo )
 
    if ( signo < MAX_SIGNO )
    {
-      s_SignalTable[signo] = TRUE;
-      s_SignalFlag = TRUE;
+      s_SignalTable[signo] = HB_TRUE;
+      s_SignalFlag = HB_TRUE;
    }
 
    switch ( signo )
@@ -400,13 +400,13 @@ static void sig_handler( int signo )
          break;
       }
       case SIGWINCH:
-         s_WinSizeChangeFlag = TRUE;
+         s_WinSizeChangeFlag = HB_TRUE;
          break;
       case SIGINT:
-         s_InetrruptFlag = TRUE;
+         s_InetrruptFlag = HB_TRUE;
          break;
       case SIGQUIT:
-         s_BreakFlag = TRUE;
+         s_BreakFlag = HB_TRUE;
          break;
       case SIGTSTP:
          break;
@@ -422,10 +422,10 @@ static void set_signals( void )
 {
    int i, sigs[] = { SIGINT, SIGQUIT, SIGTSTP, SIGWINCH, SIGCHLD, 0 };
 
-   s_SignalFlag = FALSE;
+   s_SignalFlag = HB_FALSE;
    for ( i = 1; i < MAX_SIGNO; ++i )
    {
-      s_SignalTable[i] = FALSE;
+      s_SignalTable[i] = HB_FALSE;
    }
 
    /* Ignore SIGPIPEs so they don't kill us. */
@@ -493,10 +493,10 @@ static void set_signals( void )
 {
    int i;
 
-   s_SignalFlag = FALSE;
+   s_SignalFlag = HB_FALSE;
    for ( i = 1; i < MAX_SIGNO; ++i )
    {
-      s_SignalTable[i] = FALSE;
+      s_SignalTable[i] = HB_FALSE;
       set_sig_handler( i );
    }
 }
@@ -771,7 +771,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
 
    if ( s_WinSizeChangeFlag )
    {
-      s_WinSizeChangeFlag = FALSE;
+      s_WinSizeChangeFlag = HB_FALSE;
       return K_RESIZE;
    }
 
@@ -898,9 +898,9 @@ static int wait_key( InOutBase * ioBase, int milisec )
    return nKey;
 }
 
-static BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
+static HB_BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
 {
-   BOOL success;
+   HB_BOOL success;
 
    if ( ioBase->baseout != NULL )
    {
@@ -1375,9 +1375,9 @@ static void gt_refresh( InOutBase * ioBase )
    {
 /*
    if (ioBase->cursor == SC_NONE)
-       leaveok( ioBase->stdscr, TRUE );
+       leaveok( ioBase->stdscr, HB_TRUE );
    else
-       leaveok( ioBase->stdscr, FALSE );
+       leaveok( ioBase->stdscr, HB_FALSE );
 */
 /* if (ioBase->cursor != SC_NONE) */
       wmove( ioBase->stdscr, ioBase->row, ioBase->col );
@@ -1399,12 +1399,12 @@ static void gt_ttyrestore( InOutBase * ioBase )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->saved_TIO );
 }
 
-static BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
+static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
                        int len )
 {
    unsigned char *buf, c;
    int i;
-   BOOL success;
+   HB_BOOL success;
 
    if ( ioBase->out_transtbl != NULL )
    {
@@ -1822,7 +1822,7 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 
       if ( s_WinSizeChangeFlag )
       {
-         s_WinSizeChangeFlag = FALSE;
+         s_WinSizeChangeFlag = HB_FALSE;
          ret = gt_resize( ioBase );
       }
 #if defined( TIOCGWINSZ )
@@ -1854,7 +1854,7 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
       for ( i = 0; i < 256; ++i )
-         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
    else if ( ioBase->in_transtbl != NULL )
    {
@@ -1919,7 +1919,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
          if( hb_cdpIsAlpha( cdpHost, i ) )
          {
             unsigned char uc = ( unsigned char )
-                              hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+                              hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
 
             ioBase->std_chmap[i] = uc | A_NORMAL;
             if( box )
@@ -2137,11 +2137,11 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    }
 
    getmaxyx( ioBase->stdscr, ioBase->maxrow, ioBase->maxcol );
-   scrollok( ioBase->stdscr, FALSE );
+   scrollok( ioBase->stdscr, HB_FALSE );
 /*
-    idlok( ioBase->stdscr, FALSE );
-    idcok( ioBase->stdscr, FALSE );
-    leaveok( ioBase->stdscr, FALSE );
+    idlok( ioBase->stdscr, HB_FALSE );
+    idcok( ioBase->stdscr, HB_FALSE );
+    leaveok( ioBase->stdscr, HB_FALSE );
 */
    /*
     * curses keyboard initialization
@@ -2151,13 +2151,13 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
     */
    raw();
 
-   leaveok( ioBase->stdscr, FALSE );
+   leaveok( ioBase->stdscr, HB_FALSE );
    curs_set( 0 );
 
 /*
     nonl();
-    nodelay( ioBase->stdscr, TRUE);
-    keypad( ioBase->stdscr, FALSE);
+    nodelay( ioBase->stdscr, HB_TRUE);
+    keypad( ioBase->stdscr, HB_FALSE);
     timeout( 0 );
     noecho();
     curs_set( 0 );
@@ -2379,7 +2379,7 @@ static void del_all_ioBase( void )
 /* *********************************************************************** */
 
 
-BOOL HB_GT_FUNC( gt_AddEventHandle( int iFile, int iMode,
+HB_BOOL HB_GT_FUNC( gt_AddEventHandle( int iFile, int iMode,
                                     int ( *eventFunc ) ( int, int, void * ),
                                     void *data ) )
 {
@@ -2450,14 +2450,14 @@ void HB_GT_FUNC( gt_SetDebugKey( int iDebug ) )
    set_sig_keys( s_ioBase, -1, iDebug, -1 );
 }
 
-BOOL HB_GT_FUNC( gt_GetSignalFlag( int iSig ) )
+HB_BOOL HB_GT_FUNC( gt_GetSignalFlag( int iSig ) )
 {
-   BOOL bRetVal = FALSE;
+   HB_BOOL bRetVal = HB_FALSE;
 
    if ( iSig > 0 && iSig < MAX_SIGNO && s_SignalTable[iSig] )
    {
-      bRetVal = TRUE;
-      s_SignalTable[iSig] = FALSE;
+      bRetVal = HB_TRUE;
+      s_SignalTable[iSig] = HB_FALSE;
    }
 
    return bRetVal;
@@ -2498,8 +2498,8 @@ static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
          add_new_ioBase( ioBase );
          HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
          HB_GTSELF_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
-         HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
-         HB_GTSELF_SETBLINK( pGT, TRUE );
+         HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, HB_FALSE );
+         HB_GTSELF_SETBLINK( pGT, HB_TRUE );
       }
    }
 
@@ -2520,7 +2520,7 @@ static void hb_gt_crs_Exit( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_IsColor( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_IsColor(%p)", pGT ) );
 
@@ -2531,21 +2531,21 @@ static BOOL hb_gt_crs_IsColor( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    if( gt_setsize( s_ioBase, iRows, iCols ) == 0 )
    {
       HB_GTSELF_RESIZE( pGT, iRows, iCols );
-      return TRUE;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_SetBlink( PHB_GT pGT, BOOL fBlink )
+static void hb_gt_crs_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetBlink(%p, %d)", pGT, ( int ) fBlink ) );
 
@@ -2623,7 +2623,7 @@ static void hb_gt_crs_OutErr( PHB_GT pGT, const char * szStr, HB_SIZE ulLen )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Suspend( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_Suspend( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Suspend(%p)", pGT ) );
 
@@ -2635,12 +2635,12 @@ static BOOL hb_gt_crs_Suspend( PHB_GT pGT )
       endwin();
       gt_ttyrestore( s_ioBase );
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Resume(%p)", pGT ) );
 
@@ -2654,12 +2654,12 @@ static BOOL hb_gt_crs_Resume( PHB_GT pGT )
       /* redrawwin( s_ioBase->stdscr ); */
       gt_refresh( s_ioBase );
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_PreExt( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_PreExt( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PreExt(%p)", pGT ) );
 
@@ -2669,23 +2669,23 @@ static BOOL hb_gt_crs_PreExt( PHB_GT pGT )
    {
       gt_refresh( s_ioBase );
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_PostExt( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_PostExt( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PostExt(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_crs_mouse_IsPresent( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent(%p)", pGT ) );
 
@@ -2753,9 +2753,9 @@ static void hb_gt_crs_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_crs_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
-   BOOL ret = FALSE;
+   HB_BOOL ret = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%p,%i)", pGT, iButton ) );
 
@@ -2823,7 +2823,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -2836,12 +2836,12 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    setDispTrans( s_ioBase, hb_cdpFind( pszHostCDP ),
                            hb_cdpFind( pszTermCDP ), fBox ? 1 : 0 );
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
@@ -2854,12 +2854,12 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    setKeyTrans( s_ioBase, hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -2869,7 +2869,7 @@ static BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          case HB_GTI_FULLSCREEN:
          case HB_GTI_KBDSUPPORT:
-            pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+            pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
             break;
 
          case HB_GTI_ESCDELAY:
@@ -2883,7 +2883,7 @@ static BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 
@@ -2934,7 +2934,7 @@ static void hb_gt_crs_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -2968,7 +2968,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseCountButton           = hb_gt_crs_mouse_CountButton;
    pFuncTable->MouseSetDoubleClickSpeed   = hb_gt_crs_mouse_SetDoubleClickSpeed;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
@@ -2981,7 +2981,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 #include <term.h>
 static void curs_wrkaround( void )
 {
-   back_color_erase = FALSE;
+   back_color_erase = HB_FALSE;
    /* cur_term->type.Booleans[28] = 0; */
 }
 #else

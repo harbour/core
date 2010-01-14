@@ -73,17 +73,17 @@ static TCHAR   s_lpAppName[ MAX_PATH ];
 static HANDLE  s_hInstance     = 0;
 static HANDLE  s_hPrevInstance = 0;
 static int     s_iCmdShow      = 0;
-static BOOL    s_WinMainParam  = FALSE;
+static HB_BOOL s_WinMainParam  = HB_FALSE;
 
 void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
 {
    s_hInstance = hInstance;
    s_hPrevInstance = hPrevInstance;
    s_iCmdShow = iCmdShow;
-   s_WinMainParam = TRUE;
+   s_WinMainParam = HB_TRUE;
 }
 
-BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
+HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
 {
    if( phInstance )
       *phInstance = s_hInstance;
@@ -149,7 +149,7 @@ void hb_cmdargUpdate( void )
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
-         BOOL fInPath = FALSE;
+         HB_BOOL fInPath = HB_FALSE;
 
          if( !pFName->szPath )
          {
@@ -180,7 +180,7 @@ void hb_cmdargUpdate( void )
                       */
                      hb_xfree( pFName );
                      pFName = hb_fsFNameSplit( s_szAppName );
-                     fInPath = TRUE;
+                     fInPath = HB_TRUE;
                      break;
                   }
                   pNextPath = pNextPath->pNext;
@@ -224,7 +224,7 @@ void hb_cmdargUpdate( void )
    }
 }
 
-BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
+HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s, %p)", szArg, piLen));
 
@@ -237,7 +237,7 @@ BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
       if( piLen )
          *piLen = 5;
 
-      return TRUE;
+      return HB_TRUE;
    }
    else if( strlen( szArg ) >= 2 &&
             szArg[ 0 ] == '/' &&
@@ -246,13 +246,13 @@ BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
       if( piLen )
          *piLen = 2;
 
-      return TRUE;
+      return HB_TRUE;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
+static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 {
    char * pszRetVal = NULL;
    char * pszEnvVar;
@@ -353,16 +353,16 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
    return pszRetVal;
 }
 
-BOOL hb_cmdargCheck( const char * pszName )
+HB_BOOL hb_cmdargCheck( const char * pszName )
 {
-   return hb_cmdargGet( pszName, FALSE ) != NULL;
+   return hb_cmdargGet( pszName, HB_FALSE ) != NULL;
 }
 
 /* NOTE: Pointer must be freed with hb_xfree() if not NULL */
 
 char * hb_cmdargString( const char * pszName )
 {
-   return hb_cmdargGet( pszName, TRUE );
+   return hb_cmdargGet( pszName, HB_TRUE );
 }
 
 int hb_cmdargNum( const char * pszName )
@@ -371,7 +371,7 @@ int hb_cmdargNum( const char * pszName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargNum(%s)", pszName));
 
-   pszValue = hb_cmdargGet( pszName, TRUE );
+   pszValue = hb_cmdargGet( pszName, HB_TRUE );
    if( pszValue )
    {
       int iValue = atoi( pszValue );
@@ -388,7 +388,7 @@ int hb_cmdargNum( const char * pszName )
 
 HB_FUNC( HB_ARGCHECK )
 {
-   hb_retl( HB_ISCHAR( 1 ) ? hb_cmdargCheck( hb_parc( 1 ) ) : FALSE );
+   hb_retl( HB_ISCHAR( 1 ) ? hb_cmdargCheck( hb_parc( 1 ) ) : HB_FALSE );
 }
 
 /* Returns the value of an internal switch */

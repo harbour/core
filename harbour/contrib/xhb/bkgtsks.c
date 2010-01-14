@@ -84,7 +84,7 @@ typedef struct HB_BACKGROUNDTASK_
    PHB_ITEM pTask;        /* pointer to the task item */
    double   dSeconds;     /* internal - last time this task has gone */
    int      millisec;     /* milliseconds after this task must run */
-   BOOL     bActive;      /* task is active ? */
+   HB_BOOL  bActive;      /* task is active ? */
 } HB_BACKGROUNDTASK, * PHB_BACKGROUNDTASK, * HB_BACKGROUNDTASK_PTR;
 
 extern void     hb_backgroundRunSingle( ULONG ulID ); /* run a single background routine */
@@ -92,10 +92,10 @@ extern void     hb_backgroundRunForced( void ); /* run all background routines a
 extern void     hb_backgroundRun( void ); /* run all background routines but only if them are active*/
 extern void     hb_backgroundReset( void ); /* reset internal counter */
 extern void     hb_backgroundShutDown( void ); /* closes all background tasks */
-extern ULONG    hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, BOOL bActive ); /* Adds a codeblock or an executable array */
+extern ULONG    hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive ); /* Adds a codeblock or an executable array */
 extern PHB_ITEM hb_backgroundDelFunc( ULONG ulID ); /* Deletes a prevuiously added task */
 extern PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID );
-extern BOOL     hb_backgroundActive( ULONG ulID, BOOL bActive );
+extern HB_BOOL  hb_backgroundActive( ULONG ulID, HB_BOOL bActive );
 extern int      hb_backgroundTime( ULONG ulID, int nMillisec );
 
 HB_EXTERN_END
@@ -110,10 +110,10 @@ static ULONG s_ulBackgroundID = 0;
 */
 static HB_BACKGROUNDTASK_PTR * s_pBackgroundTasks = NULL;
 
-static BOOL s_bEnabled = FALSE;
+static HB_BOOL s_bEnabled = HB_FALSE;
 
 /* flag to prevent recursive calls of hb_backgroundRun() */
-static BOOL s_bIamBackground = FALSE;
+static HB_BOOL s_bIamBackground = HB_FALSE;
 
 /* current task to be executed */
 static USHORT s_uiBackgroundTask = 0;
@@ -132,7 +132,7 @@ static USHORT s_uiBackgroundMaxTask = 0;
 
 /* ------------------------  C  LEVEL ------------------------------ */
 
-ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, BOOL bActive )
+ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
 {
    PHB_BACKGROUNDTASK pBkgTask;
 
@@ -190,7 +190,7 @@ void hb_backgroundRun( void )
 
    if( ! s_bIamBackground && s_bEnabled )
    {
-      s_bIamBackground = TRUE;
+      s_bIamBackground = HB_TRUE;
 
       if( s_uiBackgroundTask < s_uiBackgroundMaxTask )
       {
@@ -219,16 +219,16 @@ void hb_backgroundRun( void )
              s_uiBackgroundTask == s_uiBackgroundMaxTask )
             s_uiBackgroundTask = 0;
       }
-      s_bIamBackground = FALSE;
+      s_bIamBackground = HB_FALSE;
    }
 }
 
 /* RUN all tasks also if SET BACKGROUND TASKS is OFF */
 void hb_backgroundRunForced( void )
 {
-   BOOL bOldSet = s_bEnabled;
+   HB_BOOL bOldSet = s_bEnabled;
 
-   s_bEnabled = TRUE;
+   s_bEnabled = HB_TRUE;
 
    hb_backgroundRun();
 
@@ -242,13 +242,13 @@ void hb_backgroundRunSingle( ULONG ulID )
 
    if( ! s_bIamBackground )
    {
-      s_bIamBackground = TRUE;
+      s_bIamBackground = HB_TRUE;
 
       pBkgTask = hb_backgroundFind( ulID );
       if( pBkgTask )
          hb_itemRelease( hb_itemDo( pBkgTask->pTask, 0 ) );
 
-      s_bIamBackground = FALSE;
+      s_bIamBackground = HB_FALSE;
    }
 }
 
@@ -285,9 +285,9 @@ PHB_ITEM hb_backgroundDelFunc( ULONG ulID )
    SHORT iTask;
    PHB_BACKGROUNDTASK pBkgTask;
    PHB_ITEM pItem = NULL;
-   BOOL bOldSet   = s_bEnabled;
+   HB_BOOL bOldSet = s_bEnabled;
 
-   s_bEnabled = FALSE;
+   s_bEnabled = HB_FALSE;
 
    iTask = 0;
    while( iTask < s_uiBackgroundMaxTask )
@@ -344,10 +344,10 @@ PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID )
 }
 
 /* Set task as active */
-BOOL hb_backgroundActive( ULONG ulID, BOOL bActive )
+HB_BOOL hb_backgroundActive( ULONG ulID, HB_BOOL bActive )
 {
    PHB_BACKGROUNDTASK pBkgTask;
-   BOOL bOldState = FALSE;
+   HB_BOOL bOldState = HB_FALSE;
 
    pBkgTask = hb_backgroundFind( ulID );
 
@@ -421,7 +421,7 @@ HB_FUNC( HB_BACKGROUNDADD )
    {
       hb_retnl( hb_backgroundAddFunc( pBlock,
                                       ( pMillisec == NULL ? 0 : hb_itemGetNI( pMillisec ) ),
-                                      ( pActive   == NULL ? TRUE : hb_itemGetL( pActive ) )
+                                      ( pActive   == NULL ? HB_TRUE : hb_itemGetL( pActive ) )
                                     ) );
    }
    else
@@ -446,7 +446,7 @@ HB_FUNC( HB_BACKGROUNDDEL )
 /* Set a task as active or not */
 HB_FUNC( HB_BACKGROUNDACTIVE )
 {
-   BOOL bOldActive = FALSE;
+   HB_BOOL bOldActive = HB_FALSE;
 
    if( s_pBackgroundTasks && HB_ISNUM( 1 ) )
    {

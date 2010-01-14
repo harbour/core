@@ -70,9 +70,9 @@
  */
 /* C callable interface */
 
-BOOL hb_mouseIsPresent( void )
+HB_BOOL hb_mouseIsPresent( void )
 {
-   BOOL fPresent = FALSE;
+   HB_BOOL fPresent = HB_FALSE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseIsPresent()"));
@@ -86,9 +86,9 @@ BOOL hb_mouseIsPresent( void )
    return fPresent;
 }
 
-BOOL hb_mouseGetCursor( void )
+HB_BOOL hb_mouseGetCursor( void )
 {
-   BOOL fVisible = FALSE;
+   HB_BOOL fVisible = HB_FALSE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetCursor()"));
@@ -102,7 +102,7 @@ BOOL hb_mouseGetCursor( void )
    return fVisible;
 }
 
-void hb_mouseSetCursor( BOOL fVisible )
+void hb_mouseSetCursor( HB_BOOL fVisible )
 {
    PHB_GT pGT;
 
@@ -294,9 +294,9 @@ int hb_mouseCountButton( void )
    return iButtons;
 }
 
-BOOL hb_mouseButtonState( int iButton )
+HB_BOOL hb_mouseButtonState( int iButton )
 {
-   BOOL fPressed = FALSE;
+   HB_BOOL fPressed = HB_FALSE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonState(%d)", iButton));
@@ -310,9 +310,9 @@ BOOL hb_mouseButtonState( int iButton )
    return fPressed;
 }
 
-BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
+HB_BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
 {
-   BOOL fPressed = FALSE;
+   HB_BOOL fPressed = HB_FALSE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonPressed(%d,%p,%p)", iButton, piRow, piCol));
@@ -326,9 +326,9 @@ BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
    return fPressed;
 }
 
-BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
+HB_BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
 {
-   BOOL fReleased = FALSE;
+   HB_BOOL fReleased = HB_FALSE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonReleased(%d,%p,%p)", iButton, piRow, piCol));

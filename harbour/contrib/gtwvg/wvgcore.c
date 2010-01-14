@@ -229,7 +229,7 @@ IPicture * hb_wvt_gtLoadPicture( const char * cImage )
 
 /*----------------------------------------------------------------------*/
 
-BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
+HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -243,7 +243,7 @@ BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture
    int      toc =  0;
    HRGN     hrgn1;
    POINT    lpp;
-   BOOL     bResult = FALSE;
+   HB_BOOL  bResult = FALSE;
 
    if( iPicture )
    {
@@ -325,9 +325,9 @@ BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture
 
 /*----------------------------------------------------------------------*/
 
-BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
+HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
 
    if( iPicture )
    {
@@ -585,7 +585,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 /*----------------------------------------------------------------------*/
 
-BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image )
+HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image )
 {
 #if ! defined( HB_OS_WIN_CE )
   HGLOBAL  hGlobal;
@@ -602,7 +602,7 @@ BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * ima
   int      toc =  0 ;
   HRGN     hrgn1;
   POINT    lpp = { 0,0 };
-  BOOL     bResult = FALSE;
+  HB_BOOL  bResult = FALSE;
   LPTSTR   lpImage = HB_TCHAR_CONVTO( image );
 
   hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING,
@@ -1810,8 +1810,8 @@ HB_FUNC( WVT_DRAWBUTTON )
    LOGBRUSH lb = { 0,0,0 };
    HBRUSH   hBrush;
 
-   BOOL     bText     = HB_ISCHAR( 5 );
-   BOOL     bImage    = ( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) );
+   HB_BOOL  bText     = HB_ISCHAR( 5 );
+   HB_BOOL  bImage    = ( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) );
    int      iFormat   = hb_parni( 7 );
    COLORREF textColor = !HB_ISNUM(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
    COLORREF bkColor   = !HB_ISNUM(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
@@ -2519,7 +2519,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    POINT    * Point;
    POINT    xy = { 0,0 };
    int      iHeight, iOff;
-   BOOL     bDepressed = hb_parl( 7 ) ;
+   HB_BOOL  bDepressed = hb_parl( 7 ) ;
 
    Point      = ( POINT * ) hb_xgrab( 3 * sizeof( POINT ) );
    iOff       = 6;
@@ -2733,7 +2733,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   BOOL bGF = FALSE;
+   HB_BOOL bGF = FALSE;
 
    if ( _s->pGUI->hMSImg32 )
    {
@@ -2764,11 +2764,11 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
       gRect.UpperLeft = 0;
       gRect.LowerRight= 1;
 
-      bGF = ( BOOL ) _s->pGUI->pfnGF( _s->hdc, vert, 2, &gRect, 1, iMode );
+      bGF = ( HB_BOOL ) _s->pGUI->pfnGF( _s->hdc, vert, 2, &gRect, 1, iMode );
       #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
-         bGF = ( BOOL ) _s->pGUI->pfnGF( _s->hGuiDC, vert, 2, &gRect, 1, iMode );
+         bGF = ( HB_BOOL ) _s->pGUI->pfnGF( _s->hGuiDC, vert, 2, &gRect, 1, iMode );
       }
       #endif
    }
@@ -2855,7 +2855,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    int      iBottom  = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 5,3 );
    int      iRight   = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5,4 );
    int      iPercent,  iBarUpto, iDirection;
-   BOOL     bVertical, bImage;
+   HB_BOOL  bVertical, bImage;
    COLORREF crBarColor;
    HBRUSH   hBrush;
    LOGBRUSH lb = { 0,0,0 };
@@ -2977,7 +2977,7 @@ HB_FUNC( WVT_CREATEFONT )
  */
 HB_FUNC( WVT_LOADPICTURE )
 {
-   BOOL       bResult  = FALSE;
+   HB_BOOL    bResult  = FALSE;
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -3002,7 +3002,7 @@ HB_FUNC( WVT_LOADPICTURE )
 
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 {
-   BOOL       bResult  = FALSE;
+   HB_BOOL    bResult  = FALSE;
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -3151,8 +3151,8 @@ HB_FUNC( WVT_RESTSCREEN )
    HBITMAP hBmp;
    HDC     hCompDC;
 
-   BOOL    bResult = FALSE;
-   BOOL    bDoNotDestroyBMP = hb_parl( 6 );
+   HB_BOOL bResult = FALSE;
+   HB_BOOL bDoNotDestroyBMP = hb_parl( 6 );
 
    xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
    iTop    = xy.y;

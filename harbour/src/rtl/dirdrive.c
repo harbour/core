@@ -90,7 +90,7 @@ HB_FUNC( DIRREMOVE )
 
 HB_FUNC( ISDISK )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    const char * szDrive = hb_parc( 1 );
 
    if( szDrive )
@@ -105,7 +105,7 @@ HB_FUNC( ISDISK )
 
 HB_FUNC( DISKCHANGE )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    const char * szDrive = hb_parc( 1 );
 
    if( szDrive )

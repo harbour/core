@@ -79,7 +79,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
    const char  *pFmt, *pFmtEnd, *pFmtSave;
    int         i, iParam, iParamNo, iWidth, iDec;
    HB_SIZE     ulSize;
-   BOOL        fLeftAlign, fForceSign, fPadZero, fSpaceSign, fSign;
+   HB_BOOL     fLeftAlign, fForceSign, fPadZero, fSpaceSign, fSign;
 
    pFmt = hb_itemGetCPtr( pItemFormat );
    ulSize = hb_itemGetCLen( pItemFormat );

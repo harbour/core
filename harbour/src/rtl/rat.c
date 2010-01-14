@@ -64,7 +64,7 @@ HB_FUNC( RAT )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
-         BOOL bFound = FALSE;
+         HB_BOOL bFound = HB_FALSE;
 
          while( lPos >= 0 && !bFound )
          {
@@ -95,7 +95,7 @@ HB_FUNC( HB_RAT )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
-         BOOL bFound = FALSE;
+         HB_BOOL bFound = HB_FALSE;
          long lStart;
 
          if( HB_ISNUM( 3 ) )

@@ -232,7 +232,7 @@ static int hb_langFindPos( const char * pszID )
    return -1;
 }
 
-BOOL hb_langRegister( PHB_LANG lang )
+HB_BOOL hb_langRegister( PHB_LANG lang )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langRegister(%p)", lang));
 
@@ -247,21 +247,21 @@ BOOL hb_langRegister( PHB_LANG lang )
             if( s_langList[ iPos ] == NULL )
             {
                s_langList[ iPos ] = lang;
-               return TRUE;
+               return HB_TRUE;
             }
          }
       }
       else
       {
          s_langList[ iPos ] = lang;
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-BOOL hb_langDeRegister( const char * pszID )
+HB_BOOL hb_langDeRegister( const char * pszID )
 {
    int iPos;
 
@@ -272,10 +272,10 @@ BOOL hb_langDeRegister( const char * pszID )
    if( iPos != -1 )
    {
       s_langList[ iPos ] = NULL;
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 PHB_LANG hb_langFind( const char * pszID )

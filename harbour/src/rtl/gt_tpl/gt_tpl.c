@@ -105,7 +105,7 @@ static const char * hb_gt_tpl_Version( PHB_GT pGT, int iType )
    return "Harbour Terminal: (template)";
 }
 
-static BOOL hb_gt_tpl_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_tpl_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
@@ -113,9 +113,9 @@ static BOOL hb_gt_tpl_SetMode( PHB_GT pGT, int iRows, int iCols )
    HB_SYMBOL_UNUSED( iRows );
    HB_SYMBOL_UNUSED( iCols );
 
-   /* TODO: if possible change the size of the screen and return TRUE */
+   /* TODO: if possible change the size of the screen and return HB_TRUE */
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 static void hb_gt_tpl_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
@@ -149,7 +149,7 @@ static void hb_gt_tpl_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -161,7 +161,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Redraw                     = hb_gt_tpl_Redraw;
    pFuncTable->Refresh                    = hb_gt_tpl_Refresh;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

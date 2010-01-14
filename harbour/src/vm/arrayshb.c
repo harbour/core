@@ -85,14 +85,14 @@ HB_FUNC( ARRAY )
 
    if( iPCount > 0 )
    {
-      BOOL bError = FALSE;
+      HB_BOOL bError = HB_FALSE;
       int iParam;
 
       for( iParam = 1; iParam <= iPCount; iParam++ )
       {
          if( ! HB_ISNUM( iParam ) )
          {
-            bError = TRUE;
+            bError = HB_TRUE;
             break;
          }
 
@@ -103,7 +103,7 @@ HB_FUNC( ARRAY )
 #else
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), HB_ERR_ARGS_BASEPARAMS );
 #endif
-            bError = TRUE;
+            bError = HB_TRUE;
             break;
          }
       }
@@ -262,7 +262,7 @@ HB_FUNC( ASCAN )
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
                                 HB_ISNUM( 4 ) ? &ulCount : NULL,
-                                FALSE ) );
+                                HB_FALSE ) );
    }
    else
       hb_retni( 0 );

@@ -58,7 +58,7 @@
 HB_FUNC( PADC )
 {
    HB_SIZE ulSize;
-   BOOL bFreeReq;
+   HB_BOOL bFreeReq;
    char * szText;
    long lLen = hb_parnl( 2 );
 

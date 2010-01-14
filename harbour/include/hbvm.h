@@ -58,7 +58,7 @@
 HB_EXTERN_BEGIN
 
 /* Harbour virtual machine init/exit functions */
-extern HB_EXPORT void     hb_vmInit( BOOL bStartMainProc );
+extern HB_EXPORT void     hb_vmInit( HB_BOOL bStartMainProc );
 extern HB_EXPORT int      hb_vmQuit( void ); /* Immediately quits the virtual machine, return ERRORLEVEL code */
 
 /* registration AtInit, AtExit and AtQuit functions.
@@ -87,27 +87,27 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT u
       struct _HB_SYMBOLS * pNext;   /* pointer to the next SYMBOLS structure */
       HB_SYMBOLSCOPE hScope;        /* scope collected from all symbols in module used to speed initialization code */
       void *   hDynLib;             /* handler to dynamic library */
-      BOOL     fAllocated;          /* the symbol table is dynamically allocated and should be freed on HVM exit */
-      BOOL     fActive;             /* the symbol table is currently active */
-      BOOL     fInitStatics;        /* static initialization should be executed */
+      HB_BOOL  fAllocated;          /* the symbol table is dynamically allocated and should be freed on HVM exit */
+      HB_BOOL  fActive;             /* the symbol table is currently active */
+      HB_BOOL  fInitStatics;        /* static initialization should be executed */
       char *   szModuleName;        /* module name */
       ULONG    ulID;                /* module unique identifier */
    } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
 
-   extern PHB_SYMBOLS   hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
-   extern BOOL          hb_vmLockModuleSymbols( void );
+   extern PHB_SYMBOLS   hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, HB_BOOL fDynLib, HB_BOOL fClone );
+   extern HB_BOOL       hb_vmLockModuleSymbols( void );
    extern void          hb_vmUnlockModuleSymbols( void );
    extern void          hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
-   extern void          hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
+   extern void          hb_vmBeginSymbolGroup( void * hDynLib, HB_BOOL fClone );
    extern void          hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] );
    extern void          hb_vmExitSymbolGroup( void * hDynLib );
    extern const char *  hb_vmFindModuleSymbolName( PHB_SYMB pSym );
-   extern BOOL          hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, USHORT * puiSymbols );
+   extern HB_BOOL       hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, USHORT * puiSymbols );
    extern PHB_SYMB      hb_vmGetRealFuncSym( PHB_SYMB pSym );
    extern void          hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
 
    extern void          hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
-   extern BOOL          hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
+   extern HB_BOOL       hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
 
    extern void          hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount );
 
@@ -125,7 +125,7 @@ extern HB_EXPORT void     hb_vmRequestCancel( void );
 extern HB_EXPORT void     hb_vmRequestQuit( void );
 extern HB_EXPORT void     hb_vmRequestEndProc( void );
 extern HB_EXPORT USHORT   hb_vmRequestQuery( void );
-extern HB_EXPORT BOOL     hb_vmRequestReenter( void );
+extern HB_EXPORT HB_BOOL  hb_vmRequestReenter( void );
 extern HB_EXPORT void     hb_vmRequestRestore( void );
 
 /* Return values of hb_vmRequestQuery() */
@@ -154,7 +154,7 @@ extern HB_EXPORT void     hb_vmPushInteger( int iNumber ); /* pushes a integer n
 extern HB_EXPORT void     hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
 extern HB_EXPORT void     hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
 extern HB_EXPORT void     hb_vmPushNumInt( HB_LONG lNumber );  /* pushes a number on to the stack and decides if it is integer or HB_LONG */
-extern HB_EXPORT void     hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
+extern HB_EXPORT void     hb_vmPushLogical( HB_BOOL bValue );    /* pushes a logical value onto the stack */
 extern HB_EXPORT void     hb_vmPushString( const char * szText, HB_SIZE length );  /* pushes a string on to the stack */
 extern HB_EXPORT void     hb_vmPushStringPcode( const char * szText, HB_SIZE length );  /* pushes a string from pcode on to the stack */
 extern HB_EXPORT void     hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
@@ -167,14 +167,14 @@ extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on st
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
 extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
 
-extern HB_EXPORT BOOL     hb_vmIsMt( void ); /* return TRUE if HVM is compiled with thread support */
+extern HB_EXPORT HB_BOOL  hb_vmIsMt( void ); /* return TRUE if HVM is compiled with thread support */
 extern HB_EXPORT void     hb_vmLock( void ); /* lock VM blocking GC execution by other threads */
 extern HB_EXPORT void     hb_vmUnlock( void ); /* unlock VM, allow GC execution */
 #ifdef _HB_API_INTERNAL_
-extern HB_EXPORT BOOL     hb_vmSuspendThreads( BOOL fWait ); /* (try to) stop all threads except current one */
+extern HB_EXPORT HB_BOOL  hb_vmSuspendThreads( HB_BOOL fWait ); /* (try to) stop all threads except current one */
 extern HB_EXPORT void     hb_vmResumeThreads( void ); /* unblock execution of threads stopped by hb_vmSuspendThreads() */
 #endif
-extern HB_EXPORT BOOL     hb_vmThreadRegister( void * ); /* Register new thread without local thread HVM stack */
+extern HB_EXPORT HB_BOOL  hb_vmThreadRegister( void * ); /* Register new thread without local thread HVM stack */
 extern HB_EXPORT void     hb_vmThreadRelease( void * ); /* Remove registered thread which does not have local thread HVM stack yet */
 extern HB_EXPORT void     hb_vmThreadInit( void * ); /* allocate local thread HVM stack */
 extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM stack */

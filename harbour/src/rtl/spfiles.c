@@ -53,10 +53,10 @@
 #include "hbapifs.h"
 #include "hbset.h"
 
-BOOL hb_spFile( const char * pFilename, char * pRetPath )
+HB_BOOL hb_spFile( const char * pFilename, char * pRetPath )
 {
    char *Path;
-   BOOL bIsFile = FALSE;
+   HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", pFilename, pRetPath));
@@ -87,7 +87,7 @@ BOOL hb_spFile( const char * pFilename, char * pRetPath )
       {
          HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
 
-         while( bIsFile == FALSE && NextPath )
+         while( bIsFile == HB_FALSE && NextPath )
          {
             pFilepath->szPath = NextPath->szPath;
             hb_fsFNameMerge( Path, pFilepath );
@@ -117,10 +117,10 @@ BOOL hb_spFile( const char * pFilename, char * pRetPath )
    return bIsFile;
 }
 
-BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
+HB_BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
 {
    char *Path;
-   BOOL bIsFile = FALSE;
+   HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", pFilename, pRetPath));
@@ -151,7 +151,7 @@ BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
       {
          HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
 
-         while( bIsFile == FALSE && NextPath )
+         while( bIsFile == HB_FALSE && NextPath )
          {
             pFilepath->szPath = NextPath->szPath;
             hb_fsFNameMerge( Path, pFilepath );

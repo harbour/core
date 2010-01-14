@@ -55,21 +55,21 @@
 
 HB_FUNC( HB_STRCLEAR )
 {
-   PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    /* NOTE: clear RETURN value before calling hb_itemGetWriteCL(),
             it's possible that it contains copy of passed item [druzus] */
    hb_retl( HB_FALSE );
 
-   if( pBuffer && HB_ISBYREF( 1 ) )
+   if( pItem && HB_ISBYREF( 1 ) )
    {
-      char * buffer;
+      const char * pszPtr;
+      char * pBuffer;
       HB_SIZE nSize;
 
-      if( hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
-      {
-         memset( buffer, '\0', nSize + 1 );
-         hb_retl( HB_TRUE );
-      }
+      pszPtr = hb_itemGetCPtr( pItem );
+      hb_itemGetWriteCL( pItem, &pBuffer, &nSize );
+      memset( pBuffer, '\0', nSize + 1 );
+      hb_retl( pszPtr == pBuffer );
    }
 }

@@ -302,8 +302,8 @@ int matherr( struct exception *err )
 }
 #endif
 
-BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
-                      double arg1, double arg2, double dResult )
+HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
+                         double arg1, double arg2, double dResult )
 {
 #if defined( HB_MATH_ERRNO )
 
@@ -314,7 +314,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
    switch( errno )
    {
       case 0:
-         return FALSE;
+         return HB_FALSE;
       case EDOM:
       case ERANGE:
 #   if defined( EOVERFLOW )
@@ -370,7 +370,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
       if( mathHandler )
          ( *mathHandler )( phb_exc );
    }
-   return TRUE;
+   return HB_TRUE;
 #else
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathGetError(%p,%s,%lf,%lf,%lf)", phb_exc, szFunc, arg1, arg2, dResult ) );
 
@@ -387,7 +387,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
 #  else
 
    HB_SYMBOL_UNUSED( phb_exc );
-   return FALSE;
+   return HB_FALSE;
 
 #  endif
 

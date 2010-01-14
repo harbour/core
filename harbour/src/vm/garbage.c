@@ -158,7 +158,7 @@ static HB_GARBAGE_PTR s_pLockedBlock = NULL;
 static HB_GARBAGE_PTR s_pDeletedBlock = NULL;
 
 /* marks if block releasing is requested during garbage collecting */
-static BOOL s_bCollecting = FALSE;
+static HB_BOOL s_bCollecting = HB_FALSE;
 
 /* flag for used/unused blocks - the meaning of the HB_GC_USED_FLAG bit
  * is reversed on every collecting attempt
@@ -210,7 +210,7 @@ void * hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
       if( s_ulBlocks > s_ulBlocksCheck )
       {
          HB_GC_UNLOCK
-         hb_gcCollectAll( TRUE );
+         hb_gcCollectAll( HB_TRUE );
          HB_GC_LOCK
          pAlloc->used   = s_uUsedFlag;
       }
@@ -241,7 +241,7 @@ void * hb_gcAllocRaw( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
       if( s_ulBlocks > s_ulBlocksCheck )
       {
          HB_GC_UNLOCK
-         hb_gcCollectAll( TRUE );
+         hb_gcCollectAll( HB_TRUE );
          HB_GC_LOCK
          pAlloc->used   = s_uUsedFlag;
       }
@@ -608,12 +608,12 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
 void hb_gcCollect( void )
 {
    /* TODO: decrease the amount of time spend collecting */
-   hb_gcCollectAll( FALSE );
+   hb_gcCollectAll( HB_FALSE );
 }
 
 /* Check all memory block if they can be released
 */
-void hb_gcCollectAll( BOOL fForce )
+void hb_gcCollectAll( HB_BOOL fForce )
 {
    /* MTNOTE: it's not necessary to protect s_bCollecting with mutex
     *         because it can be changed at RT only inside this procedure
@@ -630,7 +630,7 @@ void hb_gcCollectAll( BOOL fForce )
          return;
       }
 
-      s_bCollecting = TRUE;
+      s_bCollecting = HB_TRUE;
 
       /* Step 1 - mark */
       /* All blocks are already marked because we are flipping
@@ -746,7 +746,7 @@ void hb_gcCollectAll( BOOL fForce )
 
          } while( s_pDeletedBlock );
       }
-      s_bCollecting = FALSE;
+      s_bCollecting = HB_FALSE;
    }
 }
 
@@ -817,7 +817,7 @@ void hb_gcReleaseAll( void )
    {
       HB_GARBAGE_PTR pAlloc, pDelete;
 
-      s_bCollecting = TRUE;
+      s_bCollecting = HB_TRUE;
 
       pAlloc = s_pCurrBlock;
       do
@@ -841,7 +841,7 @@ void hb_gcReleaseAll( void )
       } while ( s_pCurrBlock );
    }
 
-   s_bCollecting = FALSE;
+   s_bCollecting = HB_FALSE;
 
 #ifdef HB_LEGACY_LEVEL2
    hb_gcAllocExit();

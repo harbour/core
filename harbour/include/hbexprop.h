@@ -87,7 +87,7 @@ extern HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewLong( HB_LONG, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDate( long, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewTimeStamp( long, long, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewString( const char *, ULONG, BOOL, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewString( const char *, ULONG, HB_BOOL, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewLogical( int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewSelf( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, ULONG, int, HB_COMP_DECL );
@@ -151,7 +151,7 @@ extern HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
-extern BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType );
+extern HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType );
 extern ULONG hb_compExprListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprParamListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
@@ -170,7 +170,7 @@ extern const char * hb_compExprAsString( HB_EXPR_PTR );
 extern const char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
 extern HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprIsValidMacro( const char *, ULONG, BOOL *, HB_COMP_DECL );
+extern HB_BOOL hb_compExprIsValidMacro( const char *, ULONG, HB_BOOL *, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL );
@@ -195,20 +195,20 @@ extern HB_EXPR_PTR hb_compExprReduceAnd( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprReduceOr( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR, HB_COMP_DECL );
 
-extern BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceINT( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceSTOT( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
-extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
-extern BOOL hb_compExprReduceDTOS( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceMIN( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceMAX( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_LONG, BOOL, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceINT( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceSTOD( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceDTOS( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_LONG, HB_BOOL, HB_COMP_DECL );
 
 HB_EXTERN_END
 

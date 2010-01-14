@@ -60,9 +60,9 @@
 
 #define HB_FSCOPY_BUFFERSIZE    16384
 
-BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
+HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
-   BOOL bRetVal = TRUE;
+   HB_BOOL bRetVal = HB_TRUE;
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
@@ -81,7 +81,7 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          {
             if( nBytesRead != hb_fsWrite( fhndDest, pbyBuffer, nBytesRead ) )
             {
-               bRetVal = FALSE;
+               bRetVal = HB_FALSE;
                break;
             }
          }
@@ -96,12 +96,12 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          hb_fsClose( fhndDest );
       }
       else
-         bRetVal = FALSE;
+         bRetVal = HB_FALSE;
 
       hb_fsClose( fhndSource );
    }
    else
-      bRetVal = FALSE;
+      bRetVal = HB_FALSE;
 
    return bRetVal;
 }

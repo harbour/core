@@ -53,9 +53,9 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL hb_printerIsReady( const char * pszPrinterName )
+HB_BOOL hb_printerIsReady( const char * pszPrinterName )
 {
-   BOOL bIsPrinter;
+   HB_BOOL bIsPrinter;
 
 #if defined( HB_OS_DOS )
 
@@ -92,7 +92,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
          bIsPrinter = ( regs.h.ah == 0x90 );
       }
       else
-         bIsPrinter = FALSE;
+         bIsPrinter = HB_FALSE;
    }
 
 #elif defined( HB_OS_WIN )
@@ -122,7 +122,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
 
       HB_SYMBOL_UNUSED( pszPrinterName );
 
-      bIsPrinter = FALSE;
+      bIsPrinter = HB_FALSE;
    }
 
 #endif

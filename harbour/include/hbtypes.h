@@ -66,7 +66,7 @@ typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS )
 
 typedef void ( * VM_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
-typedef BOOL     ( * EXT_IS_ARRAY ) ( int iParam );
+typedef HB_BOOL  ( * EXT_IS_ARRAY ) ( int iParam );
 typedef char *   ( * EXT_PARC1 )  ( int iParam );
 typedef char *   ( * EXT_PARC2 )  ( int iParam, HB_SIZE ulArrayIndex );
 typedef PHB_ITEM ( * HB_PARAM )( int iParam, long lMask );
@@ -119,16 +119,16 @@ typedef int      ( * HB_STORL2 )( int iLogical, int iParam , HB_SIZE ulArrayInde
 typedef int      ( * HB_STORNI2 )( int iValue, int iParam , HB_SIZE ulArrayIndex );
 typedef int      ( * HB_STORNL2 )( long lValue, int iParam , HB_SIZE ulArrayIndex );
 typedef int      ( * HB_STORND2 )( double dValue, int iParam , HB_SIZE ulArrayIndex );
-typedef BOOL     ( * HB_ARRAYNEW )( PHB_ITEM pItem, HB_SIZE ulLen );
+typedef HB_BOOL  ( * HB_ARRAYNEW )( PHB_ITEM pItem, HB_SIZE ulLen );
 typedef HB_SIZE  ( * HB_ARRAYLEN )( PHB_ITEM pArray );
-typedef BOOL     ( * HB_ARRAYISOBJECT )( PHB_ITEM pArray );
-typedef BOOL     ( * HB_ARRAYADD )( PHB_ITEM pArray, PHB_ITEM pItemValue );
-typedef BOOL     ( * HB_ARRAYINS )( PHB_ITEM pArray, HB_SIZE ulIndex );
-typedef BOOL     ( * HB_ARRAYDEL )( PHB_ITEM pArray, HB_SIZE ulIndex );
-typedef BOOL     ( * HB_ARRAYSIZE )( PHB_ITEM pArray, HB_SIZE ulLen );
-typedef BOOL     ( * HB_ARRAYLAST )( PHB_ITEM pArray, PHB_ITEM pResult );
-typedef BOOL     ( * HB_ARRAYSET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
-typedef BOOL     ( * HB_ARRAYGET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
+typedef HB_BOOL  ( * HB_ARRAYISOBJECT )( PHB_ITEM pArray );
+typedef HB_BOOL  ( * HB_ARRAYADD )( PHB_ITEM pArray, PHB_ITEM pItemValue );
+typedef HB_BOOL  ( * HB_ARRAYINS )( PHB_ITEM pArray, HB_SIZE ulIndex );
+typedef HB_BOOL  ( * HB_ARRAYDEL )( PHB_ITEM pArray, HB_SIZE ulIndex );
+typedef HB_BOOL  ( * HB_ARRAYSIZE )( PHB_ITEM pArray, HB_SIZE ulLen );
+typedef HB_BOOL  ( * HB_ARRAYLAST )( PHB_ITEM pArray, PHB_ITEM pResult );
+typedef HB_BOOL  ( * HB_ARRAYSET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
+typedef HB_BOOL  ( * HB_ARRAYGET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
 typedef void     ( * HB_XINIT )( void );                         /* Initialize fixed memory subsystem */
 typedef void     ( * HB_XEXIT )( void );                         /* Deinitialize fixed memory subsystem */
 typedef void *   ( * HB_XALLOC )( ULONG ulSize );                /* allocates memory, returns NULL on failure */

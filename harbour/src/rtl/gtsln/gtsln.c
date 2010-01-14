@@ -62,10 +62,10 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTID_PTR  (&s_GtId)
 
 static HB_FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
-static BOOL s_fStdInTTY = FALSE, s_fStdOutTTY = FALSE, s_fStdErrTTY = FALSE;
+static HB_BOOL s_fStdInTTY = HB_FALSE, s_fStdOutTTY = HB_FALSE, s_fStdErrTTY = HB_FALSE;
 
 /* does terminal works in Unicode (UTF-8) mode? */
-BOOL hb_sln_Is_Unicode = FALSE;
+HB_BOOL hb_sln_Is_Unicode = HB_FALSE;
 
 /* Slang color names */
 static const char * s_colorNames[] =
@@ -105,12 +105,12 @@ static SLsmg_Char_Type s_outboxTab[ 256 ];
 unsigned char hb_sln_inputTab[ 256 ];
 PHB_CODEPAGE hb_sln_cdpIN;
 
-static BOOL s_fActive = FALSE;
+static HB_BOOL s_fActive = HB_FALSE;
 
 static int  s_iCursorStyle = SC_NORMAL;
 
 /* indicate if we are currently running a command from system */
-static BOOL s_bSuspended = FALSE;
+static HB_BOOL s_bSuspended = HB_FALSE;
 
 /* the name of an environmet variable containig a definition of nation chars.*/
 /* A definition is a list of pairs of chars. The first char in each pair is  */
@@ -122,14 +122,14 @@ static const char * hb_NationCharsEnvName = "HRBNATIONCHARS";
 
 /* *********************************************************************** */
 
-volatile BOOL hb_sln_bScreen_Size_Changed = FALSE;
+volatile HB_BOOL hb_sln_bScreen_Size_Changed = HB_FALSE;
 
 /* window's resize handler */
 static void sigwinch_handler( int iSig )
 {
    HB_SYMBOL_UNUSED( iSig );
 
-   hb_sln_bScreen_Size_Changed = TRUE;
+   hb_sln_bScreen_Size_Changed = HB_TRUE;
    SLsignal( SIGWINCH, sigwinch_handler );
 }
 
@@ -344,7 +344,7 @@ static void hb_sln_setACSCtrans( void )
 
 /* *********************************************************************** */
 
-static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOOL fBox )
+static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_BOOL fBox )
 {
    int i, iDst;
 
@@ -356,7 +356,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
    for( i = 0; i < 256; i++ )
    {
       if( hb_sln_Is_Unicode )
-         iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
+         iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
       else
          iDst = i;
 
@@ -391,12 +391,12 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
             if( hb_cdpIsAlpha( cdpHost, i ) )
             {
 #ifdef HB_SLN_UNICODE
-               iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
+               iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
 #else
                if( hb_sln_Is_Unicode )
-                  iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
+                  iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
                else
-                  iDst = hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+                  iDst = hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
 #endif
                HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
                if( fBox )
@@ -415,7 +415,7 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
 
    for ( i = 0; i < 256; i++ )
       hb_sln_inputTab[ i ] = ( unsigned char )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
 
    /* init national chars */
@@ -573,10 +573,10 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 #endif
 /* *********************************************************************** */
 
-/* I think this function should not be void. It should be BOOL */
+/* I think this function should not be void. It should be HB_BOOL */
 static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   BOOL gt_Inited = FALSE;
+   HB_BOOL gt_Inited = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
 
@@ -671,7 +671,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
             /* initialize conversion tables */
             hb_sln_colorTrans();
-            hb_sln_setCharTrans( hb_vmCDP(), NULL, TRUE );
+            hb_sln_setCharTrans( hb_vmCDP(), NULL, HB_TRUE );
             hb_sln_setKeyTrans( hb_vmCDP(), NULL );
 
             /* ensure we are in a normal chars set */
@@ -688,7 +688,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             SLsmg_gotorc( 0, 0 );
             SLsmg_refresh();
 
-            gt_Inited = TRUE;
+            gt_Inited = HB_TRUE;
          }
       }
    }
@@ -700,15 +700,15 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errInternal( 9997, "Internal error: screen driver initialization failure", NULL, NULL );
    }
 
-   s_fActive = TRUE;
+   s_fActive = HB_TRUE;
    hb_gt_sln_mouse_Init();
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, HB_FALSE );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, s_fStdOutTTY );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_fStdErrTTY );
 
-   HB_GTSELF_SETBLINK( pGT, TRUE );
+   HB_GTSELF_SETBLINK( pGT, HB_TRUE );
    HB_GTSELF_SETPOS( pGT, SLsmg_get_row(), SLsmg_get_column() );
 }
 
@@ -735,14 +735,14 @@ static void hb_gt_sln_Exit( PHB_GT pGT )
    SLsmg_reset_smg();
    SLang_reset_tty();
 
-   s_fStdInTTY = s_fStdOutTTY = s_fStdErrTTY = s_fActive = FALSE;
+   s_fStdInTTY = s_fStdOutTTY = s_fStdErrTTY = s_fActive = HB_FALSE;
 
    HB_GTSUPER_EXIT( pGT );
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
@@ -751,12 +751,12 @@ static BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
    HB_SYMBOL_UNUSED( iCols );
 
    /* TODO: How to change the size of the screen? */
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_IsColor(%p)", pGT));
 
@@ -767,7 +767,7 @@ static BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_SetBlink( PHB_GT pGT, BOOL fBlink )
+static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetBlink(%p,%d)", pGT, (int) fBlink));
 
@@ -844,7 +844,7 @@ static const char * hb_gt_sln_Version( PHB_GT pGT, int iType )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Suspend( PHB_GT pGT )
+static HB_BOOL hb_gt_sln_Suspend( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -853,7 +853,7 @@ static BOOL hb_gt_sln_Suspend( PHB_GT pGT )
       if( SLsmg_suspend_smg() != -1 )
       {
          SLang_reset_tty();
-         s_bSuspended = TRUE;
+         s_bSuspended = HB_TRUE;
       }
    }
 
@@ -862,7 +862,7 @@ static BOOL hb_gt_sln_Suspend( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_sln_Resume( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -873,7 +873,7 @@ static BOOL hb_gt_sln_Resume( PHB_GT pGT )
 #if defined( HB_HAS_GPM )
       hb_gt_sln_mouse_FixTrash();
 #endif
-      s_bSuspended = FALSE;
+      s_bSuspended = HB_FALSE;
    }
 
    return !s_bSuspended;
@@ -881,7 +881,7 @@ static BOOL hb_gt_sln_Resume( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PreExt( PHB_GT pGT )
+static HB_BOOL hb_gt_sln_PreExt( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -889,21 +889,21 @@ static BOOL hb_gt_sln_PreExt( PHB_GT pGT )
 #if defined( HB_HAS_GPM )
    hb_gt_sln_mouse_FixTrash();
 #endif
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PostExt( PHB_GT pGT )
+static HB_BOOL hb_gt_sln_PostExt( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -911,7 +911,7 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       case HB_GTI_ISUNICODE:
@@ -928,13 +928,13 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
@@ -952,12 +952,12 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
+static HB_BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
@@ -975,7 +975,7 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
       hb_sln_setKeyTrans( cdpHost, cdpTerm );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
@@ -1026,7 +1026,7 @@ static void hb_gt_sln_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -1057,7 +1057,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseButtonState           = hb_gt_sln_mouse_ButtonState;
    pFuncTable->MouseCountButton           = hb_gt_sln_mouse_CountButton;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

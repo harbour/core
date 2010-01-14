@@ -189,7 +189,7 @@ HB_FUNC( HB_GETENV )
 HB_FUNC( HB_SETENV )
 {
    const char * pszName = hb_parc( 1 );
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pszName )
    {

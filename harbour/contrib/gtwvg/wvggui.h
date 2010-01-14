@@ -251,9 +251,9 @@ typedef struct
    int       width;
    int       height;
    PHB_ITEM  pParentGT;
-   BOOL      bVisible;
-   BOOL      bRowCols;
-   BOOL      bConfigured;
+   HB_BOOL   bVisible;
+   HB_BOOL   bRowCols;
+   HB_BOOL   bConfigured;
    int       iWndType;
 } HB_GT_PARAMS, * PHB_GT_PARAMS;
 
@@ -269,7 +269,7 @@ typedef struct
    USHORT   COLS;                           /* number of displayable columns in window */
 
    POINT    MousePos;                       /* the last mouse position */
-   BOOL     MouseMove;                      /* Flag to say whether to return mouse movement events */
+   HB_BOOL  MouseMove;                      /* Flag to say whether to return mouse movement events */
 
    int      Keys[ WVT_CHAR_QUEUE_SIZE ];    /* Array to hold the characters & events */
    int      keyPointerIn;                   /* Offset into key array for character to be placed */
@@ -277,7 +277,7 @@ typedef struct
    int      keyLast;                        /* last inkey code value in buffer */
 
    POINT    PTEXTSIZE;                      /* size of the fixed width font */
-   BOOL     FixedFont;                      /* TRUE if current font is a fixed font */
+   HB_BOOL  FixedFont;                      /* TRUE if current font is a fixed font */
    int      FixedSize[ WVT_MAX_COLS ];      /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                     /* requested font height */
    int      fontWidth;                      /* requested font width */
@@ -287,7 +287,7 @@ typedef struct
    HFONT    hFont;                          /* current font handle */
 
    HWND     hWnd;                           /* the window handle */
-   BOOL     fInit;                          /* logical variable indicating that window should be open */
+   HB_BOOL  fInit;                          /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                    /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                      /* Host/HVM CodePage for unicode input translations */
@@ -297,16 +297,16 @@ typedef struct
 #endif
 
    HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
-   BOOL     bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
+   HB_BOOL  bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
 
    int      CodePage;                       /* Code page to use for display characters */
-   BOOL     Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
-   BOOL     CentreWindow;                   /* True if window is to be Reset into centre of window */
+   HB_BOOL  Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
+   HB_BOOL  CentreWindow;                   /* True if window is to be Reset into centre of window */
 
-   BOOL     IgnoreWM_SYSCHAR;
+   HB_BOOL  IgnoreWM_SYSCHAR;
 
-   BOOL     bResizable;
-   BOOL     bClosable;
+   HB_BOOL  bResizable;
+   HB_BOOL  bClosable;
 
    /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            */
 
@@ -319,13 +319,13 @@ typedef struct
 
    int       LastMenuEvent;                 /* Last menu item selected                                                */
    int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
-   BOOL      InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
-   BOOL      EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
+   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
+   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
 
-   BOOL      bPaint;
-   BOOL      bGetFocus;
-   BOOL      bSetFocus;
-   BOOL      bKillFocus;
+   HB_BOOL   bPaint;
+   HB_BOOL   bGetFocus;
+   HB_BOOL   bSetFocus;
+   HB_BOOL   bKillFocus;
 
    HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                      */
    wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll*/
@@ -334,8 +334,8 @@ typedef struct
 
    PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                       */
 
-   BOOL      bTracking;                     /* To track if mouse has eneter or left the window area          */
-   BOOL      bResizing;                     /* To know when it is in resizing mode                           */
+   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area          */
+   HB_BOOL   bResizing;                     /* To know when it is in resizing mode                           */
    int       width;
    int       height;
 
@@ -431,11 +431,11 @@ typedef struct _tag_HB_GT_COLDEF
 void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
 /*----------------------------------------------------------------------*/
 #if 0
-extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
+extern HB_BOOL  wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
-extern BOOL     wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
+extern HB_BOOL  wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
 extern PHB_ITEM wvt_Point2Array( POINT *pt  );
-extern BOOL     wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
+extern HB_BOOL  wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
 extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
 extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
 extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);

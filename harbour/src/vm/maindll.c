@@ -76,7 +76,7 @@ BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserve
    switch( fdwReason )
    {
       case DLL_PROCESS_ATTACH:
-         hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+         hb_vmInit( HB_FALSE );  /* Don't execute first linked symbol */
          break;
 
       case DLL_PROCESS_DETACH:

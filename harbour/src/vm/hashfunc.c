@@ -436,7 +436,7 @@ HB_FUNC( HB_HSCAN )
 
    if( pHash && pValue )
    {
-      BOOL fExact = hb_parl( 5 ), fFound = FALSE;
+      HB_BOOL fExact = hb_parl( 5 ), fFound = HB_FALSE;
       HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
 
       ulStart = hb_parnl( 3 );
@@ -462,7 +462,7 @@ HB_FUNC( HB_HSCAN )
                   PHB_ITEM pReturn = hb_stackReturnItem();
                   if( HB_IS_LOGICAL( pReturn ) && hb_itemGetL( pReturn ) )
                   {
-                     fFound = TRUE;
+                     fFound = HB_TRUE;
                      break;
                   }
                }
@@ -481,7 +481,7 @@ HB_FUNC( HB_HSCAN )
             {
                if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -500,7 +500,7 @@ HB_FUNC( HB_HSCAN )
             {
                if( HB_IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -520,7 +520,7 @@ HB_FUNC( HB_HSCAN )
                    pItem->item.asDateTime.julian == pValue->item.asDateTime.julian &&
                    ( !fExact || pItem->item.asDateTime.time == pValue->item.asDateTime.time ) )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -531,7 +531,7 @@ HB_FUNC( HB_HSCAN )
       }
       else if( HB_IS_LOGICAL( pValue ) )
       {
-         BOOL fValue = hb_itemGetDL( pValue );
+         HB_BOOL fValue = hb_itemGetDL( pValue );
          while( ulCount-- )
          {
             PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
@@ -539,7 +539,7 @@ HB_FUNC( HB_HSCAN )
             {
                if( HB_IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == fValue )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -557,7 +557,7 @@ HB_FUNC( HB_HSCAN )
             {
                if( HB_IS_NIL( pItem ) )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -576,7 +576,7 @@ HB_FUNC( HB_HSCAN )
                if( HB_IS_POINTER( pItem ) &&
                    pItem->item.asPointer.value == pValue->item.asPointer.value )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -595,7 +595,7 @@ HB_FUNC( HB_HSCAN )
                if( HB_IS_ARRAY( pItem ) &&
                    pItem->item.asArray.value == pValue->item.asArray.value )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }
@@ -614,7 +614,7 @@ HB_FUNC( HB_HSCAN )
                if( HB_IS_HASH( pItem ) &&
                    pItem->item.asHash.value == pValue->item.asHash.value )
                {
-                  fFound = TRUE;
+                  fFound = HB_TRUE;
                   break;
                }
             }

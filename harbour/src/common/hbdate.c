@@ -473,17 +473,17 @@ char * hb_timeStr( char * szTime, long lMilliSec )
    return szTime;
 }
 
-BOOL hb_timeStrGet( const char * szTime,
-                    int * piHour, int * piMinutes,
-                    int * piSeconds, int * piMSec )
+HB_BOOL hb_timeStrGet( const char * szTime,
+                       int * piHour, int * piMinutes,
+                       int * piSeconds, int * piMSec )
 {
    int iHour, iMinutes, iSeconds, iMSec, iBlocks;
-   BOOL fValid;
+   HB_BOOL fValid;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStrGet(%s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
 
    iHour = iMinutes = iSeconds = iMSec = iBlocks = 0;
-   fValid = FALSE;
+   fValid = HB_FALSE;
 
    if( szTime )
    {
@@ -551,7 +551,7 @@ BOOL hb_timeStrGet( const char * szTime,
             ++szTime;
          if( *szTime == 0 && iBlocks > 0 &&
              iHour < 24 && iMinutes < 60 && iSeconds < 60 )
-            fValid = TRUE;
+            fValid = HB_TRUE;
          else
             iHour = iMinutes = iSeconds = iMSec = 0;
       }
@@ -687,18 +687,18 @@ char * hb_timeStampStr( char * szDateTime, long lJulian, long lMilliSec )
    return szDateTime;
 }
 
-BOOL hb_timeStampStrGet( const char * szDateTime,
-                         int * piYear, int * piMonth, int * piDay,
-                         int * piHour, int * piMinutes, int * piSeconds,
-                         int * piMSec )
+HB_BOOL hb_timeStampStrGet( const char * szDateTime,
+                            int * piYear, int * piMonth, int * piDay,
+                            int * piHour, int * piMinutes, int * piSeconds,
+                            int * piMSec )
 {
    int iYear, iMonth, iDay;
-   BOOL fValid;
+   HB_BOOL fValid;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrGet(%s, %p, %p, %p, %p, %p, %p, %p)", szDateTime, piYear, piMonth, piDay, piHour, piMinutes, piSeconds, piMSec));
 
    iYear = iMonth = iDay = 0;
-   fValid = FALSE;
+   fValid = HB_FALSE;
 
    if( szDateTime )
    {
@@ -735,7 +735,7 @@ BOOL hb_timeStampStrGet( const char * szDateTime,
                   ++szDateTime;
                if( *szDateTime == '\0' )
                   szDateTime = NULL;
-               fValid = TRUE;
+               fValid = HB_TRUE;
             }
          }
          else
@@ -751,13 +751,13 @@ BOOL hb_timeStampStrGet( const char * szDateTime,
       if( !hb_timeStrGet( szDateTime, piHour, piMinutes, piSeconds, piMSec ) )
       {
          if( szDateTime )
-            fValid = FALSE;
+            fValid = HB_FALSE;
       }
       else
-         fValid = TRUE;
+         fValid = HB_TRUE;
    }
    else if( szDateTime )
-      fValid = FALSE;
+      fValid = HB_FALSE;
 
    if( piYear )
       *piYear = iYear;
@@ -769,11 +769,11 @@ BOOL hb_timeStampStrGet( const char * szDateTime,
    return fValid;
 }
 
-BOOL hb_timeStampStrGetDT( const char * szDateTime,
-                           long * plJulian, long * plMilliSec )
+HB_BOOL hb_timeStampStrGetDT( const char * szDateTime,
+                              long * plJulian, long * plMilliSec )
 {
    int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
-   BOOL fValid;
+   HB_BOOL fValid;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrGetDT(%s, %p, %p)", szDateTime, plJulian, plMilliSec));
 

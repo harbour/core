@@ -222,7 +222,7 @@ HB_FUNC( HB_F_EOF )
       uiError = hb_fsError();
    }
    else
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
 
    hb_fsSetFError( uiError );
 }
@@ -278,7 +278,7 @@ HB_FUNC( HB_EXEC )
 {
    if( HB_ISSYMBOL( 1 ) )
    {
-      BOOL fSend = FALSE;
+      HB_BOOL fSend = HB_FALSE;
       int iParams = hb_pcount() - 1;
 
       if( iParams >= 1 )

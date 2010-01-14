@@ -179,7 +179,7 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSiz
 }
 
 /* add a new value into th ehash table */
-BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue )
+HB_BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
@@ -199,7 +199,7 @@ BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * 
    }
    ++pTable->ulCount;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* return the pointer to item's value or NULL if not found
@@ -225,19 +225,19 @@ const void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, const void * pKey )
 }
 
 /* Delete an item from the table
-* Returns TRUE if item was found and returns FALSE when passed item
+* Returns HB_TRUE if item was found and returns HB_FALSE when passed item
 * is not stored in the table
 */
-BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void *pKey )
+HB_BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void *pKey )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    HB_HASH_ITEM_PTR pPrev = NULL;
-   BOOL bFound = FALSE;
+   HB_BOOL bFound = HB_FALSE;
 
    ulKey = ( pTable->pKeyFunc )( pTable, pKey, NULL );
    if( ulKey > pTable->ulTableSize )
-      return FALSE;
+      return HB_FALSE;
 
    pItem = pTable->pItems[ ulKey ];
    while( pItem && ! bFound )
@@ -259,7 +259,7 @@ BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void *pKey )
          }
          --pTable->ulCount;
          hb_hashItemDelete( pTable, pItem );
-         bFound = TRUE;
+         bFound = HB_TRUE;
       }
       else
       {

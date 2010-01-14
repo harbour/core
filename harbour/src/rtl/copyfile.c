@@ -62,9 +62,9 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_copyfile( const char * szSource, const char * szDest )
+static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 {
-   BOOL bRetVal = FALSE;
+   HB_BOOL bRetVal = HB_FALSE;
    HB_FHANDLE fhndSource;
    PHB_ITEM pError = NULL;
 
@@ -114,7 +114,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
 
          buffer = hb_xgrab( BUFFER_SIZE );
 
-         bRetVal = TRUE;
+         bRetVal = HB_TRUE;
 
          while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
@@ -123,7 +123,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
                pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, szDest );
                if( hb_errLaunch( pError ) != E_RETRY )
                {
-                  bRetVal = FALSE;
+                  bRetVal = HB_FALSE;
                   break;
                }
             }
@@ -155,7 +155,7 @@ HB_FUNC( __COPYFILE )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ) ) )
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */

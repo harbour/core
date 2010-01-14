@@ -325,7 +325,7 @@ static char ** hb_tokensplit ( char *string, BYTE delimiter, int iCharCount, int
 }
 
 /*----------------------------------------------------------------------------*/
-BOOL file_read ( FILE *stream, char *string, int *iCharCount )
+static HB_BOOL file_read( FILE *stream, char *string, int *iCharCount )
 {
    int ch, cnbr = 0;
 
@@ -353,7 +353,7 @@ BOOL file_read ( FILE *stream, char *string, int *iCharCount )
       {
          *iCharCount = cnbr;
          string [MAX_READ] = '\0';
-         return TRUE;
+         return HB_TRUE;
       }
    }
 }

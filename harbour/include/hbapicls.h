@@ -94,13 +94,13 @@ extern void       hb_clsInit( void );           /* initialize Classy/OO system a
 extern void       hb_clsDoInit( void );         /* initialize Classy/OO system .prg functions */
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
 extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class internals as used */
-extern BOOL       hb_clsHasDestructor( USHORT uiClass );
+extern HB_BOOL    hb_clsHasDestructor( USHORT uiClass );
 extern PHB_SYMB   hb_clsMethodSym( PHB_ITEM pBaseSymbol ); /* returns the real method symbol for given stack symbol */
 
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
-extern BOOL       hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE pStack ); /* create object variable reference */
-extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
-extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
+extern HB_BOOL    hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE pStack ); /* create object variable reference */
+extern HB_BOOL    hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
+extern HB_BOOL    hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 extern void       hb_objDestructorCall( PHB_ITEM pObject );
 
 #ifndef HB_NO_PROFILER
@@ -114,7 +114,7 @@ extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 HB_EXPORT extern const char * hb_clsName( USHORT uiClass );
 HB_EXPORT extern const char * hb_clsFuncName( USHORT uiClass );
 HB_EXPORT extern const char * hb_clsMethodName( USHORT uiClass, USHORT uiMethod );
-HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
+HB_EXPORT extern HB_BOOL    hb_clsIsParent( USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 HB_EXPORT extern USHORT     hb_clsFindClass( const char * szClass, const char * szFunc );
 
 /* object management */
@@ -123,8 +123,8 @@ HB_EXPORT extern USHORT     hb_objSetClass( PHB_ITEM pItem, const char * szClass
 HB_EXPORT extern const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
 HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 
-HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
-HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
+HB_EXPORT extern HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
+HB_EXPORT extern HB_BOOL    hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
 HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
 HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 

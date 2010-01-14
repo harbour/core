@@ -170,7 +170,7 @@ HB_FUNC( HB_DISKSPACE )
       {
          ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
-         BOOL fResult;
+         HB_BOOL fResult;
 
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
 
@@ -223,7 +223,7 @@ HB_FUNC( HB_DISKSPACE )
                fResult = pGetDiskFreeSpaceEx( lpPath,
                                               ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
                                               ( PULARGE_INTEGER ) &i64TotalBytes,
-                                              ( PULARGE_INTEGER ) &i64FreeBytes );
+                                              ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_TRUE : HB_FALSE;
                hb_fsSetIOError( fResult, 0 );
                if( fResult )
                {
@@ -259,7 +259,7 @@ HB_FUNC( HB_DISKSPACE )
                                            &dwSectorsPerCluster,
                                            &dwBytesPerSector,
                                            &dwNumberOfFreeClusters,
-                                           &dwTotalNumberOfClusters );
+                                           &dwTotalNumberOfClusters ) ? HB_TRUE : HB_FALSE;
                hb_fsSetIOError( fResult, 0 );
 
                if( fResult )
@@ -334,10 +334,10 @@ HB_FUNC( HB_DISKSPACE )
                             ( double ) fsa.cbSector;
                break;
          }
-         hb_fsSetIOError( TRUE, 0 );
+         hb_fsSetIOError( HB_TRUE, 0 );
       }
       else
-         hb_fsSetIOError( FALSE, 0 );
+         hb_fsSetIOError( HB_FALSE, 0 );
    }
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    {
@@ -375,10 +375,10 @@ HB_FUNC( HB_DISKSPACE )
                dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
                break;
          }
-         hb_fsSetIOError( TRUE, 0 );
+         hb_fsSetIOError( HB_TRUE, 0 );
       }
       else
-         hb_fsSetIOError( FALSE, 0 );
+         hb_fsSetIOError( HB_FALSE, 0 );
 
       if( pszFree )
          hb_xfree( pszFree );

@@ -58,7 +58,7 @@
          this limit is extended, so we are not *strictly* compatible here.
          [vszakats] */
 
-static void hb_memoread( BOOL bHandleEOF )
+static void hb_memoread( HB_BOOL bHandleEOF )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
 
@@ -112,19 +112,19 @@ static void hb_memoread( BOOL bHandleEOF )
 
 HB_FUNC( HB_MEMOREAD )
 {
-   hb_memoread( FALSE );
+   hb_memoread( HB_FALSE );
 }
 
 HB_FUNC( MEMOREAD )
 {
-   hb_memoread( TRUE );
+   hb_memoread( HB_TRUE );
 }
 
-static BOOL hb_memowrit( BOOL bHandleEOF )
+static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pString   = hb_param( 2, HB_IT_STRING );
-   BOOL bRetVal       = FALSE;
+   HB_BOOL bRetVal    = HB_FALSE;
 
    if( pFileName && pString )
    {
@@ -157,10 +157,10 @@ static BOOL hb_memowrit( BOOL bHandleEOF )
 
 HB_FUNC( HB_MEMOWRIT )
 {
-   hb_retl( hb_memowrit( FALSE ) );
+   hb_retl( hb_memowrit( HB_FALSE ) );
 }
 
 HB_FUNC( MEMOWRIT )
 {
-   hb_retl( hb_memowrit( TRUE ) );
+   hb_retl( hb_memowrit( HB_TRUE ) );
 }

@@ -142,7 +142,7 @@ static BITMAPINFO * PackedDibLoad( PTSTR szFileName )
 {
    BITMAPFILEHEADER bmfh;
    BITMAPINFO     * pbmi;
-   BOOL             bSuccess;
+   HB_BOOL          bSuccess;
    DWORD            dwPackedDibSize, dwBytesRead;
    HANDLE           hFile;
 
@@ -284,7 +284,7 @@ static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 #endif
 static HBITMAP hPrepareBitmap( const char * szBitmapX, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
-                               BOOL bMap3Dcolors,
+                               HB_BOOL bMap3Dcolors,
                                HWND hCtrl,
                                int  iMode )
 {
@@ -354,7 +354,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmapX, UINT uiBitmap,
                {
                   HDC     hdcSource, hdcTarget;
                   HBITMAP hBitmap2;
-                  BOOL    bResult;
+                  HB_BOOL bResult;
 
                   hdcSource = CreateCompatibleDC( hdc );
                   SelectObject( hdcSource, hBitmap );
@@ -787,7 +787,7 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 /*                            WvgFontDialog()                           */
 /*----------------------------------------------------------------------*/
 
-PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
+PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 {
    PHB_ITEM aFont = hb_itemNew( NULL );
    hb_arrayNew( aFont, 15 );
@@ -841,8 +841,8 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
 
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-   BOOL     bret = FALSE;
-   BOOL     binit = FALSE;
+   HB_BOOL  bret = FALSE;
+   HB_BOOL  binit = FALSE;
    PHB_ITEM block;
 
    if( msg == WM_INITDIALOG )
@@ -1074,7 +1074,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
-   BOOL        bSuccess;
+   HB_BOOL     bSuccess;
    HWND        hWndTB = wapi_par_HWND( 1 );
    int         iCommand = hb_parni( 4 );
    TCHAR *     szCaption;

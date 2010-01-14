@@ -123,7 +123,7 @@ HB_FUNC( HB_RANDOMINT )
 HB_FUNC( HB_RANDOMSEED )
 {
    srand( HB_ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
-   s_fInit = TRUE;
+   s_fInit = HB_TRUE;
 }
 
 /* Returns a double value between 0 and 1 */
@@ -134,7 +134,7 @@ double hb_random_num()
    if( !s_fInit )
    {
       srand( ( unsigned ) hb_dateMilliSeconds() );
-      s_fInit = TRUE;
+      s_fInit = HB_TRUE;
    }
 
    d1 = ( double ) rand();

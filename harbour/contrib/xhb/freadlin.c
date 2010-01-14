@@ -58,7 +58,7 @@
 
 #define READING_BLOCK      4096
 
-char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Term, int * iTermSizes, int iTerms, BOOL * bFound, BOOL * bEOF )
+char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Term, int * iTermSizes, int iTerms, HB_BOOL * bFound, HB_BOOL * bEOF )
 {
    int iPosTerm = 0, iPos, iPosition;
    int nTries;
@@ -67,8 +67,8 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %i, %i, %i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
 
-   *bFound  = FALSE;
-   *bEOF    = FALSE;
+   *bFound  = HB_FALSE;
+   *bEOF    = HB_FALSE;
    nTries   = 0;
    lOffset  = 0;
    lSize    = *plBuffLen;
@@ -102,13 +102,13 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
                /* Compare with the LAST terminator byte */
                if( pBuff[lOffset+iPos] == Term[iPosTerm][iTermSizes[iPosTerm]-1] && (iTermSizes[iPosTerm]-1) <= (iPos+lOffset) )
                {
-                  *bFound = TRUE;
+                  *bFound = HB_TRUE;
 
                   for(iPosition=0; iPosition < (iTermSizes[iPosTerm]-1); iPosition++)
                   {
                      if(Term[iPosTerm][iPosition] != pBuff[ lOffset+(iPos-iTermSizes[iPosTerm])+iPosition+1 ])
                      {
-                        *bFound = FALSE;
+                        *bFound = HB_FALSE;
                         break;
                      }
                   }
@@ -149,7 +149,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
                *plBuffLen = lOffset + lRead;
             }
 
-            *bEOF = TRUE;
+            *bEOF = HB_TRUE;
          }
       }
 
@@ -171,7 +171,7 @@ HB_FUNC( HB_FREADLINE )
    int * iTermSizes;
    LONG lSize = hb_parnl( 4 );
    int i, iTerms;
-   BOOL bFound, bEOF;
+   HB_BOOL bFound, bEOF;
 
    if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
    {

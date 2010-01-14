@@ -393,11 +393,11 @@ char * hb_verPlatform( void )
    return pszPlatform;
 }
 
-BOOL hb_iswinnt( void )
+HB_BOOL hb_iswinnt( void )
 {
 #if defined( HB_OS_WIN )
-   static BOOL s_fWinNT = FALSE;
-   static BOOL s_fInited = FALSE;
+   static HB_BOOL s_fWinNT = HB_FALSE;
+   static HB_BOOL s_fInited = HB_FALSE;
 
    if( ! s_fInited )
    {
@@ -405,20 +405,20 @@ BOOL hb_iswinnt( void )
       osvi.dwOSVersionInfoSize = sizeof( osvi );
       if( GetVersionEx( &osvi ) )
          s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
-      s_fInited = TRUE;
+      s_fInited = HB_TRUE;
    }
    return s_fWinNT;
 #else
-   return FALSE;
+   return HB_FALSE;
 #endif
 }
 
-BOOL hb_iswince( void )
+HB_BOOL hb_iswince( void )
 {
 #if defined( HB_OS_WIN_CE )
-   return TRUE;
+   return HB_TRUE;
 #else
-   return FALSE;
+   return HB_FALSE;
 #endif
 }
 

@@ -136,14 +136,14 @@ static void hb_inetErrRT( void )
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-static BOOL hb_inetIsOpen( PHB_SOCKET_STRUCT socket )
+static HB_BOOL hb_inetIsOpen( PHB_SOCKET_STRUCT socket )
 {
    if( socket->sd == HB_NO_SOCKET )
    {
       socket->iError = HB_INET_ERR_CLOSEDSOCKET;
-      return FALSE;
+      return HB_FALSE;
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 static int hb_inetCloseSocket( PHB_SOCKET_STRUCT socket )
@@ -226,11 +226,11 @@ static void hb_inetAutoInit( void )
    }
 }
 
-BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
-                            HB_INET_RFUNC recvFunc,
-                            HB_INET_SFUNC sendFunc,
-                            HB_INET_FFUNC flushFunc,
-                            HB_INET_CFUNC cleanFunc )
+HB_BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
+                               HB_INET_RFUNC recvFunc,
+                               HB_INET_SFUNC sendFunc,
+                               HB_INET_FFUNC flushFunc,
+                               HB_INET_CFUNC cleanFunc )
 {
    PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) hb_itemGetPtrGC( pItem, &s_gcInetFuncs );
 
@@ -243,11 +243,11 @@ BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
       socket->flushFunc = flushFunc;
       socket->cleanFunc = cleanFunc;
       socket->stream = pStream;
-      return TRUE;
+      return HB_TRUE;
    }
 
    hb_inetErrRT();
-   return FALSE;
+   return HB_FALSE;
 }
 
 HB_FUNC( HB_INETINIT )
@@ -602,7 +602,7 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
 * TCP receive and send functions
 ***/
 
-static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, BOOL readahead )
+static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, HB_BOOL readahead )
 {
    long rec = 0;
 
@@ -621,7 +621,7 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, BOOL
       socket->inbuffer = HB_MAX( 0, rec );
    }
    else
-      readahead = FALSE;
+      readahead = HB_FALSE;
 
    if( socket->inbuffer > 0 )
    {
@@ -693,7 +693,7 @@ static void s_inetRecvInternal( int iMode )
       socket->iError = HB_INET_ERR_OK;
       do
       {
-         iLen = s_inetRecv( socket, buffer + iReceived, iMaxLen - iReceived, FALSE );
+         iLen = s_inetRecv( socket, buffer + iReceived, iMaxLen - iReceived, HB_FALSE );
          if( iLen >= 0 )
          {
             iReceived += iLen;
@@ -790,14 +790,14 @@ static void s_inetRecvPattern( const char ** patterns, int * patternsizes,
          buffer = ( char * ) hb_xrealloc( buffer, iAllocated );
       }
 
-      iLen = s_inetRecv( socket, &cChar, 1, TRUE );
+      iLen = s_inetRecv( socket, &cChar, 1, HB_TRUE );
       if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
          iLen = -2;     /* this signals timeout */
          iTimeElapsed += socket->iTimeout;
          if( socket->pPeriodicBlock )
          {
-            BOOL fResult;
+            HB_BOOL fResult;
 
             hb_execFromArray( socket->pPeriodicBlock );
             fResult = hb_parl( -1 ) && hb_vmRequestQuery() == 0;
@@ -957,7 +957,7 @@ HB_FUNC( HB_INETDATAREADY )
 }
 
 
-static void s_inetSendInternal( BOOL lAll )
+static void s_inetSendInternal( HB_BOOL lAll )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
@@ -1031,12 +1031,12 @@ static void s_inetSendInternal( BOOL lAll )
 
 HB_FUNC( HB_INETSEND )
 {
-   s_inetSendInternal( FALSE );
+   s_inetSendInternal( HB_FALSE );
 }
 
 HB_FUNC( HB_INETSENDALL )
 {
-   s_inetSendInternal( TRUE );
+   s_inetSendInternal( HB_TRUE );
 }
 
 
@@ -1165,7 +1165,7 @@ HB_FUNC( HB_INETACCEPT )
 * Client specific (connection functions)
 ****/
 
-static void hb_inetConnectInternal( BOOL fResolve )
+static void hb_inetConnectInternal( HB_BOOL fResolve )
 {
    const char * szHost = hb_parc( 1 );
    char * szAddr = NULL;
@@ -1200,7 +1200,7 @@ static void hb_inetConnectInternal( BOOL fResolve )
             if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
                                    szHost, iPort ) )
             {
-               hb_socketSetKeepAlive( socket->sd, TRUE );
+               hb_socketSetKeepAlive( socket->sd, HB_TRUE );
                if( hb_socketConnect( socket->sd, socket->remote, socket->remotelen,
                                      socket->iTimeout ) != 0 )
                   socket->iError = hb_socketGetError();
@@ -1222,12 +1222,12 @@ static void hb_inetConnectInternal( BOOL fResolve )
 
 HB_FUNC( HB_INETCONNECT )
 {
-   hb_inetConnectInternal( TRUE );
+   hb_inetConnectInternal( HB_TRUE );
 }
 
 HB_FUNC( HB_INETCONNECTIP )
 {
-   hb_inetConnectInternal( FALSE );
+   hb_inetConnectInternal( HB_FALSE );
 }
 
 /***********************************************************
@@ -1261,7 +1261,7 @@ HB_FUNC( HB_INETDGRAMBIND )
 
    /* Setting broadcast if needed. */
    if( hb_parl( 3 ) )
-      hb_socketSetBroadcast( socket->sd, TRUE );
+      hb_socketSetBroadcast( socket->sd, HB_TRUE );
 
    szAddress = hb_parc( 2 );
    if( socket->remote )
@@ -1300,7 +1300,7 @@ HB_FUNC( HB_INETDGRAM )
 
    /* Setting broadcast if needed. */
    if( hb_parl( 1 ) )
-      hb_socketSetBroadcast( socket->sd, TRUE );
+      hb_socketSetBroadcast( socket->sd, HB_TRUE );
 
    hb_itemReturnRelease( pSocket );
 }
@@ -1368,7 +1368,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    int iLen = 0, iMax;
    char * buffer = NULL;
    HB_SIZE ulLen;
-   BOOL fRepeat;
+   HB_BOOL fRepeat;
 
    if( socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
       hb_inetErrRT();
@@ -1391,7 +1391,7 @@ HB_FUNC( HB_INETDGRAMRECV )
 
       do
       {
-         fRepeat = FALSE;
+         fRepeat = HB_FALSE;
          if( socket->remote )
             hb_xfree( socket->remote );
          iMax = hb_socketRecvFrom( socket->sd, buffer, iLen, 0,

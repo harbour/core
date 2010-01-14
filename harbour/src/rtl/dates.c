@@ -88,10 +88,10 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
    {
       const char * szPtr;
       int digit;
-      BOOL used_d, used_m, used_y;
+      HB_BOOL used_d, used_m, used_y;
 
       format_count = 0;
-      used_d = used_m = used_y = FALSE;
+      used_d = used_m = used_y = HB_FALSE;
       szPtr = szDateFormat;
 
       while( format_count < size )
@@ -139,7 +139,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
                      while( digit_count-- > 0 && format_count < size )
                         szFormattedDate[ format_count++ ] = ( char ) digit;
                }
-               used_d = TRUE;
+               used_d = HB_TRUE;
                break;
 
             case 'M':
@@ -174,7 +174,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
                      while( digit_count-- > 0 && format_count < size )
                         szFormattedDate[ format_count++ ] = ( char ) digit;
                }
-               used_m = TRUE;
+               used_m = HB_TRUE;
                break;
 
             case 'Y':
@@ -210,7 +210,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
                      while( digit_count-- > 0 && format_count < size )
                         szFormattedDate[ format_count++ ] = ( char ) digit;
                }
-               used_y = TRUE;
+               used_y = HB_TRUE;
                break;
 
             default:

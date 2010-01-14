@@ -82,7 +82,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
          {
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
-            BOOL fRaw = hb_parl( 3 );
+            HB_BOOL fRaw = hb_parl( 3 );
 
             /* In raw mode passed string is padded to 8 bytes with '\0'
              * otherwise ANSI X.923 padding is using
@@ -126,7 +126,7 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
             const char * pszSource;
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
-            BOOL fRaw = hb_parl( 3 );
+            HB_BOOL fRaw = hb_parl( 3 );
 
             pszData = ( char * ) hb_xgrab( ulSize + ( fRaw ? 1 : 0 ) );
             pszSource = hb_itemGetCPtr( pData );

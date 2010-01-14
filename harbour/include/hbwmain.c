@@ -69,7 +69,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     int iCmdShow )            /* show state of window */
 {
    LPSTR pArgs, pArg, pDst, pSrc, pFree;
-   BOOL fQuoted;
+   HB_BOOL fQuoted;
    int iErrorCode;
    HANDLE hHeap;
 

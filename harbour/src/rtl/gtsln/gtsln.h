@@ -210,9 +210,9 @@
 
 /* *********************************************************************** */
 
-extern BOOL hb_sln_Is_Unicode;
-extern BOOL hb_sln_UnderLinuxConsole;
-extern BOOL hb_sln_UnderXterm;
+extern HB_BOOL hb_sln_Is_Unicode;
+extern HB_BOOL hb_sln_UnderLinuxConsole;
+extern HB_BOOL hb_sln_UnderXterm;
 extern unsigned char hb_sln_inputTab[ 256 ];
 extern PHB_CODEPAGE hb_sln_cdpIN;
 
@@ -225,24 +225,24 @@ extern int hb_sln_escDelay;
 extern unsigned char hb_sln_convKDeadKeys[];
 
 /* indicates that screen size has changed */
-extern volatile BOOL hb_sln_bScreen_Size_Changed;
+extern volatile HB_BOOL hb_sln_bScreen_Size_Changed;
 
 extern int hb_sln_Init_Terminal( int phase );
 
 extern int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask );
 
-extern void hb_gt_sln_mouse_Init( void );
-extern void hb_gt_sln_mouse_Exit( void );
-extern BOOL hb_gt_sln_mouse_IsPresent( PHB_GT pGT );
-extern void hb_gt_sln_mouse_Show( PHB_GT pGT );
-extern void hb_gt_sln_mouse_Hide( PHB_GT pGT );
-extern void hb_gt_sln_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol );
-extern void hb_gt_sln_mouse_SetPos( PHB_GT pGT, int iRow, int iCol );
-extern int  hb_gt_sln_mouse_CountButton( PHB_GT pGT );
-extern BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton );
+extern void    hb_gt_sln_mouse_Init( void );
+extern void    hb_gt_sln_mouse_Exit( void );
+extern HB_BOOL hb_gt_sln_mouse_IsPresent( PHB_GT pGT );
+extern void    hb_gt_sln_mouse_Show( PHB_GT pGT );
+extern void    hb_gt_sln_mouse_Hide( PHB_GT pGT );
+extern void    hb_gt_sln_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol );
+extern void    hb_gt_sln_mouse_SetPos( PHB_GT pGT, int iRow, int iCol );
+extern int     hb_gt_sln_mouse_CountButton( PHB_GT pGT );
+extern HB_BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton );
 
-extern void hb_gt_sln_mouse_FixTrash( void );
-extern int  hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew );
-extern void hb_gt_sln_mouse_ProcessTerminalEvent( void );
+extern void    hb_gt_sln_mouse_FixTrash( void );
+extern int     hb_gt_sln_mouse_Inkey( int iEventMask, HB_BOOL fCheckNew );
+extern void    hb_gt_sln_mouse_ProcessTerminalEvent( void );
 
 /* *********************************************************************** */

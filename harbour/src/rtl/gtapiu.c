@@ -67,11 +67,11 @@ void hb_gtWDestroy( HB_GT_WND * wnd )
    HB_SYMBOL_UNUSED( wnd );
 }
 
-BOOL hb_gtWFlash( void )
+HB_BOOL hb_gtWFlash( void )
 {
    /* TODO: */
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 void hb_gtWApp( HB_GT_WND ** wnd )
@@ -96,14 +96,14 @@ void hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
    HB_SYMBOL_UNUSED( rect );
 }
 
-BOOL hb_gtWVis( HB_GT_WND * wnd, int iStatus ) /* USHORT in CA-Cl*pper [vszakats] */
+HB_BOOL hb_gtWVis( HB_GT_WND * wnd, int iStatus ) /* USHORT in CA-Cl*pper [vszakats] */
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( wnd );
    HB_SYMBOL_UNUSED( iStatus );
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */

@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbregex.h"
 
-BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
+HB_BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
 {
    PHB_REGEX pRegEx;
 
@@ -62,8 +62,8 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
    pRegEx = hb_regexCompile( szPattern, strlen( szPattern ), HBREG_EXTENDED );
    if( pRegEx )
    {
-      BOOL fMatch;
-      fMatch = hb_regexMatch( pRegEx, szString, strlen( szString ), TRUE );
+      HB_BOOL fMatch;
+      fMatch = hb_regexMatch( pRegEx, szString, strlen( szString ), HB_TRUE );
       hb_regexFree( pRegEx );
       return fMatch;
    }
@@ -84,7 +84,7 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
 
 HB_FUNC( HB_WILDMATCH )
 {
-   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? FALSE :
+   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? HB_FALSE :
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
 }
@@ -96,6 +96,6 @@ HB_FUNC( HB_WILDMATCHI )
 
 HB_FUNC( HB_FILEMATCH )
 {
-   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? FALSE :
+   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? HB_FALSE :
             hb_strMatchFile( hb_parc( 1 ), hb_parc( 2 ) ) );
 }

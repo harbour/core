@@ -81,8 +81,8 @@ typedef struct _HB_FILE
    ULONG          device;
    ULONG          inode;
    int            used;
-   BOOL           shared;
-   BOOL           readonly;
+   HB_BOOL        shared;
+   HB_BOOL        readonly;
    HB_FHANDLE     hFile;
    HB_FHANDLE     hFileRO;
    PHB_FLOCK      pLocks;
@@ -131,8 +131,8 @@ static PHB_FILE hb_fileFind( ULONG device, ULONG inode )
    return NULL;
 }
 
-static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared, BOOL fReadonly,
-                            ULONG device, ULONG inode, BOOL fBind )
+static PHB_FILE hb_fileNew( HB_FHANDLE hFile, HB_BOOL fShared, HB_BOOL fReadonly,
+                            ULONG device, ULONG inode, HB_BOOL fBind )
 {
    PHB_FILE pFile = hb_fileFind( device, inode );
 
@@ -219,27 +219,27 @@ static void hb_fileDeleteLock( PHB_FILE pFile, UINT uiPos )
    }
 }
 
-static BOOL hb_fileSetLock( PHB_FILE pFile, BOOL * pfLockFS,
-                            HB_FOFFSET ulStart, HB_FOFFSET ulLen )
+static HB_BOOL hb_fileSetLock( PHB_FILE pFile, HB_BOOL * pfLockFS,
+                               HB_FOFFSET ulStart, HB_FOFFSET ulLen )
 {
-   BOOL fLJoin, fRJoin;
+   HB_BOOL fLJoin, fRJoin;
    UINT uiPos;
 
    uiPos = hb_fileFindOffset( pFile, ulStart );
-   fLJoin = fRJoin = FALSE;
+   fLJoin = fRJoin = HB_FALSE;
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
       if( ulStart + ulLen > pLock->start )
-         return FALSE;
+         return HB_FALSE;
       if( ulStart + ulLen == pLock->start )
-         fRJoin = TRUE;
+         fRJoin = HB_TRUE;
    }
    if( uiPos > 0 )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos - 1 ];
       if( pLock->start + pLock->len == ulStart )
-         fLJoin = TRUE;
+         fLJoin = HB_TRUE;
    }
    if( fLJoin )
    {
@@ -260,14 +260,14 @@ static BOOL hb_fileSetLock( PHB_FILE pFile, BOOL * pfLockFS,
       hb_fileInsertLock( pFile, uiPos, ulStart, ulLen );
 
    if( pFile->shared )
-      * pfLockFS = TRUE;
-   return TRUE;
+      * pfLockFS = HB_TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_fileUnlock( PHB_FILE pFile, BOOL * pfLockFS,
-                           HB_FOFFSET ulStart, HB_FOFFSET ulLen )
+static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
+                              HB_FOFFSET ulStart, HB_FOFFSET ulLen )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    UINT uiPos;
 
    uiPos = hb_fileFindOffset( pFile, ulStart );
@@ -296,8 +296,8 @@ static BOOL hb_fileUnlock( PHB_FILE pFile, BOOL * pfLockFS,
             pLock->len = ulStart - pLock->start;
          }
          if( pFile->shared )
-            * pfLockFS = TRUE;
-         fResult = TRUE;
+            * pfLockFS = HB_TRUE;
+         fResult = HB_TRUE;
       }
    }
    return fResult;
@@ -308,7 +308,7 @@ static BOOL hb_fileUnlock( PHB_FILE pFile, BOOL * pfLockFS,
  * file methods
  */
 
-static BOOL s_fileAccept( const char * pFilename )
+static HB_BOOL s_fileAccept( const char * pFilename )
 {
    return pFilename && *pFilename;
 }
@@ -320,9 +320,9 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
    PHB_FILE pFile = NULL;
 #if defined( HB_OS_UNIX )
    struct stat statbuf;
-   BOOL fResult;
+   HB_BOOL fResult;
 #endif
-   BOOL fShared, fReadonly;
+   HB_BOOL fShared, fReadonly;
    HB_FHANDLE hFile;
    char * pszFile;
 
@@ -343,7 +343,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
       if( pFile )
       {
          if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
-            fResult = FALSE;
+            fResult = HB_FALSE;
          else if( !fReadonly && pFile->readonly )
             pFile = NULL;
          else
@@ -390,14 +390,14 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
 #endif
 
          hb_threadEnterCriticalSection( &s_fileMtx );
-         pFile = hb_fileNew( hFile, fShared, fReadonly, device, inode, TRUE );
+         pFile = hb_fileNew( hFile, fShared, fReadonly, device, inode, HB_TRUE );
          if( pFile->hFile != hFile )
          {
             if( pFile->hFileRO == FS_ERROR && !fReadonly && pFile->readonly )
             {
                pFile->hFileRO = pFile->hFile;
                pFile->hFile = hFile;
-               pFile->readonly = FALSE;
+               pFile->readonly = HB_FALSE;
                hFile = FS_ERROR;
             }
             if( pFile->uiLocks == 0 )
@@ -479,10 +479,10 @@ static void s_fileClose( PHB_FILE pFile )
       hb_fsClose( hFileRO );
 }
 
-static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
-                        int iType )
+static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                           int iType )
 {
-   BOOL fResult, fLockFS = FALSE;
+   HB_BOOL fResult, fLockFS = HB_FALSE;
 
    if( ( iType & FL_MASK ) == FL_UNLOCK )
    {
@@ -528,7 +528,7 @@ static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
    return hb_fsWriteAt( pFile->hFile, buffer, ulSize, llOffset );
 }
 
-static BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
+static HB_BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 {
    return hb_fsTruncAt( pFile->hFile, llOffset );
 }
@@ -583,9 +583,9 @@ static int s_iFileTypes = 0;
  * public API functions
  */
 
-BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
+HB_BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    hb_threadEnterCriticalSection( &s_fileMtx );
 
@@ -593,7 +593,7 @@ BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
    {
       s_pFileTypes[ s_iFileTypes ] = pFuncs;
       s_iFileTypes++;
-      fResult = TRUE;
+      fResult = HB_TRUE;
    }
 
    hb_threadLeaveCriticalSection( &s_fileMtx );
@@ -601,7 +601,7 @@ BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
    return fResult;
 }
 
-BOOL hb_fileDelete( const char * pFilename )
+HB_BOOL hb_fileDelete( const char * pFilename )
 {
    int i = s_iFileTypes;
 
@@ -613,7 +613,7 @@ BOOL hb_fileDelete( const char * pFilename )
    return hb_fsDelete( pFilename );
 }
 
-BOOL hb_fileExists( const char * pFilename, char * pRetPath )
+HB_BOOL hb_fileExists( const char * pFilename, char * pRetPath )
 {
    int i = s_iFileTypes;
 
@@ -625,7 +625,7 @@ BOOL hb_fileExists( const char * pFilename, char * pRetPath )
    return hb_spFileExists( pFilename, pRetPath );
 }
 
-BOOL hb_fileRename( const char * pFilename, const char * pszNewName )
+HB_BOOL hb_fileRename( const char * pFilename, const char * pszNewName )
 {
    int i = s_iFileTypes;
 
@@ -656,8 +656,8 @@ void hb_fileClose( PHB_FILE pFile )
    pFile->pFuncs->Close( pFile );
 }
 
-BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
-                  int iType )
+HB_BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                     int iType )
 {
    return pFile->pFuncs->Lock( pFile, ulStart, ulLen, iType );
 }
@@ -674,7 +674,7 @@ ULONG hb_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
    return pFile->pFuncs->WriteAt( pFile, buffer, ulSize, llOffset );
 }
 
-BOOL hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
+HB_BOOL hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 {
    return pFile->pFuncs->TruncAt( pFile, llOffset );
 }
@@ -704,7 +704,7 @@ PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
 
    hFile = hb_fsCreateTemp( pszDir, pszPrefix, ulAttr, pszName );
    if( hFile != FS_ERROR )
-      pFile = hb_fileNew( hFile, FALSE, FALSE, 0, 0, FALSE );
+      pFile = hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
 
    return pFile;
 }
@@ -720,7 +720,7 @@ PHB_FILE hb_fileCreateTempEx( char * pszName,
 
    hFile = hb_fsCreateTempEx( pszName, pszDir, pszPrefix, pszExt, ulAttr );
    if( hFile != FS_ERROR )
-      pFile = hb_fileNew( hFile, FALSE, FALSE, 0, 0, FALSE );
+      pFile = hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
 
    return pFile;
 }

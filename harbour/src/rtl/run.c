@@ -66,7 +66,7 @@ HB_FUNC( __RUN )
    if( pszCommand && hb_gtSuspend() == 0 )
    {
 #if defined( HB_OS_WIN_CE )
-      hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, FALSE );
+      hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
 #else
       char * pszFree = NULL;
 

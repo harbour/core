@@ -75,7 +75,7 @@ static int hb_mlEol( const char * pszString, HB_SIZE ulLen,
 
 static HB_SIZE hb_mlGetLine( const char * pszString, HB_SIZE ulLen, HB_SIZE ulOffset,
                              HB_SIZE ulLineLength, HB_SIZE ulTabSize, HB_SIZE ulMaxPos,
-                             BOOL fWordWrap, PHB_EOL_INFO pEOLs, int iEOLs,
+                             HB_BOOL fWordWrap, PHB_EOL_INFO pEOLs, int iEOLs,
                              HB_SIZE * pulLen, HB_SIZE * pulEOL )
 {
    HB_SIZE ulCol = 0, ulBlankCol = 0, ulBlankPos = 0;
@@ -217,7 +217,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
 
 static const char * hb_mlGetParams( int iParAdd, HB_SIZE * pulLen,
                                     HB_SIZE * pulLineLength,
-                                    HB_SIZE * pulTabSize, BOOL * pfWordWrap,
+                                    HB_SIZE * pulTabSize, HB_BOOL * pfWordWrap,
                                     PHB_EOL_INFO * pEOLs, int * piEOLs )
 {
    const char * pszString = hb_parc( 1 );
@@ -250,7 +250,7 @@ static const char * hb_mlGetParams( int iParAdd, HB_SIZE * pulLen,
 HB_FUNC( MEMOLINE )
 {
    HB_SIZE ulLen, ulLineLength, ulTabSize;
-   BOOL    fWordWrap;
+   HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
    const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
@@ -312,7 +312,7 @@ HB_FUNC( MEMOLINE )
 HB_FUNC( MLCOUNT )
 {
    HB_SIZE ulLen, ulLineLength, ulTabSize;
-   BOOL    fWordWrap;
+   HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
    const char * pszString = hb_mlGetParams( 0, &ulLen, &ulLineLength,
@@ -339,7 +339,7 @@ HB_FUNC( MLCOUNT )
 HB_FUNC( MLPOS )
 {
    HB_SIZE ulLen, ulLineLength, ulTabSize;
-   BOOL    fWordWrap;
+   HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
    const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
@@ -367,7 +367,7 @@ HB_FUNC( MLPOS )
 HB_FUNC( MLCTOPOS )
 {
    HB_SIZE ulLen, ulLineLength, ulTabSize;
-   BOOL    fWordWrap;
+   HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
    const char * pszString = hb_mlGetParams( 2, &ulLen, &ulLineLength,
@@ -388,7 +388,7 @@ HB_FUNC( MLCTOPOS )
                                      pEOLs, iEOLs, &ulCols, NULL );
          if( ulOffset < ulLen && ulCol )
             ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                     ulCol, ulTabSize, ulLen, FALSE,
+                                     ulCol, ulTabSize, ulLen, HB_FALSE,
                                      pEOLs, iEOLs, &ulCols, NULL );
       }
       hb_xfree( pEOLs );
@@ -400,7 +400,7 @@ HB_FUNC( MLCTOPOS )
 HB_FUNC( MPOSTOLC )
 {
    HB_SIZE ulLen, ulLineLength, ulTabSize;
-   BOOL    fWordWrap;
+   HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
    const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,

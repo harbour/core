@@ -78,7 +78,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
     */
    if( pCBlock->pCode && pCBlock->dynBuffer )
    {
-      pCBlock->dynBuffer = FALSE;
+      pCBlock->dynBuffer = HB_FALSE;
       hb_xfree( pCBlock->pCode );
    }
    pCBlock->pCode = ( BYTE * ) s_pCode;
@@ -280,7 +280,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, HB_SIZE ulLen )
    pBase = hb_stackBaseItem();
    /* Store the number of referenced local variables */
    pCBlock->pCode     = pCode;
-   pCBlock->dynBuffer = TRUE;
+   pCBlock->dynBuffer = HB_TRUE;
    pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
                         hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */

@@ -82,7 +82,7 @@ HB_FUNC( COLORSELECT )
 
 HB_FUNC( SETBLINK )
 {
-   BOOL bPreviousBlink;
+   HB_BOOL bPreviousBlink;
 
    hb_gtGetBlink( &bPreviousBlink );
 

@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 
 static void hb_getScreenRange( int * piMin, int * piMax,
-                               BOOL fNoCheck, BOOL fVertical )
+                               HB_BOOL fNoCheck, HB_BOOL fVertical )
 {
    int iFrom, iTo, iMax;
 
@@ -98,10 +98,10 @@ HB_FUNC( SAVESCREEN )
    int iTop, iLeft, iBottom, iRight;
    HB_SIZE ulSize;
    void * pBuffer;
-   BOOL fNoCheck = FALSE;
+   HB_BOOL fNoCheck = HB_FALSE;
 
-   hb_getScreenRange( &iTop, &iBottom, fNoCheck, TRUE );
-   hb_getScreenRange( &iLeft, &iRight, fNoCheck, FALSE );
+   hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
+   hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
    hb_gtRectSize( iTop, iLeft, iBottom, iRight, &ulSize );
    pBuffer = hb_xgrab( ulSize + 1 );
@@ -115,10 +115,10 @@ HB_FUNC( RESTSCREEN )
    if( HB_ISCHAR( 5 ) )
    {
       int iTop, iLeft, iBottom, iRight;
-      BOOL fNoCheck = FALSE;
+      HB_BOOL fNoCheck = HB_FALSE;
 
-      hb_getScreenRange( &iTop, &iBottom, fNoCheck, TRUE );
-      hb_getScreenRange( &iLeft, &iRight, fNoCheck, FALSE );
+      hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
+      hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
       hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
    }

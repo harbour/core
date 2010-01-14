@@ -77,14 +77,14 @@ HB_FUNC( HB_METHODNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
-   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, TRUE ) );
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, HB_TRUE ) );
 }
 
 HB_FUNC( PROCNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
-   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, FALSE ) );
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, HB_FALSE ) );
 }
 
 HB_FUNC( PROCLINE )
@@ -151,7 +151,7 @@ HB_FUNC( PROCFILE )
 /* NOTE: szName size must be an at least:
          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 [vszakats] */
 #define HB_PROCBUF_LEN  ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 4 )
-char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
+char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
 
@@ -221,7 +221,7 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
  *       szFile szie must be an at least:
  *          HB_PATH_MAX
  */
-BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
+HB_BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
 
@@ -281,7 +281,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
             szFile[ 0 ] = '\0';
       }
 
-      return TRUE;
+      return HB_TRUE;
    }
 
    if( szName )
@@ -291,5 +291,5 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
    if( szFile )
       szFile[ 0 ] = '\0';
 
-   return FALSE;
+   return HB_FALSE;
 }

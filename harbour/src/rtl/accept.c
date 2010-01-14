@@ -102,7 +102,7 @@ HB_FUNC( __ACCEPT )
    while( input != K_ENTER && hb_vmRequestQuery() == 0 )
    {
       /* Wait forever, for keyboard events only */
-      input = hb_inkey( TRUE, 0.0, INKEY_KEYBOARD );
+      input = hb_inkey( HB_TRUE, 0.0, INKEY_KEYBOARD );
       switch( input )
       {
          case K_BS:

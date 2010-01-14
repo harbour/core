@@ -70,7 +70,7 @@
    #endif
 #endif
 
-static BOOL hb_fsFileStats(
+static HB_BOOL hb_fsFileStats(
                            const char * pszFileName,
                            char * pszAttr,
                            HB_FOFFSET * llSize,
@@ -79,7 +79,7 @@ static BOOL hb_fsFileStats(
                            long * lmDate,
                            long * lmTime )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
 #if defined( OS_UNIX_COMPATIBLE )
 
@@ -175,7 +175,7 @@ static BOOL hb_fsFileStats(
 
       hb_fsAttrDecode( ushbAttr, pszAttr );
 
-      fResult = TRUE;
+      fResult = HB_TRUE;
    }
 
 #elif defined( HB_OS_WIN )
@@ -194,7 +194,7 @@ static BOOL hb_fsFileStats(
       {
          /* return */
          HB_TCHAR_FREE( lpFileName );
-         return FALSE;
+         return HB_FALSE;
       }
 
       hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), pszAttr );
@@ -232,7 +232,7 @@ static BOOL hb_fsFileStats(
             *lcDate = hb_dateEncode( 0, 0, 0 );
             *lcTime = 0;
          }
-         fResult = TRUE;
+         fResult = HB_TRUE;
       }
    }
 
@@ -256,7 +256,7 @@ static BOOL hb_fsFileStats(
          *lmDate = hb_dateEncode( 0, 0, 0 );
          *lmTime = 0;
          hb_fsFindClose( findinfo );
-         fResult = TRUE;
+         fResult = HB_TRUE;
       }
    }
 
@@ -290,8 +290,8 @@ HB_FUNC( FILESTATS )
       hb_stordl  ( lmDate, 6 );
       hb_stornint( lmTime, 7 );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }

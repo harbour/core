@@ -93,7 +93,7 @@ int main( int argc, char * argv[] )
 #endif
 
    hb_cmdargInit( argc, argv );
-   hb_vmInit( TRUE );
+   hb_vmInit( HB_TRUE );
    return hb_vmQuit();
 }
 

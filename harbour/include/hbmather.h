@@ -113,7 +113,7 @@ typedef struct _HB_MATH_EXCEPTION
 typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
 extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
-extern HB_EXPORT BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
+extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
 
 extern HB_EXPORT int hb_mathSetErrMode( int imode );
 extern HB_EXPORT int hb_mathGetErrMode( void );

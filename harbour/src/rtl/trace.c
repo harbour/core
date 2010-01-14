@@ -67,7 +67,7 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
    {
       char * pszString;
       HB_SIZE ulLen;
-      BOOL fFree;
+      HB_BOOL fFree;
 
       if( iParam > iFirst )
       {

@@ -72,8 +72,8 @@
 
 typedef struct
 {
-   BOOL           fCollectGarbage;  /* flag to force GC activation in idle state */
-   BOOL           fIamIdle;         /* flag to prevent recursive calls of hb_idleState() */
+   HB_BOOL        fCollectGarbage;  /* flag to force GC activation in idle state */
+   HB_BOOL        fIamIdle;         /* flag to prevent recursive calls of hb_idleState() */
    int            iIdleTask;        /* current task to be executed */
    int            iIdleMaxTask;     /* number of tasks in the list */
    PHB_ITEM *     pIdleTasks;       /* list of background tasks */
@@ -110,15 +110,15 @@ void hb_idleState( void )
 
    if( ! pIdleData->fIamIdle )
    {
-      pIdleData->fIamIdle = TRUE;
+      pIdleData->fIamIdle = HB_TRUE;
 
       hb_releaseCPU();
       if( hb_vmRequestQuery() == 0 )
       {
          if( pIdleData->fCollectGarbage )
          {
-            hb_gcCollectAll( FALSE );
-            pIdleData->fCollectGarbage = FALSE;
+            hb_gcCollectAll( HB_FALSE );
+            pIdleData->fCollectGarbage = HB_FALSE;
          }
 
          if( pIdleData->pIdleTasks && pIdleData->iIdleTask < pIdleData->iIdleMaxTask )
@@ -128,10 +128,10 @@ void hb_idleState( void )
             if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && hb_setGetIdleRepeat() )
             {
                pIdleData->iIdleTask = 0;    /* restart processing of idle tasks */
-               pIdleData->fCollectGarbage = TRUE;
+               pIdleData->fCollectGarbage = HB_TRUE;
             }
          }
-         pIdleData->fIamIdle = FALSE;
+         pIdleData->fIamIdle = HB_FALSE;
       }
    }
 }
@@ -143,7 +143,7 @@ void hb_idleReset( void )
    if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && !hb_setGetIdleRepeat() )
       pIdleData->iIdleTask = 0;
 
-   pIdleData->fCollectGarbage = TRUE;
+   pIdleData->fCollectGarbage = HB_TRUE;
 }
 
 void hb_idleSleep( double dSeconds )
@@ -163,7 +163,7 @@ void hb_idleSleep( double dSeconds )
 HB_FUNC( HB_IDLESTATE )
 {
    PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
-   pIdleData->fCollectGarbage = TRUE;
+   pIdleData->fCollectGarbage = HB_TRUE;
    hb_idleState();
 }
 

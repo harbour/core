@@ -115,9 +115,9 @@ typedef USHORT HB_GT_CELLTYPE;
 #define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
 */
 
-#define XWC_DEFAULT_FONT_FIXMETRIC  FALSE
-#define XWC_DEFAULT_FONT_CLRBKG     FALSE
-#define XWC_DEFAULT_FONT_DRAWBOX    TRUE
+#define XWC_DEFAULT_FONT_FIXMETRIC  HB_FALSE
+#define XWC_DEFAULT_FONT_CLRBKG     HB_FALSE
+#define XWC_DEFAULT_FONT_DRAWBOX    HB_TRUE
 
 
 #define XWC_SYNC_UPDATE         0
@@ -282,8 +282,8 @@ typedef struct tag_XWC_CharTrans
       XRectangle  *rect;
       USHORT      ch16;
    } u;
-   BYTE  size;
-   BOOL  inverse;
+   BYTE    size;
+   HB_BOOL inverse;
 } XWC_CharTrans;
 
 #endif

@@ -132,17 +132,17 @@ HB_FUNC( HB_VERSION )
 
    case HB_VERSION_UNIX_COMPAT:
       #if defined( HB_OS_UNIX )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       #else
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       #endif
       break;
 
    case HB_VERSION_COMPILER_CPP:
       #if defined( __cplusplus )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       #else
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       #endif
       break;
 

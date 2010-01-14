@@ -93,7 +93,7 @@ HB_FUNC( HB_STRCDECODE )
    if( pText )
    {
       HB_SIZE ulLen = hb_itemGetCLen( pText );
-      BOOL fCont = hb_parl( 2 );
+      HB_BOOL fCont = hb_parl( 2 );
       if( ulLen > 0 )
       {
          const char * pszSrc = hb_itemGetCPtr( pText );
@@ -113,7 +113,7 @@ HB_FUNC( HB_STRCDECODE )
                {
                   ++pszSrc;
                   --ulLen;
-                  fCont = TRUE;
+                  fCont = HB_TRUE;
                }
             }
             if( !fCont || !ulLen )
@@ -125,7 +125,7 @@ HB_FUNC( HB_STRCDECODE )
                char c = pszSrc[ ul ];
                if( c == '"' )
                {
-                  fCont = FALSE;
+                  fCont = HB_FALSE;
                   break;
                }
                pszDst[ ulDst + ul ] = c;

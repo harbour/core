@@ -207,7 +207,7 @@ HB_FUNC( WVG_SETGOBJDATA )
 {
    PHB_GTWVT pWVT     = hb_wvt_gtGetWVT();
    int       iHandle  = hb_parni( 1 );
-   BOOL      bSuccess = FALSE;
+   HB_BOOL   bSuccess = FALSE;
 
    if( iHandle )
    {
@@ -1182,7 +1182,7 @@ HB_FUNC( WVG_SHADEDRECT )
 /*----------------------------------------------------------------------*/
 static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, int iRight, int iBottom )
 {
-   BOOL          bGF;
+   HB_BOOL       bGF;
    GRADIENT_RECT gRect = { 0,0 };
 
    gRect.UpperLeft   = 0;
@@ -1194,7 +1194,7 @@ static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iT
    gObj->vert[ 1 ].x = iRight;
    gObj->vert[ 1 ].y = iBottom;
 
-   bGF = ( BOOL ) pWVT->pGUI->pfnGF( pWVT->hGuiDC, gObj->vert, 2, &gRect, 1, gObj->iData );
+   bGF = ( HB_BOOL ) pWVT->pGUI->pfnGF( pWVT->hGuiDC, gObj->vert, 2, &gRect, 1, gObj->iData );
 
    HB_SYMBOL_UNUSED( bGF );
 }

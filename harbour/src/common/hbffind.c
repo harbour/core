@@ -381,9 +381,9 @@ char * hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr )
    each call. Does low-level (platform dependent
    filtering if needed. */
 
-static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
+static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 {
-   BOOL bFound;
+   HB_BOOL bFound;
 
    int iYear = 0;
    int iMonth = 0;
@@ -415,7 +415,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( ffind->bFirst )
       {
-         ffind->bFirst = FALSE;
+         ffind->bFirst = HB_FALSE;
 
          /* tzset(); */
 
@@ -474,7 +474,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( ffind->bFirst )
       {
-         ffind->bFirst = FALSE;
+         ffind->bFirst = HB_FALSE;
 
          /* tzset(); */
 
@@ -520,7 +520,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      bFound = FALSE;
+      bFound = HB_FALSE;
 
       if( ffind->attrmask & HB_FA_LABEL )
       {
@@ -530,7 +530,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
             TCHAR szName[ HB_PATH_MAX ];
 
-            ffind->bFirst = FALSE;
+            ffind->bFirst = HB_FALSE;
             ffind->szName[ 0 ] = '\0';
 
             bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ), NULL, NULL, NULL, NULL, 0 );
@@ -547,13 +547,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
 
-            ffind->bFirst = FALSE;
+            ffind->bFirst = HB_FALSE;
 
             info->hFindFile = FindFirstFile( lpFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
 
             if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_MATCH() )
-               bFound = TRUE;
+               bFound = HB_TRUE;
 
             HB_TCHAR_FREE( lpFileMask );
          }
@@ -564,7 +564,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             {
                if( HB_WIN_MATCH() )
                {
-                  bFound = TRUE;
+                  bFound = HB_TRUE;
                   break;
                }
             }
@@ -623,7 +623,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       char dirname[ HB_PATH_MAX ];
 
-      bFound = FALSE;
+      bFound = HB_FALSE;
 
       /* TODO: HB_FA_LABEL handling */
 
@@ -631,7 +631,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          char * pos;
 
-         ffind->bFirst = FALSE;
+         ffind->bFirst = HB_FALSE;
 
          hb_strncpy( dirname, ffind->pszFileMask, sizeof( dirname ) - 1 );
          pos = strrchr( dirname, HB_OS_PATH_DELIM_CHR );
@@ -660,7 +660,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             if( hb_strMatchFile( info->entry->d_name, info->pattern ) )
             {
-               bFound = TRUE;
+               bFound = HB_TRUE;
                break;
             }
          }
@@ -703,7 +703,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                iSec   = lt.tm_sec;
             }
             else
-               bFound = FALSE;
+               bFound = HB_FALSE;
          }
       }
       hb_fsSetIOError( bFound, 0 );
@@ -724,7 +724,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       HB_SYMBOL_UNUSED( iSec );
       HB_SYMBOL_UNUSED( raw_attr );
 
-      bFound = FALSE;
+      bFound = HB_FALSE;
 
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
    }
@@ -778,7 +778,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
    /* Store search parameters */
    ffind->pszFileMask = pszFileMask;
    ffind->attrmask = attrmask;
-   ffind->bFirst = TRUE;
+   ffind->bFirst = HB_TRUE;
 
    /* Find first/next matching file */
 
@@ -795,7 +795,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 /* Finds next matching file, and applies a filter which makes
    searching CA-Cl*pper/MS-DOS compatible. */
 
-BOOL hb_fsFindNext( PHB_FFIND ffind )
+HB_BOOL hb_fsFindNext( PHB_FFIND ffind )
 {
    while( hb_fsFindNextLow( ffind ) )
    {
@@ -806,11 +806,11 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
              ( ( ffind->attrmask & HB_FA_LABEL     ) == 0 && ( ffind->attr & HB_FA_LABEL     ) != 0 ) ||
              ( ( ffind->attrmask & HB_FA_DIRECTORY ) == 0 && ( ffind->attr & HB_FA_DIRECTORY ) != 0 ) ) )
       {
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 void hb_fsFindClose( PHB_FFIND ffind )

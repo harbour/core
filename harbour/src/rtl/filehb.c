@@ -68,5 +68,5 @@ HB_FUNC( FILE )
 {
    const char * szFile = hb_parc( 1 );
 
-   hb_retl( szFile ? hb_spFile( szFile, NULL ) : FALSE );
+   hb_retl( szFile ? hb_spFile( szFile, NULL ) : HB_FALSE );
 }

@@ -90,7 +90,7 @@ HB_FUNC( HB_NUMTOHEX )
 {
    HB_ULONG ulNum;
    int      iLen;
-   BOOL     fDefaultLen;
+   HB_BOOL  fDefaultLen;
    char     ret[ 33 ];
 
    if( HB_ISNUM( 2 ) )

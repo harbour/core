@@ -303,8 +303,8 @@ struct hb_struBlock
 struct hb_struPointer
 {
    void * value;
-   BOOL collect;
-   BOOL single;
+   HB_BOOL collect;
+   HB_BOOL single;
 };
 
 struct hb_struDateTime
@@ -334,7 +334,7 @@ struct hb_struLong
 
 struct hb_struLogical
 {
-   BOOL value;
+   HB_BOOL value;
 };
 
 struct hb_struMemvar
@@ -442,7 +442,7 @@ typedef struct _HB_CODEBLOCK
    PHB_ITEM    pLocals;      /* table with referenced local variables */
    void *      pStatics;     /* STATICs base frame */
    USHORT      uiLocals;     /* number of referenced local variables */
-   SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of BOOL intentionally to force optimal alignment */
+   SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );
@@ -503,7 +503,7 @@ extern void hb_xclean( void );
 
 #ifdef _HB_API_INTERNAL_
 extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
-extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return HB_TRUE when 0 reached */
+extern HB_BOOL    hb_xRefDec( void * pMem );    /* decrement reference counter, return HB_TRUE when 0 reached */
 extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
 extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated );   /* reallocates memory, create copy if reference counter greater then 1 */
@@ -617,15 +617,15 @@ extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of reference
 
 #endif /* _HB_API_INTERNAL_ */
 extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
-extern void       hb_gcCollectAll( BOOL fForce ); /* checks if all memory blocks can be released */
+extern void       hb_gcCollectAll( HB_BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
 extern HB_EXPORT ULONG        hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern HB_EXPORT ULONG        hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT PHB_ITEM     hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM     hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
-extern HB_EXPORT BOOL         hb_extIsArray( int iParam );
-extern HB_EXPORT BOOL         hb_extIsObject( int iParam );
+extern HB_EXPORT HB_BOOL      hb_extIsArray( int iParam );
+extern HB_EXPORT HB_BOOL      hb_extIsObject( int iParam );
 
 extern HB_EXPORT const char * hb_parc( int iParam ); /* retrieve a string parameter */
 extern HB_EXPORT const char * hb_parcx( int iParam ); /* retrieve a string parameter */
@@ -635,7 +635,7 @@ extern HB_EXPORT const char * hb_pards( int iParam ); /* retrieve a date as a st
 extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT long         hb_pardl( int iParam ); /* retrieve a date as a long integer */
 extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL         hb_partdt( long * plJulian, long * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT HB_BOOL      hb_partdt( long * plJulian, long * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT int          hb_parl( int iParam ); /* retrieve a logical parameter as an int */
 extern HB_EXPORT int          hb_parldef( int iParam, int iDefValue ); /* retrieve a logical parameter as an int, return default value if parameter isn't logical */
 extern HB_EXPORT double       hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
@@ -658,7 +658,7 @@ extern HB_EXPORT const char * hb_parvds( int iParam, ... ); /* retrieve a date a
 extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT long         hb_parvdl( int iParam, ... ); /* retrieve a date as a long integer */
 extern HB_EXPORT double       hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL         hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT HB_BOOL      hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT int          hb_parvl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern HB_EXPORT double       hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
@@ -787,18 +787,18 @@ extern HB_EXPORT int    hb_storvnll( LONGLONG lValue, int iParam, ... ); /* stor
 #endif
 
 /* array management */
-extern HB_EXPORT BOOL         hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen ); /* creates a new array */
+extern HB_EXPORT HB_BOOL      hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen ); /* creates a new array */
 extern HB_EXPORT HB_SIZE      hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array len */
-extern HB_EXPORT BOOL         hb_arrayIsObject( PHB_ITEM pArray ); /* retrieves if the array is an object */
+extern HB_EXPORT HB_BOOL      hb_arrayIsObject( PHB_ITEM pArray ); /* retrieves if the array is an object */
 extern HB_EXPORT void *       hb_arrayId( PHB_ITEM pArray ); /* retrieves the array unique ID */
-extern HB_EXPORT BOOL         hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
-extern HB_EXPORT BOOL         hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue ); /* add a new item to the end of an array item with no incrementing of reference counters */
-extern HB_EXPORT BOOL         hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex ); /* insert a nil item into an array, without changing the length */
-extern HB_EXPORT BOOL         hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex ); /* delete an array item, without changing length */
-extern HB_EXPORT BOOL         hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen ); /* sets the array total length */
-extern HB_EXPORT BOOL         hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
-extern HB_EXPORT BOOL         hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* retrieves an item */
-extern HB_EXPORT BOOL         hb_arrayGetItemRef( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
+extern HB_EXPORT HB_BOOL      hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
+extern HB_EXPORT HB_BOOL      hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue ); /* add a new item to the end of an array item with no incrementing of reference counters */
+extern HB_EXPORT HB_BOOL      hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex ); /* insert a nil item into an array, without changing the length */
+extern HB_EXPORT HB_BOOL      hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex ); /* delete an array item, without changing length */
+extern HB_EXPORT HB_BOOL      hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen ); /* sets the array total length */
+extern HB_EXPORT HB_BOOL      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
+extern HB_EXPORT HB_BOOL      hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* retrieves an item */
+extern HB_EXPORT HB_BOOL      hb_arrayGetItemRef( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
 /* hb_arrayGetItemPtr() is dangerous, be sure that base ARRAY value will not be changed (f.e. resized) */
 extern HB_EXPORT PHB_ITEM     hb_arrayGetItemPtr( PHB_ITEM pArray, HB_SIZE ulIndex ); /* returns pointer to specified element of the array */
 extern HB_EXPORT HB_SIZE      hb_arrayCopyC( PHB_ITEM pArray, HB_SIZE ulIndex, char * szBuffer, HB_SIZE ulLen ); /* copy a string from an array item */
@@ -808,7 +808,7 @@ extern HB_EXPORT HB_SIZE      hb_arrayGetCLen( PHB_ITEM pArray, HB_SIZE ulIndex 
 extern HB_EXPORT void *       hb_arrayGetPtr( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the pointer contained on an array element */
 extern HB_EXPORT void *       hb_arrayGetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, const HB_GC_FUNCS * pFuncs ); /* retrieves the GC pointer contained on an array element */
 extern HB_EXPORT PHB_SYMB     hb_arrayGetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves symbol contained on an array element */
-extern HB_EXPORT BOOL         hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the logical value contained on an array element */
+extern HB_EXPORT HB_BOOL      hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the logical value contained on an array element */
 extern HB_EXPORT int          hb_arrayGetNI( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the int value contained on an array element */
 extern HB_EXPORT long         hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern HB_EXPORT HB_LONG      hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_LONG value contained on an array element */
@@ -816,36 +816,36 @@ extern HB_EXPORT double       hb_arrayGetND( PHB_ITEM pArray, HB_SIZE ulIndex );
 extern HB_EXPORT char *       hb_arrayGetDS( PHB_ITEM pArray, HB_SIZE ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long         hb_arrayGetDL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
 extern HB_EXPORT double       hb_arrayGetTD( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the timestamp value contained in an array element, as a double value */
-extern HB_EXPORT BOOL         hb_arrayGetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long * plJulian, long * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
+extern HB_EXPORT HB_BOOL      hb_arrayGetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long * plJulian, long * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
 extern HB_EXPORT HB_TYPE      hb_arrayGetType( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the type of an array item */
-extern HB_EXPORT BOOL         hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* sets an array element */
-extern HB_EXPORT BOOL         hb_arraySetForward( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
-extern HB_EXPORT BOOL         hb_arraySetDS( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szDate );
-extern HB_EXPORT BOOL         hb_arraySetDL( PHB_ITEM pArray, HB_SIZE ulIndex, long lDate );
-extern HB_EXPORT BOOL         hb_arraySetTD( PHB_ITEM pArray, HB_SIZE ulIndex, double dTimeStamp );
-extern HB_EXPORT BOOL         hb_arraySetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long lJulian, long lMilliSec );
-extern HB_EXPORT BOOL         hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, BOOL fValue );
-extern HB_EXPORT BOOL         hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber );
-extern HB_EXPORT BOOL         hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* sets an array element */
+extern HB_EXPORT HB_BOOL      hb_arraySetForward( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
+extern HB_EXPORT HB_BOOL      hb_arraySetDS( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szDate );
+extern HB_EXPORT HB_BOOL      hb_arraySetDL( PHB_ITEM pArray, HB_SIZE ulIndex, long lDate );
+extern HB_EXPORT HB_BOOL      hb_arraySetTD( PHB_ITEM pArray, HB_SIZE ulIndex, double dTimeStamp );
+extern HB_EXPORT HB_BOOL      hb_arraySetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long lJulian, long lMilliSec );
+extern HB_EXPORT HB_BOOL      hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_BOOL fValue );
+extern HB_EXPORT HB_BOOL      hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber );
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT BOOL         hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, LONGLONG llNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, LONGLONG llNumber );
 #endif
-extern HB_EXPORT BOOL         hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONG lNumber );
-extern HB_EXPORT BOOL         hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber );
-extern HB_EXPORT BOOL         hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText );
-extern HB_EXPORT BOOL         hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB_SIZE ulLen );
-extern HB_EXPORT BOOL         hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE ulIndex, char * szText, HB_SIZE ulLen );
-extern HB_EXPORT BOOL         hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue );
-extern HB_EXPORT BOOL         hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue );
-extern HB_EXPORT BOOL         hb_arraySetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_SYMB pSymbol );
-extern HB_EXPORT BOOL         hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount ); /* fill an array with a given item */
-extern HB_EXPORT HB_SIZE      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE */
-extern HB_EXPORT HB_SIZE      hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE in reverted order */
-extern HB_EXPORT BOOL         hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pulStart, HB_SIZE * pulCount ); /* execute a code-block for every element of an array item */
-extern HB_EXPORT BOOL         hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pulStart, HB_SIZE * pulCount, HB_SIZE * pulTarget ); /* copy items from one array to another */
+extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONG lNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText );
+extern HB_EXPORT HB_BOOL      hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB_SIZE ulLen );
+extern HB_EXPORT HB_BOOL      hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE ulIndex, char * szText, HB_SIZE ulLen );
+extern HB_EXPORT HB_BOOL      hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue );
+extern HB_EXPORT HB_BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue );
+extern HB_EXPORT HB_BOOL      hb_arraySetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_SYMB pSymbol );
+extern HB_EXPORT HB_BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount ); /* fill an array with a given item */
+extern HB_EXPORT HB_SIZE      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount, HB_BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE */
+extern HB_EXPORT HB_SIZE      hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_SIZE * pulCount, HB_BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE in reverted order */
+extern HB_EXPORT HB_BOOL      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pulStart, HB_SIZE * pulCount ); /* execute a code-block for every element of an array item */
+extern HB_EXPORT HB_BOOL      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pulStart, HB_SIZE * pulCount, HB_SIZE * pulTarget ); /* copy items from one array to another */
 extern HB_EXPORT PHB_ITEM     hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
 extern HB_EXPORT PHB_ITEM     hb_arrayCloneTo( PHB_ITEM pDest, PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
-extern HB_EXPORT BOOL         hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
+extern HB_EXPORT HB_BOOL      hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
 extern HB_EXPORT PHB_ITEM     hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
@@ -864,16 +864,16 @@ extern void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED 
 /* hash management */
 extern HB_EXPORT PHB_ITEM  hb_hashNew( PHB_ITEM pItem );
 extern HB_EXPORT HB_SIZE   hb_hashLen( PHB_ITEM pHash );
-extern HB_EXPORT BOOL      hb_hashDel( PHB_ITEM pHash, PHB_ITEM pKey );
-extern HB_EXPORT BOOL      hb_hashAdd( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
-extern HB_EXPORT BOOL      hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
-extern HB_EXPORT BOOL      hb_hashRemove( PHB_ITEM pHash, PHB_ITEM pItem );
-extern HB_EXPORT BOOL      hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr );
+extern HB_EXPORT HB_BOOL   hb_hashDel( PHB_ITEM pHash, PHB_ITEM pKey );
+extern HB_EXPORT HB_BOOL   hb_hashAdd( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
+extern HB_EXPORT HB_BOOL   hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
+extern HB_EXPORT HB_BOOL   hb_hashRemove( PHB_ITEM pHash, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL   hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr );
 extern HB_EXPORT void      hb_hashSort( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashCloneTo( PHB_ITEM pDest, PHB_ITEM pHash );
 extern HB_EXPORT void      hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType );
-extern HB_EXPORT BOOL      hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pulPos );
+extern HB_EXPORT HB_BOOL   hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pulPos );
 extern HB_EXPORT void      hb_hashPreallocate( PHB_ITEM pHash, HB_SIZE ulNewSize );
 extern HB_EXPORT PHB_ITEM  hb_hashGetKeys( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashGetValues( PHB_ITEM pHash );
@@ -891,7 +891,7 @@ extern HB_EXPORT PHB_ITEM  hb_hashGetCItemPtr( PHB_ITEM pHash, const char * pszK
 extern HB_EXPORT PHB_ITEM  hb_hashGetKeyAt( PHB_ITEM pHash, HB_SIZE ulPos );
 extern HB_EXPORT PHB_ITEM  hb_hashGetValueAt( PHB_ITEM pHash, HB_SIZE ulPos );
 
-extern HB_EXPORT BOOL      hb_hashDelAt( PHB_ITEM pHash, HB_SIZE ulPos );
+extern HB_EXPORT HB_BOOL   hb_hashDelAt( PHB_ITEM pHash, HB_SIZE ulPos );
 
 /* hash item flags */
 #define HB_HASH_AUTOADD_NEVER       0x00
@@ -930,28 +930,28 @@ extern HB_EXPORT HB_SIZE   hb_strlentrim( const char * pszText ); /* like strlen
 extern HB_EXPORT HB_SIZE   hb_strnlen( const char * pszText, HB_SIZE ulLen ); /* like strlen() but result is limited to ulLen */
 extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
-extern HB_EXPORT BOOL      hb_compStrToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
-extern HB_EXPORT BOOL      hb_valStrnToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by VAL() */
-extern HB_EXPORT BOOL      hb_strToNum( const char * szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
-extern HB_EXPORT BOOL      hb_strnToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
+extern HB_EXPORT HB_BOOL   hb_compStrToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
+extern HB_EXPORT HB_BOOL   hb_valStrnToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by VAL() */
+extern HB_EXPORT HB_BOOL   hb_strToNum( const char * szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
+extern HB_EXPORT HB_BOOL   hb_strnToNum( const char * szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
 extern HB_EXPORT int       hb_snprintf( char * buffer, size_t bufsize, const char * format, ... ) HB_PRINTF_FORMAT( 3, 4 ); /* snprintf() equivalent */
 extern HB_EXPORT int       hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap ); /* vsnprintf() equivalent */
 extern HB_EXPORT int       hb_printf_params( const char * format );
 
-extern HB_EXPORT BOOL      hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
-extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */
-extern HB_EXPORT BOOL      hb_strMatchWild( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
-extern HB_EXPORT BOOL      hb_strMatchWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to cover whole string */
-extern HB_EXPORT BOOL      hb_strMatchCaseWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) ignoring the case of the characters - patern have to cover whole string */
-extern HB_EXPORT BOOL      hb_strEmpty( const char * szText, HB_SIZE ulLen ); /* returns whether a string contains only white space */
+extern HB_EXPORT HB_BOOL   hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
+extern HB_EXPORT HB_BOOL   hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */
+extern HB_EXPORT HB_BOOL   hb_strMatchWild( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
+extern HB_EXPORT HB_BOOL   hb_strMatchWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to cover whole string */
+extern HB_EXPORT HB_BOOL   hb_strMatchCaseWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) ignoring the case of the characters - patern have to cover whole string */
+extern HB_EXPORT HB_BOOL   hb_strEmpty( const char * szText, HB_SIZE ulLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE ulLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT HB_SIZE   hb_strAt( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen ); /* returns an index to a sub-string within another string */
 extern HB_EXPORT char *    hb_strUpper( char * szText, HB_SIZE ulLen ); /* convert an existing string buffer to upper case */
 extern HB_EXPORT char *    hb_strLower( char * szText, HB_SIZE ulLen ); /* convert an existing string buffer to lower case */
-extern HB_EXPORT BOOL      hb_charIsDigit( int iChar );
-extern HB_EXPORT BOOL      hb_charIsAlpha( int iChar );
-extern HB_EXPORT BOOL      hb_charIsLower( int iChar );
-extern HB_EXPORT BOOL      hb_charIsUpper( int iChar );
+extern HB_EXPORT HB_BOOL   hb_charIsDigit( int iChar );
+extern HB_EXPORT HB_BOOL   hb_charIsAlpha( int iChar );
+extern HB_EXPORT HB_BOOL   hb_charIsLower( int iChar );
+extern HB_EXPORT HB_BOOL   hb_charIsUpper( int iChar );
 extern HB_EXPORT int       hb_charUpper( int iChar );  /* converts iChar to upper case */
 extern HB_EXPORT int       hb_charLower( int iChar );  /* converts iChar to lower case */
 extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, HB_SIZE ulLen ); /* copy at most ulLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
@@ -962,7 +962,7 @@ extern HB_EXPORT char *    hb_strncpyUpper( char * pDest, const char * pSource, 
 extern HB_EXPORT char *    hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen );
 extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE ulLen ); /* return the numeric value of a character string representation of a number */
 extern HB_EXPORT const char * hb_strLTrim( const char * szText, HB_SIZE * ulLen ); /* return a pointer to the first non-white space character */
-extern HB_EXPORT HB_SIZE   hb_strRTrimLen( const char * szText, HB_SIZE ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
+extern HB_EXPORT HB_SIZE   hb_strRTrimLen( const char * szText, HB_SIZE ulLen, HB_BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
 extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE ulLen );
 extern HB_EXPORT HB_LONG   hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * ulLen ); /* remove C ESC sequences and converts them to Clipper chars */
@@ -1002,7 +1002,7 @@ extern HB_EXPORT PHB_SYMB  hb_dynsymGetSymbol( const char * szName ); /* finds a
 extern HB_EXPORT PHB_SYMB  hb_dynsymFindSymbol( const char * szName ); /* finds a dynamic symbol and return pointer to its HB_SYMB structure */
 extern HB_EXPORT PHB_SYMB  hb_dynsymSymbol( PHB_DYNS pDynSym );
 extern HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym ); /* return dynamic symbol name */
-extern HB_EXPORT BOOL      hb_dynsymIsFunction( PHB_DYNS pDynSym );
+extern HB_EXPORT HB_BOOL   hb_dynsymIsFunction( PHB_DYNS pDynSym );
 extern HB_EXPORT int       hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return work area number bound with given dynamic symbol */
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
 #ifdef _HB_API_INTERNAL_
@@ -1020,14 +1020,14 @@ extern void          hb_cmdargUpdate( void ); /* update arguments after HVM init
 extern int           hb_cmdargARGC( void ); /* retrieve command line argument count */
 extern char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
 extern const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
-extern BOOL          hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
-extern BOOL          hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
+extern HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
+extern HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern ULONG         hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
-extern HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
-extern HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
+extern HB_EXPORT void    hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif
 
 /* Codeblock management */
@@ -1039,7 +1039,7 @@ extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItem
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */
-extern void       hb_memvarsClear( BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */
+extern void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */
 extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
@@ -1053,7 +1053,7 @@ extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_IT
 extern int        hb_memvarScope( const char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
-extern PHB_ITEM   hb_memvarSaveInArray( int iScope, BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
+extern PHB_ITEM   hb_memvarSaveInArray( int iScope, HB_BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
 extern void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
 
 #ifdef _HB_API_INTERNAL_
@@ -1072,7 +1072,7 @@ extern HB_EXPORT const char * hb_conNewLine( void ); /* retrieve a pointer to a 
 extern HB_EXPORT void         hb_conOutStd( const char * pStr, HB_SIZE ulLen ); /* output an string to STDOUT */
 extern HB_EXPORT void         hb_conOutErr( const char * pStr, HB_SIZE ulLen ); /* output an string to STDERR */
 extern HB_EXPORT void         hb_conOutAlt( const char * pStr, HB_SIZE ulLen ); /* output an string to the screen and/or printer and/or alternate */
-extern HB_EXPORT int          hb_conSetCursor( BOOL bSetCursor, int iNewCursor ); /* retrieve and optionally set cursor shape */
+extern HB_EXPORT int          hb_conSetCursor( HB_BOOL bSetCursor, int iNewCursor ); /* retrieve and optionally set cursor shape */
 extern HB_EXPORT const char * hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
@@ -1081,8 +1081,8 @@ extern char *       hb_compEncodeString( int iMethod, const char * szText, HB_SI
 extern char *       hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pulLen );
 
 /* misc */
-extern char *   hb_procname( int iLevel, char * szName, BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
-extern BOOL     hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile );
+extern char *   hb_procname( int iLevel, char * szName, HB_BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
+extern HB_BOOL  hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile );
 
 /* macro compiler */
 #if defined( HB_MACRO_SUPPORT )
@@ -1099,8 +1099,8 @@ extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro functio
 extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
 extern HB_MACRO_PTR hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
 extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
-extern char * hb_macroTextSymbol( const char * szString, HB_SIZE ulLength, BOOL *pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
-extern char * hb_macroExpandString( const char * szString, HB_SIZE ulLength, BOOL *pfNewString ); /* expands valid '&' operator */
+extern char * hb_macroTextSymbol( const char * szString, HB_SIZE ulLength, HB_BOOL * pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
+extern char * hb_macroExpandString( const char * szString, HB_SIZE ulLength, HB_BOOL * pfNewString ); /* expands valid '&' operator */
 extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern const char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
@@ -1144,21 +1144,21 @@ extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a stat
 extern HB_EXPORT const char * hb_verHB_PLAT( void );         /* retrieves a static buffer containing build time HB_PLATFORM setting */
 extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a static buffer containing build time HB_COMPILER setting */
 
-extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
-extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
-extern HB_EXPORT BOOL   hb_printerIsReady( const char * pszPrinterName );
+extern HB_EXPORT HB_BOOL hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
+extern HB_EXPORT HB_BOOL hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
+extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
 extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize ); /* Convert a string sent to a system call, from Harbour codepage. */
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize ); /* Convert a string received from a system call, to Harbour codepage. */
 
 /* environment variables access */
-extern BOOL   hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
+extern HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */
-extern char * hb_getenv( const char * name );
-extern BOOL   hb_setenv( const char * szName, const char * szValue ); /* set or delete (szValue==NULL) environment variable */
-extern char * hb_netname( void );
-extern char * hb_username( void );
+extern char *  hb_getenv( const char * name );
+extern HB_BOOL hb_setenv( const char * szName, const char * szValue ); /* set or delete (szValue==NULL) environment variable */
+extern char *  hb_netname( void );
+extern char *  hb_username( void );
 
 /* Translation related things */
 

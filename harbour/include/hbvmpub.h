@@ -222,7 +222,7 @@ typedef struct _HB_SYMB
    PHB_DYNS       pDynSym;          /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
 
-#define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
+#define HB_DYNS_FUNC( hbfunc )   HB_BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 typedef void * ( * PHB_ALLOCUPDT_FUNC )( void *, int );

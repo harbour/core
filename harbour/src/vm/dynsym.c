@@ -465,7 +465,7 @@ const char * hb_dynsymName( PHB_DYNS pDynSym )
    return pDynSym->pSymbol->szName;
 }
 
-BOOL hb_dynsymIsFunction( PHB_DYNS pDynSym )
+HB_BOOL hb_dynsymIsFunction( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymIsFunction(%p)", pDynSym));
 

@@ -273,14 +273,14 @@ static void hb_conOutDev( const char * szStr, HB_SIZE ulLen )
       hb_gtWrite( szStr, ulLen );
 }
 
-static char * hb_itemStringCon( PHB_ITEM pItem, HB_SIZE * pulLen, BOOL * pfFreeReq )
+static char * hb_itemStringCon( PHB_ITEM pItem, HB_SIZE * pulLen, HB_BOOL * pfFreeReq )
 {
    /* logical values in device output (not console, stdout or stderr) are
       shown as single letter */
    if( HB_IS_LOGICAL( pItem ) )
    {
       *pulLen = 1;
-      *pfFreeReq = FALSE;
+      *pfFreeReq = HB_FALSE;
       return ( char * ) ( hb_itemGetL( pItem ) ? "T" : "F" );
    }
    return hb_itemString( pItem, pulLen, pfFreeReq );
@@ -294,7 +294,7 @@ HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
    {
       char * pszString;
       HB_SIZE ulLen;
-      BOOL fFree;
+      HB_BOOL fFree;
 
       if( iParam > 1 )
          hb_conOutStd( " ", 1 );
@@ -314,7 +314,7 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
    {
       char * pszString;
       HB_SIZE ulLen;
-      BOOL fFree;
+      HB_BOOL fFree;
 
       if( iParam > 1 )
          hb_conOutErr( " ", 1 );
@@ -334,7 +334,7 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
    {
       char * pszString;
       HB_SIZE ulLen;
-      BOOL fFree;
+      HB_BOOL fFree;
 
       if( iParam > 1 )
          hb_conOutAlt( " ", 1 );
@@ -499,7 +499,7 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
 {
    char * pszString;
    HB_SIZE ulLen;
-   BOOL fFree;
+   HB_BOOL fFree;
 
    if( HB_ISCHAR( 2 ) )
    {
@@ -530,7 +530,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 {
    char * pszString;
    HB_SIZE ulLen;
-   BOOL bFreeReq;
+   HB_BOOL bFreeReq;
 
    if( HB_ISCHAR( 2 ) )
    {
@@ -567,7 +567,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 {
    char * pszString;
    HB_SIZE ulLen;
-   BOOL bFreeReq;
+   HB_BOOL bFreeReq;
 
    if( HB_ISCHAR( 4 ) )
    {
@@ -604,7 +604,7 @@ HB_FUNC( HB_DISPOUTAT )
    {
       char * pszString;
       HB_SIZE ulLen;
-      BOOL bFreeReq;
+      HB_BOOL bFreeReq;
       int iColor;
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );

@@ -109,10 +109,10 @@ static const char * s_szCrLf;
 static ULONG        s_ulCrLf;
 static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
 static int          s_iCursorStyle;
-static BOOL         s_bStdinConsole;
-static BOOL         s_bStdoutConsole;
-static BOOL         s_bStderrConsole;
-static BOOL         s_fDispTrans;
+static HB_BOOL      s_bStdinConsole;
+static HB_BOOL      s_bStdoutConsole;
+static HB_BOOL      s_bStderrConsole;
+static HB_BOOL      s_fDispTrans;
 static PHB_CODEPAGE s_cdpTerm;
 static PHB_CODEPAGE s_cdpHost;
 static BYTE         s_keyTransTbl[ 256 ];
@@ -123,7 +123,7 @@ static char *       s_sOutBuf;
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 
-static volatile BOOL s_fRestTTY = FALSE;
+static volatile HB_BOOL s_fRestTTY = HB_FALSE;
 static struct termios s_saved_TIO, s_curr_TIO;
 
 #if defined( SIGTTOU )
@@ -145,27 +145,27 @@ static void sig_handler( int iSigNo )
 #endif
 #ifdef SIGWINCH
       case SIGWINCH:
-         /* s_WinSizeChangeFlag = TRUE; */
+         /* s_WinSizeChangeFlag = HB_TRUE; */
          break;
 #endif
 #ifdef SIGINT
       case SIGINT:
-         /* s_InetrruptFlag = TRUE; */
+         /* s_InetrruptFlag = HB_TRUE; */
          break;
 #endif
 #ifdef SIGQUIT
       case SIGQUIT:
-         /* s_BreakFlag = TRUE; */
+         /* s_BreakFlag = HB_TRUE; */
          break;
 #endif
 #ifdef SIGTSTP
       case SIGTSTP:
-         /* s_DebugFlag = TRUE; */
+         /* s_DebugFlag = HB_TRUE; */
          break;
 #endif
 #ifdef SIGTTOU
       case SIGTTOU:
-         s_fRestTTY = FALSE;
+         s_fRestTTY = HB_FALSE;
          break;
 #endif
    }
@@ -225,7 +225,7 @@ static void hb_gt_pca_AnsiSetAutoMargin( int iAM )
 
 static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
 {
-   static BOOL s_fIsAnswer = TRUE;
+   static HB_BOOL s_fIsAnswer = HB_TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiGetCurPos(%p, %p)", iRow, iCol));
 
@@ -264,7 +264,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
                      x = x * 10 + ( rdbuf[ i++ ] - '0' );
                   if( i < n && i > d && rdbuf[ i ] == 'R' )
                   {
-                     s_fIsAnswer = TRUE;
+                     s_fIsAnswer = HB_TRUE;
                      break;
                   }
                }
@@ -455,7 +455,7 @@ static void hb_gt_pca_setKeyTrans( PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 
    for( i = 0; i < 256; ++i )
       s_keyTransTbl[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
 }
 
 static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -473,7 +473,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_bStderrConsole = hb_fsIsDevice( s_hFilenoStderr );
 
    s_cdpTerm = s_cdpHost = NULL;
-   s_fDispTrans = FALSE;
+   s_fDispTrans = HB_FALSE;
    hb_gt_pca_setKeyTrans( NULL, NULL );
 
    s_szCrLf = hb_conNewLine();
@@ -486,7 +486,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
 #if ( defined( HB_OS_UNIX ) || defined( __DJGPP__ ) ) && \
     defined( SA_NOCLDSTOP )
-   s_fRestTTY = FALSE;
+   s_fRestTTY = HB_FALSE;
    if( s_bStdinConsole )
    {
 #if defined( SIGTTOU )
@@ -507,7 +507,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       sigaction( SIGTTOU, &act, 0 );
 #endif
 
-      s_fRestTTY = TRUE;
+      s_fRestTTY = HB_TRUE;
 
       tcgetattr( hFilenoStdin, &s_saved_TIO );
       memcpy( &s_curr_TIO, &s_saved_TIO, sizeof( struct termios ) );
@@ -585,7 +585,7 @@ static void hb_gt_pca_Exit( PHB_GT pGT )
       hb_xfree( s_sOutBuf );
       s_iOutBufSize = s_iOutBufIndex = 0;
    }
-   s_bStdinConsole = s_bStdoutConsole = s_bStderrConsole = FALSE;
+   s_bStdinConsole = s_bStdoutConsole = s_bStderrConsole = HB_FALSE;
 }
 
 static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
@@ -693,7 +693,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
 
 static void hb_gt_pca_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   static double dLastSeconds = 0;
+   static double s_dLastSeconds = 0;
    double dCurrentSeconds;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Tone(%p, %lf, %lf)", pGT, dFrequency, dDuration));
@@ -706,10 +706,10 @@ static void hb_gt_pca_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    /* succession leading to BEL hell on the terminal */
 
    dCurrentSeconds = hb_dateSeconds();
-   if( dCurrentSeconds < dLastSeconds || dCurrentSeconds - dLastSeconds > 0.5 )
+   if( dCurrentSeconds < s_dLastSeconds || dCurrentSeconds - s_dLastSeconds > 0.5 )
    {
       hb_gt_pca_termOut( s_szBell, 1 );
-      dLastSeconds = dCurrentSeconds;
+      s_dLastSeconds = dCurrentSeconds;
       hb_gt_pca_termFlush();
    }
 
@@ -741,7 +741,7 @@ static const char * hb_gt_pca_Version( PHB_GT pGT, int iType )
    return "Harbour Terminal: PC ANSI";
 }
 
-static BOOL hb_gt_pca_Suspend( PHB_GT pGT )
+static HB_BOOL hb_gt_pca_Suspend( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend(%p)", pGT ) );
 
@@ -754,10 +754,10 @@ static BOOL hb_gt_pca_Suspend( PHB_GT pGT )
 #endif
    /* Enable line wrap when cursor set after last column */
    hb_gt_pca_AnsiSetAutoMargin( 1 );
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_gt_pca_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_pca_Resume( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume(%p)", pGT ) );
 
@@ -770,10 +770,10 @@ static BOOL hb_gt_pca_Resume( PHB_GT pGT )
 #endif
    hb_gt_pca_AnsiInit();
 
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -791,10 +791,10 @@ static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       s_fDispTrans = s_cdpTerm && s_cdpHost && s_cdpTerm != s_cdpHost;
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
@@ -807,7 +807,7 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    hb_gt_pca_setKeyTrans( hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
@@ -897,7 +897,7 @@ static void hb_gt_pca_Refresh( PHB_GT pGT )
    hb_gt_pca_termFlush();
 }
 
-static BOOL hb_gt_pca_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_pca_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -905,18 +905,18 @@ static BOOL hb_gt_pca_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -935,7 +935,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->ReadKey                    = hb_gt_pca_ReadKey;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

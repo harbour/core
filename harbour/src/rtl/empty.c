@@ -100,7 +100,7 @@ HB_FUNC( EMPTY )
          break;
 
       case HB_IT_BLOCK:
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          break;
 
       case HB_IT_POINTER:
@@ -113,7 +113,7 @@ HB_FUNC( EMPTY )
          break;
 
       default:
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          break;
    }
 }

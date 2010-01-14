@@ -111,10 +111,10 @@
          static HB_TLS_KEY hb_stack_key;
 #        define hb_stack_ptr     ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
 #     endif
-      static volatile BOOL s_fInited = FALSE;
+      static volatile HB_BOOL s_fInited = HB_FALSE;
 #     define hb_stack_alloc()    do { if( !s_fInited ) { \
                                          hb_tls_init( hb_stack_key ); \
-                                         s_fInited = TRUE; } \
+                                         s_fInited = HB_TRUE; } \
                                       hb_tls_set( hb_stack_key, \
                                                   hb_xgrab( sizeof( HB_STACK ) ) ); \
                                  } while ( 0 )
@@ -141,7 +141,7 @@
 
 #  define hb_stack_alloc()
 #  define hb_stack_dealloc()
-#  define hb_stack_ready()    (TRUE)
+#  define hb_stack_ready()    ( HB_TRUE )
 
 #endif /* HB_MT_VM */
 
@@ -447,7 +447,7 @@ void hb_stackClearMemvars( int iExcept )
 }
 
 #undef hb_stackQuitState
-BOOL hb_stackQuitState( void )
+HB_BOOL hb_stackQuitState( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stack.uiQuitState != 0;
@@ -486,7 +486,7 @@ int * hb_stackKeyPolls( void )
 }
 
 #undef hb_stackDebugRequest
-BOOL * hb_stackDebugRequest( void )
+HB_BOOL * hb_stackDebugRequest( void )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -689,7 +689,7 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams )
    /* as some type of protection we can set hb_stack.pStatics to NULL here */
    pFrame->ulPrivateBase = hb_memvarGetPrivatesBase();
    pFrame->uiClass = pFrame->uiMethod = pFrame->uiLineNo = 0;
-   pFrame->fDebugging = FALSE;
+   pFrame->fDebugging = HB_FALSE;
 
    pItem->item.asSymbol.stackstate = pFrame;
    pItem->item.asSymbol.paramcnt = uiParams;
@@ -1231,7 +1231,7 @@ static HB_DYNS_FUNC( hb_stackMemvarScan )
    if( pMemvar && HB_IS_GCITEM( pMemvar ) )
       hb_gcItemRef( pMemvar );
 
-   return TRUE;
+   return HB_TRUE;
 }
 #endif
 

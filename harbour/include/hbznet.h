@@ -72,18 +72,18 @@ typedef void ( * HB_INET_CFUNC ) ( PHB_ZNETSTREAM );
 extern HB_EXPORT int    hb_znetError( PHB_ZNETSTREAM pStream );
 
 extern HB_EXPORT PHB_ZNETSTREAM hb_znetOpen( int level, int strategy );
-extern HB_EXPORT void   hb_znetEncryptKey( PHB_ZNETSTREAM pStream, const void * keydata, int keylen );
-extern HB_EXPORT void   hb_znetClose( PHB_ZNETSTREAM pStream );
-extern HB_EXPORT int    hb_znetError( PHB_ZNETSTREAM pStream );
-extern HB_EXPORT long   hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_LONG timeout );
-extern HB_EXPORT long   hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout );
-extern HB_EXPORT long   hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout, long * plast );
+extern HB_EXPORT void    hb_znetEncryptKey( PHB_ZNETSTREAM pStream, const void * keydata, int keylen );
+extern HB_EXPORT void    hb_znetClose( PHB_ZNETSTREAM pStream );
+extern HB_EXPORT int     hb_znetError( PHB_ZNETSTREAM pStream );
+extern HB_EXPORT long    hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_LONG timeout );
+extern HB_EXPORT long    hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout );
+extern HB_EXPORT long    hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout, long * plast );
 
-extern HB_EXPORT BOOL   hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
-                                               HB_INET_RFUNC,
-                                               HB_INET_SFUNC,
-                                               HB_INET_FFUNC,
-                                               HB_INET_CFUNC );
+extern HB_EXPORT HB_BOOL hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
+                                                HB_INET_RFUNC,
+                                                HB_INET_SFUNC,
+                                                HB_INET_FFUNC,
+                                                HB_INET_CFUNC );
 
 HB_EXTERN_END
 

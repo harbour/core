@@ -88,7 +88,7 @@
 struct mv_PUBLIC_var_info
 {
    int iPos;
-   BOOL bFound;
+   HB_BOOL bFound;
    HB_DYNS_PTR pDynSym;
 };
 
@@ -743,7 +743,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
  * procedure only.
  * The scope of released variables are specified using passed name's mask
  */
-static void hb_memvarReleaseWithMask( const char *szMask, BOOL bInclude )
+static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
    ULONG ulBase = hb_stackGetPrivateStack()->count;
@@ -762,7 +762,7 @@ static void hb_memvarReleaseWithMask( const char *szMask, BOOL bInclude )
       pMemvar = hb_dynsymGetMemvar( pDynVar );
       if( pMemvar )
       {
-         BOOL fMatch = hb_strMatchCaseWildExact( pDynVar->pSymbol->szName, szMask );
+         HB_BOOL fMatch = hb_strMatchCaseWildExact( pDynVar->pSymbol->szName, szMask );
          if( bInclude ? fMatch : !fMatch )
             hb_itemClear( pMemvar );
       }
@@ -821,12 +821,12 @@ static HB_DYNS_FUNC( hb_memvarClear )
        hb_dynsymGetMemvar( pDynSymbol ) )
       hb_memvarDetachDynSym( pDynSymbol, NULL );
 
-   return TRUE;
+   return HB_TRUE;
 }
 #endif
 
 /* Clear all memvar variables optionally without GetList PUBLIC variable */
-void hb_memvarsClear( BOOL fAll )
+void hb_memvarsClear( HB_BOOL fAll )
 {
    HB_STACK_TLS_PRELOAD
    PHB_DYNS pGetList;
@@ -858,7 +858,7 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
    if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC )
       ( * ( ( int * )Cargo ) )++;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 static ULONG hb_memvarGetBaseOffset( int iProcLevel )
@@ -910,16 +910,16 @@ static int hb_memvarCount( int iScope, int iLevel )
  */
 static HB_DYNS_FUNC( hb_memvarFindPublicByPos )
 {
-   BOOL bCont = TRUE;
+   HB_BOOL bCont = HB_TRUE;
 
    if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC )
    {
       struct mv_PUBLIC_var_info *pStruPub = (struct mv_PUBLIC_var_info *) Cargo;
       if( pStruPub->iPos-- == 0 )
       {
-         pStruPub->bFound  = TRUE;
+         pStruPub->bFound  = HB_TRUE;
          pStruPub->pDynSym = pDynSymbol;
-         bCont = FALSE;
+         bCont = HB_FALSE;
       }
    }
 
@@ -946,7 +946,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
          struct mv_PUBLIC_var_info struPub;
 
          struPub.iPos   = iPos;
-         struPub.bFound = FALSE;
+         struPub.bFound = HB_FALSE;
          /* enumerate existing dynamic symbols and fill this structure
           * with info for requested PUBLIC variable
           */
@@ -986,10 +986,10 @@ static HB_DYNS_FUNC( hb_memvarCountVisible )
          pMVInfo->pDyns[ pMVInfo->ulCount++ ] = pDynSymbol;
       }
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
-PHB_ITEM hb_memvarSaveInArray( int iScope, BOOL fCopy )
+PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
 {
    HB_STACK_TLS_PRELOAD
    struct mv_memvarArray_info MVInfo;
@@ -1180,7 +1180,7 @@ HB_FUNC( __MVRELEASE )
 
    if( iCount && HB_ISCHAR( 1 ) )
    {
-      BOOL bIncludeVar;
+      HB_BOOL bIncludeVar;
       const char * pszMask;
 
       pszMask = hb_memvarGetMask( 1 );
@@ -1209,7 +1209,7 @@ HB_FUNC( __MVSCOPE )
 
 HB_FUNC( __MVCLEAR )
 {
-   hb_memvarsClear( FALSE );
+   hb_memvarsClear( HB_FALSE );
 }
 
 HB_FUNC( __MVDBGINFO )
@@ -1350,7 +1350,7 @@ HB_FUNC( __MVPUT )
 typedef struct
 {
    const char * pszMask;
-   BOOL bIncludeMask;
+   HB_BOOL bIncludeMask;
    BYTE * buffer;
    HB_FHANDLE fhnd;
 } MEMVARSAVE_CARGO;
@@ -1359,8 +1359,8 @@ typedef struct
 
 static HB_DYNS_FUNC( hb_memvarSave )
 {
-   const char * pszMask    = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
-   BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
+   const char * pszMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
+   HB_BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
    BYTE * buffer     = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
    HB_FHANDLE fhnd   = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
    PHB_ITEM pMemvar;
@@ -1372,7 +1372,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
    pMemvar = hb_dynsymGetMemvar( pDynSymbol );
    if( pMemvar )
    {
-      BOOL bMatch = hb_strMatchCaseWildExact( pDynSymbol->pSymbol->szName, pszMask );
+      HB_BOOL bMatch = hb_strMatchCaseWildExact( pDynSymbol->pSymbol->szName, pszMask );
 
       /* Process it if it matches the passed mask */
       if( bIncludeMask ? bMatch : ! bMatch )
@@ -1453,7 +1453,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
          }
       }
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 HB_FUNC( __MVSAVE )
@@ -1552,12 +1552,12 @@ HB_FUNC( __MVRESTORE )
       char szFileName[ HB_PATH_MAX ];
       HB_FHANDLE fhnd;
 
-      BOOL bAdditive = hb_parl( 2 );
+      HB_BOOL bAdditive = hb_parl( 2 );
 
       /* Clear all memory variables if not ADDITIVE */
 
       if( ! bAdditive )
-         hb_memvarsClear( FALSE );
+         hb_memvarsClear( HB_FALSE );
 
       /* Generate filename */
 
@@ -1589,7 +1589,7 @@ HB_FUNC( __MVRESTORE )
 
       if( fhnd != FS_ERROR )
       {
-         BOOL bIncludeMask;
+         HB_BOOL bIncludeMask;
          BYTE buffer[ HB_MEM_REC_LEN ];
          const char * pszMask;
          char *szName;
@@ -1597,7 +1597,7 @@ HB_FUNC( __MVRESTORE )
 
 #ifdef HB_CLP_STRICT
          pszMask = "*";
-         bIncludeMask = TRUE;
+         bIncludeMask = HB_TRUE;
 #else
          pszMask = hb_memvarGetMask( 3 );
          bIncludeMask = hb_parldef( 4, 1 );
@@ -1690,7 +1690,7 @@ HB_FUNC( __MVRESTORE )
 
             if( szName )
             {
-               BOOL bMatch = hb_strMatchCaseWildExact( szName, pszMask );
+               HB_BOOL bMatch = hb_strMatchCaseWildExact( szName, pszMask );
 
                /* Process it if it matches the passed mask */
                if( bIncludeMask ? bMatch : ! bMatch )
@@ -1713,7 +1713,7 @@ HB_FUNC( __MVRESTORE )
          hb_itemReturnRelease( pItem );
       }
       else
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
 
       if( pError )
          hb_itemRelease( pError );

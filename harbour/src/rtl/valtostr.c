@@ -61,7 +61,7 @@ HB_FUNC( HB_VALTOSTR )
    if( pItem )
    {
       HB_SIZE ulLen;
-      BOOL bFreeReq;
+      HB_BOOL bFreeReq;
       char * buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
 
       if( bFreeReq )

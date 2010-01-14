@@ -469,7 +469,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( 0, 7 );
          hb_stornl( 0, 8 );
          hb_stornl( 0, 9 );
-         hb_storl( FALSE, 10 );
+         hb_storl( HB_FALSE, 10 );
          hb_storc( NULL, 11 );
       }
    }
@@ -534,9 +534,9 @@ HB_FUNC( HB_UNZIPFILECLOSE )
  *
  */
 
-static BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, HB_BOOL * pfText )
 {
-   BOOL fText = pfText != NULL, fResult = FALSE;
+   HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
    ULONG ulCRC = 0;
 
    if( hFile != FS_ERROR )
@@ -562,7 +562,7 @@ static BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, BOOL 
                       ( pString[ u ] >= 0x7F && pString[ u ] < 0xA0 &&
                         pString[ u ] != ( unsigned char ) HB_CHAR_SOFT1 ) )
                   {
-                     fText = FALSE;
+                     fText = HB_FALSE;
                      break;
                   }
                }
@@ -584,10 +584,10 @@ static BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, BOOL 
    return fResult;
 }
 
-static BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, HB_BOOL * pfText )
 {
    FILE * file;
-   BOOL fText = pfText != NULL, fResult = FALSE;
+   HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
    ULONG ulCRC = 0;
 
    file = hb_fopen( szFileName, "rb" );
@@ -614,7 +614,7 @@ static BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, BOOL * pf
                       ( pString[ u ] >= 0x7f && pString[ u ] < 0xA0 &&
                         pString[ u ] != ( unsigned char ) HB_CHAR_SOFT1 ) )
                   {
-                     fText = FALSE;
+                     fText = HB_FALSE;
                      break;
                   }
                }
@@ -691,8 +691,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    ULONG         ulLen, ulExtAttr;
    zip_fileinfo  zfi;
    int           iResult;
-   BOOL          fError;
-   BOOL          fText;
+   HB_BOOL       fError;
+   HB_BOOL       fText;
    ULONG         ulCRC;
 
    if( szName )
@@ -727,7 +727,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    }
 
    memset( &zfi, 0, sizeof( zfi ) );
-   fError = FALSE;
+   fError = HB_FALSE;
 
 #if defined( HB_OS_WIN )
    {
@@ -745,7 +745,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
       }
       else
-         fError = TRUE;
+         fError = HB_TRUE;
 
       HB_TCHAR_FREE( lpFileName );
    }
@@ -793,7 +793,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          zfi.tmz_date.tm_year = st.tm_year;
       }
       else
-         fError = TRUE;
+         fError = HB_TRUE;
    }
 #elif defined( HB_OS_DOS )
    {
@@ -814,7 +814,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
       }
       else
-         fError = TRUE;
+         fError = HB_TRUE;
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -848,7 +848,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          zfi.tmz_date.tm_year = fs3.fdateLastWrite.year + 1980;
       }
       else
-         fError = TRUE;
+         fError = HB_TRUE;
    }
 #else
    {
@@ -865,7 +865,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       return -200;
    }
 
-   fText = FALSE;
+   fText = HB_FALSE;
    ulCRC = 0;
 
    zfi.external_fa = ulExtAttr;
@@ -962,7 +962,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    ULONG         ulLen;
    zip_fileinfo  zfi;
    int           iResult;
-   BOOL          fText;
+   HB_BOOL       fText;
    ULONG         ulCRC;
 
    if( hFile == FS_ERROR || szName == NULL )
@@ -989,7 +989,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    zfi.tmz_date.tm_year = 0;
 
    ulCRC = 0;
-   fText = FALSE;
+   fText = HB_FALSE;
    if( szPassword && hb_zipGetFileInfoFromHandle( hFile, &ulCRC, &fText ) )
       zfi.internal_fa = fText ? 1 : 0;
    else

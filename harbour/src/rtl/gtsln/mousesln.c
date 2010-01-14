@@ -67,8 +67,8 @@
 static int  s_iMouseRow = 0;
 static int  s_iMouseCol = 0;
 
-static BOOL s_bMousePresent = FALSE;
-static int  s_iMouseButtons = -1;
+static HB_BOOL s_bMousePresent = HB_FALSE;
+static int     s_iMouseButtons = -1;
 
 static USHORT  s_usMouseState = 0;
 static USHORT  s_usLastMouseState = 0;
@@ -81,7 +81,7 @@ static struct timeval mRightDblckTime;
 /* *********************************************************************** */
 
 #if defined( HB_HAS_GPM )
-static BOOL GetGpmEvent( Gpm_Event *Evt )
+static HB_BOOL GetGpmEvent( Gpm_Event *Evt )
 {
    if( s_bMousePresent && gpm_fd >= 0 )
    {
@@ -96,13 +96,13 @@ static BOOL GetGpmEvent( Gpm_Event *Evt )
             return Gpm_GetEvent( Evt ) > 0;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 #endif
 
 /* *********************************************************************** */
 
-static BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
+static HB_BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
 {
    /* Xterm mouse event consists of three chars */
    if( SLang_input_pending( 0 ) > 0 )
@@ -115,12 +115,12 @@ static BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
          if( SLang_input_pending( 0 ) > 0 )
          {
             *Row = SLang_getkey() - 0x21;
-            return TRUE;
+            return HB_TRUE;
          }
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
@@ -196,7 +196,7 @@ void hb_gt_sln_mouse_ProcessTerminalEvent( void )
 
 /* *********************************************************************** */
 
-int hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew )
+int hb_gt_sln_mouse_Inkey( int iEventMask, HB_BOOL fCheckNew )
 {
    if( s_usMouseState != s_usLastMouseState )
    {
@@ -346,7 +346,7 @@ void hb_gt_sln_mouse_Init( void )
       if( s_iMouseButtons < 1 )
          s_iMouseButtons = 3;
 
-      s_bMousePresent = TRUE;
+      s_bMousePresent = HB_TRUE;
    }
 #if defined( HB_HAS_GPM )
    else if( hb_sln_UnderLinuxConsole )
@@ -370,7 +370,7 @@ void hb_gt_sln_mouse_Init( void )
       {
          Gpm_Event Evt;
 
-         s_bMousePresent = TRUE;
+         s_bMousePresent = HB_TRUE;
 
          while( GetGpmEvent( &Evt ) );
          {
@@ -423,13 +423,13 @@ void hb_gt_sln_mouse_Exit( void )
             Gpm_Close();
       }
 #endif
-      s_bMousePresent = FALSE;
+      s_bMousePresent = HB_FALSE;
    }
 }
 
 /* *********************************************************************** */
 
-BOOL hb_gt_sln_mouse_IsPresent( PHB_GT pGT )
+HB_BOOL hb_gt_sln_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -490,7 +490,7 @@ void hb_gt_sln_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 /* *********************************************************************** */
 
-BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton )
+HB_BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -504,7 +504,7 @@ BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton )
          return ( s_usMouseState & M_BUTTON_MIDDLE ) != 0;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */

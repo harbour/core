@@ -67,12 +67,12 @@ HB_FUNC( MPRESENT )
 
 HB_FUNC( MHIDE )
 {
-   hb_mouseSetCursor( FALSE );
+   hb_mouseSetCursor( HB_FALSE );
 }
 
 HB_FUNC( MSHOW )
 {
-   hb_mouseSetCursor( TRUE );
+   hb_mouseSetCursor( HB_TRUE );
 }
 
 HB_FUNC( MSETCURSOR )

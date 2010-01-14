@@ -122,7 +122,7 @@ PHB_ITEM hb_itemParamPtr( USHORT uiParam, long lMask )
    return hb_param( ( int ) uiParam, lMask );
 }
 
-BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
+HB_BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStore(%hu, %p)", uiParam, pItem));
 
@@ -130,13 +130,13 @@ BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
    {
       HB_STACK_TLS_PRELOAD
       hb_itemCopyToRef( hb_stackItemFromBase( uiParam ), pItem );
-      return TRUE;
+      return HB_TRUE;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
+HB_BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStoreForward(%hu, %p)", uiParam, pItem));
 
@@ -144,10 +144,10 @@ BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
    {
       HB_STACK_TLS_PRELOAD
       hb_itemMoveToRef( hb_stackItemFromBase( uiParam ), pItem );
-      return TRUE;
+      return HB_TRUE;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 USHORT hb_itemPCount( void )
@@ -159,17 +159,17 @@ USHORT hb_itemPCount( void )
    return ( USHORT ) hb_pcount();
 }
 
-BOOL hb_itemRelease( PHB_ITEM pItem )
+HB_BOOL hb_itemRelease( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemRelease(%p)", pItem));
 
    if( pItem )
    {
       hb_gcGripDrop( pItem );
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 PHB_ITEM hb_itemArrayNew( HB_SIZE ulLen )
@@ -477,7 +477,7 @@ HB_SIZE hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, HB_SIZE ulLen )
       return 0;
 }
 
-BOOL hb_itemFreeC( char * szText )
+HB_BOOL hb_itemFreeC( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemFreeC(%s)", szText));
 
@@ -485,10 +485,10 @@ BOOL hb_itemFreeC( char * szText )
    {
       hb_xfree( szText );
 
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
@@ -543,7 +543,7 @@ double hb_itemGetTD( PHB_ITEM pItem )
       return 0;
 }
 
-BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
+HB_BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetTDT(%p,%p,%p)", pItem, plJulian, plMilliSec));
 
@@ -551,16 +551,16 @@ BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
    {
       *plJulian = pItem->item.asDateTime.julian;
       *plMilliSec = pItem->item.asDateTime.time;
-      return TRUE;
+      return HB_TRUE;
    }
    else
    {
       *plJulian = *plMilliSec = 0;
-      return FALSE;
+      return HB_FALSE;
    }
 }
 
-BOOL hb_itemGetL( PHB_ITEM pItem )
+HB_BOOL hb_itemGetL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetL(%p)", pItem));
 
@@ -579,7 +579,7 @@ BOOL hb_itemGetL( PHB_ITEM pItem )
          return pItem->item.asDouble.value != 0.0;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 double hb_itemGetND( PHB_ITEM pItem )
@@ -887,7 +887,7 @@ PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, long lJulian, long lMilliSec )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
+PHB_ITEM hb_itemPutL( PHB_ITEM pItem, HB_BOOL bValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutL(%p, %d)", pItem, ( int ) bValue));
 
@@ -1274,7 +1274,7 @@ PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
    pItem->item.asPointer.collect =
-   pItem->item.asPointer.single = FALSE;
+   pItem->item.asPointer.single = HB_FALSE;
 
    return pItem;
 }
@@ -1293,8 +1293,8 @@ PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
 
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
-   pItem->item.asPointer.collect = TRUE;
-   pItem->item.asPointer.single = FALSE;
+   pItem->item.asPointer.collect = HB_TRUE;
+   pItem->item.asPointer.single = HB_FALSE;
 
    hb_gcAttach( pValue );
 
@@ -1531,7 +1531,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
          if( pSource->item.asPointer.collect )
          {
             if( pSource->item.asPointer.single )
-               pDest->item.asPointer.collect = FALSE;
+               pDest->item.asPointer.collect = HB_FALSE;
             else
                hb_gcRefInc( pSource->item.asPointer.value );
          }
@@ -2000,7 +2000,7 @@ PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
       return pItem;
 }
 
-BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen )
+HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemGetWriteCL(%p,%p,%p)", pItem, pszValue, pulLen));
 
@@ -2014,10 +2014,10 @@ BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen )
          hb_itemUnShareString( pItem );
          *pulLen = pItem->item.asString.length;
          *pszValue = pItem->item.asString.value;
-         return TRUE;
+         return HB_TRUE;
       }
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* Internal API, not standard Clipper */
@@ -2054,7 +2054,7 @@ PHB_ITEM hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
 /* Internal API, not standard Clipper */
 
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
-int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
+int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
 {
    HB_STACK_TLS_PRELOAD
    const char * szFirst;
@@ -2079,7 +2079,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          ulLenFirst--;
       while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
          ulLenSecond--;
-      bForceExact = TRUE;
+      bForceExact = HB_TRUE;
    }
 
    ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
@@ -2133,7 +2133,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 }
 
 /* Check whether two strings are equal (0), smaller (-1), or greater (1), ignore case */
-int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
+int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
 {
    HB_STACK_TLS_PRELOAD
    const char * szFirst;
@@ -2158,7 +2158,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          ulLenFirst--;
       while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
          ulLenSecond--;
-      bForceExact = TRUE;
+      bForceExact = HB_TRUE;
    }
 
    ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
@@ -2215,10 +2215,10 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 
 /* converts a numeric to a string with optional width & precision. */
 
-BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
+HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
 {
    int iPos, iDot;
-   BOOL fNeg;
+   HB_BOOL fNeg;
 
    if( iDec < 0 )
    {
@@ -2258,12 +2258,12 @@ BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
 
          if( dNumber < 0 )
          {
-            fNeg = TRUE;
+            fNeg = HB_TRUE;
             dFract = modf( -dNumber, &dInt );
          }
          else
          {
-            fNeg = FALSE;
+            fNeg = HB_FALSE;
             dFract = modf( dNumber, &dInt );
          }
 
@@ -2427,13 +2427,13 @@ BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
    if( iPos < 0 )
    {
       memset( szResult, '*', iSize );
-      return FALSE;
+      return HB_FALSE;
    }
    else if( iDot > 0 )
    {
       szResult[ iDot ] = '.';
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* converts a numeric to a string with optional width & precision.
@@ -2499,12 +2499,12 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 }
 
 /* NOTE: The caller must free the pointer if the bFreeReq param gets set to
-         TRUE, this trick is required to stay thread safe, while minimize
+         HB_TRUE, this trick is required to stay thread safe, while minimize
          memory allocation and buffer copying.
          As a side effect the caller should never modify the returned buffer
          since it may point to a constant value. [vszakats] */
 
-char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
+char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
 {
    char * buffer;
 
@@ -2516,7 +2516,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
       case HB_IT_MEMO:
          buffer = ( char * ) hb_itemGetCPtr( pItem );
          * ulLen = hb_itemGetCLen( pItem );
-         * bFreeReq = FALSE;
+         * bFreeReq = HB_FALSE;
          break;
 
       case HB_IT_DATE:
@@ -2529,7 +2529,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
          buffer = ( char * ) hb_xgrab( 11 );
          hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
          * ulLen = strlen( buffer );
-         * bFreeReq = TRUE;
+         * bFreeReq = HB_TRUE;
          break;
       }
 
@@ -2546,7 +2546,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
 
          buffer = hb_strdup( szDateTime );
          * ulLen = strlen( buffer );
-         * bFreeReq = TRUE;
+         * bFreeReq = HB_TRUE;
          break;
       }
 
@@ -2567,13 +2567,13 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
          if( buffer )
          {
             * ulLen = strlen( buffer );
-            * bFreeReq = TRUE;
+            * bFreeReq = HB_TRUE;
          }
          else
          {
             buffer = ( char * ) "";
             * ulLen = 0;
-            * bFreeReq = FALSE;
+            * bFreeReq = HB_FALSE;
          }
          break;
       }
@@ -2581,13 +2581,13 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
       case HB_IT_NIL:
          buffer = ( char * ) "NIL";
          * ulLen = 3;
-         * bFreeReq = FALSE;
+         * bFreeReq = HB_FALSE;
          break;
 
       case HB_IT_LOGICAL:
          buffer = ( char * ) ( hb_itemGetL( pItem ) ? ".T." : ".F." );
          * ulLen = 3;
-         * bFreeReq = FALSE;
+         * bFreeReq = HB_FALSE;
          break;
 
       case HB_IT_POINTER:
@@ -2596,7 +2596,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
          HB_PTRDIFF addr = ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
 
          * ulLen = size - 1;
-         * bFreeReq = TRUE;
+         * bFreeReq = HB_TRUE;
          buffer = ( char * ) hb_xgrab( size );
          buffer[ 0 ] = '0';
          buffer[ 1 ] = 'x';
@@ -2613,7 +2613,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
       default:
          buffer = ( char * ) "";
          * ulLen = 0;
-         * bFreeReq = FALSE;
+         * bFreeReq = HB_FALSE;
    }
 
    return buffer;
@@ -2623,7 +2623,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, BOOL * bFreeReq )
    being padded. If date, convert to string using hb_dateFormat(). If numeric,
    convert to unpadded string. Return pointer to string and set string length */
 
-char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, BOOL * bFreeReq )
+char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pulSize, bFreeReq));
 
@@ -2673,7 +2673,7 @@ PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
    PHB_ITEM pResult;
    char * buffer;
    HB_SIZE ulLen;
-   BOOL bFreeReq;
+   HB_BOOL bFreeReq;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemValToStr(%p)", pItem));
 

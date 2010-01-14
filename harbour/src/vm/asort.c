@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, HB_SIZE ulLast )
+static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, HB_SIZE ulLast )
 {
    if( pBlock )
    {
@@ -74,26 +74,26 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
       hb_vmSend( 2 );
 
       if( pBaseArray->ulLen <= ulLast )
-         return FALSE;
+         return HB_FALSE;
       else
       {
          PHB_ITEM pRet = hb_param( -1, HB_IT_ANY );
 
          /* CA-Cl*pper always takes return value as logical item
-          * accepting 0, 1 as numeric representation of FALSE/TRUE
+          * accepting 0, 1 as numeric representation of HB_FALSE/HB_TRUE
           */
          if( HB_IS_LOGICAL( pRet ) ||
              HB_IS_NUMERIC( pRet ) )
             return hb_itemGetL( pRet );
          else
-            return TRUE;
+            return HB_TRUE;
       }
    }
 
    /* Do native compare when no codeblock is supplied */
 
    if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
-      return hb_itemStrCmp( pItem1, pItem2, FALSE ) < 0;
+      return hb_itemStrCmp( pItem1, pItem2, HB_FALSE ) < 0;
    else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
       /* intentionally separate comparison for integer numbers
          to avoid precision lose in 64bit integer to double conversion */
@@ -210,7 +210,7 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_I
    }
 }
 
-BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock )
+HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySort(%p, %p, %p, %p)", pArray, pulStart, pulCount, pBlock));
 
@@ -244,10 +244,10 @@ BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_
             hb_arraySortQuick( pBaseArray, ulStart - 1, ulEnd, pBlock );
       }
 
-      return TRUE;
+      return HB_TRUE;
    }
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
 HB_FUNC( ASORT )

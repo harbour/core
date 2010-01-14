@@ -113,9 +113,9 @@ char * hb_getenv( const char * szName )
 }
 
 
-BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
+HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
-   BOOL fRetVal;
+   HB_BOOL fRetVal;
 
 #if defined( HB_OS_WIN )
    {
@@ -156,12 +156,12 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
       if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
       {
-         fRetVal = TRUE;
+         fRetVal = HB_TRUE;
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, ( char * ) EnvValue, nSize - 1 );
       }
       else
-         fRetVal = FALSE;
+         fRetVal = HB_FALSE;
    }
 #else
    {
@@ -169,12 +169,12 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
       if( pszTemp != NULL )
       {
-         fRetVal = TRUE;
+         fRetVal = HB_TRUE;
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, pszTemp, nSize - 1 );
       }
       else
-         fRetVal = FALSE;
+         fRetVal = HB_FALSE;
    }
 #endif
 
@@ -187,13 +187,13 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 /* set current process environment variable, if szValue is NULL delete
  * environment variable
  */
-BOOL hb_setenv( const char * szName, const char * szValue )
+HB_BOOL hb_setenv( const char * szName, const char * szValue )
 {
 #if defined( HB_OS_WIN )
    {
       LPTSTR lpName = HB_TCHAR_CONVTO( szName );
       LPTSTR lpValue = HB_TCHAR_CONVTO( szValue );
-      BOOL bResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
+      HB_BOOL bResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
       HB_TCHAR_FREE( lpValue );
       HB_TCHAR_FREE( lpName );
       return bResult;
@@ -216,10 +216,10 @@ BOOL hb_setenv( const char * szName, const char * szValue )
       if( szValue && *szValue )
          return setenv( szName, "", 1 ) == 0;
       else
-         return TRUE;
+         return HB_TRUE;
 #  elif defined( __OpenBSD__ )
       unsetenv( szName );
-      return TRUE;
+      return HB_TRUE;
 #  else
       return unsetenv( szName ) == 0;
 #  endif
@@ -230,7 +230,7 @@ BOOL hb_setenv( const char * szName, const char * szValue )
    HB_SYMBOL_UNUSED( szName );
    HB_SYMBOL_UNUSED( szValue );
 
-   return FALSE;
+   return HB_FALSE;
 
 #else
    /* please add support for other C compilers
@@ -244,7 +244,7 @@ BOOL hb_setenv( const char * szName, const char * szValue )
    HB_SYMBOL_UNUSED( szName );
    HB_SYMBOL_UNUSED( szValue );
 
-   return FALSE;
+   return HB_FALSE;
 
 #endif
 }

@@ -82,8 +82,8 @@ typedef struct
 {
    ULONG          ulSymbols;                    /* Number of symbols        */
    ULONG          ulFuncs;                      /* Number of functions      */
-   BOOL           fInit;                        /* should be INIT functions executed */
-   BOOL           fExit;                        /* should be EXIT functions executed */
+   HB_BOOL        fInit;                        /* should be INIT functions executed */
+   HB_BOOL        fExit;                        /* should be EXIT functions executed */
    LONG           lSymStart;                    /* Startup Symbol           */
    PHB_SYMB       pSymRead;                     /* Symbols read             */
    PHB_DYNF       pDynFunc;                     /* Functions read           */
@@ -114,7 +114,7 @@ static int hb_hrbReadHead( const char * szBody, ULONG ulBodySize, ULONG * pulBod
    return HB_PCODE_MKSHORT( pVersion );
 }
 
-static BOOL hb_hrbReadValue( const char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset, ULONG * pulValue )
+static HB_BOOL hb_hrbReadValue( const char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset, ULONG * pulValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%lu,%p,%p)", szBody, ulBodySize, pulBodyOffset, pulValue));
 
@@ -125,11 +125,11 @@ static BOOL hb_hrbReadValue( const char * szBody, ULONG ulBodySize, ULONG * pulB
 
       if( *pulValue <= 0x00FFFFFFUL )
       {
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* ReadId
@@ -173,7 +173,7 @@ static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
    {
       ULONG ul;
 
-      pHrbBody->fInit = TRUE;
+      pHrbBody->fInit = HB_TRUE;
       /* Initialize static variables first */
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check _INITSTATICS functions */
       {
@@ -208,8 +208,8 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
          ULONG ul;
          int i;
 
-         pHrbBody->fInit = FALSE;
-         pHrbBody->fExit = TRUE;
+         pHrbBody->fInit = HB_FALSE;
+         pHrbBody->fExit = HB_TRUE;
 
          for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions */
          {
@@ -238,8 +238,8 @@ static void hb_hrbExit( PHRB_BODY pHrbBody )
       {
          ULONG ul;
 
-         pHrbBody->fExit = FALSE;
-         pHrbBody->fInit = TRUE;
+         pHrbBody->fExit = HB_FALSE;
+         pHrbBody->fInit = HB_TRUE;
 
          for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
          {
@@ -327,8 +327,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
 
       pHrbBody = ( PHRB_BODY ) hb_xgrab( sizeof( HRB_BODY ) );
 
-      pHrbBody->fInit = FALSE;
-      pHrbBody->fExit = FALSE;
+      pHrbBody->fInit = HB_FALSE;
+      pHrbBody->fExit = HB_FALSE;
       pHrbBody->lSymStart = -1;
       pHrbBody->ulFuncs = 0;
       pHrbBody->pSymRead = NULL;
@@ -520,7 +520,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
          }
 
          pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
-                  ( USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, TRUE, FALSE );
+                  ( USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, HB_TRUE, HB_FALSE );
 
          if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
          {
@@ -531,12 +531,12 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
             pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
             hb_xfree( pSymRead );
 
-            pHrbBody->fInit = TRUE;
+            pHrbBody->fInit = HB_TRUE;
          }
          else
          {
             /* mark symbol table as dynamically allocated so HVM will free it on exit */
-            pHrbBody->pModuleSymbols->fAllocated = TRUE;
+            pHrbBody->pModuleSymbols->fAllocated = HB_TRUE;
 
             /* initialize static variables */
             hb_hrbInitStatic( pHrbBody );

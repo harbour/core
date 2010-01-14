@@ -110,15 +110,15 @@ struct _HB_GT_BASE;
 
 typedef struct
 {
-   BOOL     (* Lock) ( HB_GT_PTR );
+   HB_BOOL  (* Lock) ( HB_GT_PTR );
    void     (* Unlock) ( HB_GT_PTR );
    void     (* Init) ( HB_GT_PTR, HB_FHANDLE, HB_FHANDLE, HB_FHANDLE );
    void     (* Exit) ( HB_GT_PTR );
    void *   (* New) ( HB_GT_PTR );
    void     (* Free) ( HB_GT_PTR );
    void     (* Mark) ( HB_GT_PTR );
-   BOOL     (* Resize) ( HB_GT_PTR, int, int );
-   BOOL     (* SetMode) ( HB_GT_PTR, int, int );
+   HB_BOOL  (* Resize) ( HB_GT_PTR, int, int );
+   HB_BOOL  (* SetMode) ( HB_GT_PTR, int, int );
    void     (* GetSize) ( HB_GT_PTR, int *, int * );
    void     (* SemiCold) ( HB_GT_PTR );
    void     (* ColdArea) ( HB_GT_PTR, int, int, int, int );
@@ -132,10 +132,10 @@ typedef struct
    void     (* Flush) ( HB_GT_PTR );
    int      (* MaxCol) ( HB_GT_PTR );
    int      (* MaxRow) ( HB_GT_PTR );
-   BOOL     (* CheckPos) ( HB_GT_PTR, int, int, long * );
+   HB_BOOL  (* CheckPos) ( HB_GT_PTR, int, int, long * );
    void     (* SetPos) ( HB_GT_PTR, int, int );
    void     (* GetPos) ( HB_GT_PTR, int *, int * );
-   BOOL     (* IsColor) ( HB_GT_PTR );
+   HB_BOOL  (* IsColor) ( HB_GT_PTR );
    void     (* GetColorStr) ( HB_GT_PTR, char * );
    void     (* SetColorStr) ( HB_GT_PTR, const char * );
    void     (* ColorSelect) ( HB_GT_PTR, int );
@@ -151,13 +151,13 @@ typedef struct
    int      (* GetCursorStyle) ( HB_GT_PTR );
    void     (* SetCursorStyle) ( HB_GT_PTR, int );
    void     (* GetScrCursor) ( HB_GT_PTR, int *, int *, int * );
-   BOOL     (* GetScrChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
-   BOOL     (* PutScrChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
+   HB_BOOL  (* GetScrChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
+   HB_BOOL  (* PutScrChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
    void     (* DispBegin) ( HB_GT_PTR );
    void     (* DispEnd) ( HB_GT_PTR );
    int      (* DispCount) ( HB_GT_PTR );
-   BOOL     (* GetChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
-   BOOL     (* PutChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
+   HB_BOOL  (* GetChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
+   HB_BOOL  (* PutChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
    long     (* RectSize) ( HB_GT_PTR, int, int, int, int );
    void     (* Save) ( HB_GT_PTR, int, int, int, int, void * );
    void     (* Rest) ( HB_GT_PTR, int, int, int, int, const void * );
@@ -175,30 +175,30 @@ typedef struct
    void     (* BoxS) ( HB_GT_PTR, int, int, int, int, const char *, int );
    void     (* HorizLine) ( HB_GT_PTR, int, int, int, USHORT, int );
    void     (* VertLine) ( HB_GT_PTR, int, int, int, USHORT, int );
-   BOOL     (* GetBlink) ( HB_GT_PTR );
-   void     (* SetBlink) ( HB_GT_PTR, BOOL );
-   void     (* SetSnowFlag) ( HB_GT_PTR, BOOL );
+   HB_BOOL  (* GetBlink) ( HB_GT_PTR );
+   void     (* SetBlink) ( HB_GT_PTR, HB_BOOL );
+   void     (* SetSnowFlag) ( HB_GT_PTR, HB_BOOL );
    const char * (* Version) ( HB_GT_PTR, int );
-   BOOL     (* Suspend) ( HB_GT_PTR );
-   BOOL     (* Resume) ( HB_GT_PTR );
-   BOOL     (* PreExt) ( HB_GT_PTR );
-   BOOL     (* PostExt) ( HB_GT_PTR );
+   HB_BOOL  (* Suspend) ( HB_GT_PTR );
+   HB_BOOL  (* Resume) ( HB_GT_PTR );
+   HB_BOOL  (* PreExt) ( HB_GT_PTR );
+   HB_BOOL  (* PostExt) ( HB_GT_PTR );
    void     (* OutStd) ( HB_GT_PTR, const char *, HB_SIZE );
    void     (* OutErr) ( HB_GT_PTR, const char *, HB_SIZE );
    void     (* Tone) ( HB_GT_PTR, double, double );
    void     (* Bell) ( HB_GT_PTR );
-   BOOL     (* Info) ( HB_GT_PTR, int, PHB_GT_INFO );
+   HB_BOOL  (* Info) ( HB_GT_PTR, int, PHB_GT_INFO );
    int      (* Alert) ( HB_GT_PTR, PHB_ITEM, PHB_ITEM, int, int, double );
    int      (* SetFlag) ( HB_GT_PTR, int, int );
 
    /* internationalization */
-   BOOL     (* SetDispCP) ( HB_GT_PTR, const char *, const char *, BOOL );
-   BOOL     (* SetKeyCP) ( HB_GT_PTR, const char *, const char * );
+   HB_BOOL  (* SetDispCP) ( HB_GT_PTR, const char *, const char *, HB_BOOL );
+   HB_BOOL  (* SetKeyCP) ( HB_GT_PTR, const char *, const char * );
 
    /* keyboard */
    int      (* ReadKey) ( HB_GT_PTR, int );
 
-   int      (* InkeyGet) ( HB_GT_PTR, BOOL fWait, double dSeconds, int iEventMask );
+   int      (* InkeyGet) ( HB_GT_PTR, HB_BOOL fWait, double dSeconds, int iEventMask );
    void     (* InkeyPut) ( HB_GT_PTR, int iKey );
    void     (* InkeyIns) ( HB_GT_PTR, int iKey );
    int      (* InkeyLast) ( HB_GT_PTR, int iEventMask );
@@ -212,11 +212,11 @@ typedef struct
    /* mouse */
    void     (* MouseInit) ( HB_GT_PTR );
    void     (* MouseExit) ( HB_GT_PTR );
-   BOOL     (* MouseIsPresent) ( HB_GT_PTR );
+   HB_BOOL  (* MouseIsPresent) ( HB_GT_PTR );
    void     (* MouseShow) ( HB_GT_PTR );
    void     (* MouseHide) ( HB_GT_PTR );
-   BOOL     (* MouseGetCursor) ( HB_GT_PTR );
-   void     (* MouseSetCursor) ( HB_GT_PTR, BOOL );
+   HB_BOOL  (* MouseGetCursor) ( HB_GT_PTR );
+   void     (* MouseSetCursor) ( HB_GT_PTR, HB_BOOL );
    int      (* MouseCol) ( HB_GT_PTR );
    int      (* MouseRow) ( HB_GT_PTR );
    void     (* MouseGetPos) ( HB_GT_PTR, int *, int * );
@@ -229,9 +229,9 @@ typedef struct
    int      (* MouseGetDoubleClickSpeed) ( HB_GT_PTR );
    void     (* MouseSetDoubleClickSpeed) ( HB_GT_PTR, int );
    int      (* MouseCountButton) ( HB_GT_PTR );
-   BOOL     (* MouseButtonState) ( HB_GT_PTR, int );
-   BOOL     (* MouseButtonPressed) ( HB_GT_PTR, int, int *, int * );
-   BOOL     (* MouseButtonReleased) ( HB_GT_PTR, int, int *, int * );
+   HB_BOOL  (* MouseButtonState) ( HB_GT_PTR, int );
+   HB_BOOL  (* MouseButtonPressed) ( HB_GT_PTR, int, int *, int * );
+   HB_BOOL  (* MouseButtonReleased) ( HB_GT_PTR, int, int *, int * );
    int      (* MouseReadKey) ( HB_GT_PTR, int );
 
    /* Graphics API */
@@ -252,7 +252,7 @@ typedef int ( * GTENTRYP_V )( void );
 typedef struct _HB_GT_INIT
 {
    const char     * id;
-   BOOL           (* init) ( PHB_GT_FUNCS );
+   HB_BOOL        (* init) ( PHB_GT_FUNCS );
    PHB_GT_FUNCS   pSuperTable;
    int *          pGtId;
 } HB_GT_INIT, * PHB_GT_INIT;
@@ -287,14 +287,14 @@ typedef struct _HB_GT_BASE
    PHB_SCREENCELL screenBuffer;     /* window foreground (board) current buffer */
    PHB_SCREENCELL prevBuffer;       /* window foreground (board) previous buffer */
 
-   BOOL *         pLines;           /* Touched Window lines */
-   BOOL           fRefresh;         /* Should Window be refreshed */
+   HB_BOOL *      pLines;           /* Touched Window lines */
+   HB_BOOL        fRefresh;         /* Should Window be refreshed */
 
-   BOOL           fVgaCell;
-   BOOL           fIsColor;
-   BOOL           fBlinking;
-   BOOL           fStdOutCon;
-   BOOL           fStdErrCon;
+   HB_BOOL        fVgaCell;
+   HB_BOOL        fIsColor;
+   HB_BOOL        fBlinking;
+   HB_BOOL        fStdOutCon;
+   HB_BOOL        fStdErrCon;
    int            iCursorShape;
    int            iDispCount;
    int            iExtCount;
@@ -304,7 +304,7 @@ typedef struct _HB_GT_BASE
    HB_FHANDLE     hStdOut;
    HB_FHANDLE     hStdErr;
 
-   BOOL           fDispTrans;
+   HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;
 
@@ -313,7 +313,7 @@ typedef struct _HB_GT_BASE
    int *          pColor;
 
    int            iDoubleClickSpeed; /* In milliseconds */
-   BOOL           fMouseVisible;
+   HB_BOOL        fMouseVisible;
    int            iMouseLastRow;
    int            iMouseLastCol;
    HB_LONG        iMouseLeftTimer;
@@ -590,19 +590,19 @@ extern void hb_gt_gcMark( void );
 #define HB_GTSUPER_GFXTEXT(g,t,l,s,c,h,w)        (HB_GTSUPERTABLE(g))->GfxText(g,t,l,s,c,h,w)
 #define HB_GTSUPER_WHOCARES(g,p)                 (HB_GTSUPERTABLE(g))->WhoCares(g,p)
 
-extern HB_EXPORT BOOL   hb_gtRegister( const HB_GT_INIT * gtInit );
-extern HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
+extern HB_EXPORT HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit );
+extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 
 /* low level GT functions common to different GTs supported by RTL */
-extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, BOOL fSetACSC );
-extern BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen );
-extern BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pulLen );
+extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
+extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen );
+extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pulLen );
 #if defined( HB_OS_WIN )
-extern BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen );
-extern BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen );
-extern int  hb_gt_winapi_getKbdState( void );
-extern void hb_gt_winapi_setKbdState( int kbdShifts );
-extern void hb_gt_winapi_tone( double dFrequency, double dDuration );
+extern HB_BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen );
+extern HB_BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen );
+extern int     hb_gt_winapi_getKbdState( void );
+extern void    hb_gt_winapi_setKbdState( int kbdShifts );
+extern void    hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
 extern int hb_gt_dos_keyCodeTranslate( int iKey );

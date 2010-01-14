@@ -178,7 +178,7 @@ static void hb_gt_os2_mouse_Exit( PHB_GT pGT )
    }
 }
 
-static BOOL hb_gt_os2_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_os2_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -249,7 +249,7 @@ static void hb_gt_os2_mouse_SetPos( PHB_GT pGT, int row, int col )
 
 typedef struct
 {
-   BOOL     fDown;
+   HB_BOOL  fDown;
    int      iPressed;
    int      iPressRow;
    int      iPressCol;
@@ -285,7 +285,7 @@ static void hb_gt_os2_mouse_ReadMouseState( void )
             {
                if( s_ulMouseLastState & s_ButtonMask[ i ] )
                {
-                  s_ButtonState[ i ].fDown = TRUE;
+                  s_ButtonState[ i ].fDown = HB_TRUE;
                   s_ButtonState[ i ].iPressed++;
                   s_ButtonState[ i ].iPressRow = MouEvent.row;
                   s_ButtonState[ i ].iPressCol = MouEvent.col;
@@ -293,7 +293,7 @@ static void hb_gt_os2_mouse_ReadMouseState( void )
                }
                else
                {
-                  s_ButtonState[ i ].fDown = FALSE;
+                  s_ButtonState[ i ].fDown = HB_FALSE;
                   s_ButtonState[ i ].iReleased++;
                   s_ButtonState[ i ].iReleaseRow = MouEvent.row;
                   s_ButtonState[ i ].iReleaseCol = MouEvent.col;
@@ -305,7 +305,7 @@ static void hb_gt_os2_mouse_ReadMouseState( void )
    }
 }
 
-static BOOL hb_gt_os2_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_os2_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -314,10 +314,10 @@ static BOOL hb_gt_os2_mouse_ButtonState( PHB_GT pGT, int iButton )
    if( s_uMouHandle && iButton >= 0 && iButton < 3 )
       return s_ButtonState[ iButton ].fDown;
    else
-      return FALSE;
+      return HB_FALSE;
 }
 
-static BOOL hb_gt_os2_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow, int * piCol )
+static HB_BOOL hb_gt_os2_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -330,14 +330,14 @@ static BOOL hb_gt_os2_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow,
          s_ButtonState[ iButton ].iPressed = 0;
          *piRow = s_ButtonState[ iButton ].iPressRow;
          *piCol = s_ButtonState[ iButton ].iPressCol;
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-static BOOL hb_gt_os2_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow, int * piCol )
+static HB_BOOL hb_gt_os2_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -350,11 +350,11 @@ static BOOL hb_gt_os2_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow
          s_ButtonState[ iButton ].iReleased = 0;
          *piRow = s_ButtonState[ iButton ].iReleaseRow;
          *piCol = s_ButtonState[ iButton ].iReleaseCol;
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 static int hb_gt_os2_mouse_CountButton( PHB_GT pGT )
@@ -626,7 +626,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    return ch;
 }
 
-static BOOL hb_gt_os2_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gt_os2_IsColor( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_IsColor(%p)", pGT));
 
@@ -635,7 +635,7 @@ static BOOL hb_gt_os2_IsColor( PHB_GT pGT )
    return s_vi.fbType != 0;        /* 0 = monochrom-compatible mode */
 }
 
-static BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
+static HB_BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 {
    VIOINTENSITY vi;
 
@@ -650,7 +650,7 @@ static BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
    return vi.fs == 0;                   /* 0 = blink, 1 = intens      */
 }
 
-static void hb_gt_os2_SetBlink( PHB_GT pGT, BOOL fBlink )
+static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    VIOINTENSITY vi;
 
@@ -706,7 +706,7 @@ static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
    return "Harbour Terminal: OS/2 console";
 }
 
-static BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resize(%p,%d,%d)", pGT, iRows, iCols));
 
@@ -722,14 +722,14 @@ static BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
             s_sLineBuf = ( char * ) hb_gt_os2_allocMem( iRows );
          s_iLineBufSize = iRows;
       }
-      return TRUE;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
-static BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   BOOL fResult;
+   HB_BOOL fResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
@@ -756,7 +756,7 @@ static BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
    return fResult;
 }
 
-static BOOL hb_gt_os2_PostExt( PHB_GT pGT )
+static HB_BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt(%p)", pGT));
 
@@ -767,7 +767,7 @@ static BOOL hb_gt_os2_PostExt( PHB_GT pGT )
    return HB_GTSUPER_POSTEXT( pGT );
 }
 
-static BOOL hb_gt_os2_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume(%p)", pGT));
 
@@ -826,7 +826,7 @@ static void hb_gt_os2_Refresh( PHB_GT pGT )
    hb_gt_os2_SetCursorStyle( iStyle );
 }
 
-static BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -834,20 +834,20 @@ static BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -880,7 +880,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseButtonReleased        = hb_gt_os2_mouse_ButtonReleased;
    pFuncTable->MouseCountButton           = hb_gt_os2_mouse_CountButton;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

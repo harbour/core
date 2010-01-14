@@ -99,7 +99,7 @@ static void DebugIt( char* text, int iVal, int iVal2 )
 
 static bool hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
-   bool fOK = FALSE;
+   bool fOK = HB_FALSE;
 
    HB_WVT_LOCK
 
@@ -112,7 +112,7 @@ static bool hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
          {
             s_wvtWindows[ iPos ] = pWVT;
             pWVT->iHandle = iPos;
-            fOK = TRUE;
+            fOK = HB_TRUE;
             ++s_wvtCount;
             break;
          }
@@ -174,35 +174,35 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    pWVT->fontQuality       = 0;
    hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, sizeof( pWVT->fontFace ) - 1 );
 
-   pWVT->CaretExist        = FALSE;
-   pWVT->CaretHidden       = TRUE;
+   pWVT->CaretExist        = HB_FALSE;
+   pWVT->CaretHidden       = HB_TRUE;
    pWVT->CaretSize         = 0;
    pWVT->CaretWidth        = 0;
    pWVT->MousePos.setX( 0 );
    pWVT->MousePos.setY( 0 );
-   pWVT->MouseMove         = TRUE;
+   pWVT->MouseMove         = HB_TRUE;
    pWVT->keyPointerIn      = 0;
    pWVT->keyPointerOut     = 0;
    pWVT->keyLast           = 0;
 
-   pWVT->CenterWindow      = TRUE;        /* Default is to always display window in centre of screen */
-   pWVT->CodePage          = 255;         /* GetACP(); - set code page to default system */
+   pWVT->CenterWindow      = HB_TRUE;        /* Default is to always display window in centre of screen */
+   pWVT->CodePage          = 255;            /* GetACP(); - set code page to default system */
 
-   pWVT->AltF4Close        = FALSE;
-   pWVT->fInit             = FALSE;
-   pWVT->bMaximized        = FALSE;
-   pWVT->bBeingMarked      = FALSE;
-   pWVT->bBeginMarked      = FALSE;
+   pWVT->AltF4Close        = HB_FALSE;
+   pWVT->fInit             = HB_FALSE;
+   pWVT->bMaximized        = HB_FALSE;
+   pWVT->bBeingMarked      = HB_FALSE;
+   pWVT->bBeginMarked      = HB_FALSE;
 
    pWVT->pszSelectCopy     = hb_strdup( "Mark and Copy" );
-   pWVT->bSelectCopy       = TRUE;
-   pWVT->bResizable        = TRUE;
-   pWVT->bClosable         = TRUE;
+   pWVT->bSelectCopy       = HB_TRUE;
+   pWVT->bResizable        = HB_TRUE;
+   pWVT->bClosable         = HB_TRUE;
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
-   pWVT->bResizing         = FALSE;
-   pWVT->bAlreadySizing    = FALSE;
+   pWVT->bResizing         = HB_FALSE;
+   pWVT->bAlreadySizing    = HB_FALSE;
 
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
@@ -309,7 +309,7 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
       if( pWVT->CaretExist && !pWVT->CaretHidden )
       {
          pWVT->qWnd->_drawingArea->hideCaret();
-         pWVT->CaretHidden = TRUE;
+         pWVT->CaretHidden = HB_TRUE;
       }
    }
    else
@@ -326,7 +326,7 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
       {
          pWVT->qWnd->_drawingArea->setCaretPos( iCol, iRow );
          pWVT->qWnd->_drawingArea->showCaret();
-         pWVT->CaretHidden = FALSE;
+         pWVT->CaretHidden = HB_FALSE;
       }
    }
 }
@@ -336,7 +336,7 @@ static void hb_gt_wvt_QKillCaret( PHB_GTWVT pWVT )
    if( pWVT->CaretExist )
    {
       pWVT->qWnd->_drawingArea->destroyCaret();
-      pWVT->CaretExist = FALSE;
+      pWVT->CaretExist = HB_FALSE;
    }
 }
 
@@ -373,10 +373,10 @@ static bool hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
       {
          pWVT->keyPointerOut = 0;
       }
-      return TRUE;
+      return HB_TRUE;
    }
    *iKey = 0;
-   return FALSE;
+   return HB_FALSE;
 }
 
 int hb_gt_wvt_getKbdState( void )
@@ -449,9 +449,9 @@ static bool hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
 
       pWVT->qWnd->_drawingArea->_iROWS = iRows;
       pWVT->qWnd->_drawingArea->_iCOLS = iCols;
-      return TRUE;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 static bool hb_gt_wvt_QInitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
@@ -493,7 +493,7 @@ static bool hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iW
    HB_SYMBOL_UNUSED( qFont  );
    HB_SYMBOL_UNUSED( iWidth );
 
-   return TRUE;
+   return HB_TRUE;
 }
 #endif
 
@@ -536,7 +536,7 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
    {
       #if 0
-      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, HB_FALSE );
       if( hSysMenu )
       {
          /* Create "Mark" prompt in SysMenu to allow console type copy operation */
@@ -547,7 +547,7 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
       #endif
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
@@ -664,7 +664,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    {
       if( !pWVT->fInit )
       {
-         pWVT->fInit = TRUE;
+         pWVT->fInit = HB_TRUE;
          if( pWVT->CenterWindow )
          {
             hb_gt_wvt_QCenterWindow( pWVT );
@@ -680,10 +680,10 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    PHB_GTWVT pWVT;
-   bool fResult = FALSE;
+   bool fResult = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
 
@@ -728,7 +728,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
    PHB_GTWVT pWVT;
    int  c = 0;
-   bool fKey = FALSE;
+   bool fKey = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
@@ -761,7 +761,7 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
@@ -803,15 +803,15 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       for( i = 0; i < 256; i++ )
       {
          pWVT->chrTransTbl[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+                           hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
       }
    }
 #  endif
 
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
+static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
@@ -847,23 +847,23 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
       for( i = 0; i < 256; i++ )
          pWVT->keyTransTbl[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
       pWVT->inCDP = cdpTerm;
    }
 #  endif
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent(%p)", pGT));
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
@@ -877,7 +877,7 @@ static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
    *piCol = pWVT->MousePos.x();
 }
 
-static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_SYMBOL_UNUSED( iButton );
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
@@ -893,7 +893,7 @@ static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
    case 2:
       return qApp->mouseButtons() & Qt::MidButton;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 static int hb_gt_wvt_mouse_CountButton( PHB_GT pGT )
@@ -908,7 +908,7 @@ static int hb_gt_wvt_mouse_CountButton( PHB_GT pGT )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTWVT pWVT;
    int iVal;
@@ -928,11 +928,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISGRAPHIC:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       case HB_GTI_ISUNICODE:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 #if 0
       case HB_GTI_INPUTFD:
@@ -1128,7 +1128,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( iY  > 0 )
             {
                bool bOldCentre = pWVT->CenterWindow;
-               pWVT->CenterWindow = pWVT->bMaximized ? TRUE : FALSE;
+               pWVT->CenterWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
                HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
                pWVT->CenterWindow = bOldCentre;
             }
@@ -1177,17 +1177,17 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
                #if 0
-               HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, FALSE ) : NULL;
+               HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, HB_FALSE ) : NULL;
                if( hSysMenu || !pWVT->hWnd )
                {
                   if( pWVT->pszSelectCopy )
                      hb_xfree( pWVT->pszSelectCopy );
                   pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
-                  pWVT->bSelectCopy = TRUE;
+                  pWVT->bSelectCopy = HB_TRUE;
                }
                #endif
                pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
-               pWVT->bSelectCopy = TRUE;
+               pWVT->bSelectCopy = HB_TRUE;
             }
          }
          else if( pInfo->pNewVal )
@@ -1198,7 +1198,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->qWnd )
                {
                   #if 0
-                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, HB_FALSE );
                   if( hSysMenu )
                   {
                      EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
@@ -1312,12 +1312,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -1338,7 +1338,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
    pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
@@ -1374,19 +1374,19 @@ DrawingArea::DrawingArea(QWidget *parent)
    _iCOLS = 80;
 
    setFocusPolicy( Qt::StrongFocus );
-   setMouseTracking( TRUE );
+   setMouseTracking( HB_TRUE );
 
    setAttribute( Qt::WA_InputMethodEnabled, true );
 
    /* Important but give it a thought */
    //setAttribute(Qt::WA_OpaquePaintEvent);
 
-   _bBlinking  = FALSE;
+   _bBlinking  = HB_FALSE;
    _basicTimer = new QBasicTimer();
 
-   _bFirst     = TRUE;
-   _bSizing    = FALSE;
-   _bCopying   = FALSE;
+   _bFirst     = HB_TRUE;
+   _bSizing    = HB_FALSE;
+   _bCopying   = HB_FALSE;
 
    _image      = new QImage();
 
@@ -1405,7 +1405,7 @@ void DrawingArea::resetWindowSize( void )
    _qFont = QFont();
    _qFont.setFamily( pWVT->fontFace );
    _qFont.setPixelSize( pWVT->fontHeight );
-   _qFont.setFixedPitch( TRUE );
+   _qFont.setFixedPitch( HB_TRUE );
    _qFont        = QFont( _qFont, painter.device() );
    QFontMetrics fontMetrics( _qFont );
    _fontHeight   = fontMetrics.height();
@@ -1598,12 +1598,12 @@ bool DrawingArea::createCaret( int iWidth, int iHeight )
 {
    _crtWidth  = iWidth;
    _crtHeight = iHeight;
-   return TRUE;
+   return HB_TRUE;
 }
 void DrawingArea::hideCaret( void )
 {
    _basicTimer->stop();
-   _bBlinking = FALSE;
+   _bBlinking = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
 }
 void DrawingArea::showCaret( void )
@@ -1656,12 +1656,12 @@ void DrawingArea::timerEvent( QTimerEvent *event )
    {
       if( _bBlinking )
       {
-         _bBlinking = FALSE;
+         _bBlinking = HB_FALSE;
          displayCell( _crtLastRow, _crtLastCol );
       }
       else
       {
-         _bBlinking = TRUE;
+         _bBlinking = HB_TRUE;
          displayBlock( _crtLastRow, _crtLastCol );
       }
    }
@@ -1690,14 +1690,14 @@ void DrawingArea::resizeEvent( QResizeEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
-   _bSizing = TRUE;
+   _bSizing = HB_TRUE;
 
    int iW  = width();
    int iH  = height();
 
    if( _bFirst )
    {
-      _bFirst = FALSE;
+      _bFirst = HB_FALSE;
       QWidget::resizeEvent( event );
    }
    else
@@ -1897,7 +1897,7 @@ void DrawingArea::mousePressEvent( QMouseEvent *event )
 
    if( _bSizing )
    {
-      _bSizing = FALSE;
+      _bSizing = HB_FALSE;
       pWVT->qWnd->setWindowSize();
    }
 
@@ -1933,7 +1933,7 @@ void DrawingArea::mouseReleaseEvent( QMouseEvent *event )
 
    if( _bSizing )
    {
-      _bSizing = FALSE;
+      _bSizing = HB_FALSE;
       pWVT->qWnd->setWindowSize();
    }
    if( _bCopying )
@@ -1971,7 +1971,7 @@ bool DrawingArea::event( QEvent *event )
 {
    if( _bSizing && ( event->type() == QEvent::Enter || event->type() == QEvent::Leave ) )
    {
-      _bSizing = FALSE;
+      _bSizing = HB_FALSE;
       PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       pWVT->qWnd->setWindowSize();
    }

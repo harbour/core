@@ -131,7 +131,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
 #if defined( HB_MACRO_SUPPORT )
    static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_COMP_DECL );
 #else
-   static void hb_compExprCodeblockPush( HB_EXPR_PTR, BOOL, HB_COMP_DECL );
+   static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_BOOL, HB_COMP_DECL );
    static void hb_compExprCodeblockEarly( HB_EXPR_PTR, HB_COMP_DECL );
    static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 #endif
@@ -146,7 +146,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DECL );
 static HB_EXPR_PTR hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL );
 static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR pAlias, HB_COMP_DECL );
-static BOOL hb_compExprIsMemvarAlias( const char *szAlias );
+static HB_BOOL hb_compExprIsMemvarAlias( const char *szAlias );
 
 
 const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
@@ -587,7 +587,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
          }
          else
          {
-            BOOL fArgsList = pSelf->ExprType == HB_ET_MACROARGLIST;
+            HB_BOOL fArgsList = pSelf->ExprType == HB_ET_MACROARGLIST;
 
             if( !fArgsList )
             {
@@ -1381,7 +1381,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
       case HB_EA_PUSH_PCODE:
       {
-         BOOL fMacroIndex = FALSE;
+         HB_BOOL fMacroIndex = FALSE;
 
          if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
          {
@@ -1452,7 +1452,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
       case HB_EA_POP_PCODE:
       {
-         BOOL fMacroIndex = FALSE;
+         HB_BOOL fMacroIndex = FALSE;
          if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
          {
             if( HB_SUPPORT_XBASE )
@@ -1791,7 +1791,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
                   HB_LONG lResult = 0;
-                  BOOL fOptimize = FALSE, fBool = FALSE;
+                  HB_BOOL fOptimize = FALSE, fBool = FALSE;
 
                   if( usCount >= 2 )
                   {
@@ -1887,7 +1887,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
                {
                   HB_EXPR_PTR pArg = pParms->value.asList.pExprList, pCount = NULL;
-                  BOOL        fStrict, fNoop, fPlural, fI18nFunc;
+                  HB_BOOL     fStrict, fNoop, fPlural, fI18nFunc;
                   ULONG       ulPos = 8;
 
                   fStrict = fNoop = fPlural = fI18nFunc = FALSE;
@@ -2082,7 +2082,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
       case HB_EA_PUSH_PCODE:
       {
-         BOOL fArgsList = FALSE;
+         HB_BOOL fArgsList = FALSE;
          USHORT usCount = 0;
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
@@ -2124,7 +2124,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
       {
-         BOOL fArgsList = FALSE;
+         HB_BOOL fArgsList = FALSE;
          USHORT usCount = 0;
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
@@ -2551,7 +2551,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
       case HB_EA_PUSH_PCODE:
          if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
          {
-            BOOL fArgsList = FALSE;
+            HB_BOOL fArgsList = FALSE;
             int iParms = ( int ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asMessage.pParms );
 
             hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
@@ -3117,7 +3117,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
 #else
             {
-               BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
+               HB_BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
                /* do not generate warning about meaningless expression usage */
                HB_COMP_PARAM->fMeaningful = TRUE;
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
@@ -3202,7 +3202,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
 #else
             {
-               BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
+               HB_BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
                /* do not generate warning about meaningless expression usage */
                HB_COMP_PARAM->fMeaningful = TRUE;
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
@@ -4314,7 +4314,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreDec )
 #if defined( HB_MACRO_SUPPORT )
 static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 #else
-static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP_DECL )
+static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_BOOL bLateEval, HB_COMP_DECL )
 #endif
 {
    HB_EXPR_PTR pExpr, pNext;
@@ -4531,7 +4531,7 @@ static void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 }
 
 static void hb_compExprPushSendPopPush( HB_EXPR_PTR pObj, HB_EXPR_PTR pValue,
-                                        BOOL fPreOp, BYTE bOper, HB_COMP_DECL )
+                                        HB_BOOL fPreOp, BYTE bOper, HB_COMP_DECL )
 {
    if( HB_SUPPORT_HARBOUR )
    {
@@ -5310,7 +5310,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
       ULONG ulLen = pAlias->ulLength;
       if( ulLen <= HB_SYMBOL_NAME_LEN )
       {
-         BOOL fLower = FALSE;
+         HB_BOOL fLower = FALSE;
          while( ulLen )
          {
             char c = szAlias[ ulLen - 1 ];
@@ -5341,7 +5341,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
    return pExpr;
 }
 
-static BOOL hb_compExprIsMemvarAlias( const char *szAlias )
+static HB_BOOL hb_compExprIsMemvarAlias( const char *szAlias )
 {
    int iLen = strlen( szAlias );
    /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */

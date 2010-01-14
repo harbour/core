@@ -284,10 +284,10 @@ typedef struct _tag_GOBJS
 #if ! defined( HB_OS_WIN_CE )
    IPicture     * iPicture      ;
 #endif
-   BOOL           bDestroyFont  ;
-   BOOL           bDestroyPen   ;
-   BOOL           bDestroyBrush ;
-   BOOL           bDestroyPicture ;
+   HB_BOOL        bDestroyFont  ;
+   HB_BOOL        bDestroyPen   ;
+   HB_BOOL        bDestroyBrush ;
+   HB_BOOL        bDestroyPicture ;
    TRIVERTEX      vert[ 2 ]     ;
    LPTSTR         lpText        ;
    PHB_ITEM       bBlock        ;
@@ -304,9 +304,9 @@ typedef struct
    int       width;
    int       height;
    PHB_ITEM  pParentGT;
-   BOOL      bVisible;
-   BOOL      bRowCols;
-   BOOL      bConfigured;
+   HB_BOOL   bVisible;
+   HB_BOOL   bRowCols;
+   HB_BOOL   bConfigured;
    int       iWndType;
 } HB_GT_PARAMS, * PHB_GT_PARAMS;
 
@@ -346,13 +346,13 @@ typedef struct
 
    COLORREF COLORS[ 16 ];                   /* colors */
 
-   BOOL     CaretExist;                     /* TRUE if a caret has been created */
-   BOOL     CaretHidden;                    /* TRUE if a caret has been hiden */
+   HB_BOOL  CaretExist;                     /* TRUE if a caret has been created */
+   HB_BOOL  CaretHidden;                    /* TRUE if a caret has been hiden */
    int      CaretSize;                      /* Height of solid caret */
    int      CaretWidth;                     /* Width of solid caret */
 
    POINT    MousePos;                       /* the last mouse position */
-   BOOL     MouseMove;                      /* Flag to say whether to return mouse movement events */
+   HB_BOOL  MouseMove;                      /* Flag to say whether to return mouse movement events */
 
    int      Keys[ WVT_CHAR_QUEUE_SIZE ];    /* Array to hold the characters & events */
    int      keyPointerIn;                   /* Offset into key array for character to be placed */
@@ -360,7 +360,7 @@ typedef struct
    int      keyLast;                        /* last inkey code value in buffer */
 
    POINT    PTEXTSIZE;                      /* size of the fixed width font */
-   BOOL     FixedFont;                      /* TRUE if current font is a fixed font */
+   HB_BOOL  FixedFont;                      /* TRUE if current font is a fixed font */
    int      FixedSize[ WVT_MAX_COLS ];      /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                     /* requested font height */
    int      fontWidth;                      /* requested font width */
@@ -373,7 +373,7 @@ typedef struct
 #endif
 
    HWND     hWnd;                           /* the window handle */
-   BOOL     fInit;                          /* logical variable indicating that window should be open */
+   HB_BOOL  fInit;                          /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                    /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                      /* Host/HVM CodePage for unicode input translations */
@@ -387,26 +387,26 @@ typedef struct
 #endif
 
    HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
-   BOOL     bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
+   HB_BOOL  bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
 
    int      CodePage;                       /* Code page to use for display characters */
 #if ! defined( UNICODE )
    int      boxCodePage;                    /* Code page to use for display draw line characters */
 #endif
-   BOOL     Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
-   BOOL     AltF4Close;                     /* Can use Alt+F4 to close application */
-   BOOL     CentreWindow;                   /* True if window is to be Reset into centre of window */
+   HB_BOOL  Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
+   HB_BOOL  AltF4Close;                     /* Can use Alt+F4 to close application */
+   HB_BOOL  CentreWindow;                   /* True if window is to be Reset into centre of window */
 
-   BOOL     IgnoreWM_SYSCHAR;
+   HB_BOOL  IgnoreWM_SYSCHAR;
 
-   BOOL     bMaximized;                     /* Flag is set when window has been maximized */
-   BOOL     bBeingMarked;                   /* Flag to control DOS window like copy operation */
-   BOOL     bBeginMarked;
+   HB_BOOL  bMaximized;                     /* Flag is set when window has been maximized */
+   HB_BOOL  bBeingMarked;                   /* Flag to control DOS window like copy operation */
+   HB_BOOL  bBeginMarked;
 
-   BOOL     bResizable;
-   BOOL     bSelectCopy;
+   HB_BOOL  bResizable;
+   HB_BOOL  bSelectCopy;
    char *   pszSelectCopy;
-   BOOL     bClosable;
+   HB_BOOL  bClosable;
 
    int      ResizeMode;                     /* Sets the resizing mode either to FONT or ROWS */
    RECT     sRectNew;
@@ -425,19 +425,19 @@ typedef struct
 
    int       LastMenuEvent;                 /* Last menu item selected                                                */
    int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
-   BOOL      InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
-   BOOL      EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
+   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
+   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
 
-   BOOL      bGui;
+   HB_BOOL   bGui;
    HDC       hGuiDC;
    HBITMAP   hGuiBmp;
    int       iGuiWidth;
    int       iGuiHeight;
 
-   BOOL      bPaint;
-   BOOL      bGetFocus;
-   BOOL      bSetFocus;
-   BOOL      bKillFocus;
+   HB_BOOL   bPaint;
+   HB_BOOL   bGetFocus;
+   HB_BOOL   bSetFocus;
+   HB_BOOL   bKillFocus;
 
    PHB_DYNS  pSymWVT_PAINT;                 /* Stores pointer to WVT_PAINT function                      */
    PHB_DYNS  pSymWVT_SETFOCUS;              /* Stores pointer to WVT_SETFOCUS function                   */
@@ -454,7 +454,7 @@ typedef struct
 
    HMENU     hPopup;                        /* Handle of context menu invokable with right click         */
    HWND      hWndTT;                        /* Handle to hold tooltip information                        */
-   BOOL      bToolTipActive;                /* Flag to set whether tooltip is active or not              */
+   HB_BOOL   bToolTipActive;                /* Flag to set whether tooltip is active or not              */
 
    HWND      hDlgModeless[ WVT_DLGML_MAX ]; /* Handle to a modeless dialog                               */
    PHB_ITEM  pFunc[ WVT_DLGML_MAX ];        /* Function pointer for WndProc                              */
@@ -469,10 +469,10 @@ typedef struct
 
    PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                   */
 
-   BOOL      bDeferPaint;                   /* To create pure Windows dialogs                            */
-   BOOL      bTracking;                     /* To track if mouse has eneter or left the window area      */
+   HB_BOOL   bDeferPaint;                   /* To create pure Windows dialogs                            */
+   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area      */
 
-   BOOL      bResizing;                     /* To know when it is in resizing mode                       */
+   HB_BOOL   bResizing;                     /* To know when it is in resizing mode                       */
 
    PHB_GOBJS gObjs;                         /* Graphic Objects                                           */
 
@@ -598,10 +598,10 @@ POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )
 IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( const char * image );
 IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
-BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
-BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
+HB_BOOL     HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
+HB_BOOL     HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
-BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
+HB_BOOL     HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
 void        HB_EXPORT   hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
 void        HB_EXPORT   hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
 
@@ -621,11 +621,11 @@ void        HB_EXPORT   hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 
 /*----------------------------------------------------------------------*/
 
-extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
+extern HB_BOOL  wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
-extern BOOL     wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
+extern HB_BOOL  wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
 extern PHB_ITEM wvt_Point2Array( POINT *pt  );
-extern BOOL     wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
+extern HB_BOOL  wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
 extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
 extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
 extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);

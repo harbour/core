@@ -63,9 +63,9 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
+static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
 {
-   BOOL bRetVal = FALSE;
+   HB_BOOL bRetVal = HB_FALSE;
    HB_FHANDLE fhndSource;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
@@ -99,7 +99,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pB
          BYTE * buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
          USHORT usRead;
 
-         bRetVal = TRUE;
+         bRetVal = HB_TRUE;
 
          if( hb_itemType( pBlock ) != HB_IT_BLOCK )
             pBlock = NULL;
@@ -112,7 +112,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pB
 
                if( uiAction != E_RETRY )
                {
-                  bRetVal = FALSE;
+                  bRetVal = HB_FALSE;
                   break;
                }
             }
@@ -150,7 +150,7 @@ HB_FUNC( XHB_COPYFILE )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ), hb_param( 3, HB_IT_BLOCK ) ) )
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */

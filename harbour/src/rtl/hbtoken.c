@@ -175,10 +175,10 @@ static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE ulLen,
    return pArray;
 }
 
-static BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
-                           const char ** pszLine, HB_SIZE * pulLen,
-                           const char ** pszDelim, HB_SIZE * pulDelim,
-                           int * piFlags )
+static HB_BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
+                              const char ** pszLine, HB_SIZE * pulLen,
+                              const char ** pszDelim, HB_SIZE * pulDelim,
+                              int * piFlags )
 {
    const char * szLine = hb_parc( 1 ), * szDelim = NULL;
    HB_SIZE ulLen = hb_parclen( 1 ), ulDelim = 0;

@@ -56,11 +56,11 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USHORT uiTabLen, BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, BOOL * bFound, BOOL * bEOF, LONG * lEnd, HB_SIZE * ulEndOffset )
+void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USHORT uiTabLen, HB_BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, HB_BOOL * bFound, HB_BOOL * bEOF, LONG * lEnd, HB_SIZE * ulEndOffset )
 {
    USHORT uiPosTerm, uiPosition;
    HB_SIZE ulPos, ulCurrCol, ulLastBlk;
-   BOOL bBreak = 0;
+   HB_BOOL bBreak = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %lu, %lu, %hu, %d, %p, %p, %hu, %p, %p, %p, %p)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, Term, iTermSizes, uiTerms, bFound, bEOF, lEnd, ulEndOffset ));
 
@@ -149,7 +149,7 @@ void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USH
 
       if( ulCurrCol > uiLineLen )
       {
-         if( bWrap == FALSE || ulLastBlk == 0 )
+         if( bWrap == HB_FALSE || ulLastBlk == 0 )
          {
             *lEnd = ulPos-1;
             *ulEndOffset = ulPos;
@@ -166,7 +166,7 @@ void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USH
       }
    }
 
-   if( *bFound == FALSE && bBreak == FALSE )
+   if( *bFound == HB_FALSE && bBreak == HB_FALSE )
    {
       *lEnd        = ulTextLen - 1;
       *ulEndOffset = ulTextLen - 1;
@@ -239,13 +239,13 @@ HB_FUNC( HB_READLINE )
    USHORT uiTabLen, uiTerms;
    HB_SIZE ulLineSize = hb_parni(3);
    USHORT i;
-   BOOL bWrap = hb_parl(5);
-   BOOL bFound, bEOF;
+   HB_BOOL bWrap = hb_parl(5);
+   HB_BOOL bFound, bEOF;
    HB_SIZE ulStartOffset;
    HB_SIZE ulEndOffset, ulTextLen;
    LONG lEnd;
    PHB_ITEM pOpt;
-   BOOL bAlloc_Term1 = FALSE;
+   HB_BOOL bAlloc_Term1 = HB_FALSE;
 
    if( !HB_ISCHAR( 1 ) )
    {
@@ -276,7 +276,7 @@ HB_FUNC( HB_READLINE )
       }
 
       pTerm1 = hb_itemPutC( NULL, hb_setGetCPtr( HB_SET_EOL ) );
-      bAlloc_Term1 = TRUE;
+      bAlloc_Term1 = HB_TRUE;
    }
    else
    {

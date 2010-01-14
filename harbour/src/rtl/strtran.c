@@ -89,7 +89,7 @@ HB_FUNC( STRTRAN )
             PHB_ITEM pReplace = hb_param( 3, HB_IT_STRING );
             HB_SIZE ulReplace;
             HB_SIZE ulCount;
-            BOOL bAll;
+            HB_BOOL bAll;
 
             if( pReplace )
             {
@@ -105,12 +105,12 @@ HB_FUNC( STRTRAN )
             if( HB_ISNUM( 5 ) )
             {
                ulCount = hb_parnl( 5 );
-               bAll = FALSE;
+               bAll = HB_FALSE;
             }
             else
             {
                ulCount = 0;
-               bAll = TRUE;
+               bAll = HB_TRUE;
             }
 
             if( bAll || ulCount > 0 )

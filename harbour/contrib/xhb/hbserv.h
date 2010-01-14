@@ -56,7 +56,7 @@
 #include "hbserv.ch"
 #endif
 HB_EXTERN_BEGIN
-HB_EXPORT BOOL hb_isService( void );
+HB_EXPORT HB_BOOL hb_isService( void );
 HB_EXPORT void hb_serviceExit( void );
 HB_EXTERN_END
 #endif

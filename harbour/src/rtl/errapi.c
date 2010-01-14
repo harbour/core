@@ -134,7 +134,7 @@ static void hb_errorDataRelease( void * Cargo )
 static HB_TSD_NEW( s_errData, sizeof( HB_ERRDATA ), NULL, hb_errorDataRelease );
 
 
-static BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
+static HB_BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_NUMERIC );
 
@@ -147,7 +147,7 @@ static BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
       if( ! pItem )
       {
          *piValue = 0;
-         return FALSE;
+         return HB_FALSE;
       }
 
       if( ! HB_IS_NUMERIC( pItem ) )
@@ -157,7 +157,7 @@ static BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
       hb_itemRelease( pItem );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 
@@ -203,7 +203,7 @@ HB_FUNC_STATIC( _CANDEFAULT )
    if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
-      BOOL fCan = hb_parl( 1 );
+      HB_BOOL fCan = hb_parl( 1 );
 
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANDEFAULT ) );
@@ -225,7 +225,7 @@ HB_FUNC_STATIC( _CANRETRY )
    if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
-      BOOL fCan = hb_parl( 1 );
+      HB_BOOL fCan = hb_parl( 1 );
 
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANRETRY ) );
@@ -247,7 +247,7 @@ HB_FUNC_STATIC( _CANSUBST )
    if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
-      BOOL fCan = hb_parl( 1 );
+      HB_BOOL fCan = hb_parl( 1 );
 
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANSUBSTITUTE ) );
@@ -590,19 +590,19 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       }
       else if( pResult )
       {
-         BOOL bFailure = FALSE;
+         HB_BOOL bFailure = HB_FALSE;
 
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
          if( hb_itemType( pResult ) != HB_IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
-            bFailure = TRUE;
+            bFailure = HB_TRUE;
          else
          {
             uiAction = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
 
             if( ( uiAction == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
                 ( uiAction == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
-               bFailure = TRUE;
+               bFailure = HB_TRUE;
          }
 
          hb_itemRelease( pResult );

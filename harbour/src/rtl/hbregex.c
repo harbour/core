@@ -172,7 +172,7 @@ HB_FUNC( HB_REGEXCOMP )
       pRegEx = hb_regexCompile( hb_parc( 1 ), ulLen, iFlags );
       if( pRegEx )
       {
-         pRegEx->fFree = FALSE;
+         pRegEx->fFree = HB_FALSE;
          hb_retptrGC( pRegEx );
       }
    }
@@ -240,12 +240,12 @@ HB_FUNC( HB_ATX )
    }
 }
 
-static BOOL hb_regex( int iRequest )
+static HB_BOOL hb_regex( int iRequest )
 {
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( REGEX_MAX_GROUPS ) ];
    PHB_ITEM pRetArray, pMatch, pString;
    int i, iMatches, iMaxMatch;
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    PHB_REGEX pRegEx;
    const char * pszString;
    HB_SIZE ulLen;
@@ -255,13 +255,13 @@ static BOOL hb_regex( int iRequest )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameters",
                             HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return FALSE;
+      return HB_FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
                          ( !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
    if( !pRegEx )
-      return FALSE;
+      return HB_FALSE;
 
    pszString = hb_itemGetCPtr( pString );
    ulLen     = hb_itemGetCLen( pString );
@@ -285,7 +285,7 @@ static BOOL hb_regex( int iRequest )
                   hb_arraySetCL( pRetArray, i + 1, NULL, 0 );
             }
             hb_itemReturnRelease( pRetArray );
-            fResult = TRUE;
+            fResult = HB_TRUE;
             break;
 
          case 1: /* LIKE */
@@ -294,7 +294,7 @@ static BOOL hb_regex( int iRequest )
             break;
 
          case 2: /* MATCH ( HAS ) */
-            fResult = TRUE;
+            fResult = HB_TRUE;
             break;
 
          case 3: /* SPLIT */
@@ -324,7 +324,7 @@ static BOOL hb_regex( int iRequest )
             hb_itemRelease( pMatch );
 
             hb_itemReturnRelease( pRetArray );
-            fResult = TRUE;
+            fResult = HB_TRUE;
             break;
 
          case 4: /* results AND positions */
@@ -353,7 +353,7 @@ static BOOL hb_regex( int iRequest )
                }
             }
             hb_itemReturnRelease( pRetArray );
-            fResult = TRUE;
+            fResult = HB_TRUE;
             break;
 
          case 5: /* _ALL_ results AND positions */
@@ -361,7 +361,7 @@ static BOOL hb_regex( int iRequest )
             PHB_ITEM pAtxArray;
             int      iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
             int      iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
-            BOOL     fOnlyMatch = hb_parldef( 7, 1 ); /* if TRUE returns only matches and sub-matches, not positions */
+            HB_BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if HB_TRUE returns only matches and sub-matches, not positions */
             HB_SIZE  ulOffSet   = 0;
             int      iCount     = 0;
             int      iSO, iEO;
@@ -459,7 +459,7 @@ static BOOL hb_regex( int iRequest )
             while( iEO && ulLen && ( iMax == 0 || iCount < iMax ) &&
                    ( iMatches = hb_regexec( pRegEx, pszString, ulLen, iMaxMatch, aMatches ) ) > 0 );
             hb_itemReturnRelease( pRetArray );
-            fResult = TRUE;
+            fResult = HB_TRUE;
             break;
          }
       }
@@ -469,7 +469,7 @@ static BOOL hb_regex( int iRequest )
       pRetArray = hb_itemArrayNew( 1 );
       hb_arraySet( pRetArray, 1, pString );
       hb_itemReturnRelease( pRetArray );
-      fResult = TRUE;
+      fResult = HB_TRUE;
    }
 
    hb_regexFree( pRegEx );

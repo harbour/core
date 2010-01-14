@@ -115,7 +115,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro )
    pMacro->pCodeInfo = (HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
    pMacro->pCodeInfo->lPCodeSize = HB_PCODE_SIZE;
    pMacro->pCodeInfo->lPCodePos  = 0;
-   pMacro->pCodeInfo->fVParams   = FALSE;
+   pMacro->pCodeInfo->fVParams   = HB_FALSE;
    pMacro->pCodeInfo->pLocals    = NULL;
    pMacro->pCodeInfo->pPrev      = NULL;
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
@@ -150,9 +150,9 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 
 /* checks if a correct ITEM was passed from the virtual machine eval stack
  */
-static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
+static HB_BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 {
-   BOOL bValid = TRUE;
+   HB_BOOL bValid = HB_TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCheckParam(%p)", pItem));
 
@@ -160,7 +160,7 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
    {
       HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 1, pItem );
 
-      bValid = FALSE;
+      bValid = HB_FALSE;
       if( pResult )
       {
          HB_STACK_TLS_PRELOAD
@@ -423,7 +423,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
    {
       HB_MACRO struMacro;
       int iStatus;
-      BOOL fFree;
+      HB_BOOL fFree;
 
       struMacro.mode       = HB_MODE_MACRO;
       struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
@@ -687,11 +687,11 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags 
 }
 
 /* Check for '&' operator and replace it with a macro variable value
- * Returns: the passed string if there is no '&' operator (pbNewString:=FALSE)
+ * Returns: the passed string if there is no '&' operator ( pbNewString := FALSE )
  * new string if a valid macro text substitution was found (and sets
  * pbNewString to TRUE)
 */
-char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, BOOL *pfNewString )
+char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, HB_BOOL *pfNewString )
 {
    char *szResultString;
 
@@ -705,7 +705,7 @@ char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, BOOL *pfNew
    return szResultString;
 }
 
-char * hb_macroTextSymbol( const char *szString, HB_SIZE ulLength, BOOL *pfNewString )
+char * hb_macroTextSymbol( const char *szString, HB_SIZE ulLength, HB_BOOL *pfNewString )
 {
    char *szResult = NULL;
 
@@ -856,7 +856,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
    if( hb_macroCheckParam( pItem ) )
    {
       char * szString;
-      BOOL fNewBuffer;
+      HB_BOOL fNewBuffer;
 
       szString = hb_macroTextSymbol( pItem->item.asString.value,
                                      pItem->item.asString.length,
@@ -1025,7 +1025,7 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
  * Set macro capabilities if flag > 0 or get current macro capabilities
  * if flag == 0
  */
-ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
+ULONG hb_macroSetMacro( HB_BOOL bSet, ULONG flag )
 {
    ULONG ulCurrentFlags = hb_macroFlags();
 
@@ -1092,7 +1092,7 @@ int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
    return 0;
 }
 
-BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
+HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
 {
    if( ulLen )
    {
@@ -1103,12 +1103,12 @@ BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
             char ch = *szText;
             if( ( ch >= 'A' && ch <= 'Z' ) ||
                 ( ch >= 'a' && ch <= 'z' ) || ch == '_' )
-               return TRUE;
+               return HB_TRUE;
          }
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 ULONG hb_macroGenJump( LONG lOffset, HB_COMP_DECL )
@@ -1206,7 +1206,7 @@ static void hb_macroMemvarGenPCode( BYTE bPCode, const char * szVarName, HB_COMP
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
-void hb_macroGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
+void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
@@ -1300,7 +1300,7 @@ void hb_macroGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
 }
 
 /* sends a message to an object */
-void hb_macroGenMessage( const char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
+void hb_macroGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
 
@@ -1316,7 +1316,7 @@ void hb_macroGenMessage( const char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 }
 
 /* generates an underscore-symbol name for a data assignment */
-void hb_macroGenMessageData( const char * szMsg, BOOL bIsObject, HB_COMP_DECL )
+void hb_macroGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COMP_DECL )
 {
    char * szResult;
    int iLen;
@@ -1362,7 +1362,7 @@ void hb_macroGenPopMemvar( const char * szVarName, HB_COMP_DECL )
  * an aliased variable
  */
 void hb_macroGenPopAliasedVar( const char * szVarName,
-                               BOOL bPushAliasValue,
+                               HB_BOOL bPushAliasValue,
                                const char * szAlias,
                                HB_LONG lWorkarea, HB_COMP_DECL )
 {
@@ -1388,7 +1388,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
          }
          else
          {  /* database alias */
-            hb_macroGenPushSymbol( szAlias, FALSE, HB_COMP_PARAM );
+            hb_macroGenPushSymbol( szAlias, HB_FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -1412,7 +1412,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
 /* generates the pcode to push a nonaliased variable value to the virtual
  * machine stack
  */
-void hb_macroGenPushVar( const char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
+void hb_macroGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL )
 {
    int iVar;
 
@@ -1454,7 +1454,7 @@ void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL )
  * machine stack
  */
 void hb_macroGenPushAliasedVar( const char * szVarName,
-                                BOOL bPushAliasValue,
+                                HB_BOOL bPushAliasValue,
                                 const char * szAlias,
                                 HB_LONG lWorkarea, HB_COMP_DECL )
 {
@@ -1483,7 +1483,7 @@ void hb_macroGenPushAliasedVar( const char * szVarName,
          }
          else
          {  /* database alias */
-            hb_macroGenPushSymbol( szAlias, FALSE, HB_COMP_PARAM );
+            hb_macroGenPushSymbol( szAlias, HB_FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -1534,12 +1534,12 @@ void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_macroGenPushSymbol( szFunction, TRUE, HB_COMP_PARAM );
+      hb_macroGenPushSymbol( szFunction, HB_TRUE, HB_COMP_PARAM );
    }
    else
    {
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
-      hb_macroGenPushSymbol( szFunName, TRUE, HB_COMP_PARAM );
+      hb_macroGenPushSymbol( szFunName, HB_TRUE, HB_COMP_PARAM );
    }
 }
 
@@ -1555,7 +1555,7 @@ void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
-   hb_macroGenPushSymbol( szFunction ? szFunction : szFunName, TRUE, HB_COMP_PARAM );
+   hb_macroGenPushSymbol( szFunction ? szFunction : szFunName, HB_TRUE, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
@@ -1662,7 +1662,7 @@ void hb_macroCodeBlockStart( HB_COMP_DECL )
    pCB->pCode = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
    pCB->lPCodeSize = HB_PCODE_SIZE;
    pCB->lPCodePos  = 0;
-   pCB->fVParams   = FALSE;
+   pCB->fVParams   = HB_FALSE;
    pCB->pLocals    = NULL;
 }
 

@@ -71,7 +71,7 @@ static HB_CRITICAL_NEW( s_clipMtx );
 static char *     s_szClipboardData;
 static HB_SIZE      s_ulClipboardLen;
 
-BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen )
+HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen )
 {
    hb_threadEnterCriticalSection( &s_clipMtx );
 
@@ -87,10 +87,10 @@ BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen )
 
    hb_threadLeaveCriticalSection( &s_clipMtx );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
-BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE *pulLen )
+HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE *pulLen )
 {
    hb_threadEnterCriticalSection( &s_clipMtx );
 
@@ -110,9 +110,9 @@ BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE *pulLen )
 
 #if defined( HB_OS_WIN )
 
-BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen )
+HB_BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( OpenClipboard( NULL ) )
    {
@@ -138,7 +138,7 @@ BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE u
                memcpy( lptstrCopy, szClipData, ulLen );
                lptstrCopy[ ulLen ] = '\0';
             }
-            fResult = TRUE;
+            fResult = HB_TRUE;
          }
          ( void ) GlobalUnlock( hglbCopy );
          /* Place the handle on the clipboard. */
@@ -149,7 +149,7 @@ BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE u
    return fResult;
 }
 
-BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen )
+HB_BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen )
 {
    *pulLen = 0;
    *pszClipData = NULL;

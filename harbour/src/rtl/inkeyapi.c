@@ -52,7 +52,7 @@
 
 #include "hbgtcore.h"
 
-int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
+int hb_inkey( HB_BOOL fWait, double dSeconds, int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;

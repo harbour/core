@@ -120,13 +120,13 @@ typedef struct
 
    COLORREF COLORS[ 16 ];                 /* colors */
 
-   BOOL     CaretExist;                   /* TRUE if a caret has been created */
-   BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
+   HB_BOOL  CaretExist;                   /* TRUE if a caret has been created */
+   HB_BOOL  CaretHidden;                  /* TRUE if a caret has been hiden */
    int      CaretSize;                    /* Height of solid caret */
    int      CaretWidth;                   /* Width of solid caret */
 
    POINT    MousePos;                     /* the last mouse position */
-   BOOL     MouseMove;                    /* Flag to say whether to return mouse movement events */
+   HB_BOOL  MouseMove;                    /* Flag to say whether to return mouse movement events */
 
    int      Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
    int      keyPointerIn;                 /* Offset into key array for character to be placed */
@@ -134,7 +134,7 @@ typedef struct
    int      keyLast;                      /* last inkey code value in buffer */
 
    POINT    PTEXTSIZE;                    /* size of the fixed width font */
-   BOOL     FixedFont;                    /* TRUE if current font is a fixed font */
+   HB_BOOL  FixedFont;                    /* TRUE if current font is a fixed font */
    int *    FixedSize;                    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                   /* requested font height */
    int      fontWidth;                    /* requested font width */
@@ -147,7 +147,7 @@ typedef struct
 #endif
 
    HWND     hWnd;                         /* the window handle */
-   BOOL     fInit;                        /* logical variable indicating that window should be open */
+   HB_BOOL  fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
@@ -161,33 +161,33 @@ typedef struct
 #endif
 
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
-   BOOL     bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+   HB_BOOL  bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    int      CodePage;                     /* Code page to use for display characters */
 #if ! defined( UNICODE )
    int      boxCodePage;                  /* Code page to use for display draw line characters */
 #endif
-   BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
-   BOOL     AltF4Close;                   /* Can use Alt+F4 to close application */
-   BOOL     CentreWindow;                 /* True if window is to be Reset into centre of window */
+   HB_BOOL  Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
+   HB_BOOL  AltF4Close;                   /* Can use Alt+F4 to close application */
+   HB_BOOL  CentreWindow;                 /* True if window is to be Reset into centre of window */
 
-   BOOL     IgnoreWM_SYSCHAR;
+   HB_BOOL  IgnoreWM_SYSCHAR;
 
-   BOOL     bMaximized;                   /* Flag is set when window has been maximized */
-   BOOL     bBeingMarked;                 /* Flag to control DOS window like copy operation */
-   BOOL     bBeginMarked;
+   HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
+   HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */
+   HB_BOOL  bBeginMarked;
 
-   BOOL     bResizable;
-   BOOL     bSelectCopy;
+   HB_BOOL  bResizable;
+   HB_BOOL  bSelectCopy;
    char *   pszSelectCopy;
-   BOOL     bClosable;
+   HB_BOOL  bClosable;
 
    int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
    RECT     sRectNew;
    RECT     sRectOld;
 
-   BOOL     bResizing;
-   BOOL     bAlreadySizing;
+   HB_BOOL  bResizing;
+   HB_BOOL  bAlreadySizing;
 
 } HB_GTWVT, * PHB_GTWVT;
 

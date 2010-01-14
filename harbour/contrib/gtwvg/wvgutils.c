@@ -89,11 +89,11 @@ BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 #if 0
 HB_EXTERN_BEGIN
 
-extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
+extern HB_BOOL  wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
-extern BOOL     wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
+extern HB_BOOL  wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
 extern PHB_ITEM wvt_Point2Array( POINT *pt  );
-extern BOOL     wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
+extern HB_BOOL  wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
 extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
 extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
 extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);
@@ -269,7 +269,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   BOOL bActive = _s->bToolTipActive;
+   HB_BOOL bActive = _s->bToolTipActive;
 
    if ( HB_ISLOG( 1 ) )
    {
@@ -480,7 +480,7 @@ HB_FUNC( WVT_SETGUI )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   BOOL bGui = _s->bGui;
+   HB_BOOL bGui = _s->bGui;
 
    if ( HB_ISLOG( 1 ) )
    {
@@ -620,7 +620,7 @@ HB_FUNC( WVT_SETMOUSEMOVE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   BOOL bMouseMove = _s->MouseMove;
+   HB_BOOL bMouseMove = _s->MouseMove;
 
    if( HB_ISLOG( 1 ) )
      _s->MouseMove = hb_parl( 1 );
@@ -810,7 +810,7 @@ HB_FUNC( WVT_ENABLESHORTCUTS )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   BOOL bWas = _s->EnableShortCuts;
+   HB_BOOL bWas = _s->EnableShortCuts;
 
    if( HB_ISLOG( 1 ) )
       _s->EnableShortCuts = hb_parl( 1 );
@@ -1382,7 +1382,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
+HB_BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
 {
    if (HB_IS_ARRAY(aRect) && hb_arrayLen(aRect) == 4) {
       rc->left   = hb_arrayGetNL(aRect,1);
@@ -1410,7 +1410,7 @@ PHB_ITEM wvt_Rect2Array( RECT *rc  )
 
 /*----------------------------------------------------------------------*/
 
-BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
+HB_BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
 {
    if (HB_IS_ARRAY(aPoint) && hb_arrayLen(aPoint) == 2) {
       pt->x = hb_arrayGetNL(aPoint,1);
@@ -1434,7 +1434,7 @@ PHB_ITEM wvt_Point2Array( POINT *pt  )
 
 /*----------------------------------------------------------------------*/
 
-BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
+HB_BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
 {
    if (HB_IS_ARRAY(aSize) && hb_arrayLen(aSize) == 2) {
       siz->cx = hb_arrayGetNL(aSize,1);

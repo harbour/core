@@ -71,14 +71,14 @@
 static int s_daysinmonth[ 12 ] =
 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-BOOL hb_isleapyear( int iYear )
+static HB_BOOL hb_isleapyear( int iYear )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_isleapyear(%d)", iYear));
 
    return ( iYear % 4 == 0 && iYear % 100 != 0 ) || ( iYear % 400 == 0 );
 }
 
-int hb_daysinmonth( int iYear, int iMonth )
+static int hb_daysinmonth( int iYear, int iMonth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%d, %d)", iYear, iMonth));
 
@@ -89,7 +89,7 @@ int hb_daysinmonth( int iYear, int iMonth )
       return 0;
 }
 
-int hb_doy( int iYear, int iMonth, int iDay )
+static int hb_doy( int iYear, int iMonth, int iDay )
 {
    int i;
    int iDoy = 0;
@@ -102,7 +102,7 @@ int hb_doy( int iYear, int iMonth, int iDay )
    return iDoy + iDay;
 }
 
-int hb_wom( int iYear, int iMonth, int iDay )
+static int hb_wom( int iYear, int iMonth, int iDay )
 {
    int iWom;
 
@@ -115,7 +115,7 @@ int hb_wom( int iYear, int iMonth, int iDay )
       return 0;
 }
 
-int hb_woy( int iYear, int iMonth, int iDay, BOOL bISO )
+static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 {
    int iWeek, n;
 
@@ -167,7 +167,7 @@ HB_FUNC( ISLEAPYEAR )
       hb_retl( hb_isleapyear( iYear ) );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( HBMISC_DAYSINMONTH )
@@ -196,7 +196,7 @@ HB_FUNC( WOY )
       int iYear, iMonth, iDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retni( hb_woy( iYear, iMonth, iDay, HB_ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
+      hb_retni( hb_woy( iYear, iMonth, iDay, HB_ISLOG( 2 ) ? hb_parl( 2 ) : HB_TRUE ) );
    }
    else
       hb_retni( 0 );

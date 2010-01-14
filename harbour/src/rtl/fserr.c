@@ -221,7 +221,7 @@ void  hb_fsSetError( HB_ERRCODE uiError )
 }
 
 /* set error code for last operation */
-void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
+void  hb_fsSetIOError( HB_BOOL fResult, USHORT uiOperation )
 {
    HB_ERRCODE uiOsErrorLast, uiErrorLast;
    PHB_IOERRORS pIOErrors;

@@ -179,7 +179,7 @@ HB_FUNC( FCLOSE )
       hb_retl( uiError == 0 );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    hb_fsSetFError( uiError );
 }
 
@@ -329,7 +329,7 @@ HB_FUNC( HB_FCOMMIT )
 HB_FUNC( HB_FLOCK )
 {
    HB_ERRCODE uiError = 0;
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
@@ -346,7 +346,7 @@ HB_FUNC( HB_FLOCK )
 HB_FUNC( HB_FUNLOCK )
 {
    HB_ERRCODE uiError = 0;
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
@@ -413,10 +413,10 @@ HB_FUNC( HB_FGETDATETIME )
       else
          hb_stortdt( lJulian, lMillisec, 2 );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( HB_FSETDEVMODE )

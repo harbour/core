@@ -101,7 +101,7 @@ static const HB_GC_FUNCS s_gcRegexFuncs =
    hb_gcDummyMark
 };
 
-BOOL hb_regexIs( PHB_ITEM pItem )
+HB_BOOL hb_regexIs( PHB_ITEM pItem )
 {
    return hb_itemGetPtrGC( pItem, &s_gcRegexFuncs ) != NULL;
 }
@@ -114,7 +114,7 @@ PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE ulLen, int iFlags )
 
    pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
    memset( pRegEx, 0, sizeof( HB_REGEX ) );
-   pRegEx->fFree = TRUE;
+   pRegEx->fFree = HB_TRUE;
    pRegEx->iFlags = iFlags;
 
    if( ( s_reg_comp )( pRegEx, szRegEx ) != 0 )
@@ -151,7 +151,7 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
    return pRegEx;
 }
 
-void      hb_regexFree( PHB_REGEX pRegEx )
+void hb_regexFree( PHB_REGEX pRegEx )
 {
    if( pRegEx && pRegEx->fFree )
    {
@@ -160,10 +160,10 @@ void      hb_regexFree( PHB_REGEX pRegEx )
    }
 }
 
-BOOL      hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE ulLen, BOOL fFull )
+HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE ulLen, HB_BOOL fFull )
 {
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
-   BOOL fMatch;
+   HB_BOOL fMatch;
 
    fMatch = ( s_reg_exec )( pRegEx, szString, ulLen, 1, aMatches ) > 0;
    return fMatch && ( !fFull ||

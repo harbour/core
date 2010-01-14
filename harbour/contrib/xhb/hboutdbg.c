@@ -133,9 +133,9 @@ static void debugInit( void )
 
 #endif
 
-BOOL hb_OutDebugName( PHB_ITEM pName )
+HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 {
-   BOOL bRet;
+   HB_BOOL bRet;
 
 #if defined( HB_OS_UNIX )
    if( s_iDebugFd == 0 && pName != NULL)
@@ -143,20 +143,20 @@ BOOL hb_OutDebugName( PHB_ITEM pName )
       hb_strncpy( s_szDebugName, hb_itemGetCPtr( pName ), sizeof( s_szDebugName ) - 1 );
       s_iUseDebugName = 1;
 
-      bRet = TRUE;
+      bRet = HB_TRUE;
    }
    else if( pName == NULL)
    {
       s_iUseDebugName = 0;
-      bRet = TRUE;
+      bRet = HB_TRUE;
    }
    else
-      bRet = FALSE;
+      bRet = HB_FALSE;
 
 #else
    HB_SYMBOL_UNUSED( pName );
 
-   bRet = FALSE;
+   bRet = HB_FALSE;
 #endif
 
    return bRet;

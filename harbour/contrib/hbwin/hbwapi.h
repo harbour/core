@@ -76,7 +76,7 @@
 
 #define wapi_par_STRUCT( n )          ( hb_parc( n ) )
 
-#define wapi_par_BOOL( n )            ( ( BOOL  ) hb_parl( n ) )
+#define wapi_par_BOOL( n )            ( ( BOOL  ) ( hb_parl( n ) ? TRUE : FALSE ) )
 #define wapi_par_INT( n )             ( ( INT   ) hb_parni( n ) )
 #define wapi_par_UINT( n )            ( ( UINT  ) hb_parni( n ) )
 #define wapi_par_LONG( n )            ( ( LONG  ) hb_parnl( n ) )
@@ -86,7 +86,7 @@
 
 #define wapi_ret_NINT( i )            ( hb_retnint( i ) )
 #define wapi_ret_NI( i )              ( hb_retni( i ) )
-#define wapi_ret_L( b )               ( hb_retl( b ) )
+#define wapi_ret_L( b )               ( hb_retl( b ? HB_TRUE : HB_FALSE ) )
 #define wapi_ret_UINT( n )            ( hb_retni( n ) )
 #define wapi_ret_LONG( n )            ( hb_retnl( n ) )
 #define wapi_ret_WORD( n )            ( hb_retnl( n ) )

@@ -401,7 +401,7 @@ static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTra
    return isTerm;
 }
 
-int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC )
+int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, HB_BOOL fSetACSC )
 {
    char *pszFree = NULL, *pszFile, szFile[ HB_PATH_MAX ];
    int nRet = -1;

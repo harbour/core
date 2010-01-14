@@ -56,14 +56,14 @@
 
 #include "xhb.h"
 
-static BOOL s_bToOutputDebug = TRUE;
-static BOOL s_bToLogFile     = TRUE;
+static HB_BOOL s_bToOutputDebug = HB_TRUE;
+static HB_BOOL s_bToLogFile     = HB_TRUE;
 
-static BOOL s_bEmptyLogFile  = TRUE;
+static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
 
-BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
+HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff )
 {
-   BOOL bOld = s_bToOutputDebug;
+   HB_BOOL bOld = s_bToOutputDebug;
    s_bToOutputDebug = bOnOff;
    return bOld;
 }
@@ -83,16 +83,16 @@ void hb_ToOutDebug( const char * sTraceMsg, ... )
    }
 }
 
-BOOL hb_ToLogFileOnOff( BOOL bOnOff )
+HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff )
 {
-   BOOL bOld = s_bToLogFile;
+   HB_BOOL bOld = s_bToLogFile;
    s_bToLogFile = bOnOff;
    return bOld;
 }
 
-BOOL hb_EmptyLogFile( BOOL bOnOff )
+HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff )
 {
-   BOOL bOld = s_bEmptyLogFile;
+   HB_BOOL bOld = s_bEmptyLogFile;
    s_bEmptyLogFile = bOnOff;
    return bOld;
 }
@@ -107,7 +107,7 @@ void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
       {
          if( s_bEmptyLogFile )
          {
-            s_bEmptyLogFile = FALSE;
+            s_bEmptyLogFile = HB_FALSE;
 
             /* Empty the file if it exists. */
             hFile = hb_fopen( "logfile.log", "w" );

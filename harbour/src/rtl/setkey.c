@@ -110,7 +110,7 @@ static PHB_SETKEY sk_findkey( int iKeyCode, PHB_SETKEY sk_list,
    return sk_list_tmp;
 }
 
-static void sk_add( PHB_SETKEY * sk_list_ptr, BOOL bReturn,
+static void sk_add( PHB_SETKEY * sk_list_ptr, HB_BOOL bReturn,
                     int iKeyCode, PHB_ITEM pAction, PHB_ITEM pIsActive )
 {
    if( iKeyCode )
@@ -201,7 +201,7 @@ HB_FUNC( SETKEY )
       else
       {
          /* Set a SETKEY value */
-         sk_add( &sk_data->sk_list, TRUE, hb_itemGetNI( pKeyCode ),
+         sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
                  hb_param( 2, HB_IT_BLOCK ), NULL );
       }
    }
@@ -234,7 +234,7 @@ HB_FUNC( HB_SETKEY )
       else
       {
          /* Set a SETKEY value */
-         sk_add( &sk_data->sk_list, TRUE, hb_itemGetNI( pKeyCode ),
+         sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
                  hb_param( 2, HB_IT_BLOCK ), hb_param( 3, HB_IT_BLOCK ) );
       }
    }
@@ -255,7 +255,7 @@ HB_FUNC( HB_SETKEYARRAY )
       HB_SIZE nPos;
 
       for( nPos = 1; nPos <= nLen; nPos++ )
-         sk_add( &sk_data->sk_list, FALSE, hb_arrayGetNI( pKeyCodeArray, nPos ), pAction, pIsActive );
+         sk_add( &sk_data->sk_list, HB_FALSE, hb_arrayGetNI( pKeyCodeArray, nPos ), pAction, pIsActive );
    }
 }
 
@@ -326,7 +326,7 @@ HB_FUNC( HB_SETKEYSAVE )
          {
             PHB_ITEM itmKeyElements = hb_arrayGetItemPtr( pParam, nitem );
 
-            sk_add( &sk_data->sk_list, FALSE,
+            sk_add( &sk_data->sk_list, HB_FALSE,
                     hb_arrayGetNI( itmKeyElements, 1 ),
                     hb_arrayGetItemPtr( itmKeyElements, 2 ),
                     hb_arrayGetItemPtr( itmKeyElements, 3 ) );
@@ -338,7 +338,7 @@ HB_FUNC( HB_SETKEYSAVE )
 HB_FUNC( HB_SETKEYCHECK )
 {
    PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
-   BOOL bIsKeySet = FALSE;
+   HB_BOOL bIsKeySet = HB_FALSE;
 
    if( pKeyCode )
    {
@@ -354,7 +354,7 @@ HB_FUNC( HB_SETKEYCHECK )
 
          if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
          {
-            bIsKeySet = TRUE;
+            bIsKeySet = HB_TRUE;
 
             switch( hb_pcount() )
             {

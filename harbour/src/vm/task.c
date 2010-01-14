@@ -141,8 +141,8 @@ typedef struct _HB_TASKINFO
 {
    int            id;
    HB_TASKSTATE   state;
-   BOOL           detached;
-   BOOL           stop;
+   HB_BOOL        detached;
+   HB_BOOL        stop;
 
    HB_LONG        wakeup;
 
@@ -817,7 +817,7 @@ void hb_taskDestroy( void * pTaskPtr )
 
    if( pTask != s_mainTask )
    {
-      pTask->detached = TRUE;
+      pTask->detached = HB_TRUE;
       if( pTask->state == TASK_ZOMBIE || pTask->state == TASK_DONE )
          hb_taskFree( pTask );
       else
@@ -863,7 +863,7 @@ int hb_taskJoin( void * pTaskPtr, unsigned long ulMilliSec, void ** pResult )
 /* detach given task - it will be removed automatically */
 void hb_taskDetach( void * pTask )
 {
-   ( ( PHB_TASKINFO ) pTask )->detached = TRUE;
+   ( ( PHB_TASKINFO ) pTask )->detached = HB_TRUE;
 }
 
 /* current task quit */

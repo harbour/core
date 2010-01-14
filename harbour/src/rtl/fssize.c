@@ -78,7 +78,7 @@
 #endif
 
 
-HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
+HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 {
    if( bUseDirEntry )
    {
@@ -98,7 +98,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
       }
 #elif defined( HB_USE_LARGEFILE64 )
       char * pszFree;
-      BOOL fResult;
+      HB_BOOL fResult;
       struct stat64 statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
       statbuf.st_size = 0;
@@ -112,7 +112,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
          return ( HB_FOFFSET ) statbuf.st_size;
 #else
       char * pszFree;
-      BOOL fResult;
+      HB_BOOL fResult;
       struct stat statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
       statbuf.st_size = 0;

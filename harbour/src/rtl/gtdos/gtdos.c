@@ -160,7 +160,7 @@ static int  s_iCurCol;
 static int  s_iCursorStyle;
 static int  s_iScreenMode;
 
-static BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static HB_BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 
 static BYTE s_charTransRev[ 256 ];
 static BYTE s_charTrans[ 256 ];
@@ -186,14 +186,14 @@ static void hb_gt_dos_CtrlBreak_Handler( int iSignal )
    /* NOTE: the layout of this function is forced by the compiler
     */
    HB_SYMBOL_UNUSED( iSignal );
-   s_bBreak = TRUE;
+   s_bBreak = HB_TRUE;
 }
 #else
 static int s_iOldCtrlBreak = 0;
 static int hb_gt_dos_CtrlBrkHandler( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_CtrlBrkHandler()"));
-   s_bBreak = TRUE;
+   s_bBreak = HB_TRUE;
    return 1;
 }
 #endif
@@ -429,16 +429,16 @@ static void hb_gt_dos_SetCursorStyle( int iStyle )
 
 /* *********************************************************************** */
 
-static BOOL s_fMousePresent = FALSE;      /* Is there a mouse ? */
-static BOOL s_fMouseVisible = FALSE;      /* Is mouse cursor visible ? */
-static int  s_iMouseButtons = 0;          /* Mouse buttons */
-static int  s_iMouseInitCol = 0;          /* Init mouse pos */
-static int  s_iMouseInitRow = 0;          /* Init mouse pos */
-static BOOL s_fMouseBound;
-static int  s_iMouseTop;
-static int  s_iMouseLeft;
-static int  s_iMouseBottom;
-static int  s_iMouseRight;
+static HB_BOOL s_fMousePresent = HB_FALSE;   /* Is there a mouse ? */
+static HB_BOOL s_fMouseVisible = HB_FALSE;   /* Is mouse cursor visible ? */
+static int     s_iMouseButtons = 0;          /* Mouse buttons */
+static int     s_iMouseInitCol = 0;          /* Init mouse pos */
+static int     s_iMouseInitRow = 0;          /* Init mouse pos */
+static HB_BOOL s_fMouseBound;
+static int     s_iMouseTop;
+static int     s_iMouseLeft;
+static int     s_iMouseBottom;
+static int     s_iMouseRight;
 
 #ifdef HB_MOUSE_SAVE
    static int  s_iMouseStorageSize = 0;      /* size of mouse storage buffer */
@@ -473,11 +473,11 @@ static void hb_gt_dos_mouse_Exit( PHB_GT pGT )
       HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
       HB_GTSELF_MOUSESETPOS( pGT, s_iMouseInitRow, s_iMouseInitCol );
       HB_GTSELF_MOUSESETBOUNDS( pGT, 0, 0, iHeight - 1, iWidth - 1 );
-      s_fMousePresent = FALSE;
+      s_fMousePresent = HB_FALSE;
    }
 }
 
-static BOOL hb_gt_dos_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_dos_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -495,7 +495,7 @@ static void hb_gt_dos_mouse_Show( PHB_GT pGT )
       regs.HB_XREGS.ax = 1;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      s_fMouseVisible = TRUE;
+      s_fMouseVisible = HB_TRUE;
    }
 }
 
@@ -510,7 +510,7 @@ static void hb_gt_dos_mouse_Hide( PHB_GT pGT )
       regs.HB_XREGS.ax = 2;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      s_fMouseVisible = FALSE;
+      s_fMouseVisible = HB_FALSE;
    }
 }
 
@@ -557,7 +557,7 @@ static int hb_gt_dos_mouse_CountButton( PHB_GT pGT )
       return 0;
 }
 
-static BOOL hb_gt_dos_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_dos_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -569,13 +569,13 @@ static BOOL hb_gt_dos_mouse_ButtonState( PHB_GT pGT, int iButton )
       HB_DOS_INT86( 0x33, &regs, &regs );
 
       if( regs.HB_XREGS.bx & ( 1 << iButton ) )
-         return TRUE;
+         return HB_TRUE;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-static BOOL hb_gt_dos_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow, int * piCol )
+static HB_BOOL hb_gt_dos_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -591,15 +591,15 @@ static BOOL hb_gt_dos_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow,
       {
          *piRow = regs.HB_XREGS.dx >> 3;
          *piCol = regs.HB_XREGS.cx >> 3;
-         return TRUE;
+         return HB_TRUE;
       }
    }
    *piRow = *piCol = 0;
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-static BOOL hb_gt_dos_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow, int * piCol )
+static HB_BOOL hb_gt_dos_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -615,12 +615,12 @@ static BOOL hb_gt_dos_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow
       {
          *piRow = regs.HB_XREGS.dx >> 3;
          *piCol = regs.HB_XREGS.cx >> 3;
-         return TRUE;
+         return HB_TRUE;
       }
    }
    *piRow = *piCol = 0;
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 #ifdef HB_MOUSE_SAVE
@@ -747,7 +747,7 @@ static void hb_gt_dos_mouse_SetBounds( PHB_GT pGT, int iTop, int iLeft, int iBot
       s_iMouseLeft   = iLeft;
       s_iMouseBottom = iBottom;
       s_iMouseRight  = iRight;
-      s_fMouseBound  = TRUE;
+      s_fMouseBound  = HB_TRUE;
    }
 }
 
@@ -775,7 +775,7 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
-   s_bBreak = FALSE;
+   s_bBreak = HB_FALSE;
 
    /* Set the Ctrl+Break handler [vszakats] */
 
@@ -810,7 +810,7 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 #endif
 
    /* initialize code page translation */
-   HB_GTSELF_SETDISPCP( pGT, NULL, NULL, FALSE );
+   HB_GTSELF_SETDISPCP( pGT, NULL, NULL, HB_FALSE );
    HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
@@ -853,7 +853,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
       with the exception of the DJGPP compiler */
    if( s_bBreak )
    {
-      s_bBreak = FALSE; /* Indicate that Ctrl+Break has been handled */
+      s_bBreak = HB_FALSE; /* Indicate that Ctrl+Break has been handled */
       ch = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
    }
 #endif
@@ -899,7 +899,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
    return ch;
 }
 
-static BOOL hb_gt_dos_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gt_dos_IsColor( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_IsColor(%p)", pGT));
 
@@ -908,7 +908,7 @@ static BOOL hb_gt_dos_IsColor( PHB_GT pGT )
    return s_iScreenMode != 7;
 }
 
-static BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
+static HB_BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetBlink(%p)", pGT));
 
@@ -923,7 +923,7 @@ static BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
 #endif
 }
 
-static void hb_gt_dos_SetBlink( PHB_GT pGT, BOOL fBlink )
+static void hb_gt_dos_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    union REGS regs;
 
@@ -1133,15 +1133,15 @@ static USHORT hb_gt_dos_GetDisplay( void )
    return ( regs.h.al == 0x1A ) ? regs.h.bl : 0xFF;
 }
 
-static BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    /* HB_GTSELF_ISCOLOR( pGT ) test for color card, we need to know if it is a VGA board...*/
-   BOOL bIsVGA, bIsVesa, bSuccess;
+   HB_BOOL bIsVGA, bIsVesa, bSuccess;
 
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_dos_SetMode(%p,%d,%d)", pGT, iRows, iCols) );
 
    bIsVGA = ( hb_gt_dos_GetDisplay() == 8 );
-   bIsVesa = FALSE;
+   bIsVesa = HB_FALSE;
 
    /* Available modes in B&N and color screens */
    if( iCols == 40 )
@@ -1185,11 +1185,11 @@ static BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
    /* Check for succesful */
    if( s_iRows == iRows && s_iCols == iCols )
    {
-      bSuccess = TRUE;
+      bSuccess = HB_TRUE;
    }
    else
    {
-      bSuccess = FALSE;
+      bSuccess = HB_FALSE;
       vmode25x80();
       hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
    }
@@ -1208,7 +1208,7 @@ static BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
    return bSuccess;
 }
 
-static BOOL hb_gt_dos_PostExt( PHB_GT pGT )
+static HB_BOOL hb_gt_dos_PostExt( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_PostExt(%p)", pGT));
 
@@ -1219,7 +1219,7 @@ static BOOL hb_gt_dos_PostExt( PHB_GT pGT )
    return HB_GTSUPER_POSTEXT( pGT );
 }
 
-static BOOL hb_gt_dos_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_dos_Resume( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Resume(%p)", pGT));
 
@@ -1239,7 +1239,7 @@ static BOOL hb_gt_dos_Resume( PHB_GT pGT )
    return HB_GTSUPER_RESUME( pGT );
 }
 
-static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
 {
    PHB_CODEPAGE cdpTerm, cdpHost;
    int i;
@@ -1260,17 +1260,17 @@ static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    for( i = 0; i < 256; i++ )
    {
       s_charTrans[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpHost, cdpTerm );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpHost, cdpTerm );
       s_charTransRev[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    PHB_CODEPAGE cdpTerm, cdpHost;
    int i;
@@ -1291,10 +1291,10 @@ static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    for( i = 0; i < 256; i++ )
    {
       s_keyTrans[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
@@ -1395,7 +1395,7 @@ static void hb_gt_dos_setKbdState( int iKbdState )
    HB_POKE_BYTE( 0x0040, 0x0017, ucStat );
 }
 
-static BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -1403,7 +1403,7 @@ static BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       case HB_GTI_KBDSHIFTS:
@@ -1416,12 +1416,12 @@ static BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -1462,7 +1462,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseRestoreState          = hb_gt_dos_mouse_RestoreState;
 #endif
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

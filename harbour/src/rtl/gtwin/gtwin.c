@@ -102,7 +102,7 @@
 /*
  To disable mouse, initialization was made in cmdarg.c
 */
-static BOOL b_MouseEnable = TRUE;
+static HB_BOOL b_MouseEnable = HB_TRUE;
 
 /* *********************************************************************** */
 
@@ -146,10 +146,10 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static BOOL    s_bSpecialKeyHandling;
-static BOOL    s_bAltKeyHandling;
+static HB_BOOL s_bSpecialKeyHandling;
+static HB_BOOL s_bAltKeyHandling;
 static DWORD   s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
-static BOOL    s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static HB_BOOL s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static int     s_iCursorStyle;
 static int     s_iOldCurStyle;
 static int     s_iCurRow;
@@ -558,7 +558,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
       case CTRL_CLOSE_EVENT:
       case CTRL_BREAK_EVENT:
-         s_bBreak = TRUE;
+         s_bBreak = HB_TRUE;
          bHandled = TRUE;
          break;
 
@@ -596,10 +596,10 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
           *       very slow in some cases
           */
 
-         uc = hb_cdpGetChar( s_cdpHost, FALSE, wc );
+         uc = hb_cdpGetChar( s_cdpHost, HB_FALSE, wc );
          if( uc == '?' && wc >= 0x100 && s_cdpHost != s_cdpBox )
          {
-            uc = hb_cdpGetChar( s_cdpBox, FALSE, wc );
+            uc = hb_cdpGetChar( s_cdpBox, HB_FALSE, wc );
             if( uc != '?' )
                bAttr |= HB_GT_ATTR_BOX;
          }
@@ -702,12 +702,12 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_hStdOut = hFilenoStdout;
    s_hStdErr = hFilenoStderr;
 
-   s_bBreak = FALSE;
+   s_bBreak = HB_FALSE;
    s_cNumRead = 0;
    s_cNumIndex = 0;
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
-   s_bSpecialKeyHandling = FALSE;
-   s_bAltKeyHandling = TRUE;
+   s_bSpecialKeyHandling = HB_FALSE;
+   s_bAltKeyHandling = HB_TRUE;
 
 #if defined( UNICODE )
    s_cdpHost = s_cdpIn = hb_vmCDP();
@@ -715,7 +715,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 #endif
 
    /* initialize code page translation */
-   HB_GTSELF_SETDISPCP( pGT, NULL, NULL, FALSE );
+   HB_GTSELF_SETDISPCP( pGT, NULL, NULL, HB_FALSE );
    HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
 
 #ifndef HB_NO_ALLOC_CONSOLE
@@ -792,7 +792,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_csbi.srWindow.Right = HB_MIN( s_csbi.srWindow.Right, _GetScreenWidth() - 1 );
    s_csbi.srWindow.Bottom = HB_MIN( s_csbi.srWindow.Bottom, _GetScreenHeight() - 1 );
 
-   SetConsoleWindowInfo( s_HOutput, TRUE,  &s_csbi.srWindow );
+   SetConsoleWindowInfo( s_HOutput, TRUE, &s_csbi.srWindow );
    SetConsoleScreenBufferSize( s_HOutput, s_csbi.dwSize );
 
    hb_gt_win_xInitScreenParam( pGT );
@@ -837,9 +837,9 @@ static void hb_gt_win_Exit( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
+static HB_BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   BOOL fRet = FALSE;
+   HB_BOOL fRet = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
@@ -874,7 +874,7 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
          if( SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
          {
             SetConsoleScreenBufferSize( s_HOutput, coBuf );
-            fRet = TRUE;
+            fRet = HB_TRUE;
          }
       }
       else if( ( int ) _GetScreenWidth() <= iCols &&
@@ -887,7 +887,7 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
          if( SetConsoleScreenBufferSize( s_HOutput, coBuf ) )
          {
             SetConsoleWindowInfo( s_HOutput, TRUE, &srWin );
-            fRet = TRUE;
+            fRet = HB_TRUE;
          }
       }
       else
@@ -921,7 +921,7 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
                srWin.Right  = ( SHORT ) ( iCols - 1 );
                SetConsoleWindowInfo( s_HOutput, TRUE, &srWin );
             }
-            fRet = TRUE;
+            fRet = HB_TRUE;
          }
       }
 
@@ -948,19 +948,19 @@ static const char * hb_gt_win_Version( PHB_GT pGT, int iType )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_PostExt( PHB_GT pGT )
+static HB_BOOL hb_gt_win_PostExt( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PostExt(%p)", pGT));
 
    HB_GTSUPER_POSTEXT( pGT );
    if( s_pCharInfoScreen )
       hb_gt_win_xInitScreenParam( pGT );
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_Suspend( PHB_GT pGT )
+static HB_BOOL hb_gt_win_Suspend( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Suspend(%p)", pGT));
 
@@ -973,10 +973,10 @@ static BOOL hb_gt_win_Suspend( PHB_GT pGT )
       SetConsoleMode( s_HOutput, s_dwomode );
       SetConsoleMode( s_HInput, s_dwimode );
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_gt_win_Resume( PHB_GT pGT )
+static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Resume(%p)", pGT));
 
@@ -989,7 +989,7 @@ static BOOL hb_gt_win_Resume( PHB_GT pGT )
       hb_gt_win_xInitScreenParam( pGT );
       hb_gt_win_xSetCursorStyle();
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
@@ -1072,7 +1072,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
    return ch;
 }
 
-static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, BOOL lReverse )
+static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, HB_BOOL lReverse )
 {
    if( lReverse )
    {
@@ -1227,7 +1227,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
    if( s_bBreak )
    {
       /* Reset the global Ctrl+Break flag */
-      s_bBreak = FALSE;
+      s_bBreak = HB_FALSE;
       ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
    }
    /* Check for events only when the event buffer is exhausted. */
@@ -1304,7 +1304,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
-            ch = hb_cdpGetChar( s_cdpIn, FALSE, ( USHORT ) ch );
+            ch = hb_cdpGetChar( s_cdpIn, HB_FALSE, ( USHORT ) ch );
 #else
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
@@ -1517,7 +1517,7 @@ static void hb_gt_win_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox));
 
@@ -1558,19 +1558,19 @@ static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       for( i = 0; i < 256; i++ )
       {
          s_charTrans[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+                           hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
          s_charTransRev[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, TRUE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_TRUE, cdpTerm, cdpHost );
       }
    }
 #  endif
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP));
 
@@ -1608,16 +1608,16 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
       for( i = 0; i < 256; i++ )
          s_keyTrans[ i ] = ( BYTE )
-                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 #  endif
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -1625,14 +1625,14 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
       case HB_GTI_ISUNICODE:
 #if defined( UNICODE )
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
 #else
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
 #endif
          break;
 
@@ -1749,12 +1749,12 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_win_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1769,9 +1769,9 @@ static void hb_gt_win_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
    *piCol = s_mouse_iCol;
 }
 
-static BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
-   BOOL fReturn = FALSE;
+   HB_BOOL fReturn = HB_FALSE;
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1818,7 +1818,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #if defined( UNICODE )
          s_pCharInfoScreen[ i ].Char.UnicodeChar =
                hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? s_cdpBox : s_cdpHost,
-                             TRUE, ( UCHAR ) usChar );
+                             HB_TRUE, ( UCHAR ) usChar );
 #else
          s_pCharInfoScreen[ i ].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
 #endif
@@ -1860,7 +1860,7 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -1885,7 +1885,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseButtonState           = hb_gt_win_mouse_ButtonState;
    pFuncTable->MouseCountButton           = hb_gt_win_mouse_CountButton;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

@@ -68,10 +68,10 @@ LONG hb_sxPtoD( const char * pDate );
 void hb_sxEnCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE ulLen );
 void hb_sxDeCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE ulLen );
 
-BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen, char * pDstBuf, HB_SIZE ulDstLen );
-BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen, char * pDstBuf, HB_SIZE ulDstLen, HB_SIZE * pulSize );
-BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, HB_SIZE * pulSize );
-BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput );
+HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen, char * pDstBuf, HB_SIZE ulDstLen );
+HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen, char * pDstBuf, HB_SIZE ulDstLen, HB_SIZE * pulSize );
+HB_BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, HB_SIZE * pulSize );
+HB_BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput );
 
 HB_EXTERN_END
 

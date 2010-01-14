@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL hb_fsFile( const char * pszFilename )
+HB_BOOL hb_fsFile( const char * pszFilename )
 {
    PHB_FFIND ffind;
    char * pszFree;
@@ -67,18 +67,18 @@ BOOL hb_fsFile( const char * pszFilename )
       hb_fsFindClose( ffind );
       if( pszFree )
          hb_xfree( pszFree );
-      return TRUE;
+      return HB_TRUE;
    }
 
    if( pszFree )
       hb_xfree( pszFree );
 
-   return FALSE;
+   return HB_FALSE;
 }
 
-BOOL hb_fsIsDirectory( const char * pszFilename )
+HB_BOOL hb_fsIsDirectory( const char * pszFilename )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    PHB_FFIND ffind;
    char * pszFree = NULL;
    int iLen;
@@ -104,7 +104,7 @@ BOOL hb_fsIsDirectory( const char * pszFilename )
       if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_DIRECTORY ) ) != NULL )
       {
          if( ( ffind->attr & HB_FA_DIRECTORY ) == HB_FA_DIRECTORY )
-            bResult = TRUE;
+            bResult = HB_TRUE;
          hb_fsFindClose( ffind );
       }
    }

@@ -261,7 +261,7 @@
 #endif
 
 #ifdef HB_FM_NEED_INIT
-static BOOL s_fInitedFM = FALSE;
+static HB_BOOL s_fInitedFM = HB_FALSE;
 #endif
 
 #ifdef HB_FM_STATISTICS
@@ -305,7 +305,7 @@ typedef struct _HB_MEMINFO
  */
 #define HB_TRACE_FM           HB_TRACE_STEALTH
 
-static BOOL s_fStatistic = FALSE;
+static HB_BOOL s_fStatistic = HB_FALSE;
 
 static long s_lMemoryBlocks = 0;      /* memory blocks used */
 static long s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
@@ -902,9 +902,9 @@ void hb_xRefInc( void * pMem )
    HB_ATOM_INC( HB_COUNTER_PTR( pMem ) );
 }
 
-/* decrement reference counter, return TRUE when 0 reached */
+/* decrement reference counter, return HB_TRUE when 0 reached */
 #undef hb_xRefDec
-BOOL hb_xRefDec( void * pMem )
+HB_BOOL hb_xRefDec( void * pMem )
 {
    return HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0;
 }
@@ -1019,13 +1019,13 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
       if( hb_getenv_buffer( "HB_FM_STAT", buffer, sizeof( buffer ) ) )
       {
          if( hb_stricmp( "yes", buffer ) == 0 )
-            s_fStatistic = TRUE;
+            s_fStatistic = HB_TRUE;
          else if( hb_stricmp( "no", buffer ) == 0 )
-            s_fStatistic = FALSE;
+            s_fStatistic = HB_FALSE;
       }
 #ifndef HB_FM_STATISTICS_DYN_OFF
       else
-         s_fStatistic = TRUE;  /* enabled by default */
+         s_fStatistic = HB_TRUE;  /* enabled by default */
 #endif /* HB_FM_STATISTICS_DYN_OFF */
 #endif /* HB_FM_STATISTICS */
 
@@ -1033,7 +1033,7 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
       s_hProcessHeap = GetProcessHeap();
 #endif
 
-      s_fInitedFM = TRUE;
+      s_fInitedFM = HB_TRUE;
    }
 #endif /* HB_FM_NEED_INIT */
 }

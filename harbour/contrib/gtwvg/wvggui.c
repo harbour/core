@@ -179,9 +179,9 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
    return pWVT;
 }
 
-static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
+static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
-   BOOL fOK = FALSE;
+   HB_BOOL fOK = FALSE;
 
    WVGDEBUG( ( "wvggui:hb_gt_wvt_Alloc()" ) );
 
@@ -397,7 +397,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
    #endif
 }
 
-static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
+static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
    #if 0
    WVGDEBUG( ( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" ) );
@@ -494,7 +494,7 @@ static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
    HB_TCHAR_FREE( text );
 }
 
-static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
+static HB_BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
 {
    TCHAR buffer[WVT_MAX_TITLE_SIZE];
    int iResult;
@@ -632,7 +632,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    }
 }
 
-static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
+static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
    WVGDEBUG( ( "wvggui:hb_gt_wvt_KeyEvent()" ) );
 
@@ -641,7 +641,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
       {
-         BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
+         HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
 
          pWVT->IgnoreWM_SYSCHAR = FALSE;
 
@@ -720,8 +720,8 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                break;
             default:
             {
-               BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-               BOOL bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
+               HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
+               HB_BOOL bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
                int  iScanCode = HIWORD( lParam ) & 0xFF;
 
                if( bCtrl && iScanCode == 76 ) /* CTRL_VK_NUMPAD5 */
@@ -782,7 +782,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
 
       case WM_CHAR:
       {
-         BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
+         HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
          int  iScanCode = HIWORD( lParam ) & 0xFF;
          int  c = ( int ) wParam;
 
@@ -1307,7 +1307,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
    return hWnd;
 }
 
-static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
+static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
    WVGDEBUG( ( "wvggui:hb_gt_wvt_CreateConsoleWindow()" ) );
 
@@ -1401,7 +1401,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
    PHB_GTWVT pWVT;
    int  c = 0;
-   BOOL fKey;
+   HB_BOOL fKey;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
    #if 0
@@ -1433,7 +1433,7 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTWVT pWVT;
    int iVal;
@@ -1797,7 +1797,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
          {
-            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
                pWVT->bResizable = bNewValue;
@@ -1835,7 +1835,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
          if( pInfo->pNewVal )
          {
-            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bClosable )
             {
                if( pWVT->hWnd )
@@ -2237,7 +2237,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
    WVGDEBUG( ( "wvggui:hb_gt_FuncInit() " ) );

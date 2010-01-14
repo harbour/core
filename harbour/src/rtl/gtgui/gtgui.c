@@ -98,7 +98,7 @@ static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -139,12 +139,12 @@ static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -152,7 +152,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Tone                       = hb_gt_gui_Tone;
    pFuncTable->Info                       = hb_gt_gui_Info;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* *********************************************************************** */

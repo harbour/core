@@ -722,7 +722,7 @@ HB_FUNC( WVG_SETMENU )
    HWND hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    #if 1
-   BOOL bSet;
+   HB_BOOL bSet;
    RECT wi = { 0, 0, 0, 0 };
    RECT ci = { 0, 0, 0, 0 };
    int height, width;
@@ -1215,7 +1215,7 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          tbb.dwData    = 0;
          tbb.iString   = wapi_par_INT( 5 );
 
-         wapi_ret_L( ( BOOL ) SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
+         wapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
          break;
       }
       case TB_ADDSTRING            :

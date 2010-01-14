@@ -94,7 +94,7 @@
 ***************************************************/
 
 HB_EXTERN_BEGIN
-BOOL hb_isService( void );
+HB_BOOL hb_isService( void );
 void hb_serviceExit( void );
 HB_EXTERN_END
 
@@ -104,7 +104,7 @@ static void s_serviceSetDflSig( void );
 static void s_signalHandlersInit( void );
 
 static PHB_ITEM sp_hooks = NULL;
-static BOOL bSignalEnabled = TRUE;
+static HB_BOOL bSignalEnabled = HB_TRUE;
 static int sb_isService = 0;
 
 /* There is a service mutex in multithreading */
@@ -177,7 +177,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
       return;
    }
 
-   bSignalEnabled = FALSE;
+   bSignalEnabled = HB_FALSE;
    ulPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
    uiSig = ( UINT ) s_translateSignal( ( UINT ) sig, 0 );
@@ -227,12 +227,12 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
          switch( iRet )
          {
             case HB_SERVICE_HANDLED:
-               bSignalEnabled = TRUE;
+               bSignalEnabled = HB_TRUE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                return;
 
             case HB_SERVICE_QUIT:
-               bSignalEnabled = FALSE;
+               bSignalEnabled = HB_FALSE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                /* TODO: A service cleanup routine */
                hb_vmRequestQuit();
@@ -250,7 +250,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
       ulPos--;
    }
 
-   bSignalEnabled = TRUE;
+   bSignalEnabled = HB_TRUE;
    /*s_serviceSetHBSig();*/
 
    /* TODO
@@ -270,7 +270,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 #if defined( HB_THREAD_SUPPORT ) && ! defined( HB_OS_OS2 )
 static void * s_signalListener( void * my_stack )
 {
-   static BOOL bFirst = TRUE;
+   static HB_BOOL bFirst = HB_TRUE;
    sigset_t passall;
    HB_STACK * pStack = ( HB_STACK * ) my_stack;
 #if defined( HB_OS_BSD )
@@ -319,7 +319,7 @@ static void * s_signalListener( void * my_stack )
       if( bFirst )
       {
          pthread_sigmask( SIG_SETMASK, &passall, NULL );
-         bFirst = FALSE;
+         bFirst = HB_FALSE;
       }
 
       /* This is also a cancelation point. When the main thread
@@ -428,7 +428,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
       return EXCEPTION_EXECUTE_HANDLER;
    }
 
-   bSignalEnabled = FALSE;
+   bSignalEnabled = HB_FALSE;
    ulPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
    uiSig = ( UINT ) s_translateSignal( ( UINT ) type, ( UINT ) sig );
@@ -484,12 +484,12 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
          switch( iRet )
          {
             case HB_SERVICE_HANDLED:
-               bSignalEnabled = TRUE;
+               bSignalEnabled = HB_TRUE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                return EXCEPTION_CONTINUE_EXECUTION;
 
             case HB_SERVICE_QUIT:
-               bSignalEnabled = FALSE;
+               bSignalEnabled = HB_FALSE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                hb_vmRequestQuit();
                #ifndef HB_THREAD_SUPPORT
@@ -504,7 +504,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
       ulPos--;
    }
 
-   bSignalEnabled = TRUE;
+   bSignalEnabled = HB_TRUE;
    return EXCEPTION_EXECUTE_HANDLER;
 }
 
@@ -785,7 +785,7 @@ HB_FUNC( HB_STARTSERVICE )
    #endif
 
    /* let's begin */
-   sb_isService = TRUE;
+   sb_isService = HB_TRUE;
 
    /* in windows, we just detach from console */
    #ifdef HB_OS_WIN
@@ -807,7 +807,7 @@ HB_FUNC( HB_STARTSERVICE )
 * Been called. C version useful for internal api
 */
 
-BOOL hb_isService( void )
+HB_BOOL hb_isService( void )
 {
    return sb_isService;
 }
@@ -860,7 +860,7 @@ HB_FUNC( HB_SERVICELOOP )
    }
 #endif
 
-   hb_gcCollectAll( FALSE );
+   hb_gcCollectAll( HB_FALSE );
 }
 
 HB_FUNC( HB_PUSHSIGNALHANDLER )
@@ -911,7 +911,7 @@ HB_FUNC( HB_POPSIGNALHANDLER )
          hb_arrayDel( sp_hooks, nLen );
          hb_arrayDel( sp_hooks, nLen - 1 );
          hb_arraySize( sp_hooks, nLen - 2 );
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          if( hb_arrayLen( sp_hooks ) == 0 )
          {
             hb_itemRelease( sp_hooks );
@@ -920,13 +920,13 @@ HB_FUNC( HB_POPSIGNALHANDLER )
       }
       else
       {
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
    }
    else
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 

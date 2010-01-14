@@ -87,7 +87,7 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;
-   BOOL fFree = TRUE;
+   HB_BOOL fFree = HB_TRUE;
 
    while( *pSearchList )
    {
@@ -103,7 +103,7 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
       (*pSearchList)->fFree  = fFree;
       pSearchList = &(*pSearchList)->pNext;
       pPath = pDelim + 1;
-      fFree = FALSE;
+      fFree = HB_FALSE;
    }
    *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
    (*pSearchList)->szPath = pPath;
@@ -287,15 +287,15 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    return pszFileName;
 }
 
-BOOL hb_fsNameExists( const char * pszFileName )
+HB_BOOL hb_fsNameExists( const char * pszFileName )
 {
-   BOOL fExist;
+   HB_BOOL fExist;
    char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsNameExists(%p)", pszFileName));
 
    if( pszFileName == NULL )
-      return FALSE;
+      return HB_FALSE;
 
    pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
@@ -332,7 +332,7 @@ BOOL hb_fsNameExists( const char * pszFileName )
    {
       int iTODO; /* To force warning */
 
-      fExist = FALSE;
+      fExist = HB_FALSE;
    }
 #endif
 
@@ -342,15 +342,15 @@ BOOL hb_fsNameExists( const char * pszFileName )
    return fExist;
 }
 
-BOOL hb_fsFileExists( const char * pszFileName )
+HB_BOOL hb_fsFileExists( const char * pszFileName )
 {
-   BOOL fExist;
+   HB_BOOL fExist;
    char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFileExists(%p)", pszFileName));
 
    if( pszFileName == NULL )
-      return FALSE;
+      return HB_FALSE;
 
    pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
@@ -395,7 +395,7 @@ BOOL hb_fsFileExists( const char * pszFileName )
    {
       int iTODO; /* To force warning */
 
-      fExist = FALSE;
+      fExist = HB_FALSE;
    }
 #endif
 
@@ -405,15 +405,15 @@ BOOL hb_fsFileExists( const char * pszFileName )
    return fExist;
 }
 
-BOOL hb_fsDirExists( const char * pszDirName )
+HB_BOOL hb_fsDirExists( const char * pszDirName )
 {
-   BOOL fExist;
+   HB_BOOL fExist;
    char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsDirExists(%p)", pszDirName));
 
    if( pszDirName == NULL )
-      return FALSE;
+      return HB_FALSE;
 
    pszDirName = hb_fsNameConv( pszDirName, &pszFree );
 
@@ -457,7 +457,7 @@ BOOL hb_fsDirExists( const char * pszDirName )
    {
       int iTODO; /* To force warning */
 
-      fExist = FALSE;
+      fExist = HB_FALSE;
    }
 #endif
 
@@ -467,7 +467,7 @@ BOOL hb_fsDirExists( const char * pszDirName )
    return fExist;
 }
 
-BOOL hb_fsMaxFilesError( void )
+HB_BOOL hb_fsMaxFilesError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMaxFilesError()"));
 

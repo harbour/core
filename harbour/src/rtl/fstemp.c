@@ -96,9 +96,9 @@
 #endif
 
 #if !defined( HB_OS_WIN )
-static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
+static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 {
-   BOOL fOK = FALSE;
+   HB_BOOL fOK = HB_FALSE;
 
    if( pszTempDir && *pszTempDir != '\0' )
    {
@@ -114,7 +114,7 @@ static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
             fOK = strcmp( pszName, pszTempDir ) == 0;
             break;
          default:
-            fOK = TRUE;
+            fOK = HB_TRUE;
             break;
       }
    }
@@ -257,9 +257,9 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
 /* NOTE: The buffer must be at least HB_PATH_MAX chars long */
 #if !defined( HB_OS_UNIX )
 
-static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * pszPrefix )
+static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * pszPrefix )
 {
-   BOOL fResult;
+   HB_BOOL fResult;
 
    hb_vmUnlock();
 
@@ -275,8 +275,8 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
       {
          if( ! GetTempPath( HB_PATH_MAX, lpTempDir ) )
          {
-            hb_fsSetIOError( FALSE, 0 );
-            return FALSE;
+            hb_fsSetIOError( HB_FALSE, 0 );
+            return HB_FALSE;
          }
       }
       lpTempDir[ HB_PATH_MAX - 1 ] = L'\0';

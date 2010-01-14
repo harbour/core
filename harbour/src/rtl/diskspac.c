@@ -80,7 +80,7 @@
 HB_FUNC( DISKSPACE )
 {
    double dSpace = 0.0;
-   BOOL bError;
+   HB_BOOL bError;
 
 #if defined( HB_OS_DOS )
    {
@@ -149,10 +149,10 @@ HB_FUNC( DISKSPACE )
 
          if( pGetDiskFreeSpaceEx )
          {
-            bError = ! pGetDiskFreeSpaceEx( lpPath,
-                                            ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                            ( PULARGE_INTEGER ) &i64TotalBytes,
-                                            ( PULARGE_INTEGER ) &i64FreeBytes );
+            bError = pGetDiskFreeSpaceEx( lpPath,
+                                          ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                          ( PULARGE_INTEGER ) &i64TotalBytes,
+                                          ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_FALSE : HB_TRUE;
             if( ! bError )
                dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
          }
@@ -163,12 +163,12 @@ HB_FUNC( DISKSPACE )
             DWORD dwNumberOfFreeClusters;
             DWORD dwTotalNumberOfClusters;
 
-            bError = ! GetDiskFreeSpace( lpPath,
-                                         &dwSectorsPerCluster,
-                                         &dwBytesPerSector,
-                                         &dwNumberOfFreeClusters,
-                                         &dwTotalNumberOfClusters );
-            if( !bError )
+            bError = GetDiskFreeSpace( lpPath,
+                                       &dwSectorsPerCluster,
+                                       &dwBytesPerSector,
+                                       &dwNumberOfFreeClusters,
+                                       &dwTotalNumberOfClusters ) ? HB_FALSE : HB_TRUE;
+            if( ! bError )
                dSpace = ( double ) dwNumberOfFreeClusters *
                         ( double ) dwSectorsPerCluster *
                         ( double ) dwBytesPerSector;
@@ -203,7 +203,7 @@ HB_FUNC( DISKSPACE )
 #if defined( __WATCOMC__ ) || defined( __CEGCC__ )
          int iTODO;
 
-         bError = FALSE;
+         bError = HB_FALSE;
 #else
 #if defined( HB_OS_DARWIN )
          struct statfs st;
@@ -226,7 +226,7 @@ HB_FUNC( DISKSPACE )
          hb_xfree( pszFree );
    }
 #else
-   bError = FALSE;
+   bError = HB_FALSE;
 #endif
 
    if( bError )

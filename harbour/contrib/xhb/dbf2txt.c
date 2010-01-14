@@ -86,7 +86,7 @@ static char * hb_strescape( const char * szInput, int lLen, const char * cDelim 
 }
 
 /* Export field values to text file */
-static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
+static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
 {
    switch( hb_itemType( pValue ) )
    {
@@ -147,9 +147,9 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
       /* an "M" field or the other, might be a "V" in SixDriver */
       default:
       /* We do not want MEMO contents */
-         return FALSE;
+         return HB_FALSE;
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 HB_FUNC( DBF2TEXT )
@@ -172,12 +172,12 @@ HB_FUNC( DBF2TEXT )
    USHORT uiFields = 0;
    USHORT ui;
    PHB_ITEM pTmp;
-   BOOL bWriteSep = FALSE;
+   HB_BOOL bWriteSep = HB_FALSE;
 
-   BOOL bEof = TRUE;
-   BOOL bBof = TRUE;
+   HB_BOOL bEof = HB_TRUE;
+   HB_BOOL bBof = HB_TRUE;
 
-   BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
+   HB_BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
 
    if( ! pArea )
    {
@@ -220,7 +220,7 @@ HB_FUNC( DBF2TEXT )
          break;
 
       /* For condition is met */
-      /* if For is NULL, hb__Eval returns TRUE */
+      /* if For is NULL, hb__Eval returns HB_TRUE */
       if( ! pFor || hb_itemGetL( hb_vmEvalBlock( pFor ) ) )
       {
          /* User does not request fields, copy all fields */
@@ -262,7 +262,7 @@ HB_FUNC( DBF2TEXT )
             }
          }
          hb_fsWriteLarge( handle, "\r\n", 2 );
-         bWriteSep = FALSE;
+         bWriteSep = HB_FALSE;
       }
 
       if( nCount != -1 )

@@ -80,8 +80,8 @@ ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2
    if( !pEval )
       return ulLen;
 
-   if( (pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST) 
-       && 
+   if( (pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST)
+       &&
        (pExpr2->ExprType == HB_ET_LIST || pExpr2->ExprType == HB_ET_ARGLIST) )
    {
       pExpr1 = pExpr1->value.asList.pExprList;
@@ -177,7 +177,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             if( szName )
             {
                HB_COMP_EXPR_DELETE( pParms );
-               HB_COMP_EXPR_DELETE( pName ); 
+               HB_COMP_EXPR_DELETE( pName );
                return hb_compExprNewMethodCall( hb_compExprNewSend(
                         hb_compExprNewVar( szName, HB_COMP_PARAM ),
                                     szMessage, NULL, HB_COMP_PARAM ), NULL );
@@ -205,7 +205,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 #endif
          pParms->value.asList.pExprList = NULL;
          HB_COMP_EXPR_DELETE( pParms );
-         HB_COMP_EXPR_DELETE( pName ); 
+         HB_COMP_EXPR_DELETE( pName );
          return pEval;
       }
       else if( iLen == 5 && memcmp( "_GET_", pName->value.asSymbol, 5 ) == 0 )
@@ -554,7 +554,7 @@ static const char * s_szStaticFun[] = {
 
 #define STATIC_FUNCTIONS      ( sizeof( s_szStaticFun ) / sizeof( char * ) )
 
-static BOOL hb_compStaticFunction( const char * szName )
+static HB_BOOL hb_compStaticFunction( const char * szName )
 {
    unsigned int ui;
    for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )

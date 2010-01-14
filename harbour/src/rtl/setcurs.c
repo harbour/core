@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-int hb_conSetCursor( BOOL bSetCursor, int iNewCursor )
+int hb_conSetCursor( HB_BOOL bSetCursor, int iNewCursor )
 {
    int iCursor;
 

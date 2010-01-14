@@ -101,7 +101,7 @@ HB_IOERRORS, * PHB_IOERRORS;
 typedef struct
 {
    const char *   szDefaultRDD;     /* default RDD */
-   BOOL           fNetError;        /* current NETERR() flag */
+   HB_BOOL        fNetError;        /* current NETERR() flag */
 
    void **        waList;           /* Allocated WorkAreas */
    USHORT         uiWaMax;          /* Number of allocated WA */
@@ -177,7 +177,7 @@ typedef struct
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
    int        iKeyPoll;       /* counter for GT/keyboard polling */
-   BOOL       fDebugRequest;  /* request debugger activation */
+   HB_BOOL    fDebugRequest;  /* request debugger activation */
    void *     pDebugInfo;     /* internal debugger structure */
 #if defined( HB_MT_VM )
    int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
@@ -332,7 +332,7 @@ extern LONG        hb_stackWithObjectOffset( void );
 extern void        hb_stackWithObjectSetOffset( LONG );
 
 extern int *       hb_stackKeyPolls( void );
-extern BOOL *      hb_stackDebugRequest( void );
+extern HB_BOOL *   hb_stackDebugRequest( void );
 
 extern void        hb_stackDestroyTSD( void );
 
@@ -354,7 +354,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
    extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
    extern int              hb_stackDynHandlesCount( void );
    extern void             hb_stackClearMemvars( int );
-   extern BOOL             hb_stackQuitState( void );
+   extern HB_BOOL          hb_stackQuitState( void );
    extern void             hb_stackSetQuitState( USHORT uiState );
    extern int              hb_stackUnlock( void );
    extern int              hb_stackLock( void );

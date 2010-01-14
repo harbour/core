@@ -58,9 +58,9 @@
 
 #define HB_MAX_WILDPATTERN     256
 
-BOOL hb_strMatchWild( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
 {
-   BOOL fMatch = TRUE, fAny = FALSE;
+   HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
    HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
            ulBufSize = HB_MAX_WILDPATTERN;
    HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
@@ -73,7 +73,7 @@ BOOL hb_strMatchWild( const char *szString, const char *szPattern )
    {
       if( szPattern[i] == '*' )
       {
-         fAny = TRUE;
+         fAny = HB_TRUE;
          i++;
       }
       else if( j < ulLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
@@ -98,7 +98,7 @@ BOOL hb_strMatchWild( const char *szString, const char *szPattern )
             ulAnyPosP[ ulAny ] = i;
             ulAnyPosV[ ulAny ] = j;
             ulAny++;
-            fAny = FALSE;
+            fAny = HB_FALSE;
          }
          j++;
          i++;
@@ -112,11 +112,11 @@ BOOL hb_strMatchWild( const char *szString, const char *szPattern )
          ulAny--;
          i = ulAnyPosP[ ulAny ];
          j = ulAnyPosV[ ulAny ] + 1;
-         fAny = TRUE;
+         fAny = HB_TRUE;
       }
       else
       {
-         fMatch = FALSE;
+         fMatch = HB_FALSE;
          break;
       }
    }
@@ -128,9 +128,9 @@ BOOL hb_strMatchWild( const char *szString, const char *szPattern )
    return fMatch;
 }
 
-BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
 {
-   BOOL fMatch = TRUE, fAny = FALSE;
+   HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
    HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
            ulBufSize = HB_MAX_WILDPATTERN;
    HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
@@ -143,7 +143,7 @@ BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
    {
       if( i < ulSize && szPattern[i] == '*' )
       {
-         fAny = TRUE;
+         fAny = HB_TRUE;
          i++;
       }
       else if( j < ulLen && i < ulSize &&
@@ -169,7 +169,7 @@ BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
             ulAnyPosP[ ulAny ] = i;
             ulAnyPosV[ ulAny ] = j;
             ulAny++;
-            fAny = FALSE;
+            fAny = HB_FALSE;
          }
          j++;
          i++;
@@ -183,11 +183,11 @@ BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
          ulAny--;
          i = ulAnyPosP[ ulAny ];
          j = ulAnyPosV[ ulAny ] + 1;
-         fAny = TRUE;
+         fAny = HB_TRUE;
       }
       else
       {
-         fMatch = FALSE;
+         fMatch = HB_FALSE;
          break;
       }
    }
@@ -199,9 +199,9 @@ BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
    return fMatch;
 }
 
-BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
 {
-   BOOL fMatch = TRUE, fAny = FALSE;
+   HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
    HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
            ulBufSize = HB_MAX_WILDPATTERN;
    HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
@@ -214,7 +214,7 @@ BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
    {
       if( i < ulSize && szPattern[i] == '*' )
       {
-         fAny = TRUE;
+         fAny = HB_TRUE;
          i++;
       }
       else if( j < ulLen && i < ulSize &&
@@ -241,7 +241,7 @@ BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
             ulAnyPosP[ ulAny ] = i;
             ulAnyPosV[ ulAny ] = j;
             ulAny++;
-            fAny = FALSE;
+            fAny = HB_FALSE;
          }
          j++;
          i++;
@@ -255,11 +255,11 @@ BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
          ulAny--;
          i = ulAnyPosP[ ulAny ];
          j = ulAnyPosV[ ulAny ] + 1;
-         fAny = TRUE;
+         fAny = HB_TRUE;
       }
       else
       {
-         fMatch = FALSE;
+         fMatch = HB_FALSE;
          break;
       }
    }
@@ -271,7 +271,7 @@ BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
    return fMatch;
 }
 
-BOOL hb_strMatchFile( const char * szString, const char * szPattern )
+HB_BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 {
 #if defined( HB_OS_UNIX )
 #  if defined( HB_NO_FNMATCH )

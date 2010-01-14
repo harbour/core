@@ -109,7 +109,7 @@ HB_FUNC( HB_LIBLOAD )
       if( hb_vmLockModuleSymbols() )
       {
          /* use stack address as first level marker */
-         hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
+         hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), HB_TRUE );
 #if defined( HB_OS_WIN )
          {
             void * hFileName;
@@ -155,7 +155,7 @@ HB_FUNC( HB_LIBLOAD )
 
 HB_FUNC( HB_LIBFREE )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    void ** pDynLibPtr = ( void ** ) hb_parptrGC( &s_gcDynlibFuncs, 1 );
 
    if( pDynLibPtr && *pDynLibPtr &&

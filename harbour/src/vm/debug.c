@@ -76,7 +76,7 @@
  * general:
  *    __DBGINVOKEDEBUG()            (debugger.prg)
  *    __DBGPROCLEVEL()              (debugger.prg)
- *    hb_dbg_InvokeDebug(BOOL)      (dbgentry.c)
+ *    hb_dbg_InvokeDebug(HB_BOOL)   (dbgentry.c)
  *    hb_dbg_ProcLevel()            (dbgentry.c)
  *    hb_dbg_SetEntry(*ENTRY_FUNC)  (dbgentry.c)
  * for statics:

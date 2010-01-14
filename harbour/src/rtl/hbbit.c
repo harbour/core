@@ -60,16 +60,16 @@
          to update the references in the compiler as well.
          [vszakats] */
 
-static BOOL hb_numParam( int iParam, HB_LONG * plNum )
+static HB_BOOL hb_numParam( int iParam, HB_LONG * plNum )
 {
    if( HB_ISNUM( iParam ) )
    {
       *plNum = hb_parnint( iParam );
-      return TRUE;
+      return HB_TRUE;
    }
    hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    *plNum = 0;
-   return FALSE;
+   return HB_FALSE;
 }
 
 HB_FUNC( HB_BITAND )

@@ -167,7 +167,7 @@ ULONG  hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
 /* function to be called from pcode DLLs to detect if the extend system
  * is going to use an array item */
 
-BOOL hb_extIsArray( int iParam )
+HB_BOOL hb_extIsArray( int iParam )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -177,7 +177,7 @@ BOOL hb_extIsArray( int iParam )
    else if( iParam >= 0 && iParam <= hb_pcount() )
       pItem = hb_stackItemFromBase( iParam );
    else
-      return FALSE;
+      return HB_FALSE;
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -188,7 +188,7 @@ BOOL hb_extIsArray( int iParam )
 /* function to be called from pcode DLLs to detect if the extend system
  * is going to use an object item */
 
-BOOL hb_extIsObject( int iParam )
+HB_BOOL hb_extIsObject( int iParam )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -198,7 +198,7 @@ BOOL hb_extIsObject( int iParam )
    else if( iParam >= 0 && iParam <= hb_pcount() )
       pItem = hb_stackItemFromBase( iParam );
    else
-      return FALSE;
+      return HB_FALSE;
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -386,7 +386,7 @@ double hb_partd( int iParam )
    return 0;
 }
 
-BOOL hb_partdt( long * plJulian, long * plMilliSec , int iParam )
+HB_BOOL hb_partdt( long * plJulian, long * plMilliSec , int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -403,11 +403,11 @@ BOOL hb_partdt( long * plJulian, long * plMilliSec , int iParam )
       {
          *plJulian = pItem->item.asDateTime.julian;
          *plMilliSec = pItem->item.asDateTime.time;
-         return TRUE;
+         return HB_TRUE;
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 
@@ -955,7 +955,7 @@ double hb_parvtd( int iParam, ... )
    return 0;
 }
 
-BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
+HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -972,7 +972,7 @@ BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
       {
          *plJulian = pItem->item.asDateTime.julian;
          *plMilliSec = pItem->item.asDateTime.time;
-         return TRUE;
+         return HB_TRUE;
       }
       else if( HB_IS_ARRAY( pItem ) )
       {
@@ -987,7 +987,7 @@ BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
       }
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 
@@ -1433,7 +1433,7 @@ void hb_retl( int iLogical )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_retl(%d)", iLogical));
 
-   hb_itemPutL( hb_stackReturnItem(), iLogical ? TRUE : FALSE );
+   hb_itemPutL( hb_stackReturnItem(), iLogical ? HB_TRUE : HB_FALSE );
 }
 
 #undef hb_retnd
@@ -1780,7 +1780,7 @@ int hb_storl( int iLogical, int iParam )
 
    if( iParam == -1 )
    {
-      hb_itemPutL( hb_stackReturnItem(), iLogical ? TRUE : FALSE );
+      hb_itemPutL( hb_stackReturnItem(), iLogical ? HB_TRUE : HB_FALSE );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -1789,7 +1789,7 @@ int hb_storl( int iLogical, int iParam )
 
       if( HB_IS_BYREF( pItem ) )
       {
-         hb_itemPutL( hb_itemUnRef( pItem ), iLogical ? TRUE : FALSE );
+         hb_itemPutL( hb_itemUnRef( pItem ), iLogical ? HB_TRUE : HB_FALSE );
          return 1;
       }
    }
@@ -1987,7 +1987,7 @@ int hb_storvc( const char * szText, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2020,7 +2020,7 @@ int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2053,7 +2053,7 @@ int hb_storvclen_buffer( char * szText, HB_SIZE ulLen, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2088,7 +2088,7 @@ int hb_storvds( const char * szDate, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2121,7 +2121,7 @@ int hb_storvdl( long lJulian, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2154,7 +2154,7 @@ int hb_storvtd( double dTimeStamp, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2187,7 +2187,7 @@ int hb_storvtdt( long lJulian, long lMilliSec, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2220,7 +2220,7 @@ int hb_storvl( int iLogical, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2230,13 +2230,13 @@ int hb_storvl( int iLogical, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetL( pItem, va_arg( va, HB_SIZE ), iLogical ? TRUE : FALSE ) ? 1 : 0;
+         iRetVal = hb_arraySetL( pItem, va_arg( va, HB_SIZE ), iLogical ? HB_TRUE : HB_FALSE ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
       else if( bByRef || iParam == -1 )
       {
-         hb_itemPutL( pItem, iLogical ? TRUE : FALSE );
+         hb_itemPutL( pItem, iLogical ? HB_TRUE : HB_FALSE );
          return 1;
       }
    }
@@ -2253,7 +2253,7 @@ int hb_storvni( int iValue, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2286,7 +2286,7 @@ int hb_storvnl( long lValue, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2320,7 +2320,7 @@ int hb_storvnll( LONGLONG llValue, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2354,7 +2354,7 @@ int hb_storvnint( HB_LONG lValue, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2387,7 +2387,7 @@ int hb_storvnd( double dNumber, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2420,7 +2420,7 @@ int hb_storvptr( void * pointer, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );
@@ -2453,7 +2453,7 @@ int hb_storvptrGC( void * pointer, int iParam, ... )
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bByRef = HB_IS_BYREF( pItem );
+      HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
       if( bByRef  )
          pItem = hb_itemUnRef( pItem );

@@ -59,14 +59,14 @@
 HB_EXTERN_BEGIN
 
 /* functions in hboutdbg.c */
-extern HB_EXPORT BOOL hb_OutDebugName( PHB_ITEM pName );
+extern HB_EXPORT HB_BOOL hb_OutDebugName( PHB_ITEM pName );
 extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE ulMsgLen );
 
 /* functions in dbgfxc.c */
-extern HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff );
+extern HB_EXPORT HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff );
 extern HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... );
-extern HB_EXPORT BOOL hb_ToLogFileOnOff( BOOL bOnOff );
-extern HB_EXPORT BOOL hb_EmptyLogFile( BOOL bOnOff );
+extern HB_EXPORT HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff );
+extern HB_EXPORT HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff );
 extern HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... );
 
 #define hb_seconds() hb_dateSeconds()

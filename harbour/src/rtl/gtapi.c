@@ -535,7 +535,7 @@ HB_ERRCODE hb_gtScrDim( int * piHeight, int * piWidth )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
+HB_ERRCODE hb_gtSetSnowFlag( HB_BOOL fNoSnow )
 {
    PHB_GT pGT;
 
@@ -568,9 +568,9 @@ HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE 
    return HB_FAILURE;
 }
 
-BOOL hb_gtIsColor( void )
+HB_BOOL hb_gtIsColor( void )
 {
-   BOOL fColor = TRUE;
+   HB_BOOL fColor = HB_TRUE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtIsColor()"));
@@ -704,7 +704,7 @@ HB_ERRCODE hb_gtEndWrite( void )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetBlink( BOOL * bpBlink )
+HB_ERRCODE hb_gtGetBlink( HB_BOOL * bpBlink )
 {
    PHB_GT pGT;
 
@@ -721,7 +721,7 @@ HB_ERRCODE hb_gtGetBlink( BOOL * bpBlink )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtSetBlink( BOOL fBlink )
+HB_ERRCODE hb_gtSetBlink( HB_BOOL fBlink )
 {
    PHB_GT pGT;
 
@@ -999,7 +999,7 @@ HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE ulLen )
    return HB_SUCCESS;
 }
 
-HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
+HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
