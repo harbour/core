@@ -304,9 +304,9 @@ HB_MEMFS_EXPORT USHORT hb_memfsError( void )
 }
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsFileExists( const char * szName )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsFileExists( const char * szName )
 {
-   BOOL  bRet;
+   HB_BOOL bRet;
 
    HB_MEMFSMT_LOCK
    bRet = memfsInodeFind( szName, NULL ) != 0;
@@ -315,7 +315,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsFileExists( const char * szName )
 }
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsDelete( const char * szName )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsDelete( const char * szName )
 {
    PHB_MEMFS_INODE  pInode;
    ULONG            ulFile;
@@ -324,7 +324,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsDelete( const char * szName )
    if( ( ulFile = memfsInodeFind( szName, NULL ) ) == 0 )
    {
       HB_MEMFSMT_UNLOCK
-      return 0;
+      return HB_FALSE;
    }
    pInode = s_fs.pInodes[ ulFile - 1 ];
 
@@ -336,11 +336,11 @@ HB_MEMFS_EXPORT BOOL hb_memfsDelete( const char * szName )
    if( --pInode->uiCount == 0 )
       memfsInodeFree( pInode );
    HB_MEMFSMT_UNLOCK
-   return 1;
+   return HB_TRUE;
 }
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsRename( const char * szName, const char * szNewName )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewName )
 {
    ULONG  ulInode;
 
@@ -349,18 +349,18 @@ HB_MEMFS_EXPORT BOOL hb_memfsRename( const char * szName, const char * szNewName
    {
       HB_MEMFSMT_UNLOCK
       /* File not found */
-      return 0;
+      return HB_FALSE;
    }
    if( memfsInodeFind( szNewName, NULL ) )
    {
       HB_MEMFSMT_UNLOCK
       /* File already exists */
-      return 0;
+      return HB_FALSE;
    }
    hb_xfree( s_fs.pInodes[ ulInode - 1 ]->szName );
    s_fs.pInodes[ ulInode - 1 ]->szName = hb_strdup( szNewName );
    HB_MEMFSMT_UNLOCK
-   return 1;
+   return HB_TRUE;
 }
 
 
@@ -572,21 +572,21 @@ HB_MEMFS_EXPORT ULONG hb_memfsWrite( HB_FHANDLE hFile, const void * pBuff, ULONG
 #endif
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE   pFile;
    PHB_MEMFS_INODE  pInode;
    HB_FOFFSET       llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return 0; /* invalid handle */
+      return HB_FALSE; /* invalid handle */
    pInode = pFile->pInode;
 
    if( ( pFile->uiFlags & FOX_WRITE ) == 0 )
-      return 0; /* access denied */
+      return HB_FALSE; /* access denied */
 
    if( llOffset < 0 )
-      return 0;
+      return HB_FALSE;
 
    HB_MEMFSMT_LOCK
 
@@ -612,7 +612,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 
    pInode->llSize = llOffset;
    HB_MEMFSMT_UNLOCK
-   return 1;
+   return HB_TRUE;
 }
 
 
@@ -653,13 +653,13 @@ HB_MEMFS_EXPORT void hb_memfsCommit( HB_FHANDLE hFile )
 }
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsLock( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_FOFFSET ulLength, int iMode )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsLock( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_FOFFSET ulLength, int iMode )
 {
    HB_SYMBOL_UNUSED( hFile );
    HB_SYMBOL_UNUSED( ulStart );
    HB_SYMBOL_UNUSED( ulLength );
    HB_SYMBOL_UNUSED( iMode );
-   return 1;
+   return HB_TRUE;
 }
 
 /******************************************************
@@ -682,32 +682,32 @@ HB_FILE;
 static PHB_FILE s_fileNew( HB_FHANDLE hFile );
 
 
-static BOOL s_fileAccept( const char * pFilename )
+static HB_BOOL s_fileAccept( const char * pFilename )
 {
    return hb_strnicmp( pFilename, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
 }
 
 
-static BOOL s_fileExists( const char * pFilename, char * pRetPath )
+static HB_BOOL s_fileExists( const char * pFilename, char * pRetPath )
 {
    if( hb_memfsFileExists( pFilename + FILE_PREFIX_LEN ) )
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
       if( pRetPath && pRetPath != pFilename )
          hb_strncpy( pRetPath, pFilename, HB_PATH_MAX );
-      return 1;
+      return HB_TRUE;
    }
-   return 0;
+   return HB_FALSE;
 }
 
 
-static BOOL s_fileDelete( const char * pFilename )
+static HB_BOOL s_fileDelete( const char * pFilename )
 {
    return hb_memfsDelete( pFilename + FILE_PREFIX_LEN );
 }
 
 
-static BOOL s_fileRename( const char * szName, const char * szNewName )
+static HB_BOOL s_fileRename( const char * szName, const char * szNewName )
 {
    szName += FILE_PREFIX_LEN;
    if( s_fileAccept( szNewName ) )
@@ -715,7 +715,7 @@ static BOOL s_fileRename( const char * szName, const char * szNewName )
       szNewName += FILE_PREFIX_LEN;
       return hb_memfsRename( szName, szNewName );
    }
-   return 0;
+   return HB_FALSE;
 }
 
 
@@ -775,8 +775,8 @@ static void s_fileClose( PHB_FILE pFile )
 }
 
 
-static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart,
-                        HB_FOFFSET ulLen, int iType )
+static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart,
+                           HB_FOFFSET ulLen, int iType )
 {
    return hb_memfsLock( pFile->hFile, ulStart, ulLen, iType );
 }
@@ -796,7 +796,7 @@ static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer,
 }
 
 
-static BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
+static HB_BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 {
    return hb_memfsTruncAt( pFile->hFile, llOffset );
 }

@@ -1279,15 +1279,15 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
 //oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
    LPCDXKEY pKey;
    HB_ERRCODE retval = HB_SUCCESS;
-   BOOL  fEOF = FALSE, fLast;
+   HB_BOOL fEOF = HB_FALSE, fLast;
    ULONG ulRec;
 
    IF ! Empty( aWAData[ WA_PENDINGREL ] )
       ADO_FORCEREL( nWA )
    ENDIF
 
-   pArea->fTop = pArea->fBottom = FALSE;
-   pArea->fEof = FALSE;
+   pArea->fTop = pArea->fBottom = HB_FALSE;
+   pArea->fEof = HB_FALSE;
 
    if ( pTag->UsrUnique )
       fLast = !pTag->UsrAscend;
@@ -1295,22 +1295,22 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
       fLast = pTag->UsrAscend ? fFindLast : !fFindLast;
 
    // TODO: runtime error if valtype(pKeyItm) != pTag->Type
-   pKey = hb_cdxKeyPutItem( NULL, pKeyItm, fLast ? CDX_MAX_REC_NUM : CDX_IGNORE_REC_NUM, pTag, TRUE, FALSE );
+   pKey = hb_cdxKeyPutItem( NULL, pKeyItm, fLast ? CDX_MAX_REC_NUM : CDX_IGNORE_REC_NUM, pTag, HB_TRUE, HB_FALSE );
 
    hb_cdxIndexLockRead( pTag->pIndex );
    hb_cdxTagRefreshScope( pTag );
    ulRec = hb_cdxTagKeyFind( pTag, pKey );
    if ( ( ulRec == 0 && ! fSoftSeek ) || pTag->TagEOF )
-      fEOF = TRUE;
+      fEOF = HB_TRUE;
    else // if ( fSoftSeek )
    {
       if ( ! hb_cdxBottomScope( pTag ) )
-         fEOF = TRUE;
+         fEOF = HB_TRUE;
       else if ( ! hb_cdxTopScope( pTag ) )
       {
          hb_cdxTagGoTop( pTag );
          if ( pTag->CurKey->rec == 0 )
-            fEOF = TRUE;
+            fEOF = HB_TRUE;
       }
    }
    hb_cdxIndexUnLockRead( pTag->pIndex );
@@ -1326,7 +1326,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
                      hb_cdxValCompare( pTag, pKey->val, pKey->len,
                         pTag->CurKey->val, pTag->CurKey->len, FALSE ) == 0 );
             if ( ! pArea->fFound && ! fSoftSeek )
-               fEOF = TRUE;
+               fEOF = HB_TRUE;
          }
       }
    }
@@ -1336,7 +1336,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
    {
       retval = SELF_GOTO( ( AREAP ) pArea, 0 );
    }
-   pArea->fBof = FALSE;
+   pArea->fBof = HB_FALSE;
    hb_cdxKeyFree( pKey );
    RETURN retval;
 */

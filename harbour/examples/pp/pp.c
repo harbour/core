@@ -74,7 +74,7 @@ extern int hb_pp_ParseDefine_( char * );
 
 static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
-static BOOL hb_pp_fopen( char * szFileName );
+static HB_BOOL hb_pp_fopen( char * szFileName );
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
@@ -86,16 +86,16 @@ FILES          hb_comp_files;
 int            hb_comp_iLine = 1; /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
-BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
-BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
-BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
-BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
-int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-FILE *hb_comp_yyppo = NULL;
+HB_BOOL hb_comp_bPPO = HB_FALSE;                      /* flag indicating, is ppo output needed */
+HB_BOOL hb_comp_bStartProc = HB_TRUE;                 /* holds if we need to create the starting procedure */
+HB_BOOL hb_comp_bLineNumbers = HB_TRUE;               /* holds if we need pcodes with line numbers */
+HB_BOOL hb_comp_bShortCuts = HB_TRUE;                 /* .and. & .or. expressions shortcuts */
+int     hb_comp_iWarnings = 0;                     /* enable parse warnings */
+HB_BOOL hb_comp_bAutoMemvarAssume = HB_FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+HB_BOOL hb_comp_bForceMemvars = HB_FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+HB_BOOL hb_comp_bDebugInfo = HB_FALSE;                /* holds if generate debugger required info */
+int     hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+FILE *  hb_comp_yyppo = NULL;
 
 int  hb_comp_iLinePRG;
 int  hb_comp_iLineINLINE = 0;
@@ -106,8 +106,8 @@ int main( int argc, char * argv[] )
   char szFileName[ HB_PATH_MAX ];
   char szPpoName[ HB_PATH_MAX ];
   int iArg = 1;
-  BOOL bOutTable = FALSE;
-  BOOL bOutNew = FALSE;
+  HB_BOOL bOutTable = HB_FALSE;
+  HB_BOOL bOutNew = HB_FALSE;
   DEFINES * stdef;
   COMMANDS * stcmd;
 
@@ -164,11 +164,11 @@ int main( int argc, char * argv[] )
               break;
             case 'o':
             case 'O':
-              bOutTable = TRUE;
+              bOutTable = HB_TRUE;
               break;
             case 'n':
             case 'N':
-              bOutNew = TRUE;
+              bOutNew = HB_TRUE;
               break;
             case 'w':
             case 'W':
@@ -490,13 +490,13 @@ int hb_verSvnID( void )
    return 0;
 }
 
-static BOOL hb_pp_fopen( char * szFileName )
+static HB_BOOL hb_pp_fopen( char * szFileName )
 {
    PFILE pFile;
    FILE * handl_i = fopen( szFileName, "r" );
 
    if( !handl_i )
-      return FALSE;
+      return HB_FALSE;
 
    pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
    pFile->handle = handl_i;
@@ -508,7 +508,7 @@ static BOOL hb_pp_fopen( char * szFileName )
    hb_comp_files.pLast = pFile;
    hb_comp_files.iFiles = 1;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 #if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )

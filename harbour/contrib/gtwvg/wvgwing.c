@@ -1113,7 +1113,8 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.dwData    = 0;
          tbb.iString   = iNewString;
 
-         bSuccess = ( BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         /* TOFIX: Convertion of LRESULT to HB_BOOL */
+         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 #if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
 #endif
@@ -1133,7 +1134,8 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.dwData    = 0;
          tbb.iString   = 0;
 
-         bSuccess = ( BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         /* TOFIX: Convertion of LRESULT to HB_BOOL */
+         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
          hb_retl( bSuccess );
          return;
       }

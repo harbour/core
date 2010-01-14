@@ -83,6 +83,8 @@
  *
  */
 
+#define HB_OS_WIN_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
@@ -90,12 +92,9 @@
 
 #if defined( HB_OS_WIN )
 
-#   include <windows.h>
-#   include <winnetwk.h>
+#include <winnetwk.h>
 
-#   define HB_OS_WIN_USED
-
-BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
+static HB_BOOL hb_WNetErrorHandler( DWORD dwErrorCode, const char * pszFunction )
 {
    PHB_ITEM pError;
 
@@ -106,7 +105,7 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
                              9001,
                              0,
                              "Windows Network operation failed",
-                             lpszFunction, ( HB_ERRCODE ) dwErrorCode, EF_NONE );
+                             pszFunction, ( HB_ERRCODE ) dwErrorCode, EF_NONE );
       hb_errLaunch( pError );
       hb_itemRelease( pError );
    }
@@ -187,11 +186,11 @@ HB_FUNC( NETPRINTER )
 
 HB_FUNC( NETDISK )
 {
-   char cDrive[3];
+   char cDrive[ 3 ];
 
-   cDrive[0] = hb_parcx( 1 )[0];
-   cDrive[1] = ':';
-   cDrive[2] = '\0';
+   cDrive[ 0 ] = hb_parcx( 1 )[ 0 ];
+   cDrive[ 1 ] = ':';
+   cDrive[ 2 ] = '\0';
 
    hb_retl( hb_IsNetShared( cDrive ) );
 }
@@ -219,7 +218,7 @@ HB_FUNC( NETREDIR )
          char szCommand[ 80 ];
          hb_snprintf( szCommand, sizeof( szCommand ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
                    hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
-         WNetErrorHandler( dwResult, szCommand );
+         hb_WNetErrorHandler( dwResult, szCommand );
       }
       hb_retl( HB_FALSE );
    }

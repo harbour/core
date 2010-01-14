@@ -84,7 +84,7 @@ static char *s_TextEndFunc = NULL;
 static char *s_TextStartFunc = NULL;
 
 /*
-BOOL bDebug = FALSE;
+HB_BOOL bDebug = HB_FALSE;
 */
 
 void hb_pp_InternalFree( void )
@@ -136,8 +136,8 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
      s_szOutLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
 #endif
 
-  hb_pp_NestedLiteralString = FALSE;
-  hb_pp_LiteralEscSeq = FALSE;
+  hb_pp_NestedLiteralString = HB_FALSE;
+  hb_pp_LiteralEscSeq = HB_FALSE;
   for( ;; )
   {
     pFile = hb_comp_files.pLast;
@@ -180,7 +180,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
             s_szLine[ lens ] = '\0';
             lens = hb_snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
             memcpy( s_szLine, s_szOutLine, lens+1 );
-            hb_pp_NestedLiteralString = TRUE;
+            hb_pp_NestedLiteralString = HB_TRUE;
             break;
           }
           else
@@ -216,7 +216,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
             lens -= rdlen;
             s_szLine[ lens ] = '\0';
             pp_StreamBlockFinish( );
-            hb_pp_LiteralEscSeq = TRUE;
+            hb_pp_LiteralEscSeq = HB_TRUE;
             break;
           }
           else
@@ -226,7 +226,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
           }
         }
       }
-        
+
       if( s_szLine[ lens - 1 ] == ';' )
       {
         lContinue = pFile->lenBuffer ? 1 : 0;
@@ -329,9 +329,9 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
 
 static void pp_ParseBuffer( PFILE pFile, int *plLine )
 {
-   BOOL bCont = TRUE;
+   HB_BOOL bCont = HB_TRUE;
    char * ptr;
-   
+
    while( bCont && *s_szLine != '\0' )
    {
       ptr = s_szLine;
@@ -339,7 +339,7 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
 
       if( *ptr == '#' )
       {
-         BOOL bIgnore = hb_pp_ParseDirective_( ptr );
+         HB_BOOL bIgnore = hb_pp_ParseDirective_( ptr );
 
          if( pFile != hb_comp_files.pLast )
          {
@@ -355,13 +355,13 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
 
             hb_snprintf( s_szLine + strlen(s_szLine), HB_PP_STR_SIZE - strlen(s_szLine),
                       "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
-            bCont = FALSE;
+            bCont = HB_FALSE;
          }
          else if( bIgnore )
             *s_szLine = '\0';
          else
          {
-            hb_pp_ParseExpression( ptr, s_szOutLine, TRUE );
+            hb_pp_ParseExpression( ptr, s_szOutLine, HB_TRUE );
          }
       }
       else
@@ -371,13 +371,13 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
             if( hb_comp_files.iFiles == 1 )
                *s_szLine = '\0';
             else
-               bCont = FALSE;
+               bCont = HB_FALSE;
          }
          else
          {
             if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
             {
-               hb_pp_ParseExpression( ptr, s_szOutLine, TRUE );
+               hb_pp_ParseExpression( ptr, s_szOutLine, HB_TRUE );
                HB_SKIPTABSPACES( ptr );
 
                bCont = ( *ptr == '#' );
@@ -393,7 +393,7 @@ static char *pp_TextCommand( char * ptr, int *pLen )
 {
    int i;
    char *cCommand = NULL;
-   
+
    i = 0;
    while( ptr[i] && ptr[i] != '|' )
    {
@@ -423,7 +423,7 @@ static char *pp_TextCommand( char * ptr, int *pLen )
       else
          *ptr ='\0';
    }
-   
+
    return cCommand;
 }
 
@@ -450,14 +450,14 @@ static void pp_TextBlockFinish( void )
       hb_xfree( (void *)s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
-   hb_pp_NestedLiteralString = FALSE;
+   hb_pp_NestedLiteralString = HB_FALSE;
 }
 
-BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
+HB_BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
 {
-  BOOL bIgnore = TRUE;
+  HB_BOOL bIgnore = HB_TRUE;
   int len;
-   
+
   switch( iStreamType )
   {
     case HB_PP_STREAM_CLIPPER:
@@ -473,7 +473,7 @@ BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
       if( s_TextStartFunc )
       {
         memcpy( ptr, s_TextStartFunc, strlen(s_TextStartFunc)+1 );
-        bIgnore = FALSE;
+        bIgnore = HB_FALSE;
       }
       hb_pp_StreamBlock = iStreamType;
       break;
@@ -494,7 +494,7 @@ BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
       hb_pp_StreamBlock = iStreamType;
       break;
     }
-    
+
     case HB_PP_STREAM_C:
     {
       /* internal handling of TEXT/ENDTEXT command
@@ -510,10 +510,10 @@ BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
       hb_pp_StreamBlock = iStreamType;
       break;
     }
-      
+
     default:
       break;
-  }                          
+  }
   return bIgnore;
 }
 
@@ -542,7 +542,7 @@ static void pp_StreamBlockFinish( void )
       hb_xfree( (void *)s_TextOutFunc );
       s_TextOutFunc = NULL;
    }
-   hb_pp_NestedLiteralString = TRUE;
+   hb_pp_NestedLiteralString = HB_TRUE;
 }
 
 void hb_pp_BlockEnd( )

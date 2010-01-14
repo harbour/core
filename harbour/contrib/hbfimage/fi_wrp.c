@@ -67,6 +67,9 @@
 
 #include "FreeImage.h"
 
+#define hb_fi_retl( x )   hb_retl( x ? HB_TRUE : HB_FALSE )
+#define hb_fi_parl( x )   ( hb_parl( x ) ? TRUE : FALSE )
+
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 
 /* static for error handler (see below FI_SETOUTPUTMESSAGE ) */
@@ -79,13 +82,8 @@ static void * s_pErrorHandler = NULL;
 /* DLL_API void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only FI_DEFAULT(FALSE)); */
 HB_FUNC( FI_INITIALISE )
 {
-   BOOL bLoadPluginsOnly;
-
-   /* Retrieve parameters */
-   bLoadPluginsOnly = ( HB_ISLOG( 1 ) ? hb_parl( 1 ) : FALSE );
-
    /* Run function */
-   FreeImage_Initialise( bLoadPluginsOnly );
+   FreeImage_Initialise( hb_fi_parl( 1 ) );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -205,9 +203,9 @@ HB_FUNC( FI_ALLOCATE )
       width      = hb_parni( 1 );
       height     = hb_parni( 2 );
       bpp        = hb_parni( 3 );
-      red_mask   = ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 0 );
-      green_mask = ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 0 );
-      blue_mask  = ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 0 );
+      red_mask   = hb_parni( 4 );
+      green_mask = hb_parni( 5 );
+      blue_mask  = hb_parni( 6 );
 
       /* run function & return value */
       hb_retptr( FreeImage_Allocate(width, height, bpp, red_mask, green_mask, blue_mask) );
@@ -240,10 +238,10 @@ HB_FUNC( FI_ALLOCATET )
       type       = ( FREE_IMAGE_TYPE ) hb_parni( 1 );
       width      = hb_parni( 2 );
       height     = hb_parni( 3 );
-      bpp        = ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 8 );
-      red_mask   = ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 0 );
-      green_mask = ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 0 );
-      blue_mask  = ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 0 );
+      bpp        = hb_parni( 3 );
+      red_mask   = hb_parni( 4 );
+      green_mask = hb_parni( 5 );
+      blue_mask  = hb_parni( 6 );
 
       /* run function & return value */
       hb_retptr( FreeImage_AllocateT(type, width, height, bpp, red_mask, green_mask, blue_mask) );
@@ -420,7 +418,7 @@ HB_FUNC( FI_SAVE )
       flags      = hb_parni( 4 );
 
       /* run function & return value */
-      hb_retl( FreeImage_Save(fif, dib, filename, flags) );
+      hb_fi_retl( FreeImage_Save(fif, dib, filename, flags) );
    }
    else
    {
@@ -500,10 +498,10 @@ HB_FUNC( FI_OPENMULTIBITMAP )
       /* Retrieve parameters */
       fif        = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
       filename   = hb_parcx( 2 );
-      create_new = hb_parl( 3 );
-      read_only  = hb_parl( 4 );
-      keep_cache_in_memory = ( HB_ISLOG( 5 ) ? hb_parl( 5 ) : FALSE );
-      flags      = ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 0 );
+      create_new = hb_fi_parl( 3 );
+      read_only  = hb_fi_parl( 4 );
+      keep_cache_in_memory = hb_fi_parl( 5 );
+      flags      = hb_parni( 6 );
 
       /* run function */
       dib = FreeImage_OpenMultiBitmap(fif, filename, create_new, read_only, keep_cache_in_memory, flags);
@@ -534,10 +532,10 @@ HB_FUNC( FI_CLOSEMULTIBITMAP )
 
       /* Retrieve parameters */
       bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      flags  = ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 );
+      flags  = hb_parni( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_CloseMultiBitmap(bitmap, flags) );
+      hb_fi_retl( FreeImage_CloseMultiBitmap(bitmap, flags) );
    }
    else
    {
@@ -706,7 +704,7 @@ HB_FUNC( FI_UNLOCKPAGE )
       /* Retrieve parameters */
       bitmap  = ( FIMULTIBITMAP * ) hb_parptr( 1 );
       page    = ( FIBITMAP * ) hb_parptr( 2 );
-      changed = hb_parl( 3 );
+      changed = hb_fi_parl( 3 );
 
       /* run function & return value */
       FreeImage_UnlockPage(bitmap, page, changed);
@@ -740,8 +738,7 @@ HB_FUNC( FI_MOVEPAGE )
       source  = hb_parni( 3 );
 
       /* run function & return value */
-      hb_retl( FreeImage_MovePage(bitmap, target, source) );
-
+      hb_fi_retl( FreeImage_MovePage(bitmap, target, source) );
    }
    else
    {
@@ -773,7 +770,7 @@ HB_FUNC( FI_GETFILETYPE )
 
       /* Retrieve parameters */
       filename   = hb_parcx( 1 );
-      size       = ( HB_ISNUM( 2 ) ? hb_parni( 1 ) : 0 );
+      size       = hb_parclen( 1 );
 
       /* run function & return value */
       hb_retni( FreeImage_GetFileType(filename, size) );
@@ -805,7 +802,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
       /* Retrieve parameters */
       szImage = hb_parcx( 1 );
       stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 1 ) );
-      size    = ( HB_ISNUM( 2 ) ? hb_parni( 1 ) : 0 );
+      size    = hb_parni( 1 );
 
       /* run function & return value */
       hb_retni( FreeImage_GetFileTypeFromMemory(stream, size) );
@@ -856,7 +853,7 @@ HB_FUNC( FI_GETIMAGETYPE )
 HB_FUNC( FI_ISLITTLEENDIAN )
 {
    /* run function & return value */
-   hb_retl( FreeImage_IsLittleEndian() );
+   hb_fi_retl( FreeImage_IsLittleEndian() );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1477,7 +1474,7 @@ HB_FUNC( FI_SETTRANSPARENT )
 
       /* Retrieve parameters */
       dib     = ( FIBITMAP * ) hb_parptr( 1 );
-      enabled = hb_parl( 2 );
+      enabled = hb_fi_parl( 2 );
 
       /* run function & return value */
       FreeImage_SetTransparent(dib, enabled);
@@ -1538,8 +1535,7 @@ HB_FUNC( FI_ISTRANSPARENT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_IsTransparent( dib ) );
-
+      hb_fi_retl( FreeImage_IsTransparent( dib ) );
    }
    else
    {
@@ -1564,8 +1560,7 @@ HB_FUNC( FI_HASBACKGROUNDCOLOR )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_HasBackgroundColor( dib ) );
-
+      hb_fi_retl( FreeImage_HasBackgroundColor( dib ) );
    }
    else
    {
@@ -1593,7 +1588,7 @@ HB_FUNC( FI_GETBACKGROUNDCOLOR )
       /*bkcolor = ( RGBQUAD * ) hb_parptr( 2 );*/
 
       /* run function & return value */
-      /*hb_retl( FreeImage_GetBackgroundColor(dib, bkcolor) );*/
+      /*hb_fi_retl( FreeImage_GetBackgroundColor(dib, bkcolor) );*/
       FreeImage_GetBackgroundColor( dib, bkcolor );
       /*hb_storptr( bkcolor, 2 );*/
       hb_retptr( bkcolor );
@@ -1626,7 +1621,7 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
       /*bkcolor = ( RGBQUAD * ) hb_parptr( 2 );*/
 
       /* run function & return value */
-      hb_retl( FreeImage_SetBackgroundColor(dib, bkcolor) );
+      hb_fi_retl( FreeImage_SetBackgroundColor(dib, bkcolor) );
       /*FreeImage_GetBackgroundColor(dib, bkcolor);*/
       /*hb_retptr( bkcolor );*/
    }
@@ -2062,7 +2057,7 @@ HB_FUNC( FI_CONVERTTOSTANDARDTYPE )
 
       /* Retrieve parameters */
       dib          = ( FIBITMAP * ) hb_parptr( 1 );
-      scale_linear = ( HB_ISLOG( 2 ) ) ? hb_parl( 2 ) : TRUE;
+      scale_linear = ( HB_ISLOG( 2 ) ) ? hb_fi_parl( 2 ) : TRUE;
 
       /* run function & return value */
       hb_retptr( FreeImage_ConvertToStandardType( dib, scale_linear ) );
@@ -2093,7 +2088,7 @@ HB_FUNC( FI_CONVERTTOTYPE )
       /* Retrieve parameters */
       dib          = ( FIBITMAP * ) hb_parptr( 1 );
       dst_type     = ( FREE_IMAGE_TYPE ) hb_parni( 2 );
-      scale_linear = ( HB_ISLOG( 3 ) ) ? hb_parl( 3 ) : TRUE;
+      scale_linear = ( HB_ISLOG( 3 ) ) ? hb_fi_parl( 3 ) : TRUE;
 
       /* run function & return value */
       hb_retptr( FreeImage_ConvertToType( dib, dst_type, scale_linear ) );
@@ -2225,7 +2220,7 @@ HB_FUNC( FI_ROTATEEX )
       y_shift  = hb_parnd( 4 );
       x_origin = hb_parnd( 5 );
       y_origin = hb_parnd( 6 );
-      use_mask = hb_parl( 7 );
+      use_mask = hb_fi_parl( 7 );
 
       /* run function & return value */
       hb_retptr( FreeImage_RotateEx( dib, angle, x_shift, y_shift, x_origin, y_origin, use_mask ) );
@@ -2255,8 +2250,7 @@ HB_FUNC( FI_FLIPHORIZONTAL )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_FlipHorizontal( dib ) );
-
+      hb_fi_retl( FreeImage_FlipHorizontal( dib ) );
    }
    else
    {
@@ -2281,8 +2275,7 @@ HB_FUNC( FI_FLIPVERTICAL )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_FlipVertical( dib ) );
-
+      hb_fi_retl( FreeImage_FlipVertical( dib ) );
    }
    else
    {
@@ -2360,8 +2353,7 @@ HB_FUNC( FI_ADJUSTGAMMA )
       gamma = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustGamma( dib, gamma ) );
-
+      hb_fi_retl( FreeImage_AdjustGamma( dib, gamma ) );
    }
    else
    {
@@ -2390,8 +2382,7 @@ HB_FUNC( FI_ADJUSTBRIGHTNESS )
       percentage = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustBrightness( dib, percentage ) );
-
+      hb_fi_retl( FreeImage_AdjustBrightness( dib, percentage ) );
    }
    else
    {
@@ -2420,8 +2411,7 @@ HB_FUNC( FI_ADJUSTCONTRAST )
       percentage = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustContrast( dib, percentage ) );
-
+      hb_fi_retl( FreeImage_AdjustContrast( dib, percentage ) );
    }
    else
    {
@@ -2447,8 +2437,7 @@ HB_FUNC( FI_INVERT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_Invert( dib ) );
-
+      hb_fi_retl( FreeImage_Invert( dib ) );
    }
    else
    {
@@ -2565,8 +2554,7 @@ HB_FUNC( FI_PASTE )
       alpha = hb_parni( 5 );
 
       /* run function & return value */
-      hb_retl( FreeImage_Paste( dst, src, left, top, alpha ) );
-
+      hb_fi_retl( FreeImage_Paste( dst, src, left, top, alpha ) );
    }
    else
    {

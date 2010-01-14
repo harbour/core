@@ -93,9 +93,9 @@ typedef struct _HB_CONSRV
    PHB_FILE       fileTable[ NETIO_FILES_MAX ];
    int            filesCount;
    int            firstFree;
-   BOOL           stop;
-   BOOL           rpc;
-   BOOL           login;
+   HB_BOOL        stop;
+   HB_BOOL        rpc;
+   HB_BOOL        login;
    PHB_SYMB       rpcFunc;
    PHB_ITEM       rpcFilter;
    int            rootPathLen;
@@ -106,13 +106,13 @@ HB_CONSRV, * PHB_CONSRV;
 typedef struct _HB_LISTENSD
 {
    HB_SOCKET      sd;
-   BOOL           stop;
-   BOOL           rpc;
+   HB_BOOL        stop;
+   HB_BOOL        rpc;
    char           rootPath[ HB_PATH_MAX ];
 }
 HB_LISTENSD, * PHB_LISTENSD;
 
-static BOOL s_isDirSep( char c )
+static HB_BOOL s_isDirSep( char c )
 {
    /* intentionally used explicit values instead of harbour macros
     * because client can use different OS
@@ -310,7 +310,7 @@ static void s_consrvRet( PHB_CONSRV conn )
       hb_ret();
 }
 
-static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, BOOL rpc )
+static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOOL rpc )
 {
    PHB_CONSRV conn = ( PHB_CONSRV ) memset( hb_xgrab( sizeof( HB_CONSRV ) ),
                                             0, sizeof( HB_CONSRV ) );
@@ -398,7 +398,7 @@ static const HB_GC_FUNCS s_gcListensdFuncs =
    hb_gcDummyMark
 };
 
-static PHB_LISTENSD s_listenParam( int iParam, BOOL fError )
+static PHB_LISTENSD s_listenParam( int iParam, HB_BOOL fError )
 {
    PHB_LISTENSD * lsd_ptr = ( PHB_LISTENSD * )
                             hb_parptrGC( &s_gcListensdFuncs, iParam );
@@ -411,7 +411,7 @@ static PHB_LISTENSD s_listenParam( int iParam, BOOL fError )
    return NULL;
 }
 
-static void s_listenRet( HB_SOCKET sd, const char * szRootPath, BOOL rpc )
+static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
 {
    if( sd != HB_NO_SOCKET )
    {
@@ -450,8 +450,8 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, BOOL rpc )
  */
 HB_FUNC( NETIO_RPC )
 {
-   PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
-   BOOL fRPC = FALSE;
+   PHB_LISTENSD lsd = s_listenParam( 1, HB_FALSE );
+   HB_BOOL fRPC = HB_FALSE;
 
    if( lsd )
    {
@@ -502,8 +502,8 @@ HB_FUNC( NETIO_RPCFILTER )
  */
 HB_FUNC( NETIO_SERVERSTOP )
 {
-   PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
-   BOOL fStop = hb_parldef( 2, 1 );
+   PHB_LISTENSD lsd = s_listenParam( 1, HB_FALSE );
+   HB_BOOL fStop = hb_parldef( 2, 1 );
 
    if( lsd )
       lsd->stop = fStop;
@@ -520,12 +520,12 @@ HB_FUNC( NETIO_SERVERSTOP )
  */
 HB_FUNC( NETIO_LISTEN )
 {
-   static BOOL s_fInit = TRUE;
+   static HB_BOOL s_fInit = HB_TRUE;
 
    int iPort = hb_parnidef( 1, NETIO_DEFAULT_PORT );
    const char * szAddress = hb_parc( 2 );
    const char * szRootPath = hb_parc( 3 );
-   BOOL fRPC = hb_parl( 4 );
+   HB_BOOL fRPC = hb_parl( 4 );
    void * pSockAddr;
    unsigned uiLen;
    HB_SOCKET sd = HB_NO_SOCKET;
@@ -533,7 +533,7 @@ HB_FUNC( NETIO_LISTEN )
    if( s_fInit )
    {
       hb_socketInit();
-      s_fInit = FALSE;
+      s_fInit = HB_FALSE;
    }
 
    if( hb_socketInetAddr( &pSockAddr, &uiLen, szAddress, iPort ) )
@@ -560,7 +560,7 @@ HB_FUNC( NETIO_LISTEN )
  */
 HB_FUNC( NETIO_ACCEPT )
 {
-   PHB_LISTENSD lsd = s_listenParam( 1, TRUE );
+   PHB_LISTENSD lsd = s_listenParam( 1, HB_TRUE );
    PHB_CONSRV conn = NULL;
 
    if( lsd && lsd->sd != HB_NO_SOCKET && !lsd->stop )
@@ -583,7 +583,7 @@ HB_FUNC( NETIO_ACCEPT )
 
       if( connsd != HB_NO_SOCKET )
       {
-         hb_socketSetNoDelay( connsd, TRUE );
+         hb_socketSetNoDelay( connsd, HB_TRUE );
          conn = s_consrvNew( connsd, lsd->rootPath, lsd->rpc );
 
 
@@ -679,7 +679,7 @@ HB_FUNC( NETIO_SERVER )
                   HB_PUT_LE_UINT32( &msgbuf[ 4 ], NETIO_CONNECTED );
                   memset( msgbuf + 8, '\0', NETIO_MSGLEN - 8 );
                   if( s_srvSendAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
-                     conn->login = TRUE;
+                     conn->login = HB_TRUE;
                }
             }
          }
@@ -690,7 +690,7 @@ HB_FUNC( NETIO_SERVER )
       else for( ;; )
       {
          BYTE buffer[ 2048 ], * ptr = NULL, * msg;
-         BOOL fNoAnswer = FALSE;
+         HB_BOOL fNoAnswer = HB_FALSE;
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
          int iFileNo;
@@ -913,7 +913,7 @@ HB_FUNC( NETIO_SERVER )
                break;
 
             case NETIO_UNLOCK:
-               fNoAnswer = TRUE;
+               fNoAnswer = HB_TRUE;
             case NETIO_LOCK:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                llOffset = HB_GET_LE_INT64( &msgbuf[ 6 ] );
@@ -980,11 +980,11 @@ HB_FUNC( NETIO_SERVER )
                pFile = s_srvFileGet( conn, iFileNo );
                if( pFile )
                   hb_fileCommit( pFile );
-               fNoAnswer = TRUE;
+               fNoAnswer = HB_TRUE;
                break;
 
             case NETIO_PROC:
-               fNoAnswer = TRUE;
+               fNoAnswer = HB_TRUE;
             case NETIO_PROCIS:
             case NETIO_PROCW:
             case NETIO_FUNC:
@@ -1032,18 +1032,18 @@ HB_FUNC( NETIO_SERVER )
                            {
                               ULONG ulSize = size - size2;
                               USHORT uiPCount = 0;
-                              BOOL fSend = FALSE;
+                              HB_BOOL fSend = HB_FALSE;
 
                               data += size2;
                               if( pItem )
                               {
-                                 fSend = TRUE;
+                                 fSend = HB_TRUE;
                                  hb_vmPushEvalSym();
                                  hb_vmPush( pItem );
                               }
                               else if( conn->rpcFunc )
                               {
-                                 fSend = TRUE;
+                                 fSend = HB_TRUE;
                                  hb_vmPushSymbol( conn->rpcFunc );
                                  hb_vmPushNil();
                                  hb_vmPushDynSym( pDynSym );
@@ -1083,7 +1083,7 @@ HB_FUNC( NETIO_SERVER )
                                  if( uiMsg == NETIO_FUNC )
                                  {
                                     ULONG itmSize;
-                                    char * itmData = hb_itemSerialize( hb_stackReturnItem(), TRUE, &itmSize );
+                                    char * itmData = hb_itemSerialize( hb_stackReturnItem(), HB_TRUE, &itmSize );
                                     if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
                                        msg = buffer;
                                     else if( !ptr || itmSize > ( ULONG ) size - NETIO_MSGLEN )

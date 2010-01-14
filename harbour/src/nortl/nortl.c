@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -391,7 +391,7 @@ void hb_vmLock( void ) {}
 
 void hb_vmUnlock( void ) {}
 
-void hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
+void hb_fsSetIOError( HB_BOOL fResult, USHORT uiOperation )
 {
    HB_SYMBOL_UNUSED( fResult );
    HB_SYMBOL_UNUSED( uiOperation );
@@ -399,10 +399,10 @@ void hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
 
 /* file name conversion */
 
-static int  s_iFileCase = HB_SET_CASE_MIXED;
-static int  s_iDirCase  = HB_SET_CASE_MIXED;
-static BOOL s_fFnTrim   = FALSE;
-static char s_cDirSep   = HB_OS_PATH_DELIM_CHR;
+static int     s_iFileCase = HB_SET_CASE_MIXED;
+static int     s_iDirCase  = HB_SET_CASE_MIXED;
+static HB_BOOL s_fFnTrim   = HB_FALSE;
+static char    s_cDirSep   = HB_OS_PATH_DELIM_CHR;
 
 const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 {
@@ -583,12 +583,12 @@ void hb_compChkFileSwitches( int argc, char * argv[] )
             case 's':
                if( !argv[i][3] )
                {
-                  s_fFnTrim = TRUE;
+                  s_fFnTrim = HB_TRUE;
                   n = 3;
                }
                else if( argv[i][3] == '-' )
                {
-                  s_fFnTrim = FALSE;
+                  s_fFnTrim = HB_FALSE;
                   n = 4;
                }
                break;
