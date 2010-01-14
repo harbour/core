@@ -138,19 +138,19 @@ CLASS wvtDialog
    DATA   cColor
 
    /*  Objects handelling  */
-   DATA   aObjects              INIT {}
+   DATA   aObjects                                INIT {}
    DATA   oCurObj
    DATA   oLastObj
    DATA   oObjOver
    DATA   oLastOver
-   DATA   nCurObj               INIT 1
-   DATA   nLastObj              INIT 0
-   DATA   nObjOver              INIT 0
-   DATA   nLastOver             INIT -1
+   DATA   nCurObj                                 INIT 1
+   DATA   nLastObj                                INIT 0
+   DATA   nObjOver                                INIT 0
+   DATA   nLastOver                               INIT -1
    DATA   nUseObj
    DATA   oMenu
-   DATA   aDialogKeys           INIT {}
-   DATA   cDialogID             INIT ""
+   DATA   aDialogKeys                             INIT {}
+   DATA   cDialogID                               INIT ""
 
    /*  Tooltip Management  */
    DATA   nTooltipWidth
@@ -158,40 +158,40 @@ CLASS wvtDialog
    DATA   nTooltipTextColor
 
    /*  Miscellaneous  */
-   DATA   ClassName             INIT "WVTDIALOG"
+   DATA   ClassName                               INIT "WVTDIALOG"
    DATA   cPaintBlockID
-   DATA   nPaintID              INIT 1
-   DATA   nObjID                INIT 5000
+   DATA   nPaintID                                INIT 1
+   DATA   nObjID                                  INIT 5000
    DATA   nKey
-   DATA   hFonts                INIT {}
+   DATA   hFonts                                  INIT {}
    DATA   lEventHandled
-   DATA   lTabStops             INIT .f.
-
-   ACCESS nObjects              INLINE len( ::aObjects )
-
+   DATA   lTabStops                               INIT .f.
    DATA   bOnCreate
 
-   METHOD New()
+   ACCESS nObjects                                INLINE len( ::aObjects )
+
+   METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFontQuality )
    METHOD Create()
    METHOD Destroy()
-   METHOD AddObject( oObject )  INLINE aadd( ::aObjects, oObject )
-   METHOD Execute()
-   METHOD MouseOver()
-   METHOD CreateObjects()
-   METHOD MaxRow()              INLINE ::nRows - 1
-   METHOD MaxCol()              INLINE ::nCols - 1
-   METHOD Eval()
-   METHOD Update()
-   METHOD OnTimer()             INLINE aeval( ::aObjects, {|o| o:OnTimer() } )
    METHOD Event()
+   METHOD Execute()
    METHOD Inkey()
+   METHOD MouseOver()
+   METHOD Update()
+   METHOD CreateObjects()
+   METHOD Eval( bBlock, p1,p2,p3,p4,p5 )
    METHOD ActivateMenu()
 
-ENDCLASS
+   METHOD AddObject( oObject )                    INLINE aadd( ::aObjects, oObject )
+   METHOD MaxRow()                                INLINE ::nRows - 1
+   METHOD MaxCol()                                INLINE ::nCols - 1
+   METHOD OnTimer()                               INLINE aeval( ::aObjects, {|o| o:OnTimer() } )
+
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFontQuality ) CLASS wvtDialog
+METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFontQuality )
    LOCAL fnt_:= Wvt_GetFontInfo()
 
    DEFAULT nRows         TO 25
@@ -203,15 +203,15 @@ METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFont
    DEFAULT nFontBold     TO fnt_[ 4 ]
    DEFAULT nFontQuality  TO fnt_[ 5 ]
 
-   if empty( cFont )
+   IF empty( cFont )
       cFont := fnt_[ 1 ]
-   endif
-   if empty( nFontHeight )
+   ENDIF
+   IF empty( nFontHeight )
       nFontHeight := fnt_[ 2 ]
-   endif
-   if empty( nFontWidth )
+   ENDIF
+   IF empty( nFontWidth )
       nFontWidth := fnt_[ 3 ]
-   endif
+   ENDIF
 
    ::nOldRows            := MaxRow()+1
    ::nOldCols            := MaxCol()+1
@@ -248,19 +248,19 @@ METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFont
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS wvtDialog
+METHOD wvtDialog:Create()
    LOCAL aPalette, i, j
 
    ::oldToolTipActive := Wvt_SetToolTipActive( .t. )
-   if ::nTooltipWidth <> nil
+   IF ::nTooltipWidth <> nil
       Wvt_setTooltipWidth( ::nTooltipWidth )
-   endif
-   if ::nTooltipBkColor <> nil
+   ENDIF
+   IF ::nTooltipBkColor <> nil
       Wvt_SetTooltipBkColor( ::nTooltipBkColor )
-   endif
-   if ::nTooltipTextColor <> nil
+   ENDIF
+   IF ::nTooltipTextColor <> nil
       Wvt_SetTooltipTextColor( ::nTooltipTextColor )
-   endif
+   ENDIF
 
    aPalette      := Wvt_GetPalette()
    aPalette[ 9 ] := RGB( 175,175,175 )
@@ -272,9 +272,9 @@ METHOD Create() CLASS wvtDialog
 
    SetMode( ::nRows, ::nCols )
    do while .t.
-      if Wvt_SetFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontBold, ::nFontQuality )
-         exit
-      endif
+      IF Wvt_SetFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontBold, ::nFontQuality )
+         EXIT
+      ENDIF
       ::nFontHeight--
    enddo
    /* Wvt_SetFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontBold, ::nFontQuality ) */
@@ -288,41 +288,41 @@ METHOD Create() CLASS wvtDialog
 
    ::CreateObjects()
 
-   if len( ::aObjects ) > 0
+   IF len( ::aObjects ) > 0
       ::oCurObj := ::aObjects[ 1 ]
-   endif
+   ENDIF
 
-   for i := 1 to len( ::aObjects )
-      if !empty( ::aObjects[ i ]:aPaint )
-         for j := 1 to len( ::aObjects[ i ]:aPaint )
+   FOR i := 1 to len( ::aObjects )
+      IF !empty( ::aObjects[ i ]:aPaint )
+         FOR j := 1 to len( ::aObjects[ i ]:aPaint )
             SetPaint( ::cPaintBlockID, ::nPaintID++, ;
                 ::aObjects[ i ]:aPaint[ j,1 ], ::aObjects[ i ]:aPaint[ j,2 ] )
          next
-      endif
+      ENDIF
    next
    WvtSetPaint( GetPaint( ::cPaintBlockID ) )
 
-   if ascan( ::aObjects, {|o| o:lTabStop } ) > 0
+   IF ascan( ::aObjects, {|o| o:lTabStop } ) > 0
       ::lTabStops := .t.
-   endif
+   ENDIF
 
    ::Update()
 
-   if HB_ISOBJECT( ::oMenu )
+   IF HB_ISOBJECT( ::oMenu )
       Wvt_SetMenu( ::oMenu:hMenu )
       Wvt_DrawMenuBar()
       SetKey( Wvt_SetMenuKeyEvent(), {|| ::ActivateMenu( ::oMenu ) } )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Destroy() CLASS wvtDialog
+METHOD wvtDialog:Destroy()
 
-   if HB_ISOBJECT( ::oMenu )
+   IF HB_ISOBJECT( ::oMenu )
       ::oMenu:Destroy()
-   endif
+   ENDIF
 
    aeval( ::aObjects, {|o| o:destroy() } )
 
@@ -343,9 +343,9 @@ METHOD Destroy() CLASS wvtDialog
    SetColor( ::cOldColor )
    SetCursor( ::nOldCursor )
 
-   if ::oldMenuHandle <> nil .and. ::oldMenuHandle <> 0
+   IF ::oldMenuHandle <> nil .and. ::oldMenuHandle <> 0
       Wvt_SetMenu( ::oldMenuHandle )
-   endif
+   ENDIF
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
    RestScreen( 0, 0, maxrow(), maxcol(), ::cScreen )
    Wvt_RestScreen( 0, 0 ,maxrow(), maxcol(), ::aWvtScreen )
@@ -358,39 +358,39 @@ METHOD Destroy() CLASS wvtDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD Event() CLASS wvtDialog
+METHOD wvtDialog:Event()
    LOCAL  nKey
 
-   if ( nKey := inkey( 0.1, INKEY_ALL ) ) == 0
-      if Wvt_IsLButtonPressed()
+   IF ( nKey := inkey( 0.1, INKEY_ALL ) ) == 0
+      IF Wvt_IsLButtonPressed()
 
          nKey := K_LBUTTONPRESSED
 
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    RETURN nKey
 
 /*----------------------------------------------------------------------*/
 
-METHOD Execute() CLASS wvtDialog
+METHOD wvtDialog:Execute()
 
-   if ::nObjects == 0
+   IF ::nObjects == 0
       do while .t.
-         if inkey( 0.1 ) == K_ESC
-            exit
-         endif
+         IF inkey( 0.1 ) == K_ESC
+            EXIT
+         ENDIF
       enddo
-   else
+   ELSE
       do while ( ::Inkey() <> K_ESC )
       enddo
-   endif
+   ENDIF
 
    RETURN ::nKey
 
 /*----------------------------------------------------------------------*/
 
-METHOD Inkey() CLASS wvtDialog
+METHOD wvtDialog:Inkey()
    LOCAL  n, oObj, nID, i
 
    ::lEventHandled := .f.
@@ -399,57 +399,57 @@ METHOD Inkey() CLASS wvtDialog
    ::nKey := ::Event()
    ::OnTimer()
 
-   if ::nKey <> 0
-      if ::nKey == K_ESC .or. ::nKey == K_CTRL_ENTER
+   IF ::nKey <> 0
+      IF ::nKey == K_ESC .or. ::nKey == K_CTRL_ENTER
          return K_ESC
-      endif
+      ENDIF
 
-      do case
+      DO CASE
 
-      case ::nKey == K_TAB
-         if ::lTabStops
+      CASE ::nKey == K_TAB
+         IF ::lTabStops
             do while .t.
                ::nCurObj++
-               if ::nCurObj > ::nObjects
+               IF ::nCurObj > ::nObjects
                   ::nCurObj := 1
-               endif
-               if ::aObjects[ ::nCurObj ]:lTabStop
-                  exit
-               endif
+               ENDIF
+               IF ::aObjects[ ::nCurObj ]:lTabStop
+                  EXIT
+               ENDIF
             enddo
-         endif
+         ENDIF
 
          ::lEventHandled := .t.
 
-      case ::nKey == K_SH_TAB
-         if ::lTabStops
+      CASE ::nKey == K_SH_TAB
+         IF ::lTabStops
             do while .t.
                ::nCurObj--
-               if ::nCurObj < 1
+               IF ::nCurObj < 1
                   ::nCurObj := ::nObjects
-               endif
-               if ::aObjects[ ::nCurObj ]:lTabStop
-                  exit
-               endif
+               ENDIF
+               IF ::aObjects[ ::nCurObj ]:lTabStop
+                  EXIT
+               ENDIF
             enddo
-         endif
+         ENDIF
 
          ::lEventHandled := .t.
 
-      case ::nKey == K_MOUSEMOVE .or. ::nKey == K_MMLEFTDOWN
+      CASE ::nKey == K_MOUSEMOVE .or. ::nKey == K_MMLEFTDOWN
          ::MouseOver()
-         if ::nObjOver == 0
+         IF ::nObjOver == 0
             Wvt_SetPointer( WVT_IDC_ARROW )
-         elseif ::oObjOver:nPointer <> nil .and. ::oObjOver:lActive
+         ELSEIF ::oObjOver:nPointer <> nil .and. ::oObjOver:lActive
             Wvt_SetPointer( ::oObjOver:nPointer )
-         else
+         ELSE
             Wvt_SetPointer( WVT_IDC_ARROW )
-         endif
+         ENDIF
          ::lEventHandled := .t.
 
-      endcase
+      ENDCASE
 
-      if    ::nKey == K_LBUTTONDOWN     .or. ;
+      IF    ::nKey == K_LBUTTONDOWN     .or. ;
             ::nKey == K_LBUTTONUP       .or. ;
             ::nKey == K_LDBLCLK         .or. ;
             ::nKey == K_MMLEFTDOWN      .or. ;
@@ -458,156 +458,156 @@ METHOD Inkey() CLASS wvtDialog
 
          ::MouseOver()
 
-         if ::nObjOver > 0
-            if    ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_BUTTON     .or. ;
+         IF ::nObjOver > 0
+            IF    ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_BUTTON     .or. ;
                   ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_TOOLBAR    .or. ;
                   ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_PUSHBUTTON .or. ;
                   ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_SCROLLBAR
 
                oObj := ::aObjects[ ::nObjOver ]
-               if oObj:oParent:ClassName == "WVTBROWSE"
+               IF oObj:oParent:ClassName == "WVTBROWSE"
                   nID := oObj:oParent:nID
-                  if ( n := ascan( ::aObjects, {|o| o:nID == nID } ) ) > 0
+                  IF ( n := ascan( ::aObjects, {|o| o:nID == nID } ) ) > 0
                      ::nCurObj := n
-                  endif
-               endif
-            else
+                  ENDIF
+               ENDIF
+            ELSE
                ::nCurObj := ::nObjOver
-            endif
+            ENDIF
             ::nUseObj := ::nObjOver
 
-         else
+         ELSE
             ::lEventHandled := .t.
 
-         endif
-      endif
+         ENDIF
+      ENDIF
 
-      if ::nLastOver <> ::nObjOver
-         if ::nLastOver > 0
+      IF ::nLastOver <> ::nObjOver
+         IF ::nLastOver > 0
             ::aObjects[ ::nLastOver ]:HoverOff()
-         endif
+         ENDIF
 
          ::nLastOver := ::nObjOver
 
-         if ::nObjOver > 0
+         IF ::nObjOver > 0
             ::oObjOver:HoverOn()
-         endif
+         ENDIF
 
-         if ::nObjOver == 0
+         IF ::nObjOver == 0
             Wvt_SetTooltip( 0,0,0,0,"" )
 
-         elseif ::oObjOver:lActive
+         ELSEIF ::oObjOver:lActive
             ::oObjOver:SetTooltip()
 
-         else
+         ELSE
             Wvt_SetTooltip( 0,0,0,0,"" )
 
-         endif
-      endif
+         ENDIF
+      ENDIF
 
-      if ::nCurObj <> ::nLastObj
-         if ::nLastObj == 0
+      IF ::nCurObj <> ::nLastObj
+         IF ::nLastObj == 0
             ::aObjects[ ::nCurObj  ]:Hilite()
 
-         else
+         ELSE
             ::aObjects[ ::nLastObj ]:DeHilite()
             ::aObjects[ ::nCurObj  ]:Hilite()
 
-         endif
+         ENDIF
 
          ::nLastObj := ::nCurObj
          ::oCurObj  := ::aObjects[ ::nCurObj ]
          ::oLastObj := ::aObjects[ ::nCurObj ]
 
-         if ::oCurObj:nType == DLG_OBJ_BROWSE
+         IF ::oCurObj:nType == DLG_OBJ_BROWSE
             Select( ::oCurObj:cAlias )
 
-         endif
+         ENDIF
 
          ::Eval( ::oCurObj:bOnFocus, ::oCurObj )
-      endif
+      ENDIF
 
-      if ::nKey == K_LBUTTONDOWN
-         if ::nUseObj > 0
-            if !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftDown() )
+      IF ::nKey == K_LBUTTONDOWN
+         IF ::nUseObj > 0
+            IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftDown )
 
-            endif
-         endif
-      endif
+            ENDIF
+         ENDIF
+      ENDIF
 
-      if ::nKey == K_LBUTTONUP
-         if ::nUseObj > 0
-            if !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftUp() )
+      IF ::nKey == K_LBUTTONUP
+         IF ::nUseObj > 0
+            IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftUp() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftUp )
 
-            endif
-         endif
-      endif
+            ENDIF
+         ENDIF
+      ENDIF
 
-      if ::nKey == K_MMLEFTDOWN
-         if ::nUseObj > 0
-            if !( ::lEventHandled := ::aObjects[ ::nUseObj ]:MMLeftDown() )
+      IF ::nKey == K_MMLEFTDOWN
+         IF ::nUseObj > 0
+            IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:MMLeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnMMLeftDown )
 
-            endif
-         endif
-      endif
+            ENDIF
+         ENDIF
+      ENDIF
 
-      if ::nKey == K_LBUTTONPRESSED
-         if ::nUseObj > 0
-            if !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftPressed() )
+      IF ::nKey == K_LBUTTONPRESSED
+         IF ::nUseObj > 0
+            IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftPressed() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftPressed )
 
-            endif
-         endif
-      endif
+            ENDIF
+         ENDIF
+      ENDIF
 
-      if ::nKey == K_LDBLCLK
-         if ::nUseObj > 0
+      IF ::nKey == K_LDBLCLK
+         IF ::nUseObj > 0
             ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnSelect )
 
-         endif
-      endif
+         ENDIF
+      ENDIF
 
-      if ::nKey == K_RBUTTONDOWN .and. ::nUseObj > 0
+      IF ::nKey == K_RBUTTONDOWN .and. ::nUseObj > 0
          ::lEventHandled := ::aObjects[ ::nUseObj ]:ShowPopup()
-      endif
+      ENDIF
 
-      if !( ::lEventHandled )
-         if ::nCurObj > 0
-            if !empty( ::aDialogKeys )
-               if ( n := ascan( ::aDialogKeys, {|e_| e_[ 1 ] == ::nKey } ) ) > 0
+      IF !( ::lEventHandled )
+         IF ::nCurObj > 0
+            IF !empty( ::aDialogKeys )
+               IF ( n := ascan( ::aDialogKeys, {|e_| e_[ 1 ] == ::nKey } ) ) > 0
                   Eval( ::aDialogKeys[ n, 2 ], self, ::oCurObj )
-               endif
-            endif
+               ENDIF
+            ENDIF
 
             ::lEventHandled := ::oCurObj:HandleEvent( ::nKey )
 
-            if ( ::lEventHandled )
-               if ::oCurObj:nChildren > 0
-                  for i := 1 to ::oCurObj:nChildren
-                     if ascan( ::oCurObj:aChildren[ i, OBJ_CHILD_EVENTS ],::nKey ) > 0
+            IF ( ::lEventHandled )
+               IF ::oCurObj:nChildren > 0
+                  FOR i := 1 to ::oCurObj:nChildren
+                     IF ascan( ::oCurObj:aChildren[ i, OBJ_CHILD_EVENTS ],::nKey ) > 0
                         ::oCurObj:NotifyChild( i, ::nKey, ::oCurObj )
-                     endif
+                     ENDIF
                   next
-               endif
-            endif
-         endif
-      endif
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
 
-      if !( ::lEventHandled )
-         if ISBLOCK( SetKey( ::nKey ) )
+      IF !( ::lEventHandled )
+         IF ISBLOCK( SetKey( ::nKey ) )
             Eval( SetKey( ::nKey ) )
-         endif
-      endif
-   endif
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN ::nKey
 
 /*----------------------------------------------------------------------*/
 
-METHOD MouseOver()  CLASS wvtDialog
+METHOD wvtDialog:MouseOver()
    LOCAL mRow := MRow()
    LOCAL mCol := MCol()
    LOCAL nObj
@@ -620,17 +620,17 @@ METHOD MouseOver()  CLASS wvtDialog
 
    ::nObjOver := nObj
    ::oObjOver := iif( nObj > 0, ::aObjects[ nObj ], nil )
-   if nObj > 0
+   IF nObj > 0
       ::aObjects[ nObj ]:nmRow := mRow
       ::aObjects[ nObj ]:nmCol := mCol
 
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Update() CLASS wvtDialog
+METHOD wvtDialog:Update()
 
    Wvt_InvalidateRect( 0, 0, ::maxrow(), ::maxcol() )
 
@@ -638,55 +638,55 @@ METHOD Update() CLASS wvtDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD CreateObjects() CLASS wvtDialog
+METHOD wvtDialog:CreateObjects()
    LOCAL i, nObjs
 
    nObjs := len( ::aObjects )
 
-   for i := 1 to nObjs
+   FOR i := 1 to nObjs
       switch ::aObjects[ i ]:nType
 
-      case DLG_OBJ_BROWSE
+      CASE DLG_OBJ_BROWSE
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_STATUSBAR
+         EXIT
+      CASE DLG_OBJ_STATUSBAR
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_LABEL
+         EXIT
+      CASE DLG_OBJ_LABEL
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_TOOLBAR
+         EXIT
+      CASE DLG_OBJ_TOOLBAR
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_BUTTON
+         EXIT
+      CASE DLG_OBJ_BUTTON
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_PUSHBUTTON
+         EXIT
+      CASE DLG_OBJ_PUSHBUTTON
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_IMAGE
+         EXIT
+      CASE DLG_OBJ_IMAGE
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_STATIC
+         EXIT
+      CASE DLG_OBJ_STATIC
          ::aObjects[ i ]:Create()
-         exit
+         EXIT
    /*
-      case DLG_OBJ_SCROLLBAR
+      CASE DLG_OBJ_SCROLLBAR
          ::aObjects[ i ]:Create()
-         exit
+         EXIT
    */
-      case DLG_OBJ_GETS
+      CASE DLG_OBJ_GETS
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_BANNER
+         EXIT
+      CASE DLG_OBJ_BANNER
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_TEXTBOX
+         EXIT
+      CASE DLG_OBJ_TEXTBOX
          ::aObjects[ i ]:Create()
-         exit
-      case DLG_OBJ_PROGRESSBAR
+         EXIT
+      CASE DLG_OBJ_PROGRESSBAR
          ::aObjects[ i ]:Create()
-         exit
+         EXIT
       end
    next
 
@@ -694,18 +694,18 @@ METHOD CreateObjects() CLASS wvtDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD Eval( bBlock, p1,p2,p3,p4,p5 ) CLASS wvtDialog
+METHOD wvtDialog:Eval( bBlock, p1,p2,p3,p4,p5 )
    LOCAL lRet
 
-   if ( lRet := ISBLOCK( bBlock ) )
+   IF ( lRet := ISBLOCK( bBlock ) )
       eval( bBlock, p1,p2,p3,p4,p5 )
-   endif
+   ENDIF
 
    RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
-METHOD ActivateMenu() CLASS WvtDialog
+METHOD wvtDialog:ActivateMenu()
    LOCAL nMenu:= Wvt_GetLastMenuEvent()
    LOCAL aMenuItem
 
@@ -727,7 +727,7 @@ METHOD ActivateMenu() CLASS WvtDialog
 /*
  *                         Class WvtObject
  *
- * Must never be used directly. It is parent class for all other objects!
+ * Must never be used directly. It is parent class FOR all other objects!
  */
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -743,38 +743,38 @@ CLASS WvtObject
    DATA   nLeft
    DATA   nBottom
    DATA   nRight
-   DATA   aPxlTLBR              INIT {}
+   DATA   aPxlTLBR                                INIT {}
 
-   DATA   aObjects              INIT {}
-   DATA   aParent               INIT {}
-   DATA   aChildren             INIT {}
-   DATA   aPaint                INIT {}
+   DATA   aObjects                                INIT {}
+   DATA   aParent                                 INIT {}
+   DATA   aChildren                               INIT {}
+   DATA   aPaint                                  INIT {}
    DATA   bPaint
-   DATA   ClassName             INIT ""
+   DATA   ClassName                               INIT ""
 
-   DATA   nObjID                INIT 900000
+   DATA   nObjID                                  INIT 900000
    DATA   nPointer
    DATA   cargo
    DATA   xSettings
    DATA   cText
    DATA   cToolTip
-   DATA   lActive               INIT .t.
-   DATA   lAnimate              INIT .f.
-   DATA   lTabStop              INIT .t.
+   DATA   lActive                                 INIT .t.
+   DATA   lAnimate                                INIT .f.
+   DATA   lTabStop                                INIT .t.
    DATA   hFont
 
-   DATA   aPopup                INIT {}
-   DATA   hPopup                INIT nil
-   DATA   nPopupItemID          INIT 700000
+   DATA   aPopup                                  INIT {}
+   DATA   hPopup                                  INIT nil
+   DATA   nPopupItemID                            INIT 700000
 
-   DATA   nMRow                 INIT 0
-   DATA   nMCol                 INIT 0
-   DATA   cColorHilite          INIT "W+/B*"
-   DATA   cColorDehilite        INIT "W/N*"
+   DATA   nMRow                                   INIT 0
+   DATA   nMCol                                   INIT 0
+   DATA   cColorHilite                            INIT "W+/B*"
+   DATA   cColorDehilite                          INIT "W/N*"
 
    DATA   nTextColor
    DATA   nBackColor
-   DATA   nBackMode             INIT 0 /* OPAQUE 1-TRANSPARENT */
+   DATA   nBackMode                               INIT 0 /* OPAQUE 1-TRANSPARENT */
    DATA   nTextColorHoverOn
    DATA   nTextColorHoverOff
    DATA   nBackColorHoverOn
@@ -792,8 +792,8 @@ CLASS WvtObject
    DATA   nAlignVert
    DATA   nAngle
 
-   ACCESS ToolTip               INLINE iif( ::cTooltip == nil, "", ::cTooltip )
-   ASSIGN ToolTip( cTip )       INLINE ::cToolTip := cTip
+   ACCESS ToolTip                                 INLINE iif( ::cTooltip == nil, "", ::cTooltip )
+   ASSIGN ToolTip( cTip )                         INLINE ::cToolTip := cTip
 
    DATA   bHandleEvent
    DATA   bOnCreate
@@ -810,58 +810,43 @@ CLASS WvtObject
    DATA   bOnHilite
    DATA   bOnDeHilite
 
-   ACCESS nChildren             INLINE len( ::aChildren )
+   ACCESS nChildren                               INLINE len( ::aChildren )
    DATA   nIndexOrder
 
-   METHOD New()
+   METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD Destroy()
-
-   /*  To Avoid any runtime errors if a message is send to an object
-    *  which does not implement these methods
-    */
-   METHOD PaintBlock()          INLINE nil
-   METHOD Hilite()              INLINE nil
-   METHOD DeHilite()            INLINE nil
-   METHOD HandleEvent()         INLINE .f.
-
-   METHOD LeftDown()            INLINE .f.
-   METHOD LeftUp()              INLINE .f.
-   METHOD MMLeftDown            INLINE .f.
-   METHOD LeftPressed           INLINE .f.
-
-   METHOD HoverOn()             INLINE nil
-   METHOD HoverOff()            INLINE nil
-
-   METHOD OnTimer()             INLINE nil
-
-   METHOD SaveSettings()        INLINE nil
-   METHOD RestSettings()        INLINE nil
-
-   METHOD SetToolTip()          INLINE ;
-            Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
-
-   METHOD Refresh()             INLINE ;
-            Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
-
-   METHOD Eval( bBlock )        INLINE ;
-            iif( ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
-
    METHOD CreatePopup()
    METHOD ShowPopup()
-   METHOD Activate()            INLINE nil
-   METHOD DeActivate()          INLINE nil
 
-   METHOD AddChild( aChild )    INLINE aadd( ::aChildren, aChild )
-   METHOD AddParent( aParent )  INLINE aadd( ::aParent, aParent )
+   METHOD SetToolTip()                            INLINE Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
+   METHOD Refresh()                               INLINE Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
+   METHOD Eval( bBlock )                          INLINE iif( ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
+   METHOD AddChild( aChild )                      INLINE aadd( ::aChildren, aChild )
+   METHOD AddParent( aParent )                    INLINE aadd( ::aParent, aParent )
 
-   METHOD NotifyChild( /*nChild*/ ) INLINE nil
+   METHOD PaintBlock()                            INLINE nil
+   METHOD Hilite()                                INLINE nil
+   METHOD DeHilite()                              INLINE nil
+   METHOD HandleEvent()                           INLINE .f.
+   METHOD LeftDown()                              INLINE .f.
+   METHOD LeftUp()                                INLINE .f.
+   METHOD MMLeftDown()                            INLINE .f.
+   METHOD LeftPressed()                           INLINE .f.
+   METHOD HoverOn()                               INLINE nil
+   METHOD HoverOff()                              INLINE nil
+   METHOD OnTimer()                               INLINE nil
+   METHOD SaveSettings()                          INLINE nil
+   METHOD RestSettings()                          INLINE nil
+   METHOD Activate()                              INLINE nil
+   METHOD DeActivate()                            INLINE nil
+   METHOD NotifyChild( /*nChild*/ )               INLINE nil
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtObject
+METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
    DEFAULT nID TO ++::nObjID
 
@@ -875,67 +860,67 @@ METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtObject
 
    switch nType
 
-   case DLG_OBJ_BROWSE
+   CASE DLG_OBJ_BROWSE
       ::ClassName := "WVTBROWSE"
-      exit
+      EXIT
 
-   case DLG_OBJ_STATIC
+   CASE DLG_OBJ_STATIC
       ::ClassName := "WVTSTATIC"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_GETS
+   CASE DLG_OBJ_GETS
       ::ClassName := "WVTGETS"
-      exit
+      EXIT
 
-   case DLG_OBJ_IMAGE
+   CASE DLG_OBJ_IMAGE
       ::ClassName := "WVTIMAGE"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_PUSHBUTTON
+   CASE DLG_OBJ_PUSHBUTTON
       ::ClassName := "WVTPUSHBUTTON"
-      exit
+      EXIT
 
-   case DLG_OBJ_BUTTON
+   CASE DLG_OBJ_BUTTON
       ::ClassName := "WVTBUTTON"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_TOOLBAR
+   CASE DLG_OBJ_TOOLBAR
       ::ClassName := "WVTTOOLBAR"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_LABEL
+   CASE DLG_OBJ_LABEL
       ::ClassName := "WVTLABEL"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_SCROLLBAR
+   CASE DLG_OBJ_SCROLLBAR
       ::ClassName := "WVTSCROLLBAR"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_STATUSBAR
+   CASE DLG_OBJ_STATUSBAR
       ::ClassName := "WVTSTATUSBAR"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_BANNER
+   CASE DLG_OBJ_BANNER
       ::ClassName := "WVTBANNER"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_TEXTBOX
+   CASE DLG_OBJ_TEXTBOX
       ::ClassName := "WVTTEXTBOX"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
-   case DLG_OBJ_PROGRESSBAR
+   CASE DLG_OBJ_PROGRESSBAR
       ::ClassName := "WVTPROGRESSBAR"
       ::lTabStop  := .f.
-      exit
+      EXIT
 
    end
 
@@ -943,7 +928,7 @@ METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtObject
+METHOD WvtObject:Create()
 
    ::Eval( ::bOnCreate )
    ::CreatePopup()
@@ -952,29 +937,29 @@ METHOD Create() CLASS WvtObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD Destroy() CLASS WvtObject
+METHOD WvtObject:Destroy()
 
-   if ::hFont <> nil
+   IF ::hFont <> nil
       WVG_DeleteObject( ::hFont )
       ::hFont := nil
-   endif
+   ENDIF
 
-   if ::hPopup <> nil
+   IF ::hPopup <> nil
       Wvt_DestroyMenu( ::hPopup )
       ::hPopup := nil
-   endif
+   ENDIF
 
    RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
-METHOD CreatePopup() CLASS WvtObject
+METHOD WvtObject:CreatePopup()
    LOCAL i, nID
 
-   if !empty( ::aPopup ) .and. ::hPopup == nil
+   IF !empty( ::aPopup ) .and. ::hPopup == nil
       ::hPopup := Wvt_CreatePopupMenu()
 
-      for i := 1 to len( ::aPopup )
+      FOR i := 1 to len( ::aPopup )
 
          aSize( ::aPopup[ i ],3 )
          nID := ::nPopupItemID++
@@ -982,30 +967,30 @@ METHOD CreatePopup() CLASS WvtObject
 
          Wvt_AppendMenu( ::hPopup, MF_ENABLED + MF_STRING, nID, ::aPopup[ i,1 ] )
       next
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD ShowPopup() CLASS WvtObject
+METHOD WvtObject:ShowPopup()
    LOCAL lRet := .f., nRet, n, aPos
 
-   if ::hPopup <> nil
+   IF ::hPopup <> nil
       aPos := Wvt_GetCursorPos()
 
       nRet := Wvt_TrackPopupMenu( ::hPopup, TPM_CENTERALIGN +TPM_RETURNCMD, ;
                              aPos[ 1 ], aPos[ 2 ], 0, Wvt_GetWindowHandle() )
-      if nRet > 0
-         if ( n := ascan( ::aPopup, {|e_| e_[ 3 ] == nRet } ) ) > 0
+      IF nRet > 0
+         IF ( n := ascan( ::aPopup, {|e_| e_[ 3 ] == nRet } ) ) > 0
             lRet := .t.
 
-            if ISBLOCK( ::aPopup[ n,2 ] )
+            IF ISBLOCK( ::aPopup[ n,2 ] )
                Eval( ::aPopup[ n,2 ] )
-            endif
-         endif
-      endif
-   endif
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN lRet
 
@@ -1023,8 +1008,8 @@ CLASS WvtBrowse FROM WvtObject
 
    DATA   cAlias
    DATA   oBrw
-   DATA   lHSBar                INIT .t.
-   DATA   lVSBar                INIT .t.
+   DATA   lHSBar                                  INIT .t.
+   DATA   lVSBar                                  INIT .t.
    DATA   oHBar
    DATA   oVBar
    DATA   bTotalRecords
@@ -1032,28 +1017,28 @@ CLASS WvtBrowse FROM WvtObject
    DATA   bTotalColumns
    DATA   bCurrentColumn
 
-   ACCESS cDesc                 INLINE iif( ::cText == nil, "", ::cText )
-   ASSIGN cDesc( cText )        INLINE ::cText := cText
+   ACCESS cDesc                                   INLINE iif( ::cText == nil, "", ::cText )
+   ASSIGN cDesc( cText )                          INLINE ::cText := cText
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
-   METHOD PaintBlock()
+   METHOD PaintBlock( nPaintObj )
    METHOD Hilite()
    METHOD DeHilite()
-   METHOD HandleEvent()
+   METHOD HandleEvent( nKey )
    METHOD Refresh()
    METHOD SetVBar()
    METHOD SetHBar()
    METHOD SetTooltip()
    METHOD SaveSettings()
    METHOD RestSettings()
-   METHOD NotifyChild()
+   METHOD NotifyChild( nIndex, nKey, oCurObj )
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtBrowse
+METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_BROWSE, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1061,7 +1046,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtBrowse
+METHOD WvtBrowse:Create()
 
    Select( ::cAlias )
 
@@ -1092,9 +1077,9 @@ METHOD Create() CLASS WvtBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetVBar() CLASS WvtBrowse
+METHOD WvtBrowse:SetVBar()
 
-   if ::lVSBar
+   IF ::lVSBar
       ::oVBar := WvtScrollBar():New( self, 999991, ;
                  ::oBrw:nTop, ::oBrw:nRight+1, ::oBrw:nBottom, ::oBrw:nRight+2 )
       ::oVBar:nBarType   := WVT_SCROLLBAR_VERT
@@ -1118,15 +1103,15 @@ METHOD SetVBar() CLASS WvtBrowse
                 ::oVBar:nSBottom, ::oVBar:nSRight } } )
 
       ::oParent:AddObject( ::oVBar )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetHBar() CLASS WvtBrowse
+METHOD WvtBrowse:SetHBar()
 
-   if ::lHSBar
+   IF ::lHSBar
       ::oHBar := WvtScrollBar():New( self, 999990, ;
                  ::oBrw:nBottom+1, ::oBrw:nLeft, ::oBrw:nBottom+1, ::oBrw:nRight )
       ::oHBar:nBarType   := 2
@@ -1148,48 +1133,48 @@ METHOD SetHBar() CLASS WvtBrowse
                        ::oHBar:nSBottom, ::oHBar:nSRight } } )
 
       ::oParent:AddObject( ::oHBar )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtBrowse
+METHOD WvtBrowse:Refresh()
    LOCAL nWorkArea := Select()
 
-   if ISBLOCK( ::bOnRefresh )
+   IF ISBLOCK( ::bOnRefresh )
       eval( ::bOnRefresh, self )
-   else
+   ELSE
       Select( ::cAlias )
 
       ::oBrw:RefreshAll()
       ::oBrw:ForceStable()
 
       Select( nWorkArea )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HandleEvent( nKey ) CLASS WvtBrowse
-   Local lRet := .f.
+METHOD WvtBrowse:HandleEvent( nKey )
+   LOCAL lRet := .f.
 
-   if valtype( ::bHandleEvent ) == "B"
+   IF valtype( ::bHandleEvent ) == "B"
       lRet := eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
-   endif
+   ENDIF
 
    RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
-METHOD NotifyChild( nIndex, nKey, oCurObj ) CLASS WvtBrowse
-   Local xData, i
+METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
+   LOCAL xData, i
 
-   if nIndex > 0 .and. nIndex <= len( ::aChildren )
-      if valtype( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] ) == "B"
+   IF nIndex > 0 .and. nIndex <= len( ::aChildren )
+      IF valtype( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] ) == "B"
          xData := eval( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
-      endif
+      ENDIF
 
       eval( ::aChildren[ nIndex, OBJ_CHILD_REFRESHBLOCK ], ;
             ::aChildren[ nIndex, OBJ_CHILD_OBJ ],;
@@ -1198,24 +1183,24 @@ METHOD NotifyChild( nIndex, nKey, oCurObj ) CLASS WvtBrowse
             nKey, ;
             xData )
 
-      if ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren > 0
-         /* Pretend if focus is current on this object */
+      IF ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren > 0
+         /* Pretend IF focus is current on this object */
          Eval( ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:bOnFocus, ::aChildren[ nIndex, OBJ_CHILD_OBJ ] )
 
-         for i := 1 to ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren
+         FOR i := 1 to ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren
             ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:NotifyChild( i, nKey, ::aChildren[ nIndex, OBJ_CHILD_OBJ ] )
          next
 
          /* Restore previous environments */
          Eval( oCurObj:bOnFocus, oCurObj )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Hilite() CLASS WvtBrowse
+METHOD WvtBrowse:Hilite()
    LOCAL b := ::oBrw
 
    DispOutAt( b:nTop-2, b:nLeft-2, pad( " "+::cDesc, b:nRight-b:nLeft+5 ), ::cColorHilite )
@@ -1224,7 +1209,7 @@ METHOD Hilite() CLASS WvtBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD DeHilite() CLASS WvtBrowse
+METHOD WvtBrowse:DeHilite()
    LOCAL b := ::oBrw
 
    DispOutAt( b:nTop-2, b:nLeft-2, pad( " "+::cDesc, b:nRight-b:nLeft+5 ), ::cColorDeHilite )
@@ -1233,10 +1218,10 @@ METHOD DeHilite() CLASS WvtBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetTooltip() CLASS WvtBrowse
+METHOD WvtBrowse:SetTooltip()
    LOCAL cTip, nArea
 
-   if ISBLOCK( ::bTooltip )
+   IF ISBLOCK( ::bTooltip )
       ::SaveSettings()
       nArea := Select( ::cAlias )
 
@@ -1247,11 +1232,11 @@ METHOD SetTooltip() CLASS WvtBrowse
       Select( nArea )
 
       ::RestSettings()
-   endif
+   ENDIF
 
-   if cTip <> nil
+   IF cTip <> nil
       ::Tooltip := cTip
-   endif
+   ENDIF
 
    Wvt_SetTooltip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
 
@@ -1259,50 +1244,50 @@ METHOD SetTooltip() CLASS WvtBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD SaveSettings CLASS WvtBrowse
+METHOD WvtBrowse:SaveSettings()
 
-   if ISBLOCK( ::bSaveSettings )
+   IF ISBLOCK( ::bSaveSettings )
       ::xSettings := Eval( ::bSaveSettings, self )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD RestSettings() CLASS WvtBrowse
+METHOD WvtBrowse:RestSettings()
 
-   if ::xSettings <> nil .and. ISBLOCK( ::bRestSettings )
+   IF ::xSettings <> nil .and. ISBLOCK( ::bRestSettings )
       Eval( ::bRestSettings, self )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintBlock( nPaintObj ) CLASS WvtBrowse
+METHOD WvtBrowse:PaintBlock( nPaintObj )
    LOCAL bBlock, b := ::oBrw
 
    switch nPaintObj
 
-   case 1
+   CASE 1
       bBlock := {|| Wvt_DrawBoxRaised( b:nTop-2,b:nLeft-2,b:nBottom+1,b:nRight+2 ) }
       aadd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop-3,b:nLeft-3,b:nBottom+2,b:nRight+3 } } )
-      exit
+      EXIT
 
-   case 2
+   CASE 2
       bBlock := {|| Wvt_DrawBoxRecessed( b:nTop,b:nLeft,b:nBottom,b:nRight ) }
       aadd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop-1,b:nLeft-1,b:nBottom+1,b:nRight+1 } } )
-      exit
+      EXIT
 
-   case 3
+   CASE 3
       bBlock := {|| Wvt_DrawGridHorz( b:nTop+3, b:nLeft, b:nRight, b:nBottom - b:nTop - 2 ) }
       aadd( ::aPaint, { bBlock, { WVT_BLOCK_GRID_H, b:nTop+4, b:nLeft+1, b:nBottom-1, b:nRight-1 } } )
-      exit
+      EXIT
 
-   case 4
+   CASE 4
       bBlock := {|| Wvt_DrawGridVert( b:nTop, b:nBottom, b:aColumnsSep, len( b:aColumnsSep ) ) }
       aadd( ::aPaint, { bBlock, { WVT_BLOCK_GRID_V, b:nTop+1, b:nLeft+1, b:nBottom-1, b:nRight-1, b } } )
-      exit
+      EXIT
 
    end
 
@@ -1320,23 +1305,23 @@ METHOD PaintBlock( nPaintObj ) CLASS WvtBrowse
 
 CLASS WvtStatusBar FROM WvtObject
 
-   DATA aPanels
-   DATA cColor
+   DATA   aPanels
+   DATA   cColor
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
-   METHOD SetPanels()
-   METHOD SetText()
-   METHOD SetIcon()
-   METHOD Refresh()
-   METHOD Update( nPanel, cText )
+   METHOD SetPanels( aPanels )
+   METHOD SetText( nPanel, cText, cColor )
+   METHOD SetIcon( nPanel, cIconFile )
+   METHOD Update( nPanel, cText, cColor )
    METHOD PaintBlock()
+   METHOD Refresh()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtStatusBar
+METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    DEFAULT nTop    TO oParent:MaxRow()
    DEFAULT nLeft   TO 0
@@ -1351,7 +1336,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtStatusBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtStatusBar
+METHOD WvtStatusBar:Create()
 
    ::Refresh()
    ::PaintBlock( DLG_OBJ_STATUSBAR, self )
@@ -1362,7 +1347,7 @@ METHOD Create() CLASS WvtStatusBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintBlock() CLASS WvtStatusBar
+METHOD WvtStatusBar:PaintBlock()
    LOCAL a_:= {}, nPanels
 
    aeval( ::aPanels, {|o| aadd( a_,o:nTop )   , aadd( a_,o:nLeft ), ;
@@ -1379,7 +1364,7 @@ METHOD PaintBlock() CLASS WvtStatusBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetPanels( aPanels )  CLASS WvtStatusBar
+METHOD WvtStatusBar:SetPanels( aPanels )
    LOCAL i, oPanel, nID
    LOCAL nLastCol := ::oParent:MaxCol()
 
@@ -1391,18 +1376,18 @@ METHOD SetPanels( aPanels )  CLASS WvtStatusBar
 
    aadd( ::aPanels, oPanel )
 
-   if aPanels <> nil
-      for i := 1 to len( aPanels )
-         if ::oParent:MaxCol() > aPanels[ i ]
+   IF aPanels <> nil
+      FOR i := 1 to len( aPanels )
+         IF ::oParent:MaxCol() > aPanels[ i ]
             oPanel := WvtPanel():New( ::oParent, ++nID, ::nTop, aPanels[ i ] )
             aadd( ::aPanels, oPanel )
-         endif
+         ENDIF
       next
-   endif
+   ENDIF
 
    atail( ::aPanels ):nRight := nLastCol
 
-   for i := len( ::aPanels ) - 1 TO 1 STEP -1
+   FOR i := len( ::aPanels ) - 1 TO 1 STEP -1
       oPanel        := ::aPanels[ i ]
       oPanel:nRight := ::aPanels[ i+1 ]:nLeft
       oPanel:cColor := ::cColor
@@ -1412,49 +1397,49 @@ METHOD SetPanels( aPanels )  CLASS WvtStatusBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Update( nPanel, cText, cColor )
+METHOD WvtStatusBar:Update( nPanel, cText, cColor )
    LOCAL oPanel
 
-   if nPanel > 0 .and. nPanel <= len( ::aPanels )
+   IF nPanel > 0 .and. nPanel <= len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
       oPanel:cColor := iif( cColor == nil, "N/W", cColor )
       oPanel:Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetText( nPanel, cText, cColor )  CLASS WvtStatusBar
+METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
    LOCAL oPanel
 
    DEFAULT cColor TO ::cColor
 
-   if nPanel > 0 .and. nPanel <= len( ::aPanels )
+   IF nPanel > 0 .and. nPanel <= len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
       oPanel:cColor := cColor
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetIcon( nPanel, cIconFile ) CLASS WvtStatusBar
+METHOD WvtStatusBar:SetIcon( nPanel, cIconFile )
 
-   if nPanel > 0 .and. nPanel <= len( ::aPanels )
+   IF nPanel > 0 .and. nPanel <= len( ::aPanels )
       ::aPanels[ nPanel ]:cIconFile := cIconFile
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtStatusBar
+METHOD WvtStatusBar:Refresh()
    LOCAL i
 
-   for i := 1 to len( ::aPanels )
+   FOR i := 1 to len( ::aPanels )
       ::aPanels[ i ]:Refresh()
    next
 
@@ -1472,21 +1457,21 @@ METHOD Refresh() CLASS WvtStatusBar
 
 CLASS WvtPanel FROM WvtObject
 
-   DATA cColor
-   DATA cTxt
-   DATA cIconFile
+   DATA   cColor
+   DATA   cTxt
+   DATA   cIconFile
 
-   ACCESS Text                  INLINE ::cTxt
-   ASSIGN Text( cText )         INLINE ::cTxt := pad( cText, ::nRight - ::nLeft-2 )
+   ACCESS Text                                    INLINE ::cTxt
+   ASSIGN Text( cText )                           INLINE ::cTxt := pad( cText, ::nRight - ::nLeft-2 )
 
-   METHOD New()
+   METHOD New( oParent, nId, nTop, nLeft )
    METHOD Refresh()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nId, nTop, nLeft ) CLASS WvtPanel
+METHOD WvtPanel:New( oParent, nId, nTop, nLeft )
 
    ::Super:New( oParent, DLG_OBJ_PANEL, nId, nTop, nLeft, nTop )
 
@@ -1494,11 +1479,11 @@ METHOD New( oParent, nId, nTop, nLeft ) CLASS WvtPanel
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtPanel
+METHOD WvtPanel:Refresh()
 
-   if ::Text <> nil
+   IF ::Text <> nil
       DispOutAt( ::nTop, ::nLeft+1, ::Text, ::cColor )
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -1514,24 +1499,24 @@ METHOD Refresh() CLASS WvtPanel
 
 CLASS WvtLabel FROM WvtObject
 
-   ACCESS Text                  INLINE iif( ::cText == nil, "", ::cText )
-   ASSIGN Text( cTxt )          INLINE ::cText := iif( cTxt == nil, "", cTxt )
+   ACCESS Text                                    INLINE iif( ::cText == nil, "", ::cText )
+   ASSIGN Text( cTxt )                            INLINE ::cText := iif( cTxt == nil, "", cTxt )
 
-   METHOD New()
-   METHOD Create()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
+   METHOD Create( lConfg )
    METHOD Configure()
    METHOD Refresh()
    METHOD HoverOn()
    METHOD HoverOff()
-   METHOD SetText()
-   METHOD SetTextColor()
-   METHOD SetBackColor()
+   METHOD SetText( ctxt )
+   METHOD SetTextColor( nRGB )
+   METHOD SetBackColor( nRGB )
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtLabel
+METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_LABEL, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1539,7 +1524,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtLabel
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create( lConfg ) CLASS WvtLabel
+METHOD WvtLabel:Create( lConfg )
 
    DEFAULT lConfg       TO .f.
 
@@ -1552,13 +1537,13 @@ METHOD Create( lConfg ) CLASS WvtLabel
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic,;
                               ::lUnderline, ::lStrikeout, ::nCharSet, ::nFontQuality, ::nAngle )
-   if ::hFont <> 0
-      if !( lConfg )
+   IF ::hFont <> 0
+      IF !( lConfg )
          ::bPaint := {|| Wvt_DrawLabelObj( ::nTop, ::nLeft, ::nBottom, ::nRight,;
                        ::Text, ::nAlignHorz, ::nAlignVert, ::nTextColor, ::nBackColor, ::hFont ) }
          aadd( ::aPaint, { ::bPaint, { WVT_BLOCK_LABEL, ::nTop, ::nLeft, ::nBottom, ::nRight } } )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    ::Super:Create()
 
@@ -1566,57 +1551,57 @@ METHOD Create( lConfg ) CLASS WvtLabel
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtLabel
+METHOD WvtLabel:Refresh()
 
-Eval( ::bPaint )
-
-RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD SetText( cTxt ) CLASS WvtLabel
-
-   if valtype( cTxt ) == "C"
-      ::Text := cTxt
-      ::Refresh()
-   endif
+   Eval( ::bPaint )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetTextColor( nRGB ) CLASS WvtLabel
+METHOD WvtLabel:SetText( cTxt )
 
-   if valtype( nRGB ) == "N"
+   IF valtype( cTxt ) == "C"
+      ::Text := cTxt
+      ::Refresh()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvtLabel:SetTextColor( nRGB )
+
+   IF valtype( nRGB ) == "N"
       ::nTextColor := nRGB
       ::nTextColorHoverOff := nRGB
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetBackColor( nRGB ) CLASS WvtLabel
+METHOD WvtLabel:SetBackColor( nRGB )
 
-   if valtype( nRGB ) == "N"
+   IF valtype( nRGB ) == "N"
       ::nBackColor := nRGB
       ::nBackColorHoverOff := nRGB
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Configure() CLASS WvtLabel
+METHOD WvtLabel:Configure()
 
    ::nTextColorHoverOff := ::nTextColor
    ::nBackColorHoverOff := ::nBackColor
 
-   if ::hFont <> 0
+   IF ::hFont <> 0
       WVG_DeleteObject( ::hFont )
-   endif
+   ENDIF
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic,;
                               ::lUnderline, ::lStrikeout, ::nCharSet, ::nFontQuality, ::nAngle )
@@ -1625,41 +1610,41 @@ METHOD Configure() CLASS WvtLabel
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn() CLASS WvtLabel
+METHOD WvtLabel:HoverOn()
    LOCAL lOn := .f.
 
-   if ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn <> nil
       lOn := .t.
       ::nTextColor := ::nTextColorHoverOn
-   endif
-   if ::nBackColorHoverOn <> nil
+   ENDIF
+   IF ::nBackColorHoverOn <> nil
       lOn := .t.
       ::nBackColor := ::nBackColorHoverOn
-   endif
+   ENDIF
 
-   if lOn
+   IF lOn
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff() CLASS WvtLabel
+METHOD WvtLabel:HoverOff()
    LOCAL lOn := .f.
 
-   if ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn <> nil
       lOn := .t.
       ::nTextColor := ::nTextColorHoverOff
-   endif
-   if ::nBackColorHoverOn <> nil
+   ENDIF
+   IF ::nBackColorHoverOn <> nil
       lOn := .t.
       ::nBackColor := ::nBackColorHoverOff
-   endif
+   ENDIF
 
-   if lOn
+   IF lOn
       ::Refresh()
-   endif
+   ENDIF
 
    Return Self
 
@@ -1676,22 +1661,22 @@ METHOD HoverOff() CLASS WvtLabel
 CLASS WvtToolBar FROM WvtObject
 
    DATA   nPaintID
-   DATA   aObjects              INIT {}
-   DATA   lHidden               INIT .f.
-   DATA   nCurButton            INIT 0
+   DATA   aObjects                                INIT {}
+   DATA   lHidden                                 INIT .f.
+   DATA   nCurButton                              INIT 0
    DATA   lActive
    DATA   lFloating
    DATA   wScreen
    DATA   cScreen
-   DATA   nBtnLeft              INIT 0
-   DATA   nRGBSep               INIT RGB( 150,150,150 )
+   DATA   nBtnLeft                                INIT 0
+   DATA   nRGBSep                                 INIT RGB( 150,150,150 )
 
-   ACCESS nButtons              INLINE len( ::aButtons )
+   ACCESS nButtons                                INLINE len( ::aButtons )
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD Refresh()
-   METHOD AddButton()
+   METHOD AddButton( cFileImage, bBlock, cTooltip )
    METHOD PaintToolBar()
    METHOD HoverOn()
    METHOD HoverOff()
@@ -1700,7 +1685,7 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtToolBar
+METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    nTop    := 0
    nLeft   := 0
@@ -1717,12 +1702,12 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtToolBar
+METHOD WvtToolBar:Create()
 
-   if ::lFloating
+   IF ::lFloating
       ::lActive := .f.
       ::lHidden := .t.
-   endif
+   ENDIF
 
    aeval( ::aObjects, {|o| o:lActive := ::lActive } )
 
@@ -1736,29 +1721,29 @@ METHOD Create() CLASS WvtToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtToolBar
+METHOD WvtToolBar:Refresh()
 
-   if ::lFloating
+   IF ::lFloating
       DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", "n/w" )
-   else
+   ELSE
       Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintToolBar() CLASS WvtToolBar
+METHOD WvtToolBar:PaintToolBar()
 
-   if ( ::lActive )
+   IF ( ::lActive )
       Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, 0, 1, 2, , , ::nRGBSep )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD AddButton( cFileImage, bBlock, cTooltip ) CLASS WvtToolBar
+METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
    LOCAL oObj, nCol
 
    nCol := ( ::nBottom-::nTop+1 ) * 2
@@ -1770,16 +1755,16 @@ METHOD AddButton( cFileImage, bBlock, cTooltip ) CLASS WvtToolBar
    oObj:nLeft      := ::nBtnLeft + 1
    oObj:nBottom    := ::nBottom
 
-   if valtype( cFileImage ) == "C"
+   IF valtype( cFileImage ) == "C"
       oObj:nBtnType   := TLB_BUTTON_TYPE_IMAGE
       oObj:nRight     := oObj:nLeft + nCol - 1
       oObj:cFileImage := cFileImage
       oObj:bOnLeftUp  := bBlock
       oObj:Tooltip    := cTooltip
-   else
+   ELSE
       oObj:nBtnType   := TLB_BUTTON_TYPE_SEPARATOR
       oObj:nRight     := oObj:nLeft
-   endif
+   ENDIF
 
    aadd( ::aObjects, oObj )
 
@@ -1792,36 +1777,36 @@ METHOD AddButton( cFileImage, bBlock, cTooltip ) CLASS WvtToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn()
+METHOD WvtToolBar:HoverOn()
 
-   if ::lFloating .and. ::lHidden
+   IF ::lFloating .and. ::lHidden
       ::lHidden   := .f.
       ::lActive   := .t.
-      #if 0
+      #IF 0
       ::cScreen   := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
       ::wScreen   := Wvt_SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
-      #endif
+      #ENDIF
       aeval( ::aObjects, {|o| o:lActive := ::lActive } )
 
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff()
+METHOD WvtToolBar:HoverOff()
 
-   if ::lFloating .and. !( ::lHidden )
+   IF ::lFloating .and. !( ::lHidden )
       ::lHidden := .t.
       ::lActive := .f.
       aeval( ::aObjects, {|o| o:lActive := ::lActive } )
-      #if 0
+      #IF 0
       RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cScreen )
       Wvt_RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::wScreen, .f. )
-      #endif
+      #ENDIF
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -1842,7 +1827,7 @@ CLASS WvtToolButton FROM WvtObject
    DATA   nBtnType              INIT TLB_BUTTON_TYPE_IMAGE
    DATA   aPxlOffSet            INIT { 0, -1, -3, 1 }
 
-   METHOD New()
+   METHOD New( oParent )
    METHOD Create()
    METHOD Refresh()
    METHOD LeftDown()
@@ -1855,7 +1840,7 @@ CLASS WvtToolButton FROM WvtObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent ) CLASS WvtToolButton
+METHOD WvtToolButton:New( oParent )
 
    ::Super:New( oParent, DLG_OBJ_BUTTON )
 
@@ -1863,7 +1848,7 @@ METHOD New( oParent ) CLASS WvtToolButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtToolButton
+METHOD WvtToolButton:Create()
 
    ::bPaint := {|| ::PaintButton() }
    aadd( ::aPaint, { ::bPaint,;
@@ -1875,74 +1860,74 @@ METHOD Create() CLASS WvtToolButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtToolButton
+METHOD WvtToolButton:Refresh()
 
-   if ::lActive
+   IF ::lActive
       Eval( ::bPaint )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintButton() CLASS WvtToolButton
+METHOD WvtToolButton:PaintButton()
 
-   if ::lActive
-      if ::nBtnType == TLB_BUTTON_TYPE_IMAGE
+   IF ::lActive
+      IF ::nBtnType == TLB_BUTTON_TYPE_IMAGE
          Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, {4,4,-6,-4} )
-      else
+      ELSE
          Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, 1, 1, , , , ::oParent:nRGBSep )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD LeftDown() CLASS WvtToolButton
+METHOD WvtToolButton:LeftDown()
    LOCAL lRet := .f.
 
-   if ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
+   IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 2 )
       lRet := .t.
-   endif
+   ENDIF
 
    RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
-METHOD LeftUp() CLASS WvtToolButton
+METHOD WvtToolButton:LeftUp()
    LOCAL lRet := .f.
 
-   if ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
+   IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 1 )
       Eval( ::bOnLeftUp )
       lRet := .t.
-   endif
+   ENDIF
 
    RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn() CLASS WvtToolButton
+METHOD WvtToolButton:HoverOn()
 
    ::oParent:HoverOn()
 
-   if ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
+   IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 1 )
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff() CLASS WvtToolButton
+METHOD WvtToolButton:HoverOff()
 
    ::oParent:HoverOff()
 
-   if ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
+   IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight,::aPxlOffSet, 0 )
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -1960,18 +1945,18 @@ CLASS WvtImage FROM WvtObject
 
    DATA   cImageFile
 
-   ACCESS cImage                INLINE ::cImageFile
-   ASSIGN cImage( cImg )        INLINE ::cImageFile := cImg
+   ACCESS cImage                                  INLINE ::cImageFile
+   ASSIGN cImage( cImg )                          INLINE ::cImageFile := cImg
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
-   METHOD SetImage()
+   METHOD SetImage( cImage )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtImage
+METHOD WvtImage:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_IMAGE, nId, nTop, nLeft, nBottom, nRight )
 
@@ -1979,7 +1964,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtImage
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtImage
+METHOD WvtImage:Create()
 
    ::bPaint := {|| iif( file( ::cImage ), ;
         Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ),"" ) }
@@ -1993,12 +1978,12 @@ METHOD Create() CLASS WvtImage
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetImage( cImage ) CLASS WvtImage
+METHOD WvtImage:SetImage( cImage )
 
-   if cImage <> nil .and. file( cImage )
+   IF cImage <> nil .and. file( cImage )
       ::cImageFile := cImage
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -2027,13 +2012,13 @@ CLASS WvtStatic FROM WvtObject
    DATA   nfBottom
    DATA   nfRight
 
-   DATA   nHorzVert             INIT 0
+   DATA   nHorzVert                               INIT 0
    DATA   aRGBb
    DATA   aRGBe
 
-   DATA   aPxlOffSet            INIT {}
+   DATA   aPxlOffSet                              INIT {}
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD Refresh()
    METHOD HoverOn()
@@ -2043,7 +2028,7 @@ CLASS WvtStatic FROM WvtObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtStatic
+METHOD WvtStatic:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_STATIC, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2051,76 +2036,76 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtStatic
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtStatic
+METHOD WvtStatic:Create()
    LOCAL lInside := .f.
 
-   switch ::nStatic
+   SWITCH ::nStatic
 
-   case WVT_STATIC_LINE
+   CASE WVT_STATIC_LINE
       lInside := .t.
       ::bPaint  := {|| Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
                ::nOrient, ::nFormat, ::nAlign, ::nStyle, ::nThick, ::nColor ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_BOXRAISED
+   CASE WVT_STATIC_BOXRAISED
       ::bPaint := {|| Wvt_DrawBoxRaised( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_BOXRECESSED
+   CASE WVT_STATIC_BOXRECESSED
       ::bPaint := {|| Wvt_DrawBoxRecessed( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_BOXGROUP
+   CASE WVT_STATIC_BOXGROUP
       ::bPaint := {|| Wvt_DrawBoxGroup( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_BOXGROUPRAISED
+   CASE WVT_STATIC_BOXGROUPRAISED
       ::bPaint := {|| Wvt_DrawBoxGroupRaised( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_OUTLINE
+   CASE WVT_STATIC_OUTLINE
       ::bPaint := {|| Wvt_DrawOutline( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_RECTANGLE
+   CASE WVT_STATIC_RECTANGLE
       lInside := .t.
       ::bPaint := {|| Wvt_DrawRectangle( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_ROUNDRECT
+   CASE WVT_STATIC_ROUNDRECT
       lInside := .t.
       ::bPaint := {|| Wvt_DrawRoundRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_FOCUSRECT
+   CASE WVT_STATIC_FOCUSRECT
       lInside := .t.
       ::bPaint := {|| Wvt_DrawFocusRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_ELLIPSE
+   CASE WVT_STATIC_ELLIPSE
       lInside := .t.
       ::bPaint := {|| Wvt_DrawEllipse( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
-      exit
+      EXIT
 
-   case WVT_STATIC_SHADEDRECT
+   CASE WVT_STATIC_SHADEDRECT
       lInside := .t.
       ::bPaint := {|| Wvt_DrawShadedRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
                                 ::aPxlOffSet, ::nHorzVert, ::aRGBb, ::aRGBe ) }
-      exit
+      EXIT
 
-   end
+   ENDSWITCH
 
-   if lInside
+   IF lInside
       ::nfTop    := ::nTop
       ::nfLeft   := ::nLeft
       ::nfBottom := ::nBottom
       ::nfRight  := ::nRight
-   else
+   ELSE
       ::nfTop    := ::nTop    - 1
       ::nfLeft   := ::nLeft   - 1
       ::nfBottom := ::nBottom + 1
       ::nfRight  := ::nRight  + 1
-   endif
+   ENDIF
 
    aadd( ::aPaint, { ::bPaint,;
              { WVT_BLOCK_STATIC, ::nfTop, ::nfLeft, ::nfBottom, ::nfRight }} )
@@ -2131,19 +2116,19 @@ METHOD Create() CLASS WvtStatic
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn()
+METHOD WvtStatic:HoverOn()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff()
+METHOD WvtStatic:HoverOff()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtStatic
+METHOD WvtStatic:Refresh()
 
    Eval( ::bPaint )
 
@@ -2164,10 +2149,10 @@ CLASS WvtPushButton FROM WvtObject
    DATA   cCaption
    DATA   cFileImage
 
-   ACCESS block                 INLINE ::bOnLeftUp
-   ASSIGN block( bBlock )       INLINE ::bOnLeftUp := bBlock
+   ACCESS block                                   INLINE ::bOnLeftUp
+   ASSIGN block( bBlock )                         INLINE ::bOnLeftUp := bBlock
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD LeftDown()
    METHOD LeftUp()
@@ -2177,7 +2162,7 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtPushButton
+METHOD WvtPushButton:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_PUSHBUTTON, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2185,7 +2170,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtPushButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtPushButton
+METHOD WvtPushButton:Create()
 
    ::bPaint := {|| ::PaintButton() }
 
@@ -2198,20 +2183,20 @@ METHOD Create() CLASS WvtPushButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintButton() CLASS WvtPushButton
+METHOD WvtPushButton:PaintButton()
 
-   if ::cCaption == nil
+   IF ::cCaption == nil
       Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, { 4, 4,-4, -4 } )
-   else
+   ELSE
       Wvt_DrawButton( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cCaption, , 4 )
-   endif
+   ENDIF
    Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, {0,0,0,0}, 1 )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD LeftDown() CLASS WvtPushButton
+METHOD WvtPushButton:LeftDown()
 
    Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight,{0,0,0,0} , 2 )
 
@@ -2219,7 +2204,7 @@ METHOD LeftDown() CLASS WvtPushButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD LeftUp() CLASS WvtPushButton
+METHOD WvtPushButton:LeftUp()
 
    Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, {0,0,0,0}, 1 )
    ::Eval( ::bOnLeftUp )
@@ -2238,19 +2223,19 @@ METHOD LeftUp() CLASS WvtPushButton
 
 CLASS WvtGets FROM WvtObject
 
-   DATA   aGetList              INIT  {}
-   DATA   nLastGet              INIT  1
-   DATA   nCurGet               INIT  1
-   DATA   GetList               INIT  {}
-   DATA   cDesc                 INIT  ""
+   DATA   aGetList                                INIT  {}
+   DATA   nLastGet                                INIT  1
+   DATA   nCurGet                                 INIT  1
+   DATA   GetList                                 INIT  {}
+   DATA   cDesc                                   INIT  ""
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD KillFocus()
    METHOD SetFocus()
-   METHOD HandleEvent()
-   METHOD AddGets()
-   METHOD PaintBlock()
+   METHOD HandleEvent( nKey )
+   METHOD AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
+   METHOD PaintBlock( nIndex )
    METHOD Read()
    METHOD Hilite()
    METHOD DeHilite()
@@ -2261,7 +2246,7 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtGets
+METHOD WvtGets:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_GETS, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2269,12 +2254,12 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtGets
+METHOD WvtGets:Create()
    LOCAL i, GetList
    LOCAL nCurRow := row()
    LOCAL nCurCol := Col()
 
-   for i := 1 to len( ::aGetList )
+   FOR i := 1 to len( ::aGetList )
       GetList := {}
 
       DEFAULT ::aGetList[ i,7 ] TO "N/W*,N/W*,,,N/GR*"
@@ -2297,7 +2282,7 @@ METHOD Create() CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD PaintBlock( nIndex ) CLASS WvtGets
+METHOD WvtGets:PaintBlock( nIndex )
    LOCAL nLen, bPaint
 
    nLen   := len( Transform( ::aGetList[ nIndex,3 ], ::aGetList[ nIndex,4 ] ) )
@@ -2312,19 +2297,19 @@ METHOD PaintBlock( nIndex ) CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetFocus() CLASS WvtGets
+METHOD WvtGets:SetFocus()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD KillFocus() CLASS WvtGets
+METHOD WvtGets:KillFocus()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen ) CLASS WvtGets
+METHOD WvtGets:AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
 
    aadd( ::aGetList, { nRow, nCol, xVar, cPic, bValid, bWhen, cColor } )
 
@@ -2332,20 +2317,20 @@ METHOD AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen ) CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD HandleEvent( nKey ) CLASS WvtGets
-   Local lRet := .f.
+METHOD WvtGets:HandleEvent( nKey )
+   LOCAL lRet := .f.
 
-   do case
-   case nKey == K_LDBLCLK
+   DO CASE
+   CASE nKey == K_LDBLCLK
       ::Read()
       lRet := .t.
-   endcase
+   ENDCASE
 
    RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
-METHOD Read() CLASS WvtGets
+METHOD WvtGets:Read()
 
    ReadModal( ::GetList, ::nCurGet )
 
@@ -2353,20 +2338,20 @@ METHOD Read() CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD GetData() CLASS WvtGets
+METHOD WvtGets:GetData()
    LOCAL aData := NIL
 
    RETURN aData
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetData( /*aData*/ )
+METHOD WvtGets:SetData( /*aData*/ )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Hilite() CLASS WvtGets
+METHOD WvtGets:Hilite()
 
    DispOutAt( ::nTop, ::nLeft, pad( " "+::cDesc, ::nRight-::nLeft+1 ), ::cColorHilite )
 
@@ -2374,7 +2359,7 @@ METHOD Hilite() CLASS WvtGets
 
 /*----------------------------------------------------------------------*/
 
-METHOD DeHilite() CLASS WvtGets
+METHOD WvtGets:DeHilite()
 
    DispOutAt( ::nTop, ::nLeft, pad( " "+::cDesc, ::nRight-::nLeft+1 ), ::cColorDeHilite )
 
@@ -2392,12 +2377,12 @@ METHOD DeHilite() CLASS WvtGets
 
 CLASS WvtScrollBar FROM WvtObject
 
-   DATA   nBarType              INIT WVT_SCROLLBAR_VERT
+   DATA   nBarType                                INIT WVT_SCROLLBAR_VERT
 
-   DATA   nTotal                INIT 100
-   DATA   nCurrent              INIT 1
-   DATA   nThumbPos             INIT 0
-   DATA   nBlockNo              INIT 1
+   DATA   nTotal                                  INIT 100
+   DATA   nCurrent                                INIT 1
+   DATA   nThumbPos                               INIT 0
+   DATA   nBlockNo                                INIT 1
 
    DATA   nSTop
    DATA   nSLeft
@@ -2413,47 +2398,43 @@ CLASS WvtScrollBar FROM WvtObject
    DATA   nBtn2Left
    DATA   nBtn2Bottom
    DATA   nBtn2Right
-
    DATA   bBtnLeftTop
    DATA   bBtnLeftTopDep
    DATA   bBtnRightBottom
    DATA   bBtnRightBottomDep
-
    DATA   bBtnScroll
-
    DATA   bTotal
    DATA   bCurrent
+   DATA   lHidden                                 INIT .t.
 
-   DATA   lHidden               INIT .t.
+   DATA   aPxlBtnTop                              INIT {0,0,0,0}
+   DATA   aPxlBtnLft                              INIT {0,0,0,0}
+   DATA   aPxlBtnBtm                              INIT {0,0,0,0}
+   DATA   aPxlBtnRgt                              INIT {0,0,0,0}
+   DATA   aPxlScroll                              INIT {0,0,0,0}
 
-   DATA   aPxlBtnTop            INIT {0,0,0,0}
-   DATA   aPxlBtnLft            INIT {0,0,0,0}
-   DATA   aPxlBtnBtm            INIT {0,0,0,0}
-   DATA   aPxlBtnRgt            INIT {0,0,0,0}
-   DATA   aPxlScroll            INIT {0,0,0,0}
+   DATA   lLeftDown                               INIT .f.
+   DATA   lOnThumb                                INIT .f.
+   DATA   lAnchored                               INIT .f.
+   DATA   lOnLeftDown                             INIT .f.
 
-   DATA   lLeftDown             INIT .f.
-   DATA   lOnThumb              INIT .f.
-   DATA   lAnchored             INIT .f.
-   DATA   lOnLeftDown           INIT .f.
+   DATA   nScrollUnits                            INIT 0
 
-   DATA   nScrollUnits          INIT 0
-
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
-   METHOD Configure()
+   METHOD Configure( nTop, nLeft, nBottom, nRight )
    METHOD Refresh()
-   METHOD HandleEvent()
-   METHOD SetPos()
+   METHOD HandleEvent( nKey )
+   METHOD SetPos( nTotal, nCurrent )
    METHOD GetPos()
    METHOD ThumbPos()
    METHOD SetTooltip()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtScrollBar
+METHOD wvtScrollbar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_SCROLLBAR, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2461,13 +2442,13 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtScrollBar
+METHOD wvtScrollbar:Create()
 
-   if ::nTop == nil .or. ::nLeft == nil
+   IF ::nTop == nil .or. ::nLeft == nil
       return nil
-   endif
+   ENDIF
 
-   if ::nBarType == WVT_SCROLLBAR_VERT
+   IF ::nBarType == WVT_SCROLLBAR_VERT
       DEFAULT ::nBottom TO ::nTop + 5
       DEFAULT ::nRight  TO ::nLeft + 1
 
@@ -2507,7 +2488,7 @@ METHOD Create() CLASS WvtScrollBar
       ::bBtnRightBottomDep := ;
            {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnBtm,3,.t. ) }
 
-   else
+   ELSE
       DEFAULT ::nBottom TO ::nTop
       DEFAULT ::nRight  TO ::nLeft + 11
 
@@ -2548,7 +2529,7 @@ METHOD Create() CLASS WvtScrollBar
       ::bBtnRightBottomDep := ;
            {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnRgt,4,.t. ) }
 
-   endif
+   ENDIF
 
    ::bOnLeftUp      := {|| ::HandleEvent( K_LBUTTONUP      ) }
    ::bOnLeftDown    := {|| ::HandleEvent( K_LBUTTONDOWN    ) }
@@ -2564,7 +2545,7 @@ METHOD Create() CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Configure( nTop, nLeft, nBottom, nRight ) CLASS WvtScrollBar
+METHOD wvtScrollbar:Configure( nTop, nLeft, nBottom, nRight )
 
    ::nTop     := nTop
    ::nLeft    := nLeft
@@ -2578,7 +2559,7 @@ METHOD Configure( nTop, nLeft, nBottom, nRight ) CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtScrollBar
+METHOD wvtScrollbar:Refresh()
 
    Eval( ::bBtnScroll )
 
@@ -2586,7 +2567,7 @@ METHOD Refresh() CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetPos( nTotal, nCurrent ) CLASS WvtScrollBar
+METHOD wvtScrollbar:SetPos( nTotal, nCurrent )
 
    DEFAULT nTotal   TO Eval( ::bTotal   )
    DEFAULT nCurrent TO Eval( ::bCurrent )
@@ -2601,49 +2582,49 @@ METHOD SetPos( nTotal, nCurrent ) CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD ThumbPos() CLASS WvtScrollBar
+METHOD wvtScrollbar:ThumbPos()
    LOCAL  nNewPos, nRecPerUnit, nCurUnit
 
-   if ::nBarType == WVT_SCROLLBAR_VERT
+   IF ::nBarType == WVT_SCROLLBAR_VERT
       nRecPerUnit := ::nTotal / ::nScrollUnits
       nCurUnit    := int( ::nCurrent / nRecPerUnit )
 
-      if ::nCurrent == 1
+      IF ::nCurrent == 1
          nCurUnit := 0
-      elseif ::nCurrent == ::nTotal
+      ELSEIF ::nCurrent == ::nTotal
          nCurUnit := ::nScrollUnits
-      endif
+      ENDIF
       nNewPos     := ::nSTop + nCurUnit
 
-      if nNewPos < ::nSTop
+      IF nNewPos < ::nSTop
          nNewPos  := ::nSTop
-      elseif nNewPos > ::nSBottom
+      ELSEIF nNewPos > ::nSBottom
          nNewPos  := ::nSBottom
-      endif
+      ENDIF
 
-   else
-      if ::nTotal < ::nScrollUnits
+   ELSE
+      IF ::nTotal < ::nScrollUnits
          nCurUnit := ::nCurrent * int( ::nScrollUnits / ::nTotal )
-      else
+      ELSE
          nRecPerUnit := ::nTotal / ::nScrollUnits
          nCurUnit    := int( ::nCurrent / nRecPerUnit )
-      endif
+      ENDIF
 
-      if ::nCurrent == 1
+      IF ::nCurrent == 1
          nCurUnit := 0
-      elseif ::nCurrent == ::nTotal
+      ELSEIF ::nCurrent == ::nTotal
          nCurUnit := ::nScrollUnits
-      endif
+      ENDIF
 
       nNewPos := ::nSLeft + nCurUnit
 
-      if nNewPos < ::nSLeft
+      IF nNewPos < ::nSLeft
          nNewPos := ::nSLeft
-      elseif nNewPos > ::nSRight - 1
+      ELSEIF nNewPos > ::nSRight - 1
          nNewPos := ::nSRight-1
-      endif
+      ENDIF
 
-   endif
+   ENDIF
 
    ::nThumbPos := nNewPos
 
@@ -2651,13 +2632,13 @@ METHOD ThumbPos() CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD GetPos() CLASS WvtScrollBar
+METHOD wvtScrollbar:GetPos()
 
    RETURN ::nCurrent
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetTooltip() CLASS WvtScrollBar
+METHOD wvtScrollbar:SetTooltip()
 
    ::Tooltip := ltrim( str( ::nCurrent,12,0 ) ) + " / " + ;
                 ltrim( str( ::nTotal  ,12,0 ) )
@@ -2668,211 +2649,211 @@ METHOD SetTooltip() CLASS WvtScrollBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD HandleEvent( nKey ) CLASS WvtScrollBar
+METHOD wvtScrollbar:HandleEvent( nKey )
    LOCAL nmRow, nmCol, nOff
    LOCAL lHit  := .F.
    LOCAL mKeys_:={ K_LBUTTONDOWN, K_LBUTTONUP, K_MMLEFTDOWN, K_LBUTTONPRESSED }
 
-   if ascan( mKeys_, nKey ) == 0
-      return .f.
-   endif
+   IF ascan( mKeys_, nKey ) == 0
+      RETURN .f.
+   ENDIF
 
    nmRow := MRow()
    nmCol := MCol()
 
-   do case
-   case ::nBarType == WVT_SCROLLBAR_VERT
+   DO CASE
+   CASE ::nBarType == WVT_SCROLLBAR_VERT
       lHit := .t.
 
-      do case
-      case ::lAnchored .and. nKey == K_MMLEFTDOWN
-         if nmRow <> ::nThumbPos
+      DO CASE
+      CASE ::lAnchored .and. nKey == K_MMLEFTDOWN
+         IF nmRow <> ::nThumbPos
             nOff := ::nThumbPos - nmRow
-            if nOff > 0
+            IF nOff > 0
                ::nThumbPos := max( ::nTop+1, nmRow )
-            else
+            ELSE
                ::nThumbPos := min( ::nBottom-1, nmRow )
-            endif
+            ENDIF
             ::nCurrent := ( ::nTotal * ( ::nThumbPos - ::nTop ) / ::nScrollUnits )
 
-            if ::nCurrent > ::nTotal
+            IF ::nCurrent > ::nTotal
                ::nCurrent := ::nTotal
-            endif
-            if ::nCurrent < 1
+            ENDIF
+            IF ::nCurrent < 1
                ::nCurrent := 1
-            endif
+            ENDIF
 
             ::SetPos( ::nTotal, ::nCurrent )
 
             ::SetTooltip()
             Wvt_Keyboard( K_SBTHUMBTRACKVERT )
-         else
+         ELSE
             lHit := .f.
-         endif
+         ENDIF
 
-      case ::lAnchored .and. nKey == K_LBUTTONUP
+      CASE ::lAnchored .and. nKey == K_LBUTTONUP
          ::lAnchored := .f.
 
-      otherwise
+      OTHERWISE
          lHit := .f.
 
-         if nmCol >= ::nLeft .and. nmCol <= ::nRight
+         IF nmCol >= ::nLeft .and. nmCol <= ::nRight
             lHit := .t.
 
-            do case
-            case nmRow == ::nThumbPos .and. nKey == K_LBUTTONDOWN
+            DO CASE
+            CASE nmRow == ::nThumbPos .and. nKey == K_LBUTTONDOWN
                ::lAnchored := .t.
 
-            case nKey == K_LBUTTONUP
-               if ( lHit := ::lOnLeftDown )
-                  do case
-                  case nmRow == ::nTop
+            CASE nKey == K_LBUTTONUP
+               IF ( lHit := ::lOnLeftDown )
+                  DO CASE
+                  CASE nmRow == ::nTop
                      Eval( ::bBtnLeftTop )
-                  case nmRow == ::nBottom
+                  CASE nmRow == ::nBottom
                      Eval( ::bBtnRightBottom )
-                  case nmRow < ::nThumbPos .and. nmRow > ::nTop
-                  case nmRow > ::nThumbPos .and. nmRow < ::nBottom
-                  otherwise
+                  CASE nmRow < ::nThumbPos .and. nmRow > ::nTop
+                  CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
+                  OTHERWISE
                      lHit := .f.
-                  endcase
-                  if lHit
+                  ENDCASE
+                  IF lHit
                      ::lOnLeftDown := .f.
-                  endif
-               endif
+                  ENDIF
+               ENDIF
 
-            case nKey == K_LBUTTONPRESSED
-               if ( lHit := ::lOnLeftDown )
-                  do case
-                  case nmRow == ::nTop
+            CASE nKey == K_LBUTTONPRESSED
+               IF ( lHit := ::lOnLeftDown )
+                  DO CASE
+                  CASE nmRow == ::nTop
                      Wvt_Keyboard( K_SBLINEUP   )
-                  case nmRow == ::nBottom
+                  CASE nmRow == ::nBottom
                      Wvt_Keyboard( K_SBLINEDOWN )
-                  case nmRow < ::nThumbPos .and. nmRow > ::nTop
+                  CASE nmRow < ::nThumbPos .and. nmRow > ::nTop
                      Wvt_Keyboard( K_SBPAGEUP )
-                  case nmRow > ::nThumbPos .and. nmRow < ::nBottom
+                  CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
                      Wvt_Keyboard( K_SBPAGEDOWN )
-                  otherwise
+                  OTHERWISE
                      lHit := .f.
-                  endcase
-               endif
+                  ENDCASE
+               ENDIF
 
-            case nKey == K_LBUTTONDOWN
-               do case
-               case nmRow == ::nTop
+            CASE nKey == K_LBUTTONDOWN
+               DO CASE
+               CASE nmRow == ::nTop
                   Eval( ::bBtnLeftTopDep )
                   Wvt_Keyboard( K_SBLINEUP )
-               case nmRow == ::nBottom
+               CASE nmRow == ::nBottom
                   Eval( ::bBtnRightBottomDep )
                   Wvt_Keyboard( K_SBLINEDOWN )
-               case nmRow < ::nThumbPos .and. nmRow > ::nTop
+               CASE nmRow < ::nThumbPos .and. nmRow > ::nTop
                   Wvt_Keyboard( K_SBPAGEUP   )
-               case nmRow > ::nThumbPos .and. nmRow < ::nBottom
+               CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
                   Wvt_Keyboard( K_SBPAGEDOWN )
-               otherwise
+               OTHERWISE
                   lHit := .f.
-               endcase
-               if lHit
+               ENDCASE
+               IF lHit
                   ::lOnLeftDown := .t.
-               endif
-            endcase
-         endif
+               ENDIF
+            ENDCASE
+         ENDIF
 
-      endcase
+      ENDCASE
 
-   case ::nBarType == WVT_SCROLLBAR_HORZ
-      do case
-      case ::lAnchored .and. nKey == K_MMLEFTDOWN
-         if ( lHit := ( nmCol < ::nThumbPos .or. nmCol > ::nThumbPos+1 ) )
+   CASE ::nBarType == WVT_SCROLLBAR_HORZ
+      DO CASE
+      CASE ::lAnchored .and. nKey == K_MMLEFTDOWN
+         IF ( lHit := ( nmCol < ::nThumbPos .or. nmCol > ::nThumbPos+1 ) )
 
             nOff := ::nThumbPos - nmCol
-            if nOff > 0
+            IF nOff > 0
                ::nThumbPos := max( ::nLeft+2, nmCol )
-            else
+            ELSE
                ::nThumbPos := min( ::nRight-2, nmCol )
-            endif
+            ENDIF
 
             ::nCurrent := ( ::nTotal * ( ::nThumbPos - ::nLeft+1 ) / ::nScrollUnits )
 
-            if ::nCurrent > ::nTotal
+            IF ::nCurrent > ::nTotal
                ::nCurrent := ::nTotal
-            endif
-            if ::nCurrent < 1
+            ENDIF
+            IF ::nCurrent < 1
                ::nCurrent := 1
-            endif
+            ENDIF
 
             ::SetPos( ::nTotal, ::nCurrent )
 
             Wvt_Keyboard( K_SBTHUMBTRACKHORZ )
-         endif
+         ENDIF
 
-      case ::lAnchored .and. nKey == K_LBUTTONUP
+      CASE ::lAnchored .and. nKey == K_LBUTTONUP
          ::lAnchored := .f.
          lHit := .t.
 
-      otherwise
+      OTHERWISE
 
-         if ( lHit := nmRow == ::nTop .and. nmCol >= ::nLeft .and. nmCol <= ::nRight )
+         IF ( lHit := nmRow == ::nTop .and. nmCol >= ::nLeft .and. nmCol <= ::nRight )
 
-            do case
-            case nKey == K_LBUTTONDOWN .and. nmCol >= ::nThumbPos .and. nmCol <= ::nThumbPos+1
+            DO CASE
+            CASE nKey == K_LBUTTONDOWN .and. nmCol >= ::nThumbPos .and. nmCol <= ::nThumbPos+1
                ::lAnchored := .t.
 
-            case nKey == K_LBUTTONUP
+            CASE nKey == K_LBUTTONUP
 
-               if ( lHit := ::lOnLeftDown )
-                  do case
-                  case nmCol >= ::nLeft    .and. nmCol <= ::nLeft+1
+               IF ( lHit := ::lOnLeftDown )
+                  DO CASE
+                  CASE nmCol >= ::nLeft    .and. nmCol <= ::nLeft+1
                      Eval( ::bBtnLeftTop )
-                  case nmCol >= ::nRight-1 .and. nmCol <= ::nRight
+                  CASE nmCol >= ::nRight-1 .and. nmCol <= ::nRight
                      Eval( ::bBtnRightBottom )
-                  case nmCol <  ::nThumbPos
-                  case nmCol >  ::nThumbPos+1
-                  otherwise
+                  CASE nmCol <  ::nThumbPos
+                  CASE nmCol >  ::nThumbPos+1
+                  OTHERWISE
                      lHit := .f.
-                  endcase
-                  if lHit
+                  ENDCASE
+                  IF lHit
                      ::lOnLeftDown := .f.
-                  endif
-               endif
+                  ENDIF
+               ENDIF
 
-            case nKey == K_LBUTTONPRESSED
-               if ( lHit := ::lOnLeftDown )
-                  do case
-                  case nmCol == ::nLeft  .or. nmCol == ::nLeft+1
+            CASE nKey == K_LBUTTONPRESSED
+               IF ( lHit := ::lOnLeftDown )
+                  DO CASE
+                  CASE nmCol == ::nLeft  .or. nmCol == ::nLeft+1
                      Wvt_Keyboard( K_SBLINELEFT )
-                  case nmCol == ::nRight .or. nmCol == ::nRight-1
+                  CASE nmCol == ::nRight .or. nmCol == ::nRight-1
                      Wvt_Keyboard( K_SBLINERIGHT )
-                  case nmCol < ::nThumbPos
+                  CASE nmCol < ::nThumbPos
                      Wvt_Keyboard( K_SBPAGELEFT )
-                  case nmCol > ::nThumbPos+1
+                  CASE nmCol > ::nThumbPos+1
                      Wvt_Keyboard( K_SBPAGERIGHT )
-                  otherwise
+                  OTHERWISE
                      lHit := .f.
-                  endcase
-               endif
+                  ENDCASE
+               ENDIF
 
-            case nKey == K_LBUTTONDOWN
-               do case
-               case nmCol == ::nLeft  .or. nmCol == ::nLeft+1
+            CASE nKey == K_LBUTTONDOWN
+               DO CASE
+               CASE nmCol == ::nLeft  .or. nmCol == ::nLeft+1
                   Eval( ::bBtnLeftTopDep )
                   Wvt_Keyboard( K_SBLINELEFT )
-               case nmCol == ::nRight .or. nmCol == ::nRight-1
+               CASE nmCol == ::nRight .or. nmCol == ::nRight-1
                   Eval( ::bBtnRightBottomDep )
                   Wvt_Keyboard( K_SBLINERIGHT )
-               case nmCol < ::nThumbPos
+               CASE nmCol < ::nThumbPos
                   Wvt_Keyboard( K_SBPAGELEFT )
-               case nmCol > ::nThumbPos+1
+               CASE nmCol > ::nThumbPos+1
                   Wvt_Keyboard( K_SBPAGERIGHT )
-               otherwise
+               OTHERWISE
                   lHit := .f.
-               endcase
-               if lHit
+               ENDCASE
+               IF lHit
                   ::lOnLeftDown := .t.
-               endif
-            endcase
-         endif
-      endcase
-   endcase
+               ENDIF
+            ENDCASE
+         ENDIF
+      ENDCASE
+   ENDCASE
 
    RETURN lHit
 
@@ -2888,36 +2869,36 @@ METHOD HandleEvent( nKey ) CLASS WvtScrollBar
 
 CLASS WvtBanner FROM WvtObject
 
-   DATA   nTimeDelay            INIT 0.5    /* One-half Second */
-   DATA   nDirection            INIT 0      /* LEFT 1-RIGHT */
-   DATA   nCharToSkip           INIT 1
-   DATA   cText                 INIT ""
-   DATA   cDispText             INIT ""
-   DATA   nTextLen              INIT 0
-   DATA   nTextIndex            INIT 0
+   DATA   nTimeDelay                              INIT 0.5    /* One-half Second */
+   DATA   nDirection                              INIT 0      /* LEFT 1-RIGHT */
+   DATA   nCharToSkip                             INIT 1
+   DATA   cText                                   INIT ""
+   DATA   cDispText                               INIT ""
+   DATA   nTextLen                                INIT 0
+   DATA   nTextIndex                              INIT 0
 
    DATA   oLabel
 
-   DATA   nAlignVert            INIT 2     /* Center */
+   DATA   nAlignVert                              INIT 2     /* Center */
 
-   DATA   nCurSeconds           INIT 0
+   DATA   nCurSeconds                             INIT 0
    DATA   nCurAlign
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD Configure()
    METHOD Refresh()
    METHOD HoverOn()
    METHOD HoverOff()
    METHOD OnTimer()
-   METHOD SetText()
+   METHOD SetText( cText )
    METHOD Destroy()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtBanner
+METHOD WvtBanner:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_BANNER, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2925,7 +2906,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtBanner
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtBanner
+METHOD WvtBanner:Create()
 
    ::cDispText := ::cText
 
@@ -2959,7 +2940,7 @@ METHOD Create() CLASS WvtBanner
 
 /*----------------------------------------------------------------------*/
 
-METHOD Destroy() CLASS WvtBanner
+METHOD WvtBanner:Destroy()
 
    WVG_DeleteObject( ::oLabel:hFont )
 
@@ -2967,13 +2948,13 @@ METHOD Destroy() CLASS WvtBanner
 
 /*----------------------------------------------------------------------*/
 
-METHOD Configure() CLASS WvtBanner
+METHOD WvtBanner:Configure()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD OnTimer() CLASS WvtBanner
+METHOD WvtBanner:OnTimer()
 
    ::Refresh()
 
@@ -2981,59 +2962,59 @@ METHOD OnTimer() CLASS WvtBanner
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetText( cText ) CLASS WvtBanner
+METHOD WvtBanner:SetText( cText )
 
-   if cText <> nil
+   IF cText <> nil
       ::cText := cText
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtBanner
+METHOD WvtBanner:Refresh()
    LOCAL nNewTime
 
-   if abs( ( nNewTime := Seconds() ) - ::nCurSeconds ) >= ::nTimeDelay
+   IF abs( ( nNewTime := Seconds() ) - ::nCurSeconds ) >= ::nTimeDelay
       ::nCurSeconds := nNewTime
 
-      if ::nDirection == 0
+      IF ::nDirection == 0
          ::nTextIndex++
-         if ::nTextIndex > ::nTextLen
+         IF ::nTextIndex > ::nTextLen
             ::nTextIndex := 1
             ::nCurAlign  := iif( ::nCurAlign == 0, 1, 0 )
-         endif
+         ENDIF
 
-         if ::nCurAlign == 0   /* Left  */
+         IF ::nCurAlign == 0   /* Left  */
             ::cDispText := substr( ::cText,::nTextIndex )
-         else                  /* Right */
+         ELSE                  /* Right */
             ::cDispText := substr( ::cText, 1, ::nTextIndex )
-         endif
-      else
+         ENDIF
+      ELSE
          ::nTextIndex--
-         if ::nTextIndex < 0
+         IF ::nTextIndex < 0
             ::nTextIndex := ::nTextLen
             ::nCurAlign := iif( ::nCurAlign == 0, 1, 0 )
-         endif
+         ENDIF
 
-         if ::nCurAlign == 0   /* Left  */
+         IF ::nCurAlign == 0   /* Left  */
             ::cDispText := substr( ::cText,::nTextIndex )
-         else                  /* Right */
+         ELSE                  /* Right */
             ::cDispText := substr( ::cText, 1, ::nTextIndex )
-         endif
-      endif
+         ENDIF
+      ENDIF
 
       ::oLabel:nAlignHorz := ::nCurAlign
       ::oLabel:SetText( ::cDispText )
       ::oLabel:Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn() CLASS WvtBanner
+METHOD WvtBanner:HoverOn()
 
    ::oLabel:HoverOn()
 
@@ -3041,7 +3022,7 @@ METHOD HoverOn() CLASS WvtBanner
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff() CLASS WvtBanner
+METHOD WvtBanner:HoverOff()
 
    ::oLabel:HoverOff()
 
@@ -3059,21 +3040,21 @@ METHOD HoverOff() CLASS WvtBanner
 
 CLASS WvtTextBox FROM WvtObject
 
-   DATA   cText                 INIT ""
+   DATA   cText                                   INIT ""
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
    METHOD Configure()
    METHOD Refresh()
-   METHOD SetText()
+   METHOD SetText( cText )
    METHOD HoverOn()
    METHOD HoverOff()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtTextBox
+METHOD WvtTextBox:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_TEXTBOX, nID, nTop, nLeft, nBottom, nRight )
 
@@ -3081,7 +3062,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtTextBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtTextBox
+METHOD WvtTextBox:Create()
 
    ::nTextColorHoverOff := ::nTextColor
 
@@ -3089,13 +3070,13 @@ METHOD Create() CLASS WvtTextBox
                   ::nFontWeight, ::lItalic, ::lUnderline, ::lStrikeout, ;
                   ::nCharSet, ::nFontQuality, 0 )
 
-   if ::hFont <> 0
+   IF ::hFont <> 0
       ::bPaint := {|| Wvt_DrawTextBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
             ::aPxlTLBR, ::cText, ::nAlignHorz, ::nAlignVert, ;
             ::nTextColor, ::nBackColor, ::nBackMode, ::hFont ) }
 
       aadd( ::aPaint, { ::bPaint, { WVT_BLOCK_LABEL, ::nTop, ::nLeft, ::nBottom, ::nRight } } )
-   endif
+   ENDIF
 
    ::Super:Create()
 
@@ -3103,7 +3084,7 @@ METHOD Create() CLASS WvtTextBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD Refresh() CLASS WvtTextBox
+METHOD WvtTextBox:Refresh()
 
    Eval( ::bPaint )
 
@@ -3111,40 +3092,40 @@ METHOD Refresh() CLASS WvtTextBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD Configure() CLASS WvtTextBox
+METHOD WvtTextBox:Configure()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetText( cText ) CLASS WvtTextBox
+METHOD WvtTextBox:SetText( cText )
 
-   if cText <> nil
+   IF cText <> nil
       ::cText := cText
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOn( /*cText*/ ) CLASS WvtTextBox
+METHOD WvtTextBox:HoverOn( /*cText*/ )
 
-   if ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn <> nil
       ::nTextColor := ::nTextColorHoverOn
       ::Refresh()
-   endif
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HoverOff( /*cText*/ ) CLASS WvtTextBox
+METHOD WvtTextBox:HoverOff( /*cText*/ )
 
-   if ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn <> nil
       ::nTextColor := ::nTextColorHoverOff
       ::Refresh()
-   endif
+   ENDIF
 
 RETURN Self
 
@@ -3161,30 +3142,30 @@ RETURN Self
 CLASS WvtProgressBar FROM WvtObject
 
    DATA   cImage
-   DATA   nDirection            INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
-   DATA   nStyle                INIT 0
-   DATA   lVertical             INIT .f.
-   DATA   lActive               INIT .f.
+   DATA   nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
+   DATA   nStyle                                  INIT 0
+   DATA   lVertical                               INIT .f.
+   DATA   lActive                                 INIT .f.
 
-   DATA   nBarColor             INIT RGB( 0,0,128 )
-   DATA   nCurrent              INIT 0
-   DATA   nTotal                INIT 1
-   DATA   nPercent              INIT 0
-   DATA   cBackColor            INIT "W/W"
+   DATA   nBarColor                               INIT RGB( 0,0,128 )
+   DATA   nCurrent                                INIT 0
+   DATA   nTotal                                  INIT 1
+   DATA   nPercent                                INIT 0
+   DATA   cBackColor                              INIT "W/W"
 
    DATA   cScreen
 
-   METHOD New()
+   METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD Create()
-   METHOD Display()
+   METHOD Display( nCurrent, nTotal )
    METHOD Activate()
    METHOD DeActivate()
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtProgressBar
+METHOD WvtProgressBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_PROGRESSBAR, nID, nTop, nLeft, nBottom, nRight )
 
@@ -3192,7 +3173,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtProgressBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create() CLASS WvtProgressBar
+METHOD WvtProgressBar:Create()
 
    DEFAULT ::nTop       TO 0
    DEFAULT ::nLeft      TO 0
@@ -3210,11 +3191,11 @@ METHOD Create() CLASS WvtProgressBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Display( nCurrent, nTotal ) CLASS WvtProgressBar
+METHOD WvtProgressBar:Display( nCurrent, nTotal )
 
-   if !( ::lActive )
+   IF !( ::lActive )
       return Self
-   endif
+   ENDIF
 
    DEFAULT nCurrent TO ::nCurrent
    DEFAULT nTotal   TO ::nTotal
@@ -3222,9 +3203,9 @@ METHOD Display( nCurrent, nTotal ) CLASS WvtProgressBar
    ::nCurrent := nCurrent
    ::nTotal   := nTotal
 
-   if ::nCurrent > ::nTotal
+   IF ::nCurrent > ::nTotal
       ::nCurrent := ::nTotal
-   endif
+   ENDIF
 
    ::nPercent := int( ::nCurrent / ::nTotal * 100 )
 
@@ -3234,7 +3215,7 @@ METHOD Display( nCurrent, nTotal ) CLASS WvtProgressBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD Activate() CLASS WvtProgressBar
+METHOD WvtProgressBar:Activate()
 
    ::cScreen := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
    DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", ::cBackColor )
@@ -3244,7 +3225,7 @@ METHOD Activate() CLASS WvtProgressBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD DeActivate() CLASS WvtProgressBar
+METHOD WvtProgressBar:DeActivate()
 
    ::lActive  := .f.
    ::nCurrent := 0
@@ -3270,7 +3251,7 @@ CLASS wvtMenu
    METHOD Create( cCaption )
    METHOD AddItem( cCaption, bAction )
    METHOD DelAllItems()
-   METHOD DelItem( nItem )
+   METHOD DelItem( nItemNum )
    METHOD EnableItem( nItemNum )
    METHOD DisableItem( nItemNum )
    METHOD NumItems()
@@ -3279,24 +3260,24 @@ CLASS wvtMenu
    METHOD FindMenuItemById( nId )
    METHOD DrawMenuBar()
 
-   CLASSVAR MenuItemId          INIT 1
+   CLASSVAR MenuItemId                            INIT 1
 
    VAR    aItems
    VAR    hMenu
    VAR    Caption
    VAR    IdNumber
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create( cCaption ) CLASS wvtMenu
+METHOD wvtMenu:Create( cCaption )
    ::aItems := {}
 
    IF EMPTY( ::hMenu:= Wvt_CreateMenu() )
-      #if 0
+      #IF 0
       Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption },"wvt.prg" ) )
-      #endif
+      #ENDIF
    ENDIF
    ::Caption:= IIF( cCaption == NIL, "", cCaption )
 
@@ -3304,15 +3285,15 @@ METHOD Create( cCaption ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD Destroy() CLASS wvtMenu
+METHOD wvtMenu:Destroy()
 
    IF !EMPTY( ::hMenu )
       ::DelAllItems()
 
       IF !Wvt_DestroyMenu( ::hMenu )
-         #if 0
+         #IF 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"wvt.prg" ) )
-         #endif
+         #ENDIF
       ENDIF
       ::hMenu:= 0
    ENDIF
@@ -3321,7 +3302,7 @@ METHOD Destroy() CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD AddItem(cCaption, bAction) CLASS wvtMenu
+METHOD wvtMenu:AddItem( cCaption, bAction )
    LOCAL lResult:= .F., aItem
 
    IF !EMPTY( ::hMenu ) .AND. ( !EMPTY( cCaption ) .OR. !EMPTY( bAction ) )
@@ -3333,15 +3314,15 @@ METHOD AddItem(cCaption, bAction) CLASS wvtMenu
       ELSEIF left( cCaption, 1 )=="-"
          aItem:= {MF_SEPARATOR,0,0,NIL}
       ELSE
-         #if 0
+         #IF 0
          Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },"wvt.prg" ) )
-         #endif
+         #ENDIF
       ENDIF
 
       IF !Wvt_AppendMenu(::hMenu, aItem[WVT_MENU_TYPE],aItem[WVT_MENU_IDENTIFIER],aItem[WVT_MENU_CAPTION])
-         #if 0
+         #IF 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },"wvt.prg" ) )
-         #endif
+         #ENDIF
       ENDIF
 
       AADD(::aItems, aItem)
@@ -3352,7 +3333,7 @@ METHOD AddItem(cCaption, bAction) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD DelAllItems() CLASS wvtMenu
+METHOD wvtMenu:DelAllItems()
    LOCAL lResult:= .T.,  nItems
 
    nItems := ::NumItems()
@@ -3365,7 +3346,7 @@ METHOD DelAllItems() CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD DelItem( nItemNum ) CLASS wvtMenu
+METHOD wvtMenu:DelItem( nItemNum )
    LOCAL lResult:= .F.
 
    IF nItemNum > 0 .AND. nItemNum <= ::NumItems()
@@ -3377,9 +3358,9 @@ METHOD DelItem( nItemNum ) CLASS wvtMenu
          ADEL( ::aItems, nItemNum )
          ASIZE( ::aItems, LEN( ::aItems ) - 1 )
       ELSE
-         #if 0
+         #IF 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )
-         #endif
+         #ENDIF
       ENDIF
    ENDIF
 
@@ -3387,7 +3368,7 @@ METHOD DelItem( nItemNum ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD EnableItem( nItemNum ) CLASS wvtMenu
+METHOD wvtMenu:EnableItem( nItemNum )
    LOCAL nPrevious:= -1
 
    IF !EMPTY( ::hMenu ) .AND. !EMPTY( nItemNum )
@@ -3398,7 +3379,7 @@ METHOD EnableItem( nItemNum ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD DisableItem( nItemNum ) CLASS wvtMenu
+METHOD wvtMenu:DisableItem( nItemNum )
    LOCAL nPrevious:= -1
 
    IF !EMPTY( ::hMenu ) .AND. !EMPTY( nItemNum )
@@ -3409,13 +3390,13 @@ METHOD DisableItem( nItemNum ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD NumItems() CLASS wvtMenu
+METHOD wvtMenu:NumItems()
 
    RETURN LEN( ::aItems )
 
 /*----------------------------------------------------------------------*/
 
-METHOD GetItem( nItemNum ) CLASS wvtMenu
+METHOD wvtMenu:GetItem( nItemNum )
    LOCAL nItems := ::NumItems(), aResult:= NIL
 
    IF nItemNum > 0 .AND. nItemNum <= nItems
@@ -3426,7 +3407,7 @@ METHOD GetItem( nItemNum ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD FindMenuItemById( nId ) CLASS wvtMenu
+METHOD wvtMenu:FindMenuItemById( nId )
    LOCAL x, aResult:= {}
 
    IF !EMPTY( nId )
@@ -3445,7 +3426,7 @@ METHOD FindMenuItemById( nId ) CLASS wvtMenu
 
 /*----------------------------------------------------------------------*/
 
-METHOD DrawMenuBar() CLASS wvtMenu
+METHOD wvtMenu:DrawMenuBar()
 
    Wvt_DrawMenuBar()
 
@@ -3463,15 +3444,15 @@ METHOD DrawMenuBar() CLASS wvtMenu
 
 CLASS WvtConsole FROM WvtObject
 
-   METHOD New()
-   METHOD Say()
-   METHOD Box()
+   METHOD New( oParent )
+   METHOD Say( nRow, nCol, xExp, cColor )
+   METHOD Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent ) CLASS WvtConsole
+METHOD WvtConsole:New( oParent )
 
    ::Super:New( oParent, DLG_OBJ_CONSOLE, , -1, -1, -1, -1 )
 
@@ -3479,34 +3460,34 @@ METHOD New( oParent ) CLASS WvtConsole
 
 /*----------------------------------------------------------------------*/
 
-METHOD Say( nRow, nCol, xExp, cColor ) CLASS WvtConsole
+METHOD WvtConsole:Say( nRow, nCol, xExp, cColor )
    LOCAL nCRow, nCCol, nCursor
 
-   if nRow >=0 .and. nCol >= 0 .and. xExp <> nil
+   IF nRow >=0 .and. nCol >= 0 .and. xExp <> nil
       nCursor := SetCursor( SC_NONE )
       nCRow   := Row()
       nCCol   := Col()
       DispOutAt( nRow, nCol, xExp, cColor )
       SetPos( nCRow, nCCol )
       SetCursor( nCursor )
-   endif
+   ENDIF
 
 RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor ) CLASS WvtConsole
+METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
    LOCAL nCRow, nCCol, nCursor
 
-   if nRow >=0 .and. nCol >= 0
+   IF nRow >=0 .and. nCol >= 0
       nCursor := SetCursor( SC_NONE )
       nCRow   := Row()
       nCCol   := Col()
       DispBox( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
       SetPos( nCRow, nCCol )
       SetCursor( nCursor )
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -3540,7 +3521,7 @@ METHOD Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor ) CLASS WvtConsole
 
 CLASS TBrowseWVG FROM TBrowse
 
-   DATA   aColumnsSep               INIT {}
+   DATA   aColumnsSep                             INIT {}
 
    METHOD SetVisible()
 
@@ -3548,8 +3529,8 @@ CLASS TBrowseWVG FROM TBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetVisible() CLASS TBrowseWVG
-   Local lFirst, aCol, nColPos
+METHOD TBrowseWVG:SetVisible()
+   LOCAL lFirst, aCol, nColPos
 
    ::Super:SetVisible()
    ::aColumnsSep := {}
@@ -3572,7 +3553,6 @@ METHOD SetVisible() CLASS TBrowseWVG
       ENDIF
    NEXT
 
-   Return Self
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+   RETURN Self
+
 /*----------------------------------------------------------------------*/
