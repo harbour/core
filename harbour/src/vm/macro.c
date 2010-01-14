@@ -255,12 +255,12 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
  *    PRIVATE &a&b   //this will cause syntax error '&'
  *
  */
-static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
+static char * hb_macroTextSubst( const char * szString, HB_SIZE *pulStringLen )
 {
    char * szResult;
-   ULONG ulResStrLen;
-   ULONG ulResBufLen;
-   ULONG ulCharsLeft;
+   HB_SIZE ulResStrLen;
+   HB_SIZE ulResBufLen;
+   HB_SIZE ulCharsLeft;
    char * pHead;
    char * pTail;
 
@@ -301,7 +301,7 @@ static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
           * length of identifiers (HB_SYMBOL_NAME_LEN) - only the max allowed
           * are used for name lookup however the whole string is replaced
           */
-         ULONG ulNameLen = 1;
+         HB_SIZE ulNameLen = 1;
          char * pName = pHead;
 
          while( *++pHead && ( *pHead == '_' ||
@@ -319,7 +319,7 @@ static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
          {
             /* this is not the "&_" string */
             char * szValPtr;
-            ULONG ulValLen;
+            HB_SIZE ulValLen;
 
             /* Get a pointer to the string value stored in this variable
              * or NULL if variable doesn't exist or doesn't contain a string
@@ -353,8 +353,8 @@ static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
                   ulResStrLen += ( ulValLen - ulNameLen );
                   if( ulResStrLen > ulResBufLen )
                   {
-                     ULONG ulHead = pHead - szResult;
-                     ULONG ulTail = pTail - szResult;
+                     HB_SIZE ulHead = pHead - szResult;
+                     HB_SIZE ulTail = pTail - szResult;
                      ulResBufLen = ulResStrLen;
                      szResult = ( char * ) hb_xrealloc( szResult, ulResBufLen + 1 );
                      pHead = szResult + ulHead;
@@ -595,7 +595,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
    {
       /* grab memory for "alias->var"
       */
-      ULONG ulLen = pAlias->item.asString.length + pVar->item.asString.length + 2;
+      HB_SIZE ulLen = pAlias->item.asString.length + pVar->item.asString.length + 2;
       char * szString = ( char * ) hb_xgrab( ulLen + 1 );
       HB_MACRO struMacro;
       int iStatus;
@@ -691,7 +691,7 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags 
  * new string if a valid macro text substitution was found (and sets
  * pbNewString to TRUE)
 */
-char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewString )
+char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, BOOL *pfNewString )
 {
    char *szResultString;
 
@@ -705,7 +705,7 @@ char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewSt
    return szResultString;
 }
 
-char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewString )
+char * hb_macroTextSymbol( const char *szString, HB_SIZE ulLength, BOOL *pfNewString )
 {
    char *szResult = NULL;
 
@@ -713,7 +713,7 @@ char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewStri
 
    if( szString )
    {
-      ULONG ulLen = 0;
+      HB_SIZE ulLen = 0;
 
       szResult = hb_macroTextSubst( szString, &ulLength );
 
@@ -751,7 +751,7 @@ char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewStri
          }
          ++ulLen;
       }
-      if( ulLen == ulLength && ulLen > ( ULONG ) ( szResult[ 0 ] == '_' ? 1 : 0 ) )
+      if( ulLen == ulLength && ulLen > ( HB_SIZE ) ( szResult[ 0 ] == '_' ? 1 : 0 ) )
       {
          if( ulLen > HB_SYMBOL_NAME_LEN )
             ulLen = HB_SYMBOL_NAME_LEN;
@@ -898,7 +898,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
    if( hb_macroCheckParam( pItem ) )
    {
       char * szString;
-      ULONG ulLength = pItem->item.asString.length;
+      HB_SIZE ulLength = pItem->item.asString.length;
 
       szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
 
@@ -991,9 +991,8 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
                /* something unpleasant happened during macro evaluation */
                if( struMacro.pError )
                {
-                  ULONG ulGenCode;
+                  HB_ERRCODE ulGenCode = hb_errGetGenCode( struMacro.pError );
 
-                  ulGenCode = hb_errGetGenCode( struMacro.pError );
                   if( ulGenCode == EG_NOVAR || ulGenCode == EG_NOALIAS )
                   {
                      /* Undeclared variable returns 'U' in Clipper */
@@ -1093,7 +1092,7 @@ int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
    return 0;
 }
 
-BOOL hb_macroIsValidMacroText( const char * szText, ULONG ulLen )
+BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
 {
    if( ulLen )
    {
@@ -1560,7 +1559,7 @@ void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
-void hb_macroGenPushString( const char * szText, ULONG ulStrLen, HB_COMP_DECL )
+void hb_macroGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL )
 {
    if( ulStrLen <= UINT24_MAX )
    {

@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, ULONG ulLast )
+static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, HB_SIZE ulLast )
 {
    if( pBlock )
    {
@@ -172,7 +172,7 @@ static LONG hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, LONG lb, LONG 
    }
 
    /* pivot belongs in pBaseArray->pItems[j] */
-   if( j > lb && pBaseArray->ulLen > ( ULONG ) j )
+   if( j > lb && pBaseArray->ulLen > ( HB_SIZE ) j )
       hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
 
    return j;
@@ -186,7 +186,7 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_I
 
    while( lb < ub )
    {
-      if( ( ULONG ) ub >= pBaseArray->ulLen )
+      if( ( HB_SIZE ) ub >= pBaseArray->ulLen )
       {
          ub = pBaseArray->ulLen - 1;
          if( lb >= ub )
@@ -210,17 +210,17 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_I
    }
 }
 
-BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock )
+BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySort(%p, %p, %p, %p)", pArray, pulStart, pulCount, pBlock));
 
    if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG ulLen = pBaseArray->ulLen;
-      ULONG ulStart;
-      ULONG ulCount;
-      ULONG ulEnd;
+      HB_SIZE ulLen = pBaseArray->ulLen;
+      HB_SIZE ulStart;
+      HB_SIZE ulCount;
+      HB_SIZE ulEnd;
 
       if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
@@ -256,8 +256,8 @@ HB_FUNC( ASORT )
 
    if( pArray && ! hb_arrayIsObject( pArray ) )
    {
-      ULONG ulStart = hb_parnl( 2 );
-      ULONG ulCount = hb_parnl( 3 );
+      HB_SIZE ulStart = hb_parnl( 2 );
+      HB_SIZE ulCount = hb_parnl( 3 );
 
       hb_arraySort( pArray,
                     HB_ISNUM( 2 ) ? &ulStart : NULL,

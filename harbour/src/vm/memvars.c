@@ -1091,7 +1091,7 @@ HB_FUNC( __MVPUBLIC )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
                {
@@ -1125,7 +1125,7 @@ HB_FUNC( __MVPRIVATE )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
                {
@@ -1159,7 +1159,7 @@ HB_FUNC( __MVXRELEASE )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
                {
@@ -1387,7 +1387,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
          if( HB_IS_STRING( pMemvar ) )
          {
             /* Store the closing zero byte, too */
-            ULONG ulLen = hb_itemGetCLen( pMemvar ) + 1;
+            HB_SIZE ulLen = hb_itemGetCLen( pMemvar ) + 1;
             int iOverFlow = 0;
 
             /* Clipper support only 64KB strings */

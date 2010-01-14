@@ -145,7 +145,7 @@ ULONG  hb_parinfo( int iParam )
    }
 }
 
-ULONG  hb_parinfa( int iParamNum, ULONG uiArrayIndex )
+ULONG  hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
 {
    PHB_ITEM pArray;
 
@@ -249,7 +249,7 @@ const char * hb_parcx( int iParam )
    return "";
 }
 
-ULONG  hb_parclen( int iParam )
+HB_SIZE  hb_parclen( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -273,7 +273,7 @@ ULONG  hb_parclen( int iParam )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-ULONG  hb_parcsiz( int iParam )
+HB_SIZE  hb_parcsiz( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -707,10 +707,10 @@ const char * hb_parvc( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
@@ -739,10 +739,10 @@ const char * hb_parvcx( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetCPtr( pItem, ulArrayIndex );
@@ -752,7 +752,7 @@ const char * hb_parvcx( int iParam, ... )
    return "";
 }
 
-ULONG  hb_parvclen( int iParam, ... )
+HB_SIZE  hb_parvclen( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -770,10 +770,10 @@ ULONG  hb_parvclen( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetCLen( pItem, ulArrayIndex );
@@ -787,7 +787,7 @@ ULONG  hb_parvclen( int iParam, ... )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-ULONG  hb_parvcsiz( int iParam, ... )
+HB_SIZE  hb_parvcsiz( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -809,10 +809,10 @@ ULONG  hb_parvcsiz( int iParam, ... )
          else if( HB_IS_ARRAY( pItem ) )
          {
             va_list va;
-            ULONG ulArrayIndex;
+            HB_SIZE ulArrayIndex;
 
             va_start( va, iParam );
-            ulArrayIndex = va_arg( va, ULONG );
+            ulArrayIndex = va_arg( va, HB_SIZE );
             va_end( va );
 
             return hb_arrayGetCLen( pItem, ulArrayIndex ) + 1;
@@ -844,10 +844,10 @@ const char * hb_parvds( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetDS( pItem, ulArrayIndex, hb_stackDateBuffer() );
@@ -877,10 +877,10 @@ char  * hb_parvdsbuff( char * szDate, int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetDS( pItem, ulArrayIndex, szDate );
@@ -910,10 +910,10 @@ long hb_parvdl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetDL( pItem, ulArrayIndex );
@@ -942,10 +942,10 @@ double hb_parvtd( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetTD( pItem, ulArrayIndex );
@@ -977,10 +977,10 @@ BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetTDT( pItem, ulArrayIndex, plJulian, plMilliSec );
@@ -1015,10 +1015,10 @@ int  hb_parvl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetL( pItem, ulArrayIndex ) ? 1 : 0;
@@ -1050,10 +1050,10 @@ double  hb_parvnd( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetND( pItem, ulArrayIndex );
@@ -1089,10 +1089,10 @@ int  hb_parvni( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetNI( pItem, ulArrayIndex );
@@ -1131,10 +1131,10 @@ long  hb_parvnl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetNL( pItem, ulArrayIndex );
@@ -1171,10 +1171,10 @@ LONGLONG  hb_parvnll( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetNLL( pItem, ulArrayIndex );
@@ -1211,10 +1211,10 @@ HB_LONG  hb_parvnint( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetNInt( pItem, ulArrayIndex );
@@ -1242,10 +1242,10 @@ void * hb_parvptr( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return hb_arrayGetPtr( pItem, ulArrayIndex );
@@ -1277,10 +1277,10 @@ void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
@@ -1305,7 +1305,7 @@ void  hb_ret( void )
 }
 
 #undef hb_reta
-void  hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
+void  hb_reta( HB_SIZE ulLen )  /* undocumented hb_reta() */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1355,7 +1355,7 @@ void hb_retc_const( const char * szText )
 }
 
 #undef hb_retclen
-void  hb_retclen( const char * szText, ULONG ulLen )
+void  hb_retclen( const char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1365,7 +1365,7 @@ void  hb_retclen( const char * szText, ULONG ulLen )
 }
 
 #undef hb_retclen_buffer
-void  hb_retclen_buffer( char * szText, ULONG ulLen )
+void  hb_retclen_buffer( char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1620,7 +1620,7 @@ int hb_storc( const char * szText, int iParam )
    return 0;
 }
 
-int hb_storclen( const char * szText, ULONG ulLen, int iParam )
+int hb_storclen( const char * szText, HB_SIZE ulLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1645,7 +1645,7 @@ int hb_storclen( const char * szText, ULONG ulLen, int iParam )
    return 0;
 }
 
-int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam )
+int hb_storclen_buffer( char * szText, HB_SIZE ulLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1997,7 +1997,7 @@ int hb_storvc( const char * szText, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetC( pItem, va_arg( va, ULONG ), szText ) ? 1 : 0;
+         iRetVal = hb_arraySetC( pItem, va_arg( va, HB_SIZE ), szText ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2011,7 +2011,7 @@ int hb_storvc( const char * szText, int iParam, ... )
    return 0;
 }
 
-int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
+int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2030,7 +2030,7 @@ int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetCL( pItem, va_arg( va, ULONG ), szText, ulLen ) ? 1 : 0;
+         iRetVal = hb_arraySetCL( pItem, va_arg( va, HB_SIZE ), szText, ulLen ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2044,7 +2044,7 @@ int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
    return 0;
 }
 
-int hb_storvclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
+int hb_storvclen_buffer( char * szText, HB_SIZE ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2063,7 +2063,7 @@ int hb_storvclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetCLPtr( pItem, va_arg( va, ULONG ), szText, ulLen ) ? 1 : 0;
+         iRetVal = hb_arraySetCLPtr( pItem, va_arg( va, HB_SIZE ), szText, ulLen ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2098,7 +2098,7 @@ int hb_storvds( const char * szDate, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetDS( pItem, va_arg( va, ULONG ), szDate ) ? 1 : 0;
+         iRetVal = hb_arraySetDS( pItem, va_arg( va, HB_SIZE ), szDate ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2131,7 +2131,7 @@ int hb_storvdl( long lJulian, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetDL( pItem, va_arg( va, ULONG ), lJulian ) ? 1 : 0;
+         iRetVal = hb_arraySetDL( pItem, va_arg( va, HB_SIZE ), lJulian ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2164,7 +2164,7 @@ int hb_storvtd( double dTimeStamp, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetTD( pItem, va_arg( va, ULONG ), dTimeStamp ) ? 1 : 0;
+         iRetVal = hb_arraySetTD( pItem, va_arg( va, HB_SIZE ), dTimeStamp ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2197,7 +2197,7 @@ int hb_storvtdt( long lJulian, long lMilliSec, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetTDT( pItem, va_arg( va, ULONG ), lJulian, lMilliSec ) ? 1 : 0;
+         iRetVal = hb_arraySetTDT( pItem, va_arg( va, HB_SIZE ), lJulian, lMilliSec ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2230,7 +2230,7 @@ int hb_storvl( int iLogical, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetL( pItem, va_arg( va, ULONG ), iLogical ? TRUE : FALSE ) ? 1 : 0;
+         iRetVal = hb_arraySetL( pItem, va_arg( va, HB_SIZE ), iLogical ? TRUE : FALSE ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2263,7 +2263,7 @@ int hb_storvni( int iValue, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetNI( pItem, va_arg( va, ULONG ), iValue ) ? 1 : 0;
+         iRetVal = hb_arraySetNI( pItem, va_arg( va, HB_SIZE ), iValue ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2296,7 +2296,7 @@ int hb_storvnl( long lValue, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetNL( pItem, va_arg( va, ULONG ), lValue ) ? 1 : 0;
+         iRetVal = hb_arraySetNL( pItem, va_arg( va, HB_SIZE ), lValue ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2330,7 +2330,7 @@ int hb_storvnll( LONGLONG llValue, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetNLL( pItem, va_arg( va, ULONG ), llValue ) ? 1 : 0;
+         iRetVal = hb_arraySetNLL( pItem, va_arg( va, HB_SIZE ), llValue ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2364,7 +2364,7 @@ int hb_storvnint( HB_LONG lValue, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetNInt( pItem, va_arg( va, ULONG ), lValue ) ? 1 : 0;
+         iRetVal = hb_arraySetNInt( pItem, va_arg( va, HB_SIZE ), lValue ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2397,7 +2397,7 @@ int hb_storvnd( double dNumber, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetND( pItem, va_arg( va, ULONG ), dNumber ) ? 1 : 0;
+         iRetVal = hb_arraySetND( pItem, va_arg( va, HB_SIZE ), dNumber ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2430,7 +2430,7 @@ int hb_storvptr( void * pointer, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetPtr( pItem, va_arg( va, ULONG ), pointer ) ? 1 : 0;
+         iRetVal = hb_arraySetPtr( pItem, va_arg( va, HB_SIZE ), pointer ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
@@ -2463,7 +2463,7 @@ int hb_storvptrGC( void * pointer, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetPtrGC( pItem, va_arg( va, ULONG ), pointer ) ? 1 : 0;
+         iRetVal = hb_arraySetPtrGC( pItem, va_arg( va, HB_SIZE ), pointer ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }

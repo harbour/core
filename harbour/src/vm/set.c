@@ -98,7 +98,7 @@ static char set_char( PHB_ITEM pItem, char oldChar )
    if( HB_IS_STRING( pItem ) )
    {
       /* Only replace if string has at least one character. */
-      ULONG ulLen = hb_itemGetCLen( pItem );
+      HB_SIZE ulLen = hb_itemGetCLen( pItem );
       if( ulLen > 0 )
       {
          newChar = *hb_itemGetCPtr( pItem );
@@ -124,7 +124,7 @@ static BOOL set_logical( PHB_ITEM pItem, BOOL bDefault )
       else if( HB_IS_STRING( pItem ) )
       {
          const char * szString = hb_itemGetCPtr( pItem );
-         ULONG ulLen = hb_itemGetCLen( pItem );
+         HB_SIZE ulLen = hb_itemGetCLen( pItem );
 
          if( ulLen >= 2
           && ( ( UCHAR ) szString[ 0 ] == 'O' || ( UCHAR ) szString[ 0 ] == 'o' )

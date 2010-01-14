@@ -75,7 +75,7 @@ HB_FUNC( STRTRAN )
       {
          const char * szSeek = hb_itemGetCPtr( pSeek );
          const char * szReplace;
-         ULONG ulStart;
+         HB_SIZE ulStart;
 
          ulStart = ( HB_ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );
 
@@ -88,7 +88,7 @@ HB_FUNC( STRTRAN )
          {
             PHB_ITEM pReplace = hb_param( 3, HB_IT_STRING );
             HB_SIZE ulReplace;
-            ULONG ulCount;
+            HB_SIZE ulCount;
             BOOL bAll;
 
             if( pReplace )
@@ -115,7 +115,7 @@ HB_FUNC( STRTRAN )
 
             if( bAll || ulCount > 0 )
             {
-               ULONG ulFound = 0;
+               HB_SIZE ulFound = 0;
                long lReplaced = 0;
                HB_SIZE i = 0;
                HB_SIZE ulLength = ulText;

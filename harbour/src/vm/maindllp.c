@@ -204,10 +204,10 @@ const char * hb_parvc( int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( EXT_PARC2 ) pParC )( iParam, ulArrayIndex );
@@ -243,7 +243,7 @@ void hb_retc( const char * szText )   /* returns a string */
       ( ( HB_RETC ) pRetc )( szText );
 }
 
-void hb_retclen( const char * szText, ULONG ulLen ) /* returns a string with a specific length */
+void hb_retclen( const char * szText, HB_SIZE ulLen ) /* returns a string with a specific length */
 {
    FARPROC pRetclen = hb_getProcAddress( HBTEXT( "_hb_retclen" ) );
    if( pRetclen )
@@ -327,14 +327,14 @@ void hb_retnllen( long lNumber, int iWidth ) /* returns a long number, with spec
       ( ( HB_RETNLLEN ) pRet )( lNumber, iWidth );
 }
 
-void hb_reta( ULONG ulLen )  /* returns an array with a specific length */
+void hb_reta( HB_SIZE ulLen )  /* returns an array with a specific length */
 {
    FARPROC pRet = hb_getProcAddress( HBTEXT( "_hb_reta" ) );
    if( pRet )
       ( ( HB_RETA ) pRet )( ulLen );
 }
 
-ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex ) /* retrieve length or element type of an array parameter */
+ULONG hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ) /* retrieve length or element type of an array parameter */
 {
    FARPROC pParinfa = hb_getProcAddress( HBTEXT( "_hb_parinfa" ) );
    return pParinfa ? ( ( HB_PARINFA ) pParinfa )( iParamNum, uiArrayIndex ) : 0;
@@ -346,7 +346,7 @@ ULONG hb_parinfo( int iParam ) /* Determine the param count or data type */
    return pParinfo ? ( ( HB_PARINFO ) pParinfo )( iParam ) : 0;
 }
 
-ULONG hb_parvclen( int iParam, ... ) /* retrieve a string parameter length */
+HB_SIZE hb_parvclen( int iParam, ... ) /* retrieve a string parameter length */
 {
    FARPROC pParC = hb_getProcAddress( HBTEXT( "_hb_parvclen" ) );
    FARPROC pExtIsArray = hb_getProcAddress( HBTEXT( "_hb_extIsArray" ) );
@@ -355,10 +355,10 @@ ULONG hb_parvclen( int iParam, ... ) /* retrieve a string parameter length */
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARCLEN2 ) pParC )( iParam, ulArrayIndex );
@@ -370,7 +370,7 @@ ULONG hb_parvclen( int iParam, ... ) /* retrieve a string parameter length */
    return 0;
 }
 
-ULONG hb_parvcsiz( int iParam, ... )/* retrieve a by-reference string parameter length, including terminator */
+HB_SIZE hb_parvcsiz( int iParam, ... )/* retrieve a by-reference string parameter length, including terminator */
 {
    FARPROC pExtIsArray = hb_getProcAddress( HBTEXT( "_hb_extIsArray" ) );
    FARPROC pParcSiz = hb_getProcAddress( HBTEXT( "_hb_parvcsiz" ) );
@@ -380,10 +380,10 @@ ULONG hb_parvcsiz( int iParam, ... )/* retrieve a by-reference string parameter 
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARCSIZ2 ) pParcSiz )( iParam, ulArrayIndex );
@@ -405,10 +405,10 @@ const char * hb_parvds( int iParam, ... ) /* retrieve a date as a string yyyymmd
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARDS2 ) pParDs )( iParam, ulArrayIndex );
@@ -430,10 +430,10 @@ char * hb_parvdsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a s
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARDSBUFF2 ) pParDsBuff )( szDate, iParam, ulArrayIndex );
@@ -456,10 +456,10 @@ int hb_parvl( int iParam, ... ) /* retrieve a logical parameter as an int */
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARL2 ) pParL )( iParam, ulArrayIndex );
@@ -481,10 +481,10 @@ double hb_parvnd( int iParam, ... ) /* retrieve a numeric parameter as a double 
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARND2 ) pParNd )( iParam, ulArrayIndex );
@@ -507,10 +507,10 @@ int hb_parvni( int iParam, ... ) /* retrieve a numeric parameter as a integer */
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARNI2 ) pParNi )( iParam, ulArrayIndex );
@@ -532,10 +532,10 @@ long hb_parvnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          return ( ( HB_PARNL2 ) pParNl )( iParam, ulArrayIndex );
@@ -557,10 +557,10 @@ int hb_storvc( const char * szText, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORC2 ) pStorC )( szText, iParam, ulArrayIndex );
@@ -576,7 +576,7 @@ int hb_storvc( const char * szText, int iParam, ... )
    return 0;
 }
 
-int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
+int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
 {
    FARPROC pExtIsArray = hb_getProcAddress( HBTEXT( "_hb_extIsArray" ) );
    FARPROC pStorC = hb_getProcAddress( HBTEXT( "_hb_storvclen" ) );
@@ -586,10 +586,10 @@ int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORCLEN2 ) pStorC )( szText, ulLen, iParam, ulArrayIndex );
@@ -615,10 +615,10 @@ int hb_storvds( const char * szDate, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORDS2 ) pStorDs )( szDate, iParam, ulArrayIndex );
@@ -645,10 +645,10 @@ int hb_storvl( int iLogical, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORL2 ) pStorL )( iLogical, iParam, ulArrayIndex );
@@ -674,10 +674,10 @@ int hb_storvni( int iValue, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORNI2 ) pStorNi )( iValue, iParam, ulArrayIndex );
@@ -703,10 +703,10 @@ int hb_storvnl( long lValue, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORNL2 ) pStorNl )( lValue, iParam, ulArrayIndex );
@@ -732,10 +732,10 @@ int hb_storvnd( double dNumber, int iParam, ... )
       if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
       {
          va_list va;
-         ULONG ulArrayIndex;
+         HB_SIZE ulArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
+         ulArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
          ( ( HB_STORND2 ) pStorNd )( dNumber, iParam, ulArrayIndex );
@@ -751,13 +751,13 @@ int hb_storvnd( double dNumber, int iParam, ... )
    return 0;
 }
 
-BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen )  /* creates a new array */
+BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen )  /* creates a new array */
 {
    HB_ARRAYNEW pArrayNew = ( HB_ARRAYNEW ) hb_getProcAddress( HBTEXT( "_hb_arrayNew" ) );
    return pArrayNew ? pArrayNew( pItem, ulLen ) : FALSE;
 }
 
-ULONG hb_arrayLen( PHB_ITEM pArray )  /* retrives the array len */
+HB_SIZE hb_arrayLen( PHB_ITEM pArray )  /* retrives the array len */
 {
    HB_ARRAYLEN pArrayLen = ( HB_ARRAYLEN ) hb_getProcAddress( HBTEXT( "_hb_arrayLen" ) );
    return pArrayLen ? pArrayLen( pArray ) : 0;
@@ -775,19 +775,19 @@ BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue )  /* add a new item to t
    return pArrayAdd ? pArrayAdd( pArray, pItemValue ) : FALSE;
 }
 
-BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )  /* insert a nil item into an array, without changing the length */
+BOOL hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex )  /* insert a nil item into an array, without changing the length */
 {
    HB_ARRAYINS pArrayIns = ( HB_ARRAYINS ) hb_getProcAddress( HBTEXT( "_hb_arrayIns" ) );
    return pArrayIns ? pArrayIns( pArray, ulIndex ) : FALSE;
 }
 
-BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )  /* delete an array item, without changing length */
+BOOL hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex )  /* delete an array item, without changing length */
 {
    HB_ARRAYDEL pArrayDel = ( HB_ARRAYDEL ) hb_getProcAddress( HBTEXT( "_hb_arrayDel" ) );
    return pArrayDel ? pArrayDel( pArray, ulIndex ) : FALSE;
 }
 
-BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )  /* sets the array total length */
+BOOL hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen )  /* sets the array total length */
 {
    HB_ARRAYSIZE pArraySize = ( HB_ARRAYSIZE ) hb_getProcAddress( HBTEXT( "_hb_arraySize" ) );
    return pArraySize ? pArraySize( pArray, ulLen ) : FALSE;
@@ -799,13 +799,13 @@ BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )  /* retrieve last item in
    return pArrayLast ? pArrayLast( pArray, pResult ) : FALSE;
 }
 
-BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )  /* sets an array element */
+BOOL hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* sets an array element */
 {
    HB_ARRAYSET pArraySet = ( HB_ARRAYSET ) hb_getProcAddress( HBTEXT( "_hb_arraySet" ) );
    return pArraySet ? pArraySet( pArray, ulIndex, pItem ) : FALSE;
 }
 
-BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )  /* retrieves an item */
+BOOL hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )  /* retrieves an item */
 {
    HB_ARRAYGET pArrayGet = ( HB_ARRAYGET ) hb_getProcAddress( HBTEXT( "_hb_arrayGet" ) );
    return pArrayGet ? pArrayGet( pArray, ulIndex, pItem ) : FALSE;

@@ -51,8 +51,8 @@
  */
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(),
-         hb_gtWriteAt(), hb_gtRepChar(), hb_gtBox(), hb_gtBoxS(), hb_gtBoxD() 
-         hb_gtInit() differs in parameter types from the original CA-Cl*pper 
+         hb_gtWriteAt(), hb_gtRepChar(), hb_gtBox(), hb_gtBoxS(), hb_gtBoxD()
+         hb_gtInit() differs in parameter types from the original CA-Cl*pper
          versions. [vszakats] */
 
 #ifndef HB_XVM_H_
@@ -183,11 +183,11 @@ extern HB_EXPORT BOOL   hb_xvmDecEq( void );
 extern HB_EXPORT BOOL   hb_xvmDecEqPop( void );
 
 extern HB_EXPORT void   hb_xvmArrayDim( USHORT uiDimensions );    /* generates an uiDimensions Array and initialize those dimensions from the stack values */
-extern HB_EXPORT void   hb_xvmArrayGen( ULONG ulElements );       /* generates an ulElements Array and fills it from the stack values */
+extern HB_EXPORT void   hb_xvmArrayGen( HB_SIZE ulElements );     /* generates an ulElements Array and fills it from the stack values */
 extern HB_EXPORT BOOL   hb_xvmArrayPush( void );                  /* pushes an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT BOOL   hb_xvmArrayPushRef( void );               /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT BOOL   hb_xvmArrayPop( void );                   /* pops a value from the stack */
-extern HB_EXPORT void   hb_xvmHashGen( ULONG ulElements );        /* generates an ulElements Hash and fills it from the stack values */
+extern HB_EXPORT void   hb_xvmHashGen( HB_SIZE ulElements );      /* generates an ulElements Hash and fills it from the stack values */
 
 extern HB_EXPORT void   hb_xvmLocalName( USHORT uiLocal, char * szLocalName );
 extern HB_EXPORT void   hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName );
@@ -209,7 +209,7 @@ extern HB_EXPORT BOOL   hb_xvmMacroPopAliased( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroSymbol( void );
 extern HB_EXPORT BOOL   hb_xvmMacroText( void );
 
-extern HB_EXPORT void   hb_xvmPushStringHidden( int iMethod, const char * szText, ULONG ulSize );
+extern HB_EXPORT void   hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE ulSize );
 extern HB_EXPORT void   hb_xvmPushDouble( double dNumber, int iWidth, int iDec );
 #ifdef HB_LONG_LONG_OFF
 extern HB_EXPORT void   hb_xvmPushLongLong( double dNumber );
@@ -230,13 +230,13 @@ extern HB_EXPORT void   hb_xvmPushLongLong( LONGLONG llNumber );
 /*
  * additional multi PCODE operations
  */
-extern HB_EXPORT BOOL hb_xvmArrayItemPush( ULONG ulIndex );
-extern HB_EXPORT BOOL hb_xvmArrayItemPop( ULONG ulIndex );
+extern HB_EXPORT BOOL hb_xvmArrayItemPush( HB_SIZE ulIndex );
+extern HB_EXPORT BOOL hb_xvmArrayItemPop( HB_SIZE ulIndex );
 extern HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue );
 extern HB_EXPORT BOOL hb_xvmDivideByInt( LONG lValue );
 extern HB_EXPORT BOOL hb_xvmAddInt( LONG lValue );
 extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, LONG lValue );
-/*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, ULONG ulLen );*/
+/*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, HB_SIZE ulLen );*/
 extern HB_EXPORT void hb_xvmPushFuncSymbol( PHB_SYMB pSym );
 
 extern HB_EXPORT BOOL hb_xvmLessThenInt( LONG lValue );

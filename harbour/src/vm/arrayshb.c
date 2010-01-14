@@ -61,11 +61,11 @@
  */
 static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
 {
-   ULONG ulElements;
+   HB_SIZE ulElements;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayNewRagged(%p, %d)", pArray, iDimension));
 
-   ulElements = ( ULONG ) hb_parnl( iDimension );
+   ulElements = ( HB_SIZE ) hb_parnl( iDimension );
 
    /* create an array */
    hb_arrayNew( pArray, ulElements );
@@ -209,7 +209,7 @@ HB_FUNC( AFILL )
 
       if( pValue )
       {
-         ULONG ulStart, ulCount;
+         HB_SIZE ulStart, ulCount;
          LONG lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
 
          /* Explicy lCount of 0 - Nothing to do! */
@@ -230,8 +230,8 @@ HB_FUNC( AFILL )
             else
                return;
          }
-         ulStart = ( ULONG ) lStart;
-         ulCount = ( ULONG ) lCount;
+         ulStart = ( HB_SIZE ) lStart;
+         ulCount = ( HB_SIZE ) lCount;
          hb_arrayFill( pArray,
                        pValue,
                        HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -256,8 +256,8 @@ HB_FUNC( ASCAN )
 
    if( pArray && pValue )
    {
-      ULONG ulStart = hb_parnl( 3 );
-      ULONG ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parnl( 3 );
+      HB_SIZE ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -276,8 +276,8 @@ HB_FUNC( HB_ASCAN )
 
    if( pArray && pValue )
    {
-      ULONG ulStart = hb_parnl( 3 );
-      ULONG ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parnl( 3 );
+      HB_SIZE ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -295,8 +295,8 @@ HB_FUNC( HB_RASCAN )
 
    if( pArray && pValue )
    {
-      ULONG ulStart = hb_parnl( 3 );
-      ULONG ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parnl( 3 );
+      HB_SIZE ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayRevScan( pArray, pValue,
                                    HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -320,8 +320,8 @@ HB_FUNC( HB_AINS )
 
       if( hb_parl( 4 ) )
       {
-         ULONG ulLen = hb_arrayLen( pArray ) + 1;
-         if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
+         HB_SIZE ulLen = hb_arrayLen( pArray ) + 1;
+         if( lPos >= 1 && ( HB_SIZE ) lPos <= ulLen )
             hb_arraySize( pArray, ulLen );
       }
 
@@ -366,8 +366,8 @@ HB_FUNC( AEVAL )
 
    if( pArray && pBlock )
    {
-      ULONG ulStart = hb_parnl( 3 );
-      ULONG ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parnl( 3 );
+      HB_SIZE ulCount = hb_parnl( 4 );
 
       hb_arrayEval( pArray,
                     pBlock,
@@ -390,9 +390,9 @@ HB_FUNC( ACOPY )
       /* CA-Cl*pper works this way. */
       if( ! hb_arrayIsObject( pSrcArray ) && ! hb_arrayIsObject( pDstArray ) )
       {
-         ULONG ulStart = hb_parnl( 3 );
-         ULONG ulCount = hb_parnl( 4 );
-         ULONG ulTarget = hb_parnl( 5 );
+         HB_SIZE ulStart = hb_parnl( 3 );
+         HB_SIZE ulCount = hb_parnl( 4 );
+         HB_SIZE ulTarget = hb_parnl( 5 );
 
          hb_arrayCopy( pSrcArray,
                        pDstArray,

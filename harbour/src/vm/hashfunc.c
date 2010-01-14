@@ -101,7 +101,7 @@ HB_FUNC( HB_HPOS )
 
    if( pHash && pKey )
    {
-      ULONG ulPos;
+      HB_SIZE ulPos;
       hb_hashScan( pHash, pKey, &ulPos );
       hb_retnint( ulPos );
    }
@@ -297,7 +297,7 @@ HB_FUNC( HB_HFILL )
    if( pHash && pValue )
    {
       PHB_ITEM pDest;
-      ULONG ulPos = 0;
+      HB_SIZE ulPos = 0;
 
       while( ( pDest = hb_hashGetValueAt( pHash, ++ulPos ) ) != NULL )
          hb_itemCopy( pDest, pValue );
@@ -325,12 +325,12 @@ HB_FUNC( HB_HCOPY )
 
    if( pSource && pDest )
    {
-      ULONG ulLen = hb_hashLen( pSource ), ulStart, ulCount;
+      HB_SIZE ulLen = hb_hashLen( pSource ), ulStart, ulCount;
 
       ulStart = hb_parnl( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
 
       while( ulCount-- )
       {
@@ -359,7 +359,7 @@ HB_FUNC( HB_HMERGE )
    {
       if( pAction && HB_IS_BLOCK( pAction ) )
       {
-         ULONG ulLen = hb_hashLen( pSource ), ulPos = 0;
+         HB_SIZE ulLen = hb_hashLen( pSource ), ulPos = 0;
          while( ++ulPos <= ulLen )
          {
             PHB_ITEM pKey = hb_hashGetKeyAt( pSource, ulPos );
@@ -398,12 +398,12 @@ HB_FUNC( HB_HEVAL )
 
    if( pHash && pBlock )
    {
-      ULONG ulLen = hb_hashLen( pHash ), ulStart, ulCount;
+      HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
 
       ulStart = hb_parnl( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
 
       while( ulCount-- )
       {
@@ -437,12 +437,12 @@ HB_FUNC( HB_HSCAN )
    if( pHash && pValue )
    {
       BOOL fExact = hb_parl( 5 ), fFound = FALSE;
-      ULONG ulLen = hb_hashLen( pHash ), ulStart, ulCount;
+      HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
 
       ulStart = hb_parnl( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
 
       if( HB_IS_BLOCK( pValue ) )
       {

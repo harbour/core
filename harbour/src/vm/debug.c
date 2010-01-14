@@ -109,7 +109,7 @@
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
  * $Description$  Add <pItem> to array <pReturn> at pos <uiPos>
  * $End$ */
-static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
+static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE ulPos )
 {
    HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
 
@@ -119,7 +119,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 
       if( pArrayItem )
       {
-         ULONG ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
+         HB_SIZE ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
          char * szBuff = ( char * ) hb_xgrab( ulLen + 1 );
 
          hb_snprintf( szBuff, ulLen + 1, "[%s]", pItem->item.asSymbol.value->szName );
@@ -146,8 +146,8 @@ HB_FUNC( __DBGVMSTKGCOUNT )
 HB_FUNC( __DBGVMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   ULONG ulLen = hb_stackTopOffset();
-   ULONG ulPos;
+   HB_SIZE ulLen = hb_stackTopOffset();
+   HB_SIZE ulPos;
 
    pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
 
@@ -206,7 +206,7 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   ULONG ulLen, ul;
+   HB_SIZE ulLen, ul;
    LONG lBaseOffset, lPrevOffset;
 
    lBaseOffset = hb_stackBaseOffset();

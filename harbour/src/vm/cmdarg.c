@@ -326,7 +326,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
          {
             if( bRetValue )
             {
-               ULONG ulLen;
+               HB_SIZE ulLen;
                pszNext += i;
 
                /* Skip value separator colon. */
@@ -434,19 +434,19 @@ HB_FUNC( HB_CMDLINE )
    char** argv = hb_cmdargARGV();
    int argc = hb_cmdargARGC();
    char * pszBuffer, * ptr;
-   ULONG ulLen;
+   HB_SIZE ulLen;
    int iArg;
 
    ulLen = 0;
    for( iArg = 1; iArg < argc; iArg++ )
-      ulLen += ( ULONG ) strlen( argv[ iArg ] ) + 1;
+      ulLen += ( HB_SIZE ) strlen( argv[ iArg ] ) + 1;
 
    if( ulLen )
    {
       ptr = pszBuffer = ( char * ) hb_xgrab( ulLen );
       for( iArg = 1; iArg < argc; iArg++ )
       {
-         ulLen = ( ULONG ) strlen( argv[ iArg ] );
+         ulLen = ( HB_SIZE ) strlen( argv[ iArg ] );
          memcpy( ptr, argv[ iArg ], ulLen );
          ptr += ulLen;
          *ptr++ = ' ';
