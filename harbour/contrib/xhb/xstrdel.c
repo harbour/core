@@ -82,7 +82,7 @@ HB_FUNC( STRDEL )
          ulResult += ulText - ulPosTxt;
 
          szResult[ ulResult ] = '\0';
-         hb_retclenAdopt( szResult, ulResult );
+         hb_retclen_buffer( szResult, ulResult );
       }
       else
          hb_retc( szText );

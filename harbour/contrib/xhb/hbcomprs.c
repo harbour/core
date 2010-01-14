@@ -165,7 +165,7 @@ HB_FUNC( HB_COMPRESS )
       }
       else
       {
-         hb_retclenAdopt( cDest, ulDstlen );
+         hb_retclen_buffer( cDest, ulDstlen );
       }
    }
    s_hb_compress_error = cerr;
@@ -247,7 +247,7 @@ HB_FUNC( HB_UNCOMPRESS )
       }
       else
       {
-         hb_retclenAdopt( cDest, ulDstlen );
+         hb_retclen_buffer( cDest, ulDstlen );
       }
    }
    s_hb_compress_error = cerr;
@@ -267,7 +267,7 @@ HB_FUNC( HB_COMPRESSERROR )
 
 HB_FUNC( HB_COMPRESSERRORDESC )
 {
-   hb_retcAdopt( hb_strdup( zError( hb_parni( 1 ) ) ) );
+   hb_retc_buffer( hb_strdup( zError( hb_parni( 1 ) ) ) );
 }
 
 /*******************************

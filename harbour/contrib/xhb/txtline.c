@@ -220,11 +220,11 @@ HB_FUNC( HB_TABEXPAND )
    }
    else
    {
-      lSize = lStrLen + uiTabCount*(uiTabLen - 1);
-      szRet = (char *) hb_xgrab( lSize + 1 );
+      lSize = lStrLen + uiTabCount * ( uiTabLen - 1 );
+      szRet = ( char * ) hb_xgrab( lSize + 1 );
       memset( szRet, ' ', lSize );
       lStrLen = hb_tabexpand( szText, szRet, lStrLen, uiTabLen );
-      hb_retclenAdopt( szRet, lStrLen);
+      hb_retclen_buffer( szRet, lStrLen );
    }
 
 }

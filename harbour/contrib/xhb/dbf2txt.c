@@ -99,7 +99,7 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
          szStrEsc = hb_strescape( hb_itemGetCPtr( pValue ),
                                   hb_itemGetCLen( pValue ), cDelim );
          if( cdp )
-            hb_cdpnTranslate( szStrEsc, hb_vmCDP(), cdp, strlen( szStrEsc ) );
+            hb_cdpnDupLen( szStrEsc, strlen( szStrEsc ), hb_vmCDP(), cdp );
 
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 

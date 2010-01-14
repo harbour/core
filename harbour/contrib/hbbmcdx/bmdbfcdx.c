@@ -717,7 +717,7 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
    if( pTag->uiType == 'C' )
    {
       if( fTrans )
-         hb_cdpnTranslate( ( char * ) pKey->val, hb_vmCDP(), pTag->pIndex->pArea->dbfarea.area.cdPage, pKey->len );
+         hb_cdpnDupLen( ( char * ) pKey->val, pKey->len, hb_vmCDP(), pTag->pIndex->pArea->dbfarea.area.cdPage );
 
       if( pTag->IgnoreCase )
          hb_strUpper( ( char * ) pKey->val, pKey->len );
@@ -742,8 +742,7 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
                char * pVal = ( char * ) hb_xgrab( pKey->len + 1 );
                memcpy( pVal, pKey->val, pKey->len );
                pVal[ pKey->len ] = '\0';
-               hb_cdpnTranslate( pVal, pTag->pIndex->pArea->dbfarea.area.cdPage, hb_vmCDP(),
-                                 pKey->len );
+               hb_cdpnDupLen( pVal, pKey->len, pTag->pIndex->pArea->dbfarea.area.cdPage, hb_vmCDP() );
                pItem = hb_itemPutCLPtr( pItem, pVal, pKey->len );
             }
             else
@@ -5669,7 +5668,7 @@ static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
    {
       memcpy( szBuff, szKey, pKey->len + 1 );
-      hb_cdpnTranslate( szBuff, pArea->dbfarea.area.cdPage, hb_vmCDP(), pKey->len );
+      hb_cdpnDupLen( szBuff, pKey->len, pArea->dbfarea.area.cdPage, hb_vmCDP() );
       szKey = szBuff;
    }
 

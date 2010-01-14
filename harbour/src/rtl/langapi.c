@@ -357,16 +357,12 @@ char * hb_langName( void )
 
 /* Compatibility interface */
 
-#ifdef HB_LEGACY_LEVEL3
-
 const char * hb_langDGetErrorDesc( int iIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorDesc(%i)", iIndex));
 
    return hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + iIndex );
 }
-
-#endif
 
 /* Harbour interface */
 

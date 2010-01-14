@@ -427,7 +427,7 @@ HB_FUNC( HB_CRYPT )
       ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
-   hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );
+   hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }
 
 /*****
@@ -448,5 +448,5 @@ HB_FUNC( HB_DECRYPT )
       ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
-   hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );
+   hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }
