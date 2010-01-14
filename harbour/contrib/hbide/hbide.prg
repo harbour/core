@@ -119,29 +119,32 @@ CLASS HbIde
    DATA   oEM                                              /* Editor Tabs Manager            */
    DATA   oSM                                              /* Souces Manager                 */
    DATA   oFR                                              /* Find Replace Manager           */
+   DATA   oThemes
 
    DATA   aMeta                                   INIT   {}  /* Holds current definition only  */
 
    DATA   mp1, mp2, oXbp, nEvent
-   DATA   aTabs                                   INIT   {}
    DATA   cProjIni
 
-   DATA   oCurTab                                 INIT   NIL
-   DATA   nCurTab                                 INIT   0
-   DATA   aIni                                    INIT   {}
+   DATA   aTabs                                   INIT   {}
+   DATA   aINI                                    INIT   {}
+   DATA   aProjData                               INIT   {}
+   DATA   aPrpObjs                                INIT   {}
+   DATA   aEditorPath                             INIT   {}
 
    /* HBQT Objects */
    DATA   qLayout
    DATA   qTabWidget
    DATA   qFindDlg
 
-   ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
-   ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
-   ACCESS qCurDocument                            INLINE ::oEM:getDocumentCurrent()
-
    DATA   qCursor
    DATA   qFontWrkProject
    DATA   qBrushWrkProject
+   DATA   qProcess
+
+   ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
+   ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
+   ACCESS qCurDocument                            INLINE ::oEM:getDocumentCurrent()
 
    /* XBP Objects */
    DATA   oDlg
@@ -165,17 +168,13 @@ CLASS HbIde
    DATA   oNewDlg
    DATA   oTabWidget
    DATA   oPBFind, oPBRepl, oPBClose, oFind, oRepl
-
    DATA   oCurProjItem
    DATA   oCurProject
-
    DATA   oProjRoot
    DATA   oExes
    DATA   oLibs
    DATA   oDlls
-   DATA   aProjData                               INIT   {}
-   DATA   aPrpObjs                                INIT   {}
-   DATA   aEditorPath                             INIT   {}
+   DATA   oProps
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -184,9 +183,12 @@ CLASS HbIde
 
    DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
-
    DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
    DATA   pathSep                                 INIT   hb_OsPathSeparator()
+   DATA   cWrkProject                             INIT   ''
+   DATA   cWrkTheme                               INIT   ''
+   DATA   cProcessInfo
+   DATA   cIniThemes
 
    DATA   aTags                                   INIT   {}
    DATA   aText                                   INIT   {}
@@ -195,36 +197,26 @@ CLASS HbIde
    DATA   aLines                                  INIT   {}
    DATA   aComments                               INIT   {}
    DATA   aProjects                               INIT   {}
-   DATA   cWrkProject                             INIT   ''
-   DATA   cWrkTheme                               INIT   ''
-   DATA   oProps
 
-   DATA   cProcessInfo
-   DATA   qProcess
-
-   DATA   cIniThemes
-   DATA   oThemes
-
-   METHOD new( cProjectOrSource )
-   METHOD create( cProjectOrSource )
+   METHOD new( cProjIni )
+   METHOD create( cProjIni )
    METHOD destroy()
-
-   METHOD setPosAndSizeByIni()
-   METHOD setPosByIni()
-   METHOD setSizeByIni()
-   METHOD execAction()
-   METHOD manageFuncContext()
-   METHOD manageProjectContext()
-   METHOD updateFuncList()
-   METHOD gotoFunction()
-   METHOD updateProjectMenu()
-   METHOD updateProjectTree()
-   METHOD manageItemSelected()
-   METHOD createTags()
+   METHOD execAction( cKey )
+   METHOD setPosAndSizeByIni( qWidget, nPart )
+   METHOD setPosByIni( qWidget, nPart )
+   METHOD setSizeByIni( qWidget, nPart )
    METHOD manageFocusInEditor()
-   METHOD loadUI()
-   METHOD setCodec()
+   METHOD updateProjectTree( aPrj, lRemove )
+   METHOD manageItemSelected( oXbpTreeItem )
+   METHOD manageProjectContext( mp1, mp2, oXbpTreeItem )
+   METHOD updateFuncList()
+   METHOD gotoFunction( mp1, mp2, oListBox )
+   METHOD manageFuncContext( mp1 )
+   METHOD createTags()
+   METHOD loadUI( cUi )
+   METHOD updateProjectMenu()
    METHOD updateTitleBar()
+   METHOD setCodec( cCodec )
 
    ENDCLASS
 

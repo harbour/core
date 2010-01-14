@@ -76,23 +76,19 @@ CLASS IdeDockS INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
 
-   METHOD new()
-   METHOD create()
+   METHOD new( oIde )
+   METHOD create( oIde )
    METHOD destroy()
-
    METHOD buildDialog()
-   METHOD buildStatusBar()
-
    METHOD buildDockWidgets()
-
    METHOD buildProjectTree()
    METHOD buildEditorTree()
    METHOD buildFuncList()
    METHOD buildCompileResults()
    METHOD buildLinkResults()
    METHOD buildOutputResults()
-
-   METHOD outputDoubleClicked()
+   METHOD outputDoubleClicked( lSelected )
+   METHOD buildStatusBar()
    METHOD toggleLeftDocks()
    METHOD toggleRightDocks()
    METHOD toggleBottomDocks()

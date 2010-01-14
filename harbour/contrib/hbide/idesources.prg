@@ -73,20 +73,19 @@
 
 CLASS IdeSourcesManager INHERIT IdeObject
 
-   METHOD new()
-   METHOD create()
-
+   METHOD new( oIde )
+   METHOD create( oIde )
    METHOD loadSources()
-   METHOD openSource()
-   METHOD editSource()
-   METHOD selectSource()
-   METHOD closeSource()
+   METHOD saveSource( nTab, lCancel, lAs )
+   METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisible )
+   METHOD closeSource( nTab, lCanCancel, lCanceled )
    METHOD closeAllSources()
-   METHOD closeAllOthers()
-   METHOD saveSource()
+   METHOD closeAllOthers( nTab )
    METHOD saveAllSources()
    METHOD saveAndExit()
-   METHOD revertSource()
+   METHOD revertSource( nTab )
+   METHOD openSource()
+   METHOD selectSource( cMode, cFile, cTitle )
 
    ENDCLASS
 

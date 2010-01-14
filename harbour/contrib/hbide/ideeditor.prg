@@ -93,10 +93,26 @@ CLASS IdeEditsManager INHERIT IdeObject
    DATA   qContextMenu
    DATA   aActions                                INIT  {}
 
-   METHOD new()
-   METHOD create()
-
-   METHOD goto()
+   METHOD new( oIde )
+   METHOD create( oIde )
+   METHOD prepareTabWidget()
+   METHOD removeSourceInTree( cSourceFile )
+   METHOD addSourceInTree( cSourceFile )
+   METHOD exeBlock( nMode, p )
+   METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   METHOD getTabBySource( cSource )
+   METHOD getTabCurrent()
+   METHOD getDocumentCurrent()
+   METHOD getEditCurrent()
+   METHOD getEditorCurrent()
+   METHOD getEditorByIndex( nIndex )
+   METHOD getEditorByTabObject( oTab )
+   METHOD getEditorByTabPosition( nPos )
+   METHOD getEditorBySource( cSource )
+   METHOD reLoad( cSource )
+   METHOD isOpen( cSource )
+   METHOD setSourceVisible( cSource )
+   METHOD setSourceVisibleByIndex( nIndex )
    METHOD undo()
    METHOD redo()
    METHOD cut()
@@ -104,39 +120,12 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD paste()
    METHOD selectAll()
    METHOD switchToReadOnly()
-   METHOD insertText()
-
+   METHOD convertSelection( cKey )
+   METHOD insertText( cKey )
+   METHOD zoom( cKey )
    METHOD printPreview()
-   METHOD paintRequested()
-
-   METHOD convertSelection()
-
-   METHOD zoom()
-
-   METHOD isOpen()
-   METHOD reLoad()
-   METHOD buildEditor()
-
-   METHOD setSourceVisible()
-   METHOD setSourceVisibleByIndex()
-
-   METHOD getDocumentCurrent()
-
-   METHOD getTabCurrent()
-   METHOD getTabBySource()
-
-   METHOD getEditCurrent()
-
-   METHOD getEditorCurrent()
-   METHOD getEditorBySource()
-   METHOD getEditorByTabPosition()
-   METHOD getEditorByTabObject()
-   METHOD getEditorByIndex()
-
-   METHOD prepareTabWidget()
-   METHOD exeBlock()
-   METHOD addSourceInTree()
-   METHOD removeSourceInTree()
+   METHOD paintRequested( pPrinter )
+   METHOD goto()
 
    ENDCLASS
 
@@ -693,17 +682,17 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nnRow                                   INIT -99
    DATA   qPoint                                  INIT QPoint():new()
 
-   METHOD new()
-   METHOD create()
-   METHOD destroy()
 
-   METHOD buildTabPage()
-   METHOD activateTab()
-   METHOD dispEditInfo()
-   METHOD setTabImage()
-   METHOD applyTheme()
+   METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+   METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+   METHOD split( nOrient, oEditP )
+   METHOD destroy()
    METHOD setDocumentProperties()
-   METHOD split()
+   METHOD activateTab( mp1, mp2, oXbp )
+   METHOD buildTabPage( cSource )
+   METHOD dispEditInfo( qEdit )
+   METHOD setTabImage( qEdit )
+   METHOD applyTheme( cTheme )
 
    ENDCLASS
 
@@ -1005,12 +994,12 @@ CLASS IdeEdit INHERIT IdeObject
 
    DATA   qPoint                                  INIT  QPoint():new( 0,0 )
 
-   METHOD new()
-   METHOD create()
+   METHOD new( oEditor, nMode )
+   METHOD create( oEditor, nMode )
    METHOD destroy()
-   METHOD exeBlock()
-   METHOD connectEditSlots()
-   METHOD disConnectEditSlots()
+   METHOD exeBlock( nMode, oEdit, o, p, p1 )
+   METHOD connectEditSlots( oEdit )
+   METHOD disConnectEditSlots( oEdit )
 
    ENDCLASS
 

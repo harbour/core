@@ -105,41 +105,11 @@ CLASS IdeProject
    DATA   dotHbp                                  INIT ""
    DATA   compilers                               INIT ""
 
-   METHOD new()
+   METHOD new( aProps )
    METHOD applyMeta( s )
    METHOD expandMeta( s )
 
    ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProject:expandMeta( s )
-   LOCAL k
-   LOCAL a_:= ::metaData
-
-   IF ! Empty( a_ )
-      FOR EACH k IN a_ DESCEND
-         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 1 ], k[ 2 ] )
-      NEXT
-   ENDIF
-
-   RETURN s
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProject:applyMeta( s )
-   LOCAL k
-   LOCAL a_:= ::metaData
-   //LOCAL ss := s
-
-   IF ! Empty( a_ )
-      FOR EACH k IN a_
-         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 2 ],  k[ 1 ] )
-      NEXT
-   ENDIF
-
-   //MsgBox( ss + " => " + s )
-   RETURN s
 
 /*----------------------------------------------------------------------*/
 
@@ -179,6 +149,34 @@ METHOD IdeProject:new( aProps )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeProject:applyMeta( s )
+   LOCAL k
+   LOCAL a_:= ::metaData
+
+   IF ! Empty( a_ )
+      FOR EACH k IN a_
+         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 2 ],  k[ 1 ] )
+      NEXT
+   ENDIF
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProject:expandMeta( s )
+   LOCAL k
+   LOCAL a_:= ::metaData
+
+   IF ! Empty( a_ )
+      FOR EACH k IN a_ DESCEND
+         s := StrTran( hbide_pathNormalized( s, .f. ), k[ 1 ], k[ 2 ] )
+      NEXT
+   ENDIF
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
 //                            IdeProjectManager
 /*----------------------------------------------------------------------*/
 
@@ -196,30 +194,30 @@ CLASS IdeProjManager INHERIT IdeObject
    DATA   lPPO                                    INIT .f.
    DATA   oProject
 
-   METHOD new()
-   METHOD create()
+   METHOD new( oIde )
+   METHOD create( oIde )
    METHOD destroy()
 
    METHOD populate()
-   METHOD loadProperties()
+   METHOD loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    METHOD fetchProperties()
-   METHOD save()
-   METHOD updateHbp()
-   METHOD addSources()
-   METHOD getCurrentProject()
-   METHOD setCurrentProject()
-   METHOD selectCurrentProject()
-   METHOD closeProject()
-   METHOD promptForPath()
-   METHOD launchProject()
-   METHOD buildProject()
-   METHOD readProcessInfo()
-   METHOD getProjectProperties()
-   METHOD getProjectByTitle()
-   METHOD getProjectByFile()
-   METHOD buildProcess()
+   METHOD sortSources( cMode )
    METHOD updateMetaData()
-   METHOD sortSources()
+   METHOD save( lCanClose )
+   METHOD updateHbp( iIndex )
+   METHOD addSources()
+   METHOD setCurrentProject( cProjectName )
+   METHOD getCurrentProject( lAlert )
+   METHOD selectCurrentProject()
+   METHOD getProjectProperties( cProjectTitle )
+   METHOD getProjectByFile( cProjectFile )
+   METHOD getProjectByTitle( cProjectTitle )
+   METHOD closeProject( cProject )
+   METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
+   METHOD buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
+   METHOD buildProcess()
+   METHOD readProcessInfo( nMode, i, ii )
+   METHOD launchProject( cProject )
 
    ENDCLASS
 
