@@ -155,11 +155,11 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
    SQLINTEGER   iNativeErr = 9999;
    SQLSMALLINT  iLen;
    char *       szRet;
-  
+
    if( SQL_SUCCEEDED( SQLError( hEnv, hConn, hStmt, szError, &iNativeErr, szError + 6, SQL_MAX_MESSAGE_LENGTH, &iLen ) ) )
    {
       char *  szStr;
-      
+
       szError[ 5 ] = ' ';
       szStr = HB_TCHAR_CONVFROM( szError );
       szRet = hb_strdup( szStr );
@@ -182,7 +182,7 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    SQLHDBC    hConnect = NULL;
    char *     szError;
    HB_ERRCODE errCode;
-      
+
    if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) ) )
    {
       SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, ( SQLPOINTER ) SQL_OV_ODBC3, SQL_IS_UINTEGER );
@@ -295,7 +295,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    SQLULEN      uiSize;
    PHB_ITEM     pItemEof, pItem;
    DBFIELDINFO  pFieldInfo;
-   BOOL         bError;
+   HB_BOOL      bError;
    USHORT       uiFields, uiIndex;
    HB_ERRCODE   errCode;
    char *       szError;
@@ -339,7 +339,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
 
    errCode = 0;
-   bError = FALSE;
+   bError = HB_FALSE;
    for ( uiIndex = 0; uiIndex < uiFields; uiIndex++  )
    {
       if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR* ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
@@ -410,7 +410,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
          default:
            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
-           bError = TRUE;
+           bError = HB_TRUE;
            errCode = ( HB_ERRCODE ) iDataType;
            pFieldInfo.uiType = 0;
            pFieldInfo.uiType = HB_FT_STRING;
@@ -454,7 +454,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_LOGICAL:
-               pItem = hb_itemPutL( NULL, FALSE );
+               pItem = hb_itemPutL( NULL, HB_FALSE );
                break;
 
             case HB_FT_DATE:
@@ -471,7 +471,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
             default:
                pItem = hb_itemNew( NULL );
-               bError = TRUE;
+               bError = HB_TRUE;
                break;
          }
 
@@ -534,7 +534,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    {
       if( ! SQL_SUCCEEDED( SQLFetch( hStmt ) ) )
       {
-         pArea->fFetched = TRUE;
+         pArea->fFetched = HB_TRUE;
          break;
       }
 
@@ -676,13 +676,13 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned = FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
       pArea->pRecord = pArea->pRow[ ulRecNo ];
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned = TRUE;
+      pArea->fPositioned = HB_TRUE;
    }
    return HB_SUCCESS;
 }

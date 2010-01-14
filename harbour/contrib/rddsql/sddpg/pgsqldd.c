@@ -236,7 +236,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    ExecStatusType  status;
    PHB_ITEM        pItemEof, pItem;
    USHORT          uiFields, uiCount;
-   BOOL            bError;
+   HB_BOOL         bError;
    char*           pBuffer;
    DBFIELDINFO     pFieldInfo;
 
@@ -264,7 +264,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    pBuffer = ( char* ) hb_xgrab( 256 );
 
-   bError = FALSE;
+   bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
       hb_strncpy( pBuffer, PQfname( pResult, ( int ) uiCount ), 256 - 1 );
@@ -370,7 +370,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          default:
             pFieldInfo.uiType = 0;
             pFieldInfo.uiLen = 0;
-            bError = TRUE;
+            bError = HB_TRUE;
             break;
       }
       /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pBuffer, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
@@ -405,7 +405,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_LOGICAL:
-               pItem = hb_itemPutL( NULL, FALSE );
+               pItem = hb_itemPutL( NULL, HB_FALSE );
                break;
 
             case HB_FT_DATE:
@@ -414,7 +414,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
             default:
                pItem = hb_itemNew( NULL );
-               bError = TRUE;
+               bError = HB_TRUE;
                break;
          }
 
@@ -473,11 +473,11 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 {
    LPFIELD   pField;
    char*     pValue;
-   BOOL      bError;
+   HB_BOOL   bError;
    PHB_ITEM  pError;
    ULONG     ulLen;
 
-   bError = FALSE;
+   bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
@@ -533,7 +533,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       }
 
       default:
-         bError = TRUE;
+         bError = HB_TRUE;
          break;
    }
 

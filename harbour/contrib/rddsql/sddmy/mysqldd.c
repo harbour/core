@@ -216,7 +216,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    ULONG         ulIndex;
    USHORT        uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
-   BOOL          bError;
+   HB_BOOL       bError;
    char *        pBuffer;
    DBFIELDINFO   pFieldInfo;
    MYSQL_FIELD * pMyField;
@@ -243,7 +243,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
    pBuffer = ( char * ) hb_xgrab( 256 );
 
-   bError = FALSE;
+   bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
       pMyField = mysql_fetch_field_direct( ( MYSQL_RES * ) pArea->pResult, uiCount );
@@ -313,7 +313,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 */
 
          default:
-           bError = TRUE;
+           bError = HB_TRUE;
            errCode = ( HB_ERRCODE ) pMyField->type;
            pFieldInfo.uiType = 0;
            break;
@@ -363,7 +363,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
             default:
                pItem = hb_itemNew( NULL );
-               bError = TRUE;
+               bError = HB_TRUE;
                break;
          }
 
@@ -434,7 +434,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
 
-      pArea->fPositioned = FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
@@ -448,7 +448,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
          pArea->pNatLength = ( void * ) mysql_fetch_lengths( ( MYSQL_RES * ) pArea->pResult );
       }
 
-      pArea->fPositioned = TRUE;
+      pArea->fPositioned = HB_TRUE;
    }
    return HB_SUCCESS;
 }
@@ -459,11 +459,11 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
    LPFIELD   pField;
    char*     pValue;
    char      szBuffer[ 64 ];
-   BOOL      bError;
+   HB_BOOL   bError;
    PHB_ITEM  pError;
    ULONG     ulLen;
 
-   bError = FALSE;
+   bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
@@ -606,7 +606,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       }
 
       default:
-         bError = TRUE;
+         bError = HB_TRUE;
          break;
    }
 

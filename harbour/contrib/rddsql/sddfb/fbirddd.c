@@ -200,7 +200,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    XSQLVAR*         pVar;
    PHB_ITEM         pItemEof, pItem;
    DBFIELDINFO      pFieldInfo;
-   BOOL             bError;
+   HB_BOOL          bError;
    char*            pBuffer;
    USHORT           uiFields, uiCount;
    int              iType;
@@ -257,7 +257,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    pBuffer = ( char * ) hb_xgrab( 256 );
 
-   bError = FALSE;
+   bError = HB_FALSE;
    for ( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++  )
    {
       memcpy( pBuffer, pVar->sqlname, pVar->sqlname_length );
@@ -362,7 +362,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
             default:
                pItem = hb_itemNew( NULL );
-               bError = TRUE;
+               bError = HB_TRUE;
                break;
          }
 
@@ -516,7 +516,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       }
       else if ( lErr == 100L )
       {
-         pArea->fFetched = TRUE;
+         pArea->fFetched = HB_TRUE;
          if ( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
          {
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTFREE, "Statement free error", NULL, ( HB_ERRCODE ) status[ 1 ] );
@@ -546,13 +546,13 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned = FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
       pArea->pRecord = pArea->pRow[ ulRecNo ];
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned = TRUE;
+      pArea->fPositioned = HB_TRUE;
    }
    return HB_SUCCESS;
 }

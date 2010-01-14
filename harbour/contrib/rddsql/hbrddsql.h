@@ -108,10 +108,10 @@ typedef struct _SQLBASEAREA
    void *                     pNatRecord;
    void *                     pNatLength;
 
-   BOOL                       fFetched;
-   BOOL                       fPositioned;
-   BOOL                       fAppend;
-   BOOL                       fRecordChanged;
+   HB_BOOL                    fFetched;
+   HB_BOOL                    fPositioned;
+   HB_BOOL                    fAppend;
+   HB_BOOL                    fRecordChanged;
 } SQLBASEAREA, * SQLBASEAREAP;
 
 
@@ -176,9 +176,9 @@ typedef struct _MIXTAG
    unsigned int         uiKeyLen;            /* Length of key */
    unsigned int         uiTotalLen;          /* Total length of key structure */
 
-   BOOL                 fEof;
-   BOOL                 fBof;
-   BOOL                 fCustom;
+   HB_BOOL              fEof;
+   HB_BOOL              fBof;
+   HB_BOOL              fCustom;
 
    PMIXNODE             Root;
 
@@ -187,7 +187,7 @@ typedef struct _MIXTAG
    unsigned int         CurPos;
 
    PMIXKEY              HotKey;
-   BOOL                 HotFor;
+   HB_BOOL              HotFor;
 
    PHB_CODEPAGE         pCodepage;  /* National sorttable for character key tags, NULL otherwise */
 } MIXTAG, * PMIXTAG;

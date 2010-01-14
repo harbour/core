@@ -193,14 +193,14 @@ static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
 
-      pArea->fPositioned = FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
       pArea->pRecord = pArea->pRow[ ulRecNo ];
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
 
-      pArea->fPositioned = TRUE;
+      pArea->fPositioned = HB_TRUE;
    }
    return HB_SUCCESS;
 }
@@ -276,8 +276,8 @@ static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
    if ( ! pArea->fFetched && pArea->pSDD->GoTo( pArea, ( ULONG ) -1 ) == HB_FAILURE )
       return HB_FAILURE;
 
-   pArea->area.fTop = FALSE;
-   pArea->area.fBottom = TRUE;
+   pArea->area.fTop = HB_FALSE;
+   pArea->area.fBottom = HB_TRUE;
 
    if ( SELF_GOTO( ( AREAP ) pArea, pArea->ulRecCount ) != HB_SUCCESS )
       return HB_FAILURE;
@@ -297,14 +297,14 @@ static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    if ( pArea->fPositioned )
    {
       pArea->ulRecNo = ulRecNo;
-      pArea->area.fBof = pArea->area.fEof = FALSE;
+      pArea->area.fBof = pArea->area.fEof = HB_FALSE;
    }
    else
    {
       pArea->ulRecNo = pArea->ulRecCount + 1;
-      pArea->area.fBof = pArea->area.fEof = TRUE;
+      pArea->area.fBof = pArea->area.fEof = HB_TRUE;
    }
-   pArea->area.fFound = FALSE;
+   pArea->area.fFound = HB_FALSE;
 
    return HB_SUCCESS;
 }
@@ -331,8 +331,8 @@ static HB_ERRCODE sqlbaseGoToId( SQLBASEAREAP pArea, PHB_ITEM pItem )
 
 static HB_ERRCODE sqlbaseGoTop( SQLBASEAREAP pArea )
 {
-   pArea->area.fTop = TRUE;
-   pArea->area.fBottom = FALSE;
+   pArea->area.fTop = HB_TRUE;
+   pArea->area.fBottom = HB_FALSE;
 
    if ( SELF_GOTO( ( AREAP ) pArea, 1 ) == HB_FAILURE )
       return HB_FAILURE;
@@ -351,7 +351,7 @@ static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, LONG lToSkip )
          return HB_FAILURE;
    }
 
-   pArea->area.fTop = pArea->area.fBottom = FALSE;
+   pArea->area.fTop = pArea->area.fBottom = HB_FALSE;
 
    if ( lToSkip == 0 || hb_setGetDeleted() ||
        pArea->area.dbfi.itmCobExpr || pArea->area.dbfi.fFilter )
@@ -363,13 +363,13 @@ static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, LONG lToSkip )
    if ( errCode == HB_SUCCESS && pArea->area.fBof && lToSkip < 0 )
    {
       errCode = SELF_GOTOP( ( AREAP ) pArea );
-      pArea->area.fBof = TRUE;
+      pArea->area.fBof = HB_TRUE;
    }
 
    if ( lToSkip < 0 )
-      pArea->area.fEof = FALSE;
+      pArea->area.fEof = HB_FALSE;
    else /* if ( lToSkip > 0 ) */
-      pArea->area.fBof = FALSE;
+      pArea->area.fBof = HB_FALSE;
 
    return errCode;
 }
@@ -388,7 +388,7 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
    if ( lToSkip == 0 )
    {
       /* TODO: maybe gocold is enough here?! */
-      BOOL bBof, bEof;
+      HB_BOOL bBof, bEof;
 
       /* Save flags */
       bBof = pArea->area.fBof;
@@ -403,7 +403,7 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
    else if ( lToSkip < 0 && ( ULONG ) ( -lToSkip ) >= pArea->ulRecNo )
    {
       errCode = SELF_GOTO( ( AREAP ) pArea, 1 );
-      pArea->area.fBof = TRUE;
+      pArea->area.fBof = HB_TRUE;
    }
    else
    {
@@ -414,7 +414,7 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
 }
 
 
-static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
+static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, HB_BOOL bUnLockAll )
 {
    HB_SYMBOL_UNUSED( bUnLockAll );
 
@@ -432,10 +432,10 @@ static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
       pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
    }
 
-   pArea->fAppend = pArea->fPositioned = TRUE;
+   pArea->fAppend = pArea->fPositioned = HB_TRUE;
    pArea->ulRecCount++;
    pArea->ulRecNo = pArea->ulRecCount;
-   pArea->area.fBof = pArea->area.fEof = pArea->area.fFound = FALSE;
+   pArea->area.fBof = pArea->area.fEof = pArea->area.fFound = HB_FALSE;
    return HB_SUCCESS;
 }
 
@@ -453,7 +453,7 @@ static HB_ERRCODE sqlbaseDeleteRec( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlbaseDeleted( SQLBASEAREAP pArea, BOOL* pDeleted )
+static HB_ERRCODE sqlbaseDeleted( SQLBASEAREAP pArea, HB_BOOL* pDeleted )
 {
    * pDeleted = pArea->bRecordFlags & SQLDD_FLAG_DELETED;
    return HB_SUCCESS;
@@ -495,8 +495,8 @@ static HB_ERRCODE sqlbaseGoCold( SQLBASEAREAP pArea )
       }
       pArea->pRow[ pArea->ulRecNo ] = pArea->pRecord;
       pArea->pRowFlags[ pArea->ulRecNo ] = pArea->bRecordFlags;
-      pArea->fRecordChanged = FALSE;
-      pArea->fAppend = FALSE;
+      pArea->fRecordChanged = HB_FALSE;
+      pArea->fAppend = HB_FALSE;
    }
    return HB_SUCCESS;
 }
@@ -517,7 +517,7 @@ static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
    }
    pArea->pRecord = pArray;
    pArea->bRecordFlags |= SQLDD_FLAG_CACHED;
-   pArea->fRecordChanged = TRUE;
+   pArea->fRecordChanged = HB_TRUE;
    return HB_SUCCESS;
 }
 
@@ -644,7 +644,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    PHB_ITEM    pItemEof, pItem;
    USHORT      uiCount;
-   BOOL        bError;
+   HB_BOOL     bError;
 
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
 
@@ -668,7 +668,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pItemEof = hb_itemArrayNew( pArea->area.uiFieldCount );
 
-   bError = FALSE;
+   bError = HB_FALSE;
    for ( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++  )
    {
       LPFIELD pField = pArea->area.lpFields + uiCount;
@@ -719,12 +719,12 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case HB_FT_LOGICAL:
-            pItem = hb_itemPutL( NULL, FALSE );
+            pItem = hb_itemPutL( NULL, HB_FALSE );
             break;
 
          default:
             pItem = hb_itemNew( NULL );
-            bError = TRUE;
+            bError = HB_TRUE;
             break;
       }
 
@@ -955,7 +955,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
    {
 
       case RDDI_REMOTE:
-         hb_itemPutL( pItem, TRUE );
+         hb_itemPutL( pItem, HB_TRUE );
          break;
 
       case RDDI_CONNECTION:
@@ -975,11 +975,11 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
       }
 
       case RDDI_ISDBF:
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
          break;
 
       case RDDI_CANPUTREC:
-         hb_itemPutL( pItem, TRUE );
+         hb_itemPutL( pItem, HB_TRUE );
          break;
 
 
@@ -1044,10 +1044,10 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
          if ( pConn && ! pConn->uiAreaCount && pConn->pSDD->Disconnect( pConn ) == HB_SUCCESS )
          {
             pConn->hConnection = 0;
-            hb_itemPutL( pItem, TRUE );
+            hb_itemPutL( pItem, HB_TRUE );
             return HB_SUCCESS;
          }
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
          return HB_SUCCESS;
       }
 
@@ -1059,7 +1059,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
             hb_itemPutL( pItem, pConn->pSDD->Execute( pConn, pItem ) == HB_SUCCESS );
          }
          else
-            hb_itemPutL( pItem, FALSE );
+            hb_itemPutL( pItem, HB_FALSE );
 
          return HB_SUCCESS;
       }
