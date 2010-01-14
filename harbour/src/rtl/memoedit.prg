@@ -171,11 +171,13 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
             RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
             SetPos( nRow, nCol )
 
-            IF nYesNoKey == Asc( "Y" ) .or. nYesNoKey == Asc( "y" )
+            IF nYesNoKey == Asc( "Y" ) .OR. nYesNoKey == Asc( "y" )
+               hb_SetLastKey( K_ESC ) /* Cl*pper compatibility */
                ::lSaved := .F.
                ::lExitEdit := .T.
             ENDIF
          ELSE
+            ::lSaved := .F.
             ::lExitEdit := .T.
          ENDIF
       ENDIF

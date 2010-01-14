@@ -336,12 +336,12 @@ METHOD display() CLASS GET
 
       IF Set( _SET_DELIMITERS ) .AND. !::hasFocus
 #ifdef HB_COMPAT_C53
-         hb_dispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
-         hb_dispOutAt( ::nRow, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+         hb_dispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+         hb_dispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
 #else
          /* NOTE: C5.2 will use the default color. We're replicating this here. [vszakats] */
-         hb_dispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
-         hb_dispOutAt( ::nRow, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
+         hb_dispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
+         hb_dispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
 #endif
          ++nColPos
       ENDIF
