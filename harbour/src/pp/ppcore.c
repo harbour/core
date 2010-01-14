@@ -2270,7 +2270,44 @@ static BOOL hb_pp_setCompilerSwitch( PHB_PP_STATE pState, const char * szSwitch,
    }
 
    if( pState->pSwitchFunc )
-      fError = ( pState->pSwitchFunc )( pState->cargo, szSwitch, iValue );
+      fError = ( pState->pSwitchFunc )( pState->cargo, szSwitch, &iValue, TRUE );
+
+   return fError;
+}
+
+static BOOL hb_pp_getCompilerSwitch( PHB_PP_STATE pState, const char * szSwitch,
+                                     int * piValue )
+{
+   BOOL fError = TRUE;
+
+   if( pState->pSwitchFunc )
+      fError = ( pState->pSwitchFunc )( pState->cargo, szSwitch, piValue, FALSE );
+
+   if( fError ) switch( szSwitch[ 0 ] )
+   {
+      case 'p':
+      case 'P':
+         if( szSwitch[ 1 ] == '\0' )
+         {
+            *piValue = pState->fWritePreprocesed ? 1 : 0;
+            fError = FALSE;
+         }
+         else if( szSwitch[ 1 ] == '+' && szSwitch[ 2 ] == '\0' )
+         {
+            *piValue = pState->fWriteTrace ? 1 : 0;
+            fError = FALSE;
+         }
+         break;
+
+      case 'q':
+      case 'Q':
+         if( szSwitch[ 1 ] == '\0' )
+         {
+            *piValue = pState->fQuiet ? 1 : 0;
+            fError = FALSE;
+         }
+         break;
+   }
 
    return fError;
 }
@@ -4222,18 +4259,63 @@ static void hb_pp_processCondDefined( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    {
       pNext = pToken->pNext;
       if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD &&
-          hb_pp_tokenValueCmp( pToken, "defined", HB_PP_CMP_CASE ) &&
+          ( hb_pp_tokenValueCmp( pToken, "defined", HB_PP_CMP_CASE ) ||
+            hb_pp_tokenValueCmp( pToken, "__pragma", HB_PP_CMP_CASE ) ) &&
           pNext && HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_LEFT_PB &&
           pNext->pNext && HB_PP_TOKEN_TYPE( pNext->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
           pNext->pNext->pNext && HB_PP_TOKEN_TYPE( pNext->pNext->pNext->type ) == HB_PP_TOKEN_RIGHT_PB )
       {
-         BOOL fDefined = hb_pp_defineFind( pState, pNext->pNext ) != NULL;
+         const char * szValue = NULL;
+         char buffer[ 32 ];
 
-         hb_pp_tokenSetValue( pToken, fDefined ? "1" : "0", 1 );
-         HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_NUMBER );
-         pToken->pNext = pNext->pNext->pNext->pNext;
-         pNext->pNext->pNext->pNext = NULL;
-         hb_pp_tokenListFree( &pNext );
+         if( pToken->value[ 0 ] == '_' )
+         {
+            const char * szSwitch = NULL;
+
+            if( hb_pp_tokenValueCmp( pNext->pNext, "AUTOMEMVAR", HB_PP_CMP_DBASE ) )
+               szSwitch = "a";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "DEBUGINFO", HB_PP_CMP_DBASE ) )
+               szSwitch = "b";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "DYNAMICMEMVAR", HB_PP_CMP_DBASE ) )
+               szSwitch = "v";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "EXITSEVERITY", HB_PP_CMP_DBASE ) )
+               szSwitch = "es";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "LINENUMBER", HB_PP_CMP_DBASE ) )
+               szSwitch = "l";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "NOSTARTPROC", HB_PP_CMP_DBASE ) )
+               szSwitch = "n";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "PREPROCESSING", HB_PP_CMP_DBASE ) )
+               szSwitch = "p";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "SHORTCUT", HB_PP_CMP_DBASE ) )
+               szSwitch = "z";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "TEXTHIDDEN", HB_PP_CMP_DBASE ) )
+               szSwitch = "TEXTHIDDEN";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "TRACE", HB_PP_CMP_DBASE ) )
+               szSwitch = "p+";
+            else if( hb_pp_tokenValueCmp( pNext->pNext, "WARNINGLEVEL", HB_PP_CMP_DBASE ) )
+               szSwitch = "w";
+            else
+               szSwitch = pNext->pNext->value;
+
+            if( szSwitch )
+            {
+               int iValue = 0;
+               if( ! hb_pp_getCompilerSwitch( pState, szSwitch, &iValue ) )
+                  szValue = hb_numToStr( buffer, sizeof( buffer ), iValue );
+            }
+         }
+         else
+            szValue = hb_pp_defineFind( pState, pNext->pNext ) != NULL ?
+                      "1" : "0";
+
+         if( szValue )
+         {
+            hb_pp_tokenSetValue( pToken, szValue, ( ULONG ) strlen( szValue ) );
+            HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_NUMBER );
+            pToken->pNext = pNext->pNext->pNext->pNext;
+            pNext->pNext->pNext->pNext = NULL;
+            hb_pp_tokenListFree( &pNext );
+         }
       }
       pToken = pToken->pNext;
    }

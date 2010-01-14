@@ -116,12 +116,15 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
 }
 
 static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
-                                  int iValue )
+                                  int * piValue, BOOL fSet )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
    BOOL fError = FALSE;
-   int i = strlen( szSwitch );
+   int iValue, i;
 
+   iValue = *piValue;
+
+   i = strlen( szSwitch );
    if( i > 1 && ( ( int ) ( szSwitch[ i - 1 ] - '0' ) ) == iValue )
       --i;
 
@@ -131,61 +134,97 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
       {
          case 'a':
          case 'A':
-            HB_COMP_PARAM->fAutoMemvarAssume = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fAutoMemvarAssume = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fAutoMemvarAssume ? 1 : 0;
             break;
 
          case 'b':
          case 'B':
-            HB_COMP_PARAM->fDebugInfo = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fDebugInfo = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fDebugInfo ? 1 : 0;
             break;
 
          case 'j':
          case 'J':
-            HB_COMP_PARAM->fI18n = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fI18n = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fI18n ? 1 : 0;
             break;
 
          case 'l':
          case 'L':
-            HB_COMP_PARAM->fLineNumbers = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fLineNumbers = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fLineNumbers ? 1 : 0;
             break;
 
          case 'n':
          case 'N':
-            if( iValue >= 0 && iValue <= 2 )
-               HB_COMP_PARAM->iStartProc = iValue;
+            if( fSet )
+            {
+               if( iValue >= 0 && iValue <= 2 )
+                  HB_COMP_PARAM->iStartProc = iValue;
+               else
+                  fError = TRUE;
+            }
             else
-               fError = TRUE;
+               iValue = HB_COMP_PARAM->iStartProc;
             break;
 
          case 'p':
          case 'P':
-            HB_COMP_PARAM->fPPO = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fPPO = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fPPO ? 1 : 0;
             break;
 
          case 'q':
          case 'Q':
-            HB_COMP_PARAM->fQuiet = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fQuiet = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fQuiet ? 1 : 0;
             break;
 
          case 'v':
          case 'V':
-            HB_COMP_PARAM->fForceMemvars = iValue != 0;
+            if( fSet )
+               HB_COMP_PARAM->fForceMemvars = iValue != 0;
+            else
+               iValue = HB_COMP_PARAM->fForceMemvars ? 1 : 0;
             break;
 
          case 'w':
          case 'W':
-            if( iValue >= 0 && iValue <= 3 )
-               HB_COMP_PARAM->iWarnings = iValue;
+            if( fSet )
+            {
+               if( iValue >= 0 && iValue <= 3 )
+                  HB_COMP_PARAM->iWarnings = iValue;
+               else
+                  fError = TRUE;
+            }
             else
-               fError = TRUE;
+               iValue = HB_COMP_PARAM->iWarnings;
             break;
 
          case 'z':
          case 'Z':
-            if( iValue )
-               HB_COMP_PARAM->supported &= ~HB_COMPFLAG_SHORTCUTS;
+            if( fSet )
+            {
+               if( iValue )
+                  HB_COMP_PARAM->supported &= ~HB_COMPFLAG_SHORTCUTS;
+               else
+                  HB_COMP_PARAM->supported |= HB_COMPFLAG_SHORTCUTS;
+            }
             else
-               HB_COMP_PARAM->supported |= HB_COMPFLAG_SHORTCUTS;
+               iValue = ( HB_COMP_PARAM->supported & HB_COMPFLAG_SHORTCUTS ) ? 0 : 1;
             break;
 
          default:
@@ -200,12 +239,26 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          /* -k? parameters are case sensitive */
          switch( szSwitch[ 1 ] )
          {
+            case '?':
+               if( fSet )
+                  HB_COMP_PARAM->supported = iValue;
+               else
+                  iValue = HB_COMP_PARAM->supported;
+               break;
             case 'c':
             case 'C':
-               /* clear all flags - minimal set of features */
-               HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
-               HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP |
-                                           HB_COMPFLAG_MACROTEXT;
+               if( fSet )
+               {
+                  /* clear all flags - minimal set of features */
+                  HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
+                  HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP |
+                                              HB_COMPFLAG_MACROTEXT;
+               }
+               else
+               {
+                  iValue = ( HB_COMP_PARAM->supported & ~HB_COMPFLAG_SHORTCUTS ) ==
+                           ( HB_COMPFLAG_OPTJUMP | HB_COMPFLAG_MACROTEXT ) ? 1 : 0;
+               }
                break;
             case 'h':
             case 'H':
@@ -246,28 +299,59 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          }
          if( !fError && iFlag )
          {
-            if( iValue )
-               HB_COMP_PARAM->supported |= iFlag;
+            if( fSet )
+            {
+               if( iValue )
+                  HB_COMP_PARAM->supported |= iFlag;
+               else
+                  HB_COMP_PARAM->supported &= ~iFlag;
+            }
             else
-               HB_COMP_PARAM->supported &= ~iFlag;
+            {
+               if( iValue )
+                  iValue = HB_COMP_PARAM->supported & iFlag ? 0 : 1;
+               else
+                  iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
+            }
          }
       }
-      else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 &&
-               ( iValue == HB_EXITLEVEL_DEFAULT ||
-                 iValue == HB_EXITLEVEL_SETEXIT ||
-                 iValue == HB_EXITLEVEL_DELTARGET ) )
-         HB_COMP_PARAM->iExitLevel = iValue;
+      else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_EXITLEVEL_DEFAULT ||
+                iValue == HB_EXITLEVEL_SETEXIT ||
+                iValue == HB_EXITLEVEL_DELTARGET )
+               HB_COMP_PARAM->iExitLevel = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iExitLevel;
+      }
       else if( hb_stricmp( szSwitch, "p+" ) == 0 )
-         HB_COMP_PARAM->fPPT = iValue != 0;
+      {
+         if( fSet )
+            HB_COMP_PARAM->fPPT = iValue != 0;
+         else
+            iValue = HB_COMP_PARAM->fPPT ? 1 : 0;
+      }
       else
          fError = TRUE;
    }
    /* xHarbour extension */
-   else if( i >= 4 && hb_strnicmp( szSwitch, "TEXTHIDDEN", i ) == 0 &&
-            iValue >= 0 && iValue <= 1 )
-      HB_COMP_PARAM->iHidden = iValue;
+   else if( i >= 4 && hb_strnicmp( szSwitch, "TEXTHIDDEN", i ) == 0 )
+   {
+      if( fSet )
+      {
+         if( iValue >= 0 && iValue <= 1 )
+            HB_COMP_PARAM->iHidden = iValue;
+      }
+      else
+         iValue = HB_COMP_PARAM->iHidden;
+   }
    else
       fError = TRUE;
+
+   *piValue = iValue;
 
    return fError;
 }

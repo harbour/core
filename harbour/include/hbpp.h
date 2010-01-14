@@ -112,7 +112,7 @@ typedef HB_PP_INLINE_FUNC_( HB_PP_INLINE_FUNC );
 typedef HB_PP_INLINE_FUNC * PHB_PP_INLINE_FUNC;
 
 /* function for catching #pragma dump data */
-#define HB_PP_SWITCH_FUNC_( func ) BOOL func( void *, const char *, int )
+#define HB_PP_SWITCH_FUNC_( func ) BOOL func( void *, const char *, int *, BOOL )
 typedef HB_PP_SWITCH_FUNC_( HB_PP_SWITCH_FUNC );
 typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 

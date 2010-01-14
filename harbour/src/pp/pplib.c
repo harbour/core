@@ -90,12 +90,13 @@ static void hb_pp_Disp( void * cargo, const char * szMessage )
 }
 
 static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
-                                  int iValue )
+                                  int * piValue, BOOL fSet )
 {
    /* ignore all compiler switches */
    HB_SYMBOL_UNUSED( cargo );
    HB_SYMBOL_UNUSED( szSwitch );
-   HB_SYMBOL_UNUSED( iValue );
+   HB_SYMBOL_UNUSED( piValue );
+   HB_SYMBOL_UNUSED( fSet );
 
    return FALSE;
 }
