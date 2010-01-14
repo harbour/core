@@ -96,7 +96,7 @@ CLASS WvgBitmap
    DATA     lDCToDestroy                          INIT .f.
 
    METHOD   new()
-   METHOD   create()
+   METHOD   create( oPScompat )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
 

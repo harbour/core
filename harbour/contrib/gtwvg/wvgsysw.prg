@@ -79,8 +79,8 @@
 CLASS WvgSysWindow INHERIT WvgPartHandler
 
 
-   METHOD   new()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, aPos )
+   METHOD   create( oParent, oOwner, aPos )
    METHOD   configure()
    METHOD   destroy()
 
@@ -88,7 +88,7 @@ CLASS WvgSysWindow INHERIT WvgPartHandler
    METHOD   enable()
    METHOD   hide()
    METHOD   show()
-   METHOD   setPos()
+   METHOD   setPos( aPos )
 
    METHOD   currentPos()
    METHOD   currentSize()
@@ -116,7 +116,7 @@ CLASS WvgSysWindow INHERIT WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos ) CLASS WvgSysWindow
+METHOD WvgSysWindow:new( oParent, oOwner, aPos )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -132,7 +132,7 @@ METHOD new( oParent, oOwner, aPos ) CLASS WvgSysWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos ) CLASS WvgSysWindow
+METHOD WvgSysWindow:create( oParent, oOwner, aPos )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -148,45 +148,43 @@ METHOD create( oParent, oOwner, aPos ) CLASS WvgSysWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure() CLASS WvgSysWindow
+METHOD WvgSysWindow:configure()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgSysWindow
-
-//   hb_FreeCallBack( ::nWndProc )
+METHOD WvgSysWindow:destroy()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD disable() CLASS WvgSysWindow
+METHOD WvgSysWindow:disable()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD enable() CLASS WvgSysWindow
+METHOD WvgSysWindow:enable()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD hide() CLASS WvgSysWindow
+METHOD WvgSysWindow:hide()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD show() CLASS WvgSysWindow
+METHOD WvgSysWindow:show()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPos( aPos ) CLASS WvgSysWindow
+METHOD WvgSysWindow:setPos( aPos )
 
    WVG_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .f. )
 
@@ -194,7 +192,7 @@ METHOD setPos( aPos ) CLASS WvgSysWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentPos() CLASS WvgSysWindow
+METHOD WvgSysWindow:currentPos()
    LOCAL aRect
 
    aRect := WVG_GetWindowRect( ::hWnd )
@@ -203,7 +201,7 @@ METHOD currentPos() CLASS WvgSysWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentSize() CLASS WvgSysWindow
+METHOD WvgSysWindow:currentSize()
    LOCAL aRect
 
    aRect := WVG_GetClientRect( ::hWnd )
@@ -262,8 +260,8 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
    DATA     viewPrinterFonts                      INIT   .F.
    DATA     viewScreenFonts                       INIT   .T.
 
-   METHOD   new()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   destroy()
    METHOD   display( nMode )
 
@@ -288,8 +286,8 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
    DATA     aPos                                  INIT   { 0, 0 }
    DATA     ok                                    INIT   .f.
 
-   METHOD   WndProc()
-   METHOD   GetWvgFont()                          PROTECTED
+   METHOD   wndProc( hWnd, nMessage, nwParam, nlParam )
+   METHOD   GetWvgFont( aFont )                   PROTECTED
 
    ENDCLASS
 

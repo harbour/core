@@ -146,90 +146,9 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    DATA     sl_setDisplayFocus
    DATA     sl_killDisplayFocus
 
-EXPORTED:
-   /*  LIFE CYCLE  */
-   METHOD   init()
-   METHOD   create()
-   METHOD   configure()
-   METHOD   destroy()
-
-   /*  MANIPULATE  */
-   METHOD   captureMouse()
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   hide()
-   METHOD   invalidateRect()
-   METHOD   lockPS()
-   METHOD   lockUpdate()
-   METHOD   setModalState()
-   METHOD   setPointer()
-   METHOD   setTrackPointer()
-   METHOD   setPos()
-   METHOD   setPosAndSize()
-   METHOD   setSize()
-   METHOD   show()
-   METHOD   toBack()
-   METHOD   toFront()
-   METHOD   unlockPS()
-   METHOD   winDevice()
-
-   /*  SETTINGS  */
    DATA     hBrushBG
-   METHOD   setColorBG( nRGB )
-   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
-   METHOD   setFont()
-   METHOD   setFontCompoundName()
-   METHOD   setPresParam()
-
-   /*  STATUS  */
-   METHOD   currentPos()
-   METHOD   currentSize()
-   METHOD   getHWND()
-   METHOD   getModalState()
-   METHOD   hasInputFocus()
-
    DATA     is_hidden                             INIT   .F.
    DATA     is_enabled                            INIT   .T.
-   METHOD   isEnabled()                           INLINE ::is_enabled
-   METHOD   isVisible()                           INLINE !( ::is_hidden )
-
-   /*  CALLBACKS  */
-   METHOD   enter()                               SETGET
-   METHOD   leave()                               SETGET
-   METHOD   lbClick()                             SETGET
-   METHOD   lbDblClick()                          SETGET
-   METHOD   lbDown()                              SETGET
-   METHOD   lbUp()                                SETGET
-   METHOD   mbClick()                             SETGET
-   METHOD   mbDblClick()                          SETGET
-   METHOD   mbDown()                              SETGET
-   METHOD   mbUp()                                SETGET
-   METHOD   motion()                              SETGET
-   METHOD   rbClick()                             SETGET
-   METHOD   rbDblClick()                          SETGET
-   METHOD   rbDown()                              SETGET
-   METHOD   rbUp()                                SETGET
-   METHOD   wheel()                               SETGET
-
-   /*  OTHER MESSAGES */
-   METHOD   helpRequest()                         SETGET
-   METHOD   keyboard()                            SETGET
-   METHOD   killInputFocus()                      SETGET
-   METHOD   move()                                SETGET
-   METHOD   paint()                               SETGET
-   METHOD   quit()                                SETGET
-   METHOD   resize()                              SETGET
-   METHOD   setInputFocus()                       SETGET
-   METHOD   dragEnter()                           SETGET
-   METHOD   dragMotion()                          SETGET
-   METHOD   dragLeave()                           SETGET
-   METHOD   dragDrop()                            SETGET
-
-   METHOD   close()                               SETGET
-   METHOD   setDisplayFocus()                     SETGET
-   METHOD   killDisplayFocus()                    SETGET
-
-
    DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
@@ -242,9 +161,6 @@ EXPORTED:
    DATA     pGT
    DATA     objType                               INIT   objTypeNone
    DATA     className                             INIT   ""
-
-   METHOD   setFocus()
-   METHOD   sendMessage()
 
    DATA     hWnd
    DATA     pWnd
@@ -260,27 +176,95 @@ EXPORTED:
 
    DATA     nID                                   INIT   0
    DATA     nControlID                            INIT   5000
-   METHOD   createControl()
-   METHOD   getControlID()                        INLINE ++::nControlID
-
-   METHOD   Initialize()
-
    DATA     nOldProc                              INIT   0
 
    DATA     oMenu
-   METHOD   HandleEvent()                         INLINE ( 1 )
-   METHOD   ControlWndProc()
+
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   destroy()
+   METHOD   SetWindowProcCallback()
+
+   METHOD   captureMouse()
+   METHOD   currentPos()
+   METHOD   currentSize()
+   METHOD   disable()
+   METHOD   enable()
+   METHOD   getHWND()
+   METHOD   getModalState()
+   METHOD   hasInputFocus()
+   METHOD   hide()
+   METHOD   invalidateRect( aRect )
+   METHOD   lockPS()
+   METHOD   lockUpdate()
+   METHOD   isDerivedFrom( cClassORoObject )
+   METHOD   setColorBG( nRGB )
+   METHOD   setModalState()
+   METHOD   setPointer()
+   METHOD   setTrackPointer()
+   METHOD   setPos( aPos, lPaint )
+   METHOD   setPosAndSize( aPos, aSize, lPaint )
+   METHOD   setSize( aSize, lPaint )
+   METHOD   setFont()
+   METHOD   setFontCompoundName( xFont )
+   METHOD   setPresParam()
+   METHOD   show()
+   METHOD   toBack()
+   METHOD   toFront()
+   METHOD   unlockPS()
+   METHOD   winDevice()
+
+   METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   setFocus()
+   METHOD   sendMessage( nMessage, nlParam, nwParam )
    METHOD   findObjectByHandle( hWnd )
+   METHOD   createControl()
+   METHOD   ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 
+   METHOD   getControlID()                        INLINE ++::nControlID
+   METHOD   HandleEvent()                         INLINE ( 1 )
+   METHOD   isEnabled()                           INLINE ::is_enabled
+   METHOD   isVisible()                           INLINE !( ::is_hidden )
+   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
 
-   METHOD   isDerivedFrom()
-   METHOD   setWindowProcCallback()
+   METHOD   enter( xParam )                       SETGET
+   METHOD   leave( xParam )                       SETGET
+   METHOD   lbClick( xParam )                     SETGET
+   METHOD   lbDblClick( xParam )                  SETGET
+   METHOD   lbDown( xParam )                      SETGET
+   METHOD   lbUp( xParam )                        SETGET
+   METHOD   mbClick( xParam )                     SETGET
+   METHOD   mbDblClick( xParam )                  SETGET
+   METHOD   mbDown( xParam )                      SETGET
+   METHOD   mbUp( xParam )                        SETGET
+   METHOD   motion( xParam )                      SETGET
+   METHOD   rbClick( xParam )                     SETGET
+   METHOD   rbDblClick( xParam )                  SETGET
+   METHOD   rbDown( xParam )                      SETGET
+   METHOD   rbUp( xParam )                        SETGET
+   METHOD   wheel( xParam )                       SETGET
+   METHOD   close( xParam )                       SETGET
+   METHOD   helpRequest( xParam )                 SETGET
+   METHOD   keyboard( xParam )                    SETGET
+   METHOD   killDisplayFocus( xParam )            SETGET
+   METHOD   killInputFocus( xParam )              SETGET
+   METHOD   move( xParam )                        SETGET
+   METHOD   paint( xParam )                       SETGET
+   METHOD   quit( xParam, xParam1 )               SETGET
+   METHOD   resize( xParam, xParam1 )             SETGET
+   METHOD   setDisplayFocus( xParam )             SETGET
+   METHOD   setInputFocus( xParam )               SETGET
+   METHOD   dragEnter( xParam, xParam1 )          SETGET
+   METHOD   dragMotion( xParam )                  SETGET
+   METHOD   dragLeave( xParam )                   SETGET
+   METHOD   dragDrop( xParam, xParam1 )           SETGET
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWindow
+METHOD WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -302,7 +286,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWind
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWindow
+METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -324,7 +308,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWi
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWindow
+METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -338,7 +322,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgWindow
+METHOD WvgWindow:destroy()
    #if 0
    hb_ToOutDebug( "          %s:destroy() WvgWindow()", __objGetClsName( self ) )
    #endif
@@ -423,7 +407,7 @@ METHOD destroy() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetWindowProcCallback() CLASS WvgWindow
+METHOD WvgWindow:SetWindowProcCallback()
 
    ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
 
@@ -431,13 +415,13 @@ METHOD SetWindowProcCallback() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD captureMouse() CLASS WvgWindow
+METHOD WvgWindow:captureMouse()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD disable() CLASS WvgWindow
+METHOD WvgWindow:disable()
 
    IF WVG_EnableWindow( ::hWnd, .f. )
       ::is_enabled := .f.
@@ -448,7 +432,7 @@ METHOD disable() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD enable() CLASS WvgWindow
+METHOD WvgWindow:enable()
 
    IF WVG_EnableWindow( ::hWnd, .t. )
       ::is_enabled := .t.
@@ -459,7 +443,7 @@ METHOD enable() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD hide() CLASS WvgWindow
+METHOD WvgWindow:hide()
 
    IF WVG_IsWindow( ::hWnd )
       WVG_ShowWindow( ::hWnd, SW_HIDE )
@@ -470,25 +454,25 @@ METHOD hide() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD invalidateRect( aRect ) CLASS WvgWindow
+METHOD WvgWindow:invalidateRect( aRect )
 
    RETURN WVG_InvalidateRect( ::hWnd, aRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockPS() CLASS WvgWindow
+METHOD WvgWindow:lockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockUpdate() CLASS WvgWindow
+METHOD WvgWindow:lockUpdate()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setColorBG( nRGB ) CLASS WvgWindow
+METHOD WvgWindow:setColorBG( nRGB )
    LOCAL hBrush
 
    IF hb_isNumeric( nRGB )
@@ -507,25 +491,25 @@ METHOD setColorBG( nRGB ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setModalState() CLASS WvgWindow
+METHOD WvgWindow:setModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPointer() CLASS WvgWindow
+METHOD WvgWindow:setPointer()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setTrackPointer() CLASS WvgWindow
+METHOD WvgWindow:setTrackPointer()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPos( aPos, lPaint ) CLASS WvgWindow
+METHOD WvgWindow:setPos( aPos, lPaint )
 
    IF hb_isArray( aPos )
       DEFAULT lPaint TO .T.
@@ -547,7 +531,7 @@ METHOD setPos( aPos, lPaint ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
+METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 
    IF hb_isArray( aPos ) .and. hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -569,7 +553,7 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setSize( aSize, lPaint ) CLASS WvgWindow
+METHOD WvgWindow:setSize( aSize, lPaint )
 
    IF hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -587,7 +571,7 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD isDerivedFrom( cClassORoObject ) CLASS WvgWindow
+METHOD WvgWindow:isDerivedFrom( cClassORoObject )
    LOCAL lTrue := .f.
    LOCAL cCls := __ObjGetClsName( self )
 
@@ -608,7 +592,7 @@ METHOD isDerivedFrom( cClassORoObject ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD show() CLASS WvgWindow
+METHOD WvgWindow:show()
 
    WVG_ShowWindow( ::hWnd, SW_NORMAL )
    ::is_hidden      := .f.
@@ -618,38 +602,38 @@ METHOD show() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD toBack() CLASS WvgWindow
+METHOD WvgWindow:toBack()
 
    RETURN WVG_SetWindowPosToBack( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
-METHOD toFront() CLASS WvgWindow
+METHOD WvgWindow:toFront()
 
    /*RETURN WVG_SetForeGroundWindow( ::hWnd ) */
    RETURN WVG_SetWindowPosToTop( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
-METHOD unlockPS() CLASS WvgWindow
+METHOD WvgWindow:unlockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD winDevice() CLASS WvgWindow
+METHOD WvgWindow:winDevice()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFont() CLASS WvgWindow
+METHOD WvgWindow:setFont()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFontCompoundName( xFont ) CLASS WvgWindow
+METHOD WvgWindow:setFontCompoundName( xFont )
    LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
    LOCAL aAttr := { "normal","italic","bold" }
 
@@ -689,13 +673,13 @@ METHOD setFontCompoundName( xFont ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPresParam() CLASS WvgWindow
+METHOD WvgWindow:setPresParam()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentPos() CLASS WvgWindow
+METHOD WvgWindow:currentPos()
    LOCAL aRect
 
    aRect := WVG_GetWindowRect( ::hWnd )
@@ -704,7 +688,7 @@ METHOD currentPos() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentSize() CLASS WvgWindow
+METHOD WvgWindow:currentSize()
    LOCAL aRect
 
    aRect := WVG_GetClientRect( ::hWnd )
@@ -713,19 +697,19 @@ METHOD currentSize() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD getHWND() CLASS WvgWindow
+METHOD WvgWindow:getHWND()
 
    RETURN ::hWnd
 
 /*----------------------------------------------------------------------*/
 
-METHOD getModalState() CLASS WvgWindow
+METHOD WvgWindow:getModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD hasInputFocus() CLASS WvgWindow
+METHOD WvgWindow:hasInputFocus()
 
    RETURN Self
 
@@ -733,7 +717,7 @@ METHOD hasInputFocus() CLASS WvgWindow
  *                           Callback Methods
 /*----------------------------------------------------------------------*/
 
-METHOD enter( xParam ) CLASS WvgWindow
+METHOD WvgWindow:enter( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_enter )
       eval( ::sl_enter, xParam, NIL, Self )
@@ -749,7 +733,7 @@ METHOD enter( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD leave( xParam ) CLASS WvgWindow
+METHOD WvgWindow:leave( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_leave )
       eval( ::sl_leave, NIL, NIL, Self )
@@ -765,7 +749,7 @@ METHOD leave( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:lbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, xParam, NIL, Self )
@@ -781,7 +765,7 @@ METHOD lbClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDblClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:lbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, xParam, NIL, Self )
@@ -797,7 +781,7 @@ METHOD lbDblClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDown( xParam ) CLASS WvgWindow
+METHOD WvgWindow:lbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDown )
       eval( ::sl_lbDown, xParam, NIL, Self )
@@ -813,7 +797,7 @@ METHOD lbDown( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbUp( xParam ) CLASS WvgWindow
+METHOD WvgWindow:lbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbUp )
       eval( ::sl_lbUp, xParam, NIL, Self )
@@ -829,7 +813,7 @@ METHOD lbUp( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:mbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbClick )
       eval( ::sl_mbClick, xParam, NIL, Self )
@@ -845,7 +829,7 @@ METHOD mbClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDblClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:mbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, xParam, NIL, Self )
@@ -861,7 +845,7 @@ METHOD mbDblClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDown( xParam ) CLASS WvgWindow
+METHOD WvgWindow:mbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDown )
       eval( ::sl_mbDown, xParam, NIL, Self )
@@ -877,7 +861,7 @@ METHOD mbDown( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbUp( xParam ) CLASS WvgWindow
+METHOD WvgWindow:mbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbUp )
       eval( ::sl_mbUp, xParam, NIL, Self )
@@ -893,7 +877,7 @@ METHOD mbUp( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD motion( xParam ) CLASS WvgWindow
+METHOD WvgWindow:motion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_motion )
       eval( ::sl_motion, xParam, NIL, Self )
@@ -909,7 +893,7 @@ METHOD motion( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:rbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbClick )
       eval( ::sl_rbClick, xParam, NIL, Self )
@@ -925,7 +909,7 @@ METHOD rbClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDblClick( xParam ) CLASS WvgWindow
+METHOD WvgWindow:rbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, xParam, NIL, Self )
@@ -941,7 +925,7 @@ METHOD rbDblClick( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDown( xParam ) CLASS WvgWindow
+METHOD WvgWindow:rbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDown )
       eval( ::sl_rbDown, xParam, NIL, Self )
@@ -957,7 +941,7 @@ METHOD rbDown( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbUp( xParam ) CLASS WvgWindow
+METHOD WvgWindow:rbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbUp )
       eval( ::sl_rbUp, xParam, NIL, Self )
@@ -973,7 +957,7 @@ METHOD rbUp( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD wheel( xParam ) CLASS WvgWindow
+METHOD WvgWindow:wheel( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_wheel )
       eval( ::sl_wheel, xParam, NIL, Self )
@@ -991,7 +975,7 @@ METHOD wheel( xParam ) CLASS WvgWindow
  *                           Other Messages
 /*----------------------------------------------------------------------*/
 
-METHOD close( xParam ) CLASS WvgWindow
+METHOD WvgWindow:close( xParam )
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
          eval( ::sl_close, NIL, NIL, Self )
@@ -1007,7 +991,7 @@ METHOD close( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD helpRequest( xParam ) CLASS WvgWindow
+METHOD WvgWindow:helpRequest( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
@@ -1023,7 +1007,7 @@ METHOD helpRequest( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD keyboard( xParam ) CLASS WvgWindow
+METHOD WvgWindow:keyboard( xParam )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_keyboard )
       eval( ::sl_keyboard, xParam, NIL, Self )
@@ -1039,7 +1023,7 @@ METHOD keyboard( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD killDisplayFocus( xParam ) CLASS WvgWindow
+METHOD WvgWindow:killDisplayFocus( xParam )
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
          eval( ::sl_killDisplayFocus, NIL, NIL, Self )
@@ -1055,7 +1039,7 @@ METHOD killDisplayFocus( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD killInputFocus( xParam ) CLASS WvgWindow
+METHOD WvgWindow:killInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
@@ -1071,7 +1055,7 @@ METHOD killInputFocus( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD move( xParam ) CLASS WvgWindow
+METHOD WvgWindow:move( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_move )
       eval( ::sl_move, xParam, NIL, Self )
@@ -1087,7 +1071,7 @@ METHOD move( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD paint( xParam ) CLASS WvgWindow
+METHOD WvgWindow:paint( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_paint )
       eval( ::sl_paint, xParam, NIL, Self )
@@ -1103,7 +1087,7 @@ METHOD paint( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD quit( xParam, xParam1 ) CLASS WvgWindow
+METHOD WvgWindow:quit( xParam, xParam1 )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_quit )
       eval( ::sl_quit, xParam, xParam1, Self )
@@ -1119,7 +1103,7 @@ METHOD quit( xParam, xParam1 ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD resize( xParam, xParam1 ) CLASS WvgWindow
+METHOD WvgWindow:resize( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isArray( xParam1 ) .and. hb_isBlock( ::sl_resize )
       eval( ::sl_resize, xParam, xParam1, Self )
@@ -1135,7 +1119,7 @@ METHOD resize( xParam, xParam1 ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setDisplayFocus( xParam ) CLASS WvgWindow
+METHOD WvgWindow:setDisplayFocus( xParam )
 
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::setDisplayFocus )
@@ -1152,7 +1136,7 @@ METHOD setDisplayFocus( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setInputFocus( xParam ) CLASS WvgWindow
+METHOD WvgWindow:setInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -1168,7 +1152,7 @@ METHOD setInputFocus( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragEnter( xParam, xParam1 ) CLASS WvgWindow
+METHOD WvgWindow:dragEnter( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragEnter )
       eval( ::sl_dragEnter, xParam, xParam1, Self )
@@ -1184,7 +1168,7 @@ METHOD dragEnter( xParam, xParam1 ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragMotion( xParam ) CLASS WvgWindow
+METHOD WvgWindow:dragMotion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragMotion )
       eval( ::sl_dragMotion, xParam, NIL, Self )
@@ -1200,7 +1184,7 @@ METHOD dragMotion( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragLeave( xParam ) CLASS WvgWindow
+METHOD WvgWindow:dragLeave( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
@@ -1216,7 +1200,7 @@ METHOD dragLeave( xParam ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragDrop( xParam, xParam1 ) CLASS WvgWindow
+METHOD WvgWindow:dragDrop( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragDrop )
       eval( ::sl_dragDrop, xParam, xParam1, Self )
@@ -1232,7 +1216,7 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWindow
+METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -1252,7 +1236,7 @@ METHOD Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS W
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFocus() CLASS WvgWindow
+METHOD WvgWindow:setFocus()
 
    ::sendMessage( WM_ACTIVATE, 1, 0 )
 
@@ -1260,13 +1244,13 @@ METHOD setFocus() CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
+METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
 
    RETURN WVG_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 /*----------------------------------------------------------------------*/
 
-METHOD findObjectByHandle( hWnd ) CLASS WvgWindow
+METHOD WvgWindow:findObjectByHandle( hWnd )
    LOCAL nObj
 
    IF len( ::aChildren ) > 0
@@ -1279,7 +1263,7 @@ METHOD findObjectByHandle( hWnd ) CLASS WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD createControl() CLASS WvgWindow
+METHOD WvgWindow:createControl()
    LOCAL hWnd
 
    ::nID := ::oParent:GetControlId()
@@ -1305,7 +1289,7 @@ METHOD createControl() CLASS WvgWindow
    RETURN Self
 /*----------------------------------------------------------------------*/
 
-METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
+METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
    #if 1

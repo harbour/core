@@ -88,10 +88,11 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .T.
 
-   METHOD   new()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   handleEvent()
+   METHOD   handleEvent( nMessage, aNM )
 
    ENDCLASS
 /*----------------------------------------------------------------------*/

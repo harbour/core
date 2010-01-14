@@ -93,17 +93,15 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    DATA     default                               INIT .F.
    DATA     cancel                                INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   setCaption()
-
-   METHOD   activate()                            SETGET
-   METHOD   draw()                                SETGET
-
-   METHOD   handleEvent( nEvent, aInfo )
+   METHOD   setCaption( xCaption, cDll )
+   METHOD   activate( xParam )
+   METHOD   draw( xParam )
 
    METHOD   setColorFG()                          INLINE NIL
    METHOD   setColorBG()                          INLINE NIL

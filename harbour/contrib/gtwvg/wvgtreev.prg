@@ -93,10 +93,11 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
    DATA     oRootItem
    ACCESS   rootItem()                            INLINE ::oRootItem
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   itemFromPos( aPos )
 
@@ -105,9 +106,9 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
    DATA     sl_itemMarked
    DATA     sl_itemSelected
 
-   METHOD   itemCollapsed()                       SETGET
-   METHOD   itemExpanded()                        SETGET
-   METHOD   itemMarked()                          SETGET
+   METHOD   itemCollapsed( xParam )               SETGET
+   METHOD   itemExpanded( xParam )                SETGET
+   METHOD   itemMarked( xParam )                  SETGET
 
    DATA     oItemSelected
    ACCESS   itemSelected                          INLINE ::sl_itemSelected
@@ -121,9 +122,6 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
    METHOD   setColorFG( nRGB )                    INLINE WVG_TreeView_SetTextColor( ::hWnd, nRGB )
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
-
-   METHOD   handleEvent( nMessage, aInfo )
-
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
                                                          IF( hb_isNil( lExpanded ), .f., lExpanded ), nLevels )
 
@@ -340,7 +338,7 @@ CLASS WvgTreeViewItem
    METHOD   setImage( nResIdoBitmap )
    METHOD   setMarkedImage( nResIdoBitmap )
 
-   METHOD   addItem()
+   METHOD   addItem( cCaption )
    METHOD   delItem()
    METHOD   getChildItems()
    METHOD   getParentItem()

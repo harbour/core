@@ -134,14 +134,13 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
    DATA     lTracking                             INIT .f.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   scroll( xParam )                      SETGET
-
-   METHOD   handleEvent()
 
    METHOD   setRange( aRange )
    METHOD   setScrollBoxSize( nUnits )

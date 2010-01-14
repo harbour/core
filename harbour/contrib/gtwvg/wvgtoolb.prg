@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
    DATA     appearance
@@ -102,15 +96,22 @@ CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
    DATA     hImageList
    DATA     lSized                                INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
-   METHOD   destroy()
+   DATA     sl_change
+   DATA     sl_buttonMenuClick
+   DATA     sl_buttonDropDown
 
-   METHOD   addItem()
-   METHOD   delItem()
-   METHOD   getItem()
    METHOD   numItems()                            INLINE Len( ::aItems )
+
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   handleEvent( nMessage, aNM )
+   METHOD   destroy()
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   sendToolbarMessage( nMsg, p1, p2 )
+   METHOD   addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
+   METHOD   delItem()
+
+   METHOD   getItem()
    METHOD   clear()
    METHOD   customize()
    METHOD   loadImageSet()
@@ -119,21 +120,16 @@ CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
    METHOD   setPosAndSize()
    METHOD   setSize()
 
-   DATA     sl_change
-   DATA     sl_buttonMenuClick
-   DATA     sl_buttonDropDown
-
-   METHOD   buttonClick()                         SETGET
-   METHOD   change()                              SETGET
-   METHOD   buttonMenuClick()                     SETGET
-   METHOD   buttonDropDown()                      SETGET
-   METHOD   sendToolbarMessage()
-   METHOD   handleEvent( nMessage, aInfo )
+   METHOD   buttonClick( xParam )                 SETGET
+   METHOD   change( xParam )                      SETGET
+   METHOD   buttonMenuClick( xParam )             SETGET
+   METHOD   buttonDropDown( xParam )              SETGET
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -150,7 +146,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolB
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -205,7 +201,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
+METHOD WvgToolBar:handleEvent( nMessage, aNM )
    LOCAL nObj, aNMMouse
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
@@ -256,7 +252,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgToolBar
+METHOD WvgToolBar:destroy()
    LOCAL i, nItems
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
@@ -285,7 +281,7 @@ METHOD destroy() CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -293,13 +289,13 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 /*----------------------------------------------------------------------*/
 
-METHOD sendToolbarMessage( nMsg, p1, p2 ) CLASS WvgToolBar
+METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 
    RETURN WVG_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB ) CLASS WvgToolBar
+METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    LOCAL oBtn, pBitmap, cType, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
@@ -367,55 +363,55 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
 
 /*----------------------------------------------------------------------*/
 
-METHOD delItem() CLASS WvgToolBar
+METHOD WvgToolBar:delItem()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD getItem() CLASS WvgToolBar
+METHOD WvgToolBar:getItem()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD clear() CLASS WvgToolBar
+METHOD WvgToolBar:clear()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD customize() CLASS WvgToolBar
+METHOD WvgToolBar:customize()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD loadImageSet() CLASS WvgToolBar
+METHOD WvgToolBar:loadImageSet()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD saveToolbar() CLASS WvgToolBar
+METHOD WvgToolBar:saveToolbar()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD restToolbar() CLASS WvgToolBar
+METHOD WvgToolBar:restToolbar()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPosAndSize() CLASS WvgToolBar
+METHOD WvgToolBar:setPosAndSize()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setSize() CLASS WvgToolBar
+METHOD WvgToolBar:setSize()
 
    ::sendMessage( TB_AUTOSIZE, 0, 0 )
 
@@ -423,7 +419,7 @@ METHOD setSize() CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD buttonClick( xParam ) CLASS WvgToolBar
+METHOD WvgToolBar:buttonClick( xParam )
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_lbClick := xParam
@@ -433,7 +429,7 @@ METHOD buttonClick( xParam ) CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD change( xParam ) CLASS WvgToolBar
+METHOD WvgToolBar:change( xParam )
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_change := xParam
@@ -443,7 +439,7 @@ METHOD change( xParam ) CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD buttonMenuClick( xParam ) CLASS WvgToolBar
+METHOD WvgToolBar:buttonMenuClick( xParam )
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_buttonMenuClick := xParam
@@ -453,7 +449,7 @@ METHOD buttonMenuClick( xParam ) CLASS WvgToolBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD buttonDropDown( xParam ) CLASS WvgToolBar
+METHOD WvgToolBar:buttonDropDown( xParam )
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_buttonDropDown := xParam
@@ -471,7 +467,7 @@ METHOD buttonDropDown( xParam ) CLASS WvgToolBar
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-CLASS WvgToolbarButton
+CLASS WvgToolBarButton
 
    DATA     enabled                               INIT .T.
    DATA     index                                 INIT 0
@@ -493,11 +489,13 @@ CLASS WvgToolbarButton
    DATA     tooltipText                           INIT ""
    DATA     command                               INIT 0
 
-   METHOD   new()
+   METHOD   new( cCaption, nStyle, cKey )
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
-METHOD new( cCaption, nStyle, cKey ) CLASS WvgToolbarButton
+
+METHOD WvgToolBarButton:new( cCaption, nStyle, cKey )
 
    DEFAULT cCaption       TO ::caption
    DEFAULT nStyle         TO ::style
@@ -508,6 +506,7 @@ METHOD new( cCaption, nStyle, cKey ) CLASS WvgToolbarButton
    ::key            := cKey
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
 /*                         MSDN on ToolBar Control                      */
 /*----------------------------------------------------------------------*/

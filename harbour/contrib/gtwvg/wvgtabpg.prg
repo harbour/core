@@ -84,7 +84,6 @@
 
 CLASS WvgTabPage  INHERIT  WvgWindow
 
-
    DATA     caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
    DATA     clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */
    DATA     minimized                             INIT .T. /* Determines whether the XbpTabPage is minimized after it is created (the page is not visible).                    */
@@ -93,19 +92,20 @@ CLASS WvgTabPage  INHERIT  WvgWindow
    DATA     tabHeight                             INIT -1  /* Determines the height of the tab.                                                                                */
    DATA     type                                  INIT WVGTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   Minimize()
    METHOD   Maximize()
 
    DATA     sl_tabActivate
-   METHOD   tabActivate()                         SETGET
+   METHOD   tabActivate( xParam )                  SETGET
 
-   METHOD   handleEvent()
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage

@@ -94,11 +94,11 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    DATA     bufferLength                          INIT    32000
    DATA     changed                               INIT    .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
-   METHOD   handleEvent()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   clear()                               VIRTUAL
    METHOD   copyMarked()                          VIRTUAL

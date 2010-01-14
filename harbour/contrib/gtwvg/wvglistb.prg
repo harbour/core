@@ -91,12 +91,12 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    DATA     vertScroll                            INIT .T.
    DATA     drawMode                              INIT WVG_DRAW_NORMAL
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
 
-   METHOD   handleEvent()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
    METHOD   getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )

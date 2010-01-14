@@ -89,22 +89,22 @@ CLASS Wvg3State  INHERIT  WvgWindow, DataRef
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
 
-   METHOD   setCaption( cCaption )
+   METHOD   setCaption( xCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
-   METHOD   handleEvent( nEvent, aInfo )
+   METHOD   handleEvent( nMessage, aNM )
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
+METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -116,7 +116,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3Stat
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
+METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -146,7 +146,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3S
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS Wvg3State
+METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
@@ -180,7 +180,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS Wvg3State
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS Wvg3State
+METHOD Wvg3State:destroy()
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
@@ -190,7 +190,7 @@ METHOD destroy() CLASS Wvg3State
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
+METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -198,7 +198,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 /*----------------------------------------------------------------------*/
 
-METHOD setCaption( xCaption ) CLASS Wvg3State
+METHOD Wvg3State:setCaption( xCaption )
 
    IF hb_isChar( xCaption )
       ::caption := xCaption

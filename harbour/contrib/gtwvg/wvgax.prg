@@ -99,29 +99,24 @@ CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
    DATA   ClassName
    DATA   nEventHandler
 
-   METHOD New()
-   METHOD Create()
+   METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
    METHOD Destroy()
+   METHOD handleEvent( nEvent, aInfo )
+   METHOD mapEvent( nEvent, bBlock )
 
    METHOD inheritPresParams()
    METHOD presParamsChanged()
    METHOD setInputFocus()
-
    METHOD subscribeStdEvents()
    METHOD unsubscribeStdEvents()
-
    METHOD keyDown()
    METHOD click()
    METHOD dblClick()
    METHOD mouseDown()
    METHOD mouseUp()
    METHOD mouseMove()
-
    METHOD activate()
-
-   METHOD mapEvent( nEvent, bBlock )
-
-   METHOD handleEvent()
 
 PROTECTED:
    METHOD adviseEvents()
@@ -130,7 +125,7 @@ PROTECTED:
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiveXControl
+METHOD WvgActiveXControl:New( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -142,7 +137,7 @@ METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiv
 
 /*----------------------------------------------------------------------*/
 
-METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense ) CLASS WvgActiveXControl
+METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
    LOCAL hObj, hWnd
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -198,7 +193,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
+METHOD WvgActiveXControl:handleEvent( nEvent, aInfo )
    LOCAL nHandled := 0
 
    HB_SYMBOL_UNUSED( aInfo )
@@ -216,7 +211,7 @@ METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
 
 /*----------------------------------------------------------------------*/
 
-METHOD Destroy() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:Destroy()
 
    IF !empty( ::__hObj )
       IF WVG_IsWindow( ::hWnd )
@@ -232,16 +227,20 @@ METHOD Destroy() CLASS WvgActiveXControl
    ENDIF
 
    RETURN NIL
+
 /*----------------------------------------------------------------------*/
-METHOD adviseEvents() CLASS WvgActiveXControl
+
+METHOD WvgActiveXControl:adviseEvents()
    LOCAL  hSink, xRet
 
    xRet := Wvg_AxSetupConnectionPoint( ::__hObj, @hSink, ::hEvents )
    ::hSink := hSink
 
    RETURN xRet
+
 /*----------------------------------------------------------------------*/
-METHOD mapEvent( nEvent, bBlock )
+
+METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
    if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
       //::hEvents[ nEvent ] := { bBlock }
@@ -250,136 +249,41 @@ METHOD mapEvent( nEvent, bBlock )
 
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD inheritPresParams() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:inheritPresParams()
    Local lSuccess := .t.
 
    RETURN lSuccess
 /*----------------------------------------------------------------------*/
-METHOD presParamsChanged() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:presParamsChanged()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD setInputFocus() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:setInputFocus()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD subscribeStdEvents() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:subscribeStdEvents()
    RETURN NIL
 /*----------------------------------------------------------------------*/
-METHOD unsubscribeStdEvents() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:unsubscribeStdEvents()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD keyDown() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:keyDown()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD click() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:click()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD dblClick() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:dblClick()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD mouseDown() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:mouseDown()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD mouseUp() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:mouseUp()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD mouseMove() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:mouseMove()
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD activate() CLASS WvgActiveXControl
+METHOD WvgActiveXControl:activate()
    RETURN Self
-/*----------------------------------------------------------------------*/
-/*                       Class AutomationObject                         */
-/*----------------------------------------------------------------------*/
-#if 0
-CLASS AutomationObject
-
-   DATA   interface             AS NUMERIC   READONLY
-   DATA   interfaceName         AS CHARACTER READONLY
-   DATA   CLSID                 AS CHARACTER READONLY INIT " "
-   DATA   server                AS CHARACTER READONLY INIT " "
-   DATA   license               AS CHARACTER READONLY INIT " "
-   DATA   cargo
-
-   METHOD create( cProgID, cServerName, cLicense )
-   METHOD destroy()
-   METHOD dynamicCast()
-   METHOD addRef()
-   METHOD release()
-   METHOD queryInterface( cGUID )
-   METHOD getIDsOfNames( aNames )
-   METHOD invoke( cNameORnID, nNamedArgs /*, ...*/ )
-   METHOD loadTypeLib( cTypeLib )
-   METHOD getProperty( cNameORnID )
-   METHOD setProperty( cNameORnID, xValue /*, ...*/ )
-   METHOD callMethod( cNameORnID /*, ...*/ )
-   METHOD onError( oError )
-
-   ENDCLASS
-
-/*----------------------------------------------------------------------*/
-METHOD create( cProgID, cServerName, cLicense )CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD destroy() CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD dynamicCast() CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD addRef() CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD release() CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD queryInterface( cGUID ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD getIDsOfNames( aNames ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD invoke( cNameORnID, nNamedArgs, ... ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD loadTypeLib( cTypeLib ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD getProperty( cNameORnID ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD setProperty( cNameORnID, xValue, ... ) CLASS AutomationObject
-   Local lValue
-
-   RETURN lValue
-/*----------------------------------------------------------------------*/
-METHOD callMethod( cNameORnID, ... ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-/*----------------------------------------------------------------------*/
-METHOD onError( oError ) CLASS AutomationObject
-   Local xValue
-
-   RETURN xValue
-#endif
 /*----------------------------------------------------------------------*/

@@ -154,15 +154,35 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     sl_dragLeave
    DATA     sl_dragDrop
 
-EXPORTED:
-   /*  LIFE CYCLE */
-   METHOD   init()
-   METHOD   create()
-   METHOD   configure()
-   METHOD   destroy()
+   /*  HARBOUR implementation */
+   DATA     resizable                             INIT  .t.
+   DATA     resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
+   DATA     style                                 INIT  (WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX)
+   DATA     exStyle                               INIT  0
+   DATA     lModal                                INIT  .f.
+   DATA     pGTp
+   DATA     pGT
+   DATA     objType                               INIT  objTypeCrt
+   DATA     ClassName                             INIT  "WVGCRT"
+   DATA     drawingArea
+   DATA     hWnd
+   DATA     aPos                                  INIT  { 0,0 }
+   DATA     aSize                                 INIT  { 24,79 }
+   DATA     aPresParams                           INIT  {}
+   DATA     lHasInputFocus                        INIT  .F.
+   DATA     nFrameState                           INIT  0  /* normal */
 
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+   METHOD   showWindow()                          INLINE ::show()
+   METHOD   refresh()                             INLINE ::invalidateRect()
+
+   /*  LIFE CYCLE */
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   destroy()
+   METHOD   setFocus()
 
    /*  METHODS */
    METHOD   currentPos()
@@ -175,7 +195,7 @@ EXPORTED:
    METHOD   getModalState()
    METHOD   hasInputFocus()
    METHOD   hide()
-   METHOD   invalidateRect()
+   METHOD   invalidateRect( nTop, nLeft, nBottom, nRight )
    METHOD   isEnabled()
    METHOD   isVisible()
    METHOD   lockPS()
@@ -185,14 +205,14 @@ EXPORTED:
    METHOD   setColorFG()
    METHOD   setFont()
    METHOD   setFontCompoundName()
-   METHOD   setFrameState()
+   METHOD   setFrameState( nState )
    METHOD   setPresParam()
    METHOD   setModalState()
    METHOD   setPointer()
    METHOD   setTrackPointer()
    METHOD   setPos()
    METHOD   setPosAndSize()
-   METHOD   setSize()
+   METHOD   setSize( aSize, lPaint )
    METHOD   showModal()
    METHOD   show()
    METHOD   toBack()
@@ -201,71 +221,45 @@ EXPORTED:
    METHOD   winDevice()
 
    /* MESSAGES  */
-   METHOD   enter()                               SETGET
-   METHOD   leave()                               SETGET
-   METHOD   lbClick()                             SETGET
-   METHOD   lbDblClick()                          SETGET
-   METHOD   lbDown()                              SETGET
-   METHOD   lbUp()                                SETGET
-   METHOD   mbClick()                             SETGET
-   METHOD   mbDblClick()                          SETGET
-   METHOD   mbDown()                              SETGET
-   METHOD   mbUp()                                SETGET
-   METHOD   motion()                              SETGET
-   METHOD   rbClick()                             SETGET
-   METHOD   rbDblClick()                          SETGET
-   METHOD   rbDown()                              SETGET
-   METHOD   rbUp()                                SETGET
-   METHOD   wheel()                               SETGET
+   METHOD   enter( xParam )                       SETGET
+   METHOD   leave( xParam )                       SETGET
+   METHOD   lbClick( xParam )                     SETGET
+   METHOD   lbDblClick( xParam )                  SETGET
+   METHOD   lbDown( xParam )                      SETGET
+   METHOD   lbUp( xParam )                        SETGET
+   METHOD   mbClick( xParam )                     SETGET
+   METHOD   mbDblClick( xParam )                  SETGET
+   METHOD   mbDown( xParam )                      SETGET
+   METHOD   mbUp( xParam )                        SETGET
+   METHOD   motion( xParam )                      SETGET
+   METHOD   rbClick( xParam )                     SETGET
+   METHOD   rbDblClick( xParam )                  SETGET
+   METHOD   rbDown( xParam )                      SETGET
+   METHOD   rbUp( xParam )                        SETGET
+   METHOD   wheel( xParam )                       SETGET
+   METHOD   close( xParam )                       SETGET
+   METHOD   helpRequest( xParam )                 SETGET
+   METHOD   keyboard( xParam )                    SETGET
+   METHOD   killDisplayFocus( xParam )            SETGET
+   METHOD   killInputFocus( xParam )              SETGET
+   METHOD   move( xParam )                        SETGET
+   METHOD   paint( xParam )                       SETGET
+   METHOD   quit( xParam, xParam1 )               SETGET
+   METHOD   resize( xParam )                      SETGET
+   METHOD   setDisplayFocus( xParam )             SETGET
+   METHOD   setInputFocus( xParam )               SETGET
+   METHOD   dragEnter( xParam, xParam1 )          SETGET
+   METHOD   dragMotion( xParam )                  SETGET
+   METHOD   dragLeave( xParam )                   SETGET
+   METHOD   dragDrop( xParam, xParam1 )           SETGET
 
-   /*  OTHER MESSAGES */
-   METHOD   close()                               SETGET
-   METHOD   helpRequest()                         SETGET
-   METHOD   keyboard()                            SETGET
-   METHOD   killDisplayFocus()                    SETGET
-   METHOD   killInputFocus()                      SETGET
-   METHOD   move()                                SETGET
-   METHOD   paint()                               SETGET
-   METHOD   quit()                                SETGET
-   METHOD   resize()                              SETGET
-   METHOD   setDisplayFocus()                     SETGET
-   METHOD   setInputFocus()                       SETGET
-   METHOD   dragEnter()                           SETGET
-   METHOD   dragMotion()                          SETGET
-   METHOD   dragLeave()                           SETGET
-   METHOD   dragDrop()                            SETGET
-
-   /*  HARBOUR implementation */
-   DATA     resizable                             INIT  .t.
-   DATA     resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
-   DATA     style                                 INIT  (WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX)
-   DATA     exStyle                               INIT  0
-   DATA     lModal                                INIT  .f.
-   DATA     pGTp
-   DATA     pGT
-   DATA     objType                               INIT  objTypeCrt
-   DATA     ClassName                             INIT  "WVGCRT"
-
-   METHOD   setFocus()
-
-   DATA     drawingArea
-   DATA     hWnd
-   DATA     aPos                                  INIT  { 0,0 }
-   DATA     aSize                                 INIT  { 24,79 }
-   DATA     aPresParams                           INIT  {}
-
-   DATA     lHasInputFocus                        INIT  .F.
-   DATA     nFrameState                           INIT  0  /* normal */
-
-   METHOD   showWindow()                          INLINE ::show()
-   METHOD   refresh()                             INLINE ::invalidateRect()
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
  *                         Instance Initiation
 /*----------------------------------------------------------------------*/
 
-METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCrt
+METHOD WvgCrt:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -288,7 +282,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCrt
  *                              Life Cycle
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCrt
+METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    Local lRowCol := .T.
 
    DEFAULT oParent     TO ::oParent
@@ -372,7 +366,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCrt
+METHOD WvgCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -392,7 +386,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgCrt
+METHOD WvgCrt:destroy()
 
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
@@ -417,25 +411,25 @@ METHOD destroy() CLASS WvgCrt
  *                              Methods
 /*----------------------------------------------------------------------*/
 
-METHOD currentPos() CLASS WvgCrt
+METHOD WvgCrt:currentPos()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentSize() CLASS WvgCrt
+METHOD WvgCrt:currentSize()
 
    RETURN { hb_gtInfo( HB_GTI_SCREENWIDTH ), hb_gtInfo( HB_GTI_SCREENHEIGHT ) }
 
 /*----------------------------------------------------------------------*/
 
-METHOD captureMouse() CLASS WvgCrt
+METHOD WvgCrt:captureMouse()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD disable() CLASS WvgCrt
+METHOD WvgCrt:disable()
 
    hb_gtInfo( HB_GTI_DISABLE, ::pGT )
 
@@ -443,7 +437,7 @@ METHOD disable() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD enable() CLASS WvgCrt
+METHOD WvgCrt:enable()
 
    hb_gtInfo( HB_GTI_ENABLE, ::pGT )
 
@@ -451,7 +445,7 @@ METHOD enable() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD getFrameState() CLASS WvgCrt
+METHOD WvgCrt:getFrameState()
 
    IF WVG_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
@@ -464,25 +458,25 @@ METHOD getFrameState() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD getHWND() CLASS WvgCrt
+METHOD WvgCrt:getHWND()
 
    RETURN ::hWnd
 
 /*----------------------------------------------------------------------*/
 
-METHOD getModalState() CLASS WvgCrt
+METHOD WvgCrt:getModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD hasInputFocus() CLASS WvgCrt
+METHOD WvgCrt:hasInputFocus()
 
    RETURN ::lHasInputFocus
 
 /*----------------------------------------------------------------------*/
 
-METHOD hide() CLASS WvgCrt
+METHOD WvgCrt:hide()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, HB_GTS_SW_HIDE )
 
@@ -490,7 +484,7 @@ METHOD hide() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD invalidateRect( nTop, nLeft, nBottom, nRight ) CLASS WvgCrt
+METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
    DEFAULT nTop TO 0
    DEFAULT nLeft TO 0
@@ -503,31 +497,31 @@ METHOD invalidateRect( nTop, nLeft, nBottom, nRight ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD isEnabled() CLASS WvgCrt
+METHOD WvgCrt:isEnabled()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD isVisible() CLASS WvgCrt
+METHOD WvgCrt:isVisible()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockPS() CLASS WvgCrt
+METHOD WvgCrt:lockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockUpdate() CLASS WvgCrt
+METHOD WvgCrt:lockUpdate()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD menuBar() CLASS WvgCrt
+METHOD WvgCrt:menuBar()
 
    IF !( hb_isObject( ::oMenu ) )
       ::oMenu := WvgMenuBar():New( self ):create()
@@ -537,31 +531,31 @@ METHOD menuBar() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD setColorBG() CLASS WvgCrt
+METHOD WvgCrt:setColorBG()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setColorFG() CLASS WvgCrt
+METHOD WvgCrt:setColorFG()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFont() CLASS WvgCrt
+METHOD WvgCrt:setFont()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFontCompoundName() CLASS WvgCrt
+METHOD WvgCrt:setFontCompoundName()
 
    RETURN ""
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFrameState( nState ) CLASS WvgCrt
+METHOD WvgCrt:setFrameState( nState )
    Local lSuccess := .f.
 
    DO CASE
@@ -580,43 +574,43 @@ METHOD setFrameState( nState ) CLASS WvgCrt
    RETURN lSuccess
 /*----------------------------------------------------------------------*/
 
-METHOD setModalState() CLASS WvgCrt
+METHOD WvgCrt:setModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPointer() CLASS WvgCrt
+METHOD WvgCrt:setPointer()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setTrackPointer() CLASS WvgCrt
+METHOD WvgCrt:setTrackPointer()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPos() CLASS WvgCrt
+METHOD WvgCrt:setPos()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPosAndSize() CLASS WvgCrt
+METHOD WvgCrt:setPosAndSize()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPresParam() CLASS WvgCrt
+METHOD WvgCrt:setPresParam()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setSize( aSize, lPaint ) CLASS WvgCrt
+METHOD WvgCrt:setSize( aSize, lPaint )
 
    if hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -629,7 +623,7 @@ METHOD setSize( aSize, lPaint ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD show() CLASS WvgCrt
+METHOD WvgCrt:show()
 
    Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
    ::lHasInputFocus := .t.
@@ -638,30 +632,30 @@ METHOD show() CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD showModal() CLASS WvgCrt
+METHOD WvgCrt:showModal()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD toBack() CLASS WvgCrt
+METHOD WvgCrt:toBack()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD toFront() CLASS WvgCrt
+METHOD WvgCrt:toFront()
    RETURN WVG_SetWindowPosToTop( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
-METHOD unlockPS() CLASS WvgCrt
+METHOD WvgCrt:unlockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD winDevice() CLASS WvgCrt
+METHOD WvgCrt:winDevice()
 
    RETURN Self
 
@@ -669,7 +663,7 @@ METHOD winDevice() CLASS WvgCrt
  *                           Callback Methods
 /*----------------------------------------------------------------------*/
 
-METHOD enter( xParam ) CLASS WvgCrt
+METHOD WvgCrt:enter( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_enter )
       eval( ::sl_enter, xParam, NIL, Self )
@@ -685,7 +679,7 @@ METHOD enter( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD leave( xParam ) CLASS WvgCrt
+METHOD WvgCrt:leave( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_leave )
       eval( ::sl_leave, NIL, NIL, Self )
@@ -701,7 +695,7 @@ METHOD leave( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:lbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, xParam, NIL, Self )
@@ -717,7 +711,7 @@ METHOD lbClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDblClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:lbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, xParam, NIL, Self )
@@ -733,7 +727,7 @@ METHOD lbDblClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDown( xParam ) CLASS WvgCrt
+METHOD WvgCrt:lbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDown )
       eval( ::sl_lbDown, xParam, NIL, Self )
@@ -749,7 +743,7 @@ METHOD lbDown( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbUp( xParam ) CLASS WvgCrt
+METHOD WvgCrt:lbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbUp )
       eval( ::sl_lbUp, xParam, NIL, Self )
@@ -765,7 +759,7 @@ METHOD lbUp( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:mbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbClick )
       eval( ::sl_mbClick, xParam, NIL, Self )
@@ -781,7 +775,7 @@ METHOD mbClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDblClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:mbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, xParam, NIL, Self )
@@ -797,7 +791,7 @@ METHOD mbDblClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDown( xParam ) CLASS WvgCrt
+METHOD WvgCrt:mbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDown )
       eval( ::sl_mbDown, xParam, NIL, Self )
@@ -813,7 +807,7 @@ METHOD mbDown( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbUp( xParam ) CLASS WvgCrt
+METHOD WvgCrt:mbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbUp )
       eval( ::sl_mbUp, xParam, NIL, Self )
@@ -829,7 +823,7 @@ METHOD mbUp( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD motion( xParam ) CLASS WvgCrt
+METHOD WvgCrt:motion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_motion )
       eval( ::sl_motion, xParam, NIL, Self )
@@ -845,7 +839,7 @@ METHOD motion( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:rbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbClick )
       eval( ::sl_rbClick, xParam, NIL, Self )
@@ -861,7 +855,7 @@ METHOD rbClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDblClick( xParam ) CLASS WvgCrt
+METHOD WvgCrt:rbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, xParam, NIL, Self )
@@ -877,7 +871,7 @@ METHOD rbDblClick( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDown( xParam ) CLASS WvgCrt
+METHOD WvgCrt:rbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDown )
       eval( ::sl_rbDown, xParam, NIL, Self )
@@ -893,7 +887,7 @@ METHOD rbDown( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbUp( xParam ) CLASS WvgCrt
+METHOD WvgCrt:rbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbUp )
       eval( ::sl_rbUp, xParam, NIL, Self )
@@ -909,7 +903,7 @@ METHOD rbUp( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD wheel( xParam ) CLASS WvgCrt
+METHOD WvgCrt:wheel( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_wheel )
       eval( ::sl_wheel, xParam, NIL, Self )
@@ -927,7 +921,7 @@ METHOD wheel( xParam ) CLASS WvgCrt
  *                           Other Messages
 /*----------------------------------------------------------------------*/
 
-METHOD close( xParam ) CLASS WvgCrt
+METHOD WvgCrt:close( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
       eval( ::sl_close, NIL, NIL, Self )
@@ -943,7 +937,7 @@ METHOD close( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD helpRequest( xParam ) CLASS WvgCrt
+METHOD WvgCrt:helpRequest( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
@@ -959,7 +953,7 @@ METHOD helpRequest( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD keyboard( xParam ) CLASS WvgCrt
+METHOD WvgCrt:keyboard( xParam )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_keyboard )
       eval( ::sl_keyboard, xParam, NIL, Self )
@@ -975,7 +969,7 @@ METHOD keyboard( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD killDisplayFocus( xParam ) CLASS WvgCrt
+METHOD WvgCrt:killDisplayFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
       eval( ::sl_killDisplayFocus, NIL, NIL, Self )
@@ -991,7 +985,7 @@ METHOD killDisplayFocus( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD killInputFocus( xParam ) CLASS WvgCrt
+METHOD WvgCrt:killInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
@@ -1007,7 +1001,7 @@ METHOD killInputFocus( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD move( xParam ) CLASS WvgCrt
+METHOD WvgCrt:move( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_move )
       eval( ::sl_move, xParam, NIL, Self )
@@ -1023,7 +1017,7 @@ METHOD move( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD paint( xParam ) CLASS WvgCrt
+METHOD WvgCrt:paint( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_paint )
       eval( ::sl_paint, xParam, NIL, Self )
@@ -1039,7 +1033,7 @@ METHOD paint( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD quit( xParam, xParam1 ) CLASS WvgCrt
+METHOD WvgCrt:quit( xParam, xParam1 )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_quit )
       eval( ::sl_quit, xParam, xParam1, Self )
@@ -1055,7 +1049,7 @@ METHOD quit( xParam, xParam1 ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD resize( xParam ) CLASS WvgCrt
+METHOD WvgCrt:resize( xParam )
 
    if hb_isBlock( xParam )/* .or. hb_isNil( xParam ) */
       ::sl_resize := xParam
@@ -1069,7 +1063,7 @@ METHOD resize( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD setDisplayFocus( xParam ) CLASS WvgCrt
+METHOD WvgCrt:setDisplayFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::setDisplayFocus )
       eval( ::setDisplayFocus, NIL, NIL, Self )
@@ -1085,7 +1079,7 @@ METHOD setDisplayFocus( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD setInputFocus( xParam ) CLASS WvgCrt
+METHOD WvgCrt:setInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -1101,7 +1095,7 @@ METHOD setInputFocus( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragEnter( xParam, xParam1 ) CLASS WvgCrt
+METHOD WvgCrt:dragEnter( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragEnter )
       eval( ::sl_dragEnter, xParam, xParam1, Self )
@@ -1117,7 +1111,7 @@ METHOD dragEnter( xParam, xParam1 ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragMotion( xParam ) CLASS WvgCrt
+METHOD WvgCrt:dragMotion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragMotion )
       eval( ::sl_dragMotion, xParam, NIL, Self )
@@ -1133,7 +1127,7 @@ METHOD dragMotion( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragLeave( xParam ) CLASS WvgCrt
+METHOD WvgCrt:dragLeave( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
@@ -1149,7 +1143,7 @@ METHOD dragLeave( xParam ) CLASS WvgCrt
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragDrop( xParam, xParam1 ) CLASS WvgCrt
+METHOD WvgCrt:dragDrop( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragDrop )
       eval( ::sl_dragDrop, xParam, xParam1, Self )
@@ -1166,7 +1160,7 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgCrt
 /*----------------------------------------------------------------------*/
  *                          HARBOUR SPECIFIC
 /*----------------------------------------------------------------------*/
-METHOD SetFocus() CLASS WvgCrt
+METHOD WvgCrt:SetFocus()
 
    ::sendMessage( WM_ACTIVATE, 1, 0 )
    /* ::sendMessage( WM_SETFOCUS, 0, 0 ) */

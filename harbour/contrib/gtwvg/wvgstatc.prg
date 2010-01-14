@@ -93,16 +93,16 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
    DATA     hBitmap
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
    METHOD   setCaption( xCaption, cDll )
 
-   METHOD   handleEvent()
-
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic

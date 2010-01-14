@@ -89,22 +89,21 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nMessage, aNM )
 
    #if 0
    METHOD   editBuffer()                          INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD   getData()                             INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
    #endif
-   METHOD   setCaption( cCaption )
+   METHOD   setCaption( xCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
-
-   METHOD   handleEvent( nEvent, aInfo )
 
    ENDCLASS
 /*----------------------------------------------------------------------*/

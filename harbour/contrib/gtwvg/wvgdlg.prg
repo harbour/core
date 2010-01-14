@@ -75,34 +75,35 @@
 #include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
+
 CLASS WvgDialog FROM WvgWindow
 
    DATA     oMenu
    DATA     aRect
-
    DATA     drawingArea
    DATA     tasklist                              INIT  .t.
 
-   METHOD   init()
-   METHOD   create()
-   METHOD   configure()
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   setFrameState( nState )
+   METHOD   getFrameState()
+   METHOD   menuBar()
 
    METHOD   showModal()                           INLINE NIL
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-
-   METHOD   menuBar()
-   METHOD   setFrameState( nState )
-   METHOD   getFrameState()
    METHOD   calcClientRect()                      INLINE ::aRect := WVG_GetClientRect( ::hWnd ), ;
                                                          { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
    METHOD   calcFrameRect()                       INLINE ::aRect := WVG_GetWindowRect( ::hWnd ),;
                                                          { ::aRect[ 1 ], ::aRect[ 2 ], ;
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
-METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+
+METHOD WvgDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -114,8 +115,10 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
    ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+
+METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL oW
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -171,14 +174,18 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+
+METHOD WvgDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
-METHOD destroy() CLASS WvgDialog
+
+METHOD WvgDialog:destroy()
 
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
@@ -196,8 +203,10 @@ METHOD destroy() CLASS WvgDialog
    ::pGTp := NIL
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
-METHOD setFrameState( nState ) CLASS WvgDialog
+
+METHOD WvgDialog:setFrameState( nState )
    LOCAL lSuccess := .f.
 
    DO CASE
@@ -214,8 +223,10 @@ METHOD setFrameState( nState ) CLASS WvgDialog
    ENDCASE
 
    RETURN lSuccess
+
 /*----------------------------------------------------------------------*/
-METHOD getFrameState() CLASS WvgDialog
+
+METHOD WvgDialog:getFrameState()
 
    IF WVG_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
@@ -225,12 +236,15 @@ METHOD getFrameState() CLASS WvgDialog
    ENDIF
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
+
 /*----------------------------------------------------------------------*/
-METHOD menuBar() CLASS WvgDialog
+
+METHOD WvgDialog:menuBar()
 
    IF !( hb_isObject( ::oMenu ) )
       ::oMenu := WvgMenuBar():New( self ):create()
    ENDIF
 
    RETURN ::oMenu
+
 /*----------------------------------------------------------------------*/
