@@ -308,7 +308,7 @@ USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
  */
 HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
 {
-   BOOL fOneLetter;
+   HB_BOOL fOneLetter;
    char c;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetAliasNumber(%s, %p)", szAlias, iArea));
@@ -585,7 +585,7 @@ HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 
 HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
                             USHORT uiArea, const char *szAlias,
-                            BOOL fShared, BOOL fReadonly,
+                            HB_BOOL fShared, HB_BOOL fReadonly,
                             const char * szCpId, ULONG ulConnection,
                             PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
@@ -611,7 +611,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
 
    /* Clipper clears NETERR flag before parameter validation, [druzus]
     */
-   hb_rddSetNetErr( FALSE );
+   hb_rddSetNetErr( HB_FALSE );
 
    /* Now check parameters, first RDD name.
     * Clipper seems to make sth like:
@@ -673,7 +673,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
 
 HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
                               USHORT uiArea, const char *szAlias,
-                              BOOL fKeepOpen,
+                              HB_BOOL fKeepOpen,
                               const char * szCpId, ULONG ulConnection,
                               PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
@@ -717,8 +717,8 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    pInfo.uiArea = pArea->uiArea;
    pInfo.abName = szFileName;
    pInfo.atomAlias = szAlias;
-   pInfo.fShared = FALSE;
-   pInfo.fReadonly = FALSE;
+   pInfo.fShared = HB_FALSE;
+   pInfo.fReadonly = HB_FALSE;
    pInfo.cdpId = szCpId ? szCpId : hb_setGetDBCODEPAGE();
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
@@ -782,13 +782,13 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
    pInfo.uiArea = pArea->uiArea;
    pInfo.abName = NULL;
    pInfo.atomAlias = szAlias;
-   pInfo.fShared = FALSE;
-   pInfo.fReadonly = FALSE;
+   pInfo.fShared = HB_FALSE;
+   pInfo.fReadonly = HB_FALSE;
    pInfo.cdpId = szCpId ? szCpId : hb_setGetDBCODEPAGE();
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
-   pItem = hb_itemPutL( NULL, TRUE );
+   pItem = hb_itemPutL( NULL, HB_TRUE );
    errCode = SELF_INFO( pArea, DBI_ISTEMPORARY, pItem );
    hb_itemRelease( pItem );
 
@@ -876,7 +876,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
    USHORT uiFields, uiSize, uiCount, uiPosSrc, uiPosDst, uiSizeSrc, uiSizeDst;
    HB_ERRCODE errCode;
    const char * szField;
-   BOOL fAll;
+   HB_BOOL fAll;
 
    errCode = SELF_FIELDCOUNT( lpaSource, &uiSizeSrc );
    if( errCode != HB_SUCCESS )
@@ -934,7 +934,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
             szField = hb_itemGetCPtr( pItem );
             uiPosDst = hb_rddFieldExpIndex( lpaDest, szField );
             if( uiPosDst != uiCount )
-               fAll = FALSE;
+               fAll = HB_FALSE;
             if( uiPosDst )
             {
                USHORT ui;
@@ -983,7 +983,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
             if( uiPosDst )
             {
                if( uiPosSrc != uiPosDst )
-                  fAll = FALSE;
+                  fAll = HB_FALSE;
                lpdbTransInfo->lpTransItems[ uiSize ].uiSource = uiPosSrc;
                lpdbTransInfo->lpTransItems[ uiSize++ ].uiDest = uiPosDst;
                if( !lpaDest )
@@ -998,14 +998,14 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
    }
 
    if( uiSize != uiSizeSrc )
-      fAll = FALSE;
+      fAll = HB_FALSE;
 
    if( fAll && lpaDest )
    {
       PHB_ITEM pSrcItm = hb_itemNew( NULL ),
                pDstItm = hb_itemNew( NULL );
       /*
-       * if fAll is TRUE here then it means that all fields are included
+       * if fAll is HB_TRUE here then it means that all fields are included
        * and they are on the same positions in both tables, so now check
        * if their types and sizes are also equal
        */
@@ -1020,7 +1020,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
          if( hb_stricmp( hb_itemGetCPtr( pSrcItm ),
                          hb_itemGetCPtr( pDstItm ) ) != 0 )
          {
-            fAll = FALSE;
+            fAll = HB_FALSE;
             break;
          }
          if( SELF_FIELDINFO( lpaSource, uiCount, DBS_LEN, pSrcItm ) != HB_SUCCESS ||
@@ -1031,7 +1031,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
          }
          if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
          {
-            fAll = FALSE;
+            fAll = HB_FALSE;
             break;
          }
          if( SELF_FIELDINFO( lpaSource, uiCount, DBS_DEC, pSrcItm ) != HB_SUCCESS ||
@@ -1042,7 +1042,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
          }
          if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
          {
-            fAll = FALSE;
+            fAll = HB_FALSE;
             break;
          }
 #ifdef DBS_FLAG
@@ -1055,7 +1055,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
 #endif
          if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
          {
-            fAll = FALSE;
+            fAll = HB_FALSE;
             break;
          }
       }
@@ -1070,15 +1070,15 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
 }
 
 HB_ERRCODE hb_rddTransRecords( AREAP pArea,
-                            const char *szFileName, const char *szDriver,
-                            ULONG ulConnection,
-                            PHB_ITEM pFields, BOOL fExport,
-                            PHB_ITEM pCobFor, PHB_ITEM pStrFor,
-                            PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
-                            PHB_ITEM pNext, PHB_ITEM pRecID,
-                            PHB_ITEM pRest,
-                            const char *szCpId,
-                            PHB_ITEM pDelim )
+                               const char *szFileName, const char *szDriver,
+                               ULONG ulConnection,
+                               PHB_ITEM pFields, HB_BOOL fExport,
+                               PHB_ITEM pCobFor, PHB_ITEM pStrFor,
+                               PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
+                               PHB_ITEM pNext, PHB_ITEM pRecID,
+                               PHB_ITEM pRest,
+                               const char *szCpId,
+                               PHB_ITEM pDelim )
 {
    AREAP lpaClose = NULL;
    PHB_ITEM pStruct = NULL;
@@ -1100,7 +1100,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       if( errCode == HB_SUCCESS )
       {
          errCode = hb_rddCreateTable( szFileName, szDriver, 0, "",
-                                      TRUE,
+                                      HB_TRUE,
                                       szCpId, ulConnection, pStruct, pDelim );
          if( errCode == HB_SUCCESS )
          {
@@ -1136,7 +1136,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
 
          if( errCode == HB_SUCCESS )
          {
-            errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
+            errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", HB_TRUE, HB_TRUE,
                                        szCpId, ulConnection, pStruct, pDelim );
             if( errCode == HB_SUCCESS )
             {
@@ -1147,7 +1147,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       }
       else
       {
-         errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
+         errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", HB_TRUE, HB_TRUE,
                                     szCpId, ulConnection, NULL, pDelim );
          if( errCode == HB_SUCCESS )
          {
@@ -1173,11 +1173,11 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.itmRecID    = pRecID;
       dbTransInfo.dbsci.fRest       = pRest;
 
-      dbTransInfo.dbsci.fIgnoreFilter     = TRUE;
-      dbTransInfo.dbsci.fIncludeDeleted   = TRUE;
-      dbTransInfo.dbsci.fLast             = FALSE;
-      dbTransInfo.dbsci.fIgnoreDuplicates = FALSE;
-      dbTransInfo.dbsci.fBackward         = FALSE;
+      dbTransInfo.dbsci.fIgnoreFilter     = HB_TRUE;
+      dbTransInfo.dbsci.fIncludeDeleted   = HB_TRUE;
+      dbTransInfo.dbsci.fLast             = HB_FALSE;
+      dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
+      dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
       errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
    }

@@ -235,8 +235,8 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
 
    pCompr->ulMaxSize   = 0;
    pCompr->ulOutSize   = 0;
-   pCompr->fResult     = TRUE;
-   pCompr->fContinue   = FALSE;
+   pCompr->fResult     = HB_TRUE;
+   pCompr->fContinue   = HB_FALSE;
 
    if( pCompr->fInFree )
       pCompr->inBuffer    = ( BYTE * ) hb_xgrab( ulDstBuf );
@@ -258,7 +258,7 @@ static HB_BOOL hb_LZSSxFlush( PHB_LZSSX_COMPR pCompr )
       if( hb_fsWriteLarge( pCompr->hOutput, pCompr->outBuffer,
                            pCompr->outBuffPos ) != pCompr->outBuffPos )
       {
-         pCompr->fResult = FALSE;
+         pCompr->fResult = HB_FALSE;
       }
       else
       {
@@ -278,7 +278,7 @@ static HB_BOOL hb_LZSSxWrite( PHB_LZSSX_COMPR pCompr, UCHAR ucVal )
       if( pCompr->outBuffPos < pCompr->outBuffSize )
          pCompr->outBuffer[ pCompr->outBuffPos ] = ucVal;
       else
-         pCompr->fResult = FALSE;
+         pCompr->fResult = HB_FALSE;
    }
    pCompr->outBuffPos++;
    return pCompr->fResult || pCompr->fContinue;
@@ -302,7 +302,7 @@ static int hb_LZSSxRead( PHB_LZSSX_COMPR pCompr )
 
 static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
 {
-   HB_BOOL fResult = TRUE;
+   HB_BOOL fResult = HB_TRUE;
    USHORT itemMask;
    int offset, length, index, c, h;
 
@@ -327,7 +327,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
       {
          if( ! hb_LZSSxWrite( pCompr, ( UCHAR ) c ) )
          {
-            fResult = FALSE;
+            fResult = HB_FALSE;
             break;
          }
          pCompr->ring_buffer[ index ] = ( UCHAR ) c;
@@ -337,7 +337,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
       {
          if( ( h = hb_LZSSxRead( pCompr ) ) == -1 )
          {
-            /* fResult = FALSE; */
+            /* fResult = HB_FALSE; */
             break;
          }
          offset = LZSS_OFFSET( c, h );   /* get offset to ring buffer */
@@ -347,7 +347,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
             c = pCompr->ring_buffer[ RBUFINDEX( offset + h ) ];
             if( ! hb_LZSSxWrite( pCompr, ( UCHAR ) c ) )
             {
-               fResult = FALSE;
+               fResult = HB_FALSE;
                break;
             }
             /* SIX does not use additional buffers and dynamically
@@ -615,7 +615,7 @@ HB_BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput )
 
 HB_FUNC( SX_FCOMPRESS )
 {
-   HB_BOOL fRet = FALSE;
+   HB_BOOL fRet = HB_FALSE;
    HB_FHANDLE hInput, hOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
    BYTE buf[ 4 ];
@@ -652,7 +652,7 @@ HB_FUNC( SX_FCOMPRESS )
 
 HB_FUNC( SX_FDECOMPRESS )
 {
-   HB_BOOL fRet = FALSE;
+   HB_BOOL fRet = HB_FALSE;
    HB_FHANDLE hInput, hOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
 
@@ -707,7 +707,7 @@ HB_FUNC( _SX_STRCOMPRESS )
 
 HB_FUNC( _SX_STRDECOMPRESS )
 {
-   HB_BOOL fOK = FALSE;
+   HB_BOOL fOK = HB_FALSE;
    const char * pStr = hb_parc( 1 );
    char * pBuf;
 
@@ -721,7 +721,7 @@ HB_FUNC( _SX_STRDECOMPRESS )
          if( ulBuf == HB_SX_UNCOMPRESED )
          {
             hb_retclen( pStr + 4, ulLen - 4 );
-            fOK = TRUE;
+            fOK = HB_TRUE;
          }
          else
          {

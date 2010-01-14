@@ -206,9 +206,9 @@ typedef FPTBLOCK * LPFPTBLOCK;
 /* MEMO internal memory structures */
 typedef struct _MEMOGCITEM
 {
-   ULONG ulOffset;                  /* Number of blocks */
-   ULONG ulSize;                    /* Block number */
-   BOOL  fChanged;                  /* Mark the free page as changed */
+   ULONG   ulOffset;                /* Number of blocks */
+   ULONG   ulSize;                  /* Block number */
+   HB_BOOL fChanged;                /* Mark the free page as changed */
 } MEMOGCITEM;
 typedef MEMOGCITEM * LPMEMOGCITEM;
 

@@ -131,8 +131,8 @@ static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, ULONG ulSize )
 
 
 /* Export field value into the buffer in SQL format */
-static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
-                                const char * szDelim, const char * szEsc )
+static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
+                                   const char * szDelim, const char * szEsc )
 {
    switch( hb_itemType( pValue ) )
    {
@@ -228,9 +228,9 @@ static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
       /* an "M" field or the other, might be a "V" in SixDriver */
       default:
          /* We do not want MEMO contents */
-         return FALSE;
+         return HB_FALSE;
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* Export DBF content to a SQL script file */
@@ -238,17 +238,17 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
                         PHB_ITEM pWhile, PHB_ITEM pFor,
                         const char * szDelim, const char * szSep,
                         const char * szEsc, const char * szTable,
-                        HB_FHANDLE hFile, BOOL fInsert, BOOL fRecno )
+                        HB_FHANDLE hFile, HB_BOOL fInsert, HB_BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
    ULONG ulRecords = 0;
    USHORT uiFields = 0, ui;
    PHB_ITEM pTmp;
-   BOOL fWriteSep = FALSE;
+   HB_BOOL fWriteSep = HB_FALSE;
    const char * szNewLine = hb_conNewLine();
    char * szInsert = NULL;
-   BOOL fEof = TRUE;
-   BOOL fNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
+   HB_BOOL fEof = HB_TRUE;
+   HB_BOOL fNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
 
    if( SELF_FIELDCOUNT( pArea, &uiFields ) != HB_SUCCESS )
       return 0;
@@ -321,7 +321,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
          if( szInsert )
             hb_addStrToFBuffer( pFileBuf, " );" );
          hb_addStrToFBuffer( pFileBuf, szNewLine );
-         fWriteSep = FALSE;
+         fWriteSep = HB_FALSE;
       }
 
       if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
@@ -347,7 +347,7 @@ HB_FUNC( __DBSQL )
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      BOOL fExport            = hb_parl( 1 );
+      HB_BOOL fExport         = hb_parl( 1 );
       const char * szFileName = hb_parc( 2 );
       const char * szTable    = hb_parc( 3 );
       PHB_ITEM pFields        = hb_param( 4, HB_IT_ARRAY );
@@ -355,10 +355,10 @@ HB_FUNC( __DBSQL )
       PHB_ITEM pWhile         = hb_param( 6, HB_IT_BLOCK );
       PHB_ITEM pNext          = hb_param( 7, HB_IT_NUMERIC );
       PHB_ITEM pRecord        = HB_ISNIL( 8 ) ? NULL : hb_param( 8, HB_IT_ANY );
-      BOOL fRest              = pWhile != NULL || hb_parl( 9 );
-      BOOL fAppend            = hb_parl( 10 );
-      BOOL fInsert            = hb_parl( 11 );
-      BOOL fRecno             = hb_parl( 12 );
+      HB_BOOL fRest           = pWhile != NULL || hb_parl( 9 );
+      HB_BOOL fAppend         = hb_parl( 10 );
+      HB_BOOL fInsert         = hb_parl( 11 );
+      HB_BOOL fRecno          = hb_parl( 12 );
       const char * szSep      = hb_parcx( 13 );
       const char * szDelim    = hb_parcx( 14 );
       const char * szEsc      = hb_parcx( 15 );
@@ -371,7 +371,7 @@ HB_FUNC( __DBSQL )
       else if( fExport )   /* COPY TO SQL */
       {
          PHB_ITEM pError = NULL;
-         BOOL fRetry;
+         HB_BOOL fRetry;
 
          /* Try to create Dat file */
          do
@@ -407,7 +407,7 @@ HB_FUNC( __DBSQL )
                fRetry = hb_errLaunch( pError ) == E_RETRY;
             }
             else
-               fRetry = FALSE;
+               fRetry = HB_FALSE;
          }
          while( fRetry );
 

@@ -87,7 +87,7 @@
 #include "hbapifs.h"
 #include "hbapirdd.h"
 
-static BOOL hb_sxOrdParam( LPDBORDERINFO pInfo )
+static HB_BOOL hb_sxOrdParam( LPDBORDERINFO pInfo )
 {
    memset( pInfo, 0, sizeof( DBORDERINFO ) );
 
@@ -103,10 +103,10 @@ static BOOL hb_sxOrdParam( LPDBORDERINFO pInfo )
       {
          pInfo->atomBagName = hb_param( 2, HB_IT_NUMERIC );
          if( hb_parni( 2 ) <= 0 )
-            return FALSE;
+            return HB_FALSE;
       }
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 HB_FUNC( SX_TAGORDER )
@@ -185,8 +185,8 @@ HB_FUNC( SX_FREEZE )
 
       if( hb_sxOrdParam( &Info ) )
       {
-         BOOL fResult = FALSE;
-         Info.itmNewVal = hb_itemPutL( NULL, TRUE );
+         HB_BOOL fResult = HB_FALSE;
+         Info.itmNewVal = hb_itemPutL( NULL, HB_TRUE );
          Info.itmResult = hb_itemNew( NULL );
          if( SELF_ORDINFO( pArea, DBOI_CUSTOM, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
@@ -208,8 +208,8 @@ HB_FUNC( SX_WARM )
 
       if( hb_sxOrdParam( &Info ) )
       {
-         BOOL fResult = FALSE;
-         Info.itmNewVal = hb_itemPutL( NULL, FALSE );
+         HB_BOOL fResult = HB_FALSE;
+         Info.itmNewVal = hb_itemPutL( NULL, HB_FALSE );
          Info.itmResult = hb_itemNew( NULL );
          if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
@@ -231,8 +231,8 @@ HB_FUNC( SX_CHILL )
 
       if( hb_sxOrdParam( &Info ) )
       {
-         BOOL fResult = FALSE;
-         Info.itmNewVal = hb_itemPutL( NULL, TRUE );
+         HB_BOOL fResult = HB_FALSE;
+         Info.itmNewVal = hb_itemPutL( NULL, HB_TRUE );
          Info.itmResult = hb_itemNew( NULL );
          if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
@@ -330,7 +330,7 @@ HB_FUNC( SX_SETSCOPE )
 HB_FUNC( SX_ISREINDEX )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fReindex = FALSE;
+   HB_BOOL fReindex = HB_FALSE;
 
    if( pArea )
    {
@@ -499,14 +499,14 @@ HB_FUNC( SX_DESCEND )
 HB_FUNC( SX_KEYADD )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea )
    {
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmResult = hb_itemPutL( NULL, FALSE );
+         Info.itmResult = hb_itemPutL( NULL, HB_FALSE );
          Info.itmNewVal = hb_param( 3 , HB_IT_ANY );
          SELF_ORDINFO( pArea, DBOI_KEYADD, &Info );
          fResult = hb_itemGetL( Info.itmResult );
@@ -519,14 +519,14 @@ HB_FUNC( SX_KEYADD )
 HB_FUNC( SX_KEYDROP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea )
    {
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmResult = hb_itemPutL( NULL, FALSE );
+         Info.itmResult = hb_itemPutL( NULL, HB_FALSE );
          Info.itmNewVal = hb_param( 3 , HB_IT_ANY );
          SELF_ORDINFO( pArea, DBOI_KEYDELETE, &Info );
          fResult = hb_itemGetL( Info.itmResult );
@@ -555,7 +555,7 @@ HB_FUNC( SX_KEYDATA )
 HB_FUNC( SX_KEYSKIP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE, fBEof = FALSE;
+   HB_BOOL fResult = HB_FALSE, fBEof = HB_FALSE;
 
    if( pArea )
    {
@@ -611,7 +611,7 @@ HB_FUNC( SX_KEYNO )
 HB_FUNC( SX_KEYGOTO )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea && hb_parnl( 3 ) != 0 )
    {
@@ -647,17 +647,17 @@ HB_FUNC( SX_SKIPUNIQUE )
 HB_FUNC( SX_SEEKLAST )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fFound = FALSE;
+   HB_BOOL fFound = HB_FALSE;
 
    if( pArea && hb_pcount() > 0 )
    {
       PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
-      BOOL bSoftSeek = hb_parl( 2 );
+      HB_BOOL bSoftSeek = hb_parl( 2 );
 
-      if( SELF_SEEK( pArea, bSoftSeek, pKey, TRUE ) == HB_SUCCESS )
+      if( SELF_SEEK( pArea, bSoftSeek, pKey, HB_TRUE ) == HB_SUCCESS )
       {
          if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )
-            fFound = FALSE;
+            fFound = HB_FALSE;
       }
    }
    hb_retl( fFound );
@@ -672,7 +672,7 @@ HB_FUNC( SX_TAGUNIQUE )
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmResult = hb_itemPutL( NULL, FALSE );
+         Info.itmResult = hb_itemPutL( NULL, HB_FALSE );
          SELF_ORDINFO( pArea, DBOI_UNIQUE, &Info );
          hb_itemReturnRelease( Info.itmResult );
       }
@@ -683,8 +683,8 @@ HB_FUNC( SX_WILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    const char * szPattern = hb_parc( 1 );
-   BOOL fCont = hb_parl( 2 );
-   BOOL fFound = FALSE;
+   HB_BOOL fCont = hb_parl( 2 );
+   HB_BOOL fFound = HB_FALSE;
    int iOrder = 0;
 
    if( pArea )
@@ -733,15 +733,15 @@ HB_FUNC( SX_WILDSEEK )
 HB_FUNC( SX_ROXLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fLocked = FALSE;
+   HB_BOOL fLocked = HB_FALSE;
 
    if( pArea )
    {
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmNewVal = hb_itemPutL( NULL, TRUE );
-         Info.itmResult = hb_itemPutL( NULL, FALSE );
+         Info.itmNewVal = hb_itemPutL( NULL, HB_TRUE );
+         Info.itmResult = hb_itemPutL( NULL, HB_FALSE );
          if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
             fLocked = hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmNewVal );
@@ -760,8 +760,8 @@ HB_FUNC( SX_ROXUNLOCK )
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmNewVal = hb_itemPutL( NULL, FALSE );
-         Info.itmResult = hb_itemPutL( NULL, FALSE );
+         Info.itmNewVal = hb_itemPutL( NULL, HB_FALSE );
+         Info.itmResult = hb_itemPutL( NULL, HB_FALSE );
          SELF_ORDINFO( pArea, DBOI_READLOCK, &Info );
          hb_itemRelease( Info.itmNewVal );
          hb_itemRelease( Info.itmResult );
@@ -772,7 +772,7 @@ HB_FUNC( SX_ROXUNLOCK )
 HB_FUNC( SX_ISMYROX )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fLocked = FALSE;
+   HB_BOOL fLocked = HB_FALSE;
 
    if( pArea )
    {
@@ -791,7 +791,7 @@ HB_FUNC( SX_ISMYROX )
 HB_FUNC( SX_ISROXLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fLocked = FALSE;
+   HB_BOOL fLocked = HB_FALSE;
 
    if( pArea )
    {
@@ -803,12 +803,12 @@ HB_FUNC( SX_ISROXLOCK )
             fLocked = hb_itemGetL( Info.itmResult );
          if( !fLocked )
          {
-            Info.itmNewVal = hb_itemPutL( NULL, TRUE );
+            Info.itmNewVal = hb_itemPutL( NULL, HB_TRUE );
             if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
                fLocked = hb_itemGetL( Info.itmResult );
             if( fLocked )
             {
-               hb_itemPutL( Info.itmNewVal, FALSE );
+               hb_itemPutL( Info.itmNewVal, HB_FALSE );
                SELF_ORDINFO( pArea, DBOI_READLOCK, &Info );
             }
             hb_itemRelease( Info.itmNewVal );
@@ -822,7 +822,7 @@ HB_FUNC( SX_ISROXLOCK )
 HB_FUNC( SX_SORTOPTION )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fUseCurrent = TRUE;
+   HB_BOOL fUseCurrent = HB_TRUE;
 
    if( pArea )
    {

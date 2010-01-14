@@ -192,8 +192,8 @@ typedef struct
    USHORT         unused;
    const char *   abName;           /* The qualified name of the data store */
    const char *   atomAlias;        /* The logical name of the data store */
-   BOOL           fShared;          /* Share mode of the data store */
-   BOOL           fReadonly;        /* Readonly mode of the data store */
+   HB_BOOL        fShared;          /* Share mode of the data store */
+   HB_BOOL        fReadonly;        /* Readonly mode of the data store */
    const char *   cdpId;            /* Id of a codepage */
    ULONG          ulConnection;     /* connection handler for RDDs which support it */
    void *         lpdbHeader;       /* Pointer to a header of the data store */
@@ -211,7 +211,7 @@ typedef DBOPENINFO * LPDBOPENINFO;
 
 typedef struct _DBORDERCONDINFO
 {
-   BOOL           fActive;
+   HB_BOOL        fActive;
    char *         abFor;
    char *         abWhile;
    PHB_ITEM       itmCobFor;
@@ -221,18 +221,18 @@ typedef struct _DBORDERCONDINFO
    PHB_ITEM       itmStartRecID;
    LONG           lNextCount;
    PHB_ITEM       itmRecID;
-   BOOL           fRest;
-   BOOL           fDescending;
-   BOOL           fScoped;
-   BOOL           fAll;
-   BOOL           fAdditive;
-   BOOL           fUseCurrent;
-   BOOL           fCustom;
-   BOOL           fNoOptimize;
-   BOOL           fCompound;
-   BOOL           fUseFilter;
-   BOOL           fTemporary;
-   BOOL           fExclusive;
+   HB_BOOL        fRest;
+   HB_BOOL        fDescending;
+   HB_BOOL        fScoped;
+   HB_BOOL        fAll;
+   HB_BOOL        fAdditive;
+   HB_BOOL        fUseCurrent;
+   HB_BOOL        fCustom;
+   HB_BOOL        fNoOptimize;
+   HB_BOOL        fCompound;
+   HB_BOOL        fUseFilter;
+   HB_BOOL        fTemporary;
+   HB_BOOL        fExclusive;
    void *         lpvCargo;
 } DBORDERCONDINFO;
 
@@ -245,7 +245,7 @@ typedef struct
    const char *   abConstrName;     /* Name of relational integrity constraint */
    const char *   abTargetName;     /* Name of target relation table */
    PHB_ITEM       itmRelationKey;   /* Array of columns in source table to match target primary key */
-   BOOL           fEnabled;         /* Is constraint enabled ? */
+   HB_BOOL        fEnabled;         /* Is constraint enabled ? */
 } DBCONSTRAINTINFO;
 
 typedef DBCONSTRAINTINFO * LPDBCONSTRAINTINFO;
@@ -263,7 +263,7 @@ typedef struct
    const char *       abBagName;          /* Name of the Order bag */
    const char*        atomBagName;        /* Name of the Order */
    PHB_ITEM           itmOrder;
-   BOOL               fUnique;            /* Flag to determine if all keys are unique */
+   HB_BOOL            fUnique;            /* Flag to determine if all keys are unique */
    PHB_ITEM           itmCobExpr;         /* Code block containing the KEY expression */
    PHB_ITEM           abExpr;             /* String containing the KEY expression */
    LPDBCONSTRAINTINFO lpdbConstraintInfo; /* Relational constraint info */
@@ -286,7 +286,7 @@ typedef struct
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
    PHB_ITEM itmResult;    /* Operation result */
    PHB_ITEM itmNewVal;    /* New Setting   */
-   BOOL     fAllTags;     /* Open all tags */
+   HB_BOOL  fAllTags;     /* Open all tags */
 } DBORDERINFO;
 
 typedef DBORDERINFO * LPDBORDERINFO;
@@ -308,12 +308,12 @@ typedef struct
    PHB_ITEM lNext;       /* NEXT record */
    PHB_ITEM itmRecID;    /* single record ID */
    PHB_ITEM fRest;       /* TRUE if start from the current record */
-   BOOL     fIgnoreFilter;       /* process should ignore any filter condition */
-   BOOL     fIncludeDeleted;     /* process should include deleted records */
-   BOOL     fLast;               /* last record of the current scope required */
-   BOOL     fIgnoreDuplicates;   /* process should ignore duplicate key value */
-   BOOL     fBackward;           /* skip backward */
-   BOOL     fOptimized;          /* Is (should be) scope optimized */
+   HB_BOOL  fIgnoreFilter;       /* process should ignore any filter condition */
+   HB_BOOL  fIncludeDeleted;     /* process should include deleted records */
+   HB_BOOL  fLast;               /* last record of the current scope required */
+   HB_BOOL  fIgnoreDuplicates;   /* process should ignore duplicate key value */
+   HB_BOOL  fBackward;           /* skip backward */
+   HB_BOOL  fOptimized;          /* Is (should be) scope optimized */
 } DBSCOPEINFO;
 
 typedef DBSCOPEINFO * LPDBSCOPEINFO;
@@ -345,8 +345,8 @@ typedef struct
 {
    PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
    PHB_ITEM abFilterText;     /* String representation of FILTER expression */
-   BOOL     fFilter;          /* flag to indicate that filter is active */
-   BOOL     fOptimized;       /* Is (should be) filter optimized */
+   HB_BOOL  fFilter;          /* flag to indicate that filter is active */
+   HB_BOOL  fOptimized;       /* Is (should be) filter optimized */
    void *   lpvCargo;         /* RDD specific extended filter info */
 } DBFILTERINFO;
 
@@ -364,8 +364,8 @@ typedef struct _DBRELINFO
 {
    PHB_ITEM            itmCobExpr;   /* Block representation of the relational SEEK key */
    PHB_ITEM            abKey;        /* String representation of the relational SEEK key */
-   BOOL                isScoped;     /* Is this relation scoped */
-   BOOL                isOptimized;  /* Is relation optimized */
+   HB_BOOL             isScoped;     /* Is this relation scoped */
+   HB_BOOL             isOptimized;  /* Is relation optimized */
    struct _AREA      * lpaParent;    /* The parent of this relation */
    struct _AREA      * lpaChild;     /* The parents children */
    struct _DBRELINFO * lpdbriNext;   /* Next child or parent */
@@ -563,11 +563,11 @@ typedef struct _AREA
    LPFIELD lpFields;             /* Pointer to an array of fields */
    void * lpFieldExtents;        /* Void ptr for additional field properties */
    PHB_ITEM valResult;           /* All purpose result holder */
-   BOOL fTop;                    /* TRUE if "top" */
-   BOOL fBottom;                 /* TRUE if "bottom" */
-   BOOL fBof;                    /* TRUE if "bof" */
-   BOOL fEof;                    /* TRUE if "eof" */
-   BOOL fFound;                  /* TRUE if "found" */
+   HB_BOOL fTop;                 /* HB_TRUE if "top" */
+   HB_BOOL fBottom;              /* HB_TRUE if "bottom" */
+   HB_BOOL fBof;                 /* HB_TRUE if "bof" */
+   HB_BOOL fEof;                 /* HB_TRUE if "eof" */
+   HB_BOOL fFound;               /* HB_TRUE if "found" */
    DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
    DBFILTERINFO dbfi;            /* Filter in effect */
    LPDBORDERCONDINFO lpdbOrdCondInfo;
@@ -589,8 +589,8 @@ typedef AREA * LPAREA;
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef HB_ERRCODE ( * DBENTRYP_V     )( AREAP area );
-typedef HB_ERRCODE ( * DBENTRYP_BP    )( AREAP area, BOOL * param );
-typedef HB_ERRCODE ( * DBENTRYP_B     )( AREAP area, BOOL param );
+typedef HB_ERRCODE ( * DBENTRYP_BP    )( AREAP area, HB_BOOL * param );
+typedef HB_ERRCODE ( * DBENTRYP_B     )( AREAP area, HB_BOOL param );
 typedef HB_ERRCODE ( * DBENTRYP_L     )( AREAP area, LONG param );
 typedef HB_ERRCODE ( * DBENTRYP_UL    )( AREAP area, ULONG param );
 typedef HB_ERRCODE ( * DBENTRYP_I     )( AREAP area, PHB_ITEM param );
@@ -625,10 +625,10 @@ typedef HB_ERRCODE ( * DBENTRYP_VSP   )( AREAP area, USHORT action, ULONG lRecor
 typedef HB_ERRCODE ( * DBENTRYP_SVL   )( AREAP area, USHORT index, ULONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_SSI   )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 typedef HB_ERRCODE ( * DBENTRYP_ISI   )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
-typedef HB_ERRCODE ( * DBENTRYP_BIB   )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
+typedef HB_ERRCODE ( * DBENTRYP_BIB   )( AREAP area, HB_BOOL p1, PHB_ITEM p2, HB_BOOL p3 );
 typedef HB_ERRCODE ( * DBENTRYP_VPL   )( AREAP area, void * p1, LONG p2 );
 typedef HB_ERRCODE ( * DBENTRYP_VPLP  )( AREAP area, void * p1, LONG * p2 );
-typedef HB_ERRCODE ( * DBENTRYP_LSP   )( AREAP area, ULONG p1, BOOL * p2 );
+typedef HB_ERRCODE ( * DBENTRYP_LSP   )( AREAP area, ULONG p1, HB_BOOL * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */
 
@@ -1188,19 +1188,19 @@ extern HB_EXPORT PHB_ITEM     hb_rddList( USHORT uiType );
 extern HB_EXPORT void         hb_rddCloseAll( void );
 extern HB_EXPORT void         hb_rddFlushAll( void );
 extern HB_EXPORT void         hb_rddUnLockAll( void );
-extern HB_EXPORT BOOL         hb_rddGetNetErr( void );
-extern HB_EXPORT void         hb_rddSetNetErr( BOOL fNetErr );
+extern HB_EXPORT HB_BOOL      hb_rddGetNetErr( void );
+extern HB_EXPORT void         hb_rddSetNetErr( HB_BOOL fNetErr );
 
 extern HB_EXPORT HB_ERRCODE   hb_rddOpenTable(
                                  const char * szFileName, const char * szDriver,
                                  USHORT uiArea, const char *szAlias,
-                                 BOOL fShared, BOOL fReadonly,
+                                 HB_BOOL fShared, HB_BOOL fReadonly,
                                  const char * szCpId, ULONG ulConnection,
                                  PHB_ITEM pStruct, PHB_ITEM pDelim );
 extern HB_EXPORT HB_ERRCODE   hb_rddCreateTable(
                                  const char * szFileName, const char * szDriver,
                                  USHORT uiArea, const char *szAlias,
-                                 BOOL fKeepOpen,
+                                 HB_BOOL fKeepOpen,
                                  const char * szCpId, ULONG ulConnection,
                                  PHB_ITEM pStruct, PHB_ITEM pDelim );
 extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
@@ -1216,7 +1216,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddTransRecords(
                                  AREAP pArea,
                                  const char *szFileName, const char *szDriver,
                                  ULONG ulConnection,
-                                 PHB_ITEM pFields, BOOL fExport,
+                                 PHB_ITEM pFields, HB_BOOL fExport,
                                  PHB_ITEM pCobFor, PHB_ITEM pStrFor,
                                  PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
                                  PHB_ITEM pNext, PHB_ITEM pRecID,
@@ -1230,7 +1230,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddEvalWA( PHB_ITEM pBlock );
 
 extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
 extern HB_EXPORT AREAP        hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                                                 BOOL fNewArea, BOOL fWait );
+                                                 HB_BOOL fNewArea, HB_BOOL fWait );
 
 typedef HB_ERRCODE ( * WACALLBACK )( AREAP, void * );
 extern HB_EXPORT HB_ERRCODE   hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo );

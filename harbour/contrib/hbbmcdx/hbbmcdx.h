@@ -270,7 +270,7 @@ typedef struct _CDXPAGE
    int      iKeys;
    int      iCurKey;
 
-   BOOL     fChanged;
+   HB_BOOL  fChanged;
    BYTE     bUsed;
 
    ULONG    RNMask;
@@ -280,7 +280,7 @@ typedef struct _CDXPAGE
    BYTE     TCBits;
    BYTE     DCMask;
    BYTE     TCMask;
-   BOOL     fBufChanged;
+   HB_BOOL  fBufChanged;
    union
    {
       CDXEXTNODE extNode;
@@ -312,7 +312,7 @@ typedef CDXSTACK * LPCDXSTACK;
 typedef struct _CDXLIST
 {
    ULONG    ulAddr;
-   BOOL     fStat;
+   HB_BOOL  fStat;
    struct _CDXLIST * pNext;
 } CDXLIST;
 typedef CDXLIST * LPCDXLIST;
@@ -329,23 +329,23 @@ typedef struct _CDXTAG
    USHORT   nField;           /* Field number for simple (one field) key expersion */
    BYTE     bTrail;           /* trailing character for shorter key value */
    BYTE     OptFlags;         /* index options flag */
-   BOOL     AscendKey;        /* ascending/descending order flag */
-   BOOL     UniqueKey;        /* unique order flag */
-   BOOL     Temporary;        /* temporary order flag */
-   BOOL     Custom;           /* custom order flag */
-   BOOL     Template;         /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
-   BOOL     MultiKey;         /* repeated key values in custom indexes accepted */
-   BOOL     Partial;          /* order is updated only partially - missing keys possible */
-   BOOL     ChgOnly;          /* only existing key modifications are updated, no new key added */
-   BOOL     UsrAscend;        /* user settable ascending/descending order flag */
-   BOOL     UsrUnique;        /* user settable unique order flag */
-   BOOL     IgnoreCase;       /* ignore case (upper keys) */
+   HB_BOOL  AscendKey;        /* ascending/descending order flag */
+   HB_BOOL  UniqueKey;        /* unique order flag */
+   HB_BOOL  Temporary;        /* temporary order flag */
+   HB_BOOL  Custom;           /* custom order flag */
+   HB_BOOL  Template;         /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
+   HB_BOOL  MultiKey;         /* repeated key values in custom indexes accepted */
+   HB_BOOL  Partial;          /* order is updated only partially - missing keys possible */
+   HB_BOOL  ChgOnly;          /* only existing key modifications are updated, no new key added */
+   HB_BOOL  UsrAscend;        /* user settable ascending/descending order flag */
+   HB_BOOL  UsrUnique;        /* user settable unique order flag */
+   HB_BOOL  IgnoreCase;       /* ignore case (upper keys) */
 
-   BOOL     TagChanged;
-   BOOL     TagBOF;
-   BOOL     TagEOF;
+   HB_BOOL  TagChanged;
+   HB_BOOL  TagBOF;
+   HB_BOOL  TagEOF;
 
-   BOOL     fRePos;
+   HB_BOOL  fRePos;
    int      curKeyState;      /* see: CDX_CURKEY_* */
    ULONG    rawKeyCount;
    ULONG    rawKeyPos;
@@ -365,7 +365,7 @@ typedef struct _CDXTAG
    LPCDXPAGE RootPage;        /* pointer to root of keys tree in memory */
    LPCDXKEY  CurKey;          /* current value of key expression */
    LPCDXKEY  HotKey;          /* value of hot key expression */
-   BOOL      HotFor;          /* index FOR condition for HotKey */
+   HB_BOOL   HotFor;          /* index FOR condition for HotKey */
 
    PHB_ITEM  topScope;        /* Top scope HB_ITEM */
    LPCDXKEY  topScopeKey;     /* Top scope index key */
@@ -385,9 +385,9 @@ typedef struct _CDXINDEX
    struct _CDXINDEX * pNext;  /* The next index in the list */
    LPCDXTAG    pCompound;     /* Compound tag */
    LPCDXTAG    TagList;       /* List of tags in index file */
-   BOOL        fShared;       /* Shared file */
-   BOOL        fReadonly;     /* Read only file */
-   BOOL        fDelete;       /* delete on close flag */
+   HB_BOOL     fShared;       /* Shared file */
+   HB_BOOL     fReadonly;     /* Read only file */
+   HB_BOOL     fDelete;       /* delete on close flag */
    ULONG       nextAvail;     /* offset to next free page in the end of index file */
    ULONG       freePage;      /* offset to next free page inside index file */
    LPCDXLIST   freeLst;       /* list of free pages in index file */
@@ -395,12 +395,12 @@ typedef struct _CDXINDEX
    int         lockRead;      /* number of read lock set */
    HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
 #ifdef HB_CDX_DBGCODE
-   BOOL        RdLck;
-   BOOL        WrLck;
+   HB_BOOL     RdLck;
+   HB_BOOL     WrLck;
 #endif
-   BOOL        fChanged;      /* changes written to index, need upadte ulVersion */
+   HB_BOOL     fChanged;      /* changes written to index, need upadte ulVersion */
    ULONG       ulVersion;     /* network version/update flag */
-   BOOL        fFlush;        /* changes written to index, need upadte ulVersion */
+   HB_BOOL     fFlush;        /* changes written to index, need upadte ulVersion */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 
@@ -422,8 +422,8 @@ typedef struct
    char *   szTempFileName;   /* temporary file name */
    int      keyLen;           /* key length */
    BYTE     bTrl;             /* filler char for shorter keys */
-   BOOL     fUnique;          /* TRUE if index is unique */
-   BOOL     fReindex;         /* TRUE if reindexing is in process */
+   HB_BOOL  fUnique;          /* HB_TRUE if index is unique */
+   HB_BOOL  fReindex;         /* HB_TRUE if reindexing is in process */
    ULONG    ulMaxRec;         /* the highest record number */
    ULONG    ulTotKeys;        /* total number of keys indexed */
    ULONG    ulKeys;           /* keys in curently created page */
@@ -466,7 +466,7 @@ typedef struct _CDXAREA
    *  example.
    */
 
-   BOOL           fCdxAppend;    /* Appended record changed */
+   HB_BOOL        fCdxAppend;    /* Appended record changed */
    LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
    USHORT         uiTag;         /* current tag focus */
    LPCDXSORTINFO  pSort;         /* Index build structure */
@@ -485,13 +485,14 @@ typedef CDXAREA * LPCDXAREA;
 #define BM_ClrBit(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] & ~(1<<(((r)-1)%32)); } while(0)
 #define BM_GetBit(m,b,r) ( ((r)<=(b)) ? (m)[((r)-1)>>5] & (1<<(((r)-1)%32)) : 0 )
 
-typedef struct _BM_FILTER_ {
-    PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
-    PHB_ITEM abFilterText;     /* String representation of FILTER expression */
-    BOOL     fFilter;          /* flag to indicate that filter is active */
-    BOOL     fOptimized;       /* Is (should be) filter optimized */
-    ULONG*   rmap;
-    ULONG    Size;
+typedef struct _BM_FILTER_
+{
+   PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
+   PHB_ITEM abFilterText;     /* String representation of FILTER expression */
+   HB_BOOL  fFilter;          /* flag to indicate that filter is active */
+   HB_BOOL  fOptimized;       /* Is (should be) filter optimized */
+   ULONG *  rmap;
+   ULONG    Size;
 } BM_FILTER;
 
 typedef BM_FILTER * LPBM_FILTER;
@@ -511,12 +512,12 @@ static HB_ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
 #define hb_cdxGoTo                                 NULL
 #define hb_cdxGoToId                               NULL
 static HB_ERRCODE hb_cdxGoTop( CDXAREAP pArea );
-static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
+static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast );
 static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip );
 static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown );
 static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxAddField                             NULL
-static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, BOOL bUnLockAll );
+static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll );
 #define hb_cdxCreateFields                         NULL
 static HB_ERRCODE hb_cdxDeleteRec( CDXAREAP pArea );
 #define hb_cdxDeleted                              NULL

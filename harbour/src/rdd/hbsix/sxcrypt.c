@@ -133,9 +133,9 @@ void hb_sxDeCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE
    }
 }
 
-static BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
+static HB_BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    PHB_ITEM pItem = NULL;
    ULONG ulKey;
 
@@ -157,7 +157,7 @@ static BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
          memcpy( pKeyVal, hb_itemGetCPtr( pKeyItem ), HB_MIN( ulKey, 8 ) );
       if( ulKey < 8 )
          memset( pKeyVal + ulKey, 0, 8 - ulKey );
-      fResult = TRUE;
+      fResult = HB_TRUE;
    }
    if( pItem )
       hb_itemRelease( pItem );

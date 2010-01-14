@@ -89,7 +89,7 @@ HB_FUNC( SX_GETLOCKS )
 HB_FUNC( SX_ISFLOCKED )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fLocked = FALSE;
+   HB_BOOL fLocked = HB_FALSE;
 
    if( pArea )
    {
@@ -105,7 +105,7 @@ HB_FUNC( SX_ISFLOCKED )
 HB_FUNC( SX_ISREADONLY )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fReadOnly = FALSE;
+   HB_BOOL fReadOnly = HB_FALSE;
 
    if( pArea )
    {
@@ -121,7 +121,7 @@ HB_FUNC( SX_ISREADONLY )
 HB_FUNC( SX_ISSHARED )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fShared = FALSE;
+   HB_BOOL fShared = HB_FALSE;
 
    if( pArea )
    {
@@ -195,7 +195,7 @@ static void hb_sxRollBackChild( AREAP pArea, PHB_ITEM pItem )
 
 HB_FUNC( SX_ROLLBACK )
 {
-   BOOL fResult = FALSE, fRollChild = FALSE;
+   HB_BOOL fResult = HB_FALSE, fRollChild = HB_FALSE;
    int iArea = 0;
    AREAP pArea;
 
@@ -225,13 +225,13 @@ HB_FUNC( SX_ROLLBACK )
 HB_FUNC( SX_RLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    PHB_ITEM pResult = NULL, pRecords;
 
    if( pArea )
    {
       DBLOCKINFO dbLockInfo;
-      dbLockInfo.fResult = FALSE;
+      dbLockInfo.fResult = HB_FALSE;
       dbLockInfo.uiMethod = DBLM_MULTIPLE;
       pRecords = hb_param( 1, HB_IT_ARRAY );
       if( pRecords )
@@ -284,7 +284,7 @@ HB_FUNC( SX_UNLOCK )
 HB_FUNC( SX_SETPASS )
 {
    int iPCount = hb_pcount();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    PHB_ITEM pItem;
 
    if( iPCount >=1 )
@@ -296,7 +296,7 @@ HB_FUNC( SX_SETPASS )
          {
             pItem = hb_itemParam( 1 );
             if( SELF_INFO( pArea, DBI_PASSWORD, pItem ) == HB_SUCCESS )
-               fResult = TRUE;
+               fResult = HB_TRUE;
             hb_itemRelease( pItem );
          }
       }
@@ -323,7 +323,7 @@ HB_FUNC( SX_SETPASS )
          {
             pItem = hb_itemParam( 1 );
             if( SELF_RDDINFO( pRDDNode, RDDI_PENDINGPASSWORD, hb_parnl( 4 ), pItem ) == HB_SUCCESS )
-               fResult = TRUE;
+               fResult = HB_TRUE;
             hb_itemRelease( pItem );
          }
       }
@@ -362,7 +362,7 @@ HB_FUNC( SX_SETPASS )
 HB_FUNC( SX_DBFENCRYPT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea )
    {
@@ -382,7 +382,7 @@ HB_FUNC( SX_DBFENCRYPT )
 HB_FUNC( SX_DBFDECRYPT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea )
    {
@@ -397,7 +397,7 @@ HB_FUNC( SX_DBFDECRYPT )
 HB_FUNC( SX_MEMOPACK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( pArea )
    {
@@ -421,11 +421,11 @@ HB_FUNC( SX_TURBOAREA )
       if( hb_pcount() > 0 && HB_IS_NIL( pItem ) )
          hb_itemPutNI( pItem, 0 );
       if( SELF_INFO( pArea, DBI_DIRTYREAD, pItem ) != HB_SUCCESS )
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
       hb_itemReturnRelease( pItem );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( SX_SETTURBO )
@@ -448,7 +448,7 @@ HB_FUNC( SX_SETTURBO )
       if( hb_pcount() > 0 && HB_IS_NIL( pItem ) )
          hb_itemPutNI( pItem, 0 );
       if( SELF_RDDINFO( pRDDNode, RDDI_DIRTYREAD, 0, pItem ) != HB_SUCCESS )
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
       hb_itemReturnRelease( pItem );
    }
 }

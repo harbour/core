@@ -59,16 +59,16 @@
 #include "hbapirdd.h"
 
 
-static BOOL hb_sxSemName( char * szFileName )
+static HB_BOOL hb_sxSemName( char * szFileName )
 {
    const char * szName = hb_parc( 1 );
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( szName && szName[0] )
    {
       hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
       hb_strLower( szFileName, strlen( szFileName ) );
-      fResult = TRUE;
+      fResult = HB_TRUE;
    }
    else
    {
@@ -88,7 +88,7 @@ static BOOL hb_sxSemName( char * szFileName )
          {
             hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
             hb_strLower( szFileName, strlen( szFileName ) );
-            fResult = TRUE;
+            fResult = HB_TRUE;
          }
          hb_itemRelease( pOrderInfo.itmResult );
       }
@@ -97,7 +97,7 @@ static BOOL hb_sxSemName( char * szFileName )
    return fResult;
 }
 
-static HB_FHANDLE hb_sxSemOpen( char * szFileName, BOOL * pfNewFile )
+static HB_FHANDLE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
 {
    HB_FHANDLE hFile;
    int i = 0;
@@ -117,7 +117,7 @@ static HB_FHANDLE hb_sxSemOpen( char * szFileName, BOOL * pfNewFile )
                                FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
          if( hFile != FS_ERROR )
          {
-            *pfNewFile = TRUE;
+            *pfNewFile = HB_TRUE;
             break;
          }
       }
@@ -141,7 +141,7 @@ HB_FUNC( SX_MAKESEM )
    char szFileName[HB_PATH_MAX];
    BYTE buffer[2];
    int iUsers = -1;
-   BOOL fError = FALSE, fNewFile = FALSE;
+   HB_BOOL fError = HB_FALSE, fNewFile = HB_FALSE;
 
    if( hb_sxSemName( szFileName ) )
    {
@@ -154,7 +154,7 @@ HB_FUNC( SX_MAKESEM )
          {
             hb_fsSeek( hFile, 0, FS_SET );
             if( hb_fsRead( hFile, buffer, 2 ) != 2 )
-               fError = TRUE;
+               fError = HB_TRUE;
             else
                iUsers = HB_GET_LE_INT16( buffer ) + 1;
          }
@@ -163,7 +163,7 @@ HB_FUNC( SX_MAKESEM )
             HB_PUT_LE_UINT16( buffer, iUsers );
             hb_fsSeek( hFile, 0, FS_SET );
             if( hb_fsWrite( hFile, buffer, 2 ) != 2 )
-               fError = TRUE;
+               fError = HB_TRUE;
          }
          hb_fsClose( hFile );
       }

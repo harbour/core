@@ -92,12 +92,12 @@ typedef struct _SDFAREA
    HB_FOFFSET ulFileSize;           /* File table size in export mode */
    ULONG    ulRecNo;                /* Current record */
    ULONG    ulRecCount;             /* Number of records (in export) */
-   BOOL     fTransRec;              /* Can put whole records */
-   BOOL     fFlush;                 /* Data was written to SDF and not commited */
-   BOOL     fShared;                /* Shared file */
-   BOOL     fReadonly;              /* Read only file */
-   BOOL     fPositioned;            /* Positioned record */
-   BOOL     fRecordChanged;         /* Record changed */
+   HB_BOOL  fTransRec;              /* Can put whole records */
+   HB_BOOL  fFlush;                 /* Data was written to SDF and not commited */
+   HB_BOOL  fShared;                /* Shared file */
+   HB_BOOL  fReadonly;              /* Read only file */
+   HB_BOOL  fPositioned;            /* Positioned record */
+   HB_BOOL  fRecordChanged;         /* Record changed */
 } SDFAREA;
 
 typedef SDFAREA * LPSDFAREA;

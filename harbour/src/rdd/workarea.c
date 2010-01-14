@@ -72,7 +72,7 @@
 /*
  * Determine logical beginning of file.
  */
-static HB_ERRCODE hb_waBof( AREAP pArea, BOOL * pBof )
+static HB_ERRCODE hb_waBof( AREAP pArea, HB_BOOL * pBof )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waBof(%p, %p)", pArea, pBof));
 
@@ -83,7 +83,7 @@ static HB_ERRCODE hb_waBof( AREAP pArea, BOOL * pBof )
 /*
  * Determine logical end of file.
  */
-static HB_ERRCODE hb_waEof( AREAP pArea, BOOL * pEof )
+static HB_ERRCODE hb_waEof( AREAP pArea, HB_BOOL * pEof )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waEof(%p, %p)", pArea, pEof));
 
@@ -94,7 +94,7 @@ static HB_ERRCODE hb_waEof( AREAP pArea, BOOL * pEof )
 /*
  * Determine outcome of the last search operation.
  */
-static HB_ERRCODE hb_waFound( AREAP pArea, BOOL * pFound )
+static HB_ERRCODE hb_waFound( AREAP pArea, HB_BOOL * pFound )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waFound(%p, %p)", pArea, pFound));
 
@@ -115,7 +115,7 @@ static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
    if( lToSkip == 0 )
       return SELF_SKIPRAW( pArea, 0 );
 
-   pArea->fTop = pArea->fBottom = FALSE;
+   pArea->fTop = pArea->fBottom = HB_FALSE;
 
    if( lToSkip > 0 )
       lSkip = 1;
@@ -136,9 +136,9 @@ static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
 
    /* Update Bof and Eof flags */
    if( lSkip < 0 )
-      pArea->fEof = FALSE;
+      pArea->fEof = HB_FALSE;
    else /* ( lSkip > 0 ) */
-      pArea->fBof = FALSE;
+      pArea->fBof = HB_FALSE;
 
    return HB_SUCCESS;
 }
@@ -148,7 +148,7 @@ static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
  */
 static HB_ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 {
-   BOOL fBottom, fDeleted;
+   HB_BOOL fBottom, fDeleted;
    HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waSkipFilter(%p, %ld)", pArea, lUpDown));
@@ -222,7 +222,7 @@ static HB_ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
       else
       {
          errCode = SELF_GOTOP( pArea );
-         pArea->fBof = TRUE;
+         pArea->fBof = HB_TRUE;
       }
    }
    else
@@ -689,7 +689,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_CANPUTREC:
       case DBI_ISFLOCK:
       case DBI_SHARED:
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
          break;
 
       /*
@@ -769,7 +769,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_SCOPEDRELATION:
       {
          int iRelNo = hb_itemGetNI( pItem );
-         BOOL fScoped = FALSE;
+         HB_BOOL fScoped = HB_FALSE;
 
          if( iRelNo > 0 )
          {
@@ -793,7 +793,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( SELF_RECNO( pArea, &ulRecNo ) != HB_SUCCESS )
             return HB_FAILURE;
          if( ulRecNo == 0 )
-            hb_itemPutL( pItem, FALSE );
+            hb_itemPutL( pItem, HB_FALSE );
          else if( SELF_RECCOUNT( pArea, &ulRecCount ) != HB_SUCCESS )
             return HB_FAILURE;
          else
@@ -801,7 +801,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
       case DBI_RM_SUPPORTED:
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
          break;
 
       case DBI_DB_VERSION:
@@ -959,7 +959,7 @@ static HB_ERRCODE hb_waSysName( AREAP pArea, char * pBuffer )
 static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 {
    LONG lNext = 1;
-   BOOL fEof, fFor;
+   HB_BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waEval(%p, %p)", pArea, pEvalInfo));
 
@@ -1006,7 +1006,7 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
             fFor = hb_itemGetL( pArea->valResult );
          }
          else
-            fFor = TRUE;
+            fFor = HB_TRUE;
 
          if( fFor )
          {
@@ -1028,10 +1028,10 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 /*
  * Locate a record which pass given condition
  */
-static HB_ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
+static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
 {
    LONG lNext = 1;
-   BOOL fEof;
+   HB_BOOL fEof;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waLocate(%p, %d)", pArea, fContinue));
 
@@ -1059,7 +1059,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
          return HB_FAILURE;
    }
 
-   pArea->fFound = FALSE;
+   pArea->fFound = HB_FALSE;
 
    /* TODO: use SKIPSCOPE() method and fRest parameter */
 
@@ -1083,7 +1083,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
 
          if( ! pArea->dbsi.itmCobFor )
          {
-            pArea->fFound = TRUE;
+            pArea->fFound = HB_TRUE;
             break;
          }
          else
@@ -1093,7 +1093,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
 
             if( hb_itemGetL( pArea->valResult ) )
             {
-               pArea->fFound = TRUE;
+               pArea->fFound = HB_TRUE;
                break;
             }
          }
@@ -1116,7 +1116,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
 static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 {
    LONG lNext = 1;
-   BOOL fEof, fFor;
+   HB_BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waTrans(%p, %p)", pArea, pTransInfo));
 
@@ -1163,7 +1163,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
             fFor = hb_itemGetL( pArea->valResult );
          }
          else
-            fFor = TRUE;
+            fFor = HB_TRUE;
 
          if( fFor )
          {
@@ -1187,7 +1187,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
  */
 static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
 {
-   BOOL bDeleted;
+   HB_BOOL bDeleted;
    BYTE *pRecord;
    HB_ERRCODE errCode;
 
@@ -1205,7 +1205,7 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
          return errCode;
 
       /* Append a new record */
-      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, TRUE );
+      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, HB_TRUE );
       if( errCode != HB_SUCCESS )
          return errCode;
 
@@ -1219,7 +1219,7 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
       USHORT uiCount;
 
       /* Append a new record */
-      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, TRUE );
+      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, HB_TRUE );
       if( errCode != HB_SUCCESS )
          return errCode;
 
@@ -1380,7 +1380,7 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
    DBORDERINFO pInfo;
    HB_ERRCODE errCode;
    int iOrder;
-   BOOL fEof;
+   HB_BOOL fEof;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
 
@@ -1416,7 +1416,7 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
                         errCode = SELF_ORDINFO( pArea, DBOI_SCOPEBOTTOM, &pInfo );
                   }
                   if( errCode == HB_SUCCESS )
-                     errCode = SELF_SEEK( pArea, FALSE, pResult, FALSE );
+                     errCode = SELF_SEEK( pArea, HB_FALSE, pResult, HB_FALSE );
                }
                else
                {
@@ -1518,8 +1518,8 @@ static HB_ERRCODE hb_waClearFilter( AREAP pArea )
       hb_itemRelease( pArea->dbfi.abFilterText );
       pArea->dbfi.abFilterText = NULL;
    }
-   pArea->dbfi.fOptimized = FALSE;
-   pArea->dbfi.fFilter = FALSE;
+   pArea->dbfi.fOptimized = HB_FALSE;
+   pArea->dbfi.fFilter = HB_FALSE;
 
    return HB_SUCCESS;
 }
@@ -1604,7 +1604,7 @@ static HB_ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
       pArea->dbfi.abFilterText = hb_itemNew( pFilterInfo->abFilterText );
    }
    pArea->dbfi.fOptimized = pFilterInfo->fOptimized;
-   pArea->dbfi.fFilter = TRUE;
+   pArea->dbfi.fFilter = HB_TRUE;
 
    return HB_SUCCESS;
 }
@@ -1722,7 +1722,7 @@ static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
  */
 static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection, PHB_ITEM pItem )
 {
-   BOOL fResult;
+   HB_BOOL fResult;
    int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnection, pItem));
@@ -1745,7 +1745,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnecti
       case RDDI_SORTRECNO:
       case RDDI_MULTIKEY:
       case RDDI_BLOB_SUPPORT:
-         hb_itemPutL( pItem, FALSE );
+         hb_itemPutL( pItem, HB_FALSE );
          break;
 
       case RDDI_CONNECTION:

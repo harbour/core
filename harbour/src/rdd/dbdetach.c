@@ -102,7 +102,7 @@ HB_FUNC( HB_DBREQUEST )
 {
    const char * szAlias;
    PHB_ITEM pCargo;
-   BOOL fNewArea, fWait;
+   HB_BOOL fNewArea, fWait;
    AREAP pArea;
 
    if( HB_ISNIL( 1 ) || HB_ISCHAR( 1 ) )

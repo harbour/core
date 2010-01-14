@@ -259,13 +259,13 @@ void hb_rddCloseAll( void )
    pRddInfo = hb_stackRDD();
    if( pRddInfo->uiWaMax > 0 )
    {
-      BOOL isParents, isFinish = FALSE;
+      HB_BOOL isParents, isFinish = HB_FALSE;
       AREAP pArea;
       USHORT uiIndex;
 
       do
       {
-         isParents = FALSE;
+         isParents = HB_FALSE;
          for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; uiIndex++ )
          {
             pArea = ( AREAP ) pRddInfo->waList[ uiIndex ];
@@ -278,7 +278,7 @@ void hb_rddCloseAll( void )
             }
             else if( pArea->uiParents )
             {
-               isParents = TRUE;
+               isParents = HB_TRUE;
             }
             else
             {
@@ -287,7 +287,7 @@ void hb_rddCloseAll( void )
          }
          if( !isParents && !isFinish )
          {
-            isParents = isFinish = TRUE;
+            isParents = isFinish = HB_TRUE;
          }
       }
       while( isParents );
@@ -352,12 +352,12 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    return errCode;
 }
 
-BOOL hb_rddGetNetErr( void )
+HB_BOOL hb_rddGetNetErr( void )
 {
    return hb_stackRDD()->fNetError;
 }
 
-void hb_rddSetNetErr( BOOL fNetErr )
+void hb_rddSetNetErr( HB_BOOL fNetErr )
 {
    hb_stackRDD()->fNetError = fNetErr;
 }
@@ -574,7 +574,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 }
 
 AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                         BOOL fNewArea, BOOL fWait )
+                         HB_BOOL fNewArea, HB_BOOL fWait )
 {
    PHB_DYNS pSymAlias = NULL;
    AREAP pArea = NULL;

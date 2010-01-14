@@ -314,7 +314,7 @@ typedef struct _NSXLEAFPAGE
 } NSXLEAFPAGE;
 typedef NSXLEAFPAGE * LPNSXLEAFPAGE;
 
-#if 0 
+#if 0
 /* meta structures for description only, cannot be compiled due to
    variable member sizes */
 typedef struct _NSXBRANCHKEY
@@ -376,7 +376,7 @@ typedef TREE_STACK * LPTREESTACK;
 typedef struct _HB_PAGEINFO
 {
    ULONG    Page;
-   BOOL     Changed;
+   HB_BOOL  Changed;
    int      iUsed;
    USHORT   uiKeys;
    USHORT   uiOffset;
@@ -409,20 +409,20 @@ typedef struct _TAGINFO
    HB_NSXSCOPE bottom;
 
 
-   BOOL        fUsrDescend;
-   BOOL        AscendKey;
-   BOOL        UniqueKey;
+   HB_BOOL     fUsrDescend;
+   HB_BOOL     AscendKey;
+   HB_BOOL     UniqueKey;
 
-   BOOL        Custom;
-   BOOL        ChgOnly;
-   BOOL        Partial;
-   BOOL        Template;
-   BOOL        MultiKey;
+   HB_BOOL     Custom;
+   HB_BOOL     ChgOnly;
+   HB_BOOL     Partial;
+   HB_BOOL     Template;
+   HB_BOOL     MultiKey;
 
-   BOOL        HdrChanged;
-   BOOL        TagBOF;
-   BOOL        TagEOF;
-   BOOL        HotFor;
+   HB_BOOL     HdrChanged;
+   HB_BOOL     TagBOF;
+   HB_BOOL     TagEOF;
+   HB_BOOL     HotFor;
 
    ULONG       HeadBlock;
    ULONG       RootBlock;
@@ -459,20 +459,20 @@ typedef struct _NSXINDEX
    ULONG       FileSize;      /* index file size */
    struct     _NSXAREA * pArea;
    PHB_FILE    pFile;
-   BOOL        fDelete;       /* delete on close flag */
-   BOOL        fReadonly;
-   BOOL        fShared;
-   BOOL        fFlush;
-   BOOL        LargeFile;
-   BOOL        Changed;
-   BOOL        Update;
-   BOOL        Production;    /* Production index */
+   HB_BOOL     fDelete;       /* delete on close flag */
+   HB_BOOL     fReadonly;
+   HB_BOOL     fShared;
+   HB_BOOL     fFlush;
+   HB_BOOL     LargeFile;
+   HB_BOOL     Changed;
+   HB_BOOL     Update;
+   HB_BOOL     Production;    /* Production index */
    HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
 
    NSXROOTHEADER  HeaderBuff;
-   BOOL        fValidHeader;
+   HB_BOOL     fValidHeader;
    int         iTags;
    LPTAGINFO * lpTags;
 
@@ -507,8 +507,8 @@ typedef struct
    int         keyLen;           /* key length */
    UCHAR       trailChar;        /* index key trail character */
    UCHAR       recSize;          /* record size in leaf keys */
-   BOOL        fUnique;          /* TRUE if index is unique */
-   BOOL        fReindex;         /* TRUE if reindexing is in process */
+   HB_BOOL     fUnique;          /* HB_TRUE if index is unique */
+   HB_BOOL     fReindex;         /* HB_TRUE if reindexing is in process */
    ULONG       ulMaxRec;         /* the highest record number */
    ULONG       ulTotKeys;        /* total number of keys indexed */
    ULONG       ulKeys;           /* keys in curently created page */
@@ -553,8 +553,8 @@ typedef struct _NSXAREA
    *  example.
    */
 
-   BOOL           fIdxAppend;       /* TRUE if new record is added */
-   BOOL           fSetTagNumbers;   /* Tag number should be recreated */
+   HB_BOOL        fIdxAppend;       /* HB_TRUE if new record is added */
+   HB_BOOL        fSetTagNumbers;   /* Tag number should be recreated */
    LPNSXINDEX     lpIndexes;        /* Pointer to list of indexes */
    LPTAGINFO      lpCurTag;         /* Pointer to current order */
    LPNSXSORTINFO  pSort;            /* Index build structure */

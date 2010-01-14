@@ -158,7 +158,7 @@ HB_FUNC( DBGOTOP ) {}
 
 HB_FUNC( DBGOBOTTOM ) {}
 
-HB_FUNC( DBSEEK ) { hb_retl( FALSE ); }
+HB_FUNC( DBSEEK ) { hb_retl( HB_FALSE ); }
 
 HB_FUNC( DBSKIP ) { hb_retni( 0 ); }
 
@@ -172,9 +172,9 @@ HB_FUNC( DBRECALL ) {}
 
 HB_FUNC( DBDELETE ) {}
 
-HB_FUNC( DBRLOCK ) { hb_retl( FALSE ); }
+HB_FUNC( DBRLOCK ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( DBUNLOCK ) { hb_retl( FALSE ); }
+HB_FUNC( DBUNLOCK ) { hb_retl( HB_FALSE ); }
 
 HB_FUNC( DBRELATION ) { hb_retc_null(); }
 
@@ -188,23 +188,23 @@ HB_FUNC( SELECT ) { hb_retni( 0 ); }
 
 HB_FUNC( ALIAS ) { hb_retc_null(); }
 
-HB_FUNC( USED ) { hb_retl( FALSE ); }
+HB_FUNC( USED ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( NETERR ) { hb_retl( FALSE ); }
+HB_FUNC( NETERR ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( LOCK ) { hb_retl( FALSE ); }
+HB_FUNC( LOCK ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( FLOCK ) { hb_retl( FALSE ); }
+HB_FUNC( FLOCK ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( RLOCK ) { hb_retl( FALSE ); }
+HB_FUNC( RLOCK ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( BOF ) { hb_retl( FALSE ); }
+HB_FUNC( BOF ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( EOF ) { hb_retl( FALSE ); }
+HB_FUNC( EOF ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( FOUND ) { hb_retl( FALSE ); }
+HB_FUNC( FOUND ) { hb_retl( HB_FALSE ); }
 
-HB_FUNC( DELETED ) { hb_retl( FALSE ); }
+HB_FUNC( DELETED ) { hb_retl( HB_FALSE ); }
 
 HB_FUNC( RECNO ) { hb_retni( 0 ); }
 

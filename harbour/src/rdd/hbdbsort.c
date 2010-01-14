@@ -52,12 +52,12 @@
 
 #include "hbdbsort.h"
 
-BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
+HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
 {
    /* Create temp file */
    pQuickSort->hFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pQuickSort->szTempName );
    if( pQuickSort->hFile == FS_ERROR )
-      return FALSE;
+      return HB_FALSE;
 
    /* Alloc buffers */
    pQuickSort->uiMaxRecords = USHRT_MAX / uiRecordLen;
@@ -70,7 +70,7 @@ BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT ui
    /* Fill structure */
    pQuickSort->uiRecordLen = uiRecordLen;
    pQuickSort->pSortInfo = pSortInfo;
-   return TRUE;
+   return HB_TRUE;
 }
 
 void hb_dbQSortExit( LPDBQUICKSORT pQuickSort )
@@ -87,7 +87,7 @@ void hb_dbQSortExit( LPDBQUICKSORT pQuickSort )
    hb_xfree( pQuickSort->pCmpBufferB );
 }
 
-BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount )
+HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount )
 {
    USHORT uiSize;
 
@@ -96,12 +96,12 @@ BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount )
    return ( hb_fsWrite( pQuickSort->hFile, pQuickSort->pBuffer, uiSize ) == uiSize );
 }
 
-static BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
+static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
 {
    USHORT uiCount, uiField;
    DBFAREAP pArea;
    LPFIELD pField;
-   BOOL bAscending, bIgnoreCase;
+   HB_BOOL bAscending, bIgnoreCase;
    int iResult;
 
    pArea = ( DBFAREAP ) pQuickSort->pSortInfo->dbtri.lpaSource;
@@ -165,7 +165,7 @@ static BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ul
       else
          return ( iResult > 0 );
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 static void hb_dbQSortSwap( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
@@ -246,7 +246,7 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
          }
 
          /* Append a new record and copy data */
-         if( SELF_APPEND( pArea, TRUE ) == HB_FAILURE ||
+         if( SELF_APPEND( pArea, HB_TRUE ) == HB_FAILURE ||
              SELF_PUTREC( pArea, pQuickSort->pSwapBufferA ) == HB_FAILURE )
             break;
       }

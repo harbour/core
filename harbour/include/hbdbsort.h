@@ -83,10 +83,10 @@ typedef DBQUICKSORT * LPDBQUICKSORT;
  *  PROTOTYPES
  *  ----------
  */
-extern BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen );
-extern void hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
-extern BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount );
-extern void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
+extern HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen );
+extern void    hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
+extern HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount );
+extern void    hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
 
 HB_EXTERN_END
 

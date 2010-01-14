@@ -143,11 +143,11 @@ typedef struct _DBFDATA
    USHORT   uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
    ULONG    ulMemoBlockSize;  /* 0 */
 
-   BOOL     fSortRecNo;
-   BOOL     fMultiKey;
-   BOOL     fStruct;
-   BOOL     fStrictStruct;
-   BOOL     fMultiTag;
+   HB_BOOL  fSortRecNo;
+   HB_BOOL  fMultiKey;
+   HB_BOOL  fStruct;
+   HB_BOOL  fStrictStruct;
+   HB_BOOL  fMultiTag;
 } DBFDATA, * LPDBFDATA;
 
 typedef struct _HB_DBFFIELDBITS
@@ -199,27 +199,27 @@ typedef struct _DBFAREA
    BYTE *   pRecord;                /* Buffer of record data */
    ULONG    ulRecCount;             /* Total records */
    ULONG    ulRecNo;                /* Current record */
-   BOOL     fAutoInc;               /* WorkArea with auto increment fields */
-   BOOL     fHasMemo;               /* WorkArea with Memo fields */
-   BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
-   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
-   BOOL     fDataFlush;             /* data was written to DBF and not commited */
-   BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
-   BOOL     fShared;                /* Shared file */
-   BOOL     fReadonly;              /* Read only file */
-   BOOL     fTemporary;             /* Temporary file */
-   BOOL     fValidBuffer;           /* State of buffer */
-   BOOL     fPositioned;            /* Positioned record */
-   BOOL     fRecordChanged;         /* Record changed */
-   BOOL     fAppend;                /* TRUE if new record is added */
-   BOOL     fDeleted;               /* TRUE if record is deleted */
-   BOOL     fEncrypted;             /* TRUE if record is encrypted */
-   BOOL     fTableEncrypted;        /* TRUE if table is encrypted */
-   BOOL     fUpdateHeader;          /* Update header of file */
-   BOOL     fFLocked;               /* TRUE if file is locked */
-   BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
-   BOOL     fPackMemo;              /* Pack memo file in pack operation */
-   BOOL     fTrigger;               /* Execute trigger function */
+   HB_BOOL  fAutoInc;               /* WorkArea with auto increment fields */
+   HB_BOOL  fHasMemo;               /* WorkArea with Memo fields */
+   HB_BOOL  fHasTags;               /* WorkArea with MDX or CDX index */
+   HB_BOOL  fModStamp;              /* WorkArea with modification autoupdate fields */
+   HB_BOOL  fDataFlush;             /* data was written to DBF and not commited */
+   HB_BOOL  fMemoFlush;             /* data was written to MEMO and not commited */
+   HB_BOOL  fShared;                /* Shared file */
+   HB_BOOL  fReadonly;              /* Read only file */
+   HB_BOOL  fTemporary;             /* Temporary file */
+   HB_BOOL  fValidBuffer;           /* State of buffer */
+   HB_BOOL  fPositioned;            /* Positioned record */
+   HB_BOOL  fRecordChanged;         /* Record changed */
+   HB_BOOL  fAppend;                /* HB_TRUE if new record is added */
+   HB_BOOL  fDeleted;               /* HB_TRUE if record is deleted */
+   HB_BOOL  fEncrypted;             /* HB_TRUE if record is encrypted */
+   HB_BOOL  fTableEncrypted;        /* HB_TRUE if table is encrypted */
+   HB_BOOL  fUpdateHeader;          /* Update header of file */
+   HB_BOOL  fFLocked;               /* HB_TRUE if file is locked */
+   HB_BOOL  fHeaderLocked;          /* HB_TRUE if DBF header is locked */
+   HB_BOOL  fPackMemo;              /* Pack memo file in pack operation */
+   HB_BOOL  fTrigger;               /* Execute trigger function */
    LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
@@ -246,8 +246,8 @@ extern HB_EXPORT HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
                                                ULONG ulBlock, ULONG ulSize,
                                                ULONG ulType );
 extern HB_EXPORT HB_ERRCODE hb_dbfGetEGcode( HB_ERRCODE errCode );
-extern HB_EXPORT BOOL       hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
-extern HB_EXPORT BOOL       hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
+extern HB_EXPORT HB_BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
+extern HB_EXPORT HB_BOOL    hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
 
 extern HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
 

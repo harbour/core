@@ -181,7 +181,7 @@ typedef TREE_STACK * LPTREESTACK;
 typedef struct _HB_PAGEINFO
 {
    ULONG    Page;
-   BOOL     Changed;
+   HB_BOOL  Changed;
    int      iUsed;
    USHORT   uiKeys;
    struct  _HB_PAGEINFO * pNext;
@@ -214,21 +214,21 @@ typedef struct _TAGINFO
 
    USHORT      Signature;
 
-   BOOL        fTagName;
-   BOOL        fUsrDescend;
-   BOOL        AscendKey;
-   BOOL        UniqueKey;
+   HB_BOOL     fTagName;
+   HB_BOOL     fUsrDescend;
+   HB_BOOL     AscendKey;
+   HB_BOOL     UniqueKey;
 
-   BOOL        Custom;
-   BOOL        ChgOnly;
-   BOOL        Partial;
-   BOOL        Template;
-   BOOL        MultiKey;
-   BOOL        fSortRec;
+   HB_BOOL     Custom;
+   HB_BOOL     ChgOnly;
+   HB_BOOL     Partial;
+   HB_BOOL     Template;
+   HB_BOOL     MultiKey;
+   HB_BOOL     fSortRec;
 
-   BOOL        HdrChanged;
-   BOOL        TagBOF;
-   BOOL        TagEOF;
+   HB_BOOL     HdrChanged;
+   HB_BOOL     TagBOF;
+   HB_BOOL     TagEOF;
    ULONG       HeadBlock;
    ULONG       RootBlock;
    USHORT      uiNumber;
@@ -243,7 +243,7 @@ typedef struct _TAGINFO
    ULONG       keyCount;
    LPKEYINFO   CurKeyInfo;
    LPKEYINFO   HotKeyInfo;
-   BOOL        HotFor;
+   HB_BOOL     HotFor;
 
    struct     _NTXINDEX * Owner;
 } TAGINFO;
@@ -258,21 +258,21 @@ typedef struct _NTXINDEX
    ULONG       TagBlock;      /* Index attr, next free page */
    struct     _NTXAREA * Owner;
    PHB_FILE    DiskFile;
-   BOOL        fDelete;       /* delete on close flag */
-   BOOL        fReadonly;
-   BOOL        fShared;
-   BOOL        fFlush;
-   BOOL        LargeFile;
-   BOOL        Changed;
-   BOOL        Update;
-   BOOL        Compound;
-   BOOL        Production;    /* Production index */
+   HB_BOOL     fDelete;       /* delete on close flag */
+   HB_BOOL     fReadonly;
+   HB_BOOL     fShared;
+   HB_BOOL     fFlush;
+   HB_BOOL     LargeFile;
+   HB_BOOL     Changed;
+   HB_BOOL     Update;
+   HB_BOOL     Compound;
+   HB_BOOL     Production;    /* Production index */
    HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
 
    BYTE *      HeaderBuff;    /* TODO: make it member */
-   BOOL        fValidHeader;
+   HB_BOOL     fValidHeader;
    int         iTags;
    LPTAGINFO * lpTags;
 
@@ -305,8 +305,8 @@ typedef struct
    HB_FHANDLE hTempFile;      /* handle to temporary file */
    char *   szTempFileName;   /* temporary file name */
    int      keyLen;           /* key length */
-   BOOL     fUnique;          /* TRUE if index is unique */
-   BOOL     fReindex;         /* TRUE if reindexing is in process */
+   HB_BOOL  fUnique;          /* HB_TRUE if index is unique */
+   HB_BOOL  fReindex;         /* HB_TRUE if reindexing is in process */
    ULONG    ulMaxRec;         /* the highest record number */
    ULONG    ulTotKeys;        /* total number of keys indexed */
    ULONG    ulKeys;           /* keys in curently created page */
@@ -350,8 +350,8 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   BOOL           fNtxAppend;       /* TRUE if new record is added */
-   BOOL           fSetTagNumbers;   /* Tag number should be recreated */
+   HB_BOOL        fNtxAppend;       /* HB_TRUE if new record is added */
+   HB_BOOL        fSetTagNumbers;   /* Tag number should be recreated */
    LPNTXINDEX     lpIndexes;        /* Pointer to list of indexes */
    LPTAGINFO      lpCurTag;         /* Pointer to current order */
    LPNTXSORTINFO  pSort;            /* Index build structure */
