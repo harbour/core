@@ -60,7 +60,7 @@ HB_EXTERN_BEGIN
 
 /* functions in hboutdbg.c */
 extern HB_EXPORT BOOL hb_OutDebugName( PHB_ITEM pName );
-extern HB_EXPORT void hb_OutDebug( const char * szMsg, ULONG ulMsgLen );
+extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE ulMsgLen );
 
 /* functions in dbgfxc.c */
 extern HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff );

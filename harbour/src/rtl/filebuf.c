@@ -697,7 +697,7 @@ HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
 /* internal FILE structures only */
 
 PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
-                            ULONG ulAttr, char * pszName )
+                            HB_FATTR ulAttr, char * pszName )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;
@@ -713,7 +713,7 @@ PHB_FILE hb_fileCreateTempEx( char * pszName,
                               const char * pszDir,
                               const char * pszPrefix,
                               const char * pszExt,
-                              ULONG ulAttr )
+                              HB_FATTR ulAttr )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;

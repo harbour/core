@@ -86,7 +86,7 @@ HB_FUNC( BLANK )
 
       if( pMode && hb_itemGetL( pMode ) )
       {
-         ULONG lLen = hb_itemGetCLen( pItem );
+         HB_SIZE lLen = hb_itemGetCLen( pItem );
          char * szResult = ( char * ) hb_xgrab( lLen + 1 );
 
          hb_xmemset( szResult, ' ', lLen );

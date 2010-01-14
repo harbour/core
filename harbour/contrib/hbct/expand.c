@@ -55,7 +55,7 @@
 
 HB_FUNC( EXPAND )
 {
-   ULONG ulLen = hb_parclen( 1 ), ulSize, ul;
+   HB_SIZE ulLen = hb_parclen( 1 ), ulSize, ul;
 
    if( ulLen > 0 )
    {

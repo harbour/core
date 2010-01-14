@@ -135,7 +135,7 @@ static int ct_doy( long lDate )
  */
 HB_FUNC( CTODOW )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
    int iDow = 0;
 
    if( ulLen )
@@ -183,7 +183,7 @@ HB_FUNC( CTODOW )
  */
 HB_FUNC( CTOMONTH )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
    int iMonth = 0;
 
    if( ulLen )

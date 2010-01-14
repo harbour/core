@@ -133,7 +133,7 @@ static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 }
 #endif
 
-static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName, const char * pszExt )
+static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName, const char * pszExt )
 {
    /* less attemps */
    int iAttemptLeft = 99, iLen;
@@ -320,7 +320,7 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
 
 /* NOTE: The pszName buffer must be at least HB_PATH_MAX chars long */
 
-HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName )
+HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName )
 {
    int iAttemptLeft = 999;
 
@@ -355,7 +355,7 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG u
 
 #else /* HB_OS_UNIX */
 
-HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName )
+HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName )
 {
    return hb_fsCreateTempLow( pszDir, pszPrefix, ulAttr, pszName, NULL );
 }
@@ -368,13 +368,13 @@ HB_FUNC( HB_FTEMPCREATE )
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( hb_parc( 1 ),
                                                hb_parc( 2 ),
-                                               ( ULONG ) ( HB_ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : FC_NORMAL ),
+                                               ( HB_FATTR ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : FC_NORMAL ),
                                                szName ) );
 
    hb_storc( szName, 4 );
 }
 
-HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, ULONG ulAttr )
+HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, HB_FATTR ulAttr )
 {
    return hb_fsCreateTempLow( pszDir, pszPrefix, ulAttr, pszName, pszExt );
 }
@@ -387,7 +387,7 @@ HB_FUNC( HB_FTEMPCREATEEX )
                                                  hb_parc( 2 ),
                                                  hb_parc( 3 ),
                                                  hb_parc( 4 ),
-                                                 ( ULONG ) ( HB_ISNUM( 5 ) ? ( ULONG ) hb_parnl( 5 ) : FC_NORMAL ) ) );
+                                                 ( HB_FATTR ) ( HB_ISNUM( 5 ) ? hb_parnl( 5 ) : FC_NORMAL ) ) );
 
    hb_storc( szName, 1 );
 }

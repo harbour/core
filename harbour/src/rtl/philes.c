@@ -362,7 +362,7 @@ HB_FUNC( HB_FUNLOCK )
 
 HB_FUNC( HB_FGETATTR )
 {
-   ULONG nAttr;
+   HB_FATTR nAttr;
 
    hb_retl( hb_fsGetAttr( hb_parcx( 1 ), &nAttr ) );
 

@@ -61,7 +61,7 @@ HB_FUNC( COMPLEMENT )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         ULONG ulLen = hb_itemGetCLen( pItem ), ulPos;
+         HB_SIZE ulLen = hb_itemGetCLen( pItem ), ulPos;
 
          if( ulLen > 0 )
          {

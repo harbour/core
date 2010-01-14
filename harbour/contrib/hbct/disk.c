@@ -122,8 +122,8 @@ HB_FUNC( DIRNAME )
 HB_FUNC( DRIVETYPE )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   ULONG ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
-   char *pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
+   HB_SIZE ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
+   char * pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
    LPTSTR lpDrive;
    int iType;
 

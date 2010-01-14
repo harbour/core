@@ -314,7 +314,7 @@ static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
       return ( HANDLE ) fHandle;
 }
 
-static void convert_open_flags( BOOL fCreate, ULONG ulAttr, USHORT uiFlags,
+static void convert_open_flags( BOOL fCreate, HB_FATTR ulAttr, USHORT uiFlags,
                                 DWORD *dwMode, DWORD *dwShare,
                                 DWORD *dwCreat, DWORD *dwAttr )
 {
@@ -390,7 +390,7 @@ static void convert_open_flags( BOOL fCreate, ULONG ulAttr, USHORT uiFlags,
 
 #else
 
-static void convert_open_flags( BOOL fCreate, ULONG ulAttr, USHORT uiFlags,
+static void convert_open_flags( BOOL fCreate, HB_FATTR ulAttr, USHORT uiFlags,
                                 int *flags, unsigned *mode,
                                 int *share, int *attr )
 {
@@ -709,7 +709,7 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-HB_FHANDLE hb_fsCreate( const char * pFilename, ULONG ulAttr )
+HB_FHANDLE hb_fsCreate( const char * pFilename, HB_FATTR ulAttr )
 {
    HB_FHANDLE hFileHandle;
    char * pszFree;
@@ -771,7 +771,7 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, ULONG ulAttr )
          [vszakats]
  */
 
-HB_FHANDLE hb_fsCreateEx( const char * pFilename, ULONG ulAttr, USHORT uiFlags )
+HB_FHANDLE hb_fsCreateEx( const char * pFilename, HB_FATTR ulAttr, USHORT uiFlags )
 {
    HB_FHANDLE hFileHandle;
    char * pszFree;
@@ -1012,7 +1012,7 @@ BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMilli
    return fResult;
 }
 
-BOOL hb_fsGetAttr( const char * pszFileName, ULONG * pulAttr )
+BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
 {
    BOOL fResult;
    char * pszFree;
@@ -1282,7 +1282,7 @@ BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
    return fResult;
 }
 
-BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
+BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
 {
    BOOL fResult;
    char * pszFree;

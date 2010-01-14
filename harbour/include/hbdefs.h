@@ -455,7 +455,7 @@
 #  define HB_ULONG_MAX           ULONG_MAX
    typedef long                  HB_LONG;    /* legacy */
    typedef unsigned long         HB_ULONG;   /* legacy */
-   typedef long                  HB_MAXINT; 
+   typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #elif !defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
@@ -476,7 +476,7 @@
 #  define HB_ULONG_MAX           ULONG_MAX
    typedef long                  HB_LONG;    /* legacy */
    typedef unsigned long         HB_ULONG;   /* legacy */
-   typedef long                  HB_MAXINT; 
+   typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #endif
@@ -720,6 +720,8 @@ typedef double              HB_DOUBLE;
 typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
 typedef void *              HB_PTRVAL;         /* TOFIX */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
+
+typedef unsigned long       HB_FATTR;
 
 /* Harbour strict bit types: */
 typedef signed char         HB_I8;

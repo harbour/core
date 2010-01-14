@@ -98,7 +98,7 @@
 typedef struct
 {
    PHB_FFIND   ffind;
-   ULONG       ulAttr;
+   HB_FATTR    ulAttr;
 } HB_FFDATA, * PHB_FFDATA;
 
 static void hb_fileFindRelease( void * cargo )
@@ -114,7 +114,7 @@ static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
 #define HB_GET_FFDATA() ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
 
 
-static PHB_FFIND _hb_fileStart( BOOL fNext, ULONG ulAttr )
+static PHB_FFIND _hb_fileStart( BOOL fNext, HB_FATTR ulAttr )
 {
    PHB_FFDATA pFFData = HB_GET_FFDATA();
 
@@ -133,7 +133,7 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, ULONG ulAttr )
       {
          szFile = hb_fsNameConv( szFile, &pszFree );
          if( HB_ISNUM( 2 ) )
-            ulAttr = ( ULONG ) hb_parnl( 2 );
+            ulAttr = ( HB_FATTR ) hb_parnl( 2 );
          pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : 0;
          pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
          if( pszFree )
@@ -267,7 +267,7 @@ HB_FUNC( FILEDELETE )
    {
       const char * pDirSpec;
       PHB_FFIND ffind;
-      ULONG ulAttr = HB_FA_ALL;
+      HB_FATTR ulAttr = HB_FA_ALL;
       char * pszFree;
 
       pDirSpec = hb_fsNameConv( hb_parc( 1 ), &pszFree );

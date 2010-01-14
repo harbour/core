@@ -172,9 +172,9 @@
 
 /* ------------------------------------------------------------- */
 
-ULONG hb_fsAttrFromRaw( ULONG raw_attr )
+HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {
-   ULONG ulAttr;
+   HB_FATTR ulAttr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%lu)", raw_attr));
 
@@ -254,9 +254,9 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    return ulAttr;
 }
 
-ULONG hb_fsAttrToRaw( ULONG ulAttr )
+HB_FATTR hb_fsAttrToRaw( HB_FATTR ulAttr )
 {
-   ULONG raw_attr;
+   HB_FATTR raw_attr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%lu)", ulAttr));
 
@@ -327,11 +327,11 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
 /* Converts a CA-Cl*pper compatible file attribute string
    to the internal reprensentation. */
 
-ULONG hb_fsAttrEncode( const char * szAttr )
+HB_FATTR hb_fsAttrEncode( const char * szAttr )
 {
    const char * pos = szAttr;
    char ch;
-   ULONG ulAttr = 0;
+   HB_FATTR ulAttr = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrEncode(%p)", szAttr));
 
@@ -358,7 +358,7 @@ ULONG hb_fsAttrEncode( const char * szAttr )
 
 /* NOTE: szAttr buffer must be at least 16 chars long */
 
-char * hb_fsAttrDecode( ULONG ulAttr, char * szAttr )
+char * hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
@@ -393,7 +393,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    int iMin = 0;
    int iSec = 0;
 
-   ULONG raw_attr = 0;
+   HB_FATTR raw_attr = 0;
 
    /* Set the default values in case some platforms don't
       support some of these, or they may fail on them. */
@@ -591,7 +591,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 #endif
             }
 
-            raw_attr = ( ULONG ) info->pFindFileData.dwFileAttributes;
+            raw_attr = ( HB_FATTR ) info->pFindFileData.dwFileAttributes;
 
             /* NOTE: One of these may fail when searching on an UNC path, I
                      don't know yet what's the reason. [vszakats] */
@@ -764,7 +764,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    return bFound;
 }
 
-PHB_FFIND hb_fsFindFirst( const char * pszFileMask, ULONG attrmask )
+PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 {
    PHB_FFIND ffind;
 
