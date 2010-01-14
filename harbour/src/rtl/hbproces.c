@@ -227,10 +227,10 @@ static void hb_getCommand( const char *pszFilename,
 
 #if defined( UNICODE )
    *lpParams = params ? hb_mbtowc( params ) : NULL;
-   *lpAppName = hb_mbntowc( pszFilename, ( ULONG ) ( src - pszFilename ) );
+   *lpAppName = hb_mbntowc( pszFilename, ( HB_SIZE ) ( src - pszFilename ) );
 #else
    *lpParams = params ? hb_strdup( params ) : NULL;
-   *lpAppName = hb_strndup( pszFilename, ( ULONG ) ( src - pszFilename ) );
+   *lpAppName = hb_strndup( pszFilename, ( HB_SIZE ) ( src - pszFilename ) );
 #endif
 }
 #endif
@@ -947,14 +947,14 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 #define HB_STD_BUFFER_SIZE    4096
 
 int hb_fsProcessRun( const char * pszFilename,
-                     const char * pStdInBuf, ULONG ulStdInLen,
-                     char ** pStdOutPtr, ULONG * pulStdOut,
-                     char ** pStdErrPtr, ULONG * pulStdErr,
+                     const char * pStdInBuf, HB_SIZE ulStdInLen,
+                     char ** pStdOutPtr, HB_SIZE * pulStdOut,
+                     char ** pStdErrPtr, HB_SIZE * pulStdErr,
                      BOOL fDetach )
 {
    HB_FHANDLE hStdin, hStdout, hStderr, *phStdin, *phStdout, *phStderr;
    char * pOutBuf, *pErrBuf;
-   ULONG ulOutSize, ulErrSize, ulOutBuf, ulErrBuf;
+   HB_SIZE ulOutSize, ulErrSize, ulOutBuf, ulErrBuf;
    char * pszFree = NULL;
    int iResult;
 
@@ -1061,7 +1061,7 @@ int hb_fsProcessRun( const char * pszFilename,
 
       DWORD dwResult, dwCount;
       HANDLE lpHandles[ 4 ];
-      ULONG ul;
+      HB_SIZE ul;
 
       if( ulStdInLen == 0 && hStdin != FS_ERROR )
       {
@@ -1154,7 +1154,7 @@ int hb_fsProcessRun( const char * pszFilename,
 
       fd_set rfds, wfds, *prfds, *pwfds;
       HB_FHANDLE fdMax;
-      ULONG ul;
+      HB_SIZE ul;
       int n;
 
       if( ulStdInLen == 0 && hStdin != FS_ERROR )

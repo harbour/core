@@ -161,11 +161,11 @@ typedef struct
    long     (* RectSize) ( HB_GT_PTR, int, int, int, int );
    void     (* Save) ( HB_GT_PTR, int, int, int, int, void * );
    void     (* Rest) ( HB_GT_PTR, int, int, int, int, const void * );
-   void     (* PutText) ( HB_GT_PTR, int, int, int, const char *, ULONG );
-   void     (* Replicate) ( HB_GT_PTR, int, int, int, BYTE, USHORT, ULONG );
-   void     (* WriteAt) ( HB_GT_PTR, int, int, const char *, ULONG );
-   void     (* Write) ( HB_GT_PTR, const char *, ULONG );
-   void     (* WriteCon) ( HB_GT_PTR, const char *, ULONG );
+   void     (* PutText) ( HB_GT_PTR, int, int, int, const char *, HB_SIZE );
+   void     (* Replicate) ( HB_GT_PTR, int, int, int, BYTE, USHORT, HB_SIZE );
+   void     (* WriteAt) ( HB_GT_PTR, int, int, const char *, HB_SIZE );
+   void     (* Write) ( HB_GT_PTR, const char *, HB_SIZE );
+   void     (* WriteCon) ( HB_GT_PTR, const char *, HB_SIZE );
    void     (* SetAttribute) ( HB_GT_PTR, int, int, int, int, int );
    void     (* DrawShadow) ( HB_GT_PTR, int, int, int, int, int );
    void     (* Scroll) ( HB_GT_PTR, int, int, int, int, int, USHORT, int, int );
@@ -183,8 +183,8 @@ typedef struct
    BOOL     (* Resume) ( HB_GT_PTR );
    BOOL     (* PreExt) ( HB_GT_PTR );
    BOOL     (* PostExt) ( HB_GT_PTR );
-   void     (* OutStd) ( HB_GT_PTR, const char *, ULONG );
-   void     (* OutErr) ( HB_GT_PTR, const char *, ULONG );
+   void     (* OutStd) ( HB_GT_PTR, const char *, HB_SIZE );
+   void     (* OutErr) ( HB_GT_PTR, const char *, HB_SIZE );
    void     (* Tone) ( HB_GT_PTR, double, double );
    void     (* Bell) ( HB_GT_PTR );
    BOOL     (* Info) ( HB_GT_PTR, int, PHB_GT_INFO );
@@ -204,7 +204,7 @@ typedef struct
    int      (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int      (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void     (* InkeyPoll) ( HB_GT_PTR );
-   void     (* InkeySetText) ( HB_GT_PTR, const char * szText, ULONG ulLen );
+   void     (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE ulLen );
    int      (* InkeySetLast) ( HB_GT_PTR, int iKey );
    void     (* InkeyReset) ( HB_GT_PTR );
    void     (* InkeyExit) ( HB_GT_PTR );

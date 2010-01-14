@@ -2509,7 +2509,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          else
          {
             char * szClipboardData;
-            ULONG ulLen;
+            HB_SIZE ulLen;
             if( hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
                                            CF_OEMTEXT : CF_TEXT,
                                            &szClipboardData, &ulLen ) )

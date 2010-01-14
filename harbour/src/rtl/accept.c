@@ -90,7 +90,7 @@ HB_FUNC( __ACCEPTSTR )
 HB_FUNC( __ACCEPT )
 {
    char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-   ULONG ulLen = 0;
+   HB_SIZE ulLen = 0;
    int input = 0;
 
    /* cPrompt(s) passed ? */

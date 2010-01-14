@@ -830,7 +830,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( s_fDispTrans )
          {
-            ULONG ulLen = iLen;
+            HB_SIZE ulLen = iLen;
             const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
                                                s_sTransBuf, &ulLen,
                                                &s_sTransBuf, &s_ulTransBufSize,
@@ -852,7 +852,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       if( s_fDispTrans )
       {
-         ULONG ulLen = iLen;
+         HB_SIZE ulLen = iLen;
          const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
                                             s_sTransBuf, &ulLen,
                                             &s_sTransBuf, &s_ulTransBufSize,

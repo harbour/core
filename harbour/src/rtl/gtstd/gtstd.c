@@ -185,7 +185,7 @@ static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_C
                            hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
 }
 
-static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, ULONG ulLen )
+static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, HB_SIZE ulLen )
 {
    hb_fsWriteLarge( pGTSTD->hStdout, szStr, ulLen );
 }
@@ -587,7 +587,7 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
    hb_gt_std_newLine( pGTSTD );
    if( iMin > 0 )
    {
-      ULONG ulLen = iMin;
+      HB_SIZE ulLen = iMin;
       const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
                                          pGTSTD->sTransBuf, &ulLen,
                                          &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,
@@ -695,7 +695,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( pGTSTD->fDispTrans )
          {
-            ULONG ulLen = iLen;
+            HB_SIZE ulLen = iLen;
             const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
                                                pGTSTD->sTransBuf, &ulLen,
                                                &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,

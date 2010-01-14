@@ -134,7 +134,7 @@ HB_FUNC( HB_PROCESSRUN )
        ( pStdErr || HB_ISNIL( 4 ) ) &&
        ( HB_ISLOG( 5 ) || HB_ISNIL( 5 ) ) )
    {
-      ULONG ulStdOut, ulStdErr;
+      HB_SIZE ulStdOut, ulStdErr;
       char * pStdOutBuf, * pStdErrBuf;
       char ** pStdOutPtr, ** pStdErrPtr;
       int iResult;

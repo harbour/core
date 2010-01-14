@@ -97,16 +97,16 @@ HB_FUNC( TRANSFORM )
    {
       char szPicDate[ 11 ];
       const char * szPic = hb_itemGetCPtr( pPic );
-      ULONG  ulPicLen = hb_itemGetCLen( pPic );
-      USHORT uiPicFlags; /* Function flags */
+      HB_SIZE ulPicLen = hb_itemGetCLen( pPic );
+      USHORT  uiPicFlags; /* Function flags */
 
-      ULONG  ulParamS = 0; /* To avoid GCC -O2 warning */
-      BYTE   byParamL = '\0'; /* To avoid GCC -O2 warning */
+      HB_SIZE   ulParamS = 0; /* To avoid GCC -O2 warning */
+      BYTE    byParamL = '\0'; /* To avoid GCC -O2 warning */
 
-      char * szResult;
-      ULONG  ulResultPos;
+      char *  szResult;
+      HB_SIZE ulResultPos;
 
-      ULONG  ulOffset = 0;
+      HB_SIZE ulOffset = 0;
 
       /* ======================================================= */
       /* Analyze picture functions                               */
@@ -174,7 +174,7 @@ HB_FUNC( TRANSFORM )
                   {
                      szPic++;
                      ulPicLen--;
-                     ulParamS = ( ulParamS * 10 ) + ( ( ULONG ) ( *szPic - '0' ) );
+                     ulParamS = ( ulParamS * 10 ) + ( ( HB_SIZE ) ( *szPic - '0' ) );
                   }
                   break;
                case 'T':
@@ -200,8 +200,8 @@ HB_FUNC( TRANSFORM )
       if( HB_IS_STRING( pValue ) )
       {
          const char * szExp = hb_itemGetCPtr( pValue );
-         ULONG  ulExpLen = hb_itemGetCLen( pValue );
-         ULONG  ulExpPos = 0;
+         HB_SIZE  ulExpLen = hb_itemGetCLen( pValue );
+         HB_SIZE  ulExpPos = 0;
          BOOL bAnyPic = FALSE;
          BOOL bFound  = FALSE;
 
@@ -407,7 +407,7 @@ HB_FUNC( TRANSFORM )
          int      iWidth;                             /* Width of string          */
          int      iDec;                               /* Number of decimals       */
          int      iCount;
-         ULONG    i;
+         HB_SIZE  i;
          char     cPic;
          PHB_ITEM pNumber = NULL;
 
@@ -516,7 +516,7 @@ HB_FUNC( TRANSFORM )
          {
             if( uiPicFlags & PF_EXCHANG )
             {
-               for( i = 0; i < ( ULONG ) iWidth; ++i )
+               for( i = 0; i < ( HB_SIZE ) iWidth; ++i )
                {
                   if( szResult[ i ] == '.' )
                   {
@@ -588,7 +588,7 @@ HB_FUNC( TRANSFORM )
                       szResult[ 1 ] == ' ' )
                      ++iCount;
                }
-               while( ( ULONG ) iCount + 1 < i && szResult[ iCount + 1 ] == ' ' )
+               while( ( HB_SIZE ) iCount + 1 < i && szResult[ iCount + 1 ] == ' ' )
                   ++iCount;
 
 #ifndef HB_CLP_STRICT
@@ -598,7 +598,7 @@ HB_FUNC( TRANSFORM )
                      szPic[ iCount ] != szResult[ iCount ] ) )
                {
                   szResult[ iCount ] = '(';
-                  for( ++iCount; ( ULONG ) iCount < i; iCount++ )
+                  for( ++iCount; ( HB_SIZE ) iCount < i; iCount++ )
                   {
                      if( szResult[ iCount ] >= '0' && szResult[ iCount ] <= '9' &&
                          ( ulPicLen == 0 || szPic[ iCount ] == '9' ||
@@ -618,7 +618,7 @@ HB_FUNC( TRANSFORM )
                if( *szResult >= '1' && *szResult <= '9' &&
                    ( ulPicLen == 0 || *szPic == '9' || *szPic != *szResult ) )
                {
-                  for( iCount = 1; ( ULONG ) iCount < i; iCount++ )
+                  for( iCount = 1; ( HB_SIZE ) iCount < i; iCount++ )
                   {
                      if( szResult[ iCount ] >= '0' && szResult[ iCount ] <= '9' &&
                          ( ulPicLen == 0 || szPic[ iCount ] == '9' ||
@@ -953,7 +953,7 @@ HB_FUNC( TRANSFORM )
          else if( uiPicFlags & PF_LEFT )
          {
             /* Trim left and pad with spaces */
-            ULONG ulFirstChar = ulOffset;
+            HB_SIZE ulFirstChar = ulOffset;
 
             while( ulFirstChar < ulResultPos && szResult[ ulFirstChar ] == ' ' )
                ulFirstChar++;
@@ -989,7 +989,7 @@ HB_FUNC( TRANSFORM )
          }
          else
          {
-            ULONG ulLen;
+            HB_SIZE ulLen;
             BOOL bFreeReq;
 
             szStr = hb_itemString( pValue, &ulLen, &bFreeReq );

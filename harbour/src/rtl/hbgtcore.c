@@ -116,7 +116,7 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 
 static void * hb_gt_def_New( PHB_GT pGT )
 {
-   ULONG ulSize, ulIndex;
+   HB_SIZE ulSize, ulIndex;
    USHORT usChar;
    int iColor;
    BYTE bAttr;
@@ -125,7 +125,7 @@ static void * hb_gt_def_New( PHB_GT pGT )
    hb_gt_def_BaseInit( pGT );
 
    HB_GTSELF_GETSIZE( pGT, &pGT->iHeight, &pGT->iWidth );
-   ulSize = ( ULONG ) pGT->iHeight * pGT->iWidth;
+   ulSize = ( HB_SIZE ) pGT->iHeight * pGT->iWidth;
 
    pGT->screenBuffer =
             ( PHB_SCREENCELL ) hb_xgrab( sizeof( HB_SCREENCELL ) * ulSize );
@@ -670,7 +670,7 @@ static BOOL hb_gt_def_Resume( PHB_GT pGT )
    return HB_GTSELF_POSTEXT( pGT );
 }
 
-static void hb_gt_def_OutStd( PHB_GT pGT, const char * szStr, ULONG ulLen )
+static void hb_gt_def_OutStd( PHB_GT pGT, const char * szStr, HB_SIZE ulLen )
 {
    if( ulLen )
    {
@@ -693,7 +693,7 @@ static void hb_gt_def_OutStd( PHB_GT pGT, const char * szStr, ULONG ulLen )
    }
 }
 
-static void hb_gt_def_OutErr( PHB_GT pGT, const char * szStr, ULONG ulLen )
+static void hb_gt_def_OutErr( PHB_GT pGT, const char * szStr, HB_SIZE ulLen )
 {
    if( ulLen )
    {
@@ -772,7 +772,7 @@ static BOOL hb_gt_def_PutChar( PHB_GT pGT, int iRow, int iCol,
    return FALSE;
 }
 
-static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const char * szText, ULONG ulLen )
+static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const char * szText, HB_SIZE ulLen )
 {
    while( ulLen-- )
    {
@@ -783,11 +783,11 @@ static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const
 }
 
 static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
-                                 BYTE bAttr, USHORT usChar, ULONG ulLen )
+                                 BYTE bAttr, USHORT usChar, HB_SIZE ulLen )
 {
    if( iCol < 0 )
    {
-      if( ulLen < ( ULONG ) -iCol )
+      if( ulLen < ( HB_SIZE ) -iCol )
          ulLen = 0;
       else
          ulLen += iCol;
@@ -801,19 +801,19 @@ static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
    }
 }
 
-static void hb_gt_def_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, ULONG ulLength )
+static void hb_gt_def_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, HB_SIZE ulLength )
 {
    int iMaxCol = HB_GTSELF_MAXCOL( pGT );
 
    /* Truncate the text if the cursor will end up off the right edge */
    HB_GTSELF_PUTTEXT( pGT, iRow, iCol, HB_GTSELF_GETCOLOR( pGT ), szText,
-                      HB_MIN( ulLength, ( ULONG ) ( iMaxCol - iCol + 1 ) ) );
+                      HB_MIN( ulLength, ( HB_SIZE ) ( iMaxCol - iCol + 1 ) ) );
 
    /* Finally, save the new cursor position, even if off-screen */
    HB_GTSELF_SETPOS( pGT, iRow, iCol + ( int ) ulLength );
 }
 
-static void hb_gt_def_Write( PHB_GT pGT, const char * szText, ULONG ulLength )
+static void hb_gt_def_Write( PHB_GT pGT, const char * szText, HB_SIZE ulLength )
 {
    int iRow, iCol;
 
@@ -823,7 +823,7 @@ static void hb_gt_def_Write( PHB_GT pGT, const char * szText, ULONG ulLength )
 
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_gt_def_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength )
+static void hb_gt_def_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE ulLength )
 {
    int iLen = 0;
    BOOL bDisp = FALSE;
@@ -1131,7 +1131,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 
       if( ( iRows || iCols ) && iColSize >= 0 && ( iBottom - iTop >= iRows ) )
       {
-         ULONG ulSize = HB_GTSELF_RECTSIZE( pGT, iTop, iColOld, iTop, iColOld + iColSize );
+         HB_SIZE ulSize = HB_GTSELF_RECTSIZE( pGT, iTop, iColOld, iTop, iColOld + iColSize );
 
          if( ulSize )
             pBuffer = hb_xgrab( ulSize );
@@ -1514,7 +1514,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_GETWIN:  /* save screen buffer, cursor shape and position */
       {
          int iRow, iCol;
-         ULONG ulSize;
+         HB_SIZE ulSize;
 
          if( !pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
@@ -1569,7 +1569,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             /* get Clipboard value */
             char * pszClipData;
-            ULONG ulLen;
+            HB_SIZE ulLen;
 
             if( hb_gt_getClipboard( &pszClipData, &ulLen ) )
                pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult, pszClipData, ulLen );
@@ -1647,7 +1647,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
    if( HB_IS_STRING( pMessage ) && iOptions > 0 )
    {
       const char * szMessage = hb_itemGetCPtr( pMessage );
-      ULONG ulLen = hb_itemGetCLen( pMessage );
+      HB_SIZE ulLen = hb_itemGetCLen( pMessage );
       BOOL fScreen = FALSE, fKeyBoard = FALSE;
       int iKey = 0, i, iDspCount, iStyle, iRows, iCols,
           iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
@@ -1673,7 +1673,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       if( fScreen )
       {
-         ULONG ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ul = 0, ulDst = 0,
+         HB_SIZE ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ul = 0, ulDst = 0,
                ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          char * szMsgDsp;
 
@@ -1771,7 +1771,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             ulCurrWidth = ulMaxWidth;
          if( ulCurrWidth > ulWidth )
             ulWidth = ulCurrWidth;
-         if( ( ULONG ) iRows < ulLines + 4 )
+         if( ( HB_SIZE ) iRows < ulLines + 4 )
             ulLines = iRows - 4;
          iTop = ( iRows - ulLines - 4 ) >> 1;
          iLeft = ( iCols - ulWidth - 4 ) >> 1;
@@ -1913,7 +1913,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       }
       else
       {
-         ULONG ul, ulStart = 0;
+         HB_SIZE ul, ulStart = 0;
          const char *szEol = hb_conNewLine();
 
          for( ul = 0; ul < ulLen; ++ul )
@@ -2008,8 +2008,8 @@ static BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
       if( pGT->iHeight != iRows || pGT->iWidth != iCols )
       {
          void * pBuffer = NULL;
-         ULONG ulLen = ( ULONG ) iRows * iCols, ulIndex;
-         ULONG ulSize;
+         HB_SIZE ulLen = ( HB_SIZE ) iRows * iCols, ulIndex;
+         HB_SIZE ulSize;
          int i;
 
          ulSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRows - 1, iCols - 1 );
@@ -2508,7 +2508,7 @@ static int hb_gt_def_InkeySetLast( PHB_GT pGT, int iKey )
 }
 
 /* Set text into inkey buffer */
-static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, ULONG ulLen )
+static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeySetText(%p,%s,%lu)", pGT, szText, ulLen));
 
