@@ -99,7 +99,7 @@ HB_FUNC( TIMEDIFF )
 HB_FUNC( TIMEISVALID )
 {
    const char * pszTime = hb_parc( 1 );
-   BOOL bRet = FALSE;
+   HB_BOOL bRet = HB_FALSE;
 
    if( pszTime )
    {
@@ -107,7 +107,7 @@ HB_FUNC( TIMEISVALID )
           atol( pszTime + 3 ) < 60 &&
           atol( pszTime + 6 ) < 60 )
       {
-         bRet = TRUE;
+         bRet = HB_TRUE;
       }
    }
 

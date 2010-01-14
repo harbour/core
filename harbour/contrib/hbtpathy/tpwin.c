@@ -165,7 +165,7 @@ HB_FUNC( __TP_ISDCD )
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
 
-   hb_retl( bRet ? ( dwModemStat & MS_RLSD_ON ) != 0 : FALSE ); /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
+   hb_retl( bRet ? ( dwModemStat & MS_RLSD_ON ) != 0 : HB_FALSE ); /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
 }
 
 HB_FUNC( __TP_ISRI )
@@ -173,7 +173,7 @@ HB_FUNC( __TP_ISRI )
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
 
-   hb_retl( bRet ? ( dwModemStat & MS_RING_ON ) != 0 : FALSE );
+   hb_retl( bRet ? ( dwModemStat & MS_RING_ON ) != 0 : HB_FALSE );
 }
 
 HB_FUNC( __TP_ISDSR )
@@ -181,7 +181,7 @@ HB_FUNC( __TP_ISDSR )
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
 
-   hb_retl( bRet ? ( dwModemStat & MS_DSR_ON ) != 0 : FALSE );
+   hb_retl( bRet ? ( dwModemStat & MS_DSR_ON ) != 0 : HB_FALSE );
 }
 
 HB_FUNC( __TP_ISCTS )
@@ -189,7 +189,7 @@ HB_FUNC( __TP_ISCTS )
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
 
-   hb_retl( bRet ? ( dwModemStat & MS_CTS_ON ) != 0 : FALSE );
+   hb_retl( bRet ? ( dwModemStat & MS_CTS_ON ) != 0 : HB_FALSE );
 }
 
 #endif /* HB_OS_WIN */

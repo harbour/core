@@ -245,7 +245,7 @@ End
 
 HB_FUNC( FT_PUTKEY )
 {
-   BOOL lSuccess = FALSE;
+   HB_BOOL lSuccess = HB_FALSE;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -254,7 +254,7 @@ HB_FUNC( FT_PUTKEY )
       if( iKey >= -39 && iKey <= 385 )
       {
          hb_inkeyPut( iKey );
-         lSuccess = TRUE;
+         lSuccess = HB_TRUE;
       }
    }
    hb_retl( lSuccess );

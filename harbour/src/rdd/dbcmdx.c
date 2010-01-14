@@ -82,7 +82,7 @@ HB_FUNC( ORDWILDSEEK )
 
       if( szPattern )
       {
-         BOOL fCont = hb_parl( 2 ), fBack = hb_parl( 3 ), fFound = FALSE;
+         HB_BOOL fCont = hb_parl( 2 ), fBack = hb_parl( 3 ), fFound = HB_FALSE;
          DBORDERINFO OrderInfo;
          HB_ERRCODE errCode = HB_SUCCESS;
 
@@ -133,7 +133,7 @@ HB_FUNC( DBSKIPPER )
    {
       LONG lSkipped = 0;
       LONG lRecs = 1;
-      BOOL fBEof;
+      HB_BOOL fBEof;
       ULONG ulRecords = 0;
 
       if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )

@@ -66,7 +66,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
    int nPosBlock = 0, nLineCount = 0;
    ULONG nFinalLen;
    unsigned char cElem, cElem1;
-   BOOL bExcept;
+   HB_BOOL bExcept;
 
    if( ! cData )
    {
@@ -437,15 +437,13 @@ HB_FUNC( TIPENCODERURL_ENCODE )
 {
    const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
-   BOOL bComplete = hb_parl( 2 );
+   HB_BOOL bComplete = hb_parl( 2 );
    char *cRet;
    int nPos = 0, nPosRet = 0, nVal;
    char cElem;
 
    if( hb_pcount() < 2 )
-   {
-      bComplete = TRUE;
-   }
+      bComplete = HB_TRUE;
 
    if( ! cData )
    {

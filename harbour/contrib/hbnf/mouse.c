@@ -436,7 +436,7 @@ HB_FUNC( _M_MBUTPRS )
    int inX;
    int inY;
    int inButton;
-   BOOL lStatus;
+   int lStatus;
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
@@ -458,24 +458,14 @@ HB_FUNC( _M_MBUTPRS )
    }
 #endif
    {
-      PHB_ITEM pArray =     hb_itemArrayNew( 4 );
-      PHB_ITEM pY =         hb_itemPutNI( NULL, inY );
-      PHB_ITEM pX =         hb_itemPutNI( NULL, inX );
-      PHB_ITEM pButton =    hb_itemPutNI( NULL, inButton );
-      PHB_ITEM pStatus =    hb_itemPutNI( NULL, lStatus );
+      PHB_ITEM pArray = hb_itemArrayNew( 4 );
 
-      hb_itemArrayPut( pArray, 1, pButton ); /* NOTE: I've changed 1 to 3 */
-      hb_itemArrayPut( pArray, 2, pX );
-      hb_itemArrayPut( pArray, 3, pY );
-      hb_itemArrayPut( pArray, 4, pStatus ); /* NOTE: I've changed 1 to 3 */
+      hb_arraySetNI( pArray, 1, inButton ); /* NOTE: I've changed 1 to 3 */
+      hb_arraySetNI( pArray, 2, inX );
+      hb_arraySetNI( pArray, 3, inY );
+      hb_arraySetNI( pArray, 4, lStatus ); /* NOTE: I've changed 1 to 3 */
 
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pArray );
-      hb_itemRelease( pX );
-      hb_itemRelease( pY );
-      hb_itemRelease( pStatus );
-      hb_itemRelease( pButton );
+      hb_itemReturnRelease( pArray );
    }
 }
 

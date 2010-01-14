@@ -192,7 +192,7 @@ static int _ins_buff( int bytes );
 static int _del_buff( int bytes );
 static long _ft_skip( long recs );
 static int _writeLine( const char * theData, ULONG iDataLen );
-static BOOL _writeeol( HB_FHANDLE fhnd );
+static HB_BOOL _writeeol( HB_FHANDLE fhnd );
 
 /* arrays used by the text workareas */
 static int        area = 0;
@@ -1974,7 +1974,7 @@ static int _writeLine( const char * theData, ULONG iDataLen )
    return err;
 }
 
-static BOOL _writeeol( HB_FHANDLE fhnd )
+static HB_BOOL _writeeol( HB_FHANDLE fhnd )
 {
    const char * crlf = hb_conNewLine();
    ULONG len = strlen( crlf );

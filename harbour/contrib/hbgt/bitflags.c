@@ -151,7 +151,7 @@ HB_FUNC( GT_CLRFLAG )
 HB_FUNC( GT_ISFLAG  )
 {
 
-        BOOL            FlagStatus = FALSE;
+        HB_BOOL         FlagStatus = HB_FALSE;
         unsigned        Bit        = 1;
         unsigned        BitPointer;
         unsigned        BytePointer;

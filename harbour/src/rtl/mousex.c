@@ -65,7 +65,7 @@ HB_FUNC( NUMBUTTONS )
 
 HB_FUNC( SETMOUSE )
 {
-   BOOL fRow, fCol;
+   HB_BOOL fRow, fCol;
 
    hb_retl( hb_mouseGetCursor() );
 

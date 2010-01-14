@@ -371,7 +371,7 @@ static void GDImageCreateFrom( int nType )
      )
    {
       /* Retrieve file handle */
-      HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_parnint( 1 ) : 0; /* 0 = std input */
+      HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_numToHandle( hb_parnint( 1 ) ) : 0; /* 0 = std input */
 
       /* Retrieve image size */
       sz     = hb_parni( 2 );
@@ -529,7 +529,10 @@ static void GDImageSaveTo( int nType )
       else if( HB_ISNUM( 2 ) )
       {
          /* Write to std output or to a passed file */
-         HB_FHANDLE fhandle = ( hb_parnint( 2 ) != FS_ERROR ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = hb_numToHandle( hb_parnint( 2 ) );
+
+         if( fhandle == FS_ERROR )
+            fhandle = 1; /* 1 = std output */
 
          /* Write Image */
          SaveImageToHandle( fhandle, iptr, sz );
@@ -3698,7 +3701,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          /* Retrieve file handle */
-         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_numToHandle( hb_parnint( 2 ) ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
       }
@@ -3754,7 +3757,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          /* Retrieve file handle */
-         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_numToHandle( hb_parnint( 2 ) ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
       }
@@ -3793,7 +3796,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          /* Retrieve file handle */
-         HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_parnint( 1 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_numToHandle( hb_parnint( 1 ) ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
       }

@@ -384,7 +384,7 @@ static const char * s_findMimeStringInTree( const char * cData, int iLen, int iE
 static const char * s_findStringMimeType( const char * cData, int iLen )
 {
    int iCount;
-   BOOL bFormFeed;
+   HB_BOOL bFormFeed;
 
    for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
@@ -434,18 +434,18 @@ static const char * s_findStringMimeType( const char * cData, int iLen )
    }
 
    /* Failure; let's see if it's a text/plain. */
-   bFormFeed = FALSE;
+   bFormFeed = HB_FALSE;
    iCount = 0;
    while( iCount < iLen )
    {
       /* form feed? */
       if( cData[ iCount ] == '\x0C' )
-         bFormFeed = TRUE;
+         bFormFeed = HB_TRUE;
 
       /* esc sequence? */
       else if( cData[ iCount ] == '\x1B' )
       {
-         bFormFeed = TRUE;
+         bFormFeed = HB_TRUE;
          iCount++;
          if( cData[ iCount ] <= 27 )
             iCount++;
