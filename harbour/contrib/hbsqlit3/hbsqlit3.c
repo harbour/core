@@ -753,11 +753,11 @@ HB_FUNC( SQLITE3_PREPARE )
       if( SQL )
       {
          const char     *pSQL = hb_itemGetCPtr( SQL );
-         ULONG          ulLen = hb_itemGetCLen( SQL );
+         int            ulLen = ( int ) hb_itemGetCLen( SQL );
          psqlite3_stmt  pStmt;
          const char     *pszTail;
 
-         if( sqlite3_prepare_v2(pHbSqlite3->db, pSQL, ulLen, &pStmt, &pszTail) == SQLITE_OK )
+         if( sqlite3_prepare_v2( pHbSqlite3->db, pSQL, ulLen, &pStmt, &pszTail ) == SQLITE_OK )
          {
             hb_retptr( pStmt );
          }

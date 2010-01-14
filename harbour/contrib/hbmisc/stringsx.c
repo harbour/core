@@ -88,7 +88,7 @@ HB_FUNC( ROT13 )
   if( HB_ISCHAR(1) )
     {
       const char *szText = hb_parc( 1 );
-      ULONG i, lLen = hb_parclen( 1 );
+      HB_SIZE i, lLen = hb_parclen( 1 );
       char *szResult = (char*)hb_xgrab(lLen + 1);
 
       for( i = 0; i < lLen; i++ )
@@ -105,5 +105,5 @@ HB_FUNC( ROT13 )
       hb_xfree(szResult);
     }
   else
-    hb_retc(NULL);
+    hb_retc_null();
 }

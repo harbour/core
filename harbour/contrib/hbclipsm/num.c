@@ -85,7 +85,7 @@ HB_FUNC( NUMGETDECIMALS )
    if( HB_ISNUM( 1 ) )
       hb_itemGetNLen( hb_param( 1, HB_IT_NUMERIC ), NULL, &iDec );
 
-   hb_retnl( iDec );
+   hb_retni( iDec );
 }
 
 /* NumGetLen( <nNumber> ) --> nDigits
@@ -93,7 +93,7 @@ HB_FUNC( NUMGETDECIMALS )
 */
 HB_FUNC( NUMGETLEN )
 {
-   ULONG ulLen = 0;
+   HB_SIZE ulLen = 0;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -157,13 +157,13 @@ HB_FUNC( SIGN )
 HB_FUNC( NUMASCURRENCY )
 {
    char * szBuffer = hb_itemStr( hb_param( 1, HB_IT_NUMERIC ), NULL, NULL );
-   long ulSymbolLen = hb_itemGetCLen( hb_param( 2, HB_IT_STRING ) );
+   HB_SIZE ulSymbolLen = hb_itemGetCLen( hb_param( 2, HB_IT_STRING ) );
    char * ptr = szBuffer;
    char * szCurrency;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    ulLen = strlen( ptr );
-   szCurrency = ( char * ) hb_xgrab( ulLen + ulSymbolLen ) ;
+   szCurrency = ( char * ) hb_xgrab( ulLen + ulSymbolLen );
 
    if( hb_parni( 3 ) < 0 )
    {

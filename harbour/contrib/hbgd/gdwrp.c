@@ -323,7 +323,7 @@ static void SaveImageToFile( const char *szFile, const void * iptr, int sz )
    if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
    {
       /* Write Image */
-      SaveImageToHandle( fhandle, iptr, ( ULONG ) sz );
+      SaveImageToHandle( fhandle, iptr, sz );
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -370,17 +370,14 @@ static void GDImageCreateFrom( int nType )
         ( HB_ISNUM( 2 ) )
      )
    {
-
-      HB_FHANDLE fhandle;
-
       /* Retrieve file handle */
-      fhandle = ( HB_ISNUM( 1 ) ) ? hb_parnl( 1 ) : 0; /* 0 = std input */
+      HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_parnint( 1 ) : 0; /* 0 = std input */
+
       /* Retrieve image size */
       sz     = hb_parni( 2 );
 
       /* retrieve image from handle */
       iptr = LoadImageFromHandle( fhandle, sz );
-
    }
    else
    {
@@ -432,7 +429,6 @@ static void GDImageSaveTo( int nType )
       gdImagePtr im;
       int sz = 0;
       void * iptr = NULL;
-      HB_FHANDLE fhandle;
       int level = 0, fg = 0;
 
       /* Retrieve image pointer */
@@ -527,16 +523,13 @@ static void GDImageSaveTo( int nType )
 
       /* If i get a file name */
       if( HB_ISCHAR( 2 ) )
-      {
-         const char *szFile = hb_parcx( 2 );
-         SaveImageToFile( szFile, iptr, sz );
-      }
+         SaveImageToFile( hb_parcx( 2 ), iptr, sz );
 
       /* Write to file handle (1 = std output) */
       else if( HB_ISNUM( 2 ) )
       {
          /* Write to std output or to a passed file */
-         fhandle = ( hb_parnl( 2 ) > -1 ) ? hb_parnl( 2 ) : 1 ; /* 1 = std output */
+         HB_FHANDLE fhandle = ( hb_parnint( 2 ) != FS_ERROR ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
 
          /* Write Image */
          SaveImageToHandle( fhandle, iptr, sz );
@@ -546,7 +539,7 @@ static void GDImageSaveTo( int nType )
       else
       {
          /* Return as string */
-         hb_retclen( ( const char * ) iptr, ( ULONG ) sz );
+         hb_retclen( ( const char * ) iptr, ( HB_SIZE ) sz );
       }
 
       /* Free memory */
@@ -3662,7 +3655,7 @@ static void AddImageToFile( const char *szFile, const void * iptr, int sz )
       hb_fsSeek( fhandle, 0, FS_END );
 
       /* Write Image */
-      SaveImageToHandle( fhandle, iptr, ( ULONG ) sz );
+      SaveImageToHandle( fhandle, iptr, sz );
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -3700,16 +3693,12 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       /* Check if 2nd parameter is a file name or an handle */
       if( HB_ISCHAR( 2 ) )
       {
-         const char *szFile = hb_parcx( 2 );
-
-         SaveImageToFile( szFile, iptr, size );
+         SaveImageToFile( hb_parcx( 2 ), iptr, size );
       }
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
-         HB_FHANDLE fhandle;
-
          /* Retrieve file handle */
-         fhandle = ( HB_ISNUM( 2 ) ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
       }
@@ -3760,19 +3749,14 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       /* Check if 2nd parameter is a file name or an handle */
       if( HB_ISCHAR( 2 ) )
       {
-         const char * szFile = hb_parcx( 2 );
-
-         AddImageToFile( szFile, iptr, size );
+         AddImageToFile( hb_parcx( 2 ), iptr, size );
       }
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
-         HB_FHANDLE fhandle;
-
          /* Retrieve file handle */
-         fhandle = ( HB_ISNUM( 2 ) ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
-
       }
 
    }
@@ -3804,21 +3788,15 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       /* Check if 1st parameter is a file name or an handle */
       if( HB_ISCHAR( 1 ) )
       {
-         const char * szFile = hb_parcx( 1 );
-
-         AddImageToFile( szFile, iptr, size );
+         AddImageToFile( hb_parcx( 1 ), iptr, size );
       }
       else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
-         HB_FHANDLE fhandle;
-
          /* Retrieve file handle */
-         fhandle = ( HB_ISNUM( 1 ) ) ? hb_parnl( 1 ) : 1; /* 1 = std output */
+         HB_FHANDLE fhandle = HB_ISNUM( 1 ) ? hb_parnint( 1 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
-
       }
-
    }
    else
    {

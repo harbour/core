@@ -61,7 +61,7 @@ HB_FUNC( BIN2U )
 
    if( pItem )
    {
-      ULONG ulLen = hb_itemGetCLen( pItem );
+      HB_SIZE ulLen = hb_itemGetCLen( pItem );
       if( ulLen )
       {
          const char * pszString = hb_itemGetCPtr( pItem );

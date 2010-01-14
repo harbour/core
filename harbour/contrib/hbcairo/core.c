@@ -394,11 +394,11 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
    if( pIterator && pIterator->ppPath && ( pPath = * ( pIterator->ppPath ) ) != NULL && pArray )
    {
       cairo_path_data_t * pData;
-      ULONG               ulLen;
+      HB_SIZE             nLen;
 
-      ulLen = hb_arrayLen( pArray );
+      nLen = hb_arrayLen( pArray );
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 &&
-          ( ULONG ) pPath->data[ pIterator->iPos ].header.length == ulLen + 1 )
+          ( HB_SIZE ) pPath->data[ pIterator->iPos ].header.length == nLen + 1 )
       {
          PHB_ITEM  pItem;
          int       i;

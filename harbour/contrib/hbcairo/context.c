@@ -136,9 +136,9 @@ HB_FUNC( CAIRO_GET_DASH )
       cairo_get_dash( pCairo, pDashes, &dOffset  );
       hb_stornd( dOffset, 3 );
 
-      pItem = hb_itemArrayNew( ( ULONG ) iCount );
+      pItem = hb_itemArrayNew( ( HB_SIZE ) iCount );
       for( i = 0; i < iCount; i++ )
-         hb_arraySetND( pItem, ( ULONG ) i + 1, pDashes[ i ] );
+         hb_arraySetND( pItem, ( HB_SIZE ) i + 1, pDashes[ i ] );
       hb_xfree( pDashes );
       hb_itemParamStoreForward( 2, pItem );
       hb_itemRelease( pItem );
@@ -224,7 +224,7 @@ HB_FUNC( CAIRO_SET_DASH )
          double *  pDashes = ( double * ) hb_xgrab( iCount * sizeof( double ) );
 
          for ( i = 0; i < iCount; i++ )
-            pDashes[ i ] = hb_arrayGetND( pItem, ( ULONG ) i + 1 );
+            pDashes[ i ] = hb_arrayGetND( pItem, ( HB_SIZE ) i + 1 );
          cairo_set_dash( pCairo, pDashes, iCount, hb_parnd( 3 ) );
          hb_xfree( pDashes );
       }
@@ -353,4 +353,3 @@ HB_FUNC( CAIRO_STROKE_PRESERVE )
    if( pCairo )
       cairo_stroke_preserve( pCairo );
 }
-

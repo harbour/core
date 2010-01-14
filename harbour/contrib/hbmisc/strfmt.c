@@ -58,10 +58,10 @@
 
 typedef struct
 {
-   char * raw;
+   char *       raw;
    const char * buffer;
-   ULONG  ulLen;
-   BOOL   bFreeReq;
+   HB_SIZE      ulLen;
+   HB_BOOL      bFreeReq;
 } STRPAR;
 
 /* TODO: Add support for embedded PICTURE string in mask string. */
@@ -69,16 +69,16 @@ typedef struct
 
 HB_FUNC( STRFORMAT )
 {
-   ULONG nParNum = hb_pcount();
+   int nParNum = hb_pcount();
 
    if( nParNum >= 1 )
    {
       const char * pszMask = hb_parcx( 1 );
-      ULONG  nMaskLen = hb_parclen( 1 );
-      ULONG  nMaskPos;
-      ULONG  nPos;
+      HB_SIZE nMaskLen = hb_parclen( 1 );
+      HB_SIZE nMaskPos;
+      int nPos;
 
-      ULONG  nRetValLen;
+      HB_SIZE nRetValLen;
       char * pszRetVal;
       char * pszRetValSave;
 

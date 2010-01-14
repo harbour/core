@@ -567,8 +567,8 @@ HB_FUNC( PSTRCOMPI )
    {
       const char * pcBase = hb_itemGetCPtr( pString );
       const char * pcSub  = hb_itemGetCPtr( pSubstr );
-      ULONG uSublen = hb_itemGetCLen( pSubstr );
-      ULONG uStart  = hb_itemGetNL( pStart );
+      HB_SIZE uSublen = hb_itemGetCLen( pSubstr );
+      HB_SIZE uStart  = hb_itemGetNL( pStart );
 
       hb_retl( hb_strnicmp( pcBase + uStart - 1, pcSub, uSublen ) == 0 );
    }

@@ -254,8 +254,8 @@ HB_FUNC( HB_ZIPFILEWRITE )
       zipFile hZip = hb_zipfileParam( 1 );
       ULONG   ulLen = hb_parclen( 2 );
 
-      if( HB_ISNUM( 3 ) && (ULONG) hb_parnl( 3 ) < ulLen )
-         ulLen = (ULONG) hb_parnl( 3 );
+      if( HB_ISNUM( 3 ) && ( ULONG ) hb_parnl( 3 ) < ulLen )
+         ulLen = ( ULONG ) hb_parnl( 3 );
 
       if( hZip )
          hb_retni( zipWriteInFileInZip( hZip, (void*) pData, ulLen ) );
@@ -397,7 +397,7 @@ HB_FUNC( HB_UNZIPFILEGOTO )
    unzFile  hUnzip = hb_unzipfileParam( 1 );
 
    if( hUnzip )
-      hb_retni( unzSetOffset( hUnzip, (ULONG) hb_parnint( 2 ) ) );
+      hb_retni( unzSetOffset( hUnzip, ( ULONG ) hb_parnint( 2 ) ) );
 }
 
 
@@ -504,7 +504,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
 
          if( HB_ISNUM( 3 ) )
          {
-            ULONG ulRead = (ULONG) hb_parnl( 3 );
+            ULONG ulRead = ( ULONG ) hb_parnl( 3 );
             if( ulRead < ulSize )
                ulSize = ulRead;
          }
@@ -1093,7 +1093,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
          {
-            hb_fsWriteLarge( hFile, pString, (ULONG) iResult );
+            hb_fsWriteLarge( hFile, pString, ( ULONG ) iResult );
          }
          hb_xfree( pString );
 
