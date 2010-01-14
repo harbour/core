@@ -65,7 +65,7 @@
 
 CREATE CLASS QByteArray INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  append( pBa )
    METHOD  append_1( cStr )

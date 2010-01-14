@@ -65,7 +65,7 @@
 
 CREATE CLASS QTreeWidgetItem INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addChild( pChild )
    METHOD  background( nColumn )

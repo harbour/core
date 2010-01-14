@@ -60,7 +60,7 @@ CLASS HbQtObjectHandler
 
    VAR    pPtr
 
-   METHOD configure()
+   METHOD configure( xObject )
 
    ERROR HANDLER onError()
 

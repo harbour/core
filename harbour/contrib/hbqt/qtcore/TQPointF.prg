@@ -65,7 +65,7 @@
 
 CREATE CLASS QPointF INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isNull()
    METHOD  rx()

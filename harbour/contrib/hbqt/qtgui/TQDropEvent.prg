@@ -65,7 +65,7 @@
 
 CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  acceptProposedAction()
    METHOD  dropAction()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  exec( nFlags )
    METHOD  exit( nReturnCode )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, QPainter
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  begin( pWidget )
    METHOD  begin_1( pPd, pWidget )

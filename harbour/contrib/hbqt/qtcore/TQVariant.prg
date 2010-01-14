@@ -65,7 +65,7 @@
 
 CREATE CLASS QVariant INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  canConvert( nT )
    METHOD  canConvert_1( nT )

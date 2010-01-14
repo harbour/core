@@ -65,7 +65,7 @@
 
 CREATE CLASS QRadioButton INHERIT HbQtObjectHandler, QAbstractButton
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

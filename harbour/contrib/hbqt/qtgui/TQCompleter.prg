@@ -65,7 +65,7 @@
 
 CREATE CLASS QCompleter INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  caseSensitivity()
    METHOD  completionColumn()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextStream INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  atEnd()
    METHOD  autoDetectUnicode()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QFtp INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bytesAvailable()
    METHOD  cd( cDir )

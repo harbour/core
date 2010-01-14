@@ -65,7 +65,7 @@
 
 CREATE CLASS QObject INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  blockSignals( lBlock )
    METHOD  connect( pSender, pSignal, pMethod, nType )

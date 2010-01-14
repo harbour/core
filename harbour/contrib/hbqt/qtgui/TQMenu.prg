@@ -65,7 +65,7 @@
 
 CREATE CLASS QMenu INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  actionAt( pPt )
    METHOD  actionGeometry( pAct )

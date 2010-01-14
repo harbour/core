@@ -65,7 +65,7 @@
 
 CREATE CLASS QStringList INHERIT HbQtObjectHandler, QList
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  append( cValue )
    METHOD  filter( cStr, nCs )

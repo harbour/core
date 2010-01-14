@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextFragment INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  charFormat()
    METHOD  charFormatIndex()

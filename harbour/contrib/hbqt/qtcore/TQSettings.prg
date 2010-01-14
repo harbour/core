@@ -65,7 +65,7 @@
 
 CREATE CLASS QSettings INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  allKeys()
    METHOD  applicationName()

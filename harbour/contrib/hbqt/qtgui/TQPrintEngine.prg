@@ -65,7 +65,7 @@
 
 CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  abort()
    METHOD  metric( nId )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QPlainTextEdit INHERIT HbQtObjectHandler, QAbstractScrollArea
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  backgroundVisible()
    METHOD  blockCount()

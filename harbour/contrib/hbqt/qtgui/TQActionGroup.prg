@@ -65,7 +65,7 @@
 
 CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )

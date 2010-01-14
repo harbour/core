@@ -65,7 +65,7 @@
 
 CREATE CLASS QPrinter INHERIT HbQtObjectHandler, QPaintDevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  abort()
    METHOD  collateCopies()

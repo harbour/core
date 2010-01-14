@@ -65,7 +65,7 @@
 
 CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, QGradient
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  finalStop()
    METHOD  setFinalStop( pStop )

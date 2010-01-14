@@ -65,7 +65,7 @@
 
 CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addPluginPath( cPath )
    METHOD  availableLayouts()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractItemDelegate INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  editorEvent( pEvent, pModel, pOption, pIndex )

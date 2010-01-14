@@ -65,7 +65,7 @@
 
 CREATE CLASS QImageReader INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  autoDetectImageFormat()
    METHOD  backgroundColor()

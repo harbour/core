@@ -65,7 +65,7 @@
 
 CREATE CLASS QVBoxLayout INHERIT HbQtObjectHandler, QBoxLayout
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

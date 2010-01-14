@@ -65,7 +65,7 @@
 
 CREATE CLASS QToolButton INHERIT HbQtObjectHandler, QAbstractButton
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  arrowType()
    METHOD  autoRaise()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  acceptDrops()
    METHOD  accessibleDescription()

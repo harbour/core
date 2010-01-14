@@ -65,7 +65,7 @@
 
 CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  allowedAreas()
    METHOD  features()

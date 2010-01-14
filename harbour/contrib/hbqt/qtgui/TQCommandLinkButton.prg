@@ -65,7 +65,7 @@
 
 CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, QPushButton
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  description()
    METHOD  setDescription( cDescription )

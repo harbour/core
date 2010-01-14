@@ -65,7 +65,7 @@
 
 CREATE CLASS QHttp INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bytesAvailable()
    METHOD  clearPendingRequests()

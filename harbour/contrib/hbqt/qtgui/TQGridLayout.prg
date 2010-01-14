@@ -65,7 +65,7 @@
 
 CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, QLayout
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
    METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )

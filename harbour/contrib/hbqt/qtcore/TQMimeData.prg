@@ -65,7 +65,7 @@
 
 CREATE CLASS QMimeData INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  clear()
    METHOD  colorData()

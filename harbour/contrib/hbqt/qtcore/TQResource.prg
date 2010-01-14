@@ -65,7 +65,7 @@
 
 CREATE CLASS QResource INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  absoluteFilePath()
    METHOD  data()

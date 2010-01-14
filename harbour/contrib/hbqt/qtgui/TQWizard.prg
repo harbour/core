@@ -65,7 +65,7 @@
 
 CREATE CLASS QWizard INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addPage( pPage )
    METHOD  button( nWhich )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QPushButton INHERIT HbQtObjectHandler, QAbstractButton
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  autoDefault()
    METHOD  isDefault()

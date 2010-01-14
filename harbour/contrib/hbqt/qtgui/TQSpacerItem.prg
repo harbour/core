@@ -65,7 +65,7 @@
 
 CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, QLayoutItem
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )
    METHOD  isEmpty()

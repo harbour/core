@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleHintReturnVariant INHERIT HbQtObjectHandler, QStyleHintReturn
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

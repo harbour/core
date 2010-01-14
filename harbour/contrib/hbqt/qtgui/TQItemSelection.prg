@@ -65,7 +65,7 @@
 
 CREATE CLASS QItemSelection INHERIT HbQtObjectHandler, QList
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  contains( pIndex )
    METHOD  merge( pOther, nCommand )

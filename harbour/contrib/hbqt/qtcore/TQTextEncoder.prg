@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  fromUnicode( cStr )
 

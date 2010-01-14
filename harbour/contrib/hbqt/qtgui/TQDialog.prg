@@ -65,7 +65,7 @@
 
 CREATE CLASS QDialog INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isSizeGripEnabled()
    METHOD  result()

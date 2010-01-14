@@ -65,7 +65,7 @@
 
 CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, QAbstractItemView
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cascadingSectionResizes()
    METHOD  count()

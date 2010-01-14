@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  closable()
    METHOD  floatable()

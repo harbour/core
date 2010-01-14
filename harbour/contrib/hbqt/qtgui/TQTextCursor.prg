@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  anchor()
    METHOD  atBlockEnd()

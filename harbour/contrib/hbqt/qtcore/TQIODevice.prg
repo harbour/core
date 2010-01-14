@@ -65,7 +65,7 @@
 
 CREATE CLASS QIODevice INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  atEnd()
    METHOD  bytesAvailable()

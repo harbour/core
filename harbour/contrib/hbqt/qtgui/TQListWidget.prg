@@ -65,7 +65,7 @@
 
 CREATE CLASS QListWidget INHERIT HbQtObjectHandler, QListView
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addItem( cLabel )
    METHOD  addItem_1( pItem )

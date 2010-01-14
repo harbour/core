@@ -65,7 +65,7 @@
 
 CREATE CLASS QToolBar INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  actionAt( pP )
    METHOD  actionAt_1( nX, nY )

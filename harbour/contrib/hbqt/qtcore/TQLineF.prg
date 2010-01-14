@@ -65,7 +65,7 @@
 
 CREATE CLASS QLineF INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  p1()
    METHOD  p2()

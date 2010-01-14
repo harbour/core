@@ -65,7 +65,7 @@
 
 CREATE CLASS QStringListModel INHERIT HbQtObjectHandler, QAbstractListModel
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  data( pIndex, nRole )
    METHOD  flags( pIndex )

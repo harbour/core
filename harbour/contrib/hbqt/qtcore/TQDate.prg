@@ -65,7 +65,7 @@
 
 CREATE CLASS QDate INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addDays( nNdays )
    METHOD  addMonths( nNmonths )

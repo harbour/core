@@ -65,7 +65,7 @@
 
 CREATE CLASS QHelpEvent INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  globalPos()
    METHOD  globalX()

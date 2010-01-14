@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextCharFormat INHERIT HbQtObjectHandler, QTextFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  anchorHref()
    METHOD  anchorNames()

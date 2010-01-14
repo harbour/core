@@ -65,7 +65,7 @@
 
 CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  depth()
    METHOD  height()

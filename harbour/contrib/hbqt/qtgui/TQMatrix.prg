@@ -65,7 +65,7 @@
 
 CREATE CLASS QMatrix INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  m11()
    METHOD  m12()

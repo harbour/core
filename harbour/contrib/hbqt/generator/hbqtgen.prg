@@ -1572,7 +1572,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '   ERROR HANDLER onError()'      )
    aadd( txt_, '   '                             )
    #endif
-   aadd( txt_, '   METHOD  new()'                )
+   aadd( txt_, '   METHOD  new( ... )'           )
    //aadd( txt_, '   METHOD  configure( xObject )' )
    aadd( txt_, '   '                             )
 

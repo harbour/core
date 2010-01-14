@@ -65,7 +65,7 @@
 
 CREATE CLASS QSizeF INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  boundedTo( pOtherSize )
    METHOD  expandedTo( pOtherSize )

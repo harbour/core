@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  boundaryReasons()
    METHOD  isAtBoundary()

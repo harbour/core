@@ -65,7 +65,7 @@
 
 CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, QComboBox
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  currentFont()
    METHOD  fontFilters()

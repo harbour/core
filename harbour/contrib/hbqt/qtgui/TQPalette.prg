@@ -65,7 +65,7 @@
 
 CREATE CLASS QPalette INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alternateBase()
    METHOD  base()

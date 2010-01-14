@@ -65,7 +65,7 @@
 
 CREATE CLASS QPainterPath INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addEllipse( pBoundingRectangle )
    METHOD  addEllipse_1( nX, nY, nWidth, nHeight )

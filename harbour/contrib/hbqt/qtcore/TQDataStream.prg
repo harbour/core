@@ -65,7 +65,7 @@
 
 CREATE CLASS QDataStream INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  atEnd()
    METHOD  byteOrder()

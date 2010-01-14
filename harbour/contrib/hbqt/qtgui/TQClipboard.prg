@@ -65,7 +65,7 @@
 
 CREATE CLASS QClipboard INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  clear( nMode )
    METHOD  image( nMode )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, QLayout
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addLayout( pLayout, nStretch )
    METHOD  addSpacerItem( pSpacerItem )

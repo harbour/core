@@ -65,7 +65,7 @@
 
 CREATE CLASS QList INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  append( xValue )
    METHOD  at( nI )

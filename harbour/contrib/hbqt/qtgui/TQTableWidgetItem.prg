@@ -65,7 +65,7 @@
 
 CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  background()
    METHOD  checkState()

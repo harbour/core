@@ -65,7 +65,7 @@
 
 CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  document()
    METHOD  setDocument( pDoc )
@@ -99,12 +99,12 @@ METHOD QSyntaxHighlighter:rehighlight()
 
 CREATE CLASS HBQSyntaxHighlighter INHERIT QSyntaxHighlighter
 
-   METHOD new()
+   METHOD new( ... )
    METHOD configure( xObject )
-   METHOD setHBCompilerDirectives( pDirectives, pFormat, pFont )
-   METHOD setHBMultiLineCommentFormat( pFormat )
+   METHOD setHBCompilerDirectives( pDirectives, pFormat )
    METHOD setHBRule( cName, cPattern, pFormat )
    METHOD setHBFormat( cName, pFormat )
+   METHOD setHBMultiLineCommentFormat( pFormat )
 
    ENDCLASS
 

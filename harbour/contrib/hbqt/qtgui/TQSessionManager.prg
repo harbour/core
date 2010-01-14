@@ -65,7 +65,7 @@
 
 CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  allowsErrorInteraction()
    METHOD  allowsInteraction()

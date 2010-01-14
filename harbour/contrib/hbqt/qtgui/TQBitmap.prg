@@ -65,7 +65,7 @@
 
 CREATE CLASS QBitmap INHERIT HbQtObjectHandler, QPixmap
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  clear()
    METHOD  transformed( pMatrix )

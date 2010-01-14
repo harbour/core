@@ -65,7 +65,7 @@
 
 CREATE CLASS QPainter INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  background()
    METHOD  backgroundMode()

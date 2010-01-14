@@ -65,7 +65,7 @@
 
 CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, QAbstractPrintDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  done( nResult )
    METHOD  open( pReceiver, pMember )

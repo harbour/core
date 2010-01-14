@@ -65,7 +65,7 @@
 
 CREATE CLASS QPicture INHERIT HbQtObjectHandler, QPaintDevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  boundingRect()
    METHOD  data()

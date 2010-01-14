@@ -65,7 +65,7 @@
 
 CREATE CLASS QInputEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  modifiers()
 

@@ -65,7 +65,7 @@
 
 CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bottomRow()
    METHOD  columnCount()

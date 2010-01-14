@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextLayout INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  beginLayout()
    METHOD  boundingRect()

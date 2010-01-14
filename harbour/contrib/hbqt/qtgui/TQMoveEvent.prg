@@ -65,7 +65,7 @@
 
 CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  oldPos()
    METHOD  pos()

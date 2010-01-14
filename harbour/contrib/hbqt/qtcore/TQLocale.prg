@@ -65,7 +65,7 @@
 
 CREATE CLASS QLocale INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  amText()
    METHOD  country()

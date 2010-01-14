@@ -65,7 +65,7 @@
 
 CREATE CLASS QProcess INHERIT HbQtObjectHandler, QIODevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  close()
    METHOD  closeReadChannel( nChannel )

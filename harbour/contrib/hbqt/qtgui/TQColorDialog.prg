@@ -65,7 +65,7 @@
 
 CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  currentColor()
    METHOD  open()

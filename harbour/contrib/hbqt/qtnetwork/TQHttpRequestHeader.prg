@@ -65,7 +65,7 @@
 
 CREATE CLASS QHttpRequestHeader INHERIT HbQtObjectHandler, QHttpHeader
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  majorVersion()
    METHOD  method()

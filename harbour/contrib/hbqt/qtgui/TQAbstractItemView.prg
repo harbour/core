@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, QAbstractScrollArea
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alternatingRowColors()
    METHOD  autoScrollMargin()

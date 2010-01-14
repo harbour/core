@@ -65,7 +65,7 @@
 
 CREATE CLASS QMovie INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  backgroundColor()
    METHOD  cacheMode()

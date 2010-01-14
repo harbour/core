@@ -65,7 +65,7 @@
 
 CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addValue( cKey, cValue )
    METHOD  allValues( cKey )

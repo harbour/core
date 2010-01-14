@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  maximum()
    METHOD  minimum()

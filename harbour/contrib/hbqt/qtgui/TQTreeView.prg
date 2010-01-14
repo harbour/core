@@ -65,7 +65,7 @@
 
 CREATE CLASS QTreeView INHERIT HbQtObjectHandler, QAbstractItemView
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  allColumnsShowFocus()
    METHOD  autoExpandDelay()

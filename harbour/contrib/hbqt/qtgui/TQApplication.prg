@@ -65,7 +65,7 @@
 
 CREATE CLASS QApplication INHERIT HbQtObjectHandler, QCoreApplication
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  commitData( pManager )
    METHOD  inputContext()

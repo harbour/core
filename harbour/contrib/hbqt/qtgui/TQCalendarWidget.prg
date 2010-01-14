@@ -65,7 +65,7 @@
 
 CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  dateEditAcceptDelay()
    METHOD  dateTextFormat( pDate )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QBrush INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  color()
    METHOD  isOpaque()

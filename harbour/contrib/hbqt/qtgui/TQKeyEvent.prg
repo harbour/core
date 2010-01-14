@@ -65,7 +65,7 @@
 
 CREATE CLASS QKeyEvent INHERIT HbQtObjectHandler, QInputEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  count()
    METHOD  isAutoRepeat()

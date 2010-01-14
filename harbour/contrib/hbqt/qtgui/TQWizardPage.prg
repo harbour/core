@@ -65,7 +65,7 @@
 
 CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  buttonText( nWhich )
    METHOD  cleanupPage()

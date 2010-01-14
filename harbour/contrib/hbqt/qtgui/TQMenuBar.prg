@@ -65,7 +65,7 @@
 
 CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  activeAction()
    METHOD  addAction( cText )

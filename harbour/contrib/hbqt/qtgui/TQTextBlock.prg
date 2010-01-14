@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextBlock INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  blockFormat()
    METHOD  blockFormatIndex()

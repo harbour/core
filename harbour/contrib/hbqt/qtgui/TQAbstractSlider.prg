@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractSlider INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  hasTracking()
    METHOD  invertedAppearance()

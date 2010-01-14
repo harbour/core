@@ -65,7 +65,7 @@
 
 CREATE CLASS QInputContext INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  filterEvent( pEvent )
    METHOD  font()

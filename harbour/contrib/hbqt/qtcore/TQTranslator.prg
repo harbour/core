@@ -65,7 +65,7 @@
 
 CREATE CLASS QTranslator INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isEmpty()
    METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QSize INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  height()
    METHOD  isEmpty()

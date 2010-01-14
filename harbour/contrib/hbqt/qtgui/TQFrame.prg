@@ -65,7 +65,7 @@
 
 CREATE CLASS QFrame INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  frameRect()
    METHOD  frameShadow()

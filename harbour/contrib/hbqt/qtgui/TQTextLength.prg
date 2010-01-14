@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextLength INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  rawValue()
    METHOD  type()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  gotFocus()
    METHOD  lostFocus()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QDragEnterEvent INHERIT HbQtObjectHandler, QDragMoveEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

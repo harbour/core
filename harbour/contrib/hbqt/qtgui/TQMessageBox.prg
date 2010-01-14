@@ -65,7 +65,7 @@
 
 CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addButton( pButton, nRole )
    METHOD  addButton_1( cText, nRole )

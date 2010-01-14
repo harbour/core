@@ -65,7 +65,7 @@
 
 CREATE CLASS QValidator INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  locale()
    METHOD  setLocale( pLocale )

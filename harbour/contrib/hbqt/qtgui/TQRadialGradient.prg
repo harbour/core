@@ -65,7 +65,7 @@
 
 CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, QGradient
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  center()
    METHOD  focalPoint()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QStandardItem INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  accessibleDescription()
    METHOD  accessibleText()

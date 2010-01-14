@@ -65,7 +65,7 @@
 
 CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, QAbstractButton
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  checkState()
    METHOD  isTristate()

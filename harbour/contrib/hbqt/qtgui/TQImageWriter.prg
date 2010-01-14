@@ -65,7 +65,7 @@
 
 CREATE CLASS QImageWriter INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  canWrite()
    METHOD  compression()

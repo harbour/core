@@ -65,7 +65,7 @@
 
 CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  contextMenu()
    METHOD  geometry()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, QTextObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  firstCursorPosition()
    METHOD  firstPosition()

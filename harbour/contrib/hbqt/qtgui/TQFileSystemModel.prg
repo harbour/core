@@ -65,7 +65,7 @@
 
 CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
    METHOD  fileIcon( pIndex )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QColor INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alpha()
    METHOD  alphaF()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  rect()
    METHOD  region()

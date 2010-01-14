@@ -65,7 +65,7 @@
 
 CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, QAbstractScrollArea
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )

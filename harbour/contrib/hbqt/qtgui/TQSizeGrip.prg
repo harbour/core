@@ -65,7 +65,7 @@
 
 CREATE CLASS QSizeGrip INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

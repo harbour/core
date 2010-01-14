@@ -65,7 +65,7 @@
 
 CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addTab( pPage, cLabel )
    METHOD  addTab_1( pPage, cIcon, cLabel )

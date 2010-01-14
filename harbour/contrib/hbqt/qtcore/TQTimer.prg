@@ -65,7 +65,7 @@
 
 CREATE CLASS QTimer INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  interval()
    METHOD  isActive()

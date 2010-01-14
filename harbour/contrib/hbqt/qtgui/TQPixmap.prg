@@ -65,7 +65,7 @@
 
 CREATE CLASS QPixmap INHERIT HbQtObjectHandler, QPaintDevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alphaChannel()
    METHOD  cacheKey()

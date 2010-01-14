@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextFormat INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  background()
    METHOD  boolProperty( nPropertyId )

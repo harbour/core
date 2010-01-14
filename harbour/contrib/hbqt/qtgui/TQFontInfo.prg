@@ -65,7 +65,7 @@
 
 CREATE CLASS QFontInfo INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bold()
    METHOD  exactMatch()

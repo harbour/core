@@ -65,7 +65,7 @@
 
 CREATE CLASS QTabBar INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addTab( cText )
    METHOD  count()

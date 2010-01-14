@@ -65,7 +65,7 @@
 
 CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  availableGeometry( nScreen )
    METHOD  availableGeometry_1( pWidget )

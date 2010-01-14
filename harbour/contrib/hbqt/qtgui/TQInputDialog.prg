@@ -65,7 +65,7 @@
 
 CREATE CLASS QInputDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cancelButtonText()
    METHOD  comboBoxItems()

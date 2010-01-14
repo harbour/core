@@ -65,7 +65,7 @@
 
 CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addPermanentWidget( pWidget, nStretch )
    METHOD  addWidget( pWidget, nStretch )

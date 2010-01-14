@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOption INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  initFrom( pWidget )
    METHOD  direction()

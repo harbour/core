@@ -65,7 +65,7 @@
 
 CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  mapping( nId )
    METHOD  mapping_1( cId )

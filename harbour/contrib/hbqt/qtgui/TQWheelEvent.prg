@@ -65,7 +65,7 @@
 
 CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, QInputEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  buttons()
    METHOD  delta()

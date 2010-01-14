@@ -65,7 +65,7 @@
 
 CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  exec()
    METHOD  open( pReceiver, pMember )

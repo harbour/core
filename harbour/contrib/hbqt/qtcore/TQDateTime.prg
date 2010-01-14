@@ -65,7 +65,7 @@
 
 CREATE CLASS QDateTime INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addDays( nNdays )
    METHOD  addMSecs( nMsecs )

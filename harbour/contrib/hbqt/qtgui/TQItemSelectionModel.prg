@@ -65,7 +65,7 @@
 
 CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  columnIntersectsSelection( nColumn, pParent )
    METHOD  currentIndex()

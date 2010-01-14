@@ -65,7 +65,7 @@
 
 CREATE CLASS QLabel INHERIT HbQtObjectHandler, QFrame
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  buddy()

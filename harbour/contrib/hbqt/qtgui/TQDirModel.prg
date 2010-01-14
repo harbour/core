@@ -65,7 +65,7 @@
 
 CREATE CLASS QDirModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  columnCount( pParent )
    METHOD  data( pIndex, nRole )

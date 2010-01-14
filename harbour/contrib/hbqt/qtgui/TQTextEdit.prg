@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, QAbstractScrollArea
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  acceptRichText()
    METHOD  alignment()

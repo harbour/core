@@ -65,7 +65,7 @@
 
 CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, QInputEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  globalPos()
    METHOD  globalX()

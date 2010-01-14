@@ -65,7 +65,7 @@
 
 CREATE CLASS QBitArray INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  at( nI )
    METHOD  clear()

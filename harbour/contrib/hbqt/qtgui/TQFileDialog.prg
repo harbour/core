@@ -65,7 +65,7 @@
 
 CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  acceptMode()
    METHOD  confirmOverwrite()

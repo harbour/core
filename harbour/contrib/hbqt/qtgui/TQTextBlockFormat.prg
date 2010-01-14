@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextBlockFormat INHERIT HbQtObjectHandler, QTextFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  bottomMargin()

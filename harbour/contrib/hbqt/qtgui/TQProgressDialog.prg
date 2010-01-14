@@ -65,7 +65,7 @@
 
 CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  autoClose()
    METHOD  autoReset()

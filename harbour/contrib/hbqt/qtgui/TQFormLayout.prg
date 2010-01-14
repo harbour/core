@@ -65,7 +65,7 @@
 
 CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, QLayout
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addRow( pLabel, pField )
    METHOD  addRow_1( pLabel, pField )

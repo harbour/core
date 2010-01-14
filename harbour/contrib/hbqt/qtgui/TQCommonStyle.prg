@@ -65,7 +65,7 @@
 
 CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, QStyle
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

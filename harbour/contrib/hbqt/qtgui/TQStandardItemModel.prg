@@ -65,7 +65,7 @@
 
 CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, QAbstractItemModeL
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  appendRow( pItem )
    METHOD  clear()

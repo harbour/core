@@ -65,7 +65,7 @@
 
 CREATE CLASS QRegExp INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cap( nNth )
    METHOD  capturedTexts()

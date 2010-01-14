@@ -65,7 +65,7 @@
 
 CREATE CLASS QTimeEdit INHERIT HbQtObjectHandler, QDateTimeEdit
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

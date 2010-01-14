@@ -65,7 +65,7 @@
 
 CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  showMessage( cMessage )
    METHOD  showMessage_1( cMessage, cType )

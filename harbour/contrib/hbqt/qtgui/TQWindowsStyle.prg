@@ -65,7 +65,7 @@
 
 CREATE CLASS QWindowsStyle INHERIT HbQtObjectHandler, QCommonStyle
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

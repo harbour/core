@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, QTextFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  border()
    METHOD  borderBrush()

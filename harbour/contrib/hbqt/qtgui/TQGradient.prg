@@ -65,7 +65,7 @@
 
 CREATE CLASS QGradient INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  coordinateMode()
    METHOD  setColorAt( nPosition, pColor )

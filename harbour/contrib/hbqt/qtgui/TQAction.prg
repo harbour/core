@@ -65,7 +65,7 @@
 
 CREATE CLASS QAction INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  actionGroup()
    METHOD  activate( nEvent )

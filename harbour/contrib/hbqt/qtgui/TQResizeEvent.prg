@@ -65,7 +65,7 @@
 
 CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  oldSize()
    METHOD  size()

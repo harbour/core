@@ -65,7 +65,7 @@
 
 CREATE CLASS QDial INHERIT HbQtObjectHandler, QAbstractSlider
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  notchSize()
    METHOD  notchTarget()

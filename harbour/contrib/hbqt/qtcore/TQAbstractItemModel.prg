@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractItemModel INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  buddy( pIndex )
    METHOD  canFetchMore( pParent )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  lineWidth()
    METHOD  midLineWidth()

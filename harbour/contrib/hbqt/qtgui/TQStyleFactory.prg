@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleFactory INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  create( cKey )
    METHOD  keys()

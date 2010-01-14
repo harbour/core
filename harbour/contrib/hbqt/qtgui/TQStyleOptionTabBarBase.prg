@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  selectedTabRect()
    METHOD  shape()

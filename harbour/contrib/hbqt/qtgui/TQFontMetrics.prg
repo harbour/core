@@ -65,7 +65,7 @@
 
 CREATE CLASS QFontMetrics INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  ascent()
    METHOD  averageCharWidth()

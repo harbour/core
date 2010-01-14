@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractSpinBox INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  buttonSymbols()

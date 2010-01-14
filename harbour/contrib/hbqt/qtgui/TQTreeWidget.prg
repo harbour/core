@@ -65,7 +65,7 @@
 
 CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, QTreeView
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addTopLevelItem( pItem )
    METHOD  closePersistentEditor( pItem, nColumn )

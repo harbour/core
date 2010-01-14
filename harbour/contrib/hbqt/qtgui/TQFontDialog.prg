@@ -65,7 +65,7 @@
 
 CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, QDialog
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  currentFont()
    METHOD  options()

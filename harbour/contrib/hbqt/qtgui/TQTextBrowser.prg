@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, QTextEdit
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  backwardHistoryCount()
    METHOD  clearHistory()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractTableModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  index( nRow, nColumn, pParent )
 

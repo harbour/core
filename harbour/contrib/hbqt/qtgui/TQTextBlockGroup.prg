@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextBlockGroup INHERIT HbQtObjectHandler, QTextObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

@@ -65,7 +65,7 @@
 
 CREATE CLASS QWidgetAction INHERIT HbQtObjectHandler, QAction
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  defaultWidget()
    METHOD  releaseWidget( pWidget )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QLayout INHERIT HbQtObjectHandler, QObject, QLayoutItem
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  activate()
    METHOD  addItem( pItem )

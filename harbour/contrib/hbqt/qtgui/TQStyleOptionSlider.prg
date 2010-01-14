@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  dialWrapping()
    METHOD  maximum()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  setWidget( pWidget )
    METHOD  widget()

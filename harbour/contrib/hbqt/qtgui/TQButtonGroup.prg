@@ -65,7 +65,7 @@
 
 CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addButton( pButton )
    METHOD  addButton_1( pButton, nId )

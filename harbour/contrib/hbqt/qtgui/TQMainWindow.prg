@@ -65,7 +65,7 @@
 
 CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addDockWidget( nArea, pDockwidget )
    METHOD  addDockWidget_1( nArea, pDockwidget, nOrientation )

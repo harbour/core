@@ -65,7 +65,7 @@
 
 CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bold( cFamily, cStyle )
    METHOD  families( nWritingSystem )

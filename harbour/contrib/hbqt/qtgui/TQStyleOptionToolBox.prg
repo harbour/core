@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  icon()
    METHOD  text()

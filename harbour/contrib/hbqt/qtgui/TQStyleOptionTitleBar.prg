@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  icon()
    METHOD  text()

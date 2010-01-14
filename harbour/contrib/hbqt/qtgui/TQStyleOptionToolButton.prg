@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionToolButton INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  arrowType()
    METHOD  features()

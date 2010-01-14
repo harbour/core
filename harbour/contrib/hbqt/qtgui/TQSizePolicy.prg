@@ -65,7 +65,7 @@
 
 CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  controlType()
    METHOD  expandingDirections()

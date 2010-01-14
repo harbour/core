@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, QTextFrameFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  cellPadding()

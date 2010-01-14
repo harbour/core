@@ -65,7 +65,7 @@
 
 CREATE CLASS QRectF INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  adjust( nDx1, nDy1, nDx2, nDy2 )
    METHOD  adjusted( nDx1, nDy1, nDx2, nDy2 )

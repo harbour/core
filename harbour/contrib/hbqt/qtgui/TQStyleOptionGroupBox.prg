@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionGroupBox INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  features()
    METHOD  lineWidth()

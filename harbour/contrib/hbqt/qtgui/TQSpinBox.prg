@@ -65,7 +65,7 @@
 
 CREATE CLASS QSpinBox INHERIT HbQtObjectHandler, QAbstractSpinBox
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cleanText()
    METHOD  maximum()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QPolygon INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  boundingRect()
    METHOD  containsPoint( pPoint, nFillRule )

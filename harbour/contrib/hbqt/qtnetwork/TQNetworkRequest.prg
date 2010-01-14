@@ -65,7 +65,7 @@
 
 CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  attribute( nCode, pDefaultValue )
    METHOD  hasRawHeader( pHeaderName )

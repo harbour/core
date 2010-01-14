@@ -65,7 +65,7 @@
 
 CREATE CLASS QTime INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addMSecs( nMs )
    METHOD  addSecs( nS )

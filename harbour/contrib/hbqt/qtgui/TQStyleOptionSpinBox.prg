@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  buttonSymbols()
    METHOD  frame()

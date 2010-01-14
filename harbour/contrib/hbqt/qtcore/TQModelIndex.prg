@@ -65,7 +65,7 @@
 
 CREATE CLASS QModelIndex INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  child( nRow, nColumn )
    METHOD  column()

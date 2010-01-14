@@ -65,7 +65,7 @@
 
 CREATE CLASS QEvent INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  accept()
    METHOD  ignore()

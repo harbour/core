@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isEmpty()
    METHOD  toHtml( pEncoding )

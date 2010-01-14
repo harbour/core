@@ -65,7 +65,7 @@
 
 CREATE CLASS QWidgetItem INHERIT HbQtObjectHandler, QLayoutItem
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isEmpty()
    METHOD  widget()

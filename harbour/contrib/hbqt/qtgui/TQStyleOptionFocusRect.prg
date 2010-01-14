@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  backgroundColor()
 

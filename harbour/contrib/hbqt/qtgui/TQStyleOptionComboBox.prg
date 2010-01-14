@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  currentIcon()
    METHOD  currentText()

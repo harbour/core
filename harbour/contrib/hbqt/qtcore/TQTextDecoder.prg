@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextDecoder INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  toUnicode( pChars, nLen )
 

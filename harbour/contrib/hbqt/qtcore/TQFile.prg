@@ -65,7 +65,7 @@
 
 CREATE CLASS QFile INHERIT HbQtObjectHandler, QIODevice
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  atEnd()
    METHOD  close()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractScrollArea INHERIT HbQtObjectHandler, QFrame
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addScrollBarWidget( pWidget, nAlignment )
    METHOD  cornerWidget()

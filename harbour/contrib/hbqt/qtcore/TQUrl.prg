@@ -65,7 +65,7 @@
 
 CREATE CLASS QUrl INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addEncodedQueryItem( pKey, pValue )
    METHOD  addQueryItem( cKey, cValue )

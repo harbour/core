@@ -65,7 +65,7 @@
 
 CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  icon( nType )
    METHOD  icon_1( pInfo )

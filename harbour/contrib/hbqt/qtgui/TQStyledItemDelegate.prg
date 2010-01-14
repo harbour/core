@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyledItemDelegate INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  displayText( pValue, pLocale )

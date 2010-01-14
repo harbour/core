@@ -65,7 +65,7 @@
 
 CREATE CLASS QIcon INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  actualSize( pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )

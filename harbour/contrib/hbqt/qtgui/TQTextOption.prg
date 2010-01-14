@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextOption INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  flags()

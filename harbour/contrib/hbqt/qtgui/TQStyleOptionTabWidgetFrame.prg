@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionTabWidgetFrame INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  leftCornerWidgetSize()
    METHOD  lineWidth()

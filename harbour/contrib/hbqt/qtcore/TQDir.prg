@@ -65,7 +65,7 @@
 
 CREATE CLASS QDir INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  absoluteFilePath( cFileName )
    METHOD  absolutePath()

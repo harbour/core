@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextItem INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  ascent()
    METHOD  descent()

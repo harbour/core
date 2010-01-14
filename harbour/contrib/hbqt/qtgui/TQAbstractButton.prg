@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractButton INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  autoExclusive()
    METHOD  autoRepeat()

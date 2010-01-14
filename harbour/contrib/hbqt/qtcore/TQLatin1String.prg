@@ -65,7 +65,7 @@
 
 CREATE CLASS QLatin1String INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  latin1()
 

@@ -65,7 +65,7 @@
 
 CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  toLatin1()
    METHOD  unicode()

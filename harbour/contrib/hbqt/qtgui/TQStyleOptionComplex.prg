@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionComplex INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  activeSubControls()
    METHOD  subControls()

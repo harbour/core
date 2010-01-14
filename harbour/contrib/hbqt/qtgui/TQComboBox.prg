@@ -65,7 +65,7 @@
 
 CREATE CLASS QComboBox INHERIT HbQtObjectHandler, QWidget
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addItem( cText, pUserData )
    METHOD  addItem_1( cIcon, cText, pUserData )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, QAbstractSpinBox
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  calendarPopup()
    METHOD  calendarWidget()

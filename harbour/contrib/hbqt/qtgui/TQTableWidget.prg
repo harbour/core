@@ -65,7 +65,7 @@
 
 CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, QTableView
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cellWidget( nRow, nColumn )
    METHOD  closePersistentEditor( pItem )

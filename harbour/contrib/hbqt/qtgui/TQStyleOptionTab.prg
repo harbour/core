@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionTab INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cornerWidgets()
    METHOD  icon()

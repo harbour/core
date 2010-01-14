@@ -65,7 +65,7 @@
 
 CREATE CLASS QToolBox INHERIT HbQtObjectHandler, QFrame
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addItem( pWidget, cIconSet, cText )
    METHOD  addItem_1( pW, cText )

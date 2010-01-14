@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextCodec INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  canEncode( nCh )
    METHOD  canEncode_1( cS )

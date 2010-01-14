@@ -65,7 +65,7 @@
 
 CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, QFrame
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  checkOverflow( nNum )
    METHOD  checkOverflow_1( nNum )

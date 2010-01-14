@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextImageFormat INHERIT HbQtObjectHandler, QTextCharFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  height()
    METHOD  isValid()

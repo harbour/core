@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, QAbstractItemModel
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  mapFromSource( pSourceIndex )
    METHOD  mapSelectionFromSource( pSourceSelection )

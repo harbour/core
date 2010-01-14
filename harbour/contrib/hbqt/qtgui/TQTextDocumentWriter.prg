@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  codec()
    METHOD  device()

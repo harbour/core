@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addResource( nType, pName, pResource )
    METHOD  adjustSize()

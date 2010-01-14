@@ -65,7 +65,7 @@
 
 CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, QGradient
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  angle()
    METHOD  center()

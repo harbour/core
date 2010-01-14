@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionButton INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  features()
    METHOD  icon()

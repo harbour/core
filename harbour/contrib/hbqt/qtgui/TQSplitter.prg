@@ -65,7 +65,7 @@
 
 CREATE CLASS QSplitter INHERIT HbQtObjectHandler, QFrame
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  addWidget( pWidget )
    METHOD  childrenCollapsible()

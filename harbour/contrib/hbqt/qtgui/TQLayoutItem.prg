@@ -65,7 +65,7 @@
 
 CREATE CLASS QLayoutItem INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  alignment()
    METHOD  controlTypes()

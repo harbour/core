@@ -65,7 +65,7 @@
 
 CREATE CLASS QKeySequence INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  count()
    METHOD  isEmpty()

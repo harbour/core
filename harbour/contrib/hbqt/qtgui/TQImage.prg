@@ -65,7 +65,7 @@
 
 CREATE CLASS QImage INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  allGray()
    METHOD  alphaChannel()

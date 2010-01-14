@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, QStyleOptionComplex
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  corner()
 

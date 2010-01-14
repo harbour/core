@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyle INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
    METHOD  drawComplexControl( nControl, pOption, pPainter, pWidget )

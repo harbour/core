@@ -65,7 +65,7 @@
 
 CREATE CLASS QPen INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  brush()
    METHOD  capStyle()

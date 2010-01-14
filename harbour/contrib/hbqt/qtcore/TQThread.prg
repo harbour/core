@@ -65,7 +65,7 @@
 
 CREATE CLASS QThread INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  exit( nReturnCode )
    METHOD  isFinished()

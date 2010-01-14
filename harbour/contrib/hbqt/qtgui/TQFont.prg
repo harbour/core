@@ -65,7 +65,7 @@
 
 CREATE CLASS QFont INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  bold()
    METHOD  capitalization()

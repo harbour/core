@@ -65,7 +65,7 @@
 
 CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, QInputEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  button()
    METHOD  buttons()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  anchorAt( pPosition )
    METHOD  blockBoundingRect( pBlock )

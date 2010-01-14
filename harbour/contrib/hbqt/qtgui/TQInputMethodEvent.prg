@@ -65,7 +65,7 @@
 
 CREATE CLASS QInputMethodEvent INHERIT HbQtObjectHandler, QEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  commitString()
    METHOD  preeditString()

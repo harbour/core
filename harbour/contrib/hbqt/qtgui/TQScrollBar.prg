@@ -65,7 +65,7 @@
 
 CREATE CLASS QScrollBar INHERIT HbQtObjectHandler, QAbstractSlider
 
-   METHOD  new()
+   METHOD  new( ... )
 
 
    ENDCLASS

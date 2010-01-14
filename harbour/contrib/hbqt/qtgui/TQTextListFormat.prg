@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, QTextFormat
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  indent()
    METHOD  isValid()

@@ -9,45 +9,45 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbxbp
 
 PRG_SOURCES := \
-   xbpgeneric.prg \
-   xbpdialog.prg \
-   xbpwindow.prg \
-   xbpparthandler.prg \
-   xbpmenubar.prg \
-   xbptoolbar.prg \
-   xbppushbutton.prg \
-   xbpdataref.prg \
-   xbpcheckbox.prg \
    xbp3state.prg \
-   xbpradiobutton.prg \
-   xbptabpage.prg \
-   xbplistbox.prg \
-   xbpstatusbar.prg \
-   xbpscrollbar.prg \
-   xbpsle.prg \
-   xbpmle.prg \
-   xbpspinbutton.prg \
-   xbpcombobox.prg \
-   xbptreeview.prg \
-   xbpstyle.prg \
    xbpappevent.prg \
-   xbpstatic.prg \
-   xbphtmlviewer.prg \
+   xbpbitmap.prg \
+   xbpbrowse.prg \
+   xbpcheckbox.prg \
+   xbpcombobox.prg \
+   xbpdataref.prg \
+   xbpdialog.prg \
    xbpfiledialog.prg \
    xbpfontdialog.prg \
-   xbpbitmap.prg \
-   xbprtf.prg \
+   xbpgeneric.prg \
+   xbphtmlviewer.prg \
+   xbplistbox.prg \
+   xbpmenubar.prg \
+   xbpmle.prg \
+   xbpparthandler.prg \
    xbppresspace.prg \
-   xbpprinter.prg \
    xbpprintdialog.prg \
-   xbpbrowse.prg \
+   xbpprinter.prg \
+   xbppushbutton.prg \
    xbpqtuiloader.prg \
+   xbpradiobutton.prg \
+   xbprtf.prg \
+   xbpscrollbar.prg \
+   xbpsle.prg \
+   xbpspinbutton.prg \
+   xbpstatic.prg \
+   xbpstatusbar.prg \
+   xbpstyle.prg \
+   xbptabpage.prg \
+   xbptoolbar.prg \
+   xbptreeview.prg \
+   xbpwindow.prg \
 
 PRG_HEADERS := \
-   xbp.ch \
-   xbpdev.ch \
    appevent.ch \
    gra.ch \
+   xbp.ch \
+   xbpdev.ch \
 
 # Try to be in sync with hbqt, but not too hard, since this
 # lib doesn't need QT external component directly.

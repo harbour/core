@@ -65,7 +65,7 @@
 
 CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, QDropEvent
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  accept( pRectangle )
    METHOD  accept_1()

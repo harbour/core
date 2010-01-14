@@ -65,7 +65,7 @@
 
 CREATE CLASS QFileInfo INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  absoluteDir()
    METHOD  absoluteFilePath()

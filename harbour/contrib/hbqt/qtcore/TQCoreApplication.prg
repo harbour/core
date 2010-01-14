@@ -65,7 +65,7 @@
 
 CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, QObject
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  notify( pReceiver, pEvent )
    METHOD  addLibraryPath( cPath )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QRegion INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  boundingRect()
    METHOD  contains( pP )

@@ -65,7 +65,7 @@
 
 CREATE CLASS QSound INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  fileName()
    METHOD  isFinished()

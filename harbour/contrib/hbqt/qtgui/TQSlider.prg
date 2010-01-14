@@ -65,7 +65,7 @@
 
 CREATE CLASS QSlider INHERIT HbQtObjectHandler, QAbstractSlider
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  setTickInterval( nTi )
    METHOD  setTickPosition( nPosition )

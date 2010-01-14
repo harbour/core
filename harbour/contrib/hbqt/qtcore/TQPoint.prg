@@ -65,7 +65,7 @@
 
 CREATE CLASS QPoint INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  isNull()
    METHOD  manhattanLength()

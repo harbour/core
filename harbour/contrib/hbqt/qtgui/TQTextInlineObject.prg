@@ -65,7 +65,7 @@
 
 CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  ascent()
    METHOD  descent()

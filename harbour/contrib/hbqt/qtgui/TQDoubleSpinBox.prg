@@ -65,7 +65,7 @@
 
 CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, QAbstractSpinBox
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  cleanText()
    METHOD  decimals()

@@ -65,7 +65,7 @@
 
 CREATE CLASS QStyleOptionViewItem INHERIT HbQtObjectHandler, QStyleOption
 
-   METHOD  new()
+   METHOD  new( ... )
 
    METHOD  decorationAlignment()
    METHOD  decorationPosition()
