@@ -1032,11 +1032,18 @@ FUNCTION hbide_expandProjects( oIde )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_buildLinesLabel( nFrom, nTimes, nW )
-   LOCAL i, s := ""
+FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
+   LOCAL n, i, s := ""
 
-   FOR i := 1 TO nTimes
-      s += padl( hb_ntos( nFrom++ ), nW ) + CRLF
+   n := min( nMax, nTo - nFrom  )
+
+   FOR i := 0 TO n
+      IF ( ( nFrom + i ) % 10 ) == 0
+         s += "<font color = red>" + padl( hb_ntos( nFrom + i ), nW ) + "</font><br>"
+      ELSE
+         //s += padl( hb_ntos( nFrom + i ), nW ) + CRLF
+         s += padl( hb_ntos( nFrom + i ), nW ) + "<br>"
+      ENDIF
    NEXT
 
    RETURN s

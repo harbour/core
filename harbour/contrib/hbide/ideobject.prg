@@ -76,6 +76,8 @@ CLASS IdeObject
    ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
 
    DATA   xD
+   DATA   xD1
+   DATA   xD2
 
    DATA   oIde
    DATA   oUI

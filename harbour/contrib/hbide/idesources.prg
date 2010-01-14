@@ -246,28 +246,28 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
-   LOCAL lSave, n, oEdit
+   LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
 
-   IF !empty( oEdit := ::oEM:getEditorByTabPosition( nTab ) )
+   IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
       lCanceled := .F.
 
-      IF !( oEdit:qDocument:isModified() )
+      IF !( oEditor:qDocument:isModified() )
          * File has not changed, ignore the question to User
          lSave := .F.
 
       ELSEIF lCanCancel
-         n := hbide_getYesNoCancel( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         n := hbide_getYesNoCancel( oEditor:oTab:Caption, "Has been modified, save this source?", 'Save?' )
          IF ( lCanceled := ( n == QMessageBox_Cancel ) )
             RETURN .F.
          ENDIF
          lSave := ( n == QMessageBox_Yes    )
 
       ELSE
-         lSave := hbide_getYesNo( oEdit:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         lSave := hbide_getYesNo( oEditor:oTab:Caption, "Has been modified, save this source?", 'Save?' )
 
       ENDIF
 
@@ -277,7 +277,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
          ENDIF
       ENDIF
 
-      oEdit:removeTabPage()
+      oEditor:destroy()
       ::oIde:updateTitleBar()
    ENDIF
 
