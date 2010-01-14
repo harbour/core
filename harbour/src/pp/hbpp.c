@@ -78,7 +78,7 @@ static int hb_pp_writeTokenCount( PHB_PP_TOKEN pToken )
 }
 
 static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
-                              const char * szName, int iToken, BOOL fLast )
+                              const char * szName, int iToken, HB_BOOL fLast )
 {
    while( pToken )
    {
@@ -121,7 +121,7 @@ static void hb_pp_writeTokenList( FILE * fout, PHB_PP_TOKEN pTokenLst, const cha
    {
       fprintf( fout, "static HB_PP_TOKEN %s[ %d ] = {\n",
                szName, iTokens );
-      hb_pp_writeToken( fout, pTokenLst, szName, 0, TRUE );
+      hb_pp_writeToken( fout, pTokenLst, szName, 0, HB_TRUE );
       fprintf( fout, "};\n" );
    }
 }
@@ -656,7 +656,7 @@ int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
    char * szStdCh = NULL, * szLogFile = NULL, * szInclude;
-   BOOL fWrite = FALSE, fChgLog = FALSE;
+   HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE;
    char * szChangeLogID = NULL, * szLastEntry = NULL;
    int iSVNID = 0, iResult = 0, iQuiet = 0, i;
    PHB_PP_STATE pState;
@@ -707,12 +707,12 @@ int main( int argc, char * argv[] )
                   if( argv[i][2] )
                      szFile = NULL;
                   else
-                     fWrite = TRUE;
+                     fWrite = HB_TRUE;
                   break;
 
                case 'c':
                case 'C':
-                  fChgLog = TRUE;
+                  fChgLog = HB_TRUE;
                   if( argv[i][2] )
                      szLogFile = argv[i] + 2;
                   break;
@@ -720,7 +720,7 @@ int main( int argc, char * argv[] )
                case 'i':
                case 'I':
                   if( argv[i][2] )
-                     hb_pp_addSearchPath( pState, argv[i] + 2, FALSE );
+                     hb_pp_addSearchPath( pState, argv[i] + 2, HB_FALSE );
                   else
                      szFile = NULL;
                   break;
@@ -767,7 +767,7 @@ int main( int argc, char * argv[] )
    if( szFile )
    {
       if( !szRuleFile && !szVerFile )
-         fWrite = TRUE;
+         fWrite = HB_TRUE;
 
       hb_pp_init( pState, iQuiet != 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
 
@@ -775,14 +775,14 @@ int main( int argc, char * argv[] )
       if( szInclude )
       {
          if( szInclude[0] )
-            hb_pp_addSearchPath( pState, szInclude, FALSE );
+            hb_pp_addSearchPath( pState, szInclude, HB_FALSE );
          hb_xfree( szInclude );
       }
 
       if( szStdCh )
          hb_pp_readRules( pState, szStdCh );
 
-      if( hb_pp_inFile( pState, szFile, TRUE, NULL, TRUE ) )
+      if( hb_pp_inFile( pState, szFile, HB_TRUE, NULL, HB_TRUE ) )
       {
          if( fWrite )
          {

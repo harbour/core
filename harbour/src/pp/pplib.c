@@ -89,8 +89,8 @@ static void hb_pp_Disp( void * cargo, const char * szMessage )
    HB_SYMBOL_UNUSED( szMessage );
 }
 
-static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
-                                  int * piValue, BOOL fSet )
+static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
+                                     int * piValue, HB_BOOL fSet )
 {
    /* ignore all compiler switches */
    HB_SYMBOL_UNUSED( cargo );
@@ -98,7 +98,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
    HB_SYMBOL_UNUSED( piValue );
    HB_SYMBOL_UNUSED( fSet );
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 /* PP destructor */
@@ -123,13 +123,13 @@ static const HB_GC_FUNCS s_gcPPFuncs =
 
 static void hb_pp_StdRules( PHB_ITEM ppItem )
 {
-   static BOOL s_fInit = TRUE;
+   static HB_BOOL s_fInit = HB_TRUE;
    static PHB_DYNS s_pDynSym;
 
    if( s_fInit )
    {
       s_pDynSym = hb_dynsymFind( "__PP_STDRULES" );
-      s_fInit = FALSE;
+      s_fInit = HB_FALSE;
    }
 
    if( s_pDynSym )
@@ -165,7 +165,7 @@ HB_FUNC( __PP_INIT )
    if( pState )
    {
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
-      BOOL fArchDefs = !ISLOG( 3 ) || hb_parl( 3 );
+      HB_BOOL fArchDefs = !ISLOG( 3 ) || hb_parl( 3 );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAllocate( sizeof( PHB_PP_STATE ),
@@ -173,12 +173,12 @@ HB_FUNC( __PP_INIT )
       * pStatePtr = pState;
       ppItem = hb_itemPutPtrGC( NULL, ( void * ) pStatePtr );
 
-      hb_pp_init( pState, TRUE, 0, NULL, NULL, NULL,
+      hb_pp_init( pState, HB_TRUE, 0, NULL, NULL, NULL,
                   hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL,
                   hb_pp_CompilerSwitch );
 
       if( szPath )
-         hb_pp_addSearchPath( pState, szPath, TRUE );
+         hb_pp_addSearchPath( pState, szPath, HB_TRUE );
 
       if( !szStdCh )
          hb_pp_StdRules( ppItem );
@@ -253,11 +253,11 @@ HB_FUNC( __PP_ADDRULE )
          }
          while( hb_pp_nextLine( pState, NULL ) );
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          return;
       }
    }
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 /*
