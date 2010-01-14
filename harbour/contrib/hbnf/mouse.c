@@ -119,24 +119,12 @@ HB_FUNC( _MGET_MVERSION )
    {
       PHB_ITEM pArray = hb_itemArrayNew( 4 );
 
-      PHB_ITEM pMinor = hb_itemPutNI( NULL, iMinor );
-      PHB_ITEM pType = hb_itemPutNI( NULL, iType );
-      PHB_ITEM pIRQ = hb_itemPutNI( NULL, iIRQ );
-      PHB_ITEM pMajor = hb_itemPutNI( NULL, iMajor );
+      hb_arraySetNI( pArray, 1, iMinor );
+      hb_arraySetNI( pArray, 2, iType );
+      hb_arraySetNI( pArray, 3, iIRQ );
+      hb_arraySetNI( pArray, 4, iMajor );
 
-      hb_itemArrayPut( pArray, 1, pMinor );
-      hb_itemArrayPut( pArray, 2, pType );
-      hb_itemArrayPut( pArray, 3, pIRQ );
-      hb_itemArrayPut( pArray, 4, pMajor );
-
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pMajor );
-      hb_itemRelease( pIRQ );
-      hb_itemRelease( pType );
-      hb_itemRelease( pMinor );
-
-      hb_itemRelease( pArray );
+      hb_itemReturnRelease( pArray );
    }
 }
 
@@ -244,17 +232,11 @@ HB_FUNC( _MGET_MICS )
 #endif
    {
       PHB_ITEM pArray = hb_itemArrayNew( 2 );
-      PHB_ITEM pHori = hb_itemPutNI( NULL, iHori );
-      PHB_ITEM pVert = hb_itemPutNI( NULL, iVert );
 
-      hb_itemArrayPut( pArray, 1, pHori );
-      hb_itemArrayPut( pArray, 2, pVert );
+      hb_arraySetNI( pArray, 1, iHori );
+      hb_arraySetNI( pArray, 2, iVert );
 
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pArray );
-      hb_itemRelease( pHori );
-      hb_itemRelease( pVert );
+      hb_itemReturnRelease( pArray );
    }
 }
 
@@ -321,17 +303,11 @@ HB_FUNC( _MSE_GETPOS )
 #endif
    {
       PHB_ITEM pArray = hb_itemArrayNew( 2 );
-      PHB_ITEM pHori = hb_itemPutNI( NULL, iHori );
-      PHB_ITEM pVert = hb_itemPutNI( NULL, iVert );
 
-      hb_itemArrayPut( pArray, 1, pHori );
-      hb_itemArrayPut( pArray, 2, pVert );
+      hb_arraySetNI( pArray, 1, iHori );
+      hb_arraySetNI( pArray, 2, iVert );
 
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pArray );
-      hb_itemRelease( pHori );
-      hb_itemRelease( pVert );
+      hb_itemReturnRelease( pArray );
    }
 }
 
@@ -533,19 +509,10 @@ HB_FUNC( _M_MGETCOORD )
    {
       PHB_ITEM pArray = hb_itemArrayNew( 3 );
 
-      PHB_ITEM pnY = hb_itemPutNI( NULL, inY );
-      PHB_ITEM pnX = hb_itemPutNI( NULL, inX );
-      PHB_ITEM pnButton = hb_itemPutNI( NULL, inButton );
+      hb_arraySetNI( pArray, 1, inX );
+      hb_arraySetNI( pArray, 2, inY );
+      hb_arraySetNI( pArray, 3, inButton );
 
-      hb_itemArrayPut( pArray, 1, pnX );
-      hb_itemArrayPut( pArray, 2, pnY );
-      hb_itemArrayPut( pArray, 3, pnButton );
-
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pArray );
-      hb_itemRelease( pnY );
-      hb_itemRelease( pnX );
-      hb_itemRelease( pnButton );
+      hb_itemReturnRelease( pArray );
    }
 }

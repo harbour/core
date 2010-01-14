@@ -375,18 +375,15 @@ HB_FUNC( WIN_GETCLIENTRECT )
 {
    RECT     rc = { 0 };
    PHB_ITEM  info = hb_itemArrayNew(4);
-   PHB_ITEM  temp = hb_itemNew(NULL);
 
    GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, rc.left   ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, rc.top    ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, rc.right  ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, rc.bottom ) );
+   hb_arraySetNI( info, 1, rc.left   );
+   hb_arraySetNI( info, 2, rc.top    );
+   hb_arraySetNI( info, 3, rc.right  );
+   hb_arraySetNI( info, 4, rc.bottom );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 /*-------------------------------------------------------------------
@@ -813,44 +810,27 @@ HB_FUNC( GETBITMAPSIZE )
 {
    BITMAP  bitmap;
    PHB_ITEM aMetr = hb_itemArrayNew( 3 );
-   PHB_ITEM temp;
 
    GetObject( (HBITMAP) HB_PARHANDLE( 1 ), sizeof( BITMAP ), ( LPVOID ) &bitmap );
 
-   temp = hb_itemPutNL( NULL, bitmap.bmWidth );
-   hb_itemArrayPut( aMetr, 1, temp );
-   hb_itemRelease( temp );
+   hb_arraySetNL( aMetr, 1, bitmap.bmWidth );
+   hb_arraySetNL( aMetr, 2, bitmap.bmHeight );
+   hb_arraySetNL( aMetr, 3, bitmap.bmBitsPixel );
 
-   temp = hb_itemPutNL( NULL, bitmap.bmHeight );
-   hb_itemArrayPut( aMetr, 2, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, bitmap.bmBitsPixel );
-   hb_itemArrayPut( aMetr, 3, temp );
-   hb_itemRelease( temp );
-
-   hb_itemReturn( aMetr );
-   hb_itemRelease( aMetr );
+   hb_itemReturnRelease( aMetr );
 }
 
 HB_FUNC( GETICONSIZE )
 {
    ICONINFO iinfo;
    PHB_ITEM aMetr = hb_itemArrayNew( 2 );
-   PHB_ITEM temp;
 
    GetIconInfo( (HICON) HB_PARHANDLE( 1 ), &iinfo );
 
-   temp = hb_itemPutNL( NULL, iinfo.xHotspot * 2 );
-   hb_itemArrayPut( aMetr, 1, temp );
-   hb_itemRelease( temp );
+   hb_arraySetNL( aMetr, 1, iinfo.xHotspot * 2 );
+   hb_arraySetNL( aMetr, 2, iinfo.yHotspot * 2 );
 
-   temp = hb_itemPutNL( NULL, iinfo.yHotspot * 2 );
-   hb_itemArrayPut( aMetr, 2, temp );
-   hb_itemRelease( temp );
-
-   hb_itemReturn( aMetr );
-   hb_itemRelease( aMetr );
+   hb_itemReturnRelease( aMetr );
 }
 
 
@@ -1182,7 +1162,7 @@ HB_FUNC( SELECTFONT )
    HFONT hfont;
    PHB_ITEM pObj = ( ISNIL(1) )? NULL:hb_param( 1, HB_IT_OBJECT );
    //PHB_ITEM temp1;
-   PHB_ITEM aMetr = hb_itemArrayNew( 9 ),temp;
+   PHB_ITEM aMetr = hb_itemArrayNew( 9 );
 
    cf.lStructSize = sizeof(CHOOSEFONT);
    cf.hwndOwner = (HWND)NULL;
@@ -1215,44 +1195,18 @@ HB_FUNC( SELECTFONT )
    /* that font.                                  */
 
    hfont = CreateFontIndirect(cf.lpLogFont);
-   temp = hb_itemPutNL( NULL, (LONG) hfont );
-   hb_itemArrayPut( aMetr, 1, temp );
-   hb_itemRelease( temp );
 
-   temp = hb_itemPutC( NULL, lf.lfFaceName );
-   hb_itemArrayPut( aMetr, 2, temp );
-   hb_itemRelease( temp );
+   hb_arraySetNInt( aMetr, 1, ( HB_PTRDIFF ) hfont );
+   hb_arraySetC(  aMetr, 2, lf.lfFaceName );
+   hb_arraySetNL( aMetr, 3, lf.lfWidth );
+   hb_arraySetNL( aMetr, 4, lf.lfHeight );
+   hb_arraySetNL( aMetr, 5, lf.lfWeight );
+   hb_arraySetNI( aMetr, 6, lf.lfCharSet );
+   hb_arraySetNI( aMetr, 7, lf.lfItalic );
+   hb_arraySetNI( aMetr, 8, lf.lfUnderline );
+   hb_arraySetNI( aMetr, 9, lf.lfStrikeOut );
 
-   temp = hb_itemPutNL( NULL, lf.lfWidth );
-   hb_itemArrayPut( aMetr, 3, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, lf.lfHeight );
-   hb_itemArrayPut( aMetr, 4, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, lf.lfWeight );
-   hb_itemArrayPut( aMetr, 5, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNI( NULL, lf.lfCharSet );
-   hb_itemArrayPut( aMetr, 6, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNI( NULL, lf.lfItalic );
-   hb_itemArrayPut( aMetr, 7, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNI( NULL, lf.lfUnderline );
-   hb_itemArrayPut( aMetr, 8, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNI( NULL, lf.lfStrikeOut );
-   hb_itemArrayPut( aMetr, 9, temp );
-   hb_itemRelease( temp );
-
-   hb_itemReturn( aMetr );
-   hb_itemRelease( aMetr );
+   hb_itemReturnRelease( aMetr );
 
 }
 
@@ -1573,16 +1527,13 @@ HB_FUNC( WVW_GETPAINTRECT )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    RECT   rPaintRect = pWindowData->rPaintPending;
    PHB_ITEM  info = hb_itemArrayNew(4);
-   PHB_ITEM  temp = hb_itemNew(NULL);
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, rPaintRect.top ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, rPaintRect.left ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, rPaintRect.bottom  ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, rPaintRect.right  ) );
+   hb_arraySetNI( info, 1, rPaintRect.top );
+   hb_arraySetNI( info, 2, rPaintRect.left );
+   hb_arraySetNI( info, 3, rPaintRect.bottom  );
+   hb_arraySetNI( info, 4, rPaintRect.right  );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 /*-------------------------------------------------------------------*/
@@ -2297,16 +2248,13 @@ HB_FUNC( WVW_GETCURSORPOS )
  {
     POINT    xy = { 0 };
     PHB_ITEM  info = hb_itemArrayNew(2);
-    PHB_ITEM  temp = hb_itemNew(NULL);
 
     GetCursorPos( &xy );
 
-    hb_arraySet( info, 1, hb_itemPutNI( temp, xy.x ) );
-    hb_arraySet( info, 2, hb_itemPutNI( temp, xy.y ) );
+    hb_arraySetNI( info, 1, xy.x );
+    hb_arraySetNI( info, 2, xy.y );
 
-    hb_itemRelease( temp );
-    hb_itemReturn( info );
-    hb_itemRelease( info );
+    hb_itemReturnRelease( info );
   }
 
 /*-------------------------------------------------------------------*/
@@ -2620,7 +2568,6 @@ HB_FUNC( WVW_SAVESCREEN )
    POINT    xy = { 0 };
    int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
    PHB_ITEM  info = hb_itemArrayNew(3);
-   PHB_ITEM  temp = hb_itemNew(NULL);
 
    USHORT   usTop    = ( USHORT )hb_parni( 2 ),
             usLeft   = ( USHORT )hb_parni( 3 ),
@@ -2649,14 +2596,11 @@ HB_FUNC( WVW_SAVESCREEN )
    BitBlt( pWindowData->hCompDC, 0, 0, iWidth, iHeight, pWindowData->hdc, iLeft, iTop, SRCCOPY );
    SelectObject( pWindowData->hCompDC, oldBmp );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, iWidth ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, iHeight ) );
-   hb_arraySet( info, 3, hb_itemPutNL( temp, ( ULONG ) hBmp ) );
-   hb_itemRelease( temp );
+   hb_arraySetNI( info, 1, iWidth );
+   hb_arraySetNI( info, 2, iHeight );
+   hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
 
-   hb_itemReturn( info );
-   hb_itemRelease( info );
-
+   hb_itemReturnRelease( info );
 }
 
 /*-------------------------------------------------------------------*/

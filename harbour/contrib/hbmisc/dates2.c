@@ -139,13 +139,9 @@ HB_FUNC( AMONTHS )
    int i;
 
    for( i = 0; i < 12; i++ )
-   {
-      PHB_ITEM pString = hb_itemPutC( NULL, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
-      hb_itemArrayPut( pReturn, i+1, pString );
-      hb_itemRelease( pString );
-   }
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+      hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
+
+   hb_itemReturnRelease( pReturn );
 }
 
 HB_FUNC( ADAYS )
@@ -154,13 +150,9 @@ HB_FUNC( ADAYS )
    int i;
 
    for( i = 0; i < 7; i++ )
-   {
-      PHB_ITEM pString = hb_itemPutC( NULL, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
-      hb_itemArrayPut( pReturn, i + 1, pString );
-      hb_itemRelease( pString );
-   }
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+      hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
+
+   hb_itemReturnRelease( pReturn );
 }
 
 HB_FUNC( ISLEAPYEAR )

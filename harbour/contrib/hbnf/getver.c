@@ -175,19 +175,11 @@ HB_FUNC( _FT_TEMPFIL )
 #endif
    {
       PHB_ITEM pArray = hb_itemArrayNew( 3 );
-      PHB_ITEM pAx = hb_itemPutNI( NULL, nax );
-      PHB_ITEM pDs = hb_itemPutC( NULL, cPath );
-      PHB_ITEM pFlags = hb_itemPutNI( NULL, iflags );
 
-      hb_itemArrayPut( pArray, 1, pAx );
-      hb_itemArrayPut( pArray, 2, pDs );
-      hb_itemArrayPut( pArray, 3, pFlags);
+      hb_arraySetNI( pArray, 1, nax );
+      hb_arraySetC(  pArray, 2, cPath );
+      hb_arraySetNI( pArray, 3, iflags );
 
-      hb_itemReturn( pArray );
-
-      hb_itemRelease( pAx);
-      hb_itemRelease( pDs );
-      hb_itemRelease( pFlags );
-      hb_itemRelease( pArray );
+      hb_itemReturnRelease( pArray );
    }
 }

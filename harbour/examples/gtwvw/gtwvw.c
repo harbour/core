@@ -9270,7 +9270,6 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = s_pWvwData->s_pWindows[usWinNum];
    PHB_ITEM  paXY = hb_itemArrayNew(2);
-   PHB_ITEM  ptemp = hb_itemNew(NULL);
    POINT    xy = { 0 };
    USHORT   usTop    = ( USHORT ) hb_parni( 2 ),
             usLeft   = ( USHORT )hb_parni( 3 );
@@ -9284,12 +9283,10 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
 
    ClientToScreen( pWindowData->hWnd, &xy );
 
-   hb_arraySet( paXY, 1, hb_itemPutNL( ptemp, xy.x ) );
-   hb_arraySet( paXY, 2, hb_itemPutNL( ptemp, xy.y ) );
+   hb_arraySetNL( paXY, 1, xy.x );
+   hb_arraySetNL( paXY, 2, xy.y );
 
-   hb_itemRelease( ptemp );
-   hb_itemReturn( paXY );
-   hb_itemRelease( paXY );
+   hb_itemReturnRelease( paXY );
 }
 
 /*-------------------------------------------------------------------*/
@@ -9398,17 +9395,14 @@ HB_FUNC( WVW_GETXYFROMROWCOL )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    PHB_ITEM  paXY = hb_itemArrayNew(2);
-   PHB_ITEM  ptemp = hb_itemNew(NULL);
    POINT     xy = { 0 };
 
    xy   = hb_gt_wvwGetXYFromColRow( s_pWvwData->s_pWindows[ usWinNum ], (USHORT) hb_parni( 3 ), (USHORT) hb_parni( 2 ) );
 
-   hb_arraySet( paXY, 1, hb_itemPutNL( ptemp, xy.x ) );
-   hb_arraySet( paXY, 2, hb_itemPutNL( ptemp, xy.y ) );
+   hb_arraySetNL( paXY, 1, xy.x );
+   hb_arraySetNL( paXY, 2, xy.y );
 
-   hb_itemRelease( ptemp );
-   hb_itemReturn( paXY );
-   hb_itemRelease( paXY );
+   hb_itemReturnRelease( paXY );
 }
 
 /*-------------------------------------------------------------------*/
@@ -9420,17 +9414,14 @@ HB_FUNC( WVW_GETROWCOLFROMXY )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    PHB_ITEM  paRowCol = hb_itemArrayNew(2);
-   PHB_ITEM  ptemp = hb_itemNew(NULL);
    POINT    RowCol;
 
    RowCol   = hb_gt_wvwGetColRowFromXY( s_pWvwData->s_pWindows[ usWinNum ], (USHORT)hb_parni( 2 ), (USHORT)hb_parni( 3 ));
 
-   hb_arraySet( paRowCol, 1, hb_itemPutNL( ptemp, RowCol.y ) );
-   hb_arraySet( paRowCol, 2, hb_itemPutNL( ptemp, RowCol.x ) );
+   hb_arraySetNL( paRowCol, 1, RowCol.y );
+   hb_arraySetNL( paRowCol, 2, RowCol.x );
 
-   hb_itemRelease( ptemp );
-   hb_itemReturn( paRowCol );
-   hb_itemRelease( paRowCol );
+   hb_itemReturnRelease( paRowCol );
 }
 
 /*-------------------------------------------------------------------*/
@@ -9439,19 +9430,16 @@ HB_FUNC( WVW_GETFONTINFO )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    PHB_ITEM  info = hb_itemArrayNew(7);
-   PHB_ITEM  temp = hb_itemNew(NULL);
 
-   hb_arraySet( info, 1, hb_itemPutC(  temp, s_pWvwData->s_pWindows[usWinNum]->fontFace    ) );
-   hb_arraySet( info, 2, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->fontHeight  ) );
-   hb_arraySet( info, 3, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->fontWidth   ) );
-   hb_arraySet( info, 4, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->fontWeight  ) );
-   hb_arraySet( info, 5, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->fontQuality ) );
-   hb_arraySet( info, 6, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->PTEXTSIZE.y ) );
-   hb_arraySet( info, 7, hb_itemPutNL( temp, s_pWvwData->s_pWindows[usWinNum]->PTEXTSIZE.x ) );
+   hb_arraySetC(  info, 1, s_pWvwData->s_pWindows[usWinNum]->fontFace    );
+   hb_arraySetNL( info, 2, s_pWvwData->s_pWindows[usWinNum]->fontHeight  );
+   hb_arraySetNL( info, 3, s_pWvwData->s_pWindows[usWinNum]->fontWidth   );
+   hb_arraySetNL( info, 4, s_pWvwData->s_pWindows[usWinNum]->fontWeight  );
+   hb_arraySetNL( info, 5, s_pWvwData->s_pWindows[usWinNum]->fontQuality );
+   hb_arraySetNL( info, 6, s_pWvwData->s_pWindows[usWinNum]->PTEXTSIZE.y );
+   hb_arraySetNL( info, 7, s_pWvwData->s_pWindows[usWinNum]->PTEXTSIZE.x );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 
 }
 
@@ -9460,16 +9448,12 @@ HB_FUNC( WVW_GETFONTINFO )
 HB_FUNC( WVW_GETPALETTE )
 {
    PHB_ITEM  info = hb_itemArrayNew(16);
-   PHB_ITEM  temp = hb_itemNew(NULL);
    int       i;
 
    for ( i = 0; i < 16; i++ )
-   {
-      hb_arraySet( info, i+1, hb_itemPutNL( temp, _COLORS[ i ] ) );
-   }
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+      hb_arraySetNL( info, i+1, _COLORS[ i ] );
+
+   hb_itemReturnRelease( info );
 
 }
 

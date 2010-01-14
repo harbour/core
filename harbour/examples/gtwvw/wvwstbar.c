@@ -688,7 +688,6 @@ HB_FUNC( WVW_XBINFO )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    PHB_ITEM  aInfo;
-   PHB_ITEM  temp;
    SCROLLINFO si;
 
    UINT uiXBid = (UINT) ( ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
@@ -716,17 +715,14 @@ HB_FUNC( WVW_XBINFO )
      return;
    }
 
-   temp = hb_itemNew(NULL);
    aInfo = hb_itemArrayNew(5);
-   hb_arraySet( aInfo, 1, hb_itemPutNL( temp, si.nMin ));
-   hb_arraySet( aInfo, 2, hb_itemPutNL( temp, si.nMax ));
-   hb_arraySet( aInfo, 3, hb_itemPutNL( temp, si.nPage ));
-   hb_arraySet( aInfo, 4, hb_itemPutNL( temp, si.nPos ));
-   hb_arraySet( aInfo, 5, hb_itemPutNL( temp, si.nTrackPos ));
+   hb_arraySetNL( aInfo, 1, si.nMin );
+   hb_arraySetNL( aInfo, 2, si.nMax );
+   hb_arraySetNL( aInfo, 3, si.nPage );
+   hb_arraySetNL( aInfo, 4, si.nPos );
+   hb_arraySetNL( aInfo, 5, si.nTrackPos );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( aInfo );
-   hb_itemRelease( aInfo );
+   hb_itemReturnRelease( aInfo );
 }
 
 /*WVW_XBenable( [nWinNum], nXBid, nFlags )

@@ -83,21 +83,20 @@ HB_FUNC( STATUSUPDATE )
 
    if( pArray )
    {
-      const char * szDisplay = "|/-\\";
+      static const char * s_szDisplay = "|/-\\";
+
       long lCurrent = hb_arrayGetNL( pArray, ST_CURRENT );
-      char * szOldColor[ HB_CLRSTR_LEN ];
-      PHB_ITEM pCurrent = hb_itemNew( NULL );
+      char szOldColor[ HB_CLRSTR_LEN ];
 
       lCurrent = ( ++lCurrent > 4 ? 1 : lCurrent );
-      hb_itemArrayPut( pArray, ST_CURRENT, hb_itemPutNL( pCurrent, lCurrent ) );
+      hb_arraySetNL( pArray, ST_CURRENT, lCurrent );
 
-      hb_gtGetColorStr( ( char * ) szOldColor );
+      hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, ST_COLOR ) );
       hb_gtWriteAt( hb_arrayGetNI( pArray, ST_ROW ),
                     hb_arrayGetNI( pArray, ST_COL ),
-                    szDisplay + lCurrent - 1, 1 );
+                    s_szDisplay + lCurrent - 1, 1 );
 
-      hb_gtSetColorStr( ( char * ) szOldColor );
-      hb_itemRelease( pCurrent );
+      hb_gtSetColorStr( szOldColor );
    }
 }
