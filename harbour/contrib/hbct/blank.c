@@ -58,13 +58,13 @@
 HB_FUNC( BLANK )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   BOOL bRef = HB_ISBYREF( 1 );
-   BOOL bRet = ! ct_getref();
+   HB_BOOL bRef = HB_ISBYREF( 1 );
+   HB_BOOL bRet = ! ct_getref();
 
    if( ! pItem )
    {
       if( bRet )
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else if( HB_IS_DATE( pItem ) )
    {
@@ -115,14 +115,14 @@ HB_FUNC( BLANK )
    else if( HB_IS_LOGICAL( pItem ) )
    {
       if( bRef )
-         hb_storl( FALSE, 1 );
+         hb_storl( HB_FALSE, 1 );
       if( bRet )
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else
    {
       if( bRet )
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    if( ! bRet )
       hb_ret();

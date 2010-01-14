@@ -270,8 +270,8 @@ HB_FUNC( SAYSCREEN )
    hb_retc_null();
 }
 
-static BOOL hb_ctGetWinCord( int * piTop, int * piLeft,
-                             int * piBottom, int * piRight )
+static HB_BOOL hb_ctGetWinCord( int * piTop, int * piLeft,
+                                int * piBottom, int * piRight )
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
@@ -552,7 +552,7 @@ HB_FUNC( CHARWIN )
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
       USHORT usNewChar, usOldChar = 0;
-      BOOL fAll = FALSE;
+      HB_BOOL fAll = HB_FALSE;
 
       usNewChar = ( USHORT ) hb_ctGetClearChar( 5 );
 
@@ -561,7 +561,7 @@ HB_FUNC( CHARWIN )
       else if( hb_parclen( 6 ) > 0 )
          usOldChar = ( UCHAR ) hb_parc( 6 )[0];
       else
-         fAll = TRUE;
+         fAll = HB_TRUE;
 
       hb_gtBeginWrite();
       while( iTop <= iBottom )
@@ -634,14 +634,14 @@ HB_FUNC( COLORWIN )
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
       int iNewColor, iOldColor = 0;
-      BOOL fAll = FALSE;
+      HB_BOOL fAll = HB_FALSE;
 
       iNewColor = hb_ctGetClearColor( 5 );
 
       if( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) )
          iOldColor = hb_ctGetClearColor( 6 );
       else
-         fAll = TRUE;
+         fAll = HB_TRUE;
 
       hb_gtBeginWrite();
       while( iTop <= iBottom )
@@ -765,14 +765,14 @@ HB_FUNC( COLORREPL )
    int iMaxCol = hb_gtMaxCol();
    int iRow = 0, iCol;
    int iNewColor, iOldColor = 0;
-   BOOL fAll = FALSE;
+   HB_BOOL fAll = HB_FALSE;
 
    iNewColor = hb_ctGetClearColor( 1 );
 
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
       iOldColor = hb_ctGetClearColor( 2 );
    else
-      fAll = TRUE;
+      fAll = HB_TRUE;
 
    hb_gtBeginWrite();
    while( iRow <= iMaxRow )

@@ -167,7 +167,7 @@ HB_FUNC( SAYMOVEIN )
       ULONG ulChars, ul;
       int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
       long lDelay;
-      BOOL fBack;
+      HB_BOOL fBack;
 
       lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
       fBack = hb_parl( 5 );

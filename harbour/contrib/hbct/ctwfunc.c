@@ -241,7 +241,7 @@ HB_FUNC( WFORMAT )
 
    if( hb_pcount() == 0 )
    {
-      hb_ctwGetFormatCords( iWindow, TRUE, &iTop, &iLeft, &iBottom, &iRight );
+      hb_ctwGetFormatCords( iWindow, HB_TRUE, &iTop, &iLeft, &iBottom, &iRight );
       iTop    = -iTop;
       iLeft   = -iLeft;
       iBottom = -iBottom;

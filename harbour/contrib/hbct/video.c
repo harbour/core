@@ -153,7 +153,7 @@ HB_FUNC( VGAPALETTE )
    if( hb_pcount() < 4 )
    {
       /* Resetting palette registers to default values is not supported yet */
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -168,7 +168,7 @@ HB_FUNC( VGAPALETTE )
    if( attr < 0 || attr >= 16 )
    {
       /* An invalid argument */
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -201,9 +201,9 @@ HB_FUNC( VGAPALETTE )
       if( iflag )
          __dpmi_get_and_enable_virtual_interrupt_state();
    }
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 #   else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #   endif
 }
 

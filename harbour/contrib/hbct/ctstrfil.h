@@ -55,8 +55,8 @@
 
 HB_EXTERN_BEGIN
 
-extern BOOL ct_getsafety( void );
-extern void ct_setsafety( BOOL bSafety );
+extern HB_BOOL ct_getsafety( void );
+extern void ct_setsafety( HB_BOOL bSafety );
 
 HB_EXTERN_END
 

@@ -256,7 +256,7 @@ static const size_t ssSeparatorStrLen = 26;
 
 /* TODO: make thread safe */
 static TOKEN_ENVIRONMENT s_sTokenEnvironment = NULL;
-static BOOL s_fInit = FALSE;
+static HB_BOOL s_fInit = HB_FALSE;
 
 static void sTokExit( void * cargo )
 {
@@ -274,7 +274,7 @@ static void sTokSet( TOKEN_ENVIRONMENT env )
    if( !s_fInit && env )
    {
       hb_vmAtExit( sTokExit, NULL );
-      s_fInit = TRUE;
+      s_fInit = HB_TRUE;
    }
 
    if( s_sTokenEnvironment )

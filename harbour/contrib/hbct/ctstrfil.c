@@ -59,7 +59,7 @@
 #include "ctstrfil.h"
 
 static int s_iFileAttr = HB_FA_NORMAL;
-static BOOL s_bSafety = 0;
+static HB_BOOL s_bSafety = 0;
 
 void ct_setfcreate( int iFileAttr )
 {
@@ -81,13 +81,13 @@ HB_FUNC( SETFCREATE )
       ct_setfcreate( hb_parni( 1 ) );
 }
 
-void ct_setsafety( BOOL bSafety )
+void ct_setsafety( HB_BOOL bSafety )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setsafety(%i)", bSafety ) );
    s_bSafety = bSafety;
 }
 
-BOOL ct_getsafety( void )
+HB_BOOL ct_getsafety( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getsafety()" ) );
    return s_bSafety;
@@ -101,18 +101,18 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parnl( 1 ) );
 }
 
-static LONG ct_StrFile( const char * pFileName, const char * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
-                        BOOL bTrunc )
+static LONG ct_StrFile( const char * pFileName, const char * pcStr, ULONG ulLen, HB_BOOL bOverwrite, LONG lOffset,
+                        HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
-   BOOL bOpen = FALSE;
-   BOOL bFile = hb_fsFile( pFileName );
+   HB_BOOL bOpen = HB_FALSE;
+   HB_BOOL bFile = hb_fsFile( pFileName );
    ULONG ulWrite = 0;
 
    if( bFile && bOverwrite )
    {
       hFile = hb_fsOpen( pFileName, FO_READWRITE );
-      bOpen = TRUE;
+      bOpen = HB_TRUE;
    }
    else if( !bFile || !ct_getsafety() )
       hFile = hb_fsCreate( pFileName, ct_getfcreate() );
@@ -158,7 +158,7 @@ HB_FUNC( FILESTR )
          LONG lFileSize = hb_fsSeek( hFile, 0, FS_END );
          LONG lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET ), lLength;
          char *pcResult, *pCtrlZ;
-         BOOL bCtrlZ = hb_parl( 4 );
+         HB_BOOL bCtrlZ = hb_parl( 4 );
 
          if( HB_ISNUM( 2 ) )
          {

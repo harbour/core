@@ -57,7 +57,7 @@ static LONG s_lCounter = 0;
 
 HB_FUNC( NUMCOUNT )
 {
-   BOOL bMode = hb_parl( 2 );
+   HB_BOOL bMode = hb_parl( 2 );
 
    if( HB_ISNUM( 1 ) )
    {

@@ -56,7 +56,7 @@
 
 #include "hbapi.h"
 
-static BOOL __numParam( int iParam, HB_LONG * plNum )
+static HB_BOOL __numParam( int iParam, HB_LONG * plNum )
 {
    const char *szHex = hb_parc( iParam );
 
@@ -81,16 +81,16 @@ static BOOL __numParam( int iParam, HB_LONG * plNum )
          iParam = 0;
       }
       if( !iParam )
-         return TRUE;
+         return HB_TRUE;
    }
    else if( HB_ISNUM( iParam ) )
    {
       *plNum = hb_parnint( iParam );
-      return TRUE;
+      return HB_TRUE;
    }
 
    *plNum = -1;
-   return FALSE;
+   return HB_FALSE;
 }
 
 HB_FUNC( NUMAND )
@@ -291,7 +291,7 @@ HB_FUNC( INTNEG )
 
    if( __numParam( 1, &lValue ) )
    {
-      BOOL f32Bit = hb_parl( 2 );
+      HB_BOOL f32Bit = hb_parl( 2 );
 
       if( f32Bit )
          hb_retnint( ( INT16 ) lValue );
@@ -308,7 +308,7 @@ HB_FUNC( INTPOS )
 
    if( __numParam( 1, &lValue ) )
    {
-      BOOL f32Bit = hb_parl( 2 );
+      HB_BOOL f32Bit = hb_parl( 2 );
 
       if( f32Bit )
          hb_retnint( ( UINT16 ) lValue );

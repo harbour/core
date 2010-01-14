@@ -114,7 +114,7 @@ static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
 #define HB_GET_FFDATA() ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
 
 
-static PHB_FFIND _hb_fileStart( BOOL fNext, HB_FATTR ulAttr )
+static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 {
    PHB_FFDATA pFFData = HB_GET_FFDATA();
 
@@ -168,7 +168,7 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, HB_FATTR ulAttr )
 
 HB_FUNC( FILESEEK )
 {
-   PHB_FFIND ffind = _hb_fileStart( TRUE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_TRUE, HB_FA_ALL );
 
    hb_retc( ffind ? ffind->szName : NULL );
 }
@@ -179,28 +179,28 @@ HB_FUNC( FILEATTR )
     * attributes and because we are supporting more attributes
     * then I decided to use 0xffff value. [druzus]
     */
-   PHB_FFIND ffind = _hb_fileStart( FALSE, 0xffff );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, 0xffff );
 
    hb_retni( ffind ? ffind->attr : 0 );
 }
 
 HB_FUNC( FILESIZE )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
 
    hb_retnint( ffind ? ffind->size : -1 );
 }
 
 HB_FUNC( FILEDATE )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
 
    hb_retdl( ffind ? ffind->lDate : 0 );
 }
 
 HB_FUNC( FILETIME )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
 
    hb_retc( ffind ? ffind->szTime : NULL );
 }
@@ -223,7 +223,7 @@ HB_FUNC( SETFATTR )
 HB_FUNC( SETFDATI )
 {
    const char *szFile = hb_parc( 1 );
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( szFile && *szFile )
    {
@@ -261,7 +261,7 @@ HB_FUNC( SETFDATI )
 
 HB_FUNC( FILEDELETE )
 {
-   BOOL bReturn = FALSE;
+   HB_BOOL bReturn = HB_FALSE;
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -289,7 +289,7 @@ HB_FUNC( FILEDELETE )
             hb_fsFNameMerge( szPath, pFilepath );
 
             if( hb_fsDelete( szPath ) )
-               bReturn = TRUE;
+               bReturn = HB_TRUE;
          }
          while( hb_fsFindNext( ffind ) );
 

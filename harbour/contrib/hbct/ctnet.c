@@ -113,11 +113,12 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
    else
    {
       DWORD dwLastError, dwWNetResult;
-      TCHAR lpDescription[256], lpProvider[256];
+      TCHAR lpDescription[ 256 ], lpProvider[ 256 ];
       char * szDescription, * szProvider;
 
-      dwWNetResult = WNetGetLastError( &dwLastError, lpDescription, 256,
-                                       lpProvider, 256 );
+      dwWNetResult = WNetGetLastError( &dwLastError,
+                                       lpDescription, HB_SIZEOFARRAY( lpDescription ),
+                                       lpProvider, HB_SIZEOFARRAY( lpProvider ) );
 
       if( dwWNetResult != NO_ERROR )
       {
@@ -126,7 +127,7 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
                                 ( HB_ERRCODE ) dwWNetResult, EF_NONE );
          hb_errLaunch( pError );
          hb_itemRelease( pError );
-         return FALSE;
+         return HB_FALSE;
       }
 
       szDescription = HB_TCHAR_CONVFROM( lpDescription );
@@ -141,18 +142,18 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
       hb_itemRelease( pError );
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
-static BOOL hb_IsNetShared( const char *szLocalDevice )
+static HB_BOOL hb_IsNetShared( const char *szLocalDevice )
 {
-   TCHAR lpRemoteDevice[80];
+   TCHAR lpRemoteDevice[ 80 ];
    LPTSTR lpLocalDevice;
-   DWORD cchBuff = sizeof( lpRemoteDevice ) / sizeof( TCHAR );
+   DWORD cchBuff = HB_SIZEOFARRAY( lpRemoteDevice );
    DWORD dwResult;
 
    lpLocalDevice = HB_TCHAR_CONVTO( szLocalDevice );
-   dwResult = WNetGetConnection( ( LPTSTR ) lpLocalDevice,
+   dwResult = WNetGetConnection( ( LPCTSTR ) lpLocalDevice,
                                  ( LPTSTR ) lpRemoteDevice, &cchBuff );
    HB_TCHAR_FREE( lpLocalDevice );
 
@@ -202,7 +203,7 @@ HB_FUNC( NETREDIR )
    LPTSTR lpLocalDev  = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
    LPTSTR lpSharedRes = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpPassword  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   BOOL bShowError = hb_parl( 4 );
+   HB_BOOL bShowError = hb_parl( 4 );
 
    if( hb_pcount() >= 3 && HB_ISCHAR( 3 ) )
       dwResult = WNetAddConnection( lpSharedRes, lpPassword, lpLocalDev );
@@ -210,25 +211,25 @@ HB_FUNC( NETREDIR )
       dwResult = WNetAddConnection( lpSharedRes, NULL, lpLocalDev );
 
    if( dwResult == NO_ERROR )
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    else
    {
       if( bShowError )
       {
-         char szCommand[80];
-         hb_snprintf( szCommand, 80, "NETREDIR( \"%s\", \"%s\", \"%s\" )",
+         char szCommand[ 80 ];
+         hb_snprintf( szCommand, sizeof( szCommand ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
                    hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
          WNetErrorHandler( dwResult, szCommand );
       }
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 
 HB_FUNC( NETRMTNAME )
 {
-   TCHAR lpRemoteDevice[80];
+   TCHAR lpRemoteDevice[ 80 ];
    LPTSTR lpLocalDevice;
-   DWORD cchBuff = sizeof( lpRemoteDevice ) / sizeof( TCHAR );
+   DWORD cchBuff = HB_SIZEOFARRAY( lpRemoteDevice );
    DWORD dwResult;
    char *szRemoteDevice;
 
@@ -245,8 +246,8 @@ HB_FUNC( NETRMTNAME )
 HB_FUNC( NETWORK )
 {
    DWORD dwResult;
-   TCHAR lpProviderName[80];
-   DWORD cchBuff = sizeof( lpProviderName ) / sizeof( TCHAR );
+   TCHAR lpProviderName[ 80 ];
+   DWORD cchBuff = HB_SIZEOFARRAY( lpProviderName );
 
    dwResult = WNetGetProviderName( WNNC_NET_MSNET, lpProviderName, &cchBuff );
 
@@ -265,8 +266,8 @@ HB_FUNC( NETWORK )
 HB_FUNC( NNETWORK )
 {
    DWORD dwResult;
-   TCHAR lpProviderName[80];
-   DWORD cchBuff = sizeof( lpProviderName ) / sizeof( TCHAR );
+   TCHAR lpProviderName[ 80 ];
+   DWORD cchBuff = HB_SIZEOFARRAY( lpProviderName );
 
    dwResult = WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &cchBuff );
 

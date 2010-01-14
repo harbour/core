@@ -283,13 +283,13 @@ static void do_token1( int iSwitch )
             if( ulSkip == 0xFFFFFFFFUL )
             {
                const char *t;
-               BOOL bLast = TRUE;
+               HB_BOOL bLast = HB_TRUE;
 
                for( t = pc + 1; t < pcString + sStrLen; t++ )
                {
                   if( !memchr( pcSeparatorStr, *t, sSeparatorStrLen ) )
                   {
-                     bLast = FALSE;
+                     bLast = HB_FALSE;
                      break;
                   }
                }

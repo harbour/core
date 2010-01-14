@@ -70,13 +70,13 @@
 #include "hbset.h"
 
 
-static BOOL ct_isleap( int iYear )
+static HB_BOOL ct_isleap( int iYear )
 {
    return iYear != 0 && ( ( ( iYear & 3 ) == 0 && iYear % 100 != 0 ) ||
                           iYear % 400 == 0 );
 }
 
-static int ct_daysinmonth( int iMonth, BOOL bLeap )
+static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )
 {
    if( iMonth == 2 )
       return bLeap ? 29 : 28;
@@ -86,7 +86,7 @@ static int ct_daysinmonth( int iMonth, BOOL bLeap )
       return 31;
 }
 
-static int ct_daystomonth( int iMonth, BOOL bLeap )
+static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
 {
    static const int iMonthes[] =
                { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
@@ -233,7 +233,7 @@ HB_FUNC( CTOMONTH )
 HB_FUNC( DMY )
 {
    int iYear, iMonth, iDay;
-   BOOL bMode = FALSE;
+   HB_BOOL bMode = HB_FALSE;
 
    if( HB_ISDATETIME( 1 ) )
    {
@@ -416,7 +416,7 @@ HB_FUNC( ADDMONTH )
 {
    long lJulian, lMillisec = 0;
    int iYear, iMonth, iDay, iNum, iDays;
-   BOOL fTimeStamp = FALSE;
+   HB_BOOL fTimeStamp = HB_FALSE;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -427,7 +427,7 @@ HB_FUNC( ADDMONTH )
    {
       if( HB_ISTIMESTAMP( 1 ) )
       {
-         fTimeStamp = TRUE;
+         fTimeStamp = HB_TRUE;
          hb_partdt( &lJulian, &lMillisec, 1 );
          hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
       }
@@ -587,7 +587,7 @@ HB_FUNC( ISLEAP )
 HB_FUNC( DAYSTOMONTH )
 {
    int iMonth = hb_parni( 1 );
-   BOOL bLeap = hb_parl( 2 );
+   HB_BOOL bLeap = hb_parl( 2 );
 
    hb_retni( ct_daystomonth( iMonth, bLeap ) );
 }
@@ -623,7 +623,7 @@ HB_FUNC( DAYSTOMONTH )
 HB_FUNC( DAYSINMONTH )
 {
    int iMonth = hb_parni( 1 );
-   BOOL bLeap = hb_parl( 2 );
+   HB_BOOL bLeap = hb_parl( 2 );
 
    hb_retni( ct_daysinmonth( iMonth, bLeap ) );
 
@@ -707,7 +707,7 @@ HB_FUNC( QUARTER )
  */
 HB_FUNC( LASTDAYOM )
 {
-   BOOL bLeap = FALSE;
+   HB_BOOL bLeap = HB_FALSE;
    int iYear, iMonth, iDay;
 
    if( HB_ISNUM( 1 ) )
@@ -838,7 +838,7 @@ HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;
    long lDate;
-   BOOL bSWN = hb_parl( 2 );
+   HB_BOOL bSWN = hb_parl( 2 );
 
    if( HB_ISDATETIME( 1 ) )
    {
