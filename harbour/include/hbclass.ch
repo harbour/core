@@ -193,7 +193,7 @@
    #define __HB_CLS_NOINI .F.
 #endif
 
-/* Should we generate compile error when method declaration has differ parameters? */
+/* Should we generate compile error when method declaration has different parameters? */
 #ifdef HB_CLS_NO_PARAMS_ERR
    #xtranslate __HB_CLS_PARAMS(<Method>)     => __HB_CLS_ASID(<Method>)
 #else
@@ -299,8 +299,14 @@ DECLARE HBClass ;
       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
-   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[\<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
-         DECLARED METHOD \<type> <MethodName>\[(\<xparams>)] CLASS <ClassName>
+      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+         DECLARED METHOD \<type> <MethodName> CLASS <ClassName>
+
+#xcommand __HB_CLS_DECLARE_METHOD <!MethodName!> <ClassName> => ;
+   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+         DECLARED METHOD \<type> <MethodName> CLASS <ClassName> ;;
+   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>(\[ \<xparams,...>] ) CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+         DECLARED METHOD \<type> <MethodName>(\[ \<xparams>] ) CLASS <ClassName>
 
 #xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
    __HB_CLS_ERR( Method <MethodName> not declared or declaration mismatch in class: <ClassName> ) ;;
