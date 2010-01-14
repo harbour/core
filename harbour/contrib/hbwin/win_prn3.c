@@ -67,35 +67,36 @@
 #include "hbwinuni.h"
 
 /* NOTE: Based on hb_strncat() */
-static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, ULONG ulLen )
+static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 {
    TCHAR * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %lu)", pDest, pSource, nLen));
 
-   pDest[ ulLen ] = '\0';
+   pDest[ nLen ] = '\0';
 
-   while( ulLen && *pDest )
+   while( nLen && *pDest )
    {
       pDest++;
-      ulLen--;
+      nLen--;
    }
 
-   while( ulLen-- && ( *pDest++ = *pSource++ ) ) {};
+   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+      nLen--;
 
    return pBuf;
 }
 
-static ULONG hb_tstrlen( const TCHAR * pText )
+static HB_SIZE hb_tstrlen( const TCHAR * pText )
 {
-   ULONG ul = 0;
+   HB_SIZE nLen = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_tstrlen(%p)", pText));
 
-   while( pText[ ul ] )
-      ++ul;
+   while( pText[ nLen ] )
+      ++nLen;
 
-   return ul;
+   return nLen;
 }
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )

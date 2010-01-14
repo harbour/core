@@ -71,7 +71,7 @@
 #endif
 
 #if defined( __WATCOMC__ )
-typedef ULONG (PASCAL * LPMAPISENDMAIL) (LHANDLE,ULONG,lpMapiMessage,FLAGS,ULONG);
+typedef ULONG ( PASCAL * LPMAPISENDMAIL ) ( LHANDLE, ULONG, lpMapiMessage, FLAGS, ULONG );
 #endif
 
 HB_FUNC( WIN_MAPISENDMAIL )
