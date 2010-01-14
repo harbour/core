@@ -54,10 +54,10 @@
 
 HB_FUNC( AMPM )
 {
-   ULONG  ulTimeLen = hb_parclen( 1 );
-   char * pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
-   int    iHour = 0;
-   BOOL   bAM;
+   HB_SIZE ulTimeLen = hb_parclen( 1 );
+   char *  pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
+   int     iHour = 0;
+   HB_BOOL bAM;
 
    if( ulTimeLen )
    {
@@ -73,7 +73,7 @@ HB_FUNC( AMPM )
 
       pszResult[ 0 ] = '1';
       pszResult[ 1 ] = '2';
-      bAM = TRUE;
+      bAM = HB_TRUE;
    }
    else if( iHour > 12 )
    {
@@ -87,7 +87,7 @@ HB_FUNC( AMPM )
       if( pszResult[ 0 ] == '0' )
          pszResult[ 0 ] = ' ';
 
-      bAM = FALSE;
+      bAM = HB_FALSE;
    }
    else
       bAM = ( iHour != 12 );

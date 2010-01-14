@@ -136,7 +136,7 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
 
          if( szResult )
          {
-            ULONG ulLen = strlen( szResult );
+            HB_SIZE ulLen = strlen( szResult );
             const char * szTrimmed = hb_strLTrim( szResult, &ulLen );
 
             hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );

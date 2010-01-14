@@ -145,11 +145,11 @@ static int hb_errnoToDosError( int ErrCode )
 #endif
 
 #if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
-static int hb_WinToDosError( ULONG ulError )
+static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 {
    int iResult;
 
-   switch( ulError )
+   switch( dwError )
    {
       case ERROR_ALREADY_EXISTS:
          iResult = 5;
@@ -168,7 +168,7 @@ static int hb_WinToDosError( ULONG ulError )
          break;
 
       default:
-         iResult = ( int ) ulError;
+         iResult = ( HB_ERRCODE ) dwError;
          break;
    }
 
@@ -238,8 +238,9 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    else
    {
 #if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
-      uiOsErrorLast = ( HB_ERRCODE ) GetLastError();
-      uiErrorLast = ( HB_ERRCODE ) hb_WinToDosError( uiOsErrorLast );
+      DWORD dwLastError = GetLastError();
+      uiOsErrorLast = ( HB_ERRCODE ) dwLastError;
+      uiErrorLast = hb_WinToDosError( dwLastError );
 #elif defined( _MSC_VER ) || defined( __DMC__ )
       #if defined( __XCC__ )
          extern unsigned long _doserrno;

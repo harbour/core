@@ -74,16 +74,16 @@ typedef struct HB_HASH_ITEM_
 typedef struct HB_HASH_TABLE_
 {
    HB_HASH_ITEM_PTR * pItems;    /* pointer to items */
-   ULONG ulTableSize;            /* the table size - number of slots */
-   ULONG ulCount;                /* number of items stored in the table */
-   ULONG ulUsed;                 /* number of used slots */
+   HB_SIZE ulTableSize;          /* the table size - number of slots */
+   HB_SIZE ulCount;              /* number of items stored in the table */
+   HB_SIZE ulUsed;               /* number of used slots */
    HB_HASH_FUNC_PTR pKeyFunc;    /* pointer to func that returns key value */
    HB_HASH_FUNC_PTR pDeleteItemFunc; /* ptr to func that deletes value stored in the table */
    HB_HASH_FUNC_PTR pCompFunc;       /* ptr to func that compares two items */
 } HB_HASH_TABLE, * HB_HASH_TABLE_PTR;
 
 
-extern HB_HASH_TABLE_PTR hb_hashTableCreate( ULONG ulSize,
+extern HB_HASH_TABLE_PTR hb_hashTableCreate( HB_SIZE ulSize,
                                    HB_HASH_FUNC_PTR pHashFunc,
                                    HB_HASH_FUNC_PTR pDelete,
                                    HB_HASH_FUNC_PTR pComp );
@@ -91,8 +91,8 @@ extern void hb_hashTableKill( HB_HASH_TABLE_PTR pTable ); /* release all items a
 extern BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue ); /* add a new item into the table */
 extern BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void * pKey ); /* delete an item from the table  */
 extern const void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, const void * pKey ); /* return the pointer to item's value or NULL if not found */
-extern HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize ); /* resize the hash table */
-extern ULONG hb_hashTableSize( HB_HASH_TABLE_PTR pTable ); /* return the hash table size */
+extern HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSize ); /* resize the hash table */
+extern HB_SIZE hb_hashTableSize( HB_HASH_TABLE_PTR pTable ); /* return the hash table size */
 
 HB_EXTERN_END
 

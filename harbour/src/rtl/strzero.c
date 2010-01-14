@@ -83,7 +83,7 @@ HB_FUNC( STRZERO )
 
          if( szResult )
          {
-            ULONG ulPos = 0;
+            HB_SIZE ulPos = 0;
 
             while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] != '-' )
                ulPos++;

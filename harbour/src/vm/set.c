@@ -2644,7 +2644,7 @@ const char * hb_setGetDBCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_DBCODEPAGE;
 }
 
-const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
+const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2658,7 +2658,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
          PHB_CODEPAGE cdpHost = hb_vmCDP();
          if( cdpHost && cdpHost != cdpOS )
          {
-            ULONG ulSize = 0;
+            HB_SIZE ulSize = 0;
             char * pszBuf;
 
             if( pszFree == NULL )
@@ -2672,7 +2672,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
             else if( *pulSize > 0 )
                ulSize = *pulSize - 1;
 
-            szName = hb_cdpnDup3( szName, ( ULONG ) strlen( szName ),
+            szName = hb_cdpnDup3( szName, ( HB_SIZE ) strlen( szName ),
                                   pszBuf, &ulSize, pszFree, pulSize,
                                   cdpHost, cdpOS );
          }
@@ -2682,7 +2682,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
    return szName;
 }
 
-const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
+const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2696,7 +2696,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
          PHB_CODEPAGE cdpHost = hb_vmCDP();
          if( cdpHost && cdpHost != cdpOS )
          {
-            ULONG ulSize = 0;
+            HB_SIZE ulSize = 0;
             char * pszBuf;
 
             if( pszFree == NULL )
@@ -2710,7 +2710,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
             else if( *pulSize > 0 )
                ulSize = *pulSize - 1;
 
-            szName = hb_cdpnDup3( szName, ( ULONG ) strlen( szName ),
+            szName = hb_cdpnDup3( szName, ( HB_SIZE ) strlen( szName ),
                                   pszBuf, &ulSize, pszFree, pulSize,
                                   cdpOS, cdpHost );
          }

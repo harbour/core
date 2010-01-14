@@ -2546,7 +2546,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
 {
    HB_SOCKET maxsd, sd;
    int i, ret;
-   ULONG ulLen, ulPos, ul;
+   HB_SIZE ulLen, ulPos, ul;
    PHB_ITEM pItemSets[ 3 ];
    BOOL pSet[ 3 ];
    fd_set fds[ 3 ], *pfds[ 3 ];

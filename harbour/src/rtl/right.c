@@ -67,8 +67,8 @@ HB_FUNC( RIGHT )
          hb_retc_null();
       else
       {
-         ULONG ulText = hb_itemGetCLen( pText );
-         if( ( ULONG ) lLen >= ulText )
+         HB_SIZE ulText = hb_itemGetCLen( pText );
+         if( ( HB_SIZE ) lLen >= ulText )
             hb_itemReturn( pText );
          else
             hb_retclen( hb_itemGetCPtr( pText ) + ulText - lLen, lLen );

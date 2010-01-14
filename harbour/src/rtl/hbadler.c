@@ -59,7 +59,7 @@
 #define BASE 65521   /* largest prime smaller than 65536 */
 #define NMAX 5552    /* largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
 
-ULONG hb_adler32( ULONG adler, const void *buf, ULONG len )
+ULONG hb_adler32( ULONG adler, const void * buf, HB_SIZE len )
 {
    ULONG s1 = adler & 0xffff;
    ULONG s2 = ( adler >> 16 ) & 0xffff;

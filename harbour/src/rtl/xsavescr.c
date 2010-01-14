@@ -87,7 +87,7 @@ static HB_TSD_NEW( s_scrData, sizeof( HB_SCRDATA ), NULL, hb_xSaveRestRelease );
 HB_FUNC( __XSAVESCREEN )
 {
    PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    hb_gtGetPos( &pScrData->row, &pScrData->col );
    hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );

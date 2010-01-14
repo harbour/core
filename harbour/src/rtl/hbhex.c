@@ -130,7 +130,7 @@ HB_FUNC( HB_NUMTOHEX )
 HB_FUNC( HB_STRTOHEX )
 {
    const char * szStr = hb_parc( 1 ), * szSep = "";
-   ULONG ulStr, ulSep = 0;
+   HB_SIZE ulStr, ulSep = 0;
 
    if( hb_pcount() > 1 )
    {
@@ -147,7 +147,7 @@ HB_FUNC( HB_STRTOHEX )
    ulStr = hb_parclen( 1 );
    if( ulStr )
    {
-      ULONG ulDest = ( ulStr << 1 ) + ( ulStr - 1 ) * ulSep;
+      HB_SIZE ulDest = ( ulStr << 1 ) + ( ulStr - 1 ) * ulSep;
       char * szDest, * szPtr;
 
       szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
@@ -174,7 +174,7 @@ HB_FUNC( HB_STRTOHEX )
 HB_FUNC( HB_HEXTOSTR )
 {
    const char * szStr = hb_parc( 1 );
-   ULONG ulStr;
+   HB_SIZE ulStr;
 
    if( !szStr )
    {
@@ -185,7 +185,7 @@ HB_FUNC( HB_HEXTOSTR )
    ulStr = hb_parclen( 1 );
    if( ulStr > 1 )
    {
-      ULONG ulDest, ul;
+      HB_SIZE ulDest, ul;
       const char * szPtr;
       char * szDest;
 

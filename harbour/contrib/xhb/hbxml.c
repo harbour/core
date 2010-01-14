@@ -1634,8 +1634,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
 
 static void mxml_node_write_attributes( MXML_OUTPUT *out, PHB_ITEM pAttr, int style )
 {
-   ULONG iLen = hb_hashLen( pAttr );
-   ULONG i;
+   HB_SIZE iLen = hb_hashLen( pAttr );
+   HB_SIZE i;
    HBXML_ATTRIBUTE hbAttr;
 
    for ( i = 1; i <= iLen; i ++ )
@@ -2301,7 +2301,7 @@ HB_FUNC( HBXML_DATAREAD )
    PHB_ITEM pRoot;
    MXML_REFIL refil;
    char buffer[512], * buf;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    if( pDoc == NULL || pParam == NULL ||
        ( !HB_IS_STRING( pParam ) && !HB_IS_NUMERIC( pParam ) ) )

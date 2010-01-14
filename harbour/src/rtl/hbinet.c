@@ -659,7 +659,7 @@ static void s_inetRecvInternal( int iMode )
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char * buffer;
-   ULONG ulLen;
+   HB_SIZE ulLen;
    int iLen, iMaxLen, iReceived;
    int iTimeElapsed;
 
@@ -1367,7 +1367,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    int iTimeElapsed = 0;
    int iLen = 0, iMax;
    char * buffer = NULL;
-   ULONG ulLen;
+   HB_SIZE ulLen;
    BOOL fRepeat;
 
    if( socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )

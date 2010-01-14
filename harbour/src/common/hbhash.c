@@ -81,7 +81,7 @@ static void hb_hashItemDelete( HB_HASH_TABLE_PTR pTable, HB_HASH_ITEM_PTR pItem 
 *       (first and second are values to compare, function have to return
 *        zero if values match or nonzero if they don't match)
 */
-HB_HASH_TABLE_PTR hb_hashTableCreate( ULONG ulSize,
+HB_HASH_TABLE_PTR hb_hashTableCreate( HB_SIZE ulSize,
                                    HB_HASH_FUNC_PTR pHashFunc,
                                    HB_HASH_FUNC_PTR pDelete,
                                    HB_HASH_FUNC_PTR pComp )
@@ -104,7 +104,7 @@ HB_HASH_TABLE_PTR hb_hashTableCreate( ULONG ulSize,
 */
 void hb_hashTableKill( HB_HASH_TABLE_PTR pTable )
 {
-   ULONG ulSize = 0;
+   HB_SIZE ulSize = 0;
 
    while( ulSize < pTable->ulTableSize )
    {
@@ -126,10 +126,10 @@ void hb_hashTableKill( HB_HASH_TABLE_PTR pTable )
 }
 
 /* resize table */
-HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize )
+HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSize )
 {
    HB_HASH_TABLE_PTR pNew;
-   ULONG ulSize = 0;
+   HB_SIZE ulSize = 0;
 
    if( ulNewSize == 0 )
       ulNewSize = 2 * pTable->ulTableSize + 1;
@@ -272,7 +272,7 @@ BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void *pKey )
 }
 
 /* return the hash table size */
-ULONG hb_hashTableSize( HB_HASH_TABLE_PTR pTable )
+HB_SIZE hb_hashTableSize( HB_HASH_TABLE_PTR pTable )
 {
    return pTable->ulTableSize;
 }

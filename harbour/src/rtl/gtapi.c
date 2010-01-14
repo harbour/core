@@ -551,7 +551,7 @@ HB_ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pulBuffSize )
+HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE * pulBuffSize )
 {
    PHB_GT pGT;
 
@@ -584,7 +584,7 @@ BOOL hb_gtIsColor( void )
    return fColor;
 }
 
-HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, ULONG ulCount )
+HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, HB_SIZE ulCount )
 {
    PHB_GT pGT;
 
@@ -755,7 +755,7 @@ HB_ERRCODE hb_gtSetMode( int iRows, int iCols )
 }
 
 HB_ERRCODE hb_gtPutText( int iRow, int iCol,
-                         const char * szStr, ULONG ulLength, int iColor )
+                         const char * szStr, HB_SIZE ulLength, int iColor )
 {
    PHB_GT pGT;
 
@@ -776,7 +776,7 @@ HB_ERRCODE hb_gtPutText( int iRow, int iCol,
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, ULONG ulLength )
+HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE ulLength )
 {
    PHB_GT pGT;
 
@@ -793,7 +793,7 @@ HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, ULONG ulLength 
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWrite( const char * szStr, ULONG ulLength )
+HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE ulLength )
 {
    PHB_GT pGT;
 
@@ -810,7 +810,7 @@ HB_ERRCODE hb_gtWrite( const char * szStr, ULONG ulLength )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWriteCon( const char * szStr, ULONG ulLength )
+HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE ulLength )
 {
    PHB_GT pGT;
 
@@ -963,7 +963,7 @@ HB_ERRCODE hb_gtResume( void )
    return errCode;
 }
 
-HB_ERRCODE hb_gtOutStd( const char * szStr, ULONG ulLen )
+HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE ulLen )
 {
    PHB_GT pGT;
 
@@ -981,7 +981,7 @@ HB_ERRCODE hb_gtOutStd( const char * szStr, ULONG ulLen )
    return HB_SUCCESS;
 }
 
-HB_ERRCODE hb_gtOutErr( const char * szStr, ULONG ulLen )
+HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE ulLen )
 {
    PHB_GT pGT;
 

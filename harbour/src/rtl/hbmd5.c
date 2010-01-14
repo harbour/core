@@ -79,7 +79,7 @@ PRG functions:
 
 C functions:
 
-   void hb_md5( const void * data, ULONG datalen, char * digest )
+   void hb_md5( const void * data, HB_SIZE datalen, char * digest )
       Parameters:
          data     - input byte stream
          datalen  - input stream length
@@ -261,7 +261,7 @@ static void hb_md5val( UINT32 accum[], char * md5val )
    }
 }
 
-void hb_md5( const void * data, ULONG ulLen, char * digest )
+void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
    UCHAR buf[ 128 ];
@@ -307,7 +307,7 @@ void hb_md5( const void * data, ULONG ulLen, char * digest )
 void hb_md5file( HB_FHANDLE hFile, char * digest )
 {
    MD5_BUF md5;
-   ULONG n;
+   HB_SIZE n;
    int i;
    HB_FOFFSET flen = 0;
    UCHAR buf[ 128 ];
@@ -364,7 +364,7 @@ HB_FUNC( HB_MD5 )
 
    if( pszStr )
    {
-      ULONG ulLen = hb_parclen( 1 );
+      HB_SIZE ulLen = hb_parclen( 1 );
       char dststr[ 16 ];
 
       hb_md5( pszStr, ulLen, dststr );

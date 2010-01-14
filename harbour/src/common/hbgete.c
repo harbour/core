@@ -123,7 +123,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
       TCHAR name[ 128 ];
       TCHAR buffer[ 128 ];
       LPTSTR lpName, lpBuffer;
-      ULONG nLen = ( ULONG ) strlen( szName ) + 1;
+      HB_SIZE nLen = ( HB_SIZE ) strlen( szName ) + 1;
 
       if( nLen * sizeof( TCHAR ) <= sizeof( name ) )
          lpName = name;

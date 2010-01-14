@@ -56,10 +56,10 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void hb_readLine( const char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabLen, BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, BOOL * bFound, BOOL * bEOF, LONG * lEnd, ULONG * ulEndOffset )
+void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USHORT uiTabLen, BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, BOOL * bFound, BOOL * bEOF, LONG * lEnd, HB_SIZE * ulEndOffset )
 {
    USHORT uiPosTerm, uiPosition;
-   ULONG ulPos, ulCurrCol, ulLastBlk;
+   HB_SIZE ulPos, ulCurrCol, ulLastBlk;
    BOOL bBreak = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %lu, %lu, %hu, %d, %p, %p, %hu, %p, %p, %p, %p)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, Term, iTermSizes, uiTerms, bFound, bEOF, lEnd, ulEndOffset ));
@@ -237,12 +237,12 @@ HB_FUNC( HB_READLINE )
    char ** Term;
    int * iTermSizes;
    USHORT uiTabLen, uiTerms;
-   ULONG ulLineSize = hb_parni(3);
+   HB_SIZE ulLineSize = hb_parni(3);
    USHORT i;
    BOOL bWrap = hb_parl(5);
    BOOL bFound, bEOF;
-   ULONG ulStartOffset;
-   ULONG ulEndOffset, ulTextLen;
+   HB_SIZE ulStartOffset;
+   HB_SIZE ulEndOffset, ulTextLen;
    LONG lEnd;
    PHB_ITEM pOpt;
    BOOL bAlloc_Term1 = FALSE;

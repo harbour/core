@@ -64,8 +64,8 @@ HB_FUNC( ASPLICE )
 
    if( pArray )
    {
-      ULONG ulStart, ulRemove, ulIndex, ulAdd;
-      ULONG ulLen = hb_arrayLen( pArray );
+      HB_SIZE ulStart, ulRemove, ulIndex, ulAdd;
+      HB_SIZE ulLen = hb_arrayLen( pArray );
       PHB_ITEM pReturn = hb_stackReturnItem();
 
       if( ulLen == 0 )
@@ -76,7 +76,7 @@ HB_FUNC( ASPLICE )
 
       if( HB_ISNUM( 2 ) )
       {
-         ulStart = ( ULONG ) hb_parnl( 2 );
+         ulStart = ( HB_SIZE ) hb_parnl( 2 );
       }
       else
       {
@@ -85,7 +85,7 @@ HB_FUNC( ASPLICE )
 
       if( HB_ISNUM( 3 ) )
       {
-         ulRemove = ( ULONG ) hb_parnl( 3 );
+         ulRemove = ( HB_SIZE ) hb_parnl( 3 );
       }
       else
       {
@@ -119,13 +119,13 @@ HB_FUNC( ASPLICE )
 
       if( hb_pcount() > 3 )
       {
-         ULONG ulNew = 0;
+         HB_SIZE ulNew = 0;
          ulAdd = hb_pcount() - 3;
 
          if( ulAdd > ulRemove )
          {
-            ULONG ulMore = ulAdd - ulRemove;
-            ULONG ulShift = ulLen - (ulStart + ulRemove);
+            HB_SIZE ulMore = ulAdd - ulRemove;
+            HB_SIZE ulShift = ulLen - (ulStart + ulRemove);
 
             hb_arraySize( pArray, ulLen + ulMore );
 
@@ -191,9 +191,9 @@ HB_FUNC( AMERGE )
 
    if( pArray1 && pArray2 )
    {
-      ULONG ulLen = hb_arrayLen( pArray1 );
-      ULONG ulAdd = hb_arrayLen( pArray2 );
-      ULONG ulIndex, ulStart;
+      HB_SIZE ulLen = hb_arrayLen( pArray1 );
+      HB_SIZE ulAdd = hb_arrayLen( pArray2 );
+      HB_SIZE ulIndex, ulStart;
 
       hb_arraySize( pArray1, ulLen + ulAdd );
 
@@ -266,12 +266,12 @@ HB_FUNC( XHB_AINS )
 
       if( hb_parl( 4 ) )
       {
-         ULONG ulLen = hb_arrayLen( pArray ) + 1;
+         HB_SIZE ulLen = hb_arrayLen( pArray ) + 1;
          if( lPos == 0 )
             lPos = 1;
          else if( lPos < 0 )
             lPos += ulLen + 1;
-         if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
+         if( lPos >= 1 && ( HB_SIZE ) lPos <= ulLen )
             hb_arraySize( pArray, ulLen );
       }
       else if( lPos == 0 )

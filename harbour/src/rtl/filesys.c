@@ -550,7 +550,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
       pid_t pid;
       char * pszTmp;
       BOOL bRead;
-      ULONG ulLen;
+      HB_SIZE ulLen;
       int iMaxFD;
 
       ulLen = strlen( pFilename );
@@ -2710,12 +2710,12 @@ const char * hb_fsCurDir( USHORT uiDrive )
 /* NOTE: Thread safe version of hb_fsCurDir() */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_ERRCODE hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, ULONG ulSize )
+HB_ERRCODE hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, HB_SIZE ulSize )
 {
    USHORT uiCurDrv = uiDrive;
    HB_ERRCODE usError;
    char * pszStart;
-   ULONG ulLen;
+   HB_SIZE ulLen;
    BOOL fResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDirBuff(%hu)", uiDrive));
@@ -3270,7 +3270,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        pszCP )
    {
       PHB_FNAME pFileName;
-      ULONG ulLen;
+      HB_SIZE ulLen;
 
       if( pszFree )
       {
@@ -3365,7 +3365,7 @@ void hb_fsBaseDirBuff( char * pszBuffer )
       PHB_FNAME pFName = hb_fsFNameSplit( szBaseName );
       const char * pszResult;
       char * pszFree = NULL;
-      ULONG ulSize = HB_PATH_MAX;
+      HB_SIZE ulSize = HB_PATH_MAX;
 
       pFName->szName = NULL;
       pFName->szExtension = NULL;

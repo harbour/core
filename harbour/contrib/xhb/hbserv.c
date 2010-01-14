@@ -160,7 +160,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    UINT uiMask;
    UINT uiSig;
    PHB_ITEM pFunction, pExecArray, pRet;
-   ULONG ulPos;
+   HB_SIZE ulPos;
    int iRet;
 
    #if !( defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ ) )
@@ -414,7 +414,7 @@ static S_TUPLE s_sigTable[] = {
 static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
    PHB_ITEM pFunction, pExecArray, pRet;
-   ULONG ulPos;
+   HB_SIZE ulPos;
    UINT uiSig, uiMask;
    int iRet;
 

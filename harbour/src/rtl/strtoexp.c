@@ -58,7 +58,7 @@ HB_FUNC( HB_STRTOEXP )
 
    if( pszString )
    {
-      ULONG ulLen = hb_parclen( 1 ), ulRet, ul, uQ = 0;
+      HB_SIZE ulLen = hb_parclen( 1 ), ulRet, ul, uQ = 0;
       int iType = 0;
       char ch, * pDst, * pszResult;
 

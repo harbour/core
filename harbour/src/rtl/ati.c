@@ -55,14 +55,14 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      ULONG ulPos = 0;
-      ULONG ulSubPos = 0;
+      HB_SIZE ulPos = 0;
+      HB_SIZE ulSubPos = 0;
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
@@ -95,10 +95,10 @@ HB_FUNC( HB_ATI )
 
    if( pText && pSub )
    {
-      ULONG ulTextLength = hb_itemGetCLen( pText );
-      ULONG ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
-      ULONG ulEnd = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
-      ULONG ulPos;
+      HB_SIZE ulTextLength = hb_itemGetCLen( pText );
+      HB_SIZE ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+      HB_SIZE ulEnd = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulTextLength;
+      HB_SIZE ulPos;
 
       if( ulStart > ulTextLength || ulEnd < ulStart )
          hb_retnl( 0 );

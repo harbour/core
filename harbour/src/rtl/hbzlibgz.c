@@ -165,7 +165,7 @@ HB_FUNC( HB_GZREAD )
 {
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szBuffer;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    if( pBuffer && hb_itemGetWriteCL( pBuffer, &szBuffer, &ulLen ) )
    {
@@ -174,7 +174,7 @@ HB_FUNC( HB_GZREAD )
       {
          if( HB_ISNUM( 3 ) )
          {
-            ULONG ulLim = ( ULONG ) hb_parnl( 3 );
+            HB_SIZE ulLim = ( HB_SIZE ) hb_parnl( 3 );
             if( ulLim < ulLen )
                ulLen = ulLim;
          }
@@ -196,7 +196,7 @@ HB_FUNC( HB_GZWRITE )
       gzFile gz = hb_gzParam( 1 );
       if( gz )
          hb_retni( gzwrite( gz, szData, HB_ISNUM( 3 ) ?
-                            ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
+                            ( HB_SIZE ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

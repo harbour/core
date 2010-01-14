@@ -65,7 +65,7 @@
 
 #if defined( HB_OS_WIN )
 
-void hb_mbtowccpy( wchar_t *dstW, const char *srcA, ULONG ulLen )
+void hb_mbtowccpy( wchar_t *dstW, const char *srcA, HB_SIZE ulLen )
 {
    MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ulLen / sizeof( wchar_t ) );
 }

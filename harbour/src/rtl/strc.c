@@ -64,7 +64,7 @@ HB_FUNC( HB_STRDECODESCAPE )
 
    if( pText )
    {
-      ULONG ulLen = hb_itemGetCLen( pText );
+      HB_SIZE ulLen = hb_itemGetCLen( pText );
       if( ulLen > 0 )
       {
          char * str = ( char * ) hb_xgrab( ulLen + 1 );
@@ -92,13 +92,13 @@ HB_FUNC( HB_STRCDECODE )
 
    if( pText )
    {
-      ULONG ulLen = hb_itemGetCLen( pText );
+      HB_SIZE ulLen = hb_itemGetCLen( pText );
       BOOL fCont = hb_parl( 2 );
       if( ulLen > 0 )
       {
          const char * pszSrc = hb_itemGetCPtr( pText );
          char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-         ULONG ulDst = 0, ul;
+         HB_SIZE ulDst = 0, ul;
 
          for( ;; )
          {

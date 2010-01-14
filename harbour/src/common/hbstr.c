@@ -81,14 +81,14 @@ const char * hb_szAscii[ 256 ] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05
                                    "\xE0", "\xE1", "\xE2", "\xE3", "\xE4", "\xE5", "\xE6", "\xE7", "\xE8", "\xE9", "\xEA", "\xEB", "\xEC", "\xED", "\xEE", "\xEF",
                                    "\xF0", "\xF1", "\xF2", "\xF3", "\xF4", "\xF5", "\xF6", "\xF7", "\xF8", "\xF9", "\xFA", "\xFB", "\xFC", "\xFD", "\xFE", "\xFF" };
 
-ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+HB_SIZE hb_strAt( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      ULONG ulPos = 0;
-      ULONG ulSubPos = 0;
+      HB_SIZE ulPos = 0;
+      HB_SIZE ulSubPos = 0;
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
@@ -114,7 +114,7 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
       return 0;
 }
 
-BOOL hb_strEmpty( const char * szText, ULONG ulLen )
+BOOL hb_strEmpty( const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %lu)", szText, ulLen));
 
@@ -156,7 +156,7 @@ char * hb_strlow( char * pszText )
 char * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   ULONG ulLen = strlen( pszText ) + 1;
+   HB_SIZE ulLen = strlen( pszText ) + 1;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %ld)", pszText, ulLen));
 
@@ -166,10 +166,10 @@ char * hb_strdup( const char * pszText )
    return pszDup;
 }
 
-char * hb_strndup( const char * pszText, ULONG ulLen )
+char * hb_strndup( const char * pszText, HB_SIZE ulLen )
 {
    char * pszDup;
-   ULONG ul;
+   HB_SIZE ul;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%s, %ld)", pszText, ulLen));
 
@@ -185,9 +185,9 @@ char * hb_strndup( const char * pszText, ULONG ulLen )
    return pszDup;
 }
 
-ULONG hb_strnlen( const char * pszText, ULONG ulLen )
+HB_SIZE hb_strnlen( const char * pszText, HB_SIZE ulLen )
 {
-   ULONG ul = 0;
+   HB_SIZE ul = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%s, %ld)", pszText, ulLen));
 
@@ -200,7 +200,7 @@ ULONG hb_strnlen( const char * pszText, ULONG ulLen )
 char * hb_strduptrim( const char * pszText )
 {
    char * pszDup;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strduptrim(%s)", pszText));
 
@@ -218,9 +218,9 @@ char * hb_strduptrim( const char * pszText )
    return pszDup;
 }
 
-ULONG hb_strlentrim( const char * pszText )
+HB_SIZE hb_strlentrim( const char * pszText )
 {
-   ULONG ul = 0;
+   HB_SIZE ul = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strlentrim(%s)", pszText));
 
@@ -262,9 +262,9 @@ int hb_stricmp( const char * s1, const char * s2 )
 }
 
 /* warning: It is not case sensitive */
-int hb_strnicmp( const char * s1, const char * s2, ULONG count )
+int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
-   ULONG ulCount;
+   HB_SIZE ulCount;
    int rc = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
@@ -334,7 +334,7 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
    if( szDest == NULL )
    {
       const char * szSrcPtr = szSrc;
-      ULONG ulSize = 1;
+      HB_SIZE ulSize = 1;
       va_start( va, szSrc );
       while( szSrcPtr )
       {
@@ -535,10 +535,10 @@ double hb_numDecConv( double dNum, int iDec )
       return hb_numRound( dNum, 0 );
 }
 
-static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG * lVal, double * dVal, int * piDec, int * piWidth )
+static BOOL hb_str2number( BOOL fPCode, const char* szNum, HB_SIZE ulLen, HB_LONG * lVal, double * dVal, int * piDec, int * piWidth )
 {
    BOOL fDbl = FALSE, fDec = FALSE, fNeg, fHex = FALSE;
-   ULONG ulPos = 0;
+   HB_SIZE ulPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %lu, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
@@ -700,13 +700,13 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    return fDbl;
 }
 
-BOOL hb_compStrToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+BOOL hb_compStrToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( TRUE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
-BOOL hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_valStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
@@ -718,14 +718,14 @@ BOOL hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal )
    return hb_str2number( FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
-BOOL hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal )
+BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %lu, %p, %p)", szNum, ulLen, plVal, pdVal ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
 }
 
 /* returns the numeric value of a character string representation of a number */
-double hb_strVal( const char * szText, ULONG ulLen )
+double hb_strVal( const char * szText, HB_SIZE ulLen )
 {
    HB_LONG lVal;
    double dVal;
@@ -753,7 +753,7 @@ HB_LONG hb_strValInt( const char * szText, int * iOverflow )
    return lVal;
 }
 
-char * hb_numToStr( char * szBuf, ULONG ulSize, HB_LONG lNumber )
+char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_LONG lNumber )
 {
    int iPos = ( int ) ulSize;
    BOOL fNeg = FALSE;
@@ -793,7 +793,7 @@ char * hb_numToStr( char * szBuf, ULONG ulSize, HB_LONG lNumber )
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
-char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
@@ -812,7 +812,7 @@ char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
  * NOTE: Unlike the documentation for strncat, this routine will always append
  *       a null and the ulLen param is pDest size not pSource limit
  */
-char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncat( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
@@ -839,7 +839,7 @@ char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
@@ -863,7 +863,7 @@ char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
@@ -887,10 +887,10 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
-   ULONG ulSLen;
+   HB_SIZE ulSLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -919,10 +919,10 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
-char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
+char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
-   ULONG ulSLen;
+   HB_SIZE ulSLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %s, %lu)", pDest, pSource, ulLen));
 
@@ -944,9 +944,9 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
    return pBuf;
 }
 
-char * hb_strRemEscSeq( char *str, ULONG *pLen )
+char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
 {
-   ULONG ul = * pLen, ulStripped = 0;
+   HB_SIZE ul = * pLen, ulStripped = 0;
    char * ptr, * dst, ch;
 
    ptr = dst = str;
@@ -1039,7 +1039,7 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
    return str;
 }
 
-char * hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen )
+char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pulLen )
 {
    char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
 
@@ -1047,14 +1047,14 @@ char * hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen )
    pBuffer[ *pulLen ] = '\0';
    if( iMethod == 1 )
    {
-      ULONG ul;
+      HB_SIZE ul;
       for( ul = 0; ul < *pulLen; ul++ )
          pBuffer[ ul ] ^= 0xF3;
    }
    return pBuffer;
 }
 
-char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
+char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pulLen )
 {
    char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
 
@@ -1062,7 +1062,7 @@ char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
    pBuffer[ *pulLen ] = '\0';
    if( iMethod == 1 )
    {
-      ULONG ul;
+      HB_SIZE ul;
       for( ul = 0; ul < *pulLen; ul++ )
          pBuffer[ ul ] ^= 0xF3;
    }
@@ -1070,9 +1070,9 @@ char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
 }
 
 /* 'pDest' must be double the size of 'size'. [vszakats] */
-void hb_strtohex( const char * pSource, ULONG size, char * pDest )
+void hb_strtohex( const char * pSource, HB_SIZE size, char * pDest )
 {
-   ULONG i;
+   HB_SIZE i;
 
    for( i = 0; i < size; i++ )
    {

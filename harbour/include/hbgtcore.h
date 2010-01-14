@@ -594,12 +594,12 @@ extern HB_EXPORT BOOL   hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 
 /* low level GT functions common to different GTs supported by RTL */
-extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC );
-extern BOOL hb_gt_setClipboard( const char * szClipData, ULONG ulLen );
-extern BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen );
+extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, BOOL fSetACSC );
+extern BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen );
+extern BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pulLen );
 #if defined( HB_OS_WIN )
-extern BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen );
-extern BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
+extern BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen );
+extern BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen );
 extern int  hb_gt_winapi_getKbdState( void );
 extern void hb_gt_winapi_setKbdState( int kbdShifts );
 extern void hb_gt_winapi_tone( double dFrequency, double dDuration );

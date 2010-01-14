@@ -1304,7 +1304,7 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
 /* NOTE: The full size of the buffer is expected as nSize. [vszakats] */
 int hb_vsnprintf( char * buffer, size_t nSize, const char * format, va_list arglist )
 {
-   ULONG result;
+   int result;
 
 #if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
    /* Use vsprintf() for DJGPP <= 2.03.

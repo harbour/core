@@ -58,15 +58,15 @@ HB_FUNC( STRDEL )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       const char * szText = hb_parcx( 1 );
-      ULONG ulText = hb_parclen( 1 );
-      ULONG ulDel = hb_parclen( 2 );
+      HB_SIZE ulText = hb_parclen( 1 );
+      HB_SIZE ulDel = hb_parclen( 2 );
 
       if( ulDel > 0 && ulText > 0 )
       {
          const char * szDel = hb_parcx( 2 );
-         ULONG ulPosTxt = 0;
-         ULONG ulResult = 0;
-         ULONG ulPosDel = 0;
+         HB_SIZE ulPosTxt = 0;
+         HB_SIZE ulResult = 0;
+         HB_SIZE ulPosDel = 0;
          char * szResult = ( char * ) hb_xgrab( ulText + 1 );
 
          for( ; ( ulPosDel < ulText && ulPosDel < ulDel ); ulPosDel++ )

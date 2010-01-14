@@ -53,9 +53,9 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-static char * hb_strHardCR( char * pszString, ULONG ulStringLen )
+static char * hb_strHardCR( char * pszString, HB_SIZE ulStringLen )
 {
-   ULONG ulStringPos;
+   HB_SIZE ulStringPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %lu)", pszString, ulStringLen));
 
@@ -78,7 +78,7 @@ HB_FUNC( HARDCR )
    if( pString )
    {
       char * pszBuffer = hb_itemGetC( pString );
-      ULONG ulStringLen = hb_itemGetCLen( pString );
+      HB_SIZE ulStringLen = hb_itemGetCLen( pString );
 
       hb_retclen_buffer( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
    }

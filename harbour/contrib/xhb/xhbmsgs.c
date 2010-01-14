@@ -297,7 +297,7 @@ HB_FUNC( XHB_GREATEREQ )
  * data from tail
  */
 #undef HB_IS_VALID_INDEX
-#define HB_IS_VALID_INDEX( idx, max )  ( ( ( LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( ULONG ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( ( ( LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
 
 HB_FUNC( XHB_INDEX )
 {
@@ -309,10 +309,10 @@ HB_FUNC( XHB_INDEX )
       PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
       if( HB_IS_NUMERIC( pIndex ) )
       {
-         ULONG ulIndex = hb_itemGetNL( pIndex );
+         HB_SIZE ulIndex = hb_itemGetNL( pIndex );
          if( HB_IS_ARRAY( pSelf ) )
          {
-            ULONG ulLen = hb_arrayLen( pSelf );
+            HB_SIZE ulLen = hb_arrayLen( pSelf );
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
             {
                hb_itemMoveRef( hb_arrayGetItemPtr( pSelf, ulIndex ), pValue );
@@ -322,7 +322,7 @@ HB_FUNC( XHB_INDEX )
          }
          else if( HB_IS_STRING( pSelf ) )
          {
-            ULONG ulLen = hb_itemGetCLen( pSelf );
+            HB_SIZE ulLen = hb_itemGetCLen( pSelf );
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
             {
                char cValue = HB_IS_STRING( pValue ) ? hb_itemGetCPtr( pValue )[0] :
@@ -353,10 +353,10 @@ HB_FUNC( XHB_INDEX )
    {  /* ACCESS */
       if( HB_IS_NUMERIC( pIndex ) )
       {
-         ULONG ulIndex = hb_itemGetNL( pIndex );
+         HB_SIZE ulIndex = hb_itemGetNL( pIndex );
          if( HB_IS_ARRAY( pSelf ) )
          {
-            ULONG ulLen = hb_arrayLen( pSelf );
+            HB_SIZE ulLen = hb_arrayLen( pSelf );
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
                hb_itemReturn( hb_arrayGetItemPtr( pSelf, ulIndex ) );
             else
@@ -364,7 +364,7 @@ HB_FUNC( XHB_INDEX )
          }
          else if( HB_IS_STRING( pSelf ) )
          {
-            ULONG ulLen = hb_itemGetCLen( pSelf );
+            HB_SIZE ulLen = hb_itemGetCLen( pSelf );
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
                hb_retclen( hb_itemGetCPtr( pSelf ) + ulIndex - 1, 1 );
             else

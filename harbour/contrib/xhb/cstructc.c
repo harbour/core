@@ -61,7 +61,7 @@
 #include "hbset.h"
 #include "hbctypes.ch"
 
-static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, ULONG ulLen )
+static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPutCRaw(%p, %s, %lu)", pItem, szText, ulLen));
 
@@ -90,7 +90,7 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, ULONG ulLen
 #ifdef hb_itemPutCRawStatic
    #undef hb_itemPutCRawStatic
 #endif
-static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG ulLen )
+static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %lu)", pItem, szText, ulLen));
 
@@ -113,7 +113,7 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG
 #ifdef hb_retclenAdoptRaw
    #undef hb_retclenAdoptRaw
 #endif
-void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
+void hb_retclenAdoptRaw( const char * szText, HB_SIZE ulLen )
 {
    hb_itemPutCRaw( hb_stackReturnItem(), szText, ulLen );
 }
@@ -121,7 +121,7 @@ void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
 #ifdef hb_retclenStatic
    #undef hb_retclenStatic
 #endif
-void hb_retclenStatic( const char * szText, ULONG ulLen )
+void hb_retclenStatic( const char * szText, HB_SIZE ulLen )
 {
    hb_itemPutCRawStatic( hb_stackReturnItem(), szText, ulLen );
 }
@@ -1411,15 +1411,15 @@ HB_FUNC( HB_POINTER2STRING )
 
    if( HB_IS_POINTER( pPointer ) && pLen )
    {
-      hb_retclen( (char *) hb_itemGetPtr( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
+      hb_retclen( (char *) hb_itemGetPtr( pPointer ), (HB_SIZE) hb_itemGetNL( pLen ) );
    }
    else if( HB_IS_INTEGER( pPointer ) && pLen )
    {
-      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNI( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
+      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNI( pPointer ), (HB_SIZE) hb_itemGetNL( pLen ) );
    }
    else if( HB_IS_LONG( pPointer ) && pLen )
    {
-      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNL( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
+      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNL( pPointer ), (HB_SIZE) hb_itemGetNL( pLen ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );

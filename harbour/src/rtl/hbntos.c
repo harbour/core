@@ -63,7 +63,7 @@ HB_FUNC( HB_NTOS )
 
       if( szResult )
       {
-         ULONG nToTrim = 0;
+         HB_SIZE nToTrim = 0;
 
          while( szResult[ nToTrim ] == ' ' )
             ++nToTrim;

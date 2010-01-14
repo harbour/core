@@ -57,7 +57,7 @@
 
 /* locates a substring in a string */
 
-ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
    char cLastChar = ' ';
 
@@ -65,8 +65,8 @@ ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText,
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      ULONG ulPos = 0;
-      ULONG ulSubPos = 0;
+      HB_SIZE ulPos = 0;
+      HB_SIZE ulSubPos = 0;
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
@@ -168,14 +168,14 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 }
 
 /* Case insensitive hb_strAt() function */
-static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      ULONG ulPos = 0;
-      ULONG ulSubPos = 0;
+      HB_SIZE ulPos = 0;
+      HB_SIZE ulSubPos = 0;
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
@@ -213,7 +213,7 @@ HB_FUNC( ATI )
       LONG lLen = hb_itemGetCLen( pText );
       LONG lStart = pStart ? hb_itemGetNL( pStart ) : 1;
       LONG lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
-      ULONG ulPos;
+      HB_SIZE ulPos;
 
       if( lStart < 0 )
       {

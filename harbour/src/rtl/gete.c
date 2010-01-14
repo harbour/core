@@ -71,8 +71,8 @@ HB_FUNC( GETENV )
    if( pName && hb_pcount() == 1 )
    {
       char * pszName = hb_itemGetC( pName );
-      ULONG ulName = strlen( pszName );
-      ULONG ulPos;
+      HB_SIZE ulName = strlen( pszName );
+      HB_SIZE ulPos;
 
       /* strip the '=' or else it will clear the variable! */
 
@@ -140,8 +140,8 @@ HB_FUNC( HB_GETENV )
    if( pName )
    {
       char * pszName = hb_itemGetC( pName );
-      ULONG ulName = strlen( pszName );
-      ULONG ulPos;
+      HB_SIZE ulName = strlen( pszName );
+      HB_SIZE ulPos;
 
       /* strip the '=' or else it will clear the variable! */
 

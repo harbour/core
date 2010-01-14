@@ -96,7 +96,7 @@ static void hb_getScreenRange( int * piMin, int * piMax,
 HB_FUNC( SAVESCREEN )
 {
    int iTop, iLeft, iBottom, iRight;
-   ULONG ulSize;
+   HB_SIZE ulSize;
    void * pBuffer;
    BOOL fNoCheck = FALSE;
 

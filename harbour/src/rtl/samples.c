@@ -78,7 +78,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 
 static ULONG hb_TimeStrToSec( const char * pszTime )
 {
-   ULONG ulLen;
+   HB_SIZE ulLen;
    ULONG ulTime = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));

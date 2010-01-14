@@ -162,7 +162,7 @@ BOOL hb_OutDebugName( PHB_ITEM pName )
    return bRet;
 }
 
-void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
+void hb_OutDebug( const char * szMsg, HB_SIZE ulMsgLen )
 {
 #if defined( HB_OS_UNIX )
    int iStatus, iPid;
@@ -199,7 +199,7 @@ void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
 
          if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
          {
-            if( ( ULONG ) write( s_iDebugFd, szMsg, ulMsgLen ) == ulMsgLen )
+            if( ( HB_SIZE ) write( s_iDebugFd, szMsg, ulMsgLen ) == ulMsgLen )
             {
                tv.tv_sec = 0;
                tv.tv_usec = 100000;

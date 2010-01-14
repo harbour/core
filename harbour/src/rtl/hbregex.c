@@ -98,7 +98,7 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 #endif
 }
 
-static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
+static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE ulLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
 #if defined( HB_HAS_PCRE )
@@ -154,7 +154,7 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
 
 HB_FUNC( HB_REGEXCOMP )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen == 0 )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type",
@@ -186,7 +186,7 @@ HB_FUNC( HB_ISREGEX )
 HB_FUNC( HB_ATX )
 {
    const char * pszString;
-   ULONG ulLen, ulStart, ulEnd;
+   HB_SIZE ulLen, ulStart, ulEnd;
    PHB_REGEX pRegEx;
    PHB_ITEM pString;
    int iPCount = hb_pcount();
@@ -248,7 +248,7 @@ static BOOL hb_regex( int iRequest )
    BOOL fResult = FALSE;
    PHB_REGEX pRegEx;
    const char * pszString;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    pString = hb_param( 2, HB_IT_STRING );
    if( !pString )
@@ -290,7 +290,7 @@ static BOOL hb_regex( int iRequest )
 
          case 1: /* LIKE */
             fResult = HB_REGMATCH_SO( aMatches, 0 ) == 0 &&
-                      ( ULONG ) HB_REGMATCH_EO( aMatches, 0 ) == ulLen;
+                      ( HB_SIZE ) HB_REGMATCH_EO( aMatches, 0 ) == ulLen;
             break;
 
          case 2: /* MATCH ( HAS ) */
@@ -359,12 +359,12 @@ static BOOL hb_regex( int iRequest )
          case 5: /* _ALL_ results AND positions */
          {
             PHB_ITEM pAtxArray;
-            int   iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
-            int   iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
-            BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if TRUE returns only matches and sub-matches, not positions */
-            ULONG ulOffSet   = 0;
-            int   iCount     = 0;
-            int   iSO, iEO;
+            int      iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
+            int      iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
+            BOOL     fOnlyMatch = hb_parldef( 7, 1 ); /* if TRUE returns only matches and sub-matches, not positions */
+            HB_SIZE  ulOffSet   = 0;
+            int      iCount     = 0;
+            int      iSO, iEO;
 
             /* Set new array */
             pRetArray = hb_itemArrayNew( 0 );

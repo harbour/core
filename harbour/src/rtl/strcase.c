@@ -62,7 +62,7 @@ HB_FUNC( LOWER )
    if( pText )
    {
       char * pszBuffer = hb_itemGetC( pText );
-      ULONG ulLen = hb_itemGetCLen( pText );
+      HB_SIZE ulLen = hb_itemGetCLen( pText );
 
       hb_retclen_buffer( hb_strLower( pszBuffer, ulLen ), ulLen );
    }
@@ -78,7 +78,7 @@ HB_FUNC( UPPER )
    if( pText )
    {
       char * pszBuffer = hb_itemGetC( pText );
-      ULONG ulLen = hb_itemGetCLen( pText );
+      HB_SIZE ulLen = hb_itemGetCLen( pText );
 
       hb_retclen_buffer( hb_strUpper( pszBuffer, ulLen ), ulLen );
    }

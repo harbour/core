@@ -54,7 +54,7 @@
 
 HB_FUNC( RAT )
 {
-   ULONG ulSubLen = hb_parclen( 1 );
+   HB_SIZE ulSubLen = hb_parclen( 1 );
 
    if( ulSubLen )
    {
@@ -85,7 +85,7 @@ HB_FUNC( RAT )
 
 HB_FUNC( HB_RAT )
 {
-   ULONG ulSubLen = hb_parclen( 1 );
+   HB_SIZE ulSubLen = hb_parclen( 1 );
 
    if( ulSubLen )
    {

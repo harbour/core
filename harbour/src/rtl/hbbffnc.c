@@ -76,7 +76,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
 
       if( pData )
       {
-         ULONG ulLen = hb_itemGetCLen( pData ), ulSize;
+         HB_SIZE ulLen = hb_itemGetCLen( pData ), ulSize;
 
          if( ulLen )
          {
@@ -119,7 +119,7 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
 
       if( pData )
       {
-         ULONG ulSize = hb_itemGetCLen( pData ), ulLen;
+         HB_SIZE ulSize = hb_itemGetCLen( pData ), ulLen;
 
          if( ulSize >= 8 && ( ulSize & 0x07 ) == 0 )
          {

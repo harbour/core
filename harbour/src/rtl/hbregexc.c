@@ -67,7 +67,7 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    return -1;
 }
 
-static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
+static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE ulLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
    HB_SYMBOL_UNUSED( pRegEx );
@@ -106,7 +106,7 @@ BOOL hb_regexIs( PHB_ITEM pItem )
    return hb_itemGetPtrGC( pItem, &s_gcRegexFuncs ) != NULL;
 }
 
-PHB_REGEX hb_regexCompile( const char *szRegEx, ULONG ulLen, int iFlags )
+PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE ulLen, int iFlags )
 {
    PHB_REGEX pRegEx;
 
@@ -138,7 +138,7 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
       }
       else if( HB_IS_STRING( pRegExItm ) )
       {
-         ULONG ulLen = hb_itemGetCLen( pRegExItm );
+         HB_SIZE ulLen = hb_itemGetCLen( pRegExItm );
          const char * szRegEx = hb_itemGetCPtr( pRegExItm );
          if( ulLen > 0 )
             pRegEx = hb_regexCompile( szRegEx, ulLen, iFlags );
@@ -160,7 +160,7 @@ void      hb_regexFree( PHB_REGEX pRegEx )
    }
 }
 
-BOOL      hb_regexMatch( PHB_REGEX pRegEx, const char *szString, ULONG ulLen, BOOL fFull )
+BOOL      hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE ulLen, BOOL fFull )
 {
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
    BOOL fMatch;

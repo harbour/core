@@ -54,7 +54,7 @@
 
 HB_FUNC( HB_BASE64ENCODE )
 {
-   ULONG len = hb_parclen( 1 );
+   HB_SIZE len = hb_parclen( 1 );
 
    if( len <= INT_MAX ) /* TOFIX */
    {

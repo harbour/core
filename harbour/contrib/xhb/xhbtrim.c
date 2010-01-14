@@ -64,7 +64,7 @@ HB_FUNC( XHB_RTRIM )
 
    if( pText )
    {
-      ULONG ulLen, ulSrc;
+      HB_SIZE ulLen, ulSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );
@@ -96,7 +96,7 @@ HB_FUNC( XHB_ALLTRIM )
 
    if( pText )
    {
-      ULONG ulLen, ulSrc;
+      HB_SIZE ulLen, ulSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );

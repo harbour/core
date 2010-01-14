@@ -56,11 +56,11 @@
 
 #include <zlib.h>
 
-static ULONG hb_zlibUncompressedSize( const char * szSrc, ULONG ulLen )
+static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE ulLen )
 {
    Byte buffer[ 1024 ];
    z_stream stream;
-   ULONG ulDest = 0;
+   HB_SIZE ulDest = 0;
 
    memset( &stream, 0, sizeof( z_stream ) );
 
@@ -118,7 +118,7 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
  */
 HB_FUNC( HB_ZUNCOMPRESSLEN )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    hb_retnint( ulLen ? hb_zlibUncompressedSize( hb_parc( 1 ), ulLen ) : 0 );
 }
@@ -132,7 +132,7 @@ HB_FUNC( HB_ZCOMPRESS )
    const char * szData = hb_parc( 1 );
    if( szData )
    {
-      ULONG ulLen = hb_parclen( 1 );
+      HB_SIZE ulLen = hb_parclen( 1 );
 
       if( ulLen )
       {
@@ -196,7 +196,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 
    if( szData )
    {
-      ULONG ulLen = hb_parclen( 1 );
+      HB_SIZE ulLen = hb_parclen( 1 );
 
       if( ulLen )
       {

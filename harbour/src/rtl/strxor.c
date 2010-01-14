@@ -61,7 +61,7 @@ HB_FUNC( HB_STRXOR )
    if( pItem )
    {
       PHB_ITEM     pItem2;
-      ULONG        ulLen1, ulLen2, ul, ul2;
+      HB_SIZE      ulLen1, ulLen2, ul, ul2;
       const char * pStr1;
       const char * pStr2;
       char *       pRet;

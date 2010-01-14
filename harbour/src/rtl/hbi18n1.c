@@ -279,7 +279,7 @@ static void hb_i18n_setitem( PHB_ITEM pHash, const char * szKey, const char * sz
 
 static PHB_ITEM hb_i18n_pluralexp_compile( PHB_ITEM pExp )
 {
-   ULONG ulLen = hb_itemGetCLen( pExp );
+   HB_SIZE ulLen = hb_itemGetCLen( pExp );
    PHB_ITEM pBlock = NULL;
 
    if( ulLen > 0 )
@@ -444,7 +444,8 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
 {
    if( pI18N )
    {
-      ULONG ulSize, ulCRC;
+      HB_SIZE ulSize;
+      ULONG ulCRC;
       char * pBuffer = hb_itemSerialize( pI18N->table, FALSE, &ulSize );
       char * pI18Nbuffer;
       PHB_ITEM pKey, pValue;
@@ -471,7 +472,7 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
    return NULL;
 }
 
-static BOOL hb_i18n_headercheck( const char * pBuffer, ULONG ulLen )
+static BOOL hb_i18n_headercheck( const char * pBuffer, HB_SIZE ulLen )
 {
    if( ulLen < HB_I18N_HEADER_SIZE )
       return FALSE;
@@ -490,7 +491,7 @@ static PHB_I18N_TRANS hb_i18n_deserialize( PHB_ITEM pItem )
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
-      ULONG ulLen = hb_itemGetCLen( pItem );
+      HB_SIZE ulLen = hb_itemGetCLen( pItem );
       const char * pBuffer = hb_itemGetCPtr( pItem );
 
       if( ulLen > HB_I18N_HEADER_SIZE && hb_i18n_headercheck( pBuffer, ulLen ) )
@@ -652,7 +653,7 @@ static BOOL hb_i18n_setpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pForm,
 
 static void hb_i18n_transitm( PHB_ITEM pText, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   ULONG ulLen = hb_itemGetCLen( pText );
+   HB_SIZE ulLen = hb_itemGetCLen( pText );
    if( ulLen > 0 )
    {
       char * szValue = hb_cdpnDup( hb_itemGetCPtr( pText ), &ulLen,
@@ -678,11 +679,11 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
       {
          if( fTranslate && cdpage )
          {
-            ULONG ulHashLen = hb_hashLen( pI18N->context_table ), ul;
+            HB_SIZE ulHashLen = hb_hashLen( pI18N->context_table ), ul;
             for( ul = 1; ul <= ulHashLen; ++ul )
             {
                PHB_ITEM pContext = hb_hashGetValueAt( pI18N->context_table, ul );
-               ULONG ulCount = hb_hashLen( pContext ), u;
+               HB_SIZE ulCount = hb_hashLen( pContext ), u;
 
                for( u = 1; u <= ulCount; ++u )
                {
@@ -700,7 +701,7 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
                      }
                      else if( HB_IS_ARRAY( pResult ) )
                      {
-                        ULONG ulTrans = hb_arrayLen( pResult ), u2;
+                        HB_SIZE ulTrans = hb_arrayLen( pResult ), u2;
                         for( u2 = 1; u2 <= ulTrans; ++u2 )
                         {
                            hb_i18n_transitm( hb_arrayGetItemPtr( pResult, u2 ),
@@ -1048,7 +1049,7 @@ HB_FUNC( HB_I18N_ADDTEXT )
       {
          if( HB_IS_ARRAY( pTrans ) )
          {
-            ULONG ulLen = hb_arrayLen( pTrans ), ul;
+            HB_SIZE ulLen = hb_arrayLen( pTrans ), ul;
             if( ulLen != 0 )
             {
                for( ul = 1; ul <= ulLen; ++ul )

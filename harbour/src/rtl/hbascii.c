@@ -61,7 +61,7 @@ HB_FUNC( HB_ASCIIUPPER )
    if( pText )
    {
       const char * pszText = hb_itemGetCPtr( pText );
-      ULONG ulLen = hb_itemGetCLen( pText ), u;
+      HB_SIZE ulLen = hb_itemGetCLen( pText ), u;
 
       for( u = 0; u < ulLen; u++ )
       {
@@ -91,7 +91,7 @@ HB_FUNC( HB_ASCIILOWER )
    if( pText )
    {
       const char * pszText = hb_itemGetCPtr( pText );
-      ULONG ulLen = hb_itemGetCLen( pText ), u;
+      HB_SIZE ulLen = hb_itemGetCLen( pText ), u;
 
       for( u = 0; u < ulLen; u++ )
       {

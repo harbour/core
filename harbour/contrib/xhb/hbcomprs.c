@@ -64,9 +64,9 @@
 
 int s_hb_compress_error;
 
-ULONG hb_destBuflen( ULONG srclen )
+HB_SIZE hb_destBuflen( HB_SIZE srclen )
 {
-   ULONG ret = srclen;
+   HB_SIZE ret = srclen;
 
    ret += ret / 100*15 + 12;
    if ( srclen % 100 != 0 ) ret+=15;
@@ -84,7 +84,7 @@ HB_FUNC( HB_COMPRESS )
 {
    const char *cSource;
    char *cDest;
-   ULONG ulSrclen, ulDstlen, ulBufLen;
+   HB_SIZE ulSrclen, ulDstlen, ulBufLen;
    PHB_ITEM pSource, pDest =NULL, pDestLen = NULL;
    int nCompFactor, iFirst;
    int cerr;
@@ -111,7 +111,7 @@ HB_FUNC( HB_COMPRESS )
    cSource = hb_itemGetCPtr( pSource );
    if (hb_pcount() > iFirst + 1 )
    {
-      ulSrclen = (ULONG) hb_parnl( iFirst + 2 );
+      ulSrclen = (HB_SIZE) hb_parnl( iFirst + 2 );
    }
    else
    {
@@ -181,7 +181,7 @@ HB_FUNC( HB_UNCOMPRESS )
 {
    const char *cSource;
    char *cDest;
-   ULONG ulSrclen, ulDstlen, ulBufLen;
+   HB_SIZE ulSrclen, ulDstlen, ulBufLen;
    PHB_ITEM pSource, pDest;
    int cerr;
 
@@ -194,10 +194,10 @@ HB_FUNC( HB_UNCOMPRESS )
    }
 
    cSource = hb_itemGetCPtr( pSource );
-   ulDstlen = (ULONG) hb_parnl( 1 );
+   ulDstlen = (HB_SIZE) hb_parnl( 1 );
    if (hb_pcount() > 2 )
    {
-      ulSrclen = (ULONG) hb_parnl( 3 );
+      ulSrclen = (HB_SIZE) hb_parnl( 3 );
    }
    else
    {

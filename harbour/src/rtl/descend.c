@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
+void hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strDescend(%s, %s, %lu)", szStringTo, szStringFrom, ulLen));
 
@@ -74,7 +74,7 @@ HB_FUNC( DESCEND )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         ULONG ulLen = hb_itemGetCLen( pItem );
+         HB_SIZE ulLen = hb_itemGetCLen( pItem );
 
          if( ulLen > 0 )
          {

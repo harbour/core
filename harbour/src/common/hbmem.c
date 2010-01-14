@@ -64,12 +64,12 @@
    #if UINT_MAX != ULONG_MAX
 */
 #ifndef hb_xmemcpy
-void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
+void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen )
 {
-   BYTE * pDest;
-   BYTE * pSource;
-   ULONG  ulRemaining;
-   int    iCopySize;
+   BYTE *  pDest;
+   BYTE *  pSource;
+   HB_SIZE ulRemaining;
+   int     iCopySize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
 
@@ -83,7 +83,7 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
       if( ulRemaining > UINT_MAX )
       {
          iCopySize = UINT_MAX;
-         ulRemaining -= ( ULONG ) iCopySize;
+         ulRemaining -= ( HB_SIZE ) iCopySize;
       }
       else
       {
@@ -100,11 +100,11 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 #endif
 
 #ifndef hb_xmemset
-void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
+void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen )
 {
-   BYTE * pDest;
-   ULONG  ulRemaining;
-   int    iSetSize;
+   BYTE *  pDest;
+   HB_SIZE ulRemaining;
+   int     iSetSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
 
@@ -117,7 +117,7 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
       if( ulRemaining > UINT_MAX )
       {
          iSetSize = UINT_MAX;
-         ulRemaining -= ( ULONG ) iSetSize;
+         ulRemaining -= ( HB_SIZE ) iSetSize;
       }
       else
       {

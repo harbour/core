@@ -97,7 +97,9 @@ extern HB_EXPORT char *       hb_langName       ( void );
 
 /* Compatibility interface */
 
-extern HB_EXPORT const char * hb_langDGetErrorDesc    ( ULONG ulIndex );
+#ifdef HB_LEGACY_LEVEL3
+extern HB_EXPORT const char * hb_langDGetErrorDesc    ( int iIndex );
+#endif
 
 HB_EXTERN_END
 

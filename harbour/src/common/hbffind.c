@@ -741,7 +741,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       /* Convert from OS codepage */
       {
          char * pszFree = NULL;
-         ULONG ulSize = sizeof( ffind->szName );
+         HB_SIZE ulSize = sizeof( ffind->szName );
          const char * pszResult = hb_osDecodeCP( ffind->szName, &pszFree, &ulSize );
 
          if( pszFree )

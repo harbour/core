@@ -80,11 +80,11 @@ HB_FUNC( HB_POINTER2STRING )
    PHB_ITEM pLen     = hb_param( 2, HB_IT_NUMERIC );
 
    if( HB_IS_POINTER( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetPtr( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetPtr( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
    else if( HB_IS_INTEGER( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetNI( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetNI( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
    else if( HB_IS_LONG( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
@@ -136,8 +136,8 @@ HB_FUNC( XHB__KEYBOARD )
    else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      ULONG ulIndex;
-      ULONG ulElements = hb_arrayLen( pArray );
+      HB_SIZE ulIndex;
+      HB_SIZE ulElements = hb_arrayLen( pArray );
 
       for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
       {

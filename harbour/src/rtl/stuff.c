@@ -58,12 +58,12 @@ HB_FUNC( STUFF )
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
       const char * szText = hb_parc( 1 );
-      ULONG ulText = hb_parclen( 1 );
-      ULONG ulPos = hb_parnl( 2 );
-      ULONG ulDel = hb_parnl( 3 );
-      ULONG ulInsert = hb_parclen( 4 );
+      HB_SIZE ulText = hb_parclen( 1 );
+      HB_SIZE ulPos = hb_parnl( 2 );
+      HB_SIZE ulDel = hb_parnl( 3 );
+      HB_SIZE ulInsert = hb_parclen( 4 );
 
-      ULONG ulTotalLen;
+      HB_SIZE ulTotalLen;
 
       if( ulPos > 0 )
          ulPos--;

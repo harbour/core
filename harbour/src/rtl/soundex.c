@@ -69,9 +69,9 @@ HB_FUNC( SOUNDEX )
    if( pString )
    {
       const char * pszString = hb_itemGetCPtr( pString );
-      ULONG ulLen = hb_itemGetCLen( pString );
-      ULONG nPos = 0;
-      ULONG nResultPos = 0;
+      HB_SIZE ulLen = hb_itemGetCLen( pString );
+      HB_SIZE nPos = 0;
+      HB_SIZE nResultPos = 0;
       char cCharPrev = '0';
 
       while( nPos < ulLen && nResultPos < SOUNDEX_LEN_MAX )

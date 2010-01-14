@@ -251,8 +251,8 @@ HB_FUNC( HB_SETKEYARRAY )
    {
       PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
       PHB_ITEM pIsActive = hb_param( 3, HB_IT_BLOCK );
-      ULONG nLen = hb_arrayLen( pKeyCodeArray );
-      ULONG nPos;
+      HB_SIZE nLen = hb_arrayLen( pKeyCodeArray );
+      HB_SIZE nPos;
 
       for( nPos = 1; nPos <= nLen; nPos++ )
          sk_add( &sk_data->sk_list, FALSE, hb_arrayGetNI( pKeyCodeArray, nPos ), pAction, pIsActive );
@@ -286,7 +286,7 @@ HB_FUNC( HB_SETKEYSAVE )
    PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
    PHB_ITEM pKeys, pKeyElements, pParam;
    PHB_SETKEY sk_list_tmp;
-   ULONG itemcount, nitem;
+   HB_SIZE itemcount, nitem;
 
    /* build an multi-dimensional array from existing hot-keys, and return it */
 

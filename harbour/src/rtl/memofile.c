@@ -132,7 +132,7 @@ static BOOL hb_memowrit( BOOL bHandleEOF )
 
       if( fhnd != FS_ERROR )
       {
-         ULONG ulSize = hb_itemGetCLen( pString );
+         HB_SIZE ulSize = hb_itemGetCLen( pString );
 
          bRetVal = ( hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pString ), ulSize ) == ulSize );
 

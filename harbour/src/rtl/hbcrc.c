@@ -149,7 +149,7 @@ static const ULONG crc16_tab[] =
 };
 
 
-ULONG hb_crc32( ULONG crc, const void *buf, ULONG len )
+ULONG hb_crc32( ULONG crc, const void * buf, HB_SIZE len )
 {
    crc ^= 0xffffffffL;
    if( buf && len )
@@ -162,7 +162,7 @@ ULONG hb_crc32( ULONG crc, const void *buf, ULONG len )
    return crc ^ 0xffffffffL;
 }
 
-ULONG hb_crc16( ULONG crc, const void *buf, ULONG len )
+ULONG hb_crc16( ULONG crc, const void * buf, HB_SIZE len )
 {
    crc ^= 0xffff;
    if( buf && len )
@@ -175,7 +175,7 @@ ULONG hb_crc16( ULONG crc, const void *buf, ULONG len )
    return crc ^ 0xffff;
 }
 
-HB_ULONG hb_crc( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crc( HB_ULONG crc, const void * buf, HB_SIZE len, HB_ULONG poly )
 {
    if( buf && len )
    {
@@ -205,7 +205,7 @@ HB_ULONG hb_crc( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
    return crc;
 }
 
-HB_ULONG hb_crcct( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crcct( HB_ULONG crc, const void * buf, HB_SIZE len, HB_ULONG poly )
 {
    if( buf && len )
    {
