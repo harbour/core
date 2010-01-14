@@ -99,27 +99,6 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
    DATA     hMenu
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
-   METHOD   destroy()
-
-   /* Manipulation */
-   METHOD   addItem()
-   METHOD   checkItem()
-   METHOD   delItem()
-   METHOD   disableItem()
-   METHOD   enableItem()
-   METHOD   getItem()
-   METHOD   insItem()
-   METHOD   isItemChecked()
-   METHOD   isItemEnabled()
-   METHOD   numItems()                            INLINE len( ::aMenuItems )
-   METHOD   selectItem()
-   METHOD   setItem()
-
-   /* Event CallBack Slots */
    DATA     sl_beginMenu
    DATA     sl_endMenu
    DATA     sl_itemMarked
@@ -127,17 +106,6 @@ CLASS xbpMenuBar INHERIT xbpWindow
    DATA     sl_drawItem
    DATA     sl_measureItem
    DATA     sl_onMenuKey
-
-   /* Event Callback Methods */
-   METHOD   beginMenu()                           SETGET
-   METHOD   endMenu()                             SETGET
-   METHOD   itemMarked()                          SETGET
-   METHOD   itemSelected()                        SETGET
-   METHOD   drawItem()                            SETGET
-   METHOD   measureItem()                         SETGET
-   METHOD   onMenuKey()                           SETGET
-
-   METHOD   DelAllItems()
 
    DATA     aMenuItems                             INIT {}
    DATA     aOrgItems                              INIT {}
@@ -151,10 +119,38 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
    DATA     className                              INIT "XbpMenuBar"
 
-   METHOD   ExeBlock()
-   METHOD   ExeHovered()
-   METHOD   PlaceItem()
+   METHOD   new( oParent, aPresParams, lVisible )
+   METHOD   create( oParent, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, aPresParams, lVisible )
+   METHOD   destroy()
+   METHOD   exeBlock( nMenuItemID )
+
+   METHOD   delAllItems()
+   METHOD   delItem( nItemIndex )
+   METHOD   placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
+   METHOD   addItem( aItem )
+   METHOD   insItem( nItemIndex, aItem )
+   METHOD   setItem( nItemIndex, aItem )
+   METHOD   exeHovered( nMenuItemID )
+   METHOD   checkItem( nItemIndex, lCheck )
+   METHOD   enableItem( nItemIndex )
+   METHOD   disableItem( nItemIndex )
+   METHOD   getItem( nItemIndex )
+   METHOD   isItemChecked( nItemIndex )
+   METHOD   isItemEnabled( nItemIndex )
+   METHOD   selectItem( nItemIndex )
+
+   METHOD   beginMenu( xParam )                   SETGET
+   METHOD   endMenu( xParam )                     SETGET
+   METHOD   itemMarked( xParam )                  SETGET
+   METHOD   itemSelected( xParam )                SETGET
+   METHOD   drawItem( xParam )                    SETGET
+   METHOD   measureItem( xParam )                 SETGET
+   METHOD   onMenuKey( xParam )                   SETGET
+
    METHOD   setStyle()
+   METHOD   numItems()                            INLINE len( ::aMenuItems )
 
    ENDCLASS
 
@@ -201,9 +197,9 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+METHOD xbpMenuBar:hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
 
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
       ::oWidget := QMenuBar()
@@ -704,12 +700,11 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
    DATA     title                                 INIT  ""
 
-   METHOD   new()
-   METHOD   create()
-
+   METHOD   new( oParent, aPresParams, lVisible )
+   METHOD   create( oParent, aPresParams, lVisible )
    METHOD   getTitle()
-   METHOD   setTitle()
-   METHOD   popup()
+   METHOD   setTitle( cTitle )
+   METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
 
    ENDCLASS

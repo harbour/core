@@ -76,12 +76,14 @@
 
 CLASS XbpRtf INHERIT XbpWindow
 
-   METHOD   init()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure()
-   METHOD   hbCreateFromQtPtr()
    METHOD   destroy()
-   METHOD   exeBlock()
+   METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
+   METHOD   exeBlock( nEvent, p1 )
+   METHOD   setStyle()                            VIRTUAL
 
    DATA     appearance                            INIT      XBP_APPEARANCE_3D
    DATA     bulletIndent                          INIT      0
@@ -133,15 +135,15 @@ CLASS XbpRtf INHERIT XbpWindow
    /*< Harbour Extensions >*/
    METHOD   redo()
    METHOD   insertText( cText )
-   METHOD   insertImage( cImageFile )
+   METHOD   insertImage( cImageFilename )
    METHOD   selFont                               SETGET
    /*</Harbour Extensions >*/
 
    DATA     sl_xbeRTF_Change
-   METHOD   change()                              SETGET
+   METHOD   change( ... )                         SETGET
 
    DATA     sl_xbeRTF_SelChange
-   METHOD   selChange()                           SETGET
+   METHOD   selChange( ... )                      SETGET
 
    PROTECTED:
 
@@ -155,7 +157,7 @@ CLASS XbpRtf INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpRtf:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpRtf:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

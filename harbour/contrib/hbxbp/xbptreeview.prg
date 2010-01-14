@@ -84,13 +84,14 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
    DATA     oRootItem
    ACCESS   rootItem()                            INLINE ::oRootItem
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   handleEvent()
-   METHOD   exeBlock()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   ExeBlock( nMsg, p1, p2 )
+
    METHOD   setStyle()
 
    METHOD   itemFromPos( aPos )
@@ -377,7 +378,7 @@ CLASS XbpTreeViewItem  INHERIT  XbpDataRef
    METHOD   setExpandedImage( nResIdoBitmap )
    METHOD   setMarkedImage( nResIdoBitmap )
 
-   METHOD   addItem()
+   METHOD   addItem( xItem, xNormalImage, xMarkedImage, xExpandedImage, cDllName, xValue )
    METHOD   delItem( oItem )
    METHOD   getChildItems()
    METHOD   getParentItem()

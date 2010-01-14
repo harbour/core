@@ -88,19 +88,19 @@ CLASS XbpBitmap
    DATA     cImageFileName
 
    METHOD   new()                                 INLINE  Self
-   METHOD   create()
+   METHOD   create( oPS )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()                             VIRTUAL
 
    METHOD   draw()
    METHOD   getColorTable( nNumColors )
    METHOD   getDefaultBGColor()
-   METHOD   load()
-   METHOD   loadFile()
-   METHOD   make()
+   METHOD   load( cDLLName, cID )
+   METHOD   loadFile( cImageFileName )
+   METHOD   make( nXsize, nYsize, nPlanes, nBits )
    METHOD   presSpace( oPS )
-   METHOD   saveFile()
-   METHOD   setBuffer()
+   METHOD   saveFile( cImageFileName, nFormat, nCompression )
+   METHOD   setBuffer( cBuffer, nFormat, nCompression )
    METHOD   getIPicture()
    METHOD   setIPicture( oPicture )
 

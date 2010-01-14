@@ -83,16 +83,16 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, XbpDataRef
 
    DATA     sl_xbeSB_Scroll
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
 
    METHOD   scroll( xParam )                      SETGET
 
-   METHOD   handleEvent()
-   METHOD   exeBlock()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   exeBlock( nAction )
 
    METHOD   setRange( aRange )
    METHOD   setScrollBoxSize( nUnits )

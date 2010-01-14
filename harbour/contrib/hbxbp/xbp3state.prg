@@ -80,19 +80,19 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
 
-   METHOD   setCaption( cCaption )
+   METHOD   setCaption( xCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
-   METHOD   handleEvent( nEvent, aInfo )
-   METHOD   exeBlock()
+   METHOD   exeBlock( iState )
 
    ENDCLASS
 

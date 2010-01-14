@@ -84,19 +84,18 @@ CLASS XbpQtUiLoader INHERIT XbpWindow
    DATA     aSignals                              INIT {}
    DATA     aEvents                               INIT {}
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
 
-   METHOD   loadUI()
-   METHOD   loadContents()
+   METHOD   event( cWidget, nEvent, bBlock )
+   METHOD   signal( cWidget, cSignal, bBlock )
    METHOD   loadWidgets()
-   METHOD   signal()
-   METHOD   event()
+   METHOD   loadContents( cUiFull )
+   METHOD   loadUI( cUiFull )
 
-
-   ERROR HANDLER OnError()
+   ERROR HANDLER OnError( ... )
 
    ENDCLASS
 

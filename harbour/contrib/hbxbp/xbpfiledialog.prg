@@ -85,15 +85,13 @@ CLASS XbpFileDialog INHERIT XbpWindow
    DATA     title                                 INIT NIL  // ""
    DATA     validatePath                          INIT .f.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos )
+   METHOD   create( oParent, oOwner, aPos )
+   METHOD   exeBlock( nEvent, p1 )
    METHOD   destroy()
-   METHOD   exeBlock()
-
-   METHOD   open()
-   METHOD   saveAs()
-   METHOD   extractFileNames()
+   METHOD   open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
+   METHOD   saveAs( cDefaultFile, lFileList, lCenter )
+   METHOD   extractFileNames( lAllowMultiple )
    METHOD   setStyle()
 
    ENDCLASS

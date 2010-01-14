@@ -84,15 +84,14 @@ CLASS XbpStatic  INHERIT  XbpWindow
 
    DATA     hBitmap
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
 
    METHOD   setCaption( xCaption, cDll )
-
-   METHOD   handleEvent()
 
    ENDCLASS
 /*----------------------------------------------------------------------*/

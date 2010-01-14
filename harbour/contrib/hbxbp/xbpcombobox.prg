@@ -79,12 +79,13 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    DATA     type                                  INIT    XBPCOMBO_DROPDOWN
    DATA     drawMode                              INIT    XBP_DRAW_NORMAL
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
-   METHOD   exeBlock()
+   METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
+   METHOD   exeBlock( nMsg, p1 )
 
    METHOD   listBoxFocus( lFocus )                VIRTUAL      // -> lOldFocus
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize

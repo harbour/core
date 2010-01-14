@@ -117,11 +117,12 @@ CLASS XbpFontDialog INHERIT XbpWindow
    DATA     viewPrinterFonts                      INIT   .F.
    DATA     viewScreenFonts                       INIT   .T.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   destroy()
+   METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD   exeBlock( nEvent, p1 )
    METHOD   display( nMode )
-   METHOD   exeBlock()
+   METHOD   destroy()
+   METHOD   XbpFontObject()
 
    DATA     sl_activateApply
    ACCESS   activateApply                         INLINE ::sl_activateApply
@@ -145,7 +146,6 @@ CLASS XbpFontDialog INHERIT XbpWindow
    DATA     ok                                    INIT   .f.
 
    DATA     oFont
-   METHOD   xbpFontObject
 
    ENDCLASS
 
@@ -451,7 +451,9 @@ METHOD XbpFont:create( cFontName )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFont:configure()
+METHOD XbpFont:configure( cFontName )
+
+   HB_SYMBOL_UNUSED( cFontName )
 
    RETURN Self
 

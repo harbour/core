@@ -95,10 +95,10 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
    DATA     oURL
    DATA     cSelectedText
 
-   METHOD   new()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   exeBlock()
+   METHOD   exeBlock( nEvent, p1 )
 
    METHOD   setHTML( cHTML )                      INLINE  ::oWidget:setHTML( cHTML )
 
@@ -110,7 +110,7 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
    METHOD   refresh()                             INLINE  ::oWidget:reload()
    METHOD   stop()                                INLINE  ::oWidget:stop()
 
-   METHOD   navigate( cURL, cCGI )
+   METHOD   navigate( cURL )
 
    DATA     sl_beforeNavigate                                                  PROTECTED
    ACCESS   beforeNavigate                        INLINE ::sl_beforeNavigate

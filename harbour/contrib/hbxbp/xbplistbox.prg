@@ -85,14 +85,14 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    DATA     oStrList
    DATA     oStrModel
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   exeBlock( nMode, pModel )
 
-   METHOD   handleEvent()
-   METHOD   exeBlock()
    METHOD   setStyle()
 
    METHOD   setItemsHeight( nPixel )              VIRTUAL

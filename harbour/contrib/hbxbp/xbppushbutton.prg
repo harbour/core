@@ -86,19 +86,19 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    DATA     default                               INIT .F.
    DATA     cancel                                INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-
-   METHOD   setCaption()
-
-   METHOD   activate()                            SETGET
-   METHOD   draw()                                SETGET
-
-   METHOD   handleEvent( nEvent, aInfo )
+   METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   exeBlock()
+   METHOD   setStyle()                            VIRTUAL
+
+   METHOD   setCaption( xCaption, cDll )
+
+   METHOD   activate( xParam )                    SETGET
+   METHOD   draw( xParam )                        SETGET
 
    ENDCLASS
 

@@ -94,7 +94,7 @@ CLASS XbpPartHandler
    METHOD   setOwner( oXbp )
    METHOD   setParent( oXbp )
 
-   METHOD   notifier( nEvent, xParams )
+   METHOD   notifier()
 
    DATA     aChildren                             INIT    {}
    DATA     nNameId

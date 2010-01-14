@@ -91,7 +91,7 @@ CLASS XbpDataRef
    ASSIGN   editBuffer( xData )                    INLINE ::sl_editBuffer := xData
 
    METHOD   getData()
-   METHOD   setData()
+   METHOD   setData( xValue, mp2 )
    METHOD   undo()
 
    METHOD   validate( xParam )                     SETGET

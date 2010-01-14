@@ -84,23 +84,22 @@ CLASS XbpTabPage  INHERIT  XbpWindow
    DATA     tabHeight                             INIT -1  /* Determines the height of the tab.                                                                                */
    DATA     type                                  INIT XBPTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   exeBlock( iIndex )
 
    METHOD   Minimize()
    METHOD   Maximize()
 
    DATA     sl_tabActivate
-   METHOD   tabActivate()                         SETGET
+   METHOD   tabActivate( xParam )                 SETGET
    /* Harbour extension */
    DATA     sl_closeRequested
-   METHOD   closeRequested()                      SETGET
-
-   METHOD   handleEvent()
-   METHOD   exeBlock()
+   METHOD   closeRequested( xParam )              SETGET
 
    ENDCLASS
 
@@ -249,13 +248,14 @@ METHOD XbpTabPage:maximize()
 
 CLASS XbpTabWidget  INHERIT  XbpWindow
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
-   METHOD   destroy()
-   METHOD   exeBlock()
-
    DATA     aTabs                 INIT {}
+
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject ) VIRTUAL
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   destroy()
+   METHOD   exeBlock( nMode, iIndex )
 
    ENDCLASS
 

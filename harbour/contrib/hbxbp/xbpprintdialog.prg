@@ -88,9 +88,8 @@ CLASS XbpPrintDialog INHERIT XbpWindow
    DATA     printRange                            INIT      XBPPDLG_PRINT_ALLPAGES
    DATA     printToFile                           INIT      .F.
 
-   METHOD   new()
-   METHOD   create()
-   //METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner )
+   METHOD   create( oParent, oOwner )
    METHOD   destroy()
    METHOD   display( oXbpPrinter )
 

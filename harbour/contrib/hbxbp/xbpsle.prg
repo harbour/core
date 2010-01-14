@@ -86,13 +86,13 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
 
    DATA     changed                               INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()                           VIRTUAL
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
-   METHOD   handleEvent()
-   METHOD   exeBlock()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   exeBlock( nMsg, p1, p2 )
 
    METHOD   clear()                               INLINE  ::oWidget:clear()
    METHOD   copyMarked()                          INLINE  ::oWidget:copy()

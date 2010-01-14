@@ -149,7 +149,7 @@
 
 #define _TBR_COORD( n )       Int( n )
 
-#define ISFROZEN( n )  ( ascan( ::aLeftFrozen, n ) > 0 .OR. ascan( ::aRightFrozen, n ) > 0 )
+#define ISFROZEN( n )         ( ascan( ::aLeftFrozen, n ) > 0 .OR. ascan( ::aRightFrozen, n ) > 0 )
 
 /*----------------------------------------------------------------------*/
 
@@ -307,8 +307,8 @@ EXPORTED:
 
    METHOD new( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )   // constructor, NOTE: This method is a Harbour extension [vszakats]
-   METHOD exeBlock( nMode )                                 // executes view events
-   METHOD supplyInfo( nMode )                               // supplies cell parameters to Qt engine
+   METHOD exeBlock( nEvent, p1, p2, p3 )                    // executes view events
+   METHOD supplyInfo( nMode, nInfo, p2, p3 )                // supplies cell parameters to Qt engine
    METHOD configure( nMode )                                // mark that the internal settings of the TBrowse object should be reconfigured
    METHOD handleEvent( nEvent, mp1, mp2 )
 
@@ -348,8 +348,8 @@ PROTECTED:
 
    METHOD doConfigure()                                     // reconfigures the internal settings of the TBrowse object
    METHOD setUnstable()                                     // set TBrows in unstable mode resetting flags
-   METHOD setPosition( nPos )                               // synchronize record position with the buffer
-   METHOD readRecord()                                      // read current record into the buffer
+   METHOD setPosition()                                     // synchronize record position with the buffer
+   METHOD readRecord( nRow )                                // read current record into the buffer
 
    METHOD setVisible()                                      // set visible columns
    METHOD setCursorPos()                                    // set screen cursor position at current cell
@@ -376,23 +376,21 @@ PROTECTED:
    DATA     lFirst                                INIT      .t.
    DATA     nRowsInView                           INIT      1
 
-   METHOD   setCurrentIndex()
+   METHOD   setCurrentIndex( lReset )
    METHOD   setHorzOffset()
-   METHOD   setVertScrollBarRange()
-   METHOD   setHorzScrollBarRange()
+   METHOD   setVertScrollBarRange( lPageStep )
+   METHOD   setHorzScrollBarRange( lPageStep )
    METHOD   updateVertScrollBar()
    METHOD   updatePosition()
 
 EXPORTED:
-   METHOD   footerRbDown()                        SETGET
-   METHOD   headerRbDown()                        SETGET
-   METHOD   itemMarked()                          SETGET
-   METHOD   itemRbDown()                          SETGET
-   METHOD   itemSelected()                        SETGET
-
-   //METHOD   forceStable()                         SETGET
-   METHOD   navigate()                            SETGET
-   METHOD   pan()                                 SETGET
+   METHOD   footerRbDown( p1, p2 )                SETGET
+   METHOD   headerRbDown( p1, p2 )                SETGET
+   METHOD   itemMarked( p1 )                      SETGET
+   METHOD   itemRbDown( p1, p2 )                  SETGET
+   METHOD   itemSelected( p1 )                    SETGET
+   METHOD   navigate( p1, p2 )                    SETGET
+   METHOD   pan( p1 )                             SETGET
 
    DATA     sl_xbeBRW_FooterRbDown
    DATA     sl_xbeBRW_HeaderRbDown
@@ -439,10 +437,10 @@ EXPORTED:
 
    METHOD   buildLeftFreeze()
    METHOD   buildRightFreeze()
-   METHOD   fetchColumnInfo()
+   METHOD   fetchColumnInfo( nInfo, nArea, nRow, nCol )
 
-   METHOD   setLeftFrozen( aColumns )
-   METHOD   setRightFrozen( aColumns )
+   METHOD   setLeftFrozen( aColFrozens )
+   METHOD   setRightFrozen( aColFrozens )
    DATA     aLeftFrozen                             INIT   {}
    DATA     aRightFrozen                            INIT   {}
    DATA     nLeftFrozen                             INIT   0
@@ -3991,11 +3989,11 @@ CREATE CLASS XbpColumn  INHERIT XbpWindow, XbpDataRef
 
    METHOD preBlock( bPreBlock )                   SETGET                 /* Code block determining editing */
    METHOD postBlock( bPostBlock )                 SETGET                 /* Code block validating values */
-   METHOD setStyle( nStyle, lSetting )
+   METHOD setStyle( nStyle, lNewValue )
 
    METHOD new( cHeading, bBlock )
-   METHOD create( p1, p2, p3, p4, aPresParams )
-   METHOD configure( p1, p2, p3, p4, aPresParams )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure()
 
    METHOD datalink( bBlock )                      SETGET
 

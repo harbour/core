@@ -76,6 +76,63 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
+
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   setQtProperty( cProperty )
+   METHOD   connect( pWidget, cSignal, bBlock )
+   METHOD   connectEvent( pWidget, nEvent, bBlock )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   grabEvent( nEvent, pEvent, oXbp )
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   captureMouse( lCapture )
+   METHOD   invalidateRect( aRect )
+   METHOD   setStyleSheet( cNewSheet )
+   METHOD   setFont( oFont )
+   METHOD   setFontCompoundName( xFont )
+   METHOD   setModalState( nState )
+   METHOD   setPointer( cDllName, xResID, nType )
+   METHOD   setTrackPointer( lTrack )
+   METHOD   setPos( aPos, lPaint )
+   METHOD   setPosAndSize( aPos, aSize, lPaint )
+   METHOD   setSize( aSize, lPaint )
+   METHOD   isDerivedFrom( cClassORoObject )
+   METHOD   setPresParam( aPPNew )
+
+   METHOD   enter( xParam )                       SETGET
+   METHOD   leave( xParam )                       SETGET
+   METHOD   lbClick( xParam )                     SETGET
+   METHOD   lbDblClick( xParam )                  SETGET
+   METHOD   lbDown( xParam )                      SETGET
+   METHOD   lbUp( xParam )                        SETGET
+   METHOD   mbClick( xParam )                     SETGET
+   METHOD   mbDblClick( xParam )                  SETGET
+   METHOD   mbDown( xParam )                      SETGET
+   METHOD   mbUp( xParam )                        SETGET
+   METHOD   motion( xParam )                      SETGET
+   METHOD   rbClick( xParam )                     SETGET
+   METHOD   rbDblClick( xParam )                  SETGET
+   METHOD   rbDown( xParam )                      SETGET
+   METHOD   rbUp( xParam )                        SETGET
+   METHOD   wheel( xParam )                       SETGET
+   METHOD   close( xParam )                       SETGET
+   METHOD   helpRequest( xParam )                 SETGET
+   METHOD   keyboard( xParam )                    SETGET
+   METHOD   killDisplayFocus( xParam )            SETGET
+   METHOD   killInputFocus( xParam )              SETGET
+   METHOD   move( xParam )                        SETGET
+   METHOD   paint( xParam )                       SETGET
+   METHOD   quit( xParam, xParam1 )               SETGET
+   METHOD   resize( xParam, xParam1 )             SETGET
+   METHOD   setDisplayFocus( xParam )             SETGET
+   METHOD   setInputFocus( xParam )               SETGET
+   METHOD   dragEnter( xParam, xParam1 )          SETGET
+   METHOD   dragMotion( xParam )                  SETGET
+   METHOD   dragLeave( xParam )                   SETGET
+   METHOD   dragDrop( xParam, xParam1 )           SETGET
+
+   METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    CLASSDATA nProperty                            INIT  0
    DATA     qtProperty                            INIT  ""
    DATA     qtObject
@@ -83,11 +140,11 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    /* Called in the initializer - Unique in the application */
    METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
    /* After object is physically created, set unique property to 1 */
-   METHOD   setQtProperty()
+*  METHOD   setQtProperty()
 
    DATA     cargo                                 INIT  ""
    DATA     styleSheet                            INIT  ""
-   METHOD   setStyleSheet()
+*  METHOD   setStyleSheet()
 
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
@@ -121,7 +178,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     sl_rbDown
    DATA     sl_rbUp
    DATA     sl_wheel
-
    DATA     sl_helpRequest
    DATA     sl_keyboard
    DATA     sl_killInputFocus
@@ -134,107 +190,20 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     sl_dragMotion
    DATA     sl_dragLeave
    DATA     sl_dragDrop
-
    DATA     sl_close
    DATA     sl_setDisplayFocus
    DATA     sl_killDisplayFocus
 
    DATA     hb_contextMenu
-
-EXPORTED:
-   /*  LIFE CYCLE  */
-   METHOD   init()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()                         VIRTUAL
-   METHOD   configure()
-   METHOD   destroy()
-
-   /*  MANIPULATE  */
-   METHOD   captureMouse()
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   hide()
-   METHOD   invalidateRect()
-   METHOD   lockPS()
-   METHOD   lockUpdate()
-   METHOD   setModalState()
-   METHOD   setPointer()
-   METHOD   setTrackPointer()
-   METHOD   setPos()
-   METHOD   setPosAndSize()
-   METHOD   setSize()
-   METHOD   show()
-   METHOD   toBack()
-   METHOD   toFront()
-   METHOD   unlockPS()
-   METHOD   winDevice()
-
-   /*  SETTINGS  */
    DATA     hBrushBG
-   METHOD   setColorBG( nRGB )
-   METHOD   setColorFG( nRGB )
-   METHOD   setFont()
-   METHOD   setFontCompoundName()
-   METHOD   setPresParam()
-
-   /*  STATUS  */
-   METHOD   currentPos()
-   METHOD   currentSize()
-   METHOD   getHWND()
-   METHOD   getModalState()
-   METHOD   hasInputFocus()
-
    DATA     is_hidden                             INIT   .F.
    DATA     is_enabled                            INIT   .T.
-   METHOD   isEnabled()                           INLINE ::is_enabled
-   METHOD   isVisible()                           INLINE !( ::is_hidden )
-
-   /*  CALLBACKS  */
-   METHOD   enter()                               SETGET
-   METHOD   leave()                               SETGET
-   METHOD   lbClick()                             SETGET
-   METHOD   lbDblClick()                          SETGET
-   METHOD   lbDown()                              SETGET
-   METHOD   lbUp()                                SETGET
-   METHOD   mbClick()                             SETGET
-   METHOD   mbDblClick()                          SETGET
-   METHOD   mbDown()                              SETGET
-   METHOD   mbUp()                                SETGET
-   METHOD   motion()                              SETGET
-   METHOD   rbClick()                             SETGET
-   METHOD   rbDblClick()                          SETGET
-   METHOD   rbDown()                              SETGET
-   METHOD   rbUp()                                SETGET
-   METHOD   wheel()                               SETGET
-
-   /*  OTHER MESSAGES */
-   METHOD   helpRequest()                         SETGET
-   METHOD   keyboard()                            SETGET
-   METHOD   killInputFocus()                      SETGET
-   METHOD   move()                                SETGET
-   METHOD   paint()                               SETGET
-   METHOD   quit()                                SETGET
-   METHOD   resize()                              SETGET
-   METHOD   setInputFocus()                       SETGET
-   METHOD   dragEnter()                           SETGET
-   METHOD   dragMotion()                          SETGET
-   METHOD   dragLeave()                           SETGET
-   METHOD   dragDrop()                            SETGET
-
-   METHOD   close()                               SETGET
-   METHOD   setDisplayFocus()                     SETGET
-   METHOD   killDisplayFocus()                    SETGET
-
    DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
    DATA     resizable                             INIT   .t.
    DATA     resizeMode                            INIT   0
    DATA     lModal                                INIT   .f.
-
-   METHOD   setFocus()
-   METHOD   sendMessage()
-
    DATA     hWnd
    DATA     pWnd
    DATA     aPos                                  INIT   { 0,0 }
@@ -242,23 +211,13 @@ EXPORTED:
    DATA     aPresParams                           INIT   {}
    DATA     lHasInputFocus                        INIT   .F.
    DATA     nFrameState                           INIT   0       /* normal */
-
    DATA     maxCol                                INIT   79
    DATA     maxRow                                INIT   24
    DATA     mouseMode                             INIT   1
-
    DATA     nID                                   INIT   0
-
-   METHOD   Initialize()
-
    DATA     nOldProc                              INIT   0
    DATA     nWndProc
-
    DATA     oMenu
-   METHOD   handleEvent()
-   METHOD   grabEvent()
-
-   METHOD   isDerivedFrom()
 
    DATA     oWidget
    ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, ::oWidget:pPtr )
@@ -267,25 +226,96 @@ EXPORTED:
    DATA     aTabs                                 INIT  {}
    DATA     oPalette
    DATA     xDummy
-
-   METHOD   connect()
-   METHOD   connectEvent()
-   METHOD   connectWindowEvents()
    DATA     aConnections                          INIT  {}
    DATA     aEConnections                         INIT  {}
-
-   METHOD   setStyle()                            INLINE NIL
-
    DATA     lTrack                                INIT  .f.
-
-   METHOD   disConnect()
-   METHOD   clearSlots()
    DATA     aPP
-
-   METHOD   hbContextMenu                         SETGET
-
+   METHOD   setStyle()                            INLINE NIL
    ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
    ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+
+   METHOD   isEnabled()                           INLINE ::is_enabled
+   METHOD   isVisible()                           INLINE !( ::is_hidden )
+
+*  METHOD   init()
+*  METHOD   create()
+   METHOD   hbCreateFromQtPtr()                   VIRTUAL
+*  METHOD   configure()
+   METHOD   destroy()
+*  METHOD   captureMouse()
+   METHOD   disable()
+   METHOD   enable()
+   METHOD   hide()
+*  METHOD   invalidateRect()
+   METHOD   lockPS()
+   METHOD   lockUpdate()
+*  METHOD   setModalState()
+*  METHOD   setPointer()
+*  METHOD   setTrackPointer()
+*  METHOD   setPos()
+*  METHOD   setPosAndSize()
+*  METHOD   setSize()
+   METHOD   show()
+   METHOD   toBack()
+   METHOD   toFront()
+   METHOD   unlockPS()
+   METHOD   winDevice()
+   METHOD   setColorBG( nRGB )
+   METHOD   setColorFG( nRGB )
+*  METHOD   setFont()
+*  METHOD   setFontCompoundName()
+*  METHOD   setPresParam()
+   METHOD   currentPos()
+   METHOD   currentSize()
+   METHOD   getHWND()
+   METHOD   getModalState()
+   METHOD   hasInputFocus()
+
+
+*  METHOD   enter()                               SETGET
+*  METHOD   leave()                               SETGET
+*  METHOD   lbClick()                             SETGET
+*  METHOD   lbDblClick()                          SETGET
+*  METHOD   lbDown()                              SETGET
+*  METHOD   lbUp()                                SETGET
+*  METHOD   mbClick()                             SETGET
+*  METHOD   mbDblClick()                          SETGET
+*  METHOD   mbDown()                              SETGET
+*  METHOD   mbUp()                                SETGET
+*  METHOD   motion()                              SETGET
+*  METHOD   rbClick()                             SETGET
+*  METHOD   rbDblClick()                          SETGET
+*  METHOD   rbDown()                              SETGET
+*  METHOD   rbUp()                                SETGET
+*  METHOD   wheel()                               SETGET
+*  METHOD   helpRequest()                         SETGET
+*  METHOD   keyboard()                            SETGET
+*  METHOD   killInputFocus()                      SETGET
+*  METHOD   move()                                SETGET
+*  METHOD   paint()                               SETGET
+*  METHOD   quit()                                SETGET
+*  METHOD   resize()                              SETGET
+*  METHOD   setInputFocus()                       SETGET
+*  METHOD   dragEnter()                           SETGET
+*  METHOD   dragMotion()                          SETGET
+*  METHOD   dragLeave()                           SETGET
+*  METHOD   dragDrop()                            SETGET
+*  METHOD   close()                               SETGET
+*  METHOD   setDisplayFocus()                     SETGET
+*  METHOD   killDisplayFocus()                    SETGET
+   METHOD   hbContextMenu( xParam )               SETGET
+   METHOD   setFocus()
+   METHOD   sendMessage()
+*  METHOD   Initialize()
+*  METHOD   handleEvent()
+*  METHOD   grabEvent()
+*  METHOD   isDerivedFrom()
+*  METHOD   connect()
+*  METHOD   connectEvent()
+   METHOD   connectWindowEvents()
+   METHOD   disConnect()
+   METHOD   clearSlots()
+
 
    ENDCLASS
 

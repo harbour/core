@@ -95,16 +95,22 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    DATA     hImageList
    DATA     lSized                                INIT .F.
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
-   METHOD   destroy()
+   DATA     sl_change
+   DATA     sl_buttonMenuClick
+   DATA     sl_buttonDropDown
 
-   METHOD   addItem()
+   METHOD   numItems()                            INLINE Len( ::aItems )
+
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   destroy()
+   METHOD   exeBlock( oBtn )
+
+   METHOD   addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    METHOD   delItem()
    METHOD   getItem()
-   METHOD   numItems()                            INLINE Len( ::aItems )
    METHOD   clear()
    METHOD   customize()
    METHOD   loadImageSet()
@@ -113,17 +119,12 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    METHOD   setPosAndSize()
    METHOD   setSize()
 
-   DATA     sl_change
-   DATA     sl_buttonMenuClick
-   DATA     sl_buttonDropDown
+   METHOD   buttonClick( xParam )                 SETGET
+   METHOD   change( xParam )                      SETGET
+   METHOD   buttonMenuClick( xParam )             SETGET
+   METHOD   buttonDropDown( xParam )              SETGET
 
-   METHOD   buttonClick()                         SETGET
-   METHOD   change()                              SETGET
-   METHOD   buttonMenuClick()                     SETGET
-   METHOD   buttonDropDown()                      SETGET
    METHOD   sendToolbarMessage()
-
-   METHOD   ExeBlock()
    METHOD   setStyle()
 
    ENDCLASS
@@ -449,7 +450,7 @@ CLASS XbpToolbarButton
    DATA     command                               INIT 0
    DATA     oAction
 
-   METHOD   new()
+   METHOD   new( cCaption, nStyle, cKey )
 
    ENDCLASS
 

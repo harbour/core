@@ -96,7 +96,7 @@ CLASS XbpPrinter
    DATA     isValid
 
    METHOD   new()
-   METHOD   create()
+   METHOD   create( cDeviceName, nSpoolFormat, cDeviceParams )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()                             VIRTUAL
 
@@ -117,7 +117,7 @@ CLASS XbpPrinter
    METHOD   setOrientation( nOrientation )
    METHOD   setPaperBin( nBin )
    METHOD   setPrintFile( cFileName )
-   METHOD   setResolution( aResolution )
+   METHOD   setResolution( anResolution )
 
    METHOD   setupDialog()
 
@@ -126,7 +126,7 @@ CLASS XbpPrinter
    METHOD   newPage()
    METHOD   startPage()
    METHOD   endPage()
-   METHOD   startDoc()
+   METHOD   startDoc( cDocName )
 
    METHOD   setDevName( cName )                   INLINE ::devName := cName
 

@@ -84,10 +84,13 @@ CLASS XbpDialog FROM XbpWindow
    DATA     tasklist                              INIT  .t.
    DATA     oEventLoop
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
+   METHOD   exeBlock( nEvent, pEvent )
+
    METHOD   close()                               INLINE NIL
 
    METHOD   showModal()                           INLINE NIL
@@ -100,8 +103,6 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   calcClientRect()                      INLINE { 0, 0, ::oWidget:width(), ::oWidget:height() }
    METHOD   calcFrameRect()                       INLINE { ::oWidget:x(), ::oWidget:y(), ;
                                                            ::oWidget:x()+::oWidget:width(), ::oWidget:y()+::oWidget:height() }
-   METHOD   exeBlock()
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -291,8 +292,8 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .T.
 
-   METHOD   new()
-   METHOD   create()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ENDCLASS
 

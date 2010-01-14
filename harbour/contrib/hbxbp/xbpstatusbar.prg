@@ -80,23 +80,22 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
 
    DATA     aItems                                INIT {}
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   hbCreateFromQtPtr()
-   METHOD   configure()
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-
-   METHOD   addItem()
-   METHOD   delItem()
-   METHOD   getItem()
-   METHOD   clear()
-   METHOD   numItems()                            INLINE Len( ::aItems )
-
-   METHOD   panelClick()                          SETGET
-   METHOD   panelDblClick()                       SETGET
-
-   METHOD   handleEvent()
+   METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   exeBlock()
+
+   METHOD   addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
+   METHOD   delItem( nItemORcKey )
+   METHOD   getItem( nItemORcKey )
+   METHOD   clear()
+   METHOD   panelClick( xParam )                  SETGET
+   METHOD   panelDblClick( xParam )               SETGET
+
+   METHOD   numItems()                            INLINE Len( ::aItems )
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
@@ -302,6 +301,8 @@ METHOD XbpStatusBar:panelDblClick( xParam )
 
 CLASS XbpStatusBarPanel
 
+   DATA     oParent
+
    DATA     oWidget
    DATA     alignment                             INIT XBPALIGN_LEFT
    DATA     autosize                              INIT XBPSTATUSBAR_AUTOSIZE_NONE
@@ -318,11 +319,9 @@ CLASS XbpStatusBarPanel
    DATA     width                                 INIT 0
    DATA     minWidth                              INIT 0
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   caption()                             SETGET
-
-   DATA     oParent
+   METHOD   new( cCaption, nStyle, cKey )
+   METHOD   create( cCaption, nStyle, cKey )
+   METHOD   caption( cCaption )                   SETGET
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
