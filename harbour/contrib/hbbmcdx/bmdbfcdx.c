@@ -5534,7 +5534,7 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_strdup( szPattern );
-      hb_cdpTranslate( szFree, hb_vmCDP(), pArea->dbfarea.area.cdPage );
+      hb_cdpnDupLen( szFree, strlen( szFree ), hb_vmCDP(), pArea->dbfarea.area.cdPage );
    }
 
    while( iFixed < pTag->uiLen && szPattern[ iFixed ] &&

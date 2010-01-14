@@ -155,8 +155,8 @@ extern HB_EXPORT void     hb_vmPushLong( long lNumber ); /* pushes a long number
 extern HB_EXPORT void     hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
 extern HB_EXPORT void     hb_vmPushNumInt( HB_LONG lNumber );  /* pushes a number on to the stack and decides if it is integer or HB_LONG */
 extern HB_EXPORT void     hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
-extern HB_EXPORT void     hb_vmPushString( const char * szText, ULONG length );  /* pushes a string on to the stack */
-extern HB_EXPORT void     hb_vmPushStringPcode( const char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
+extern HB_EXPORT void     hb_vmPushString( const char * szText, HB_SIZE length );  /* pushes a string on to the stack */
+extern HB_EXPORT void     hb_vmPushStringPcode( const char * szText, HB_SIZE length );  /* pushes a string from pcode on to the stack */
 extern HB_EXPORT void     hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
 extern HB_EXPORT void     hb_vmPushTimeStamp( long lJulian, long lMilliSec ); /* pushes two long value as timestamp onto the stack */
 extern HB_EXPORT void     hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */

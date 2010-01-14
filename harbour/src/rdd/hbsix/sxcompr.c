@@ -211,8 +211,8 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 }
 
 static PHB_LZSSX_COMPR hb_LZSSxInit(
-                        HB_FHANDLE hInput, BYTE * pSrcBuf, ULONG ulSrcBuf,
-                        HB_FHANDLE hOutput, BYTE * pDstBuf, ULONG ulDstBuf )
+                        HB_FHANDLE hInput, BYTE * pSrcBuf, HB_SIZE ulSrcBuf,
+                        HB_FHANDLE hOutput, BYTE * pDstBuf, HB_SIZE ulDstBuf )
 {
    PHB_LZSSX_COMPR pCompr = ( PHB_LZSSX_COMPR ) hb_xgrab( sizeof( HB_LZSSX_COMPR ) );
 
@@ -462,11 +462,11 @@ static void hb_LZSSxNodeDelete( PHB_LZSSX_COMPR pCompr, int p )
    }
 }
 
-static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
+static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
 {
    UCHAR itemSet[ITEMSETSIZE];
    UCHAR itemMask;
-   ULONG ulSize = 0;
+   HB_SIZE ulSize = 0;
    int iItem;
    short int  i, c, len, r, s, last_match_length;
 
@@ -515,7 +515,7 @@ static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
          for( i = 0; i < iItem; i++ )
          {
             if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
-               return ( ULONG ) -1;
+               return ( HB_SIZE ) -1;
          }
          ulSize += iItem;
          itemSet[ 0 ] = 0;
@@ -548,24 +548,24 @@ static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
       for( i = 0; i < iItem; i++ )
       {
          if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
-            return ( ULONG ) -1;
+            return ( HB_SIZE ) -1;
       }
       ulSize += iItem;
    }
 
    if( !hb_LZSSxFlush( pCompr ) )
-      return ( ULONG ) -1;
+      return ( HB_SIZE ) -1;
 
    return ulSize;
 }
 
 
-BOOL hb_LZSSxCompressMem( const char * pSrcBuf, ULONG ulSrcLen,
-                          char * pDstBuf, ULONG ulDstLen,
-                          ULONG * pulSize )
+BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen,
+                          char * pDstBuf, HB_SIZE ulDstLen,
+                          HB_SIZE * pulSize )
 {
    PHB_LZSSX_COMPR pCompr;
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    pCompr = hb_LZSSxInit( FS_ERROR, ( BYTE * ) pSrcBuf, ulSrcLen,
                           FS_ERROR, ( BYTE * ) pDstBuf, ulDstLen );
@@ -576,8 +576,8 @@ BOOL hb_LZSSxCompressMem( const char * pSrcBuf, ULONG ulSrcLen,
    return ( ulSize <= ulDstLen );
 }
 
-BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, ULONG ulSrcLen,
-                            char * pDstBuf, ULONG ulDstLen )
+BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen,
+                            char * pDstBuf, HB_SIZE ulDstLen )
 {
    PHB_LZSSX_COMPR pCompr;
    BOOL fResult;
@@ -589,17 +589,17 @@ BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, ULONG ulSrcLen,
    return fResult;
 }
 
-BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, ULONG * pulSize )
+BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, HB_SIZE * pulSize )
 {
    PHB_LZSSX_COMPR pCompr;
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    pCompr = hb_LZSSxInit( hInput, NULL, 0, hOutput, NULL, 0 );
    ulSize = hb_LZSSxEncode( pCompr );
    hb_LZSSxExit( pCompr );
    if( pulSize )
       *pulSize = ulSize;
-   return ulSize != ( ULONG ) -1;
+   return ulSize != ( HB_SIZE ) -1;
 }
 
 BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput )
@@ -619,7 +619,7 @@ HB_FUNC( SX_FCOMPRESS )
    HB_FHANDLE hInput, hOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
    BYTE buf[ 4 ];
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    if( szSource && *szSource && szDestin && *szDestin )
    {
@@ -685,7 +685,7 @@ HB_FUNC( _SX_STRCOMPRESS )
 
    if( pStr )
    {
-      ULONG ulLen = hb_parclen( 1 ), ulBuf, ulDst;
+      HB_SIZE ulLen = hb_parclen( 1 ), ulBuf, ulDst;
 
       /* this is for strict SIX compatibility - in general very bad idea */
       ulBuf = ulLen + 257;
@@ -713,7 +713,7 @@ HB_FUNC( _SX_STRDECOMPRESS )
 
    if( pStr )
    {
-      ULONG ulLen = hb_parclen( 1 ), ulBuf;
+      HB_SIZE ulLen = hb_parclen( 1 ), ulBuf;
 
       if( ulLen >= 4 )
       {
