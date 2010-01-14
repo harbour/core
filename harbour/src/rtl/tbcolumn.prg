@@ -93,7 +93,7 @@ CREATE CLASS TBCOLUMN
 #ifdef HB_COMPAT_C53
    METHOD preBlock( bPreBlock ) SETGET               /* Code block determining editing */
    METHOD postBlock( bPostBlock ) SETGET             /* Code block validating values */
-   METHOD setStyle( nStyle, lSetting )
+   METHOD setStyle( nStyle, lNewValue )
 #endif
 
    METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */

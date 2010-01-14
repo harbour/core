@@ -83,15 +83,15 @@ CREATE CLASS HBDbMenu
    VAR lPopup
    VAR cBackImage
 
-   METHOD New( aItems )
+   METHOD New()
    METHOD AddItem( oMenuItem )
    METHOD Build()
-   METHOD ClosePopup()
+   METHOD ClosePopup( nPopup )
    METHOD Close() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
    METHOD DeHilite()
    METHOD Display()
    METHOD EvalAction()
-   METHOD GetHotKeyPos( nKey )
+   METHOD GetHotKeyPos( cKey )
    METHOD GetItemByIdent( uIdent )
    METHOD GetItemOrdByCoors( nRow, nCol )
    METHOD GoBottom()

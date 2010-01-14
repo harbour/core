@@ -85,11 +85,11 @@ CLASS TCgiFile
    Freadstr( ::Handle, n )
    METHOD Write( c, n ) INLINE Fwrite( ::Handle, c, n )
 
-   METHOD WriteByte( n )
+   METHOD WriteByte( nByte )
 
-   METHOD WriteInt( n )
+   METHOD WriteInt( nInt )
 
-   METHOD WriteLong( n )
+   METHOD WriteLong( nLong )
 
    METHOD GetBuffer() INLINE ::Buffer
 
@@ -103,15 +103,15 @@ CLASS TCgiFile
 
    METHOD SEEK( n, o ) INLINE Fseek( ::Handle, n, o )
 
-   METHOD CREATE ( n )
+   METHOD CREATE( nAttr )
 
    METHOD Size()
 
-   METHOD _Read( n, c )
+   METHOD _Read( nSize, cBuff )
 
-   METHOD ReadAhead( n, c )
+   METHOD ReadAhead( nSize, cBuff )
 
-   METHOD ReadLine( n )
+   METHOD ReadLine( nSize )
 
    METHOD PrevLine( nBytes )
 
@@ -121,15 +121,15 @@ CLASS TCgiFile
 
    METHOD ReadLong()
 
-   METHOD GOTO( n )
+   METHOD GOTO( nLine )
 
-   METHOD SKIP( n )
+   METHOD SKIP( nLines )
 
-   METHOD MaxPages( n )
+   METHOD MaxPages( nPageSize )
 
-   METHOD PrevPage( n )
+   METHOD PrevPage( nBytes )
 
-   METHOD NextPage( n )
+   METHOD NextPage( nBytes )
 
 ENDCLASS
 
@@ -475,7 +475,7 @@ RETURN ::cPage
 **   ::PrevLine( [<nBytes>] ) --> ::Buffer
 */
 
-METHOD PrevLine( npBytes ) CLASS TCgiFile
+METHOD PrevLine( nBytes ) CLASS TCgiFile
 
 
    LOCAL fHandle    := ::Handle
@@ -488,7 +488,7 @@ METHOD PrevLine( npBytes ) CLASS TCgiFile
    LOCAL nPrev
    LOCAL cTemp
 
-   DEFAULT npBytes TO 256
+   DEFAULT nBytes TO 256
 
    IF nOrigPos == 0
 
@@ -507,7 +507,7 @@ METHOD PrevLine( npBytes ) CLASS TCgiFile
          Fseek( fHandle, - 2, FS_RELATIVE )
       ENDIF
 
-      nMaxRead := Min( npBytes, FPOS( fHandle ) )
+      nMaxRead := Min( nBytes, FPOS( fHandle ) )
 
       cBuff   := Space( nMaxRead )
       nNewPos := Fseek( fHandle, - nMaxRead, FS_RELATIVE )

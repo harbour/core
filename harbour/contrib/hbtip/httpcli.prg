@@ -74,7 +74,7 @@ CREATE CLASS tIPClientHTTP FROM tIPClient
    METHOD New( oUrl, bTrace, oCredentials )
    METHOD Get( cQuery )
    METHOD Post( xPostData, cQuery )
-   METHOD ReadHeaders()
+   METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
    METHOD UseBasicAuth()      INLINE   ::cAuthMode := "Basic"
    METHOD ReadAll()

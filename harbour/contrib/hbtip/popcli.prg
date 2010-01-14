@@ -68,7 +68,7 @@ CREATE CLASS tIPClientPOP FROM tIPClient
    METHOD Open( cUrl )
    METHOD OpenDigest( cUrl )
    METHOD Close( lAutoQuit )
-   METHOD Delete()
+   METHOD Delete( nId )
    METHOD List()
    METHOD Noop()                 // Can be called repeatedly to keep-alive the connection
    METHOD Retrieve( nId, nLen )
@@ -79,8 +79,8 @@ CREATE CLASS tIPClientPOP FROM tIPClient
    METHOD UIDL( nMsgId )         // Returns Unique ID of message n or list of unique IDs of all message inside maildrop
    METHOD countMail()
    METHOD GetOK()
-   METHOD Read( iLen )
-   METHOD retrieveAll()
+   METHOD Read( nLen )
+   METHOD retrieveAll( lDelete )
 
 ENDCLASS
 
@@ -327,7 +327,7 @@ METHOD UIDL( nMsgId ) CLASS tIPClientPOP
 
 /**
 */
-METHOD countMail CLASS TIpClientPop
+METHOD countMail() CLASS TIpClientPop
    LOCAL cStat
 
    IF ::isOpen

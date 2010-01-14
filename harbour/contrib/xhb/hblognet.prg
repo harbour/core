@@ -66,15 +66,15 @@ CLASS HB_LogEmail FROM HB_LogChannel
    DATA cPostfix
 
    METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom )
-   METHOD Open()
-   METHOD Close()
+   METHOD Open( cName )
+   METHOD Close( cName )
 
 PROTECTED:
-   METHOD Send( nStyle, cMessage, cProgName, nPrio )
+   METHOD Send( nStyle, cMessage, cName, nPriority )
 
 HIDDEN:
-   METHOD GetOk()
-   METHOD Prepare( nStyle, cMessage, cProgName, nPrio )
+   METHOD GetOk( skCon )
+   METHOD Prepare( nStyle, cMessage, cName, nPriority )
 
 ENDCLASS
 
@@ -127,7 +127,7 @@ RETURN .T.
 * Sends the real message in e-mail
 */
 
-METHOD Send( nStyle, cMessage, cName, nPrio ) CLASS HB_LogEmail
+METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    LOCAL skCon := hb_inetCreate()
 
 
@@ -159,7 +159,7 @@ METHOD Send( nStyle, cMessage, cName, nPrio ) CLASS HB_LogEmail
       RETURN .F.
    ENDIF
 
-   cMessage := ::Prepare( nStyle, cMessage, cName, nPrio )
+   cMessage := ::Prepare( nStyle, cMessage, cName, nPriority )
 
    hb_inetSendAll( skCon,  cMessage + hb_inetCRLF() + "." + hb_inetCRLF() )
    IF .not. ::GetOk( skCon )
@@ -183,7 +183,7 @@ METHOD GetOk( skCon ) CLASS HB_LogEmail
    ENDIF
 RETURN .T.
 
-METHOD Prepare( nStyle, cMessage, cName, nPrio ) CLASS HB_LogEmail
+METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    LOCAL cPre
    cPre := "FROM: " + ::cAddress + hb_inetCRLF() + ;
                "TO: " + ::cSendTo + hb_inetCRLF() +;
@@ -193,7 +193,7 @@ METHOD Prepare( nStyle, cMessage, cName, nPrio ) CLASS HB_LogEmail
       cPre += ::cPrefix + hb_inetCRLF() + hb_inetCRLF()
    ENDIF
 
-   cPre += ::Format( nStyle, cMessage, cName, nPrio )
+   cPre += ::Format( nStyle, cMessage, cName, nPriority )
 
    IF .not. Empty( ::cPostfix )
       cPre += hb_inetCRLF() +hb_inetCRLF() + ::cPostfix + hb_inetCRLF()
@@ -223,7 +223,7 @@ CLASS HB_LogInetPort FROM HB_LogChannel
    METHOD Close( cName )
 
 PROTECTED:
-   METHOD Send( nStyle, cMessage, cName, nPrio )
+   METHOD Send( nStyle, cMessage, cName, nPriority )
 
 #ifdef HB_THREAD_SUPPORT
 HIDDEN:
@@ -297,7 +297,7 @@ METHOD Close( cName ) CLASS HB_LogInetPort
 RETURN .T.
 
 
-METHOD Send( nStyle, cMessage, cName, nPrio ) CLASS HB_LogInetPort
+METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
    LOCAL sk, nCount
 
 #ifdef HB_THREAD_SUPPORT
@@ -313,7 +313,7 @@ METHOD Send( nStyle, cMessage, cName, nPrio ) CLASS HB_LogInetPort
 #endif
 
    // now we transmit the message to all the available channels
-   cMessage := ::Format( nStyle, cMessage, cName, nPrio )
+   cMessage := ::Format( nStyle, cMessage, cName, nPriority )
 
    nCount := 1
    DO WHILE nCount <= Len( ::aListeners )

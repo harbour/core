@@ -536,7 +536,7 @@ CLASS HBRecord
    DATA Number INIT 0
    DATA aFields INIT {}
 
-   METHOD New()
+   METHOD New( cAlias )
    METHOD GET()
    METHOD Put()
 
@@ -737,15 +737,15 @@ CLASS HBTable
 
    METHOD OPEN()
 
-   METHOD dbMove( n )
+   METHOD dbMove( nDirection )
    METHOD FldInit()
-   METHOD READ( l )
-   METHOD ReadBLANK( l )
-   METHOD Write( l )
-   METHOD BufWrite( l )
-   MESSAGE DELETE() METHOD __oTDelete() // reserved word - *HAS* to be renamed...
+   METHOD READ( lKeepBuffer )
+   METHOD ReadBLANK( lKeepBuffer )
+   METHOD Write( lKeepBuffer )
+   METHOD BufWrite( aBuffer )
+   MESSAGE DELETE() METHOD __oTDelete( lKeepBuffer ) // reserved word - *HAS* to be renamed...
    METHOD SetMonitor( l )
-   METHOD Undo( a, b, c )
+   METHOD Undo( nBuffer, nLevel )
 
    METHOD DBSKIP( n ) INLINE ( ::Alias )->( DBSKIP( n ) ),;
           ::nRecno := ( ::alias )->( RECNO() )
@@ -778,7 +778,7 @@ CLASS HBTable
    METHOD AddField( f, t, l, d )
    METHOD Gentable()
 
-   ERROR HANDLER OnError()
+   ERROR HANDLER OnError( uParam )
 
 ENDCLASS
 

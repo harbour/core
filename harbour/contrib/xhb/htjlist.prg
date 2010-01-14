@@ -68,7 +68,7 @@ CLASS TJsList
    DATA FontColor INIT "black"
 
    METHOD New( name, lOpen, width, height, bgColor, ;
-               FONT, fntColor, fntSize, cMinusIg, cPlusImg )
+               FONT, fntColor, fntSize, cMinusImg, cPlusImg )
 
    METHOD NewNode( name, lOpen, width, height, bgColor )
 
@@ -93,7 +93,7 @@ ENDCLASS
 */
 
 METHOD New( name, lOpen, width, height, bgColor, ;
-               FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJsList
+            FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJsList
 
    LOCAL cStr
 

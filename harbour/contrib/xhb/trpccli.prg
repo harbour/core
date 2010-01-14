@@ -88,18 +88,18 @@ CLASS tRPCClient
 
    /* Network scan functions */
    METHOD ScanServers( cName )
-   METHOD ScanFunctions( cName, cSerial )
+   METHOD ScanFunctions( cFunc, cSerial )
    METHOD ScanAgain()            INLINE ::UDPAccept()
    METHOD StopScan()
 
    /* Function call */
-   METHOD CheckServer()    //Checks if a server is ready on tcp
+   METHOD CheckServer( cRemote )    //Checks if a server is ready on tcp
    METHOD SetLoopMode( nMethod, xData, nEnd, nStep )
-   METHOD Call()  // variable parameters
+   METHOD Call( ... )  // variable parameters
    METHOD CallAgain()            INLINE ::TCPAccept()
    METHOD StopCall()
 
-   METHOD SetPeriodCallback()
+   METHOD SetPeriodCallback( ... )
    METHOD ClearPeriodCallback()
 
 
@@ -170,8 +170,8 @@ HIDDEN:
    DATA oResult
 
    /* Encryption system */
-   METHOD Encrypt( cData )
-   METHOD Decrypt( cData )
+   METHOD Encrypt( cDataIn )
+   METHOD Decrypt( cDataIn )
    METHOD BuildChallengePwd( cPassword )
    METHOD ManageChallenge()
 
@@ -180,7 +180,7 @@ HIDDEN:
    METHOD UDPAccept()
    METHOD UDPParse( cData, nLen )
    METHOD TCPAccept()
-   METHOD TCPParse( cData )
+   METHOD TCPParse( cCode )
    METHOD clearTCPBuffer()
 
    /* internal network send call */
@@ -287,7 +287,7 @@ METHOD CheckServer( cRemote )
    ENDIF
 RETURN .F.
 
-METHOD ScanFunctions(cFunc, cSerial ) CLASS tRPCClient
+METHOD ScanFunctions( cFunc, cSerial ) CLASS tRPCClient
    // do not allow asynchronous mode without timeout
    IF .not. ::lAsyncMode .and. ( ::nTimeOut == NIL .or. ::nTimeOut <= 0 )
       RETURN .F.

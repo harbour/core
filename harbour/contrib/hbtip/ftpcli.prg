@@ -113,9 +113,9 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    VAR cLogFile
 
    METHOD New( oUrl, bTrace, oCredentials )
-   METHOD Open()
+   METHOD Open( cUrl )
    METHOD Read( nLen )
-   METHOD Write( nLen )
+   METHOD Write( cData, nLen )
    METHOD Close()
    METHOD TransferStart()
    METHOD Commit()
@@ -137,8 +137,8 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    METHOD Stor( cFile )
    METHOD Quit()
    METHOD ScanLength()
-   METHOD ReadAuxPort()
-   METHOD mget()
+   METHOD ReadAuxPort( cLocalFile )
+   METHOD mget( cSpec, cLocalPath )
 
    // Method below contributed by Rafa Carmona
 
@@ -149,7 +149,7 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    METHOD MKD( cPath )                             // new method to create an directory on ftp server
 
    METHOD RMD( cPath )
-   METHOD listFiles( cList )
+   METHOD listFiles( cFileSpec )
    METHOD MPut
    METHOD StartCleanLogFile()
    METHOD fileSize( cFileSpec )

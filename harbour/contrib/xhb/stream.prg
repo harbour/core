@@ -130,7 +130,7 @@ CREATE CLASS TStreamFileReader FROM TStream
    VAR cFile
    VAR Handle
 
-   METHOD New( cFile ) CONSTRUCTOR
+   METHOD New( cFile, nMode ) CONSTRUCTOR
 
    METHOD Close() INLINE IIF( ::Handle > 0, FClose( ::Handle ), ), ::Handle := -2
    METHOD Seek( nOffset Origin ) INLINE FSeek( ::Handle, nOffset, Origin )
@@ -200,7 +200,7 @@ CREATE CLASS TStreamFileWriter FROM TStream
    VAR cFile
    VAR Handle
 
-   METHOD New( cFile ) CONSTRUCTOR
+   METHOD New( cFile, nMode ) CONSTRUCTOR
 
    METHOD Close() INLINE IIF( ::Handle > 0, FClose( ::Handle ), ), ::Handle := -2
    METHOD Seek( nOffset Origin ) INLINE ::nPosition := FSeek( ::Handle, nOffset, Origin )

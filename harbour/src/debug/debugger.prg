@@ -342,7 +342,7 @@ CREATE CLASS HBDebugger
           ::nTabWidth := ::InputBox( "Tab width", ::nTabWidth ),;
           ::oBrwText:nTabWidth := ::nTabWidth, ::oBrwText:RefreshAll()
 
-   METHOD ToggleBreakPoint()
+   METHOD ToggleBreakPoint( nLine, cFileName )
 
    METHOD Trace()
 
@@ -351,7 +351,7 @@ CREATE CLASS HBDebugger
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
    METHOD LineNumbers( lLineNumbers ) // Toggles numbering of source code lines
-   METHOD RemoveWindow()
+   METHOD RemoveWindow( oWnd )
    METHOD SearchLine()
    METHOD ToggleAnimate() INLINE ::oPullDown:GetItemByIdent( "ANIMATE" ):checked := ::lAnimate := ! ::lAnimate
    METHOD ToggleCaseSensitive() INLINE ::oPullDown:GetItemByIdent( "CASE" ):checked := ::lCaseSensitive := ! ::lCaseSensitive
@@ -362,7 +362,7 @@ CREATE CLASS HBDebugger
    METHOD WatchpointDel( nPos )
    METHOD WatchpointsShow()
    METHOD WatchpointsHide()
-   METHOD WatchpointEdit( nVar )
+   METHOD WatchpointEdit( nPos )
    METHOD WatchpointInspect( nPos )
    METHOD WatchGetInfo( nWatch )
 

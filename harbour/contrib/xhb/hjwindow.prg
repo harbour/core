@@ -115,7 +115,7 @@ CLASS TJsWindow
    METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
                        Resizable, Menubar, personalBar, ;
                        dependent, location, directories, ;
-                       Scrollbars, Status, TitleBar, Toolbar )
+                       Scrollbars, Status, TitleBar, Toolbar, copyHistory )
 
    METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
                     cOnClick, cOnMsover, cOnMsout, ;
@@ -159,9 +159,9 @@ RETURN Self
 */
 
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
-                       Resizable, Menubar, personalBar, ;
-                       dependent, location, directories, ;
-                       Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJsWindow
+                    Resizable, Menubar, personalBar, ;
+                    dependent, location, directories, ;
+                    Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJsWindow
 
    LOCAL cStr := ""
 

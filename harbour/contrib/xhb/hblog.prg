@@ -415,12 +415,12 @@ CLASS HB_LogConsole FROM HB_LogChannel
    METHOD New( nLevel )
    METHOD Open( cName )
    METHOD Close( cName )
-   METHOD Out()
+   METHOD Out( ... )
 
    METHOD LogOnVt( ldo )      INLINE ::lRealConsole := ldo
 
 PROTECTED:
-   METHOD Send( nStyle, cMessage, nPriority )
+   METHOD Send( nStyle, cMessage, cName, nPriority )
    DATA lRealConsole    INIT .T.
 
 ENDCLASS
@@ -484,12 +484,12 @@ CLASS HB_LogFile FROM HB_LogChannel
    DATA nFileLimit         INIT -1
    DATA nBackup            INIT 5
 
-   METHOD New( nLevel, cName, cFile, nMaxSize, nBackup )
-   METHOD Open( cName )
-   METHOD Close( cName )
+   METHOD New( nLevel, cFilename, nMaxSize, nBackup )
+   METHOD Open( cProgName )
+   METHOD Close( cProgName )
 
 PROTECTED:
-   METHOD Send( nStyle, cMessage, nPriority )
+   METHOD Send( nStyle, cMessage, cProgName, nPriority )
 
 ENDCLASS
 
@@ -550,11 +550,11 @@ METHOD Close( cProgName ) CLASS HB_LogFile
 
 RETURN .T.
 
-METHOD Send( nStyle, cMessage, cProgName, nPrio ) CLASS HB_LogFile
+METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
    LOCAL nCount
 
-   FWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPrio ) + HB_OsNewLine() )
+   FWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + HB_OsNewLine() )
    HB_FCommit( ::nFileHandle );
 
    // see file limit and eventually swap file.
@@ -598,12 +598,12 @@ CLASS HB_LogDbf FROM HB_LogChannel
                            { "TIME"    , "C",   8, 0 }  ;
                          }
 
-   METHOD New( nLevel, cFile, cIndex, aStruct, cDriver )
-   METHOD Open( cName )
-   METHOD Close( cName )
+   METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver )
+   METHOD Open( cProgName )
+   METHOD Close( cProgName )
 
 PROTECTED:
-   METHOD Send( nStyle, cMessage, nPriority )
+   METHOD Send( nStyle, cMessage, cProgName, nPriority )
 
 ENDCLASS
 
@@ -696,10 +696,10 @@ METHOD Close( cProgName ) CLASS HB_LogDbf
 
 RETURN .T.
 
-METHOD Send( nStyle, cMessage, cProgName, nPrio ) CLASS HB_LogDbf
+METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
 
    LogDbf->( dbAppend() )
-   LogDbf->priority := nPrio
+   LogDbf->priority := nPriority
    LogDbf->date     := Date()
    LogDbf->time     := Time()
    LogDbf->progname := cProgName
@@ -720,11 +720,11 @@ CLASS HB_LogSyslog FROM HB_LogChannel
    DATA nId
 
    METHOD New( nLevel, nId )
-   METHOD Open()
-   METHOD Close()
+   METHOD Open( cName )
+   METHOD Close( cName )
 
 PROTECTED:
-   METHOD Send( cMessage, nPrio )
+   METHOD Send( nType, cMessage, cName, nPriority )
 
 ENDCLASS
 
@@ -761,11 +761,11 @@ METHOD Close( cName ) CLASS HB_LogSyslog
 
 RETURN .F.
 
-METHOD Send( nType, cMessage, cName, nPrio ) CLASS HB_LogSyslog
+METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSyslog
 
    HB_SYMBOL_UNUSED( nType )
    // Syslog does not need timestamp, nor priority
-RETURN HB_SyslogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPrio ), nPrio, ::nId )
+RETURN HB_SyslogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPriority ), nPriority, ::nId )
 
 
 /**********************************************
@@ -779,7 +779,7 @@ CLASS HB_LogDebug FROM HB_LogChannel
    METHOD Open()    INLINE .T.
    METHOD Close()   INLINE .T.
 PROTECTED:
-   METHOD Send( nStyle, cMessage, nPriority )
+   METHOD Send( nStyle, cMessage, cName, nPriority )
 
 ENDCLASS
 

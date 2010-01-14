@@ -73,16 +73,16 @@ CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
    VAR cargo
 
    METHOD addItem( oRadioButton )
-   METHOD delItem( oRadioButton )
+   METHOD delItem( nPos )
    METHOD display()
-   METHOD getAccel( oRadioButton )
-   METHOD getItem( oRadioButton )
+   METHOD getAccel( xValue )
+   METHOD getItem( nPos )
    METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, oRadioButton )
    METHOD killFocus()
    METHOD nextItem()
    METHOD prevItem()
-   METHOD select( xPos )
+   METHOD select( xValue )
    METHOD setColor( cColorSpec )
    METHOD setFocus()
    METHOD setStyle( cStyle )
@@ -131,7 +131,7 @@ CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
    VAR aItems     INIT {}
    VAR nCursor    INIT 0
 
-   METHOD changeButton( xVal, nPos )
+   METHOD changeButton( nUnselect, nSelect )
 
 ENDCLASS
 
@@ -292,14 +292,14 @@ METHOD hitTest( nMRow, nMCol ) CLASS RADIOGROUP
 
    RETURN HTNOWHERE
 
-METHOD insItem( nPos, oRadioButtom ) CLASS RADIOGROUP
+METHOD insItem( nPos, oRadioButton ) CLASS RADIOGROUP
 
-   IF ISOBJECT( oRadioButtom ) .AND. oRadioButtom:ClassName() == "RADIOBUTTN" .AND. ;
+   IF ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN" .AND. ;
       nPos < ::nItemCount
 
       ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos, oRadioButtom )
-      ::aItems[ nPos ] := oRadioButtom
+      AIns( ::aItems, nPos, oRadioButton )
+      ::aItems[ nPos ] := oRadioButton
    ENDIF
 
    RETURN ::aItems[ nPos ]

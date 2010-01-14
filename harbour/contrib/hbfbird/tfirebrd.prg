@@ -468,7 +468,7 @@ CREATE CLASS TFbQuery
     VAR      aKeys
     VAR      aTables
 
-    METHOD   New( db, cQuery, nDialect )
+    METHOD   New( nDB, cQuery, nDialect )
     METHOD   Destroy()
     METHOD   Close()            INLINE ::Destroy()
 
@@ -764,14 +764,14 @@ CREATE CLASS TFbRow
    VAR      dialect
    VAR      aTables
 
-   METHOD   New( row, struct, db, dialect )
+   METHOD   New( row, struct, nDB, nDialect, aTable )
    METHOD   Changed(nField)
    METHOD   GetTables()        INLINE ::aTables
    METHOD   FCount()           INLINE Len(::aRow)
    METHOD   FieldGet( nField )
    METHOD   FieldPut( nField, Value )
    METHOD   FieldName( nField )
-   METHOD   FieldPos( cFieldName )
+   METHOD   FieldPos( cField )
    METHOD   FieldLen( nField )
    METHOD   FieldDec( nField )
    METHOD   FieldType( nField )

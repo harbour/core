@@ -94,8 +94,8 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    METHOD nextItem()
    METHOD open()
    METHOD prevItem()
-   METHOD scroll( n )
-   METHOD select( nValue )
+   METHOD scroll( nMethod )
+   METHOD select( xPos )
    METHOD setData( nPos, cData )
    METHOD setFocus()
    METHOD setItem( nPos, aItem )
@@ -127,7 +127,7 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    METHOD value() SETGET                                  /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD vScroll( oVScroll ) SETGET
 
-   METHOD New( nTop, nLeft, nBottom, nRight, lDrop ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 

@@ -66,7 +66,7 @@ CLASS TCode FROM TBarCode
    DATA nType
 
    // EAN-13 ISBN
-   METHOD New( nType ) CONSTRUCTOR
+   METHOD New( nTypeCode ) CONSTRUCTOR
    METHOD Draw( cText )
 
    METHOD Draw13( cText )
@@ -85,7 +85,7 @@ CLASS TCode FROM TBarCode
 
    // Utils
    METHOD FindCharCode( cstring, cchar )
-   METHOD MixCode(bar_string)
+   METHOD MixCode(value)
    METHOD Findcode( uval )
 
 ENDCLASS

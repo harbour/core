@@ -131,7 +131,7 @@ CREATE CLASS TODBC FROM HBClass
    METHOD ExecSQL()
    METHOD CLOSE()
 
-   METHOD LoadData()
+   METHOD LoadData( nPos )
    METHOD ClearData() INLINE AEval( ::Fields, {| oField | oField:Value := NIL } )
    METHOD FieldByName( cField )
 

@@ -64,11 +64,11 @@
 CREATE CLASS tIPClientSMTP FROM tIPClient
 
    METHOD New( oUrl, bTrace, oCredentials )
-   METHOD Open( cUrl )
+   METHOD Open( cUrl, lTLS )
    METHOD Close()
    METHOD Write( cData, nLen, bCommit )
    METHOD Mail( cFrom )
-   METHOD Rcpt( cRcpt )
+   METHOD Rcpt( cTo )
    METHOD Data( cData )
    METHOD Commit()
    METHOD Quit()
@@ -76,7 +76,7 @@ CREATE CLASS tIPClientSMTP FROM tIPClient
    METHOD SendMail( oTIpMail )
 
    /* Methods for smtp server that require login */
-   METHOD OpenSecure( cUrl )
+   METHOD OpenSecure( cUrl, lTLS )
    METHOD Auth( cUser, cPass ) // Auth by login method
    METHOD AuthPlain( cUser, cPass ) // Auth by plain method
    METHOD ServerSuportSecure( lAuthPlain, lAuthLogin )

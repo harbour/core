@@ -18,7 +18,7 @@ class Twirler
    var n_Smooth
    var c_Chars
    var c_Title
-   method new( nRow, nCol, cTitle, cChars )
+   method new( nRow, nCol, cTitle, cChars, nSmooth )
    method twirl()
    method show()
    method hide()

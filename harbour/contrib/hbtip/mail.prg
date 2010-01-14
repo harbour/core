@@ -80,13 +80,13 @@ CREATE CLASS TipMail
    METHOD Send( sSocket )
    METHOD Recv( sSocket )
    */
-   METHOD FromString( cString )
+   METHOD FromString( cMail, cBoundary, nPos )
    METHOD ToString()
 
-   METHOD GetFieldPart( cField )
-   METHOD GetFieldOption( cField )
-   METHOD SetFieldPart( cField, cValue )
-   METHOD SetFieldOption( cField, cValue )
+   METHOD GetFieldPart( cPart )
+   METHOD GetFieldOption( cPart, cOption )
+   METHOD SetFieldPart( cPart, cValue )
+   METHOD SetFieldOption( cPart, cOption, cValue )
    METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( ISCHARACTER( cCharset ), cCharset, "ISO-8859-1" )
 
    METHOD GetContentType() INLINE ::GetFieldPart( "Content-Type" )
@@ -101,9 +101,9 @@ CREATE CLASS TipMail
    METHOD MakeBoundary()
 
    METHOD isMultiPart()
-   METHOD getMultiParts()
+   METHOD getMultiParts( aParts )
 
-   METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC )
+   METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC )
    METHOD attachFile( cFileName )
    METHOD detachFile( cPath )
    METHOD getFileName()
@@ -137,11 +137,11 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
 
    RETURN Self
 
-METHOD SetEncoder( cEnc ) CLASS TipMail
-   IF hb_isString( cEnc )
-      ::oEncoder := TIp_GetEncoder( cEnc )
+METHOD SetEncoder( cEncoder ) CLASS TipMail
+   IF hb_isString( cEncoder )
+      ::oEncoder := TIp_GetEncoder( cEncoder )
    ELSE
-      ::oEncoder := cEnc
+      ::oEncoder := cEncoder
    ENDIF
    ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
    RETURN .T.
@@ -653,7 +653,7 @@ METHOD detachFile( cPath ) CLASS TipMail
 METHOD getFileName() CLASS TipMail
    RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"' )
 
-METHOD isMultiPart CLASS TipMail
+METHOD isMultiPart() CLASS TipMail
    RETURN "multipart/" $ Lower( ::GetFieldPart("Content-Type") )
 
 METHOD getMultiParts( aParts ) CLASS TipMail

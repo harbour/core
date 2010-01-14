@@ -58,15 +58,15 @@ CLASS TBTree STATIC
 
 ENDCLASS
 
-METHOD New( FileName, PageSize, KeySize, nFlags, Buffers ) CLASS TBTree
-   ::nHandle := hb_btreenew( FileName, PageSize, KeySize, nFlags, Buffers )
+METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers ) CLASS TBTree
+   ::nHandle := hb_btreenew( cFileName, nPageSize, nKeySize, nFlags, nBuffers )
    IF ::nHandle >= 1
       RETURN SELF
    ENDIF
    RETURN NIL
 
-METHOD Open( FileName, nFlags, Buffers ) CLASS TBTree
-  ::nHandle := hb_btreeopen( FileName, nFlags, Buffers )
+METHOD Open( cFileName, nFlags, nBuffers ) CLASS TBTree
+  ::nHandle := hb_btreeopen( cFileName, nFlags, nBuffers )
    IF ::nHandle >= 1
       RETURN SELF
    ENDIF

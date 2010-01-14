@@ -218,8 +218,8 @@ CLASS tRPCFunction
 
    CLASSDATA cPattern INIT HB_RegexComp( "^C:[0-9]{1,6}$|^A$|^O$|^D$|^N$|^NI$")
 
-   METHOD New( cFname, cSerial, cFret, aParams, nAuthLevel, oExec, oMethod ) CONSTRUCTOR
-   METHOD SetCallable( oExecSymbol, oMethod )
+   METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CONSTRUCTOR
+   METHOD SetCallable( oExec, oMeth )
    METHOD CheckTypes( aParams )
    METHOD CheckParam( cParam )
    METHOD Describe()
@@ -383,7 +383,7 @@ CLASS tRPCServeCon
    /* Allow progress ?*/
    DATA lAllowProgress
 
-   METHOD New( oCaller, skRemote ) CONSTRUCTOR
+   METHOD New( oParent, skIn ) CONSTRUCTOR
    METHOD Destroy()
 
    /* Managing async */
@@ -392,7 +392,7 @@ CLASS tRPCServeCon
    METHOD Run()
 
    /* Utilty */
-   METHOD SendProgress( nProgress, aData )
+   METHOD SendProgress( nProgress, oData )
    METHOD IsCanceled()        INLINE ::lCanceled
 
    METHOD GetStatus()         INLINE ::nStatus
@@ -415,12 +415,12 @@ HIDDEN:
    METHOD RecvChallenge()
    METHOD RecvFunction( bComp, bMode )
    METHOD FuncCall( cData )
-   METHOD FuncLoopCall( cData, cMode )
-   METHOD FuncForeachCall( cData, cMode )
+   METHOD FuncLoopCall( cMode, cData )
+   METHOD FuncForeachCall( cMode, cData )
    METHOD LaunchChallenge( cUserid, cPassword )
-   METHOD LaunchFunction( cFuncName, aParms, nMode, aItems )
-   METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aItems )
-   METHOD SendResult( oRet )
+   METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc )
+   METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc )
+   METHOD SendResult( oRet, cFuncName )
 
    METHOD Encrypt(cDataIn)
    METHOD Decrypt(cDataIn)
@@ -1209,7 +1209,7 @@ CLASS tRPCService
    DATA bConnection
 
    /* Function management */
-   METHOD Add( xFunction, cVersion, nId, oExec, oMethod )
+   METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    METHOD Run( cName, aParams )
    METHOD Describe( cName )
    METHOD Find( cName )
@@ -1226,11 +1226,11 @@ CLASS tRPCService
 
    /* UDP services */
    METHOD UdpListen()
-   METHOD UDPParseRequest()
+   METHOD UDPParseRequest( cData, nPacketLen )
    METHOD UDPInterpretRequest( cData, nPacketLen, cRes )
 
    /* Utility */
-   METHOD AuthorizeChallenge( cUserid, cPassword )
+   METHOD AuthorizeChallenge( cUserId, cData )
 
    /* to be overloaded */
    METHOD Authorize( cUserid, cPassword )
@@ -1242,7 +1242,7 @@ CLASS tRPCService
    METHOD OnClientLogin( oClient )
    METHOD OnClientRequest( oClient, nRequest, cData )
    METHOD OnFunctionProgress( oClient, nProgress, aData )
-   METHOD OnFunctionError( oClient, cFuncName, nError )
+   METHOD OnFunctionError( oClient, cFunction, nError )
    METHOD OnFunctionReturn( oClient, aData )
    METHOD OnFunctionCanceled( oClient, cFuncName )
    METHOD OnClientLogout( oClient )

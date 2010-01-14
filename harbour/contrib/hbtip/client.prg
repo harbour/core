@@ -136,13 +136,13 @@ CREATE CLASS tIPClient
    VAR cProxyPassword
 
    METHOD New( oUrl, bTrace, oCredentials )
-   METHOD Open()
+   METHOD Open( cUrl )
 
    METHOD EnableTLS( lEnable )
 
-   METHOD Read( iLen )
+   METHOD Read( nLen )
    METHOD ReadToFile( cFile, nMode, nSize )
-   METHOD Write( cData, iLen, bCommit )
+   METHOD Write( cData, nLen, bCommit )
    METHOD Commit()
    METHOD WriteFromFile( cFile )
    METHOD Reset()
@@ -169,15 +169,15 @@ CREATE CLASS tIPClient
 
    /* Methods to log data if needed */
    METHOD InetRecv( SocketCon, cStr1, len)
-   METHOD InetRecvLine( SocketCon, nLen, size )
-   METHOD InetRecvAll( SocketCon, cStr1, len )
+   METHOD InetRecvLine( SocketCon, nRet, size )
+   METHOD InetRecvAll( SocketCon, cRet, size )
    METHOD InetCount( SocketCon )
    METHOD InetSendAll( SocketCon, cData, nLen )
    METHOD InetErrorCode( SocketCon )
    METHOD InetErrorDesc( SocketCon )
    METHOD InetConnect( cServer, nPort, SocketCon )
 
-   METHOD Log()
+   METHOD Log( ... )
 
 ENDCLASS
 

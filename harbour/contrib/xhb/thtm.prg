@@ -83,13 +83,24 @@ CLASS THtml
                //cStyle, aimages, baseURL, baseTarget, ;
                //nRefresh, cRefreshURL, cStyleScr, lnocache )
    METHOD Newalt(cType)
-   MeTHOD CGINEW()
-   METHOD New( cTitle, cLinkTitle, cCharSet, cScriptSRC, ;
-                  bgImage, bgColor, txtColor, cJavaCode, ;
-                  onLoad, onUnload, cLinkClr, cVLinkClr, cALinkClr, ;
-                  cStyle, aImages, aServerSrc, baseURL, baseTarget, ;
-                  nRefresh, cRefreshURL, cStyleScr, lnocache, ;
-                  nof, nMarginTop, nMarginHeight, nMarginWidth, nMarginLeft ,lcgi)
+   METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
+                  BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
+                  onLoad, onUnload, ;
+                  cLinkClr, cVLinkClr, cALinkClr, ;
+                  cStyle, aImages, aServerSrc, ;
+                  cBaseURL, cBaseTarget, ;
+                  nRefresh, cRefreshURL, cStyleScr, ;
+                  lNocache, NOF, nMarginTop, nMarginHeight, ;
+                  nMarginWidth, nMarginLeft, lCgi, cFile )
+   METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
+               BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
+               onLoad, onUnload, ;
+               cLinkClr, cVLinkClr, cALinkClr, ;
+               cStyle, aImages, aServerSrc, ;
+               cBaseURL, cBaseTarget, ;
+               nRefresh, cRefreshURL, cStyleScr, ;
+               lNocache, NOF, nMarginTop, nMarginHeight, ;
+               nMarginWidth, nMarginLeft, lCgi, cFile )
 
    METHOD CGIClose()
 
@@ -105,7 +116,7 @@ CLASS THtml
 
    METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet )
 
-   METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet )
+   METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut )
 
    METHOD DefineFont( cFont, cType, nSize, cColor, lSet )
 
@@ -146,7 +157,7 @@ CLASS THtml
 
    METHOD PutParagraph() INLINE ::cStr +=  "<P> </P>" + CRLF()
 
-   METHOD Paragraph( l, c, style )
+   METHOD Paragraph( lStart, cAlign, cStyle )
 
    METHOD PutBreak() INLINE ::cStr +=  "<BR>" + CRLF()
 
@@ -159,23 +170,26 @@ CLASS THtml
                         onMsOver, onMsOut, onClick, onStart, onFinish )
                         METHOD EndMarquee()
 
-   METHOD PutTextUrl( cText, cUrl, cOnClick, cOmMsOver, cOnMsout, cTarget,  font, clr, size, style, bld, lbreak, cClass )
+   METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, clr, size, style, bld, lbreak, cClass )
 
-   METHOD PutImageUrl( cImage, nBorder, nHeight, nWidth, cUrl, ;
-                       cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, nWidth, lbreak, cClass, ALING )
+   METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
+                       cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, nWidth, lbreak, cClass, ;
+                       Id, hSpace, Aling )
 
-   METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, l3d, lRuleCols, lRuleRows, ;
-                       cClrDark, cClrLight, ncellpadding, ncellspacing, ;
-                       cAling, lRules, BGIMAGE, cStyle, ID, NOF )
+   METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
+                       l3d, lRuleCols, lRuleRows, cClrDark, cClrLight, cClrBorder, ;
+                       nCellPadding, nCellSpacing, cAling, lRules, ;
+                       bgImage, cStyle, Id, NOF )
 
    METHOD TableHead( cHead, cColor, cAlign, cFont, nSize, cFntColor, nHeight, cBgPic )
 
-   METHOD NewTableRow( cColor )
+   METHOD NewTableRow( cColor, vAling, aLing )
 
    METHOD EndTableRow()
 
-   METHOD NewTableCell( cAlign, cColor, cFont, nSize, cFntColor, nHeight, cBgPic, ;
-                        nWidth, lWrap, nCSpan, nRSpan, cValing, clrdrk, clrlt, cBdrClr, cclass )
+   METHOD NewTableCell( cAlign, cColor, cFont, nSize, cFntColor, nHeight, ;
+                        cBgPic, nWidth, lWrap, nColspan, nRowspan, cValign, ;
+                        clrdrk, clrlt, cBdrClr, cClass, lNoFont )
 
    METHOD EndTableCell()
 
@@ -193,9 +207,9 @@ CLASS THtml
 
    METHOD FormEdit( cType, cName, xValue, nSize )
 
-   METHOD FormReset( c )
+   METHOD FormReset( cText )
 
-   METHOD FormSubmit( c )
+   METHOD FormSubmit( cText )
 
    METHOD FormQOut( c ) INLINE ::cStr +=  c + '<BR>' + CRLF()
 
@@ -209,7 +223,7 @@ CLASS THtml
 
    METHOD Button( cName, cCaption, cOnClick, cCgiApp, cOnMsOver, cOnMsOut, style, ID )
 
-   METHOD iFrame( name, src, border, marginwidth, marginheight, scrolling, allign, WIDTH, HEIGHT )
+   METHOD iFrame( name, src, border, marginwidth, marginheight, scrolling, align, WIDTH, HEIGHT )
 
    METHOD StartJava() INLINE ::cStr +=  '<SCRIPT LANGUAGE="JavaScript">' + CRLF() + "<!--" + CRLF()
 
@@ -235,7 +249,7 @@ CLASS THtml
    METHOD ADDoBJECT( cType, cClassid, cAling, cCode, lDisable, cCodeBase, ;
                      cName, nWidth, nHeight )
 
-   METHOD ADDPARAM( cName, cValue )
+   METHOD ADDPARAM( cType, cValue )
 
    METHOD EndOBJect()
 
@@ -260,14 +274,14 @@ ENDCLASS
 
 
 METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
-                  BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
-                  onLoad, onUnload, ;
-                  cLinkClr, cVLinkClr, cALinkClr, ;
-                  cStyle, aImages, aServerSrc, ;
-                  cBaseURL, cBaseTarget, ;
-                  nRefresh, cRefreshURL, cStyleScr, ;
-                  lNocache, NOF, nMarginTop, nMarginHeight, ;
-                  nMarginWidth, nMarginLeft, lCgi, cFile ) CLASS THtml
+               BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
+               onLoad, onUnload, ;
+               cLinkClr, cVLinkClr, cALinkClr, ;
+               cStyle, aImages, aServerSrc, ;
+               cBaseURL, cBaseTarget, ;
+               nRefresh, cRefreshURL, cStyleScr, ;
+               lNocache, NOF, nMarginTop, nMarginHeight, ;
+               nMarginWidth, nMarginLeft, lCgi, cFile ) CLASS THtml
 
    HB_SYMBOL_UNUSED( lCgi )
 
@@ -284,14 +298,14 @@ METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
 
 METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
-                  BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
-                  onLoad, onUnload, ;
-                  cLinkClr, cVLinkClr, cALinkClr, ;
-                  cStyle, aImages, aServerSrc, ;
-                  cBaseURL, cBaseTarget, ;
-                  nRefresh, cRefreshURL, cStyleScr, ;
-                  lNocache, NOF, nMarginTop, nMarginHeight, ;
-                  nMarginWidth, nMarginLeft, lCgi, cFile ) CLASS THtml
+            BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
+            onLoad, onUnload, ;
+            cLinkClr, cVLinkClr, cALinkClr, ;
+            cStyle, aImages, aServerSrc, ;
+            cBaseURL, cBaseTarget, ;
+            nRefresh, cRefreshURL, cStyleScr, ;
+            lNocache, NOF, nMarginTop, nMarginHeight, ;
+            nMarginWidth, nMarginLeft, lCgi, cFile ) CLASS THtml
 
    LOCAL i
    DEFAULT lCgi to .F.
@@ -972,8 +986,8 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 */
 
 METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
-                       cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, nWidth, lbreak, cClass, ;
-                       Id, hSpace, Aling ) CLASS THtml
+                    cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, nWidth, lbreak, cClass, ;
+                    Id, hSpace, Aling ) CLASS THtml
    LOCAL cStr := ""
    default lbreak TO .F.
 
@@ -1210,9 +1224,9 @@ RETURN Self
 */
 
 METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
-                       l3d, lRuleCols, lRuleRows, cClrDark, cClrLight, cClrBorder, ;
-                       nCellPadding, nCellSpacing, cAling, lRules, ;
-                       bgImage, cStyle, Id, NOF ) CLASS THtml
+                    l3d, lRuleCols, lRuleRows, cClrDark, cClrLight, cClrBorder, ;
+                    nCellPadding, nCellSpacing, cAling, lRules, ;
+                    bgImage, cStyle, Id, NOF ) CLASS THtml
 
    LOCAL cStr  := CRLF() + CRLF() + "<TABLE "
    LOCAL xCols := nCols
@@ -1408,9 +1422,9 @@ METHOD EndTableRow() CLASS THtml
 */
 
 METHOD NewTableCell( cAlign, cColor, ;
-                        cFont, nSize, cFntColor, nHeight, ;
-                        cBgPic, nWidth, lWrap, ;
-                        nColspan, nRowspan, cValign, clrdrk, clrlt, cBdrClr, cClass, lNoFont ) CLASS THtml
+                     cFont, nSize, cFntColor, nHeight, ;
+                     cBgPic, nWidth, lWrap, ;
+                     nColspan, nRowspan, cValign, clrdrk, clrlt, cBdrClr, cClass, lNoFont ) CLASS THtml
 
    LOCAL cStr := Space( 10 ) + "<TD"
    LOCAL cAli := cAlign
@@ -1900,7 +1914,7 @@ METHOD EndMarquee() CLASS THtml
 */
 
 METHOD iFrame( name, src, border, marginwidth, marginheight, ;
-                  scrolling, align, WIDTH, HEIGHT ) CLASS THtml
+               scrolling, align, WIDTH, HEIGHT ) CLASS THtml
 
    LOCAL cStr := "<IFRAME " + CRLF()
 

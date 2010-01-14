@@ -75,7 +75,7 @@ HIDDEN:
    VAR lFocus  AS LOGICAL     INIT .F.
 
 EXPORTED:
-   METHOD new( nRow, nCol, nWidth, cValue, nSize )
+   METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize )
    METHOD applyKey( nKey )
    METHOD getValue()
    METHOD setValue( cValue )

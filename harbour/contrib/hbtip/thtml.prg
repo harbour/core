@@ -123,7 +123,7 @@ CREATE CLASS THtmlDocument MODULE FRIENDLY
    METHOD writeFile( cFileName )
 
    METHOD collect()
-   METHOD toString( nIndent )
+   METHOD toString()
    METHOD getNode( cTagName )
    METHOD getNodes( cTagName )
    METHOD findFirst( cName, cAttrib, cValue, cData )
@@ -313,7 +313,7 @@ METHOD findFirstRegex( cName, cAttrib, cValue, cData ) CLASS THtmlDocument
  * (Adopted from TXMLIterator -> source\rtl\txml.prg)
  */
 CREATE CLASS THtmlIterator MODULE FRIENDLY
-   METHOD New( oNodeTop ) CONSTRUCTOR
+   METHOD New( oHtml ) CONSTRUCTOR
    METHOD Next()
    METHOD Rewind()
    METHOD Find( cName, cAttribute, cValue, cData )
@@ -351,7 +351,7 @@ METHOD New( oHtml ) CLASS THtmlIterator
    ::nLast    := Len( ::aNodes )
    RETURN Self
 
-METHOD rewind CLASS THtmlIterator
+METHOD rewind() CLASS THtmlIterator
    ::oNode := ::oTop
    ::nCurrent := 0
    RETURN Self
@@ -512,13 +512,13 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    VAR parent
    VAR htmlContent
 
-   METHOD parseHtml
-   METHOD parseHtmlFixed
+   METHOD parseHtml( parser )
+   METHOD parseHtmlFixed( parser )
 
-   METHOD _getTextNode
-   METHOD _setTextNode
+   METHOD _getTextNode()
+   METHOD _setTextNode( cText )
 
-   METHOD keepFormatting
+   METHOD keepFormatting()
 
    EXPORTED:
 
@@ -529,7 +529,7 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
 
    METHOD New( oParent, cTagName, cAttrib, cContent )
 
-   METHOD isType( nCM_TYPE )
+   METHOD isType( nType )
    ACCESS isEmpty()
    ACCESS isInline()
    ACCESS isOptional()
@@ -545,8 +545,8 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    MESSAGE insertBelow METHOD addNode
    MESSAGE unlink      METHOD delete
 
-   METHOD firstNode()
-   METHOD lastNode()
+   METHOD firstNode( lRoot )
+   METHOD lastNode( lRoot )
 
    ACCESS nextNode()
    ACCESS prevNode()
@@ -559,19 +559,19 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    METHOD toString( nIndent )
    METHOD attrToString()
 
-   METHOD collect()
-   METHOD getText( cCRLF )
+   METHOD collect( oEndNode )
+   METHOD getText( cEOL )
 
-   METHOD getAttribute( cAttrName )
+   METHOD getAttribute( cName )
    METHOD getAttributes()
 
-   METHOD setAttribute( cAttrName, cAttrValue )
-   METHOD setAttributes( cHtmlAttr )
+   METHOD setAttribute( cName, cValue )
+   METHOD setAttributes( cHtml )
 
-   METHOD delAttribute( cAttrName )
+   METHOD delAttribute( cName )
    METHOD delAttributes()
 
-   METHOD isAttribute()
+   METHOD isAttribute( cName )
 
    ACCESS text    INLINE ::_getTextNode()
    ASSIGN text(x) INLINE ::_setTextNode( x )
@@ -641,27 +641,27 @@ METHOD isType( nType ) CLASS THtmlNode
    RETURN lRet
 
 // checks if this is a node that is always empty and never has HTML text, e.g. <img>,<link>,<meta>
-METHOD isEmpty CLASS THtmlNode
+METHOD isEmpty() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_EMPTY ) > 0
 
 // checks if this is a node that may occur inline, eg. <b>,<font>
-METHOD isInline CLASS THtmlNode
+METHOD isInline() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_INLINE ) > 0
 
 // checks if this is a node that may appear without a closing tag, eg. <p>,<tr>,<td>
-METHOD isOptional CLASS THtmlNode
+METHOD isOptional() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_OPT ) > 0
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br>,<hr>,_text_)
-METHOD isNode CLASS THtmlNode
+METHOD isNode() CLASS THtmlNode
    RETURN ISARRAY( ::htmlContent ) .AND. Len( ::htmlContent ) > 0
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
-METHOD isBlock CLASS THtmlNode
+METHOD isBlock() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_BLOCK ) > 0
 
 // checks if this is a node whose text line formatting must be preserved: <pre>,<script>,<textarea>
-METHOD keepFormatting CLASS THtmlNode
+METHOD keepFormatting() CLASS THtmlNode
    RETURN "<" + Lower( ::htmlTagName ) + ">" $ "<pre>,<script>,<textarea>"
 
 // parses a HTML string and builds a tree of THtmlNode objects

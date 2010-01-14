@@ -77,9 +77,9 @@ CLASS TCgi FROM THtml
 
    DATA aQueryFields INIT {}
 
-   METHOD New( c )
+   METHOD New( cInBuffer )
 
-   METHOD Field( c )
+   METHOD Field( cQueryName )
 
    METHOD ToObject()
 

@@ -170,7 +170,7 @@ CLASS TXmlIterator
    METHOD Clone()
 
 PROTECTED:
-   METHOD MatchCriteria()
+   METHOD MatchCriteria( oNode )
 
    DATA cName
    DATA cAttribute

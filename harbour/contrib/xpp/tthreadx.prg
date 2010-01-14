@@ -72,7 +72,7 @@ CREATE CLASS TSignal FUNCTION Signal
 
 EXPORTED:
 
-   METHOD new()
+   METHOD new( ... )
    METHOD wait( nTimeOut )
    METHOD signal()
 
@@ -116,7 +116,7 @@ HIDDEN:
    VAR pThreadID        AS USUAL             INIT NIL
 
 EXPORTED:
-   METHOD new()
+   METHOD new( ... )
 
 PROTECTED:
    /* METHOD atEnd() */
@@ -128,7 +128,7 @@ EXPORTED:
    METHOD setInterval( nHSeconds )
    METHOD setPriority( nPriority )
    METHOD setStartTime( nSeconds )
-   METHOD start()
+   METHOD start( xAction, ... )
    METHOD synchronize( nTimeOut )
    METHOD threadSelf()
    METHOD threadID()

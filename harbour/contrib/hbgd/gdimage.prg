@@ -157,8 +157,9 @@ CLASS GDImage
    METHOD Points()                         INLINE Len( ::aPoints )
 
    METHOD Rectangle( x1, y1, x2, y2, lFilled, color )
-   METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, nColor )
-   METHOD Ellipse( x, y, nWidth, nHeight, lFilled, nColor )
+   METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle )
+   METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color )
+
    METHOD Circle( x, y, nRadius, lFilled, nColor ) ;
                                            INLINE ::Ellipse( x, y, nRadius, nRadius, lFilled, nColor )
 
@@ -263,20 +264,20 @@ CLASS GDImage
    METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, .F. )
 
    /* COPY AND RESIZING FUNCTIONS */
-   METHOD Copy()
-   METHOD CopyResized()
-   METHOD CopyResampled()
-   METHOD CopyRotated()
-   METHOD CopyMerge()
-   METHOD CopyMergeGray()
+   METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage )
+   METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage )
+   METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage )
+   METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestImage )
+   METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage )
+   METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage )
 
    /* New implemented */
    METHOD Clone()
-   METHOD CopyZoomed()
-   METHOD Crop()
-   METHOD Zoom()
-   METHOD Resize()
-   METHOD Rotate()
+   METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight )
+   METHOD Crop( nX, nY, nWidth, nHeight )
+   METHOD Zoom( nPerc )
+   METHOD Resize( nWidth, nHeight )
+   METHOD Rotate( nAngle, lInside )
    METHOD RotateInside( nAngle )           INLINE ::Rotate( nAngle, .T. )
 
    METHOD PaletteCopy( oDestImage )        INLINE gdImagePaletteCopy( oDestImage:pImage, ::pImage )
@@ -290,7 +291,7 @@ CLASS GDImage
    METHOD Version()                        INLINE gdVersion()
 
    PROTECTED:
-   METHOD CloneDataFrom()
+   METHOD CloneDataFrom( oSrc )
 
 ENDCLASS
 

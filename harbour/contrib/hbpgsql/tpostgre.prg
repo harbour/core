@@ -489,7 +489,7 @@ CREATE CLASS TPQQuery
     METHOD   Destroy()
     METHOD   Close()            INLINE ::Destroy()
 
-    METHOD   Refresh()
+    METHOD   Refresh( lQuery, lMeta )
     METHOD   Fetch()            INLINE ::Skip()
     METHOD   Read()
     METHOD   Skip( nRecno )
@@ -1180,7 +1180,7 @@ CREATE CLASS TPQRow
    METHOD   FieldGet( nField )
    METHOD   FieldPut( nField, Value )
    METHOD   FieldName( nField )
-   METHOD   FieldPos( cFieldName )
+   METHOD   FieldPos( cField )
    METHOD   FieldLen( nField )
    METHOD   FieldDec( nField )
    METHOD   FieldType( nField )

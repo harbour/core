@@ -59,7 +59,7 @@ CREATE CLASS Symbol
    METHOD New( cSymName )    // Constructor. cSymName may already exists or not
    METHOD name()             // retrieves the symbol name
    METHOD isEqual( oSymbol ) // Compares two symbol objects
-   METHOD exec()             // Executes the function referred to by the
+   METHOD exec( ... )        // Executes the function referred to by the
                              // Symbol object, with an optional parameters list
    PROTECTED:
 

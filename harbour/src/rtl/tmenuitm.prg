@@ -80,7 +80,7 @@ CREATE CLASS MENUITEM FUNCTION HBMenuItem
 
    METHOD isPopUp()
 
-   METHOD New( cCaption, boData, nShortcut, cMsg, nID ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( cCaption, boData, nShortcut, cMessage, nID ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 

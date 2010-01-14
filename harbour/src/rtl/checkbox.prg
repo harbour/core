@@ -75,7 +75,7 @@ CREATE CLASS CHECKBOX FUNCTION HBCheckBox
    METHOD display()
    METHOD hitTest( nMRow, nMCol )
    METHOD killFocus()
-   METHOD select()
+   METHOD select( lState )
    METHOD setFocus()
 
    METHOD bitmaps( aBitmaps ) SETGET

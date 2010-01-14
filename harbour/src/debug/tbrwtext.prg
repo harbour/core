@@ -89,7 +89,7 @@ CREATE CLASS HBBrwText
    METHOD RefreshCurrent() INLINE ::oBrw:RefreshCurrent(), Self
    METHOD GotoLine( n )
    METHOD SetActiveLine( n )
-   METHOD GetLine( n )
+   METHOD GetLine()
    METHOD ToggleBreakPoint( nRow, lSet )
    METHOD Search( cString, lCaseSensitive, nMode )
 

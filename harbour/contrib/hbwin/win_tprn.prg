@@ -78,7 +78,7 @@ CREATE CLASS WIN_PRN
                                     // Create() ( & StartDoc() ) must be called before printing can start.
    METHOD Destroy()                 // Calls EndDoc() - restores default font, Deletes DC.
                                     // Destroy() must be called to avoid memory leaks
-   METHOD StartDoc( cDocame )       // Calls StartPage()
+   METHOD StartDoc( cDocName )      // Calls StartPage()
    METHOD EndDoc( lAbortDoc )       // Calls EndPage() if lAbortDoc not .T.
    METHOD StartPage()
    METHOD EndPage( lStartNewPage )  // If lStartNewPage == .T. then StartPage() is called for the next page of output
@@ -95,15 +95,15 @@ CREATE CLASS WIN_PRN
    METHOD SetDefaultFont()
 
    METHOD GetFonts()                                   // Returns array of { "FontName", lFixed, lTrueType, nCharSetRequired }
-   METHOD Bold( nBoldWeight )
-   METHOD UnderLine( lOn )
-   METHOD Italic( lOn )
+   METHOD Bold( nWeight )
+   METHOD UnderLine( lUnderline )
+   METHOD Italic( lItalic )
    METHOD SetDuplexType( nDuplexType )                 // Get/Set current Duplexmode
    METHOD SetPrintQuality( nPrintQuality )             // Get/Set Printquality
    METHOD CharSet( nCharSet )
 
 
-   METHOD SetPos( nX, nY )                             // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD SetPos( nPosX, nPosY )                       // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
 
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : 0 == left, 1 == right, 2 == centered
@@ -135,8 +135,8 @@ CREATE CLASS WIN_PRN
    METHOD INCH_TO_POSY( nInch )  //   "       "      "    "    "   "    "   "       "    Row
 
    METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize,;     // Print text string at location
-                      nWidth, nBold, lUnderLine, lItalic, lNewLine,; // in specified font and color.
-                      lUpdatePosX, nColor, nAlign )                  // Restore original font and colour
+                      nWidth, nBold, lUnderLine, lItalic, nCharSet,; // in specified font and color.
+                      lNewLine, lUpdatePosX, nColor, nAlign )        // Restore original font and colour
                                                                      // after printing.
    METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
                                                                      // Set Background mode
@@ -256,7 +256,7 @@ METHOD Destroy() CLASS WIN_PRN
       IF ::Printing
          ::EndDoc()
       ENDIF
-      ::hPrinterDC := win_DeleteDC( ::hPrinterDC )
+      ::hPrinterDC :=   win_DeleteDC( ::hPrinterDC )
    ENDIF
    RETURN .T.
 

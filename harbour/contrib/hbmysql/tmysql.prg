@@ -1330,7 +1330,7 @@ CREATE CLASS TMySQLServer
    VAR   lError                  // .T. if occurred an error
    VAR   cCreateQuery
 
-   METHOD   New( cServer, cUser, cPassword )   // Opens connection to a server, returns a server object
+   METHOD   New( cServer, cUser, cPassword, nPort )   // Opens connection to a server, returns a server object
    METHOD   Destroy()                         // Closes connection to server
 
    METHOD   SelectDB( cDBName )    // Which data base I will use for subsequent queries

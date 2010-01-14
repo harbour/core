@@ -290,8 +290,8 @@ PROTECTED:
 
    METHOD doConfigure()                         // reconfigures the internal settings of the TBrowse object
    METHOD setUnstable()                         // set TBrows in unstable mode resetting flags
-   METHOD setPosition( nPos )                   // synchronize record position with the buffer
-   METHOD readRecord()                          // read current record into the buffer
+   METHOD setPosition()                         // synchronize record position with the buffer
+   METHOD readRecord( nRow )                    // read current record into the buffer
 
    METHOD setVisible()                          // set visible columns
    METHOD setCursorPos()                        // set screen cursor position at current cell

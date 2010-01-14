@@ -117,7 +117,7 @@ CREATE CLASS HBDbWindow // Debugger windows and dialogs
    METHOD Move()
    METHOD KeyPressed( nKey )
    METHOD Refresh()
-   METHOD Resize()
+   METHOD Resize( nTop, nLeft, nBottom, nRight )
 
 ENDCLASS
 
@@ -170,7 +170,7 @@ METHOD SetCaption( cCaption ) CLASS HBDbWindow
 
    RETURN NIL
 
-METHOD ShowCaption CLASS HBDbWindow
+METHOD ShowCaption() CLASS HBDbWindow
 
    IF ! Empty( ::cCaption )
       hb_dispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;

@@ -112,7 +112,8 @@ CREATE CLASS HBEditor
 
 
    METHOD New( cString, nTop, nLeft, nBottom,;           // Converts a string to an array of strings splitting input string at EOL boundaries
-               nRight, lEditMode, nLineLength, nTabSize )
+               nRight, lEditMode, nLineLength, nTabSize,;
+               nTextRow, nTextCol, nWndRow, nWndCol )
 
    PROTECTED:
 

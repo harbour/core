@@ -95,7 +95,7 @@ STATIC FUNCTION ThrowOpError( nSubCode, cOperator, ... )
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
    VAR cClassName
-   METHOD New( xOle, cIID )
+   METHOD New( xOle, cClass )
    METHOD hObj( xOle )
 
    METHOD OleCollection( xIndex, xValue ) OPERATOR "[]"

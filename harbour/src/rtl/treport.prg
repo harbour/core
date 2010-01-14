@@ -182,14 +182,25 @@ CREATE CLASS HBReportForm
    METHOD ReportHeader()
    METHOD EjectPage()
    METHOD PrintIt( cString AS STRING )
-   METHOD LoadReportFile( cFile AS STRING )
+   METHOD LoadReportFile( cFrmFile AS STRING )
    METHOD GetExpr( nPointer AS NUMERIC )
    METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC )
 
 ENDCLASS
 
-METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord,;
-           lRest, lPlain, cHeading, lBEject, lSummary ) CLASS HBReportForm
+METHOD New( cFrmName AS STRING,;
+            lPrinter AS LOGICAL,;
+            cAltFile AS STRING,;
+            lNoConsole AS LOGICAL,;
+            bFor AS CODEBLOCK,;
+            bWhile AS CODEBLOCK,;
+            nNext AS NUMERIC,;
+            nRecord AS NUMERIC,;
+            lRest AS LOGICAL,;
+            lPlain AS LOGICAL,;
+            cHeading AS STRING,;
+            lBEject AS LOGICAL,;
+            lSummary AS LOGICAL ) CLASS HBReportForm
 
    LOCAL lPrintOn, lConsoleOn // Status of PRINTER and CONSOLE
    LOCAL cExtraFile, lExtraState // Status of EXTRA
@@ -437,7 +448,7 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
 
    RETURN NIL
 
-METHOD PrintIt( cString ) CLASS HBReportForm
+METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
    DEFAULT cString TO ""
 
@@ -871,7 +882,7 @@ METHOD ExecuteReport() CLASS HBReportForm
 
    RETURN NIL
 
-METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
+METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL cFieldsBuff
    LOCAL cParamsBuff
    LOCAL nFieldOffset   := 0
@@ -1141,7 +1152,7 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 *
 */
 
-METHOD GetExpr( nPointer ) CLASS HBReportForm
+METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
    LOCAL nExprOffset
    LOCAL nExprLength
    LOCAL nOffsetOffset := 0
@@ -1273,7 +1284,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 *        b. Character following character pointed to by pointer is Chr(0)
 *
 */
-METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
+METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportForm
    LOCAL nPointer, aColumn[ RCT_COUNT ], cType, cExpr
 
    // Column width

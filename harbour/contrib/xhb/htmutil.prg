@@ -357,9 +357,9 @@ Class JWindow
    METHOD WriteLN( c ) INLINE ::qOut( c )
 
    METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
-   Resizable, Menubar, personalBar, ;
-   dependent, location, directories, ;
-   Scrollbars, Status, TitleBar, Toolbar )
+                       Resizable, Menubar, personalBar, ;
+                       dependent, location, directories, ;
+                       Scrollbars, Status, TitleBar, Toolbar, copyHistory )
 
    METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    cOnClick, cOnMsover, cOnMsout, ;
@@ -409,9 +409,9 @@ RETURN Self
 */
 
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
-                       Resizable, Menubar, personalBar, ;
-                       dependent, location, directories, ;
-                       Scrollbars, Status, TitleBar, Toolbar, copyHistory ) Class JWindow
+                    Resizable, Menubar, personalBar, ;
+                    dependent, location, directories, ;
+                    Scrollbars, Status, TitleBar, Toolbar, copyHistory ) Class JWindow
 
    LOCAL cStr := ""
 

@@ -314,7 +314,7 @@ typedef union YYSTYPE
    } asMessage;
    PHB_VARTYPE asVarType;
 }
-/* Line 1495 of yacc.c.  */
+/* Line 1489 of yacc.c.  */
 #line 319 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

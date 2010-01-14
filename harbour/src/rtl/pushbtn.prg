@@ -82,7 +82,7 @@ CREATE CLASS PUSHBUTTON FUNCTION HBPushButton
    METHOD display()
    METHOD hitTest( nMRow, nMCol )
    METHOD killFocus()
-   METHOD select()
+   METHOD select( nPos )
    METHOD setFocus()
 
    METHOD bitmap( cBitmap ) SETGET

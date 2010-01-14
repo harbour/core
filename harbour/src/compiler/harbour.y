@@ -1267,7 +1267,7 @@ ClassInfo  : DecMethod
            | ClassInfo DecData
            ;
 
-DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, $1 ); } DecList ')' AsType
+DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, $1 ); } DecListExt ')' AsType
              {
                if( HB_COMP_PARAM->pLastMethod )
                {
@@ -1345,6 +1345,15 @@ DecList    : /* Nothing */
            | FormalList
            | OptList
            | FormalList ',' OptList
+           ;
+
+DecListExt : /* Nothing */
+           | FormalList
+           | OptList
+           | EPSILON
+           | FormalList ',' EPSILON
+           | FormalList ',' OptList
+           | FormalList ',' OptList ',' EPSILON
            ;
 
 DummyArgList : DummyArgument

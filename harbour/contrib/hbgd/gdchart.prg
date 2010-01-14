@@ -72,10 +72,10 @@ CLASS GDChart FROM GDImage
 
 
    METHOD New( sx, sy )  CONSTRUCTOR
-   METHOD AddData()
-   METHOD AddDef()
-   METHOD SetData()
-   METHOD SetDefs()
+   METHOD AddData( hData )
+   METHOD AddDef( cDefKey, xDefVal )
+   METHOD SetData( aData )
+   METHOD SetDefs( hDefs )
 
    METHOD PieChart()
    METHOD VerticalBarChart()
@@ -86,7 +86,7 @@ CLASS GDChart FROM GDImage
    METHOD Clone()
 
    PROTECTED:
-   METHOD CloneDataFrom()
+   METHOD CloneDataFrom( oSrc )
 
 ENDCLASS
 

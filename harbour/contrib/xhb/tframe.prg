@@ -57,7 +57,7 @@ CLASS THtmlFrameSet
 
    DATA TITLE INIT "FrameSet01"
 
-   METHOD New( fName, title )
+   METHOD New( cFName, cTitle )
 
    METHOD StartSet( aRows, aCols, onLoad, onUnload )
 

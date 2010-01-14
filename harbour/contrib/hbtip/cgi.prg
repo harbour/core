@@ -87,20 +87,20 @@ CREATE CLASS TIpCgi
    VAR lDumpHtml    INIT .F.
 
    METHOD New()
-   METHOD Header( hOptions )
+   METHOD Header( cValue )
    METHOD Redirect( cUrl )
    METHOD Print( cString )
    METHOD Flush()
-   METHOD ErrHandler()
+   METHOD ErrHandler( xError )
 
    METHOD StartHtml( hOptions )
    METHOD EndHtml()
    METHOD StartFrameSet( hOptions )
-   METHOD EndFrameSet()
+   METHOD EndFrameSet( hOptions )
    METHOD SaveHtmlPage( cFile )
 
-   METHOD StartSession()
-   METHOD DestroySession()
+   METHOD StartSession( cSID )
+   METHOD DestroySession( cID )
    METHOD CreateSID( cCRCKey ) INLINE ::cSID := TIP_GenerateSID( cCrcKey )
    METHOD CheckCrcSID( cSID, cCRCKey ) INLINE TIP_CheckSID( cSID, cCRCKey )
    METHOD SessionEncode()
