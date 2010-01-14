@@ -234,10 +234,9 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
 }
 #endif
 
-static BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 u16KeyLen )
+static HB_BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 u16KeyLen )
 {
    UNSIGNED32 u32RetVal;
-   UNSIGNED16 u16Found = FALSE;
    UNSIGNED8  pucCurKey[ ADS_MAX_KEY_LENGTH + 1 ];
    UNSIGNED16 u16CurKeyLen = ADS_MAX_KEY_LENGTH;
 
@@ -255,12 +254,12 @@ static BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 u16
          if( u16CurKeyLen >= u16KeyLen &&
              memcmp( ( UNSIGNED8 * ) pucCurKey, ( UNSIGNED8 * ) pszKey, u16KeyLen ) == 0 )
          {
-            u16Found = TRUE;
+            return HB_TRUE;
          }
       }
    }
 
-   return  u16Found;
+   return HB_FALSE;
 }
 
 
@@ -381,7 +380,7 @@ static HB_ERRCODE hb_adsCheckLock( ADSAREAP pArea )
 {
    if( hb_ads_bTestRecLocks && pArea->fShared && !pArea->fFLocked )
    {
-      UNSIGNED16 u16Locked = FALSE;
+      UNSIGNED16 u16Locked = 0;
       UNSIGNED32 u32RetVal;
 
       u32RetVal = AdsIsRecordLocked( pArea->hTable, 0, &u16Locked );
@@ -753,7 +752,7 @@ HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
  * -- ADS METHODS --
  */
 
-static HB_ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
+static HB_ERRCODE adsBof( ADSAREAP pArea, HB_BOOL * pBof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
 
@@ -766,7 +765,7 @@ static HB_ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
+static HB_ERRCODE adsEof( ADSAREAP pArea, HB_BOOL * pEof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsEof(%p, %p)", pArea, pEof));
 
@@ -779,7 +778,7 @@ static HB_ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE adsFound( ADSAREAP pArea, BOOL * pFound )
+static HB_ERRCODE adsFound( ADSAREAP pArea, HB_BOOL * pFound )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsFound(%p, %p)", pArea, pFound));
 
@@ -800,8 +799,8 @@ static HB_ERRCODE adsGoBottom( ADSAREAP pArea )
    /* reset any pending relations */
    SELF_RESETREL( pArea );
 
-   pArea->area.fTop = FALSE;
-   pArea->area.fBottom = TRUE;
+   pArea->area.fTop = HB_FALSE;
+   pArea->area.fBottom = HB_TRUE;
 
    u32RetVal = AdsGotoBottom( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
    if( u32RetVal != AE_SUCCESS )
@@ -941,8 +940,8 @@ static HB_ERRCODE adsGoTop( ADSAREAP pArea )
    /* reset any pending relations */
    SELF_RESETREL( pArea );
 
-   pArea->area.fTop = TRUE;
-   pArea->area.fBottom = FALSE;
+   pArea->area.fTop = HB_TRUE;
+   pArea->area.fBottom = HB_FALSE;
    u32RetVal = AdsGotoTop( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
    if( u32RetVal != AE_SUCCESS )
    {
@@ -959,7 +958,7 @@ static HB_ERRCODE adsGoTop( ADSAREAP pArea )
    return SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
 }
 
-static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
+static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast )
 {
    UNSIGNED32 u32RecNo = 0, u32NewRec, u32RetVal;
    UNSIGNED16 u16SeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK,
@@ -1052,7 +1051,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
     * They could be used by SKIP_FILTER and gives differ result
     * when seek is called just after GOTOP or GOBOTTOM, Druzus.
     */
-   pArea->area.fTop = pArea->area.fBottom = FALSE;
+   pArea->area.fTop = pArea->area.fBottom = HB_FALSE;
 
    if( bFindLast )
    {
@@ -1088,7 +1087,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    {
       HB_ERRCODE errCode = SELF_GOTO( ( AREAP ) pArea, 0 );
       /* HB_ERRCODE errCode = SELF_GOTOP( ( AREAP ) pArea ); */
-      pArea->area.fBof = FALSE;
+      pArea->area.fBof = HB_FALSE;
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
       if( pszKeyFree )
          hb_adsOemAnsiFree( ( char * ) pszKeyFree );
@@ -1117,7 +1116,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    if( pArea->area.dbfi.itmCobExpr && !pArea->area.dbfi.fOptimized && !pArea->area.fEof )
    {
       /* Remember FOUND flag for updating after SKIPFILTER() */
-      u16Found = ( UNSIGNED16 ) pArea->area.fFound;
+      u16Found = ( UNSIGNED16 ) ( pArea->area.fFound ? 1 : 0 );
 
       if( u16Found && u16KeyLen > 0 )
       {
@@ -1176,7 +1175,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       {
          if( pArea->area.fEof )
          {
-            u16Found = FALSE;
+            u16Found = 0;
          }
          /* seek empty string is synonymous with GoTop */
          else if( u16KeyLen > 0 )
@@ -1186,7 +1185,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
             if( u32RecNo != u32NewRec )
             {
                if( u16SavedKeyLen == 0 )
-                  u16Found = FALSE;
+                  u16Found = 0;
                else
                   u16Found = ( UNSIGNED16 ) adsIndexKeyCmp( pArea->hOrdCurrent, pucSavedKey, u16SavedKeyLen );
             }
@@ -1200,7 +1199,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
     * when it doesn't but only sometimes. I've not been able to detect
     * the rule yet. Any how it's much safer to clear it, Druzus.
     */
-   pArea->area.fBof = FALSE;
+   pArea->area.fBof = HB_FALSE;
 
    if( pucSavedKey )
       hb_xfree( pucSavedKey );
@@ -1246,7 +1245,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
       /* Clipper does not update record at EOF position in SKIP(0) */
       if( pArea->fPositioned )
       {
-         BOOL fBof, fEof;
+         HB_BOOL fBof, fEof;
 
          /* Save flags */
          fBof = pArea->area.fBof;
@@ -1286,13 +1285,13 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
       if( !pArea->fPositioned )
       {
          if( lToSkip > 0 )
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          else
-            pArea->area.fBof = TRUE;
+            pArea->area.fBof = HB_TRUE;
       }
       else if( lToSkip )
       {
-         pArea->area.fTop = pArea->area.fBottom = FALSE;
+         pArea->area.fTop = pArea->area.fBottom = HB_FALSE;
 
          /*
           * This causes that skip is done on the server side but it
@@ -1322,7 +1321,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
                errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lSkipper );
                lToSkip -= lSkipper;
             }
-            pArea->area.fBof = FALSE;
+            pArea->area.fBof = HB_FALSE;
          }
          else
          {
@@ -1341,7 +1340,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
                errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lSkipper );
                lToSkip -= lSkipper;
             }
-            pArea->area.fEof = FALSE;
+            pArea->area.fEof = HB_FALSE;
          }
       }
 
@@ -1352,7 +1351,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
 static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
 {
    UNSIGNED32 u32RetVal;
-   BOOL fBottom;
+   HB_BOOL fBottom;
    HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("adsSkipFilter(%p, %ld)", pArea, lUpDown));
@@ -1406,7 +1405,7 @@ static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
       else
       {
          errCode = SELF_GOTOP( ( AREAP ) pArea );
-         pArea->area.fBof = TRUE;
+         pArea->area.fBof = HB_TRUE;
       }
    }
    else if( !pArea->fPositioned )
@@ -1425,7 +1424,7 @@ static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
 #define  adsSkipRaw               NULL
 #define  adsAddField              NULL
 
-static HB_ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
+static HB_ERRCODE adsAppend( ADSAREAP pArea, HB_BOOL fUnLockAll )
 {
    UNSIGNED32 u32RetVal;
 
@@ -1454,14 +1453,14 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
          if( SELF_RECNO( ( AREAP ) pArea, &ulRecNo ) == HB_SUCCESS )
          {
             /* to avoid unnecessary record refreshing after locking */
-            pArea->fPositioned = TRUE;
+            pArea->fPositioned = HB_TRUE;
             SELF_RAWLOCK( ( AREAP ) pArea, REC_LOCK, ulRecNo );
          }
       }
-      pArea->area.fBof = FALSE;
-      pArea->area.fEof = FALSE;
-      pArea->area.fFound = FALSE;
-      pArea->fPositioned = TRUE;
+      pArea->area.fBof = HB_FALSE;
+      pArea->area.fEof = HB_FALSE;
+      pArea->area.fFound = HB_FALSE;
+      pArea->fPositioned = HB_TRUE;
       return HB_SUCCESS;
    }
    else if( u32RetVal == AE_TABLE_READONLY )
@@ -1854,7 +1853,7 @@ static HB_ERRCODE adsDeleteRec( ADSAREAP pArea )
    return u32RetVal == AE_SUCCESS ? HB_SUCCESS : HB_FAILURE;
 }
 
-static HB_ERRCODE adsDeleted( ADSAREAP pArea, BOOL * pDeleted )
+static HB_ERRCODE adsDeleted( ADSAREAP pArea, HB_BOOL * pDeleted )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsDeleted(%p, %p)", pArea, pDeleted));
 
@@ -1865,7 +1864,7 @@ static HB_ERRCODE adsDeleted( ADSAREAP pArea, BOOL * pDeleted )
    if( !pArea->fPositioned )
    {
       /* AdsIsRecordDeleted has error AE_NO_CURRENT_RECORD at eof; avoid server call */
-      *pDeleted = FALSE;
+      *pDeleted = HB_FALSE;
    }
    else
    {
@@ -2138,14 +2137,14 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( u32RetVal != AE_SUCCESS )
          {
             lTime = 0;
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          }
          else if( pField->uiType != HB_FT_TIME )
          {
             u32RetVal = AdsGetJulian( pArea->hTable, ADSFIELD( uiIndex ), &lDate );
             if( u32RetVal != AE_SUCCESS )
             {
-               pArea->area.fEof = TRUE;
+               pArea->area.fEof = HB_TRUE;
                lDate = 0;
             }
          }
@@ -2163,7 +2162,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( u32RetVal != AE_SUCCESS )
             {
                qVal = 0;
-               pArea->area.fEof = TRUE;
+               pArea->area.fEof = HB_TRUE;
             }
             hb_itemPutNIntLen( pItem, ( HB_LONG ) qVal, 20 );
 #else
@@ -2172,7 +2171,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( u32RetVal != AE_SUCCESS )
             {
                dVal = 0.0;
-               pArea->area.fEof = TRUE;
+               pArea->area.fEof = HB_TRUE;
             }
             hb_itemPutNLen( pItem, dVal, 20, 0 );
 #endif
@@ -2185,7 +2184,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( u32RetVal != AE_SUCCESS )
             {
                lVal = 0;
-               pArea->area.fEof = TRUE;
+               pArea->area.fEof = HB_TRUE;
             }
             if( pField->uiTypeExtended == ADS_SHORTINT )
                hb_itemPutNILen( pItem, ( int ) lVal, 6 );
@@ -2202,7 +2201,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( u32RetVal != AE_SUCCESS )
          {
             qVal = 0;
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          }
          hb_itemPutNIntLen( pItem, ( HB_LONG ) qVal, 10 );
          break;
@@ -2214,7 +2213,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( u32RetVal != AE_SUCCESS )
          {
             qVal = 0;
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          }
          hb_itemPutNIntLen( pItem, ( HB_LONG ) qVal, 20 );
          break;
@@ -2229,7 +2228,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( u32RetVal != AE_SUCCESS )
          {
             dVal = 0.0;
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          }
          hb_itemPutNLen( pItem, dVal,
                          pField->uiTypeExtended == HB_FT_AUTOINC ? 10 : 20, 0 );
@@ -2246,7 +2245,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( u32RetVal != AE_SUCCESS )
          {
             dVal = 0.0;
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
          }
 #ifdef ADS_MONEY /* Not defined below 7.00 */
          if( pField->uiTypeExtended == ADS_CURDOUBLE ||
@@ -2280,7 +2279,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          u32RetVal = AdsGetJulian( pArea->hTable, ADSFIELD( uiIndex ), &lDate );
          if( u32RetVal != AE_SUCCESS )
          {
-            pArea->area.fEof = TRUE;
+            pArea->area.fEof = HB_TRUE;
             lDate = 0;
          }
          hb_itemPutDL( pItem, lDate );
@@ -2289,12 +2288,12 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case HB_FT_LOGICAL:
       {
-         UNSIGNED16 pbValue = FALSE;
+         UNSIGNED16 pbValue = 0;
          u32RetVal = AdsGetLogical( pArea->hTable, ADSFIELD( uiIndex ), &pbValue );
          if( u32RetVal != AE_SUCCESS )
          {
-            pbValue = FALSE;
-            pArea->area.fEof = TRUE;
+            pbValue = 0;
+            pArea->area.fEof = HB_TRUE;
          }
          hb_itemPutL( pItem, pbValue != 0 );
          break;
@@ -2466,7 +2465,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    LPFIELD pField;
    USHORT uiCount;
    BYTE * szText;
-   BOOL bTypeError = TRUE;
+   HB_BOOL bTypeError = HB_TRUE;
    UNSIGNED32 u32RetVal = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("adsPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
@@ -2517,7 +2516,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_FT_VARLENGTH:
          if( HB_IS_STRING( pItem ) )
          {
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
@@ -2550,7 +2549,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_FT_CURRENCY:
          if( HB_IS_NUMERIC( pItem ) )
          {
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             u32RetVal = AdsSetDouble( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetND( pItem ) );
             /* write to autoincrement field will gen error 5066
                #if HB_TR_LEVEL >= HB_TR_DEBUG
@@ -2567,7 +2566,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_DATETIME( pItem ) )
          {
             long lDate, lTime;
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             hb_itemGetTDT( pItem, &lDate, &lTime );
             u32RetVal = AdsSetMilliseconds( pArea->hTable, ADSFIELD( uiIndex ), lTime );
             if( u32RetVal == AE_SUCCESS && pField->uiType != HB_FT_TIME )
@@ -2578,7 +2577,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_FT_DATE:
          if( HB_IS_DATETIME( pItem ) )
          {
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             u32RetVal = AdsSetJulian( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetDL( pItem ) );
          }
          break;
@@ -2586,7 +2585,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_FT_LOGICAL:
          if( HB_IS_LOGICAL( pItem ) )
          {
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
             u32RetVal = AdsSetLogical( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED16 ) hb_itemGetL( pItem ) );
          }
@@ -2599,7 +2598,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             ULONG ulLen;
 
-            bTypeError = FALSE;
+            bTypeError = HB_FALSE;
             ulLen = hb_itemGetCLen( pItem );
 
             /* ToninhoFwi - 09/12/2006 - In the previous code ulLen was limited to 0xFFFF
@@ -2700,7 +2699,7 @@ static HB_ERRCODE adsRecInfo( ADSAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
    {
       case DBRI_DELETED:
       {
-         BOOL fDeleted = FALSE;
+         HB_BOOL fDeleted = HB_FALSE;
          ULONG ulCurrRec = 0;
 
          if( ulRecNo != 0 )
@@ -2743,7 +2742,7 @@ static HB_ERRCODE adsRecInfo( ADSAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
 
       case DBRI_UPDATED:
          /* TODO: this will not work properly with current ADS RDD */
-         hb_itemPutL( pInfo, FALSE );
+         hb_itemPutL( pInfo, HB_FALSE );
          break;
 
       default:
@@ -3012,8 +3011,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
     * In Clipper CREATE() keeps database open on success [druzus]
     */
    pArea->hTable    = hTable;
-   pArea->fShared   = FALSE;  /* pCreateInfo->fShared; */
-   pArea->fReadonly = FALSE;  /* pCreateInfo->fReadonly */
+   pArea->fShared   = HB_FALSE;  /* pCreateInfo->fShared; */
+   pArea->fReadonly = HB_FALSE;  /* pCreateInfo->fReadonly */
 
    /* If successful call SUPER_CREATE to finish system jobs */
    if( SUPER_CREATE( ( AREAP ) pArea, pCreateInfo ) != HB_SUCCESS )
@@ -3041,7 +3040,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    {
       case DBI_ISDBF:
       case DBI_CANPUTREC:
-         hb_itemPutL( pItem, TRUE );
+         hb_itemPutL( pItem, HB_TRUE );
          break;
 
       case DBI_GETHEADERSIZE:
@@ -3230,7 +3229,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    UNSIGNED16 usBufLen, usType, usDecimals;
    DBFIELDINFO dbFieldInfo;
    char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ], * szFile;
-   BOOL fDictionary = FALSE;
+   HB_BOOL fDictionary = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
 
@@ -3296,7 +3295,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    else
    {
       PHB_ITEM pError = NULL;
-      BOOL fRetry;
+      HB_BOOL fRetry;
 
       /* Use an  Advantage Data Dictionary
        * if fDictionary was set for this connection
@@ -3322,7 +3321,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
                                   EF_CANRETRY | EF_CANDEFAULT, &pError ) == E_RETRY;
          }
          else
-            fRetry = FALSE;
+            fRetry = HB_FALSE;
       }
       while( fRetry );
 
@@ -3876,7 +3875,7 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    UNSIGNED16 u16 = 0;
    UNSIGNED8  pucWhile[ ( ADS_MAX_KEY_LENGTH << 1 ) + 3 ];
    UNSIGNED16 u16Len = ADS_MAX_KEY_LENGTH;
-   BOOL fClose = TRUE;
+   HB_BOOL fClose = HB_TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
@@ -3888,10 +3887,10 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                     !pArea->area.lpdbOrdCondInfo->fAdditive ) )
    {
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
-      fClose = FALSE;
+      fClose = HB_FALSE;
    }
    else if( pArea->area.lpdbOrdCondInfo->fAdditive )
-      fClose = FALSE;
+      fClose = HB_FALSE;
 
    if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' )
       u32Options = ADS_COMPOUND;
@@ -4115,7 +4114,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             if( pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) )
             {
                if( hb_itemGetL( pOrderInfo->itmNewVal ) ? u16 == 0 : u16 != 0 )
-                  AdsSetIndexDirection( hIndex, TRUE );
+                  AdsSetIndexDirection( hIndex, HB_TRUE );
             }
 #endif
          }
@@ -4525,7 +4524,7 @@ these are really global settings:
 */
 
       case DBOI_AUTOOPEN :
-         hb_itemPutL( pOrderInfo->itmResult, TRUE );
+         hb_itemPutL( pOrderInfo->itmResult, HB_TRUE );
          /* TODO: Since ADS always opens structural indexes throw some kind of error if caller tries to set to False
             OR be prepared to close indexes (if ADS will allow it) if autoopen is False
          */
@@ -4579,7 +4578,7 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
    /* must do this first as it calls clearFilter */
    if( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) == HB_SUCCESS )
    {
-      UNSIGNED16 bValidExpr = FALSE;
+      UNSIGNED16 bValidExpr = 0;
       UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  /*ADS_RESOLVE_IMMEDIATE ;get this from a SETting*/
       UNSIGNED32 u32RetVal = AE_INVALID_EXPRESSION;
       const char * pucFilter = hb_itemGetCPtr( pFilterInfo->abFilterText );
@@ -4661,7 +4660,7 @@ static HB_ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG ulRecNo )
          if( u32RetVal != AE_SUCCESS )
             return HB_FAILURE;
 
-         pArea->fFLocked = TRUE;
+         pArea->fFLocked = HB_TRUE;
          /* Update phantom record status after locking */
          if( !pArea->fPositioned )
          {
@@ -4673,12 +4672,12 @@ static HB_ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG ulRecNo )
 
       case FILE_UNLOCK:
          if( !pArea->fShared )
-            return TRUE;
+            return HB_TRUE;
 
          u32RetVal = AdsUnlockTable( pArea->hTable );
          if( u32RetVal == AE_SUCCESS || u32RetVal == AE_TABLE_NOT_LOCKED ||
              u32RetVal == AE_TABLE_NOT_SHARED )
-            pArea->fFLocked = FALSE;
+            pArea->fFLocked = HB_FALSE;
          else
             return HB_FAILURE;
          break;
@@ -4721,7 +4720,7 @@ static HB_ERRCODE adsLock( ADSAREAP pArea, LPDBLOCKINFO pLockInfo )
       default  :
          /* This should probably throw a real error... */
          HB_TRACE(HB_TR_INFO, ("adsLock() error in pLockInfo->uiMethod"));
-         pLockInfo->fResult = FALSE;
+         pLockInfo->fResult = HB_FALSE;
          return HB_FAILURE;
    }
 
@@ -4822,7 +4821,7 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
    const char * szExt;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
-   BOOL fTable = FALSE, fResult = FALSE;
+   HB_BOOL fTable = HB_FALSE, fResult = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsDrop(%p, %p, %p, %lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
@@ -4832,8 +4831,8 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
       /* Try to delete index file */
       szFile = hb_itemGetCPtr( pItemTable );
       if( !szFile[ 0 ] )
-         return FALSE;
-      fTable = TRUE;
+         return HB_FALSE;
+      fTable = HB_TRUE;
    }
 
    pFileName = hb_fsFNameSplit( szFile );
@@ -4909,7 +4908,7 @@ static HB_ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    const char * szFile;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
-   BOOL fTable = FALSE;
+   HB_BOOL fTable = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsExists(%p, %p, %p, %lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
@@ -4918,8 +4917,8 @@ static HB_ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    {
       szFile = hb_itemGetCPtr( pItemTable );
       if( !szFile[ 0 ] )
-         return FALSE;
-      fTable = TRUE;
+         return HB_FALSE;
+      fTable = HB_TRUE;
    }
 
    pFileName = hb_fsFNameSplit( szFile );
@@ -4988,7 +4987,7 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
    switch( uiIndex )
    {
       case RDDI_REMOTE:
-         hb_itemPutL( pItem, TRUE );
+         hb_itemPutL( pItem, HB_TRUE );
          break;
 
       case RDDI_CONNECTION:
@@ -5004,7 +5003,7 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          break;
 
       case RDDI_CANPUTREC:
-         hb_itemPutL( pItem, TRUE );
+         hb_itemPutL( pItem, HB_TRUE );
          break;
 
       case RDDI_TABLEEXT:

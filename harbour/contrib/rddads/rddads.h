@@ -150,10 +150,10 @@ typedef struct _ADSAREA_
    BYTE *   pRecord;             /* Buffer of record data */
    ULONG    maxFieldLen;         /* Max field length in table record */
 
-   BOOL     fPositioned;         /* TRUE if we are not at phantom record */
-   BOOL     fShared;             /* Shared file */
-   BOOL     fReadonly;           /* Read only file */
-   BOOL     fFLocked;            /* TRUE if file is locked */
+   HB_BOOL  fPositioned;         /* HB_TRUE if we are not at phantom record */
+   HB_BOOL  fShared;             /* Shared file */
+   HB_BOOL  fReadonly;           /* Read only file */
+   HB_BOOL  fFLocked;            /* HB_TRUE if file is locked */
 
    int      iFileType;           /* adt/cdx/ntx/vfp */
 
@@ -192,7 +192,7 @@ extern int        hb_ads_iFileType; /* current global setting */
 extern int        hb_ads_iLockType;
 extern int        hb_ads_iCheckRights;
 extern int        hb_ads_iCharType;
-extern BOOL       hb_ads_bTestRecLocks;
+extern HB_BOOL    hb_ads_bTestRecLocks;
 extern ADSHANDLE  hb_ads_hConnect;
 
 extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );

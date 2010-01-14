@@ -75,12 +75,12 @@ int       hb_ads_iFileType = ADS_CDX;
 int       hb_ads_iLockType = ADS_PROPRIETARY_LOCKING;
 int       hb_ads_iCheckRights = ADS_CHECKRIGHTS;
 int       hb_ads_iCharType = ADS_ANSI;
-BOOL      hb_ads_bTestRecLocks = FALSE;             /* Debug Implicit locks */
+HB_BOOL   hb_ads_bTestRecLocks = HB_FALSE;             /* Debug Implicit locks */
 ADSHANDLE hb_ads_hConnect = 0;
 
 #ifdef ADS_USE_OEM_TRANSLATION
 
-BOOL hb_ads_bOEM = FALSE;
+HB_BOOL hb_ads_bOEM = HB_FALSE;
 
 char * hb_adsOemToAnsi( const char * pszSrc, ULONG nLen )
 {
@@ -851,12 +851,12 @@ HB_FUNC( ADSISRECORDINAOF )
 /* Does current record match any current filter? */
 HB_FUNC( ADSISRECORDVALID )
 {
-   BOOL bReturn = FALSE;
+   HB_BOOL bReturn = HB_FALSE;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
-      BOOL fEof = TRUE;
+      HB_BOOL fEof = HB_TRUE;
 
       if( SELF_EOF( ( AREAP ) pArea, &fEof ) == HB_SUCCESS && ! fEof )
       {
@@ -867,7 +867,7 @@ HB_FUNC( ADSISRECORDVALID )
             bReturn = HB_IS_LOGICAL( pResult ) && hb_itemGetL( pResult );
          }
          else
-            bReturn = TRUE;
+            bReturn = HB_TRUE;
       }
    }
 
@@ -1069,10 +1069,10 @@ HB_FUNC( ADSCONNECT )
                    &hConnect ) == AE_SUCCESS )
    {
       hb_ads_hConnect = hConnect;
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSDISCONNECT )
@@ -1100,10 +1100,10 @@ HB_FUNC( ADSDISCONNECT )
       if( hConnect == hb_ads_hConnect )
          hb_ads_hConnect = 0;
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSSTMTSETTABLELOCKTYPE )
@@ -1117,7 +1117,7 @@ HB_FUNC( ADSSTMTSETTABLELOCKTYPE )
 
 HB_FUNC( ADSCREATESQLSTATEMENT )
 {
-   BOOL fResult = FALSE;
+   HB_BOOL fResult = HB_FALSE;
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 3 );
 
    if( hConnect )
@@ -1153,7 +1153,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
                   pArea->hTable = 0;
                   pArea->hOrdCurrent = 0;
                   pArea->hStatement = adsStatementHandle;
-                  fResult = TRUE;
+                  fResult = HB_TRUE;
                }
                else
                   hb_rddReleaseCurrentArea();
@@ -1193,23 +1193,23 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
 
             memset( &pInfo, 0, sizeof( DBOPENINFO ) );
             pInfo.abName = "";
-            pInfo.fReadonly = TRUE;
+            pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
          else
             hb_adsCloseCursor( pArea );
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       }
       else
       {
          HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQLDirect() error"));
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSPREPARESQL )
@@ -1227,15 +1227,15 @@ HB_FUNC( ADSPREPARESQL )
    {
       if( AdsPrepareSQL( pArea->hStatement,
                          ( UNSIGNED8 * ) hb_parc( 1 ) /* pucStmt */ ) == AE_SUCCESS )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       else
       {
          HB_TRACE(HB_TR_DEBUG, ("AdsPrepareSQL() error"));
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSEXECUTESQL )
@@ -1261,23 +1261,23 @@ HB_FUNC( ADSEXECUTESQL )
 
             memset( &pInfo, 0, sizeof( DBOPENINFO ) );
             pInfo.abName = "";
-            pInfo.fReadonly = TRUE;
+            pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
          else
             hb_adsCloseCursor( pArea );
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       }
       else
       {
          HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQL() error"));
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSVERIFYSQL )
@@ -1290,7 +1290,7 @@ HB_FUNC( ADSVERIFYSQL )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1359,7 +1359,7 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
    if( s_pItmCobCallBack && HB_IS_BLOCK( s_pItmCobCallBack ) )
    {
       PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
-      BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( s_pItmCobCallBack, 1, pPercentDone ) );
+      HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( s_pItmCobCallBack, 1, pPercentDone ) );
 
       hb_itemRelease( pPercentDone );
 
@@ -1392,7 +1392,7 @@ HB_FUNC( ADSREGCALLBACK )
 
       if( AdsRegisterProgressCallback( hb_adsShowPercentageCB ) == AE_SUCCESS )
       {
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          return;
       }
       else
@@ -1402,7 +1402,7 @@ HB_FUNC( ADSREGCALLBACK )
       }
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSCLRCALLBACK )
@@ -1467,7 +1467,7 @@ HB_FUNC( ADSISCONNECTIONALIVE ) /* Determine if passed or default connection is 
 
    hb_retl( bConnectionIsAlive != 0 );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1530,7 +1530,7 @@ HB_FUNC( ADSINTRANSACTION )
    UNSIGNED16 pbInTrans = 0;
 
    hb_retl( AdsInTransaction( hb_parnl( 1 ) /* hConnect */,
-                              &pbInTrans ) == AE_SUCCESS ? pbInTrans != 0 : FALSE );
+                              &pbInTrans ) == AE_SUCCESS ? pbInTrans != 0 : HB_FALSE );
 }
 
 HB_FUNC( ADSROLLBACK )
@@ -1549,7 +1549,7 @@ HB_FUNC( ADSCACHERECORDS )
 
    if( pArea && AdsCacheRecords( pArea->hTable,
                                  ( UNSIGNED16 ) hb_parni( 1 ) ) == AE_SUCCESS )
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
@@ -1657,7 +1657,7 @@ HB_FUNC( ADSDDADDTABLE )
                            ( UNSIGNED8 * ) hb_parcx( 3 ) /* pTableIndexFileName */,
                            NULL ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1670,7 +1670,7 @@ HB_FUNC( ADSDDREMOVETABLE )
                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                               ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1682,7 +1682,7 @@ HB_FUNC( ADSDDREMOVEINDEXFILE )
                                   ( UNSIGNED8 * ) hb_parcx( 2 ) /* pIndexName */,
                                   ( UNSIGNED16 ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( HB_ISLOG( 3 ) ? hb_parl( 3 ) : 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1693,7 +1693,7 @@ HB_FUNC( ADSDDADDUSERTOGROUP )
                                  ( UNSIGNED8 * ) hb_parcx( 1 ) /* pGroup */,
                                  ( UNSIGNED8 * ) hb_parcx( 2 ) /* pName */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1704,7 +1704,7 @@ HB_FUNC( ADSDDREMOVEUSERFROMGROUP )
                                       ( UNSIGNED8 * ) hb_parcx( 1 ) /* pGroup */,
                                       ( UNSIGNED8 * ) hb_parcx( 2 ) /* pName */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1724,12 +1724,12 @@ HB_FUNC( ADSCONNECT60 )
 
       hb_stornint( hConnect, 6 );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1744,12 +1744,12 @@ HB_FUNC( ADSDDCREATE )
                     &hConnect ) == AE_SUCCESS )
    {
       hb_ads_hConnect = hConnect;
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1762,7 +1762,7 @@ HB_FUNC( ADSDDCREATEUSER )
                              ( UNSIGNED8 * ) hb_parc( 3 ) /* pucPassword */,
                              ( UNSIGNED8 * ) hb_parc( 4 ) /* pucDescription */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1772,7 +1772,7 @@ HB_FUNC( ADSDDDELETEUSER )
    hb_retl( AdsDDDeleteUser( HB_ADS_PARCONNECTION( 2 ) /* hConnect */,
                              ( UNSIGNED8 * ) hb_parc( 1 ) /* pucUserName */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1971,7 +1971,7 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
    else
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2015,12 +2015,12 @@ HB_FUNC( ADSTESTLOGIN )
 
       AdsDisconnect( adsTestHandle );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2038,7 +2038,7 @@ HB_FUNC( ADSRESTRUCTURETABLE )
                                  ( UNSIGNED8 * ) hb_parcx( 3 ) /* pucDeleteFields */,
                                  ( UNSIGNED8 * ) hb_parcx( 4 ) /* pucChangeFields */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2070,7 +2070,7 @@ HB_FUNC( ADSCOPYTABLECONTENTS )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2130,7 +2130,7 @@ HB_FUNC( ADSCHECKEXISTENCE )
                                ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucFilename */,
                                &usExist ) == AE_SUCCESS && usExist != 0 );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2140,7 +2140,7 @@ HB_FUNC( ADSDELETEFILE )
    hb_retl( AdsDeleteFile( HB_ADS_PARCONNECTION( 2 ) /* hConnect */,
                            ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucFilename */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2190,12 +2190,12 @@ HB_FUNC( ADSCLOSECACHEDTABLES )
    if( hConnect )
    {
       AdsCloseCachedTables( hConnect );
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2262,7 +2262,7 @@ HB_FUNC( ADSDDCREATELINK )
                              ( UNSIGNED8 * ) hb_parc( 5 )  /* pucPassword   */,
                              ( UNSIGNED32 ) ( HB_ISNUM( 6 ) ? hb_parnl( 6 ) : ADS_DEFAULT ) /* ulOptions */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2276,7 +2276,7 @@ HB_FUNC( ADSDDMODIFYLINK )
                              ( UNSIGNED8 * ) hb_parc( 5 )  /* pucPassword   */,
                              ( UNSIGNED32 ) ( HB_ISNUM( 6 ) ? hb_parnl( 6 ) : ADS_DEFAULT ) /* ulOptions */ ) == AE_SUCCESS );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2285,8 +2285,8 @@ HB_FUNC( ADSDDDROPLINK )
 #if ADS_LIB_VERSION >= 900
    hb_retl( AdsDDDropLink( HB_ADS_PARCONNECTION( 1 )     /* hConnect     */,
                            ( UNSIGNED8 * ) hb_parcx( 2 ) /* pucLinkAlias */,
-                           ( UNSIGNED16 ) hb_parl( 3 )   /* usDropGlobal */ ) == AE_SUCCESS ); /* NOTE: Defaults to 0/FALSE for non logical parameters. */
+                           ( UNSIGNED16 ) hb_parl( 3 )   /* usDropGlobal */ ) == AE_SUCCESS ); /* NOTE: Defaults to 0/HB_FALSE for non logical parameters. */
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
