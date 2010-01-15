@@ -140,8 +140,8 @@ CLASS IdeObject
 
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}
-   METHOD connect()
-   METHOD disConnect()
+   METHOD connect( qWidget, cSlot, bBlock )
+   METHOD disConnect( qWidget, cSlot )
 
    METHOD createTags( ... )                       INLINE ::oIde:createTags( ... )
    METHOD addSourceInTree( ... )                  INLINE ::oIde:addSourceInTree( ... )

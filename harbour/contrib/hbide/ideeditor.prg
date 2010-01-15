@@ -82,7 +82,7 @@
 #define cursorPositionChanged                     9
 
 #define blockCountChanged                         21
-#define contentsChanged                           22
+#define contentsChange                            22
 
 #define EDT_LINNO_WIDTH                           50
 
@@ -707,6 +707,7 @@ CLASS IdeEditor INHERIT IdeObject
 
    DATA   nBlock                                  INIT   -1
    DATA   nColumn                                 INIT   -1
+   DATA   nPrevBlocks                             INIT   0
    DATA   nBlocks                                 INIT   0
 
    DATA   nPos                                    INIT   0
@@ -728,6 +729,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    METHOD split( nOrient, oEditP )
    METHOD destroy()
+   METHOD exeEvent( nMode, o, p, p1, p2 )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -797,6 +799,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qCoEdit := ::oEdit
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
+   ::connect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } )
+   ::connect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
    IF ::cType != "U"
       ::qHiliter := ::oThemes:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
@@ -814,6 +818,27 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::setTabImage()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
+
+   HB_SYMBOL_UNUSED( o )
+
+   SWITCH nMode
+   CASE blockCountChanged
+      hbide_dbg( "blockCountChanged(int)", p, p1 )
+      ::nPrevBlocks := ::nBlocks
+      ::nBlocks     := p
+      EXIT
+   CASE contentsChange
+      IF p2 > 0  /* Characters Added */
+
+      ENDIF
+      EXIT
+   ENDSWITCH
+
+   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -843,6 +868,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
+
 
    ::qCqEdit := NIL
    ::qEdit         := NIL
@@ -1053,7 +1079,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD exeEvent( nMode, oEdit, o, p, p1 )
    METHOD connectEditSlots( oEdit )
    METHOD disConnectEditSlots( oEdit )
-   METHOD highlightCurrentLine( qEdit )
+   METHOD highlightCurrentLine( oEdit )
    METHOD setNewMark()
    METHOD gotoLastMark()
 
@@ -1171,7 +1197,8 @@ METHOD IdeEdit:connectEditSlots( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
-   LOCAL pAct, qAct, n, pCursor, qCursor, qEdit, nLineNo, oo
+   LOCAL pAct, qAct, n, qCursor, qEdit, nLineNo, oo, nBlocks
+   //pCursor
 
    HB_SYMBOL_UNUSED( o  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1180,7 +1207,6 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
 
    SWITCH nMode
 
-   /* QPlainTextEdit */
    CASE customContextMenuRequested
       IF !empty( pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) ) )
          qAct := QAction():configure( pAct )
@@ -1201,14 +1227,14 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
       ENDIF
       EXIT
    CASE textChanged
-      hbide_dbg( "textChanged" )
+      hbide_dbg( "textChanged()" )
       ::oEditor:setTabImage( qEdit )
       EXIT
    CASE copyAvailable
-      hbide_dbg( "copyAvailable(bool)" )
+      hbide_dbg( "copyAvailable(bool)", p )
       EXIT
    CASE modificationChanged
-      hbide_dbg( "modificationChanged(bool)" )
+      hbide_dbg( "modificationChanged(bool)", p )
       EXIT
    CASE redoAvailable
       hbide_dbg( "redoAvailable(bool)", p )
@@ -1222,18 +1248,18 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
       EXIT
    CASE undoAvailable
-      hbide_dbg( "undoAvailable(bool)" )
+      hbide_dbg( "undoAvailable(bool)", p )
       EXIT
    CASE updateRequest
- *    hbide_dbg( "updateRequest" )
-      pCursor := qEdit:cursorForPosition( ::qPoint )
-      IF hb_isPointer( pCursor )
-         qCursor := QTextCursor():configure( pCursor )
-         nLineNo := qCursor:blockNumber()
-         IF oEdit:nLineNo != nLineNo .OR. !( ::oEditor:lLoaded )
-            oEdit:nLineNo := nLineNo
-            oEdit:qLineNos:setHTML( hbide_buildLinesLabel( ::nLineNo + 1, ::oEditor:qDocument:blockCount(), ::nMaxDigits, ::nMaxRows ) )
-         ENDIF
+      *    hbide_dbg( "updateRequest" )
+      qCursor := QTextCursor():configure( qEdit:cursorForPosition( ::qPoint ) )
+      nLineNo := qCursor:blockNumber()
+      nBlocks := ::oEditor:qDocument:blockCount()
+      IF oEdit:nLineNo != nLineNo .OR. !( ::oEditor:lLoaded ) .OR. !( nBlocks == ::oEditor:nPrevBlocks )
+         ::oEditor:nPrevBlocks := nBlocks
+         oEdit:nLineNo := nLineNo
+         oEdit:qLineNos:setHTML( hbide_buildLinesLabel( ::nLineNo + 1, ;
+                                  ::oEditor:qDocument:blockCount(), ::nMaxDigits, ::nMaxRows ) )
       ENDIF
       EXIT
    CASE cursorPositionChanged

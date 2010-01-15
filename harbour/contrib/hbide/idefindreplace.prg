@@ -73,16 +73,16 @@
 
 CLASS IdeFindReplace INHERIT IdeObject
 
-   METHOD new()
-   METHOD create()
+   METHOD new( oIde )
+   METHOD create( oIde )
    METHOD destroy()
    METHOD show()
    METHOD onClickReplace()
-   METHOD replaceSelection()
+   METHOD replaceSelection( cReplWith )
    METHOD replace()
    METHOD onClickFind()
-   METHOD find()
-   METHOD updateFindReplaceData()
+   METHOD find( lWarn )
+   METHOD updateFindReplaceData( cMode )
 
    ENDCLASS
 

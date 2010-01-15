@@ -80,15 +80,14 @@ CLASS IdeActions INHERIT IdeObject
 
    DATA   hActions                                INIT hb_hash()
 
-   METHOD new()
-   METHOD create()
+   METHOD new( oIde )
+   METHOD create( oIde )
    METHOD destroy()
-
-   METHOD buildMainMenu()
-   METHOD buildToolBar()
+   METHOD getAction( cKey )
    METHOD buildActions()
-   METHOD getAction()
    METHOD loadActions()
+   METHOD buildToolBar()
+   METHOD buildMainMenu()
 
    ENDCLASS
 
