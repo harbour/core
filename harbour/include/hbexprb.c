@@ -976,13 +976,13 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
 #if defined( HB_MACRO_SUPPORT )
          if( HB_PCODE_DATA->lPCodePos == ulPosFalse + 3 )
          {
-            HB_PCODE_DATA->pCode[ ulPosFalse - 1 ] = HB_P_JUMPHB_TRUEFAR;
+            HB_PCODE_DATA->pCode[ ulPosFalse - 1 ] = HB_P_JUMPTRUEFAR;
             ulPosEnd = ulPosFalse;
          }
 #else
          if( HB_COMP_PARAM->functions.pLast->lPCodePos == ulPosFalse + 3 )
          {
-            HB_COMP_PARAM->functions.pLast->pCode[ ulPosFalse - 1 ] = HB_P_JUMPHB_TRUEFAR;
+            HB_COMP_PARAM->functions.pLast->pCode[ ulPosFalse - 1 ] = HB_P_JUMPTRUEFAR;
             ulPosEnd = ulPosFalse;
          }
 #endif

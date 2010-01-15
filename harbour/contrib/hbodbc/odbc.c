@@ -222,7 +222,7 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
    lLen = ( SQLLEN ) hb_parnint( 4 );
    if( ! lLen )
       lLen = 64;
-   bBuffer    = hb_xgrab( ( ULONG ) lLen + 1 );
+   bBuffer    = hb_xgrab( ( HB_SIZE ) lLen + 1 );
    bOut       = NULL;
    lInitBuff  = lLen;
    lBuffLen   = 0;
@@ -239,7 +239,7 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 
       if( result == SQL_SUCCESS && iReallocs == 0 )
       {
-         hb_storclen( ( char * ) bBuffer, ( long ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
+         hb_storclen( ( char * ) bBuffer, ( HB_SIZE ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
          break;
       }
       else if( result == SQL_SUCCESS_WITH_INFO && iReallocs == 0 )
@@ -249,22 +249,22 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
          {
             /* data right truncated! */
             lBuffLen = lLen;
-            bOut = ( char * ) hb_xgrab( ( ULONG ) lBuffLen + 1 );
+            bOut = ( char * ) hb_xgrab( ( HB_SIZE ) lBuffLen + 1 );
             hb_strncpy( ( char * ) bOut, ( char * ) bBuffer, lLen );
             lLen = lLen - lInitBuff + 2;
-            bBuffer = ( char * ) hb_xrealloc( bBuffer, ( ULONG ) lLen );
+            bBuffer = ( char * ) hb_xrealloc( bBuffer, ( HB_SIZE ) lLen );
             iReallocs++;
          }
          else
          {
-            hb_storclen( ( char * ) bBuffer, ( long ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
+            hb_storclen( ( char * ) bBuffer, ( HB_SIZE ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
             break;
          }
       }
       else if( ( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO ) && iReallocs > 0 )
       {
          hb_strncat( ( char * ) bOut, ( char * ) bBuffer, lBuffLen );
-         hb_storclen( ( char * ) bOut, ( long ) ( lLen + lInitBuff - 1 ), 5 );
+         hb_storclen( ( char * ) bOut, ( HB_SIZE ) ( lLen + lInitBuff - 1 ), 5 );
          result = SQL_SUCCESS;
          break;
       }
@@ -314,7 +314,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
       if( HB_ISBYREF( 3 ) )
       {
          char * szStr = HB_TCHAR_CONVNFROM( buffer, wBufLen );
-         hb_storclen( szStr, ( long ) wBufLen, 3 );
+         hb_storclen( szStr, ( HB_SIZE ) wBufLen, 3 );
          HB_TCHAR_FREE( szStr );
       }
       hb_storni( ( int ) wBufLen, 5 );
@@ -355,7 +355,7 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
 
    if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
    {
-      hb_storclen( ( char * ) bBuffer, ( long ) wBufLen, 4 );
+      hb_storclen( ( char * ) bBuffer, ( HB_SIZE ) wBufLen, 4 );
       hb_storni( ( int ) wBufLen, 6 );
       hb_stornint( wNumPtr, 7 );
    }

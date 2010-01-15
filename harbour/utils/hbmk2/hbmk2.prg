@@ -6390,6 +6390,19 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ENDIF
          ENDIF
 
+      /* .hbc identification strings. Similar to pkgconfig ones. */
+      CASE Lower( Left( cLine, Len( "name="         ) ) ) == "name="         ; cLine := SubStr( cLine, Len( "name="         ) + 1 )
+
+         /* Silently ignore */
+
+      CASE Lower( Left( cLine, Len( "description="  ) ) ) == "description="  ; cLine := SubStr( cLine, Len( "description="  ) + 1 )
+
+         /* Silently ignore */
+
+      CASE Lower( Left( cLine, Len( "version="      ) ) ) == "version="      ; cLine := SubStr( cLine, Len( "version="      ) + 1 )
+
+         /* Silently ignore */
+
       ENDCASE
    NEXT
 
