@@ -1043,7 +1043,6 @@ HB_FUNC( NETIO_SERVER )
                               }
                               else if( conn->rpcFunc )
                               {
-                                 fSend = HB_TRUE;
                                  hb_vmPushSymbol( conn->rpcFunc );
                                  hb_vmPushNil();
                                  hb_vmPushDynSym( pDynSym );

@@ -288,7 +288,7 @@ HB_FUNC( WIN_TEXTOUT )
 
          if( iWidth < 0 && nLen < 1024 )
          {
-            int n = nLen, aFixed[ 1024 ];
+            int n = ( int ) nLen, aFixed[ 1024 ];
 
             iWidth = -iWidth;
 
