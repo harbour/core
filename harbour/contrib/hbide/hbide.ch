@@ -81,8 +81,9 @@
 #define FindDialogGeometry                        10
 #define ThemesDialogGeometry                      11
 #define CurrentTheme                              12
+#define CurrentCodec                              13
 
-#define INI_HBIDE_VRBLS                           12
+#define INI_HBIDE_VRBLS                           13
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
@@ -123,7 +124,7 @@
 #define SB_PNL_LINE                               3
 #define SB_PNL_COLUMN                             4
 #define SB_PNL_INS                                5
-#define SB_PNL_M_1                                6
+#define SB_PNL_SELECTEDCHARS                      6
 #define SB_PNL_MODIFIED                           7
 #define SB_PNL_M_2                                8
 #define SB_PNL_STREAM                             9

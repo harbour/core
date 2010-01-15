@@ -90,6 +90,7 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "FindDialogGeometry     = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry   ] )
    aadd( txt_, "ThemesDialogGeometry   = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] )
    aadd( txt_, "CurrentTheme           = " + oIde:cWrkTheme                               )
+   aadd( txt_, "CurrentCodec           = " + oIde:cWrkCodec                               )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -160,7 +161,8 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
    LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
                       "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
                       "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
-                      "finddialoggeometry" , "themesdialoggeometry", "currenttheme" }
+                      "finddialoggeometry" , "themesdialoggeometry", "currenttheme",        ;
+                      "currentcodec" }
 
    DEFAULT cHbideIni TO "hbide.ini"
 

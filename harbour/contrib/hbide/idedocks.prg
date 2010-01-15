@@ -92,6 +92,7 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD toggleLeftDocks()
    METHOD toggleRightDocks()
    METHOD toggleBottomDocks()
+   METHOD setStatusText( nPart, xValue )
 
    ENDCLASS
 
@@ -461,6 +462,44 @@ METHOD IdeDocks:toggleBottomDocks()
       ::oDockB2:show()
    ENDIF
    ::oIde:lDockBVisible := !( ::oIde:lDockBVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:setStatusText( nPart, xValue )
+   LOCAL oPanel := ::oSBar:getItem( nPart )
+
+   SWITCH nPart
+   CASE SB_PNL_MAIN
+      EXIT
+   CASE SB_PNL_READY
+      EXIT
+   CASE SB_PNL_LINE
+      EXIT
+   CASE SB_PNL_COLUMN
+      EXIT
+   CASE SB_PNL_INS
+      EXIT
+   CASE SB_PNL_SELECTEDCHARS
+      oPanel:caption := iif( xValue == 0, "", "Sel: " + hb_ntos( xValue ) )
+      EXIT
+   CASE SB_PNL_MODIFIED
+      oPanel:caption := iif( xValue, "Modified", "" )
+      EXIT
+   CASE SB_PNL_M_2
+      EXIT
+   CASE SB_PNL_STREAM
+      EXIT
+   CASE SB_PNL_EDIT
+      EXIT
+   CASE SB_PNL_SEARCH
+      EXIT
+   CASE SB_PNL_CODEC
+      EXIT
+   CASE SB_PNL_PROJECT
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 

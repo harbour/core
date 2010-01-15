@@ -185,10 +185,11 @@ CLASS HbIde
    DATA   oOpenedSources
    DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
    DATA   pathSep                                 INIT   hb_OsPathSeparator()
-   DATA   cWrkProject                             INIT   ''
-   DATA   cWrkTheme                               INIT   ''
+   DATA   cWrkProject                             INIT   ""
+   DATA   cWrkTheme                               INIT   ""
    DATA   cProcessInfo
    DATA   cIniThemes
+   DATA   cWrkCodec                               INIT   ""
 
    DATA   aTags                                   INIT   {}
    DATA   aText                                   INIT   {}
@@ -213,7 +214,6 @@ CLASS HbIde
    METHOD gotoFunction( mp1, mp2, oListBox )
    METHOD manageFuncContext( mp1 )
    METHOD createTags()
-   METHOD loadUI( cUi )
    METHOD updateProjectMenu()
    METHOD updateTitleBar()
    METHOD setCodec( cCodec )
@@ -249,6 +249,11 @@ METHOD HbIde:create( cProjIni )
 
    /* Load IDE Settings */
    hbide_loadINI( Self, cProjIni )
+   /* Set variables from last session */
+   ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
+   ::cWrkCodec := ::aINI[ INI_HBIDE, CurrentCodec ]
+   /* Set Codec at the Begining */
+   HbXbp_SetCodec( ::cWrkCodec )
 
    /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )
@@ -307,7 +312,6 @@ METHOD HbIde:create( cProjIni )
    ::updateTitleBar()
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
-   ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
 
    /* Set components Sizes */
    ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
@@ -315,6 +319,7 @@ METHOD HbIde:create( cProjIni )
 
    /* Restore Settings */
    hbide_restSettings( Self )
+   ::setCodec()
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -900,23 +905,6 @@ METHOD HbIde:CreateTags()
    RETURN ( NIL )
 
 //----------------------------------------------------------------------//
-
-METHOD HbIde:loadUI( cUi )
-   LOCAL cUiFull := s_resPath + cUi + ".ui"
-   LOCAL qDialog, qUiLoader, qFile
-
-   IF hb_FileExists( cUiFull )
-      qFile := QFile():new( cUiFull )
-      IF qFile:open( 1 )
-         qUiLoader  := QUiLoader():new()
-         qDialog    := QDialog():configure( qUiLoader:load( qFile, ::oDlg:oWidget ) )
-         qFile:close()
-      ENDIF
-   ENDIF
-
-   RETURN qDialog
-
-/*----------------------------------------------------------------------*/
 /*
  * Update the project menu to show current info.
  * 03/01/2010 - 12:48:18 - vailtom
@@ -971,8 +959,13 @@ METHOD HbIde:updateTitleBar()
 
 METHOD HbIde:setCodec( cCodec )
 
-   HbXbp_SetCodec( cCodec )
-   ::oSBar:getItem( SB_PNL_CODEC ):caption := cCodec
+   DEFAULT cCodec TO ::cWrkCodec
+
+   ::cWrkCodec := cCodec
+
+   HbXbp_SetCodec( ::cWrkCodec )
+
+   ::oSBar:getItem( SB_PNL_CODEC ):caption := ::cWrkCodec
 
    RETURN Self
 

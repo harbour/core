@@ -107,6 +107,7 @@ CLASS IdeObject
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
+   ACCESS cWrkCodec                               INLINE ::oIde:cWrkCodec
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
 
@@ -156,7 +157,6 @@ CLASS IdeObject
    METHOD updateProjectTree( ... )                INLINE ::oIde:updateProjectTree( ... )
    METHOD manageItemSelected( ... )               INLINE ::oIde:manageItemSelected( ... )
    METHOD manageFocusInEditor( ... )              INLINE ::oIde:manageFocusInEditor( ... )
-   METHOD loadUI( ... )                           INLINE ::oIde:loadUI( ... )
    METHOD setCodec( ... )                         INLINE ::oIde:setCodec( ... )
    METHOD updateTitleBar( ... )                   INLINE ::oIde:updateTitleBar( ... )
 
