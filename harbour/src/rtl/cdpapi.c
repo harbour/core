@@ -2332,8 +2332,8 @@ HB_FUNC( HB_UTF8SUBSTR )
    {
       char * szDest = NULL;
       HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
-      LONG lFrom = hb_parnl( 2 );
-      LONG lCount = iPCount < 3 ? ( LONG ) ulLen : hb_parnl( 3 );
+      HB_ISIZ lFrom = hb_parnl( 2 );
+      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) ulLen : hb_parnl( 3 );
 
       if( lFrom < 0 )
       {
@@ -2362,7 +2362,7 @@ HB_FUNC( HB_UTF8LEFT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      HB_ISIZ lLen = hb_parnl( 2 );
       HB_SIZE ulDest = 0;
       char * szDest = NULL;
 
@@ -2385,7 +2385,7 @@ HB_FUNC( HB_UTF8RIGHT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 ), lFrom;
+      HB_ISIZ lLen = hb_parnl( 2 ), lFrom;
       HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
       char * szDest = NULL;
 

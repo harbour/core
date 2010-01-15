@@ -282,7 +282,7 @@ void hb_backgroundShutDown( void )
 /* caller have to free return ITEM by hb_itemRelease() if it's not NULL */
 PHB_ITEM hb_backgroundDelFunc( ULONG ulID )
 {
-   SHORT iTask;
+   int iTask;
    PHB_BACKGROUNDTASK pBkgTask;
    PHB_ITEM pItem = NULL;
    HB_BOOL bOldSet = s_bEnabled;
@@ -327,7 +327,7 @@ PHB_ITEM hb_backgroundDelFunc( ULONG ulID )
 /* Find a task */
 PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID )
 {
-   SHORT iTask;
+   int iTask;
    PHB_BACKGROUNDTASK pBkgTask;
 
    iTask = 0;

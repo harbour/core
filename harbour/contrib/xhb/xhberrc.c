@@ -116,7 +116,7 @@ HB_FUNC( SETUNHANDLEDEXCEPTIONFILTER )
 
    pDefaultHandler = SetUnhandledExceptionFilter( PRGUnhandledExceptionFilter );
 
-   hb_retnl( ( LONG ) pDefaultHandler );
+   hb_retnl( ( long ) pDefaultHandler );
 #endif
    /* Dummy in Harbour */
    hb_retnl( 0 );

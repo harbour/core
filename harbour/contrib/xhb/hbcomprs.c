@@ -242,13 +242,9 @@ HB_FUNC( HB_UNCOMPRESS )
    else
    {
       if ( hb_pcount() == 4 )
-      {
          hb_retni( Z_OK );
-      }
       else
-      {
          hb_retclen_buffer( cDest, ulDstlen );
-      }
    }
    s_hb_compress_error = cerr;
 }
@@ -276,5 +272,5 @@ HB_FUNC( HB_COMPRESSERRORDESC )
 
 HB_FUNC( HB_COMPRESSBUFLEN )
 {
-   hb_retnl( (LONG) hb_destBuflen( hb_parni(1) ) );
+   hb_retnl( ( long ) hb_destBuflen( hb_parni( 1 ) ) );
 }

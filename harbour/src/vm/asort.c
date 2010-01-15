@@ -135,9 +135,9 @@ static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock,
 
 /* partition array pItems[lb..ub] */
 
-static LONG hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_ITEM pBlock )
+static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub, PHB_ITEM pBlock )
 {
-   LONG i, j;
+   HB_ISIZ i, j;
 
    /* select pivot and exchange with 1st element */
    i = lb + ( ( ub - lb ) >> 1 );
@@ -180,9 +180,9 @@ static LONG hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, LONG lb, LONG 
 
 /* sort array pBaseArray->pItems[lb..ub] */
 
-static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_ITEM pBlock )
+static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub, PHB_ITEM pBlock )
 {
-   LONG m;
+   HB_ISIZ m;
 
    while( lb < ub )
    {

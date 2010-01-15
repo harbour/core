@@ -102,19 +102,6 @@ static int hb_doy( int iYear, int iMonth, int iDay )
    return iDoy + iDay;
 }
 
-static int hb_wom( int iYear, int iMonth, int iDay )
-{
-   int iWom;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_wom(%d, %d, %d)", iYear, iMonth, iDay));
-
-   iWom = iDay + hb_dateDOW( iYear, iMonth, 1 ) - 1;
-   if( iWom > 0 )
-      return ( iWom - hb_dateDOW( iYear, iMonth, iDay ) ) / 7 + 1;
-   else
-      return 0;
-}
-
 static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 {
    int iWeek, n;

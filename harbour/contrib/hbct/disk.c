@@ -65,31 +65,22 @@
  *
  */
 
+#define HB_OS_WIN_USED
+
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "ctstrfil.h"
+#include "hbwinuni.h"
 
-#if defined( HB_OS_WIN )
-
-#   include <windows.h>
-#   include <winbase.h>
-#   include <shellapi.h>
-
-#   define HB_OS_WIN_USED
-
-#elif defined( HB_OS_DOS )
-
+#if defined( HB_OS_DOS )
 #   include <dos.h>
-
 #endif
 
 
 HB_FUNC( DIRMAKE )
 {
-   const char *pFileName = hb_parcx( 1 );
-
-   if( hb_fsMkDir( pFileName ) )
+   if( hb_fsMkDir( hb_parcx( 1 ) ) )
       hb_retni( 0 );
    else
       hb_retnint( - ( HB_LONG ) hb_fsOsError() );
@@ -97,8 +88,8 @@ HB_FUNC( DIRMAKE )
 
 HB_FUNC( DIRNAME )
 {
-   char *pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX );
-   const char *pszDrive = hb_parc( 1 );
+   char * pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX );
+   const char * pszDrive = hb_parc( 1 );
    USHORT uiDrive = 0;
 
    if( pszDrive )
@@ -112,7 +103,7 @@ HB_FUNC( DIRNAME )
       else if( uc >= 'a' && uc < 'a' + 32 )
          uiDrive = uc - ( 'a' - 1 );
    }
-   pbyBuffer[0] = HB_OS_PATH_DELIM_CHR;
+   pbyBuffer[ 0 ] = HB_OS_PATH_DELIM_CHR;
    hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, HB_PATH_MAX - 1 );
 
    hb_retc_buffer( pbyBuffer );
@@ -210,13 +201,13 @@ HB_FUNC( VOLUME )
 {
    HB_BOOL bReturn = HB_FALSE;
 
-   if( !ct_getsafety() )
+   if( ! ct_getsafety() )
    {
       PHB_FNAME fname;
-      const char *sDiskName;
-      char *sRoot = NULL;
-      char *sVolName = NULL;
-      char sRootBuf[4], sVolNameBuf[12];
+      const char * sDiskName;
+      char * sRoot = NULL;
+      char * sVolName = NULL;
+      char sRootBuf[ 4 ], sVolNameBuf[ 12 ];
       char * pszFree;
 
       if( hb_parclen( 1 ) > 0 )
@@ -248,9 +239,8 @@ HB_FUNC( VOLUME )
       }
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
       {
-         LPTSTR lpRoot, lpVolName;
-         lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
-         lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
+         LPTSTR lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
+         LPTSTR lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
          bReturn = SetVolumeLabel( lpRoot, lpVolName );
          if( lpRoot )
             HB_TCHAR_FREE( lpRoot );
@@ -260,36 +250,6 @@ HB_FUNC( VOLUME )
 #endif
    }
    hb_retl( bReturn );
-}
-
-/*
- * GetVolInfo() is a new function. It returns the volume name of a Floppy, CD,
- * Hard-disk or mapped network drive.
- * Syntax is: GetVolInfo("X:\")
- * Note that the trailing backslash is required.
- */
-HB_FUNC( GETVOLINFO )
-{
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   int iretval;
-   const char * sDrive = hb_parcx( 1 );
-   TCHAR lpVolName[ 256 ];
-   LPTSTR lpDrive;
-
-   lpDrive = sDrive[ 0 ] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
-   iretval = GetVolumeInformation( lpDrive, lpVolName, HB_SIZEOFARRAY( lpVolName ), NULL, NULL, NULL, NULL, 0 );
-   if( lpDrive )
-      HB_TCHAR_FREE( lpDrive );
-
-   if( iretval != 0 )
-   {
-      char * sVolName = HB_TCHAR_CONVFROM( lpVolName );
-      hb_retc( sVolName );
-      HB_TCHAR_FREE( sVolName );
-   }
-   else
-      hb_retc_null();
-#endif
 }
 
 /*
@@ -308,48 +268,41 @@ HB_FUNC( GETVOLINFO )
 HB_FUNC( VOLSERIAL )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   int retval;
-   const char *sDrive = hb_parcx( 1 );
-   LPTSTR lpDrive;
-   DWORD dSerial;
+   void * hDrive = NULL;
+   DWORD dSerial = 0;
 
-   lpDrive = sDrive[0] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
-   retval = GetVolumeInformation( lpDrive,      /* RootPathName */
-                                  NULL,         /* VolumeName */
-                                  0,            /* VolumeNameSize */
-                                  &dSerial,     /* VolumeSerialNumber */
-                                  NULL,         /* MaxComponentLength */
-                                  NULL,         /* FileSystemFlags */
-                                  NULL,         /* FileSystemName */
-                                  0 );          /* FileSystemSize */
-   if( lpDrive )
-      HB_TCHAR_FREE( lpDrive );
-
-   if( retval != 0 )
+   if( GetVolumeInformation( hb_parclen( 1 ) > 0 ? HB_PARSTR( 1, &hDrive, NULL ) : NULL, /* RootPathName */
+                             NULL,      /* VolumeName */
+                             0,         /* VolumeNameSize */
+                             &dSerial,  /* VolumeSerialNumber */
+                             NULL,      /* MaxComponentLength */
+                             NULL,      /* FileSystemFlags */
+                             NULL,      /* FileSystemName */
+                             0 ) )      /* FileSystemSize */
       hb_retnint( dSerial );
    else
       hb_retni( -1 );
+
+   hb_strfree( hDrive );
 #endif
 }
 
 HB_FUNC( TRUENAME )
 {
-   const char * szFile = hb_parc( 1 );
-
-   if( szFile )
+   if( HB_ISCHAR( 1 ) )
    {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-      char *szBuffRet;
-      TCHAR buffer[MAX_PATH + 1] = { TEXT( '\0' ) };
-      LPTSTR lpFile;
+      void * hFile;
+      TCHAR buffer[ MAX_PATH + 1 ];
 
-      lpFile = HB_TCHAR_CONVTO( szFile );
-      GetFullPathName( lpFile, HB_SIZEOFARRAY( buffer ) - 1, buffer, NULL );
-      HB_TCHAR_FREE( lpFile );
+      buffer[ 0 ] = TEXT( '\0' );
 
-      szBuffRet = HB_TCHAR_CONVFROM( buffer );
-      hb_retc( szBuffRet );
-      HB_TCHAR_FREE( szBuffRet );
+      GetFullPathName( HB_PARSTR( 1, &hFile, NULL ),
+                       HB_SIZEOFARRAY( buffer ) - 1,
+                       buffer, NULL );
+
+      HB_RETSTR( buffer );
+      hb_strfree( hFile );
 #else
       hb_retc( szFile );
 #endif

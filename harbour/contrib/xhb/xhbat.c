@@ -208,9 +208,9 @@ HB_FUNC( ATI )
    {
       PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
       PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
-      LONG lLen = hb_itemGetCLen( pText );
-      LONG lStart = pStart ? hb_itemGetNL( pStart ) : 1;
-      LONG lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
+      HB_ISIZ lLen = hb_itemGetCLen( pText );
+      HB_ISIZ lStart = pStart ? hb_itemGetNL( pStart ) : 1;
+      HB_ISIZ lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
       HB_SIZE ulPos;
 
       if( lStart < 0 )

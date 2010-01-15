@@ -80,7 +80,6 @@ static PHB_ITEM hb_sqlite3_itemPut( PHB_ITEM pItem, void *pMemAddr, int iType );
 static void *   hb_sqlite3_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError );
 static void     hb_sqlite3_ret( void *pMemAddr, int iType );
 static void *   hb_sqlite3_param( int iParam, int iType, HB_BOOL fError );
-static HB_BOOL  hb_sqlite3_store( void *pMemAddr, int iType, int iParam );
 
 static int  callback( void *, int, char **, char ** );
 static int  authorizer( void *, int, const char *, const char *, const char *, const char * );
@@ -228,18 +227,6 @@ static void hb_sqlite3_ret( void *pMemAddr, int iType )
 static void *hb_sqlite3_param( int iParam, int iType, HB_BOOL fError )
 {
    return hb_sqlite3_itemGet( hb_param(iParam, HB_IT_POINTER), iType, fError );
-}
-
-static HB_BOOL hb_sqlite3_store( void *pMemAddr, int iType, int iParam )
-{
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_BYREF );
-   if( !pItem )
-   {
-      return HB_FALSE;
-   }
-
-   hb_sqlite3_itemPut( pItem, pMemAddr, iType );
-   return HB_TRUE;
 }
 
 /**

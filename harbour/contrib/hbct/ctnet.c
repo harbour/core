@@ -89,64 +89,15 @@
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbapierr.h"
+#include "hbwinuni.h"
 
 #if defined( HB_OS_WIN )
 
 #include <winnetwk.h>
 
-static HB_BOOL hb_WNetErrorHandler( DWORD dwErrorCode, const char * pszFunction )
-{
-   PHB_ITEM pError;
-
-   if( dwErrorCode != ERROR_EXTENDED_ERROR )
-   {
-      pError = hb_errRT_New( ES_ERROR,
-                             "CT",
-                             9001,
-                             0,
-                             "Windows Network operation failed",
-                             pszFunction, ( HB_ERRCODE ) dwErrorCode, EF_NONE );
-      hb_errLaunch( pError );
-      hb_itemRelease( pError );
-   }
-   else
-   {
-      DWORD dwLastError, dwWNetResult;
-      TCHAR lpDescription[ 256 ], lpProvider[ 256 ];
-      char * szDescription, * szProvider;
-
-      dwWNetResult = WNetGetLastError( &dwLastError,
-                                       lpDescription, HB_SIZEOFARRAY( lpDescription ),
-                                       lpProvider, HB_SIZEOFARRAY( lpProvider ) );
-
-      if( dwWNetResult != NO_ERROR )
-      {
-         pError = hb_errRT_New( ES_ERROR, "CT", 9002, 0,
-                                "WNetGetLastError failed", "see OS error",
-                                ( HB_ERRCODE ) dwWNetResult, EF_NONE );
-         hb_errLaunch( pError );
-         hb_itemRelease( pError );
-         return HB_FALSE;
-      }
-
-      szDescription = HB_TCHAR_CONVFROM( lpDescription );
-      szProvider = HB_TCHAR_CONVFROM( lpProvider );
-      pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
-                             szDescription, szProvider,
-                             ( HB_ERRCODE ) dwLastError, EF_NONE );
-      HB_TCHAR_FREE( szDescription );
-      HB_TCHAR_FREE( szProvider );
-
-      hb_errLaunch( pError );
-      hb_itemRelease( pError );
-   }
-
-   return HB_TRUE;
-}
-
 static HB_BOOL hb_IsNetShared( const char *szLocalDevice )
 {
-   TCHAR lpRemoteDevice[ 80 ];
+   TCHAR lpRemoteDevice[ 128 ];
    LPTSTR lpLocalDevice;
    DWORD cchBuff = HB_SIZEOFARRAY( lpRemoteDevice );
    DWORD dwResult;
@@ -195,67 +146,121 @@ HB_FUNC( NETDISK )
    hb_retl( hb_IsNetShared( cDrive ) );
 }
 
-
 HB_FUNC( NETREDIR )
 {
-   DWORD dwResult;
-   LPTSTR lpLocalDev  = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   LPTSTR lpSharedRes = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpPassword  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   HB_BOOL bShowError = hb_parl( 4 );
+   void * hLocalDev;
+   void * hSharedRes;
+   void * hPassword;
 
-   if( hb_pcount() >= 3 && HB_ISCHAR( 3 ) )
-      dwResult = WNetAddConnection( lpSharedRes, lpPassword, lpLocalDev );
-   else
-      dwResult = WNetAddConnection( lpSharedRes, NULL, lpLocalDev );
+   DWORD dwResult = WNetAddConnection( HB_PARSTRDEF( 2, &hSharedRes, NULL ),
+                                       HB_PARSTR( 3, &hPassword, NULL ),
+                                       HB_PARSTRDEF( 1, &hLocalDev, NULL ) );
+
+   hb_strfree( hLocalDev  );
+   hb_strfree( hSharedRes );
+   hb_strfree( hPassword  );
 
    if( dwResult == NO_ERROR )
       hb_retl( HB_TRUE );
    else
    {
-      if( bShowError )
+      /* NOTE: Hidden extension (Added by xhb project) */
+
+      /* TOFIX: Is this really needed? Consider converting it
+                to HB_TRACE() call or a wrapper to WNetGetLastError() API.
+                [vszakats] */
+
+      if( hb_parl( 4 ) /* lShowError */ )
       {
-         char szCommand[ 80 ];
-         hb_snprintf( szCommand, sizeof( szCommand ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
-                   hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
-         hb_WNetErrorHandler( dwResult, szCommand );
+         PHB_ITEM pError;
+
+         if( dwResult != ERROR_EXTENDED_ERROR )
+         {
+            char szFunction[ 128 ];
+
+            hb_snprintf( szFunction, sizeof( szFunction ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
+                      hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
+
+            pError = hb_errRT_New( ES_ERROR,
+                                   "CT",
+                                   9001,
+                                   0,
+                                   "Windows Network operation failed",
+                                   szFunction, ( HB_ERRCODE ) dwResult, EF_NONE );
+            hb_errLaunch( pError );
+            hb_itemRelease( pError );
+         }
+         else
+         {
+            DWORD dwLastError;
+            DWORD dwWNetResult;
+            TCHAR lpDescription[ 256 ];
+            TCHAR lpProvider[ 256 ];
+            char * szDescription;
+            char * szProvider;
+
+            dwWNetResult = WNetGetLastError( &dwLastError,
+                                             lpDescription, HB_SIZEOFARRAY( lpDescription ),
+                                             lpProvider, HB_SIZEOFARRAY( lpProvider ) );
+
+            if( dwWNetResult != NO_ERROR )
+            {
+               pError = hb_errRT_New( ES_ERROR, "CT", 9002, 0,
+                                      "WNetGetLastError failed", "see OS error",
+                                      ( HB_ERRCODE ) dwWNetResult, EF_NONE );
+               hb_errLaunch( pError );
+               hb_itemRelease( pError );
+            }
+
+            szDescription = HB_TCHAR_CONVFROM( lpDescription );
+            szProvider = HB_TCHAR_CONVFROM( lpProvider );
+            pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
+                                   szDescription, szProvider,
+                                   ( HB_ERRCODE ) dwLastError, EF_NONE );
+            HB_TCHAR_FREE( szDescription );
+            HB_TCHAR_FREE( szProvider );
+
+            hb_errLaunch( pError );
+            hb_itemRelease( pError );
+         }
       }
+
       hb_retl( HB_FALSE );
    }
 }
 
 HB_FUNC( NETRMTNAME )
 {
-   TCHAR lpRemoteDevice[ 80 ];
-   LPTSTR lpLocalDevice;
-   DWORD cchBuff = HB_SIZEOFARRAY( lpRemoteDevice );
-   DWORD dwResult;
-   char *szRemoteDevice;
+   void * hLocalDev;
 
-   lpLocalDevice = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   dwResult = WNetGetConnection( ( LPTSTR ) lpLocalDevice,
-                                 ( LPTSTR ) lpRemoteDevice, &cchBuff );
-   HB_TCHAR_FREE( lpLocalDevice );
-   szRemoteDevice = HB_TCHAR_CONVFROM( lpRemoteDevice );
-   hb_retc( dwResult == NO_ERROR ? szRemoteDevice : NULL );
-   HB_TCHAR_FREE( szRemoteDevice );
+   TCHAR lpRemoteDevice[ 128 ];
+   DWORD dwLen = HB_SIZEOFARRAY( lpRemoteDevice );
+
+   if( WNetGetConnection( HB_PARSTRDEF( 1, &hLocalDev, NULL ),
+                          lpRemoteDevice,
+                          &dwLen ) == NO_ERROR )
+      HB_RETSTRLEN( lpRemoteDevice, ( HB_SIZE ) dwLen );
+   else
+      hb_retc_null();
+
+   hb_strfree( hLocalDev );
 }
 
 
 HB_FUNC( NETWORK )
 {
    DWORD dwResult;
-   TCHAR lpProviderName[ 80 ];
-   DWORD cchBuff = HB_SIZEOFARRAY( lpProviderName );
+   TCHAR lpProviderName[ 128 ];
+   DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
 
-   dwResult = WNetGetProviderName( WNNC_NET_MSNET, lpProviderName, &cchBuff );
+   dwResult = WNetGetProviderName( WNNC_NET_MSNET, lpProviderName, &dwLen );
 
    if( dwResult != NO_ERROR )
    {
-      dwResult = WNetGetProviderName( WNNC_NET_LANMAN, lpProviderName, &cchBuff );
+      dwResult = WNetGetProviderName( WNNC_NET_LANMAN, lpProviderName, &dwLen );
 
       if( dwResult != NO_ERROR )
-         dwResult = WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &cchBuff );
+         dwResult = WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &dwLen );
    }
 
    hb_retl( dwResult == NO_ERROR );
@@ -264,13 +269,10 @@ HB_FUNC( NETWORK )
 
 HB_FUNC( NNETWORK )
 {
-   DWORD dwResult;
-   TCHAR lpProviderName[ 80 ];
-   DWORD cchBuff = HB_SIZEOFARRAY( lpProviderName );
+   TCHAR lpProviderName[ 128 ];
+   DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
 
-   dwResult = WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &cchBuff );
-
-   hb_retl( dwResult == NO_ERROR );
+   hb_retl( WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &dwLen ) == NO_ERROR );
 }
 
 #endif

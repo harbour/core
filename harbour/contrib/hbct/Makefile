@@ -46,6 +46,7 @@ C_SOURCES := \
    dattime3.c \
    dbftools.c \
    disk.c \
+   diskhb.c \
    expand.c \
    exponent.c \
    files.c \

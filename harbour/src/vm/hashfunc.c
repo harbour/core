@@ -743,7 +743,7 @@ HB_FUNC( HB_HALLOCATE )
 
    if( pHash && pValue )
    {
-      LONG lMem = hb_itemGetNL( pValue );
+      HB_ISIZ lMem = hb_itemGetNL( pValue );
       if( lMem >= 0 )
          hb_hashPreallocate( pHash, lMem );
    }

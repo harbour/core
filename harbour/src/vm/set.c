@@ -219,7 +219,7 @@ static HB_BOOL is_devicename( const char * szFileName )
          return HB_TRUE;
       else
       {
-         ULONG ulAttr = 0;
+         HB_FATTR ulAttr = 0;
          if( hb_fsGetAttr( szFileName, &ulAttr ) )
          {
             if( ulAttr & ( HB_FA_CHRDEVICE | HB_FA_BLKDEVICE | HB_FA_FIFO | HB_FA_SOCKET ) )
