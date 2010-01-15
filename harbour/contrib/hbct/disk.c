@@ -304,7 +304,7 @@ HB_FUNC( TRUENAME )
       HB_RETSTR( buffer );
       hb_strfree( hFile );
 #else
-      hb_retc( szFile );
+      hb_retc( hb_parc( 1 ) );
 #endif
    }
    else

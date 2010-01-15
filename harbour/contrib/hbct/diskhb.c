@@ -76,5 +76,7 @@ HB_FUNC( GETVOLINFO )
       hb_retc_null();
 
    hb_strfree( hDrive );
+#else
+   hb_retc_null();
 #endif
 }
