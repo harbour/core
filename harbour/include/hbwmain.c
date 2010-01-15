@@ -86,7 +86,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #endif
    hHeap = GetProcessHeap();
    pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pFree ) + 1 );
-   fQuoted = FALSE;
+   fQuoted = HB_FALSE;
 
    while( *pSrc != 0 && s_argc < HB_MAX_ARGS )
    {
@@ -127,7 +127,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    hb_cmdargInit( s_argc, s_argv );
 
-   hb_vmInit( TRUE );
+   hb_vmInit( HB_TRUE );
    iErrorCode = hb_vmQuit();
 #else
    HB_SYMBOL_UNUSED( hInstance );

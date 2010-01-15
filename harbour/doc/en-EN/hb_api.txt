@@ -767,7 +767,7 @@
  *      <iTrueFalse>
  *  $DESCRIPTION$
  *      Note that when HB_API_MACROS is defined, this function is replaced with
- *      a macro: hb_retl( iLogical ) --> hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE )
+ *      a macro: hb_retl( iLogical ) --> hb_itemPutL( &hb_stack.Return, iLogical ? HB_TRUE : HB_FALSE )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -1749,7 +1749,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) --> ( BOOL )bResult
+ *      hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -1825,7 +1825,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayIsObject( PHB_ITEM pArray ) --> ( BOOL )bResult
+ *      hb_arrayIsObject( PHB_ITEM pArray ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *  $RETURNS$
@@ -1862,7 +1862,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ) --> ( BOOL )bResult
+ *      hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -1901,7 +1901,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ) --> ( BOOL )bResult
+ *      hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -1940,7 +1940,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ) --> ( BOOL )bResult
+ *      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -1979,7 +1979,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ) --> ( BOOL )bResult
+ *      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2018,7 +2018,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ) --> ( BOOL )bResult
+ *      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2057,7 +2057,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayRelease( PHB_ITEM pArray ) --> ( BOOL )bResult
+ *      hb_arrayRelease( PHB_ITEM pArray ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *  $RETURNS$
@@ -2094,7 +2094,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2135,7 +2135,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2375,7 +2375,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ) --> ( BOOL )bResult
+ *      hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2650,7 +2650,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ) --> ( BOOL )bResult
+ *      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2736,7 +2736,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ) --> ( BOOL )bResult
+ *      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -2779,7 +2779,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ) --> ( BOOL )bResult
+ *      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pSrcArray>
  *
@@ -2861,7 +2861,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ) --> ( BOOL )bResult
+ *      hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
  *
@@ -3058,7 +3058,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_strMatchRegExp( const char * szString, const char * szMask ) --> ( BOOL )bResult
+ *      hb_strMatchRegExp( const char * szString, const char * szMask ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szString>
  *
@@ -3097,7 +3097,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_strEmpty( const char * szText, ULONG ulLen ) --> ( BOOL )bResult
+ *      hb_strEmpty( const char * szText, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szText>
  *
@@ -3415,7 +3415,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ) --> ( ULONG )ulResult
+ *      hb_strRTrimLen( const char * szText, ULONG ulLen, HB_BOOL bAnySpace ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <szText>
  *
@@ -4011,7 +4011,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_cmdargIsInternal( const char * szArg ) --> ( BOOL )bResult
+ *      hb_cmdargIsInternal( const char * szArg ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szArg>
  *  $RETURNS$
@@ -4048,7 +4048,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_cmdargCheck( const char * pszName ) --> ( BOOL )bResult
+ *      hb_cmdargCheck( const char * pszName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszName>
  *  $RETURNS$
@@ -4498,7 +4498,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ) --> ( HB_HANDLE )hResult
+ *      hb_memvarValueNew( HB_ITEM_PTR pSource, HB_BOOL bTrueMemvar ) --> ( HB_HANDLE )hResult
  *  $ARGUMENTS$
  *      <pSource>
  *
@@ -5306,7 +5306,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ) --> ( USHORT )usResult
+ *      hb_conSetCursor( HB_BOOL bSetCursor, USHORT usNewCursor ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bSetCursor>
  *
@@ -5779,7 +5779,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroIsIdent( char * szString ) --> ( BOOL )bResult
+ *      hb_macroIsIdent( char * szString ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szString>
  *  $RETURNS$

@@ -272,8 +272,8 @@ HB_EXTERN_BEGIN
 #  define HB_CRITICAL_UNLOCK(v)
 #  define HB_COND_SIGNAL(v)
 #  define HB_COND_SIGNALN(v,n)
-#  define HB_COND_WAIT(v)           ( FALSE )
-#  define HB_COND_TIMEDWAIT(v,n)    ( FALSE )
+#  define HB_COND_WAIT(v)           ( HB_FALSE )
+#  define HB_COND_TIMEDWAIT(v,n)    ( HB_FALSE )
 
 #endif
 
@@ -311,7 +311,7 @@ HB_EXTERN_BEGIN
          HB_RAWCRITICAL_T  value;
       } critical;
    } HB_CRITICAL_T;
-#  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { FALSE, { 0 } }
+#  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { HB_FALSE, { 0 } }
 #endif /* HB_CRITICAL_NEED_INIT */
 
 #ifdef HB_COND_NEED_INIT
@@ -325,7 +325,7 @@ HB_EXTERN_BEGIN
             HB_RAWCOND_T   value;
          } cond;
       } HB_COND_T;
-#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, { 0 } }
+#     define HB_COND_NEW( name )       HB_COND_T name = { HB_FALSE, { 0 } }
 #  else
       typedef struct
       {
@@ -342,7 +342,7 @@ HB_EXTERN_BEGIN
             HB_RAWCRITICAL_T  value;
          } critical;
       } HB_COND_T;
-#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, { 0 }, { 0 } }
+#     define HB_COND_NEW( name )       HB_COND_T name = { HB_FALSE, 0, { 0 }, { 0 } }
 #  endif
 #endif /* HB_COND_NEED_INIT */
 
@@ -396,7 +396,7 @@ extern void hb_threadReleaseCPU( void );
 void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
 HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
 void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
-HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns TRUE when counter reach after decrementation */
+HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns HB_TRUE when counter reach after decrementation */
 
 /* Critical sections or fast non recursive MUTEXes */
 extern void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );

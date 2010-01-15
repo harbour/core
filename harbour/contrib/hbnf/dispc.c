@@ -903,7 +903,7 @@ HB_FUNC( FT_DISPFILE )
 
 static int keyin()
 {
-    return hb_inkey( TRUE, 0.0, INKEY_ALL );
+    return hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 }
 
 

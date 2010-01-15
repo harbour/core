@@ -120,8 +120,8 @@ typedef struct
 
    COLORREF COLORS[ 16 ];                 /* colors */
 
-   HB_BOOL  CaretExist;                   /* TRUE if a caret has been created */
-   HB_BOOL  CaretHidden;                  /* TRUE if a caret has been hiden */
+   HB_BOOL  CaretExist;                   /* HB_TRUE if a caret has been created */
+   HB_BOOL  CaretHidden;                  /* HB_TRUE if a caret has been hiden */
    int      CaretSize;                    /* Height of solid caret */
    int      CaretWidth;                   /* Width of solid caret */
 
@@ -134,7 +134,7 @@ typedef struct
    int      keyLast;                      /* last inkey code value in buffer */
 
    POINT    PTEXTSIZE;                    /* size of the fixed width font */
-   HB_BOOL  FixedFont;                    /* TRUE if current font is a fixed font */
+   HB_BOOL  FixedFont;                    /* HB_TRUE if current font is a fixed font */
    int *    FixedSize;                    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                   /* requested font height */
    int      fontWidth;                    /* requested font width */
@@ -169,7 +169,7 @@ typedef struct
 #endif
    HB_BOOL  Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
    HB_BOOL  AltF4Close;                   /* Can use Alt+F4 to close application */
-   HB_BOOL  CentreWindow;                 /* True if window is to be Reset into centre of window */
+   HB_BOOL  CentreWindow;                 /* HB_TRUE if window is to be Reset into centre of window */
 
    HB_BOOL  IgnoreWM_SYSCHAR;
 

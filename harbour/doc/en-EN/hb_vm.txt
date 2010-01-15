@@ -30,7 +30,7 @@
  *      C Prototype
  *
  *      #include <hbvm.h>
- *      hb_vmInit( BOOL bStartMainProc )
+ *      hb_vmInit( HB_BOOL bStartMainProc )
  *  $ARGUMENTS$
  *      <bStartMainProc>
  *  $DESCRIPTION$
@@ -820,7 +820,7 @@
  *      C Prototype
  *
  *      #include <hbvm.h>
- *      hb_vmPushLogical( BOOL bValue )
+ *      hb_vmPushLogical( HB_BOOL bValue )
  *  $ARGUMENTS$
  *      <bValue>
  *  $DESCRIPTION$

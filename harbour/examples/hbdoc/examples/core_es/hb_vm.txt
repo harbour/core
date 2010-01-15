@@ -5,9 +5,9 @@
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
- * 
+ *
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de:  
+ * Documentaci¢n en Espa¤ol de:
  *   Archivo de cabecera para la API de la VM
  *   hb_vmInit(), hb_vmQuit(), hb_vmExecute(), hb_vmProcessSymbols()
  *   hb_vmSymbolInit_RT(), hb_vmRequestQuit(), hb_vmRequestEndProc()
@@ -32,21 +32,21 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      Inicializa la M quina Virtual (Virtual machine)   
+ *      Inicializa la M quina Virtual (Virtual machine)
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
- *      hb_vmInit( BOOL bStartMainProc ) --> void
+ *      hb_vmInit( HB_BOOL bStartMainProc ) --> void
  *  $ARGUMENTS$
  *      <bStartMainProc> Valor l¢gico que indica si la VM se inicia en
  *                       un m¢dulo principal ¢ secundario.
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      Inicializa la M quina Virtual (Virtual machine)   
+ *      Inicializa la M quina Virtual (Virtual machine)
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -69,7 +69,7 @@
  *      Sale Inmediatamente de la M quina Virtual
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmQuit( void ) --> int
  *  $ARGUMENTS$
@@ -79,7 +79,7 @@
  *  $DESCRIPTION$
  *      Ocasiona la Inmediata salida de la M quina Virtual
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -102,19 +102,19 @@
  *      Invoca la M quina Virtual
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols ) --> void
  *  $ARGUMENTS$
  *      <pCode>    puntero a cadena constante
- * 
+ *
  *      <pSymbols> s¡mbolo a procesar
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -134,22 +134,22 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      Inicializaci¢n de s¡mbolos est ticos 
+ *      Inicializaci¢n de s¡mbolos est ticos
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ) --> void
  *  $ARGUMENTS$
  *      <pSymbols>
- * 
+ *
  *      <uiSymbols>
  *  $RETURNS$
- *      Nada 
+ *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -172,7 +172,7 @@
  *      Inicializaci¢n de s¡mbolos de soporte de ejecuci¢n
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmSymbolInit_RT( void ) --> void
  *  $ARGUMENTS$
@@ -180,9 +180,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -202,10 +202,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmRequestQuit( void ) --> void
  *  $ARGUMENTS$
@@ -213,9 +213,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -235,10 +235,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmRequestEndProc( void ) --> void
  *  $ARGUMENTS$
@@ -246,9 +246,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -268,10 +268,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmRequestCancel( void ) --> void
  *  $ARGUMENTS$
@@ -279,9 +279,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -301,10 +301,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmRequestBreak( PHB_ITEM pItem ) --> void
  *  $ARGUMENTS$
@@ -312,9 +312,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -334,10 +334,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmRequestQuery( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
@@ -345,9 +345,9 @@
  *  $RETURNS$
  *      El resultado <usResult> expresado como un entero corto sin signo
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -370,7 +370,7 @@
  *      Env¡a un mensaje a un objeto
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmMessage( PHB_SYMB pSymMsg ) --> void
  *  $ARGUMENTS$
@@ -378,9 +378,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -403,7 +403,7 @@
  *      Invoca la M quina Virtual
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmDo( USHORT uiParams ) --> void
  *  $ARGUMENTS$
@@ -411,9 +411,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -436,7 +436,7 @@
  *      Ejecuta una funci¢n guardando su resultado
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmFunction( USHORT uiParams ) --> void
  *  $ARGUMENTS$
@@ -446,7 +446,7 @@
  *  $DESCRIPTION$
  *      Ejecuta una funci¢n guardando su resultado
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -469,7 +469,7 @@
  *      Env¡a un mensaje a un objeto
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmSend( USHORT uiParams ) --> void
  *  $ARGUMENTS$
@@ -477,9 +477,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -502,7 +502,7 @@
  *      Ejecuta el codeblock pasado sin argumentos
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmEvalBlock( PHB_ITEM pBlockItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
@@ -510,9 +510,9 @@
  *  $RETURNS$
  *      Un puntero a PHB_ITEM
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -535,22 +535,22 @@
  *      Ejecuta el codeblock pasado con argumentos
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmEvalBlockV( PHB_ITEM pBlockItem, USHORT uiArgCount, ... )
  *                       --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pBlockItem>
- * 
+ *
  *      <uiArgCount>  Numero de argumentos, expresado como entero sin signo
- * 
+ *
  *      <...>         Argumentos opcionales indicados arriba
  *  $RETURNS$
  *      Un puntero a PHB_ITEM
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -573,7 +573,7 @@
  *      Empuja un item generico a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPush( PHB_ITEM pItem ) --> void
  *  $ARGUMENTS$
@@ -583,7 +583,7 @@
  *  $DESCRIPTION$
  *      Empuja un item gen‚rico a la pila de evaluaci¢n
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -606,7 +606,7 @@
  *      Pone NIL en el lugar de self
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushNil( void ) --> void
  *  $ARGUMENTS$
@@ -614,9 +614,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -639,12 +639,12 @@
  *      Empuja un n£mero en la pila y lo eval£a
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushNumber( double dNumber, int iDec ) --> void
  *  $ARGUMENTS$
  *      <dNumber> N£mero de doble precisi¢n para ser evaluado
- * 
+ *
  *      <iDec>    Numero entero para indicar las cifras decimales
  *  $RETURNS$
  *      Nada
@@ -652,7 +652,7 @@
  *      Empuja un n£mero en la pila y lo eval£a para decidir si es entero
  *      (int), entero largo (long) ¢ de doble precisi¢n (double)
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -675,7 +675,7 @@
  *      Empuja un n£mero entero corto a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushInteger( int iNumber ) --> void
  *  $ARGUMENTS$
@@ -685,7 +685,7 @@
  *  $DESCRIPTION$
  *      Empuja un n£mero entero corto a la pila para su evaluaci¢n
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -708,7 +708,7 @@
  *      Empuja un n£mero entero largo a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushLong( long lNumber ) --> void
  *  $ARGUMENTS$
@@ -718,7 +718,7 @@
  *  $DESCRIPTION$
  *      Empuja un n£mero entero largo a la pila para su evaluaci¢n.
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -741,19 +741,19 @@
  *      Empuja un n£mero doble a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushDouble( double lNumber, int iDec ) --> void
  *  $ARGUMENTS$
  *      <lNumber> N£mero de doble precisi¢n para ser evaluado
- * 
+ *
  *      <iDec>    Numero entero para indicar las cifras decimales
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
  *      Empuja un n£mero de doble precisi¢n a la pila para su evaluaci¢n
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -776,17 +776,17 @@
  *      Empuja un valor l¢gico a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
- *      hb_vmPushLogical( BOOL bValue ) --> void
+ *      hb_vmPushLogical( HB_BOOL bValue ) --> void
  *  $ARGUMENTS$
  *      <bValue> Valor logico
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -809,19 +809,19 @@
  *      Empuja una cadena a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushString( char * szText, ULONG length ) --> void
  *  $ARGUMENTS$
  *      <szText>   puntero a una cadena de texto terminada en '\0'
- * 
+ *
  *      <ulLength> longitud de la cadena
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
  *      Empuja una cadena a la pila
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -844,17 +844,17 @@
  *      Empuja una fecha representada como entero largo a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushDate( long lDate ) --> void
  *  $ARGUMENTS$
  *      <lDate> Entero largo representando una fecha
  *  $RETURNS$
- *      Nada 
+ *      Nada
  *  $DESCRIPTION$
  *      Empuja una fecha representada como entero largo a la pila
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -877,17 +877,17 @@
  *      Empuja un puntero a una funci¢n, a la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushSymbol( PHB_SYMB pSym ) --> void
  *  $ARGUMENTS$
  *      <pSym> puntero a una funci¢n
  *  $RETURNS$
- *      Nada 
+ *      Nada
  *  $DESCRIPTION$
  *      Empuja un puntero a una funci¢n, a la pila
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -907,10 +907,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      Empuja un item del tipo HB_IT_POINTER 
+ *      Empuja un item del tipo HB_IT_POINTER
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_vmPushPointer( void * ) --> void
  *  $ARGUMENTS$
@@ -918,9 +918,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -940,10 +940,10 @@
  *  $CATEGORY$
  *      Virtual machine API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_stackDispCall( void ) --> void
  *  $ARGUMENTS$
@@ -951,9 +951,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -976,7 +976,7 @@
  *      Recupera un item de la pila
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbvm.h>
  *      hb_stackPop( void ) --> void
  *  $ARGUMENTS$
@@ -984,9 +984,9 @@
  *  $RETURNS$
  *      Nada
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -999,6 +999,3 @@
  *      hb_stackDispCall()
  *  $END$
  */
-
-
-

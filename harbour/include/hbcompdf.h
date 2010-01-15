@@ -403,10 +403,10 @@ typedef struct __FUNC
    ULONG *      pJumps;                   /* pointer to the Jumps array */
    ULONG        iNOOPs;                   /* NOOPs Counter */
    ULONG        iJumps;                   /* Jumps Counter */
-   HB_BOOL      bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
-   HB_BOOL      fVParams;                 /* TRUE if variable number of parameters is used */
+   HB_BOOL      bLateEval;                /* HB_TRUE if accessing of declared (compile time) variables is allowed */
+   HB_BOOL      fVParams;                 /* HB_TRUE if variable number of parameters is used */
    HB_BOOL      bError;                   /* error during function compilation */
-   HB_BOOL      bBlock;                   /* TRUE if simple codeblock body is compiled */
+   HB_BOOL      bBlock;                   /* HB_TRUE if simple codeblock body is compiled */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
    HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */

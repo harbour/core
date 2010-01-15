@@ -101,7 +101,7 @@ HB_BOOL hb_oleAxInit( void )
       if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
       {
          s_hLib = NULL;
-         return FALSE;
+         return HB_FALSE;
       }
       pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
       s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );

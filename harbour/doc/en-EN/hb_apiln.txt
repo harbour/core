@@ -30,7 +30,7 @@
  *      C Prototype
  *
  *      #include <hbapilng.h>
- *      hb_langRegister( PHB_LANG lang ) --> ( BOOL )bResult
+ *      hb_langRegister( PHB_LANG lang ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <lang>
  *  $RETURNS$
@@ -67,7 +67,7 @@
  *      C Prototype
  *
  *      #include <hbapilng.h>
- *      hb_langDeRegister( char * pszID ) --> ( BOOL )bResult
+ *      hb_langDeRegister( char * pszID ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszID>
  *  $RETURNS$

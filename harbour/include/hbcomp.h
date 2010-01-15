@@ -150,10 +150,10 @@ extern PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piP
 extern const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar );   /* returns the name of local variable */
 extern const char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
 
-#define HB_SYM_MEMVAR   FALSE
-#define HB_SYM_ALIAS    FALSE
-#define HB_SYM_MSGNAME  FALSE
-#define HB_SYM_FUNCNAME TRUE
+#define HB_SYM_MEMVAR   HB_FALSE
+#define HB_SYM_ALIAS    HB_FALSE
+#define HB_SYM_MSGNAME  HB_FALSE
+#define HB_SYM_FUNCNAME HB_TRUE
 extern const char * hb_compSymbolName( HB_COMP_DECL, USHORT );   /* returns a symbol name based on its index on the symbol table */
 
 extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * );

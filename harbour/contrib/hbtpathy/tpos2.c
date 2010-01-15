@@ -193,7 +193,7 @@ HB_FUNC( __TP_ISDCD )
                     NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & DCD_ON ) == DCD_ON );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISRI )
@@ -204,7 +204,7 @@ HB_FUNC( __TP_ISRI )
                     NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & RI_ON ) == RI_ON );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISDSR )
@@ -215,7 +215,7 @@ HB_FUNC( __TP_ISDSR )
                     NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & DSR_ON ) == DSR_ON );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISCTS )
@@ -226,7 +226,7 @@ HB_FUNC( __TP_ISCTS )
                     NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & CTS_ON ) == CTS_ON );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_CTRLCTS )

@@ -123,7 +123,7 @@ HB_EXPORT extern USHORT     hb_objSetClass( PHB_ITEM pItem, const char * szClass
 HB_EXPORT extern const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
 HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 
-HB_EXPORT extern HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
+HB_EXPORT extern HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns HB_TRUE/HB_FALSE whether szString is an existing message for object */
 HB_EXPORT extern HB_BOOL    hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
 HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
 HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );

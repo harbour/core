@@ -235,7 +235,7 @@ HB_FUNC( __TP_ISDCD )
       hb_retl( ( status & TIOCM_CD ) == TIOCM_CD );
    else
 #endif
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISRI )
@@ -247,7 +247,7 @@ HB_FUNC( __TP_ISRI )
       hb_retl( ( status & TIOCM_RI ) == TIOCM_RI );
    else
 #endif
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISDSR )
@@ -259,7 +259,7 @@ HB_FUNC( __TP_ISDSR )
       hb_retl( ( status & TIOCM_DSR ) == TIOCM_DSR );
    else
 #endif
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( __TP_ISCTS )
@@ -271,7 +271,7 @@ HB_FUNC( __TP_ISCTS )
       hb_retl( ( status & TIOCM_CTS ) == TIOCM_CTS );
    else
 #endif
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 #if ! defined( CRTSCTS )

@@ -46,8 +46,8 @@ Code Implementation
 
 [3] Use definitions and macros whenever possible, so that constants have
     meaningful names and can be easily manipulated.
-    Use TRUE instead of 1 (in boolean context)
-    Use FALSE instead of 0 (in boolean context)
+    Use HB_TRUE instead of 1 (in boolean context)
+    Use HB_FALSE instead of 0 (in boolean context)
     Use NULL instead of 0 (in pointer context)
     Always use 'HB_' prefix for definitions of new datatypes and macros.
     Use either 'PHB_' prefix for datatypes that are pointers.

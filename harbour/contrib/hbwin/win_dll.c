@@ -940,11 +940,11 @@ HB_FUNC( LOADLIBRARY )
 HB_FUNC( FREELIBRARY )
 {
    if( HB_ISPOINTER( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
+      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) ? HB_TRUE : HB_FALSE );
    else if( HB_ISNUM( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ? HB_TRUE : HB_FALSE );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( GETPROCADDRESS )

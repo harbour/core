@@ -208,7 +208,7 @@ HB_FUNC( WAPI_FREELIBRARY )
 {
    BOOL bResult = FreeLibrary( ( HMODULE ) hb_parptr( 1 ) );
    hbwapi_SetLastError( GetLastError() );
-   hb_retl( bResult );
+   wapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETPROCADDRESS )

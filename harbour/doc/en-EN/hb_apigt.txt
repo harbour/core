@@ -504,7 +504,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtGetBlink( BOOL * pbBlink ) --> ( USHORT )usResult
+ *      hb_gtGetBlink( HB_BOOL * pbBlink ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pbBlink>
  *  $RETURNS$
@@ -654,7 +654,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtIsColor( void ) --> ( BOOL )bResult
+ *      hb_gtIsColor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -1214,7 +1214,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtSetBlink( BOOL bBlink ) --> ( USHORT )usResult
+ *      hb_gtSetBlink( HB_BOOL bBlink ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bBlink>
  *  $RETURNS$
@@ -1444,7 +1444,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtSetSnowFlag( BOOL bNoSnow ) --> ( USHORT )usResult
+ *      hb_gtSetSnowFlag( HB_BOOL bNoSnow ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bNoSnow>
  *  $RETURNS$
@@ -1748,7 +1748,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtWFlash( void ) --> ( BOOL )bResult
+ *      hb_gtWFlash( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -1892,7 +1892,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus ) --> ( BOOL )bResult
+ *      hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <wnd>
  *
@@ -2301,7 +2301,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen ) --> ( BOOL )bResult
+ *      hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pStr>
  *
@@ -2625,7 +2625,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_GetBlink( void ) --> ( BOOL )bResult
+ *      hb_gt_GetBlink( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -2861,7 +2861,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_IsColor( void ) --> ( BOOL )bResult
+ *      hb_gt_IsColor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -2898,7 +2898,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_PreExt( void ) --> ( BOOL )bResult
+ *      hb_gt_PreExt( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -2935,7 +2935,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_PostExt( void ) --> ( BOOL )bResult
+ *      hb_gt_PostExt( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -2972,7 +2972,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_Suspend( void ) --> ( BOOL )bResult
+ *      hb_gt_Suspend( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -3009,7 +3009,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_Resume( void ) --> ( BOOL )bResult
+ *      hb_gt_Resume( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -3378,7 +3378,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_SetBlink( BOOL bBlink )
+ *      hb_gt_SetBlink( HB_BOOL bBlink )
  *  $ARGUMENTS$
  *      <bBlink>
  *  $DESCRIPTION$
@@ -3448,7 +3448,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_gt_SetMode( USHORT uiRows, USHORT uiCols ) --> ( BOOL )bResult
+ *      hb_gt_SetMode( USHORT uiRows, USHORT uiCols ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <uiRows>
  *
@@ -3645,7 +3645,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask ) --> ( int )iResult
+ *      hb_inkey( HB_BOOL bWait, double dSeconds, HB_inkey_enum event_mask ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <bWait>
  *
@@ -3867,7 +3867,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_inkeyReset( BOOL allocate )
+ *      hb_inkeyReset( HB_BOOL allocate )
  *  $ARGUMENTS$
  *      <allocate>
  *  $DESCRIPTION$
@@ -3902,7 +3902,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouseIsPresent( void ) --> ( BOOL )bResult
+ *      hb_mouseIsPresent( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -3939,7 +3939,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouseGetCursor( void ) --> ( BOOL )bResult
+ *      hb_mouseGetCursor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -3976,7 +3976,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouseSetCursor( BOOL bVisible )
+ *      hb_mouseSetCursor( HB_BOOL bVisible )
  *  $ARGUMENTS$
  *      <bVisible>
  *  $DESCRIPTION$
@@ -4122,7 +4122,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouseIsButtonPressed( int iButton ) --> ( BOOL )bResult
+ *      hb_mouseIsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <iButton>
  *  $RETURNS$
@@ -4348,7 +4348,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouse_IsPresent( void ) --> ( BOOL )bResult
+ *      hb_mouse_IsPresent( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -4566,7 +4566,7 @@
  *      C Prototype
  *
  *      #include <hbapigt.h>
- *      hb_mouse_IsButtonPressed( int iButton ) --> ( BOOL )bResult
+ *      hb_mouse_IsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <iButton>
  *  $RETURNS$

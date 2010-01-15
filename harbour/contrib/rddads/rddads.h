@@ -199,10 +199,10 @@ extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
-   extern BOOL   hb_ads_bOEM;
-   extern char * hb_adsOemToAnsi( const char * pcString, ULONG ulLen );
-   extern char * hb_adsAnsiToOem( const char * pcString, ULONG ulLen );
-   extern void   hb_adsOemAnsiFree( char * pcString );
+   extern HB_BOOL hb_ads_bOEM;
+   extern char *  hb_adsOemToAnsi( const char * pcString, ULONG ulLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, ULONG ulLen );
+   extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */
    UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE   hObj,

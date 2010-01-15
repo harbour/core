@@ -373,7 +373,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                   {
                       /* no second argument */
                      const char *szText = pFirst->value.asMacro.szMacro;
-                     pArg->pNext = hb_compExprNewString( szText, strlen( szText ), FALSE, HB_COMP_PARAM );
+                     pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
                      pArg->pNext->pNext = pNext;
                   }
                   HB_COMP_EXPR_DELETE( pFirst );  /* delete first argument */
@@ -537,7 +537,7 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
    HB_EXPR_USE( pIndex, HB_EA_ARRAY_INDEX );
    pExpr->value.asList.pExprList = pArray;
    pExpr->value.asList.pIndex = pIndex;
-   pExpr->value.asList.reference = FALSE;
+   pExpr->value.asList.reference = HB_FALSE;
 
    return pExpr;
 }
@@ -560,9 +560,9 @@ static HB_BOOL hb_compStaticFunction( const char * szName )
    for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
    {
       if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
-         return TRUE;
+         return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 

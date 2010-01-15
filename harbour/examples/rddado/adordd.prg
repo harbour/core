@@ -1324,7 +1324,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
          {
             pArea->fFound = ( ulRec == pArea->ulRecNo ||
                      hb_cdxValCompare( pTag, pKey->val, pKey->len,
-                        pTag->CurKey->val, pTag->CurKey->len, FALSE ) == 0 );
+                        pTag->CurKey->val, pTag->CurKey->len, HB_FALSE ) == 0 );
             if ( ! pArea->fFound && ! fSoftSeek )
                fEOF = HB_TRUE;
          }

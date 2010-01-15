@@ -30,7 +30,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsChDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *      hb_fsChDir( BYTE * pszDirName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszDirName>
  *  $RETURNS$
@@ -406,7 +406,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsEof( HB_FHANDLE hFileHandle ) --> ( BOOL )bResult
+ *      hb_fsEof( HB_FHANDLE hFileHandle ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <hFileHandle>
  *  $RETURNS$
@@ -480,7 +480,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsFile( BYTE * pszFileName ) --> ( BOOL )bResult
+ *      hb_fsFile( BYTE * pszFileName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszFileName>
  *  $RETURNS$
@@ -517,7 +517,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry ) --> ( ULONG )ulResult
+ *      hb_fsFSize( BYTE * pszFileName, HB_BOOL bUseDirEntry ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pszFileName>
  *
@@ -638,7 +638,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsIsDevice( HB_FHANDLE hFileHandle ) --> ( BOOL )bResult
+ *      hb_fsIsDevice( HB_FHANDLE hFileHandle ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <hFileHandle>
  *  $RETURNS$
@@ -675,7 +675,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ) --> ( BOOL )bResult
+ *      hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <hFileHandle>
  *
@@ -718,7 +718,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsMkDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *      hb_fsMkDir( BYTE * pszDirName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszDirName>
  *  $RETURNS$
@@ -876,7 +876,7 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsRmDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *      hb_fsRmDir( BYTE * pszDirName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszDirName>
  *  $RETURNS$
@@ -1437,4 +1437,3 @@
  *
  *  $END$
  */
-

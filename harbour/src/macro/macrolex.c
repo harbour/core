@@ -63,12 +63,12 @@ typedef struct _HB_MACRO_LEX
    char *   pDst;
    ULONG    ulLen;
    ULONG    ulSrc;
-   BOOL     quote;
+   HB_BOOL  quote;
    char     pBuffer[ 2 ];
 }
 HB_MACRO_LEX, * PHB_MACRO_LEX;
 
-BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
+HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
 {
    if( pMacro->length )
    {
@@ -83,13 +83,13 @@ BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
       ( ( PHB_MACRO_LEX ) pMacro->pLex )->pString = pMacro->string;
       ( ( PHB_MACRO_LEX ) pMacro->pLex )->ulLen   = pMacro->length;
       ( ( PHB_MACRO_LEX ) pMacro->pLex )->ulSrc = 0;
-      ( ( PHB_MACRO_LEX ) pMacro->pLex )->quote = TRUE;
+      ( ( PHB_MACRO_LEX ) pMacro->pLex )->quote = HB_TRUE;
       ( ( PHB_MACRO_LEX ) pMacro->pLex )->pDst  =
                                  ( ( PHB_MACRO_LEX ) pMacro->pLex )->pBuffer;
-      return TRUE;
+      return HB_TRUE;
    }
 
-   return FALSE;
+   return HB_FALSE;
 }
 
 void hb_macroLexDelete( HB_MACRO_PTR pMacro )
@@ -128,16 +128,16 @@ static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
 static int hb_lexTimestampGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                                PHB_MACRO_LEX pLex )
 {
-   BOOL fOK = FALSE;
+   HB_BOOL fOK = HB_FALSE;
    char * dst = pLex->pDst;
 
-   pLex->quote = FALSE;
+   pLex->quote = HB_FALSE;
    while( pLex->ulSrc < pLex->ulLen )
    {
       char ch = pLex->pString[ pLex->ulSrc++ ];
       if( ch == '"' )
       {
-         fOK = TRUE;
+         fOK = HB_TRUE;
          break;
       }
       *dst++ = ch;
@@ -146,7 +146,7 @@ static int hb_lexTimestampGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
    if( !hb_timeStampStrGetDT( pLex->pDst,
                               &yylval_ptr->valTimeStamp.date,
                               &yylval_ptr->valTimeStamp.time ) )
-      fOK = FALSE;
+      fOK = HB_FALSE;
    if( !fOK )
       hb_macroError( EG_SYNTAX, pMacro );
    return TIMESTAMP;
@@ -155,17 +155,17 @@ static int hb_lexTimestampGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
 static int hb_lexDateGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                           PHB_MACRO_LEX pLex )
 {
-   BOOL fOK = FALSE;
+   HB_BOOL fOK = HB_FALSE;
    char * dst = pLex->pDst;
    int iYear, iMonth, iDay;
 
-   pLex->quote = FALSE;
+   pLex->quote = HB_FALSE;
    while( pLex->ulSrc < pLex->ulLen )
    {
       char ch = pLex->pString[ pLex->ulSrc++ ];
       if( ch == '"' )
       {
-         fOK = TRUE;
+         fOK = HB_TRUE;
          break;
       }
       *dst++ = ch;
@@ -187,7 +187,7 @@ static int hb_lexDateGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
 static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                              PHB_MACRO_LEX pLex, char cDelim )
 {
-   pLex->quote = FALSE;
+   pLex->quote = HB_FALSE;
    yylval_ptr->valChar.string = pLex->pDst;
    while( pLex->ulSrc < pLex->ulLen )
    {
@@ -210,7 +210,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                                 PHB_MACRO_LEX pLex )
 {
    ULONG ulLen;
-   pLex->quote = FALSE;
+   pLex->quote = HB_FALSE;
    yylval_ptr->valChar.string = pLex->pDst;
    while( pLex->ulSrc < pLex->ulLen )
    {
@@ -284,21 +284,21 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          case '@':
          case '(':
          case '{':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             return ch;
 
          case ')':
          case '}':
          case ']':
-            pLex->quote = FALSE;
+            pLex->quote = HB_FALSE;
             return ch;
 
          case '#':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             return NE1;
 
          case '!':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -307,7 +307,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return NOT;
 
          case '<':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '>' )
             {
                pLex->ulSrc++;
@@ -321,7 +321,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '<';
 
          case '>':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -330,7 +330,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '>';
 
          case '=':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -344,7 +344,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '=';
 
          case '+':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '+' )
             {
                pLex->ulSrc++;
@@ -358,7 +358,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '+';
 
          case '-':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '-' )
             {
                pLex->ulSrc++;
@@ -377,7 +377,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '-';
 
          case '*':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '*' )
             {
                pLex->ulSrc++;
@@ -396,7 +396,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '*';
 
          case '/':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -405,7 +405,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '/';
 
          case '%':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -414,7 +414,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '%';
 
          case '^':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -423,7 +423,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return POWER;
 
          case ':':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->pString[ pLex->ulSrc ] == '=' )
             {
                pLex->ulSrc++;
@@ -437,7 +437,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return ':';
 
          case '.':
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             if( pLex->ulSrc < pLex->ulLen &&
                 HB_ISDIGIT( pLex->pString[ pLex->ulSrc ] ) )
             {
@@ -481,14 +481,14 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                if( ( pLex->pString[ pLex->ulSrc ] | ('a' - 'A') ) == 't' ||
                    ( pLex->pString[ pLex->ulSrc ] | ('a' - 'A') ) == 'y' )
                {
-                  pLex->quote = FALSE;
+                  pLex->quote = HB_FALSE;
                   pLex->ulSrc += 2;
                   return TRUEVALUE;
                }
                if( ( pLex->pString[ pLex->ulSrc ] | ('a' - 'A') ) == 'f' ||
                    ( pLex->pString[ pLex->ulSrc ] | ('a' - 'A') ) == 'n' )
                {
-                  pLex->quote = FALSE;
+                  pLex->quote = HB_FALSE;
                   pLex->ulSrc += 2;
                   return FALSEVALUE;
                }
@@ -503,7 +503,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          case '[':
             if( pLex->quote )
                return hb_lexStringCopy( yylval_ptr, pMacro, pLex, ']' );
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             return '[';
 
          case '`':
@@ -520,7 +520,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                {
                   /* [&<keyword>[.[<nextidchars>]]]+ */
                   int iParts = 0;
-                  pLex->quote = FALSE;
+                  pLex->quote = HB_FALSE;
                   yylval_ptr->string = pLex->pDst;
                   pLex->ulSrc--;
                   do
@@ -560,7 +560,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                         pLex->pString[ pLex->ulSrc ] == '[' )
                   hb_macroError( EG_SYNTAX, pMacro );
             }
-            pLex->quote = TRUE;
+            pLex->quote = HB_TRUE;
             return '&';
 
          default:
@@ -568,7 +568,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             {
                ULONG ul = pLex->ulSrc;
 
-               pLex->quote = FALSE;
+               pLex->quote = HB_FALSE;
                if( ch == '0' && ul < pLex->ulLen )
                {
                   if( pLex->pString[ ul ] == 'd' || pLex->pString[ ul ] == 'D' )
@@ -637,7 +637,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             else if( HB_ISFIRSTIDCHAR( ch ) )
             {
                ULONG ulLen;
-               pLex->quote = FALSE;
+               pLex->quote = HB_FALSE;
                yylval_ptr->string = pLex->pDst;
                *pLex->pDst++ = ch - ( ( ch >= 'a' && ch <= 'z' ) ? 'a' - 'A' : 0 );
                hb_lexIdentCopy( pLex );

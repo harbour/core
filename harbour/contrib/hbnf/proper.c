@@ -82,17 +82,17 @@ static char _ftToUpper( char c )
   return c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c;
 }
 
-static int _ftIsUpper( char c )
+static HB_BOOL _ftIsUpper( char c )
 {
   return c >= 'A' && c <= 'Z';
 }
 
-static int _ftIsLower( char c )
+static HB_BOOL _ftIsLower( char c )
 {
   return c >= 'a' && c <= 'z';
 }
 
-static int _ftIsAlpha( char c )
+static HB_BOOL _ftIsAlpha( char c )
 {
   return _ftIsUpper(c) || _ftIsLower(c);
 }
@@ -102,18 +102,19 @@ HB_FUNC( FT_PROPER )
   int iLen = hb_parclen(1);
   const char *cStr;
   char *cDst = NULL;
-  int i, fCap = TRUE; /*, iPos = 0; */
+  int i; /*, iPos = 0; */
+  HB_BOOL fCap = HB_TRUE;
 
   hb_storc( NULL, 1 );
   cStr = hb_parc(1);
 
   for( i = 0; i < iLen; i++ ) {
-     if( _ftIsAlpha( cStr[i] ) != 0 )  {
+     if( _ftIsAlpha( cStr[i] ) )  {
         if( !cDst ) {
             cDst = (char *) hb_xgrab(iLen + 1);
             memcpy(cDst, cStr, iLen + 1);
         }
-        if( fCap != 0 )
+        if( fCap )
            cDst[i] = _ftToUpper( cDst[i] );
         else
            cDst[i] = _ftToLower( cDst[i] );
@@ -131,7 +132,7 @@ HB_FUNC( FT_PROPER )
   /* // If "Mc" was found, Cap next letter if Alpha
   if( iPos > 1 )
      if( iPos < iLen )
-        if( _ftIsUpper( cStr[iPos] ) == FALSE )
+        if( ! _ftIsUpper( cStr[iPos] ) )
            cStr[iPos] = _ftToUpper( cStr[iPos] );
   */
   if( cDst )

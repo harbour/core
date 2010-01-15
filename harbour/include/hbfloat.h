@@ -209,7 +209,7 @@
                                     v = hb_isfinite( d ) ? 0 : _HB_NUM_NAN ; \
                                  } while( 0 )
 #  else
-#     define hb_isfinite( d )       TRUE
+#     define hb_isfinite( d )       HB_TRUE
 #     define HB_NUMTYPE( v, d )  do { \
                                     int iTODO; \
                                     v = hb_isfinite( d ) ? 0 : _HB_NUM_NAN ; \

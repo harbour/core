@@ -4,8 +4,8 @@
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
- * www - http://www.harbour-project.org 
- * 
+ * www - http://www.harbour-project.org
+ *
  * Copyright 2003 Alejandro de G rate <alex_degarate@hotmail.com>
  * Documentaci¢n en Espa¤ol de:
  *   Readme, Archivo de cabecera para la API de Idiomas
@@ -111,8 +111,8 @@
  *
  *      /* Manejo de lista de lenguajes */
  *
- *       extern BOOL     hb_langRegister         ( PHB_LANG lang );
- *       extern BOOL     hb_langDeRegister       ( char * pszID );
+ *       extern HB_BOOL  hb_langRegister         ( PHB_LANG lang );
+ *       extern HB_BOOL  hb_langDeRegister       ( char * pszID );
  *       extern int      hb_langFindPos          ( char * pszID )
  *       extern PHB_LANG hb_langFind             ( char * pszID );
  *
@@ -148,7 +148,7 @@
  *      C Prototype
  *
  *      #include <hbapilng.h>
- *      hb_langRegister( PHB_LANG lang ) --> ( BOOL )bResult
+ *      hb_langRegister( PHB_LANG lang ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <lang> es un puntero a la estructura del Idioma, que se va a
  *      registrar como idioma por defecto.
@@ -190,7 +190,7 @@
  *      C Prototype
  *
  *      #include <hbapilng.h>
- *      hb_langDeRegister( char * pszID ) --> ( BOOL )bResult
+ *      hb_langDeRegister( char * pszID ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszID> Puntero a una cadena terminada con '\0' que contiene la
  *      identificaci¢n del idioma a ser removido.
@@ -393,7 +393,7 @@
  *      hb_langDGetItem( int iIndex ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <iIndex> es la posici¢n del elemento en el array del idioma.
- *      El valor de <iIndex> debe estar comprendido entre 0 y 
+ *      El valor de <iIndex> debe estar comprendido entre 0 y
  *      HB_LANG_ITEM_MAX_
  *  $RETURNS$
  *      Retorna un puntero <pResult> a void, que previo a su uso debe
@@ -495,7 +495,7 @@
  *      uso en la forma "Harbour Language: %s1 %s2 (%s3)", donde:
  *
  *       %s1 es un puntero a una cadena de caracteres terminada en '\0' que
- *           contiene el identificador del idioma en uso como resultado de 
+ *           contiene el identificador del idioma en uso como resultado de
  *           la llamada a la funci¢n:
  *           hb_langDGetItem( HB_LANG_ITEM_ID_ID).
  *
@@ -597,15 +597,15 @@
  *                                         HB_FUNC_EXEC( HB_LANG_##id ); \
  *                                      }
  *
- *      // Macro to publish a specific language module, for both C 
- *      // and Harbour level 
+ *      // Macro to publish a specific language module, for both C
+ *      // and Harbour level
  *      #define HB_LANG_ANNOUNCE( id )       HB_FUNC( HB_LANG_##id ) {}
  *  $ARGUMENTS$
  *      <id> Es el identificador del idioma a establecer
  *  $RETURNS$
  *      Nada.
  *  $DESCRIPTION$
- *      Este truco es necesario para forzar un pre-procesamiento si id es 
+ *      Este truco es necesario para forzar un pre-procesamiento si id es
  *      tambi‚n una macro.
  *      La macro termina ejecutando la funci¢n HB_FUNC( HB_LANG_##id ) para
  *      el identificador <id>.
@@ -620,8 +620,6 @@
  *  $PLATFORMS$
  *      Todas
  *  $SEEALSO$
- *      HB_LANG_ANNOUNCE(), HB_LANG_REQUEST_() 
+ *      HB_LANG_ANNOUNCE(), HB_LANG_REQUEST_()
  *  $END$
  */
-
-

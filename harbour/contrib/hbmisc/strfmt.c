@@ -108,7 +108,7 @@ HB_FUNC( STRFORMAT )
                strpar[ nPos ].raw = hb_itemString( hb_param( POS_TO_PAR( nPos ), HB_IT_ANY ), &strpar[ nPos ].ulLen, &strpar[ nPos ].bFreeReq );
 
                /* AllTrim() */
-               strpar[ nPos ].ulLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].ulLen, FALSE );
+               strpar[ nPos ].ulLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].ulLen, HB_FALSE );
                strpar[ nPos ].buffer = hb_strLTrim( strpar[ nPos ].raw, &strpar[ nPos ].ulLen );
 
                nRetValLen += strpar[ nPos ].ulLen;

@@ -718,10 +718,11 @@ typedef unsigned int        HB_UINT;
 #endif
 typedef double              HB_DOUBLE;
 typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
+typedef long                HB_ISIZ;           /* TOFIX: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
 typedef void *              HB_PTRVAL;         /* TOFIX */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
 
-typedef unsigned long       HB_FATTR;
+typedef HB_U32              HB_FATTR;
 
 /* Harbour strict bit types: */
 typedef signed char         HB_I8;

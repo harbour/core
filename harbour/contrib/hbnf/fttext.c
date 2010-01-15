@@ -202,8 +202,8 @@ static HB_FHANDLE handles[ TEXT_WORKAREAS];
 static long       last_rec[TEXT_WORKAREAS];
 static long       last_off[TEXT_WORKAREAS];
 static long       lastbyte[TEXT_WORKAREAS];
-static int        isBof[   TEXT_WORKAREAS];
-static int        isEof[   TEXT_WORKAREAS];
+static HB_BOOL    isBof[   TEXT_WORKAREAS];
+static HB_BOOL    isEof[   TEXT_WORKAREAS];
 static HB_ERRCODE error[   TEXT_WORKAREAS];
 
 /* for debugging purposes */
@@ -324,7 +324,8 @@ HB_FUNC( FT_FUSE )
          last_rec[area] = 0L;
          last_off[area] = 0L;
          lastbyte[area] = 0L;
-         isEof[area]    = 0;
+         isBof[area]    = HB_FALSE;
+         isEof[area]    = HB_FALSE;
       }
    }
 }
@@ -469,8 +470,8 @@ HB_FUNC( FT_FGOTOP )
    error[area]  = 0;
    offset[area] = 0L;
    recno[area]  = 1L;
-   isBof[area]  = FALSE;
-   isEof[area]  = FALSE;
+   isBof[area]  = HB_FALSE;
+   isEof[area]  = HB_FALSE;
 }
 
 
@@ -632,8 +633,8 @@ HB_FUNC( FT_FGOBOT )
 
    recno[ area] = last_rec[area];
    offset[area] = last_off[area];
-   isBof[area]  = FALSE;
-   isEof[area]  = FALSE;
+   isBof[area]  = HB_FALSE;
+   isEof[area]  = HB_FALSE;
 
 }
 
@@ -722,8 +723,8 @@ static long _ft_skip( long iRecs )
    char *       cBuff    = ( char * ) hb_xgrab( BUFFSIZE );
    long         fpOffset = offset[area];
 
-   isBof[area] = FALSE;
-   isEof[area] = FALSE;
+   isBof[area] = HB_FALSE;
+   isEof[area] = HB_FALSE;
    error[area] = 0;
 
    /* iRecs is zero if they want to find the EOF, start a top of file */
@@ -747,7 +748,7 @@ static long _ft_skip( long iRecs )
          if( !iBytesRead )
          {
             /* buffer is empty thus EOF, set vars and quit */
-            isEof[area]    = TRUE;
+            isEof[area]    = HB_TRUE;
             last_rec[area] = recno[ area];
             last_off[area] = offset[area];
             error[area]    = hb_fsError();
@@ -789,7 +790,7 @@ static long _ft_skip( long iRecs )
                   last_rec[area]  = recno[area];
                   last_off[area]  = offset[area];
                   if( iRecs )
-                     isEof[area]  = TRUE;
+                     isEof[area]  = HB_TRUE;
                }
                else
                {
@@ -825,8 +826,8 @@ static long _ft_skip( long iRecs )
             if( !iBytesRead )
             {
                /* buffer is empty thus file is zero len, set vars and quit */
-               isBof[area]        = TRUE;
-               isEof[area]        = TRUE;
+               isBof[area]        = HB_TRUE;
+               isEof[area]        = HB_TRUE;
                recno[area]        = 0;
                offset[area]       = 0;
                last_rec[area]     = 0;
@@ -871,7 +872,7 @@ static long _ft_skip( long iRecs )
                      iBytesRemaining = 0;
                      offset[area]    = 0;
                      recno[area]     = 1;
-                     isBof[area]     = TRUE;
+                     isBof[area]     = HB_TRUE;
                   }
                   else
                   {
@@ -887,7 +888,7 @@ static long _ft_skip( long iRecs )
 
          offset[area] = 0;
          recno[area]  = 1;
-         isBof[area]  = TRUE;
+         isBof[area]  = HB_TRUE;
       }
    }
 
@@ -1068,7 +1069,7 @@ HB_FUNC( FT_FDELETE )
 
    /* if we've deleted to EOF, leave EOF flag set, otherwise clear it */
    if( recno[area] != last_rec[area] )
-      isEof[area]  = FALSE;
+      isEof[area]  = HB_FALSE;
 
    hb_xfree( ( void * ) Buff );
 
@@ -1625,8 +1626,8 @@ HB_FUNC( FT_FGOTO )
 
       offset[area] = 0L;
       recno[area]  = 1L;
-      isBof[area]  = FALSE;
-      isEof[area]  = FALSE;
+      isBof[area]  = HB_FALSE;
+      isEof[area]  = HB_FALSE;
 
       if( --target )
          _ft_skip( target );

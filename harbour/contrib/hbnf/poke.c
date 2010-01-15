@@ -91,10 +91,10 @@ HB_FUNC( FT_POKE )
 
       if ( ProtMode ) hb_cpmiFreeSelector( FP_SEG( bytePtr ) );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      Bogus: hb_retl( FALSE );
+      Bogus: hb_retl( HB_FALSE );
 
    return;
 }

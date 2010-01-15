@@ -134,10 +134,10 @@ CLIPPER FT_OnTick( void )
    {
       Interval = hb_parnl( 2 );
 
-      _evLow( 5, TickTock, TRUE );
+      _evLow( 5, TickTock, HB_TRUE );
    }
    else
-      _evLow( 5, TickTock, FALSE );
+      _evLow( 5, TickTock, HB_FALSE );
 
    return;
 }

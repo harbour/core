@@ -666,10 +666,10 @@ HB_FUNC( PQNFIELDS )
 
 HB_FUNC( PQSENDQUERY )
 {
-   int res = FALSE;
+   HB_BOOL res = HB_FALSE;
 
    if( hb_pcount() == 2 )
-       res = PQsendQuery( PGconn_par( 1 ), hb_parcx( 2 ) );
+       res = PQsendQuery( PGconn_par( 1 ), hb_parcx( 2 ) ) ? HB_TRUE : HB_FALSE;
 
    hb_retl( res );
 }
@@ -698,20 +698,20 @@ HB_FUNC( PQCONSUMEINPUT )
 
 HB_FUNC( PQISBUSY )
 {
-   int res = FALSE;
+   HB_BOOL res = HB_FALSE;
 
    if( hb_parinfo( 1 ) )
-      res = PQisBusy( PGconn_par( 1 ) );
+      res = PQisBusy( PGconn_par( 1 ) ) ? HB_TRUE : HB_FALSE;
 
    hb_retl( res );
 }
 
 HB_FUNC( PQREQUESTCANCEL ) /* deprecated */
 {
-   int res = FALSE;
+   HB_BOOL res = HB_FALSE;
 
    if( hb_parinfo( 1 ) )
-      res = PQrequestCancel( PGconn_par( 1 ) );
+      res = PQrequestCancel( PGconn_par( 1 ) ) ? HB_TRUE : HB_FALSE;
 
    hb_retl( res );
 }
@@ -804,7 +804,7 @@ HB_FUNC( LO_IMPORT )
 
 HB_FUNC( LO_EXPORT )
 {
-   int ret = FALSE;
+   HB_BOOL ret = HB_FALSE;
 
    if( hb_pcount() == 3 )
       ret = ( lo_export( PGconn_par( 1 ), ( Oid ) hb_parnl( 2 ), hb_parcx( 3 ) ) == 1 );
@@ -814,7 +814,7 @@ HB_FUNC( LO_EXPORT )
 
 HB_FUNC( LO_UNLINK )
 {
-   int ret = FALSE;
+   HB_BOOL ret = HB_FALSE;
 
    if( hb_pcount() == 2 )
       ret = ( lo_unlink( PGconn_par( 1 ), ( Oid ) hb_parnl( 2 ) ) == 1 );
@@ -838,7 +838,7 @@ HB_FUNC( PQGETCANCEL )
 
 HB_FUNC( PQCANCEL )
 {
-   int ret = FALSE;
+   HB_BOOL ret = HB_FALSE;
 
    if( hb_parinfo( 1 ) )
    {
@@ -846,7 +846,7 @@ HB_FUNC( PQCANCEL )
 
       if( PQcancel( ( PGcancel * ) hb_parptr( 1 ), errbuf, sizeof( errbuf ) - 1 ) == 1 )
       {
-         ret = TRUE;
+         ret = HB_TRUE;
          hb_storc( errbuf, 2 );
       }
    }

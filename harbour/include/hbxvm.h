@@ -66,9 +66,9 @@
 HB_EXTERN_BEGIN
 
 /*
- * Functions below which return BOLL value can cause error handler
+ * Functions below which return HB_BOOL value can cause error handler
  * executing so we have to check for break request flag. The return
- * value is TRUE when break request is set.
+ * value is HB_TRUE when break request is set.
  * other functions does not execute error handler and we do not have
  * to check HVM state so they are simply declared as void.
  */

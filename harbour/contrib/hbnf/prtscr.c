@@ -73,10 +73,10 @@ HB_FUNC( FT_PRTSCR )
    }
 
    if ( pbyte == 1)
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    else
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
