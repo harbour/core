@@ -126,6 +126,16 @@ typedef NEARP * NEARPP;
    #define ERRCODE     HB_ERRCODE
 #endif
 
+#ifndef HB_LEGACY_LEVEL3
+   #undef BOOL
+   typedef int         BOOL;
+
+   #undef FALSE
+   #define FALSE       0
+   #undef TRUE
+   #define TRUE        1
+#endif
+
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 

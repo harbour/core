@@ -189,9 +189,16 @@
 
 #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
-   #if ! defined( HB_DONT_DEFINE_BOOL )
-      #undef BOOL                         /* boolean */
-      typedef int BOOL;
+   #ifdef HB_LEGACY_LEVEL3
+      #if ! defined( HB_DONT_DEFINE_BOOL )
+         #undef BOOL                         /* boolean */
+         typedef int BOOL;
+      #endif
+
+      #undef FALSE
+      #define FALSE  0
+      #undef TRUE
+      #define TRUE   (!0)
    #endif
 
    #undef UINT                            /* varies with platform */
@@ -221,11 +228,6 @@
 
    #undef ULONG                           /* 4 or 8 bytes unsigned */
    typedef unsigned long ULONG;
-
-   #undef FALSE
-   #define FALSE  0
-   #undef TRUE
-   #define TRUE   (!0)
 
 #else  /* HB_DONT_DEFINE_BASIC_TYPES */
 
