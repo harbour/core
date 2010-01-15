@@ -487,7 +487,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
    if( hWndSB == NULL || !IsWindow( hWndSB ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -512,7 +512,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
          if( SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
          {
-            hb_retl( TRUE );
+            hb_retl( HB_TRUE );
             return;
          }
       }
@@ -527,13 +527,13 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
             SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) ( LPINT ) ptArray );
 
-            hb_retl( TRUE );
+            hb_retl( HB_TRUE );
             return;
          }
       }
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -577,11 +577,11 @@ HB_FUNC( WVG_STATUSBARREFRESH )
 
       if( SendMessage( hWndSB, SB_SETPARTS, iParts, ( LPARAM ) ( LPINT ) ptArray ) )
       {
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          return;
       }
    }
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
    #endif
 }
 
@@ -841,8 +841,8 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-   HB_BOOL  bret = FALSE;
-   HB_BOOL  binit = FALSE;
+   HB_BOOL  bret = HB_FALSE;
+   HB_BOOL  binit = HB_FALSE;
    PHB_ITEM block;
 
    if( msg == WM_INITDIALOG )
@@ -850,7 +850,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
       CHOOSEFONT * cf = ( CHOOSEFONT * ) lParam;
       PHB_ITEM pBlock = ( PHB_ITEM ) hb_itemNew( ( PHB_ITEM ) cf->lCustData );
       SetProp( hwnd, TEXT( "DIALOGPROC" ), pBlock );
-      binit = TRUE;
+      binit = HB_TRUE;
    }
 
    block = ( PHB_ITEM ) GetProp( hwnd, TEXT( "DIALOGPROC" ) );
@@ -873,7 +873,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
       }
    }
    if( binit )
-      return TRUE;
+      return HB_TRUE;
 
    return bret;
 }
@@ -949,7 +949,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    if( ChooseFont( &cf ) )
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, FALSE );
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_FALSE );
       PHB_ITEM aInfo = hb_itemNew( NULL );
 
       hb_arrayNew( aInfo, 4 );
@@ -981,7 +981,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 
    SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, ( WPARAM ) 0, ( LPARAM ) &lf );
 
-   aFont = wvg_logfontTOarray( &lf, FALSE );
+   aFont = wvg_logfontTOarray( &lf, HB_FALSE );
 
    hb_itemReturnRelease( aFont );
 #endif
@@ -1015,13 +1015,13 @@ HB_FUNC( WVG_FONTCREATE )
 
    if( hFont )
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, FALSE );
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_FALSE );
       hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
       hb_itemReturnRelease( aFont );
    }
    else
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, TRUE );
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_TRUE );
       hb_itemReturnRelease( aFont );
    }
 }

@@ -346,8 +346,8 @@ typedef struct
 
    COLORREF COLORS[ 16 ];                   /* colors */
 
-   HB_BOOL  CaretExist;                     /* TRUE if a caret has been created */
-   HB_BOOL  CaretHidden;                    /* TRUE if a caret has been hiden */
+   HB_BOOL  CaretExist;                     /* HB_TRUE if a caret has been created */
+   HB_BOOL  CaretHidden;                    /* HB_TRUE if a caret has been hiden */
    int      CaretSize;                      /* Height of solid caret */
    int      CaretWidth;                     /* Width of solid caret */
 
@@ -360,7 +360,7 @@ typedef struct
    int      keyLast;                        /* last inkey code value in buffer */
 
    POINT    PTEXTSIZE;                      /* size of the fixed width font */
-   HB_BOOL  FixedFont;                      /* TRUE if current font is a fixed font */
+   HB_BOOL  FixedFont;                      /* HB_TRUE if current font is a fixed font */
    int      FixedSize[ WVT_MAX_COLS ];      /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                     /* requested font height */
    int      fontWidth;                      /* requested font width */

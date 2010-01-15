@@ -181,7 +181,7 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
 
 static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
-   HB_BOOL fOK = FALSE;
+   HB_BOOL fOK = HB_FALSE;
 
    WVGDEBUG( ( "wvggui:hb_gt_wvt_Alloc()" ) );
 
@@ -198,7 +198,7 @@ static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
             pWVT->iHandle = iPos;
             if( ++s_wvtCount == 1 )
                hb_gt_wvt_RegisterClass( pWVT->hInstance );
-            fOK = TRUE;
+            fOK = HB_TRUE;
             break;
          }
          ++iPos;
@@ -278,21 +278,21 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->MousePos.x        = 0;
    pWVT->MousePos.y        = 0;
-   pWVT->MouseMove         = TRUE;
+   pWVT->MouseMove         = HB_TRUE;
    pWVT->hWnd              = NULL;
    pWVT->keyPointerIn      = 0;
    pWVT->keyPointerOut     = 0;
    pWVT->keyLast           = 0;
 
-   pWVT->CentreWindow      = TRUE;            /* Default is to always display window in centre of screen */
+   pWVT->CentreWindow      = HB_TRUE;         /* Default is to always display window in centre of screen */
    pWVT->CodePage          = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 
    pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
 
-   pWVT->IgnoreWM_SYSCHAR  = FALSE;
+   pWVT->IgnoreWM_SYSCHAR  = HB_FALSE;
 
-   pWVT->bResizable        = TRUE;
-   pWVT->bClosable         = TRUE;
+   pWVT->bResizable        = HB_TRUE;
+   pWVT->bClosable         = HB_TRUE;
 
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
@@ -302,9 +302,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->pPP->width        = 600;
    pWVT->pPP->height       = 400;
    pWVT->pPP->pParentGT    = NULL;
-   pWVT->pPP->bVisible     = FALSE;
-   pWVT->pPP->bConfigured  = FALSE;
-   pWVT->pPP->bRowCols     = FALSE;
+   pWVT->pPP->bVisible     = HB_FALSE;
+   pWVT->pPP->bConfigured  = HB_FALSE;
+   pWVT->pPP->bRowCols     = HB_FALSE;
    pWVT->pPP->iWndType     = 0;
 
    pWVT->hostCDP    = hb_vmCDP();
@@ -317,7 +317,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
          pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
    }
 #endif
-   pWVT->bResizing         = FALSE;
+   pWVT->bResizing         = HB_FALSE;
    pWVT->width             = 600;
    pWVT->height            = 400;
 
@@ -410,11 +410,11 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
       {
          pWVT->keyPointerOut = 0;
       }
-      return TRUE;
+      return HB_TRUE;
    }
 
    *iKey = 0;
-   return FALSE;
+   return HB_FALSE;
 }
 
 static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
@@ -507,11 +507,11 @@ static HB_BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
       *title = ( char * ) hb_xgrab( iResult + 1 );
       HB_TCHAR_GETFROM( *title, buffer, iResult );
       ( *title )[ iResult ] = '\0';
-      return TRUE;
+      return HB_TRUE;
    }
 
    *title = NULL;
-   return FALSE;
+   return HB_FALSE;
 }
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -643,7 +643,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
       {
          HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
 
-         pWVT->IgnoreWM_SYSCHAR = FALSE;
+         pWVT->IgnoreWM_SYSCHAR = HB_FALSE;
 
          switch( wParam )
          {
@@ -737,7 +737,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   if( bCtrl )  /* Not scroll lock */
                   {
                      hb_gt_wvt_AddCharToInputQueue( pWVT, HB_BREAK_FLAG ); /* Pretend Alt+C pressed */
-                     pWVT->IgnoreWM_SYSCHAR = TRUE;
+                     pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                   }
                   else
                   {
@@ -753,7 +753,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                         wParam == VK_SUBTRACT || wParam == VK_DIVIDE ) )
                {
                   if( bAlt )
-                     pWVT->IgnoreWM_SYSCHAR = TRUE;
+                     pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
 
                   switch( wParam )
                   {
@@ -817,7 +817,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      if( pWVT->inCDP )
                      {
 #if defined( UNICODE )
-                        c = hb_cdpGetChar( pWVT->inCDP, FALSE, ( USHORT ) c );
+                        c = hb_cdpGetChar( pWVT->inCDP, HB_FALSE, ( USHORT ) c );
 #else
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
                            c = pWVT->keyTransTbl[ c ];
@@ -830,7 +830,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                }
             }
          }
-         pWVT->IgnoreWM_SYSCHAR = FALSE; /* As Suggested by Peter */
+         pWVT->IgnoreWM_SYSCHAR = HB_FALSE; /* As Suggested by Peter */
          break;
       }
 
@@ -961,7 +961,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             }
             hb_gt_wvt_AddCharToInputQueue( pWVT, c );
          }
-         pWVT->IgnoreWM_SYSCHAR = FALSE;
+         pWVT->IgnoreWM_SYSCHAR = HB_FALSE;
       }
    }
 
@@ -1122,7 +1122,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
-         pWVT->bTracking = FALSE;
+         pWVT->bTracking = HB_FALSE;
          break;
       }
 #endif
@@ -1281,7 +1281,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
          }
       }
       if( pWVT->pPP->y < 0 )
-         pWVT->CentreWindow = TRUE;
+         pWVT->CentreWindow = HB_TRUE;
    }
 
    hWnd = CreateWindowEx(
@@ -1338,7 +1338,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
    }
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
@@ -1449,15 +1449,15 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISGRAPHIC:
       {
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
       }
       case HB_GTI_ISUNICODE:
       {
 #if defined( UNICODE )
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
 #else
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
 #endif
          break;
       }
@@ -1481,7 +1481,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_SETFONT:
       {
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
          {
             PHB_ITEM pSome;
@@ -1654,7 +1654,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             LPTSTR lpImage;
 
             lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = TRUE;
+            pWVT->bIconToFree = HB_TRUE;
             pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
                                                IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
             HB_TCHAR_FREE( lpImage );
@@ -1678,7 +1678,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             LPTSTR lpIcon;
 
             lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = FALSE;
+            pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance, lpIcon );
             HB_TCHAR_FREE( lpIcon );
 
@@ -1695,7 +1695,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
 
-            pWVT->bIconToFree = FALSE;
+            pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
                                     MAKEINTRESOURCE( ( HB_LONG )
                                          hb_itemGetNInt( pInfo->pNewVal ) ) );
@@ -2183,8 +2183,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
 
                /* Flag that caller configured itself */
-               pWVT->pPP->bConfigured = TRUE;
-               pWVT->CentreWindow = FALSE;
+               pWVT->pPP->bConfigured = HB_TRUE;
+               pWVT->CentreWindow = HB_FALSE;
             }
          }
          /* Only possible when it is WvgDialog() Window */
@@ -2232,7 +2232,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
       }
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */
@@ -2249,7 +2249,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 /* ********************************************************************** */

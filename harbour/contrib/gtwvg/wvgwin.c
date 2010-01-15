@@ -590,13 +590,13 @@ HB_FUNC( WVG_CLIENTTOSCREEN )
       if( ClientToScreen( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &Point ) )
       {
           wvt_Point2ArrayEx( &Point, pArray );
-          hb_retl( TRUE );
+          hb_retl( HB_TRUE );
       }
       else
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -611,13 +611,13 @@ HB_FUNC( WVG_SCREENTOCLIENT )
       if( ScreenToClient( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &Point ) > 0 )
       {
           wvt_Point2ArrayEx( &Point, pArray );
-          hb_retl( TRUE );
+          hb_retl( HB_TRUE );
       }
       else
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1040,7 +1040,7 @@ HB_FUNC( WVG_ISICONIC )
 #if ! defined( HB_OS_WIN_CE )
    hb_retl( IsIconic( wvg_parhwnd( 1 ) ) );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1050,7 +1050,7 @@ HB_FUNC( WVG_ISZOOMED )
 #if ! defined( HB_OS_WIN_CE )
    hb_retl( IsZoomed( wvg_parhwnd( 1 ) ) );
 #else
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 #endif
 }
 /*----------------------------------------------------------------------*/

@@ -506,7 +506,7 @@ HB_FUNC( WVT_SETMOUSEPOS )
    }
    else
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 
@@ -1389,9 +1389,9 @@ HB_BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
       rc->top    = hb_arrayGetNL(aRect,2);
       rc->right  = hb_arrayGetNL(aRect,3);
       rc->bottom = hb_arrayGetNL(aRect,4);
-      return TRUE ;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1415,9 +1415,9 @@ HB_BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
    if (HB_IS_ARRAY(aPoint) && hb_arrayLen(aPoint) == 2) {
       pt->x = hb_arrayGetNL(aPoint,1);
       pt->y = hb_arrayGetNL(aPoint,2);
-      return TRUE ;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1439,9 +1439,9 @@ HB_BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
    if (HB_IS_ARRAY(aSize) && hb_arrayLen(aSize) == 2) {
       siz->cx = hb_arrayGetNL(aSize,1);
       siz->cy = hb_arrayGetNL(aSize,2);
-      return TRUE ;
+      return HB_TRUE;
    }
-   return FALSE;
+   return HB_FALSE;
 }
 
 /*----------------------------------------------------------------------*/

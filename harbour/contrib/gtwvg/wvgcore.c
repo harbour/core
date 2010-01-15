@@ -243,7 +243,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
    int      toc =  0;
    HRGN     hrgn1;
    POINT    lpp;
-   HB_BOOL  bResult = FALSE;
+   HB_BOOL  bResult = HB_FALSE;
 
    if( iPicture )
    {
@@ -317,7 +317,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
          DeleteObject( hrgn1 );
       }
 
-      bResult = TRUE;
+      bResult = HB_TRUE;
    }
 
    return bResult;
@@ -327,12 +327,12 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
 
 HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
 
    if( iPicture )
    {
       iPicture->lpVtbl->Release( iPicture );
-      bResult = TRUE;
+      bResult = HB_TRUE;
    }
 
    return bResult;
@@ -602,7 +602,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
   int      toc =  0 ;
   HRGN     hrgn1;
   POINT    lpp = { 0,0 };
-  HB_BOOL  bResult = FALSE;
+  HB_BOOL  bResult = HB_FALSE;
   LPTSTR   lpImage = HB_TCHAR_CONVTO( image );
 
   hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING,
@@ -675,7 +675,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
             DeleteObject( hrgn1 );
 
             iPicture->lpVtbl->Release( iPicture );
-            bResult = TRUE ;
+            bResult = HB_TRUE ;
           }
         }
         GlobalFree( hGlobal );
@@ -691,7 +691,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
   HB_SYMBOL_UNUSED( wd );
   HB_SYMBOL_UNUSED( ht );
   HB_SYMBOL_UNUSED( image );
-  return FALSE;
+  return HB_FALSE;
 #endif
 }
 
@@ -987,7 +987,7 @@ HB_FUNC( WVT_SETPEN )
 
    if ( !HB_ISNUM( 1 ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 
    iPenStyle = hb_parni( 1 ) ;
@@ -1004,11 +1004,11 @@ HB_FUNC( WVT_SETPEN )
       }
       _s->currentPen = hPen;
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 
@@ -1025,7 +1025,7 @@ HB_FUNC( WVT_SETBRUSH )
 
    if ( !HB_ISNUM( 1 ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 
    lb.lbStyle = hb_parnl( 1 );
@@ -1044,11 +1044,11 @@ HB_FUNC( WVT_SETBRUSH )
       }
       _s->currentBrush = hBrush;
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 
@@ -1198,9 +1198,9 @@ HB_FUNC( WVT_DRAWIMAGE )
       #endif
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 #else
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -1268,10 +1268,10 @@ HB_FUNC( WVT_DRAWLABEL )
       #endif
       HB_TCHAR_FREE( text );
       DeleteObject( hFont );
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1545,7 +1545,7 @@ HB_FUNC( WVT_DRAWLINE )
       SelectObject( _s->hGuiDC, hOldPenGUI );
    }
    DeleteObject( hPen );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1739,7 +1739,7 @@ HB_FUNC( WVT_DRAWGRIDHORZ )
       }
    }
    #endif
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1756,7 +1756,7 @@ HB_FUNC( WVT_DRAWGRIDVERT )
 
    if ( ! iTabs )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 
    iCharWidth  = _s->PTEXTSIZE.x;
@@ -1789,7 +1789,7 @@ HB_FUNC( WVT_DRAWGRIDVERT )
       }
    }
    #endif
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1955,7 +1955,7 @@ HB_FUNC( WVT_DRAWBUTTON )
 #endif
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2098,10 +2098,10 @@ HB_FUNC( WVT_DRAWLABELEX )
       }
       #endif
       HB_TCHAR_FREE( text );
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2313,7 +2313,7 @@ HB_FUNC( WVT_DRAWLINEEX )
       break;
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2445,7 +2445,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    }
    #endif
    HB_TCHAR_FREE( text );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2500,7 +2500,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       }
       break;
    }
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2733,7 +2733,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   HB_BOOL bGF = FALSE;
+   HB_BOOL bGF = HB_FALSE;
 
    if ( _s->pGUI->hMSImg32 )
    {
@@ -2977,7 +2977,7 @@ HB_FUNC( WVT_CREATEFONT )
  */
 HB_FUNC( WVT_LOADPICTURE )
 {
-   HB_BOOL    bResult  = FALSE;
+   HB_BOOL    bResult  = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -2992,7 +2992,7 @@ HB_FUNC( WVT_LOADPICTURE )
       }
 
       _s->pGUI->iPicture[ iSlot ] = iPicture;
-      bResult = TRUE;
+      bResult = HB_TRUE;
    }
 #endif
    hb_retl( bResult );
@@ -3002,7 +3002,7 @@ HB_FUNC( WVT_LOADPICTURE )
 
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 {
-   HB_BOOL    bResult  = FALSE;
+   HB_BOOL    bResult  = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -3017,7 +3017,7 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
       }
 
       _s->pGUI->iPicture[ iSlot ] = iPicture;
-      bResult = TRUE;
+      bResult = HB_TRUE;
    }
 #endif
    hb_retl( bResult );
@@ -3090,11 +3090,11 @@ HB_FUNC( WVT_LOADPEN )
       }
       _s->pGUI->hUserPens[ iSlot ] = hPen;
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 }
 
@@ -3151,7 +3151,7 @@ HB_FUNC( WVT_RESTSCREEN )
    HBITMAP hBmp;
    HDC     hCompDC;
 
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    HB_BOOL bDoNotDestroyBMP = hb_parl( 6 );
 
    xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
@@ -3177,7 +3177,7 @@ HB_FUNC( WVT_RESTSCREEN )
                       0,  0,
                       SRCCOPY ) )
          {
-            bResult = TRUE;
+            bResult = HB_TRUE;
          }
       }
       else
@@ -3190,7 +3190,7 @@ HB_FUNC( WVT_RESTSCREEN )
                           hb_parvni( 5,2 ),
                           SRCCOPY ) )
          {
-            bResult = TRUE;
+            bResult = HB_TRUE;
          }
       }
    }
