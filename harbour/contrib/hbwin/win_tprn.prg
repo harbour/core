@@ -478,16 +478,21 @@ METHOD SetPos( nPosX, nPosY ) CLASS WIN_PRN
 
 METHOD SetColor( nClrText, nClrPane, nAlign ) CLASS WIN_PRN
 
-   ::TextColor := nClrText
-   ::BkColor := nClrPane
-   ::TextAlign := nAlign
+   IF HB_ISNUMERIC( nClrText )
+      ::TextColor := nClrText
+   ENDIF
+   IF HB_ISNUMERIC( nClrPane )
+      ::BkColor := nClrPane
+   ENDIF
+   IF HB_ISNUMERIC( nAlign )
+      ::TextAlign := nAlign
+   ENDIF
 
    RETURN win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign )
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    LOCAL lResult := .F.
    LOCAL nPosX
-   LOCAL hPen
 
    IF cString != NIL
 

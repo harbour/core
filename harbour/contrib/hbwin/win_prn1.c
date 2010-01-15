@@ -277,10 +277,11 @@ HB_FUNC( WIN_TEXTOUT )
          int iRow = hb_parni( 2 );
          int iCol = hb_parni( 3 );
          int iWidth = hb_parni( 6 ); /* defaults to 0 */
+         int iAlign = hb_parni( 7 ); /* defaults to 0 */
 
-         if( hb_parni( 7 ) == 1 )
+         if( iAlign == 1 )
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_RIGHT );
-         else if( hb_parni( 7 ) == 2 )
+         else if( iAlign == 2 )
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_CENTER );
          else
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_LEFT );
