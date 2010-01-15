@@ -277,14 +277,9 @@ HB_FUNC( WIN_TEXTOUT )
          int iRow = hb_parni( 2 );
          int iCol = hb_parni( 3 );
          int iWidth = hb_parni( 6 ); /* defaults to 0 */
-         int iAlign = hb_parni( 7 ); /* defaults to 0 */
 
-         if( iAlign == 1 )
-            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_RIGHT );
-         else if( iAlign == 2 )
-            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_CENTER );
-         else
-            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_LEFT );
+         if( HB_ISNUM( 7 ) )
+            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | hb_parni( 7 ) );
 
          if( iWidth < 0 && nLen < 1024 )
          {
@@ -773,8 +768,16 @@ HB_FUNC( WIN_ELLIPSE )
 HB_FUNC( WIN_SETBKMODE )
 {
    HDC hDC = win_HDC_par( 1 );
+   int iMode = 0;
 
-   hb_retni( hDC ? SetBkMode( win_HDC_par( 1 ), hb_parni( 2 ) ) : 0 );
+   if( hDC )
+   {
+      if( HB_ISNUM( 2 ) )
+         iMode = SetBkMode( win_HDC_par( 1 ), hb_parni( 2 ) );
+      else
+         iMode = GetBkMode( win_HDC_par( 1 ) );
+   }
+   hb_retni( iMode );
 }
 
 #endif

@@ -106,7 +106,7 @@ CREATE CLASS WIN_PRN
    METHOD SetPos( nPosX, nPosY )                       // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : 0 == left, 1 == right, 2 == centered
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : TA_LEFT, TA_RGIHT, TA_CENTER, TA_TOP, TA_BOTTOM, TA_BASELINE
    METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
 
 
@@ -195,6 +195,8 @@ CREATE CLASS WIN_PRN
    VAR TextColor
    VAR BkColor
    VAR TextAlign
+
+   VAR BkMode
 
    VAR hPen             INIT 0
    VAR PenStyle
@@ -490,6 +492,12 @@ METHOD SetColor( nClrText, nClrPane, nAlign ) CLASS WIN_PRN
 
    RETURN win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign )
 
+METHOD SetBkMode( nMode ) CLASS WIN_PRN
+   IF HB_ISNUMERIC( nMode )
+      ::BkMode := nMode
+   ENDIF
+   RETURN win_SetBkMode( ::hPrinterDc, nMode )
+
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    LOCAL lResult := .F.
    LOCAL nPosX
@@ -498,7 +506,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
 
       DEFAULT lNewLine TO .F.
       DEFAULT lUpdatePosX TO .T.
-      DEFAULT nAlign TO 0
+      DEFAULT nAlign TO HB_BITOR( TA_BOTTOM, TA_LEFT )
 
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
 
@@ -522,7 +530,7 @@ METHOD SetPen( nStyle, nWidth, nColor ) CLASS WIN_PRN
    ::PenStyle := nStyle
    ::PenWidth := nWidth
    ::PenColor := nColor
-   RETURN ! Empty( ::hPen := win_SetPen(::hPrinterDC, nStyle, nWidth, nColor ) )
+   RETURN ! Empty( ::hPen := win_SetPen( ::hPrinterDC, nStyle, nWidth, nColor ) )
 
 METHOD Line( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
    LOCAL lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
@@ -603,7 +611,7 @@ METHOD PCol() CLASS WIN_PRN
    RETURN Int( ( ::PosX - ::LeftMargin ) / ::CharWidth )   // Uses width of current character
 
 METHOD MaxRow() CLASS WIN_PRN
-   RETURN Int( ( ( ::BottomMargin - ::TopMargin ) + 1) / ::LineHeight ) - 1
+   RETURN Int( ( ( ::BottomMargin - ::TopMargin ) + 1 ) / ::LineHeight ) - 1
 
 METHOD MaxCol() CLASS WIN_PRN
    RETURN Int( ( ( ::RightMargin - ::LeftMargin ) + 1 ) / ::CharWidth ) - 1
@@ -641,7 +649,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
    IF nColor != NIL
       nColor := win_SetColor( ::hPrinterDC, nColor )
    ENDIF
-   lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign)
+   lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
    IF lCreated
       ::SetFont()  // Reset font
    ENDIF
@@ -650,11 +658,8 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
    ENDIF
    RETURN lResult
 
-METHOD SetBkMode( nMode ) CLASS WIN_PRN
-   RETURN win_SetBkMode( ::hPrinterDc, nMode )
-
 METHOD GetDeviceCaps( nCaps ) CLASS WIN_PRN
-   RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps)
+   RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps )
 
 // Bitmap class
 
