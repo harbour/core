@@ -78,12 +78,15 @@ CREATE CLASS WIN_PRN
                                     // Create() ( & StartDoc() ) must be called before printing can start.
    METHOD Destroy()                 // Calls EndDoc() - restores default font, Deletes DC.
                                     // Destroy() must be called to avoid memory leaks
+   DESTRUCTOR Destruct()
+
    METHOD StartDoc( cDocName )      // Calls StartPage()
    METHOD EndDoc( lAbortDoc )       // Calls EndPage() if lAbortDoc not .T.
    METHOD StartPage()
    METHOD EndPage( lStartNewPage )  // If lStartNewPage == .T. then StartPage() is called for the next page of output
    METHOD NewLine()
-   METHOD NewPage()
+   METHOD NewPage( lDelay )
+   METHOD CheckPage()
    METHOD GetDocumentProperties()
    METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet )
                                                                  // NB: nWidth is in "CharactersPerInch"
@@ -105,6 +108,8 @@ CREATE CLASS WIN_PRN
 
    METHOD SetPos( nPosX, nPosY )                       // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
+   METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
+                                                                     // Set Background mode
 
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : TA_LEFT, TA_RGIHT, TA_CENTER, TA_TOP, TA_BOTTOM, TA_BASELINE
    METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
@@ -122,7 +127,7 @@ CREATE CLASS WIN_PRN
    METHOD GetTextHeight( cString )
    METHOD DrawBitMap( oBmp )
 
-//  Clipper DOS compatible functions.
+   /* Clipper DOS compatible functions. */
    METHOD SetPrc( nRow, nCol )      // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()
@@ -138,14 +143,13 @@ CREATE CLASS WIN_PRN
                       nWidth, nBold, lUnderLine, lItalic, nCharSet,; // in specified font and color.
                       lNewLine, lUpdatePosX, nColor, nAlign )        // Restore original font and colour
                                                                      // after printing.
-   METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
-                                                                     // Set Background mode
 
    METHOD GetDeviceCaps( nCaps )
 
    VAR PrinterName      INIT ""
    VAR Printing         INIT .F.
    VAR HavePrinted      INIT .F.
+   VAR PageInit         INIT .F.
    VAR PageNumber       INIT 0
    VAR hPrinterDc       INIT 0
 
@@ -245,7 +249,7 @@ METHOD Create() CLASS WIN_PRN
       // Set the standard font
       ::SetDefaultFont()
       ::PageNumber := 0
-      ::HavePrinted := ::Printing := .F.
+      ::HavePrinted := ::Printing := ::PageInit := .F.
       ::fOldFormType := ::FormType  // Last formtype used
       ::fOldLandScape := ::LandScape
       ::fOldBinNumber := ::BinNumber
@@ -260,9 +264,14 @@ METHOD Destroy() CLASS WIN_PRN
       IF ::Printing
          ::EndDoc()
       ENDIF
-      ::hPrinterDC :=   win_DeleteDC( ::hPrinterDC )
+      win_DeleteDC( ::hPrinterDC )
+      ::hPrinterDC := NIL
    ENDIF
    RETURN .T.
+
+METHOD PROCEDURE Destruct() CLASS WIN_PRN
+   ::Destroy()
+   RETURN
 
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
@@ -290,8 +299,7 @@ METHOD EndDoc( lAbortDoc ) CLASS WIN_PRN
       ::EndPage( .F. )
       win_EndDoc( ::hPrinterDC )
    ENDIF
-   ::Printing := .F.
-   ::HavePrinted := .F.
+   ::HavePrinted := ::Printing := ::PageInit := .F.
    ::PageNumber := 0
    RETURN .T.
 
@@ -328,9 +336,21 @@ METHOD StartPage() CLASS WIN_PRN
    ENDIF
    win_StartPage( ::hPrinterDC )
    ::PageNumber++
+   ::PageInit := .F.
    ::PosX := ::LeftMargin
    ::PosY := ::TopMargin
    RETURN .T.
+
+METHOD CheckPage() CLASS WIN_PRN
+   IF ::PageInit
+      ::PageInit := .F.
+      win_StartPage( ::hPrinterDC )
+      ::PageNumber++
+      IF win_osIs9X() // Reset font on Win9X
+         ::SetFont()
+      ENDIF
+   ENDIF
+   RETURN ::Printing
 
 METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
 
@@ -338,9 +358,14 @@ METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
 
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
-      ::StartPage()
-      IF win_osIs9X() // Reset font on Win9X
-         ::SetFont()
+      IF ::PageInit
+         ::PosX := ::LeftMargin
+         ::PosY := ::TopMargin
+      ELSE
+         ::StartPage()
+         IF win_osIs9X() // Reset font on Win9X
+            ::SetFont()
+         ENDIF
       ENDIF
    ENDIF
 
@@ -351,8 +376,17 @@ METHOD NewLine() CLASS WIN_PRN
    ::PosY += ::LineHeight
    RETURN ::PosY
 
-METHOD NewPage() CLASS WIN_PRN
-   ::EndPage( .T. )
+METHOD NewPage( lDelay ) CLASS WIN_PRN
+
+   DEFAULT lDelay TO .F.
+
+   IF ::Printing
+      IF lDelay
+         ::PageInit := .T.
+      ENDIF
+      ::EndPage( .T. )
+   ENDIF
+
    RETURN .T.
 
 METHOD GetDocumentProperties() CLASS WIN_PRN
@@ -502,7 +536,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    LOCAL lResult := .F.
    LOCAL nPosX
 
-   IF cString != NIL
+   IF cString != NIL .AND. ::CheckPage()
 
       DEFAULT lNewLine TO .F.
       DEFAULT lUpdatePosX TO .T.
@@ -518,6 +552,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
       IF lNewLine
          ::NewLine()
       ENDIF
+
    ENDIF
 
    RETURN lResult
@@ -533,37 +568,57 @@ METHOD SetPen( nStyle, nWidth, nColor ) CLASS WIN_PRN
    RETURN ! Empty( ::hPen := win_SetPen( ::hPrinterDC, nStyle, nWidth, nColor ) )
 
 METHOD Line( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
-   LOCAL lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   IF lResult
-      ::HavePrinted := .T.
+   LOCAL lResult := .F.
+
+   IF ::CheckPage()
+      lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
    RETURN lResult
 
 METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight ) CLASS WIN_PRN
-   LOCAL lResult := win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
-   IF lResult
-      ::HavePrinted := .T.
+   LOCAL lResult := .F.
+
+   IF ::CheckPage()
+      lResult := win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
    RETURN lResult
 
 METHOD Arc( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
-   LOCAL lResult := win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   IF lResult
-      ::HavePrinted := .T.
+   LOCAL lResult := .F.
+
+   IF ::CheckPage()
+      lResult := win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
    RETURN lResult
 
 METHOD Ellipse( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
-   LOCAL lResult := win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   IF lResult
-      ::HavePrinted := .T.
+   LOCAL lResult := .F.
+
+   IF ::CheckPage()
+      lResult := win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
    RETURN lResult
 
 METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS WIN_PRN
-   LOCAL lResult := win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor )
-   IF lResult
-      ::HavePrinted := .T.
+   LOCAL lResult := .F.
+
+   IF ::CheckPage()
+      lResult := win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor )
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
    RETURN lResult
 
@@ -593,7 +648,7 @@ METHOD GetTextHeight( cString ) CLASS WIN_PRN
 
 METHOD DrawBitMap( oBmp ) CLASS WIN_PRN
    LOCAL lResult := .F.
-   IF ::BitMapsOk .AND. ::Printing .AND. ! Empty( oBmp:BitMap )
+   IF ::BitMapsOk .AND. ::CheckPage() .AND. ! Empty( oBmp:BitMap )
       IF ( lResult := win_DrawBitMap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:rect[ 3 ], oBmp:Rect[ 4 ] ) )
          ::HavePrinted := .T.
       ENDIF
@@ -629,32 +684,39 @@ METHOD Inch_To_PosY( nInch ) CLASS WIN_PRN
    RETURN Int( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
 
 METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnderLine, lItalic, nCharSet, lNewLine, lUpdatePosX, nColor, nAlign ) CLASS WIN_PRN
-   LOCAL lCreated := .F.
    LOCAL lResult
    LOCAL nDiv := 0
    LOCAL cType
+   LOCAL hFont
 
-   DEFAULT nPointSize TO ::FontPointSize
+   IF ::CheckPage()
 
-   IF cFont != NIL
-      cType := ValType( nWidth )
-      IF cType == "A"
-         nDiv   := nWidth[ 1 ]
-         nWidth := nWidth[ 2 ]
-      ELSEIF cType == "N" .AND. ! Empty( nWidth )
-         nDiv := 1
+      DEFAULT nPointSize TO ::FontPointSize
+
+      IF cFont != NIL
+         cType := ValType( nWidth )
+         IF cType == "A"
+            nDiv   := nWidth[ 1 ]
+            nWidth := nWidth[ 2 ]
+         ELSEIF cType == "N" .AND. ! Empty( nWidth )
+            nDiv := 1
+         ENDIF
+         hFont := ::hFont
+         ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
       ENDIF
-      lCreated := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet ) )
-   ENDIF
-   IF nColor != NIL
-      nColor := win_SetColor( ::hPrinterDC, nColor )
-   ENDIF
-   lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
-   IF lCreated
-      ::SetFont()  // Reset font
-   ENDIF
-   IF nColor != NIL
-      win_SetColor( ::hPrinterDC, nColor )  // Reset Color
+      IF nColor != NIL
+         nColor := win_SetColor( ::hPrinterDC, nColor )
+      ENDIF
+
+      lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
+
+      IF cFont != NIL
+         ::hFont := hFont     // Reset Font
+      ENDIF
+      IF nColor != NIL
+         win_SetColor( ::hPrinterDC, nColor )  // Reset Color
+      ENDIF
+
    ENDIF
    RETURN lResult
 
