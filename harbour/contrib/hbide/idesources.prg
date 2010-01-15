@@ -259,14 +259,14 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
          lSave := .F.
 
       ELSEIF lCanCancel
-         n := hbide_getYesNoCancel( oEditor:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         n := hbide_getYesNoCancel( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
          IF ( lCanceled := ( n == QMessageBox_Cancel ) )
             RETURN .F.
          ENDIF
          lSave := ( n == QMessageBox_Yes    )
 
       ELSE
-         lSave := hbide_getYesNo( oEditor:oTab:Caption, "Has been modified, save this source?", 'Save?' )
+         lSave := hbide_getYesNo( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
 
       ENDIF
 

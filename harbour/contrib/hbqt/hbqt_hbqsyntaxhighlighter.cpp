@@ -63,37 +63,24 @@
 #include <QHash>
 #include <QTextCharFormat>
 
+HBQTextBlockUserData::HBQTextBlockUserData()
+   : QTextBlockUserData()
+{
+   state = -1;
+}
+HBQTextBlockUserData::~HBQTextBlockUserData()
+{
+}
+void HBQTextBlockUserData::setData( int iState )
+{
+   state = iState;
+}
+
+
 HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    : QSyntaxHighlighter( parent )
 {
    HighlightingRule rule;
-   #if 0
-   keywordFormat.setForeground( Qt::darkBlue );
-   keywordFormat.setFontWeight( QFont::Bold );
-   QStringList keywordPatterns;
-   keywordPatterns << "\\bchar\\b"     << "\\bclass\\b"     << "\\bconst\\b"
-                   << "\\bdouble\\b"   << "\\benum\\b"      << "\\bexplicit\\b"
-                   << "\\bfriend\\b"   << "\\binline\\b"    << "\\bint\\b"
-                   << "\\blong\\b"     << "\\bnamespace\\b" << "\\boperator\\b"
-                   << "\\bprivate\\b"  << "\\bprotected\\b" << "\\bpublic\\b"
-                   << "\\bshort\\b"    << "\\bsignals\\b"   << "\\bsigned\\b"
-                   << "\\bslots\\b"    << "\\bstatic\\b"    << "\\bstruct\\b"
-                   << "\\btemplate\\b" << "\\btypedef\\b"   << "\\btypename\\b"
-                   << "\\bunion\\b"    << "\\bunsigned\\b"  << "\\bvirtual\\b"
-                   << "\\bvoid\\b"     << "\\bvolatile\\b";
-   foreach( const QString &pattern, keywordPatterns )
-   {
-      rule.pattern = QRegExp( pattern );
-      rule.format = keywordFormat;
-      highlightingRules.append( rule );
-   }
-   #endif
-   classFormat.setFontWeight( QFont::Bold );
-   classFormat.setForeground( Qt::darkMagenta );
-   rule.pattern = QRegExp( "\\bQ[A-Za-z]+\\b" );
-   rule.format = classFormat;
-   highlightingRules.append( rule );
-
    multiLineCommentFormat.setForeground( Qt::red );
 
    commentStartExpression = QRegExp( "/\\*" );
@@ -143,22 +130,13 @@ void HBQSyntaxHighlighter::setHBMultiLineCommentFormat( const QTextCharFormat & 
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
+   //HB_TRACE( HB_TR_ALWAYS, ( "text = %s", ( char * ) &text ) );
+   #if 0
+   return ;
+   #endif
+
    QRegExp expression;
 
-   #if 0
-   int index( 0 );
-   foreach( const HighlightingRule &rule, highlightingRules )
-   {
-      expression = QRegExp( rule.pattern );
-      index = expression.indexIn( text );
-      while( index >= 0 )
-      {
-         int length = expression.matchedLength();
-         setFormat( index, length, rule.format );
-         index = expression.indexIn( text, index + length );
-      }
-   }
-   #else
    foreach( const hHighlightingRule &rule, hhighlightingRules )
    {
       QRegExp expression( rule.pattern );
@@ -170,8 +148,6 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
          index = expression.indexIn( text, index + length );
       }
    }
-   #endif
-
    setCurrentBlockState( 0 );
 
    int startIndex = 0;
@@ -314,6 +290,50 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBRULE )
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBFORMAT )
 {
    hbqt_par_HBQSyntaxHighlighter( 1 )->setHBFormat( hbqt_par_QString( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+}
+
+
+
+
+
+QT_G_FUNC( hbqt_gcRelease_HBQTextBlockUserData )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   if( p && p->ph )
+   {
+      delete ( ( HBQTextBlockUserData * ) p->ph );
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_HBQTextBlockUserData                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_HBQTextBlockUserData                   Object Already deleted!" ) );
+   }
+}
+
+void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->func = hbqt_gcRelease_HBQTextBlockUserData;
+   HB_TRACE( HB_TR_DEBUG, ( "          new_HBQTextBlockUserData                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   return p;
+}
+
+HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
+{
+   void * pObj = NULL;
+
+   pObj = new HBQTextBlockUserData();
+
+   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( pObj ) );
+}
+
+HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_SETDATA )
+{
+   hbqt_par_HBQTextBlockUserData( 1 )->setData( hb_parni( 2 ) );
 }
 
 #endif

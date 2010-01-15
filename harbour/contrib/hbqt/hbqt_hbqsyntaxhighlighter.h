@@ -56,8 +56,21 @@
 /*----------------------------------------------------------------------*/
 
 #include <QSyntaxHighlighter>
+#include <QTextBlockUserData>
 
 class QTextDocument;
+
+class HBQTextBlockUserData : public QTextBlockUserData
+{
+
+public:
+   HBQTextBlockUserData();
+   ~HBQTextBlockUserData();
+
+   void setData( int state );
+
+   int state;
+};
 
 class HBQSyntaxHighlighter : public QSyntaxHighlighter
 {

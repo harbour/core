@@ -482,11 +482,11 @@ METHOD HbIde:execAction( cKey )
          ::oFR:show()
       ENDIF
    CASE cKey == "SetMark"
-      //
+      ::oEM:setMark()
    CASE cKey == "GotoMark"
-      //
+      ::oEM:gotoMark()
    CASE cKey == "Goto"
-      ::oEM:goto()
+      ::oEM:goTo()
    CASE cKey == "ToUpper"
       ::oEM:convertSelection( cKey )
    CASE cKey == "ToLower"

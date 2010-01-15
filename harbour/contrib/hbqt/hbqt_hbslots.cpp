@@ -664,7 +664,7 @@ static void hbqt_SlotsExecQRectInt( HBSlots * t_slots, QObject * object, const c
    if( object )
    {
       int i = object->property( pszEvent ).toInt();
-      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && t_slots->listObj[ i - 1 ] == object && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( r ) );
