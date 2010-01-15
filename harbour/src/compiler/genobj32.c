@@ -101,7 +101,7 @@ static ULONG GetSymbolsAmount( HB_COMP_DECL )
    return ulAmount;
 }
 
-static BOOL IsExternal( HB_COMP_DECL, ULONG ulSymbol )
+static HB_BOOL IsExternal( HB_COMP_DECL, ULONG ulSymbol )
 {
    PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
    ULONG ul = 0;

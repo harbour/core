@@ -67,7 +67,7 @@ static void hb_pp_ErrorGen( void * cargo,
       hb_compGenWarning( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    else
       hb_compGenError( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
-   HB_COMP_PARAM->fError = FALSE;
+   HB_COMP_PARAM->fError = HB_FALSE;
    HB_COMP_PARAM->currLine = iCurrLine;
    HB_COMP_PARAM->currModule = currModule;
 }
@@ -101,7 +101,7 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
       int iCurrLine = HB_COMP_PARAM->currLine;
       HB_COMP_PARAM->currLine = iLine;
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
-      HB_COMP_PARAM->fError = FALSE;
+      HB_COMP_PARAM->fError = HB_FALSE;
       HB_COMP_PARAM->currLine = iCurrLine;
    }
    else
@@ -115,11 +115,11 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
    }
 }
 
-static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
-                                  int * piValue, BOOL fSet )
+static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
+                                     int * piValue, HB_BOOL fSet )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
-   BOOL fError = FALSE;
+   HB_BOOL fError = HB_FALSE;
    int iValue, i;
 
    iValue = *piValue;
@@ -171,7 +171,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                if( iValue >= 0 && iValue <= 2 )
                   HB_COMP_PARAM->iStartProc = iValue;
                else
-                  fError = TRUE;
+                  fError = HB_TRUE;
             }
             else
                iValue = HB_COMP_PARAM->iStartProc;
@@ -208,7 +208,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                if( iValue >= 0 && iValue <= 3 )
                   HB_COMP_PARAM->iWarnings = iValue;
                else
-                  fError = TRUE;
+                  fError = HB_TRUE;
             }
             else
                iValue = HB_COMP_PARAM->iWarnings;
@@ -228,7 +228,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             break;
 
          default:
-            fError = TRUE;
+            fError = HB_TRUE;
       }
    }
    else if( i == 2 )
@@ -295,7 +295,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                iFlag = HB_COMPFLAG_ARRSTR;
                break;
             default:
-               fError = TRUE;
+               fError = HB_TRUE;
          }
          if( !fError && iFlag )
          {
@@ -335,7 +335,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             iValue = HB_COMP_PARAM->fPPT ? 1 : 0;
       }
       else
-         fError = TRUE;
+         fError = HB_TRUE;
    }
    /* xHarbour extension */
    else if( i >= 4 && hb_strnicmp( szSwitch, "TEXTHIDDEN", i ) == 0 )
@@ -349,7 +349,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          iValue = HB_COMP_PARAM->iHidden;
    }
    else
-      fError = TRUE;
+      fError = HB_TRUE;
 
    *piValue = iValue;
 

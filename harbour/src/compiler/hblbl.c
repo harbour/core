@@ -90,7 +90,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalsenear )
 {
    ULONG ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 2;
 }
@@ -100,7 +100,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalse )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 3;
 }
@@ -110,7 +110,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalsefar )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 4;
 }
@@ -119,7 +119,7 @@ static HB_LABEL_FUNC( hb_p_jumptruenear )
 {
    ULONG ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 2;
 }
@@ -129,7 +129,7 @@ static HB_LABEL_FUNC( hb_p_jumptrue )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 3;
 }
@@ -139,7 +139,7 @@ static HB_LABEL_FUNC( hb_p_jumptruefar )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
-   cargo->fCondJump = TRUE;
+   cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
    return 4;
 }

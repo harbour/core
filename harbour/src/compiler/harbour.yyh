@@ -271,7 +271,7 @@ typedef union YYSTYPE
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_LONG lNumber;     /* to hold a temporary long number */
-   BOOL    bTrue;
+   HB_BOOL bTrue;
    HB_EXPR_PTR asExpr;
    void * pVoid;        /* to hold any memory structure we may need */
    struct
@@ -295,7 +295,7 @@ typedef union YYSTYPE
    {
       char *   string;
       int      length;
-      BOOL     dealloc;
+      HB_BOOL  dealloc;
    } valChar;
    struct
    {
@@ -305,7 +305,7 @@ typedef union YYSTYPE
    } asCodeblock;
    struct
    {
-      BOOL bMacro;
+      HB_BOOL bMacro;
       union
       {
          char * string;
@@ -321,6 +321,3 @@ typedef union YYSTYPE
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
-
-
-

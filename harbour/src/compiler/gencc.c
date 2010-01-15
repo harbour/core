@@ -114,26 +114,26 @@ static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCo
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
    {
       LONG lOffset = 0;
-      BOOL fNot = FALSE;
+      HB_BOOL fNot = HB_FALSE;
       int iSize = 0;
 
       switch( pFunc->pCode[ lPCodePos + 1 ] )
       {
          case HB_P_JUMPFALSENEAR:
             lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 2 ] );
-            fNot = TRUE;
+            fNot = HB_TRUE;
             iSize = 3;
             break;
 
          case HB_P_JUMPFALSE:
             lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
-            fNot = TRUE;
+            fNot = HB_TRUE;
             iSize = 4;
             break;
 
          case HB_P_JUMPFALSEFAR:
             lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 2 ] );
-            fNot = TRUE;
+            fNot = HB_TRUE;
             iSize = 5;
             break;
 
@@ -414,7 +414,7 @@ static HB_GENC_FUNC( hb_p_endproc )
    {
       if( cargo->iNestedBlock )
       {
-         cargo->fEndRequest = TRUE;
+         cargo->fEndRequest = HB_TRUE;
          fprintf( cargo->yyc, "\thb_xvmEndProc();\n" );
       }
       fprintf( cargo->yyc, "\tbreak;\n" );
@@ -426,7 +426,7 @@ static HB_GENC_FUNC( hb_p_false )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushLogical( FALSE );\n" );
+   fprintf( cargo->yyc, "\thb_xvmPushLogical( HB_FALSE );\n" );
    return 1;
 }
 
@@ -1602,7 +1602,7 @@ static HB_GENC_FUNC( hb_p_true )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushLogical( TRUE );\n" );
+   fprintf( cargo->yyc, "\thb_xvmPushLogical( HB_TRUE );\n" );
    return 1;
 }
 
@@ -1682,7 +1682,7 @@ static HB_GENC_FUNC( hb_p_switch )
 {
    USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
    ULONG ulStart = lPCodePos, ulNewPos;
-   BOOL fNum = FALSE, fStr = FALSE, fDefault = FALSE;
+   HB_BOOL fNum = HB_FALSE, fStr = HB_FALSE, fDefault = HB_FALSE;
 
    HB_GENC_LABEL();
 
@@ -1692,16 +1692,16 @@ static HB_GENC_FUNC( hb_p_switch )
       switch( pFunc->pCode[ lPCodePos ] )
       {
          case HB_P_PUSHLONG:
-            fNum = TRUE;
+            fNum = HB_TRUE;
             lPCodePos += 5;
             break;
          case HB_P_PUSHSTRSHORT:
-            fStr = TRUE;
+            fStr = HB_TRUE;
             lPCodePos += 2 + pFunc->pCode[ lPCodePos + 1 ];
             break;
          case HB_P_PUSHNIL:
             /* default clause */
-            fDefault = TRUE;
+            fDefault = HB_TRUE;
             lPCodePos++;
             break;
       }
@@ -2267,9 +2267,9 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
 
    label_info.yyc = yyc;
    label_info.fVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
-   label_info.fSetSeqBegin = FALSE;
-   label_info.fCondJump = FALSE;
-   label_info.fEndRequest = FALSE;
+   label_info.fSetSeqBegin = HB_FALSE;
+   label_info.fCondJump = HB_FALSE;
+   label_info.fEndRequest = HB_FALSE;
    label_info.iNestedBlock = 0;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
@@ -2282,7 +2282,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
 
    fprintf( yyc, "{\n" );
    if( label_info.fCondJump )
-      fprintf( yyc, "   BOOL fValue;\n" );
+      fprintf( yyc, "   HB_BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
 
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );

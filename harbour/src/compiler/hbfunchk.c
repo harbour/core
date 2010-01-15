@@ -115,7 +115,7 @@ static HB_FUNCINFO hb_StdFunc[] =
 
 #define HB_STD_FUNCOUNT    ( sizeof( hb_StdFunc ) / sizeof( HB_FUNCINFO ) )
 
-BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
+HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {
    unsigned int uiFirst = 0, uiLast = HB_STD_FUNCOUNT - 1, uiMiddle;
    int iLen = ( int ) strlen( szFuncCall ), iCmp;
@@ -165,9 +165,9 @@ BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
 
-         return FALSE;
+         return HB_FALSE;
       }
    }
 
-   return TRUE;
+   return HB_TRUE;
 }

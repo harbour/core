@@ -218,20 +218,20 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_MACROTEXT |
                          HB_COMPFLAG_SHORTCUTS;
 
-      pComp->fLongOptimize    = TRUE;
-      pComp->fPPO             = FALSE;    /* flag indicating, is ppo output needed */
-      pComp->fLineNumbers     = TRUE;     /* holds if we need pcodes with line numbers */
-      pComp->fAnyWarning      = FALSE;    /* holds if there was any warning during the compilation process */
-      pComp->fAutoMemvarAssume= FALSE;    /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-      pComp->fForceMemvars    = FALSE;    /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-      pComp->fDebugInfo       = FALSE;    /* holds if generate debugger required info */
-      pComp->fNoStartUp       = FALSE;    /* C code generation embed HB_FS_FIRST or not */
-      pComp->fCredits         = FALSE;    /* print credits */
-      pComp->fBuildInfo       = FALSE;    /* print build info */
-      pComp->fLogo            = TRUE;     /* print logo */
-      pComp->fSingleModule    = FALSE;
-      pComp->fError           = FALSE;
-      pComp->fINCLUDE         = TRUE;
+      pComp->fLongOptimize    = HB_TRUE;
+      pComp->fPPO             = HB_FALSE;    /* flag indicating, is ppo output needed */
+      pComp->fLineNumbers     = HB_TRUE;     /* holds if we need pcodes with line numbers */
+      pComp->fAnyWarning      = HB_FALSE;    /* holds if there was any warning during the compilation process */
+      pComp->fAutoMemvarAssume= HB_FALSE;    /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+      pComp->fForceMemvars    = HB_FALSE;    /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+      pComp->fDebugInfo       = HB_FALSE;    /* holds if generate debugger required info */
+      pComp->fNoStartUp       = HB_FALSE;    /* C code generation embed HB_FS_FIRST or not */
+      pComp->fCredits         = HB_FALSE;    /* print credits */
+      pComp->fBuildInfo       = HB_FALSE;    /* print build info */
+      pComp->fLogo            = HB_TRUE;     /* print logo */
+      pComp->fSingleModule    = HB_FALSE;
+      pComp->fError           = HB_FALSE;
+      pComp->fINCLUDE         = HB_TRUE;
 
       pComp->iSyntaxCheckOnly = 0;        /* syntax check only */
       pComp->iStartProc       = 0;        /* no implicit starting procedure */

@@ -32,7 +32,7 @@
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
-static void hb_compGenCFunc( FILE *yyc, const char *cDecor, const char *szName, BOOL fStrip, int iFuncSuffix );
+static void hb_compGenCFunc( FILE *yyc, const char *cDecor, const char *szName, HB_BOOL fStrip, int iFuncSuffix );
 static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, const char * szSourceFile );
 
 /* helper structure to pass information */
@@ -40,7 +40,7 @@ typedef struct HB_stru_genc_info
 {
    HB_COMP_DECL;
    FILE * yyc;
-   BOOL bVerbose;
+   HB_BOOL bVerbose;
    ULONG ulEndBlockPos;
 } HB_GENC_INFO, * HB_GENC_INFO_PTR;
 
@@ -131,7 +131,7 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
    }
 }
 
-static void hb_compGenCStdHeaders( HB_COMP_DECL, FILE * yyc, BOOL fHbInLine )
+static void hb_compGenCStdHeaders( HB_COMP_DECL, FILE * yyc, HB_BOOL fHbInLine )
 {
    fprintf( yyc, "#include \"hbvmpub.h\"\n" );
 
@@ -162,7 +162,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    PFUNCTION pFunc;
    PINLINE pInline;
    FILE * yyc; /* file handle for C output */
-   BOOL fHasHbInline = FALSE;
+   HB_BOOL fHasHbInline = HB_FALSE;
    int iFuncSuffix;
 
    hb_fsFNameMerge( szFileName, pFileName );
@@ -213,7 +213,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       {
          if( pInline->szName )
          {
-            fHasHbInline = TRUE;
+            fHasHbInline = HB_TRUE;
             break;
          }
          pInline = pInline->pNext;
@@ -239,16 +239,16 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             {
                iFuncSuffix = pSym->pFunc ? pSym->pFunc->iFuncSuffix : 0;
                if( pSym->cScope & HB_FS_INIT )
-                  hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pSym->szName, TRUE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pSym->szName, HB_TRUE, iFuncSuffix );
                else if( pSym->cScope & HB_FS_EXIT )
-                  hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pSym->szName, TRUE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pSym->szName, HB_TRUE, iFuncSuffix );
                else if( pSym->cScope & HB_FS_STATIC )
-                  hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pSym->szName, FALSE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pSym->szName, HB_FALSE, iFuncSuffix );
                else
-                  hb_compGenCFunc( yyc, "HB_FUNC( %s );\n", pSym->szName, FALSE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "HB_FUNC( %s );\n", pSym->szName, HB_FALSE, iFuncSuffix );
             }
             else if( ( pSym->cScope & HB_FS_DEFERRED ) == 0 ) /* it's not a function declared as dynamic */
-               hb_compGenCFunc( yyc, "HB_FUNC_EXTERN( %s );\n", pSym->szName, FALSE, 0 );
+               hb_compGenCFunc( yyc, "HB_FUNC_EXTERN( %s );\n", pSym->szName, HB_FALSE, 0 );
          }
          pSym = pSym->pNext;
       }
@@ -313,16 +313,16 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
                iFuncSuffix = pSym->pFunc ? pSym->pFunc->iFuncSuffix : 0;
                if( pSym->cScope & HB_FS_INIT )
-                  hb_compGenCFunc( yyc, "}, {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, TRUE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "}, {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, HB_TRUE, iFuncSuffix );
                else if( pSym->cScope & HB_FS_EXIT )
-                  hb_compGenCFunc( yyc, "}, {HB_EXIT_FUNCNAME( %s )}, NULL }", pSym->szName, TRUE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "}, {HB_EXIT_FUNCNAME( %s )}, NULL }", pSym->szName, HB_TRUE, iFuncSuffix );
                else
-                  hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, FALSE, iFuncSuffix );
+                  hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, HB_FALSE, iFuncSuffix );
             }
             else if( pSym->cScope & HB_FS_DEFERRED ) /* is it a function declared as dynamic */
                fprintf( yyc, " | HB_FS_DEFERRED}, {NULL}, NULL }" );
             else if( pSym->iFunc ) /* is it a function called from this module */
-               hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, FALSE, 0 );
+               hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, HB_FALSE, 0 );
             else
                fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar | alias | message */
          }
@@ -350,15 +350,15 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                fprintf( yyc, "HB_FUNC_INITLINES()\n" );
             /* Is it an INIT FUNCTION/PROCEDURE */
             else if( pFunc->cScope & HB_FS_INIT )
-               hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )\n", pFunc->szName, TRUE, pFunc->iFuncSuffix );
+               hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )\n", pFunc->szName, HB_TRUE, pFunc->iFuncSuffix );
             /* Is it an EXIT FUNCTION/PROCEDURE */
             else if( pFunc->cScope & HB_FS_EXIT )
-               hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s )\n", pFunc->szName, TRUE, pFunc->iFuncSuffix );
+               hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s )\n", pFunc->szName, HB_TRUE, pFunc->iFuncSuffix );
             /* Is it a STATIC FUNCTION/PROCEDURE */
             else if( pFunc->cScope & HB_FS_STATIC )
-               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pFunc->szName, FALSE, pFunc->iFuncSuffix );
+               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pFunc->szName, HB_FALSE, pFunc->iFuncSuffix );
             else /* Then it must be PUBLIC FUNCTION/PROCEDURE */
-               hb_compGenCFunc( yyc, "HB_FUNC( %s )\n", pFunc->szName, FALSE, pFunc->iFuncSuffix );
+               hb_compGenCFunc( yyc, "HB_FUNC( %s )\n", pFunc->szName, HB_FALSE, pFunc->iFuncSuffix );
 
             if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
                hb_compGenCRealCode( HB_COMP_PARAM, pFunc, yyc );
@@ -387,7 +387,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             fprintf( yyc, "\n" );
 
             if( pInline->szName )
-               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName, FALSE, 0 );
+               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName, HB_FALSE, 0 );
 
             fprintf( yyc, "%s", pInline->pCode );
          }
@@ -403,8 +403,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          {
             if( !fHasHbInline )
             {
-               hb_compGenCStdHeaders( HB_COMP_PARAM, yyc, FALSE );
-               fHasHbInline = TRUE;
+               hb_compGenCStdHeaders( HB_COMP_PARAM, yyc, HB_FALSE );
+               fHasHbInline = HB_TRUE;
             }
             fprintf( yyc, "#line %i ", pInline->iLine );
             hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
@@ -412,7 +412,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             fprintf( yyc, "\n" );
 
             if( pInline->szName )
-               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName, FALSE, 0 );
+               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName, HB_FALSE, 0 );
 
             fprintf( yyc, "%s", pInline->pCode );
          }
@@ -451,7 +451,7 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, 
 }
 
 static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
-                             BOOL fStrip, int iFuncSuffix )
+                             HB_BOOL fStrip, int iFuncSuffix )
 {
    int i = 0;
 

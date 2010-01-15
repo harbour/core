@@ -129,9 +129,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'a':
             case 'A':
                if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fAutoMemvarAssume = FALSE;
+                  HB_COMP_PARAM->fAutoMemvarAssume = HB_FALSE;
                else
-                  HB_COMP_PARAM->fAutoMemvarAssume = TRUE;
+                  HB_COMP_PARAM->fAutoMemvarAssume = HB_TRUE;
                break;
 
             case 'b':
@@ -145,15 +145,15 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                szOption[i] = '\0';
 
                if( strcmp( szOption, "BUILD" ) == 0 )
-                  HB_COMP_PARAM->fBuildInfo = TRUE;
+                  HB_COMP_PARAM->fBuildInfo = HB_TRUE;
                else
                {
                   if( *( s + 1 ) == '-' )
-                     HB_COMP_PARAM->fDebugInfo = FALSE;
+                     HB_COMP_PARAM->fDebugInfo = HB_FALSE;
                   else
                   {
-                     HB_COMP_PARAM->fDebugInfo = TRUE;
-                     HB_COMP_PARAM->fLineNumbers = TRUE;
+                     HB_COMP_PARAM->fDebugInfo = HB_TRUE;
+                     HB_COMP_PARAM->fLineNumbers = HB_TRUE;
                   }
                }
 
@@ -175,7 +175,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                    strcmp( szOption, "CREDIT" ) == 0 ||
                    strcmp( szOption, "CREDI" ) == 0 ||
                    strcmp( szOption, "CRED" ) == 0 )
-                  HB_COMP_PARAM->fCredits = TRUE;
+                  HB_COMP_PARAM->fCredits = HB_TRUE;
                else
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
 
@@ -301,21 +301,21 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                switch( *( s + 1 ) )
                {
                   case '-':
-                     HB_COMP_PARAM->fINCLUDE = FALSE;
+                     HB_COMP_PARAM->fINCLUDE = HB_FALSE;
                      break;
 
                   case '+':
-                     HB_COMP_PARAM->fINCLUDE = TRUE;
+                     HB_COMP_PARAM->fINCLUDE = HB_TRUE;
                      break;
 
                   default:
-                     hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, FALSE );
+                     hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, HB_FALSE );
                }
                break;
 
             case 'j':
             case 'J':
-               HB_COMP_PARAM->fI18n = TRUE;
+               HB_COMP_PARAM->fI18n = HB_TRUE;
                if( s[ 1 ] )
                   HB_COMP_PARAM->pI18nFileName = hb_fsFNameSplit( s + 1 );
                break;
@@ -332,8 +332,8 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      case '?':
                         hb_compPrintLogo( HB_COMP_PARAM );
                         hb_compPrintModes( HB_COMP_PARAM );
-                        HB_COMP_PARAM->fLogo = FALSE;
-                        HB_COMP_PARAM->fQuiet = TRUE;
+                        HB_COMP_PARAM->fLogo = HB_FALSE;
+                        HB_COMP_PARAM->fQuiet = HB_TRUE;
                         break;
 
                      case 'h':
@@ -444,17 +444,17 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'l':
             case 'L':
                if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fLineNumbers = TRUE;
+                  HB_COMP_PARAM->fLineNumbers = HB_TRUE;
                else
-                  HB_COMP_PARAM->fLineNumbers = FALSE;
+                  HB_COMP_PARAM->fLineNumbers = HB_FALSE;
                break;
 
             case 'm':
             case 'M':
                if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fSingleModule = FALSE;
+                  HB_COMP_PARAM->fSingleModule = HB_FALSE;
                else
-                  HB_COMP_PARAM->fSingleModule = TRUE;
+                  HB_COMP_PARAM->fSingleModule = HB_TRUE;
                break;
 
             case 'n':
@@ -487,7 +487,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'p':
             case 'P':
                if( s[ 1 ] == '+' && s[ 2 ] == '\0' )
-                  HB_COMP_PARAM->fPPT = TRUE;
+                  HB_COMP_PARAM->fPPT = HB_TRUE;
                else
                {
                   if( HB_COMP_PARAM->pPpoPath )
@@ -496,12 +496,12 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      HB_COMP_PARAM->pPpoPath = NULL;
                   }
                   if( s[ 1 ] == '-' && s[ 2 ] == '\0' )
-                     HB_COMP_PARAM->fPPO = FALSE;
+                     HB_COMP_PARAM->fPPO = HB_FALSE;
                   else
                   {
                      if( s[ 1 ] )
                         HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( s + 1 );
-                     HB_COMP_PARAM->fPPO = TRUE;
+                     HB_COMP_PARAM->fPPO = HB_TRUE;
                   }
                }
                break;
@@ -511,11 +511,11 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                switch( *( s + 1 ) )
                {
                   case '2':
-                     HB_COMP_PARAM->fFullQuiet = TRUE;
+                     HB_COMP_PARAM->fFullQuiet = HB_TRUE;
                   case '0':
-                     HB_COMP_PARAM->fLogo = FALSE;
+                     HB_COMP_PARAM->fLogo = HB_FALSE;
                   default:
-                     HB_COMP_PARAM->fQuiet = TRUE;
+                     HB_COMP_PARAM->fQuiet = HB_TRUE;
                }
                break;
 
@@ -581,7 +581,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                       ( s[10] == 'H' || s[10] == 'h' ) &&
                       s[11] == '.' )
                   {
-                     HB_COMP_PARAM->fNoArchDefs = TRUE;
+                     HB_COMP_PARAM->fNoArchDefs = HB_TRUE;
                   }
                   break;
                }
@@ -615,9 +615,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'v':
             case 'V':
                if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fForceMemvars = FALSE;
+                  HB_COMP_PARAM->fForceMemvars = HB_FALSE;
                else
-                  HB_COMP_PARAM->fForceMemvars = TRUE;
+                  HB_COMP_PARAM->fForceMemvars = HB_TRUE;
                break;
 
             case 'w':
@@ -658,7 +658,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 #ifdef YYDEBUG
             case 'y':
             case 'Y':
-               yydebug = TRUE;
+               yydebug = HB_TRUE;
                break;
 #endif
 
@@ -999,15 +999,15 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         if( szSwitch[l-1] == '-' && j-l == 7 &&
                             memcmp( &szSwitch[l], "version", 7 ) == 0 )
                         {
-                           HB_COMP_PARAM->fLogo = TRUE;
-                           HB_COMP_PARAM->fQuiet = TRUE;
+                           HB_COMP_PARAM->fLogo = HB_TRUE;
+                           HB_COMP_PARAM->fQuiet = HB_TRUE;
                         }
                         else if( szSwitch[l-1] == '-' && j-l == 4 &&
                             memcmp( &szSwitch[l], "help", 4 ) == 0 )
                         {
-                           HB_COMP_PARAM->fLogo = TRUE;
-                           HB_COMP_PARAM->fQuiet = FALSE;
-                           HB_COMP_PARAM->fExit = FALSE;
+                           HB_COMP_PARAM->fLogo = HB_TRUE;
+                           HB_COMP_PARAM->fQuiet = HB_FALSE;
+                           HB_COMP_PARAM->fExit = HB_FALSE;
                         }
                         else
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, &szSwitch[l], NULL );
@@ -1099,7 +1099,7 @@ void hb_compChkPaths( HB_COMP_DECL )
    if( szInclude )
    {
       if( szInclude[0] != '\0' )
-         hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, szInclude, FALSE );
+         hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, szInclude, HB_FALSE );
       hb_xfree( ( void * ) szInclude );
    }
 }

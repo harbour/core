@@ -62,7 +62,7 @@ typedef struct _HB_CODETRACE_INFO
    ULONG    ulJumpSize;
    ULONG    ulJumpCount;
    ULONG    ulPCodeSize;
-   BOOL     fFinished;
+   HB_BOOL  fFinished;
 } HB_CODETRACE_INFO, * PHB_CODETRACE_INFO;
 
 #define HB_CODETRACE_FUNC( func ) HB_PCODE_FUNC( func, PHB_CODETRACE_INFO )
@@ -111,7 +111,7 @@ static ULONG hb_compCodeTraceNextPos( PHB_CODETRACE_INFO pInfo, ULONG ulPCodePos
          return ulPCodePos;
    }
 
-   pInfo->fFinished = TRUE;
+   pInfo->fFinished = HB_TRUE;
    return pInfo->ulPCodeSize;
 }
 
@@ -560,7 +560,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
    code_info.ulJumpSize = 0;
    code_info.ulJumpCount = 0;
    code_info.ulPCodeSize = pFunc->lPCodePos;
-   code_info.fFinished = FALSE;
+   code_info.fFinished = HB_FALSE;
 
    code_info.pCodeMark = ( BYTE * ) hb_xgrab( code_info.ulPCodeSize );
    memset( code_info.pCodeMark, 0, code_info.ulPCodeSize );
@@ -581,7 +581,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
             bLastCode = pFunc->pCode[ ulPos ];
             if( ulCount )
             {
-               hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, FALSE, TRUE );
+               hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, HB_FALSE, HB_TRUE );
                ulCount = 0;
             }
          }
@@ -606,7 +606,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
          pFunc->pCode[ ulPos - ulCount ] = pFunc->pCode[ ulPos - 1 ];
          pFunc->lPCodePos = pFunc->lPCodeSize = ulPos - ulCount + 1;
          */
-         hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, FALSE, TRUE );
+         hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, HB_FALSE, HB_TRUE );
       }
    }
 

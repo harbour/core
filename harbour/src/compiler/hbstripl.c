@@ -69,7 +69,7 @@ static HB_STRIP_FUNC( hb_p_line )
    HB_SYMBOL_UNUSED( cargo );
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_LINE )
    {
-      hb_compNOOPfill( pFunc, lPCodePos, 3, FALSE, FALSE );
+      hb_compNOOPfill( pFunc, lPCodePos, 3, HB_FALSE, HB_FALSE );
    }
 
    return 3;
