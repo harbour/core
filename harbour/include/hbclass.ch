@@ -147,11 +147,9 @@
    #endif
 #endif
 
-/*
- * I have to enable this definition by default until we will not fix
- * preprocessor. [druzus]
- */
-#ifndef HB_CLS_PARAMS_ERR
+/* disable strict parameters validation in method declaration and
+   implementation when warning level (-w?) is not 3 or higher */
+#if __pragma( WARNINGLEVEL ) < 3
    #ifndef HB_CLS_NO_PARAMS_ERR
       #define HB_CLS_NO_PARAMS_ERR
    #endif
@@ -207,7 +205,7 @@
    #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #line
 #endif
 
-#xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name: <var> )
+#xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
 
 DECLARE HBClass ;
         New( cName AS String, OPTIONAL SuperParams ) AS CLASS HBClass ;
@@ -309,7 +307,7 @@ DECLARE HBClass ;
          DECLARED METHOD \<type> <MethodName>(\[ \<xparams>] ) CLASS <ClassName>
 
 #xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
-   __HB_CLS_ERR( Method <MethodName> not declared or declaration mismatch in class: <ClassName> ) ;;
+   __HB_CLS_ERR( Method \<<MethodName>> not declared or declaration mismatch in class \<<ClassName>> ) ;;
    DECLARED METHOD <type> <MethodName> CLASS <ClassName>
 
 #xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] [_CLASS_DECLARATION_] => ;

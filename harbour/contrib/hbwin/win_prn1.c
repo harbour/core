@@ -132,6 +132,13 @@ static const HB_GC_FUNCS s_gc_HPEN_funcs =
    hb_gcDummyMark
 };
 
+static HPEN win_HPEN_par( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
+
+   return ph ? ( HPEN ) * ph : ( HPEN ) hb_parptr( iParam );
+}
+
 static HB_GARBAGE_FUNC( win_HFONT_release )
 {
    void ** ph = ( void ** ) Cargo;
@@ -641,7 +648,10 @@ HB_FUNC( WIN_SETCOLOR )
 
    if( hDC )
    {
-      SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) );
+      if( HB_ISNUM( 2 ) )
+         hb_retnl( ( long ) SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+      else
+         hb_retnl( ( long ) GetTextColor( hDC ) );
 
       if( HB_ISNUM( 3 ) )
          SetBkColor( hDC, ( COLORREF ) hb_parnl( 3 ) );
@@ -649,6 +659,8 @@ HB_FUNC( WIN_SETCOLOR )
       if( HB_ISNUM( 4 ) )
          SetTextAlign( hDC, hb_parni( 4 ) );
    }
+   else
+      hb_retnl( ( long ) CLR_INVALID );
 }
 
 HB_FUNC( WIN_SETPEN )
@@ -659,10 +671,13 @@ HB_FUNC( WIN_SETPEN )
    {
       HPEN hPen;
 
-      hPen = CreatePen( hb_parni( 2 ),                /* pen style */
-                        hb_parni( 3 ),                /* pen width */
-                        ( COLORREF ) hb_parnl( 4 )    /* pen color */
-                      );
+      if( HB_ISPOINTER( 2 ) )
+         hPen = win_HPEN_par( 1 );
+      else
+         hPen = CreatePen( hb_parni( 2 ),             /* pen style */
+                           hb_parni( 3 ),             /* pen width */
+                           ( COLORREF ) hb_parnl( 4 ) /* pen color */
+                         );
 
       if( hPen )
       {
@@ -682,6 +697,7 @@ HB_FUNC( WIN_SETPEN )
 HB_FUNC( WIN_FILLRECT )
 {
    HDC hDC = win_HDC_par( 1 );
+   HB_BOOL fResult = HB_FALSE;
 
    if( hDC )
    {
@@ -693,10 +709,12 @@ HB_FUNC( WIN_FILLRECT )
       rct.right = hb_parnl( 4 );
       rct.bottom = hb_parnl( 5 );
 
-      FillRect( hDC, &rct, hBrush );
+      if( FillRect( hDC, &rct, hBrush ) )
+         fResult = HB_TRUE;
 
       DeleteObject( hBrush );
    }
+   hb_retl( fResult );
 }
 
 HB_FUNC( WIN_LINETO )
