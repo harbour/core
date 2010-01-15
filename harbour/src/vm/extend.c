@@ -145,7 +145,7 @@ ULONG  hb_parinfo( int iParam )
    }
 }
 
-ULONG  hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
+HB_SIZE hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
 {
    PHB_ITEM pArray;
 
@@ -158,7 +158,7 @@ ULONG  hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
       if( uiArrayIndex == 0 )
          return hb_arrayLen( pArray );
       else
-         return ( long ) hb_arrayGetType( pArray, uiArrayIndex );
+         return ( HB_ISIZ ) hb_arrayGetType( pArray, uiArrayIndex );
    }
    else
       return 0;

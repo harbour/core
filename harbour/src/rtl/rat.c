@@ -58,7 +58,7 @@ HB_FUNC( RAT )
 
    if( ulSubLen )
    {
-      long lPos = hb_parclen( 2 ) - ulSubLen;
+      HB_ISIZ lPos = hb_parclen( 2 ) - ulSubLen;
 
       if( lPos >= 0 )
       {
@@ -89,14 +89,14 @@ HB_FUNC( HB_RAT )
 
    if( ulSubLen )
    {
-      long lPos = hb_parclen( 2 ) - ulSubLen;
+      HB_ISIZ lPos = hb_parclen( 2 ) - ulSubLen;
 
       if( lPos >= 0 )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
          HB_BOOL bFound = HB_FALSE;
-         long lStart;
+         HB_ISIZ lStart;
 
          if( HB_ISNUM( 3 ) )
          {
@@ -111,7 +111,7 @@ HB_FUNC( HB_RAT )
 
          if( HB_ISNUM( 4 ) )
          {
-            long lEnd = hb_parnl( 4 ) - 1;
+            HB_ISIZ lEnd = hb_parnl( 4 ) - 1;
 
             if( lEnd < lPos )
                lPos = lEnd;

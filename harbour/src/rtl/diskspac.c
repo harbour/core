@@ -123,9 +123,9 @@ HB_FUNC( DISKSPACE )
       TCHAR lpPath[ 4 ];
 
       lpPath[ 0 ] = ( TCHAR ) ( uiDrive + 'A' - 1 );
-      lpPath[ 1 ] = ':';
-      lpPath[ 2 ] = '\\';
-      lpPath[ 3 ] = '\0';
+      lpPath[ 1 ] = TEXT( ':' );
+      lpPath[ 2 ] = TEXT( '\\' );
+      lpPath[ 3 ] = TEXT( '\0' );
 
 #if defined( HB_OS_WIN_CE )
 

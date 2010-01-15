@@ -74,7 +74,7 @@ HB_FUNC( STACKPUSH )
 HB_FUNC( STACKPOP )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   long ulLen = hb_arrayLen( pArray );
+   HB_ISIZ ulLen = hb_arrayLen( pArray );
    PHB_ITEM pLast = hb_itemNew( NULL );
 
    if( ulLen )

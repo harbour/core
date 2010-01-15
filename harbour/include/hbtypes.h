@@ -87,7 +87,7 @@ typedef void     ( * HB_RETNDLEN )( double dNumber, int iWidth, int iDec );
 typedef void     ( * HB_RETNILEN )( int iNumber, int iWidth );
 typedef void     ( * HB_RETNLLEN )( long lNumber, int iWidth );
 typedef void     ( * HB_RETA )( HB_SIZE ulLen );
-typedef ULONG    ( * HB_PARINFA )( int iParamNum, HB_SIZE uiArrayIndex );
+typedef HB_SIZE  ( * HB_PARINFA )( int iParamNum, HB_SIZE uiArrayIndex );
 typedef ULONG    ( * HB_PARINFO )( int iParam );
 typedef HB_SIZE  ( * HB_PARCLEN )( int iParam );
 typedef HB_SIZE  ( * HB_PARCSIZ )( int iParam );

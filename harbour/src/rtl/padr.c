@@ -60,7 +60,7 @@ HB_FUNC( PADR )
    HB_SIZE ulSize;
    HB_BOOL bFreeReq;
    char * szText;
-   long lLen = hb_parnl( 2 );
+   HB_ISIZ lLen = hb_parnl( 2 );
 
    if( lLen > 0 )
    {

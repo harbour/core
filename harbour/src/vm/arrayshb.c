@@ -139,7 +139,7 @@ HB_FUNC( ASIZE )
 
    if( pArray && HB_ISNUM( 2 ) )
    {
-      long lSize = hb_parnl( 2 );
+      HB_ISIZ lSize = hb_parnl( 2 );
 
       hb_arraySize( pArray, HB_MAX( lSize, 0 ) );
 
@@ -169,7 +169,7 @@ HB_FUNC( AINS )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -186,7 +186,7 @@ HB_FUNC( ADEL )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -210,7 +210,7 @@ HB_FUNC( AFILL )
       if( pValue )
       {
          HB_SIZE ulStart, ulCount;
-         LONG lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
+         HB_ISIZ lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
 
          /* Explicy lCount of 0 - Nothing to do! */
          if( HB_ISNUM( 4 ) && lCount == 0 )
@@ -313,7 +313,7 @@ HB_FUNC( HB_AINS )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -341,7 +341,7 @@ HB_FUNC( HB_ADEL )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( lPos == 0 )
          lPos = 1;

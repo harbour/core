@@ -62,7 +62,7 @@ HB_FUNC( LEFT )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      long lLen = hb_parnl( 2 );
+      HB_ISIZ lLen = hb_parnl( 2 );
       if( lLen <= 0 )
          hb_retc_null();
       else

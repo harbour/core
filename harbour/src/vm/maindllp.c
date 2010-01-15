@@ -334,7 +334,7 @@ void hb_reta( HB_SIZE ulLen )  /* returns an array with a specific length */
       ( ( HB_RETA ) pRet )( ulLen );
 }
 
-ULONG hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ) /* retrieve length or element type of an array parameter */
+HB_SIZE hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ) /* retrieve length or element type of an array parameter */
 {
    FARPROC pParinfa = hb_getProcAddress( HBTEXT( "_hb_parinfa" ) );
    return pParinfa ? ( ( HB_PARINFA ) pParinfa )( iParamNum, uiArrayIndex ) : 0;

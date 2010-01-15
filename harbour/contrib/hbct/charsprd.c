@@ -62,7 +62,7 @@ HB_FUNC( CHARSPREAD )
       hb_retc_null();
    else
    {
-      long lSize = hb_parnl( 2 );
+      HB_ISIZ lSize = hb_parnl( 2 );
 
       if( lSize < 0 || ( HB_SIZE ) lSize <= ulLen )
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );

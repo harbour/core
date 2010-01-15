@@ -68,7 +68,7 @@ HB_FUNC( HB_USERLANG )
 
    if( ietf != NULL )
    {
-      long tmp;
+      HB_ISIZ tmp;
 
       for( tmp = 0; ietf[ tmp ] && ietf[ tmp ] != '.' ; tmp++ )
       {

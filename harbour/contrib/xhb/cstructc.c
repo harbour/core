@@ -129,8 +129,8 @@ void hb_retclenStatic( const char * szText, HB_SIZE ulLen )
 static unsigned int SizeOfCStructure( PHB_ITEM aDef, unsigned int uiAlign )
 {
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   unsigned long ulLen = pBaseDef->ulLen;
-   unsigned long ulIndex;
+   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE ulIndex;
    unsigned int uiSize = 0, uiMemberSize;
    BYTE cShift;
    unsigned int uiPad;
@@ -294,8 +294,8 @@ static BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int uiAli
 {
    PHB_BASEARRAY pBaseVar = aVar->item.asArray.value;
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   unsigned long ulLen = pBaseDef->ulLen;
-   unsigned long ulIndex;
+   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE ulIndex;
    BYTE  *Buffer;
    unsigned int uiOffset = 0, uiMemberSize;
    BYTE cShift;
@@ -1050,11 +1050,11 @@ HB_FUNC( HB_ARRAYTOSTRUCTURE )
    }
 }
 
-static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_ITEM aDef, unsigned int uiAlign, HB_BOOL bAdoptNested, PHB_ITEM pRet )
+static PHB_ITEM StructureToArray( BYTE* Buffer, HB_SIZE ulBufferLen, PHB_ITEM aDef, unsigned int uiAlign, HB_BOOL bAdoptNested, PHB_ITEM pRet )
 {
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   unsigned long ulLen = pBaseDef->ulLen;
-   unsigned long ulIndex;
+   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE ulIndex;
    unsigned int uiOffset, uiMemberSize;
    BYTE cShift;
    /* PHB_ITEM pRet = hb_itemNew( NULL ); */

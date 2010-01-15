@@ -279,7 +279,7 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
             return HB_FALSE;
          }
       }
-      lpTempDir[ HB_PATH_MAX - 1 ] = L'\0';
+      lpTempDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
 
       fResult = GetTempFileName( lpTempDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
 

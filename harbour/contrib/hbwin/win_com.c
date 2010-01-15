@@ -86,7 +86,17 @@ HB_FUNC( WIN_COMOPEN )
       HANDLE hCommPort;
       DCB NewDCB;
 
-      TCHAR szName[ 11 ] = { '\\', '\\', '.', '\\', 'C', 'O', 'M', 0, 0, 0, 0 };
+      TCHAR szName[ 11 ] = { TEXT( '\\' ),
+                             TEXT( '\\' ),
+                             TEXT( '.' ),
+                             TEXT( '\\' ),
+                             TEXT( 'C' ),
+                             TEXT( 'O' ),
+                             TEXT( 'M' ),
+                             TEXT( '\0' ),
+                             TEXT( '\0' ),
+                             TEXT( '\0' ),
+                             TEXT( '\0' ) };
 
       i = iPort + 1;
       iPos = 6;

@@ -273,8 +273,8 @@ HB_FUNC( PQEXECPARAMS )
    if( hb_pcount() == 3 )
    {
       PHB_ITEM aParam = hb_param( 3, HB_IT_ARRAY );
-      long n = hb_arrayLen( aParam );
-      long i;
+      HB_ISIZ n = hb_arrayLen( aParam );
+      HB_ISIZ i;
 
       const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
 

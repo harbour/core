@@ -238,7 +238,7 @@ HB_FUNC( XHB_ADEL )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -261,8 +261,7 @@ HB_FUNC( XHB_AINS )
 
    if( pArray )
    {
-      long lPos = hb_parnl( 2 );
-
+      HB_ISIZ lPos = hb_parnl( 2 );
 
       if( hb_parl( 4 ) )
       {

@@ -272,12 +272,12 @@ HB_FUNC( GETVOLINFO )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    int iretval;
-   const char *sDrive = hb_parcx( 1 );
-   TCHAR lpVolName[256];
+   const char * sDrive = hb_parcx( 1 );
+   TCHAR lpVolName[ 256 ];
    LPTSTR lpDrive;
 
-   lpDrive = sDrive[0] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
-   iretval = GetVolumeInformation( lpDrive, lpVolName, 256, NULL, NULL, NULL, NULL, 0 );
+   lpDrive = sDrive[ 0 ] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
+   iretval = GetVolumeInformation( lpDrive, lpVolName, HB_SIZEOFARRAY( lpVolName ), NULL, NULL, NULL, NULL, 0 );
    if( lpDrive )
       HB_TCHAR_FREE( lpDrive );
 
@@ -340,11 +340,11 @@ HB_FUNC( TRUENAME )
    {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
       char *szBuffRet;
-      TCHAR buffer[MAX_PATH + 1] = { 0 };
+      TCHAR buffer[MAX_PATH + 1] = { TEXT( '\0' ) };
       LPTSTR lpFile;
 
       lpFile = HB_TCHAR_CONVTO( szFile );
-      GetFullPathName( lpFile, MAX_PATH, buffer, NULL );
+      GetFullPathName( lpFile, HB_SIZEOFARRAY( buffer ) - 1, buffer, NULL );
       HB_TCHAR_FREE( lpFile );
 
       szBuffRet = HB_TCHAR_CONVFROM( buffer );

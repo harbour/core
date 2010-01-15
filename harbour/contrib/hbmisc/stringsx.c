@@ -4,17 +4,15 @@
 
 #include "hbapi.h"
 
-/* TODO: search this file for TODO and find 'em! */
-
 static const char *hb_strtoken(const char *szText,
-                               long lText,
-                               long lIndex,
+                               HB_ISIZ lText,
+                               HB_ISIZ lIndex,
                                char cDelimiter,
-                               long *lLen)
+                               HB_ISIZ *lLen)
 {
-  long wStart;
-  long wEnd = 0;
-  long wCounter = 0;
+  HB_ISIZ wStart;
+  HB_ISIZ wEnd = 0;
+  HB_ISIZ wCounter = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
 
@@ -60,9 +58,9 @@ static const char *hb_strtoken(const char *szText,
 HB_FUNC( STRTOKEN )
 {
   const char *szText;
-  long lIndex = hb_parnl(2);
+  HB_ISIZ lIndex = hb_parnl(2);
   char cDelimiter = *hb_parc(3);
-  long lLen;
+  HB_ISIZ lLen;
 
   if( !cDelimiter )
     cDelimiter = ' ';
@@ -77,7 +75,7 @@ HB_FUNC( STRTOKEN )
 HB_FUNC( STRDUMP )
 {
   const char *szText = hb_parc(1);
-  long i, lLength = hb_parclen(1);
+  HB_ISIZ i, lLength = hb_parclen(1);
   for( i = 0; i < lLength; i++ )
     printf("%d ", szText[i]);
   printf("\n");

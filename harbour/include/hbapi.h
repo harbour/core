@@ -621,7 +621,7 @@ extern void       hb_gcCollectAll( HB_BOOL fForce ); /* checks if all memory blo
 
 /* Extend API */
 extern HB_EXPORT ULONG        hb_parinfo( int iParam ); /* Determine the param count or data type */
-extern HB_EXPORT ULONG        hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ); /* retrieve length or element type of an array parameter */
+extern HB_EXPORT HB_SIZE      hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT PHB_ITEM     hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM     hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern HB_EXPORT HB_BOOL      hb_extIsArray( int iParam );

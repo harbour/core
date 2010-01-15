@@ -396,7 +396,7 @@ HB_FUNC( WIN_CREATEFONT )
       else
          iWidth = 0;  /* Use the default font width */
 
-      hFont = CreateFont( iHeight, 
+      hFont = CreateFont( iHeight,
                           iWidth,
                           0,
                           0,
@@ -436,7 +436,7 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )
    {
       TCHAR tszFontName[ 128 ];
 
-      GetTextFace( hDC, sizeof( tszFontName ) - 1, tszFontName );
+      GetTextFace( hDC, HB_SIZEOFARRAY( tszFontName ) - 1, tszFontName );
 
       HB_RETSTR( tszFontName );
    }

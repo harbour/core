@@ -142,16 +142,14 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 
    if( pFind && pWhere )
    {
-      unsigned long ulStart = (unsigned long) hb_parnl(3);
+      HB_SIZE ulStart = ( HB_SIZE ) hb_parnl(3);
 
       if( ulStart > 0 )
-      {
          ulStart--;
-      }
 
       if( ulStart < hb_itemGetCLen( pWhere ) )
       {
-         unsigned long ulRet;
+         HB_SIZE ulRet;
 
          ulRet = hb_AtSkipStrings( hb_itemGetCPtr( pFind ), hb_itemGetCLen( pFind ),
                                    hb_itemGetCPtr( pWhere ) + ulStart, hb_itemGetCLen( pWhere ) - ulStart );

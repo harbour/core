@@ -181,11 +181,11 @@ extern char * strerror( int errnum );
 
 extern HB_EXPORT wchar_t * hb_mbtowc( const char *srcA );
 extern HB_EXPORT char * hb_wctomb( const wchar_t *srcW );
-extern HB_EXPORT wchar_t * hb_mbntowc( const char *srcA, unsigned long ulLen );
-extern HB_EXPORT char * hb_wcntomb( const wchar_t *srcW, unsigned long ulLen );
-extern HB_EXPORT void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern HB_EXPORT void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
+extern HB_EXPORT wchar_t * hb_mbntowc( const char *srcA, HB_SIZE ulLen );
+extern HB_EXPORT char * hb_wcntomb( const wchar_t *srcW, HB_SIZE ulLen );
+extern HB_EXPORT void hb_mbtowccpy( wchar_t *dstW, const char *srcA, HB_SIZE ulLen );
+extern HB_EXPORT void hb_mbtowcset( wchar_t *dstW, const char *srcA, HB_SIZE ulLen );
+extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, HB_SIZE ulLen );
 
 #if defined( HB_OS_WIN_CE )
    #define HBTEXT( x ) TEXT( x )

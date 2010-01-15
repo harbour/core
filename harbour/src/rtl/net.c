@@ -154,7 +154,7 @@ char * hb_netname( void )
    TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
    char * pszValue;
 
-   lpValue[ 0 ] = L'\0';
+   lpValue[ 0 ] = TEXT( '\0' );
    GetComputerName( lpValue, &ulLen );
 
 #if defined( UNICODE )
@@ -191,7 +191,7 @@ char * hb_username( void )
    TCHAR lpValue[ 256 ];
    char * pszValue;
 
-   lpValue[ 0 ] = L'\0';
+   lpValue[ 0 ] = TEXT( '\0' );
    GetUserName( lpValue, &ulLen );
 
 #if defined( UNICODE )

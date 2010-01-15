@@ -140,9 +140,9 @@ void hb_cmdargUpdate( void )
                because in console apps the name may be truncated
                in some cases, and in GUI apps it's not filled
                at all. [vszakats] */
-      if( GetModuleFileName( NULL, s_lpAppName, MAX_PATH ) != 0 )
+      if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
       {
-         HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
+         HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) );
          s_argv[ 0 ] = s_szAppName;
       }
 #else

@@ -60,7 +60,7 @@ HB_FUNC( REPLICATE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      long lTimes = hb_parnl( 2 );
+      HB_ISIZ lTimes = hb_parnl( 2 );
 
       if( lTimes > 0 )
       {
@@ -71,7 +71,7 @@ HB_FUNC( REPLICATE )
             const char * szText = hb_parc( 1 );
             char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
             char * szPtr = szResult;
-            long i;
+            HB_ISIZ i;
 
             for( i = 0; i < lTimes; i++ )
             {

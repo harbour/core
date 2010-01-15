@@ -62,7 +62,7 @@ HB_FUNC( SPACE )
 
    if( pItem )
    {
-      long lLen = hb_itemGetNL( pItem );
+      HB_ISIZ lLen = hb_itemGetNL( pItem );
 
       if( lLen > 0 )
       {

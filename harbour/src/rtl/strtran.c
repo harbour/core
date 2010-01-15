@@ -116,14 +116,14 @@ HB_FUNC( STRTRAN )
             if( bAll || ulCount > 0 )
             {
                HB_SIZE ulFound = 0;
-               long lReplaced = 0;
+               HB_ISIZ lReplaced = 0;
                HB_SIZE i = 0;
                HB_SIZE ulLength = ulText;
                HB_SIZE ulStop = ulText - ulSeek + 1;
 
                while( i < ulStop )
                {
-                  if( ( bAll || lReplaced < ( long ) ulCount ) &&
+                  if( ( bAll || lReplaced < ( HB_ISIZ ) ulCount ) &&
                       ! memcmp( szText + i, szSeek, ulSeek ) )
                   {
                      ulFound++;

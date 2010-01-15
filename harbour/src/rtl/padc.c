@@ -60,7 +60,7 @@ HB_FUNC( PADC )
    HB_SIZE ulSize;
    HB_BOOL bFreeReq;
    char * szText;
-   long lLen = hb_parnl( 2 );
+   HB_ISIZ lLen = hb_parnl( 2 );
 
    if( lLen > 0 )
    {
@@ -79,7 +79,7 @@ HB_FUNC( PADC )
             {
                char * szResult = ( char * ) hb_xgrab( lLen + 1 );
                char cPad;
-               long ulPad = ( ( HB_SIZE ) lLen - ulSize ) >> 1;
+               HB_ISIZ ulPad = ( ( HB_SIZE ) lLen - ulSize ) >> 1;
 
                cPad = ( HB_ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
                hb_xmemset( szResult, cPad, ulPad );

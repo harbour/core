@@ -73,7 +73,7 @@ static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %lu)", pDest, pSource, nLen));
 
-   pDest[ nLen ] = '\0';
+   pDest[ nLen ] = TEXT( '\0' );
 
    while( nLen && *pDest )
    {
@@ -81,7 +81,7 @@ static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
       nLen--;
    }
 
-   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+   while( nLen && ( *pDest++ = *pSource++ ) != TEXT( '\0' ) )
       nLen--;
 
    return pBuf;
@@ -93,7 +93,7 @@ static HB_SIZE hb_tstrlen( const TCHAR * pText )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_tstrlen(%p)", pText));
 
-   while( pText[ nLen ] )
+   while( pText[ nLen ] != TEXT( '\0' ) )
       ++nLen;
 
    return nLen;
@@ -237,7 +237,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             String will be in form "printername,drivername,portname". */
          pBuffer = ( LPTSTR ) hb_xgrab( ( nStrLen + 1 ) * sizeof( TCHAR ) );
 
-         pBuffer[ 0 ] = '\0';
+         pBuffer[ 0 ] = TEXT( '\0' );
 
          /* Build string in form "printername,drivername,portname". */
          hb_tstrncat( pBuffer, lpPrinterName, nStrLen );

@@ -70,7 +70,7 @@ void hb_mbtowccpy( wchar_t *dstW, const char *srcA, HB_SIZE ulLen )
    MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ulLen / sizeof( wchar_t ) );
 }
 
-void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen )
+void hb_mbtowcset( wchar_t *dstW, const char *srcA, HB_SIZE ulLen )
 {
    MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, dstW, ulLen );
 }
@@ -99,7 +99,7 @@ char *hb_wctomb( const wchar_t *srcW )
    return dstA;
 }
 
-wchar_t *hb_mbntowc( const char *srcA, unsigned long ulLen )
+wchar_t *hb_mbntowc( const char *srcA, HB_SIZE ulLen )
 {
    DWORD length;
    wchar_t *dstW;
@@ -111,7 +111,7 @@ wchar_t *hb_mbntowc( const char *srcA, unsigned long ulLen )
    return dstW;
 }
 
-char *hb_wcntomb( const wchar_t *srcW, unsigned long ulLen )
+char *hb_wcntomb( const wchar_t *srcW, HB_SIZE ulLen )
 {
    DWORD length;
    char *dstA;
@@ -123,7 +123,7 @@ char *hb_wcntomb( const wchar_t *srcW, unsigned long ulLen )
    return dstA;
 }
 
-void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
+void hb_wctombget( char *dstA, const wchar_t *srcW, HB_SIZE ulLen )
 {
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
