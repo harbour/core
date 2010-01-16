@@ -472,7 +472,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
          if( lSize > 0 )
          {
             PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
-            int iProp;
+            int iProp, iProp2;
 
             DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
@@ -493,6 +493,14 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
             if( ( iProp = hb_parni( 8 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
                pDevMode->dmPrintQuality = ( short ) iProp;
+
+            if( pDevMode->dmPaperSize == DMPAPER_USER &&
+                ( iProp = hb_parni( 9 ) ) > 0 &&
+                ( iProp2 = hb_parni( 10 ) ) > 0 )
+            {
+               pDevMode->dmPaperLength = ( short ) iProp;
+               pDevMode->dmPaperWidth = ( short ) iProp2;
+            }
 
             bResult = ( ResetDC( hDC, pDevMode ) != NULL );
 
@@ -531,6 +539,8 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
          hb_storni( pDevMode->dmDefaultSource, 5 );
          hb_storni( pDevMode->dmDuplex, 6 );
          hb_storni( pDevMode->dmPrintQuality, 7 );
+         hb_storni( pDevMode->dmPaperLength, 8 );
+         hb_storni( pDevMode->dmPaperWidth, 9 );
          bResult = HB_TRUE;
 
          hb_xfree( pDevMode );

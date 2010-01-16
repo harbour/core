@@ -159,6 +159,9 @@ CREATE CLASS WIN_PRN
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
 
+   VAR PaperLength      INIT 0                        // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperWidth       INIT 0                        //   "    "    "     "       "     "
+
    VAR SetFontOk        INIT .F.
    VAR hFont            INIT 0
    VAR FontName         INIT ""                       // Current Point size for font
@@ -191,6 +194,8 @@ CREATE CLASS WIN_PRN
    VAR fOldLandScape    INIT .F.    HIDDEN
    VAR fOldBinNumber    INIT 0      HIDDEN
    VAR fOldFormType     INIT 0      HIDDEN
+   VAR fOldPaperLength  INIT 0      HIDDEN
+   VAR fOldPaperWidth   INIT 0      HIDDEN
 
    VAR PosX             INIT 0
    VAR PosY             INIT 0
@@ -224,7 +229,10 @@ METHOD Create() CLASS WIN_PRN
       // Set Orientation
       // Set Duplex mode
       // Set PrintQuality
-      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ::FormType, ::Landscape, ::Copies, ::BinNumber, ::fDuplexType, ::fPrintQuality )
+      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
+                                 ::FormType, ::Landscape, ;
+                                 ::Copies, ::BinNumber, ::fDuplexType, ;
+                                 ::fPrintQuality, ::PaperLength, ::PaperWidth )
       // Set mapping mode to pixels, topleft down
       win_SetMapMode( ::hPrinterDC, MM_TEXT )
 //    win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
@@ -249,11 +257,13 @@ METHOD Create() CLASS WIN_PRN
       ::SetDefaultFont()
       ::PageNumber := 0
       ::HavePrinted := ::Printing := ::PageInit := .F.
-      ::fOldFormType := ::FormType  // Last formtype used
-      ::fOldLandScape := ::LandScape
-      ::fOldBinNumber := ::BinNumber
-      ::fNewDuplexType := ::fDuplexType
+      ::fOldFormType     := ::FormType  // Last formtype used
+      ::fOldLandScape    := ::LandScape
+      ::fOldBinNumber    := ::BinNumber
+      ::fNewDuplexType   := ::fDuplexType
       ::fNewPrintQuality := ::fPrintQuality
+      ::fOldPaperLength  := ::PaperLength
+      ::fOldPaperWidth   := ::PaperWidth
       lResult := .T.
    ENDIF
    RETURN lResult
@@ -308,6 +318,8 @@ METHOD StartPage() CLASS WIN_PRN
    LOCAL nLFormType
    LOCAL nLDuplexType
    LOCAL nLPrintQuality
+   LOCAL nLPaperLength
+   LOCAL nLPaperWidth
    LOCAL lChangeDP := .F.
 
    IF ::LandScape != ::fOldLandScape  // Direct-modify property
@@ -330,8 +342,21 @@ METHOD StartPage() CLASS WIN_PRN
       nLPrintQuality := ::fPrintQuality := ::fNewPrintQuality
       lChangeDP := .T.
    ENDIF
+   IF ::fOldPaperLength != ::PaperLength .OR. ; // Get/Set property
+      ::fOldPaperWidth != ::PaperWidth          // Get/Set property
+      nLFormType := ::FormType
+      nLPaperLength := ::fOldPaperLength := ::PaperLength
+      nLPaperWidth := ::fOldPaperWidth := ::PaperWidth
+      lChangeDP := .T.
+   ENDIF
+   IF ::fOldPaperWidth != ::PaperWidth  // Get/Set property
+      lChangeDP := .T.
+   ENDIF
    IF lChangeDP
-      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, nLFormType, lLLandscape, , nLBinNumber, nLDuplexType, nLPrintQuality )
+      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
+                                 nLFormType, lLLandscape, , ;
+                                 nLBinNumber, nLDuplexType, nLPrintQuality, ;
+                                 nLPaperLength, nLPaperWidth )
    ENDIF
    win_StartPage( ::hPrinterDC )
    ::PageNumber++
@@ -389,7 +414,10 @@ METHOD NewPage( lDelay ) CLASS WIN_PRN
    RETURN .T.
 
 METHOD GetDocumentProperties() CLASS WIN_PRN
-   RETURN win_GetDocumentProperties( ::PrinterName, @::FormType, @::Landscape, @::Copies, @::BinNumber, @::fDuplexType, @::fPrintQuality )
+   RETURN win_GetDocumentProperties( ::PrinterName, @::FormType, @::Landscape, ;
+                                     @::Copies, @::BinNumber, @::fDuplexType, ;
+                                     @::fPrintQuality, ;
+                                     @::PaperLength, @::PaperWidth )
 
 // If font width is specified it is in "characters per inch" to emulate DotMatrix
 // An array {nMul,nDiv} is used to get precise size such a the Dot Matric equivalent
