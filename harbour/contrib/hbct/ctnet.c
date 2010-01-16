@@ -92,26 +92,29 @@
 #include "hbwinuni.h"
 
 #if defined( HB_OS_WIN )
+   #include <winnetwk.h>
+#endif
 
-#include <winnetwk.h>
-
-static HB_BOOL hb_IsNetShared( const char *szLocalDevice )
+#if defined( HB_OS_WIN )
+static HB_BOOL hb_IsNetShared( const char * szLocalDevice )
 {
    TCHAR lpRemoteDevice[ 128 ];
    LPTSTR lpLocalDevice;
-   DWORD cchBuff = HB_SIZEOFARRAY( lpRemoteDevice );
+   DWORD dwLen = HB_SIZEOFARRAY( lpRemoteDevice );
    DWORD dwResult;
 
    lpLocalDevice = HB_TCHAR_CONVTO( szLocalDevice );
    dwResult = WNetGetConnection( ( LPCTSTR ) lpLocalDevice,
-                                 ( LPTSTR ) lpRemoteDevice, &cchBuff );
+                                 ( LPTSTR ) lpRemoteDevice, &dwLen );
    HB_TCHAR_FREE( lpLocalDevice );
 
    return dwResult == NO_ERROR;
 }
+#endif
 
 HB_FUNC( NETCANCEL )
 {
+#if defined( HB_OS_WIN )
    DWORD dwResult;
    LPTSTR lpDevice = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
@@ -122,21 +125,29 @@ HB_FUNC( NETCANCEL )
     *        open files or print jobs.
     */
    hb_retl( dwResult == NO_ERROR );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 
 HB_FUNC( NETPRINTER )
 {
+#if defined( HB_OS_WIN )
    const char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
 
    if( !cPrn || !*cPrn || hb_stricmp( cPrn, "PRN" ) == 0 )
       cPrn = "LPT1";
    hb_retl( hb_IsNetShared( cPrn ) );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 
 HB_FUNC( NETDISK )
 {
+#if defined( HB_OS_WIN )
    char cDrive[ 3 ];
 
    cDrive[ 0 ] = hb_parcx( 1 )[ 0 ];
@@ -144,10 +155,14 @@ HB_FUNC( NETDISK )
    cDrive[ 2 ] = '\0';
 
    hb_retl( hb_IsNetShared( cDrive ) );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( NETREDIR )
 {
+#if defined( HB_OS_WIN )
    void * hLocalDev;
    void * hSharedRes;
    void * hPassword;
@@ -192,45 +207,48 @@ HB_FUNC( NETREDIR )
          }
          else
          {
-            DWORD dwLastError;
-            DWORD dwWNetResult;
+            DWORD dwLastError = 0;
             TCHAR lpDescription[ 256 ];
             TCHAR lpProvider[ 256 ];
-            char * szDescription;
-            char * szProvider;
 
-            dwWNetResult = WNetGetLastError( &dwLastError,
-                                             lpDescription, HB_SIZEOFARRAY( lpDescription ),
-                                             lpProvider, HB_SIZEOFARRAY( lpProvider ) );
+            dwResult = WNetGetLastError( &dwLastError,
+                                         lpDescription, HB_SIZEOFARRAY( lpDescription ),
+                                         lpProvider, HB_SIZEOFARRAY( lpProvider ) );
 
-            if( dwWNetResult != NO_ERROR )
+            if( dwResult != NO_ERROR )
             {
                pError = hb_errRT_New( ES_ERROR, "CT", 9002, 0,
                                       "WNetGetLastError failed", "see OS error",
-                                      ( HB_ERRCODE ) dwWNetResult, EF_NONE );
+                                      ( HB_ERRCODE ) dwResult, EF_NONE );
                hb_errLaunch( pError );
                hb_itemRelease( pError );
             }
+            else
+            {
+               char * szDescription = HB_TCHAR_CONVFROM( lpDescription );
+               char * szProvider = HB_TCHAR_CONVFROM( lpProvider );
+               pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
+                                      szDescription, szProvider,
+                                      ( HB_ERRCODE ) dwLastError, EF_NONE );
+               HB_TCHAR_FREE( szDescription );
+               HB_TCHAR_FREE( szProvider );
 
-            szDescription = HB_TCHAR_CONVFROM( lpDescription );
-            szProvider = HB_TCHAR_CONVFROM( lpProvider );
-            pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
-                                   szDescription, szProvider,
-                                   ( HB_ERRCODE ) dwLastError, EF_NONE );
-            HB_TCHAR_FREE( szDescription );
-            HB_TCHAR_FREE( szProvider );
-
-            hb_errLaunch( pError );
-            hb_itemRelease( pError );
+               hb_errLaunch( pError );
+               hb_itemRelease( pError );
+            }
          }
       }
 
       hb_retl( HB_FALSE );
    }
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( NETRMTNAME )
 {
+#if defined( HB_OS_WIN )
    void * hLocalDev;
 
    TCHAR lpRemoteDevice[ 128 ];
@@ -244,11 +262,14 @@ HB_FUNC( NETRMTNAME )
       hb_retc_null();
 
    hb_strfree( hLocalDev );
+#else
+   hb_retc_null();
+#endif
 }
-
 
 HB_FUNC( NETWORK )
 {
+#if defined( HB_OS_WIN )
    DWORD dwResult;
    TCHAR lpProviderName[ 128 ];
    DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
@@ -264,15 +285,20 @@ HB_FUNC( NETWORK )
    }
 
    hb_retl( dwResult == NO_ERROR );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 
 HB_FUNC( NNETWORK )
 {
+#if defined( HB_OS_WIN )
    TCHAR lpProviderName[ 128 ];
    DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
 
    hb_retl( WNetGetProviderName( WNNC_NET_NETWARE, lpProviderName, &dwLen ) == NO_ERROR );
-}
-
+#else
+   hb_retl( HB_FALSE );
 #endif
+}

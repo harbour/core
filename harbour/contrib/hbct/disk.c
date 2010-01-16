@@ -284,6 +284,8 @@ HB_FUNC( VOLSERIAL )
       hb_retni( -1 );
 
    hb_strfree( hDrive );
+#else
+   hb_retni( -1 );
 #endif
 }
 
