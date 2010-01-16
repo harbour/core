@@ -14,7 +14,6 @@ HB_BUILD_MODE := c
 C_SOURCES := \
    png.c \
    pngerror.c \
-   pnggccrd.c \
    pngget.c \
    pngmem.c \
    pngpread.c \
@@ -24,7 +23,6 @@ C_SOURCES := \
    pngrutil.c \
    pngset.c \
    pngtrans.c \
-   pngvcrd.c \
    pngwio.c \
    pngwrite.c \
    pngwtran.c \
@@ -50,6 +48,9 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
 
          ifeq ($(HB_COMPILER),djgpp)
             HB_CFLAGS += -DPNG_NO_SNPRINTF
+         endif
+         ifeq ($(HB_COMPILER),watcom)
+            HB_CFLAGS += -DPNG_NO_SETJMP
          endif
 
          include $(TOP)$(ROOT)config/lib.mk
