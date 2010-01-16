@@ -526,7 +526,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
          DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
          hb_storni( pDevMode->dmPaperSize, 2 );
-         hb_storl( pDevMode->dmOrientation == 2, 3 );
+         hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 3 );
          hb_storni( pDevMode->dmCopies, 4 );
          hb_storni( pDevMode->dmDefaultSource, 5 );
          hb_storni( pDevMode->dmDuplex, 6 );

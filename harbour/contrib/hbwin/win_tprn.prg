@@ -77,7 +77,6 @@ CREATE CLASS WIN_PRN
    METHOD Create()                  // CreatesDC and sets "Courier New" font, set Orientation, Copies, Bin#
                                     // Create() ( & StartDoc() ) must be called before printing can start.
    METHOD Destroy()                 // Calls EndDoc() - restores default font, Deletes DC.
-                                    // Destroy() must be called to avoid memory leaks
    DESTRUCTOR Destruct()
 
    METHOD StartDoc( cDocName )      // Calls StartPage()
@@ -85,7 +84,7 @@ CREATE CLASS WIN_PRN
    METHOD StartPage()
    METHOD EndPage( lStartNewPage )  // If lStartNewPage == .T. then StartPage() is called for the next page of output
    METHOD NewLine()
-   METHOD NewPage( lDelay )
+   METHOD NewPage( lDelay )         // If lDelay == .T. then new page is not created immediately but just before 1-st output
    METHOD CheckPage()
    METHOD GetDocumentProperties()
    METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet )
