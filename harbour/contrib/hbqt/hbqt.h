@@ -207,6 +207,8 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QLocale( n )                       ( ( QLocale                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QMainWindow( n )                   ( ( QMainWindow                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QMatrix( n )                       ( ( QMatrix                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QMdiArea( n )                      ( ( QMdiArea                    * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QMdiSubWindow( n )                 ( ( QMdiSubWindow               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QMenu( n )                         ( ( QMenu                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QMenuBar( n )                      ( ( QMenuBar                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QMessageBox( n )                   ( ( QMessageBox                 * ) hbqt_gcpointer( n ) )

@@ -93,6 +93,8 @@ CPP_SOURCES := \
    QListWidgetItem.cpp \
    QMainWindow.cpp \
    QMatrix.cpp \
+   QMdiArea.cpp \
+   QMdiSubWindow.cpp \
    QMenu.cpp \
    QMenuBar.cpp \
    QMessageBox.cpp \
@@ -303,6 +305,8 @@ PRG_SOURCES := \
    TQListWidgetItem.prg \
    TQMainWindow.prg \
    TQMatrix.prg \
+   TQMdiArea.prg \
+   TQMdiSubWindow.prg \
    TQMenu.prg \
    TQMenuBar.prg \
    TQMessageBox.prg \

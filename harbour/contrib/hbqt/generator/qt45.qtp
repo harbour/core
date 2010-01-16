@@ -125,6 +125,8 @@ QListWidgetItem.qth
 QLocale.qth
 QMainWindow.qth
 QMatrix.qth
+QMdiArea.qth
+QMdiSubWindow.qth
 QMenu.qth
 QMenuBar.qth
 QMessageBox.qth
