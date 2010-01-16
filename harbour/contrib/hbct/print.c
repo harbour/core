@@ -232,5 +232,9 @@ HB_FUNC( PRINTSEND )
    }
    hb_retni( usRet );
 
+#else
+
+   hb_retni( 0 );
+
 #endif
 }

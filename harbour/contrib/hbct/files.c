@@ -61,14 +61,6 @@
  *
  */
 
-/* OS2 */
-#define INCL_DOSFILEMGR   /* File Manager values */
-#define INCL_DOSERRORS    /* DOS error values    */
-#define INCL_DOSDATETIME  /* DATETIME functions  */
-
-/* Windows */
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
@@ -84,14 +76,12 @@
 #  include <sys/farptr.h>
 #  include <sys/param.h>
 #endif
+
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 #  include <sys/types.h>
 #  include <utime.h>
 #  include <unistd.h>
 #  include <time.h>
-#elif defined( HB_OS_OS2 )
-#  include <os2.h>
-#  include <stdio.h>
 #endif
 
 
