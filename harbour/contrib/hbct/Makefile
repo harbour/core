@@ -46,7 +46,6 @@ C_SOURCES := \
    dattime3.c \
    dbftools.c \
    disk.c \
-   diskhb.c \
    expand.c \
    exponent.c \
    files.c \
@@ -101,6 +100,7 @@ PRG_SOURCES := \
    ctmisc.prg \
    ctrand.prg \
    cttime.prg \
+   diskhb.prg \
    fcopy.prg \
    getinfo.prg \
    getinput.prg \
