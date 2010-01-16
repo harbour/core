@@ -480,7 +480,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                pDevMode->dmPaperSize = ( short ) iProp;
 
             if( HB_ISLOG( 4 ) )
-               pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
+               pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? DMORIENT_LANDSCAPE : DMORIENT_PORTRAIT );
 
             if( ( iProp = hb_parni( 5 ) ) > 0 )
                pDevMode->dmCopies = ( short ) iProp;

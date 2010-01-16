@@ -118,7 +118,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
 
 //       To print a barcode;
 //       Replace 'BCod39HN' with your own bar code font or any other font
-//         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ) , oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
+//         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
 //
          PrintBitMap( oPrinter, cBMPFile )
 

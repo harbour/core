@@ -25,6 +25,9 @@
 
 request DBFCDX
 
+request HB_DIREXISTS
+request MAKEDIR
+
 proc main()
    local pSockSrv, lExists
 
