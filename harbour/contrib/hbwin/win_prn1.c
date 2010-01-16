@@ -472,26 +472,27 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
          if( lSize > 0 )
          {
             PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+            int iProp;
 
             DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-            if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* [2007-02-22] don't change if 0 */
-               pDevMode->dmPaperSize = ( short ) hb_parni( 3 );
+            if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               pDevMode->dmPaperSize = ( short ) iProp;
 
             if( HB_ISLOG( 4 ) )
                pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
 
-            if( HB_ISNUM( 5 ) && hb_parni( 5 ) > 0 )
-               pDevMode->dmCopies = ( short ) hb_parni( 5 );
+            if( ( iProp = hb_parni( 5 ) ) > 0 )
+               pDevMode->dmCopies = ( short ) iProp;
 
-            if( HB_ISNUM( 6 ) && hb_parni( 6 ) )        /* [2007-02-22] don't change if 0 */
-               pDevMode->dmDefaultSource = ( short ) hb_parni( 6 );
+            if( ( iProp = hb_parni( 6 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               pDevMode->dmDefaultSource = ( short ) iProp;
 
-            if( HB_ISNUM( 7 ) && hb_parni( 7 ) )        /* [2007-02-22] don't change if 0 */
-               pDevMode->dmDuplex = ( short ) hb_parni( 7 );
+            if( ( iProp = hb_parni( 7 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               pDevMode->dmDuplex = ( short ) iProp;
 
-            if( HB_ISNUM( 8 ) && hb_parni( 8 ) )        /* [2007-02-22] don't change if 0 */
-               pDevMode->dmPrintQuality = ( short ) hb_parni( 8 );
+            if( ( iProp = hb_parni( 8 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               pDevMode->dmPrintQuality = ( short ) iProp;
 
             bResult = ( ResetDC( hDC, pDevMode ) != NULL );
 
@@ -608,14 +609,14 @@ HB_FUNC( WIN_DRAWBITMAP )
       hb_retl( HB_FALSE );
 }
 
-static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD dwFontType,
-                                      LPVOID pArray )
+static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
+                                      DWORD dwFontType, LPVOID pArray )
 {
    PHB_ITEM pSubItems = hb_itemArrayNew( 4 );
 
    HB_ARRAYSETSTR( pSubItems, 1, lplf->lfFaceName );
-   hb_arraySetL( pSubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
-   hb_arraySetL( pSubItems, 3, dwFontType & TRUETYPE_FONTTYPE );
+   hb_arraySetL( pSubItems, 2, ( lplf->lfPitchAndFamily & FIXED_PITCH ) != 0 );
+   hb_arraySetL( pSubItems, 3, ( dwFontType & TRUETYPE_FONTTYPE ) != 0 );
    hb_arraySetNL( pSubItems, 4, lpntm->tmCharSet );
    hb_arrayAddForward( ( PHB_ITEM ) pArray, pSubItems );
 
