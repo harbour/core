@@ -80,10 +80,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define HBQT_RELEASE_WITH_DELETE                  0        // Release the QObject with delete operator
-#define HBQT_RELEASE_WITH_DESTRUTOR               1        // Release the QObject with his destructor
-#define HBQT_RELEASE_WITH_DELETE_LATER            2        // Release the QObject with deleteLater() slot
-
 #define QEvent_None                               0        // Not an event.
 #define QEvent_Timer                              1        // Regular timer events (QTimerEvent).
 #define QEvent_MouseButtonPress                   2        // Mouse press (QMouseEvent).

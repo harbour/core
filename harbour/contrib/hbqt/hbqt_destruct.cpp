@@ -61,8 +61,6 @@
 
 #include <QTextCodec>
 
-static int s_iObjectReleaseMethod = HBQT_RELEASE_WITH_DELETE_LATER;
-
 /*----------------------------------------------------------------------*/
 
 HB_GARBAGE_FUNC( Q_release )
@@ -112,19 +110,6 @@ void * hbqt_pPtrFromObj( int iParam )
       return hbqt_gcpointer( iParam );
    else
       return NULL;
-}
-
-int hbqt_get_object_release_method()
-{
-   return s_iObjectReleaseMethod;
-}
-
-HB_FUNC( HBQT_SET_RELEASE_METHOD )
-{
-   hb_retni( s_iObjectReleaseMethod );
-
-   if( HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= HBQT_RELEASE_WITH_DELETE_LATER )
-      s_iObjectReleaseMethod = hb_parni( 1 );
 }
 
 HB_FUNC( HBQT_SETCODECFORCSTRINGS )

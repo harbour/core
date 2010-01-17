@@ -210,20 +210,9 @@ static QT_G_FUNC( release_HBQSyntaxHighlighter )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         switch( hbqt_get_object_release_method() )
-         {
-         case HBQT_RELEASE_WITH_DELETE:
-            delete ( ( HBQSyntaxHighlighter * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( HBQSyntaxHighlighter * ) p->ph )->~HBQSyntaxHighlighter();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( HBQSyntaxHighlighter * ) p->ph )->deleteLater();
-            break;
-         }
-         p->ph = NULL;
+         delete ( ( HBQSyntaxHighlighter * ) p->ph );
          HB_TRACE( HB_TR_DEBUG, ( "release_HBQSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
       }
       else
       {

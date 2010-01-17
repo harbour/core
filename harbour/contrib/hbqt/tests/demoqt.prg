@@ -168,9 +168,6 @@ HB_TRACE( HB_TR_ALWAYS, ( "-----------------b-----------------" ) )
 
 HB_TRACE( HB_TR_ALWAYS, ( "----------------- qApp:exec -----------------" ) )
 
-   //HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
-//HB_TRACE( HB_TR_ALWAYS, ( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" ) )
-
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
 HB_TRACE( HB_TR_ALWAYS, ( "-------------------- exit -------------------" ) )
