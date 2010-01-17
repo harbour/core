@@ -149,7 +149,10 @@
 
 #define PS_SOLID                    0
 
-#define RGB( nR, nG, nB )           ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+#define WIN_RGB( nR, nG, nB )       ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+
+/* deprecated */
+#define RGB( nR, nG, nB )           WIN_RGB( nR, nG, nB )
 
 #define RGB_BLACK                   RGB( 0x00, 0x00, 0x00 )
 #define RGB_BLUE                    RGB( 0x00, 0x00, 0x85 )

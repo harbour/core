@@ -285,7 +285,7 @@ METHOD PROCEDURE Destruct() CLASS WIN_PRN
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
 
-   DEFAULT cDocName TO win_GetExeFileName() + " [" + DToC( Date() ) + " - " + Time() + "]"
+   DEFAULT cDocName TO hb_ArgV( 0 ) + " [" + DToC( Date() ) + " - " + Time() + "]"
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
       IF !( lResult := ::StartPage( ::hPrinterDc ) )
