@@ -67,6 +67,8 @@ public:
    HBQTextBlockUserData();
    ~HBQTextBlockUserData();
 
+   HBQTextBlockUserData * data( const QTextBlock& block );
+
    void setData( int state );
 
    int state;

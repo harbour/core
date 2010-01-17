@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -87,10 +87,12 @@ CREATE CLASS QTextBlock INHERIT HbQtObjectHandler
    METHOD  revision()
    METHOD  setLineCount( nCount )
    METHOD  setRevision( nRev )
+   METHOD  setUserData( pData )
    METHOD  setUserState( nState )
    METHOD  setVisible( lVisible )
    METHOD  text()
    METHOD  textList()
+   METHOD  userData()
    METHOD  userState()
 
    ENDCLASS
@@ -185,6 +187,10 @@ METHOD QTextBlock:setRevision( nRev )
    RETURN Qt_QTextBlock_setRevision( ::pPtr, nRev )
 
 
+METHOD QTextBlock:setUserData( pData )
+   RETURN Qt_QTextBlock_setUserData( ::pPtr, hbqt_ptr( pData ) )
+
+
 METHOD QTextBlock:setUserState( nState )
    RETURN Qt_QTextBlock_setUserState( ::pPtr, nState )
 
@@ -199,6 +205,10 @@ METHOD QTextBlock:text()
 
 METHOD QTextBlock:textList()
    RETURN Qt_QTextBlock_textList( ::pPtr )
+
+
+METHOD QTextBlock:userData()
+   RETURN Qt_QTextBlock_userData( ::pPtr )
 
 
 METHOD QTextBlock:userState()

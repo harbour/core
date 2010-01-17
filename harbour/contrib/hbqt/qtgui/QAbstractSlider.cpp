@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -80,9 +80,33 @@
  * ~QAbstractSlider ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractSlider > pq;
+} QGC_POINTER_QAbstractSlider;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractSlider * p = ( QGC_POINTER_QAbstractSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractSlider ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractSlider;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractSlider            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTSLIDER )

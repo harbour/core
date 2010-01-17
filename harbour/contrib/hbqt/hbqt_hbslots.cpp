@@ -329,6 +329,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< HBSlots > pq;
 } QGC_POINTER_HBSlots;
@@ -337,45 +338,40 @@ static QT_G_FUNC( hbqt_release_HBSlots )
 {
    QGC_POINTER_HBSlots * p = ( QGC_POINTER_HBSlots * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBSlots                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBSlots                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( HBSlots * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( HBSlots * ) p->ph )->~HBSlots();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( HBSlots * ) p->ph )->deleteLater();
-            break;
+            p->ph = NULL;
+            HB_TRACE( HB_TR_DEBUG, ( "release_HBSlots                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_HBSlots                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO release_HBSlots                 Object Name Missing!" ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBSlots                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_HBSlots     :     Object Already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBSlots                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_HBSlots     :     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-static void * hbqt_gcAllocate_HBSlots( void * pObj )
+static void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew )
 {
    QGC_POINTER_HBSlots * p = ( QGC_POINTER_HBSlots * ) hb_gcAllocate( sizeof( QGC_POINTER_HBSlots ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_release_HBSlots;
    new( & p->pq ) QPointer< HBSlots >( ( HBSlots * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBSlots                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
@@ -576,7 +572,6 @@ static void hbqt_SlotsExecQTextCursor( HBSlots * t_slots, QObject * object, cons
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCursor( cursor ) );
-         //PHB_ITEM p1 = hb_itemPutPtr( NULL, *cursor );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
          hb_itemRelease( pObject );
          delete ( ( QTextCursor * ) hb_itemGetPtr( p1 ) );
@@ -912,6 +907,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
       if( object )
       {
          const char * signal = hb_parcx( 3 );
+
          int i = object->property( signal ).toInt();
 
          if( i > 0 && i <= t_slots->listBlock.size() )
@@ -922,7 +918,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
 
             bRet = ( disconnect_signal( object, signal ) == true );
 
-            //HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", signal ) );
+            HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", signal ) );
          }
       }
    }
@@ -936,7 +932,7 @@ HB_FUNC( QT_SLOTS_NEW )
 
    pObj = ( HBSlots * ) new HBSlots();
 
-   hb_retptrGC( hbqt_gcAllocate_HBSlots( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBSlots( pObj, true ) );
 }
 
 #endif

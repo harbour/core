@@ -63,8 +63,7 @@
 #include <QHash>
 #include <QTextCharFormat>
 
-HBQTextBlockUserData::HBQTextBlockUserData()
-   : QTextBlockUserData()
+HBQTextBlockUserData::HBQTextBlockUserData() : QTextBlockUserData()
 {
    state = -1;
 }
@@ -74,6 +73,10 @@ HBQTextBlockUserData::~HBQTextBlockUserData()
 void HBQTextBlockUserData::setData( int iState )
 {
    state = iState;
+}
+HBQTextBlockUserData * HBQTextBlockUserData::data( const QTextBlock& block )
+{
+   return static_cast<HBQTextBlockUserData *>( block.userData() );
 }
 
 
@@ -136,6 +139,13 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    #endif
 
    QRegExp expression;
+   QTextBlock curBlock( currentBlock() );
+   bool bMerge = false;
+   //HBQTextBlockUserData * data = HBQTextBlockUserData::data( curBlock );
+   HBQTextBlockUserData * data = ( HBQTextBlockUserData * ) curBlock.userData();
+
+   if( data )
+      bMerge = ( data->state == 99 );
 
    foreach( const hHighlightingRule &rule, hhighlightingRules )
    {
@@ -144,7 +154,17 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       while( index >= 0 )
       {
          int length = expression.matchedLength();
-         setFormat( index, length, rule.format );
+         QTextBlockFormat tBlockFormat( curBlock.blockFormat() );
+         QBrush brush( tBlockFormat.background() );
+
+         if( bMerge )
+         {
+            HB_TRACE( HB_TR_ALWAYS, ( "text = %s", ( char * ) &text ) );
+            setFormat( index, length, rule.format );
+         }
+         else
+            setFormat( index, length, rule.format );
+
          index = expression.indexIn( text, index + length );
       }
    }
@@ -290,50 +310,6 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBRULE )
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBFORMAT )
 {
    hbqt_par_HBQSyntaxHighlighter( 1 )->setHBFormat( hbqt_par_QString( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
-}
-
-
-
-
-
-QT_G_FUNC( hbqt_gcRelease_HBQTextBlockUserData )
-{
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
-
-   if( p && p->ph )
-   {
-      delete ( ( HBQTextBlockUserData * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_HBQTextBlockUserData                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_HBQTextBlockUserData                   Object Already deleted!" ) );
-   }
-}
-
-void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj )
-{
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
-
-   p->ph = pObj;
-   p->func = hbqt_gcRelease_HBQTextBlockUserData;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_HBQTextBlockUserData                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return p;
-}
-
-HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
-{
-   void * pObj = NULL;
-
-   pObj = new HBQTextBlockUserData();
-
-   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( pObj ) );
-}
-
-HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_SETDATA )
-{
-   hbqt_par_HBQTextBlockUserData( 1 )->setData( hb_parni( 2 ) );
 }
 
 #endif

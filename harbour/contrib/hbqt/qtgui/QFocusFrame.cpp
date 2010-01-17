@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QFocusFrame > pq;
 } QGC_POINTER_QFocusFrame;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QFocusFrame )
 {
    QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFocusFrame                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFocusFrame                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QFocusFrame * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QFocusFrame * ) p->ph )->~QFocusFrame();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QFocusFrame * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QFocusFrame                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFocusFrame                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QFocusFrame                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QFocusFrame                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QFocusFrame                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFocusFrame                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QFocusFrame                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QFocusFrame( void * pObj )
+void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )
 {
    QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFocusFrame ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusFrame;
-   new( & p->pq ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QFocusFrame                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,7 +138,7 @@ HB_FUNC( QT_QFOCUSFRAME )
 
    pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFocusFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFocusFrame( pObj, true ) );
 }
 /*
  * void setWidget ( QWidget * widget )
@@ -153,7 +153,7 @@ HB_FUNC( QT_QFOCUSFRAME_SETWIDGET )
  */
 HB_FUNC( QT_QFOCUSFRAME_WIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QFocusFrame( 1 )->widget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QFocusFrame( 1 )->widget(), false ) );
 }
 
 

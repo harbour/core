@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -67,13 +67,17 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 21/23 [ 91.30% ] ]
+ *  Constructed[ 20/23 [ 86.96% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setSizes ( const QList<int> & list )
  *  QList<int> sizes () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //QSplitterHandle * handle ( int index ) const
  */
 
 #include <QtCore/QPointer>
@@ -90,6 +94,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QSplitter > pq;
 } QGC_POINTER_QSplitter;
@@ -98,48 +103,47 @@ QT_G_FUNC( hbqt_gcRelease_QSplitter )
 {
    QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSplitter                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSplitter                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QSplitter * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QSplitter * ) p->ph )->~QSplitter();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QSplitter * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSplitter                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSplitter                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSplitter                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSplitter                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSplitter                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSplitter                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSplitter                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QSplitter( void * pObj )
+void * hbqt_gcAllocate_QSplitter( void * pObj, bool bNew )
 {
    QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplitter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QSplitter;
-   new( & p->pq ) QPointer< QSplitter >( ( QSplitter * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QSplitter >( ( QSplitter * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QSplitter                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -152,7 +156,7 @@ HB_FUNC( QT_QSPLITTER )
    else
       pObj = ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSplitter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSplitter( pObj, true ) );
 }
 /*
  * void addWidget ( QWidget * widget )
@@ -190,14 +194,6 @@ HB_FUNC( QT_QSPLITTER_GETRANGE )
 
    hb_storni( iMin, 3 );
    hb_storni( iMax, 4 );
-}
-
-/*
- * QSplitterHandle * handle ( int index ) const
- */
-HB_FUNC( QT_QSPLITTER_HANDLE )
-{
-   hb_retptr( ( QSplitterHandle* ) hbqt_par_QSplitter( 1 )->handle( hb_parni( 2 ) ) );
 }
 
 /*
@@ -269,7 +265,7 @@ HB_FUNC( QT_QSPLITTER_RESTORESTATE )
  */
 HB_FUNC( QT_QSPLITTER_SAVESTATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ), true ) );
 }
 
 /*
@@ -325,7 +321,7 @@ HB_FUNC( QT_QSPLITTER_SETSTRETCHFACTOR )
  */
 HB_FUNC( QT_QSPLITTER_WIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QSplitter( 1 )->widget( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QSplitter( 1 )->widget( hb_parni( 2 ) ), false ) );
 }
 
 

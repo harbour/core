@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QWidgetAction > pq;
 } QGC_POINTER_QWidgetAction;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QWidgetAction )
 {
    QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWidgetAction                p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWidgetAction               ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QWidgetAction * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QWidgetAction * ) p->ph )->~QWidgetAction();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QWidgetAction * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QWidgetAction              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWidgetAction               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QWidgetAction              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QWidgetAction               Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QWidgetAction               Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QWidgetAction               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QWidgetAction               Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QWidgetAction( void * pObj )
+void * hbqt_gcAllocate_QWidgetAction( void * pObj, bool bNew )
 {
    QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidgetAction ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QWidgetAction;
-   new( & p->pq ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QWidgetAction              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,14 +138,14 @@ HB_FUNC( QT_QWIDGETACTION )
 
    pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWidgetAction( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidgetAction( pObj, true ) );
 }
 /*
  * QWidget * defaultWidget () const
  */
 HB_FUNC( QT_QWIDGETACTION_DEFAULTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QWidgetAction( 1 )->defaultWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QWidgetAction( 1 )->defaultWidget(), false ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QWIDGETACTION_RELEASEWIDGET )
  */
 HB_FUNC( QT_QWIDGETACTION_REQUESTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QWidgetAction( 1 )->requestWidget( hbqt_par_QWidget( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QWidgetAction( 1 )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) );
 }
 
 /*

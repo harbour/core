@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,6 +84,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QColorDialog > pq;
 } QGC_POINTER_QColorDialog;
@@ -92,48 +93,47 @@ QT_G_FUNC( hbqt_gcRelease_QColorDialog )
 {
    QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QColorDialog                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QColorDialog                ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QColorDialog * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QColorDialog * ) p->ph )->~QColorDialog();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QColorDialog * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QColorDialog               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QColorDialog                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QColorDialog               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QColorDialog                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QColorDialog                Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QColorDialog                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QColorDialog                Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QColorDialog( void * pObj )
+void * hbqt_gcAllocate_QColorDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QColorDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QColorDialog;
-   new( & p->pq ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QColorDialog               ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -150,14 +150,14 @@ HB_FUNC( QT_QCOLORDIALOG )
       pObj = ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QColorDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QColorDialog( pObj, true ) );
 }
 /*
  * QColor currentColor () const
  */
 HB_FUNC( QT_QCOLORDIALOG_CURRENTCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ), true ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QCOLORDIALOG_SELECTEDCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ), true ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), QColorDialog::tr( hb_parc( 4 ) ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), QColorDialog::tr( hb_parc( 4 ) ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ), true ) );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ), true ) );
 }
 
 /*

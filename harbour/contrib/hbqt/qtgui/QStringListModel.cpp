@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QStringListModel > pq;
 } QGC_POINTER_QStringListModel;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QStringListModel )
 {
    QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStringListModel             p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStringListModel            ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QStringListModel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QStringListModel * ) p->ph )->~QStringListModel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QStringListModel * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStringListModel           ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStringListModel            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QStringListModel           ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QStringListModel            Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStringListModel            Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStringListModel            Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStringListModel            Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStringListModel( void * pObj )
+void * hbqt_gcAllocate_QStringListModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStringListModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringListModel;
-   new( & p->pq ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStringListModel           ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,14 +138,14 @@ HB_FUNC( QT_QSTRINGLISTMODEL )
 
    pObj = ( QStringListModel* ) new QStringListModel() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStringListModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringListModel( pObj, true ) );
 }
 /*
  * virtual QVariant data ( const QModelIndex & index, int role ) const
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ), true ) );
 }
 
 

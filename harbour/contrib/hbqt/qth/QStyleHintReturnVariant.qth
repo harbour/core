@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QStyleHintReturn
 Type     = Core
 New      = 
@@ -80,6 +81,7 @@ Public Functions
 </ENUMS>
 
 <PROTOS>
+QVariant variant
 </PROTOS>
 
 <SLOTS>

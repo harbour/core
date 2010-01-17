@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -67,7 +67,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 26/33 [ 78.79% ] ]
+ *  Constructed[ 25/33 [ 75.76% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -79,6 +79,10 @@
  *  void insertRow ( int row, const QList<QStandardItem *> & items )
  *  QList<QStandardItem *> takeColumn ( int column )
  *  QList<QStandardItem *> takeRow ( int row )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // const QStandardItem * itemPrototype () const
  */
 
 #include <QtCore/QPointer>
@@ -95,6 +99,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QStandardItemModel > pq;
 } QGC_POINTER_QStandardItemModel;
@@ -103,48 +108,47 @@ QT_G_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel           p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel          ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QStandardItemModel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QStandardItemModel * ) p->ph )->~QStandardItemModel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QStandardItemModel * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStandardItemModel         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStandardItemModel          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QStandardItemModel         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QStandardItemModel          Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStandardItemModel          Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStandardItemModel          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStandardItemModel          Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStandardItemModel( void * pObj )
+void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStandardItemModel;
-   new( & p->pq ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStandardItemModel         ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -154,7 +158,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
 
    pObj = ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( pObj, true ) );
 }
 /*
  * void appendRow ( QStandardItem * item )
@@ -177,7 +181,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_CLEAR )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->horizontalHeaderItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -185,7 +189,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), true ) );
 }
 
 /*
@@ -217,7 +221,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW_1 )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->invisibleRootItem() );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->invisibleRootItem(), false ) );
 }
 
 /*
@@ -225,7 +229,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->item( hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -233,15 +237,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_ITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEMFROMINDEX )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ) );
-}
-
-/*
- * const QStandardItem * itemPrototype () const
- */
-HB_FUNC( QT_QSTANDARDITEMMODEL_ITEMPROTOTYPE )
-{
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->itemPrototype() );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ), false ) );
 }
 
 /*
@@ -337,7 +333,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SORTROLE )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->takeHorizontalHeaderItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -345,7 +341,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -353,7 +349,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->takeVerticalHeaderItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -361,7 +357,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_VERTICALHEADERITEM )
 {
-   hb_retptr( ( QStandardItem* ) hbqt_par_QStandardItemModel( 1 )->verticalHeaderItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
 }
 
 

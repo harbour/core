@@ -65,6 +65,7 @@ Destructor = no
 #include <qpalette.h>
 #include <QtGui/QClipboard>
 #include <QtGui/QApplication>
+#include <QtCore/QMimeData>
 
 /*
  *
@@ -83,7 +84,7 @@ enum Mode { Clipboard, Selection, FindBuffer }
 <PROTOS>
 void clear ( Mode mode = Clipboard )
 QImage image ( Mode mode = Clipboard ) const
-const QMimeData * mimeData ( Mode mode = Clipboard ) const
+//const QMimeData * mimeData ( Mode mode = Clipboard ) const
 bool ownsClipboard () const
 bool ownsFindBuffer () const
 bool ownsSelection () const

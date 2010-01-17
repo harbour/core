@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -99,6 +99,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QWizard > pq;
 } QGC_POINTER_QWizard;
@@ -107,48 +108,47 @@ QT_G_FUNC( hbqt_gcRelease_QWizard )
 {
    QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizard                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizard                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QWizard * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QWizard * ) p->ph )->~QWizard();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QWizard * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QWizard                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizard                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QWizard                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QWizard                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QWizard                     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QWizard                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QWizard                     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QWizard( void * pObj )
+void * hbqt_gcAllocate_QWizard( void * pObj, bool bNew )
 {
    QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizard ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizard;
-   new( & p->pq ) QPointer< QWizard >( ( QWizard * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QWizard >( ( QWizard * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QWizard                    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -158,7 +158,7 @@ HB_FUNC( QT_QWIZARD )
 
    pObj = new QWizard( hbqt_par_QWidget( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWizard( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizard( pObj, true ) );
 }
 /*
  * int addPage ( QWizardPage * page )
@@ -173,7 +173,7 @@ HB_FUNC( QT_QWIZARD_ADDPAGE )
  */
 HB_FUNC( QT_QWIZARD_BUTTON )
 {
-   hb_retptr( ( QAbstractButton* ) hbqt_par_QWizard( 1 )->button( ( QWizard::WizardButton ) hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QWizard( 1 )->button( ( QWizard::WizardButton ) hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QWIZARD_CURRENTID )
  */
 HB_FUNC( QT_QWIZARD_CURRENTPAGE )
 {
-   hb_retptr( ( QWizardPage* ) hbqt_par_QWizard( 1 )->currentPage() );
+   hb_retptrGC( hbqt_gcAllocate_QWizardPage( hbqt_par_QWizard( 1 )->currentPage(), false ) );
 }
 
 /*
@@ -205,7 +205,7 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_FIELD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( QWizard::tr( hb_parc( 2 ) ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( QWizard::tr( hb_parc( 2 ) ) ) ), true ) );
 }
 
 /*
@@ -237,7 +237,7 @@ HB_FUNC( QT_QWIZARD_OPTIONS )
  */
 HB_FUNC( QT_QWIZARD_PAGE )
 {
-   hb_retptr( ( QWizardPage* ) hbqt_par_QWizard( 1 )->page( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizardPage( hbqt_par_QWizard( 1 )->page( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QWIZARD_PAGE )
  */
 HB_FUNC( QT_QWIZARD_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*

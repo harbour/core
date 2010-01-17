@@ -107,6 +107,7 @@ INIT PROCEDURE hbxbp_Start()
 /*----------------------------------------------------------------------*/
 
 EXIT PROCEDURE hbxbp_End()
+   HB_TRACE( HB_TR_ALWAYS, "................................... EXIT PROCEDURE hbxbp_End()    begin " )
 
    t_oAppWindow := NIL
 
@@ -114,8 +115,11 @@ EXIT PROCEDURE hbxbp_End()
       s_oDeskTop:oWidget:pPtr := 0
    endif
 
-   s_oApp:quit()
+   /* These must never be called from here as QApplication.cpp's EXIT routine does it */
+   //s_oApp:quit()
+   //s_oApp := NIL
 
+   HB_TRACE( HB_TR_ALWAYS, "................................... EXIT PROCEDURE hbxbp_End()    end   " )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -396,3 +400,4 @@ FUNCTION HbXbp_SetCodecForTr( cCodec )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+

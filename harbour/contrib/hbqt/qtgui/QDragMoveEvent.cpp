@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -76,9 +76,31 @@
  * ~QDragMoveEvent ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QDragMoveEvent;
+
 QT_G_FUNC( hbqt_gcRelease_QDragMoveEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QDragMoveEvent;
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDragMoveEvent             ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QDRAGMOVEEVENT )
@@ -105,7 +127,7 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ), true ) );
 }
 
 /*

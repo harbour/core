@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,32 +85,49 @@
  * ~QFileInfo ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QFileInfo;
+
 QT_G_FUNC( hbqt_gcRelease_QFileInfo )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFileInfo                    p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFileInfo                   ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QFileInfo * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QFileInfo                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QFileInfo * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QFileInfo                  ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QFileInfo                   Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFileInfo                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QFileInfo                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QFileInfo( void * pObj )
+void * hbqt_gcAllocate_QFileInfo( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileInfo;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QFileInfo                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -120,14 +137,14 @@ HB_FUNC( QT_QFILEINFO )
 
    pObj = new QFileInfo() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFileInfo( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileInfo( pObj, true ) );
 }
 /*
  * QDir absoluteDir () const
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ), true ) );
 }
 
 /*
@@ -207,7 +224,7 @@ HB_FUNC( QT_QFILEINFO_COMPLETESUFFIX )
  */
 HB_FUNC( QT_QFILEINFO_CREATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ), true ) );
 }
 
 /*
@@ -215,7 +232,7 @@ HB_FUNC( QT_QFILEINFO_CREATED )
  */
 HB_FUNC( QT_QFILEINFO_DIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ), true ) );
 }
 
 /*
@@ -351,7 +368,7 @@ HB_FUNC( QT_QFILEINFO_ISWRITABLE )
  */
 HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ), true ) );
 }
 
 /*
@@ -359,7 +376,7 @@ HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILEINFO_LASTREAD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ), true ) );
 }
 
 /*

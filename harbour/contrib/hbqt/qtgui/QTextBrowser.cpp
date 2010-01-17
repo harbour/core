@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -78,6 +78,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QTextBrowser > pq;
 } QGC_POINTER_QTextBrowser;
@@ -86,48 +87,47 @@ QT_G_FUNC( hbqt_gcRelease_QTextBrowser )
 {
    QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBrowser                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBrowser                ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QTextBrowser * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QTextBrowser * ) p->ph )->~QTextBrowser();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QTextBrowser * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextBrowser               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBrowser                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTextBrowser               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTextBrowser                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextBrowser                Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextBrowser                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextBrowser                Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextBrowser( void * pObj )
+void * hbqt_gcAllocate_QTextBrowser( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBrowser;
-   new( & p->pq ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextBrowser               ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -137,7 +137,7 @@ HB_FUNC( QT_QTEXTBROWSER )
 
    pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextBrowser( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBrowser( pObj, true ) );
 }
 /*
  * int backwardHistoryCount () const
@@ -176,7 +176,7 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -200,7 +200,7 @@ HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
 }
 
 /*
@@ -224,7 +224,7 @@ HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ), true ) );
 }
 
 /*
@@ -256,7 +256,7 @@ HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ), true ) );
 }
 
 /*

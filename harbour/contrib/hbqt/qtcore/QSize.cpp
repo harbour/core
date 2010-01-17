@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -77,32 +77,49 @@
  * ~QSize ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QSize;
+
 QT_G_FUNC( hbqt_gcRelease_QSize )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSize                        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSize                       ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QSize * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QSize                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QSize * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSize                      ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSize                       Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSize                       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSize                       Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QSize( void * pObj )
+void * hbqt_gcAllocate_QSize( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QSize;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QSize                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QSize                      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -123,7 +140,7 @@ HB_FUNC( QT_QSIZE )
       pObj = ( QSize* ) new QSize() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QSize( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( pObj, true ) );
 }
 /*
  * int height () const
@@ -226,7 +243,7 @@ HB_FUNC( QT_QSIZE_WIDTH )
  */
 HB_FUNC( QT_QSIZE_BOUNDEDTO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ), true ) );
 }
 
 /*
@@ -234,7 +251,7 @@ HB_FUNC( QT_QSIZE_BOUNDEDTO )
  */
 HB_FUNC( QT_QSIZE_EXPANDEDTO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ), true ) );
 }
 
 

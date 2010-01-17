@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -90,9 +90,33 @@
  * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractPrintDialog > pq;
+} QGC_POINTER_QAbstractPrintDialog;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractPrintDialog * p = ( QGC_POINTER_QAbstractPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractPrintDialog ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractPrintDialog;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractPrintDialog       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
@@ -143,7 +167,7 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTRANGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTER )
 {
-   hb_retptr( ( QPrinter* ) hbqt_par_QAbstractPrintDialog( 1 )->printer() );
+   hb_retptrGC( hbqt_gcAllocate_QPrinter( hbqt_par_QAbstractPrintDialog( 1 )->printer(), false ) );
 }
 
 /*

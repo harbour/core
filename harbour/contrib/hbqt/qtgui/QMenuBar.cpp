@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QMenuBar > pq;
 } QGC_POINTER_QMenuBar;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QMenuBar )
 {
    QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMenuBar                     p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMenuBar                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QMenuBar * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QMenuBar * ) p->ph )->~QMenuBar();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QMenuBar * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMenuBar                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMenuBar                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QMenuBar                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMenuBar                    Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMenuBar                    Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMenuBar                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMenuBar                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QMenuBar( void * pObj )
+void * hbqt_gcAllocate_QMenuBar( void * pObj, bool bNew )
 {
    QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenuBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QMenuBar;
-   new( & p->pq ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMenuBar                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,14 +138,14 @@ HB_FUNC( QT_QMENUBAR )
 
    pObj = ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QMenuBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenuBar( pObj, true ) );
 }
 /*
  * QAction * activeAction () const
  */
 HB_FUNC( QT_QMENUBAR_ACTIVEACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->activeAction() );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->activeAction(), false ) );
 }
 
 /*
@@ -153,7 +153,7 @@ HB_FUNC( QT_QMENUBAR_ACTIVEACTION )
  */
 HB_FUNC( QT_QMENUBAR_ADDACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ) ), false ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QMENUBAR_ADDACTION )
  */
 HB_FUNC( QT_QMENUBAR_ADDACTION_1 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->addAction( QMenuBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QMENUBAR_ADDACTION_2 )
  */
 HB_FUNC( QT_QMENUBAR_ADDMENU )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ), false ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QMENUBAR_ADDMENU )
  */
 HB_FUNC( QT_QMENUBAR_ADDMENU_1 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QMenuBar::tr( hb_parc( 2 ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QMenuBar( 1 )->addMenu( QMenuBar::tr( hb_parc( 2 ) ) ), false ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QMENUBAR_ADDMENU_1 )
  */
 HB_FUNC( QT_QMENUBAR_ADDMENU_2 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), QMenuBar::tr( hb_parc( 3 ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), QMenuBar::tr( hb_parc( 3 ) ) ), false ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QMENUBAR_ADDMENU_2 )
  */
 HB_FUNC( QT_QMENUBAR_ADDSEPARATOR )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addSeparator() );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->addSeparator(), false ) );
 }
 
 /*
@@ -217,7 +217,7 @@ HB_FUNC( QT_QMENUBAR_CLEAR )
  */
 HB_FUNC( QT_QMENUBAR_INSERTMENU )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertMenu( hbqt_par_QAction( 2 ), hbqt_par_QMenu( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->insertMenu( hbqt_par_QAction( 2 ), hbqt_par_QMenu( 3 ) ), false ) );
 }
 
 /*
@@ -225,7 +225,7 @@ HB_FUNC( QT_QMENUBAR_INSERTMENU )
  */
 HB_FUNC( QT_QMENUBAR_INSERTSEPARATOR )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QMenuBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ), false ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,6 +84,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QFontComboBox > pq;
 } QGC_POINTER_QFontComboBox;
@@ -92,48 +93,47 @@ QT_G_FUNC( hbqt_gcRelease_QFontComboBox )
 {
    QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFontComboBox                p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFontComboBox               ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QFontComboBox * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QFontComboBox * ) p->ph )->~QFontComboBox();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QFontComboBox * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QFontComboBox              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFontComboBox               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QFontComboBox              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QFontComboBox               Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QFontComboBox               Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFontComboBox               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QFontComboBox               Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QFontComboBox( void * pObj )
+void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontComboBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontComboBox;
-   new( & p->pq ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QFontComboBox               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QFontComboBox              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,14 +143,14 @@ HB_FUNC( QT_QFONTCOMBOBOX )
 
    pObj = ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFontComboBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontComboBox( pObj, true ) );
 }
 /*
  * QFont currentFont () const
  */
 HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ), true ) );
 }
 
 /*

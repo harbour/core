@@ -9,6 +9,7 @@
 # --------------------------------------------------------------------
 
 CPP_SOURCES := \
+   HBQTextBlockUserData.cpp \
    QAbstractButton.cpp \
    QAbstractItemDelegate.cpp \
    QAbstractItemView.cpp \
@@ -101,10 +102,11 @@ CPP_SOURCES := \
    QMouseEvent.cpp \
    QMoveEvent.cpp \
    QMovie.cpp \
-   QPaintDevice.cpp \
-   QPainterPath.cpp \
    QPageSetupDialog.cpp \
+   QPaintDevice.cpp \
+   QPaintEngine.cpp \
    QPainter.cpp \
+   QPainterPath.cpp \
    QPaintEvent.cpp \
    QPalette.cpp \
    QPen.cpp \
@@ -196,6 +198,7 @@ CPP_SOURCES := \
    QTextLayout.cpp \
    QTextLength.cpp \
    QTextLine.cpp \
+   QTextList.cpp \
    QTextListFormat.cpp \
    QTextObject.cpp \
    QTextOption.cpp \
@@ -221,6 +224,7 @@ CPP_SOURCES := \
 
 
 PRG_SOURCES := \
+   THBQTextBlockUserData.prg \
    TQAbstractButton.prg \
    TQAbstractItemDelegate.prg \
    TQAbstractItemView.prg \
@@ -313,10 +317,11 @@ PRG_SOURCES := \
    TQMouseEvent.prg \
    TQMoveEvent.prg \
    TQMovie.prg \
-   TQPaintDevice.prg \
-   TQPainterPath.prg \
    TQPageSetupDialog.prg \
+   TQPaintDevice.prg \
+   TQPaintEngine.prg \
    TQPainter.prg \
+   TQPainterPath.prg \
    TQPaintEvent.prg \
    TQPalette.prg \
    TQPen.prg \
@@ -408,6 +413,7 @@ PRG_SOURCES := \
    TQTextLayout.prg \
    TQTextLength.prg \
    TQTextLine.prg \
+   TQTextList.prg \
    TQTextListFormat.prg \
    TQTextObject.prg \
    TQTextOption.prg \

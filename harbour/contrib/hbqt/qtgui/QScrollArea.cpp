@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QScrollArea > pq;
 } QGC_POINTER_QScrollArea;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QScrollArea )
 {
    QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QScrollArea                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QScrollArea                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QScrollArea * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QScrollArea * ) p->ph )->~QScrollArea();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QScrollArea * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QScrollArea                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QScrollArea                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QScrollArea                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QScrollArea                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QScrollArea                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QScrollArea                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QScrollArea                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QScrollArea( void * pObj )
+void * hbqt_gcAllocate_QScrollArea( void * pObj, bool bNew )
 {
    QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollArea ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QScrollArea;
-   new( & p->pq ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QScrollArea                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QScrollArea                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSCROLLAREA )
 
    pObj = ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QScrollArea( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QScrollArea( pObj, true ) );
 }
 /*
  * Qt::Alignment alignment () const
@@ -193,7 +193,7 @@ HB_FUNC( QT_QSCROLLAREA_SETWIDGETRESIZABLE )
  */
 HB_FUNC( QT_QSCROLLAREA_TAKEWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QScrollArea( 1 )->takeWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QScrollArea( 1 )->takeWidget(), false ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QSCROLLAREA_TAKEWIDGET )
  */
 HB_FUNC( QT_QSCROLLAREA_WIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QScrollArea( 1 )->widget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QScrollArea( 1 )->widget(), false ) );
 }
 
 /*

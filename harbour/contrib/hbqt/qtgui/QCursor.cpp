@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -70,6 +70,7 @@
 
 #include <qpixmap.h>
 #include <QtGui/QCursor>
+#include <QtGui/QBitmap>
 
 /*
  * QCursor ()
@@ -82,32 +83,49 @@
  * ~QCursor ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QCursor;
+
 QT_G_FUNC( hbqt_gcRelease_QCursor )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCursor                      p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCursor                     ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QCursor * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QCursor                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QCursor * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QCursor                    ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QCursor                     Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QCursor                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QCursor                     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QCursor( void * pObj )
+void * hbqt_gcAllocate_QCursor( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QCursor;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QCursor                    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -145,14 +163,14 @@ HB_FUNC( QT_QCURSOR )
       pObj = ( QCursor* ) new QCursor() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QCursor( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCursor( pObj, true ) );
 }
 /*
  * const QBitmap * bitmap () const
  */
 HB_FUNC( QT_QCURSOR_BITMAP )
 {
-   hb_retptr( ( QBitmap* ) hbqt_par_QCursor( 1 )->bitmap() );
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( hbqt_par_QCursor( 1 )->bitmap() ) ), true ) );
 }
 
 /*
@@ -160,7 +178,7 @@ HB_FUNC( QT_QCURSOR_BITMAP )
  */
 HB_FUNC( QT_QCURSOR_HOTSPOT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->hotSpot() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->hotSpot() ), true ) );
 }
 
 /*
@@ -168,7 +186,7 @@ HB_FUNC( QT_QCURSOR_HOTSPOT )
  */
 HB_FUNC( QT_QCURSOR_MASK )
 {
-   hb_retptr( ( QBitmap* ) hbqt_par_QCursor( 1 )->mask() );
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( hbqt_par_QCursor( 1 )->mask() ) ), true ) );
 }
 
 /*
@@ -176,7 +194,7 @@ HB_FUNC( QT_QCURSOR_MASK )
  */
 HB_FUNC( QT_QCURSOR_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QCursor( 1 )->pixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QCursor( 1 )->pixmap() ), true ) );
 }
 
 /*
@@ -200,7 +218,7 @@ HB_FUNC( QT_QCURSOR_SHAPE )
  */
 HB_FUNC( QT_QCURSOR_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->pos() ), true ) );
 }
 
 /*

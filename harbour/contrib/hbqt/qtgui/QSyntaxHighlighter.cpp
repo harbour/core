@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -81,6 +81,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QSyntaxHighlighter > pq;
 } QGC_POINTER_QSyntaxHighlighter;
@@ -89,48 +90,47 @@ QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
 {
    QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter           p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter          ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QSyntaxHighlighter * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QSyntaxHighlighter * ) p->ph )->~QSyntaxHighlighter();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QSyntaxHighlighter * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSyntaxHighlighter         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSyntaxHighlighter         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSyntaxHighlighter          Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSyntaxHighlighter          Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSyntaxHighlighter          Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSyntaxHighlighter          Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj )
+void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
 {
    QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QSyntaxHighlighter;
-   new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QSyntaxHighlighter         ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,14 +143,14 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
       pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QSyntaxHighlighter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSyntaxHighlighter( pObj, true ) );
 }
 /*
  * QTextDocument * document () const
  */
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QSyntaxHighlighter( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QSyntaxHighlighter( 1 )->document(), false ) );
 }
 
 /*

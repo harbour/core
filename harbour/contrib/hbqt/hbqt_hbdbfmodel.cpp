@@ -309,6 +309,7 @@ void HBDbfModel::hbSetRowColumns( int rows, int cols )
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< HBDbfModel > pq;
 } QGC_POINTER_HBDbfModel;
@@ -317,26 +318,14 @@ static QT_G_FUNC( hbqt_release_HBDbfModel )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBDbfModel                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBDbfModel                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
+if( p->bNew )
+{
    if( p && p->ph && p->pq )
    {
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         switch( hbqt_get_object_release_method() )
-         {
-         case HBQT_RELEASE_WITH_DELETE:
-            delete ( ( HBDbfModel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( HBDbfModel * ) p->ph )->~HBDbfModel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( HBDbfModel * ) p->ph )->deleteLater();
-            break;
-         }
+         delete ( ( HBDbfModel * ) p->ph );
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_HBDbfModel                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
@@ -350,12 +339,19 @@ static QT_G_FUNC( hbqt_release_HBDbfModel )
       HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBDbfModel                 Object Already deleted!" ) );
    }
 }
+else
+{
+   HB_TRACE( HB_TR_ALWAYS, ( "PTR_rel_HBDbfModel                Object not created with - new" ) );
+   p->ph = NULL;
+}
+}
 
-static void * hbqt_gcAllocate_HBDbfModel( void * pObj )
+static void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_release_HBDbfModel;
    new( & p->pq ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBDbfModel                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
@@ -368,7 +364,7 @@ HB_FUNC( QT_HBDBFMODEL )
 
    pObj = ( HBDbfModel * ) new HBDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) );
 
-   hb_retptrGC( hbqt_gcAllocate_HBDbfModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBDbfModel( pObj, true ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_RESET )
@@ -378,7 +374,7 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), true ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )

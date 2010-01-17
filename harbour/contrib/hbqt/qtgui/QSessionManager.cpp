@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,9 +79,33 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QSessionManager > pq;
+} QGC_POINTER_QSessionManager;
+
 QT_G_FUNC( hbqt_gcRelease_QSessionManager )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
+{
+   QGC_POINTER_QSessionManager * p = ( QGC_POINTER_QSessionManager * ) hb_gcAllocate( sizeof( QGC_POINTER_QSessionManager ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QSessionManager;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QSessionManager >( ( QSessionManager * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QSessionManager            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QSESSIONMANAGER )
@@ -116,7 +140,7 @@ HB_FUNC( QT_QSESSIONMANAGER_CANCEL )
  */
 HB_FUNC( QT_QSESSIONMANAGER_DISCARDCOMMAND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->discardCommand() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->discardCommand() ), true ) );
 }
 
 /*
@@ -148,7 +172,7 @@ HB_FUNC( QT_QSESSIONMANAGER_REQUESTPHASE2 )
  */
 HB_FUNC( QT_QSESSIONMANAGER_RESTARTCOMMAND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->restartCommand() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->restartCommand() ), true ) );
 }
 
 /*

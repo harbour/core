@@ -94,7 +94,7 @@ void insertRow ( int row, QStandardItem * item )
 QStandardItem * invisibleRootItem () const
 QStandardItem * item ( int row, int column = 0 ) const
 QStandardItem * itemFromIndex ( const QModelIndex & index ) const
-const QStandardItem * itemPrototype () const
+// const QStandardItem * itemPrototype () const
 void setColumnCount ( int columns )
 void setHorizontalHeaderItem ( int column, QStandardItem * item )
 void setHorizontalHeaderLabels ( const QStringList & labels )

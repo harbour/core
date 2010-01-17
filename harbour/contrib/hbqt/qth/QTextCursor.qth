@@ -143,7 +143,7 @@ QTextList * createList ( const QTextListFormat & format )
 QTextList * createList ( QTextListFormat::Style style )
 QTextFrame * currentFrame () const
 QTextList * currentList () const
-QTextTable * currentTable () const
+//QTextTable * currentTable () const
 void deleteChar ()
 void deletePreviousChar ()
 QTextDocument * document () const
@@ -162,8 +162,8 @@ void insertImage ( const QTextImageFormat & format, QTextFrameFormat::Position a
 void insertImage ( const QImage & image, const QString & name = QString() )
 QTextList * insertList ( const QTextListFormat & format )
 QTextList * insertList ( QTextListFormat::Style style )
-QTextTable * insertTable ( int rows, int columns, const QTextTableFormat & format )
-QTextTable * insertTable ( int rows, int columns )
+//QTextTable * insertTable ( int rows, int columns, const QTextTableFormat & format )
+//QTextTable * insertTable ( int rows, int columns )
 void insertText ( const QString & text )
 void insertText ( const QString & text, const QTextCharFormat & format )
 bool isCopyOf ( const QTextCursor & other ) const

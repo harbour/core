@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -139,32 +139,49 @@ QVariant ( const QRegExp & regExp )
 ~QVariant ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QVariant;
+
 QT_G_FUNC( hbqt_gcRelease_QVariant )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QVariant                     p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QVariant                    ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QVariant * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QVariant                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QVariant * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QVariant                   ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QVariant                    Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QVariant                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QVariant                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QVariant( void * pObj )
+void * hbqt_gcAllocate_QVariant( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QVariant;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QVariant                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QVariant                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -174,7 +191,7 @@ HB_FUNC( QT_QVARIANT )
 
    pObj = ( QVariant* ) new QVariant() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QVariant( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( pObj, true ) );
 }
 /*
  * bool canConvert ( Type t ) const
@@ -237,7 +254,7 @@ HB_FUNC( QT_QVARIANT_SETVALUE )
  */
 HB_FUNC( QT_QVARIANT_TOBITARRAY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBitArray( new QBitArray( hbqt_par_QVariant( 1 )->toBitArray() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBitArray( new QBitArray( hbqt_par_QVariant( 1 )->toBitArray() ), true ) );
 }
 
 /*
@@ -253,7 +270,7 @@ HB_FUNC( QT_QVARIANT_TOBOOL )
  */
 HB_FUNC( QT_QVARIANT_TOBYTEARRAY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QVariant( 1 )->toByteArray() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QVariant( 1 )->toByteArray() ), true ) );
 }
 
 /*
@@ -261,7 +278,7 @@ HB_FUNC( QT_QVARIANT_TOBYTEARRAY )
  */
 HB_FUNC( QT_QVARIANT_TODATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QVariant( 1 )->toDate() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QVariant( 1 )->toDate() ), true ) );
 }
 
 /*
@@ -269,7 +286,7 @@ HB_FUNC( QT_QVARIANT_TODATE )
  */
 HB_FUNC( QT_QVARIANT_TODATETIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QVariant( 1 )->toDateTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QVariant( 1 )->toDateTime() ), true ) );
 }
 
 /*
@@ -301,7 +318,7 @@ HB_FUNC( QT_QVARIANT_TOINT )
  */
 HB_FUNC( QT_QVARIANT_TOLINE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( hbqt_par_QVariant( 1 )->toLine() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( hbqt_par_QVariant( 1 )->toLine() ), true ) );
 }
 
 /*
@@ -309,7 +326,7 @@ HB_FUNC( QT_QVARIANT_TOLINE )
  */
 HB_FUNC( QT_QVARIANT_TOLINEF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QVariant( 1 )->toLineF() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QVariant( 1 )->toLineF() ), true ) );
 }
 
 /*
@@ -317,7 +334,7 @@ HB_FUNC( QT_QVARIANT_TOLINEF )
  */
 HB_FUNC( QT_QVARIANT_TOLOCALE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QVariant( 1 )->toLocale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QVariant( 1 )->toLocale() ), true ) );
 }
 
 /*
@@ -337,7 +354,7 @@ HB_FUNC( QT_QVARIANT_TOLONGLONG )
  */
 HB_FUNC( QT_QVARIANT_TOPOINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QVariant( 1 )->toPoint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QVariant( 1 )->toPoint() ), true ) );
 }
 
 /*
@@ -345,7 +362,7 @@ HB_FUNC( QT_QVARIANT_TOPOINT )
  */
 HB_FUNC( QT_QVARIANT_TOPOINTF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QVariant( 1 )->toPointF() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QVariant( 1 )->toPointF() ), true ) );
 }
 
 /*
@@ -353,7 +370,7 @@ HB_FUNC( QT_QVARIANT_TOPOINTF )
  */
 HB_FUNC( QT_QVARIANT_TORECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QVariant( 1 )->toRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QVariant( 1 )->toRect() ), true ) );
 }
 
 /*
@@ -361,7 +378,7 @@ HB_FUNC( QT_QVARIANT_TORECT )
  */
 HB_FUNC( QT_QVARIANT_TORECTF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QVariant( 1 )->toRectF() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QVariant( 1 )->toRectF() ), true ) );
 }
 
 /*
@@ -369,7 +386,7 @@ HB_FUNC( QT_QVARIANT_TORECTF )
  */
 HB_FUNC( QT_QVARIANT_TOREGEXP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegExp( new QRegExp( hbqt_par_QVariant( 1 )->toRegExp() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRegExp( new QRegExp( hbqt_par_QVariant( 1 )->toRegExp() ), true ) );
 }
 
 /*
@@ -377,7 +394,7 @@ HB_FUNC( QT_QVARIANT_TOREGEXP )
  */
 HB_FUNC( QT_QVARIANT_TOSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QVariant( 1 )->toSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QVariant( 1 )->toSize() ), true ) );
 }
 
 /*
@@ -385,7 +402,7 @@ HB_FUNC( QT_QVARIANT_TOSIZE )
  */
 HB_FUNC( QT_QVARIANT_TOSIZEF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QVariant( 1 )->toSizeF() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QVariant( 1 )->toSizeF() ), true ) );
 }
 
 /*
@@ -401,7 +418,7 @@ HB_FUNC( QT_QVARIANT_TOSTRING )
  */
 HB_FUNC( QT_QVARIANT_TOSTRINGLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QVariant( 1 )->toStringList() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QVariant( 1 )->toStringList() ), true ) );
 }
 
 /*
@@ -409,7 +426,7 @@ HB_FUNC( QT_QVARIANT_TOSTRINGLIST )
  */
 HB_FUNC( QT_QVARIANT_TOTIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QVariant( 1 )->toTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QVariant( 1 )->toTime() ), true ) );
 }
 
 /*
@@ -441,7 +458,7 @@ HB_FUNC( QT_QVARIANT_TOULONGLONG )
  */
 HB_FUNC( QT_QVARIANT_TOURL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QVariant( 1 )->toUrl() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QVariant( 1 )->toUrl() ), true ) );
 }
 
 /*
@@ -465,7 +482,7 @@ HB_FUNC( QT_QVARIANT_USERTYPE )
  */
 HB_FUNC( QT_QVARIANT_FROMVALUE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QVariant( 1 )->fromValue( hb_param( 2, HB_IT_ANY ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QVariant( 1 )->fromValue( hb_param( 2, HB_IT_ANY ) ) ), true ) );
 }
 
 /*

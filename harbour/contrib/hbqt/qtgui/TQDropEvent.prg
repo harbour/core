@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -70,7 +70,6 @@ CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, QEvent
    METHOD  acceptProposedAction()
    METHOD  dropAction()
    METHOD  keyboardModifiers()
-   METHOD  mimeData()
    METHOD  mouseButtons()
    METHOD  pos()
    METHOD  possibleActions()
@@ -100,10 +99,6 @@ METHOD QDropEvent:dropAction()
 
 METHOD QDropEvent:keyboardModifiers()
    RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr )
-
-
-METHOD QDropEvent:mimeData()
-   RETURN Qt_QDropEvent_mimeData( ::pPtr )
 
 
 METHOD QDropEvent:mouseButtons()

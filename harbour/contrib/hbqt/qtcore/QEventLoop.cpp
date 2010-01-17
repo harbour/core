@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,6 +84,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QEventLoop > pq;
 } QGC_POINTER_QEventLoop;
@@ -92,48 +93,47 @@ QT_G_FUNC( hbqt_gcRelease_QEventLoop )
 {
    QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QEventLoop                   p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QEventLoop                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QEventLoop * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QEventLoop * ) p->ph )->~QEventLoop();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QEventLoop * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QEventLoop                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QEventLoop                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QEventLoop                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QEventLoop                  Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QEventLoop                  Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QEventLoop                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QEventLoop                  Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QEventLoop( void * pObj )
+void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew )
 {
    QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) hb_gcAllocate( sizeof( QGC_POINTER_QEventLoop ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QEventLoop;
-   new( & p->pq ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QEventLoop                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,7 +143,7 @@ HB_FUNC( QT_QEVENTLOOP )
 
    pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QEventLoop( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QEventLoop( pObj, true ) );
 }
 /*
  * int exec ( ProcessEventsFlags flags = AllEvents )

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -77,6 +77,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QWizardPage > pq;
 } QGC_POINTER_QWizardPage;
@@ -85,48 +86,47 @@ QT_G_FUNC( hbqt_gcRelease_QWizardPage )
 {
    QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizardPage                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizardPage                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QWizardPage * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QWizardPage * ) p->ph )->~QWizardPage();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QWizardPage * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QWizardPage                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QWizardPage                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QWizardPage                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QWizardPage                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QWizardPage                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QWizardPage                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QWizardPage                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QWizardPage( void * pObj )
+void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
 {
    QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizardPage ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizardPage;
-   new( & p->pq ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QWizardPage                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -136,7 +136,7 @@ HB_FUNC( QT_QWIZARDPAGE )
 
    pObj = new QWizardPage() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWizardPage( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizardPage( pObj, true ) );
 }
 /*
  * QString buttonText ( QWizard::WizardButton which ) const
@@ -199,7 +199,7 @@ HB_FUNC( QT_QWIZARDPAGE_NEXTID )
  */
 HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizardPage( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizardPage( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*

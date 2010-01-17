@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = 
 Type     = Core
 New      = 
@@ -80,6 +81,8 @@ enum StyleOptionVersion { Version }
 </ENUMS>
 
 <PROTOS>
+int type
+int version
 </PROTOS>
 
 <SLOTS>

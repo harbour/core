@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,32 +85,49 @@ QColor ( const QColor & color )
 ~QColor ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QColor;
+
 QT_G_FUNC( hbqt_gcRelease_QColor )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QColor                       p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QColor                      ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QColor * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QColor                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QColor * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QColor                     ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QColor                      Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QColor                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QColor                      Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QColor( void * pObj )
+void * hbqt_gcAllocate_QColor( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QColor;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QColor                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QColor                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -154,7 +171,7 @@ HB_FUNC( QT_QCOLOR )
       pObj = ( QColor* ) new QColor() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QColor( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( pObj, true ) );
 }
 /*
  * int alpha () const
@@ -209,7 +226,7 @@ HB_FUNC( QT_QCOLOR_BLUEF )
  */
 HB_FUNC( QT_QCOLOR_CONVERTTO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->convertTo( ( QColor::Spec ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->convertTo( ( QColor::Spec ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -233,7 +250,7 @@ HB_FUNC( QT_QCOLOR_CYANF )
  */
 HB_FUNC( QT_QCOLOR_DARKER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->darker( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 200 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->darker( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 200 ) ) ), true ) );
 }
 
 /*
@@ -393,7 +410,7 @@ HB_FUNC( QT_QCOLOR_ISVALID )
  */
 HB_FUNC( QT_QCOLOR_LIGHTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->lighter( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 150 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->lighter( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 150 ) ) ), true ) );
 }
 
 /*
@@ -617,7 +634,7 @@ HB_FUNC( QT_QCOLOR_SPEC )
  */
 HB_FUNC( QT_QCOLOR_TOCMYK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toCmyk() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toCmyk() ), true ) );
 }
 
 /*
@@ -625,7 +642,7 @@ HB_FUNC( QT_QCOLOR_TOCMYK )
  */
 HB_FUNC( QT_QCOLOR_TOHSV )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toHsv() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toHsv() ), true ) );
 }
 
 /*
@@ -633,7 +650,7 @@ HB_FUNC( QT_QCOLOR_TOHSV )
  */
 HB_FUNC( QT_QCOLOR_TORGB )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toRgb() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->toRgb() ), true ) );
 }
 
 /*
@@ -673,7 +690,7 @@ HB_FUNC( QT_QCOLOR_YELLOWF )
  */
 HB_FUNC( QT_QCOLOR_COLORNAMES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QColor( 1 )->colorNames() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QColor( 1 )->colorNames() ), true ) );
 }
 
 /*
@@ -681,7 +698,7 @@ HB_FUNC( QT_QCOLOR_COLORNAMES )
  */
 HB_FUNC( QT_QCOLOR_FROMCMYK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ) ), true ) );
 }
 
 /*
@@ -689,7 +706,7 @@ HB_FUNC( QT_QCOLOR_FROMCMYK )
  */
 HB_FUNC( QT_QCOLOR_FROMCMYKF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromCmykF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromCmykF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) ) ), true ) );
 }
 
 /*
@@ -697,7 +714,7 @@ HB_FUNC( QT_QCOLOR_FROMCMYKF )
  */
 HB_FUNC( QT_QCOLOR_FROMHSV )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) );
 }
 
 /*
@@ -705,7 +722,7 @@ HB_FUNC( QT_QCOLOR_FROMHSV )
  */
 HB_FUNC( QT_QCOLOR_FROMHSVF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromHsvF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromHsvF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ), true ) );
 }
 
 /*
@@ -713,7 +730,7 @@ HB_FUNC( QT_QCOLOR_FROMHSVF )
  */
 HB_FUNC( QT_QCOLOR_FROMRGB )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parnl( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parnl( 2 ) ) ), true ) );
 }
 
 /*
@@ -721,7 +738,7 @@ HB_FUNC( QT_QCOLOR_FROMRGB )
  */
 HB_FUNC( QT_QCOLOR_FROMRGB_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) );
 }
 
 /*
@@ -729,7 +746,7 @@ HB_FUNC( QT_QCOLOR_FROMRGB_1 )
  */
 HB_FUNC( QT_QCOLOR_FROMRGBF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgbF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgbF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ), true ) );
 }
 
 /*
@@ -737,7 +754,7 @@ HB_FUNC( QT_QCOLOR_FROMRGBF )
  */
 HB_FUNC( QT_QCOLOR_FROMRGBA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgba( hb_parnl( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColor( 1 )->fromRgba( hb_parnl( 2 ) ) ), true ) );
 }
 
 

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -76,9 +76,31 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextInlineObject;
+
 QT_G_FUNC( hbqt_gcRelease_QTextInlineObject )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QTextInlineObject;
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextInlineObject          ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QTEXTINLINEOBJECT )
@@ -105,7 +127,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ), true ) );
 }
 
 /*
@@ -137,7 +159,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ), true ) );
 }
 
 /*

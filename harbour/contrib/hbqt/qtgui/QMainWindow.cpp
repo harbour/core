@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -108,6 +108,7 @@ HB_FUNC( HBQT_QMAINWINDOW_RESTSETTINGS )
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QMainWindow > pq;
 } QGC_POINTER_QMainWindow;
@@ -116,48 +117,47 @@ QT_G_FUNC( hbqt_gcRelease_QMainWindow )
 {
    QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMainWindow                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMainWindow                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QMainWindow * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QMainWindow * ) p->ph )->~QMainWindow();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QMainWindow * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMainWindow                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMainWindow                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QMainWindow                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMainWindow                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMainWindow                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMainWindow                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMainWindow                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QMainWindow( void * pObj )
+void * hbqt_gcAllocate_QMainWindow( void * pObj, bool bNew )
 {
    QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMainWindow ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QMainWindow;
-   new( & p->pq ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMainWindow                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -167,7 +167,7 @@ HB_FUNC( QT_QMAINWINDOW )
 
    pObj = ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QMainWindow( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMainWindow( pObj, true ) );
 }
 /*
  * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
@@ -206,7 +206,7 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_1 )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_2 )
 {
-   hb_retptr( ( QToolBar* ) hbqt_par_QMainWindow( 1 )->addToolBar( QMainWindow::tr( hb_parc( 2 ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolBar( hbqt_par_QMainWindow( 1 )->addToolBar( QMainWindow::tr( hb_parc( 2 ) ) ), false ) );
 }
 
 /*
@@ -222,7 +222,7 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBARBREAK )
  */
 HB_FUNC( QT_QMAINWINDOW_CENTRALWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QMainWindow( 1 )->centralWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QMainWindow( 1 )->centralWidget(), false ) );
 }
 
 /*
@@ -238,7 +238,7 @@ HB_FUNC( QT_QMAINWINDOW_CORNER )
  */
 HB_FUNC( QT_QMAINWINDOW_CREATEPOPUPMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QMainWindow( 1 )->createPopupMenu() );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QMainWindow( 1 )->createPopupMenu(), false ) );
 }
 
 /*
@@ -270,7 +270,7 @@ HB_FUNC( QT_QMAINWINDOW_DOCUMENTMODE )
  */
 HB_FUNC( QT_QMAINWINDOW_ICONSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ), true ) );
 }
 
 /*
@@ -310,7 +310,7 @@ HB_FUNC( QT_QMAINWINDOW_ISDOCKNESTINGENABLED )
  */
 HB_FUNC( QT_QMAINWINDOW_MENUBAR )
 {
-   hb_retptr( ( QMenuBar* ) hbqt_par_QMainWindow( 1 )->menuBar() );
+   hb_retptrGC( hbqt_gcAllocate_QMenuBar( hbqt_par_QMainWindow( 1 )->menuBar(), false ) );
 }
 
 /*
@@ -318,7 +318,7 @@ HB_FUNC( QT_QMAINWINDOW_MENUBAR )
  */
 HB_FUNC( QT_QMAINWINDOW_MENUWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QMainWindow( 1 )->menuWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QMainWindow( 1 )->menuWidget(), false ) );
 }
 
 /*
@@ -366,7 +366,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
  */
 HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -478,7 +478,7 @@ HB_FUNC( QT_QMAINWINDOW_SPLITDOCKWIDGET )
  */
 HB_FUNC( QT_QMAINWINDOW_STATUSBAR )
 {
-   hb_retptr( ( QStatusBar* ) hbqt_par_QMainWindow( 1 )->statusBar() );
+   hb_retptrGC( hbqt_gcAllocate_QStatusBar( hbqt_par_QMainWindow( 1 )->statusBar(), false ) );
 }
 
 /*

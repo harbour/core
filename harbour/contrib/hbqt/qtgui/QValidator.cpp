@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,9 +79,33 @@
  * ~QValidator ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QValidator > pq;
+} QGC_POINTER_QValidator;
+
 QT_G_FUNC( hbqt_gcRelease_QValidator )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
+{
+   QGC_POINTER_QValidator * p = ( QGC_POINTER_QValidator * ) hb_gcAllocate( sizeof( QGC_POINTER_QValidator ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QValidator;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QValidator >( ( QValidator * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QValidator                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QVALIDATOR )
@@ -92,7 +116,7 @@ HB_FUNC( QT_QVALIDATOR )
  */
 HB_FUNC( QT_QVALIDATOR_LOCALE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ), true ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,6 +84,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QDirModel > pq;
 } QGC_POINTER_QDirModel;
@@ -92,48 +93,47 @@ QT_G_FUNC( hbqt_gcRelease_QDirModel )
 {
    QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDirModel                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDirModel                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QDirModel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QDirModel * ) p->ph )->~QDirModel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QDirModel * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QDirModel                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDirModel                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QDirModel                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QDirModel                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QDirModel                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDirModel                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QDirModel                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QDirModel( void * pObj )
+void * hbqt_gcAllocate_QDirModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QDirModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QDirModel;
-   new( & p->pq ) QPointer< QDirModel >( ( QDirModel * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QDirModel                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QDirModel >( ( QDirModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDirModel                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,7 +143,7 @@ HB_FUNC( QT_QDIRMODEL )
 
    pObj = ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDirModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDirModel( pObj, true ) );
 }
 /*
  * virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const
@@ -158,7 +158,7 @@ HB_FUNC( QT_QDIRMODEL_COLUMNCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), true ) );
 }
 
 /*
@@ -174,7 +174,7 @@ HB_FUNC( QT_QDIRMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QDIRMODEL_FILEICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QDirModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QDirModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -182,7 +182,7 @@ HB_FUNC( QT_QDIRMODEL_FILEICON )
  */
 HB_FUNC( QT_QDIRMODEL_FILEINFO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QDirModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QDirModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -230,7 +230,7 @@ HB_FUNC( QT_QDIRMODEL_HASCHILDREN )
  */
 HB_FUNC( QT_QDIRMODEL_HEADERDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), true ) );
 }
 
 /*
@@ -238,7 +238,7 @@ HB_FUNC( QT_QDIRMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QDIRMODEL_ICONPROVIDER )
 {
-   hb_retptr( ( QFileIconProvider* ) hbqt_par_QDirModel( 1 )->iconProvider() );
+   hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( hbqt_par_QDirModel( 1 )->iconProvider(), false ) );
 }
 
 /*
@@ -246,7 +246,7 @@ HB_FUNC( QT_QDIRMODEL_ICONPROVIDER )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
 }
 
 /*
@@ -254,7 +254,7 @@ HB_FUNC( QT_QDIRMODEL_INDEX )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) );
 }
 
 /*
@@ -286,7 +286,7 @@ HB_FUNC( QT_QDIRMODEL_LAZYCHILDCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->mimeTypes() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->mimeTypes() ), true ) );
 }
 
 /*
@@ -294,7 +294,7 @@ HB_FUNC( QT_QDIRMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QDIRMODEL_MKDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ), true ) );
 }
 
 /*
@@ -302,7 +302,7 @@ HB_FUNC( QT_QDIRMODEL_MKDIR )
  */
 HB_FUNC( QT_QDIRMODEL_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->nameFilters() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->nameFilters() ), true ) );
 }
 
 /*
@@ -310,7 +310,7 @@ HB_FUNC( QT_QDIRMODEL_NAMEFILTERS )
  */
 HB_FUNC( QT_QDIRMODEL_PARENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*

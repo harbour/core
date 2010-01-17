@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,32 +79,49 @@
  * ~QTextDocumentFragment ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextDocumentFragment;
+
 QT_G_FUNC( hbqt_gcRelease_QTextDocumentFragment )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDocumentFragment        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDocumentFragment       ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextDocumentFragment * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextDocumentFragment       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextDocumentFragment * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextDocumentFragment      ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextDocumentFragment       Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextDocumentFragment       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextDocumentFragment       Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextDocumentFragment( void * pObj )
+void * hbqt_gcAllocate_QTextDocumentFragment( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentFragment;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextDocumentFragment      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -114,7 +131,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT )
 
    pObj = ( QTextDocumentFragment* ) new QTextDocumentFragment() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( pObj, true ) );
 }
 /*
  * bool isEmpty () const
@@ -153,7 +170,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 /*
@@ -161,7 +178,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ), true ) );
 }
 
 /*
@@ -169,7 +186,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMPLAINTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 

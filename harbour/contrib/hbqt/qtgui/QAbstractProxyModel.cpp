@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,9 +75,33 @@
  * ~QAbstractProxyModel ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractProxyModel > pq;
+} QGC_POINTER_QAbstractProxyModel;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractProxyModel * p = ( QGC_POINTER_QAbstractProxyModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractProxyModel ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractProxyModel;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractProxyModel        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTPROXYMODEL )
@@ -88,7 +112,7 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -96,7 +120,7 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
 }
 
 /*
@@ -104,7 +128,7 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
 }
 
 /*
@@ -112,7 +136,7 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPTOSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -128,7 +152,7 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_SOURCEMODEL )
 {
-   hb_retptr( ( QAbstractItemModel* ) hbqt_par_QAbstractProxyModel( 1 )->sourceModel() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( hbqt_par_QAbstractProxyModel( 1 )->sourceModel(), false ) );
 }
 
 

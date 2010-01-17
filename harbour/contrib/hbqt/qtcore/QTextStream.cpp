@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -96,32 +96,49 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 
 }
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextStream;
+
 QT_G_FUNC( hbqt_gcRelease_QTextStream )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextStream                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextStream                 ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextStream * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextStream                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextStream * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextStream                ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextStream                 Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextStream                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextStream                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextStream( void * pObj )
+void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextStream;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextStream                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -131,7 +148,7 @@ HB_FUNC( QT_QTEXTSTREAM )
 
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextStream( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextStream( pObj, true ) );
 }
 /*
  * bool atEnd () const
@@ -154,7 +171,7 @@ HB_FUNC( QT_QTEXTSTREAM_AUTODETECTUNICODE )
  */
 HB_FUNC( QT_QTEXTSTREAM_CODEC )
 {
-   hb_retptr( ( QTextCodec* ) hbqt_par_QTextStream( 1 )->codec() );
+   hb_retptrGC( hbqt_gcAllocate_QTextCodec( hbqt_par_QTextStream( 1 )->codec(), false ) );
 }
 
 /*
@@ -162,7 +179,7 @@ HB_FUNC( QT_QTEXTSTREAM_CODEC )
  */
 HB_FUNC( QT_QTEXTSTREAM_DEVICE )
 {
-   hb_retptr( ( QIODevice* ) hbqt_par_QTextStream( 1 )->device() );
+   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QTextStream( 1 )->device(), false ) );
 }
 
 /*
@@ -210,7 +227,7 @@ HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ), true ) );
 }
 
 /*

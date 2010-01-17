@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -110,32 +110,49 @@ HB_FUNC( QT_QURL_SETQUERYDELIMITERS )
    hbqt_par_QUrl( 1 )->setQueryDelimiters( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) );
 }
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QUrl;
+
 QT_G_FUNC( hbqt_gcRelease_QUrl )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QUrl                         p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QUrl                        ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QUrl * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QUrl                        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QUrl * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QUrl                       ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QUrl                        Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QUrl                        Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QUrl                        Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QUrl( void * pObj )
+void * hbqt_gcAllocate_QUrl( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QUrl;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QUrl                        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QUrl                       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -145,7 +162,7 @@ HB_FUNC( QT_QURL )
 
    pObj = new QUrl( hbqt_par_QString( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QUrl( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( pObj, true ) );
 }
 /*
  * void addEncodedQueryItem ( const QByteArray & key, const QByteArray & value )
@@ -168,7 +185,7 @@ HB_FUNC( QT_QURL_ADDQUERYITEM )
  */
 HB_FUNC( QT_QURL_ALLQUERYITEMVALUES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUrl( 1 )->allQueryItemValues( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUrl( 1 )->allQueryItemValues( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 /*
@@ -192,7 +209,7 @@ HB_FUNC( QT_QURL_CLEAR )
  */
 HB_FUNC( QT_QURL_ENCODEDFRAGMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedFragment() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedFragment() ), true ) );
 }
 
 /*
@@ -200,7 +217,7 @@ HB_FUNC( QT_QURL_ENCODEDFRAGMENT )
  */
 HB_FUNC( QT_QURL_ENCODEDHOST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedHost() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedHost() ), true ) );
 }
 
 /*
@@ -208,7 +225,7 @@ HB_FUNC( QT_QURL_ENCODEDHOST )
  */
 HB_FUNC( QT_QURL_ENCODEDPASSWORD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedPassword() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedPassword() ), true ) );
 }
 
 /*
@@ -216,7 +233,7 @@ HB_FUNC( QT_QURL_ENCODEDPASSWORD )
  */
 HB_FUNC( QT_QURL_ENCODEDPATH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedPath() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedPath() ), true ) );
 }
 
 /*
@@ -224,7 +241,7 @@ HB_FUNC( QT_QURL_ENCODEDPATH )
  */
 HB_FUNC( QT_QURL_ENCODEDQUERY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedQuery() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedQuery() ), true ) );
 }
 
 /*
@@ -232,7 +249,7 @@ HB_FUNC( QT_QURL_ENCODEDQUERY )
  */
 HB_FUNC( QT_QURL_ENCODEDQUERYITEMVALUE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedQueryItemValue( *hbqt_par_QByteArray( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedQueryItemValue( *hbqt_par_QByteArray( 2 ) ) ), true ) );
 }
 
 /*
@@ -240,7 +257,7 @@ HB_FUNC( QT_QURL_ENCODEDQUERYITEMVALUE )
  */
 HB_FUNC( QT_QURL_ENCODEDUSERNAME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedUserName() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->encodedUserName() ), true ) );
 }
 
 /*
@@ -424,7 +441,7 @@ HB_FUNC( QT_QURL_REMOVEQUERYITEM )
  */
 HB_FUNC( QT_QURL_RESOLVED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->resolved( *hbqt_par_QUrl( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->resolved( *hbqt_par_QUrl( 2 ) ) ), true ) );
 }
 
 /*
@@ -592,7 +609,7 @@ HB_FUNC( QT_QURL_SETUSERNAME )
  */
 HB_FUNC( QT_QURL_TOENCODED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toEncoded( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toEncoded( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ) ), true ) );
 }
 
 /*
@@ -640,7 +657,7 @@ HB_FUNC( QT_QURL_FROMACE )
  */
 HB_FUNC( QT_QURL_FROMENCODED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ) ) ), true ) );
 }
 
 /*
@@ -648,7 +665,7 @@ HB_FUNC( QT_QURL_FROMENCODED )
  */
 HB_FUNC( QT_QURL_FROMENCODED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ), ( QUrl::ParsingMode ) hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ), ( QUrl::ParsingMode ) hb_parni( 3 ) ) ), true ) );
 }
 
 /*
@@ -656,7 +673,7 @@ HB_FUNC( QT_QURL_FROMENCODED_1 )
  */
 HB_FUNC( QT_QURL_FROMLOCALFILE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromLocalFile( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QUrl( 1 )->fromLocalFile( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 /*
@@ -672,7 +689,7 @@ HB_FUNC( QT_QURL_FROMPERCENTENCODING )
  */
 HB_FUNC( QT_QURL_IDNWHITELIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUrl( 1 )->idnWhitelist() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUrl( 1 )->idnWhitelist() ), true ) );
 }
 
 /*
@@ -688,7 +705,7 @@ HB_FUNC( QT_QURL_SETIDNWHITELIST )
  */
 HB_FUNC( QT_QURL_TOACE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toAce( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toAce( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 /*
@@ -696,7 +713,7 @@ HB_FUNC( QT_QURL_TOACE )
  */
 HB_FUNC( QT_QURL_TOPERCENTENCODING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toPercentEncoding( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QUrl( 1 )->toPercentEncoding( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) ) ), true ) );
 }
 
 

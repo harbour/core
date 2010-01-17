@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -69,6 +69,7 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QLabel>
+#include <QtGui/QPicture>
 
 
 /*
@@ -80,6 +81,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QLabel > pq;
 } QGC_POINTER_QLabel;
@@ -88,48 +90,47 @@ QT_G_FUNC( hbqt_gcRelease_QLabel )
 {
    QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLabel                       p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLabel                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QLabel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QLabel * ) p->ph )->~QLabel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QLabel * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QLabel                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLabel                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QLabel                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QLabel                      Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QLabel                      Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLabel                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QLabel                      Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QLabel( void * pObj )
+void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
 {
    QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) hb_gcAllocate( sizeof( QGC_POINTER_QLabel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QLabel;
-   new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QLabel                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -139,7 +140,7 @@ HB_FUNC( QT_QLABEL )
 
    pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLabel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLabel( pObj, true ) );
 }
 /*
  * Qt::Alignment alignment () const
@@ -154,7 +155,7 @@ HB_FUNC( QT_QLABEL_ALIGNMENT )
  */
 HB_FUNC( QT_QLABEL_BUDDY )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QLabel( 1 )->buddy() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QLabel( 1 )->buddy(), false ) );
 }
 
 /*
@@ -186,7 +187,7 @@ HB_FUNC( QT_QLABEL_MARGIN )
  */
 HB_FUNC( QT_QLABEL_MOVIE )
 {
-   hb_retptr( ( QMovie* ) hbqt_par_QLabel( 1 )->movie() );
+   hb_retptrGC( hbqt_gcAllocate_QMovie( hbqt_par_QLabel( 1 )->movie(), false ) );
 }
 
 /*
@@ -202,7 +203,7 @@ HB_FUNC( QT_QLABEL_OPENEXTERNALLINKS )
  */
 HB_FUNC( QT_QLABEL_PICTURE )
 {
-   hb_retptr( ( QPicture* ) hbqt_par_QLabel( 1 )->picture() );
+   hb_retptrGC( hbqt_gcAllocate_QPicture( new QPicture( *( hbqt_par_QLabel( 1 )->picture() ) ), true ) );
 }
 
 /*
@@ -210,7 +211,7 @@ HB_FUNC( QT_QLABEL_PICTURE )
  */
 HB_FUNC( QT_QLABEL_PIXMAP )
 {
-   hb_retptr( ( QPixmap* ) hbqt_par_QLabel( 1 )->pixmap() );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( *( hbqt_par_QLabel( 1 )->pixmap() ) ), true ) );
 }
 
 /*

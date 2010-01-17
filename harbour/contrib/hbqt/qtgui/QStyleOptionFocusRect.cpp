@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -81,32 +81,49 @@
  * QStyleOptionFocusRect ( const QStyleOptionFocusRect & other )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStyleOptionFocusRect;
+
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionFocusRect )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionFocusRect        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionFocusRect       ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QStyleOptionFocusRect * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionFocusRect       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QStyleOptionFocusRect * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionFocusRect      ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionFocusRect       Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionFocusRect       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionFocusRect       Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFocusRect;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionFocusRect      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -116,14 +133,14 @@ HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 
    pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( pObj, true ) );
 }
 /*
  * QColor backgroundColor
  */
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ), true ) );
 }
 
 

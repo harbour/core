@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -72,7 +72,6 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, QObject
    METHOD  document()
    METHOD  documentSize()
    METHOD  frameBoundingRect( pFrame )
-   METHOD  handlerForObject( nObjectType )
    METHOD  hitTest( pPoint, nAccuracy )
    METHOD  pageCount()
    METHOD  paintDevice()
@@ -109,10 +108,6 @@ METHOD QAbstractTextDocumentLayout:documentSize()
 
 METHOD QAbstractTextDocumentLayout:frameBoundingRect( pFrame )
    RETURN Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, hbqt_ptr( pFrame ) )
-
-
-METHOD QAbstractTextDocumentLayout:handlerForObject( nObjectType )
-   RETURN Qt_QAbstractTextDocumentLayout_handlerForObject( ::pPtr, nObjectType )
 
 
 METHOD QAbstractTextDocumentLayout:hitTest( pPoint, nAccuracy )

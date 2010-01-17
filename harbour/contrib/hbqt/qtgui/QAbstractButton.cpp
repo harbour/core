@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -76,9 +76,33 @@
  * ~QAbstractButton ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractButton > pq;
+} QGC_POINTER_QAbstractButton;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractButton )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractButton * p = ( QGC_POINTER_QAbstractButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractButton ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractButton;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractButton >( ( QAbstractButton * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractButton            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTBUTTON )
@@ -121,7 +145,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_AUTOREPEATINTERVAL )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_GROUP )
 {
-   hb_retptr( ( QButtonGroup* ) hbqt_par_QAbstractButton( 1 )->group() );
+   hb_retptrGC( hbqt_gcAllocate_QButtonGroup( hbqt_par_QAbstractButton( 1 )->group(), false ) );
 }
 
 /*
@@ -129,7 +153,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_GROUP )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ), true ) );
 }
 
 /*
@@ -137,7 +161,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_ICON )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICONSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ), true ) );
 }
 
 /*
@@ -241,7 +265,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_SHORTCUT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ), true ) );
 }
 
 /*

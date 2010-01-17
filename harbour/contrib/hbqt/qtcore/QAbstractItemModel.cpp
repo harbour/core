@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -96,9 +96,33 @@
 
 
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractItemModel > pq;
+} QGC_POINTER_QAbstractItemModel;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractItemModel( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractItemModel * p = ( QGC_POINTER_QAbstractItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractItemModel ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractItemModel;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractItemModel >( ( QAbstractItemModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractItemModel         ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTITEMMODEL )
@@ -109,7 +133,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_BUDDY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -133,7 +157,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_COLUMNCOUNT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), true ) );
 }
 
 /*
@@ -181,7 +205,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASINDEX )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), true ) );
 }
 
 /*
@@ -189,7 +213,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
 }
 
 /*
@@ -229,7 +253,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROWS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ), true ) );
 }
 
 /*
@@ -237,7 +261,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_PARENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -309,7 +333,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SETSUPPORTEDDRAGACTIONS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SIBLING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ), true ) );
 }
 
 /*
@@ -325,7 +349,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SORT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SPAN )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*

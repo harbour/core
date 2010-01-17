@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,32 +79,49 @@
  * ~QRect ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QRect;
+
 QT_G_FUNC( hbqt_gcRelease_QRect )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QRect                        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QRect                       ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QRect * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QRect                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QRect * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QRect                      ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QRect                       Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QRect                       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QRect                       Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QRect( void * pObj )
+void * hbqt_gcAllocate_QRect( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QRect;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QRect                      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -129,7 +146,7 @@ HB_FUNC( QT_QRECT )
       pObj = ( QRect* ) new QRect() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QRect( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( pObj, true ) );
 }
 /*
  * void adjust ( int dx1, int dy1, int dx2, int dy2 )
@@ -144,7 +161,7 @@ HB_FUNC( QT_QRECT_ADJUST )
  */
 HB_FUNC( QT_QRECT_ADJUSTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
 }
 
 /*
@@ -160,7 +177,7 @@ HB_FUNC( QT_QRECT_BOTTOM )
  */
 HB_FUNC( QT_QRECT_BOTTOMLEFT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomLeft() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomLeft() ), true ) );
 }
 
 /*
@@ -168,7 +185,7 @@ HB_FUNC( QT_QRECT_BOTTOMLEFT )
  */
 HB_FUNC( QT_QRECT_BOTTOMRIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomRight() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomRight() ), true ) );
 }
 
 /*
@@ -176,7 +193,7 @@ HB_FUNC( QT_QRECT_BOTTOMRIGHT )
  */
 HB_FUNC( QT_QRECT_CENTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->center() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->center() ), true ) );
 }
 
 /*
@@ -260,7 +277,7 @@ HB_FUNC( QT_QRECT_HEIGHT )
  */
 HB_FUNC( QT_QRECT_INTERSECTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) );
 }
 
 /*
@@ -396,7 +413,7 @@ HB_FUNC( QT_QRECT_MOVETOPRIGHT )
  */
 HB_FUNC( QT_QRECT_NORMALIZED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->normalized() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->normalized() ), true ) );
 }
 
 /*
@@ -532,7 +549,7 @@ HB_FUNC( QT_QRECT_SETY )
  */
 HB_FUNC( QT_QRECT_SIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QRect( 1 )->size() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QRect( 1 )->size() ), true ) );
 }
 
 /*
@@ -548,7 +565,7 @@ HB_FUNC( QT_QRECT_TOP )
  */
 HB_FUNC( QT_QRECT_TOPLEFT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topLeft() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topLeft() ), true ) );
 }
 
 /*
@@ -556,7 +573,7 @@ HB_FUNC( QT_QRECT_TOPLEFT )
  */
 HB_FUNC( QT_QRECT_TOPRIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topRight() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topRight() ), true ) );
 }
 
 /*
@@ -580,7 +597,7 @@ HB_FUNC( QT_QRECT_TRANSLATE_1 )
  */
 HB_FUNC( QT_QRECT_TRANSLATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
 }
 
 /*
@@ -588,7 +605,7 @@ HB_FUNC( QT_QRECT_TRANSLATED )
  */
 HB_FUNC( QT_QRECT_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
 }
 
 /*
@@ -596,7 +613,7 @@ HB_FUNC( QT_QRECT_TRANSLATED_1 )
  */
 HB_FUNC( QT_QRECT_UNITED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->united( *hbqt_par_QRect( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->united( *hbqt_par_QRect( 2 ) ) ), true ) );
 }
 
 /*

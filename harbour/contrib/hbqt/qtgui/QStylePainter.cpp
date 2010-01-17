@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -77,32 +77,49 @@
  * QStylePainter ( QPaintDevice * pd, QWidget * widget )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStylePainter;
+
 QT_G_FUNC( hbqt_gcRelease_QStylePainter )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStylePainter                p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStylePainter               ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QStylePainter * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStylePainter               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QStylePainter * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStylePainter              ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStylePainter               Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStylePainter               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStylePainter               Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStylePainter( void * pObj )
+void * hbqt_gcAllocate_QStylePainter( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStylePainter;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStylePainter               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStylePainter              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -112,7 +129,7 @@ HB_FUNC( QT_QSTYLEPAINTER )
 
    pObj = ( QStylePainter* ) new QStylePainter() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStylePainter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStylePainter( pObj, true ) );
 }
 /*
  * bool begin ( QWidget * widget )
@@ -175,7 +192,7 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWPRIMITIVE )
  */
 HB_FUNC( QT_QSTYLEPAINTER_STYLE )
 {
-   hb_retptr( ( QStyle* ) hbqt_par_QStylePainter( 1 )->style() );
+   hb_retptrGC( hbqt_gcAllocate_QStyle( hbqt_par_QStylePainter( 1 )->style(), false ) );
 }
 
 

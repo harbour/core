@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -88,32 +88,49 @@
  * ~QTextCursor ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextCursor;
+
 QT_G_FUNC( hbqt_gcRelease_QTextCursor )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextCursor                  p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextCursor                 ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextCursor * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextCursor                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextCursor * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextCursor                ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextCursor                 Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextCursor                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextCursor                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextCursor( void * pObj )
+void * hbqt_gcAllocate_QTextCursor( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCursor;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextCursor                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -151,7 +168,7 @@ HB_FUNC( QT_QTEXTCURSOR )
       pObj = ( QTextCursor* ) new QTextCursor() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( pObj, true ) );
 }
 /*
  * int anchor () const
@@ -206,7 +223,7 @@ HB_FUNC( QT_QTEXTCURSOR_BEGINEDITBLOCK )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextCursor( 1 )->block() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextCursor( 1 )->block() ), true ) );
 }
 
 /*
@@ -214,7 +231,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCK )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ), true ) );
 }
 
 /*
@@ -222,7 +239,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ), true ) );
 }
 
 /*
@@ -238,7 +255,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTCURSOR_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ), true ) );
 }
 
 /*
@@ -262,7 +279,7 @@ HB_FUNC( QT_QTEXTCURSOR_COLUMNNUMBER )
  */
 HB_FUNC( QT_QTEXTCURSOR_CREATELIST )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextCursor( 1 )->createList( *hbqt_par_QTextListFormat( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextCursor( 1 )->createList( *hbqt_par_QTextListFormat( 2 ) ), false ) );
 }
 
 /*
@@ -270,7 +287,7 @@ HB_FUNC( QT_QTEXTCURSOR_CREATELIST )
  */
 HB_FUNC( QT_QTEXTCURSOR_CREATELIST_1 )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextCursor( 1 )->createList( ( QTextListFormat::Style ) hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextCursor( 1 )->createList( ( QTextListFormat::Style ) hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -278,7 +295,7 @@ HB_FUNC( QT_QTEXTCURSOR_CREATELIST_1 )
  */
 HB_FUNC( QT_QTEXTCURSOR_CURRENTFRAME )
 {
-   hb_retptr( ( QTextFrame* ) hbqt_par_QTextCursor( 1 )->currentFrame() );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrame( hbqt_par_QTextCursor( 1 )->currentFrame(), false ) );
 }
 
 /*
@@ -286,15 +303,7 @@ HB_FUNC( QT_QTEXTCURSOR_CURRENTFRAME )
  */
 HB_FUNC( QT_QTEXTCURSOR_CURRENTLIST )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextCursor( 1 )->currentList() );
-}
-
-/*
- * QTextTable * currentTable () const
- */
-HB_FUNC( QT_QTEXTCURSOR_CURRENTTABLE )
-{
-   hb_retptr( ( QTextTable* ) hbqt_par_QTextCursor( 1 )->currentTable() );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextCursor( 1 )->currentList(), false ) );
 }
 
 /*
@@ -318,7 +327,7 @@ HB_FUNC( QT_QTEXTCURSOR_DELETEPREVIOUSCHAR )
  */
 HB_FUNC( QT_QTEXTCURSOR_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QTextCursor( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QTextCursor( 1 )->document(), false ) );
 }
 
 /*
@@ -382,7 +391,7 @@ HB_FUNC( QT_QTEXTCURSOR_INSERTFRAGMENT )
  */
 HB_FUNC( QT_QTEXTCURSOR_INSERTFRAME )
 {
-   hb_retptr( ( QTextFrame* ) hbqt_par_QTextCursor( 1 )->insertFrame( *hbqt_par_QTextFrameFormat( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrame( hbqt_par_QTextCursor( 1 )->insertFrame( *hbqt_par_QTextFrameFormat( 2 ) ), false ) );
 }
 
 /*
@@ -430,7 +439,7 @@ HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE_3 )
  */
 HB_FUNC( QT_QTEXTCURSOR_INSERTLIST )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextCursor( 1 )->insertList( *hbqt_par_QTextListFormat( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextCursor( 1 )->insertList( *hbqt_par_QTextListFormat( 2 ) ), false ) );
 }
 
 /*
@@ -438,23 +447,7 @@ HB_FUNC( QT_QTEXTCURSOR_INSERTLIST )
  */
 HB_FUNC( QT_QTEXTCURSOR_INSERTLIST_1 )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextCursor( 1 )->insertList( ( QTextListFormat::Style ) hb_parni( 2 ) ) );
-}
-
-/*
- * QTextTable * insertTable ( int rows, int columns, const QTextTableFormat & format )
- */
-HB_FUNC( QT_QTEXTCURSOR_INSERTTABLE )
-{
-   hb_retptr( ( QTextTable* ) hbqt_par_QTextCursor( 1 )->insertTable( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QTextTableFormat( 4 ) ) );
-}
-
-/*
- * QTextTable * insertTable ( int rows, int columns )
- */
-HB_FUNC( QT_QTEXTCURSOR_INSERTTABLE_1 )
-{
-   hb_retptr( ( QTextTable* ) hbqt_par_QTextCursor( 1 )->insertTable( hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextCursor( 1 )->insertList( ( QTextListFormat::Style ) hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -584,7 +577,7 @@ HB_FUNC( QT_QTEXTCURSOR_SELECTEDTEXT )
  */
 HB_FUNC( QT_QTEXTCURSOR_SELECTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ), true ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,7 +84,6 @@ CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
    METHOD  createList_1( nStyle )
    METHOD  currentFrame()
    METHOD  currentList()
-   METHOD  currentTable()
    METHOD  deleteChar()
    METHOD  deletePreviousChar()
    METHOD  document()
@@ -103,8 +102,6 @@ CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
    METHOD  insertImage_3( pImage, cName )
    METHOD  insertList( pFormat )
    METHOD  insertList_1( nStyle )
-   METHOD  insertTable( nRows, nColumns, pFormat )
-   METHOD  insertTable_1( nRows, nColumns )
    METHOD  insertText( cText )
    METHOD  insertText_1( cText, pFormat )
    METHOD  isCopyOf( pOther )
@@ -209,10 +206,6 @@ METHOD QTextCursor:currentList()
    RETURN Qt_QTextCursor_currentList( ::pPtr )
 
 
-METHOD QTextCursor:currentTable()
-   RETURN Qt_QTextCursor_currentTable( ::pPtr )
-
-
 METHOD QTextCursor:deleteChar()
    RETURN Qt_QTextCursor_deleteChar( ::pPtr )
 
@@ -283,14 +276,6 @@ METHOD QTextCursor:insertList( pFormat )
 
 METHOD QTextCursor:insertList_1( nStyle )
    RETURN Qt_QTextCursor_insertList_1( ::pPtr, nStyle )
-
-
-METHOD QTextCursor:insertTable( nRows, nColumns, pFormat )
-   RETURN Qt_QTextCursor_insertTable( ::pPtr, nRows, nColumns, hbqt_ptr( pFormat ) )
-
-
-METHOD QTextCursor:insertTable_1( nRows, nColumns )
-   RETURN Qt_QTextCursor_insertTable_1( ::pPtr, nRows, nColumns )
 
 
 METHOD QTextCursor:insertText( cText )

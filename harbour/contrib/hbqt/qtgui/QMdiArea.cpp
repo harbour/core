@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -96,6 +96,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QMdiArea > pq;
 } QGC_POINTER_QMdiArea;
@@ -104,48 +105,47 @@ QT_G_FUNC( hbqt_gcRelease_QMdiArea )
 {
    QGC_POINTER_QMdiArea * p = ( QGC_POINTER_QMdiArea * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMdiArea                     p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMdiArea                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QMdiArea * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QMdiArea * ) p->ph )->~QMdiArea();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QMdiArea * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMdiArea                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMdiArea                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QMdiArea                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMdiArea                    Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMdiArea                    Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMdiArea                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMdiArea                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QMdiArea( void * pObj )
+void * hbqt_gcAllocate_QMdiArea( void * pObj, bool bNew )
 {
    QGC_POINTER_QMdiArea * p = ( QGC_POINTER_QMdiArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QMdiArea ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QMdiArea;
-   new( & p->pq ) QPointer< QMdiArea >( ( QMdiArea * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QMdiArea                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QMdiArea >( ( QMdiArea * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMdiArea                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -162,7 +162,7 @@ HB_FUNC( QT_QMDIAREA )
       pObj = new QMdiArea() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QMdiArea( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMdiArea( pObj, true ) );
 }
 /*
  * WindowOrder activationOrder () const
@@ -177,7 +177,7 @@ HB_FUNC( QT_QMDIAREA_ACTIVATIONORDER )
  */
 HB_FUNC( QT_QMDIAREA_ACTIVESUBWINDOW )
 {
-   hb_retptr( ( QMdiSubWindow* ) hbqt_par_QMdiArea( 1 )->activeSubWindow() );
+   hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( hbqt_par_QMdiArea( 1 )->activeSubWindow(), false ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QMDIAREA_ACTIVESUBWINDOW )
  */
 HB_FUNC( QT_QMDIAREA_ADDSUBWINDOW )
 {
-   hb_retptr( ( QMdiSubWindow* ) hbqt_par_QMdiArea( 1 )->addSubWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( hbqt_par_QMdiArea( 1 )->addSubWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QMDIAREA_ADDSUBWINDOW )
  */
 HB_FUNC( QT_QMDIAREA_BACKGROUND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QMdiArea( 1 )->background() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QMdiArea( 1 )->background() ), true ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QMDIAREA_BACKGROUND )
  */
 HB_FUNC( QT_QMDIAREA_CURRENTSUBWINDOW )
 {
-   hb_retptr( ( QMdiSubWindow* ) hbqt_par_QMdiArea( 1 )->currentSubWindow() );
+   hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( hbqt_par_QMdiArea( 1 )->currentSubWindow(), false ) );
 }
 
 /*

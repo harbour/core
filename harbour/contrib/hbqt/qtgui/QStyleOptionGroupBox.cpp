@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -81,32 +81,49 @@
  * QStyleOptionGroupBox ( const QStyleOptionGroupBox & other )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStyleOptionGroupBox;
+
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionGroupBox )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionGroupBox         p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOptionGroupBox        ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QStyleOptionGroupBox * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOptionGroupBox        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QStyleOptionGroupBox * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionGroupBox       ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionGroupBox        Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOptionGroupBox        Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionGroupBox        Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionGroupBox;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionGroupBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionGroupBox       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -116,7 +133,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 
    pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( pObj, true ) );
 }
 /*
  * QStyleOptionFrameV2::FrameFeatures features
@@ -163,7 +180,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ), true ) );
 }
 
 

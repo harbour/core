@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -84,6 +84,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QItemSelectionModel > pq;
 } QGC_POINTER_QItemSelectionModel;
@@ -92,48 +93,47 @@ QT_G_FUNC( hbqt_gcRelease_QItemSelectionModel )
 {
    QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel          p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel         ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QItemSelectionModel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QItemSelectionModel * ) p->ph )->~QItemSelectionModel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QItemSelectionModel * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QItemSelectionModel        ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QItemSelectionModel         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QItemSelectionModel        ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QItemSelectionModel         Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QItemSelectionModel         Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QItemSelectionModel         Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QItemSelectionModel         Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QItemSelectionModel( void * pObj )
+void * hbqt_gcAllocate_QItemSelectionModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelectionModel;
-   new( & p->pq ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QItemSelectionModel        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -146,7 +146,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL )
       pObj = new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( pObj, true ) );
 }
 /*
  * bool columnIntersectsSelection ( int column, const QModelIndex & parent ) const
@@ -161,7 +161,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_COLUMNINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_CURRENTINDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ), true ) );
 }
 
 /*
@@ -217,7 +217,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_ROWINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_SELECTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ), true ) );
 }
 
 /*

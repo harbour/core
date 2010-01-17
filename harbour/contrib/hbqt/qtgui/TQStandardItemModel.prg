@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -77,7 +77,6 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, QAbstractItemModeL
    METHOD  invisibleRootItem()
    METHOD  item( nRow, nColumn )
    METHOD  itemFromIndex( pIndex )
-   METHOD  itemPrototype()
    METHOD  setColumnCount( nColumns )
    METHOD  setHorizontalHeaderItem( nColumn, pItem )
    METHOD  setHorizontalHeaderLabels( pLabels )
@@ -144,10 +143,6 @@ METHOD QStandardItemModel:item( nRow, nColumn )
 
 METHOD QStandardItemModel:itemFromIndex( pIndex )
    RETURN Qt_QStandardItemModel_itemFromIndex( ::pPtr, hbqt_ptr( pIndex ) )
-
-
-METHOD QStandardItemModel:itemPrototype()
-   RETURN Qt_QStandardItemModel_itemPrototype( ::pPtr )
 
 
 METHOD QStandardItemModel:setColumnCount( nColumns )

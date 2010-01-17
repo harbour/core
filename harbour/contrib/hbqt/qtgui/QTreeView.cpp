@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -91,6 +91,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QTreeView > pq;
 } QGC_POINTER_QTreeView;
@@ -99,48 +100,47 @@ QT_G_FUNC( hbqt_gcRelease_QTreeView )
 {
    QGC_POINTER_QTreeView * p = ( QGC_POINTER_QTreeView * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeView                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeView                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QTreeView * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QTreeView * ) p->ph )->~QTreeView();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QTreeView * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTreeView                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeView                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTreeView                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTreeView                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTreeView                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTreeView                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTreeView                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTreeView( void * pObj )
+void * hbqt_gcAllocate_QTreeView( void * pObj, bool bNew )
 {
    QGC_POINTER_QTreeView * p = ( QGC_POINTER_QTreeView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeView;
-   new( & p->pq ) QPointer< QTreeView >( ( QTreeView * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTreeView >( ( QTreeView * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTreeView                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -150,7 +150,7 @@ HB_FUNC( QT_QTREEVIEW )
 
    pObj = ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTreeView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeView( pObj, true ) );
 }
 /*
  * bool allColumnsShowFocus () const
@@ -205,7 +205,7 @@ HB_FUNC( QT_QTREEVIEW_EXPANDSONDOUBLECLICK )
  */
 HB_FUNC( QT_QTREEVIEW_HEADER )
 {
-   hb_retptr( ( QHeaderView* ) hbqt_par_QTreeView( 1 )->header() );
+   hb_retptrGC( hbqt_gcAllocate_QHeaderView( hbqt_par_QTreeView( 1 )->header(), false ) );
 }
 
 /*
@@ -221,7 +221,7 @@ HB_FUNC( QT_QTREEVIEW_INDENTATION )
  */
 HB_FUNC( QT_QTREEVIEW_INDEXABOVE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTreeView( 1 )->indexAbove( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTreeView( 1 )->indexAbove( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QTREEVIEW_INDEXABOVE )
  */
 HB_FUNC( QT_QTREEVIEW_INDEXBELOW )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTreeView( 1 )->indexBelow( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTreeView( 1 )->indexBelow( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*
@@ -469,7 +469,7 @@ HB_FUNC( QT_QTREEVIEW_UNIFORMROWHEIGHTS )
  */
 HB_FUNC( QT_QTREEVIEW_VISUALRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTreeView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTreeView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
 }
 
 /*

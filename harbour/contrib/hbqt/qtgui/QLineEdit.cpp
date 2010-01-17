@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -73,6 +73,7 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QLineEdit>
+#include <QtGui/QValidator>
 
 
 /*
@@ -84,6 +85,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QLineEdit > pq;
 } QGC_POINTER_QLineEdit;
@@ -92,48 +94,47 @@ QT_G_FUNC( hbqt_gcRelease_QLineEdit )
 {
    QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QLineEdit * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QLineEdit * ) p->ph )->~QLineEdit();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QLineEdit * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QLineEdit                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLineEdit                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QLineEdit                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QLineEdit                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QLineEdit                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLineEdit                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QLineEdit                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QLineEdit( void * pObj )
+void * hbqt_gcAllocate_QLineEdit( void * pObj, bool bNew )
 {
    QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QLineEdit;
-   new( & p->pq ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QLineEdit                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,7 +144,7 @@ HB_FUNC( QT_QLINEEDIT )
 
    pObj = ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLineEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineEdit( pObj, true ) );
 }
 /*
  * Qt::Alignment alignment () const
@@ -166,7 +167,7 @@ HB_FUNC( QT_QLINEEDIT_BACKSPACE )
  */
 HB_FUNC( QT_QLINEEDIT_COMPLETER )
 {
-   hb_retptr( ( QCompleter* ) hbqt_par_QLineEdit( 1 )->completer() );
+   hb_retptrGC( hbqt_gcAllocate_QCompleter( hbqt_par_QLineEdit( 1 )->completer(), false ) );
 }
 
 /*
@@ -174,7 +175,7 @@ HB_FUNC( QT_QLINEEDIT_COMPLETER )
  */
 HB_FUNC( QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QLineEdit( 1 )->createStandardContextMenu() );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QLineEdit( 1 )->createStandardContextMenu(), false ) );
 }
 
 /*
@@ -384,7 +385,7 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
  */
 HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ), true ) );
 }
 
 /*
@@ -512,7 +513,7 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
  */
 HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ), true ) );
 }
 
 /*
@@ -524,7 +525,7 @@ HB_FUNC( QT_QLINEEDIT_TEXT )
 }
 
 /*
- * const QValidator * validator () const
+ * virtual const QValidator * validator () const
  */
 HB_FUNC( QT_QLINEEDIT_VALIDATOR )
 {

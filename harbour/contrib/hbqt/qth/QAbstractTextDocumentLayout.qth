@@ -83,7 +83,7 @@ QTextDocument * document () const
 virtual QSizeF documentSize () const = 0
 //virtual void draw ( QPainter * painter, const PaintContext & context ) = 0
 virtual QRectF frameBoundingRect ( QTextFrame * frame ) const = 0
-QTextObjectInterface * handlerForObject ( int objectType ) const
+//QTextObjectInterface * handlerForObject ( int objectType ) const
 virtual int hitTest ( const QPointF & point, Qt::HitTestAccuracy accuracy ) const = 0
 virtual int pageCount () const = 0
 QPaintDevice * paintDevice () const

@@ -260,9 +260,12 @@ METHOD xbpMenuBar:delItem( nItemIndex )
       ENDIF
       ADEL( ::aMenuItems, nItemIndex )
       ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
+
       IF hb_isObject( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
-         Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
-         Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
+         IF !oAction:isSeparator()
+            Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
+            Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
+         ENDIF
          ::oWidget:removeAction( oAction )
          oAction:pPtr := 0
          oAction := NIL
@@ -289,11 +292,10 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
    cType := valtype( xCaption )
    DO CASE
    CASE cType == "U" .OR. empty( xCaption ) .OR. nStyle == XBPMENUBAR_MIS_SEPARATOR
-      oAction := QAction()
       IF lInsert
-         oAction:pPtr := ::oWidget:insertSeparator()
+         oAction := QAction():configure( ::oWidget:insertSeparator() )
       ELSE
-         oAction:pPtr := ::oWidget:addSeparator()
+         QAction():configure( ::oWidget:addSeparator() )
       ENDIF
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 

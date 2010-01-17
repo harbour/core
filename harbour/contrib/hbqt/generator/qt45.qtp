@@ -14,7 +14,7 @@
 
 -D=../doc
 
-
+HBQTextBlockUserData.qth
 QAbstractButton.qth
 QAbstractItemDelegate.qth
 QAbstractItemModel.qth
@@ -137,10 +137,11 @@ QMoveEvent.qth
 QMovie.qth
 QNetworkRequest.qth
 QObject.qth
-QPaintDevice.qth
-QPainterPath.qth
 QPageSetupDialog.qth
+QPaintDevice.qth
+QPaintEngine.qth
 QPainter.qth
+QPainterPath.qth
 QPaintEvent.qth
 QPalette.qth
 QPen.qth
@@ -248,6 +249,7 @@ QTextItem.qth
 QTextLayout.qth
 QTextLength.qth
 QTextLine.qth
+QTextList.qth
 QTextListFormat.qth
 QTextObject.qth
 QTextOption.qth

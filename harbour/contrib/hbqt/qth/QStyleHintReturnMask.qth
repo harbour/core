@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QStyleHintReturn
 Type     = Core
 New      = 
@@ -76,10 +77,10 @@ HB_FUNC( QT_QSTYLEHINTRETURNMASK )
 <ENUMS>
 enum StyleOptionType { Type }
 enum StyleOptionVersion { Version }
-Public Functions
 </ENUMS>
 
 <PROTOS>
+QRegion region
 </PROTOS>
 
 <SLOTS>

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -83,32 +83,49 @@
  * ~QStyleOption ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStyleOption;
+
 QT_G_FUNC( hbqt_gcRelease_QStyleOption )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOption                 p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleOption                ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QStyleOption * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleOption                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QStyleOption * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOption               ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOption                Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleOption                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOption                Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStyleOption( void * pObj )
+void * hbqt_gcAllocate_QStyleOption( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOption;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOption               ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -118,7 +135,7 @@ HB_FUNC( QT_QSTYLEOPTION )
 
    pObj = ( QStyleOption* ) new QStyleOption() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOption( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOption( pObj, true ) );
 }
 /*
  * void initFrom ( const QWidget * widget )
@@ -141,7 +158,7 @@ HB_FUNC( QT_QSTYLEOPTION_DIRECTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ), true ) );
 }
 
 /*
@@ -149,7 +166,7 @@ HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
  */
 HB_FUNC( QT_QSTYLEOPTION_PALETTE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QStyleOption( 1 )->palette ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QStyleOption( 1 )->palette ), true ) );
 }
 
 /*
@@ -157,7 +174,7 @@ HB_FUNC( QT_QSTYLEOPTION_PALETTE )
  */
 HB_FUNC( QT_QSTYLEOPTION_RECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOption( 1 )->rect ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOption( 1 )->rect ), true ) );
 }
 
 /*

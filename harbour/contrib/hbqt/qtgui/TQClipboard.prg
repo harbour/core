@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -69,7 +69,6 @@ CREATE CLASS QClipboard INHERIT HbQtObjectHandler, QObject
 
    METHOD  clear( nMode )
    METHOD  image( nMode )
-   METHOD  mimeData( nMode )
    METHOD  ownsClipboard()
    METHOD  ownsFindBuffer()
    METHOD  ownsSelection()
@@ -100,10 +99,6 @@ METHOD QClipboard:clear( nMode )
 
 METHOD QClipboard:image( nMode )
    RETURN Qt_QClipboard_image( ::pPtr, nMode )
-
-
-METHOD QClipboard:mimeData( nMode )
-   RETURN Qt_QClipboard_mimeData( ::pPtr, nMode )
 
 
 METHOD QClipboard:ownsClipboard()

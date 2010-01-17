@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,32 +75,49 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStyleFactory;
+
 QT_G_FUNC( hbqt_gcRelease_QStyleFactory )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleFactory                p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QStyleFactory               ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QStyleFactory * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QStyleFactory               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QStyleFactory * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleFactory              ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleFactory               Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QStyleFactory               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleFactory               Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStyleFactory( void * pObj )
+void * hbqt_gcAllocate_QStyleFactory( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleFactory;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleFactory              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -110,14 +127,14 @@ HB_FUNC( QT_QSTYLEFACTORY )
 
    pObj = new QStyleFactory() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleFactory( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleFactory( pObj, true ) );
 }
 /*
  * QStyle * create ( const QString & key )
  */
 HB_FUNC( QT_QSTYLEFACTORY_CREATE )
 {
-   hb_retptr( ( QStyle* ) hbqt_par_QStyleFactory( 1 )->create( hbqt_par_QString( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyle( hbqt_par_QStyleFactory( 1 )->create( hbqt_par_QString( 2 ) ), false ) );
 }
 
 /*
@@ -125,7 +142,7 @@ HB_FUNC( QT_QSTYLEFACTORY_CREATE )
  */
 HB_FUNC( QT_QSTYLEFACTORY_KEYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ), true ) );
 }
 
 

@@ -69,7 +69,8 @@ typedef QT_G_FUNC_ * QT_G_FUNC_PTR;
 
 typedef struct
 {
-  void *        ph;
+  void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
 } QGC_POINTER;
 
@@ -224,6 +225,8 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QObject( n )                       ( ( QObject                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPageSetupDialog( n )              ( ( QPageSetupDialog            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPaintDevice( n )                  ( ( QPaintDevice                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QPaintEngine( n )                  ( ( QPaintEngine                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QPaintEngineState( n )             ( ( QPaintEngineState           * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPainter( n )                      ( ( QPainter                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPainterPath( n )                  ( ( QPainterPath                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPaintEvent( n )                   ( ( QPaintEvent                 * ) hbqt_gcpointer( n ) )
@@ -336,6 +339,7 @@ extern void * hbqt_pPtrFromObj( int iParam );
 #define hbqt_par_QTextImageFormat( n )              ( ( QTextImageFormat            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTextInlineObject( n )             ( ( QTextInlineObject           * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTextItem( n )                     ( ( QTextItem                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QTextList( n )                     ( ( QTextList                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTextLayout( n )                   ( ( QTextLayout                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTextLength( n )                   ( ( QTextLength                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTextLine( n )                     ( ( QTextLine                   * ) hbqt_gcpointer( n ) )

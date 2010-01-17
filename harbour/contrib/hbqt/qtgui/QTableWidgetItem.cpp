@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -83,32 +83,49 @@
  * virtual ~QTableWidgetItem ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTableWidgetItem;
+
 QT_G_FUNC( hbqt_gcRelease_QTableWidgetItem )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableWidgetItem             p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableWidgetItem            ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTableWidgetItem * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTableWidgetItem            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTableWidgetItem * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTableWidgetItem           ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTableWidgetItem            Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTableWidgetItem            Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTableWidgetItem            Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTableWidgetItem( void * pObj )
+void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidgetItem;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTableWidgetItem           ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -133,14 +150,14 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
       pObj = new QTableWidgetItem( 0 ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( pObj, true ) );
 }
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_BACKGROUND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ), true ) );
 }
 
 /*
@@ -156,7 +173,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_CHECKSTATE )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_CLONE )
 {
-   hb_retptr( ( QTableWidgetItem* ) hbqt_par_QTableWidgetItem( 1 )->clone() );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidgetItem( 1 )->clone(), false ) );
 }
 
 /*
@@ -172,7 +189,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_COLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -188,7 +205,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ), true ) );
 }
 
 /*
@@ -196,7 +213,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ), true ) );
 }
 
 /*
@@ -204,7 +221,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ), true ) );
 }
 
 /*
@@ -348,7 +365,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ), true ) );
 }
 
 /*
@@ -364,7 +381,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_STATUSTIP )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TABLEWIDGET )
 {
-   hb_retptr( ( QTableWidget* ) hbqt_par_QTableWidgetItem( 1 )->tableWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidget( hbqt_par_QTableWidgetItem( 1 )->tableWidget(), false ) );
 }
 
 /*

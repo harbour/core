@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -71,7 +71,6 @@ CREATE CLASS QSplitter INHERIT HbQtObjectHandler, QFrame
    METHOD  childrenCollapsible()
    METHOD  count()
    METHOD  getRange( nIndex, nMin, nMax )
-   METHOD  handle( nIndex )
    METHOD  handleWidth()
    METHOD  indexOf( pWidget )
    METHOD  insertWidget( nIndex, pWidget )
@@ -115,10 +114,6 @@ METHOD QSplitter:count()
 
 METHOD QSplitter:getRange( nIndex, nMin, nMax )
    RETURN Qt_QSplitter_getRange( ::pPtr, nIndex, nMin, nMax )
-
-
-METHOD QSplitter:handle( nIndex )
-   RETURN Qt_QSplitter_handle( ::pPtr, nIndex )
 
 
 METHOD QSplitter:handleWidth()

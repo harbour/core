@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -98,6 +98,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QAction > pq;
 } QGC_POINTER_QAction;
@@ -106,48 +107,47 @@ QT_G_FUNC( hbqt_gcRelease_QAction )
 {
    QGC_POINTER_QAction * p = ( QGC_POINTER_QAction * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QAction                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QAction                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QAction * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QAction * ) p->ph )->~QAction();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QAction * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QAction                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QAction                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QAction                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QAction                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QAction                     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QAction                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QAction                     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QAction( void * pObj )
+void * hbqt_gcAllocate_QAction( void * pObj, bool bNew )
 {
    QGC_POINTER_QAction * p = ( QGC_POINTER_QAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QAction ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QAction;
-   new( & p->pq ) QPointer< QAction >( ( QAction * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAction >( ( QAction * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAction                    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -162,14 +162,14 @@ HB_FUNC( QT_QACTION )
    else if( HB_ISPOINTER( 3 ) )
       pObj = new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QAction( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QAction( pObj, true ) );
 }
 /*
  * QActionGroup * actionGroup () const
  */
 HB_FUNC( QT_QACTION_ACTIONGROUP )
 {
-   hb_retptr( ( QActionGroup* ) hbqt_par_QAction( 1 )->actionGroup() );
+   hb_retptrGC( hbqt_gcAllocate_QActionGroup( hbqt_par_QAction( 1 )->actionGroup(), false ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QACTION_AUTOREPEAT )
  */
 HB_FUNC( QT_QACTION_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAction( 1 )->data() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QAction( 1 )->data() ), true ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QACTION_DATA )
  */
 HB_FUNC( QT_QACTION_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QAction( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QAction( 1 )->font() ), true ) );
 }
 
 /*
@@ -209,7 +209,7 @@ HB_FUNC( QT_QACTION_FONT )
  */
 HB_FUNC( QT_QACTION_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QAction( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QAction( 1 )->icon() ), true ) );
 }
 
 /*
@@ -273,7 +273,7 @@ HB_FUNC( QT_QACTION_ISVISIBLE )
  */
 HB_FUNC( QT_QACTION_MENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QAction( 1 )->menu() );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QAction( 1 )->menu(), false ) );
 }
 
 /*
@@ -289,7 +289,7 @@ HB_FUNC( QT_QACTION_MENUROLE )
  */
 HB_FUNC( QT_QACTION_PARENTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QAction( 1 )->parentWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QAction( 1 )->parentWidget(), false ) );
 }
 
 /*
@@ -441,7 +441,7 @@ HB_FUNC( QT_QACTION_SETWHATSTHIS )
  */
 HB_FUNC( QT_QACTION_SHORTCUT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ), true ) );
 }
 
 /*

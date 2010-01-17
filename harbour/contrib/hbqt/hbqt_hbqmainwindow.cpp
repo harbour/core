@@ -255,6 +255,7 @@ void HBQMainWindow::closeEvent( QCloseEvent * event )
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< HBQMainWindow > pq;
 } QGC_POINTER_HBQMainWindow;
@@ -263,45 +264,42 @@ static QT_G_FUNC( release_HBQMainWindow )
 {
    QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p && p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( HBQMainWindow * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( HBQMainWindow * ) p->ph )->~HBQMainWindow();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( HBQMainWindow * ) p->ph )->deleteLater();
-            break;
+            p->ph = NULL;
+            HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_HBQMainWindow    :    Object Name Missing!" ) );
+            p->ph = NULL;
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBQMainWindow                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_HBQMainWindow    :    Object Already deleted!" ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBQMainWindow                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "PTR_rel_HBQMainWindow    :    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-static void * hbqt_gcAllocate_HBQMainWindow( void * pObj )
+static void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew )
 {
    QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = release_HBQMainWindow;
    new( & p->pq ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBQMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
@@ -314,7 +312,7 @@ HB_FUNC( QT_HBQMAINWINDOW )
 
    pObj = ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) );
 
-   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( pObj, true ) );
 }
 
 #endif

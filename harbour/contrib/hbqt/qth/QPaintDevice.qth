@@ -55,7 +55,8 @@
 ;
 
 <CLASS>
-New = pParent
+QObject  = no
+New      = pParent
 </CLASS>
 
 <CODE>

@@ -517,10 +517,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, "" )
       ENDIF
 
-      lList         := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "list" .and. lower( e_[ 2 ] ) == "yes" } ) > 0
-      //cWgt        := IF( lList, cWidget +"< void * >", cWidget )
-      lDestructor   := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "destructor" .and. lower( e_[ 2 ] ) == "no"} ) == 0
-      lObject       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "qobject" .and. lower( e_[ 2 ] ) == "no"} ) == 0
+      lList       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "list"       .AND. lower( e_[ 2 ] ) == "yes" } ) > 0
+      lDestructor := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "destructor" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
+      lObject     := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "qobject"    .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
 
       IF ( lNewGCtoQT )
          lConst := .f.
@@ -532,110 +531,68 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                ENDIF
             ENDIF
          NEXT
-         IF ( lDestructor ) .AND. ( lConst )
-            IF lObject
-               aadd( cpp_, "typedef struct"                  )
-               aadd( cpp_, "{"                               )
-               aadd( cpp_, "  void * ph;"                    )
-               aadd( cpp_, "  QT_G_FUNC_PTR func;"           )
-               aadd( cpp_, "  QPointer< "+ cWidget +" > pq;" )
-               aadd( cpp_, "} QGC_POINTER_" + cWidget + ";"  )
-               aadd( cpp_, " "                               )
-            ENDIF
+
+         aadd( cpp_, "typedef struct"                  )
+         aadd( cpp_, "{"                               )
+         aadd( cpp_, "  void * ph;"                    )
+         aadd( cpp_, "  bool bNew;"                    )
+         aadd( cpp_, "  QT_G_FUNC_PTR func;"           )
+         IF lObject
+            aadd( cpp_, "  QPointer< "+ cWidget +" > pq;" )
          ENDIF
+         aadd( cpp_, "} QGC_POINTER_" + cWidget + ";"  )
+         aadd( cpp_, " "                               )
+
          aadd( cpp_, "QT_G_FUNC( hbqt_gcRelease_" + cWidget + " )"  )
          aadd( cpp_, "{"                                     )
          IF ( lDestructor ) .AND. ( lConst )
             IF lObject
                aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) Cargo; " )
                aadd( cpp_, "   " )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + '  p=%p", p));')
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' ph=%p pq=%p", p->ph, (void *)(p->pq)));')
-               aadd( cpp_, "   " )
-               aadd( cpp_, "   if( p && p->ph && p->pq )                                 " )
-               aadd( cpp_, "   {                                                " )
-               aadd( cpp_, "      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();" )
-               aadd( cpp_, '      if( ( QString ) m->className() != ( QString ) "QObject" )' )
+               aadd( cpp_, "   if( p && p->bNew )" )
+               aadd( cpp_, "   {" )
+               aadd( cpp_, "      if( p->ph && p->pq )" )
                aadd( cpp_, "      {" )
-               aadd( cpp_, "         switch( hbqt_get_object_release_method() )" )
+               aadd( cpp_, "         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();" )
+               aadd( cpp_, '         if( ( QString ) m->className() != ( QString ) "QObject" )' )
                aadd( cpp_, "         {" )
-               aadd( cpp_, "         case HBQT_RELEASE_WITH_DELETE:" )
                aadd( cpp_, "            delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
-               aadd( cpp_, "            break;" )
-               aadd( cpp_, "         case HBQT_RELEASE_WITH_DESTRUTOR:" )
-               aadd( cpp_, "            ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph )->~" + cWidget + "(); " )
-               aadd( cpp_, "            break;" )
-               aadd( cpp_, "         case HBQT_RELEASE_WITH_DELETE_LATER:" )
-               aadd( cpp_, "            ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph )->deleteLater(); " )
-               aadd( cpp_, "            break;" )
+               aadd( cpp_, '            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_' + pad( cWidget, 27 ) + 'ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+               aadd( cpp_, "            p->ph = NULL;" )
                aadd( cpp_, "         }" )
+               aadd( cpp_, "         else" )
+               aadd( cpp_, "         {" )
+               aadd( cpp_, '            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_' + pad( cWidget, 27 ) + 'ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+               aadd( cpp_, "         }" )
+            ELSE
+               aadd( cpp_, "      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
+               aadd( cpp_, "      " )
+               aadd( cpp_, "   if( p && p->bNew )" )
+               aadd( cpp_, "   {" )
+               aadd( cpp_, "      if( p->ph )" )
+               aadd( cpp_, "      {" )
+               aadd( cpp_, "         delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
+               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_' + pad( cWidget, 27 ) + 'ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
                aadd( cpp_, "         p->ph = NULL;" )
-               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
-               aadd( cpp_, "      }" )
-               aadd( cpp_, "      else" )
-               aadd( cpp_, "      {" )
-               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object Name Missing!" ) );')
-               aadd( cpp_, "      }" )
-            ELSE
-               aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;       " )
-               aadd( cpp_, "   " )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + '  p=%p", p ) );' )
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' ph=%p", p->ph ) );' )
-               aadd( cpp_, "   " )
-               aadd( cpp_, "   if( p && p->ph )                                 " )
-               aadd( cpp_, "   {                                                " )
-               aadd( cpp_, "      delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
-               //aadd( cpp_, "      ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph )->~" + cWidget + "(); " )
-               aadd( cpp_, "      p->ph = NULL;" )
-               aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
             ENDIF
+            aadd( cpp_, "      }" )
+            aadd( cpp_, "      else" )
+            aadd( cpp_, "      {" )
+            aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_' + pad( cWidget, 27 ) + ' Object already deleted!" ) );' )
+            aadd( cpp_, "      }" )
             aadd( cpp_, "   }" )
             aadd( cpp_, "   else" )
             aadd( cpp_, "   {" )
-            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_' + pad( cWidget, 27 ) + ' Object Already deleted!" ) );' )
+            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_' + pad( cWidget, 27 ) + ' Object not created with - new" ) );' )
+            aadd( cpp_, "      p->ph = NULL;" )
             aadd( cpp_, "   }" )
          ELSE
             aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
          ENDIF
-         aadd( cpp_, "}                                      " )
-         aadd( cpp_, "                                       " )
-      ELSE
-         aadd( cpp_, "QT_G_FUNC( hbqt_gcRelease_" + cWidget + " )   " )
-         aadd( cpp_, "{                                      " )
-         IF lDestructor
-            aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
-            aadd( cpp_, "" )
-            aadd( cpp_, "   void * ph = ( void * ) Cargo;       " )
-            aadd( cpp_, "   if( ph )                            " )
-            aadd( cpp_, "   {                                   " )
-            IF lObject
-               aadd( cpp_, "      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();" )
-               aadd( cpp_, '      if( ( QString ) m->className() != ( QString ) "QObject" )' )
-               aadd( cpp_, "      {" )
-               //aadd( cpp_, "         delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph ); " )
-               aadd( cpp_, "         ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph )->~" + cWidget + "(); " )
-               aadd( cpp_, "         ph = NULL;" )
-               aadd( cpp_, "      }" )
-               aadd( cpp_, "      else" )
-               aadd( cpp_, "      {" )
-               aadd( cpp_, '         HB_TRACE( HB_TR_DEBUG, ( "  Object Name Missin: ' + pad( cWidget, 27 ) + '" ) );')
-               aadd( cpp_, "      }" )
-            ELSE
-               //aadd( cpp_, "      delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph ); " )
-               aadd( cpp_, "      ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph )->~" + cWidget + "(); " )
-               aadd( cpp_, "      ph = NULL;" )
-            ENDIF
-            aadd( cpp_, "   }" )
-            aadd( cpp_, "   else" )
-            aadd( cpp_, "   {" )
-            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "! ph_____' + cWidget + '" ) );')
-            aadd( cpp_, "   }" )
-         ELSE
-            aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
-         ENDIF
-         aadd( cpp_, "}                                      " )
-         aadd( cpp_, "                                       " )
+         aadd( cpp_, "}" )
+         aadd( cpp_, "" )
       ENDIF
+
       /* Insert CONSTRUCTOR - if defined */
       lConst := .f.
       FOR i := 3 TO len( new_ ) - 1
@@ -648,27 +605,28 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       NEXT
 
       IF ( lNewGCtoQT )
-         IF lConst
-            IF lDestructor
-               aadd( cpp_, "void * hbqt_gcAllocate_" + cWidget + "( void * pObj )" )
-               aadd( cpp_, "{                                      " )
-               IF lObject
-                  aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), hbqt_gcFuncs() );" )
-               ELSE
-                  aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
-               ENDIF
-               aadd( cpp_, "" )
-               aadd( cpp_, "   p->ph = pObj;" )
-               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget + ";" )
-               IF lObject
-                  aadd( cpp_, "   new( & p->pq ) QPointer< "+ cWidget +" >( ( " + cWidget + " * ) pObj );" )
-               ENDIF
-               aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "          new_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
-               aadd( cpp_, "   return p;" )
-               aadd( cpp_, "}" )
-               aadd( cpp_, "" )
-            ENDIF
+         aadd( cpp_, "void * hbqt_gcAllocate_" + cWidget + "( void * pObj, bool bNew )" )
+         aadd( cpp_, "{                                      " )
+         IF lObject
+            aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), hbqt_gcFuncs() );" )
+         ELSE
+            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
          ENDIF
+         aadd( cpp_, "" )
+         aadd( cpp_, "   p->ph = pObj;" )
+         aadd( cpp_, "   p->bNew = bNew;" )
+         aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget + ";" )
+         aadd( cpp_, "" )
+         aadd( cpp_, "   if( bNew )" )
+         aadd( cpp_, "   {" )
+         IF lObject
+            aadd( cpp_, "      new( & p->pq ) QPointer< "+ cWidget +" >( ( " + cWidget + " * ) pObj );" )
+         ENDIF
+         aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "   _new_' + pad( cWidget, 27 ) + 'ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+         aadd( cpp_, "   }" )
+         aadd( cpp_, "   return p;" )
+         aadd( cpp_, "}" )
+         aadd( cpp_, "" )
 
          aadd( cpp_, new_[ 1 ] )           // Func definition
          aadd( cpp_, new_[ 2 ] )           // {
@@ -690,55 +648,14 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             NEXT
             aadd( cpp_, " " )
             IF lDestructor
-               aadd( cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + cWidget + "( pObj ) );" )
-            ELSE
-               aadd( cpp_, "   hb_retptr( pObj );" )
-            ENDIF
-         ENDIF
-         aadd( cpp_, new_[ len( new_ ) ] ) // }
-      ELSE
-         aadd( cpp_, new_[ 1 ] )           // Func definition
-         aadd( cpp_, new_[ 2 ] )           // {
-         IF lConst
-            IF lDestructor
-               aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
-            ENDIF
-            IF lObject
-               aadd( cpp_, "   QPointer< "+ cWidget +" > pObj = NULL;" )
-            ELSE
-               aadd( cpp_, "   void * pObj = NULL;" )
-            ENDIF
-
-            aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "   ' + IIF( lDestructor, 'GC', 'NON-GC' ) + ':  new ' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );' )
-
-            aadd( cpp_, "" )
-            FOR i := 3 TO len( new_ ) - 1
-               IF left( ltrim( new_[ i ] ), 2 ) != "//"
-                  IF "hb_retptr(" $ new_[ i ]
-                     s := trim( strtran( new_[ i ], "hb_retptr(", "pObj =" ) )
-                     s := strtran( s, ");", ";" )
-                     aadd( cpp_, s )
-                  ELSE
-                     aadd( cpp_, new_[ i ] )
-                  ENDIF
-               ENDIF
-            NEXT
-            aadd( cpp_, "" )
-
-            aadd( cpp_, '   HB_TRACE( HB_TR_DEBUG, ( "   ' + IIF( lDestructor, 'GC', 'NON-GC' ) + ':      ' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );' )
-
-            //IF lObject .or. IsMemObject( cWidget )
-            IF lDestructor
-               aadd( cpp_, "   p->ph = pObj;" )
-               aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget +";" )
-               aadd( cpp_, " " )
-               aadd( cpp_, "   hb_retptrGC( p );" )
+               aadd( cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + cWidget + "( pObj, true ) );" )
             ELSE
                aadd( cpp_, "   hb_retptr( pObj );" )
             ENDIF
          ENDIF
          aadd( cpp_, new_[ len( new_ ) ] ) // }
       ENDIF
+
       /* Insert Functions */
       aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
 
@@ -788,36 +705,34 @@ FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre )
 
 /*----------------------------------------------------------------------*/
 
-#define PRT_L_CONST    1
-#define PRT_L_FAR      2
-#define PRT_L_AND      3
-#define PRT_L_VIRT     4
-#define PRT_NAME       5
-#define PRT_CAST       6
-#define PRT_DEFAULT    7
-#define PRT_RAW        8
-#define PRT_BODY       9
-#define PRT_DOC       10
-#define PRT_BODY_PRE  11
+#define PRT_L_CONST                                1
+#define PRT_L_FAR                                  2
+#define PRT_L_AND                                  3
+#define PRT_L_VIRT                                 4
+#define PRT_NAME                                   5
+#define PRT_CAST                                   6
+#define PRT_DEFAULT                                7
+#define PRT_RAW                                    8
+#define PRT_BODY                                   9
+#define PRT_DOC                                   10
+#define PRT_BODY_PRE                              11
+#define PRT_L_CONST_LAST                          12
 
-#define PRT_ATTRB_MAX 11
+#define PRT_ATTRB_MAX                             12
 
 #define THIS_PROPER( s )   ( upper( left( s,1 ) ) + substr( s,2 ) )
 
 STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
-   LOCAL aRet, aA, aArgus, aArg, aPar, aPre
-   LOCAL n, nn, nHBIdx
-   LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
+   LOCAL aRet, aA, aArgus, aArg, aPar, aPre, n, nn, nHBIdx
+   LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss, cFirstParamCast
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess
    LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
    LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
-   LOCAL cFirstParamCast
 
    cParas := ''
    cDocs  := ''
-   //aArgus := {}
 
    aRet := {}; aArgus := {}
    n := at( '(', cProto )
@@ -827,24 +742,25 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
          /* Pull out pre-mid-post components */
          cPre := alltrim( substr( cProto,   1, n-1    ) )
          cPar := alltrim( substr( cProto, n+1, nn-1-n ) )
-         cPas := alltrim( substr( cProto, nn+1 ) )
+         cPas := alltrim( substr( cProto, nn+1        ) )
 
          /* parse cPre, it has two components */
          n := rat( ' ', cPre )
          IF n > 0   /* And it must be, otherwise it is constructor function which we write in <CODE>section */
-            cFun := alltrim( substr( cPre, n+1    ) )
-            cRet := alltrim( substr( cPre, 1, n-1 ) )
+            cFun := alltrim( substr( cPre, n + 1    ) )
+            cRet := alltrim( substr( cPre, 1, n - 1 ) )
          ELSE
             cFun := cPre
             cRet := ''
          ENDIF
 
          aRet := array( PRT_ATTRB_MAX )
-
-         aRet[ PRT_L_CONST ] := 'const'   $ cRet  .or. 'const'   $ cPas
-         aRet[ PRT_L_AND   ] := '&'       $ cRet
-         aRet[ PRT_L_FAR   ] := '*'       $ cRet
-         aRet[ PRT_L_VIRT  ] := 'virtual' $ cRet
+         JustACall( cPas )  ////////////////////////////////////////////////////////
+         aRet[ PRT_L_CONST      ] := 'const'   $ cRet  //.or. 'const'   $ cPas
+         aRet[ PRT_L_AND        ] := '&'       $ cRet
+         aRet[ PRT_L_FAR        ] := '*'       $ cRet
+         aRet[ PRT_L_VIRT       ] := 'virtual' $ cRet
+         aRet[ PRT_L_CONST_LAST ] := 'const'   $ cPas
 
          cRet := strtran( cRet, 'const '  , '' )
          cRet := strtran( cRet, '& '      , '' )
@@ -1064,7 +980,6 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
                s := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .and. ( '(' $ aA[ PRT_DEFAULT ] )
-                  //aA[ PRT_BODY ] := '( HB_ISNIL( ' + cHBIdx + ' ) ? ' + aA[ PRT_DEFAULT ] + ' : ' + s + ' )'
                   aA[ PRT_BODY ] := '( HB_ISPOINTER( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
                ELSE
                   aA[ PRT_BODY ] := s
@@ -1092,7 +1007,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
          /* Build complete code line */
          IF .t.
-            aA     := aRet
+            aA     := aRet       /*     T A K E   C A R E    */
+            //
             cWdg   := 'hbqt_par_' + cWidget + '( 1 )->'
             cParas := '( ' + cParas + ' )'
             cCmn   := cWdg + cFun + cParas
@@ -1147,8 +1063,39 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retc( ' + cCmn + ' )'
                cPrgRet := 'c' + cDocNM
 
-            CASE aA[ PRT_L_FAR ]
+            CASE aA[ PRT_L_FAR ] .AND. ( aA[ PRT_CAST ] $ "uchar" )
                cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cPrgRet := 'p' + cDocNM
+
+//            CASE aA[ PRT_L_FAR ]
+            CASE aA[ PRT_L_FAR ] .AND. !( aA[ PRT_L_CONST ] )
+               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               IF ( left( aA[ PRT_CAST ], 1 ) == 'Q' )
+                  cCmd := Get_Command( aA[ PRT_CAST ], cCmn, .F. )
+               ELSE
+                  cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               ENDIF
+               cPrgRet := 'p' + cDocNM
+
+            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+                                      aA[ PRT_L_FAR ]   .AND. ;
+                                      aA[ PRT_L_CONST ] .AND. ;
+                                      ( "Abstract" $ aA[ PRT_CAST ] )
+               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cPrgRet := 'p' + cDocNM
+
+            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+                                      aA[ PRT_L_FAR   ] .AND. ;
+                                      aA[ PRT_L_CONST ] .AND. ;
+                                      aA[ PRT_L_VIRT  ]
+               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cPrgRet := 'p' + cDocNM
+
+            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+                                      aA[ PRT_L_FAR   ] .AND. ;
+                                      aA[ PRT_L_CONST ] .AND. ;
+                                      aA[ PRT_L_CONST_LAST ]
+               cCmd := Get_Command_1( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ] .AND. aA[ PRT_L_CONST ]
@@ -1165,7 +1112,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             OTHERWISE
                /* No attribute is attached to return value */
-               IF (left( aA[ PRT_CAST ], 1 ) == 'Q')
+               IF ( left( aA[ PRT_CAST ], 1 ) == 'Q' )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
@@ -1329,8 +1276,6 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
             OTHERWISE
                /* No attribute is attached to return value */
                IF (left( aA[ PRT_CAST ], 1 ) == 'Q')
-//                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-//                  cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
@@ -1413,7 +1358,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, " * Harbour Project source code:"                                               )
    aadd( txt_, " * QT wrapper main header"                                                     )
    aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>"                         )
+   aadd( txt_, " * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>"                    )
    aadd( txt_, " * "                                                                           )
    aadd( txt_, " * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>"     )
    aadd( txt_, " * www - http://www.harbour-project.org"                                       )
@@ -1462,7 +1407,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
    aadd( txt_, '#include "hbapi.h"'                                                            )
-   aadd( txt_, '#include "../hbqt.h"'                                                             ) /////////////
+   aadd( txt_, '#include "../hbqt.h"'                                                          ) /////////////
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
@@ -1672,9 +1617,9 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    NEXT
    aadd( txt_, "" )
 
-   IF (lNewGCtoQT)
+   IF ( lNewGCtoQT )
       FOR EACH s IN cpp_
-         aadd( txt_, "extern void * hbqt_gcAllocate_" + s + "( void * pObj );" )
+         aadd( txt_, "extern void * hbqt_gcAllocate_" + s + "( void * pObj, bool bNew );" )
       NEXT
       aadd( txt_, "" )
    ENDIF
@@ -2333,16 +2278,23 @@ FUNCTION IsMemObject( cWidget )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Get_Command( cWgt, cCmn )
-   STATIC a_:={}
+FUNCTION Get_Command_1( cWgt, cCmn )
+
+   RETURN 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( *( ' + cCmn + ' ) ), true ) )'
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Get_Command( cWgt, cCmn, lNew )
    LOCAL  cRet
 
-   IF ascan( a_, cWgt ) == 0
-      aadd( a_, cWgt )
-   ENDIF
+   DEFAULT lNew TO .T.
 
-   IF (lNewGCtoQT)
-      cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ) ) )'
+   IF ( lNewGCtoQT )
+      IF lNew
+         cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ), true ) )'
+      ELSE
+         cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( ' + cCmn + ', false ) )'
+      ENDIF
    ELSE
       cRet := 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), hbqt_gcRelease_' + cWgt +' ) )'
    ENDIF
@@ -2389,5 +2341,10 @@ FUNCTION ParsePtr( cParam )
    ENDIF
 
    RETURN cPar
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION JustACall()
+   RETURN nil
 
 /*----------------------------------------------------------------------*/

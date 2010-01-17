@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -108,32 +108,49 @@
  * ~QPrinter ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QPrinter;
+
 QT_G_FUNC( hbqt_gcRelease_QPrinter )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPrinter                     p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPrinter                    ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QPrinter * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QPrinter                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QPrinter * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPrinter                   ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QPrinter                    Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QPrinter                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QPrinter                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QPrinter( void * pObj )
+void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrinter;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QPrinter                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -143,7 +160,7 @@ HB_FUNC( QT_QPRINTER )
 
    pObj = ( QPrinter* ) new QPrinter() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPrinter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrinter( pObj, true ) );
 }
 /*
  * bool abort ()
@@ -304,7 +321,7 @@ HB_FUNC( QT_QPRINTER_PAGEORDER )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ), true ) );
 }
 
 /*
@@ -312,7 +329,7 @@ HB_FUNC( QT_QPRINTER_PAGERECT )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -320,7 +337,7 @@ HB_FUNC( QT_QPRINTER_PAGERECT_1 )
  */
 HB_FUNC( QT_QPRINTER_PAINTENGINE )
 {
-   hb_retptr( ( QPaintEngine* ) hbqt_par_QPrinter( 1 )->paintEngine() );
+   hb_retptrGC( hbqt_gcAllocate_QPaintEngine( hbqt_par_QPrinter( 1 )->paintEngine(), false ) );
 }
 
 /*
@@ -328,7 +345,7 @@ HB_FUNC( QT_QPRINTER_PAINTENGINE )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ), true ) );
 }
 
 /*
@@ -336,7 +353,7 @@ HB_FUNC( QT_QPRINTER_PAPERRECT )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -352,7 +369,7 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE )
  */
 HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -368,7 +385,7 @@ HB_FUNC( QT_QPRINTER_PAPERSOURCE )
  */
 HB_FUNC( QT_QPRINTER_PRINTENGINE )
 {
-   hb_retptr( ( QPrintEngine* ) hbqt_par_QPrinter( 1 )->printEngine() );
+   hb_retptrGC( hbqt_gcAllocate_QPrintEngine( hbqt_par_QPrinter( 1 )->printEngine(), false ) );
 }
 
 /*

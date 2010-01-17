@@ -81,7 +81,14 @@ HB_FUNC( QT_QDROPEVENT )
 void acceptProposedAction ()
 Qt::DropAction dropAction () const
 Qt::KeyboardModifiers keyboardModifiers () const
-const QMimeData * mimeData () const
+
+# This function is OK if called as line below, but do not found a way 
+# how to construct dynamically - no separate keyword ???
+#
+//const QMimeData * mimeData () const
+//hb_retptrGC( hbqt_gcAllocate_QMimeData( ( void* ) hbqt_par_QDropEvent( 1 )->mimeData(), false ) );
+#
+#
 Qt::MouseButtons mouseButtons () const
 const QPoint & pos () const
 Qt::DropActions possibleActions () const

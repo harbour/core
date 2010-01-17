@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -95,6 +95,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QTextEdit > pq;
 } QGC_POINTER_QTextEdit;
@@ -103,48 +104,47 @@ QT_G_FUNC( hbqt_gcRelease_QTextEdit )
 {
    QGC_POINTER_QTextEdit * p = ( QGC_POINTER_QTextEdit * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextEdit                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QTextEdit * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QTextEdit * ) p->ph )->~QTextEdit();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QTextEdit * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextEdit                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextEdit                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTextEdit                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTextEdit                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextEdit                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextEdit                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextEdit                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextEdit( void * pObj )
+void * hbqt_gcAllocate_QTextEdit( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextEdit * p = ( QGC_POINTER_QTextEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextEdit;
-   new( & p->pq ) QPointer< QTextEdit >( ( QTextEdit * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTextEdit >( ( QTextEdit * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextEdit                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -157,7 +157,7 @@ HB_FUNC( QT_QTEXTEDIT )
    else
       pObj = new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextEdit( pObj, true ) );
 }
 /*
  * bool acceptRichText () const
@@ -204,7 +204,7 @@ HB_FUNC( QT_QTEXTEDIT_CANPASTE )
  */
 HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu() );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QTextEdit( 1 )->createStandardContextMenu(), false ) );
 }
 
 /*
@@ -212,7 +212,7 @@ HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU )
  */
 HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU_1 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu( *hbqt_par_QPoint( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QTextEdit( 1 )->createStandardContextMenu( *hbqt_par_QPoint( 2 ) ), false ) );
 }
 
 /*
@@ -220,7 +220,7 @@ HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU_1 )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ), true ) );
 }
 
 /*
@@ -228,7 +228,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ), true ) );
 }
 
 /*
@@ -236,7 +236,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ), true ) );
 }
 
 /*
@@ -244,7 +244,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ), true ) );
 }
 
 /*
@@ -252,7 +252,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ), true ) );
 }
 
 /*
@@ -268,7 +268,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QTextEdit( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QTextEdit( 1 )->document(), false ) );
 }
 
 /*
@@ -372,7 +372,7 @@ HB_FUNC( QT_QTEXTEDIT_LINEWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_LOADRESOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
 }
 
 /*
@@ -556,7 +556,7 @@ HB_FUNC( QT_QTEXTEDIT_TABSTOPWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ), true ) );
 }
 
 /*
@@ -564,7 +564,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ), true ) );
 }
 
 /*
@@ -572,7 +572,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCURSOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ), true ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -86,6 +86,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QDateTimeEdit > pq;
 } QGC_POINTER_QDateTimeEdit;
@@ -94,48 +95,47 @@ QT_G_FUNC( hbqt_gcRelease_QDateTimeEdit )
 {
    QGC_POINTER_QDateTimeEdit * p = ( QGC_POINTER_QDateTimeEdit * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDateTimeEdit                p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDateTimeEdit               ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QDateTimeEdit * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QDateTimeEdit * ) p->ph )->~QDateTimeEdit();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QDateTimeEdit * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QDateTimeEdit              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDateTimeEdit               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QDateTimeEdit              ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QDateTimeEdit               Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QDateTimeEdit               Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDateTimeEdit               Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QDateTimeEdit               Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QDateTimeEdit( void * pObj )
+void * hbqt_gcAllocate_QDateTimeEdit( void * pObj, bool bNew )
 {
    QGC_POINTER_QDateTimeEdit * p = ( QGC_POINTER_QDateTimeEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateTimeEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateTimeEdit;
-   new( & p->pq ) QPointer< QDateTimeEdit >( ( QDateTimeEdit * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QDateTimeEdit >( ( QDateTimeEdit * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDateTimeEdit              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -145,7 +145,7 @@ HB_FUNC( QT_QDATETIMEEDIT )
 
    pObj = ( QDateTimeEdit* ) new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDateTimeEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTimeEdit( pObj, true ) );
 }
 /*
  * bool calendarPopup () const
@@ -160,7 +160,7 @@ HB_FUNC( QT_QDATETIMEEDIT_CALENDARPOPUP )
  */
 HB_FUNC( QT_QDATETIMEEDIT_CALENDARWIDGET )
 {
-   hb_retptr( ( QCalendarWidget* ) hbqt_par_QDateTimeEdit( 1 )->calendarWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( hbqt_par_QDateTimeEdit( 1 )->calendarWidget(), false ) );
 }
 
 /*
@@ -232,7 +232,7 @@ HB_FUNC( QT_QDATETIMEEDIT_CURRENTSECTIONINDEX )
  */
 HB_FUNC( QT_QDATETIMEEDIT_DATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->date() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->date() ), true ) );
 }
 
 /*
@@ -240,7 +240,7 @@ HB_FUNC( QT_QDATETIMEEDIT_DATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_DATETIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->dateTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->dateTime() ), true ) );
 }
 
 /*
@@ -264,7 +264,7 @@ HB_FUNC( QT_QDATETIMEEDIT_DISPLAYEDSECTIONS )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->maximumDate() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->maximumDate() ), true ) );
 }
 
 /*
@@ -272,7 +272,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATETIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->maximumDateTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->maximumDateTime() ), true ) );
 }
 
 /*
@@ -280,7 +280,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATETIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMTIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->maximumTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->maximumTime() ), true ) );
 }
 
 /*
@@ -288,7 +288,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMTIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->minimumDate() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTimeEdit( 1 )->minimumDate() ), true ) );
 }
 
 /*
@@ -296,7 +296,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATETIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->minimumDateTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->minimumDateTime() ), true ) );
 }
 
 /*
@@ -304,7 +304,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATETIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMTIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->minimumTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->minimumTime() ), true ) );
 }
 
 /*
@@ -464,7 +464,7 @@ HB_FUNC( QT_QDATETIMEEDIT_SETTIMESPEC )
  */
 HB_FUNC( QT_QDATETIMEEDIT_TIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->time() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTimeEdit( 1 )->time() ), true ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,9 +75,33 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QTextObject > pq;
+} QGC_POINTER_QTextObject;
+
 QT_G_FUNC( hbqt_gcRelease_QTextObject )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QTextObject( void * pObj, bool bNew )
+{
+   QGC_POINTER_QTextObject * p = ( QGC_POINTER_QTextObject * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextObject ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QTextObject;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTextObject >( ( QTextObject * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextObject                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QTEXTOBJECT )
@@ -88,7 +112,7 @@ HB_FUNC( QT_QTEXTOBJECT )
  */
 HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QTextObject( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QTextObject( 1 )->document(), false ) );
 }
 
 /*
@@ -96,7 +120,7 @@ HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ), true ) );
 }
 
 /*

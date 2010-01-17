@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -72,6 +72,16 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 0/2 [ 0.00% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  int type
+ *  int version
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleHintReturn>
@@ -81,9 +91,31 @@
  * QStyleHintReturn ( int version = QStyleOption::Version, int type = SH_Default )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QStyleHintReturn;
+
 QT_G_FUNC( hbqt_gcRelease_QStyleHintReturn )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QStyleHintReturn( void * pObj, bool bNew )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QStyleHintReturn;
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleHintReturn           ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QSTYLEHINTRETURN )

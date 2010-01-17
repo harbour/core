@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -78,6 +78,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QCommonStyle > pq;
 } QGC_POINTER_QCommonStyle;
@@ -86,48 +87,47 @@ QT_G_FUNC( hbqt_gcRelease_QCommonStyle )
 {
    QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCommonStyle                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCommonStyle                ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QCommonStyle * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QCommonStyle * ) p->ph )->~QCommonStyle();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QCommonStyle * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QCommonStyle               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCommonStyle                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QCommonStyle               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QCommonStyle                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QCommonStyle                Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QCommonStyle                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QCommonStyle                Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QCommonStyle( void * pObj )
+void * hbqt_gcAllocate_QCommonStyle( void * pObj, bool bNew )
 {
    QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QCommonStyle;
-   new( & p->pq ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QCommonStyle                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QCommonStyle               ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -137,7 +137,7 @@ HB_FUNC( QT_QCOMMONSTYLE )
 
    pObj = ( QCommonStyle* ) new QCommonStyle() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QCommonStyle( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCommonStyle( pObj, true ) );
 }
 
 /*----------------------------------------------------------------------*/

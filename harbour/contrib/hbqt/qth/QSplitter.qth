@@ -82,7 +82,12 @@ void addWidget ( QWidget * widget )
 bool childrenCollapsible () const
 int count () const
 void getRange ( int index, int * min, int * max ) const
-QSplitterHandle * handle ( int index ) const
+#
+# The call below need QSplitterHandle class constructed firts
+# Will review later
+#
+//QSplitterHandle * handle ( int index ) const
+#
 int handleWidth () const
 int indexOf ( QWidget * widget ) const
 void insertWidget ( int index, QWidget * widget )

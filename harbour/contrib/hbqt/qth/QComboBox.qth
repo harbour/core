@@ -136,7 +136,7 @@ void setValidator ( const QValidator * validator )
 void setView ( QAbstractItemView * itemView )
 virtual void showPopup ()
 SizeAdjustPolicy sizeAdjustPolicy () const
-const QValidator * validator () const
+virtual const QValidator * validator () const
 QAbstractItemView * view () const
 </PROTOS>
 

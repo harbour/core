@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -88,6 +88,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QButtonGroup > pq;
 } QGC_POINTER_QButtonGroup;
@@ -96,48 +97,47 @@ QT_G_FUNC( hbqt_gcRelease_QButtonGroup )
 {
    QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QButtonGroup                 p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QButtonGroup                ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QButtonGroup * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QButtonGroup * ) p->ph )->~QButtonGroup();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QButtonGroup * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QButtonGroup               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QButtonGroup                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QButtonGroup               ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QButtonGroup                Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QButtonGroup                Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QButtonGroup                Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QButtonGroup                Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QButtonGroup( void * pObj )
+void * hbqt_gcAllocate_QButtonGroup( void * pObj, bool bNew )
 {
    QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QButtonGroup ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QButtonGroup;
-   new( & p->pq ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QButtonGroup               ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -154,7 +154,7 @@ HB_FUNC( QT_QBUTTONGROUP )
       pObj = ( QButtonGroup* ) new QButtonGroup() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QButtonGroup( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QButtonGroup( pObj, true ) );
 }
 /*
  * void addButton ( QAbstractButton * button )
@@ -177,7 +177,7 @@ HB_FUNC( QT_QBUTTONGROUP_ADDBUTTON_1 )
  */
 HB_FUNC( QT_QBUTTONGROUP_BUTTON )
 {
-   hb_retptr( ( QAbstractButton* ) hbqt_par_QButtonGroup( 1 )->button( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QButtonGroup( 1 )->button( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QBUTTONGROUP_BUTTON )
  */
 HB_FUNC( QT_QBUTTONGROUP_CHECKEDBUTTON )
 {
-   hb_retptr( ( QAbstractButton* ) hbqt_par_QButtonGroup( 1 )->checkedButton() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QButtonGroup( 1 )->checkedButton(), false ) );
 }
 
 /*

@@ -61,6 +61,7 @@ New      = pParent, nFlags
 
 <CODE>
 #include <QtGui/QLabel>
+#include <QtGui/QPicture>
 
 
 /*

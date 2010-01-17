@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,32 +79,49 @@
  * ~QDateTime ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QDateTime;
+
 QT_G_FUNC( hbqt_gcRelease_QDateTime )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDateTime                    p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDateTime                   ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QDateTime * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QDateTime                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QDateTime * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QDateTime                  ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QDateTime                   Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDateTime                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QDateTime                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QDateTime( void * pObj )
+void * hbqt_gcAllocate_QDateTime( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateTime;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QDateTime                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDateTime                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -114,14 +131,14 @@ HB_FUNC( QT_QDATETIME )
 
    pObj = ( QDateTime* ) new QDateTime() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( pObj, true ) );
 }
 /*
  * QDateTime addDays ( int ndays ) const
  */
 HB_FUNC( QT_QDATETIME_ADDDAYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addDays( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addDays( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -129,7 +146,7 @@ HB_FUNC( QT_QDATETIME_ADDDAYS )
  */
 HB_FUNC( QT_QDATETIME_ADDMSECS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parnint( 2 ) ) ), true ) );
 }
 
 /*
@@ -137,7 +154,7 @@ HB_FUNC( QT_QDATETIME_ADDMSECS )
  */
 HB_FUNC( QT_QDATETIME_ADDMONTHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMonths( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -145,7 +162,7 @@ HB_FUNC( QT_QDATETIME_ADDMONTHS )
  */
 HB_FUNC( QT_QDATETIME_ADDSECS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addSecs( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addSecs( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -153,7 +170,7 @@ HB_FUNC( QT_QDATETIME_ADDSECS )
  */
 HB_FUNC( QT_QDATETIME_ADDYEARS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addYears( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addYears( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -161,7 +178,7 @@ HB_FUNC( QT_QDATETIME_ADDYEARS )
  */
 HB_FUNC( QT_QDATETIME_DATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTime( 1 )->date() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDateTime( 1 )->date() ), true ) );
 }
 
 /*
@@ -233,7 +250,7 @@ HB_FUNC( QT_QDATETIME_SETTIME_T )
  */
 HB_FUNC( QT_QDATETIME_TIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTime( 1 )->time() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QDateTime( 1 )->time() ), true ) );
 }
 
 /*
@@ -249,7 +266,7 @@ HB_FUNC( QT_QDATETIME_TIMESPEC )
  */
 HB_FUNC( QT_QDATETIME_TOLOCALTIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toLocalTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toLocalTime() ), true ) );
 }
 
 /*
@@ -273,7 +290,7 @@ HB_FUNC( QT_QDATETIME_TOSTRING_1 )
  */
 HB_FUNC( QT_QDATETIME_TOTIMESPEC )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -289,7 +306,7 @@ HB_FUNC( QT_QDATETIME_TOTIME_T )
  */
 HB_FUNC( QT_QDATETIME_TOUTC )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toUTC() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toUTC() ), true ) );
 }
 
 /*
@@ -297,7 +314,7 @@ HB_FUNC( QT_QDATETIME_TOUTC )
  */
 HB_FUNC( QT_QDATETIME_CURRENTDATETIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->currentDateTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->currentDateTime() ), true ) );
 }
 
 /*
@@ -305,7 +322,7 @@ HB_FUNC( QT_QDATETIME_CURRENTDATETIME )
  */
 HB_FUNC( QT_QDATETIME_FROMSTRING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) );
 }
 
 /*
@@ -313,7 +330,7 @@ HB_FUNC( QT_QDATETIME_FROMSTRING )
  */
 HB_FUNC( QT_QDATETIME_FROMSTRING_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
 }
 
 /*
@@ -321,7 +338,7 @@ HB_FUNC( QT_QDATETIME_FROMSTRING_1 )
  */
 HB_FUNC( QT_QDATETIME_FROMTIME_T )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromTime_t( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromTime_t( hb_parni( 2 ) ) ), true ) );
 }
 
 

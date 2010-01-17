@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,9 +79,33 @@
  * virtual ~QAbstractItemDelegate ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractItemDelegate > pq;
+} QGC_POINTER_QAbstractItemDelegate;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractItemDelegate * p = ( QGC_POINTER_QAbstractItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractItemDelegate ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractItemDelegate;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractItemDelegate >( ( QAbstractItemDelegate * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractItemDelegate      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTITEMDELEGATE )
@@ -92,7 +116,7 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_CREATEEDITOR )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QAbstractItemDelegate( 1 )->createEditor( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QAbstractItemDelegate( 1 )->createEditor( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ), false ) );
 }
 
 /*
@@ -132,7 +156,7 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), true ) );
 }
 
 /*

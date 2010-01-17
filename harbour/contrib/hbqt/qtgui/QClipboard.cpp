@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,15 +75,40 @@
 #include <qpalette.h>
 #include <QtGui/QClipboard>
 #include <QtGui/QApplication>
+#include <QtCore/QMimeData>
 
 /*
  *
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QClipboard > pq;
+} QGC_POINTER_QClipboard;
+
 QT_G_FUNC( hbqt_gcRelease_QClipboard )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QClipboard( void * pObj, bool bNew )
+{
+   QGC_POINTER_QClipboard * p = ( QGC_POINTER_QClipboard * ) hb_gcAllocate( sizeof( QGC_POINTER_QClipboard ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QClipboard;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QClipboard >( ( QClipboard * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QClipboard                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QCLIPBOARD )
@@ -107,15 +132,7 @@ HB_FUNC( QT_QCLIPBOARD_CLEAR )
  */
 HB_FUNC( QT_QCLIPBOARD_IMAGE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
-}
-
-/*
- * const QMimeData * mimeData ( Mode mode = Clipboard ) const
- */
-HB_FUNC( QT_QCLIPBOARD_MIMEDATA )
-{
-   hb_retptr( ( QMimeData* ) hbqt_par_QClipboard( 1 )->mimeData( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
 }
 
 /*
@@ -147,7 +164,7 @@ HB_FUNC( QT_QCLIPBOARD_OWNSSELECTION )
  */
 HB_FUNC( QT_QCLIPBOARD_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
 }
 
 /*

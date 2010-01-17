@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -90,6 +90,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QProcess > pq;
 } QGC_POINTER_QProcess;
@@ -98,48 +99,47 @@ QT_G_FUNC( hbqt_gcRelease_QProcess )
 {
    QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProcess                     p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProcess                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QProcess * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QProcess * ) p->ph )->~QProcess();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QProcess * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QProcess                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QProcess                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QProcess                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QProcess                    Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QProcess                    Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QProcess                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QProcess                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QProcess( void * pObj )
+void * hbqt_gcAllocate_QProcess( void * pObj, bool bNew )
 {
    QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) hb_gcAllocate( sizeof( QGC_POINTER_QProcess ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QProcess;
-   new( & p->pq ) QPointer< QProcess >( ( QProcess * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QProcess >( ( QProcess * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QProcess                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -156,7 +156,7 @@ HB_FUNC( QT_QPROCESS )
       pObj = ( QProcess* ) new QProcess() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QProcess( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QProcess( pObj, true ) );
 }
 /*
  * virtual void close ()
@@ -187,7 +187,7 @@ HB_FUNC( QT_QPROCESS_CLOSEWRITECHANNEL )
  */
 HB_FUNC( QT_QPROCESS_ENVIRONMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->environment() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->environment() ), true ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QPROCESS_PROCESSCHANNELMODE )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ), true ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDOUTPUT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ), true ) );
 }
 
 /*
@@ -407,7 +407,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
  */
 HB_FUNC( QT_QPROCESS_SYSTEMENVIRONMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ), true ) );
 }
 
 /*

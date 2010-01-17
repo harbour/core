@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -87,6 +87,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QMovie > pq;
 } QGC_POINTER_QMovie;
@@ -95,48 +96,47 @@ QT_G_FUNC( hbqt_gcRelease_QMovie )
 {
    QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                       p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QMovie * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QMovie * ) p->ph )->~QMovie();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QMovie * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMovie                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMovie                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QMovie                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMovie                      Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMovie                      Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMovie                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMovie                      Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QMovie( void * pObj )
+void * hbqt_gcAllocate_QMovie( void * pObj, bool bNew )
 {
    QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QMovie;
-   new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMovie                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -146,14 +146,14 @@ HB_FUNC( QT_QMOVIE )
 
    pObj = new QMovie() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QMovie( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMovie( pObj, true ) );
 }
 /*
  * QColor backgroundColor () const
  */
 HB_FUNC( QT_QMOVIE_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ), true ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QMOVIE_CURRENTFRAMENUMBER )
  */
 HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QMovie( 1 )->currentImage() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QMovie( 1 )->currentImage() ), true ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
  */
 HB_FUNC( QT_QMOVIE_CURRENTPIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ), true ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QMOVIE_CURRENTPIXMAP )
  */
 HB_FUNC( QT_QMOVIE_DEVICE )
 {
-   hb_retptr( ( QIODevice* ) hbqt_par_QMovie( 1 )->device() );
+   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QMovie( 1 )->device(), false ) );
 }
 
 /*
@@ -209,7 +209,7 @@ HB_FUNC( QT_QMOVIE_FILENAME )
  */
 HB_FUNC( QT_QMOVIE_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMovie( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMovie( 1 )->format() ), true ) );
 }
 
 /*
@@ -225,7 +225,7 @@ HB_FUNC( QT_QMOVIE_FRAMECOUNT )
  */
 HB_FUNC( QT_QMOVIE_FRAMERECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QMovie( 1 )->frameRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QMovie( 1 )->frameRect() ), true ) );
 }
 
 /*
@@ -265,7 +265,7 @@ HB_FUNC( QT_QMOVIE_NEXTFRAMEDELAY )
  */
 HB_FUNC( QT_QMOVIE_SCALEDSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ), true ) );
 }
 
 /*

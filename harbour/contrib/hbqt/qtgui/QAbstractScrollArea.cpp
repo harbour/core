@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -76,9 +76,33 @@
  * ~QAbstractScrollArea ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractScrollArea > pq;
+} QGC_POINTER_QAbstractScrollArea;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractScrollArea )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractScrollArea( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractScrollArea * p = ( QGC_POINTER_QAbstractScrollArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractScrollArea ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractScrollArea;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractScrollArea >( ( QAbstractScrollArea * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractScrollArea        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTSCROLLAREA )
@@ -97,7 +121,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_ADDSCROLLBARWIDGET )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_CORNERWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->cornerWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QAbstractScrollArea( 1 )->cornerWidget(), false ) );
 }
 
 /*
@@ -105,7 +129,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_CORNERWIDGET )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBAR )
 {
-   hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBar() );
+   hb_retptrGC( hbqt_gcAllocate_QScrollBar( hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBar(), false ) );
 }
 
 /*
@@ -121,7 +145,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ), true ) );
 }
 
 /*
@@ -177,7 +201,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVIEWPORT )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBAR )
 {
-   hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBar() );
+   hb_retptrGC( hbqt_gcAllocate_QScrollBar( hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBar(), false ) );
 }
 
 /*
@@ -193,7 +217,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBARPOLICY )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_VIEWPORT )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->viewport() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QAbstractScrollArea( 1 )->viewport(), false ) );
 }
 
 

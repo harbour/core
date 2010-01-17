@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,6 +85,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QFormLayout > pq;
 } QGC_POINTER_QFormLayout;
@@ -93,48 +94,47 @@ QT_G_FUNC( hbqt_gcRelease_QFormLayout )
 {
    QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFormLayout                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFormLayout                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QFormLayout * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QFormLayout * ) p->ph )->~QFormLayout();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QFormLayout * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QFormLayout                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QFormLayout                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QFormLayout                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QFormLayout                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QFormLayout                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QFormLayout                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QFormLayout                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QFormLayout( void * pObj )
+void * hbqt_gcAllocate_QFormLayout( void * pObj, bool bNew )
 {
    QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QFormLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QFormLayout;
-   new( & p->pq ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QFormLayout                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -144,7 +144,7 @@ HB_FUNC( QT_QFORMLAYOUT )
 
    pObj = ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFormLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFormLayout( pObj, true ) );
 }
 /*
  * void addRow ( QWidget * label, QWidget * field )
@@ -313,7 +313,7 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_5 )
  */
 HB_FUNC( QT_QFORMLAYOUT_ITEMAT )
 {
-   hb_retptr( ( QLayoutItem* ) hbqt_par_QFormLayout( 1 )->itemAt( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLayoutItem( hbqt_par_QFormLayout( 1 )->itemAt( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -329,7 +329,7 @@ HB_FUNC( QT_QFORMLAYOUT_LABELALIGNMENT )
  */
 HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QFormLayout( 1 )->labelForField( hbqt_par_QWidget( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QFormLayout( 1 )->labelForField( hbqt_par_QWidget( 2 ) ), false ) );
 }
 
 /*
@@ -337,7 +337,7 @@ HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD )
  */
 HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD_1 )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QFormLayout( 1 )->labelForField( hbqt_par_QLayout( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QFormLayout( 1 )->labelForField( hbqt_par_QLayout( 2 ) ), false ) );
 }
 
 /*

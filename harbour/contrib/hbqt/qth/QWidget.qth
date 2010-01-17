@@ -124,7 +124,7 @@ void grabKeyboard ()
 void grabMouse ()
 void grabMouse ( const QCursor & cursor )
 int grabShortcut ( const QKeySequence & key, Qt::ShortcutContext context = Qt::WindowShortcut )
-QGraphicsProxyWidget * graphicsProxyWidget () const
+// QGraphicsProxyWidget * graphicsProxyWidget () const
 // bool hasEditFocus () const
 bool hasFocus () const
 bool hasMouseTracking () const

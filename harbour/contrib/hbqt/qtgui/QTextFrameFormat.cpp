@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,32 +85,49 @@
  * QTextFrameFormat ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextFrameFormat;
+
 QT_G_FUNC( hbqt_gcRelease_QTextFrameFormat )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFrameFormat             p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextFrameFormat            ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextFrameFormat * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextFrameFormat            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextFrameFormat * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextFrameFormat           ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextFrameFormat            Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextFrameFormat            Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextFrameFormat            Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextFrameFormat( void * pObj )
+void * hbqt_gcAllocate_QTextFrameFormat( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFrameFormat;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextFrameFormat           ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -120,7 +137,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT )
 
    pObj = ( QTextFrameFormat* ) new QTextFrameFormat() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( pObj, true ) );
 }
 /*
  * qreal border () const
@@ -135,7 +152,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDER )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERBRUSH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ), true ) );
 }
 
 /*
@@ -159,7 +176,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_HEIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ), true ) );
 }
 
 /*
@@ -351,7 +368,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_TOPMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_WIDTH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ), true ) );
 }
 
 

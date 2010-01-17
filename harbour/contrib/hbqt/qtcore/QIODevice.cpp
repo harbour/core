@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -82,9 +82,33 @@
  * virtual ~QIODevice ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QIODevice > pq;
+} QGC_POINTER_QIODevice;
+
 QT_G_FUNC( hbqt_gcRelease_QIODevice )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
+{
+   QGC_POINTER_QIODevice * p = ( QGC_POINTER_QIODevice * ) hb_gcAllocate( sizeof( QGC_POINTER_QIODevice ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QIODevice;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QIODevice >( ( QIODevice * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QIODevice                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QIODEVICE )
@@ -215,7 +239,7 @@ HB_FUNC( QT_QIODEVICE_PEEK )
  */
 HB_FUNC( QT_QIODEVICE_PEEK_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ), true ) );
 }
 
 /*
@@ -247,7 +271,7 @@ HB_FUNC( QT_QIODEVICE_READ )
  */
 HB_FUNC( QT_QIODEVICE_READ_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ), true ) );
 }
 
 /*
@@ -255,7 +279,7 @@ HB_FUNC( QT_QIODEVICE_READ_1 )
  */
 HB_FUNC( QT_QIODEVICE_READALL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ), true ) );
 }
 
 /*
@@ -271,7 +295,7 @@ HB_FUNC( QT_QIODEVICE_READLINE )
  */
 HB_FUNC( QT_QIODEVICE_READLINE_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ), true ) );
 }
 
 /*

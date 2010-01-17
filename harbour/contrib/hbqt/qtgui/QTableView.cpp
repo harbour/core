@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -81,6 +81,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QTableView > pq;
 } QGC_POINTER_QTableView;
@@ -89,48 +90,47 @@ QT_G_FUNC( hbqt_gcRelease_QTableView )
 {
    QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableView                   p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableView                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QTableView * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QTableView * ) p->ph )->~QTableView();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QTableView * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTableView                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTableView                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTableView                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTableView                  Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTableView                  Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTableView                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTableView                  Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTableView( void * pObj )
+void * hbqt_gcAllocate_QTableView( void * pObj, bool bNew )
 {
    QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableView;
-   new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTableView                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -140,7 +140,7 @@ HB_FUNC( QT_QTABLEVIEW )
 
    pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTableView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableView( pObj, true ) );
 }
 /*
  * void clearSpans ()
@@ -195,7 +195,7 @@ HB_FUNC( QT_QTABLEVIEW_GRIDSTYLE )
  */
 HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
 {
-   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->horizontalHeader() );
+   hb_retptrGC( hbqt_gcAllocate_QHeaderView( hbqt_par_QTableView( 1 )->horizontalHeader(), false ) );
 }
 
 /*
@@ -203,7 +203,7 @@ HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_INDEXAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) );
 }
 
 /*
@@ -379,7 +379,7 @@ HB_FUNC( QT_QTABLEVIEW_SORTBYCOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_VERTICALHEADER )
 {
-   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->verticalHeader() );
+   hb_retptrGC( hbqt_gcAllocate_QHeaderView( hbqt_par_QTableView( 1 )->verticalHeader(), false ) );
 }
 
 /*

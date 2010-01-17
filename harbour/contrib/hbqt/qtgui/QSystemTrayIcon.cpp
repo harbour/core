@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,6 +85,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QSystemTrayIcon > pq;
 } QGC_POINTER_QSystemTrayIcon;
@@ -93,48 +94,47 @@ QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 {
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon              p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon             ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QSystemTrayIcon * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QSystemTrayIcon * ) p->ph )->~QSystemTrayIcon();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QSystemTrayIcon * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSystemTrayIcon            ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QSystemTrayIcon             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSystemTrayIcon            ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QSystemTrayIcon             Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSystemTrayIcon             Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QSystemTrayIcon             Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSystemTrayIcon             Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj )
+void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
 {
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QSystemTrayIcon;
-   new( & p->pq ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QSystemTrayIcon             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QSystemTrayIcon            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -144,14 +144,14 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
 
    pObj = ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( pObj, true ) );
 }
 /*
  * QMenu * contextMenu () const
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QSystemTrayIcon( 1 )->contextMenu() );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QSystemTrayIcon( 1 )->contextMenu(), false ) );
 }
 
 /*
@@ -159,7 +159,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ), true ) );
 }
 
 /*
@@ -167,7 +167,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ), true ) );
 }
 
 /*

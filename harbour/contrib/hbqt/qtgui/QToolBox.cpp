@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,6 +79,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QToolBox > pq;
 } QGC_POINTER_QToolBox;
@@ -87,48 +88,47 @@ QT_G_FUNC( hbqt_gcRelease_QToolBox )
 {
    QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QToolBox                     p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QToolBox                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QToolBox * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QToolBox * ) p->ph )->~QToolBox();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QToolBox * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QToolBox                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QToolBox                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QToolBox                   ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QToolBox                    Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QToolBox                    Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QToolBox                    Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QToolBox                    Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QToolBox( void * pObj )
+void * hbqt_gcAllocate_QToolBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolBox;
-   new( & p->pq ) QPointer< QToolBox >( ( QToolBox * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QToolBox >( ( QToolBox * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QToolBox                   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -138,7 +138,7 @@ HB_FUNC( QT_QTOOLBOX )
 
    pObj = ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QToolBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolBox( pObj, true ) );
 }
 /*
  * int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
@@ -177,7 +177,7 @@ HB_FUNC( QT_QTOOLBOX_CURRENTINDEX )
  */
 HB_FUNC( QT_QTOOLBOX_CURRENTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QToolBox( 1 )->currentWidget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QToolBox( 1 )->currentWidget(), false ) );
 }
 
 /*
@@ -217,7 +217,7 @@ HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -281,7 +281,7 @@ HB_FUNC( QT_QTOOLBOX_SETITEMTOOLTIP )
  */
 HB_FUNC( QT_QTOOLBOX_WIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QToolBox( 1 )->widget( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QToolBox( 1 )->widget( hb_parni( 2 ) ), false ) );
 }
 
 /*

@@ -61,6 +61,7 @@ New      = pParent
 
 <CODE>
 #include <QtGui/QLineEdit>
+#include <QtGui/QValidator>
 
 
 /*
@@ -125,7 +126,7 @@ void setTextMargins ( int left, int top, int right, int bottom )
 void setValidator ( const QValidator * v )
 virtual QSize sizeHint () const
 QString text () const
-const QValidator * validator () const
+virtual const QValidator * validator () const
 </PROTOS>
 
 <SLOTS>

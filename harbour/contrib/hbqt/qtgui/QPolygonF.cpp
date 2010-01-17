@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -80,32 +80,49 @@
  * ~QPolygonF ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QPolygonF;
+
 QT_G_FUNC( hbqt_gcRelease_QPolygonF )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPolygonF                    p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QPolygonF                   ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QPolygonF * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QPolygonF                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QPolygonF * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPolygonF                  ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QPolygonF                   Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QPolygonF                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QPolygonF                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QPolygonF( void * pObj )
+void * hbqt_gcAllocate_QPolygonF( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QPolygonF;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QPolygonF                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QPolygonF                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -115,14 +132,14 @@ HB_FUNC( QT_QPOLYGONF )
 
    pObj = new QPolygonF() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygonF( pObj, true ) );
 }
 /*
  * QRectF boundingRect () const
  */
 HB_FUNC( QT_QPOLYGONF_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPolygonF( 1 )->boundingRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPolygonF( 1 )->boundingRect() ), true ) );
 }
 
 /*
@@ -138,7 +155,7 @@ HB_FUNC( QT_QPOLYGONF_CONTAINSPOINT )
  */
 HB_FUNC( QT_QPOLYGONF_INTERSECTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->intersected( *hbqt_par_QPolygonF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
 }
 
 /*
@@ -154,7 +171,7 @@ HB_FUNC( QT_QPOLYGONF_ISCLOSED )
  */
 HB_FUNC( QT_QPOLYGONF_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
 }
 
 /*
@@ -162,7 +179,7 @@ HB_FUNC( QT_QPOLYGONF_SUBTRACTED )
  */
 HB_FUNC( QT_QPOLYGONF_TOPOLYGON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygonF( 1 )->toPolygon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygonF( 1 )->toPolygon() ), true ) );
 }
 
 /*
@@ -186,7 +203,7 @@ HB_FUNC( QT_QPOLYGONF_TRANSLATE_1 )
  */
 HB_FUNC( QT_QPOLYGONF_UNITED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->united( *hbqt_par_QPolygonF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
 }
 
 

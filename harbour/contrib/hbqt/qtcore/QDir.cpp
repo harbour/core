@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,32 +85,49 @@
  * ~QDir ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QDir;
+
 QT_G_FUNC( hbqt_gcRelease_QDir )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDir                         p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDir                        ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QDir * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QDir                        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QDir * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QDir                       ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QDir                        Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDir                        Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QDir                        Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QDir( void * pObj )
+void * hbqt_gcAllocate_QDir( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QDir;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QDir                        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDir                       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -120,7 +137,7 @@ HB_FUNC( QT_QDIR )
 
    pObj = new QDir( hbqt_par_QString( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDir( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( pObj, true ) );
 }
 /*
  * QString absoluteFilePath ( const QString & fileName ) const
@@ -183,7 +200,7 @@ HB_FUNC( QT_QDIR_DIRNAME )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
 }
 
 /*
@@ -191,7 +208,7 @@ HB_FUNC( QT_QDIR_ENTRYLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
 }
 
 /*
@@ -287,7 +304,7 @@ HB_FUNC( QT_QDIR_MKPATH )
  */
 HB_FUNC( QT_QDIR_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ), true ) );
 }
 
 /*
@@ -407,7 +424,7 @@ HB_FUNC( QT_QDIR_CLEANPATH )
  */
 HB_FUNC( QT_QDIR_CURRENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->current() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->current() ), true ) );
 }
 
 /*
@@ -431,7 +448,7 @@ HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
  */
 HB_FUNC( QT_QDIR_HOME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->home() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->home() ), true ) );
 }
 
 /*
@@ -479,7 +496,7 @@ HB_FUNC( QT_QDIR_MATCH_1 )
  */
 HB_FUNC( QT_QDIR_ROOT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->root() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->root() ), true ) );
 }
 
 /*
@@ -495,7 +512,7 @@ HB_FUNC( QT_QDIR_ROOTPATH )
  */
 HB_FUNC( QT_QDIR_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
 /*
@@ -519,7 +536,7 @@ HB_FUNC( QT_QDIR_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QDIR_TEMP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->temp() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->temp() ), true ) );
 }
 
 /*

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,6 +85,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QLCDNumber > pq;
 } QGC_POINTER_QLCDNumber;
@@ -93,48 +94,47 @@ QT_G_FUNC( hbqt_gcRelease_QLCDNumber )
 {
    QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLCDNumber                   p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLCDNumber                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QLCDNumber * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QLCDNumber * ) p->ph )->~QLCDNumber();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QLCDNumber * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QLCDNumber                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QLCDNumber                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QLCDNumber                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QLCDNumber                  Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QLCDNumber                  Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QLCDNumber                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QLCDNumber                  Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QLCDNumber( void * pObj )
+void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
 {
    QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) hb_gcAllocate( sizeof( QGC_POINTER_QLCDNumber ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QLCDNumber;
-   new( & p->pq ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QLCDNumber                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QLCDNumber                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -144,7 +144,7 @@ HB_FUNC( QT_QLCDNUMBER )
 
    pObj = ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLCDNumber( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLCDNumber( pObj, true ) );
 }
 /*
  * bool checkOverflow ( double num ) const

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -78,32 +78,49 @@
  * ~QTextDocumentWriter ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextDocumentWriter;
+
 QT_G_FUNC( hbqt_gcRelease_QTextDocumentWriter )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDocumentWriter          p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextDocumentWriter         ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextDocumentWriter * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextDocumentWriter         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextDocumentWriter * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextDocumentWriter        ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextDocumentWriter         Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextDocumentWriter         Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextDocumentWriter         Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj )
+void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentWriter;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextDocumentWriter         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextDocumentWriter        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -113,14 +130,14 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 
    pObj = ( QTextDocumentWriter* ) new QTextDocumentWriter() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextDocumentWriter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentWriter( pObj, true ) );
 }
 /*
  * QTextCodec * codec () const
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_CODEC )
 {
-   hb_retptr( ( QTextCodec* ) hbqt_par_QTextDocumentWriter( 1 )->codec() );
+   hb_retptrGC( hbqt_gcAllocate_QTextCodec( hbqt_par_QTextDocumentWriter( 1 )->codec(), false ) );
 }
 
 /*
@@ -128,7 +145,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_CODEC )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_DEVICE )
 {
-   hb_retptr( ( QIODevice* ) hbqt_par_QTextDocumentWriter( 1 )->device() );
+   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QTextDocumentWriter( 1 )->device(), false ) );
 }
 
 /*
@@ -144,7 +161,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ), true ) );
 }
 
 /*

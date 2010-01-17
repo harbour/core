@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,32 +85,49 @@
  * ~QBrush ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QBrush;
+
 QT_G_FUNC( hbqt_gcRelease_QBrush )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBrush                       p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QBrush                      ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QBrush * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QBrush                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QBrush * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QBrush                     ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QBrush                      Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QBrush                      Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QBrush                      Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QBrush( void * pObj )
+void * hbqt_gcAllocate_QBrush( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QBrush;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QBrush                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -172,14 +189,14 @@ HB_FUNC( QT_QBRUSH )
       pObj = ( QBrush* ) new QBrush() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QBrush( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( pObj, true ) );
 }
 /*
  * const QColor & color () const
  */
 HB_FUNC( QT_QBRUSH_COLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ), true ) );
 }
 
 /*
@@ -195,7 +212,7 @@ HB_FUNC( QT_QBRUSH_ISOPAQUE )
  */
 HB_FUNC( QT_QBRUSH_MATRIX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ), true ) );
 }
 
 /*
@@ -267,7 +284,7 @@ HB_FUNC( QT_QBRUSH_STYLE )
  */
 HB_FUNC( QT_QBRUSH_TEXTURE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ), true ) );
 }
 
 /*
@@ -275,7 +292,7 @@ HB_FUNC( QT_QBRUSH_TEXTURE )
  */
 HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ), true ) );
 }
 
 /*
@@ -283,7 +300,7 @@ HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
  */
 HB_FUNC( QT_QBRUSH_TRANSFORM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ), true ) );
 }
 
 

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,9 +75,33 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QAbstractTextDocumentLayout > pq;
+} QGC_POINTER_QAbstractTextDocumentLayout;
+
 QT_G_FUNC( hbqt_gcRelease_QAbstractTextDocumentLayout )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QAbstractTextDocumentLayout( void * pObj, bool bNew )
+{
+   QGC_POINTER_QAbstractTextDocumentLayout * p = ( QGC_POINTER_QAbstractTextDocumentLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractTextDocumentLayout ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QAbstractTextDocumentLayout;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QAbstractTextDocumentLayout >( ( QAbstractTextDocumentLayout * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractTextDocumentLayoutph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT )
@@ -96,7 +120,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_ANCHORAT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_BLOCKBOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ), true ) );
 }
 
 /*
@@ -104,7 +128,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_BLOCKBOUNDINGRECT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QAbstractTextDocumentLayout( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QAbstractTextDocumentLayout( 1 )->document(), false ) );
 }
 
 /*
@@ -112,7 +136,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ), true ) );
 }
 
 /*
@@ -120,15 +144,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_FRAMEBOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ) ) );
-}
-
-/*
- * QTextObjectInterface * handlerForObject ( int objectType ) const
- */
-HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_HANDLERFOROBJECT )
-{
-   hb_retptr( ( QTextObjectInterface* ) hbqt_par_QAbstractTextDocumentLayout( 1 )->handlerForObject( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ), true ) );
 }
 
 /*
@@ -152,7 +168,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_PAGECOUNT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_PAINTDEVICE )
 {
-   hb_retptr( ( QPaintDevice* ) hbqt_par_QAbstractTextDocumentLayout( 1 )->paintDevice() );
+   hb_retptrGC( hbqt_gcAllocate_QPaintDevice( hbqt_par_QAbstractTextDocumentLayout( 1 )->paintDevice(), false ) );
 }
 
 /*

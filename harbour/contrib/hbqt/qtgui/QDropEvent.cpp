@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -75,9 +75,31 @@
  * QDropEvent ( const QPoint & pos, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = Drop )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QDropEvent;
+
 QT_G_FUNC( hbqt_gcRelease_QDropEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QDropEvent;
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDropEvent                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QDROPEVENT )
@@ -108,14 +130,6 @@ HB_FUNC( QT_QDROPEVENT_KEYBOARDMODIFIERS )
 }
 
 /*
- * const QMimeData * mimeData () const
- */
-HB_FUNC( QT_QDROPEVENT_MIMEDATA )
-{
-   hb_retptr( ( QMimeData* ) hbqt_par_QDropEvent( 1 )->mimeData() );
-}
-
-/*
  * Qt::MouseButtons mouseButtons () const
  */
 HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
@@ -128,7 +142,7 @@ HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
  */
 HB_FUNC( QT_QDROPEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ), true ) );
 }
 
 /*
@@ -160,7 +174,7 @@ HB_FUNC( QT_QDROPEVENT_SETDROPACTION )
  */
 HB_FUNC( QT_QDROPEVENT_SOURCE )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QDropEvent( 1 )->source() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QDropEvent( 1 )->source(), false ) );
 }
 
 

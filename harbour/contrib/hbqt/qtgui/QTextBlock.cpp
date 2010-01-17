@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -69,38 +69,56 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextBlock>
-
+#include <QtGui/QTextDocument>
+#include "../hbqt_hbqsyntaxhighlighter.h"
 
 /*
  * QTextBlock ( const QTextBlock & other )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QTextBlock;
+
 QT_G_FUNC( hbqt_gcRelease_QTextBlock )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBlock                   p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTextBlock                  ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QTextBlock * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QTextBlock                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QTextBlock * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextBlock                 ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextBlock                  Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTextBlock                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextBlock                  Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTextBlock( void * pObj )
+void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlock;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBlock                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextBlock                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -117,14 +135,14 @@ HB_FUNC( QT_QTEXTBLOCK )
       pObj = new QTextBlock() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( pObj, true ) );
 }
 /*
  * QTextBlockFormat blockFormat () const
  */
 HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextBlock( 1 )->blockFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextBlock( 1 )->blockFormat() ), true ) );
 }
 
 /*
@@ -148,7 +166,7 @@ HB_FUNC( QT_QTEXTBLOCK_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTBLOCK_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextBlock( 1 )->charFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextBlock( 1 )->charFormat() ), true ) );
 }
 
 /*
@@ -176,7 +194,7 @@ HB_FUNC( QT_QTEXTBLOCK_CONTAINS )
 }
 
 /*
- * const QTextDocument * document () const
+ * virtual const QTextDocument * document () const
  */
 HB_FUNC( QT_QTEXTBLOCK_DOCUMENT )
 {
@@ -212,7 +230,7 @@ HB_FUNC( QT_QTEXTBLOCK_ISVISIBLE )
  */
 HB_FUNC( QT_QTEXTBLOCK_LAYOUT )
 {
-   hb_retptr( ( QTextLayout* ) hbqt_par_QTextBlock( 1 )->layout() );
+   hb_retptrGC( hbqt_gcAllocate_QTextLayout( hbqt_par_QTextBlock( 1 )->layout(), false ) );
 }
 
 /*
@@ -236,7 +254,7 @@ HB_FUNC( QT_QTEXTBLOCK_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTBLOCK_NEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->next() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->next() ), true ) );
 }
 
 /*
@@ -252,7 +270,7 @@ HB_FUNC( QT_QTEXTBLOCK_POSITION )
  */
 HB_FUNC( QT_QTEXTBLOCK_PREVIOUS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->previous() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->previous() ), true ) );
 }
 
 /*
@@ -277,6 +295,14 @@ HB_FUNC( QT_QTEXTBLOCK_SETLINECOUNT )
 HB_FUNC( QT_QTEXTBLOCK_SETREVISION )
 {
    hbqt_par_QTextBlock( 1 )->setRevision( hb_parni( 2 ) );
+}
+
+/*
+ * void setUserData ( HBQTextBlockUserData * data )
+ */
+HB_FUNC( QT_QTEXTBLOCK_SETUSERDATA )
+{
+   hbqt_par_QTextBlock( 1 )->setUserData( hbqt_par_HBQTextBlockUserData( 2 ) );
 }
 
 /*
@@ -308,7 +334,15 @@ HB_FUNC( QT_QTEXTBLOCK_TEXT )
  */
 HB_FUNC( QT_QTEXTBLOCK_TEXTLIST )
 {
-   hb_retptr( ( QTextList* ) hbqt_par_QTextBlock( 1 )->textList() );
+   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextBlock( 1 )->textList(), false ) );
+}
+
+/*
+ * HBQTextBlockUserData * userData () const
+ */
+HB_FUNC( QT_QTEXTBLOCK_USERDATA )
+{
+   hb_retptr( ( HBQTextBlockUserData* ) hbqt_par_QTextBlock( 1 )->userData() );
 }
 
 /*

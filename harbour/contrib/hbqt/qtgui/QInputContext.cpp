@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -92,9 +92,33 @@
  * virtual ~QInputContext ()
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+  QPointer< QInputContext > pq;
+} QGC_POINTER_QInputContext;
+
 QT_G_FUNC( hbqt_gcRelease_QInputContext )
 {
    HB_SYMBOL_UNUSED( Cargo );
+}
+
+void * hbqt_gcAllocate_QInputContext( void * pObj, bool bNew )
+{
+   QGC_POINTER_QInputContext * p = ( QGC_POINTER_QInputContext * ) hb_gcAllocate( sizeof( QGC_POINTER_QInputContext ), hbqt_gcFuncs() );
+
+   p->ph = pObj;
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QInputContext;
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QInputContext >( ( QInputContext * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QInputContext              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
+   return p;
 }
 
 HB_FUNC( QT_QINPUTCONTEXT )
@@ -113,7 +137,7 @@ HB_FUNC( QT_QINPUTCONTEXT_FILTEREVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QInputContext( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QInputContext( 1 )->font() ), true ) );
 }
 
 /*
@@ -169,7 +193,7 @@ HB_FUNC( QT_QINPUTCONTEXT_SENDEVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_STANDARDFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ), true ) );
 }
 
 /*

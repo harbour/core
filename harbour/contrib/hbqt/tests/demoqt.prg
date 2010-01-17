@@ -108,7 +108,9 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events()
-HBQT_DEBUG( "Key Pressed" )
+
+   HB_TRACE( HB_TR_ALWAYS, "Key Pressed" )
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -122,22 +124,8 @@ PROCEDURE Main()
    s_events := QT_EVENTS_NEW()
    s_slots := QT_SLOTS_NEW()
 
-   DO CASE
-   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DELETE
-HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DELETE" )
-   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DESTRUTOR
-HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DESTRUTOR" )
-   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DELETE_LATER
-HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DELETE_LATER" )
-   ENDCASE
-
-//   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE_LATER )
-//HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE_LATER" )
-   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
-HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
-
-HBQT_DEBUG( "  " )
-HBQT_DEBUG( "-----------------b-----------------" )
+HB_TRACE( HB_TR_ALWAYS, ( "  " ) )
+HB_TRACE( HB_TR_ALWAYS, ( "-----------------b-----------------" ) )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
@@ -171,20 +159,21 @@ HBQT_DEBUG( "-----------------b-----------------" )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
+   oWnd:installEventFilter( s_events )
    QT_EVENTS_CONNECT( s_events, oWnd, 6, {|o,e| My_Events( o, e ) } )
 
    oWnd:Show()
 
    s_qApp:exec()
 
-HBQT_DEBUG( "----------------- s_qApp:exec -----------------" )
+HB_TRACE( HB_TR_ALWAYS, ( "----------------- qApp:exec -----------------" ) )
 
-   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
-HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
+   //HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
+//HB_TRACE( HB_TR_ALWAYS, ( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" ) )
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-HBQT_DEBUG( "-------------------- exit -------------------" )
+HB_TRACE( HB_TR_ALWAYS, ( "-------------------- exit -------------------" ) )
 
    RETURN
 
@@ -193,7 +182,7 @@ HBQT_DEBUG( "-------------------- exit -------------------" )
 FUNCTION xReleaseMemory( aObj )
    #if 1
    LOCAL i
-HBQT_DEBUG( "-----------------  Releasing Memory  -----------------" )
+HB_TRACE( HB_TR_ALWAYS, ( "-----------------  Releasing Memory  -----------------" ) )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -201,7 +190,7 @@ HBQT_DEBUG( "-----------------  Releasing Memory  -----------------" )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-HBQT_DEBUG( "------------------  Memory Released ------------------" )
+HB_TRACE( HB_TR_ALWAYS, ( "------------------  Memory Released ------------------" ) )
    #else
       HB_SYMBOL_UNUSED( aObj )
    #endif
@@ -478,7 +467,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView():new( oWnd )
    oTV:setMouseTracking( .t. )
-   //QT_SLOTS_CONNECT( s_slots, oTV, QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oTV:hovered" ) } )
+   //QT_SLOTS_CONNECT( s_slots, oTV, QT_EVE_HOVERED, {|o,i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
    oDirModel := QDirModel():new()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
@@ -494,7 +483,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView():New( oWnd )
    oListBox:setMouseTracking( .t. )
-   //QT_SLOTS_CONNECT( s_slots, oListBox, QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oListBox:hovered" ) } )
+   //QT_SLOTS_CONNECT( s_slots, oListBox, QT_EVE_HOVERED, {|o,i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new()
 
@@ -549,7 +538,6 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   //QT_SLOTS_CONNECT( s_slots, oComboBox, QT_EVE_HIGHLIGHTED_I        , {|o,i| HBQT_DEBUG( oComboBox:itemText( i ) ) } )
    QT_SLOTS_CONNECT( s_slots, oComboBox, QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| o := o, i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )

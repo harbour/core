@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -91,6 +91,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QTreeWidget > pq;
 } QGC_POINTER_QTreeWidget;
@@ -99,48 +100,47 @@ QT_G_FUNC( hbqt_gcRelease_QTreeWidget )
 {
    QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QTreeWidget * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QTreeWidget * ) p->ph )->~QTreeWidget();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QTreeWidget * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTreeWidget                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QTreeWidget                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTreeWidget                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QTreeWidget                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTreeWidget                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QTreeWidget                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTreeWidget                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QTreeWidget( void * pObj )
+void * hbqt_gcAllocate_QTreeWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeWidget;
-   new( & p->pq ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTreeWidget                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -150,7 +150,7 @@ HB_FUNC( QT_QTREEWIDGET )
 
    pObj = ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTreeWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidget( pObj, true ) );
 }
 /*
  * void addTopLevelItem ( QTreeWidgetItem * item )
@@ -189,7 +189,7 @@ HB_FUNC( QT_QTREEWIDGET_CURRENTCOLUMN )
  */
 HB_FUNC( QT_QTREEWIDGET_CURRENTITEM )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->currentItem() );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->currentItem(), false ) );
 }
 
 /*
@@ -205,7 +205,7 @@ HB_FUNC( QT_QTREEWIDGET_EDITITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_HEADERITEM )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->headerItem() );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->headerItem(), false ) );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QTREEWIDGET_INSERTTOPLEVELITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_INVISIBLEROOTITEM )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->invisibleRootItem() );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->invisibleRootItem(), false ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QTREEWIDGET_ISFIRSTITEMCOLUMNSPANNED )
  */
 HB_FUNC( QT_QTREEWIDGET_ITEMABOVE )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->itemAbove( hbqt_par_QTreeWidgetItem( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->itemAbove( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QTREEWIDGET_ITEMABOVE )
  */
 HB_FUNC( QT_QTREEWIDGET_ITEMAT )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->itemAt( *hbqt_par_QPoint( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
 }
 
 /*
@@ -261,7 +261,7 @@ HB_FUNC( QT_QTREEWIDGET_ITEMAT )
  */
 HB_FUNC( QT_QTREEWIDGET_ITEMAT_1 )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -269,7 +269,7 @@ HB_FUNC( QT_QTREEWIDGET_ITEMAT_1 )
  */
 HB_FUNC( QT_QTREEWIDGET_ITEMBELOW )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->itemBelow( hbqt_par_QTreeWidgetItem( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->itemBelow( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
 }
 
 /*
@@ -277,7 +277,7 @@ HB_FUNC( QT_QTREEWIDGET_ITEMBELOW )
  */
 HB_FUNC( QT_QTREEWIDGET_ITEMWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QTreeWidget( 1 )->itemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QTreeWidget( 1 )->itemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ), false ) );
 }
 
 /*
@@ -389,7 +389,7 @@ HB_FUNC( QT_QTREEWIDGET_SORTITEMS )
  */
 HB_FUNC( QT_QTREEWIDGET_TAKETOPLEVELITEM )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->takeTopLevelItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->takeTopLevelItem( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -397,7 +397,7 @@ HB_FUNC( QT_QTREEWIDGET_TAKETOPLEVELITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEM )
 {
-   hb_retptr( ( QTreeWidgetItem* ) hbqt_par_QTreeWidget( 1 )->topLevelItem( hb_parni( 2 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( hbqt_par_QTreeWidget( 1 )->topLevelItem( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -413,7 +413,7 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEMCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ), true ) );
 }
 
 /*

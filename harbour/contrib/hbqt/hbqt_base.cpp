@@ -81,11 +81,22 @@ HB_FUNC( QT_FINDCHILD )
 HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-   if( p && p->ph )
-      hb_retl( p->ph == hb_parptr( 2 ) );
+   if( p && q )
+   {
+      if( p->ph && q->ph )
+         hb_retl( p->ph == q->ph );
+      else
+         hb_retl( false );
+   }
    else
-      hb_retl( false );
+   {
+      if( p && p->ph )
+         hb_retl( p->ph == hb_parptr( 2 ) );
+      else
+         hb_retl( false );
+   }
 }
 
 #if defined( HB_OS_WIN )

@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -89,6 +89,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QMimeData > pq;
 } QGC_POINTER_QMimeData;
@@ -97,48 +98,47 @@ QT_G_FUNC( hbqt_gcRelease_QMimeData )
 {
    QGC_POINTER_QMimeData * p = ( QGC_POINTER_QMimeData * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMimeData                    p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMimeData                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QMimeData * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QMimeData * ) p->ph )->~QMimeData();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QMimeData * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMimeData                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QMimeData                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QMimeData                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QMimeData                   Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMimeData                   Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QMimeData                   Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMimeData                   Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QMimeData( void * pObj )
+void * hbqt_gcAllocate_QMimeData( void * pObj, bool bNew )
 {
    QGC_POINTER_QMimeData * p = ( QGC_POINTER_QMimeData * ) hb_gcAllocate( sizeof( QGC_POINTER_QMimeData ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QMimeData;
-   new( & p->pq ) QPointer< QMimeData >( ( QMimeData * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QMimeData >( ( QMimeData * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMimeData                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -148,7 +148,7 @@ HB_FUNC( QT_QMIMEDATA )
 
    pObj = new QMimeData() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QMimeData( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMimeData( pObj, true ) );
 }
 /*
  * void clear ()
@@ -163,7 +163,7 @@ HB_FUNC( QT_QMIMEDATA_CLEAR )
  */
 HB_FUNC( QT_QMIMEDATA_COLORDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->colorData() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->colorData() ), true ) );
 }
 
 /*
@@ -171,7 +171,7 @@ HB_FUNC( QT_QMIMEDATA_COLORDATA )
  */
 HB_FUNC( QT_QMIMEDATA_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMimeData( 1 )->data( QMimeData::tr( hb_parc( 2 ) ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMimeData( 1 )->data( QMimeData::tr( hb_parc( 2 ) ) ) ), true ) );
 }
 
 /*
@@ -179,7 +179,7 @@ HB_FUNC( QT_QMIMEDATA_DATA )
  */
 HB_FUNC( QT_QMIMEDATA_FORMATS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QMimeData( 1 )->formats() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QMimeData( 1 )->formats() ), true ) );
 }
 
 /*
@@ -243,7 +243,7 @@ HB_FUNC( QT_QMIMEDATA_HTML )
  */
 HB_FUNC( QT_QMIMEDATA_IMAGEDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->imageData() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->imageData() ), true ) );
 }
 
 /*

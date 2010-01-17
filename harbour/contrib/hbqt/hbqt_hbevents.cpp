@@ -70,6 +70,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< HBEvents > pq;
 } QGC_POINTER_HBEvents;
@@ -78,45 +79,42 @@ static QT_G_FUNC( hbqt_release_HBEvents )
 {
    QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBEvents                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBEvents                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( HBEvents * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( HBEvents * ) p->ph )->~HBEvents();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( HBEvents * ) p->ph )->deleteLater();
-            break;
+            p->ph = NULL;
+            HB_TRACE( HB_TR_DEBUG, ( "release_HBEvents                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_HBEvents                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO release_HBEvents                 Object Name Missing!" ) );
+            p->ph = NULL;
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBEvents                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBEvents                 Object Already deleted!" ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBEvents                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_HBEvents     :     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-static void * hbqt_gcAllocate_HBEvents( void * pObj )
+static void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
 {
    QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) hb_gcAllocate( sizeof( QGC_POINTER_HBEvents ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_release_HBEvents;
    new( & p->pq ) QPointer< HBEvents >( ( HBEvents * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBEvents                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
@@ -251,7 +249,7 @@ HB_FUNC( QT_EVENTS_NEW )
 
    pObj = ( HBEvents * ) new HBEvents();
 
-   hb_retptrGC( hbqt_gcAllocate_HBEvents( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBEvents( pObj, true ) );
 }
 
 #endif

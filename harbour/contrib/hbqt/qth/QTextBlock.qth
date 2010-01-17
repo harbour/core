@@ -63,7 +63,8 @@ New      =
 
 <CODE>
 #include <QtGui/QTextBlock>
-
+#include <QtGui/QTextDocument>
+#include "../hbqt_hbqsyntaxhighlighter.h"
 
 /*
  * QTextBlock ( const QTextBlock & other )
@@ -93,7 +94,13 @@ QTextCharFormat charFormat () const
 int charFormatIndex () const
 void clearLayout ()
 bool contains ( int position ) const
-const QTextDocument * document () const
+#
+#
+# const QTextDocument * document () const
+#
+virtual const QTextDocument * document () const
+#
+#
 //iterator end () const
 int firstLineNumber () const
 bool isValid () const
@@ -107,12 +114,12 @@ QTextBlock previous () const
 int revision () const
 void setLineCount ( int count )
 void setRevision ( int rev )
-// void setUserData ( QTextBlockUserData * data )
+void setUserData ( HBQTextBlockUserData * data )
 void setUserState ( int state )
 void setVisible ( bool visible )
 QString text () const
 QTextList * textList () const
-// QTextBlockUserData * userData () const
+HBQTextBlockUserData * userData () const
 int userState () const
 </PROTOS>
 

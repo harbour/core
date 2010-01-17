@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -96,6 +96,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QObject > pq;
 } QGC_POINTER_QObject;
@@ -104,48 +105,47 @@ QT_G_FUNC( hbqt_gcRelease_QObject )
 {
    QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QObject                      p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QObject                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QObject * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QObject * ) p->ph )->~QObject();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QObject * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QObject                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QObject                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QObject                    ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QObject                     Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QObject                     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QObject                     Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QObject                     Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QObject( void * pObj )
+void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )
 {
    QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) hb_gcAllocate( sizeof( QGC_POINTER_QObject ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QObject;
-   new( & p->pq ) QPointer< QObject >( ( QObject * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QObject >( ( QObject * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QObject                    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -155,7 +155,7 @@ HB_FUNC( QT_QOBJECT )
 
    pObj = ( QObject* ) new QObject( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QObject( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QObject( pObj, true ) );
 }
 /*
  * bool blockSignals ( bool block )
@@ -282,7 +282,7 @@ HB_FUNC( QT_QOBJECT_OBJECTNAME )
  */
 HB_FUNC( QT_QOBJECT_PARENT )
 {
-   hb_retptr( ( QObject* ) hbqt_par_QObject( 1 )->parent() );
+   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QObject( 1 )->parent(), false ) );
 }
 
 /*
@@ -290,7 +290,7 @@ HB_FUNC( QT_QOBJECT_PARENT )
  */
 HB_FUNC( QT_QOBJECT_PROPERTY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ), true ) );
 }
 
 /*
@@ -346,7 +346,7 @@ HB_FUNC( QT_QOBJECT_STARTTIMER )
  */
 HB_FUNC( QT_QOBJECT_THREAD )
 {
-   hb_retptr( ( QThread* ) hbqt_par_QObject( 1 )->thread() );
+   hb_retptrGC( hbqt_gcAllocate_QThread( hbqt_par_QObject( 1 )->thread(), false ) );
 }
 
 /*

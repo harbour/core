@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -85,6 +85,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QCompleter > pq;
 } QGC_POINTER_QCompleter;
@@ -93,48 +94,47 @@ QT_G_FUNC( hbqt_gcRelease_QCompleter )
 {
    QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCompleter                   p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCompleter                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QCompleter * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QCompleter * ) p->ph )->~QCompleter();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QCompleter * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QCompleter                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QCompleter                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QCompleter                 ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QCompleter                  Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QCompleter                  Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QCompleter                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QCompleter                  Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QCompleter( void * pObj )
+void * hbqt_gcAllocate_QCompleter( void * pObj, bool bNew )
 {
    QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) hb_gcAllocate( sizeof( QGC_POINTER_QCompleter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QCompleter;
-   new( & p->pq ) QPointer< QCompleter >( ( QCompleter * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QCompleter >( ( QCompleter * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QCompleter                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -144,7 +144,7 @@ HB_FUNC( QT_QCOMPLETER )
 
    pObj = new QCompleter() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QCompleter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCompleter( pObj, true ) );
 }
 /*
  * Qt::CaseSensitivity caseSensitivity () const
@@ -183,7 +183,7 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONMODE )
  */
 HB_FUNC( QT_QCOMPLETER_COMPLETIONMODEL )
 {
-   hb_retptr( ( QAbstractItemModel* ) hbqt_par_QCompleter( 1 )->completionModel() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( hbqt_par_QCompleter( 1 )->completionModel(), false ) );
 }
 
 /*
@@ -215,7 +215,7 @@ HB_FUNC( QT_QCOMPLETER_CURRENTCOMPLETION )
  */
 HB_FUNC( QT_QCOMPLETER_CURRENTINDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ), true ) );
 }
 
 /*
@@ -231,7 +231,7 @@ HB_FUNC( QT_QCOMPLETER_CURRENTROW )
  */
 HB_FUNC( QT_QCOMPLETER_MODEL )
 {
-   hb_retptr( ( QAbstractItemModel* ) hbqt_par_QCompleter( 1 )->model() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( hbqt_par_QCompleter( 1 )->model(), false ) );
 }
 
 /*
@@ -255,7 +255,7 @@ HB_FUNC( QT_QCOMPLETER_PATHFROMINDEX )
  */
 HB_FUNC( QT_QCOMPLETER_POPUP )
 {
-   hb_retptr( ( QAbstractItemView* ) hbqt_par_QCompleter( 1 )->popup() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemView( hbqt_par_QCompleter( 1 )->popup(), false ) );
 }
 
 /*
@@ -335,7 +335,7 @@ HB_FUNC( QT_QCOMPLETER_SETWIDGET )
  */
 HB_FUNC( QT_QCOMPLETER_SPLITPATH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( QCompleter::tr( hb_parc( 2 ) ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( QCompleter::tr( hb_parc( 2 ) ) ) ), true ) );
 }
 
 /*
@@ -343,7 +343,7 @@ HB_FUNC( QT_QCOMPLETER_SPLITPATH )
  */
 HB_FUNC( QT_QCOMPLETER_WIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QCompleter( 1 )->widget() );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QCompleter( 1 )->widget(), false ) );
 }
 
 /*

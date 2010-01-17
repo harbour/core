@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -80,6 +80,7 @@
 typedef struct
 {
   void * ph;
+  bool bNew;
   QT_G_FUNC_PTR func;
   QPointer< QGridLayout > pq;
 } QGC_POINTER_QGridLayout;
@@ -88,48 +89,47 @@ QT_G_FUNC( hbqt_gcRelease_QGridLayout )
 {
    QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QGridLayout                  p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QGridLayout                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
+   if( p && p->bNew )
    {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
+      if( p->ph && p->pq )
       {
-         switch( hbqt_get_object_release_method() )
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-         case HBQT_RELEASE_WITH_DELETE:
             delete ( ( QGridLayout * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QGridLayout * ) p->ph )->~QGridLayout();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QGridLayout * ) p->ph )->deleteLater();
-            break;
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QGridLayout                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            p->ph = NULL;
          }
-         p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QGridLayout                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QGridLayout                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO hbqt_gcRelease_QGridLayout                 Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QGridLayout                 Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QGridLayout                 Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QGridLayout                 Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QGridLayout( void * pObj )
+void * hbqt_gcAllocate_QGridLayout( void * pObj, bool bNew )
 {
    QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QGridLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QGridLayout;
-   new( & p->pq ) QPointer< QGridLayout >( ( QGridLayout * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QGridLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      new( & p->pq ) QPointer< QGridLayout >( ( QGridLayout * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QGridLayout                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -139,7 +139,7 @@ HB_FUNC( QT_QGRIDLAYOUT )
 
    pObj = new QGridLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QGridLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QGridLayout( pObj, true ) );
 }
 /*
  * void addItem ( QLayoutItem * item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0 )
@@ -186,7 +186,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_CELLRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
 }
 
 /*
@@ -244,7 +244,7 @@ HB_FUNC( QT_QGRIDLAYOUT_HORIZONTALSPACING )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ITEMATPOSITION )
 {
-   hb_retptr( ( QLayoutItem* ) hbqt_par_QGridLayout( 1 )->itemAtPosition( hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLayoutItem( hbqt_par_QGridLayout( 1 )->itemAtPosition( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
 }
 
 /*

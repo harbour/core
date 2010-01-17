@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -79,32 +79,49 @@
  * QDate ( int y, int m, int d )
  */
 
+typedef struct
+{
+  void * ph;
+  bool bNew;
+  QT_G_FUNC_PTR func;
+} QGC_POINTER_QDate;
+
 QT_G_FUNC( hbqt_gcRelease_QDate )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDate                        p=%p", p ) );
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcRelease_QDate                       ph=%p", p->ph ) );
-
-   if( p && p->ph )
+   if( p && p->bNew )
    {
-      delete ( ( QDate * ) p->ph );
-      p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "YES hbqt_gcRelease_QDate                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      if( p->ph )
+      {
+         delete ( ( QDate * ) p->ph );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QDate                      ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         p->ph = NULL;
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QDate                       Object already deleted!" ) );
+      }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL hbqt_gcRelease_QDate                       Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QDate                       Object not created with - new" ) );
+      p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QDate( void * pObj )
+void * hbqt_gcAllocate_QDate( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
+   p->bNew = bNew;
    p->func = hbqt_gcRelease_QDate;
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QDate                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QDate                      ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   }
    return p;
 }
 
@@ -114,14 +131,14 @@ HB_FUNC( QT_QDATE )
 
    pObj = new QDate() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDate( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( pObj, true ) );
 }
 /*
  * QDate addDays ( int ndays ) const
  */
 HB_FUNC( QT_QDATE_ADDDAYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -129,7 +146,7 @@ HB_FUNC( QT_QDATE_ADDDAYS )
  */
 HB_FUNC( QT_QDATE_ADDMONTHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -137,7 +154,7 @@ HB_FUNC( QT_QDATE_ADDMONTHS )
  */
 HB_FUNC( QT_QDATE_ADDYEARS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ), true ) );
 }
 
 /*

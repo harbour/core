@@ -12,7 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
@@ -101,7 +101,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  grabMouse()
    METHOD  grabMouse_1( pCursor )
    METHOD  grabShortcut( pKey, nContext )
-   METHOD  graphicsProxyWidget()
    METHOD  hasFocus()
    METHOD  hasMouseTracking()
    METHOD  height()
@@ -425,10 +424,6 @@ METHOD QWidget:grabMouse_1( pCursor )
 
 METHOD QWidget:grabShortcut( pKey, nContext )
    RETURN Qt_QWidget_grabShortcut( ::pPtr, hbqt_ptr( pKey ), nContext )
-
-
-METHOD QWidget:graphicsProxyWidget()
-   RETURN Qt_QWidget_graphicsProxyWidget( ::pPtr )
 
 
 METHOD QWidget:hasFocus()
