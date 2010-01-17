@@ -40,7 +40,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
    LOCAL nColCharSet
 
    oPrinter:Landscape := .F.
-   oPrinter:FormType  := FORM_A4
+   oPrinter:FormType  := WIN_PRN_DMPAPER_A4
    oPrinter:Copies    := 1
 
    IF ! oPrinter:Create()

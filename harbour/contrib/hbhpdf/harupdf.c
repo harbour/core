@@ -698,7 +698,7 @@ HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
 */
 HB_FUNC( HPDF_PAGE_TEXTWIDTH )
 {
-   hb_retnl( ( long ) HPDF_Page_TextWidth( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ) ) );
+   hb_retnd( ( double ) HPDF_Page_TextWidth( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_MeasureText( hPage, cText, nWidth, lWordWrap ) -> nByteLenOfTextToFitWidth

@@ -56,207 +56,218 @@
 
 /* Positions for WIN_MAPISENDMAIL() array */
 
-#define HB_WIN_MAPI_TO        1
-#define HB_WIN_MAPI_CC        2
-#define HB_WIN_MAPI_BCC       3
+#define HB_WIN_MAPI_TO              1
+#define HB_WIN_MAPI_CC              2
+#define HB_WIN_MAPI_BCC             3
 
 /* Positions for WIN_PRINTERLIST() array */
 
-#define HB_WINPRN_NAME        1
-#define HB_WINPRN_PORT        2
-#define HB_WINPRN_TYPE        3
-#define HB_WINPRN_DRIVER      4
-#define HB_WINPRN_SHARE       5
-#define HB_WINPRN_SERVER      6
-#define HB_WINPRN_LEN_        6
+#define HB_WINPRN_NAME              1
+#define HB_WINPRN_PORT              2
+#define HB_WINPRN_TYPE              3
+#define HB_WINPRN_DRIVER            4
+#define HB_WINPRN_SHARE             5
+#define HB_WINPRN_SERVER            6
+#define HB_WINPRN_LEN_              6
 
 /* Registry related values */
 
-#define HKEY_CLASSES_ROOT     0x80000000
-#define HKEY_CURRENT_USER     0x80000001
-#define HKEY_LOCAL_MACHINE    0x80000002
-#define HKEY_USERS            0x80000003
-#define HKEY_PERFORMANCE_DATA 0x80000004
-#define HKEY_CURRENT_CONFIG   0x80000005
-#define HKEY_DYN_DATA         0x80000006
+#define HKEY_CLASSES_ROOT           0x80000000
+#define HKEY_CURRENT_USER           0x80000001
+#define HKEY_LOCAL_MACHINE          0x80000002
+#define HKEY_USERS                  0x80000003
+#define HKEY_PERFORMANCE_DATA       0x80000004
+#define HKEY_CURRENT_CONFIG         0x80000005
+#define HKEY_DYN_DATA               0x80000006
 
 /* win_Port() related values */
 
 /* The following are from winbase.h */
 
-#define CBR_110               110
-#define CBR_300               300
-#define CBR_600               600
-#define CBR_1200              1200
-#define CBR_2400              2400
-#define CBR_4800              4800
-#define CBR_9600              9600
-#define CBR_14400             14400
-#define CBR_19200             19200
-#define CBR_38400             38400
-#define CBR_56000             56000
-#define CBR_57600             57600
-#define CBR_115200            115200
-#define CBR_128000            128000
-#define CBR_256000            256000
+#define CBR_110                     110
+#define CBR_300                     300
+#define CBR_600                     600
+#define CBR_1200                    1200
+#define CBR_2400                    2400
+#define CBR_4800                    4800
+#define CBR_9600                    9600
+#define CBR_14400                   14400
+#define CBR_19200                   19200
+#define CBR_38400                   38400
+#define CBR_56000                   56000
+#define CBR_57600                   57600
+#define CBR_115200                  115200
+#define CBR_128000                  128000
+#define CBR_256000                  256000
 
-#define NOPARITY              0
-#define ODDPARITY             1
-#define EVENPARITY            2
-#define MARKPARITY            3
-#define SPACEPARITY           4
+#define NOPARITY                    0
+#define ODDPARITY                   1
+#define EVENPARITY                  2
+#define MARKPARITY                  3
+#define SPACEPARITY                 4
 
-#define ONESTOPBIT            0
-#define ONE5STOPBITS          1
-#define TWOSTOPBITS           2
+#define ONESTOPBIT                  0
+#define ONE5STOPBITS                1
+#define TWOSTOPBITS                 2
 
 /* DTR Control Flow Values. */
-#define DTR_CONTROL_DISABLE   0x00
-#define DTR_CONTROL_ENABLE    0x01
-#define DTR_CONTROL_HANDSHAKE 0x02
+#define DTR_CONTROL_DISABLE         0x00
+#define DTR_CONTROL_ENABLE          0x01
+#define DTR_CONTROL_HANDSHAKE       0x02
 
 /* RTS Control Flow Values */
-#define RTS_CONTROL_DISABLE   0x00
-#define RTS_CONTROL_ENABLE    0x01
-#define RTS_CONTROL_HANDSHAKE 0x02
-#define RTS_CONTROL_TOGGLE    0x03
+#define RTS_CONTROL_DISABLE         0x00
+#define RTS_CONTROL_ENABLE          0x01
+#define RTS_CONTROL_HANDSHAKE       0x02
+#define RTS_CONTROL_TOGGLE          0x03
 
-#define WIN_COM_DBGBASIC      0x01
-#define WIN_COM_DBGFLOW       0x02
-#define WIN_COM_DBGXTRAFLOW   0x04
-#define WIN_COM_DBGOTHER      0x08
-#define WIN_COM_DBGTIMEOUTS   0x10
-#define WIN_COM_DBGQUEUE      0x20
-#define WIN_COM_DBGALL        0x3F
+#define WIN_COM_DBGBASIC            0x01
+#define WIN_COM_DBGFLOW             0x02
+#define WIN_COM_DBGXTRAFLOW         0x04
+#define WIN_COM_DBGOTHER            0x08
+#define WIN_COM_DBGTIMEOUTS         0x10
+#define WIN_COM_DBGQUEUE            0x20
+#define WIN_COM_DBGALL              0x3F
 
 /* win_Prn() related values */
 
-/* these are DMPAPER_* values from wingdi.h */
-#define FORM_LETTER           1
-#define FORM_A4               9
-#define FORM_CUSTOM           256
+/* paper types */
+#define WIN_PRN_DMPAPER_LETTER      1
+#define WIN_PRN_DMPAPER_LEGAL       5
+#define WIN_PRN_DMPAPER_EXECUTIVE   7
+#define WIN_PRN_DMPAPER_A3          8
+#define WIN_PRN_DMPAPER_A4          9
+#define WIN_PRN_DMPAPER_A5          11
+#define WIN_PRN_DMPAPER_B4          12
+#define WIN_PRN_DMPAPER_B5          13
+#define WIN_PRN_DMPAPER_USER        256
 
-#define PS_SOLID              0
+/* paper types (deprecated) */
+#define FORM_LETTER                 WIN_PRN_DMPAPER_LETTER
+#define FORM_A4                     WIN_PRN_DMPAPER_A4
+#define FORM_CUSTOM                 WIN_PRN_DMPAPER_USER
 
-#define RGB( nR, nG, nB )     ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+#define PS_SOLID                    0
 
-#define RGB_BLACK             RGB( 0x00, 0x00, 0x00 )
-#define RGB_BLUE              RGB( 0x00, 0x00, 0x85 )
-#define RGB_GREEN             RGB( 0x00, 0x85, 0x00 )
-#define RGB_CYAN              RGB( 0x00, 0x85, 0x85 )
-#define RGB_RED               RGB( 0x85, 0x00, 0x00 )
-#define RGB_MAGENTA           RGB( 0x85, 0x00, 0x85 )
-#define RGB_BROWN             RGB( 0x85, 0x85, 0x00 )
-#define RGB_WHITE             RGB( 0xC6, 0xC6, 0xC6 )
+#define RGB( nR, nG, nB )           ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+
+#define RGB_BLACK                   RGB( 0x00, 0x00, 0x00 )
+#define RGB_BLUE                    RGB( 0x00, 0x00, 0x85 )
+#define RGB_GREEN                   RGB( 0x00, 0x85, 0x00 )
+#define RGB_CYAN                    RGB( 0x00, 0x85, 0x85 )
+#define RGB_RED                     RGB( 0x85, 0x00, 0x00 )
+#define RGB_MAGENTA                 RGB( 0x85, 0x00, 0x85 )
+#define RGB_BROWN                   RGB( 0x85, 0x85, 0x00 )
+#define RGB_WHITE                   RGB( 0xC6, 0xC6, 0xC6 )
 
 /* Cut from wingdi.h */
 
-#define MM_TEXT               1
-#define MM_LOMETRIC           2
-#define MM_HIMETRIC           3
-#define MM_LOENGLISH          4
-#define MM_HIENGLISH          5
+#define MM_TEXT                     1
+#define MM_LOMETRIC                 2
+#define MM_HIMETRIC                 3
+#define MM_LOENGLISH                4
+#define MM_HIENGLISH                5
 
-#define FW_DONTCARE           0
-#define FW_THIN               100
-#define FW_EXTRALIGHT         200
-#define FW_ULTRALIGHT         FW_EXTRALIGHT
-#define FW_LIGHT              300
-#define FW_NORMAL             400
-#define FW_REGULAR            FW_NORMAL
-#define FW_MEDIUM             500
-#define FW_SEMIBOLD           600
-#define FW_DEMIBOLD           FW_SEMIBOLD
-#define FW_BOLD               700
-#define FW_EXTRABOLD          800
-#define FW_ULTRABOLD          FW_EXTRABOLD
-#define FW_HEAVY              900
-#define FW_BLACK              FW_HEAVY
+#define FW_DONTCARE                 0
+#define FW_THIN                     100
+#define FW_EXTRALIGHT               200
+#define FW_ULTRALIGHT               FW_EXTRALIGHT
+#define FW_LIGHT                    300
+#define FW_NORMAL                   400
+#define FW_REGULAR                  FW_NORMAL
+#define FW_MEDIUM                   500
+#define FW_SEMIBOLD                 600
+#define FW_DEMIBOLD                 FW_SEMIBOLD
+#define FW_BOLD                     700
+#define FW_EXTRABOLD                800
+#define FW_ULTRABOLD                FW_EXTRABOLD
+#define FW_HEAVY                    900
+#define FW_BLACK                    FW_HEAVY
 
-#define ANSI_CHARSET          0
-#define DEFAULT_CHARSET       1
-#define SYMBOL_CHARSET        2
-#define MAC_CHARSET           77
-#define SHIFTJIS_CHARSET      128
-#define HANGEUL_CHARSET       129
-#define HANGUL_CHARSET        129
-#define JOHAB_CHARSET         130
-#define GB2312_CHARSET        134
-#define CHINESEBIG5_CHARSET   136
-#define GREEK_CHARSET         161
-#define TURKISH_CHARSET       162
-#define VIETNAMESE_CHARSET    163
-#define HEBREW_CHARSET        177
-#define ARABIC_CHARSET        178
-#define BALTIC_CHARSET        186
-#define RUSSIAN_CHARSET       204
-#define THAI_CHARSET          222
-#define EASTEUROPE_CHARSET    238
-#define OEM_CHARSET           255
+#define ANSI_CHARSET                0
+#define DEFAULT_CHARSET             1
+#define SYMBOL_CHARSET              2
+#define MAC_CHARSET                 77
+#define SHIFTJIS_CHARSET            128
+#define HANGEUL_CHARSET             129
+#define HANGUL_CHARSET              129
+#define JOHAB_CHARSET               130
+#define GB2312_CHARSET              134
+#define CHINESEBIG5_CHARSET         136
+#define GREEK_CHARSET               161
+#define TURKISH_CHARSET             162
+#define VIETNAMESE_CHARSET          163
+#define HEBREW_CHARSET              177
+#define ARABIC_CHARSET              178
+#define BALTIC_CHARSET              186
+#define RUSSIAN_CHARSET             204
+#define THAI_CHARSET                222
+#define EASTEUROPE_CHARSET          238
+#define OEM_CHARSET                 255
 
 /* Device Parameters for win_GetDeviceCaps() */
 
-#define HORZSIZE              4     // Horizontal size in millimeters
-#define VERTSIZE              6     // Vertical size in millimeters
-#define HORZRES               8     // Horizontal width in pixels
-#define VERTRES               10    // Vertical height in pixels
-#define NUMBRUSHES            16    // Number of brushes the device has
-#define NUMPENS               18    // Number of pens the device has
-#define NUMFONTS              22    // Number of fonts the device has
-#define NUMCOLORS             24    // Number of colors the device supports
-#define RASTERCAPS            38    // Bitblt capabilities
+#define HORZSIZE                    4     // Horizontal size in millimeters
+#define VERTSIZE                    6     // Vertical size in millimeters
+#define HORZRES                     8     // Horizontal width in pixels
+#define VERTRES                     10    // Vertical height in pixels
+#define NUMBRUSHES                  16    // Number of brushes the device has
+#define NUMPENS                     18    // Number of pens the device has
+#define NUMFONTS                    22    // Number of fonts the device has
+#define NUMCOLORS                   24    // Number of colors the device supports
+#define RASTERCAPS                  38    // Bitblt capabilities
 
-#define LOGPIXELSX            88    // Logical pixels/inch in X
-#define LOGPIXELSY            90    // Logical pixels/inch in Y
+#define LOGPIXELSX                  88    // Logical pixels/inch in X
+#define LOGPIXELSY                  90    // Logical pixels/inch in Y
 
-#define PHYSICALWIDTH         110   // Physical Width in device units
-#define PHYSICALHEIGHT        111   // Physical Height in device units
-#define PHYSICALOFFSETX       112   // Physical Printable Area x margin
-#define PHYSICALOFFSETY       113   // Physical Printable Area y margin
-#define SCALINGFACTORX        114   // Scaling factor x
-#define SCALINGFACTORY        115   // Scaling factor y
+#define PHYSICALWIDTH               110   // Physical Width in device units
+#define PHYSICALHEIGHT              111   // Physical Height in device units
+#define PHYSICALOFFSETX             112   // Physical Printable Area x margin
+#define PHYSICALOFFSETY             113   // Physical Printable Area y margin
+#define SCALINGFACTORX              114   // Scaling factor x
+#define SCALINGFACTORY              115   // Scaling factor y
 
 /* bin selections */
-#define DMBIN_FIRST           DMBIN_UPPER
-#define DMBIN_UPPER           1
-#define DMBIN_ONLYONE         1
-#define DMBIN_LOWER           2
-#define DMBIN_MIDDLE          3
-#define DMBIN_MANUAL          4
-#define DMBIN_ENVELOPE        5
-#define DMBIN_ENVMANUAL       6
-#define DMBIN_AUTO            7
-#define DMBIN_TRACTOR         8
-#define DMBIN_SMALLFMT        9
-#define DMBIN_LARGEFMT        10
-#define DMBIN_LARGECAPACITY   11
-#define DMBIN_CASSETTE        14
-#define DMBIN_FORMSOURCE      15
-#define DMBIN_LAST            DMBIN_FORMSOURCE
+#define DMBIN_FIRST                 DMBIN_UPPER
+#define DMBIN_UPPER                 1
+#define DMBIN_ONLYONE               1
+#define DMBIN_LOWER                 2
+#define DMBIN_MIDDLE                3
+#define DMBIN_MANUAL                4
+#define DMBIN_ENVELOPE              5
+#define DMBIN_ENVMANUAL             6
+#define DMBIN_AUTO                  7
+#define DMBIN_TRACTOR               8
+#define DMBIN_SMALLFMT              9
+#define DMBIN_LARGEFMT              10
+#define DMBIN_LARGECAPACITY         11
+#define DMBIN_CASSETTE              14
+#define DMBIN_FORMSOURCE            15
+#define DMBIN_LAST                  DMBIN_FORMSOURCE
 
 /* print qualities */
-#define DMRES_DRAFT           ( -1 )
-#define DMRES_LOW             ( -2 )
-#define DMRES_MEDIUM          ( -3 )
-#define DMRES_HIGH            ( -4 )
+#define DMRES_DRAFT                 ( -1 )
+#define DMRES_LOW                   ( -2 )
+#define DMRES_MEDIUM                ( -3 )
+#define DMRES_HIGH                  ( -4 )
 
 /* duplex enable */
-#define DMDUP_SIMPLEX         1
-#define DMDUP_VERTICAL        2
-#define DMDUP_HORIZONTAL      3
+#define DMDUP_SIMPLEX               1
+#define DMDUP_VERTICAL              2
+#define DMDUP_HORIZONTAL            3
 
 /* Text Alignment Options */
-#define TA_NOUPDATECP         0
-#define TA_UPDATECP           1
+#define TA_NOUPDATECP               0
+#define TA_UPDATECP                 1
 
-#define TA_LEFT               0
-#define TA_RIGHT              2
-#define TA_CENTER             6
+#define TA_LEFT                     0
+#define TA_RIGHT                    2
+#define TA_CENTER                   6
 
-#define TA_TOP                0
-#define TA_BOTTOM             8
-#define TA_BASELINE           24
+#define TA_TOP                      0
+#define TA_BOTTOM                   8
+#define TA_BASELINE                 24
 
-#define MM_TO_INCH            25.4
+#define MM_TO_INCH                  25.4
 
 #endif /* HBWIN_CH_ */
