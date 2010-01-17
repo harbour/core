@@ -164,9 +164,6 @@ FUNCTION hbide_createTarget( cFile, txt_ )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_posAndSize( qWidget )
-   LOCAL qRect := QRect():configure( qWidget:geometry() )
-
-   hbide_dbg( qRect:x(), qRect:y(), qRect:width(), qRect:height() )
 
    RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
           hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","

@@ -793,8 +793,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::oEdit := IdeEdit():new( Self, 0 ):create()
-   ::qEdit     := ::oEdit:qEdit
+   ::oEdit   := IdeEdit():new( Self, 0 ):create()
+   ::qEdit   := ::oEdit:qEdit
    ::qCqEdit := ::oEdit:qEdit
    ::qCoEdit := ::oEdit
 
@@ -869,6 +869,8 @@ METHOD IdeEditor:split( nOrient, oEditP )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
+   ::disconnect( ::qDocument, "blockCountChanged(int)"      )
+   ::disconnect( ::qDocument, "contentsChange(int,int,int)" )
 
    ::qCqEdit := NIL
    ::qEdit         := NIL
@@ -883,13 +885,17 @@ METHOD IdeEditor:destroy()
       ::qDocument:pPtr := 0
       ::qDocument      := nil
    ENDIF
-   IF !Empty( ::qLayout )
-      ::qLayout:pPtr   := 0
-      ::qLayout        := nil
-   ENDIF
+
    IF !Empty( ::qHiliter )
       ::qHiliter:pPtr  := 0
       ::qHiliter       := nil
+   ENDIF
+
+   ::oEdit := NIL
+
+   IF !Empty( ::qLayout )
+      ::qLayout:pPtr   := 0
+      ::qLayout        := nil
    ENDIF
 
    IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
@@ -918,7 +924,6 @@ METHOD IdeEditor:setDocumentProperties()
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
-      hbide_dbg( "......................" )
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
@@ -1133,10 +1138,12 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qHLayout:addWidget( ::qLineNos )
    ::qHLayout:addWidget( ::qEdit    )
 
+   #if 0
    ::qActionTab := QAction():new( ::qEdit )
    ::qActionTab:setText( "Editor Tab" )
    ::qActionTab:setShortcut( QKeySequence():new( "Ctrl+F2" ) )
    ::connect( ::qActionTab, "triggered(bool)", {|| ::exeEvent( 71, Self ) } )
+   #endif
 
    ::connectEditSlots( Self )
 
@@ -1151,14 +1158,14 @@ METHOD IdeEdit:destroy()
    ::qHLayout:removeWidget( ::qEdit )
    ::qHLayout:removeWidget( ::qLineNos )
 
-   ::qHLayout:pPtr := 0
-   ::qHLayout      := NIL
-
-   ::qLineNos:pPtr := 0
+   //::qLineNos:pPtr := 0
    ::qLineNos      := NIL
 
-   ::qEdit:pPtr    := 0
+   //::qEdit:pPtr    := 0
    ::qEdit         := NIL
+
+   ::qHLayout:pPtr := 0
+   ::qHLayout      := NIL
 
    RETURN Self
 
@@ -1326,18 +1333,23 @@ METHOD IdeEdit:highlightCurrentLine( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:setNewMark()
-   LOCAL qBlockFmt, qTextBlock, qDoc, lModified
+   LOCAL qBlockFmt, qTextBlock, qDoc, lModified, qUData
 
    IF empty( ::qCursorMark )
       qDoc := QTextDocument():configure( ::qEdit:document() )
       lModified := qDoc:isModified()
 
       ::qCursorMark := QTextCursor():configure( ::qEdit:textCursor() )
+
       qTextBlock := QTextBlock():configure( ::qCursorMark:block() )
       qBlockFmt := QTextBlockFormat():new()
       qBlockFmt:setBackground( ::qBrushMark )
       ::qCursorMark:setBlockFormat( qBlockFmt )
       qTextBlock:setUserState( 77 )
+
+      qUData := HBQTextBlockUserData():new()
+      qUData:setData( 99 )
+      qTextBlock:setUserData( qUData )
 
       qDoc:setModified( lModified )
    ELSE
@@ -1359,3 +1371,4 @@ METHOD IdeEdit:gotoLastMark()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
