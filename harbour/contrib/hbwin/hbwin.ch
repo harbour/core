@@ -132,6 +132,13 @@
 #define HB_WINPRN_SERVER            6
 #define HB_WINPRN_LEN_              6
 
+/* WIN_ENUMFONTS() positions for array returned */
+#define HB_WINFONT_NAME             1
+#define HB_WINFONT_FIXED            2
+#define HB_WINFONT_TRUETYPE         3
+#define HB_WINFONT_CHARSET          4
+#define HB_WINFONT_LEN_             4
+
 #define WIN_RGB( nR, nG, nB )       ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
 /* Color constants for convenience */
@@ -277,7 +284,7 @@
 /* Deprecated constants and macros */
 /* ------------------------------- */
 
-#ifdef HB_LEGACY_LEVEL3
+#if defined( HB_LEGACY_LEVEL3 ) .AND. ! defined( HB_WIN_NO_LEGACY )
 
 #define HKEY_CLASSES_ROOT           WIN_HKEY_CLASSES_ROOT
 #define HKEY_CURRENT_USER           WIN_HKEY_CURRENT_USER

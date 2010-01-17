@@ -640,6 +640,8 @@ HB_FUNC( WIN_ENUMFONTS )
 
       hb_itemReturnRelease( pArray );
    }
+   else
+      hb_reta( 0 );
 }
 
 HB_FUNC( WIN_SETCOLOR )
