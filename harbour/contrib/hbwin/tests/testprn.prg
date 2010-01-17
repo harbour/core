@@ -40,7 +40,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
    LOCAL nColCharSet
 
    oPrinter:Landscape := .F.
-   oPrinter:FormType  := WIN_PRN_DMPAPER_A4
+   oPrinter:FormType  := WIN_DMPAPER_A4
    oPrinter:Copies    := 1
 
    IF ! oPrinter:Create()
@@ -49,10 +49,10 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
       IF ! oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
          Alert( "StartDoc() failed" )
       ELSE
-         oPrinter:SetPen( PS_SOLID, 1, RGB_RED )
-         oPrinter:Bold( 800 )
+         oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )
+         oPrinter:Bold( WIN_FW_EXTRABOLD )
          oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + Str( oPrinter:MaxRow(), 4 ) + "   MaxCol() = " + Str( oPrinter:MaxCol(), 4 ) )
-         oPrinter:Bold( 0 )     // Normal
+         oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:NewLine()
          oPrinter:TextOut("   Partial list of available fonts that are available for OEM_")
          oPrinter:NewLine()
@@ -95,13 +95,13 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
          NEXT
          oPrinter:SetFont( "Lucida Console", 8, { 3, -50 } )  // Alternative Compressed print
          oPrinter:CharSet( 0 )  // Reset default charset
-         oPrinter:Bold( 800 )
+         oPrinter:Bold( WIN_FW_EXTRABOLD )
          oPrinter:NewLine()
          oPrinter:TextOut( "This is on line" + Str( oPrinter:Prow(), 4 ) + ", Printed bold, " )
          oPrinter:TextOut( " finishing at Column: " )
          oPrinter:TextOut( Str( oPrinter:Pcol(), 4 ) )
          oPrinter:SetPrc( oPrinter:Prow() + 3, 0 )
-         oPrinter:Bold( 0 )
+         oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:TextOut( "Notice: UNDERLINE only prints correctly if there is a blank line after", .T. )
          oPrinter:TextOut( "        it. This is because of ::LineHeight and the next line", .T. )
          oPrinter:TextOut( "        printing over top of the underline. To avoid this happening", .T. )
@@ -109,12 +109,12 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
          oPrinter:NewLine()
          oPrinter:NewLine()
          oPrinter:SetFont( "Lucida Console", 18, 0 )  // Large print
-         oPrinter:SetColor( RGB_GREEN )
+         oPrinter:SetColor( HB_WIN_RGB_GREEN )
          oPrinter:TextOut( "Finally some larger print" )
          oPrinter:Box(   0, oPrinter:PosY + 100, 100, oPrinter:PosY + 200 )
          oPrinter:Arc( 200, oPrinter:PosY + 100, 300, oPrinter:PosY + 200 )
          oPrinter:Ellipse( 400, oPrinter:PosY + 100, 500, oPrinter:PosY + 200 )
-         oPrinter:FillRect( 600, oPrinter:PosY + 100, 700, oPrinter:PosY + 200, RGB_RED )
+         oPrinter:FillRect( 600, oPrinter:PosY + 100, 700, oPrinter:PosY + 200, HB_WIN_RGB_RED )
 
 //       To print a barcode;
 //       Replace 'BCod39HN' with your own bar code font or any other font

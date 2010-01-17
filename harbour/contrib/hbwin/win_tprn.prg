@@ -51,25 +51,27 @@
  */
 
 /*
-  WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
-  Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
-  Even though "Mapping Mode" for WIN_PRN() is MM_TEXT, ::SetFont() accepts the
-  nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
-  6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
-  If you do not like this then inherit from the class and override anything you want
+   WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
+   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
+   Even though "Mapping Mode" for WIN_PRN() is WIN_MM_TEXT, ::SetFont() accepts the
+   nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
+   6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
+   If you do not like this then inherit from the class and override anything you want
 
-  Simple example
+   Simple example
 
-  TODO: Colour printing
-        etc....
+   TODO: Colour printing
+         etc....
 
-  Peter Rees 21 January 2004 <peter@rees.co.nz>
+   Peter Rees 21 January 2004 <peter@rees.co.nz>
 */
 
 #include "hbclass.ch"
 #include "common.ch"
 
 #include "hbwin.ch"
+
+#define MM_TO_INCH                  25.4
 
 CREATE CLASS WIN_PRN
 
@@ -110,7 +112,7 @@ CREATE CLASS WIN_PRN
    METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
                                                                      // Set Background mode
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : TA_LEFT, TA_RGIHT, TA_CENTER, TA_TOP, TA_BOTTOM, TA_BASELINE
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : WIN_TA_*
    METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
 
 
@@ -166,7 +168,7 @@ CREATE CLASS WIN_PRN
    VAR hFont            INIT 0
    VAR FontName         INIT ""                       // Current Point size for font
    VAR FontPointSize    INIT 12                       // Point size for font
-   VAR FontWidth        INIT { 0, 0 }                 // {Mul, Div} Calc width: nWidth:= MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
+   VAR FontWidth        INIT { 0, 0 }                 // {Mul, Div} Calc width: nWidth:= wapi_MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
                                                       // If font width is specified it is in "characters per inch" to emulate DotMatrix
    VAR fBold            INIT 0      HIDDEN            // font darkness weight ( Bold). See wingdi.h or WIN SDK CreateFont() for valid values
    VAR fUnderLine       INIT .F.    HIDDEN            // UnderLine is on or off
@@ -187,8 +189,8 @@ CREATE CLASS WIN_PRN
    VAR fCharWidth       INIT 0      HIDDEN
    VAR BitmapsOk        INIT .F.
    VAR NumColors        INIT 1
-   VAR fDuplexType      INIT 0      HIDDEN            // DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
-   VAR fPrintQuality    INIT 0      HIDDEN            // DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
+   VAR fDuplexType      INIT 0      HIDDEN            // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
+   VAR fPrintQuality    INIT 0      HIDDEN            // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
    VAR fNewDuplexType   INIT 0      HIDDEN
    VAR fNewPrintQuality INIT 0      HIDDEN
    VAR fOldLandScape    INIT .F.    HIDDEN
@@ -234,24 +236,24 @@ METHOD Create() CLASS WIN_PRN
                                  ::Copies, ::BinNumber, ::fDuplexType, ;
                                  ::fPrintQuality, ::PaperLength, ::PaperWidth )
       // Set mapping mode to pixels, topleft down
-      win_SetMapMode( ::hPrinterDC, MM_TEXT )
+      win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
 //    win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
       // Get Margins etc... here
-      ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, PHYSICALWIDTH )
-      ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, PHYSICALHEIGHT )
-      ::LeftMargin       := win_GetDeviceCaps( ::hPrinterDC, PHYSICALOFFSETX )
+      ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
+      ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
+      ::LeftMargin       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
       ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
-      ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, LOGPIXELSY )
-      ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, LOGPIXELSX )
+      ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
+      ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
       ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
-      ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, PHYSICALOFFSETY )
+      ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
       ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
       // Set .T. if can print bitmaps
       ::BitMapsOk := win_BitMapsOk( ::hPrinterDC )
 
       // supports Colour
-      ::NumColors := win_GetDeviceCaps( ::hPrinterDC, NUMCOLORS )
+      ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
 
       // Set the standard font
       ::SetDefaultFont()
@@ -567,7 +569,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
 
       DEFAULT lNewLine TO .F.
       DEFAULT lUpdatePosX TO .T.
-      DEFAULT nAlign TO HB_BITOR( TA_BOTTOM, TA_LEFT )
+      DEFAULT nAlign TO HB_BITOR( WIN_TA_BOTTOM, WIN_TA_LEFT )
 
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
 
@@ -587,6 +589,43 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    ::SetPos( nPosX, nPosY )
    RETURN ::TextOut( cString, lNewLine, lUpdatePosX, nAlign )
+
+METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnderLine, lItalic, nCharSet, lNewLine, lUpdatePosX, nColor, nAlign ) CLASS WIN_PRN
+   LOCAL lResult
+   LOCAL nDiv := 0
+   LOCAL cType
+   LOCAL hFont
+
+   IF ::CheckPage()
+
+      DEFAULT nPointSize TO ::FontPointSize
+
+      IF cFont != NIL
+         cType := ValType( nWidth )
+         IF cType == "A"
+            nDiv   := nWidth[ 1 ]
+            nWidth := nWidth[ 2 ]
+         ELSEIF cType == "N" .AND. ! Empty( nWidth )
+            nDiv := 1
+         ENDIF
+         hFont := ::hFont
+         ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
+      ENDIF
+      IF nColor != NIL
+         nColor := win_SetColor( ::hPrinterDC, nColor )
+      ENDIF
+
+      lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
+
+      IF cFont != NIL
+         ::hFont := hFont     // Reset Font
+      ENDIF
+      IF nColor != NIL
+         win_SetColor( ::hPrinterDC, nColor )  // Reset Color
+      ENDIF
+
+   ENDIF
+   RETURN lResult
 
 METHOD SetPen( nStyle, nWidth, nColor ) CLASS WIN_PRN
    ::PenStyle := nStyle
@@ -652,7 +691,7 @@ METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS WIN_PRN
 METHOD GetCharWidth() CLASS WIN_PRN
    LOCAL nWidth
    IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
-      nWidth := win_MulDiv( ::FontWidth[ 1 ], ::PixelsPerInchX, ::FontWidth[ 2 ] )
+      nWidth := wapi_MulDiv( ::FontWidth[ 1 ], ::PixelsPerInchX, ::FontWidth[ 2 ] )
    ELSE
       nWidth := win_GetCharSize( ::hPrinterDC )
    ENDIF
@@ -710,43 +749,6 @@ METHOD Inch_To_PosX( nInch ) CLASS WIN_PRN
 METHOD Inch_To_PosY( nInch ) CLASS WIN_PRN
    RETURN Int( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
 
-METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnderLine, lItalic, nCharSet, lNewLine, lUpdatePosX, nColor, nAlign ) CLASS WIN_PRN
-   LOCAL lResult
-   LOCAL nDiv := 0
-   LOCAL cType
-   LOCAL hFont
-
-   IF ::CheckPage()
-
-      DEFAULT nPointSize TO ::FontPointSize
-
-      IF cFont != NIL
-         cType := ValType( nWidth )
-         IF cType == "A"
-            nDiv   := nWidth[ 1 ]
-            nWidth := nWidth[ 2 ]
-         ELSEIF cType == "N" .AND. ! Empty( nWidth )
-            nDiv := 1
-         ENDIF
-         hFont := ::hFont
-         ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
-      ENDIF
-      IF nColor != NIL
-         nColor := win_SetColor( ::hPrinterDC, nColor )
-      ENDIF
-
-      lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
-
-      IF cFont != NIL
-         ::hFont := hFont     // Reset Font
-      ENDIF
-      IF nColor != NIL
-         win_SetColor( ::hPrinterDC, nColor )  // Reset Color
-      ENDIF
-
-   ENDIF
-   RETURN lResult
-
 METHOD GetDeviceCaps( nCaps ) CLASS WIN_PRN
    RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps )
 
@@ -760,7 +762,7 @@ CREATE CLASS WIN_BMP
    METHOD LoadFile( cFileName )
    METHOD Create()
    METHOD Destroy()
-   METHOD Draw( oPrn, arectangle )
+   METHOD Draw( oPrn, aRectangle )
 
    VAR Rect     INIT { 0, 0, 0, 0 }     // Coordinates to print BitMap
                                         //   XDest,                    // x-coord of destination upper-left corner

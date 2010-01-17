@@ -78,7 +78,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    IF ! lDoVista .AND. win_osIsVistaOrUpper()
       /* do nothing */
    ELSEIF win_osIs9X()
-      bRetVal := win_regQuery( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
+      bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
       cKeyWks := "System\CurrentControlSet\Services\LanmanWorkStation\Parameters"
@@ -88,26 +88,26 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       ENDIF
 
       /* Server settings */
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLocks", 0, lSetIt ) /* Q124916 */
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLocks", 0, lSetIt ) /* Q124916 */
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
 
       IF win_osIsVistaOrUpper()
          /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
-         bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
       ENDIF
 
       /* Workstation settings */
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
-      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
       IF win_osIs2000OrUpper()
-         bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
    ENDIF
 

@@ -69,7 +69,7 @@ PROCEDURE Main( cPortName )
    ?
    Inkey( 0 )
 
-   oWinPort := win_Com():Init( cPortName, CBR_9600, ODDPARITY, 7, ONESTOPBIT )
+   oWinPort := win_Com():Init( cPortName, WIN_CBR_9600, WIN_ODDPARITY, 7, WIN_ONESTOPBIT )
    IF ! oWinPort:Open()
       ? "Open() failed :", oWinPort:Error()
    ELSE
@@ -110,24 +110,24 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() failed :", oWinPort:Error()
       ENDIF
       ?
-      IF oWinPort:RTSFlow( RTS_CONTROL_HANDSHAKE )
-         ? "RTSFlow( RTS_CONTROL_HANDSHAKE ) succeeded"
+      IF oWinPort:RTSFlow( WIN_RTS_CONTROL_HANDSHAKE )
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "RTSFlow( RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
       ENDIF
-      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
+      ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it shouldn't according to docs!)"
       ELSE
          ? "SetRTS( .F. ) failed (it should) :", oWinPort:Error()
       ENDIF
       ?
-      IF oWinPort:RTSFlow( RTS_CONTROL_DISABLE )
-         ? "RTSFlow( RTS_CONTROL_DISABLE ) succeeded"
+      IF oWinPort:RTSFlow( WIN_RTS_CONTROL_DISABLE )
+         ? "RTSFlow( WIN_RTS_CONTROL_DISABLE ) succeeded"
       ELSE
-         ? "RTSFlow( RTS_CONTROL_DISABLE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_DISABLE ) failed :", oWinPort:Error()
       ENDIF
-      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
+      ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it should)"
       ELSE
@@ -164,7 +164,7 @@ PROCEDURE Main( cPortName )
    ? "This is going to fail, so no device needed"
    Inkey( 0 )
 
-   oWinPort := Win_Com():Init( cPortName, CBR_9600, NOPARITY, 99, ONESTOPBIT )
+   oWinPort := Win_Com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 99, WIN_ONESTOPBIT )
    IF !oWinPort:Open
       ? "Open() failed :", oWinPort:Error()
    ELSE
@@ -176,13 +176,13 @@ PROCEDURE Main( cPortName )
    ?
    Inkey( 0 )
 
-   oWinPort := Win_Com():Init( cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT )
+   oWinPort := Win_Com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
    IF ! oWinPort:Open
       ? "Open() failed :", oWinPort:Error()
    ELSE
       ? "Open succeeded"
       ?
-      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
+      ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
       ? "Printers will probably have CTS, DSR and DCD high, IF they are off they'll all be low"
       IF oWinPort:Status( @lCTS, @lDSR, @lRing, @lDCD )
          ? "Status() succeeded : CTS ", lCTS, ", DSR ", lDSR, ", Ring ", lRing, ", DCD ", lDCD
@@ -207,15 +207,15 @@ PROCEDURE Main( cPortName )
 
       ?
       ? "Switch all handshaking on (normally only hardware and RTS)"
-      IF oWinPort:RTSFlow( DTR_CONTROL_HANDSHAKE )
-         ? "RTSFlow( RTS_CONTROL_HANDSHAKE ) succeeded"
+      IF oWinPort:RTSFlow( WIN_DTR_CONTROL_HANDSHAKE )
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "RTSFlow( RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
       ENDIF
-      IF oWinPort:DTRFlow( DTR_CONTROL_HANDSHAKE )
-         ? "DTRFlow( DTR_CONTROL_HANDSHAKE ) succeeded"
+      IF oWinPort:DTRFlow( WIN_DTR_CONTROL_HANDSHAKE )
+         ? "DTRFlow( WIN_DTR_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "DTRFlow( DTR_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "DTRFlow( WIN_DTR_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
       ENDIF
       IF oWinPort:XonXoffFlow( .T. )
          ? "XonXoffFlow( .T. ) ", oWinPort:XonXoffFlow( .T. )
@@ -223,7 +223,7 @@ PROCEDURE Main( cPortName )
          ? "XonXoffFlow( .T. ) failed :", oWinPort:Error()
       ENDIF
       ?
-      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
+      ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
 
       ? "If it's on then no Hold status should be on, IF off then probably CTS and DSR"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )

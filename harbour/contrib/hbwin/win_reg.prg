@@ -60,7 +60,7 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
    LOCAL cHKEY
    LOCAL tmp
 
-   nHKEY := HKEY_CURRENT_USER
+   nHKEY := WIN_HKEY_CURRENT_USER
    cKey := ""
    cEntry := ""
 
@@ -79,20 +79,20 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
 
       /* Len( <literal> ) is optimized to a number by Harbour at compile time. */
       DO CASE
-      CASE Left( cHKEY, Len( "HKCU"                  ) ) == "HKCU"                  ; nHKEY := HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKLM"                  ) ) == "HKLM"                  ; nHKEY := HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKCR"                  ) ) == "HKCR"                  ; nHKEY := HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKU"                   ) ) == "HKU"                   ; nHKEY := HKEY_USERS
-      CASE Left( cHKEY, Len( "HKPD"                  ) ) == "HKPD"                  ; nHKEY := HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKCC"                  ) ) == "HKCC"                  ; nHKEY := HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKDD"                  ) ) == "HKDD"                  ; nHKEY := HKEY_DYN_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_USER"     ) ) == "HKEY_CURRENT_USER"     ; nHKEY := HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKEY_LOCAL_MACHINE"    ) ) == "HKEY_LOCAL_MACHINE"    ; nHKEY := HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKEY_CLASSES_ROOT"     ) ) == "HKEY_CLASSES_ROOT"     ; nHKEY := HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKEY_USERS"            ) ) == "HKEY_USERS"            ; nHKEY := HKEY_USERS
-      CASE Left( cHKEY, Len( "HKEY_PERFORMANCE_DATA" ) ) == "HKEY_PERFORMANCE_DATA" ; nHKEY := HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_CONFIG"   ) ) == "HKEY_CURRENT_CONFIG"   ; nHKEY := HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKEY_DYN_DATA"         ) ) == "HKEY_DYN_DATA"         ; nHKEY := HKEY_DYN_DATA
+      CASE Left( cHKEY, Len( "HKCU"                  ) ) == "HKCU"                  ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE Left( cHKEY, Len( "HKLM"                  ) ) == "HKLM"                  ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE Left( cHKEY, Len( "HKCR"                  ) ) == "HKCR"                  ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE Left( cHKEY, Len( "HKU"                   ) ) == "HKU"                   ; nHKEY := WIN_HKEY_USERS
+      CASE Left( cHKEY, Len( "HKPD"                  ) ) == "HKPD"                  ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE Left( cHKEY, Len( "HKCC"                  ) ) == "HKCC"                  ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE Left( cHKEY, Len( "HKDD"                  ) ) == "HKDD"                  ; nHKEY := WIN_HKEY_DYN_DATA
+      CASE Left( cHKEY, Len( "HKEY_CURRENT_USER"     ) ) == "HKEY_CURRENT_USER"     ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE Left( cHKEY, Len( "HKEY_LOCAL_MACHINE"    ) ) == "HKEY_LOCAL_MACHINE"    ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE Left( cHKEY, Len( "HKEY_CLASSES_ROOT"     ) ) == "HKEY_CLASSES_ROOT"     ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE Left( cHKEY, Len( "HKEY_USERS"            ) ) == "HKEY_USERS"            ; nHKEY := WIN_HKEY_USERS
+      CASE Left( cHKEY, Len( "HKEY_PERFORMANCE_DATA" ) ) == "HKEY_PERFORMANCE_DATA" ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE Left( cHKEY, Len( "HKEY_CURRENT_CONFIG"   ) ) == "HKEY_CURRENT_CONFIG"   ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE Left( cHKEY, Len( "HKEY_DYN_DATA"         ) ) == "HKEY_DYN_DATA"         ; nHKEY := WIN_HKEY_DYN_DATA
       ENDCASE
    ENDIF
 

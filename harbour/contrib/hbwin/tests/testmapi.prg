@@ -11,7 +11,7 @@ PROCEDURE Main()
    LOCAL lMailConf := .F.
    LOCAL lFromUser := .T.
    LOCAL aSender := { "test from", "from@test.com" }
-   LOCAL aDest := { { "test to", "to@test.com", HB_WIN_MAPI_TO } }
+   LOCAL aDest := { { "test to", "to@test.com", WIN_MAPI_TO } }
    LOCAL aFiles := { { "testmapi.prg", "testmapi" } }
 
    ? win_MAPISendMail( cSubject,                        ; // subject

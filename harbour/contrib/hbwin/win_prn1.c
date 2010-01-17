@@ -51,21 +51,19 @@
  */
 
 /*
+   WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
+   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
+   Even though "Mapping Mode" for WIN_PRN() is WIN_MM_TEXT, ::SetFont() accepts the
+   nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
+   6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
+   If you do not like this then inherit from the class and override anything you want
 
-  TPRINT() was designed to make it easy to emulate Clipper Dot Matrix printing.
-  Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
-  Even though "Mapping Mode" for TPRINT() is MM_TEXT, ::SetFont() accepts the
-  nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
-  6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
-  If you do not like this then inherit from the class and override anything you want
+   Simple example
 
-  Simple example
+   TODO: Colour printing
+         etc....
 
-  TO DO:    Colour printing
-            etc....
-
-  Peter Rees 21 January 2004 <peter@rees.co.nz>
-
+   Peter Rees 21 January 2004 <peter@rees.co.nz>
 */
 
 #define HB_OS_WIN_USED
@@ -371,11 +369,6 @@ HB_FUNC( WIN_SETMAPMODE )
    HDC hDC = win_HDC_par( 1 );
 
    hb_retnl( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parni( 2 ) ) : 0 );
-}
-
-HB_FUNC( WIN_MULDIV )
-{
-   hb_retnl( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WIN_CREATEFONT )

@@ -289,3 +289,8 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    hb_strfree( hSource );
    hb_strfree( hBuffer );
 }
+
+HB_FUNC( WAPI_MULDIV )
+{
+   hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
+}
