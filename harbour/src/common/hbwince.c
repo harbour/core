@@ -130,53 +130,6 @@ void hb_wctombget( char *dstA, const wchar_t *srcW, HB_SIZE ulLen )
 
 #if defined( HB_OS_WIN_CE )
 
-int system( const char *cmd )
-{
-   LPWSTR wcmd;
-   STARTUPINFOW si;
-   PROCESS_INFORMATION pi;
-   BOOL b;
-
-   memset( &si, '\0', sizeof( si ) );
-   si.cb = sizeof( si );
-   memset( &pi, '\0', sizeof( pi ) );
-
-   wcmd = hb_mbtowc( cmd );
-
-   /* Start the child process. */
-   b = CreateProcessW( NULL,     /* No module name (use command line) */
-                       wcmd,     /* Command line */
-                       NULL,     /* Process handle not inheritable */
-                       NULL,     /* Thread handle not inheritable */
-                       FALSE,    /* Set handle inheritance to FALSE */
-                       0,        /* No creation flags */
-                       NULL,     /* Use parent's environment block */
-                       NULL,     /* Use parent's starting directory */
-                       &si,      /* Pointer to STARTUPINFO structure */
-                       &pi );    /* Pointer to PROCESS_INFORMATION structure */
-
-   hb_xfree( wcmd );
-
-   if( b )
-   {
-      /* Wait until child process exits. */
-      WaitForSingleObject( pi.hProcess, INFINITE );
-
-      /* Close process and thread handles. */
-      CloseHandle( pi.hProcess );
-      CloseHandle( pi.hThread );
-   }
-
-   return b ? 0 : -1;
-}
-
-char * strerror( int errnum )
-{
-   HB_SYMBOL_UNUSED( errnum );
-
-   return ( char * ) "";
-}
-
 DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size )
 {
    /* use registry instead of "environment variable". */
@@ -252,7 +205,7 @@ DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer )
    if( len && buffer )
       buffer[ 0 ] = '\0';
 
-   return FALSE;
+   return 0;
 }
 
 BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname )
@@ -474,6 +427,54 @@ clock_t clock( void )
    return ( ( clock_t ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) - 2451545 ) * 86400000 +
       ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 + st.wMilliseconds;
 }
+
+int system( const char *cmd )
+{
+   LPWSTR wcmd;
+   STARTUPINFOW si;
+   PROCESS_INFORMATION pi;
+   BOOL b;
+
+   memset( &si, '\0', sizeof( si ) );
+   si.cb = sizeof( si );
+   memset( &pi, '\0', sizeof( pi ) );
+
+   wcmd = hb_mbtowc( cmd );
+
+   /* Start the child process. */
+   b = CreateProcessW( NULL,     /* No module name (use command line) */
+                       wcmd,     /* Command line */
+                       NULL,     /* Process handle not inheritable */
+                       NULL,     /* Thread handle not inheritable */
+                       FALSE,    /* Set handle inheritance to FALSE */
+                       0,        /* No creation flags */
+                       NULL,     /* Use parent's environment block */
+                       NULL,     /* Use parent's starting directory */
+                       &si,      /* Pointer to STARTUPINFO structure */
+                       &pi );    /* Pointer to PROCESS_INFORMATION structure */
+
+   hb_xfree( wcmd );
+
+   if( b )
+   {
+      /* Wait until child process exits. */
+      WaitForSingleObject( pi.hProcess, INFINITE );
+
+      /* Close process and thread handles. */
+      CloseHandle( pi.hProcess );
+      CloseHandle( pi.hThread );
+   }
+
+   return b ? 0 : -1;
+}
+
+char * strerror( int errnum )
+{
+   HB_SYMBOL_UNUSED( errnum );
+
+   return ( char * ) "";
+}
+
 #endif /* __MINGW32CE__ */
 
 #endif /* 0 */
