@@ -78,6 +78,8 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 #endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
+           "\n          %cge[<mode>]      error output <mode>: 0=Clipper (default)",
+           "\n                                                1=IDE friendly",
            "\n          %ci<path>         #include file search path",
            "\n          %ci[-|+]          disable/enable support for INCLUDE envvar",
            "\n          %cj[<file>]       generate i18n gettext file (.pot)",

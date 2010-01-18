@@ -71,6 +71,13 @@ typedef enum
    HB_LANG_PORT_OBJ_BUF            /* Portable objects in memory buffer */
 } HB_LANGUAGES;                    /* supported Harbour output languages */
 
+/* Error message format modes */
+typedef enum
+{
+   HB_ERRORFMT_CLIPPER,
+   HB_ERRORFMT_IDE
+} HB_ERRORFMT;
+
 struct _COMCLASS;    /* forward declaration */
 
 /* Declared Function/Method support structure */
@@ -699,6 +706,7 @@ typedef struct _HB_COMP
    int               ilastLineErr;        /* line numer with last syntax error */
    int               iTraceInclude;       /* trace included files and generate dependencies list */
    int               iSyntaxCheckOnly;    /* syntax check only */
+   int               iErrorFmt;           /* error message formatting mode (default: Clipper) */
 
    HB_BOOL           fQuiet;              /* be quiet during compilation (-q) */
    HB_BOOL           fFullQuiet;          /* be quiet during compilation disable all messages */

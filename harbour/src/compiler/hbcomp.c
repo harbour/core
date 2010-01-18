@@ -238,9 +238,10 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->iWarnings        = 0;        /* enable parse warnings */
       pComp->iErrorCount      = 0;        /* number of compile errors */
 
-      pComp->iGenCOutput= HB_COMPGENC_COMPACT;  /* C code generation default mode */
-      pComp->iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-      pComp->iLanguage  = HB_LANG_C;            /* default Harbour generated output language */
+      pComp->iGenCOutput = HB_COMPGENC_COMPACT;  /* C code generation default mode */
+      pComp->iExitLevel  = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+      pComp->iLanguage   = HB_LANG_C;            /* default Harbour generated output language */
+      pComp->iErrorFmt   = HB_ERRORFMT_CLIPPER;  /* default Harbour generated output language */
    }
 
    return pComp;

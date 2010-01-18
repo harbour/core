@@ -156,13 +156,26 @@ static void hb_compDispMessage( HB_COMP_DECL, char cPrefix, int iValue,
 
    if( HB_COMP_PARAM->currModule )
    {
-      hb_snprintf( buffer, sizeof( buffer ), "\r%s(%i) ",
+      if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
+         hb_snprintf( buffer, sizeof( buffer ), "\r%s(%i) ",
+                      HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
+      else if( HB_COMP_PARAM->currLine )
+         hb_snprintf( buffer, sizeof( buffer ), "\n%s:%i: ",
                    HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
+      else
+         hb_snprintf( buffer, sizeof( buffer ), "\n%s:%s ",
+                   HB_COMP_PARAM->currModule, szPar2 );
+
       hb_compOutErr( HB_COMP_PARAM, buffer );
    }
 
-   hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
-                cPrefix == 'W' ? "Warning" : "Error", cPrefix, iValue );
+   if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
+      hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
+                   cPrefix == 'W' ? "Warning" : "Error", cPrefix, iValue );
+   else
+      hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
+                   cPrefix == 'W' ? "warning" : "error", cPrefix, iValue );
+
    hb_compOutErr( HB_COMP_PARAM, buffer );
    hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
    hb_compOutErr( HB_COMP_PARAM, buffer );

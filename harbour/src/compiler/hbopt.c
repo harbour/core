@@ -1424,7 +1424,10 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
                   To obtain real line number we need one more tree scan or other
                   algorithm. [Mindaugas] */
 
-               hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, usLine );
+               if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
+                  hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, usLine );
+               else
+                  hb_snprintf( szFun, sizeof( szFun ), "%i:%s", usLine, pFunc->szName );
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGNED_UNUSED, pVar->szName, szFun );
             }
          }
@@ -1600,9 +1603,12 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 
       if( usIndex >= pFunc->wParamCount && pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_PUSH )
       {
-         char    szFun[ 256 ];
+         char szFun[ 256 ];
 
-         hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
+         if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
+            hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
+         else
+            hb_snprintf( szFun, sizeof( szFun ), "%i:%s", pVar->iDeclLine, pFunc->szName );
          hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NEVER_ASSIGNED, pVar->szName, szFun );
       }
 

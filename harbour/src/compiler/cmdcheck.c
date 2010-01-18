@@ -272,6 +272,24 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                      break;
 
+                  case 'e':
+                  case 'E':
+                     switch( *( s + 2 ) )
+                     {
+                        case '1':
+                           HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_IDE;
+                           break;
+
+                        case '\0':
+                        case '0':
+                           HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_CLIPPER;
+                           break;
+
+                        default:
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                     }
+                     break;
+
 #ifdef HB_GEN_OBJ32
                   case 'w':
                   case 'W':

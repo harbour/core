@@ -1706,7 +1706,10 @@ static void hb_compWarnUnusedVar( HB_COMP_DECL, const char * szFuncName,
                                   const char * szVarName, int iDeclLine )
 {
    char szFun[ HB_SYMBOL_NAME_LEN + 17 ];
-   hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", szFuncName, iDeclLine );
+   if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
+      hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", szFuncName, iDeclLine );
+   else
+      hb_snprintf( szFun, sizeof( szFun ), "%i:%s", iDeclLine, szFuncName );
    hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W',
                       HB_COMP_WARN_VAR_NOT_USED, szVarName, szFun );
 }
