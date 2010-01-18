@@ -70,7 +70,7 @@
 #  endif
 #endif
 
-#if defined( __WATCOMC__ )
+#if defined( __WATCOMC__ ) || defined( __CYGWIN__ )
 typedef ULONG ( PASCAL * LPMAPISENDMAIL ) ( LHANDLE, ULONG, lpMapiMessage, FLAGS, ULONG );
 #endif
 

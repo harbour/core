@@ -102,6 +102,12 @@ HB_EXTERN_BEGIN
 HB_EXPORT void  hbwapi_SetLastError( DWORD dwLastError );
 HB_EXPORT DWORD hbwapi_GetLastError( void );
 
+HB_EXPORT HDC   hbwapi_par_HDC( int iParam );
+HB_EXPORT HPEN  hbwapi_par_HPEN( int iParam );
+
+HB_EXPORT void  hbwapi_ret_HDC( HDC p );
+HB_EXPORT void  hbwapi_ret_HPEN( HPEN p );
+
 HB_EXTERN_END
 
 #endif /* __HBWAPI_H */

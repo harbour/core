@@ -50,6 +50,8 @@
  *
  */
 
+/* TOFIX: To use GC collected pointers. */
+
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"

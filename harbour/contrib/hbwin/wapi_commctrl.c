@@ -855,7 +855,7 @@ HB_FUNC( WAPI_TREEVIEW_EXPAND )
 */
 HB_FUNC( WAPI_TREEVIEW_GETBKCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
    wapi_ret_COLORREF( TreeView_GetBkColor( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
@@ -1112,7 +1112,7 @@ HB_FUNC( WAPI_TREEVIEW_GETROOT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETSCROLLTIME )
 {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
    wapi_ret_UINT( TreeView_GetScrollTime( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_UINT( 0 );
@@ -1160,7 +1160,7 @@ HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 */
 HB_FUNC( WAPI_TREEVIEW_GETUNICODEFORMAT )
 {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
    wapi_ret_L( TreeView_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_L( FALSE );
@@ -1381,7 +1381,7 @@ HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_SETSCROLLTIME )
 {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
    wapi_ret_UINT( TreeView_SetScrollTime( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ) );
 #else
    wapi_ret_UINT( 0 );
@@ -1421,7 +1421,7 @@ HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 */
 HB_FUNC( WAPI_TREEVIEW_SETUNICODEFORMAT )
 {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
    wapi_ret_L( TreeView_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
 #else
    wapi_ret_L( FALSE );

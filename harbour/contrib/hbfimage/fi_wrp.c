@@ -50,6 +50,8 @@
  *
  */
 
+/* TOFIX: To use GC collected pointers. */
+
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
@@ -323,14 +325,14 @@ HB_FUNC( FI_LOADFROMMEM )
 {
    if( hb_pcount() == 3 &&
        HB_ISNUM( 1 ) &&
-       HB_ISCHAR( 2 )  &&
+       HB_ISCHAR( 2 ) &&
        HB_ISNUM( 3 )
      )
    {
       FIBITMAP * dib;
       FREE_IMAGE_FORMAT fif;
-      FIMEMORY *stream;
-      const char *szImage;
+      FIMEMORY * stream;
+      const char * szImage;
       int flags;
 
       /* Retrieve parameters */
@@ -339,7 +341,7 @@ HB_FUNC( FI_LOADFROMMEM )
       flags    = hb_parni( 3 );
 
       /* run function */
-      stream   = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 2 ) );
+      stream = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 2 ) );
       dib = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
@@ -375,7 +377,7 @@ HB_FUNC( FI_LOAD )
       flags    = hb_parni( 3 );
 
       /* run function */
-      dib = FreeImage_Load(fif, filename, flags);
+      dib = FreeImage_Load( fif, filename, flags );
 
       /* return value */
       if( dib )

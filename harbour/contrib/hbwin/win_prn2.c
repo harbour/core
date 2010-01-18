@@ -51,23 +51,15 @@
  *
  */
 
-#include "hbsetup.h"
-
-#if defined( HB_OS_WIN ) && \
-    !( defined( __RSXNT__ ) || defined( __CYGWIN__ ) || defined( HB_OS_WIN_CE ) )
-
-#include <windows.h>
-
-#if defined( __LCC__ )
-#   include <winspool.h>
-#endif
-
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
 #include "hbwinuni.h"
+
+#if defined( HB_OS_WIN ) && \
+    !( defined( __RSXNT__ ) || defined( __CYGWIN__ ) || defined( HB_OS_WIN_CE ) )
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 

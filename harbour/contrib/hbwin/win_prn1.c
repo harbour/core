@@ -71,17 +71,16 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
+#include "hbwapi.h"
 #include "hbwinuni.h"
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
-
-#include <winspool.h>
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
 #endif
 
-static HB_GARBAGE_FUNC( win_HDC_release )
+static HB_GARBAGE_FUNC( s_gc_HDC_release )
 {
    void ** ph = ( void ** ) Cargo;
 
@@ -98,18 +97,32 @@ static HB_GARBAGE_FUNC( win_HDC_release )
 
 static const HB_GC_FUNCS s_gc_HDC_funcs =
 {
-   win_HDC_release,
+   s_gc_HDC_release,
    hb_gcDummyMark
 };
 
-static HDC win_HDC_par( int iParam )
+void hbwapi_ret_HDC( HDC p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+HDC hbwapi_par_HDC( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
 
    return ph ? ( HDC ) * ph : ( HDC ) hb_parptr( iParam );
 }
 
-static HB_GARBAGE_FUNC( win_HPEN_release )
+static HB_GARBAGE_FUNC( s_gc_HPEN_release )
 {
    void ** ph = ( void ** ) Cargo;
 
@@ -126,18 +139,32 @@ static HB_GARBAGE_FUNC( win_HPEN_release )
 
 static const HB_GC_FUNCS s_gc_HPEN_funcs =
 {
-   win_HPEN_release,
+   s_gc_HPEN_release,
    hb_gcDummyMark
 };
 
-static HPEN win_HPEN_par( int iParam )
+void hbwapi_ret_HPEN( HPEN p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+HPEN hbwapi_par_HPEN( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
 
    return ph ? ( HPEN ) * ph : ( HPEN ) hb_parptr( iParam );
 }
 
-static HB_GARBAGE_FUNC( win_HFONT_release )
+static HB_GARBAGE_FUNC( s_gc_HFONT_release )
 {
    void ** ph = ( void ** ) Cargo;
 
@@ -154,7 +181,7 @@ static HB_GARBAGE_FUNC( win_HFONT_release )
 
 static const HB_GC_FUNCS s_gc_HFONT_funcs =
 {
-   win_HFONT_release,
+   s_gc_HFONT_release,
    hb_gcDummyMark
 };
 
@@ -169,15 +196,7 @@ HB_FUNC( WIN_CREATEDC )
                           NULL,
                           NULL );
 
-      if( hDC )
-      {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
-
-         *ph = hDC;
-         hb_retptrGC( ph );
-      }
-      else
-         hb_retptr( NULL );
+      hbwapi_ret_HDC( hDC );
 
       hb_strfree( hDevice );
    }
@@ -187,7 +206,7 @@ HB_FUNC( WIN_CREATEDC )
 
 HB_FUNC( WIN_STARTDOC )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
    DOCINFO sDoc;
    HB_BOOL bResult = HB_FALSE;
 
@@ -211,7 +230,7 @@ HB_FUNC( WIN_STARTDOC )
 HB_FUNC( WIN_ENDDOC )
 {
    HB_BOOL bResult = HB_FALSE;
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -226,28 +245,28 @@ HB_FUNC( WIN_ENDDOC )
 
 HB_FUNC( WIN_ABORTDOC )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC && ( AbortDoc( hDC ) > 0 ) );
 }
 
 HB_FUNC( WIN_DELETEDC )
 {
-   win_HDC_release( hb_parptrGC( &s_gc_HDC_funcs, 1 ) );
+   s_gc_HDC_release( hb_parptrGC( &s_gc_HDC_funcs, 1 ) );
 
    hb_retni( 0 );               /* Return zero as a new handle even if fails */
 }
 
 HB_FUNC( WIN_STARTPAGE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC && StartPage( hDC ) > 0 );
 }
 
 HB_FUNC( WIN_ENDPAGE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC && EndPage( hDC ) > 0 );
 }
@@ -255,7 +274,7 @@ HB_FUNC( WIN_ENDPAGE )
 HB_FUNC( WIN_TEXTOUT )
 {
    long lResult = 0;
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC && HB_ISCHAR( 4 ) )
    {
@@ -307,7 +326,7 @@ HB_FUNC( WIN_TEXTOUT )
 HB_FUNC( WIN_GETTEXTSIZE )
 {
    long lResult = 0;
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC && HB_ISCHAR( 2 ) )
    {
@@ -341,7 +360,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 HB_FUNC( WIN_GETCHARSIZE )
 {
    long lResult = 0;
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -359,21 +378,21 @@ HB_FUNC( WIN_GETCHARSIZE )
 
 HB_FUNC( WIN_GETDEVICECAPS )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retnl( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_SETMAPMODE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retnl( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_CREATEFONT )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -414,8 +433,10 @@ HB_FUNC( WIN_CREATEFONT )
          void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
 
          *ph = hFont;
-         SelectObject( hDC, hFont );
+
          hb_retptrGC( ph );
+
+         SelectObject( hDC, hFont );
       }
       else
          hb_retptr( NULL );
@@ -426,7 +447,7 @@ HB_FUNC( WIN_CREATEFONT )
 
 HB_FUNC( WIN_GETPRINTERFONTNAME )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -442,7 +463,7 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )
 
 HB_FUNC( WIN_BITMAPSOK )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC && ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB ) );
 }
@@ -450,7 +471,7 @@ HB_FUNC( WIN_BITMAPSOK )
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
    HB_BOOL bResult = HB_FALSE;
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -579,7 +600,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
 HB_FUNC( WIN_DRAWBITMAP )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -630,7 +651,7 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
 
 HB_FUNC( WIN_ENUMFONTS )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -646,7 +667,7 @@ HB_FUNC( WIN_ENUMFONTS )
 
 HB_FUNC( WIN_SETCOLOR )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
@@ -667,30 +688,25 @@ HB_FUNC( WIN_SETCOLOR )
 
 HB_FUNC( WIN_SETPEN )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
    {
       HPEN hPen;
 
       if( HB_ISPOINTER( 2 ) )
-         hPen = win_HPEN_par( 1 );
+         hPen = hbwapi_par_HPEN( 2 );
       else
-         hPen = CreatePen( hb_parni( 2 ),             /* pen style */
-                           hb_parni( 3 ),             /* pen width */
-                           ( COLORREF ) hb_parnl( 4 ) /* pen color */
-                         );
+      {
+         hPen = CreatePen( hb_parni( 2 ),                /* pen style */
+                           hb_parni( 3 ),                /* pen width */
+                           ( COLORREF ) hb_parnl( 4 ) ); /* pen color */
+
+         hbwapi_ret_HPEN( hPen );
+      }
 
       if( hPen )
-      {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
-
-         *ph = hPen;
          SelectObject( hDC, hPen );
-         hb_retptrGC( ph );
-      }
-      else
-         hb_retptr( NULL );
    }
    else
       hb_retptr( NULL );
@@ -698,7 +714,7 @@ HB_FUNC( WIN_SETPEN )
 
 HB_FUNC( WIN_FILLRECT )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
    HB_BOOL fResult = HB_FALSE;
 
    if( hDC )
@@ -721,7 +737,7 @@ HB_FUNC( WIN_FILLRECT )
 
 HB_FUNC( WIN_LINETO )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC ? MoveToEx( hDC, hb_parni( 2 ) /* x1 */,
                                  hb_parni( 3 ) /* y1 */, NULL ) &&
@@ -731,7 +747,7 @@ HB_FUNC( WIN_LINETO )
 
 HB_FUNC( WIN_RECTANGLE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -747,7 +763,7 @@ HB_FUNC( WIN_RECTANGLE )
 
 HB_FUNC( WIN_ARC )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC ? Arc( hDC /* hDC */,
                        hb_parni( 2 ) /* x1 */,
@@ -762,7 +778,7 @@ HB_FUNC( WIN_ARC )
 
 HB_FUNC( WIN_ELLIPSE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC ? Ellipse( hDC /* hDC */,
                            hb_parni( 2 ) /* x1 */,
@@ -773,15 +789,15 @@ HB_FUNC( WIN_ELLIPSE )
 
 HB_FUNC( WIN_SETBKMODE )
 {
-   HDC hDC = win_HDC_par( 1 );
+   HDC hDC = hbwapi_par_HDC( 1 );
    int iMode = 0;
 
    if( hDC )
    {
       if( HB_ISNUM( 2 ) )
-         iMode = SetBkMode( win_HDC_par( 1 ), hb_parni( 2 ) );
+         iMode = SetBkMode( hbwapi_par_HDC( 1 ), hb_parni( 2 ) );
       else
-         iMode = GetBkMode( win_HDC_par( 1 ) );
+         iMode = GetBkMode( hbwapi_par_HDC( 1 ) );
    }
    hb_retni( iMode );
 }
