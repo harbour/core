@@ -116,9 +116,7 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
 
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
    pAct   := qPop:exec_1( qPoint )
-
-   //IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
-   IF !empty( pAct )
+   IF !hbqt_isEmptyQtPointer( pAct )
       qAct := QAction():configure( pAct )
       cAct := qAct:text()
       FOR EACH a_ IN aPops

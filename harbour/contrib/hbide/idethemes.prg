@@ -332,7 +332,7 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
    LOCAL aAttr
 
    IF !empty( aAttr := ::getThemeAttribute( "CommentsAndRemarks", cTheme ) )
-      qHiliter:setHBMultiLineCommentFormat( ::buildSyntaxFormat( aAttr ) )
+      qHiliter:hbSetMultiLineCommentFormat( ::buildSyntaxFormat( aAttr ) )
    ENDIF
 
    RETURN Self
@@ -341,7 +341,7 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
 
 METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
 
-   qHiliter:setHBRule( cName, cPattern, ::buildSyntaxFormat( aAttr ) )
+   qHiliter:hbSetRule( cName, cPattern, ::buildSyntaxFormat( aAttr ) )
 
    RETURN Self
 
@@ -349,7 +349,7 @@ METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
 
 METHOD IdeThemes:setSyntaxFormat( qHiliter, cName, aAttr )
 
-   qHiliter:setHBFormat( cName, ::buildSyntaxFormat( aAttr ) )
+   qHiliter:hbSetFormat( cName, ::buildSyntaxFormat( aAttr ) )
 //   qHiliter:rehighlight()
 
    RETURN Self
@@ -843,7 +843,7 @@ STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lI
    ENDIF
    qFormat:setForeGround( QBrush():new( "QColor", QColor():new( nR, nG, nB ) ) )
 
-   qHiliter:setHBRule( cName, cPattern, qFormat )
+   qHiliter:hbSetRule( cName, cPattern, qFormat )
 
    RETURN nil
 

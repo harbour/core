@@ -342,6 +342,9 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_Invert"            ), , , , , , "Invert"            )
    oTBar:addItem( ::getAction( "TB_MatchPairs"        ), , , , , , "MatchPairs"        )
    oTBar:addItem( , , , , , nSep )
+   oTBar:addItem( ::getAction( "ZoomIn"               ), , , , , , "ZoomIn"            )
+   oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
+   oTBar:addItem( , , , , , nSep )
 
    RETURN Self
 

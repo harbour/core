@@ -427,7 +427,10 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       oDlg:center      := .t.
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
-      cFile := oDlg:open( , , .f. )
+      cFile := oDlg:open( ::cLastFileOpenPath, , .f. )
+      IF !empty( cFile )
+         ::oIde:cLastFileOpenPath := cFile
+      ENDIF
 
    ELSEIF cMode == "openmany"
       oDlg:title       := "Select Sources"
@@ -435,7 +438,10 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       oDlg:defExtension:= 'prg'
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
-      cFile := oDlg:open( , , .t. )
+      cFile := oDlg:open( ::cLastFileOpenPath, , .t. )
+      IF !empty( cFile ) .AND. !empty( cFile[ 1 ] )
+         ::oIde:cLastFileOpenPath := cFile[ 1 ]
+      ENDIF
 
    ELSEIF cMode == "save"
       oDlg:title       := iif( !hb_isChar( cTitle ), "Save as...", cTitle )
@@ -451,7 +457,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       Endif
 
       oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
-                                                            { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
+                                                        { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
       cFile := oDlg:saveAs( cPath )
 
    ELSE

@@ -110,6 +110,7 @@ CLASS IdeObject
    ACCESS cWrkCodec                               INLINE ::oIde:cWrkCodec
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
+   ACCESS cLastFileOpenPath                       INLINE ::oIde:cLastFileOpenPath
 
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aINI                                    INLINE ::oIde:aINI

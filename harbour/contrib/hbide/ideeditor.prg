@@ -123,7 +123,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD switchToReadOnly()
    METHOD convertSelection( cKey )
    METHOD insertText( cKey )
-   METHOD zoom( cKey )
+   METHOD zoom( nKey )
    METHOD printPreview()
    METHOD paintRequested( pPrinter )
    METHOD setMark()
@@ -578,14 +578,23 @@ METHOD IdeEditsManager:insertText( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:zoom( cKey )
+METHOD IdeEditsManager:zoom( nKey )
+   LOCAL nPointSize, oEdit, qFont
 
-   IF empty( ::qCurEdit )
+   IF empty( oEdit := ::getEditObjectCurrent() )
       RETURN Self
    ENDIF
 
-   IF     upper( cKey ) == "ZOOMIN"
-   ELSEIF upper( cKey ) == "ZOOMOUT"
+   qFont := QFont():configure( oEdit:qEdit:font() )
+   qFont:setFamily( "Courier New" )
+   qFont:setFixedPitch( .t. )
+   nPointSize := qFont:pointSize()
+   nPointSize += iif( nKey == 1, 1, -1 )
+
+   IF nPointSize > 4 .AND. nPointSize < 37
+      qFont:setPointSize( nPointSize )
+      oEdit:qEdit:setFont( qFont )
+      oEdit:qLineNos:setFont( qFont )
    ENDIF
 
    RETURN Self
@@ -724,6 +733,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nnRow                                   INIT -99
    DATA   qPoint                                  INIT QPoint():new()
 
+   DATA   qEvents
+   DATA   qSlots
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
@@ -764,6 +775,8 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
+   ::qSlots := HBSlots():new()
+
    DEFAULT oIde        TO ::oIde
    DEFAULT cSourceFile TO ::sourceFile
    DEFAULT nPos        TO ::nPos
@@ -799,8 +812,13 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::qCoEdit := ::oEdit
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
+   #if 0
    ::connect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } )
    ::connect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
+   #endif
+hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } ) )
+   ::qSlots:hbConnect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
+
    IF ::cType != "U"
       ::qHiliter := ::oThemes:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
@@ -1076,7 +1094,10 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   qLastCursor
 
    DATA   qCursorMark
+   DATA   qMarkUData                              INIT  HBQTextBlockUserData():new()
    DATA   aBookMarks                              INIT  {}
+
+   DATA   qSlots
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1087,6 +1108,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD highlightCurrentLine( oEdit )
    METHOD setNewMark()
    METHOD gotoLastMark()
+   METHOD getUserDataState( qB )
 
    ENDCLASS
 
@@ -1215,7 +1237,8 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
    SWITCH nMode
 
    CASE customContextMenuRequested
-      IF !empty( pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) ) )
+      pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
+      IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
          DO CASE
          CASE qAct:text() == "Split Horizontally"
@@ -1283,7 +1306,8 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:highlightCurrentLine( oEdit )
-   LOCAL nCurLine, nLastLine, qCursor, lModified, qBlock, qDoc, qEdit, qBlockFmt, lClear, qB
+   LOCAL nCurLine, nLastLine, qCursor, lModified, qBlock, qDoc
+   LOCAL qUData, qEdit, qBlockFmt, qB, lInvalidate
 
    qEdit     := oEdit:qEdit
    qCursor   := QTextCursor():configure( qEdit:textCursor() )
@@ -1297,14 +1321,19 @@ METHOD IdeEdit:highlightCurrentLine( oEdit )
 
          IF !empty( oEdit:qLastCursor )
             IF ( qB := QTextBlock():configure( oEdit:qLastCursor:block() ) ):isValid()
-               IF qB:userState() != 77
+               IF ::getUserDataState( qB ) != 99
                   oEdit:qLastCursor:setBlockFormat( QTextBlockFormat():new() )
                ENDIF
             ENDIF
          ENDIF
 
          IF ( qB := QTextBlock():configure( qCursor:block() ) ):isValid()
-            IF qB:userState() != 77
+            qUData := HBQTextBlockUserData():configure( qB:userData() )
+            lInvalidate := empty( qUData:pPtr )
+            IF !( lInvalidate )
+               lInvalidate := qUData:hbState() != 99
+            ENDIF
+            IF lInvalidate
                qBlockFmt := QTextBlockFormat():configure( qBlock:blockFormat() )
                qBlockFmt:setBackground( ::qBrushCL )
                qCursor:setBlockFormat( qBlockFmt )
@@ -1326,39 +1355,59 @@ METHOD IdeEdit:highlightCurrentLine( oEdit )
       oEdit:nLastLine := nCurLine
       oEdit:qLastCursor := qCursor
    ENDIF
-         lclear := 12
-   hbide_justACall( qB, lclear )
+   hbide_justACall( qB )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:setNewMark()
-   LOCAL qBlockFmt, qTextBlock, qDoc, lModified, qUData
+   LOCAL qBlockFmt, qTextBlock, qDoc, lModified, nState
+
+   qDoc := QTextDocument():configure( ::qEdit:document() )
+   lModified := qDoc:isModified()
 
    IF empty( ::qCursorMark )
-      qDoc := QTextDocument():configure( ::qEdit:document() )
-      lModified := qDoc:isModified()
-
+hbide_dbg( ".................................. Set New Mark" )
       ::qCursorMark := QTextCursor():configure( ::qEdit:textCursor() )
 
       qTextBlock := QTextBlock():configure( ::qCursorMark:block() )
       qBlockFmt := QTextBlockFormat():new()
+
       qBlockFmt:setBackground( ::qBrushMark )
       ::qCursorMark:setBlockFormat( qBlockFmt )
-      qTextBlock:setUserState( 77 )
 
-      qUData := HBQTextBlockUserData():new()
-      qUData:setData( 99 )
-      qTextBlock:setUserData( qUData )
+      ::qMarkUData := HBQTextBlockUserData():new()
+      ::qMarkUData:hbSetState( 99 )
+      qTextBlock:setUserData( ::qMarkUData )
 
-      qDoc:setModified( lModified )
    ELSE
-      ::qCursorMark:setBlockFormat( QTextBlockFormat():new() )
-      ::qCursorMark:pPtr := 0
-      ::qCursorMark := NIL
+hbide_dbg( "........................................... Release Mark" )
+      IF ( qTextBlock := QTextBlock():configure( ::qCursorMark:block() ) ):isValid()
+         nState := ::getUserDataState( qTextBlock )
+hbide_dbg( 10001, nState )
+         IF nState == 99  /* Marked */
+            ::qMarkUData:hbSetState( -1 )
+            ::qCursorMark:setBlockFormat( QTextBlockFormat():new() )
+            ::qCursorMark:pPtr := NIL  // Should We ?
+            ::qCursorMark      := NIL
+         ENDIF
+      ENDIF
    ENDIF
-   hbide_justACall( qTextBlock )
+
+   qDoc:setModified( lModified )
+
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getUserDataState( qB )
+   LOCAL qUData := HBQTextBlockUserData():configure( qB:userData() )
+
+   IF !empty( qUData:pPtr )
+      RETURN qUData:hbState()
+   ENDIF
+
+   RETURN -1
 
 /*----------------------------------------------------------------------*/
 

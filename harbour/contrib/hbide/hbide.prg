@@ -181,6 +181,7 @@ CLASS HbIde
    DATA   oOpenedSources
    DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
    DATA   pathSep                                 INIT   hb_OsPathSeparator()
+   DATA   cLastFileOpenPath                       INIT   hb_DirBase() + "projects"
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
    DATA   cProcessInfo
@@ -315,6 +316,8 @@ METHOD HbIde:create( cProjIni )
 
    /* Restore Settings */
    hbide_restSettings( Self )
+   /* Again to be displayed in Statusbar */
+   HbXbp_SetCodec( ::cWrkCodec )
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -497,9 +500,9 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "InsertExternalFile"
       ::oEM:insertText( cKey )
    CASE cKey == "ZoomIn"
-      ::oEM:zoom( cKey )
+      ::oEM:zoom( 1 )
    CASE cKey == "ZoomOut"
-      ::oEM:zoom( cKey )
+      ::oEM:zoom( 0 )
 
    CASE cKey == "ToggleProjectTree"
       ::oDK:toggleLeftDocks()
