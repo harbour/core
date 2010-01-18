@@ -90,30 +90,30 @@ CREATE CLASS WIN_PRN
    METHOD CheckPage()
    METHOD GetDocumentProperties()
    METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet )
-                                                                 // NB: xWidth is in "CharactersPerInch"
-                                                                 //     _OR_ { nMul, nDiv } which equates to "CharactersPerInch"
-                                                                 //     _OR_ ZERO ( 0 ) which uses the default width of the font
-                                                                 //          for the nPointSize
-                                                                 //   IF xWidth (or nDiv) is < 0 then Fixed font is emulated
+                                                      // NB: xWidth is in "CharactersPerInch"
+                                                      //     _OR_ { nMul, nDiv } which equates to "CharactersPerInch"
+                                                      //     _OR_ ZERO ( 0 ) which uses the default width of the font
+                                                      //          for the nPointSize
+                                                      //   IF xWidth (or nDiv) is < 0 then Fixed font is emulated
 
    METHOD SetDefaultFont()
 
-   METHOD GetFonts()                                   // Returns array of { "FontName", lFixed, lTrueType, nCharSetRequired }
+   METHOD GetFonts()                                  // Returns array of { "FontName", lFixed, lTrueType, nCharSetRequired }
    METHOD Bold( nWeight )
    METHOD UnderLine( lUnderline )
    METHOD Italic( lItalic )
-   METHOD SetDuplexType( nDuplexType )                 // Get/Set current Duplexmode
-   METHOD SetPrintQuality( nPrintQuality )             // Get/Set Printquality
+   METHOD SetDuplexType( nDuplexType )                // Get/Set current Duplexmode
+   METHOD SetPrintQuality( nPrintQuality )            // Get/Set Printquality
    METHOD CharSet( nCharSet )
 
 
-   METHOD SetPos( nPosX, nPosY )                       // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD SetPos( nPosX, nPosY )                      // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
-   METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
-                                                                     // Set Background mode
+   METHOD SetBkMode( nMode )                          // Set Background mode
+                                                      // 1 == TRANSPARENT or 2 == OPAQUE
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : WIN_TA_*
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) // nAlign : WIN_TA_*
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor )
@@ -129,11 +129,11 @@ CREATE CLASS WIN_PRN
    METHOD DrawBitMap( oBmp )
 
    /* Clipper DOS compatible functions. */
-   METHOD SetPrc( nRow, nCol )      // Based on ::LineHeight and current ::CharWidth
+   METHOD SetPrc( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()
-   METHOD MaxRow()                  // Based on ::LineHeight & Form dimensions
-   METHOD MaxCol()                  // Based on ::CharWidth & Form dimensions
+   METHOD MaxRow()               // Based on ::LineHeight & Form dimensions
+   METHOD MaxCol()               // Based on ::CharWidth & Form dimensions
 
    METHOD MM_TO_POSX( nMm )      // Convert position on page from MM to pixel location Column
    METHOD MM_TO_POSY( nMm )      //   "       "      "    "    "   "  "   "      "     Row
@@ -154,25 +154,24 @@ CREATE CLASS WIN_PRN
    VAR PageNumber       INIT 0
    VAR hPrinterDc       INIT 0
 
-// These next 4 variables must be set before calling ::Create() if
-// you wish to alter the defaults
+   // These next 6 variables must be set before calling ::Create() if
+   // you wish to alter the defaults
    VAR FormType         INIT 0
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
-
-   VAR PaperLength      INIT 0                          // Value is * 1/10 of mm   1000 = 10cm
-   VAR PaperWidth       INIT 0                          //   "    "    "     "       "     "
+   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.
    VAR hFont            INIT 0
-   VAR FontName         INIT ""                         // Current Point size for font
-   VAR FontPointSize    INIT 12                         // Point size for font
-   VAR FontWidth        INIT { 0, 0 }                   // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
-                                                        // If font width is specified it is in "characters per inch" to emulate DotMatrix
-   VAR fBold            INIT 0                   HIDDEN // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
-   VAR fUnderLine       INIT .F.                 HIDDEN // UnderLine is on or off
-   VAR fItalic          INIT .F.                 HIDDEN // Italic is on or off
+   VAR FontName         INIT ""                          // Current Point size for font
+   VAR FontPointSize    INIT 12                          // Point size for font
+   VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
+                                                         // If font width is specified it is in "characters per inch" to emulate DotMatrix
+   VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
+   VAR fUnderLine       INIT .F.                 HIDDEN  // UnderLine is on or off
+   VAR fItalic          INIT .F.                 HIDDEN  // Italic is on or off
    VAR fCharSet         INIT WIN_DEFAULT_CHARSET HIDDEN
 
    VAR PixelsPerInchY   INIT 0
@@ -189,8 +188,8 @@ CREATE CLASS WIN_PRN
    VAR fCharWidth       INIT 0      HIDDEN
    VAR BitmapsOk        INIT .F.
    VAR NumColors        INIT 1
-   VAR fDuplexType      INIT 0      HIDDEN              // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
-   VAR fPrintQuality    INIT 0      HIDDEN              // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
+   VAR fDuplexType      INIT 0      HIDDEN               // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
+   VAR fPrintQuality    INIT 0      HIDDEN               // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
    VAR fNewDuplexType   INIT 0      HIDDEN
    VAR fNewPrintQuality INIT 0      HIDDEN
    VAR fOldLandScape    INIT .F.    HIDDEN

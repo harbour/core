@@ -6866,7 +6866,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       }
       else
       {
-         pIndex->LargeFile = ( pIndex->pArea->dbfarea.bLockType == DB_DBFLOCK_XHB64 );
+         pIndex->LargeFile = ( pIndex->pArea->dbfarea.bLockType == DB_DBFLOCK_HB64 );
       }
 
       pIndexPtr = &pArea->lpIndexes;

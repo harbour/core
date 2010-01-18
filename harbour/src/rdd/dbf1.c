@@ -1142,9 +1142,9 @@ HB_BOOL hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPoo
          break;
 
 #ifndef HB_LONG_LONG_OFF
-      case DB_DBFLOCK_XHB64:
-         *ulPos  = IDX_LOCKPOS_XHB64;
-         *ulPool = IDX_LOCKPOOL_XHB64;
+      case DB_DBFLOCK_HB64:
+         *ulPos  = IDX_LOCKPOS_HB64;
+         *ulPool = IDX_LOCKPOOL_HB64;
          break;
 #endif
 
@@ -1263,11 +1263,11 @@ static HB_ERRCODE hb_dbfLockData( DBFAREAP pArea,
          break;
 
 #ifndef HB_LONG_LONG_OFF
-      case DB_DBFLOCK_XHB64:
-         *ulPos = DBF_LOCKPOS_XHB64;
-         *iDir = DBF_LOCKDIR_XHB64;
-         *ulFlSize = DBF_FLCKSIZE_XHB64;
-         *ulRlSize = DBF_RLCKSIZE_XHB64;
+      case DB_DBFLOCK_HB64:
+         *ulPos = DBF_LOCKPOS_HB64;
+         *iDir = DBF_LOCKDIR_HB64;
+         *ulFlSize = DBF_FLCKSIZE_HB64;
+         *ulRlSize = DBF_RLCKSIZE_HB64;
          break;
 #endif
       default:
@@ -3376,7 +3376,7 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             case DB_DBFLOCK_CL53EXT:
             case DB_DBFLOCK_VFP:
 #ifndef HB_LONG_LONG_OFF
-            case DB_DBFLOCK_XHB64:
+            case DB_DBFLOCK_HB64:
 #endif
                pArea->bLockType = ( BYTE ) iScheme;
          }
@@ -5709,7 +5709,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
             case DB_DBFLOCK_CL53EXT:
             case DB_DBFLOCK_VFP:
 #ifndef HB_LONG_LONG_OFF
-            case DB_DBFLOCK_XHB64:
+            case DB_DBFLOCK_HB64:
 #endif
                pData->bLockType = ( int ) iScheme;
          }

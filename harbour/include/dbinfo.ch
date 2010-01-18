@@ -368,7 +368,7 @@
 #define DB_DBFLOCK_CL53       2
 #define DB_DBFLOCK_VFP        3
 #define DB_DBFLOCK_CL53EXT    4
-#define DB_DBFLOCK_XHB64      5
+#define DB_DBFLOCK_HB64       5
 
 
 #endif /* HB_DBINFO_CH_ */

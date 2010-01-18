@@ -68,6 +68,7 @@ PRG_SOURCES := \
    xhbmt.prg \
    xhbver.prg \
    xthrow.prg \
+   xhw32prn.prg \
    \
    hjwindow.prg \
    hterrsys.prg \

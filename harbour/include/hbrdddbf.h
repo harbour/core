@@ -68,40 +68,40 @@ HB_EXTERN_BEGIN
 #define DBF_LOCKPOS_VFP                   0x40000000UL
 #define DBF_LOCKPOS_VFPX                  0x7ffffffeUL
 #define DBF_LOCKPOS_CL53EXT               4000000000UL
-#define DBF_LOCKPOS_XHB64                 HB_LL( 0x7FFFFFFF00000001 )
+#define DBF_LOCKPOS_HB64                  HB_LL( 0x7FFFFFFF00000001 )
 
 #define DBF_LOCKDIR_CLIP                  1
 #define DBF_LOCKDIR_CL53                  1
 #define DBF_LOCKDIR_VFP                   2  /* lock forward at at record offset */
 #define DBF_LOCKDIR_VFPX                  -1
 #define DBF_LOCKDIR_CL53EXT               1
-#define DBF_LOCKDIR_XHB64                 1
+#define DBF_LOCKDIR_HB64                  1
 
 #define DBF_FLCKSIZE_CLIP                 1000000000UL
 #define DBF_FLCKSIZE_CL53                 1000000000UL
 #define DBF_FLCKSIZE_VFP                  0x3ffffffdUL
 #define DBF_FLCKSIZE_VFPX                 0x07ffffffUL
 #define DBF_FLCKSIZE_CL53EXT              294967295UL
-#define DBF_FLCKSIZE_XHB64                0x7ffffffeUL
+#define DBF_FLCKSIZE_HB64                 0x7ffffffeUL
 
 #define DBF_RLCKSIZE_CLIP                 1UL
 #define DBF_RLCKSIZE_CL53                 1UL
 #define DBF_RLCKSIZE_VFP                  1UL
 #define DBF_RLCKSIZE_VFPX                 1UL
 #define DBF_RLCKSIZE_CL53EXT              1UL
-#define DBF_RLCKSIZE_XHB64                1UL
+#define DBF_RLCKSIZE_HB64                 1UL
 
 #define IDX_LOCKPOS_CLIP                  1000000000UL
 #define IDX_LOCKPOS_CL53                  0xfffeffffUL
 #define IDX_LOCKPOS_VFP                   0x7ffffffeUL
 #define IDX_LOCKPOS_CL53EXT               0xfffeffffUL
-#define IDX_LOCKPOS_XHB64                 HB_LL( 0x7FFFFFFF00000001 )
+#define IDX_LOCKPOS_HB64                  HB_LL( 0x7FFFFFFF00000001 )
 
 #define IDX_LOCKPOOL_CLIP                 0UL
 #define IDX_LOCKPOOL_CL53                 0x00010000UL
 #define IDX_LOCKPOOL_VFP                  0UL
 #define IDX_LOCKPOOL_CL53EXT              0x00010000UL
-#define IDX_LOCKPOOL_XHB64                0UL
+#define IDX_LOCKPOOL_HB64                 0UL
 
 
 /* Index dirty read flags */

@@ -1600,7 +1600,7 @@ static LPTAGINFO hb_ntxTagLoad( LPNTXINDEX pIndex, ULONG ulBlock,
       /* TODO: this breaks unlocking !!! */
       if( usType & NTX_FLAG_LARGEFILE )
       {
-         pIndex->Owner->dbfarea.bLockType = DB_DBFLOCK_XHB64;
+         pIndex->Owner->dbfarea.bLockType = DB_DBFLOCK_HB64;
       }
       else if( usType & NTX_FLAG_EXTLOCK )
       {
@@ -6477,7 +6477,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       }
       else
       {
-         pIndex->LargeFile = ( pIndex->Owner->dbfarea.bLockType == DB_DBFLOCK_XHB64 );
+         pIndex->LargeFile = ( pIndex->Owner->dbfarea.bLockType == DB_DBFLOCK_HB64 );
       }
    }
 
