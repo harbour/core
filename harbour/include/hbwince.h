@@ -62,14 +62,6 @@ HB_EXTERN_BEGIN
 
 /* defined( __CEGCC__ ) || defined( __MINGW32CE__ ) */
 
-#if defined( __MINGW32CE__ ) && 0
-typedef long clock_t;
-extern clock_t clock( void );
-extern int access( const char *filename, int mode )
-extern int system( const char * string );
-extern char * strerror( int errnum );
-#endif
-
 #if defined( HB_OS_WIN_USED )
 
    #if defined( _MSC_VER )
