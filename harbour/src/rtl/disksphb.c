@@ -213,9 +213,9 @@ HB_FUNC( HB_DISKSPACE )
             P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
                               GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
 #if defined( UNICODE )
-                                              "GetDiskFreeSpaceExW" );
+                                              HBTEXT( "GetDiskFreeSpaceExW" ) );
 #else
-                                              "GetDiskFreeSpaceExA" );
+                                              HBTEXT( "GetDiskFreeSpaceExA" ) );
 #endif
 
             if( pGetDiskFreeSpaceEx )

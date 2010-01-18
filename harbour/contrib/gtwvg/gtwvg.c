@@ -2561,11 +2561,11 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 #if defined( UNICODE ) && defined( GetProcAddress )
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  TEXT( "SetLayeredWindowAttributes" ) );
+                                  HBTEXT( "SetLayeredWindowAttributes" ) );
 #else
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  "SetLayeredWindowAttributes" );
+                                  HBTEXT( "SetLayeredWindowAttributes" ) );
 #endif
 
          if( pSetLayeredWindowAttributes )
@@ -4200,9 +4200,9 @@ static void hb_wvt_gtLoadGuiData( void )
    {
       /* workaround for wrong declarations in some old C compilers */
 #if defined( UNICODE ) && defined( GetProcAddress )
-      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddressW( h, TEXT( "GradientFill" ) );
+      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddressW( h, HBTEXT( "GradientFill" ) );
 #else
-      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
+      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, HBTEXT( "GradientFill" ) );
 #endif
       if( s_guiData->pfnGF )
       {
@@ -4215,9 +4215,9 @@ static void hb_wvt_gtLoadGuiData( void )
    {
       /* workaround for wrong declarations in some old C compilers */
 #if defined( UNICODE ) && defined( GetProcAddress )
-      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, HBTEXT( "SetLayeredWindowAttributes" ) );
 #else
-      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, HBTEXT( "SetLayeredWindowAttributes" ) );
 #endif
       if( s_guiData->pfnLayered )
       {

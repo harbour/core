@@ -1160,9 +1160,9 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
    if( h )
    {
 #if defined( UNICODE ) && defined( GetProcAddress )
-      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, HBTEXT( "SetLayeredWindowAttributes" ) );
 #else
-      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, HBTEXT( "SetLayeredWindowAttributes" ) );
 #endif
       if( pfnLayered )
       {

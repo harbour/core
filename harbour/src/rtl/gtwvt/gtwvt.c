@@ -1860,15 +1860,9 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
 
-#if defined( HB_OS_WIN_CE )
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  TEXT( "SetLayeredWindowAttributes" ) );
-#else
-         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
-                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  "SetLayeredWindowAttributes" );
-#endif
+                                  HBTEXT( "SetLayeredWindowAttributes" ) );
 
          if( pSetLayeredWindowAttributes )
          {
