@@ -3851,27 +3851,25 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             break;
 
          case HB_GFX_MAKECOLOR:
-            iRet = (iTop << 16) | (iLeft << 8) | ( iBottom );
+            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | ( iBottom );
             break;
 
          case HB_GFX_PUTPIXEL:
             SetGFXContext( iBottom );
 
-            MoveToEx( hdc, iLeft, iTop, NULL );
-            LineTo( hdc, iLeft, iTop );
+            iRet = ( MoveToEx( hdc, iLeft, iTop, NULL ) &&
+                     LineTo( hdc, iLeft, iTop ) ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_LINE:
             SetGFXContext( iColor );
 
-            MoveToEx( hdc, iLeft, iTop, NULL );
-            LineTo( hdc, iRight, iBottom );
+            iRet = ( MoveToEx( hdc, iLeft, iTop, NULL ) &&
+                     LineTo( hdc, iRight, iBottom ) ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_RECT:
@@ -3885,64 +3883,57 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
             SetGFXContext( iColor );
 
-            FrameRect( hdc, &r, hBrush );
+            iRet = FrameRect( hdc, &r, hBrush ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
          }
          case HB_GFX_FILLEDRECT:
             SetGFXContext( iColor );
 
-            Rectangle( hdc, iLeft, iTop, iRight, iBottom );
+            iRet = Rectangle( hdc, iLeft, iTop, iRight, iBottom ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_CIRCLE:
             SetGFXContext( iRight );
 
-            Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+            iRet = Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_FILLEDCIRCLE:
             SetGFXContext( iRight );
 
-            Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
+            iRet = Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_ELLIPSE:
             SetGFXContext( iColor );
 
-            Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+            iRet = Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_FILLEDELLIPSE:
             SetGFXContext( iColor );
 
-            Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
+            iRet = Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
 
          case HB_GFX_FLOODFILL:
             SetGFXContext( iBottom );
 
-            FloodFill( hdc, iLeft, iTop, iColor );
+            iRet = FloodFill( hdc, iLeft, iTop, iColor ) ? 1 : 0;
 
             ClearGFXContext();
-            iRet = 1;
             break;
       }
    }
