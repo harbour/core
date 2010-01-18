@@ -2,9 +2,10 @@
  * $Id$
  */
 
+#include "common.ch"
 #include "hbwin.ch"
 
-PROCEDURE Main()
+PROCEDURE Main( cPar1 )
    LOCAL nPrn := 1
    LOCAL cBMPFile := Space( 40 )
    LOCAL aPrn := WIN_PRINTERLIST()
@@ -25,13 +26,13 @@ PROCEDURE Main()
       @ 2, 0 TO MaxRow(), MaxCol()
       nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
       IF nPrn != 0
-         PrnTest( aPrn[ nPrn ], cBMPFile )
+         PrnTest( aPrn[ nPrn ], cBMPFile, iif( ISCHARACTER( cPar1 ) .AND. Lower( cPar1 ) == "ask", .T., NIL ) )
       ENDIF
    ENDDO
 
    RETURN
 
-STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
+STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
    LOCAL oPrinter := Win_Prn():New( cPrinter )
    LOCAL aFonts
    LOCAL x
@@ -42,6 +43,9 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
    oPrinter:Landscape := .F.
    oPrinter:FormType  := WIN_DMPAPER_A4
    oPrinter:Copies    := 1
+   IF ISLOGICAL( lAsk )
+      oPrinter:AskProperties := lAsk
+   ENDIF
 
    IF ! oPrinter:Create()
       Alert( "Cannot Create Printer" )
