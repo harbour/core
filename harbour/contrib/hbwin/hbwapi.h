@@ -104,9 +104,11 @@ HB_EXPORT DWORD hbwapi_GetLastError( void );
 
 HB_EXPORT HDC   hbwapi_par_HDC( int iParam );
 HB_EXPORT HPEN  hbwapi_par_HPEN( int iParam );
+HB_EXPORT HFONT hbwapi_par_HFONT( int iParam );
 
 HB_EXPORT void  hbwapi_ret_HDC( HDC p );
 HB_EXPORT void  hbwapi_ret_HPEN( HPEN p );
+HB_EXPORT void  hbwapi_ret_HFONT( HFONT p );
 
 HB_EXTERN_END
 

@@ -185,6 +185,27 @@ static const HB_GC_FUNCS s_gc_HFONT_funcs =
    hb_gcDummyMark
 };
 
+void hbwapi_ret_HFONT( HFONT p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+HFONT hbwapi_par_HFONT( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HFONT_funcs, iParam );
+
+   return ph ? ( HFONT ) * ph : ( HFONT ) hb_parptr( iParam );
+}
+
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
@@ -428,18 +449,10 @@ HB_FUNC( WIN_CREATEFONT )
 
       hb_strfree( hFontFace );
 
+      hbwapi_ret_HFONT( hFont );
+
       if( hFont )
-      {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
-
-         *ph = hFont;
-
-         hb_retptrGC( ph );
-
          SelectObject( hDC, hFont );
-      }
-      else
-         hb_retptr( NULL );
    }
    else
       hb_retptr( NULL );
