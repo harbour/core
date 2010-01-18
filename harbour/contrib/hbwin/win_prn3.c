@@ -168,7 +168,9 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          if( ! hWinSpool )
             return HB_FALSE;
          fnSetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
-#if defined( UNICODE )
+#if defined( HB_OS_WIN_CE )
+             TEXT( "SetDefaultPrinterW" ) );
+#elif defined( UNICODE )
             "SetDefaultPrinterW" );
 #else
             "SetDefaultPrinterA" );
