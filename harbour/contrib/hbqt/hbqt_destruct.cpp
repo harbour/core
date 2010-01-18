@@ -119,7 +119,7 @@ void * hbqt_pPtrFromItem( PHB_ITEM pObj )
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
       return hbqt_gcpointerFromItem( pObj );
    else
-      return NULL;
+      return NULL; /* TODO: Still better if RTE. */
 }
 
 void * hbqt_pPtrFromObj( int iParam )
@@ -137,7 +137,7 @@ void * hbqt_pPtrFromObj( int iParam )
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
       return hbqt_gcpointer( iParam );
    else
-      return NULL;
+      return NULL; /* TODO: Still better if RTE. */
 }
 
 HB_FUNC( HBQT_SETCODECFORCSTRINGS )

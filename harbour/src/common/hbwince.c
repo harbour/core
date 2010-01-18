@@ -333,12 +333,6 @@ int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
 }
 #endif /* __MINGW32CE__ */
 
-BOOL WINAPI FreeResource( HGLOBAL h )
-{
-   HB_SYMBOL_UNUSED( h );
-   return FALSE;
-}
-
 BOOL WINAPI Arc( HDC h, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8 )
 {
    HB_SYMBOL_UNUSED( h );

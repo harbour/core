@@ -86,6 +86,8 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 
 #include "hbqt_garbage.h"
 
+/* TOFIX: Here basically we're using GC pointers without pointer type identification,
+          which means that it's very easy to cause a GPF by passing wrong type. */
 #define hbqt_par_ExtensionOption( n )               ( ( ExtensionOption             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_IUnknown( n )                      ( ( IUnknown                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QAbstractButton( n )               ( ( QAbstractButton             * ) hbqt_gcpointer( n ) )
@@ -397,10 +399,5 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
-
-#define hbqt_ret_QWidget( p )                       ( hb_retptr( ( QWidget* ) p ) )
-#define hbqt_ret_QAbstractItemDelegate( p )         ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
-#define hbqt_ret_QAbstractItemModel( p )            ( hb_retptr( ( QAbstractItemModel* ) p ) )
-#define hbqt_ret_QPrinter( p )                      ( hb_retptr( ( QPrinter* ) p ) )
 
 #endif /* __HBQT_H */
