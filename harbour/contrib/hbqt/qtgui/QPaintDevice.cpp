@@ -108,6 +108,7 @@ void * hbqt_gcAllocate_QPaintDevice( void * pObj, bool bNew )
 HB_FUNC( QT_QPAINTDEVICE )
 {
 }
+
 /*
  * int depth () const
  */

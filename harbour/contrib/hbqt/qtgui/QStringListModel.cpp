@@ -140,6 +140,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL )
 
    hb_retptrGC( hbqt_gcAllocate_QStringListModel( pObj, true ) );
 }
+
 /*
  * virtual QVariant data ( const QModelIndex & index, int role ) const
  */

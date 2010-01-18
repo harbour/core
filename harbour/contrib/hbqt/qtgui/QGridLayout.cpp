@@ -141,6 +141,7 @@ HB_FUNC( QT_QGRIDLAYOUT )
 
    hb_retptrGC( hbqt_gcAllocate_QGridLayout( pObj, true ) );
 }
+
 /*
  * void addItem ( QLayoutItem * item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0 )
  */

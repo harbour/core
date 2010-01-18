@@ -70,15 +70,22 @@ HBQTextBlockUserData::HBQTextBlockUserData() : QTextBlockUserData()
 HBQTextBlockUserData::~HBQTextBlockUserData()
 {
 }
-void HBQTextBlockUserData::setData( int iState )
+int HBQTextBlockUserData::hbSetState( int istate )
 {
-   state = iState;
+   int iCurState = state;
+   state = istate;
+   return iCurState;
+}
+int HBQTextBlockUserData::hbState()
+{
+   return state;
 }
 HBQTextBlockUserData * HBQTextBlockUserData::data( const QTextBlock& block )
 {
    return static_cast<HBQTextBlockUserData *>( block.userData() );
 }
 
+/*----------------------------------------------------------------------*/
 
 HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    : QSyntaxHighlighter( parent )
@@ -90,43 +97,28 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    commentEndExpression = QRegExp( "\\*/" );
 }
 
-void HBQSyntaxHighlighter::setHBRule( QString name, QString pattern, const QTextCharFormat & format )
+void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
 {
    if( pattern != "" )
-      hhighlightingRules.insert( name, hHighlightingRule( QRegExp( pattern ), format ) );
+      HighlightingRules.insert( name, HighlightingRule( QRegExp( pattern ), format ) );
    else
-      hhighlightingRules.remove( name );
+      HighlightingRules.remove( name );
 }
-
-void HBQSyntaxHighlighter::setHBFormat( QString name, const QTextCharFormat & format )
+void HBQSyntaxHighlighter::hbSetFormat( QString name, const QTextCharFormat & format )
 {
-   if( hhighlightingRules.contains( name ) )
+   if( HighlightingRules.contains( name ) )
    {
-      hHighlightingRule rule = hhighlightingRules.value( name );
+      HighlightingRule rule = HighlightingRules.value( name );
       QRegExp reg = rule.pattern;
 
-      hhighlightingRules.insert( name, hHighlightingRule( reg, format ) );
+      HighlightingRules.insert( name, HighlightingRule( reg, format ) );
    }
    else
    {
-      hhighlightingRules.remove( name );
+      HighlightingRules.remove( name );
    }
 }
-
-void HBQSyntaxHighlighter::setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format )
-{
-   HighlightingRule rule;
-
-   directivesFormat = format;
-   foreach( const QString &pattern, directives )
-   {
-      rule.pattern = QRegExp( pattern );
-      rule.format = directivesFormat;
-      highlightingRules.append( rule );
-   }
-}
-
-void HBQSyntaxHighlighter::setHBMultiLineCommentFormat( const QTextCharFormat & format )
+void HBQSyntaxHighlighter::hbSetMultiLineCommentFormat( const QTextCharFormat & format )
 {
    multiLineCommentFormat = format;
 }
@@ -141,13 +133,12 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    QRegExp expression;
    QTextBlock curBlock( currentBlock() );
    bool bMerge = false;
-   //HBQTextBlockUserData * data = HBQTextBlockUserData::data( curBlock );
    HBQTextBlockUserData * data = ( HBQTextBlockUserData * ) curBlock.userData();
 
    if( data )
       bMerge = ( data->state == 99 );
 
-   foreach( const hHighlightingRule &rule, hhighlightingRules )
+   foreach( const HighlightingRule &rule, HighlightingRules )
    {
       QRegExp expression( rule.pattern );
       int index = expression.indexIn( text );
@@ -159,11 +150,13 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 
          if( bMerge )
          {
-            HB_TRACE( HB_TR_ALWAYS, ( "text = %s", ( char * ) &text ) );
-            setFormat( index, length, rule.format );
+            HB_TRACE( HB_TR_ALWAYS, ( "text = %i", data->state ) );
+//            setFormat( index, length, rule.format );
          }
          else
+         {
             setFormat( index, length, rule.format );
+         }
 
          index = expression.indexIn( text, index + length );
       }
@@ -189,116 +182,6 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       setFormat( startIndex, commentLength, multiLineCommentFormat );
       startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
    }
-}
-
-typedef struct
-{
-  void * ph;
-  QT_G_FUNC_PTR func;
-  QPointer< HBQSyntaxHighlighter > pq;
-} QGC_POINTER_HBQSyntaxHighlighter;
-
-static QT_G_FUNC( release_HBQSyntaxHighlighter )
-{
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) Cargo;
-
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBQSyntaxHighlighter           p=%p", p));
-   HB_TRACE( HB_TR_DEBUG, ( "release_HBQSyntaxHighlighter          ph=%p pq=%p", p->ph, (void *)(p->pq)));
-
-   if( p && p->ph && p->pq )
-   {
-      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         delete ( ( HBQSyntaxHighlighter * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "release_HBQSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-         p->ph = NULL;
-      }
-      else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBQSyntaxHighlighter          Object Name Missing!" ) );
-      }
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBQSyntaxHighlighter          Object Already deleted!" ) );
-   }
-}
-
-static void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj )
-{
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
-
-   p->ph = pObj;
-   p->func = release_HBQSyntaxHighlighter;
-   new( & p->pq ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_HBQSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
-}
-
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
-{
-   void * pObj = NULL;
-
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
-      pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
-
-   hb_retptrGC( hbqt_gcAllocate_HBQSyntaxHighlighter( pObj ) );
-}
-/*
- * QTextDocument * document () const
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_DOCUMENT )
-{
-   hb_retptr( ( QTextDocument* ) hbqt_par_HBQSyntaxHighlighter( 1 )->document() );
-}
-
-/*
- * void setDocument ( QTextDocument * doc )
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETDOCUMENT )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->setDocument( hbqt_par_QTextDocument( 2 ) );
-}
-
-/*
- * void rehighlight ()
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_REHIGHLIGHT )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->rehighlight();
-}
-
-/*
- * void setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format )
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBCOMPILERDIRECTIVES )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBCompilerDirectives( *hbqt_par_QStringList( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
-}
-
-/*
- * void setHBMultiLineCommentFormat( const QTextCharFormat & format )
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBMULTILINECOMMENTFORMAT )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
-}
-
-/*
- * void setRule( QString name, QString pattern, QTextCharFormat format );
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBRULE )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBRule( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), *hbqt_par_QTextCharFormat( 4 ) );
-}
-
-/*
- * void setFormat( QString name, const QTextCharFormat & format );
- */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_SETHBFORMAT )
-{
-   hbqt_par_HBQSyntaxHighlighter( 1 )->setHBFormat( hbqt_par_QString( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
 }
 
 #endif

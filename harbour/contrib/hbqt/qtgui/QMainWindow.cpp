@@ -169,6 +169,7 @@ HB_FUNC( QT_QMAINWINDOW )
 
    hb_retptrGC( hbqt_gcAllocate_QMainWindow( pObj, true ) );
 }
+
 /*
  * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
  */

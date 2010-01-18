@@ -93,7 +93,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QDataStream )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -138,6 +138,7 @@ HB_FUNC( QT_QDATASTREAM )
 
    hb_retptrGC( hbqt_gcAllocate_QDataStream( pObj, true ) );
 }
+
 /*
  * bool atEnd () const
  */

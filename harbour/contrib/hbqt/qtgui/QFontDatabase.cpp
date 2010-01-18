@@ -102,7 +102,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QFontDatabase )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -147,6 +147,7 @@ HB_FUNC( QT_QFONTDATABASE )
 
    hb_retptrGC( hbqt_gcAllocate_QFontDatabase( pObj, true ) );
 }
+
 /*
  * bool bold ( const QString & family, const QString & style ) const
  */

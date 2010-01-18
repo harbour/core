@@ -148,6 +148,7 @@ HB_FUNC( QT_QMOVIE )
 
    hb_retptrGC( hbqt_gcAllocate_QMovie( pObj, true ) );
 }
+
 /*
  * QColor backgroundColor () const
  */

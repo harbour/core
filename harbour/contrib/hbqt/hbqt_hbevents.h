@@ -74,6 +74,10 @@ public:
    QList<bool>         listActv;
    QList<QObject*>     listObj;
 
+   bool hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock );
+   bool hbDisconnect( PHB_ITEM pObj, int iEvent );
+   bool hbClear();
+
 protected:
    bool eventFilter( QObject * obj, QEvent * event );
 

@@ -87,7 +87,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QSizeF )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -139,6 +139,7 @@ HB_FUNC( QT_QSIZEF )
 
    hb_retptrGC( hbqt_gcAllocate_QSizeF( pObj, true ) );
 }
+
 /*
  * QSizeF boundedTo ( const QSizeF & otherSize ) const
  */

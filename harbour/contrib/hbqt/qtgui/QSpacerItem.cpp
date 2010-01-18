@@ -84,7 +84,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QSpacerItem )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -132,6 +132,7 @@ HB_FUNC( QT_QSPACERITEM )
 
    hb_retptrGC( hbqt_gcAllocate_QSpacerItem( pObj, true ) );
 }
+
 /*
  * void changeSize ( int w, int h, QSizePolicy::Policy hPolicy = QSizePolicy::Minimum, QSizePolicy::Policy vPolicy = QSizePolicy::Minimum )
  */

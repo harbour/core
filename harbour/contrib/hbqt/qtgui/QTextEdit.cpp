@@ -159,6 +159,7 @@ HB_FUNC( QT_QTEXTEDIT )
 
    hb_retptrGC( hbqt_gcAllocate_QTextEdit( pObj, true ) );
 }
+
 /*
  * bool acceptRichText () const
  */

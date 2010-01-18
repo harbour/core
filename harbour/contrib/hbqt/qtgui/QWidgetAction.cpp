@@ -140,6 +140,7 @@ HB_FUNC( QT_QWIDGETACTION )
 
    hb_retptrGC( hbqt_gcAllocate_QWidgetAction( pObj, true ) );
 }
+
 /*
  * QWidget * defaultWidget () const
  */

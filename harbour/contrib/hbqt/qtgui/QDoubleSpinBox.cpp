@@ -139,6 +139,7 @@ HB_FUNC( QT_QDOUBLESPINBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QDoubleSpinBox( pObj, true ) );
 }
+
 /*
  * QString cleanText () const
  */

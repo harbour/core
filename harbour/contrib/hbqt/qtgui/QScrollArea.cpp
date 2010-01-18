@@ -140,6 +140,7 @@ HB_FUNC( QT_QSCROLLAREA )
 
    hb_retptrGC( hbqt_gcAllocate_QScrollArea( pObj, true ) );
 }
+
 /*
  * Qt::Alignment alignment () const
  */

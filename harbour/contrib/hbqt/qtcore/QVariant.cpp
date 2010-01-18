@@ -148,7 +148,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QVariant )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -193,6 +193,7 @@ HB_FUNC( QT_QVARIANT )
 
    hb_retptrGC( hbqt_gcAllocate_QVariant( pObj, true ) );
 }
+
 /*
  * bool canConvert ( Type t ) const
  */

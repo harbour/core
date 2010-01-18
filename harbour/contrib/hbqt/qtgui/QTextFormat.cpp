@@ -110,7 +110,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QTextFormat )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -155,6 +155,7 @@ HB_FUNC( QT_QTEXTFORMAT )
 
    hb_retptrGC( hbqt_gcAllocate_QTextFormat( pObj, true ) );
 }
+
 /*
  * QBrush background () const
  */

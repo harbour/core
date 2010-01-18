@@ -145,6 +145,7 @@ HB_FUNC( QT_QCOMBOBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QComboBox( pObj, true ) );
 }
+
 /*
  * void addItem ( const QString & text, const QVariant & userData = QVariant() )
  */

@@ -124,6 +124,7 @@ void * hbqt_gcAllocate_QInputContext( void * pObj, bool bNew )
 HB_FUNC( QT_QINPUTCONTEXT )
 {
 }
+
 /*
  * virtual bool filterEvent ( const QEvent * event )
  */

@@ -90,7 +90,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabBarBase )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -135,6 +135,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabBarBase( pObj, true ) );
 }
+
 /*
  * QRect selectedTabRect
  */

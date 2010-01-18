@@ -150,6 +150,7 @@ HB_FUNC( QT_QMIMEDATA )
 
    hb_retptrGC( hbqt_gcAllocate_QMimeData( pObj, true ) );
 }
+
 /*
  * void clear ()
  */

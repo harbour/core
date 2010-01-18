@@ -146,6 +146,7 @@ HB_FUNC( QT_QCOMPLETER )
 
    hb_retptrGC( hbqt_gcAllocate_QCompleter( pObj, true ) );
 }
+
 /*
  * Qt::CaseSensitivity caseSensitivity () const
  */

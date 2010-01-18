@@ -142,6 +142,7 @@ HB_FUNC( QT_QPUSHBUTTON )
 
    hb_retptrGC( hbqt_gcAllocate_QPushButton( pObj, true ) );
 }
+
 /*
  * bool autoDefault () const
  */

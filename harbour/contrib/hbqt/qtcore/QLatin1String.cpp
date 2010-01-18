@@ -84,7 +84,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QLatin1String )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -129,6 +129,7 @@ HB_FUNC( QT_QLATIN1STRING )
 
    hb_retptrGC( hbqt_gcAllocate_QLatin1String( pObj, true ) );
 }
+
 /*
  * const char * latin1 () const
  */

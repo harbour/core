@@ -94,7 +94,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QFileInfo )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -139,6 +139,7 @@ HB_FUNC( QT_QFILEINFO )
 
    hb_retptrGC( hbqt_gcAllocate_QFileInfo( pObj, true ) );
 }
+
 /*
  * QDir absoluteDir () const
  */

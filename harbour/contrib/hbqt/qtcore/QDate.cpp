@@ -88,7 +88,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QDate )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -133,6 +133,7 @@ HB_FUNC( QT_QDATE )
 
    hb_retptrGC( hbqt_gcAllocate_QDate( pObj, true ) );
 }
+
 /*
  * QDate addDays ( int ndays ) const
  */

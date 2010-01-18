@@ -144,6 +144,7 @@ HB_FUNC( QT_QBOXLAYOUT )
 
    hb_retptrGC( hbqt_gcAllocate_QBoxLayout( pObj, true ) );
 }
+
 /*
  * void addLayout ( QLayout * layout, int stretch = 0 )
  */

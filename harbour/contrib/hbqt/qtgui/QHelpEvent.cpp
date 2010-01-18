@@ -105,6 +105,7 @@ void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QHELPEVENT )
 {
 }
+
 /*
  * const QPoint & globalPos () const
  */

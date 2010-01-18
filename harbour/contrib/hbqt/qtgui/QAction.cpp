@@ -164,6 +164,7 @@ HB_FUNC( QT_QACTION )
 
    hb_retptrGC( hbqt_gcAllocate_QAction( pObj, true ) );
 }
+
 /*
  * QActionGroup * actionGroup () const
  */

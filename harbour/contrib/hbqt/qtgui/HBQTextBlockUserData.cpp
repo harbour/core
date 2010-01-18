@@ -85,7 +85,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_HBQTextBlockUserData )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -130,12 +130,21 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
 
    hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( pObj, true ) );
 }
+
 /*
- * void setData( int state )
+ * int hbSetState( int state )
  */
-HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_SETDATA )
+HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE )
 {
-   hbqt_par_HBQTextBlockUserData( 1 )->setData( hb_parni( 2 ) );
+   hb_retni( hbqt_par_HBQTextBlockUserData( 1 )->hbSetState( hb_parni( 2 ) ) );
+}
+
+/*
+ * int hbState()
+ */
+HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSTATE )
+{
+   hb_retni( hbqt_par_HBQTextBlockUserData( 1 )->hbState() );
 }
 
 

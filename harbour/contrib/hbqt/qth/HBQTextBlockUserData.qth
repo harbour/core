@@ -85,7 +85,8 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
 </ENUMS>
 
 <PROTOS>
-void setData( int state )
+int hbSetState( int state )
+int hbState()
 </PROTOS>
 
 <SLOTS>

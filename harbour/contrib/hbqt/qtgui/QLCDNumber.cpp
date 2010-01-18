@@ -146,6 +146,7 @@ HB_FUNC( QT_QLCDNUMBER )
 
    hb_retptrGC( hbqt_gcAllocate_QLCDNumber( pObj, true ) );
 }
+
 /*
  * bool checkOverflow ( double num ) const
  */

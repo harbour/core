@@ -148,6 +148,7 @@ HB_FUNC( QT_QMENU )
 
    hb_retptrGC( hbqt_gcAllocate_QMenu( pObj, true ) );
 }
+
 /*
  * QAction * actionAt ( const QPoint & pt ) const
  */

@@ -148,6 +148,7 @@ HB_FUNC( QT_QPAGESETUPDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QPageSetupDialog( pObj, true ) );
 }
+
 /*
  * virtual int exec ()
  */

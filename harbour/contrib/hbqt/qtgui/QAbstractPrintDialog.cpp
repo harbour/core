@@ -122,6 +122,7 @@ void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
 {
 }
+
 /*
  * virtual int exec () = 0
  */

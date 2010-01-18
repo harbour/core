@@ -104,7 +104,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QIcon )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -160,6 +160,7 @@ HB_FUNC( QT_QICON )
 
    hb_retptrGC( hbqt_gcAllocate_QIcon( pObj, true ) );
 }
+
 /*
  * QSize actualSize ( const QSize & size, Mode mode = Normal, State state = Off ) const
  */

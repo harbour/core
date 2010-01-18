@@ -89,7 +89,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QBitmap )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -168,6 +168,7 @@ HB_FUNC( QT_QBITMAP )
 
    hb_retptrGC( hbqt_gcAllocate_QBitmap( pObj, true ) );
 }
+
 /*
  * void clear ()
  */

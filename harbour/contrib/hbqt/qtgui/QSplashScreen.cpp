@@ -141,6 +141,7 @@ HB_FUNC( QT_QSPLASHSCREEN )
 
    hb_retptrGC( hbqt_gcAllocate_QSplashScreen( pObj, true ) );
 }
+
 /*
  * void finish ( QWidget * mainWin )
  */

@@ -221,6 +221,7 @@ HB_FUNC( QT_QAPPLICATION )
 
    hb_retptrGC( hbqt_gcAllocate_QApplication( pObj, true ) );
 }
+
 /*
  * virtual void commitData ( QSessionManager & manager )
  */

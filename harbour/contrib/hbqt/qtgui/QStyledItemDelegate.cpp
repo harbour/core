@@ -140,6 +140,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 
    hb_retptrGC( hbqt_gcAllocate_QStyledItemDelegate( pObj, true ) );
 }
+
 /*
  * virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  */

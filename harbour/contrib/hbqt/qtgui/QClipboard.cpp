@@ -119,6 +119,7 @@ HB_FUNC( QT_QCLIPBOARD )
 
    hb_retptr( pObj );
 }
+
 /*
  * void clear ( Mode mode = Clipboard )
  */

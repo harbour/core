@@ -157,6 +157,7 @@ HB_FUNC( QT_QOBJECT )
 
    hb_retptrGC( hbqt_gcAllocate_QObject( pObj, true ) );
 }
+
 /*
  * bool blockSignals ( bool block )
  */

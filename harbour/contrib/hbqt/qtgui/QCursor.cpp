@@ -92,7 +92,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QCursor )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -165,6 +165,7 @@ HB_FUNC( QT_QCURSOR )
 
    hb_retptrGC( hbqt_gcAllocate_QCursor( pObj, true ) );
 }
+
 /*
  * const QBitmap * bitmap () const
  */

@@ -117,6 +117,7 @@ void * hbqt_gcAllocate_QHttpHeader( void * pObj, bool bNew )
 HB_FUNC( QT_QHTTPHEADER )
 {
 }
+
 /*
  * void addValue ( const QString & key, const QString & value )
  */

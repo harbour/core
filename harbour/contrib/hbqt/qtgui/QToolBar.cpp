@@ -144,6 +144,7 @@ HB_FUNC( QT_QTOOLBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QToolBar( pObj, true ) );
 }
+
 /*
  * QAction * actionAt ( const QPoint & p ) const
  */

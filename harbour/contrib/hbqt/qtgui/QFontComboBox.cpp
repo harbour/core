@@ -145,6 +145,7 @@ HB_FUNC( QT_QFONTCOMBOBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QFontComboBox( pObj, true ) );
 }
+
 /*
  * QFont currentFont () const
  */

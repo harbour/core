@@ -105,6 +105,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QDROPEVENT )
 {
 }
+
 /*
  * void acceptProposedAction ()
  */

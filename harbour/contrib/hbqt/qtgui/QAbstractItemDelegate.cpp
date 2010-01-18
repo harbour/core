@@ -111,6 +111,7 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTITEMDELEGATE )
 {
 }
+
 /*
  * virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  */

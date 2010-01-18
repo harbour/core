@@ -146,6 +146,7 @@ HB_FUNC( QT_QINPUTDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QInputDialog( pObj, true ) );
 }
+
 /*
  * QString cancelButtonText () const
  */

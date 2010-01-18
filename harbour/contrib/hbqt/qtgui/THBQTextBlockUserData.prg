@@ -67,7 +67,8 @@ CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler
 
    METHOD  new( ... )
 
-   METHOD  setData( nState )
+   METHOD  hbSetState( nState )
+   METHOD  hbState()
 
    ENDCLASS
 
@@ -81,6 +82,10 @@ METHOD HBQTextBlockUserData:new( ... )
    RETURN Self
 
 
-METHOD HBQTextBlockUserData:setData( nState )
-   RETURN Qt_HBQTextBlockUserData_setData( ::pPtr, nState )
+METHOD HBQTextBlockUserData:hbSetState( nState )
+   RETURN Qt_HBQTextBlockUserData_hbSetState( ::pPtr, nState )
+
+
+METHOD HBQTextBlockUserData:hbState()
+   RETURN Qt_HBQTextBlockUserData_hbState( ::pPtr )
 

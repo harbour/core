@@ -115,6 +115,7 @@ void * hbqt_gcAllocate_QPaintEngine( void * pObj, bool bNew )
 HB_FUNC( QT_QPAINTENGINE )
 {
 }
+
 /*
  * virtual bool begin ( QPaintDevice * pdev ) = 0
  */

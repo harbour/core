@@ -140,6 +140,7 @@ HB_FUNC( QT_QERRORMESSAGE )
 
    hb_retptrGC( hbqt_gcAllocate_QErrorMessage( pObj, true ) );
 }
+
 /*
  * void showMessage ( const QString & message )
  */

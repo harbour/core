@@ -147,6 +147,7 @@ HB_FUNC( QT_QDATETIMEEDIT )
 
    hb_retptrGC( hbqt_gcAllocate_QDateTimeEdit( pObj, true ) );
 }
+
 /*
  * bool calendarPopup () const
  */

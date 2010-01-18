@@ -144,6 +144,7 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QPrintPreviewDialog( pObj, true ) );
 }
+
 /*
  * void open ( QObject * receiver, const char * member )
  */

@@ -84,7 +84,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QTime )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -129,6 +129,7 @@ HB_FUNC( QT_QTIME )
 
    hb_retptrGC( hbqt_gcAllocate_QTime( pObj, true ) );
 }
+
 /*
  * QTime addMSecs ( int ms ) const
  */

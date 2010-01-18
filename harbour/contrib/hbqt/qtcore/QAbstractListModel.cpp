@@ -108,6 +108,7 @@ void * hbqt_gcAllocate_QAbstractListModel( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTLISTMODEL )
 {
 }
+
 /*
  * virtual QModelIndex index ( int row, int column = 0, const QModelIndex & parent = QModelIndex() ) const
  */

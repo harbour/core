@@ -153,6 +153,7 @@ HB_FUNC( QT_QFILE )
 
    hb_retptrGC( hbqt_gcAllocate_QFile( pObj, true ) );
 }
+
 /*
  * virtual bool atEnd () const
  */

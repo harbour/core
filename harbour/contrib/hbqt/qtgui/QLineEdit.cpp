@@ -146,6 +146,7 @@ HB_FUNC( QT_QLINEEDIT )
 
    hb_retptrGC( hbqt_gcAllocate_QLineEdit( pObj, true ) );
 }
+
 /*
  * Qt::Alignment alignment () const
  */

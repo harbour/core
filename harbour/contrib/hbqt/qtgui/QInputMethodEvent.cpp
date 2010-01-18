@@ -98,7 +98,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QInputMethodEvent )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -143,6 +143,7 @@ HB_FUNC( QT_QINPUTMETHODEVENT )
 
    hb_retptrGC( hbqt_gcAllocate_QInputMethodEvent( pObj, true ) );
 }
+
 /*
  * const QString & commitString () const
  */

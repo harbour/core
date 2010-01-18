@@ -82,6 +82,18 @@ const HB_GC_FUNCS * hbqt_gcFuncs( void )
    return &QT_gcFuncs;
 }
 
+void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
+
+   if( p && p->ph )
+      return p->ph;
+   else if( hb_itemGetPtr( pObj ) )
+      return hb_itemGetPtr( pObj ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
+   else
+      return NULL; /* TODO: Still better if RTE. */
+}
+
 void * hbqt_gcpointer( int iParam )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
@@ -92,6 +104,22 @@ void * hbqt_gcpointer( int iParam )
       return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
    else
       return NULL; /* TODO: Still better if RTE. */
+}
+
+void * hbqt_pPtrFromItem( PHB_ITEM pObj )
+{
+   if( hb_itemType( pObj ) == HB_IT_OBJECT )
+   {
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pObj );
+      hb_vmSend( 0 );
+
+      return hbqt_gcpointer( -1 );
+   }
+   else if( hb_itemType( pObj ) == HB_IT_POINTER )
+      return hbqt_gcpointerFromItem( pObj );
+   else
+      return NULL;
 }
 
 void * hbqt_pPtrFromObj( int iParam )

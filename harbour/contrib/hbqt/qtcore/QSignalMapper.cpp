@@ -140,6 +140,7 @@ HB_FUNC( QT_QSIGNALMAPPER )
 
    hb_retptrGC( hbqt_gcAllocate_QSignalMapper( pObj, true ) );
 }
+
 /*
  * QObject * mapping ( int id ) const
  */

@@ -140,6 +140,7 @@ HB_FUNC( QT_QSOUND )
 
    hb_retptrGC( hbqt_gcAllocate_QSound( pObj, true ) );
 }
+
 /*
  * QString fileName () const
  */

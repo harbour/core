@@ -152,6 +152,7 @@ HB_FUNC( QT_QCOLORDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QColorDialog( pObj, true ) );
 }
+
 /*
  * QColor currentColor () const
  */

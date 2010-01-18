@@ -105,7 +105,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QNetworkRequest )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -150,6 +150,7 @@ HB_FUNC( QT_QNETWORKREQUEST )
 
    hb_retptrGC( hbqt_gcAllocate_QNetworkRequest( pObj, true ) );
 }
+
 /*
  * QVariant attribute ( Attribute code, const QVariant & defaultValue = QVariant() ) const
  */

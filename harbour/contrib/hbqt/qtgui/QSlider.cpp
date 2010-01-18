@@ -148,6 +148,7 @@ HB_FUNC( QT_QSLIDER )
 
    hb_retptrGC( hbqt_gcAllocate_QSlider( pObj, true ) );
 }
+
 /*
  * void setTickInterval ( int ti )
  */

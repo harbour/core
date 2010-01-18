@@ -97,7 +97,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QTextCursor )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -170,6 +170,7 @@ HB_FUNC( QT_QTEXTCURSOR )
 
    hb_retptrGC( hbqt_gcAllocate_QTextCursor( pObj, true ) );
 }
+
 /*
  * int anchor () const
  */

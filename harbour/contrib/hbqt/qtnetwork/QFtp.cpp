@@ -163,6 +163,7 @@ HB_FUNC( QT_QFTP )
 
    hb_retptrGC( hbqt_gcAllocate_QFtp( pObj, true ) );
 }
+
 /*
  * qint64 bytesAvailable () const
  */

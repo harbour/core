@@ -140,6 +140,7 @@ HB_FUNC( QT_QMENUBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QMenuBar( pObj, true ) );
 }
+
 /*
  * QAction * activeAction () const
  */

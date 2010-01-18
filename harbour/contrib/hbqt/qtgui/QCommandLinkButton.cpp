@@ -141,6 +141,7 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON )
 
    hb_retptrGC( hbqt_gcAllocate_QCommandLinkButton( pObj, true ) );
 }
+
 /*
  * QString description () const
  */

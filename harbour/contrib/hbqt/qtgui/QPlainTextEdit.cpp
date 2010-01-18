@@ -175,6 +175,7 @@ HB_FUNC( QT_QPLAINTEXTEDIT )
 
    hb_retptrGC( hbqt_gcAllocate_QPlainTextEdit( pObj, true ) );
 }
+
 /*
  * bool backgroundVisible () const
  */

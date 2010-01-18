@@ -92,7 +92,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOption )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -137,6 +137,7 @@ HB_FUNC( QT_QSTYLEOPTION )
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOption( pObj, true ) );
 }
+
 /*
  * void initFrom ( const QWidget * widget )
  */

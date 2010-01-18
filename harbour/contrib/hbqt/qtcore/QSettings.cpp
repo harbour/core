@@ -161,6 +161,7 @@ HB_FUNC( QT_QSETTINGS )
 
    hb_retptrGC( hbqt_gcAllocate_QSettings( pObj, true ) );
 }
+
 /*
  * QStringList allKeys () const
  */

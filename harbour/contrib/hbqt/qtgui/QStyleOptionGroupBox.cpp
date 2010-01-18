@@ -90,7 +90,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionGroupBox )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -135,6 +135,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( pObj, true ) );
 }
+
 /*
  * QStyleOptionFrameV2::FrameFeatures features
  */

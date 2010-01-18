@@ -78,6 +78,16 @@ HB_FUNC( QT_FINDCHILD )
    hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
 }
 
+HB_FUNC( HBQT_ISEMPTYQTPOINTER )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+
+   if( p && p->ph )
+      hb_retl( false );
+   else
+      hb_retl( true );
+}
+
 HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );

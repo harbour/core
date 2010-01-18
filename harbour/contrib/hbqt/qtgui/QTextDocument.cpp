@@ -163,6 +163,7 @@ HB_FUNC( QT_QTEXTDOCUMENT )
 
    hb_retptrGC( hbqt_gcAllocate_QTextDocument( pObj, true ) );
 }
+
 /*
  * void addResource ( int type, const QUrl & name, const QVariant & resource )
  */

@@ -118,6 +118,7 @@ void * hbqt_gcAllocate_QAbstractItemView( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTITEMVIEW )
 {
 }
+
 /*
  * bool alternatingRowColors () const
  */

@@ -160,6 +160,7 @@ HB_FUNC( QT_QWIZARD )
 
    hb_retptrGC( hbqt_gcAllocate_QWizard( pObj, true ) );
 }
+
 /*
  * int addPage ( QWizardPage * page )
  */

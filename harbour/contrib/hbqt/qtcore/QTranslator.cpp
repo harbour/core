@@ -139,6 +139,7 @@ HB_FUNC( QT_QTRANSLATOR )
 
    hb_retptrGC( hbqt_gcAllocate_QTranslator( pObj, true ) );
 }
+
 /*
  * virtual bool isEmpty () const
  */

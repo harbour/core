@@ -60,26 +60,10 @@ New      = pParent
 </CLASS>
 
 <SUBCLASS>
-CREATE CLASS HBQTableView INHERIT QTableView
-
-   METHOD new( pParent )
-   METHOD navigate( nCursorAction, nModifiers )
-
-   ENDCLASS
-
-METHOD HBQTableView:new( pParent )
-   ::pPtr := Qt_HBQTableView( pParent )
-   RETURN Self
-
-METHOD HBQTableView:navigate( nCursorAction, nModifiers )
-   RETURN Qt_HBQTableView_navigate( ::pPtr, nCursorAction, nModifiers )
-
 </SUBCLASS>
 
 <CODE>
 #include <QtGui/QTableView>
-
-#include "../hbqt_hbqtableview.h"
 
 /*
  * QTableView ( QWidget * parent = 0 )

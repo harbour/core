@@ -86,7 +86,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QLine )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -146,6 +146,7 @@ HB_FUNC( QT_QLINE )
 
    hb_retptrGC( hbqt_gcAllocate_QLine( pObj, true ) );
 }
+
 /*
  * QPoint p1 () const
  */

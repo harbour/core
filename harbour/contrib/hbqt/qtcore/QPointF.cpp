@@ -86,7 +86,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QPointF )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -142,6 +142,7 @@ HB_FUNC( QT_QPOINTF )
 
    hb_retptrGC( hbqt_gcAllocate_QPointF( pObj, true ) );
 }
+
 /*
  * bool isNull () const
  */

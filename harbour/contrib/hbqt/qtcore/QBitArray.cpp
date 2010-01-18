@@ -85,7 +85,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QBitArray )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -130,6 +130,7 @@ HB_FUNC( QT_QBITARRAY )
 
    hb_retptrGC( hbqt_gcAllocate_QBitArray( pObj, true ) );
 }
+
 /*
  * bool at ( int i ) const
  */

@@ -145,6 +145,7 @@ HB_FUNC( QT_QTABWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QTabWidget( pObj, true ) );
 }
+
 /*
  * int addTab ( QWidget * page, const QString & label )
  */

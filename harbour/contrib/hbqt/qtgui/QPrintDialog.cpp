@@ -146,6 +146,7 @@ HB_FUNC( QT_QPRINTDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QPrintDialog( pObj, true ) );
 }
+
 /*
  * virtual void done ( int result )
  */

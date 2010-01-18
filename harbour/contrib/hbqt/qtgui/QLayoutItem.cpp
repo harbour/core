@@ -106,6 +106,7 @@ void * hbqt_gcAllocate_QLayoutItem( void * pObj, bool bNew )
 HB_FUNC( QT_QLAYOUTITEM )
 {
 }
+
 /*
  * Qt::Alignment alignment () const
  */

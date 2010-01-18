@@ -89,7 +89,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QEvent )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -134,6 +134,7 @@ HB_FUNC( QT_QEVENT )
 
    hb_retptrGC( hbqt_gcAllocate_QEvent( pObj, true ) );
 }
+
 /*
  * void accept ()
  */

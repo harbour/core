@@ -107,6 +107,7 @@ void * hbqt_gcAllocate_QAbstractTextDocumentLayout( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT )
 {
 }
+
 /*
  * QString anchorAt ( const QPointF & position ) const
  */

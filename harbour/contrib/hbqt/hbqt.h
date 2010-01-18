@@ -82,6 +82,7 @@ extern const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern int hbqt_getmemused( void );
 
 extern void * hbqt_pPtrFromObj( int iParam );
+extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 
 #include "hbqt_garbage.h"
 

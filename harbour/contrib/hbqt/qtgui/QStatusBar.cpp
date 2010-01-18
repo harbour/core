@@ -140,6 +140,7 @@ HB_FUNC( QT_QSTATUSBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QStatusBar( pObj, true ) );
 }
+
 /*
  * void addPermanentWidget ( QWidget * widget, int stretch = 0 )
  */

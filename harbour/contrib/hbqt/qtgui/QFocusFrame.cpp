@@ -140,6 +140,7 @@ HB_FUNC( QT_QFOCUSFRAME )
 
    hb_retptrGC( hbqt_gcAllocate_QFocusFrame( pObj, true ) );
 }
+
 /*
  * void setWidget ( QWidget * widget )
  */

@@ -109,6 +109,7 @@ void * hbqt_gcAllocate_QPrintEngine( void * pObj, bool bNew )
 HB_FUNC( QT_QPRINTENGINE )
 {
 }
+
 /*
  * virtual bool abort ()
  */

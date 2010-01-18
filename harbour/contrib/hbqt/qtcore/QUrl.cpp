@@ -119,7 +119,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QUrl )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -164,6 +164,7 @@ HB_FUNC( QT_QURL )
 
    hb_retptrGC( hbqt_gcAllocate_QUrl( pObj, true ) );
 }
+
 /*
  * void addEncodedQueryItem ( const QByteArray & key, const QByteArray & value )
  */

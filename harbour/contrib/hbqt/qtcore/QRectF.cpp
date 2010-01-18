@@ -89,7 +89,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QRectF )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -149,6 +149,7 @@ HB_FUNC( QT_QRECTF )
 
    hb_retptrGC( hbqt_gcAllocate_QRectF( pObj, true ) );
 }
+
 /*
  * void adjust ( qreal dx1, qreal dy1, qreal dx2, qreal dy2 )
  */

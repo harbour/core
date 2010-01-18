@@ -87,7 +87,6 @@
 #include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
-#include "../hbqt_hbdbfmodel.h"
 
 /*
  * QAbstractItemModel ( QObject * parent = 0 )
@@ -128,6 +127,7 @@ void * hbqt_gcAllocate_QAbstractItemModel( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTITEMMODEL )
 {
 }
+
 /*
  * virtual QModelIndex buddy ( const QModelIndex & index ) const
  */

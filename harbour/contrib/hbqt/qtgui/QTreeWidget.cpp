@@ -152,6 +152,7 @@ HB_FUNC( QT_QTREEWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QTreeWidget( pObj, true ) );
 }
+
 /*
  * void addTopLevelItem ( QTreeWidgetItem * item )
  */

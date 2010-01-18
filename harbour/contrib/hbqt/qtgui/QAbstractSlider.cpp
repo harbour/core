@@ -112,6 +112,7 @@ void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTSLIDER )
 {
 }
+
 /*
  * bool hasTracking () const
  */

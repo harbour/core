@@ -106,6 +106,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
 HB_FUNC( QT_QTEXTINLINEOBJECT )
 {
 }
+
 /*
  * qreal ascent () const
  */

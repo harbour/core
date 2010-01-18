@@ -148,6 +148,7 @@ HB_FUNC( QT_QUILOADER )
 
    hb_retptrGC( hbqt_gcAllocate_QUiLoader( pObj, true ) );
 }
+
 /*
  * void addPluginPath ( const QString & path )
  */

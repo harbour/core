@@ -178,6 +178,7 @@ HB_FUNC( QT_QFILEDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QFileDialog( pObj, true ) );
 }
+
 /*
  * AcceptMode acceptMode () const
  */

@@ -14,7 +14,13 @@
 
 -D=../doc
 
+HBDbfModel.qth
+HBEvents.qth
+HBQSyntaxHighlighter.qth
+HBQTableView.qth
 HBQTextBlockUserData.qth
+HBSlots.qth
+
 QAbstractButton.qth
 QAbstractItemDelegate.qth
 QAbstractItemModel.qth

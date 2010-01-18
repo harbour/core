@@ -144,6 +144,7 @@ HB_FUNC( QT_QDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QDialog( pObj, true ) );
 }
+
 /*
  * bool isSizeGripEnabled () const
  */

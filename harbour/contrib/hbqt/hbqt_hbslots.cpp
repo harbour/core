@@ -326,60 +326,6 @@ static bool disconnect_signal( QObject * object, const char * signal )
 
 /*----------------------------------------------------------------------*/
 
-typedef struct
-{
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< HBSlots > pq;
-} QGC_POINTER_HBSlots;
-
-static QT_G_FUNC( hbqt_release_HBSlots )
-{
-   QGC_POINTER_HBSlots * p = ( QGC_POINTER_HBSlots * ) Cargo;
-
-   if( p && p->bNew )
-   {
-      if( p->ph && p->pq )
-      {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-         if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
-            delete ( ( HBSlots * ) p->ph );
-            p->ph = NULL;
-            HB_TRACE( HB_TR_DEBUG, ( "release_HBSlots                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-         }
-         else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "NO release_HBSlots                 Object Name Missing!" ) );
-         }
-      }
-      else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_HBSlots     :     Object Already deleted!" ) );
-      }
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_HBSlots     :     Object not created with - new" ) );
-      p->ph = NULL;
-   }
-}
-
-static void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew )
-{
-   QGC_POINTER_HBSlots * p = ( QGC_POINTER_HBSlots * ) hb_gcAllocate( sizeof( QGC_POINTER_HBSlots ), hbqt_gcFuncs() );
-
-   p->ph = pObj;
-   p->bNew = bNew;
-   p->func = hbqt_release_HBSlots;
-   new( & p->pq ) QPointer< HBSlots >( ( HBSlots * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_HBSlots                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
-}
-
-/*----------------------------------------------------------------------*/
-
 static void hbqt_SlotsExec( HBSlots * t_slots, QObject * object, const char * pszEvent )
 {
    if( object )
@@ -714,6 +660,103 @@ HBSlots::~HBSlots()
    listBlock.clear();
 }
 
+bool HBSlots::hbIsConnected( PHB_ITEM pObj, const char * slot )
+{
+   HB_SYMBOL_UNUSED( pObj );
+
+   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
+   return isConnected( object, slot );
+}
+
+bool HBSlots::isConnected( QObject * object, const char * slot )
+{
+   int i;
+
+   for( i = 0; i < listBlock.size(); i++ )
+   {
+      if( listBlock[ i ] != NULL && listObj[ i ] == object )
+      {
+         if( object->property( slot ).toInt() == i + 1 )
+         {
+            return HB_TRUE;
+         }
+      }
+   }
+   return HB_FALSE;
+}
+
+bool HBSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
+{
+   HB_SYMBOL_UNUSED( pObj   );
+   HB_SYMBOL_UNUSED( bBlock );
+
+   QObject * object = ( QObject * ) hbqt_pPtrFromItem( pObj );                  /* get sender    */
+
+   if( object )
+   {
+      if( !isConnected( object, slot ) )
+      {
+HB_TRACE( HB_TR_ALWAYS, ( "AAA 3 %s  %p", slot, object ) );
+         bool bConnected = connect_signal( ( QString ) slot, object, this );
+HB_TRACE( HB_TR_ALWAYS, ( "AAA 4" ) );
+         if( bConnected )
+         {
+            //PHB_ITEM pBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
+            PHB_ITEM pBlock = hb_itemNew( bBlock );                        /* get codeblock */
+HB_TRACE( HB_TR_ALWAYS, ( "AAA 5" ) );
+            listBlock << pBlock;
+            listObj   << object;
+
+            object->setProperty( hb_parcx( 2 ), ( int ) listBlock.size() );
+
+            return HB_TRUE;
+         }
+      }
+   }
+   return HB_FALSE;
+}
+
+bool HBSlots::hbDisconnect( PHB_ITEM pObj, const char * signal )
+{
+   HB_SYMBOL_UNUSED( pObj );
+
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
+
+   if( object )
+   {
+      int i = object->property( signal ).toInt();
+
+      if( i > 0 && i <= listBlock.size() )
+      {
+         hb_itemRelease( listBlock.at( i - 1 ) );
+         listBlock[ i - 1 ] = NULL;
+         listObj[ i - 1 ] = NULL;
+
+         bool bRet = disconnect_signal( object, signal );
+
+         HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", signal ) );
+
+         return bRet;
+      }
+   }
+   return HB_FALSE;
+}
+
+bool HBSlots::hbClear()
+{
+   int i;
+
+   for( i = 0; i < listBlock.size(); i++ )
+   {
+      if( listBlock[ i ] != NULL )
+      {
+         hb_itemRelease( listBlock.at( i ) );
+         listBlock[ i ] = NULL;
+      }
+   }
+   listBlock.clear();
+   return HB_TRUE;
+}
 /* Generic Key and Mouse Events emitted by subclass objects */
 void HBSlots::customContextMenuRequested( const QPoint & pos )                                             { hbqt_SlotsExecQPoint(         this, qobject_cast<QObject *>( sender() ), "customContextMenuRequested(QPoint)", pos                         ); }
 void HBSlots::keyPressEvent( QKeyEvent * event )                                                           { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "keyPressEvent()", event                                          ); }

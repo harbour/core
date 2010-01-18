@@ -111,6 +111,7 @@ void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
 HB_FUNC( QT_QSESSIONMANAGER )
 {
 }
+
 /*
  * bool allowsErrorInteraction ()
  */

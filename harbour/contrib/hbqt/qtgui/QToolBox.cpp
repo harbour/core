@@ -140,6 +140,7 @@ HB_FUNC( QT_QTOOLBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QToolBox( pObj, true ) );
 }
+
 /*
  * int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
  */

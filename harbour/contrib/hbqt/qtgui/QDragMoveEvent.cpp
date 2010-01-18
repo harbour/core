@@ -106,6 +106,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QDRAGMOVEEVENT )
 {
 }
+
 /*
  * void accept ( const QRect & rectangle )
  */

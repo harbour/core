@@ -140,6 +140,7 @@ HB_FUNC( QT_QDESKTOPWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QDesktopWidget( pObj, true ) );
 }
+
 /*
  * const QRect availableGeometry ( int screen = -1 ) const
  */

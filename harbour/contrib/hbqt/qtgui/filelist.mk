@@ -9,6 +9,8 @@
 # --------------------------------------------------------------------
 
 CPP_SOURCES := \
+   HBQSyntaxHighlighter.cpp \
+   HBQTableView.cpp \
    HBQTextBlockUserData.cpp \
    QAbstractButton.cpp \
    QAbstractItemDelegate.cpp \
@@ -224,6 +226,8 @@ CPP_SOURCES := \
 
 
 PRG_SOURCES := \
+   THBQSyntaxHighlighter.prg \
+   THBQTableView.prg \
    THBQTextBlockUserData.prg \
    TQAbstractButton.prg \
    TQAbstractItemDelegate.prg \

@@ -85,7 +85,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QInputEvent )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -130,6 +130,7 @@ HB_FUNC( QT_QINPUTEVENT )
 
    hb_retptrGC( hbqt_gcAllocate_QInputEvent( pObj, true ) );
 }
+
 /*
  * Qt::KeyboardModifiers modifiers () const
  */

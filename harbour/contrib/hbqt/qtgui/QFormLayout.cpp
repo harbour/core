@@ -146,6 +146,7 @@ HB_FUNC( QT_QFORMLAYOUT )
 
    hb_retptrGC( hbqt_gcAllocate_QFormLayout( pObj, true ) );
 }
+
 /*
  * void addRow ( QWidget * label, QWidget * field )
  */

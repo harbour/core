@@ -114,6 +114,7 @@ void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
 HB_FUNC( QT_QIODEVICE )
 {
 }
+
 /*
  * virtual bool atEnd () const
  */

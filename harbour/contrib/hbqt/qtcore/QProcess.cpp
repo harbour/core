@@ -158,6 +158,7 @@ HB_FUNC( QT_QPROCESS )
 
    hb_retptrGC( hbqt_gcAllocate_QProcess( pObj, true ) );
 }
+
 /*
  * virtual void close ()
  */

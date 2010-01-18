@@ -98,7 +98,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QFont )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -170,6 +170,7 @@ HB_FUNC( QT_QFONT )
 
    hb_retptrGC( hbqt_gcAllocate_QFont( pObj, true ) );
 }
+
 /*
  * bool bold () const
  */

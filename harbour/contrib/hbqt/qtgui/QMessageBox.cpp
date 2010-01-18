@@ -157,6 +157,7 @@ HB_FUNC( QT_QMESSAGEBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QMessageBox( pObj, true ) );
 }
+
 /*
  * void addButton ( QAbstractButton * button, ButtonRole role )
  */

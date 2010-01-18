@@ -156,6 +156,7 @@ HB_FUNC( QT_QFONTDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QFontDialog( pObj, true ) );
 }
+
 /*
  * QFont currentFont () const
  */

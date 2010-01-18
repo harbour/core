@@ -108,7 +108,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QStandardItem )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -153,6 +153,7 @@ HB_FUNC( QT_QSTANDARDITEM )
 
    hb_retptrGC( hbqt_gcAllocate_QStandardItem( pObj, true ) );
 }
+
 /*
  * QString accessibleDescription () const
  */

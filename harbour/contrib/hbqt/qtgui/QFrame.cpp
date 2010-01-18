@@ -146,6 +146,7 @@ HB_FUNC( QT_QFRAME )
 
    hb_retptrGC( hbqt_gcAllocate_QFrame( pObj, true ) );
 }
+
 /*
  * QRect frameRect () const
  */

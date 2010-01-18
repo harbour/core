@@ -108,6 +108,7 @@ void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTBUTTON )
 {
 }
+
 /*
  * bool autoExclusive () const
  */

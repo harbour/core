@@ -146,6 +146,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
 
    hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( pObj, true ) );
 }
+
 /*
  * QMenu * contextMenu () const
  */

@@ -145,6 +145,7 @@ HB_FUNC( QT_QEVENTLOOP )
 
    hb_retptrGC( hbqt_gcAllocate_QEventLoop( pObj, true ) );
 }
+
 /*
  * int exec ( ProcessEventsFlags flags = AllEvents )
  */

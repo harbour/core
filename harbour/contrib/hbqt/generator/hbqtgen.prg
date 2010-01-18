@@ -565,8 +565,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, '            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_' + pad( cWidget, 27 ) + 'ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
                aadd( cpp_, "         }" )
             ELSE
-               aadd( cpp_, "      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
-               aadd( cpp_, "      " )
+               aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
+               aadd( cpp_, "   " )
                aadd( cpp_, "   if( p && p->bNew )" )
                aadd( cpp_, "   {" )
                aadd( cpp_, "      if( p->ph )" )
@@ -654,6 +654,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             ENDIF
          ENDIF
          aadd( cpp_, new_[ len( new_ ) ] ) // }
+         aadd( cpp_, "" )
       ENDIF
 
       /* Insert Functions */
@@ -850,6 +851,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             ENDIF
 
             DO CASE
+            CASE aA[ PRT_CAST ] == 'PHB_ITEM'
+               aA[ PRT_BODY ] := 'hb_param( ' + cHBIdx + ', HB_IT_ANY )'
+               aA[ PRT_DOC  ] := 'x' + cDocNM
+
             CASE aA[ PRT_CAST ] == 'T'
                aA[ PRT_BODY ] := 'hb_param( ' + cHBIdx + ', HB_IT_ANY )'
                aA[ PRT_DOC  ] := 'x' + cDocNM

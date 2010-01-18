@@ -57,12 +57,11 @@
 
 #include "hbapiitm.h"
 
-#include <QTextCursor>
-#include <QTextCharFormat>
-#include <QTreeWidgetItem>
-//#include <QWebFrame>
-#include <QHeaderView>
-#include <QProcess>
+#include <QtCore/QProcess>
+#include <QtGui/QTextCursor>
+#include <QtGui/QTextCharFormat>
+#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QHeaderView>
 
 /*----------------------------------------------------------------------*/
 
@@ -75,6 +74,12 @@ public:
    ~HBSlots();
    QList<PHB_ITEM>  listBlock;
    QList<QObject *> listObj;
+
+   bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock );
+   bool hbDisconnect( PHB_ITEM pObj, const char * slot );
+   bool hbIsConnected( PHB_ITEM pObj, const char * slot );
+   bool isConnected( QObject * object, const char * slot );
+   bool hbClear();
 
 public slots:
    /* QWidget */

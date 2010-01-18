@@ -85,7 +85,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlock )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -137,6 +137,7 @@ HB_FUNC( QT_QTEXTBLOCK )
 
    hb_retptrGC( hbqt_gcAllocate_QTextBlock( pObj, true ) );
 }
+
 /*
  * QTextBlockFormat blockFormat () const
  */

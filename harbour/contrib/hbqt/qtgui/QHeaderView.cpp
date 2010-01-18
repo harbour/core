@@ -144,6 +144,7 @@ HB_FUNC( QT_QHEADERVIEW )
 
    hb_retptrGC( hbqt_gcAllocate_QHeaderView( pObj, true ) );
 }
+
 /*
  * bool cascadingSectionResizes () const
  */

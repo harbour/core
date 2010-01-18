@@ -85,7 +85,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QPaintEvent )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -142,6 +142,7 @@ HB_FUNC( QT_QPAINTEVENT )
 
    hb_retptrGC( hbqt_gcAllocate_QPaintEvent( pObj, true ) );
 }
+
 /*
  * const QRect & rect () const
  */

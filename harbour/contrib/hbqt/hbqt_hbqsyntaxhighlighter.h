@@ -69,10 +69,13 @@ public:
 
    HBQTextBlockUserData * data( const QTextBlock& block );
 
-   void setData( int state );
+   int hbSetState( int state );
+   int hbState();
 
    int state;
 };
+
+/*----------------------------------------------------------------------*/
 
 class HBQSyntaxHighlighter : public QSyntaxHighlighter
 {
@@ -81,37 +84,27 @@ class HBQSyntaxHighlighter : public QSyntaxHighlighter
 public:
    HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
-   void setHBCompilerDirectives( const QStringList & directives, const QTextCharFormat & format );
-   void setHBMultiLineCommentFormat( const QTextCharFormat & format );
-   void setHBRule( QString name, QString pattern, const QTextCharFormat & format );
-   void setHBFormat( QString name, const QTextCharFormat & format );
+   void hbSetMultiLineCommentFormat( const QTextCharFormat & format );
+   void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
+   void hbSetFormat( QString name, const QTextCharFormat & format );
 
 protected:
    void highlightBlock( const QString &text );
 
-
-   struct hHighlightingRule
-   {
-      hHighlightingRule()
-      {
-      }
-      hHighlightingRule( QRegExp _pattern, const QTextCharFormat & _format )
-      {
-         pattern = _pattern;
-         format = _format;
-      }
-      QRegExp pattern;
-      QTextCharFormat format;
-   };
-   QMap< QString, hHighlightingRule > hhighlightingRules;
-
-private:
    struct HighlightingRule
    {
       QRegExp pattern;
       QTextCharFormat format;
+
+      HighlightingRule() {;}
+
+      HighlightingRule( QRegExp _pattern, const QTextCharFormat & _format )
+      {
+         pattern = _pattern;
+         format = _format;
+      }
    };
-   QVector<HighlightingRule> highlightingRules;
+   QMap< QString, HighlightingRule > HighlightingRules;
 
 protected:
 

@@ -114,7 +114,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QLocale )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -159,6 +159,7 @@ HB_FUNC( QT_QLOCALE )
 
    hb_retptrGC( hbqt_gcAllocate_QLocale( pObj, true ) );
 }
+
 /*
  * QString amText () const
  */

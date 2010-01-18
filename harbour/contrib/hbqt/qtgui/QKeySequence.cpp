@@ -104,7 +104,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QKeySequence )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -156,6 +156,7 @@ HB_FUNC( QT_QKEYSEQUENCE )
 
    hb_retptrGC( hbqt_gcAllocate_QKeySequence( pObj, true ) );
 }
+
 /*
  * uint count () const
  */

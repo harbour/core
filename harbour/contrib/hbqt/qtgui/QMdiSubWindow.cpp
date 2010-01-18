@@ -153,6 +153,7 @@ HB_FUNC( QT_QMDISUBWINDOW )
 
    hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( pObj, true ) );
 }
+
 /*
  * bool isShaded () const
  */

@@ -164,6 +164,7 @@ HB_FUNC( QT_QMDIAREA )
 
    hb_retptrGC( hbqt_gcAllocate_QMdiArea( pObj, true ) );
 }
+
 /*
  * WindowOrder activationOrder () const
  */

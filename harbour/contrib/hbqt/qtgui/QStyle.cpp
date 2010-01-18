@@ -123,6 +123,7 @@ void * hbqt_gcAllocate_QStyle( void * pObj, bool bNew )
 HB_FUNC( QT_QSTYLE )
 {
 }
+
 /*
  * int combinedLayoutSpacing ( QSizePolicy::ControlTypes controls1, QSizePolicy::ControlTypes controls2, Qt::Orientation orientation, QStyleOption * option = 0, QWidget * widget = 0 ) const
  */

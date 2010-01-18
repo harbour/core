@@ -106,7 +106,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QPainterPath )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -151,6 +151,7 @@ HB_FUNC( QT_QPAINTERPATH )
 
    hb_retptrGC( hbqt_gcAllocate_QPainterPath( pObj, true ) );
 }
+
 /*
  * void addEllipse ( const QRectF & boundingRectangle )
  */

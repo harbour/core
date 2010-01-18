@@ -108,6 +108,7 @@ void * hbqt_gcAllocate_QTextList( void * pObj, bool bNew )
 HB_FUNC( QT_QTEXTLIST )
 {
 }
+
 /*
  * void add ( const QTextBlock & block )
  */

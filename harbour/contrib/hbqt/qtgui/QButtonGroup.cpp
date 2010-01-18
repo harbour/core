@@ -156,6 +156,7 @@ HB_FUNC( QT_QBUTTONGROUP )
 
    hb_retptrGC( hbqt_gcAllocate_QButtonGroup( pObj, true ) );
 }
+
 /*
  * void addButton ( QAbstractButton * button )
  */

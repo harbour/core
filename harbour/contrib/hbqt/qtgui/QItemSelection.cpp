@@ -84,7 +84,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QItemSelection )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -129,6 +129,7 @@ HB_FUNC( QT_QITEMSELECTION )
 
    hb_retptrGC( hbqt_gcAllocate_QItemSelection( pObj, true ) );
 }
+
 /*
  * bool contains ( const QModelIndex & index ) const
  */

@@ -140,6 +140,7 @@ HB_FUNC( QT_QDIAL )
 
    hb_retptrGC( hbqt_gcAllocate_QDial( pObj, true ) );
 }
+
 /*
  * int notchSize () const
  */

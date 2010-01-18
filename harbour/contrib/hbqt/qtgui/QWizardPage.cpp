@@ -138,6 +138,7 @@ HB_FUNC( QT_QWIZARDPAGE )
 
    hb_retptrGC( hbqt_gcAllocate_QWizardPage( pObj, true ) );
 }
+
 /*
  * QString buttonText ( QWizard::WizardButton which ) const
  */

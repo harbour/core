@@ -146,6 +146,7 @@ HB_FUNC( QT_QDOCKWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QDockWidget( pObj, true ) );
 }
+
 /*
  * Qt::DockWidgetAreas allowedAreas () const
  */

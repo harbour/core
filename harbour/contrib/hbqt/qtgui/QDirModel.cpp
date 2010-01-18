@@ -145,6 +145,7 @@ HB_FUNC( QT_QDIRMODEL )
 
    hb_retptrGC( hbqt_gcAllocate_QDirModel( pObj, true ) );
 }
+
 /*
  * virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const
  */

@@ -158,6 +158,7 @@ HB_FUNC( QT_QSPLITTER )
 
    hb_retptrGC( hbqt_gcAllocate_QSplitter( pObj, true ) );
 }
+
 /*
  * void addWidget ( QWidget * widget )
  */

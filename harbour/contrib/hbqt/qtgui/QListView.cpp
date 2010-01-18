@@ -148,6 +148,7 @@ HB_FUNC( QT_QLISTVIEW )
 
    hb_retptrGC( hbqt_gcAllocate_QListView( pObj, true ) );
 }
+
 /*
  * int batchSize () const
  */

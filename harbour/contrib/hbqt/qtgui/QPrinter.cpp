@@ -117,7 +117,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QPrinter )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -162,6 +162,7 @@ HB_FUNC( QT_QPRINTER )
 
    hb_retptrGC( hbqt_gcAllocate_QPrinter( pObj, true ) );
 }
+
 /*
  * bool abort ()
  */

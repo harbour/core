@@ -91,7 +91,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionProgressBar )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -136,6 +136,7 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( pObj, true ) );
 }
+
 /*
  * int maximum
  */

@@ -140,6 +140,7 @@ HB_FUNC( QT_QTIMER )
 
    hb_retptrGC( hbqt_gcAllocate_QTimer( pObj, true ) );
 }
+
 /*
  * int interval () const
  */

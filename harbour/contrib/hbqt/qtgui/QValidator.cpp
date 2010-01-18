@@ -111,6 +111,7 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
 HB_FUNC( QT_QVALIDATOR )
 {
 }
+
 /*
  * QLocale locale () const
  */

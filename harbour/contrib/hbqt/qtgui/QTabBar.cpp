@@ -147,6 +147,7 @@ HB_FUNC( QT_QTABBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QTabBar( pObj, true ) );
 }
+
 /*
  * int addTab ( const QString & text )
  */

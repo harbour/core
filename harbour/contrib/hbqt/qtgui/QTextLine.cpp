@@ -89,7 +89,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QTextLine )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -134,6 +134,7 @@ HB_FUNC( QT_QTEXTLINE )
 
    hb_retptrGC( hbqt_gcAllocate_QTextLine( pObj, true ) );
 }
+
 /*
  * qreal ascent () const
  */

@@ -67,62 +67,6 @@
 #include <QPointer>
 #include <QVariant>
 
-typedef struct
-{
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< HBEvents > pq;
-} QGC_POINTER_HBEvents;
-
-static QT_G_FUNC( hbqt_release_HBEvents )
-{
-   QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) Cargo;
-
-   if( p && p->bNew )
-   {
-      if( p->ph && p->pq )
-      {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-         if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
-            delete ( ( HBEvents * ) p->ph );
-            p->ph = NULL;
-            HB_TRACE( HB_TR_DEBUG, ( "release_HBEvents                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-         }
-         else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "NO release_HBEvents                 Object Name Missing!" ) );
-            p->ph = NULL;
-         }
-      }
-      else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBEvents                 Object Already deleted!" ) );
-         p->ph = NULL;
-      }
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_HBEvents     :     Object not created with - new" ) );
-      p->ph = NULL;
-   }
-}
-
-static void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
-{
-   QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) hb_gcAllocate( sizeof( QGC_POINTER_HBEvents ), hbqt_gcFuncs() );
-
-   p->ph = pObj;
-   p->bNew = bNew;
-   p->func = hbqt_release_HBEvents;
-   new( & p->pq ) QPointer< HBEvents >( ( HBEvents * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_HBEvents                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   return( p );
-}
-
-/*----------------------------------------------------------------------*/
-
 HBEvents::HBEvents( QObject * parent ) : QObject( parent )
 {
 }
@@ -142,8 +86,77 @@ HBEvents::~HBEvents()
          listObj[ i ] = NULL;
       }
    }
-
    listBlock.clear();
+}
+
+bool HBEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
+{
+   HB_SYMBOL_UNUSED( pObj   );
+   HB_SYMBOL_UNUSED( iEvent );
+   HB_SYMBOL_UNUSED( bBlock );
+
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );          /* get sender    */
+
+   if( object )
+   {
+      PHB_ITEM codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+      //PHB_ITEM codeblock = hb_itemNew( bBlock );
+
+      char prop[ 20 ];
+      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );  /* Make it a unique identifier */
+
+      listBlock << codeblock;
+      listObj   << object;            /* TOFIX: Reference to GC collected pointer is stored. */
+
+      object->setProperty( prop, ( int ) listBlock.size() );
+
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
+bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
+{
+   HB_SYMBOL_UNUSED( pObj );
+
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
+
+   if( object )
+   {
+      char prop[ 20 ];
+      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );    /* Make it a unique identifier */
+
+      int i = object->property( prop ).toInt();
+      if( i > 0 && i <= listBlock.size() )
+      {
+         hb_itemRelease( listBlock.at( i - 1 ) );
+         listBlock[ i - 1 ] = NULL;
+         listObj[ i - 1 ]   = NULL;
+         object->setProperty( prop, QVariant() );
+
+         HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", iEvent ) );
+         return HB_TRUE;
+      }
+   }
+   return HB_FALSE;
+}
+
+bool HBEvents::hbClear()
+{
+   HB_TRACE( HB_TR_DEBUG, ( "      HBEvents::hbClear()" ) );
+   int i;
+
+   for( i = 0; i < listBlock.size(); i++ )
+   {
+      if( listBlock[ i ] != NULL )
+      {
+         hb_itemRelease( listBlock.at( i ) );
+         listBlock[ i ] = NULL;
+         listObj[ i ] = NULL;
+      }
+   }
+   listBlock.clear();
+   return HB_TRUE;
 }
 
 bool HBEvents::eventFilter( QObject * object, QEvent * event )
@@ -151,7 +164,7 @@ bool HBEvents::eventFilter( QObject * object, QEvent * event )
    QEvent::Type eventtype = event->type();
 
    if( ( int ) eventtype == 0 )
-      return false;
+      return HB_FALSE;
 
    char prop[ 20 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
@@ -159,9 +172,9 @@ bool HBEvents::eventFilter( QObject * object, QEvent * event )
    int found = object->property( prop ).toInt();
 
    if( found == 0 )
-      return false;
+      return HB_FALSE;
 
-   bool ret = true;
+   bool ret = HB_TRUE;
 
    if( found <= listBlock.size() && listObj.at( found - 1 ) == object && hb_vmRequestReenter() )
    {
@@ -176,7 +189,6 @@ bool HBEvents::eventFilter( QObject * object, QEvent * event )
       if( eventtype == QEvent::Close )
          event->ignore();
    }
-
    return ret;
 }
 
@@ -198,15 +210,13 @@ HB_FUNC( QT_EVENTS_CONNECT )
          hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
          t_events->listBlock << codeblock;
-         /* TOFIX: Reference to GC collected pointer is stored. */
-         t_events->listObj   << object;
+         t_events->listObj   << object;      /* TOFIX: Reference to GC collected pointer is stored. */
 
          object->setProperty( prop, ( int ) t_events->listBlock.size() );
 
          bRet = HB_TRUE;
       }
    }
-
    hb_retl( bRet );
 }
 
@@ -239,7 +249,6 @@ HB_FUNC( QT_EVENTS_DISCONNECT )
          }
       }
    }
-
    hb_retl( bRet );
 }
 

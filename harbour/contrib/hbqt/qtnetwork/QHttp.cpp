@@ -163,6 +163,7 @@ HB_FUNC( QT_QHTTP )
 
    hb_retptrGC( hbqt_gcAllocate_QHttp( pObj, true ) );
 }
+
 /*
  * qint64 bytesAvailable () const
  */

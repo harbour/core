@@ -107,6 +107,7 @@ void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTPROXYMODEL )
 {
 }
+
 /*
  * virtual QModelIndex mapFromSource ( const QModelIndex & sourceIndex ) const = 0
  */

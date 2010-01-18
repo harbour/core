@@ -155,6 +155,7 @@ HB_FUNC( QT_QCALENDARWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( pObj, true ) );
 }
+
 /*
  * int dateEditAcceptDelay () const
  */

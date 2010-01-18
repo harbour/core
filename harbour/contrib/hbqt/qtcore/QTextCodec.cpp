@@ -125,6 +125,7 @@ void * hbqt_gcAllocate_QTextCodec( void * pObj, bool bNew )
 HB_FUNC( QT_QTEXTCODEC )
 {
 }
+
 /*
  * bool canEncode ( QChar ch ) const
  */

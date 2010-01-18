@@ -92,7 +92,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QLinearGradient )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -152,6 +152,7 @@ HB_FUNC( QT_QLINEARGRADIENT )
 
    hb_retptrGC( hbqt_gcAllocate_QLinearGradient( pObj, true ) );
 }
+
 /*
  * QPointF finalStop () const
  */

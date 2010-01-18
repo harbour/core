@@ -142,6 +142,7 @@ HB_FUNC( QT_QLABEL )
 
    hb_retptrGC( hbqt_gcAllocate_QLabel( pObj, true ) );
 }
+
 /*
  * Qt::Alignment alignment () const
  */

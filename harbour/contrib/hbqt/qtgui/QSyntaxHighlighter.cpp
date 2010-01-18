@@ -88,34 +88,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
 {
-   QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) Cargo;
-
-   if( p && p->bNew )
-   {
-      if( p->ph && p->pq )
-      {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
-         if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
-            delete ( ( QSyntaxHighlighter * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSyntaxHighlighter         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-            p->ph = NULL;
-         }
-         else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSyntaxHighlighter         ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-         }
-      }
-      else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSyntaxHighlighter          Object already deleted!" ) );
-      }
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSyntaxHighlighter          Object not created with - new" ) );
-      p->ph = NULL;
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
@@ -136,15 +109,8 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 {
-   void * pObj = NULL;
-
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
-   {
-      pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
-   }
-
-   hb_retptrGC( hbqt_gcAllocate_QSyntaxHighlighter( pObj, true ) );
 }
+
 /*
  * QTextDocument * document () const
  */

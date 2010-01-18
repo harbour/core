@@ -86,7 +86,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QSize )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -142,6 +142,7 @@ HB_FUNC( QT_QSIZE )
 
    hb_retptrGC( hbqt_gcAllocate_QSize( pObj, true ) );
 }
+
 /*
  * int height () const
  */

@@ -152,6 +152,7 @@ HB_FUNC( QT_QTREEVIEW )
 
    hb_retptrGC( hbqt_gcAllocate_QTreeView( pObj, true ) );
 }
+
 /*
  * bool allColumnsShowFocus () const
  */

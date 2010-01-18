@@ -155,6 +155,7 @@ HB_FUNC( QT_QTEXTFRAME )
 
    hb_retptrGC( hbqt_gcAllocate_QTextFrame( pObj, true ) );
 }
+
 /*
  * QTextCursor firstCursorPosition () const
  */

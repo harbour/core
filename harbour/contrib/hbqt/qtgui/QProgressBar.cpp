@@ -143,6 +143,7 @@ HB_FUNC( QT_QPROGRESSBAR )
 
    hb_retptrGC( hbqt_gcAllocate_QProgressBar( pObj, true ) );
 }
+
 /*
  * Qt::Alignment alignment () const
  */

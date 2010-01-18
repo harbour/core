@@ -143,6 +143,7 @@ HB_FUNC( QT_QTHREAD )
 
    hb_retptrGC( hbqt_gcAllocate_QThread( pObj, true ) );
 }
+
 /*
  * void exit ( int returnCode = 0 )
  */

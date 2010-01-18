@@ -179,6 +179,7 @@ HB_FUNC( QT_QWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QWidget( pObj, true ) );
 }
+
 /*
  * bool acceptDrops () const
  */

@@ -105,6 +105,7 @@ void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QFOCUSEVENT )
 {
 }
+
 /*
  * bool gotFocus () const
  */

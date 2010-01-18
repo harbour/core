@@ -112,6 +112,7 @@ void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew )
 HB_FUNC( QT_QLAYOUT )
 {
 }
+
 /*
  * bool activate ()
  */

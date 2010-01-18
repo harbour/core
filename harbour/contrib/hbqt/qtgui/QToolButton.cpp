@@ -144,6 +144,7 @@ HB_FUNC( QT_QTOOLBUTTON )
 
    hb_retptrGC( hbqt_gcAllocate_QToolButton( pObj, true ) );
 }
+
 /*
  * Qt::ArrowType arrowType () const
  */

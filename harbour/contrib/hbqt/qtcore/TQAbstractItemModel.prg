@@ -239,28 +239,3 @@ METHOD QAbstractItemModel:revert()
 METHOD QAbstractItemModel:submit()
    RETURN Qt_QAbstractItemModel_submit( ::pPtr )
 
-
-
-CREATE CLASS HBDbfModel INHERIT QAbstractItemModel
-
-   METHOD new( bBlock )
-   METHOD reset()
-   METHOD index( nRow, nCol )
-   METHOD hbSetRowColumns( nRows, nCols )
-
-   ENDCLASS
-
-METHOD HBDbfModel:new( bBlock )
-   ::pPtr := Qt_HBDbfModel( bBlock )
-   RETURN Self
-
-METHOD HBDbfModel:reset()
-   RETURN Qt_HBDbfModel_reset( ::pPtr )
-
-METHOD HBDbfModel:index( nRow, nCol )
-   RETURN Qt_HBDbfModel_index( ::pPtr, nRow, nCol, 0 )
-
-METHOD HBDbfModel:hbSetRowColumns( nRows, nCols )
-   RETURN Qt_HBDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
-
-

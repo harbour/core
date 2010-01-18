@@ -70,8 +70,6 @@
 
 #include <QtGui/QTableView>
 
-#include "../hbqt_hbqtableview.h"
-
 /*
  * QTableView ( QWidget * parent = 0 )
  * ~QTableView ()
@@ -142,6 +140,7 @@ HB_FUNC( QT_QTABLEVIEW )
 
    hb_retptrGC( hbqt_gcAllocate_QTableView( pObj, true ) );
 }
+
 /*
  * void clearSpans ()
  */

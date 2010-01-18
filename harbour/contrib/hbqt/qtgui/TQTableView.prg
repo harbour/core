@@ -289,20 +289,3 @@ METHOD QTableView:showColumn( nColumn )
 METHOD QTableView:showRow( nRow )
    RETURN Qt_QTableView_showRow( ::pPtr, nRow )
 
-
-
-CREATE CLASS HBQTableView INHERIT QTableView
-
-   METHOD new( pParent )
-   METHOD navigate( nCursorAction, nModifiers )
-
-   ENDCLASS
-
-METHOD HBQTableView:new( pParent )
-   ::pPtr := Qt_HBQTableView( pParent )
-   RETURN Self
-
-METHOD HBQTableView:navigate( nCursorAction, nModifiers )
-   RETURN Qt_HBQTableView_navigate( ::pPtr, nCursorAction, nModifiers )
-
-

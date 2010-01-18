@@ -155,6 +155,7 @@ HB_FUNC( QT_QTABLEWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QTableWidget( pObj, true ) );
 }
+
 /*
  * QWidget * cellWidget ( int row, int column ) const
  */

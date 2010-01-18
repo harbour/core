@@ -151,6 +151,7 @@ HB_FUNC( QT_QACTIONGROUP )
 
    hb_retptrGC( hbqt_gcAllocate_QActionGroup( pObj, true ) );
 }
+
 /*
  * QAction * addAction ( QAction * action )
  */

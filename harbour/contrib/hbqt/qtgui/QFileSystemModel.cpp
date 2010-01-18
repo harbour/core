@@ -144,6 +144,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
 
    hb_retptrGC( hbqt_gcAllocate_QFileSystemModel( pObj, true ) );
 }
+
 /*
  * virtual bool dropMimeData ( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
  */

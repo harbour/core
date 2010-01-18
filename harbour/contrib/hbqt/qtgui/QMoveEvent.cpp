@@ -106,6 +106,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QMOVEEVENT )
 {
 }
+
 /*
  * const QPoint & oldPos () const
  */

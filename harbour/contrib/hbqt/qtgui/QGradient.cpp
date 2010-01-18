@@ -111,6 +111,7 @@ void * hbqt_gcAllocate_QGradient( void * pObj, bool bNew )
 HB_FUNC( QT_QGRADIENT )
 {
 }
+
 /*
  * CoordinateMode coordinateMode () const
  */

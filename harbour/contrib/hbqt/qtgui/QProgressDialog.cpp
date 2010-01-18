@@ -141,6 +141,7 @@ HB_FUNC( QT_QPROGRESSDIALOG )
 
    hb_retptrGC( hbqt_gcAllocate_QProgressDialog( pObj, true ) );
 }
+
 /*
  * bool autoClose () const
  */

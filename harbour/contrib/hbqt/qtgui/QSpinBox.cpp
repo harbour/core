@@ -139,6 +139,7 @@ HB_FUNC( QT_QSPINBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QSpinBox( pObj, true ) );
 }
+
 /*
  * QString cleanText () const
  */

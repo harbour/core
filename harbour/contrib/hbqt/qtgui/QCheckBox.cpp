@@ -147,6 +147,7 @@ HB_FUNC( QT_QCHECKBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QCheckBox( pObj, true ) );
 }
+
 /*
  * Qt::CheckState checkState () const
  */

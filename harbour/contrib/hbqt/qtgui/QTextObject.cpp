@@ -107,6 +107,7 @@ void * hbqt_gcAllocate_QTextObject( void * pObj, bool bNew )
 HB_FUNC( QT_QTEXTOBJECT )
 {
 }
+
 /*
  * QTextDocument * document () const
  */

@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QCoreApplication( void * pObj, bool bNew )
 HB_FUNC( QT_QCOREAPPLICATION )
 {
 }
+
 /*
  * virtual bool notify ( QObject * receiver, QEvent * event )
  */

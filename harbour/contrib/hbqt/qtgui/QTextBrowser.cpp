@@ -139,6 +139,7 @@ HB_FUNC( QT_QTEXTBROWSER )
 
    hb_retptrGC( hbqt_gcAllocate_QTextBrowser( pObj, true ) );
 }
+
 /*
  * int backwardHistoryCount () const
  */

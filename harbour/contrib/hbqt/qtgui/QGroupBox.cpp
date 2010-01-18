@@ -141,6 +141,7 @@ HB_FUNC( QT_QGROUPBOX )
 
    hb_retptrGC( hbqt_gcAllocate_QGroupBox( pObj, true ) );
 }
+
 /*
  * Qt::Alignment alignment () const
  */

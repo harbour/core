@@ -106,6 +106,7 @@ void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew )
 HB_FUNC( QT_QWHEELEVENT )
 {
 }
+
 /*
  * Qt::MouseButtons buttons () const
  */

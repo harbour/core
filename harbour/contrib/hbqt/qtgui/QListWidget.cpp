@@ -150,6 +150,7 @@ HB_FUNC( QT_QLISTWIDGET )
 
    hb_retptrGC( hbqt_gcAllocate_QListWidget( pObj, true ) );
 }
+
 /*
  * void addItem ( const QString & label )
  */

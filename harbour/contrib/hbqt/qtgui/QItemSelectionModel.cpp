@@ -148,6 +148,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL )
 
    hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( pObj, true ) );
 }
+
 /*
  * bool columnIntersectsSelection ( int column, const QModelIndex & parent ) const
  */

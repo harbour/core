@@ -86,7 +86,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QHttpRequestHeader )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -131,6 +131,7 @@ HB_FUNC( QT_QHTTPREQUESTHEADER )
 
    hb_retptrGC( hbqt_gcAllocate_QHttpRequestHeader( pObj, true ) );
 }
+
 /*
  * virtual int majorVersion () const
  */

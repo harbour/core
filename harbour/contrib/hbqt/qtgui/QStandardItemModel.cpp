@@ -160,6 +160,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
 
    hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( pObj, true ) );
 }
+
 /*
  * void appendRow ( QStandardItem * item )
  */

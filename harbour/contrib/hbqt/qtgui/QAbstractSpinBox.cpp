@@ -115,6 +115,7 @@ void * hbqt_gcAllocate_QAbstractSpinBox( void * pObj, bool bNew )
 HB_FUNC( QT_QABSTRACTSPINBOX )
 {
 }
+
 /*
  * Qt::Alignment alignment () const
  */

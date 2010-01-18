@@ -62,58 +62,12 @@ New      =
 </CLASS>
 
 <SUBCLASS>
-
-CREATE CLASS HBQSyntaxHighlighter INHERIT QSyntaxHighlighter
-
-   METHOD new( ... )
-   METHOD configure( xObject )
-   METHOD setHBCompilerDirectives( pDirectives, pFormat )
-   METHOD setHBRule( cName, cPattern, pFormat )
-   METHOD setHBFormat( cName, pFormat )
-   METHOD setHBMultiLineCommentFormat( pFormat )
-
-   ENDCLASS
-
-METHOD HBQSyntaxHighlighter:new( ... )
-   LOCAL p
-   FOR EACH p IN { ... }
-      p := hbqt_ptr( p )
-      hb_pvalue( p:__enumIndex(), p )
-   NEXT
-   ::pPtr := Qt_QSyntaxHighlighter( ... )
-   RETURN Self
-
-
-METHOD HBQSyntaxHighlighter:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
-
-
-METHOD HBQSyntaxHighlighter:setHBCompilerDirectives( pDirectives, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_setHBCompilerDirectives( ::pPtr, hbqt_ptr( pDirectives ), hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:setHBRule( cName, cPattern, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_setHBRule( ::pPtr, cName, cPattern, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:setHBFormat( cName, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_setHBFormat( ::pPtr, cName, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:setHBMultiLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_setHBMultiLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
 </SUBCLASS>
 
 <DOC>
-oSynHiliter := QSyntaxHighlighter():new( pObject )
-oSynHiliter := QSyntaxHighlighter():new( "QTextDocument", pQTextDocument )
-oSynHiliter := QSyntaxHighlighter():new( "QTextEdit", pQTextEdit )
+oSynHiliter := HBQSyntaxHighlighter():new( pObject )
+oSynHiliter := HBQSyntaxHighlighter():new( "QTextDocument", pQTextDocument )
+oSynHiliter := HBQSyntaxHighlighter():new( "QTextEdit", pQTextEdit )
 </DOC>
 
 <CODE>
@@ -128,10 +82,7 @@ oSynHiliter := QSyntaxHighlighter():new( "QTextEdit", pQTextEdit )
  */
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
-   {
-      hb_retptr( new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) );
-   }
+
 }
 </CODE>
 
@@ -139,8 +90,10 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 </ENUMS>
 
 <PROTOS>
+
 QTextDocument * document () const
 void setDocument ( QTextDocument * doc )
+
 </PROTOS>
 
 <SLOTS>

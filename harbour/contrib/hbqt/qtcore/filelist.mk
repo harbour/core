@@ -9,6 +9,9 @@
 # --------------------------------------------------------------------
 
 CPP_SOURCES := \
+   HBDbfModel.cpp \
+   HBEvents.cpp \
+   HBSlots.cpp \
    QAbstractItemModel.cpp \
    QAbstractListModel.cpp \
    QAbstractTableModel.cpp \
@@ -61,6 +64,9 @@ CPP_SOURCES := \
 
 
 PRG_SOURCES := \
+   THBDbfModel.prg \
+   THBEvents.prg \
+   THBSlots.prg \
    TQAbstractItemModel.prg \
    TQAbstractListModel.prg \
    TQAbstractTableModel.prg \

@@ -94,7 +94,7 @@ typedef struct
 
 QT_G_FUNC( hbqt_gcRelease_QColor )
 {
-      QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -173,6 +173,7 @@ HB_FUNC( QT_QCOLOR )
 
    hb_retptrGC( hbqt_gcAllocate_QColor( pObj, true ) );
 }
+
 /*
  * int alpha () const
  */
