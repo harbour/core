@@ -803,7 +803,7 @@ HB_FUNC( HPDF_PAGE_GETLINEJOIN )
 */
 HB_FUNC( HPDF_PAGE_GETMITERLIMIT )
 {
-   hb_retnl( ( long ) HPDF_Page_GetMiterLimit( ( HPDF_Page ) hb_parptr( 1 ) ) );
+   hb_retnd( ( double ) HPDF_Page_GetMiterLimit( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_GetDash( hPage ) -> aDash
@@ -1097,13 +1097,12 @@ HB_FUNC( HPDF_PAGE_GRESTORE )
 HB_FUNC( HPDF_PAGE_CONCAT )
 {
    hb_retnl( ( long ) HPDF_Page_Concat( ( HPDF_Page ) hb_parptr( 1 ),
-                                                  ( HPDF_REAL ) hb_parnd( 2 ),
-                                                  ( HPDF_REAL ) hb_parnd( 3 ),
-                                                  ( HPDF_REAL ) hb_parnd( 4 ),
-                                                  ( HPDF_REAL ) hb_parnd( 5 ),
-                                                  ( HPDF_REAL ) hb_parnd( 6 ),
-                                                  ( HPDF_REAL ) hb_parnd( 7 )
-                                                                  ) );
+                                        ( HPDF_REAL ) hb_parnd( 2 ),
+                                        ( HPDF_REAL ) hb_parnd( 3 ),
+                                        ( HPDF_REAL ) hb_parnd( 4 ),
+                                        ( HPDF_REAL ) hb_parnd( 5 ),
+                                        ( HPDF_REAL ) hb_parnd( 6 ),
+                                        ( HPDF_REAL ) hb_parnd( 7 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Page_MoveTo( hPage, nX, nY ) -> hStatus
@@ -1125,13 +1124,12 @@ HB_FUNC( HPDF_PAGE_LINETO )
 HB_FUNC( HPDF_PAGE_CURVETO )
 {
    hb_retnl( ( long ) HPDF_Page_CurveTo( ( HPDF_Page ) hb_parptr( 1 ),
-                                                   ( HPDF_REAL ) hb_parnd( 2 ),
-                                                   ( HPDF_REAL ) hb_parnd( 3 ),
-                                                   ( HPDF_REAL ) hb_parnd( 4 ),
-                                                   ( HPDF_REAL ) hb_parnd( 5 ),
-                                                   ( HPDF_REAL ) hb_parnd( 6 ),
-                                                   ( HPDF_REAL ) hb_parnd( 7 )
-                                                                  ) );
+                                         ( HPDF_REAL ) hb_parnd( 2 ),
+                                         ( HPDF_REAL ) hb_parnd( 3 ),
+                                         ( HPDF_REAL ) hb_parnd( 4 ),
+                                         ( HPDF_REAL ) hb_parnd( 5 ),
+                                         ( HPDF_REAL ) hb_parnd( 6 ),
+                                         ( HPDF_REAL ) hb_parnd( 7 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Page_CurveTo2( hPage, nX2, nY2, nX3, nY3 ) -> hStatus
@@ -1139,11 +1137,10 @@ HB_FUNC( HPDF_PAGE_CURVETO )
 HB_FUNC( HPDF_PAGE_CURVETO2 )
 {
    hb_retnl( ( long ) HPDF_Page_CurveTo2( ( HPDF_Page ) hb_parptr( 1 ),
-                                                    ( HPDF_REAL ) hb_parnd( 2 ),
-                                                    ( HPDF_REAL ) hb_parnd( 3 ),
-                                                    ( HPDF_REAL ) hb_parnd( 4 ),
-                                                    ( HPDF_REAL ) hb_parnd( 5 )
-                                                                  ) );
+                                          ( HPDF_REAL ) hb_parnd( 2 ),
+                                          ( HPDF_REAL ) hb_parnd( 3 ),
+                                          ( HPDF_REAL ) hb_parnd( 4 ),
+                                          ( HPDF_REAL ) hb_parnd( 5 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Page_CurveTo3( hPage, nX1, nY1, nX3, nY3 ) -> hStatus
@@ -1151,11 +1148,10 @@ HB_FUNC( HPDF_PAGE_CURVETO2 )
 HB_FUNC( HPDF_PAGE_CURVETO3 )
 {
    hb_retnl( ( long ) HPDF_Page_CurveTo3( ( HPDF_Page ) hb_parptr( 1 ),
-                                                    ( HPDF_REAL ) hb_parnd( 2 ),
-                                                    ( HPDF_REAL ) hb_parnd( 3 ),
-                                                    ( HPDF_REAL ) hb_parnd( 4 ),
-                                                    ( HPDF_REAL ) hb_parnd( 5 )
-                                                                  ) );
+                                          ( HPDF_REAL ) hb_parnd( 2 ),
+                                          ( HPDF_REAL ) hb_parnd( 3 ),
+                                          ( HPDF_REAL ) hb_parnd( 4 ),
+                                          ( HPDF_REAL ) hb_parnd( 5 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Page_ClosePath( hPage ) -> hStatus
@@ -1786,13 +1782,12 @@ HB_FUNC( HPDF_IMAGE_GETCOLORSPACE )
 HB_FUNC( HPDF_IMAGE_SETCOLORMASK )
 {
    hb_retnl( ( long ) HPDF_Image_SetColorMask( ( HPDF_Image ) hb_parptr( 1 ),
-                                                          hb_parni( 2 ),
-                                                          hb_parni( 3 ),
-                                                          hb_parni( 4 ),
-                                                          hb_parni( 5 ),
-                                                          hb_parni( 6 ),
-                                                          hb_parni( 7 )
-                                                                         ) );
+                                               hb_parni( 2 ),
+                                               hb_parni( 3 ),
+                                               hb_parni( 4 ),
+                                               hb_parni( 5 ),
+                                               hb_parni( 6 ),
+                                               hb_parni( 7 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Image_SetMaskImage( hImage, hImageMask ) -> hStatus

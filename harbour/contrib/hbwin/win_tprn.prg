@@ -54,7 +54,7 @@
    WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
    Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
    Even though "Mapping Mode" for WIN_PRN() is WIN_MM_TEXT, ::SetFont() accepts the
-   nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
+   xWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
    6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
    If you do not like this then inherit from the class and override anything you want
 
@@ -89,12 +89,12 @@ CREATE CLASS WIN_PRN
    METHOD NewPage( lDelay )         // If lDelay == .T. then new page is not created immediately but just before 1-st output
    METHOD CheckPage()
    METHOD GetDocumentProperties()
-   METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet )
-                                                                 // NB: nWidth is in "CharactersPerInch"
+   METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet )
+                                                                 // NB: xWidth is in "CharactersPerInch"
                                                                  //     _OR_ { nMul, nDiv } which equates to "CharactersPerInch"
                                                                  //     _OR_ ZERO ( 0 ) which uses the default width of the font
                                                                  //          for the nPointSize
-                                                                 //   IF nWidth (or nDiv) is < 0 then Fixed font is emulated
+                                                                 //   IF xWidth (or nDiv) is < 0 then Fixed font is emulated
 
    METHOD SetDefaultFont()
 
@@ -161,19 +161,19 @@ CREATE CLASS WIN_PRN
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
 
-   VAR PaperLength      INIT 0                        // Value is * 1/10 of mm   1000 = 10cm
-   VAR PaperWidth       INIT 0                        //   "    "    "     "       "     "
+   VAR PaperLength      INIT 0                          // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperWidth       INIT 0                          //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.
    VAR hFont            INIT 0
-   VAR FontName         INIT ""                       // Current Point size for font
-   VAR FontPointSize    INIT 12                       // Point size for font
-   VAR FontWidth        INIT { 0, 0 }                 // {Mul, Div} Calc width: nWidth:= wapi_MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
-                                                      // If font width is specified it is in "characters per inch" to emulate DotMatrix
-   VAR fBold            INIT 0      HIDDEN            // font darkness weight ( Bold). See wingdi.h or WIN SDK CreateFont() for valid values
-   VAR fUnderLine       INIT .F.    HIDDEN            // UnderLine is on or off
-   VAR fItalic          INIT .F.    HIDDEN            // Italic is on or off
-   VAR fCharSet         INIT 1      HIDDEN            // Default character set == DEFAULT_CHARSET ( see wingdi.h )
+   VAR FontName         INIT ""                         // Current Point size for font
+   VAR FontPointSize    INIT 12                         // Point size for font
+   VAR FontWidth        INIT { 0, 0 }                   // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
+                                                        // If font width is specified it is in "characters per inch" to emulate DotMatrix
+   VAR fBold            INIT 0                   HIDDEN // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
+   VAR fUnderLine       INIT .F.                 HIDDEN // UnderLine is on or off
+   VAR fItalic          INIT .F.                 HIDDEN // Italic is on or off
+   VAR fCharSet         INIT WIN_DEFAULT_CHARSET HIDDEN
 
    VAR PixelsPerInchY   INIT 0
    VAR PixelsPerInchX   INIT 0
@@ -189,8 +189,8 @@ CREATE CLASS WIN_PRN
    VAR fCharWidth       INIT 0      HIDDEN
    VAR BitmapsOk        INIT .F.
    VAR NumColors        INIT 1
-   VAR fDuplexType      INIT 0      HIDDEN            // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
-   VAR fPrintQuality    INIT 0      HIDDEN            // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
+   VAR fDuplexType      INIT 0      HIDDEN              // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
+   VAR fPrintQuality    INIT 0      HIDDEN              // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
    VAR fNewDuplexType   INIT 0      HIDDEN
    VAR fNewPrintQuality INIT 0      HIDDEN
    VAR fOldLandScape    INIT .F.    HIDDEN
@@ -463,6 +463,18 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
    ::FontName := win_GetPrinterFontName( ::hPrinterDC )  // Get the font name that Windows actually used
    RETURN ::SetFontOk
 
+METHOD GetCharWidth() CLASS WIN_PRN
+   LOCAL nWidth
+   IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
+      nWidth := wapi_MulDiv( ::FontWidth[ 1 ], ::PixelsPerInchX, ::FontWidth[ 2 ] )
+   ELSE
+      nWidth := win_GetCharSize( ::hPrinterDC )
+   ENDIF
+   RETURN nWidth
+
+METHOD GetCharHeight() CLASS WIN_PRN
+   RETURN win_GetCharSize( ::hPrinterDC, .T. )
+
 METHOD SetDefaultFont() CLASS WIN_PRN
    RETURN ::SetFont( "Courier New", 12, { 1, 10 }, 0, .F., .F., 0 )
 
@@ -687,18 +699,6 @@ METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS WIN_PRN
       ENDIF
    ENDIF
    RETURN lResult
-
-METHOD GetCharWidth() CLASS WIN_PRN
-   LOCAL nWidth
-   IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
-      nWidth := wapi_MulDiv( ::FontWidth[ 1 ], ::PixelsPerInchX, ::FontWidth[ 2 ] )
-   ELSE
-      nWidth := win_GetCharSize( ::hPrinterDC )
-   ENDIF
-   RETURN nWidth
-
-METHOD GetCharHeight() CLASS WIN_PRN
-   RETURN win_GetCharSize( ::hPrinterDC, .T. )
 
 METHOD GetTextWidth( cString ) CLASS WIN_PRN
    LOCAL nWidth
