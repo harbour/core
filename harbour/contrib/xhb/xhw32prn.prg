@@ -82,11 +82,8 @@ CREATE CLASS WIN32PRN FROM WIN_PRN
    VAR SetTextVert      INIT TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TEXTOUT)
 
    /* not implemented */
-
 //   METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
 //   METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
-
-//   VAR AskProperties    INIT .F.
 
 ENDCLASS
 

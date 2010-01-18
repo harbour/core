@@ -320,33 +320,6 @@ BOOL WINAPI SetKeyboardState( PBYTE p )
    return FALSE;
 }
 
-#if !defined( _MSC_VER ) || defined( __POCC__ ) || defined( __XCC__ )
-
-#ifndef LocalLock
-PVOID WINAPI LocalLock( HLOCAL h )
-{
-   return ( PVOID ) h;
-}
-#endif
-
-#ifndef LocalUnlock
-BOOL WINAPI LocalUnlock( HLOCAL h )
-{
-   HB_SYMBOL_UNUSED( h );
-
-   return FALSE;
-}
-#endif
-
-#ifndef LocalHandle
-HLOCAL WINAPI LocalHandle( LPCVOID p )
-{
-   return ( HLOCAL ) p;
-}
-#endif
-
-#endif /* !_MSC_VER || __POCC__ || __XCC__ */
-
 #if defined( __MINGW32CE__ )
 int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
 {
