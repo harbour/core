@@ -220,6 +220,10 @@
 #define WIN_FW_HEAVY                900
 #define WIN_FW_BLACK                WIN_FW_HEAVY
 
+/* WIN_SETBKMODE() modes */
+#define WIN_TRANSPARENT             1
+#define WIN_OPAQUE                  2
+
 /* Windows charset values (WIN_CREATEFONT()) */
 #define WIN_ANSI_CHARSET            0
 #define WIN_DEFAULT_CHARSET         1
