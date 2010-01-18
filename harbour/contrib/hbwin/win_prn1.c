@@ -499,37 +499,81 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
          if( lSize > 0 )
          {
             PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
-            int iProp, iProp2;
 
-            DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
-
-            if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
-               pDevMode->dmPaperSize = ( short ) iProp;
-
-            if( HB_ISLOG( 4 ) )
-               pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? DMORIENT_LANDSCAPE : DMORIENT_PORTRAIT );
-
-            if( ( iProp = hb_parni( 5 ) ) > 0 )
-               pDevMode->dmCopies = ( short ) iProp;
-
-            if( ( iProp = hb_parni( 6 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
-               pDevMode->dmDefaultSource = ( short ) iProp;
-
-            if( ( iProp = hb_parni( 7 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
-               pDevMode->dmDuplex = ( short ) iProp;
-
-            if( ( iProp = hb_parni( 8 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
-               pDevMode->dmPrintQuality = ( short ) iProp;
-
-            if( pDevMode->dmPaperSize == DMPAPER_USER &&
-                ( iProp = hb_parni( 9 ) ) > 0 &&
-                ( iProp2 = hb_parni( 10 ) ) > 0 )
+            if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
             {
-               pDevMode->dmPaperLength = ( short ) iProp;
-               pDevMode->dmPaperWidth = ( short ) iProp2;
-            }
+               DWORD dmFields = 0, fMode;
+               HB_BOOL fUserDialog;
+               int iProp, iProp2;
 
-            bResult = ( ResetDC( hDC, pDevMode ) != NULL );
+               fUserDialog = HB_ISBYREF( 3 ) || HB_ISBYREF( 4 ) ||
+                             HB_ISBYREF( 5 ) || HB_ISBYREF( 6 ) ||
+                             HB_ISBYREF( 7 ) || HB_ISBYREF( 8 ) ||
+                             HB_ISBYREF( 9 ) || HB_ISBYREF( 10 );
+
+               if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               {
+                  pDevMode->dmPaperSize = ( short ) iProp;
+                  dmFields |= DM_PAPERSIZE;
+               }
+
+               if( HB_ISLOG( 4 ) )
+               {
+                  pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? DMORIENT_LANDSCAPE : DMORIENT_PORTRAIT );
+                  dmFields |= DM_ORIENTATION;
+               }
+
+               if( ( iProp = hb_parni( 5 ) ) > 0 )
+               {
+                  pDevMode->dmCopies = ( short ) iProp;
+                  dmFields |= DM_COPIES;
+               }
+
+               if( ( iProp = hb_parni( 6 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               {
+                  pDevMode->dmDefaultSource = ( short ) iProp;
+                  dmFields |= DM_DEFAULTSOURCE;
+               }
+
+               if( ( iProp = hb_parni( 7 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               {
+                  pDevMode->dmDuplex = ( short ) iProp;
+                  dmFields |= DM_DUPLEX;
+               }
+
+               if( ( iProp = hb_parni( 8 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
+               {
+                  pDevMode->dmPrintQuality = ( short ) iProp;
+                  dmFields |= DM_PRINTQUALITY;
+               }
+
+               if( pDevMode->dmPaperSize == DMPAPER_USER &&
+                   ( iProp = hb_parni( 9 ) ) > 0 &&
+                   ( iProp2 = hb_parni( 10 ) ) > 0 )
+               {
+                  pDevMode->dmPaperLength = ( short ) iProp;
+                  pDevMode->dmPaperWidth = ( short ) iProp2;
+                  dmFields |= DM_PAPERLENGTH | DM_PAPERWIDTH;
+               }
+
+               fMode = DM_IN_BUFFER | DM_OUT_BUFFER;
+               if( fUserDialog )
+                  fMode |= DM_IN_PROMPT;
+
+               if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, fMode ) == IDOK )
+               {
+                  hb_storni( pDevMode->dmPaperSize, 3 );
+                  hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 4 );
+                  hb_storni( pDevMode->dmCopies, 5 );
+                  hb_storni( pDevMode->dmDefaultSource, 6 );
+                  hb_storni( pDevMode->dmDuplex, 7 );
+                  hb_storni( pDevMode->dmPrintQuality, 8 );
+                  hb_storni( pDevMode->dmPaperLength, 9 );
+                  hb_storni( pDevMode->dmPaperWidth, 10 );
+
+                  bResult = ( ResetDC( hDC, pDevMode ) != NULL );
+               }
+            }
 
             hb_xfree( pDevMode );
          }
@@ -558,17 +602,18 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
       {
          PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
 
-         DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
-
-         hb_storni( pDevMode->dmPaperSize, 2 );
-         hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 3 );
-         hb_storni( pDevMode->dmCopies, 4 );
-         hb_storni( pDevMode->dmDefaultSource, 5 );
-         hb_storni( pDevMode->dmDuplex, 6 );
-         hb_storni( pDevMode->dmPrintQuality, 7 );
-         hb_storni( pDevMode->dmPaperLength, 8 );
-         hb_storni( pDevMode->dmPaperWidth, 9 );
-         bResult = HB_TRUE;
+         if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
+         {
+            hb_storni( pDevMode->dmPaperSize, 2 );
+            hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 3 );
+            hb_storni( pDevMode->dmCopies, 4 );
+            hb_storni( pDevMode->dmDefaultSource, 5 );
+            hb_storni( pDevMode->dmDuplex, 6 );
+            hb_storni( pDevMode->dmPrintQuality, 7 );
+            hb_storni( pDevMode->dmPaperLength, 8 );
+            hb_storni( pDevMode->dmPaperWidth, 9 );
+            bResult = HB_TRUE;
+         }
 
          hb_xfree( pDevMode );
       }

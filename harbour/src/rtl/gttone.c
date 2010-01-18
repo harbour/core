@@ -66,9 +66,13 @@
 
 #if defined( HB_OS_WIN )
 
+#undef HB_HAS_WIN9X_TONE
+
 #if defined( HB_CPU_X86 ) && \
     ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
       defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
+
+#define HB_HAS_WIN9X_TONE
 
 #if defined( _MSC_VER ) || defined( __WATCOMC__ )
    #include <conio.h>
@@ -240,22 +244,15 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
    /* keep the frequency in an acceptable range */
    dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
 
-   /* If Windows NT or NT2k, use wNtTone, which provides TONE()
-      reset sequence support (new) */
-   if( hb_iswinnt() || hb_iswince() )
-   {
+#if defined( HB_HAS_WIN9X_TONE )
+   if( hb_iswin9x() )
+      /* If Windows 95 or 98, use w9xTone for chosen C compilers */
+      hb_gt_w9xTone( dFrequency, dDuration );
+   else
+#endif
+      /* If Windows NT or NT2k, use wNtTone, which redirects TONE() to
+         WIN API Beep() function */
       hb_gt_wNtTone( dFrequency, dDuration );
-   }
-   else  /* If Windows 95 or 98, use w9xTone for chosen C compilers */
-   {
-      #if defined( HB_CPU_X86 ) && \
-          ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-            defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
-         hb_gt_w9xTone( dFrequency, dDuration );
-      #else
-         hb_gt_wNtTone( dFrequency, dDuration );
-      #endif
-   }
 }
 
 #endif /* HB_OS_WIN */

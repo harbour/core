@@ -393,21 +393,43 @@ char * hb_verPlatform( void )
    return pszPlatform;
 }
 
+#if defined( HB_OS_WIN )
+static HB_BOOL s_fWinVerInit = HB_FALSE;
+
+static HB_BOOL s_fWinNT = HB_FALSE;
+static HB_BOOL s_fWin9x = HB_FALSE;
+
+static void s_hb_winVerInit( void )
+{
+   OSVERSIONINFO osvi;
+
+   osvi.dwOSVersionInfoSize = sizeof( osvi );
+   if( GetVersionEx( &osvi ) )
+   {
+      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
+      s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
+   }
+   s_fWinVerInit = HB_TRUE;
+}
+#endif
+
 HB_BOOL hb_iswinnt( void )
 {
 #if defined( HB_OS_WIN )
-   static HB_BOOL s_fWinNT = HB_FALSE;
-   static HB_BOOL s_fInited = HB_FALSE;
-
-   if( ! s_fInited )
-   {
-      OSVERSIONINFO osvi;
-      osvi.dwOSVersionInfoSize = sizeof( osvi );
-      if( GetVersionEx( &osvi ) )
-         s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
-      s_fInited = HB_TRUE;
-   }
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
    return s_fWinNT;
+#else
+   return HB_FALSE;
+#endif
+}
+
+HB_BOOL hb_iswin9x( void )
+{
+#if defined( HB_OS_WIN )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin9x;
 #else
    return HB_FALSE;
 #endif

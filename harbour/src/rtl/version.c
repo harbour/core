@@ -186,6 +186,11 @@ HB_FUNC( HB_VERSION )
    }
 }
 
+HB_FUNC( HB_OSISWIN9X )
+{
+   hb_retl( hb_iswin9x() );
+}
+
 HB_FUNC( HB_OSISWINNT )
 {
    hb_retl( hb_iswinnt() );

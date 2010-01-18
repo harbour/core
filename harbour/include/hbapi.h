@@ -1144,6 +1144,7 @@ extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a stat
 extern HB_EXPORT const char * hb_verHB_PLAT( void );         /* retrieves a static buffer containing build time HB_PLATFORM setting */
 extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a static buffer containing build time HB_COMPILER setting */
 
+extern HB_EXPORT HB_BOOL hb_iswin9x( void ); /* return .T. if OS == Windows 9x, ME */
 extern HB_EXPORT HB_BOOL hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT HB_BOOL hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );

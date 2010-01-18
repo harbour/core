@@ -153,6 +153,8 @@ CREATE CLASS WIN_PRN
    VAR PageNumber       INIT 0
    VAR hPrinterDc       INIT 0
 
+   VAR AskProperties    INIT .F.
+
    // These next 6 variables must be set before calling ::Create() if
    // you wish to alter the defaults
    VAR FormType         INIT 0
@@ -221,6 +223,7 @@ METHOD New( cPrinter ) CLASS WIN_PRN
 
 METHOD Create() CLASS WIN_PRN
    LOCAL lResult := .F.
+
    ::Destroy()                            // Finish current print job if any
    IF ! Empty( ::hPrinterDC := win_CreateDC( ::PrinterName ) )
 
@@ -229,42 +232,57 @@ METHOD Create() CLASS WIN_PRN
       // Set Orientation
       // Set Duplex mode
       // Set PrintQuality
-      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
-                                 ::FormType, ::Landscape, ;
-                                 ::Copies, ::BinNumber, ::fDuplexType, ;
-                                 ::fPrintQuality, ::PaperLength, ::PaperWidth )
-      // Set mapping mode to pixels, topleft down
-      win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
-//    win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
-      // Get Margins etc... here
-      ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
-      ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
-      ::LeftMargin       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
-      ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
-      ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
-      ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
-      ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
-      ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
-      ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
-      // Set .T. if can print bitmaps
-      ::BitMapsOk := win_BitMapsOk( ::hPrinterDC )
+      IF ::AskProperties
+         lResult := win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
+                                               @::FormType, @::Landscape, ;
+                                               @::Copies, @::BinNumber, ;
+                                               @::fDuplexType, @::fPrintQuality, ;
+                                               @::PaperLength, @::PaperWidth )
+      ELSE
+         lResult := win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
+                                               ::FormType, ::Landscape, ;
+                                               ::Copies, ::BinNumber, ;
+                                               ::fDuplexType, ::fPrintQuality, ;
+                                               ::PaperLength, ::PaperWidth )
+      ENDIF
 
-      // supports Colour
-      ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
+      IF !lResult
+         win_DeleteDC( ::hPrinterDC )
+         ::hPrinterDC := NIL
+      ELSE
+         // Set mapping mode to pixels, topleft down
+         win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
+//         win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+         // Get Margins etc... here
+         ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
+         ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
+         ::LeftMargin       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
+         ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
+         ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
+         ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
+         ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
+         ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
+         ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
-      // Set the standard font
-      ::SetDefaultFont()
-      ::PageNumber := 0
-      ::HavePrinted := ::Printing := ::PageInit := .F.
-      ::fOldFormType     := ::FormType  // Last formtype used
-      ::fOldLandScape    := ::LandScape
-      ::fOldBinNumber    := ::BinNumber
-      ::fNewDuplexType   := ::fDuplexType
-      ::fNewPrintQuality := ::fPrintQuality
-      ::fOldPaperLength  := ::PaperLength
-      ::fOldPaperWidth   := ::PaperWidth
-      lResult := .T.
+         // Set .T. if can print bitmaps
+         ::BitMapsOk := win_BitMapsOk( ::hPrinterDC )
+
+         // supports Colour
+         ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
+
+         // Set the standard font
+         ::SetDefaultFont()
+         ::PageNumber := 0
+         ::HavePrinted := ::Printing := ::PageInit := .F.
+         ::fOldFormType     := ::FormType  // Last formtype used
+         ::fOldLandScape    := ::LandScape
+         ::fOldBinNumber    := ::BinNumber
+         ::fNewDuplexType   := ::fDuplexType
+         ::fNewPrintQuality := ::fPrintQuality
+         ::fOldPaperLength  := ::PaperLength
+         ::fOldPaperWidth   := ::PaperWidth
+      ENDIF
    ENDIF
    RETURN lResult
 
