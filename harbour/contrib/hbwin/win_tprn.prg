@@ -425,7 +425,7 @@ METHOD GetDocumentProperties() CLASS WIN_PRN
 // An array {nMul,nDiv} is used to get precise size such a the Dot Matric equivalent
 // of Compressed print == 16.67 char per inch == { 3,-50 }
 // If nDiv is < 0 then Fixed width printing is forced via ExtTextOut()
-METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet ) CLASS WIN_PRN
+METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet ) CLASS WIN_PRN
    LOCAL cType
    IF cFontName != NIL
       ::FontName := cFontName
@@ -433,12 +433,12 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
    IF nPointSize != NIL
       ::FontPointSize := nPointSize
    ENDIF
-   IF nWidth != NIL
-      cType := ValType( nWidth )
+   IF xWidth != NIL
+      cType := ValType( xWidth )
       IF cType == "A"
-         ::FontWidth := nWidth
-      ELSEIF cType == "N" .AND. ! Empty( nWidth )
-         ::FontWidth := { 1, nWidth }
+         ::FontWidth := xWidth
+      ELSEIF cType == "N" .AND. ! Empty( xWidth )
+         ::FontWidth := { 1, xWidth }
       ELSE
          ::FontWidth := { 0, 0 }
       ENDIF
