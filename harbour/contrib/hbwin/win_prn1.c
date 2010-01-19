@@ -419,18 +419,29 @@ HB_FUNC( WIN_CREATEFONT )
    {
       HFONT hFont;
       void * hFontFace;
-      int iHeight = hb_parni( 3 );
-      int iMul = hb_parni( 4 );
-      int iDiv = hb_parni( 5 );
+      int iHeight;
       int iWidth;
       int iWeight = hb_parni( 6 );
 
       iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
-      iHeight = -MulDiv( iHeight, GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
-      if( iDiv )
-         iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
+
+      if( hb_parl( 10 ) ) /* Ugly hack to enable full control for caller */
+      {
+         iHeight = hb_parni( 3 );
+         iWidth = hb_parni( 5 );
+      }
       else
-         iWidth = 0;  /* Use the default font width */
+      {
+         int iMul = hb_parni( 4 );
+         int iDiv = hb_parni( 5 );
+
+         iHeight = -MulDiv( hb_parni( 3 ), GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
+
+         if( iDiv )
+            iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
+         else
+            iWidth = 0;  /* Use the default font width */
+      }
 
       hFont = CreateFont( iHeight,
                           iWidth,

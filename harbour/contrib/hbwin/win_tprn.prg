@@ -89,7 +89,7 @@ CREATE CLASS WIN_PRN
    METHOD NewPage( lDelay )         // If lDelay == .T. then new page is not created immediately but just before 1-st output
    METHOD CheckPage()
    METHOD GetDocumentProperties()
-   METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet )
+   METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet, lManualSize )
                                                       // NB: xWidth is in "CharactersPerInch"
                                                       //     _OR_ { nMul, nDiv } which equates to "CharactersPerInch"
                                                       //     _OR_ ZERO ( 0 ) which uses the default width of the font
@@ -371,6 +371,7 @@ METHOD StartPage() CLASS WIN_PRN
       lChangeDP := .T.
    ENDIF
    IF lChangeDP
+      HB_TRACELOG( "setdoc", nLFormType )
       win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
                                  nLFormType, lLLandscape, , ;
                                  nLBinNumber, nLDuplexType, nLPrintQuality, ;
@@ -441,7 +442,7 @@ METHOD GetDocumentProperties() CLASS WIN_PRN
 // An array {nMul,nDiv} is used to get precise size such a the Dot Matric equivalent
 // of Compressed print == 16.67 char per inch == { 3,-50 }
 // If nDiv is < 0 then Fixed width printing is forced via ExtTextOut()
-METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet ) CLASS WIN_PRN
+METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet, lManualSize ) CLASS WIN_PRN
    LOCAL cType
    IF cFontName != NIL
       ::FontName := cFontName
@@ -471,7 +472,7 @@ METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nChar
    IF nCharSet != NIL
       ::fCharSet := nCharSet
    ENDIF
-   IF ( ::SetFontOk := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet ) ) )
+   IF ( ::SetFontOk := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet, lManualSize ) ) )
       ::fCharWidth  := ::GetCharWidth()
       ::CharWidth   := Abs( ::fCharWidth )
       ::CharHeight  := ::GetCharHeight()
