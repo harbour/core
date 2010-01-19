@@ -579,11 +579,12 @@ METHOD IdeEditsManager:insertText( cKey )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:zoom( nKey )
-   LOCAL nPointSize, oEdit, qFont
+   LOCAL nPointSize, qFont, oEdit, oEditor
 
-   IF empty( oEdit := ::getEditObjectCurrent() )
+   IF empty( oEditor := ::getEditorCurrent() )
       RETURN Self
    ENDIF
+   oEdit := oEditor:oEdit
 
    qFont := QFont():configure( oEdit:qEdit:font() )
    qFont:setFamily( "Courier New" )
@@ -593,10 +594,15 @@ METHOD IdeEditsManager:zoom( nKey )
 
    IF nPointSize > 4 .AND. nPointSize < 37
       qFont:setPointSize( nPointSize )
+
       oEdit:qEdit:setFont( qFont )
       oEdit:qLineNos:setFont( qFont )
-   ENDIF
 
+      FOR EACH oEdit IN oEditor:aEdits
+         oEdit:qEdit:setFont( qFont )
+         oEdit:qLineNos:setFont( qFont )
+      NEXT
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -739,6 +745,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    METHOD split( nOrient, oEditP )
+   METHOD relay( oEdit )
    METHOD destroy()
    METHOD exeEvent( nMode, o, p, p1, p2 )
    METHOD setDocumentProperties()
@@ -860,25 +867,56 @@ METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditor:relay( oEdit )
+   LOCAL nCols, oEdt, nR, nC
+
+   ::qLayout:removeItem( ::oEdit:qHLayout )
+   FOR EACH oEdt IN ::aEdits
+      ::qLayout:removeItem( oEdt:qHLayout )
+      //
+      oEdt:qHLayout:removeWidget( oEdt:qLineNos )
+      oEdt:qHLayout:removeWidget( oEdt:qEdit )
+      oEdt:qHLayout := QHBoxLayout():new()
+      oEdt:qHLayout:addWidget( oEdt:qLineNos )
+      oEdt:qHLayout:addWidget( oEdt:qEdit )
+   NEXT
+
+   IF hb_isObject( oEdit )
+      aadd( ::aEdits, oEdit )
+   ENDIF
+   ::qLayout:addLayout( ::oEdit:qHLayout, 0, 0 )
+
+   // Now we know how many rows and columns
+   //
+   nR := 0 ; nC := 0
+   FOR EACH oEdt IN ::aEdits
+      IF oEdt:nOrient == 1     // Horiz
+         nC++
+         ::qLayout:addLayout_1( oEdt:qHLayout, 0, nC, 1, 1, Qt_Vertical )
+      ENDIF
+   NEXT
+   nCols := ::qLayout:columnCount()
+   FOR EACH oEdt IN ::aEdits
+      IF oEdt:nOrient == 2     // Verti
+         nR++
+         ::qLayout:addLayout_1( oEdt:qHLayout, nR, 0, 1, nCols, Qt_Horizontal )
+      ENDIF
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditor:split( nOrient, oEditP )
-   LOCAL oEdit, nRows, nCols
+   LOCAL oEdit
 
    HB_SYMBOL_UNUSED( oEditP  )
-   HB_SYMBOL_UNUSED( nOrient )
 
    oEdit := IdeEdit():new( Self, 1 ):create()
    oEdit:qEdit:setDocument( ::qDocument )
+   oEdit:nOrient := nOrient
 
-   aadd( ::aEdits, oEdit )
-
-   nRows := ::qLayout:rowCount()
-   nCols := ::qLayout:columnCount()
-
-   IF     nOrient == 1
-      ::qLayout:addLayout( oEdit:qHLayout, nRows -1 , nCols )
-   ELSEIF nOrient == 2
-      ::qLayout:addLayout( oEdit:qHLayout, nRows, nCols - 1 )
-   ENDIF
+   ::relay( oEdit )
 
    RETURN Self
 
@@ -1078,6 +1116,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   qEdit
    DATA   qHLayout
    DATA   qLineNos
+   DATA   nOrient                                 INIT  0
 
    DATA   nMode                                   INIT  0
    DATA   nLineNo                                 INIT  -99
@@ -1177,6 +1216,8 @@ METHOD IdeEdit:destroy()
 
    ::disConnectEditSlots( Self )
 
+   ::oEditor:qLayout:removeItem( ::qHLayout )
+   //
    ::qHLayout:removeWidget( ::qEdit )
    ::qHLayout:removeWidget( ::qLineNos )
 
@@ -1186,7 +1227,7 @@ METHOD IdeEdit:destroy()
    //::qEdit:pPtr    := 0
    ::qEdit         := NIL
 
-   ::qHLayout:pPtr := 0
+   //::qHLayout:pPtr := 0
    ::qHLayout      := NIL
 
    RETURN Self
@@ -1250,6 +1291,10 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
                oo := ::oEditor:aEdits[ n ]
                hb_adel( ::oEditor:aEdits, n, .t. )
                oo:destroy()
+               ::oEditor:relay()
+               ::oEditor:qCqEdit := ::oEditor:qEdit
+               ::oEditor:qCoEdit := ::oEditor:oEdit
+               ::oIde:manageFocusInEditor()
             ENDIF
          CASE qAct:text() == "Apply Theme"
             ::oEditor:applyTheme()

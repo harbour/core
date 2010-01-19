@@ -678,11 +678,11 @@ bool HBSlots::isConnected( QObject * object, const char * slot )
       {
          if( object->property( slot ).toInt() == i + 1 )
          {
-            return HB_TRUE;
+            return true;
          }
       }
    }
-   return HB_FALSE;
+   return false;
 }
 
 bool HBSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
@@ -690,7 +690,8 @@ bool HBSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
    HB_SYMBOL_UNUSED( pObj   );
    HB_SYMBOL_UNUSED( bBlock );
 
-   QObject * object = ( QObject * ) hbqt_pPtrFromItem( pObj );                  /* get sender    */
+   //QObject * object = ( QObject * ) hbqt_pPtrFromItem( pObj );             /* get sender    */
+   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );                   /* get sender    */
 
    if( object )
    {
@@ -701,19 +702,18 @@ HB_TRACE( HB_TR_ALWAYS, ( "AAA 3 %s  %p", slot, object ) );
 HB_TRACE( HB_TR_ALWAYS, ( "AAA 4" ) );
          if( bConnected )
          {
-            //PHB_ITEM pBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
             PHB_ITEM pBlock = hb_itemNew( bBlock );                        /* get codeblock */
 HB_TRACE( HB_TR_ALWAYS, ( "AAA 5" ) );
             listBlock << pBlock;
             listObj   << object;
 
-            object->setProperty( hb_parcx( 2 ), ( int ) listBlock.size() );
+            object->setProperty( slot, ( int ) listBlock.size() );
 
-            return HB_TRUE;
+            return true;
          }
       }
    }
-   return HB_FALSE;
+   return false;
 }
 
 bool HBSlots::hbDisconnect( PHB_ITEM pObj, const char * signal )
@@ -739,7 +739,7 @@ bool HBSlots::hbDisconnect( PHB_ITEM pObj, const char * signal )
          return bRet;
       }
    }
-   return HB_FALSE;
+   return false;
 }
 
 bool HBSlots::hbClear()
@@ -755,7 +755,7 @@ bool HBSlots::hbClear()
       }
    }
    listBlock.clear();
-   return HB_TRUE;
+   return true;
 }
 /* Generic Key and Mouse Events emitted by subclass objects */
 void HBSlots::customContextMenuRequested( const QPoint & pos )                                             { hbqt_SlotsExecQPoint(         this, qobject_cast<QObject *>( sender() ), "customContextMenuRequested(QPoint)", pos                         ); }

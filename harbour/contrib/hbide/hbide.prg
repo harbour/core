@@ -365,6 +365,10 @@ METHOD HbIde:create( cProjIni )
             ENDIF
 
          ENDCASE
+
+      ELSEIF ::nEvent == xbeM_Wheel
+         ::oEM:zoom( iif( ::mp2[ 2 ] < 0, 1, 0 ) )
+
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )

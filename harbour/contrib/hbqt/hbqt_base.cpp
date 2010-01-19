@@ -83,9 +83,9 @@ HB_FUNC( HBQT_ISEMPTYQTPOINTER )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
 
    if( p && p->ph )
-      hb_retl( false );
+      hb_retl( HB_FALSE );
    else
-      hb_retl( true );
+      hb_retl( HB_TRUE );
 }
 
 HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
@@ -98,14 +98,14 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
       if( p->ph && q->ph )
          hb_retl( p->ph == q->ph );
       else
-         hb_retl( false );
+         hb_retl( HB_FALSE );
    }
    else
    {
       if( p && p->ph )
          hb_retl( p->ph == hb_parptr( 2 ) );
       else
-         hb_retl( false );
+         hb_retl( HB_FALSE );
    }
 }
 

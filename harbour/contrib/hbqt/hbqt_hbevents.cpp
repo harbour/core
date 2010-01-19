@@ -110,9 +110,9 @@ bool HBEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
 
       object->setProperty( prop, ( int ) listBlock.size() );
 
-      return HB_TRUE;
+      return true;
    }
-   return HB_FALSE;
+   return false;
 }
 
 bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
@@ -135,10 +135,10 @@ bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
          object->setProperty( prop, QVariant() );
 
          HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", iEvent ) );
-         return HB_TRUE;
+         return true;
       }
    }
-   return HB_FALSE;
+   return false;
 }
 
 bool HBEvents::hbClear()
@@ -156,7 +156,7 @@ bool HBEvents::hbClear()
       }
    }
    listBlock.clear();
-   return HB_TRUE;
+   return true;
 }
 
 bool HBEvents::eventFilter( QObject * object, QEvent * event )
