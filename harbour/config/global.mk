@@ -1361,6 +1361,8 @@ ifeq ($(HB_INIT_DONE),)
          DYNNAME_POST := $(DYNNAME_POST)-wce
          ifeq ($(HB_CPU),arm)
             DYNNAME_POST := $(DYNNAME_POST)-arm
+         else ifeq ($(HB_CPU),x86)
+            DYNNAME_POST := $(DYNNAME_POST)-x86
          else ifeq ($(HB_CPU),mips)
             DYNNAME_POST := $(DYNNAME_POST)-mips
          else ifeq ($(HB_CPU),sh)

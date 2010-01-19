@@ -2458,6 +2458,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
 
@@ -2556,6 +2557,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
                                                       "harbour" + cDL_Version_Alter + "-wce-arm" ) }
+         CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86",;
+                                                      "harbour" + cDL_Version_Alter + "-wce-x86" ) }
          OTHERWISE
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter,;
                                                       "harbour" + cDL_Version_Alter ) }
@@ -3109,6 +3114,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
                AAdd( hbmk[ _HBMK_aOPTC ], "-DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__" )
+            CASE hbmk[ _HBMK_cCOMP ] == "msvc"
+               /* TODO */
             ENDCASE
             AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:oldnames.lib" )
@@ -3132,6 +3139,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE
+         CASE hbmk[ _HBMK_cCOMP ] == "msvc" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86" + cLibExt,;
+                                                      "harbour" + cDL_Version_Alter + "-wce-x86" + cLibExt ) }
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
+                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
          CASE hbmk[ _HBMK_cCOMP ] $ "msvc|icc"
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + cLibExt ) }
@@ -3141,9 +3154,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cCOMP ] $ "msvcia64|iccia64"
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-ia64" + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + "-ia64" + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
          ENDCASE
 
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }

@@ -79,6 +79,9 @@
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
    #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_X86 )
+   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
+   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
    #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
