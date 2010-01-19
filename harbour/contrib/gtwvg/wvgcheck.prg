@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -182,7 +182,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
 
 METHOD destroy() CLASS WvgCheckBox
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::wvgWindow:destroy()
 

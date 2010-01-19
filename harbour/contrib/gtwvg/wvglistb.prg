@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -240,7 +240,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 METHOD destroy() CLASS WvgListBox
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
 

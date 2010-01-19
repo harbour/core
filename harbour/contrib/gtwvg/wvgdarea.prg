@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -90,7 +90,6 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
@@ -134,7 +133,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDr
 METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
    LOCAL hDC
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -166,7 +165,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
 
 METHOD destroy() CLASS WvgDrawingArea
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    ::wvgWindow:destroy()
 

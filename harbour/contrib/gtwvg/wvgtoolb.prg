@@ -204,7 +204,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 METHOD WvgToolBar:handleEvent( nMessage, aNM )
    LOCAL nObj, aNMMouse
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
 
    SWITCH nMessage
 
@@ -218,7 +218,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
    CASE HB_GTE_NOTIFY
       aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
       #if 0
-      hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
+      hb_traceLog( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
                           aNMMouse[ NMH_code ], TBN_GETINFOTIPA )
       #endif
       DO CASE
@@ -255,7 +255,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 METHOD WvgToolBar:destroy()
    LOCAL i, nItems
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems

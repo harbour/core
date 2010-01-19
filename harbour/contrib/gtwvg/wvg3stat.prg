@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -182,7 +182,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
 METHOD Wvg3State:destroy()
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
 

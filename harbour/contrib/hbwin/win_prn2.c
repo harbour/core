@@ -466,9 +466,7 @@ HB_FUNC( WIN_PRINTERLIST )
             if( ! bLocalPrintersOnly || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
             {
                if( bPrinterNamesOnly )
-               {
                   hb_arrayAddForward( pPrinterArray, HB_ITEMPUTSTR( pTempItem, pPrinterEnum->pPrinterName ) );
-               }
                else
                {
                   HANDLE hPrinter;

@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -178,7 +178,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
 METHOD destroy() CLASS WvgPushButton
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::wvgWindow:destroy()
 

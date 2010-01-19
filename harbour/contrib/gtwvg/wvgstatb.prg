@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
    LOCAL nHandled := 1
    LOCAL nObj, aNMH
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -202,7 +202,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 METHOD WvgStatusBar:destroy()
    LOCAL i, nItems
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems

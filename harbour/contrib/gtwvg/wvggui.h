@@ -428,8 +428,6 @@ typedef struct _tag_HB_GT_COLDEF
 #endif
 
 /*----------------------------------------------------------------------*/
-void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
-/*----------------------------------------------------------------------*/
 #if 0
 extern HB_BOOL  wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );

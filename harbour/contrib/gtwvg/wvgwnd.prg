@@ -84,7 +84,7 @@
 #endif
 
 #ifndef __DBG_PARTS__
-   #xtranslate hb_ToOutDebug( [<x,...>] ) =>
+   #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -324,7 +324,7 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD WvgWindow:destroy()
    #if 0
-   hb_ToOutDebug( "          %s:destroy() WvgWindow()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy() WvgWindow()", __objGetClsName( self ) )
    #endif
 
    IF Len( ::aChildren ) > 0
@@ -1293,7 +1293,7 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
    #if 1
-   hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
+   hb_traceLog( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
    #endif
 
    SWITCH nMessage
@@ -1404,12 +1404,5 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    END
 
    RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
-
-/*----------------------------------------------------------------------*/
-
-#if 0
-FUNCTION hb_toOut( ... )
-   RETURN hb_ToOutDebug( ... )
-#endif
 
 /*----------------------------------------------------------------------*/

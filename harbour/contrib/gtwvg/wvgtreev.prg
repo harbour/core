@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -181,7 +181,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
    LOCAL cText   := space( 20 )
    LOCAL aHdr
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -244,7 +244,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
 
 METHOD destroy() CLASS WvgTreeView
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::wvgWindow:destroy()
 

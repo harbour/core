@@ -615,8 +615,6 @@ void        HB_EXPORT   hb_wvt_wvtUtils( void );
 
 PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
-void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
-
 void        HB_EXPORT   hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 
 /*----------------------------------------------------------------------*/

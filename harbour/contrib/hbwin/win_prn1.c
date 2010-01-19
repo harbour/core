@@ -133,7 +133,7 @@ static HB_GARBAGE_FUNC( s_gc_HPEN_release )
       DeleteObject( ( HPEN ) * ph );
 
       /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -175,7 +175,7 @@ static HB_GARBAGE_FUNC( s_gc_HFONT_release )
       DeleteObject( ( HFONT ) * ph );
 
       /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -665,11 +665,10 @@ HB_FUNC( WIN_DRAWBITMAP )
    if( hDC )
    {
       BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
-      BITMAPINFO * pbmi;
+      BITMAPINFO * pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
       BYTE * pBits;
       int cxDib, cyDib;
 
-      pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
       pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
 
       if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -691,6 +690,40 @@ HB_FUNC( WIN_DRAWBITMAP )
    }
    else
       hb_retl( HB_FALSE );
+}
+
+HB_FUNC( WIN_BITMAPDIMENSIONS )
+{
+   if( hb_parclen( 1 ) > 1 )
+   {
+      BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 1 );
+      BITMAPINFO * pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
+
+      int cxDib, cyDib;
+
+      if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
+      {                            /* Remember there are 2 types of BitMap File */
+         cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
+         cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
+      }
+      else
+      {
+         cxDib = pbmi->bmiHeader.biWidth;
+         cyDib = abs( pbmi->bmiHeader.biHeight );
+      }
+
+      hb_storni( cxDib, 2 );
+      hb_storni( cyDib, 3 );
+
+      hb_retl( HB_TRUE );
+   }
+   else
+   {
+      hb_storni( 0, 2 );
+      hb_storni( 0, 3 );
+
+      hb_retl( HB_FALSE );
+   }
 }
 
 static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,

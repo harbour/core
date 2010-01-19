@@ -69,13 +69,6 @@
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
 #endif
 
-#if 0
-#define __HBTOOUT__
-#endif
-#ifdef __HBTOOUT__
-void extern hb_ToOutDebug( const char * sTraceMsg, ... );
-#endif
-
 /*----------------------------------------------------------------------*/
 
 #undef  INTERFACE
@@ -125,9 +118,6 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTa
    if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )
    {
       *ppv = ( IUnknown * ) self;
-#ifdef __HBTOOUT__
-hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
-#endif
       HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
@@ -135,9 +125,6 @@ hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IU
    if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )
    {
       *ppv = ( IDispatch * ) self;
-#ifdef __HBTOOUT__
-hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
-#endif
       HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
@@ -147,9 +134,6 @@ hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_ID
       if( ++( ( ( MyRealIEventHandler * ) self )->iID_riid ) == 1 )
       {
          *ppv = ( IDispatch* ) self;
-#ifdef __HBTOOUT__
-hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
-#endif
          HB_VTBL( self )->AddRef( HB_THIS( self ) );
       }
       return S_OK;
@@ -169,10 +153,6 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 
 static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 {
-#ifdef __HBTOOUT__
-hb_ToOutDebug( "WinSink.c:Release %i", ( ( MyRealIEventHandler * ) self )->count );
-#endif
-
    if( --( ( MyRealIEventHandler * ) self )->count == 0 )
    {
       if( ( ( MyRealIEventHandler * ) self )->pSelf )
@@ -452,4 +432,3 @@ HB_FUNC( WVG_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, s
 }
 
 /*----------------------------------------------------------------------*/
-

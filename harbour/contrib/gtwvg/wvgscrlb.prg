@@ -117,7 +117,7 @@ typedef struct tagSCROLLINFO {;
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
    cSI := si:value
    IF WAPI_GetScrollInfo( ::pWnd, SB_CTL, @cSI )
       si:buffer( cSI )
-hb_ToOutDebug( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
+hb_traceLog( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
    ENDIF
 #endif
    RETURN Self
@@ -199,7 +199,7 @@ hb_ToOutDebug( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
    LOCAL nScrMsg, nScrPos, nCommand
 
-   hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -353,7 +353,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
 METHOD destroy() CLASS WvgScrollBar
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    ::wvgWindow:destroy()
 

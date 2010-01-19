@@ -634,8 +634,7 @@ HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
    lptbgit->cchTextMax = strlen( hb_parcx( 2 ) );
    /*memcpy( lptbgit->pszText, pszText, strlen( hb_parcx( 2 ) ) );*/
    lptbgit->pszText = pszText;
-/*hb_ToOutDebug( hb_parcx( 2 ) );
-  HB_TCHAR_FREE( pszText ); */
+   HB_TCHAR_FREE( pszText ); */
 }
 #endif
 /*----------------------------------------------------------------------*/

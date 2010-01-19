@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgML
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
    CASE nMessage == HB_GTE_COMMAND
@@ -242,7 +242,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
 
 METHOD destroy() CLASS WvgMLE
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    ::wvgWindow:destroy()
 

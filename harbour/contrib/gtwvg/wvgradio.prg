@@ -77,7 +77,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -142,7 +142,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -165,7 +165,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
 METHOD destroy() CLASS WvgRadioButton
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    ::wvgWindow:destroy()
 
