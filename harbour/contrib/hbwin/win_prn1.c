@@ -556,6 +556,8 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                   dmFields |= DM_PAPERLENGTH | DM_PAPERWIDTH;
                }
 
+               pDevMode->dmFields = dmFields;
+
                fMode = DM_IN_BUFFER | DM_OUT_BUFFER;
                if( fUserDialog )
                   fMode |= DM_IN_PROMPT;
