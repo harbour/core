@@ -2069,9 +2069,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       hbmk[ _HBMK_cFIRST ] := SubStr( hbmk[ _HBMK_cFIRST ], 2 )
    ENDIF
 
+#if 0 /* disabled to experiment with '-hbdyn -shared' combination. */
    IF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lSHARED ]
       hbmk[ _HBMK_lSHARED ] := .F.
    ENDIF
+#endif
 
    /* Force MT mode off in 1.0.x and xhb/dos compatibility modes. */
    IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
@@ -2309,7 +2311,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -2492,7 +2494,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -2605,7 +2607,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -3720,8 +3722,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF ! lStopAfterCComp .AND. ;
             ( l_cMAIN != NIL .OR. ;
               ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
-              hbmk[ _HBMK_cGT ] != NIL ) .OR. ;
-            l_cCMAIN != NIL
+              hbmk[ _HBMK_cGT ] != NIL .OR. ;
+              l_cCMAIN != NIL )
 
             l_cCSTUB := DirAddPathSep( cWorkDir ) + "_hbmkaut.c"
 
