@@ -71,6 +71,7 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, QObject
    METHOD  adjustSize()
    METHOD  begin()
    METHOD  blockCount()
+   METHOD  characterAt( nPos )
    METHOD  characterCount()
    METHOD  clear()
    METHOD  clone( pParent )
@@ -160,6 +161,10 @@ METHOD QTextDocument:begin()
 
 METHOD QTextDocument:blockCount()
    RETURN Qt_QTextDocument_blockCount( ::pPtr )
+
+
+METHOD QTextDocument:characterAt( nPos )
+   RETURN Qt_QTextDocument_characterAt( ::pPtr, nPos )
 
 
 METHOD QTextDocument:characterCount()

@@ -81,7 +81,7 @@
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
- *  // QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
+ *  //QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
  *  // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
  */
 
@@ -131,7 +131,7 @@ HB_FUNC( QT_QTEXTCODEC )
  */
 HB_FUNC( QT_QTEXTCODEC_CANENCODE )
 {
-   hb_retl( hbqt_par_QTextCodec( 1 )->canEncode( hb_parni( 2 ) ) );
+   hb_retl( hbqt_par_QTextCodec( 1 )->canEncode( *hbqt_par_QChar( 2 ) ) );
 }
 
 /*

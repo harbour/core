@@ -67,6 +67,7 @@ CREATE CLASS QTextStream INHERIT HbQtObjectHandler
 
    METHOD  new( ... )
 
+   METHOD  padChar()
    METHOD  atEnd()
    METHOD  autoDetectUnicode()
    METHOD  codec()
@@ -97,7 +98,7 @@ CREATE CLASS QTextStream INHERIT HbQtObjectHandler
    METHOD  setIntegerBase( nBase )
    METHOD  setLocale( pLocale )
    METHOD  setNumberFlags( nFlags )
-   METHOD  setPadChar( nCh )
+   METHOD  setPadChar( pCh )
    METHOD  setRealNumberNotation( nNotation )
    METHOD  setRealNumberPrecision( nPrecision )
    METHOD  setStatus( nStatus )
@@ -114,6 +115,10 @@ METHOD QTextStream:new( ... )
    NEXT
    ::pPtr := Qt_QTextStream( ... )
    RETURN Self
+
+
+METHOD QTextStream:padChar()
+   RETURN Qt_QTextStream_padChar( ::pPtr )
 
 
 METHOD QTextStream:atEnd()
@@ -236,8 +241,8 @@ METHOD QTextStream:setNumberFlags( nFlags )
    RETURN Qt_QTextStream_setNumberFlags( ::pPtr, nFlags )
 
 
-METHOD QTextStream:setPadChar( nCh )
-   RETURN Qt_QTextStream_setPadChar( ::pPtr, nCh )
+METHOD QTextStream:setPadChar( pCh )
+   RETURN Qt_QTextStream_setPadChar( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QTextStream:setRealNumberNotation( nNotation )

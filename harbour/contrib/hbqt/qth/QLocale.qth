@@ -92,18 +92,18 @@ Country country () const
 QString dateFormat ( FormatType format = LongFormat ) const
 QString dateTimeFormat ( FormatType format = LongFormat ) const
 QString dayName ( int day, FormatType type = LongFormat ) const
-// QChar decimalPoint () const
-// QChar exponential () const
-// QChar groupSeparator () const
+QChar decimalPoint () const
+QChar exponential () const
+QChar groupSeparator () const
 Language language () const
 MeasurementSystem measurementSystem () const
 QString monthName ( int month, FormatType type = LongFormat ) const
 QString name () const
-// QChar negativeSign () const
+QChar negativeSign () const
 NumberOptions numberOptions () const
-// QChar percent () const
+QChar percent () const
 QString pmText () const
-// QChar positiveSign () const
+QChar positiveSign () const
 void setNumberOptions ( NumberOptions options )
 QString standaloneDayName ( int day, FormatType type = LongFormat ) const
 QString standaloneMonthName ( int month, FormatType type = LongFormat ) const
@@ -136,7 +136,7 @@ QTime toTime ( const QString & string, const QString & format ) const
 uint toUInt ( const QString & s, bool * ok = 0, int base = 0 ) const
 qlonglong toULongLong ( const QString & s, bool * ok = 0, int base = 0 ) const
 ushort toUShort ( const QString & s, bool * ok = 0, int base = 0 ) const
-// QChar zeroDigit () const
+QChar zeroDigit () const
 
 QLocale c ()
 QList<Country> countriesForLanguage ( Language language )

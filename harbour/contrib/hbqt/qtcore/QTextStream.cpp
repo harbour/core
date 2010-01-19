@@ -88,13 +88,6 @@
  * QTextStream ( const QByteArray & array, QIODevice::OpenMode openMode = QIODevice::ReadOnly )
  * virtual ~QTextStream ()
  */
-/*
- * QChar padChar () const
- */
-HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
-{
-
-}
 
 typedef struct
 {
@@ -149,6 +142,14 @@ HB_FUNC( QT_QTEXTSTREAM )
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextStream( pObj, true ) );
+}
+
+/*
+ * QChar padChar () const
+ */
+HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QTextStream( 1 )->padChar() ), true ) );
 }
 
 /*
@@ -396,7 +397,7 @@ HB_FUNC( QT_QTEXTSTREAM_SETNUMBERFLAGS )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETPADCHAR )
 {
-   hbqt_par_QTextStream( 1 )->setPadChar( hb_parni( 2 ) );
+   hbqt_par_QTextStream( 1 )->setPadChar( *hbqt_par_QChar( 2 ) );
 }
 
 /*

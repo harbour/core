@@ -86,9 +86,7 @@ virtual QList<QByteArray> aliases () const
 bool canEncode ( QChar ch ) const
 bool canEncode ( const QString & s ) const
 QByteArray fromUnicode ( const QString & str ) const
-#
-// QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
-#
+//QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
 QTextDecoder * makeDecoder () const
 QTextEncoder * makeEncoder () const
 virtual int mibEnum () const = 0

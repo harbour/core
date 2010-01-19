@@ -70,27 +70,27 @@ CREATE CLASS QFontMetricsF INHERIT HbQtObjectHandler
    METHOD  ascent()
    METHOD  averageCharWidth()
    METHOD  boundingRect( cText )
-   METHOD  boundingRect_1( nCh )
+   METHOD  boundingRect_1( pCh )
    METHOD  boundingRect_2( pRect, nFlags, cText, nTabStops, nTabArray )
    METHOD  descent()
    METHOD  elidedText( cText, nMode, nWidth, nFlags )
    METHOD  height()
-   METHOD  inFont( nCh )
+   METHOD  inFont( pCh )
    METHOD  leading()
-   METHOD  leftBearing( nCh )
+   METHOD  leftBearing( pCh )
    METHOD  lineSpacing()
    METHOD  lineWidth()
    METHOD  maxWidth()
    METHOD  minLeftBearing()
    METHOD  minRightBearing()
    METHOD  overlinePos()
-   METHOD  rightBearing( nCh )
+   METHOD  rightBearing( pCh )
    METHOD  size( nFlags, cText, nTabStops, nTabArray )
    METHOD  strikeOutPos()
    METHOD  tightBoundingRect( cText )
    METHOD  underlinePos()
    METHOD  width( cText )
-   METHOD  width_1( nCh )
+   METHOD  width_1( pCh )
    METHOD  xHeight()
 
    ENDCLASS
@@ -117,8 +117,8 @@ METHOD QFontMetricsF:boundingRect( cText )
    RETURN Qt_QFontMetricsF_boundingRect( ::pPtr, cText )
 
 
-METHOD QFontMetricsF:boundingRect_1( nCh )
-   RETURN Qt_QFontMetricsF_boundingRect_1( ::pPtr, nCh )
+METHOD QFontMetricsF:boundingRect_1( pCh )
+   RETURN Qt_QFontMetricsF_boundingRect_1( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QFontMetricsF:boundingRect_2( pRect, nFlags, cText, nTabStops, nTabArray )
@@ -137,16 +137,16 @@ METHOD QFontMetricsF:height()
    RETURN Qt_QFontMetricsF_height( ::pPtr )
 
 
-METHOD QFontMetricsF:inFont( nCh )
-   RETURN Qt_QFontMetricsF_inFont( ::pPtr, nCh )
+METHOD QFontMetricsF:inFont( pCh )
+   RETURN Qt_QFontMetricsF_inFont( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QFontMetricsF:leading()
    RETURN Qt_QFontMetricsF_leading( ::pPtr )
 
 
-METHOD QFontMetricsF:leftBearing( nCh )
-   RETURN Qt_QFontMetricsF_leftBearing( ::pPtr, nCh )
+METHOD QFontMetricsF:leftBearing( pCh )
+   RETURN Qt_QFontMetricsF_leftBearing( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QFontMetricsF:lineSpacing()
@@ -173,8 +173,8 @@ METHOD QFontMetricsF:overlinePos()
    RETURN Qt_QFontMetricsF_overlinePos( ::pPtr )
 
 
-METHOD QFontMetricsF:rightBearing( nCh )
-   RETURN Qt_QFontMetricsF_rightBearing( ::pPtr, nCh )
+METHOD QFontMetricsF:rightBearing( pCh )
+   RETURN Qt_QFontMetricsF_rightBearing( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QFontMetricsF:size( nFlags, cText, nTabStops, nTabArray )
@@ -197,8 +197,8 @@ METHOD QFontMetricsF:width( cText )
    RETURN Qt_QFontMetricsF_width( ::pPtr, cText )
 
 
-METHOD QFontMetricsF:width_1( nCh )
-   RETURN Qt_QFontMetricsF_width_1( ::pPtr, nCh )
+METHOD QFontMetricsF:width_1( pCh )
+   RETURN Qt_QFontMetricsF_width_1( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QFontMetricsF:xHeight()

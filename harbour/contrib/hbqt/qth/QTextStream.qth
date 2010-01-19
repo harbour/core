@@ -77,13 +77,6 @@ HB_FUNC( QT_QTEXTSTREAM )
 {
    hb_retptr( new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
 }
-/*
- * QChar padChar () const
- */
-HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
-{
-
-}
 </CODE>
 
 <ENUMS>
@@ -95,6 +88,7 @@ enum Status { Ok, ReadPastEnd, ReadCorruptData }
 </ENUMS>
 
 <PROTOS>
+QChar padChar () const
 bool atEnd () const
 bool autoDetectUnicode () const
 QTextCodec * codec () const

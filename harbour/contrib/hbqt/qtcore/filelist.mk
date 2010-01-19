@@ -17,6 +17,7 @@ CPP_SOURCES := \
    QAbstractTableModel.cpp \
    QBitArray.cpp \
    QByteArray.cpp \
+   QChar.cpp \
    QCoreApplication.cpp \
    QDataStream.cpp \
    QDate.cpp \
@@ -72,6 +73,7 @@ PRG_SOURCES := \
    TQAbstractTableModel.prg \
    TQBitArray.prg \
    TQByteArray.prg \
+   TQChar.prg \
    TQCoreApplication.prg \
    TQDataStream.prg \
    TQDate.prg \

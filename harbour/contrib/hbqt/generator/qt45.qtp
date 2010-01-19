@@ -43,6 +43,7 @@ QBrush.qth
 QButtonGroup.qth
 QByteArray.qth
 QCalendarWidget.qth
+QChar.qth
 QCheckBox.qth
 QClipboard.qth
 QColor.qth

@@ -728,7 +728,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss, cFirstParamCast
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess
-   LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+ * LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+   LOCAL cInt         := 'int,qint16,quint16,short,ushort'
    LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
 
@@ -995,6 +996,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'p' + cDocNM
 
+            CASE aA[ PRT_CAST ] == 'QChar'
+               aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'p' + cDocNM
+
             OTHERWISE
                aA[ PRT_BODY ] := ''
                aA[ PRT_DOC  ] := ''
@@ -1202,7 +1207,8 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cRet, cFun, cDocs, cCmd
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cDocNM
    LOCAL lSuccess
-   LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+ * LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+   LOCAL cInt         := 'int,qint16,quint16,short,ushort'
    LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
 

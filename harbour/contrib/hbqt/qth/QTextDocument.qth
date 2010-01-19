@@ -90,9 +90,7 @@ void adjustSize ()
 QVector<QTextFormat> allFormats () const
 QTextBlock begin () const
 int blockCount () const
-#
-// QChar characterAt ( int pos ) const
-#
+QChar characterAt ( int pos ) const
 int characterCount () const
 virtual void clear ()
 QTextDocument * clone ( QObject * parent = 0 ) const

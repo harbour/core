@@ -71,7 +71,7 @@
  */
 
 /*
- *  Constructed[ 36/42 [ 85.71% ] ]
+ *  Constructed[ 37/42 [ 88.10% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -82,7 +82,6 @@
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
- *  //QChar toChar () const
  *  //const char * typeName () const
  *  //T value () const
  */
@@ -272,6 +271,14 @@ HB_FUNC( QT_QVARIANT_TOBOOL )
 HB_FUNC( QT_QVARIANT_TOBYTEARRAY )
 {
    hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QVariant( 1 )->toByteArray() ), true ) );
+}
+
+/*
+ * QChar toChar () const
+ */
+HB_FUNC( QT_QVARIANT_TOCHAR )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QVariant( 1 )->toChar() ), true ) );
 }
 
 /*

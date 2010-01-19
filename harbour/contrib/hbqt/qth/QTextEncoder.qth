@@ -80,7 +80,7 @@ HB_FUNC( QT_QTEXTENCODER )
 
 <PROTOS>
 QByteArray fromUnicode ( const QString & str )
-//QByteArray fromUnicode ( const QChar * uc, int len )
+QByteArray fromUnicode ( const QChar * uc, int len )
 //QByteArray fromUnicode ( const QString & uc, int & lenInOut )
 </PROTOS>
 

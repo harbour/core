@@ -139,6 +139,14 @@ HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
    hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) );
 }
 
+/*
+ * QByteArray fromUnicode ( const QChar * uc, int len )
+ */
+HB_FUNC( QT_QTEXTENCODER_FROMUNICODE_1 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

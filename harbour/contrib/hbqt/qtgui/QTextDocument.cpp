@@ -74,16 +74,12 @@
  */
 
 /*
- *  Constructed[ 66/68 [ 97.06% ] ]
+ *  Constructed[ 67/68 [ 98.53% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QVector<QTextFormat> allFormats () const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // QChar characterAt ( int pos ) const
  */
 
 #include <QtCore/QPointer>
@@ -194,6 +190,14 @@ HB_FUNC( QT_QTEXTDOCUMENT_BEGIN )
 HB_FUNC( QT_QTEXTDOCUMENT_BLOCKCOUNT )
 {
    hb_retni( hbqt_par_QTextDocument( 1 )->blockCount() );
+}
+
+/*
+ * QChar characterAt ( int pos ) const
+ */
+HB_FUNC( QT_QTEXTDOCUMENT_CHARACTERAT )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QTextDocument( 1 )->characterAt( hb_parni( 2 ) ) ), true ) );
 }
 
 /*

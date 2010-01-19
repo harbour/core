@@ -131,11 +131,7 @@ void setValue ( const T & value )
 QBitArray toBitArray () const
 bool toBool () const
 QByteArray toByteArray () const
-#
-# Donot know how to return this type
-#
-//QChar toChar () const
-#
+QChar toChar () const
 QDate toDate () const
 QDateTime toDateTime () const
 double toDouble ( bool * ok = 0 ) const

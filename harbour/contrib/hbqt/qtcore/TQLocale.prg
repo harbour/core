@@ -72,12 +72,18 @@ CREATE CLASS QLocale INHERIT HbQtObjectHandler
    METHOD  dateFormat( nFormat )
    METHOD  dateTimeFormat( nFormat )
    METHOD  dayName( nDay, nType )
+   METHOD  decimalPoint()
+   METHOD  exponential()
+   METHOD  groupSeparator()
    METHOD  language()
    METHOD  measurementSystem()
    METHOD  monthName( nMonth, nType )
    METHOD  name()
+   METHOD  negativeSign()
    METHOD  numberOptions()
+   METHOD  percent()
    METHOD  pmText()
+   METHOD  positiveSign()
    METHOD  setNumberOptions( nOptions )
    METHOD  standaloneDayName( nDay, nType )
    METHOD  standaloneMonthName( nMonth, nType )
@@ -110,6 +116,7 @@ CREATE CLASS QLocale INHERIT HbQtObjectHandler
    METHOD  toUInt( cS, lOk, nBase )
    METHOD  toULongLong( cS, lOk, nBase )
    METHOD  toUShort( cS, lOk, nBase )
+   METHOD  zeroDigit()
    METHOD  c()
    METHOD  countryToString( nCountry )
    METHOD  languageToString( nLanguage )
@@ -148,6 +155,18 @@ METHOD QLocale:dayName( nDay, nType )
    RETURN Qt_QLocale_dayName( ::pPtr, nDay, nType )
 
 
+METHOD QLocale:decimalPoint()
+   RETURN Qt_QLocale_decimalPoint( ::pPtr )
+
+
+METHOD QLocale:exponential()
+   RETURN Qt_QLocale_exponential( ::pPtr )
+
+
+METHOD QLocale:groupSeparator()
+   RETURN Qt_QLocale_groupSeparator( ::pPtr )
+
+
 METHOD QLocale:language()
    RETURN Qt_QLocale_language( ::pPtr )
 
@@ -164,12 +183,24 @@ METHOD QLocale:name()
    RETURN Qt_QLocale_name( ::pPtr )
 
 
+METHOD QLocale:negativeSign()
+   RETURN Qt_QLocale_negativeSign( ::pPtr )
+
+
 METHOD QLocale:numberOptions()
    RETURN Qt_QLocale_numberOptions( ::pPtr )
 
 
+METHOD QLocale:percent()
+   RETURN Qt_QLocale_percent( ::pPtr )
+
+
 METHOD QLocale:pmText()
    RETURN Qt_QLocale_pmText( ::pPtr )
+
+
+METHOD QLocale:positiveSign()
+   RETURN Qt_QLocale_positiveSign( ::pPtr )
 
 
 METHOD QLocale:setNumberOptions( nOptions )
@@ -298,6 +329,10 @@ METHOD QLocale:toULongLong( cS, lOk, nBase )
 
 METHOD QLocale:toUShort( cS, lOk, nBase )
    RETURN Qt_QLocale_toUShort( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:zeroDigit()
+   RETURN Qt_QLocale_zeroDigit( ::pPtr )
 
 
 METHOD QLocale:c()

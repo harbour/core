@@ -517,6 +517,14 @@ HB_FUNC( QT_QDIR_SEARCHPATHS )
 }
 
 /*
+ * QChar separator ()
+ */
+HB_FUNC( QT_QDIR_SEPARATOR )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QDir( 1 )->separator() ), true ) );
+}
+
+/*
  * bool setCurrent ( const QString & path )
  */
 HB_FUNC( QT_QDIR_SETCURRENT )

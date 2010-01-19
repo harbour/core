@@ -76,22 +76,12 @@
  */
 
 /*
- *  Constructed[ 48/56 [ 85.71% ] ]
+ *  Constructed[ 55/56 [ 98.21% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<Country> countriesForLanguage ( Language language )
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // QChar decimalPoint () const
- *  // QChar exponential () const
- *  // QChar groupSeparator () const
- *  // QChar negativeSign () const
- *  // QChar percent () const
- *  // QChar positiveSign () const
- *  // QChar zeroDigit () const
  */
 
 #include <QtCore/QPointer>
@@ -201,6 +191,30 @@ HB_FUNC( QT_QLOCALE_DAYNAME )
 }
 
 /*
+ * QChar decimalPoint () const
+ */
+HB_FUNC( QT_QLOCALE_DECIMALPOINT )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->decimalPoint() ), true ) );
+}
+
+/*
+ * QChar exponential () const
+ */
+HB_FUNC( QT_QLOCALE_EXPONENTIAL )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->exponential() ), true ) );
+}
+
+/*
+ * QChar groupSeparator () const
+ */
+HB_FUNC( QT_QLOCALE_GROUPSEPARATOR )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->groupSeparator() ), true ) );
+}
+
+/*
  * Language language () const
  */
 HB_FUNC( QT_QLOCALE_LANGUAGE )
@@ -233,6 +247,14 @@ HB_FUNC( QT_QLOCALE_NAME )
 }
 
 /*
+ * QChar negativeSign () const
+ */
+HB_FUNC( QT_QLOCALE_NEGATIVESIGN )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->negativeSign() ), true ) );
+}
+
+/*
  * NumberOptions numberOptions () const
  */
 HB_FUNC( QT_QLOCALE_NUMBEROPTIONS )
@@ -241,11 +263,27 @@ HB_FUNC( QT_QLOCALE_NUMBEROPTIONS )
 }
 
 /*
+ * QChar percent () const
+ */
+HB_FUNC( QT_QLOCALE_PERCENT )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->percent() ), true ) );
+}
+
+/*
  * QString pmText () const
  */
 HB_FUNC( QT_QLOCALE_PMTEXT )
 {
    hb_retc( hbqt_par_QLocale( 1 )->pmText().toAscii().data() );
+}
+
+/*
+ * QChar positiveSign () const
+ */
+HB_FUNC( QT_QLOCALE_POSITIVESIGN )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->positiveSign() ), true ) );
 }
 
 /*
@@ -534,6 +572,14 @@ HB_FUNC( QT_QLOCALE_TOUSHORT )
    hb_retni( hbqt_par_QLocale( 1 )->toUShort( hbqt_par_QString( 2 ), &iOk, hb_parni( 4 ) ) );
 
    hb_stornl( iOk, 3 );
+}
+
+/*
+ * QChar zeroDigit () const
+ */
+HB_FUNC( QT_QLOCALE_ZERODIGIT )
+{
+   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QLocale( 1 )->zeroDigit() ), true ) );
 }
 
 /*

@@ -68,6 +68,7 @@ CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler
    METHOD  new( ... )
 
    METHOD  fromUnicode( cStr )
+   METHOD  fromUnicode_1( pUc, nLen )
 
    ENDCLASS
 
@@ -83,4 +84,8 @@ METHOD QTextEncoder:new( ... )
 
 METHOD QTextEncoder:fromUnicode( cStr )
    RETURN Qt_QTextEncoder_fromUnicode( ::pPtr, cStr )
+
+
+METHOD QTextEncoder:fromUnicode_1( pUc, nLen )
+   RETURN Qt_QTextEncoder_fromUnicode_1( ::pPtr, hbqt_ptr( pUc ), nLen )
 

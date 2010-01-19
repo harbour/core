@@ -77,6 +77,7 @@ CREATE CLASS QVariant INHERIT HbQtObjectHandler
    METHOD  toBitArray()
    METHOD  toBool()
    METHOD  toByteArray()
+   METHOD  toChar()
    METHOD  toDate()
    METHOD  toDateTime()
    METHOD  toDouble( lOk )
@@ -154,6 +155,10 @@ METHOD QVariant:toBool()
 
 METHOD QVariant:toByteArray()
    RETURN Qt_QVariant_toByteArray( ::pPtr )
+
+
+METHOD QVariant:toChar()
+   RETURN Qt_QVariant_toChar( ::pPtr )
 
 
 METHOD QVariant:toDate()

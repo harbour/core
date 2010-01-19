@@ -67,7 +67,7 @@ CREATE CLASS QTextCodec INHERIT HbQtObjectHandler
 
    METHOD  new( ... )
 
-   METHOD  canEncode( nCh )
+   METHOD  canEncode( pCh )
    METHOD  canEncode_1( cS )
    METHOD  fromUnicode( cStr )
    METHOD  makeDecoder()
@@ -100,8 +100,8 @@ METHOD QTextCodec:new( ... )
    RETURN Self
 
 
-METHOD QTextCodec:canEncode( nCh )
-   RETURN Qt_QTextCodec_canEncode( ::pPtr, nCh )
+METHOD QTextCodec:canEncode( pCh )
+   RETURN Qt_QTextCodec_canEncode( ::pPtr, hbqt_ptr( pCh ) )
 
 
 METHOD QTextCodec:canEncode_1( cS )

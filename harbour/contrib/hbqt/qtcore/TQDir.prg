@@ -114,6 +114,7 @@ CREATE CLASS QDir INHERIT HbQtObjectHandler
    METHOD  root()
    METHOD  rootPath()
    METHOD  searchPaths( cPrefix )
+   METHOD  separator()
    METHOD  setCurrent( cPath )
    METHOD  setSearchPaths( cPrefix, pSearchPaths )
    METHOD  temp()
@@ -318,6 +319,10 @@ METHOD QDir:rootPath()
 
 METHOD QDir:searchPaths( cPrefix )
    RETURN Qt_QDir_searchPaths( ::pPtr, cPrefix )
+
+
+METHOD QDir:separator()
+   RETURN Qt_QDir_separator( ::pPtr )
 
 
 METHOD QDir:setCurrent( cPath )
