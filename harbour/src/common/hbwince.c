@@ -228,6 +228,21 @@ BOOL WINAPI LockFile( HANDLE hFile,
    return TRUE;
 }
 
+BOOL WINAPI UnlockFile( HANDLE hFile,
+                        DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                        DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh )
+{
+   HB_SYMBOL_UNUSED( hFile );
+   HB_SYMBOL_UNUSED( dwFileOffsetLow );
+   HB_SYMBOL_UNUSED( dwFileOffsetHigh );
+   HB_SYMBOL_UNUSED( nNumberOfBytesToUnlockLow );
+   HB_SYMBOL_UNUSED( nNumberOfBytesToUnlockHigh );
+
+   return TRUE;
+}
+
+/* LockFileEx() and UnlockFileEx() functions are present in COREDLL6
+ */
 BOOL WINAPI LockFileEx( HANDLE hFile,
                         DWORD dwFlags, DWORD dwReserved,
                         DWORD nNumberOfBytesToLockLow,
@@ -239,19 +254,6 @@ BOOL WINAPI LockFileEx( HANDLE hFile,
    HB_SYMBOL_UNUSED( nNumberOfBytesToLockLow );
    HB_SYMBOL_UNUSED( nNumberOfBytesToLockHigh );
    HB_SYMBOL_UNUSED( lpOverlapped );
-
-   return TRUE;
-}
-
-BOOL WINAPI UnlockFile( HANDLE hFile,
-                        DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                        DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh )
-{
-   HB_SYMBOL_UNUSED( hFile );
-   HB_SYMBOL_UNUSED( dwFileOffsetLow );
-   HB_SYMBOL_UNUSED( dwFileOffsetHigh );
-   HB_SYMBOL_UNUSED( nNumberOfBytesToUnlockLow );
-   HB_SYMBOL_UNUSED( nNumberOfBytesToUnlockHigh );
 
    return TRUE;
 }
@@ -268,6 +270,7 @@ BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
 
    return TRUE;
 }
+
 
 UINT WINAPI SetErrorMode( UINT mode )
 {
@@ -294,6 +297,8 @@ BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat )
 {
    HB_SYMBOL_UNUSED( dwFreq );
    HB_SYMBOL_UNUSED( dwDurat );
+
+   MessageBeep( 0xFFFFFFFF );
 
    return FALSE;
 }

@@ -4270,7 +4270,7 @@ static void hb_pp_processCondDefined( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
          if( pToken->value[ 0 ] == '_' )
          {
-            const char * szSwitch = NULL;
+            const char * szSwitch;
 
             if( hb_pp_tokenValueCmp( pNext->pNext, "AUTOMEMVAR", HB_PP_CMP_DBASE ) )
                szSwitch = "a";

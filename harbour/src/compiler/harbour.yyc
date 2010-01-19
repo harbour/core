@@ -4046,6 +4046,7 @@ yydestruct (yymsg, yytype, yyvaluep, pComp)
 
   if (!yymsg)
     yymsg = "Deleting";
+  YYUSE (yymsg);
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
   switch (yytype)
@@ -4053,12 +4054,12 @@ yydestruct (yymsg, yytype, yyvaluep, pComp)
       case 19: /* "LITERAL" */
 #line 281 "harbour.y"
 	{ if( (yyvaluep->valChar).dealloc ) hb_xfree( (yyvaluep->valChar).string ); };
-#line 4057 "harboury.c"
+#line 4058 "harboury.c"
 	break;
       case 96: /* "CBSTART" */
 #line 280 "harbour.y"
 	{ if( (yyvaluep->asCodeblock).string )  hb_xfree( (yyvaluep->asCodeblock).string ); };
-#line 4062 "harboury.c"
+#line 4063 "harboury.c"
 	break;
 
       default:
@@ -4244,6 +4245,7 @@ int yynerrs;
 	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss);
 	YYSTACK_RELOCATE (yyvs);
+	YYUSE (yyptr);
 
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
@@ -6942,8 +6944,8 @@ yyreduce:
     break;
 
 
-/* Line 1267 of yacc.c.  */
-#line 6947 "harboury.c"
+/* Line 1268 of yacc.c.  */
+#line 6949 "harboury.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -6978,6 +6980,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
+      YYUSE (yynerrs);
 #if ! YYERROR_VERBOSE
       yyerror (pComp, YY_("syntax error"));
 #else
@@ -7044,13 +7047,16 @@ yyerrlab:
 /*---------------------------------------------------.
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
+#ifndef NO_YYERROR
 yyerrorlab:
 
   /* Pacify compilers like GCC when the user code never invokes
      YYERROR and the label yyerrorlab therefore never appears in user
      code.  */
+#if ! defined( __BORLANDC__ ) && ! defined( __WATCOMC__ )
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
+#endif
 
   /* Do not reclaim the symbols of the rule which action triggered
      this YYERROR.  */
@@ -7059,6 +7065,7 @@ yyerrorlab:
   YY_STACK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
+#endif /* NO_YYERROR */
 
 
 /*-------------------------------------------------------------.
@@ -8059,3 +8066,4 @@ void yyerror( HB_COMP_DECL, const char * s )
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
+
