@@ -188,6 +188,9 @@ CLASS HbIde
    DATA   cIniThemes
    DATA   cWrkCodec                               INIT   ""
 
+   DATA   nTabSpaces                              INIT   3           /* Via User Setup */
+   DATA   cTabSpaces                              INIT   space( 3 ) //::nTabSpaces )
+
    DATA   aTags                                   INIT   {}
    DATA   aText                                   INIT   {}
    DATA   aSources                                INIT   {}

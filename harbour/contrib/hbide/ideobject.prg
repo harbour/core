@@ -119,6 +119,9 @@ CLASS IdeObject
    ACCESS aProjData                               INLINE ::oIde:aProjData
    ACCESS aTabs                                   INLINE ::oIde:aTabs
 
+   ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
+   ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
+
    ACCESS oDockPT                                 INLINE ::oIde:oDockPT
    ACCESS oProjTree                               INLINE ::oIde:oProjTree
    ACCESS oProjRoot                               INLINE ::oIde:oProjRoot
