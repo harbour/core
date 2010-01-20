@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Cairo library: pdf
+ * Cairo library: image
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
