@@ -192,6 +192,10 @@
 #define WIN_DMDUP_VERTICAL          2
 #define WIN_DMDUP_HORIZONTAL        3
 
+/* WAPI DEVMODE "dmOrientation" modes */
+#define WIN_DMORIENT_PORTRAIT       1
+#define WIN_DMORIENT_LANDSCAPE      2
+
 /* WIN_SETMAPMODE() parameters */
 #define WIN_MM_TEXT                 1
 #define WIN_MM_LOMETRIC             2

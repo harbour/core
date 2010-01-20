@@ -161,7 +161,7 @@ HPEN hbwapi_par_HPEN( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
 
-   return ph ? ( HPEN ) * ph : ( HPEN ) hb_parptr( iParam );
+   return ph ? ( HPEN ) * ph : NULL;
 }
 
 static HB_GARBAGE_FUNC( s_gc_HFONT_release )
@@ -203,7 +203,7 @@ HFONT hbwapi_par_HFONT( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HFONT_funcs, iParam );
 
-   return ph ? ( HFONT ) * ph : ( HFONT ) hb_parptr( iParam );
+   return ph ? ( HFONT ) * ph : NULL;
 }
 
 HB_FUNC( WIN_CREATEDC )
@@ -401,14 +401,14 @@ HB_FUNC( WIN_GETDEVICECAPS )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retnl( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
+   hb_retni( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_SETMAPMODE )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retnl( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parni( 2 ) ) : 0 );
+   hb_retni( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_CREATEFONT )
@@ -899,9 +899,9 @@ HB_FUNC( WIN_SETBKMODE )
    if( hDC )
    {
       if( HB_ISNUM( 2 ) )
-         iMode = SetBkMode( hbwapi_par_HDC( 1 ), hb_parni( 2 ) );
+         iMode = SetBkMode( hDC, hb_parni( 2 ) );
       else
-         iMode = GetBkMode( hbwapi_par_HDC( 1 ) );
+         iMode = GetBkMode( hDC );
    }
    hb_retni( iMode );
 }
