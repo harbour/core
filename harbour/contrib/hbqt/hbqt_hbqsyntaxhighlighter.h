@@ -112,6 +112,7 @@ protected:
    QRegExp commentStartExpression;
    QRegExp commentEndExpression;
    QRegExp commentSingleLine;
+   QRegExp patternQuotation;
 
    QTextCharFormat keywordFormat;
    QTextCharFormat classFormat;

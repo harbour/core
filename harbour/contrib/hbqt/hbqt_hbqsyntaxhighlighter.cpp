@@ -97,6 +97,8 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    commentEndExpression = QRegExp( "\\*/" );
 
    commentSingleLine = QRegExp( "//[^\n]*" );
+
+   patternQuotation = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
 }
 
 void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -108,16 +110,23 @@ void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QText
 }
 void HBQSyntaxHighlighter::hbSetFormat( QString name, const QTextCharFormat & format )
 {
-   if( HighlightingRules.contains( name ) )
+   if( ( QString ) "TerminatedStrings" == name )
    {
-      HighlightingRule rule = HighlightingRules.value( name );
-      QRegExp reg = rule.pattern;
-
-      HighlightingRules.insert( name, HighlightingRule( reg, format ) );
+      quotationFormat = format;
    }
    else
    {
-      HighlightingRules.remove( name );
+      if( HighlightingRules.contains( name ) )
+      {
+         HighlightingRule rule = HighlightingRules.value( name );
+         QRegExp reg = rule.pattern;
+
+         HighlightingRules.insert( name, HighlightingRule( reg, format ) );
+      }
+      else
+      {
+         HighlightingRules.remove( name );
+      }
    }
 }
 void HBQSyntaxHighlighter::hbSetMultiLineCommentFormat( const QTextCharFormat & format )
@@ -131,13 +140,6 @@ void HBQSyntaxHighlighter::hbSetSingleLineCommentFormat( const QTextCharFormat &
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
-   //HB_TRACE( HB_TR_ALWAYS, ( "text = %s", ( char * ) &text ) );
-   #if 0
-   return ;
-   #endif
-
-   QRegExp expression;
-
    #if 0
    QTextBlock curBlock( currentBlock() );
    int iState = -1;
@@ -158,10 +160,12 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    }
    #endif
 
+   int index = 0;
+
    foreach( const HighlightingRule &rule, HighlightingRules )
    {
       QRegExp expression( rule.pattern );
-      int index = expression.indexIn( text );
+      index = expression.indexIn( text );
       while( index >= 0 )
       {
          int length = expression.matchedLength();
@@ -170,21 +174,32 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
 
+   /* Quoted text */
+   index = patternQuotation.indexIn( text );
+   while( index >= 0 )
+   {
+      int length = patternQuotation.matchedLength();
+      setFormat( index, length, quotationFormat );
+      index = patternQuotation.indexIn( text, index + length );
+   }
+
    /* Single Line Comments */
-   int index = commentSingleLine.indexIn( text );
+   index = commentSingleLine.indexIn( text );
    while( index >= 0 )
    {
       int length = commentSingleLine.matchedLength();
       setFormat( index, length, singleLineCommentFormat );
       index = commentSingleLine.indexIn( text, index + length );
    }
+
    setCurrentBlockState( 0 );
 
    /* Multi Line Comments */
    int startIndex = 0;
    if( previousBlockState() != 1 )
+   {
       startIndex = commentStartExpression.indexIn( text );
-
+   }
    while( startIndex >= 0 )
    {
       int endIndex = commentEndExpression.indexIn( text, startIndex );
@@ -195,8 +210,9 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
          commentLength = text.length() - startIndex;
       }
       else
+      {
          commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
-
+      }
       setFormat( startIndex, commentLength, multiLineCommentFormat );
       startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
    }

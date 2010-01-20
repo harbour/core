@@ -123,6 +123,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD getThemeAttribute( cAttr, cTheme )
    METHOD buildSyntaxFormat( aAttr )
    METHOD setForeBackGround( qEdit, cTheme )
+   METHOD setQuotesRule( qHiliter, cTheme )
    METHOD setMultiLineCommentRule( qHiliter, cTheme )
    METHOD setSingleLineCommentRule( qHiliter, cTheme )
    METHOD setSyntaxRule( qHiliter, cName, cPattern, aAttr )
@@ -204,8 +205,6 @@ METHOD IdeThemes:create( oIde, cIniFile )
    aadd( ::aPatterns, { "BracketsAndBraces" , "\(|\)|\{|\}|\[|\]|\|"  } )
 
    aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" } )
-
-   aadd( ::aPatterns, { "TerminatedStrings" , [\".*\"|\'.*\']         } )
 
    RETURN Self
 
@@ -327,6 +326,17 @@ METHOD IdeThemes:setForeBackGround( qEdit, cTheme )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeThemes:setQuotesRule( qHiliter, cTheme )
+   LOCAL aAttr
+
+   IF !empty( aAttr := ::getThemeAttribute( "TerminatedStrings", cTheme ) )
+      qHiliter:hbSetFormat( "TerminatedStrings", ::buildSyntaxFormat( aAttr ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeThemes:setSingleLineCommentRule( qHiliter, cTheme )
    LOCAL aAttr
 
@@ -390,6 +400,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    NEXT
    ::setMultiLineCommentRule( qHiliter, cTheme )
    ::setSingleLineCommentRule( qHiliter, cTheme )
+   ::setQuotesRule( qHiliter, cTheme )
 
    RETURN qHiliter
 
