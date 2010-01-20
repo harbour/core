@@ -95,6 +95,8 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
 
    commentStartExpression = QRegExp( "/\\*" );
    commentEndExpression = QRegExp( "\\*/" );
+
+   commentSingleLine = QRegExp( "//[^\n]*" );
 }
 
 void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -122,6 +124,10 @@ void HBQSyntaxHighlighter::hbSetMultiLineCommentFormat( const QTextCharFormat & 
 {
    multiLineCommentFormat = format;
 }
+void HBQSyntaxHighlighter::hbSetSingleLineCommentFormat( const QTextCharFormat & format )
+{
+   singleLineCommentFormat = format;
+}
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
@@ -131,12 +137,26 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    #endif
 
    QRegExp expression;
+
+   #if 0
    QTextBlock curBlock( currentBlock() );
-   bool bMerge = false;
+   int iState = -1;
    HBQTextBlockUserData * data = ( HBQTextBlockUserData * ) curBlock.userData();
 
+   QTextBlockFormat fmt( curBlock.blockFormat() );
    if( data )
-      bMerge = ( data->state == 99 );
+   {
+      iState = data->state;
+      HB_TRACE( HB_TR_ALWAYS, ( "iState = %i", iState ) );
+
+      switch( iState )
+      {
+      case 99:
+         fmt.setBackground( QColor( 255,255,0 ) );
+         break;
+      }
+   }
+   #endif
 
    foreach( const HighlightingRule &rule, HighlightingRules )
    {
@@ -145,24 +165,22 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       while( index >= 0 )
       {
          int length = expression.matchedLength();
-         QTextBlockFormat tBlockFormat( curBlock.blockFormat() );
-         QBrush brush( tBlockFormat.background() );
-
-         if( bMerge )
-         {
-            HB_TRACE( HB_TR_ALWAYS, ( "text = %i", data->state ) );
-//            setFormat( index, length, rule.format );
-         }
-         else
-         {
-            setFormat( index, length, rule.format );
-         }
-
+         setFormat( index, length, rule.format );
          index = expression.indexIn( text, index + length );
       }
    }
+
+   /* Single Line Comments */
+   int index = commentSingleLine.indexIn( text );
+   while( index >= 0 )
+   {
+      int length = commentSingleLine.matchedLength();
+      setFormat( index, length, singleLineCommentFormat );
+      index = commentSingleLine.indexIn( text, index + length );
+   }
    setCurrentBlockState( 0 );
 
+   /* Multi Line Comments */
    int startIndex = 0;
    if( previousBlockState() != 1 )
       startIndex = commentStartExpression.indexIn( text );

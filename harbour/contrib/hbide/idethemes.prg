@@ -124,6 +124,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD buildSyntaxFormat( aAttr )
    METHOD setForeBackGround( qEdit, cTheme )
    METHOD setMultiLineCommentRule( qHiliter, cTheme )
+   METHOD setSingleLineCommentRule( qHiliter, cTheme )
    METHOD setSyntaxRule( qHiliter, cName, cPattern, aAttr )
    METHOD setSyntaxFormat( qHiliter, cName, aAttr )
    METHOD setSyntaxHilighting( qEdit, cTheme, lNew )
@@ -205,8 +206,6 @@ METHOD IdeThemes:create( oIde, cIniFile )
    aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" } )
 
    aadd( ::aPatterns, { "TerminatedStrings" , [\".*\"|\'.*\']         } )
-
-   aadd( ::aPatterns, { "CommentsAndRemarks", "//[^\n]*"              } )
 
    RETURN Self
 
@@ -328,6 +327,17 @@ METHOD IdeThemes:setForeBackGround( qEdit, cTheme )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeThemes:setSingleLineCommentRule( qHiliter, cTheme )
+   LOCAL aAttr
+
+   IF !empty( aAttr := ::getThemeAttribute( "CommentsAndRemarks", cTheme ) )
+      qHiliter:hbSetSingleLineCommentFormat( ::buildSyntaxFormat( aAttr ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
    LOCAL aAttr
 
@@ -379,6 +389,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
       ENDIF
    NEXT
    ::setMultiLineCommentRule( qHiliter, cTheme )
+   ::setSingleLineCommentRule( qHiliter, cTheme )
 
    RETURN qHiliter
 

@@ -85,6 +85,7 @@ public:
    HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
    void hbSetMultiLineCommentFormat( const QTextCharFormat & format );
+   void hbSetSingleLineCommentFormat( const QTextCharFormat & format );
    void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
    void hbSetFormat( QString name, const QTextCharFormat & format );
 
@@ -110,6 +111,7 @@ protected:
 
    QRegExp commentStartExpression;
    QRegExp commentEndExpression;
+   QRegExp commentSingleLine;
 
    QTextCharFormat keywordFormat;
    QTextCharFormat classFormat;

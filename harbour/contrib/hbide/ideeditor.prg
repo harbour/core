@@ -123,6 +123,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD switchToReadOnly()
    METHOD convertSelection( cKey )
    METHOD insertText( cKey )
+   METHOD insertSeparator()
    METHOD zoom( nKey )
    METHOD printPreview()
    METHOD paintRequested( pPrinter )
@@ -530,14 +531,36 @@ METHOD IdeEditsManager:convertSelection( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:insertText( cKey )
-   LOCAL nB, nL, qCursor, cFile, cText
+METHOD IdeEditsManager:insertSeparator()
+   LOCAL oEdit, qCursor
 
-   IF Empty( ::qCurEdit )
+   IF empty( oEdit := ::getEditObjectCurrent() )
       RETURN Self
    ENDIF
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+
+   qCursor:beginEditBlock()
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:insertBlock()
+   qCursor:movePosition( QTextCursor_PreviousBlock )
+   qCursor:insertText( ::cSeparator )
+   qCursor:movePosition( QTextCursor_NextBlock )
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:endEditBlock()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:insertText( cKey )
+   LOCAL nB, nL, qCursor, cFile, cText, oEdit
+
+   IF empty( oEdit := ::getEditObjectCurrent() )
+      RETURN Self
+   ENDIF
+
+   qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
    DO CASE
 
@@ -896,7 +919,6 @@ FUNCTION hbide_handlePreviousWord( qEdit )
    cText      := qTextBlock:text()
    nPos       := qCursor:columnNumber()
    cWord      := hbide_getPreviousWord( cText, nPos + 1 )
-   hbide_dbg( cWord )
 
    IF !empty( cWord )
       nL := len( cWord + " " )
@@ -908,6 +930,7 @@ FUNCTION hbide_handlePreviousWord( qEdit )
          qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
          qCursor:removeSelectedText()
          qCursor:insertText( upper( cWord ) + " " )
+
          qEdit:setTextCursor( qCursor )
          qCursor:endEditBlock()
       ENDIF
@@ -915,11 +938,14 @@ FUNCTION hbide_handlePreviousWord( qEdit )
       IF hbide_isStartingKeyword( cWord )
          qCursor:setPosition( nB )
          nPos := qCursor:columnNumber()
+
          IF nPos > 0
             qCursor:beginEditBlock()
             qCursor:movePosition( QTextCursor_StartOfBlock )
+
             qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nPos )
             qCursor:removeSelectedText()
+
             qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
             qCursor:endEditBlock()
          ENDIF
@@ -1003,11 +1029,12 @@ METHOD IdeEditor:findLastIndent()
 METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
    LOCAL qCursor, nSpaces, qChar
 
-   HB_SYMBOL_UNUSED( o )
+   HB_SYMBOL_UNUSED( o  )
+   HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nMode
    CASE blockCountChanged
-      hbide_dbg( "blockCountChanged(int)", p, p1 )
+      hbide_dbg( "blockCountChanged(int)", p )
       ::nPrevBlocks := ::nBlocks
       ::nBlocks     := p
       //
@@ -1017,7 +1044,7 @@ METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
             qCursor:insertText( space( nSpaces ) )
          ENDIF
       ENDIF
-      ::qCoEdit:nPrevLineNo := ::qCoEdit:nCurLineNo
+      //::qCoEdit:nPrevLineNo := ::qCoEdit:nCurLineNo
       EXIT
    CASE contentsChange
       IF p2 == 1                     /* Characters Added */
@@ -1303,13 +1330,14 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   qBrushNR                                INIT  QBrush():new( "QColor", QColor():new( 255,255,255 ) )
    DATA   qBrushMark                              INIT  QBrush():new( "QColor", QColor():new(   0,255,255 ) )
    DATA   qActionTab
-   DATA   qLastCursor
+   DATA   qLastCursor                             INIT  QTextCursor():new()
 
    DATA   qCursorMark
    DATA   qMarkUData                              INIT  HBQTextBlockUserData():new()
    DATA   aBookMarks                              INIT  {}
 
    DATA   qSlots
+   DATA   lCursorPosChanging                      INIT  .F.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1317,10 +1345,11 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD exeEvent( nMode, oEdit, o, p, p1 )
    METHOD connectEditSlots( oEdit )
    METHOD disConnectEditSlots( oEdit )
-   METHOD highlightCurrentLine( oEdit )
+   METHOD highlightCurrentLine()
    METHOD setNewMark()
    METHOD gotoLastMark()
    METHOD getUserDataState( qB )
+   METHOD deHighlightPreviousLine()
 
    ENDCLASS
 
@@ -1471,20 +1500,20 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
       ENDIF
       EXIT
    CASE textChanged
-      hbide_dbg( "textChanged()" )
+      //hbide_dbg( "textChanged()" )
       ::oEditor:setTabImage( qEdit )
       EXIT
    CASE copyAvailable
-      hbide_dbg( "copyAvailable(bool)", p )
+      //hbide_dbg( "copyAvailable(bool)", p )
       EXIT
    CASE modificationChanged
-      hbide_dbg( "modificationChanged(bool)", p )
+      //hbide_dbg( "modificationChanged(bool)", p )
       EXIT
    CASE redoAvailable
-      hbide_dbg( "redoAvailable(bool)", p )
+      //hbide_dbg( "redoAvailable(bool)", p )
       EXIT
    CASE selectionChanged
-      hbide_dbg( "selectionChanged()" )
+      //hbide_dbg( "selectionChanged()" )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
@@ -1492,10 +1521,10 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
       EXIT
    CASE undoAvailable
-      hbide_dbg( "undoAvailable(bool)", p )
+      //hbide_dbg( "undoAvailable(bool)", p )
       EXIT
    CASE updateRequest
-      *    hbide_dbg( "updateRequest" )
+      //hbide_dbg( "updateRequest" )
       qCursor := QTextCursor():configure( qEdit:cursorForPosition( ::qPoint ) )
       nLineNo := qCursor:blockNumber()
       nBlocks := ::oEditor:qDocument:blockCount()
@@ -1507,69 +1536,72 @@ METHOD IdeEdit:exeEvent( nMode, oEdit, o, p, p1 )
       ENDIF
       EXIT
    CASE cursorPositionChanged
-      ::oEditor:dispEditInfo( qEdit )
-      ::highlightCurrentLine( oEdit )
+      /* This is a hack */
+      IF !( ::lCursorPosChanging )
+         //hbide_dbg( "cursorPositionChanged()" )
+         ::lCursorPosChanging := .T.
+         ::oEditor:dispEditInfo( qEdit )
+         ::highlightCurrentLine()
+         ::lCursorPosChanging := .F.
+      ENDIF
       EXIT
-   CASE 71
-      hbide_dbg( "CTRL+F2 Pressed" )
-      EXIT
+
    ENDSWITCH
 
    RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:highlightCurrentLine( oEdit )
-   LOCAL nCurLine, nLastLine, qCursor, lModified, qBlock, qDoc
-   LOCAL qUData, qEdit, qBlockFmt, qB, lInvalidate
+METHOD IdeEdit:deHighlightPreviousLine()
+   LOCAL qB, qDoc
 
-   qEdit     := oEdit:qEdit
-   qCursor   := QTextCursor():configure( qEdit:textCursor() )
+   qDoc := QTextDocument():configure( ::qEdit:document() )
+
+   IF ( qB := QTextBlock():configure( qDoc:findBlockByNumber( ::nLastLine ) ) ):isValid()
+      IF ::getUserDataState( qB ) != 99
+         ::qLastCursor:setBlockFormat( QTextBlockFormat():new() )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:highlightCurrentLine()
+   LOCAL nCurLine, nLastLine, qCursor, lModified, qDoc, qEdit, qBlockFmt, qB
+
+   qEdit     := ::qEdit
+   qCursor   := QTextCursor():new( qEdit:textCursor() )
    nCurLine  := qCursor:blockNumber()
-   nLastLine := oEdit:nLastLine
+   nLastLine := ::nLastLine
 
    IF !( nCurLine == nLastLine )
-      IF ( qBlock := QTextBlock():configure( qCursor:block() ) ):isValid()
-         qDoc := QTextDocument():configure( qEdit:document() )
-         lModified := qDoc:isModified()
+      qDoc := QTextDocument():configure( qEdit:document() )
+      lModified := qDoc:isModified()
 
-         IF !empty( oEdit:qLastCursor )
-            IF ( qB := QTextBlock():configure( oEdit:qLastCursor:block() ) ):isValid()
-               IF ::getUserDataState( qB ) != 99
-                  oEdit:qLastCursor:setBlockFormat( QTextBlockFormat():new() )
-               ENDIF
-            ENDIF
+      ::deHighlightPreviousLine()
+
+      IF ( qB := QTextBlock():configure( qCursor:block() ) ):isValid()
+         IF ::getUserDataState( qB ) != 99
+            qBlockFmt := QTextBlockFormat():configure( qB:blockFormat() )
+            qBlockFmt:setBackground( ::qBrushCL )
+            qCursor:setBlockFormat( qBlockFmt )
          ENDIF
-
-         IF ( qB := QTextBlock():configure( qCursor:block() ) ):isValid()
-            qUData := HBQTextBlockUserData():configure( qB:userData() )
-            lInvalidate := empty( qUData:pPtr )
-            IF !( lInvalidate )
-               lInvalidate := qUData:hbState() != 99
-            ENDIF
-            IF lInvalidate
-               qBlockFmt := QTextBlockFormat():configure( qBlock:blockFormat() )
-               qBlockFmt:setBackground( ::qBrushCL )
-               qCursor:setBlockFormat( qBlockFmt )
-               qEdit:setTextCursor( qCursor )
-            ENDIF
-         ENDIF
-
-         qDoc:setModified( lModified )
-
-         /* Infact these must not be called from here but because changing the format  */
-         /* Qt consider that document has been modified, hence I need to put them here */
-
-         ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( oEdit:oEditor:oTab:oWidget ), ;
-                                      ::resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
-         ::oDK:setStatusText( SB_PNL_MODIFIED, lModified )
-
       ENDIF
 
-      oEdit:nLastLine := nCurLine
-      oEdit:qLastCursor := qCursor
+      /* Infact these must not be called from here but because changing the format  */
+      /* Qt consider that document has been modified, hence I need to put them here */
+      qDoc:setModified( lModified )
+      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oEditor:oTab:oWidget ), ;
+                                   ::resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
+      ::oDK:setStatusText( SB_PNL_MODIFIED, lModified )
    ENDIF
-   hbide_justACall( qB )
+
+   ::nLastLine := nCurLine
+   IF !( qCursor:isNull() )
+      ::qLastCursor := qCursor
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1581,7 +1613,6 @@ METHOD IdeEdit:setNewMark()
    lModified := qDoc:isModified()
 
    IF empty( ::qCursorMark )
-hbide_dbg( ".................................. Set New Mark" )
       ::qCursorMark := QTextCursor():configure( ::qEdit:textCursor() )
 
       qTextBlock := QTextBlock():configure( ::qCursorMark:block() )
@@ -1595,10 +1626,9 @@ hbide_dbg( ".................................. Set New Mark" )
       qTextBlock:setUserData( ::qMarkUData )
 
    ELSE
-hbide_dbg( "........................................... Release Mark" )
       IF ( qTextBlock := QTextBlock():configure( ::qCursorMark:block() ) ):isValid()
          nState := ::getUserDataState( qTextBlock )
-hbide_dbg( 10001, nState )
+
          IF nState == 99  /* Marked */
             ::qMarkUData:hbSetState( -1 )
             ::qCursorMark:setBlockFormat( QTextBlockFormat():new() )

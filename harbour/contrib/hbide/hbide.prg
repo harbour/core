@@ -187,6 +187,7 @@ CLASS HbIde
    DATA   cProcessInfo
    DATA   cIniThemes
    DATA   cWrkCodec                               INIT   ""
+   DATA   cSeparator                              INIT   "/*" + replicate( "-", 70 ) + "*/"
 
    DATA   nTabSpaces                              INIT   3           /* Via User Setup */
    DATA   cTabSpaces                              INIT   space( 3 ) //::nTabSpaces )
@@ -500,6 +501,8 @@ METHOD HbIde:execAction( cKey )
       ::oEM:convertSelection( cKey )
    CASE cKey == "MatchPairs"
       //
+   CASE cKey == "InsertSeparator"
+      ::oEM:insertSeparator()
    CASE cKey == "InsertDateTime"
       ::oEM:insertText( cKey )
    CASE cKey == "InsertRandomName"

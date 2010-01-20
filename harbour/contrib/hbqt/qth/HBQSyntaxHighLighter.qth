@@ -87,6 +87,7 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
 <PROTOS>
 
 void hbSetMultiLineCommentFormat( const QTextCharFormat & format )
+void hbSetSingleLineCommentFormat( const QTextCharFormat & format )
 void hbSetRule( QString name, QString pattern, QTextCharFormat & format )
 void hbSetFormat( QString name, const QTextCharFormat & format )
 

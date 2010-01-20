@@ -150,6 +150,14 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETMULTILINECOMMENTFORMAT )
 }
 
 /*
+ * void hbSetSingleLineCommentFormat( const QTextCharFormat & format )
+ */
+HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETSINGLELINECOMMENTFORMAT )
+{
+   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetSingleLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+}
+
+/*
  * void hbSetRule( QString name, QString pattern, QTextCharFormat & format )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETRULE )

@@ -121,6 +121,7 @@ CLASS IdeObject
 
    ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
    ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
+   ACCESS cSeparator                              INLINE ::oIde:cSeparator
 
    ACCESS oDockPT                                 INLINE ::oIde:oDockPT
    ACCESS oProjTree                               INLINE ::oIde:oProjTree
