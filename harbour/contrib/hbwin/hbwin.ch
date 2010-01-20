@@ -224,6 +224,13 @@
 #define WIN_FW_HEAVY                900
 #define WIN_FW_BLACK                WIN_FW_HEAVY
 
+/* WAPI_CREATEFONT() font qualities */
+#define WIN_DEFAULT_QUALITY         0
+#define WIN_DRAFT_QUALITY           1
+#define WIN_PROOF_QUALITY           2
+#define WIN_NONANTIALIASED_QUALITY  3
+#define WIN_ANTIALIASED_QUALITY     4
+
 /* WIN_SETBKMODE() modes */
 #define WIN_TRANSPARENT             1
 #define WIN_OPAQUE                  2

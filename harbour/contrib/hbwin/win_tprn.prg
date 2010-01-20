@@ -369,7 +369,6 @@ METHOD StartPage() CLASS WIN_PRN
       lChangeDP := .T.
    ENDIF
    IF lChangeDP
-      HB_TRACELOG( "setdoc", nLFormType )
       win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
                                  nLFormType, lLLandscape, , ;
                                  nLBinNumber, nLDuplexType, nLPrintQuality, ;

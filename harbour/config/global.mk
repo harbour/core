@@ -1101,6 +1101,9 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       endif
       export HB_BIN_COMPILE
    else
+      ifeq ($(HB_INIT_DONE),)
+         $(info ! HB_BIN_COMPILE: $(HB_BIN_COMPILE))
+      endif
       HB_CROSS_BUILD := yes
    endif
    ifeq ($(HB_CROSS_BUILD),yes)

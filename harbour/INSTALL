@@ -1073,6 +1073,9 @@ HARBOUR
    - Make sure to install fresh source tree in a new local directory and
      start over. See HOW TO GET THE HARBOUR SOURCES section for instructions
      to get the source.
+   - If you are doing a cross-build, make sure to have rebuilt the native
+     Harbour executables for your host platform. See 'HB_BIN_COMPILE'
+     build messages to find their location.
    - Keep you PATH clean from old, mixed compiler tools or other Harbour
      versions when building Harbour. The surest way to achieve this is to
      leave only compiler directory in PATH:
