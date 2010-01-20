@@ -28,6 +28,7 @@ C_SOURCES := \
    win_prn2.c \
    win_prn3.c \
    win_regc.c \
+   wapi_alloc.c \
    wapi_commctrl.c \
    wapi_err.c \
    wapi_shellapi.c \

@@ -64,7 +64,7 @@
 #include "hbapiitm.h"
 #include "hbwinuni.h"
 
-#if defined( HB_OS_WIN ) && !defined( __CYGWIN__ ) && !defined( HB_NO_ASM )
+#if !defined( __CYGWIN__ ) && !defined( HB_NO_ASM )
 
 /* ==================================================================
  * DynaCall support comments below

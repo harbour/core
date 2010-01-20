@@ -248,7 +248,6 @@ METHOD Create() CLASS WIN_PRN
       ENDIF
 
       IF !lResult
-         win_DeleteDC( ::hPrinterDC )
          ::hPrinterDC := NIL
       ELSE
          // Set mapping mode to pixels, topleft down
@@ -291,7 +290,6 @@ METHOD Destroy() CLASS WIN_PRN
       IF ::Printing
          ::EndDoc()
       ENDIF
-      win_DeleteDC( ::hPrinterDC )
       ::hPrinterDC := NIL
    ENDIF
    RETURN .T.

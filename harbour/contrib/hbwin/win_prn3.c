@@ -55,8 +55,7 @@
 #include "hbapi.h"
 #include "hbwinuni.h"
 
-#if defined( HB_OS_WIN ) && \
-    !( defined( __RSXNT__ ) || defined( __CYGWIN__ ) || defined( HB_OS_WIN_CE ) )
+#if ! defined( HB_OS_WIN_CE )
 
 /* NOTE: Based on hb_strncat() */
 static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )

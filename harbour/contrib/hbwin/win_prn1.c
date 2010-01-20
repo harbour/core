@@ -74,137 +74,11 @@
 #include "hbwapi.h"
 #include "hbwinuni.h"
 
-#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
 #endif
-
-static HB_GARBAGE_FUNC( s_gc_HDC_release )
-{
-   void ** ph = ( void ** ) Cargo;
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && *ph )
-   {
-      /* Destroy the object */
-      DeleteDC( ( HDC ) *ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      *ph = NULL;
-   }
-}
-
-static const HB_GC_FUNCS s_gc_HDC_funcs =
-{
-   s_gc_HDC_release,
-   hb_gcDummyMark
-};
-
-void hbwapi_ret_HDC( HDC p )
-{
-   if( p )
-   {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
-
-      *ph = p;
-
-      hb_retptrGC( ph );
-   }
-   else
-      hb_retptr( NULL );
-}
-
-HDC hbwapi_par_HDC( int iParam )
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
-
-   return ph ? ( HDC ) * ph : ( HDC ) hb_parptr( iParam );
-}
-
-static HB_GARBAGE_FUNC( s_gc_HPEN_release )
-{
-   void ** ph = ( void ** ) Cargo;
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      DeleteObject( ( HPEN ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      *ph = NULL;
-   }
-}
-
-static const HB_GC_FUNCS s_gc_HPEN_funcs =
-{
-   s_gc_HPEN_release,
-   hb_gcDummyMark
-};
-
-void hbwapi_ret_HPEN( HPEN p )
-{
-   if( p )
-   {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
-
-      *ph = p;
-
-      hb_retptrGC( ph );
-   }
-   else
-      hb_retptr( NULL );
-}
-
-HPEN hbwapi_par_HPEN( int iParam )
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
-
-   return ph ? ( HPEN ) * ph : NULL;
-}
-
-static HB_GARBAGE_FUNC( s_gc_HFONT_release )
-{
-   void ** ph = ( void ** ) Cargo;
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      DeleteObject( ( HFONT ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      *ph = NULL;
-   }
-}
-
-static const HB_GC_FUNCS s_gc_HFONT_funcs =
-{
-   s_gc_HFONT_release,
-   hb_gcDummyMark
-};
-
-void hbwapi_ret_HFONT( HFONT p )
-{
-   if( p )
-   {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
-
-      *ph = p;
-
-      hb_retptrGC( ph );
-   }
-   else
-      hb_retptr( NULL );
-}
-
-HFONT hbwapi_par_HFONT( int iParam )
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HFONT_funcs, iParam );
-
-   return ph ? ( HFONT ) * ph : NULL;
-}
 
 HB_FUNC( WIN_CREATEDC )
 {
@@ -271,11 +145,10 @@ HB_FUNC( WIN_ABORTDOC )
    hb_retl( hDC && ( AbortDoc( hDC ) > 0 ) );
 }
 
+/* Compatibility dummy */
 HB_FUNC( WIN_DELETEDC )
 {
-   s_gc_HDC_release( hb_parptrGC( &s_gc_HDC_funcs, 1 ) );
-
-   hb_retni( 0 );               /* Return zero as a new handle even if fails */
+   hb_retni( 0 );
 }
 
 HB_FUNC( WIN_STARTPAGE )

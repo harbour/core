@@ -94,6 +94,8 @@ DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
       return bMandatory ? p : NULL;
 }
 
+#if ! defined( HB_OS_WIN_CE )
+
 HB_FUNC( WAPI_CREATEDC )
 {
    void * hDriver;
@@ -420,3 +422,5 @@ HB_FUNC( WAPI_GETTEXTFACE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+#endif
