@@ -76,10 +76,6 @@
 
 #if ! defined( HB_OS_WIN_CE )
 
-#ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
-#endif
-
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )

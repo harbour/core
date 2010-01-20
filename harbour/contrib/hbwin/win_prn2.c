@@ -62,8 +62,6 @@
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
-#define MAXBUFFERSIZE 256
-
 static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 {
    static const char * s_pszPrnDev[] = { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
@@ -146,7 +144,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
 
          if( fnGetDefaultPrinter )
          {
-            TCHAR lpPrinterName[ MAXBUFFERSIZE ];
+            TCHAR lpPrinterName[ 256 ];
             DWORD dwSize = HB_SIZEOFARRAY( lpPrinterName ) - 1;
 
             bResult = ( *fnGetDefaultPrinter )( lpPrinterName, &dwSize );
@@ -160,7 +158,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
 
    if( ! bResult ) /* Win9x and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load! */
    {
-      TCHAR lpPrinterName[ MAXBUFFERSIZE ];
+      TCHAR lpPrinterName[ 256 ];
 
       DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, ( DWORD ) HB_SIZEOFARRAY( lpPrinterName ) - 1 );
 
@@ -448,11 +446,9 @@ HB_FUNC( WIN_PRINTERLIST )
    HB_BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : HB_TRUE;
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
-   PHB_ITEM pTempItem = hb_itemNew( NULL );
    PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
 
    EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-
    if( dwNeeded )
    {
       PRINTER_INFO_5 * pPrinterEnumBak;
@@ -460,6 +456,8 @@ HB_FUNC( WIN_PRINTERLIST )
 
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
       {
+         PHB_ITEM pTempItem = hb_itemNew( NULL );
+
          for( i = 0; i < dwReturned; ++i, ++pPrinterEnum )
          {
             if( ! bLocalPrintersOnly || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
@@ -514,13 +512,13 @@ HB_FUNC( WIN_PRINTERLIST )
                }
             }
          }
+
+         hb_itemRelease( pTempItem );
       }
       hb_xfree( pPrinterEnumBak );
    }
 
    hb_itemReturnRelease( pPrinterArray );
-
-   hb_itemRelease( pTempItem );
 }
 
 #endif
