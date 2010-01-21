@@ -176,7 +176,7 @@ HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {
    HB_FATTR ulAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%lu)", raw_attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%u)", raw_attr));
 
 #if defined( HB_OS_DOS )
 
@@ -258,7 +258,7 @@ HB_FATTR hb_fsAttrToRaw( HB_FATTR ulAttr )
 {
    HB_FATTR raw_attr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%lu)", ulAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%u)", ulAttr));
 
 #if defined( HB_OS_DOS )
 
@@ -362,7 +362,7 @@ char * hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrDecode(%lu, %p)", ulAttr, szAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrDecode(%u, %p)", ulAttr, szAttr));
 
    /* Using the same order as CA-Cl*pper did: RHSVDA. */
    if( ulAttr & HB_FA_READONLY   ) *ptr++ = 'R';

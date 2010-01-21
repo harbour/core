@@ -394,7 +394,7 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR ulAttr, USHORT uiFlags
                                 int *flags, unsigned *mode,
                                 int *share, int *attr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("convert_open_flags(%d, %lu, %hu, %p, %p, %p, %p)", fCreate, ulAttr, uiFlags, flags, mode, share, attr));
+   HB_TRACE(HB_TR_DEBUG, ("convert_open_flags(%d, %u, %hu, %p, %p, %p, %p)", fCreate, ulAttr, uiFlags, flags, mode, share, attr));
 
    /* file access mode */
 #if defined( HB_OS_UNIX )
@@ -714,7 +714,7 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, HB_FATTR ulAttr )
    HB_FHANDLE hFileHandle;
    char * pszFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%s, %lu)", pFilename, ulAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%s, %u)", pFilename, ulAttr));
 
    pFilename = hb_fsNameConv( pFilename, &pszFree );
 
@@ -776,7 +776,7 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, HB_FATTR ulAttr, USHORT uiFlag
    HB_FHANDLE hFileHandle;
    char * pszFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%s, %lu, %hu)", pFilename, ulAttr, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%s, %u, %hu)", pFilename, ulAttr, uiFlags));
 
    pFilename = hb_fsNameConv( pFilename, &pszFree );
 
@@ -1287,7 +1287,7 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
    HB_BOOL fResult;
    char * pszFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetAttr(%s, %lu)", pszFileName, ulAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetAttr(%s, %u)", pszFileName, ulAttr));
 
    pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
