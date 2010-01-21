@@ -56,6 +56,7 @@
 #include "inkey.ch"
 #include "memoedit.ch"
 #include "setcurs.ch"
+#include "hbgtinfo.ch"
 
 // A specialized HBEditor which can simulate MemoEdit() behaviour
 CREATE CLASS HBMemoEditor INHERIT HBEditor
@@ -232,7 +233,7 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
 
 #ifdef HB_COMPAT_XPP
    CASE nUserKey == ME_PASTE
-      // TODO
+      hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
 #endif
 
    OTHERWISE
@@ -312,7 +313,7 @@ FUNCTION MemoEdit( cString,;
    IF ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
-      IF oEd:Changed()
+      IF oEd:Changed() .AND. oEd:Saved()
          cString := oEd:GetText()
       ENDIF
       SetCursor( nOldCursor )

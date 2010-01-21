@@ -448,8 +448,9 @@ HB_FUNC( WAPI_SELECTOBJECT )
    HGDIOBJ h;
 
    if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL );
+   else if( ( h = hbwapi_par_HBRUSH( 2 ) ) != NULL );
    else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL );
-   /* TODO: Add BRUSH, BITMAP, REGION */
+   /* TODO: Add BITMAP, REGION */
    else
       h = NULL;
 

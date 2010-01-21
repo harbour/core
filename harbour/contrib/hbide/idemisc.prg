@@ -773,9 +773,8 @@ FUNCTION hbide_dbg( ... )
  * 01/01/2010 - 19:40:17 - vailtom
  */
 FUNCTION hbide_getNextUntitled()
-   STATIC nCount := 0
-      nCount ++
-   RETURN nCount
+   STATIC s_nCount := 0
+   RETURN ++s_nCount
 
 /*----------------------------------------------------------------------*/
 /*
@@ -783,12 +782,12 @@ FUNCTION hbide_getNextUntitled()
  * 02/01/2010 - 10:47:16 - vailtom
  */
 FUNCTION hbide_getNextUniqueID()
-   STATIC nCount := 0
+   STATIC s_nCount := 0
 
-   IF nCount > 4294967295
-      nCount := 0
+   IF s_nCount > 4294967295
+      s_nCount := 0
    ENDIF
-   RETURN ++nCount
+   RETURN ++s_nCount
 
 /*----------------------------------------------------------------------*/
 /*

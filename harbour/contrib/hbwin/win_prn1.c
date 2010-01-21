@@ -518,6 +518,9 @@ HB_FUNC( WIN_LOADBITMAPFILE )
    {
       ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
 
+      /* TOFIX: No check is done on read data from disk which is a large security hole
+                and may cause GPF even in simple error cases, like invalid file content.
+                [vszakats] */
       if( ulSize > 2 && ulSize <= ( 32 * 1024 * 1024 ) )
       {
          BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( ulSize );
@@ -542,7 +545,10 @@ HB_FUNC( WIN_DRAWBITMAP )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   if( hDC )
+   /* TOFIX: No check is done on 2nd parameter which is a large security hole
+             and may cause GPF in simple error cases.
+             [vszakats] */
+   if( hDC && hb_parclen( 2 ) > 2 )
    {
       BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
       BITMAPINFO * pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
@@ -551,8 +557,9 @@ HB_FUNC( WIN_DRAWBITMAP )
 
       pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
 
+      /* Remember there are 2 types of BitMap File */
       if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
-      {                            /* Remember there are 2 types of BitMap File */
+      {
          cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
          cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
       }
