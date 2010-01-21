@@ -528,7 +528,7 @@ HARBOUR
    wce
    ---
    mingw    - MinGW GNU C x86
-   mingwarm - MinGW GNU C ARM
+   mingwarm - MinGW GNU C ARM (from CEGCC 0.55 and above)
    msvcarm  - Microsoft Visual C++ ARM
    poccarm  - Pelles C ARM 5.0
 

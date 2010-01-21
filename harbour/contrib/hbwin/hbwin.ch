@@ -231,9 +231,44 @@
 #define WIN_NONANTIALIASED_QUALITY  3
 #define WIN_ANTIALIASED_QUALITY     4
 
+/* WAPI_CREATEFONT() output precision values */
+#define WIN_OUT_DEFAULT_PRECIS      0
+#define WIN_OUT_STRING_PRECIS       1
+#define WIN_OUT_CHARACTER_PRECIS    2
+#define WIN_OUT_STROKE_PRECIS       3
+#define WIN_OUT_TT_PRECIS           4
+#define WIN_OUT_DEVICE_PRECIS       5
+#define WIN_OUT_RASTER_PRECIS       6
+#define WIN_OUT_TT_ONLY_PRECIS      7
+#define WIN_OUT_OUTLINE_PRECIS      8
+#define WIN_OUT_PS_ONLY_PRECIS      10
+
 /* WIN_SETBKMODE() modes */
 #define WIN_TRANSPARENT             1
 #define WIN_OPAQUE                  2
+
+/* WAPI_DRAWTEXT() format methods */
+#define WIN_DT_BOTTOM               8
+#define WIN_DT_CALCRECT             1024
+#define WIN_DT_CENTER               1
+#define WIN_DT_EDITCONTROL          8192
+#define WIN_DT_END_ELLIPSIS         32768
+#define WIN_DT_PATH_ELLIPSIS        16384
+#define WIN_DT_WORD_ELLIPSIS        0x40000
+#define WIN_DT_EXPANDTABS           64
+#define WIN_DT_EXTERNALLEADING      512
+#define WIN_DT_LEFT                 0
+#define WIN_DT_MODIFYSTRING         65536
+#define WIN_DT_NOCLIP               256
+#define WIN_DT_NOPREFIX             2048
+#define WIN_DT_RIGHT                2
+#define WIN_DT_RTLREADING           131072
+#define WIN_DT_SINGLELINE           32
+#define WIN_DT_TABSTOP              128
+#define WIN_DT_TOP                  0
+#define WIN_DT_VCENTER              4
+#define WIN_DT_WORDBREAK            16
+#define WIN_DT_INTERNAL             4096
 
 /* Windows charset values (WIN_CREATEFONT()) */
 #define WIN_ANSI_CHARSET            0

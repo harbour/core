@@ -99,16 +99,19 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT void  hbwapi_SetLastError( DWORD dwLastError );
-HB_EXPORT DWORD hbwapi_GetLastError( void );
+HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );
+HB_EXPORT DWORD     hbwapi_GetLastError( void );
 
-HB_EXPORT HDC   hbwapi_par_HDC( int iParam );
-HB_EXPORT HPEN  hbwapi_par_HPEN( int iParam );
-HB_EXPORT HFONT hbwapi_par_HFONT( int iParam );
+HB_EXPORT RECT *    hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory );
+HB_EXPORT DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory );
 
-HB_EXPORT void  hbwapi_ret_HDC( HDC p );
-HB_EXPORT void  hbwapi_ret_HPEN( HPEN p );
-HB_EXPORT void  hbwapi_ret_HFONT( HFONT p );
+HB_EXPORT HDC       hbwapi_par_HDC( int iParam );
+HB_EXPORT HPEN      hbwapi_par_HPEN( int iParam );
+HB_EXPORT HFONT     hbwapi_par_HFONT( int iParam );
+
+HB_EXPORT void      hbwapi_ret_HDC( HDC p );
+HB_EXPORT void      hbwapi_ret_HPEN( HPEN p );
+HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
 
 HB_EXTERN_END
 

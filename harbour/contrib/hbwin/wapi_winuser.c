@@ -54,6 +54,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbapierr.h"
 #include "hbwinuni.h"
 #include "hbwapi.h"
 
@@ -111,6 +112,29 @@ HB_FUNC( WAPI_DESTROYWINDOW )
    BOOL bResult = DestroyWindow( ( HWND ) hb_parptr( 1 ) );
    hbwapi_SetLastError( GetLastError() );
    hb_retl( bResult );
+}
+
+HB_FUNC( WAPI_DRAWTEXT )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+   RECT rect;
+
+   if( hDC && hbwapi_par_RECT( &rect, 3, HB_TRUE ) )
+   {
+      void * hText;
+      HB_SIZE nTextLen;
+      LPCTSTR lpText = HB_PARSTR( 2, &hText, &nTextLen );
+
+      hb_retni( DrawText( hDC,
+                          lpText,
+                          nTextLen,
+                          &rect,
+                          ( UINT ) hb_parni( 4 ) ) );
+
+      hb_strfree( hText );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*-----------------------------------------------------------------------/

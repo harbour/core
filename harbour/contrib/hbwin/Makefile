@@ -21,6 +21,7 @@ C_SOURCES := \
    wce_simc.c \
    wce_smsc.c \
    win_com.c \
+   win_dlg.c \
    win_dll.c \
    win_misc.c \
    win_osc.c \

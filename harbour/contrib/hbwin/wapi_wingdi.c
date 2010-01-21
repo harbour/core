@@ -58,35 +58,63 @@
 #include "hbwinuni.h"
 #include "hbwapi.h"
 
+RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   memset( p, 0, sizeof( RECT ) );
+
+   if( HB_IS_HASH( pStru ) )
+   {
+      p->left   = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "left"   ) );
+      p->top    = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "top"    ) );
+      p->right  = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "right"  ) );
+      p->bottom = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "bottom" ) );
+
+      return p;
+   }
+   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   {
+      p->left   = ( LONG ) hb_arrayGetNL( pStru, 1 );
+      p->top    = ( LONG ) hb_arrayGetNL( pStru, 2 );
+      p->right  = ( LONG ) hb_arrayGetNL( pStru, 3 );
+      p->bottom = ( LONG ) hb_arrayGetNL( pStru, 4 );
+
+      return p;
+   }
+   else
+      return bMandatory ? p : NULL;
+}
+
 DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
 {
-   PHB_ITEM pHash = hb_param( iParam, HB_IT_HASH );
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
    memset( p, 0, sizeof( DEVMODE ) );
 
    p->dmSize = sizeof( DEVMODE );
 
-   if( pHash )
+   if( HB_IS_HASH( pStru ) )
    {
-      p->dmOrientation   = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmOrientation" ) );
-      p->dmPaperSize     = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmPaperSize" ) );
-      p->dmPaperLength   = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmPaperLength" ) );
-      p->dmPaperWidth    = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmPaperWidth" ) );
-      p->dmScale         = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmScale" ) );
-      p->dmCopies        = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmCopies" ) );
-      p->dmDefaultSource = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmDefaultSource" ) );
-      p->dmPrintQuality  = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmPrintQuality" ) );
-      p->dmDuplex        = hb_itemGetNI( hb_hashGetCItemPtr( pHash, "dmDuplex" ) );
+      p->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
+      p->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
+      p->dmPaperLength   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) );
+      p->dmPaperWidth    = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) );
+      p->dmScale         = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmScale"         ) );
+      p->dmCopies        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmCopies"        ) );
+      p->dmDefaultSource = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) );
+      p->dmPrintQuality  = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) );
+      p->dmDuplex        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) );
 
-      if( hb_hashGetCItemPtr( pHash, "dmOrientation"   ) ) p->dmFields |= DM_ORIENTATION;
-      if( hb_hashGetCItemPtr( pHash, "dmPaperSize"     ) ) p->dmFields |= DM_PAPERSIZE;
-      if( hb_hashGetCItemPtr( pHash, "dmPaperLength"   ) ) p->dmFields |= DM_PAPERLENGTH;
-      if( hb_hashGetCItemPtr( pHash, "dmPaperWidth"    ) ) p->dmFields |= DM_PAPERWIDTH;
-      if( hb_hashGetCItemPtr( pHash, "dmScale"         ) ) p->dmFields |= DM_SCALE;
-      if( hb_hashGetCItemPtr( pHash, "dmCopies"        ) ) p->dmFields |= DM_COPIES;
-      if( hb_hashGetCItemPtr( pHash, "dmDefaultSource" ) ) p->dmFields |= DM_DEFAULTSOURCE;
-      if( hb_hashGetCItemPtr( pHash, "dmPrintQuality"  ) ) p->dmFields |= DM_PRINTQUALITY;
-      if( hb_hashGetCItemPtr( pHash, "dmDuplex"        ) ) p->dmFields |= DM_DUPLEX;
+      if( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) ) p->dmFields |= DM_ORIENTATION;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) ) p->dmFields |= DM_PAPERSIZE;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) ) p->dmFields |= DM_PAPERLENGTH;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) ) p->dmFields |= DM_PAPERWIDTH;
+      if( hb_hashGetCItemPtr( pStru, "dmScale"         ) ) p->dmFields |= DM_SCALE;
+      if( hb_hashGetCItemPtr( pStru, "dmCopies"        ) ) p->dmFields |= DM_COPIES;
+      if( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) ) p->dmFields |= DM_DEFAULTSOURCE;
+      if( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) ) p->dmFields |= DM_PRINTQUALITY;
+      if( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) ) p->dmFields |= DM_DUPLEX;
 
       return p;
    }
@@ -345,9 +373,9 @@ HB_FUNC( WAPI_CREATEFONT )
                                  ( DWORD ) hb_parl( 7 ) /* fdwUnderline */,
                                  ( DWORD ) hb_parl( 8 ) /* fdwStrikeOut */,
                                  ( DWORD ) hb_parnl( 9 ) /* fdwCharSet */,
-                                 ( DWORD ) hb_parnldef( 10, OUT_DEVICE_PRECIS ) /* fdwOutputPrecision */,
+                                 ( DWORD ) hb_parnldef( 10, OUT_DEFAULT_PRECIS ) /* fdwOutputPrecision */,
                                  ( DWORD ) hb_parnldef( 11, CLIP_DEFAULT_PRECIS ) /* fdwClipPrecision */,
-                                 ( DWORD ) hb_parnldef( 12, DRAFT_QUALITY ) /* fdwQuality */,
+                                 ( DWORD ) hb_parnldef( 12, DEFAULT_QUALITY ) /* fdwQuality */,
                                  ( DWORD ) hb_parnldef( 13, DEFAULT_PITCH | FF_DONTCARE ) /* fdwPitchAndFamily */,
                                  HB_PARSTR( 14, &hFontFace, NULL ) /* lpszFace */ ) );
 
@@ -359,8 +387,8 @@ HB_FUNC( WAPI_SELECTOBJECT )
    HDC hDC = hbwapi_par_HDC( 1 );
    HGDIOBJ h;
 
-   if(      ( h = hbwapi_par_HPEN( 2 ) ) );
-   else if( ( h = hbwapi_par_HFONT( 2 ) ) );
+   if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL );
+   else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL );
    /* TODO: Add BRUSH, BITMAP, REGION */
    else
       h = NULL;
