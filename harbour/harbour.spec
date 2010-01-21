@@ -126,6 +126,43 @@ fordМtСprogram. A csomag rИsze a fordМtС maga, az elУfordМtС, fejlИc
 АllomАnyok, a virtuАlis gИp Иs fЭggvИnykЖnyvtАrak, valamint a dokumentАciС.
 
 ######################################################################
+## main shared lib
+######################################################################
+
+%package lib
+Summary:        Shared runtime libaries for %{dname} compiler
+Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
+Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
+Summary(hu):    Megosztott kЖnyvtАrak a(z) %{dname} fordМtСhoz
+Group:          Development/Languages
+Provides:       lib%{name}.so lib%{name}mt.so
+
+%description lib
+%{dname} is a Clipper compatible compiler.
+This package provides %{dname} runtime shared libraries for programs
+linked dynamically.
+
+%description -l pl lib
+%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
+Ten pakiet udostЙpnia dzielone bilioteki kompilatora %{dname}
+dla programСw konsolidowanych dynamicznie.
+
+%description -l pt_BR lib
+%{dname} И um compilador compativel com o Clipper.
+Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
+linkados dinamicamente.
+
+%description -l ru lib
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит совместно используемые библиотеки %{dname},
+необходимые для работы динамически скомпонованных программ.
+
+%description -l hu lib
+A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
+Ez a csomag biztosМtja a dinamikusan szerkesztett %{dname}
+programokhoz szЭksИges megosztott (dinamikus) futtatСkЖnyvtАrakat.
+
+######################################################################
 ## contrib libs (without package requirements)
 ######################################################################
 
@@ -572,6 +609,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
+%files lib
 %defattr(755,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
