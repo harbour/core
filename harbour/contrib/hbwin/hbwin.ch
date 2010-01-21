@@ -248,27 +248,35 @@
 #define WIN_OPAQUE                  2
 
 /* WAPI_DRAWTEXT() format methods */
-#define WIN_DT_BOTTOM               8
-#define WIN_DT_CALCRECT             1024
-#define WIN_DT_CENTER               1
-#define WIN_DT_EDITCONTROL          8192
-#define WIN_DT_END_ELLIPSIS         32768
-#define WIN_DT_PATH_ELLIPSIS        16384
+#define WIN_DT_BOTTOM               0x00008
+#define WIN_DT_CALCRECT             0x00400
+#define WIN_DT_CENTER               0x00001
+#define WIN_DT_EDITCONTROL          0x02000
+#define WIN_DT_END_ELLIPSIS         0x08000
+#define WIN_DT_PATH_ELLIPSIS        0x04000
 #define WIN_DT_WORD_ELLIPSIS        0x40000
-#define WIN_DT_EXPANDTABS           64
-#define WIN_DT_EXTERNALLEADING      512
-#define WIN_DT_LEFT                 0
-#define WIN_DT_MODIFYSTRING         65536
-#define WIN_DT_NOCLIP               256
-#define WIN_DT_NOPREFIX             2048
-#define WIN_DT_RIGHT                2
-#define WIN_DT_RTLREADING           131072
-#define WIN_DT_SINGLELINE           32
-#define WIN_DT_TABSTOP              128
-#define WIN_DT_TOP                  0
-#define WIN_DT_VCENTER              4
-#define WIN_DT_WORDBREAK            16
-#define WIN_DT_INTERNAL             4096
+#define WIN_DT_EXPANDTABS           0x00040
+#define WIN_DT_EXTERNALLEADING      0x00200
+#define WIN_DT_LEFT                 0x00000
+#define WIN_DT_MODIFYSTRING         0x10000
+#define WIN_DT_NOCLIP               0x00100
+#define WIN_DT_NOPREFIX             0x00800
+#define WIN_DT_RIGHT                0x00002
+#define WIN_DT_RTLREADING           0x20000
+#define WIN_DT_SINGLELINE           0x00020
+#define WIN_DT_TABSTOP              0x00080
+#define WIN_DT_TOP                  0x00000
+#define WIN_DT_VCENTER              0x00004
+#define WIN_DT_WORDBREAK            0x00010
+#define WIN_DT_INTERNAL             0x01000
+
+/* WAPI_CREATEHATCHBRUSH() styles */
+#define WIN_HS_BDIAGONAL            3
+#define WIN_HS_CROSS                4
+#define WIN_HS_DIAGCROSS            5
+#define WIN_HS_FDIAGONAL            2
+#define WIN_HS_HORIZONTAL           0
+#define WIN_HS_VERTICAL             1
 
 /* Windows charset values (WIN_CREATEFONT()) */
 #define WIN_ANSI_CHARSET            0

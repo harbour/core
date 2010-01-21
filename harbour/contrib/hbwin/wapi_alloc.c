@@ -139,6 +139,48 @@ HPEN hbwapi_par_HPEN( int iParam )
    return ph ? ( HPEN ) * ph : NULL;
 }
 
+static HB_GARBAGE_FUNC( s_gc_HBRUSH_release )
+{
+   void ** ph = ( void ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      DeleteObject( ( HBRUSH ) * ph );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      *ph = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gc_HBRUSH_funcs =
+{
+   s_gc_HBRUSH_release,
+   hb_gcDummyMark
+};
+
+void hbwapi_ret_HBRUSH( HBRUSH p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HBRUSH * ), &s_gc_HBRUSH_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+HBRUSH hbwapi_par_HBRUSH( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HBRUSH_funcs, iParam );
+
+   return ph ? ( HBRUSH ) * ph : NULL;
+}
+
 static HB_GARBAGE_FUNC( s_gc_HFONT_release )
 {
    void ** ph = ( void ** ) Cargo;

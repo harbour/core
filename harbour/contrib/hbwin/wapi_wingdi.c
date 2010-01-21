@@ -50,6 +50,10 @@
  *
  */
 
+/* WinCE MSDN documentation:
+      http://msdn.microsoft.com/en-us/library/aa923590.aspx
+ */
+
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
@@ -57,6 +61,30 @@
 #include "hbapierr.h"
 #include "hbwinuni.h"
 #include "hbwapi.h"
+
+POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   memset( p, 0, sizeof( POINT ) );
+
+   if( HB_IS_HASH( pStru ) )
+   {
+      p->x = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "x" ) );
+      p->y = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "y" ) );
+
+      return p;
+   }
+   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+   {
+      p->x = ( LONG ) hb_arrayGetNL( pStru, 1 );
+      p->y = ( LONG ) hb_arrayGetNL( pStru, 2 );
+
+      return p;
+   }
+   else
+      return bMandatory ? p : NULL;
+}
 
 RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 {
@@ -333,6 +361,22 @@ HB_FUNC( WAPI_GETTEXTCOLOR )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( WAPI_GETTEXTFACE )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+
+   if( hDC )
+   {
+      TCHAR tszFontName[ 128 ];
+
+      GetTextFace( hDC, HB_SIZEOFARRAY( tszFontName ) - 1, tszFontName );
+
+      HB_RETSTR( tszFontName );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( WAPI_SETBKCOLOR )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -360,6 +404,21 @@ HB_FUNC( WAPI_CREATEPEN )
                                ( COLORREF ) hb_parnl( 3 ) /* crColor */ ) );
 }
 
+HB_FUNC( WAPI_CREATESOLIDBRUSH )
+{
+   HBRUSH h = CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* crColor */ );
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( GetLastError() );
+#endif
+   hbwapi_ret_HBRUSH( h );
+}
+
+HB_FUNC( WAPI_CREATEHATCHBRUSH )
+{
+   hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
+                                        ( COLORREF ) hb_parnl( 2 ) /* crColor */ ) );
+}
+
 HB_FUNC( WAPI_CREATEFONT )
 {
    void * hFontFace;
@@ -385,6 +444,7 @@ HB_FUNC( WAPI_CREATEFONT )
 HB_FUNC( WAPI_SELECTOBJECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
+   HB_BOOL bRegion = HB_FALSE;
    HGDIOBJ h;
 
    if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL );
@@ -394,8 +454,12 @@ HB_FUNC( WAPI_SELECTOBJECT )
       h = NULL;
 
    if( hDC && h )
-      /* TODO: Return value */
-      SelectObject( hDC, h );
+   {
+      if( bRegion )
+         hb_retni( ( int ) SelectObject( hDC, h ) );
+      else
+         hb_retl( SelectObject( hDC, h ) != NULL ); /* NOTE: We don't return a raw pointer. */
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -414,7 +478,7 @@ HB_FUNC( WAPI_MOVETOEX )
 
          hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &p ) );
 
-         /* TODO: Use hash */
+         /* TODO: Support both has and array */
          hb_arraySetNL( pPOINT, 1, p.x );
          hb_arraySetNL( pPOINT, 2, p.y );
       }
@@ -435,18 +499,76 @@ HB_FUNC( WAPI_LINETO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WAPI_GETTEXTFACE )
+HB_FUNC( WAPI_FILLRECT )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+   RECT rect;
+   HBRUSH hBrush = hbwapi_par_HBRUSH( 3 );
+
+   if( hDC && hbwapi_par_RECT( &rect, 2, HB_TRUE ) && hBrush )
+      hb_retni( FillRect( hDC, &rect, hBrush ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_ROUNDRECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-   {
-      TCHAR tszFontName[ 128 ];
+      hb_retl( RoundRect( hDC,
+                          hb_parni( 2 ) /* x1 */,
+                          hb_parni( 3 ) /* y1 */,
+                          hb_parni( 4 ) /* x2 */,
+                          hb_parni( 5 ) /* y2 */,
+                          hb_parni( 6 ) /* iWidth */,
+                          hb_parni( 7 ) /* iHeight */ ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
-      GetTextFace( hDC, HB_SIZEOFARRAY( tszFontName ) - 1, tszFontName );
+HB_FUNC( WAPI_RECTANGLE )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
 
-      HB_RETSTR( tszFontName );
-   }
+   if( hDC )
+      hb_retl( Rectangle( hDC,
+                          hb_parni( 2 ) /* x1 */,
+                          hb_parni( 3 ) /* y1 */,
+                          hb_parni( 4 ) /* x2 */,
+                          hb_parni( 5 ) /* y2 */ ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_ARC )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+
+   if( hDC )
+      hb_retl( Arc( hDC,
+                    hb_parni( 2 ) /* nLeftRect */,
+                    hb_parni( 3 ) /* nTopRect */,
+                    hb_parni( 4 ) /* nRightRect */,
+                    hb_parni( 5 ) /* nBottomRect */,
+                    hb_parni( 6 ) /* nXStartArc */,
+                    hb_parni( 7 ) /* nYStartArc */,
+                    hb_parni( 8 ) /* nXEndArc */,
+                    hb_parni( 9 ) /* nYEndArc */ ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_ELLIPSE )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+
+   if( hDC )
+      hb_retl( Ellipse( hDC,
+                        hb_parni( 2 ) /* nLeftRect */,
+                        hb_parni( 3 ) /* nTopRect */,
+                        hb_parni( 4 ) /* nRightRect */,
+                        hb_parni( 5 ) /* nBottomRect */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
