@@ -14,7 +14,7 @@ RDDs with name starting with "net:" are redirected to the hbnetio server.
 
 Client side functions:
 ======================
-   NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>], ;
+   NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>], ;
                   [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
          -> <lConnected>
       Register HBNETIO as alternative RDD IO API redirecting all files
@@ -59,9 +59,16 @@ Client side functions:
       given then default connection is chosen.
 
 
-   NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+   NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
       Close the connection created by NETIO_CONNECT()
 
+
+   NETIO_DECODE( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>], ;
+                 [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
+         -> <lDecoded>
+      Decode connection parameters from <cFullName> and default settings.
+      Return .T. if <cFullName> contains any connection settings.
+      <cFullName> should not contain "net:" prefix.
 
    NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
       Check if function or procedure exists on the server side.

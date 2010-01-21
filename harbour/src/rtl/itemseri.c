@@ -57,10 +57,6 @@
 
 
 /*
-TODO: extended hash format with default value and hash flags
-*/
-
-/*
 UCHAR [ 1 ] - item type
    0. NIL               0
    1. TRUE              0
@@ -102,6 +98,8 @@ UCHAR [ 1 ] - item type
   37. INT64NUM          8+1
   38. DBLNUM            8+1+1
   39. TIMESTAMP         8
+  40. HASHFLAGS         2
+  41. HASHDEFAULT VALUE 0
 */
 
 #define HB_SERIAL_NIL         0
@@ -144,6 +142,8 @@ UCHAR [ 1 ] - item type
 #define HB_SERIAL_INT64NUM   37
 #define HB_SERIAL_DBLNUM     38
 #define HB_SERIAL_TIMESTAMP  39
+#define HB_SERIAL_HASHFLAGS  40
+#define HB_SERIAL_HASHDEFVAL 41
 
 #define HB_SERIAL_DUMMYOFFSET ( ( ULONG ) -1 )
 
@@ -280,6 +280,7 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
    ULONG ulSize, ulLen, u;
    HB_LONG lVal;
    USHORT uiClass;
+   PHB_ITEM pDefVal;
    const char * szVal;
 
    if( HB_IS_BYREF( pItem ) )
@@ -388,13 +389,24 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
          }
          else
          {
-            ulLen = hb_hashLen( pItem );
-            if( ulLen <= 255 )
-               ulSize = 2;
-            else if( ulLen <= UINT16_MAX )
+            if( hb_hashGetFlags( pItem ) != HB_HASH_FLAG_DEFAULT )
                ulSize = 3;
             else
-               ulSize = 5;
+               ulSize = 0;
+            pDefVal = hb_hashGetDefault( pItem );
+            if( pDefVal )
+            {
+               ulSize++;
+               ulSize += hb_itemSerialSize( pDefVal, fNumSize,
+                                            cdpIn, cdpOut, pRefPtr, ulOffset + ulSize );
+            }
+            ulLen = hb_hashLen( pItem );
+            if( ulLen <= 255 )
+               ulSize += 2;
+            else if( ulLen <= UINT16_MAX )
+               ulSize += 3;
+            else
+               ulSize += 5;
             for( u = 1; u <= ulLen; u++ )
             {
                ulSize += hb_itemSerialSize( hb_hashGetKeyAt( pItem, u ), fNumSize,
@@ -697,6 +709,21 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
          }
          else
          {
+            int iFlags = hb_hashGetFlags( pItem );
+            PHB_ITEM pDefVal = hb_hashGetDefault( pItem );
+
+            if( iFlags != HB_HASH_FLAG_DEFAULT )
+            {
+               pBuffer[ ulOffset++ ] = HB_SERIAL_HASHFLAGS;
+               HB_PUT_LE_UINT16( &pBuffer[ ulOffset ], iFlags );
+               ulOffset += 2;
+            }
+            if( pDefVal )
+            {
+               pBuffer[ ulOffset++ ] = HB_SERIAL_HASHDEFVAL;
+               ulOffset = hb_serializeItem( pDefVal, fNumSize,
+                                            cdpIn, cdpOut, pBuffer, ulOffset, pRef );
+            }
             ulLen = hb_hashLen( pItem );
             if( ulLen <= 255 )
             {
@@ -762,7 +789,7 @@ static ULONG hb_deserializeHash( PHB_ITEM pItem,
 #else
       PHB_ITEM pKey, pVal;
 
-      hb_hashSetFlags( pItem, HB_HASH_BINARY | HB_HASH_RESORT );
+      hb_hashSetFlags( pItem, HB_HASH_BINARY /* | HB_HASH_RESORT */ );
       hb_hashPreallocate( pItem, ulLen );
       while( ulLen-- )
       {
@@ -1026,6 +1053,30 @@ static ULONG hb_deserializeItem( PHB_ITEM pItem,
          break;
       }
 
+      case HB_SERIAL_HASHFLAGS:
+      {
+         int iFlags = HB_GET_LE_UINT16( &pBuffer[ ulOffset ] );
+         ulOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
+                                        ulOffset + 2, pRef );
+         hb_hashClearFlags( pItem, HB_HASH_FLAG_MASK );
+         if( ( iFlags & HB_HASH_BINARY ) == 0 )
+            iFlags |= HB_HASH_RESORT;
+         hb_hashSetFlags( pItem, iFlags );
+         break;
+      }
+
+      case HB_SERIAL_HASHDEFVAL:
+      {
+         PHB_ITEM pDefVal = hb_itemNew( NULL );
+         ulOffset = hb_deserializeItem( pDefVal, cdpIn, cdpOut, pBuffer,
+                                        ulOffset, pRef );
+         ulOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
+                                        ulOffset, pRef );
+         hb_hashSetDefault( pItem, pDefVal );
+         hb_itemRelease( pDefVal );
+         break;
+      }
+
       default:
          hb_itemClear( pItem );
          break;
@@ -1191,6 +1242,14 @@ static HB_BOOL hb_deserializeTest( const UCHAR ** pBufferPtr, ULONG * pulSize,
                ulSize = ulLen;
          }
          ulLen = 1;
+         break;
+      case HB_SERIAL_HASHFLAGS:
+         ulSize = 3;
+         ulLen = 1;
+         break;
+      case HB_SERIAL_HASHDEFVAL:
+         ulSize = 1;
+         ulLen = 2;
          break;
       default:
          ulSize = 1;

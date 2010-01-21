@@ -8,14 +8,17 @@
  *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is client code with
- *       NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>],
+ *       NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>],
  *                      [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
  *             -> <lOK>
  *    function which register alternative RDD IO API, sets server
  *    address and port and connection timeout parameter.
  *    Then it tries to connect to the server and returns .T. on success.
  *    This code also provides the following .prg functions:
- *       NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+ *       NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
+ *       NETIO_DECODE( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>],
+ *                     [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
+ *             -> <lDecoded>
  *       NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
  *       NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
  *       NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
@@ -399,7 +402,114 @@ static void s_fileGetConnParam( const char ** pszServer, int * piPort, int * piT
    }
 }
 
-static PHB_CONCLI s_fileConnect( const char ** pszFilename,
+static const char * s_fileDecode( const char * pszFilename,
+                                  char * buffer, const char ** pServer,
+                                  int * piPort, int * piTimeOut,
+                                  const char ** pPasswd, int * piPassLen,
+                                  int * piLevel, int * piStrategy )
+{
+   HB_SYMBOL_UNUSED( piTimeOut );
+   HB_SYMBOL_UNUSED( piLevel );
+   HB_SYMBOL_UNUSED( piStrategy );
+
+   if( pszFilename )
+   {
+      /* decode server address and port if given as part of file name
+       * in format like:
+       *          "192.168.0.1:2941:path/to/file"
+       * or:
+       *          "192.168.0.1:2941:passwd:path/to/file"
+       * or:
+       *          "//192.168.0.1:2941/path/to/file"
+       */
+      const char * psz, * pth = NULL;
+
+      if( ( pszFilename[ 0 ] == '/' || pszFilename[ 0 ] == '\\' ) &&
+          pszFilename[ 0 ] == pszFilename[ 1 ] )
+      {
+         pszFilename += 2;
+         pth = strchr( pszFilename, '/' );
+         psz = strchr( pszFilename, '\\' );
+         if( !pth || ( psz && psz < pth ) )
+         {
+            pth = psz;
+            if( !pth )
+               pth = pszFilename + strlen( pszFilename );
+         }
+      }
+
+      psz = strchr( pszFilename, ':' );
+      if( pth && ( !psz || pth < psz ) )
+         psz = pth;
+
+      if( psz )
+      {
+         int iLen = ( int ) ( psz - pszFilename );
+
+         if( pth || iLen == 0 || iLen > 1 )
+         {
+            char port_buf[ 10 ], c;
+
+            if( iLen >= NETIO_SERVERNAME_MAX )
+               iLen = NETIO_SERVERNAME_MAX - 1;
+            if( iLen > 0 )
+            {
+               hb_strncpy( buffer, pszFilename, iLen );
+               *pServer = buffer;
+            }
+            pszFilename = psz + 1;
+            if( !pth || psz < pth )
+            {
+               iLen = 0;
+               while( HB_ISDIGIT( pszFilename[ iLen ] ) &&
+                      iLen < ( int ) sizeof( port_buf ) - 1 )
+               {
+                  port_buf[ iLen ] = pszFilename[ iLen ];
+                  ++iLen;
+               }
+               c = pszFilename[ iLen ];
+               if( c == ':' || c == '/' || c == '\\' )
+               {
+                  if( iLen > 0 )
+                  {
+                     int iOverflow;
+                     HB_LONG llPort;
+
+                     port_buf[ iLen ] = '\0';
+                     llPort = hb_strValInt( port_buf, &iOverflow );
+
+                     if( !iOverflow && llPort > 0 && llPort < 0x10000 )
+                     {
+                        pszFilename += iLen;
+                        *piPort = ( int ) llPort;
+                     }
+                  }
+                  if( c == ':' )
+                  {
+                     ++pszFilename;
+                     iLen = 0;
+                     while( pszFilename[ iLen ] &&
+                            pszFilename[ iLen ] != ':' )
+                        ++iLen;
+                     if( pszFilename[ iLen ] == ':' )
+                     {
+                        *pPasswd = pszFilename;
+                        pszFilename += iLen + 1;
+                        if( iLen > NETIO_PASSWD_MAX )
+                           iLen = NETIO_PASSWD_MAX;
+                        *piPassLen = iLen;
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   return pszFilename;
+}
+
+static PHB_CONCLI s_fileConnect( const char ** pFilename,
                                  const char * pszServer,
                                  int iPort, int iTimeOut,
                                  const char * pszPasswd, int iPassLen,
@@ -412,89 +522,10 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
 
    s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
 
-   if( pszFilename )
-   {
-      /* decode server address and port if given as part of file name
-       * in format like:
-       *          "192.168.0.1:2941:path/to/file"
-       * or:
-       *          "192.168.0.1:2941:passwd:path/to/file"
-       * or:
-       *          "//192.168.0.1:2941/path/to/file"
-       */
-      const char * psz, * tmp;
-
-      if( ( ( *pszFilename )[ 0 ] == '/' || ( *pszFilename )[ 0 ] == '\\' ) &&
-          ( *pszFilename )[ 0 ] == ( *pszFilename )[ 1 ] )
-      {
-         *pszFilename += 2;
-         psz = strchr( *pszFilename, '/' );
-         tmp = strchr( *pszFilename, '\\' );
-         if( tmp < psz )
-            psz = tmp;
-      }
-      else
-         psz = strchr( *pszFilename, ':' );
-
-      if( psz )
-      {
-         int iLen = ( int ) ( psz - *pszFilename );
-
-         if( iLen == 0 || iLen > 1 )
-         {
-            char port_buf[ 10 ], c;
-            if( iLen >= ( int ) sizeof( server ) )
-               iLen = ( int ) sizeof( server ) - 1;
-            if( iLen > 0 )
-            {
-               hb_strncpy( server, *pszFilename, iLen );
-               pszServer = server;
-            }
-            *pszFilename = psz + 1;
-            iLen = 0;
-            while( HB_ISDIGIT( ( *pszFilename )[ iLen ] ) &&
-                   iLen < ( int ) sizeof( port_buf ) - 1 )
-            {
-               port_buf[ iLen ] = ( *pszFilename )[ iLen ];
-               ++iLen;
-            }
-            c = ( *pszFilename )[ iLen ];
-            if( c == ':' || c == '/' || c == '\\' )
-            {
-               if( iLen > 0 )
-               {
-                  int iOverflow;
-                  HB_LONG llPort;
-
-                  port_buf[ iLen ] = '\0';
-                  llPort = hb_strValInt( port_buf, &iOverflow );
-
-                  if( !iOverflow && llPort > 0 && llPort < 0x10000 )
-                  {
-                     *pszFilename += iLen;
-                     iPort = ( int ) llPort;
-                  }
-               }
-               if( c == ':' )
-               {
-                  ++( *pszFilename );
-                  iLen = 0;
-                  while( ( *pszFilename )[ iLen ] &&
-                         ( *pszFilename )[ iLen ] != ':' )
-                     ++iLen;
-                  if( ( *pszFilename )[ iLen ] == ':' )
-                  {
-                     pszPasswd = *pszFilename;
-                     *pszFilename += iLen + 1;
-                     iPassLen = iLen;
-                     if( iPassLen > NETIO_PASSWD_MAX )
-                        iPassLen = NETIO_PASSWD_MAX;
-                  }
-               }
-            }
-         }
-      }
-   }
+   if( pFilename )
+      *pFilename = s_fileDecode( *pFilename, server,
+                                 &pszServer, &iPort, &iTimeOut,
+                                 &pszPasswd, &iPassLen, &iLevel, &iStrategy );
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE && iPassLen )
       iLevel = HB_ZLIB_COMPRESSION_DEFAULT;
@@ -618,7 +649,55 @@ static void s_netio_init( void * cargo )
    }
 }
 
-/* NETIO_CONNECT( [<cServer>], [<cPort>], [<nTimeOut>], ;
+/* NETIO_DECODE( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>], ;
+ *               [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] ) -> <lOK>
+ */
+HB_FUNC( NETIO_DECODE )
+{
+   char server[ NETIO_SERVERNAME_MAX ];
+   const char * pszFullName = hb_parc( 1 );
+   const char * pszServer, * pszPasswd, * pszFile;
+   int iPort, iTimeOut, iPassLen, iLevel, iStrategy;
+   HB_BOOL fResult = FALSE;
+
+   pszServer = NULL;
+   pszPasswd = NULL;
+   iPort = iTimeOut = iPassLen = 0;
+   iLevel = HB_ZLIB_COMPRESSION_DISABLE;
+   iStrategy = HB_ZLIB_STRATEGY_DEFAULT;
+
+   s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
+
+   pszFile = s_fileDecode( pszFullName, server,
+                           &pszServer, &iPort, &iTimeOut,
+                           &pszPasswd, &iPassLen, &iLevel, &iStrategy );
+
+   if( iLevel == HB_ZLIB_COMPRESSION_DISABLE && iPassLen )
+      iLevel = HB_ZLIB_COMPRESSION_DEFAULT;
+
+   hb_storc( pszServer, 2 );
+   hb_storni( iPort, 3 );
+   hb_storni( iTimeOut, 4 );
+   hb_storclen( pszPasswd, iPassLen, 5 );
+   hb_storni( iLevel, 6 );
+   hb_storni( iStrategy, 7 );
+
+   fResult = pszFile != pszFullName;
+   if( fResult && HB_ISBYREF( 1 ) )
+   {
+      if( * pszFile )
+      {
+         char * pszFileName = hb_strdup( pszFile );
+         if( !hb_storclen_buffer( pszFileName, strlen( pszFileName ), 1 ) )
+            hb_xfree( pszFileName );
+      }
+      else
+         hb_storc( NULL, 1 );
+   }
+   hb_retl( fResult );
+}
+
+/* NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>], ;
  *                [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] ) -> <lOK>
  */
 HB_FUNC( NETIO_CONNECT )
@@ -658,7 +737,7 @@ HB_FUNC( NETIO_CONNECT )
    hb_retl( conn != NULL );
 }
 
-/* NETIO_DISCONNECT( [<cServer>], [<cPort>] ) -> <lOK>
+/* NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
  */
 HB_FUNC( NETIO_DISCONNECT )
 {
