@@ -130,6 +130,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD setMark()
    METHOD gotoMark()
    METHOD goto()
+   METHOD formatBraces()
    METHOD removeTabs()
    METHOD RemoveTrailingSpaces()
    METHOD getSelectedText()
@@ -598,6 +599,58 @@ METHOD IdeEditsManager:insertText( cKey )
       qCursor:insertText( cText )
       qCursor:setPosition( nB )
       qCursor:endEditBlock()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:formatBraces()
+   LOCAL qEdit, qDoc, cText
+
+   IF empty( qEdit := ::getEditCurrent() )
+      RETURN Self
+   ENDIF
+
+   qDoc := QTextDocument():configure( qedit:document() )
+
+   IF !( qDoc:isEmpty() )
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+
+      cText := strtran( cText, "( ", "(" )
+      cText := strtran( cText, "(  ", "(" )
+      cText := strtran( cText, "(   ", "(" )
+      cText := strtran( cText, "(    ", "(" )
+      cText := strtran( cText, "(     ", "(" )
+      cText := strtran( cText, "(      ", "(" )
+      cText := strtran( cText, " (", "(" )
+      cText := strtran( cText, "  (", "(" )
+      cText := strtran( cText, "   (", "(" )
+      cText := strtran( cText, "    (", "(" )
+      cText := strtran( cText, "     (", "(" )
+
+      cText := strtran( cText, "      )", ")" )
+      cText := strtran( cText, "     )", ")" )
+      cText := strtran( cText, "    )", ")" )
+      cText := strtran( cText, "   )", ")" )
+      cText := strtran( cText, "  )", ")" )
+      cText := strtran( cText, " )", ")" )
+
+      cText := strtran( cText, "(", "( " )
+      cText := strtran( cText, ")", " )" )
+
+      cText := strtran( cText, "(     )", "()" )
+      cText := strtran( cText, "(    )", "()" )
+      cText := strtran( cText, "(   )", "()" )
+      cText := strtran( cText, "(  )", "()" )
+      cText := strtran( cText, "( )", "()" )
+
+      qDoc:clear()
+      qDoc:setPlainText( cText )
+
+      qDoc:setUndoRedoEnabled( .t. )
    ENDIF
 
    RETURN Self

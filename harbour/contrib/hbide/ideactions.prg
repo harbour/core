@@ -288,6 +288,7 @@ METHOD IdeActions:loadActions()
 
    aadd( aAct, { "RemoveTabs"           , "Replace Tabs with Spaces"     , "RemoveTabs"     , ""     , "No", "Yes" } )
    aadd( aAct, { "RemoveTrailingSpaces" , "Remove Trailing Spaces"       , "RemoveTrailingSpaces", ""     , "No", "Yes" } )
+   aadd( aAct, { "FormatBraces"         , "Format Braces"                , "FormatBraces"   , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -461,6 +462,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "RemoveTabs"         ), {|| oIde:execAction( "RemoveTabs"         ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu2:addItem( { ::getAction( "RemoveTrailingSpaces"), {|| oIde:execAction( "RemoveTrailingSpaces" ) } } )
+   oSubMenu2:addItem( { ::getAction( "FormatBraces"       ), {|| oIde:execAction( "FormatBraces"       ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Format" ) } )
 
    hbide_menuAddSep( oSubMenu )

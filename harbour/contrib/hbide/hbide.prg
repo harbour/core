@@ -515,6 +515,8 @@ METHOD HbIde:execAction( cKey )
    CASE cKey == "ZoomOut"
       ::oEM:zoom( 0 )
 
+   CASE cKey == "FormatBraces"
+      ::oEM:formatBraces()
    CASE cKey == "RemoveTabs"
       ::oEM:removeTabs()
    CASE cKey == "RemoveTrailingSpaces"
