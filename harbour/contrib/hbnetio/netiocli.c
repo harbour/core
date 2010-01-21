@@ -660,11 +660,13 @@ HB_FUNC( NETIO_DECODE )
    int iPort, iTimeOut, iPassLen, iLevel, iStrategy;
    HB_BOOL fResult;
 
-   pszServer = NULL;
-   pszPasswd = NULL;
-   iPort = iTimeOut = iPassLen = 0;
-   iLevel = HB_ZLIB_COMPRESSION_DISABLE;
-   iStrategy = HB_ZLIB_STRATEGY_DEFAULT;
+   pszServer = hb_parc( 2 );
+   iPort = hb_parni( 3 );
+   iTimeOut = hb_parni( 4 );
+   pszPasswd = hb_parc( 5 );
+   iPassLen = ( int ) hb_parclen( 5 );
+   iLevel = hb_parnidef( 6, HB_ZLIB_COMPRESSION_DISABLE );
+   iStrategy = hb_parnidef( 7, HB_ZLIB_STRATEGY_DEFAULT );
 
    s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
 
