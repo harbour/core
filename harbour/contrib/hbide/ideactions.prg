@@ -286,6 +286,9 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "RebuildQt"            , "Rebuild Project"              , "rebuild"        , ""     , "No", "Yes" } )
    aadd( aAct, { "RebuildLaunchQt"      , "Rebuild and Launch"           , "rebuildlaunch"  , ""     , "No", "Yes" } )
 
+   aadd( aAct, { "RemoveTabs"           , "Replace Tabs with Spaces"     , "RemoveTabs"     , ""     , "No", "Yes" } )
+   aadd( aAct, { "RemoveTrailingSpaces" , "Remove Trailing Spaces"       , "RemoveTrailingSpaces", ""     , "No", "Yes" } )
+
    RETURN aAct
 
 /*----------------------------------------------------------------------*/
@@ -452,6 +455,13 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "InsertRandomName"   ), {|| oIde:execAction( "InsertRandomName"   ) } } )
    oSubMenu2:addItem( { ::getAction( "InsertExternalFile" ), {|| oIde:execAction( "InsertExternalFile" ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
+
+   hbide_menuAddSep( oSubMenu )
+   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2:addItem( { ::getAction( "RemoveTabs"         ), {|| oIde:execAction( "RemoveTabs"         ) } } )
+   hbide_menuAddSep( oSubMenu )
+   oSubMenu2:addItem( { ::getAction( "RemoveTrailingSpaces"), {|| oIde:execAction( "RemoveTrailingSpaces" ) } } )
+   oMenuBar:addItem( { oSubMenu2,  _T( "~Format" ) } )
 
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "switchReadOnly"      ), {|| oIde:execAction( "switchReadOnly"     ) } } )

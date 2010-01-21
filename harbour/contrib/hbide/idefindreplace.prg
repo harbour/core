@@ -138,6 +138,7 @@ METHOD IdeFindReplace:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindReplace:show()
+   LOCAL cText, qLineEdit
 
    ::oUI:q_buttonReplace:setEnabled( .f. )
    ::oUI:q_checkGlobal:setEnabled( .f. )
@@ -145,6 +146,13 @@ METHOD IdeFindReplace:show()
    ::oUI:q_checkListOnly:setChecked( .f. )
    ::oIde:setPosByIni( ::oUI:oWidget, FindDialogGeometry )
    ::oUI:q_comboFindWhat:setFocus()
+
+   IF !empty( cText := ::oEM:getSelectedText() )
+      qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
+      qLineEdit:setText( cText )
+      qLineEdit:selectAll()
+      //QLineEdit( ::oUI:q_comboFindWhat:lineEdit() ):setText( cText ):selectAll()
+   ENDIF
    ::oUI:show()
 
    RETURN Self

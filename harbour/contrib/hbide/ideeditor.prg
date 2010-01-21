@@ -130,6 +130,9 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD setMark()
    METHOD gotoMark()
    METHOD goto()
+   METHOD removeTabs()
+   METHOD RemoveTrailingSpaces()
+   METHOD getSelectedText()
 
    ENDCLASS
 
@@ -601,6 +604,61 @@ METHOD IdeEditsManager:insertText( cKey )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:RemoveTabs()
+   LOCAL qEdit, qDoc, cText, cSpaces
+
+   IF empty( qEdit := ::getEditCurrent() )
+      RETURN Self
+   ENDIF
+
+   qDoc := QTextDocument():configure( qedit:document() )
+
+   IF !( qDoc:isEmpty() )
+      cSpaces := space( ::nTabSpaces )
+
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+      qDoc:clear()
+      qDoc:setPlainText( strtran( cText, chr( 9 ), cSpaces ) )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:RemoveTrailingSpaces()
+   LOCAL qEdit, qDoc, cText, a_, s
+
+   IF empty( qEdit := ::getEditCurrent() )
+      RETURN Self
+   ENDIF
+
+   qDoc := QTextDocument():configure( qedit:document() )
+
+   IF !( qDoc:isEmpty() )
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+
+      a_:= hbide_memoToArray( cText )
+      FOR EACH s IN a_
+         s := trim( s )
+      NEXT
+      cText := hbide_arrayToMemo( a_ )
+
+      qDoc:clear()
+      qDoc:setPlainText( cText )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:zoom( nKey )
    LOCAL nPointSize, qFont, oEdit, oEditor
 
@@ -644,6 +702,17 @@ METHOD IdeEditsManager:printPreview()
    Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
 
    RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getSelectedText()
+   LOCAL qEdit
+
+   IF !empty( qEdit := ::oEM:getEditCurrent() )
+      RETURN QTextCursor():configure( qEdit:textCursor() ):selectedText()
+   ENDIF
+
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
@@ -1182,8 +1251,12 @@ METHOD IdeEditor:setDocumentProperties()
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
+
       QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
       QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
+
+      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+
       ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
       ::lLoaded := .T.
    ENDIF
@@ -1339,6 +1412,7 @@ CLASS IdeEdit INHERIT IdeObject
 
    DATA   qSlots
    DATA   lCursorPosChanging                      INIT  .F.
+   DATA   lModified                               INIT  .F.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1489,18 +1563,21 @@ METHOD IdeEdit:deHighlightPreviousLine()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:highlightCurrentLine()
-   LOCAL nCurLine, nLastLine, qCursor, lModified, qDoc, qEdit, qBlockFmt, qB
+   LOCAL nCurLine, nLastLine, qCursor, qDoc, qEdit, qBlockFmt, qB, lOldModified
 
    qEdit     := ::qEdit
    qCursor   := QTextCursor():new( qEdit:textCursor() )
+
+   qDoc := QTextDocument():configure( qEdit:document() )
+   lOldModified := ::lModified
+   ::lModified := qDoc:isModified()
+
    qCursor:beginEditBlock()
 
    nCurLine  := qCursor:blockNumber()
    nLastLine := ::nLastLine
 
    IF !( nCurLine == nLastLine )
-      qDoc := QTextDocument():configure( qEdit:document() )
-      lModified := qDoc:isModified()
 
       ::deHighlightPreviousLine()
 
@@ -1511,13 +1588,6 @@ METHOD IdeEdit:highlightCurrentLine()
             qCursor:setBlockFormat( qBlockFmt )
          ENDIF
       ENDIF
-
-      /* Infact these must not be called from here but because changing the format  */
-      /* Qt consider that document has been modified, hence I need to put them here */
-      qDoc:setModified( lModified )
-      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oEditor:oTab:oWidget ), ;
-                                   ::resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
-      ::oDK:setStatusText( SB_PNL_MODIFIED, lModified )
    ENDIF
 
    qCursor:endEditBlock()
@@ -1525,6 +1595,15 @@ METHOD IdeEdit:highlightCurrentLine()
    ::nLastLine := nCurLine
    IF !( qCursor:isNull() )
       ::qLastCursor := qCursor
+   ENDIF
+
+   /* Infact these must not be called from here but because changing the format  */
+   /* Qt consider that document has been modified, hence I need to put them here */
+   IF ( lOldModified != ::lModified )
+      qDoc:setModified( ::lModified )
+      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oEditor:oTab:oWidget ), ;
+                                   ::resPath + iif( ::lModified, "tabmodified.png", "tabunmodified.png" ) )
+      ::oDK:setStatusText( SB_PNL_MODIFIED, ::lModified )
    ENDIF
 
    RETURN Self

@@ -96,7 +96,7 @@ PROCEDURE Main( cProjIni )
 
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
    s_pathSep := hb_OsPathSeparator()
-
+hbide_dbg( cProjIni )
    oIde := HbIde():new( cProjIni ):create()
    oIde:destroy()
 
@@ -242,6 +242,10 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
+
+   DEFAULT cProjIni TO ::cProjIni
+   ::cProjIni := cProjIni
+
    /* Setup GUI Error Reporting System*/
    hbqt_errorsys()
 
@@ -510,6 +514,11 @@ METHOD HbIde:execAction( cKey )
       ::oEM:zoom( 1 )
    CASE cKey == "ZoomOut"
       ::oEM:zoom( 0 )
+
+   CASE cKey == "RemoveTabs"
+      ::oEM:removeTabs()
+   CASE cKey == "RemoveTrailingSpaces"
+      ::oEM:removeTrailingSpaces()
 
    CASE cKey == "ToggleProjectTree"
       ::oDK:toggleLeftDocks()

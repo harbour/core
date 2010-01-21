@@ -164,19 +164,22 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "finddialoggeometry" , "themesdialoggeometry", "currenttheme",        ;
                       "currentcodec" }
 
-   DEFAULT cHbideIni TO "hbide.ini"
-
-   IF ! hb_FileExists( cHbideIni )
-      cHbideIni := hb_dirBase() + "hbide.ini"
-   ENDIF
-   oIde:cProjIni := cHbideIni
-
+   /* Initiate the place holders */
    oIde:aIni := Array( INI_SECTIONS_COUNT )
    oIde:aIni[ 1 ] := afill( array( INI_HBIDE_VRBLS ), "" )
    //
    FOR n := 2 TO INI_SECTIONS_COUNT
-       oIde:aIni[ n ] := Array( 0 )
+      oIde:aIni[ n ] := Array( 0 )
    NEXT
+
+   IF empty( cHbideIni )
+      IF file( "hbide.ini" )
+         cHbideIni := "hbide.ini"
+      ELSE
+         cHbideIni := hb_dirBase() + "hbide.ini"
+      ENDIF
+   ENDIF
+   oIde:cProjIni := cHbideIni
 
    IF hb_FileExists( oIde:cProjIni )
       aElem := hbide_readSource( oIde:cProjIni )
