@@ -148,7 +148,7 @@ HB_FUNC( VGAPALETTE )
 {
    const char *color_string;
    char red, green, blue;
-   char attr;
+   int attr;
 
    if( hb_pcount() < 4 )
    {

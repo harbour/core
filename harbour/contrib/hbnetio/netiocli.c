@@ -658,7 +658,7 @@ HB_FUNC( NETIO_DECODE )
    const char * pszFullName = hb_parc( 1 );
    const char * pszServer, * pszPasswd, * pszFile;
    int iPort, iTimeOut, iPassLen, iLevel, iStrategy;
-   HB_BOOL fResult = FALSE;
+   HB_BOOL fResult;
 
    pszServer = NULL;
    pszPasswd = NULL;

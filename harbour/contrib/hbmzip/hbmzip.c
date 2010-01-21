@@ -803,7 +803,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       attr = _chmod( szFileName, 0, 0 );
       if( attr != -1 )
 #else
-      ULONG attr;
+      HB_FATTR attr;
 
       if( hb_fsGetAttr( szFileName, &attr ) )
 #endif
@@ -852,10 +852,17 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    }
 #else
    {
-      ULONG attr;
+      HB_FATTR attr;
 
       if( !hb_fsGetAttr( szFileName, &attr ) )
          ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
+      else
+      {
+         ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
+                               HB_FA_DIRECTORY | HB_FA_ARCHIVE );
+
+         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
+      }
    }
 #endif
 
