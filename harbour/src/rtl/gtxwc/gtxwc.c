@@ -383,6 +383,7 @@ typedef struct tag_x_wnddef
 
    /* character translation table, it changes characters in screen buffer into UNICODE or graphs primitives */
    XWC_CharTrans charTrans[256];
+   XWC_CharTrans boxTrans[256];
 
    HB_BOOL fInvalidChr;
    XWC_RECT rInvalidChr;
@@ -1504,33 +1505,39 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, USHORT usCh, XWC_CharTran
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_DestroyCharTrans( PXWND_DEF wnd )
+static void hb_gt_xwc_ClearCharTrans( XWC_CharTrans * charTrans )
 {
    int i;
 
    for( i = 0; i < 256; i++ )
    {
-      switch( wnd->charTrans[ i ].type )
+      switch( charTrans[ i ].type )
       {
          case CH_IMG:
-            XDestroyImage( wnd->charTrans[ i ].u.img );
+            XDestroyImage( charTrans[ i ].u.img );
             break;
          case CH_SEG:
-            hb_xfree( wnd->charTrans[ i ].u.seg );
+            hb_xfree( charTrans[ i ].u.seg );
             break;
          case CH_RECT:
-            hb_xfree( wnd->charTrans[ i ].u.rect );
+            hb_xfree( charTrans[ i ].u.rect );
             break;
          case CH_PTS:
          case CH_LINE:
          case CH_POLY:
-            hb_xfree( wnd->charTrans[ i ].u.pts );
+            hb_xfree( charTrans[ i ].u.pts );
             break;
          default:
             break;
       }
-      memset( &wnd->charTrans[ i ], 0, sizeof( XWC_CharTrans ) );
    }
+   memset( charTrans, 0, 256 * sizeof( XWC_CharTrans ) );
+}
+
+static void hb_gt_xwc_DestroyCharTrans( PXWND_DEF wnd )
+{
+   hb_gt_xwc_ClearCharTrans( wnd->charTrans );
+   hb_gt_xwc_ClearCharTrans( wnd->boxTrans );
 }
 
 /* *********************************************************************** */
@@ -1539,20 +1546,29 @@ static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
 {
    int i;
    USHORT usCh16;
+   USHORT usBx16;
 
    hb_gt_xwc_DestroyCharTrans( wnd );
 
    for( i = 0; i < 256; i++ )
    {
       usCh16 = hb_cdpGetU16( wnd->hostCDP, HB_TRUE, ( unsigned char ) i );
+      usBx16 = hb_cdpGetU16( wnd->boxCDP, HB_TRUE, ( unsigned char ) i );
 
       wnd->charTrans[ i ].type = CH_CHAR;
       wnd->charTrans[ i ].u.ch16 = usCh16;
       wnd->charTrans[ i ].size = 0;
       wnd->charTrans[ i ].inverse = HB_FALSE;
+
+      wnd->boxTrans[ i ].type = CH_CHAR;
+      wnd->boxTrans[ i ].u.ch16 = usBx16;
+      wnd->boxTrans[ i ].size = 0;
+      wnd->boxTrans[ i ].inverse = HB_FALSE;
+
       if( wnd->fDrawBox )
       {
          hb_gt_xwc_DefineBoxChar( wnd, usCh16, &wnd->charTrans[ i ] );
+         hb_gt_xwc_DefineBoxChar( wnd, usBx16, &wnd->boxTrans[ i ] );
       }
    }
 }
@@ -2489,6 +2505,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    USHORT usCh16, usChBuf[XWC_MAX_COLS];
    ULONG ulCurr = 0xFFFFFFFFL;
    int i, iColor;
+   XWC_CharTrans * chTrans;
 
 #ifdef XWC_DEBUG
    printf( "Repaint(%d,%d,%d,%d)[%dx%d]\r\n", rowStart, colStart, rowStop, colStop, wnd->fontHeight, wnd->fontWidth );fflush(stdout);
@@ -2522,11 +2539,13 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
             color = ( BYTE ) iColor;
          }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
-         if( wnd->charTrans[ usCh16 ].inverse )
+         chTrans = ( attr & HB_GT_ATTR_BOX ) ? &wnd->boxTrans[ usCh16 ] :
+                                               &wnd->charTrans[ usCh16 ];
+         if( chTrans->inverse )
          {
             color = ( color << 4 ) | ( color >> 4 );
          }
-         if( len > 0 && ( wnd->charTrans[ usCh16 ].type != CH_CHAR ||
+         if( len > 0 && ( chTrans->type != CH_CHAR ||
                            color != oldColor || ulCurr == wnd->pCurrScr[index] ) )
          {
             hb_gt_xwc_DrawString( wnd, startCol, irow, oldColor, usChBuf, len );
@@ -2534,12 +2553,12 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
          }
          if( wnd->pCurrScr[index] != ulCurr )
          {
-            switch( wnd->charTrans[ usCh16 ].type )
+            switch( chTrans->type )
             {
                case CH_CHAR:
                   if( wnd->fFixMetric )
                   {
-                     HB_PUT_BE_UINT16( &usChBuf[ 0 ], wnd->charTrans[ usCh16 ].u.ch16 );
+                     HB_PUT_BE_UINT16( &usChBuf[ 0 ], chTrans->u.ch16 );
                      hb_gt_xwc_DrawString( wnd, icol, irow, color, usChBuf, 1 );
                   }
                   else
@@ -2549,13 +2568,13 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                         oldColor = color;
                         startCol = icol;
                      }
-                     HB_PUT_BE_UINT16( &usChBuf[ len ], wnd->charTrans[ usCh16 ].u.ch16 );
+                     HB_PUT_BE_UINT16( &usChBuf[ len ], chTrans->u.ch16 );
                      len++;
                   }
                   break;
 
                case CH_CHBX:
-                  /* hb_gt_xwc_DrawBoxChar( wnd, icol, irow, wnd->charTrans[ usCh16 ].u.ch16, color ); */
+                  /* hb_gt_xwc_DrawBoxChar( wnd, icol, irow, chTrans->u.ch16, color ); */
                   break;
 
                case CH_NONE:
@@ -2569,88 +2588,88 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   XSetBackground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XPutImage( wnd->dpy, wnd->drw, wnd->gc,
-                             wnd->charTrans[ usCh16 ].u.img, 0, 0,
+                             chTrans->u.img, 0, 0,
                              icol * wnd->fontWidth, irow * wnd->fontHeight,
                              wnd->fontWidth, wnd->fontHeight );
                   break;
 
                case CH_PTS:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawPoints( wnd->dpy, wnd->drw, wnd->gc,
-                               wnd->charTrans[ usCh16 ].u.pts,
-                               wnd->charTrans[ usCh16 ].size, CoordModePrevious );
+                               chTrans->u.pts,
+                               chTrans->size, CoordModePrevious );
                   break;
 
                case CH_LINE:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawLines( wnd->dpy, wnd->drw, wnd->gc,
-                               wnd->charTrans[ usCh16 ].u.pts,
-                               wnd->charTrans[ usCh16 ].size, CoordModePrevious );
+                               chTrans->u.pts,
+                               chTrans->size, CoordModePrevious );
                   break;
 
                case CH_POLY:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XFillPolygon( wnd->dpy, wnd->drw, wnd->gc,
-                                wnd->charTrans[ usCh16 ].u.pts,
-                                wnd->charTrans[ usCh16 ].size,
+                                chTrans->u.pts,
+                                chTrans->size,
                                 Convex, CoordModePrevious );
                   break;
 
                case CH_SEG:
                   basex = icol * wnd->fontWidth;
                   basey = irow * wnd->fontHeight;
-                  nsize = wnd->charTrans[ usCh16 ].size;
+                  nsize = chTrans->size;
                   for( i = 0; i < nsize; i++ )
                   {
-                     wnd->charTrans[ usCh16 ].u.seg[i].x1 = (wnd->charTrans[ usCh16 ].u.seg[i].x1 % wnd->fontWidth ) + basex;
-                     wnd->charTrans[ usCh16 ].u.seg[i].y1 = (wnd->charTrans[ usCh16 ].u.seg[i].y1 % wnd->fontHeight ) + basey;
-                     wnd->charTrans[ usCh16 ].u.seg[i].x2 = (wnd->charTrans[ usCh16 ].u.seg[i].x2 % wnd->fontWidth ) + basex;
-                     wnd->charTrans[ usCh16 ].u.seg[i].y2 = (wnd->charTrans[ usCh16 ].u.seg[i].y2 % wnd->fontHeight ) + basey;
+                     chTrans->u.seg[i].x1 = (chTrans->u.seg[i].x1 % wnd->fontWidth ) + basex;
+                     chTrans->u.seg[i].y1 = (chTrans->u.seg[i].y1 % wnd->fontHeight ) + basey;
+                     chTrans->u.seg[i].x2 = (chTrans->u.seg[i].x2 % wnd->fontWidth ) + basex;
+                     chTrans->u.seg[i].y2 = (chTrans->u.seg[i].y2 % wnd->fontHeight ) + basey;
                   }
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawSegments( wnd->dpy, wnd->drw, wnd->gc,
-                                 wnd->charTrans[ usCh16 ].u.seg, nsize );
+                                 chTrans->u.seg, nsize );
                   break;
 
                case CH_RECT:
                   basex = icol * wnd->fontWidth;
                   basey = irow * wnd->fontHeight;
-                  nsize = wnd->charTrans[ usCh16 ].size;
+                  nsize = chTrans->size;
                   for( i = 0; i < nsize; i++ )
                   {
-                     wnd->charTrans[ usCh16 ].u.rect[i].x = (wnd->charTrans[ usCh16 ].u.rect[i].x % wnd->fontWidth ) + basex;
-                     wnd->charTrans[ usCh16 ].u.rect[i].y = (wnd->charTrans[ usCh16 ].u.rect[i].y % wnd->fontHeight ) + basey;
+                     chTrans->u.rect[i].x = (chTrans->u.rect[i].x % wnd->fontWidth ) + basex;
+                     chTrans->u.rect[i].y = (chTrans->u.rect[i].y % wnd->fontHeight ) + basey;
                   }
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XFillRectangles( wnd->dpy, wnd->drw, wnd->gc,
-                                   wnd->charTrans[ usCh16 ].u.rect, nsize );
+                                   chTrans->u.rect, nsize );
                   break;
 
             }
@@ -3222,7 +3241,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fUTF8 = hb_gt_xwc_isUTF8();
    wnd->hostCDP = hb_vmCDP();
    wnd->utf8CDP = hb_cdpFindExt( "UTF8" );
-   wnd->boxCDP = hb_cdpFind( "EN" );
+   if( wnd->boxCDP == NULL )
+      wnd->boxCDP = hb_cdpFind( "EN" );
    wnd->cursorType = SC_NORMAL;
 
    /* Window Title */
@@ -3532,6 +3552,7 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 #endif
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, HB_FALSE );
 
 #ifndef HB_XWC_XLIB_NEEDLOCKS
    if( hb_vmIsMt() )
@@ -3842,6 +3863,7 @@ static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
 static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PXWND_DEF wnd;
+   const char * szVal;
    int iVal;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Info(%p,%d,%p)", pGT, iType, pInfo ) );
@@ -3933,6 +3955,26 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) )
                hb_gt_xwc_CreateWindow( wnd );
             HB_XWC_XLIB_UNLOCK
+         }
+         break;
+
+      case HB_GTI_BOXCP:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult,
+                                       wnd->boxCDP ? wnd->boxCDP->id : NULL );
+         szVal = hb_itemGetCPtr( pInfo->pNewVal );
+         if( szVal && *szVal )
+         {
+            PHB_CODEPAGE cdpBox = hb_cdpFind( szVal );
+            if( cdpBox )
+            {
+               wnd->boxCDP = cdpBox;
+               if( wnd->fInit )
+               {
+                  HB_XWC_XLIB_LOCK
+                  hb_gt_xwc_BuildCharTrans( wnd );
+                  HB_XWC_XLIB_UNLOCK
+               }
+            }
          }
          break;
 
