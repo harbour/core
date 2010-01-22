@@ -89,6 +89,7 @@
 #include <qpalette.h>
 #include <QtGui/QApplication>
 #include <QtCore/QLocale>
+#include <QtCore/QTextCodec>
 #include <QtGui/QIcon>
 
 static QApplication * s_app = NULL;
@@ -123,6 +124,10 @@ static void hbqt_Exit( void * cargo )
 static void hbqt_Init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+
+   QTextCodec *codec = QTextCodec::codecForLocale();
+   QTextCodec::setCodecForTr( codec );
+   QTextCodec::setCodecForCStrings( codec );
 
    s_argc = hb_cmdargARGC();
    s_argv = hb_cmdargARGV();

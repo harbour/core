@@ -16,6 +16,7 @@
 
 HBDbfModel.qth
 HBEvents.qth
+HBQPlainTextEdit.qth
 HBQSyntaxHighlighter.qth
 HBQTableView.qth
 HBQTextBlockUserData.qth

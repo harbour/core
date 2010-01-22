@@ -6,6 +6,7 @@ MOC_HEADERS := \
    hbqt_hbdbfmodel.h \
    hbqt_hbevents.h \
    hbqt_hbqmainwindow.h \
+   hbqt_hbqplaintextedit.h \
    hbqt_hbqsyntaxhighlighter.h \
    hbqt_hbqtableview.h \
    hbqt_hbslots.h \
@@ -17,6 +18,7 @@ CPP_SOURCES := \
    hbqt_hbdbfmodel.cpp \
    hbqt_hbevents.cpp \
    hbqt_hbqmainwindow.cpp \
+   hbqt_hbqplaintextedit.cpp \
    hbqt_hbqsyntaxhighlighter.cpp \
    hbqt_hbqtableview.cpp \
    hbqt_hbslots.cpp \

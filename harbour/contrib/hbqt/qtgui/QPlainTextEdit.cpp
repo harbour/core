@@ -71,18 +71,13 @@
  */
 
 /*
- *  Constructed[ 57/64 [ 89.06% ] ]
+ *  Constructed[ 57/59 [ 96.61% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<QTextEdit::ExtraSelection> extraSelections () const
  *  void setExtraSelections ( const QList<QTextEdit::ExtraSelection> & selections )
- *  15 public functions inherited from QAbstractScrollArea
- *  13 public functions inherited from QFrame
- *  207 public functions inherited from QWidget
- *  29 public functions inherited from QObject
- *  12 public functions inherited from QPaintDevice
  */
 
 #include <QtCore/QPointer>

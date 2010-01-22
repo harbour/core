@@ -200,10 +200,11 @@ CLASS HbIde
    DATA   aComments                               INIT   {}
    DATA   aProjects                               INIT   {}
 
+   DATA   aMarkTBtns                              INIT   array( 6 )
+
    METHOD new( cProjIni )
    METHOD create( cProjIni )
    METHOD destroy()
-   METHOD execAction( cKey )
    METHOD setPosAndSizeByIni( qWidget, nPart )
    METHOD setPosByIni( qWidget, nPart )
    METHOD setSizeByIni( qWidget, nPart )
@@ -218,6 +219,12 @@ CLASS HbIde
    METHOD updateProjectMenu()
    METHOD updateTitleBar()
    METHOD setCodec( cCodec )
+
+   METHOD execAction( cKey )
+   METHOD execProjectAction( cKey )
+   METHOD execSourceAction( cKey )
+   METHOD execEditorAction( cKey )
+   METHOD execWindowsAction( cKey )
 
    ENDCLASS
 
@@ -403,136 +410,269 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:execAction( cKey )
-   LOCAL aPrj, cHbi, cTmp, n
 
-   DO CASE
-   CASE cKey == "Exit"
+   SWITCH cKey
+   CASE "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+      EXIT
+   CASE "NewProject"
+   CASE "LoadProject"
+   CASE "LaunchProject"
+   CASE "Build"
+   CASE "BuildLaunch"
+   CASE "Rebuild"
+   CASE "RebuildLaunch"
+   CASE "Compile"
+   CASE "CompilePPO"
+   CASE "Properties"
+   CASE "SelectProject"
+   CASE "CloseProject"
+      ::execProjectAction( cKey )
+      EXIT
+   CASE "New"
+   CASE "Open"
+   CASE "Save"
+   CASE "SaveAs"
+   CASE "SaveAll"
+   CASE "SaveExit"
+   CASE "Revert"
+   CASE "Close"
+   CASE "CloseAll"
+   CASE "CloseOther"
+      ::execSourceAction( cKey )
+      EXIT
+   CASE "Print"
+   CASE "Undo"
+   CASE "Redo"
+   CASE "Cut"
+   CASE "Copy"
+   CASE "Paste"
+   CASE "SelectAll"
+   CASE "DuplicateLine"
+   CASE "BlockComment"
+   CASE "StreamComment"
+   CASE "switchReadOnly"
+   CASE "Find"
+   CASE "SetMark"
+   CASE "GotoMark"
+   CASE "Goto"
+   CASE "ToUpper"
+   CASE "ToLower"
+   CASE "Invert"
+   CASE "MatchPairs"
+   CASE "InsertSeparator"
+   CASE "InsertDateTime"
+   CASE "InsertRandomName"
+   CASE "InsertExternalFile"
+   CASE "ZoomIn"
+   CASE "ZoomOut"
+   CASE "FormatBraces"
+   CASE "RemoveTabs"
+   CASE "RemoveTrailingSpaces"
+      ::execEditorAction( cKey )
+      EXIT
+   CASE "ToggleProjectTree"
+   CASE "ToggleBuildInfo"
+   CASE "ToggleFuncList"
+      ::execWindowsAction( cKey )
+      EXIT
 
-   CASE cKey == "NewProject"
-      ::oPM:loadProperties( , .t., .t., .t. )
-   CASE cKey == "LoadProject"
-      ::oPM:loadProperties( , .f., .f., .t. )
-   CASE cKey == "LaunchProject"
-      ::oPM:launchProject()
-   CASE cKey == "Build"
-      ::oPM:buildProject( '', .F., .F. )
-   CASE cKey == "BuildLaunch"
-      ::oPM:buildProject( '', .T., .F. )
-   CASE cKey == "Rebuild"
-      ::oPM:buildProject( '', .F., .T. )
-   CASE cKey == "RebuildLaunch"
-      ::oPM:buildProject( '', .T., .T. )
-   CASE cKey == "Compile"
-      //
-   CASE cKey == "CompilePPO"
-      ::oPM:buildProject( '', .F., .F., .T., .T. )
-   CASE cKey == "Properties"
-      IF Empty( ::cWrkProject )
-         MsgBox( 'No active project detected' )
-      ENDIF
-      cTmp := ::oPM:getCurrentProject()
-      IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
-         aPrj := ::aProjects[ n, 3 ]
-         cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + ;
-                 aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
-
-         ::oPM:loadProperties( cHbi, .f., .t., .t. )
-      ELSE
-         MsgBox( 'Invalid project: ' + cTmp )
-      ENDIF
-   CASE cKey == "SelectProject"
-      ::oPM:selectCurrentProject()
-   CASE cKey == "CloseProject"
-      ::oPM:closeProject()
-
-   CASE cKey == "New"
-      ::oSM:editSource( '' )
-   CASE cKey == "Open"
-      ::oSM:openSource()
-   CASE cKey == "Save"
-      ::oSM:saveSource( ::oEM:getTabCurrent(), .f., .f. )
-   CASE cKey == "SaveAs"
-      ::oSM:saveSource( ::oEM:getTabCurrent(), .t., .t. )
-   CASE cKey == "SaveAll"
-      ::oSM:saveAllSources()
-   CASE cKey == "SaveExit"
-      ::oSM:saveAndExit()
-   CASE cKey == "Revert"
-      ::oSM:RevertSource()
-   CASE cKey == "Close"
-      ::oSM:closeSource()
-   CASE cKey == "CloseAll"
-      ::oSM:closeAllSources()
-   CASE cKey == "CloseOther"
-      ::oSM:closeAllOthers()
-
-   CASE cKey == "Print"
-      ::oEM:printPreview()
-   CASE cKey == "Undo"
-      ::oEM:undo()
-   CASE cKey == "Redo"
-      ::oEM:redo()
-   CASE cKey == "Cut"
-      ::oEM:cut()
-   CASE cKey == "Copy"
-      ::oEM:copy()
-   CASE cKey == "Paste"
-      ::oEM:paste()
-   CASE cKey == "SelectAll"
-      ::oEM:selectAll()
-
-   CASE cKey == "switchReadOnly"
-      ::oEM:switchToReadOnly()
-   CASE cKey == "Find"
-      IF !Empty( ::qCurEdit )
-         ::oFR:show()
-      ENDIF
-   CASE cKey == "SetMark"
-      ::oEM:setMark()
-   CASE cKey == "GotoMark"
-      ::oEM:gotoMark()
-   CASE cKey == "Goto"
-      ::oEM:goTo()
-   CASE cKey == "ToUpper"
-      ::oEM:convertSelection( cKey )
-   CASE cKey == "ToLower"
-      ::oEM:convertSelection( cKey )
-   CASE cKey == "Invert"
-      ::oEM:convertSelection( cKey )
-   CASE cKey == "MatchPairs"
-      //
-   CASE cKey == "InsertSeparator"
-      ::oEM:insertSeparator()
-   CASE cKey == "InsertDateTime"
-      ::oEM:insertText( cKey )
-   CASE cKey == "InsertRandomName"
-      ::oEM:insertText( cKey )
-   CASE cKey == "InsertExternalFile"
-      ::oEM:insertText( cKey )
-   CASE cKey == "ZoomIn"
-      ::oEM:zoom( 1 )
-   CASE cKey == "ZoomOut"
-      ::oEM:zoom( 0 )
-
-   CASE cKey == "FormatBraces"
-      ::oEM:formatBraces()
-   CASE cKey == "RemoveTabs"
-      ::oEM:removeTabs()
-   CASE cKey == "RemoveTrailingSpaces"
-      ::oEM:removeTrailingSpaces()
-
-   CASE cKey == "ToggleProjectTree"
-      ::oDK:toggleLeftDocks()
-   CASE cKey == "ToggleBuildInfo"
-      ::oDK:toggleBottomDocks()
-   CASE cKey == "ToggleFuncList"
-      ::oDK:toggleRightDocks()
-   ENDCASE
+   ENDSWITCH
 
    ::manageFocusInEditor()
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:execEditorAction( cKey )
+
+   SWITCH cKey
+   CASE "Print"
+      ::oEM:printPreview()
+      EXIT
+   CASE "Undo"
+      ::oEM:undo()
+      EXIT
+   CASE "Redo"
+      ::oEM:redo()
+      EXIT
+   CASE "Cut"
+      ::oEM:cut()
+      EXIT
+   CASE "Copy"
+      ::oEM:copy()
+      EXIT
+   CASE "Paste"
+      ::oEM:paste()
+      EXIT
+   CASE "SelectAll"
+      ::oEM:selectAll()
+      EXIT
+   CASE "DuplicateLine"
+      ::oEM:duplicateLine()
+      EXIT
+   CASE "BlockComment"
+      ::oEM:blockComment()
+      EXIT
+   CASE "StreamComment"
+      ::oEM:streamComment()
+      EXIT
+   CASE "switchReadOnly"
+      ::oEM:switchToReadOnly()
+      EXIT
+   CASE "Find"
+      IF !Empty( ::qCurEdit )
+         ::oFR:show()
+      ENDIF
+      EXIT
+   CASE "SetMark"
+      ::oEM:setMark()
+      EXIT
+   CASE "GotoMark"
+      ::oEM:gotoMark()
+      EXIT
+   CASE "Goto"
+      ::oEM:goTo()
+      EXIT
+   CASE "ToUpper"
+      ::oEM:convertSelection( cKey )
+      EXIT
+   CASE "ToLower"
+      ::oEM:convertSelection( cKey )
+      EXIT
+   CASE "Invert"
+      ::oEM:convertSelection( cKey )
+      EXIT
+   CASE "MatchPairs"
+      //
+      EXIT
+   CASE "InsertSeparator"
+      ::oEM:insertSeparator()
+      EXIT
+   CASE "InsertDateTime"
+      ::oEM:insertText( cKey )
+      EXIT
+   CASE "InsertRandomName"
+      ::oEM:insertText( cKey )
+      EXIT
+   CASE "InsertExternalFile"
+      ::oEM:insertText( cKey )
+      EXIT
+   CASE "ZoomIn"
+      ::oEM:zoom( 1 )
+      EXIT
+   CASE "ZoomOut"
+      ::oEM:zoom( 0 )
+      EXIT
+   CASE "FormatBraces"
+      ::oEM:formatBraces()
+      EXIT
+   CASE "RemoveTabs"
+      ::oEM:removeTabs()
+      EXIT
+   CASE "RemoveTrailingSpaces"
+      ::oEM:removeTrailingSpaces()
+      EXIT
+   ENDSWITCH
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:execSourceAction( cKey )
+   SWITCH cKey
+   CASE "New"
+      ::oSM:editSource( '' )
+      EXIT
+   CASE "Open"
+      ::oSM:openSource()
+      EXIT
+   CASE "Save"
+      ::oSM:saveSource( ::oEM:getTabCurrent(), .f., .f. )
+      EXIT
+   CASE "SaveAs"
+      ::oSM:saveSource( ::oEM:getTabCurrent(), .t., .t. )
+      EXIT
+   CASE "SaveAll"
+      ::oSM:saveAllSources()
+      EXIT
+   CASE "SaveExit"
+      ::oSM:saveAndExit()
+      EXIT
+   CASE "Revert"
+      ::oSM:RevertSource()
+      EXIT
+   CASE "Close"
+      ::oSM:closeSource()
+      EXIT
+   CASE "CloseAll"
+      ::oSM:closeAllSources()
+      EXIT
+   CASE "CloseOther"
+      ::oSM:closeAllOthers()
+      EXIT
+   ENDSWITCH
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:execProjectAction( cKey )
+   SWITCH cKey
+   CASE "NewProject"
+      ::oPM:loadProperties( , .t., .t., .t. )
+      EXIT
+   CASE "LoadProject"
+      ::oPM:loadProperties( , .f., .f., .t. )
+      EXIT
+   CASE "LaunchProject"
+      ::oPM:launchProject()
+      EXIT
+   CASE "Build"
+      ::oPM:buildProject( '', .F., .F. )
+      EXIT
+   CASE "BuildLaunch"
+      ::oPM:buildProject( '', .T., .F. )
+      EXIT
+   CASE "Rebuild"
+      ::oPM:buildProject( '', .F., .T. )
+      EXIT
+   CASE "RebuildLaunch"
+      ::oPM:buildProject( '', .T., .T. )
+      EXIT
+   CASE "Compile"
+      //
+      EXIT
+   CASE "CompilePPO"
+      ::oPM:buildProject( '', .F., .F., .T., .T. )
+      EXIT
+   CASE "Properties"
+      ::oPM:getProperties()
+      EXIT
+   CASE "SelectProject"
+      ::oPM:selectCurrentProject()
+      EXIT
+   CASE "CloseProject"
+      ::oPM:closeProject()
+      EXIT
+   ENDSWITCH
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:execWindowsAction( cKey )
+
+   SWITCH cKey
+   CASE "ToggleProjectTree"
+      ::oDK:toggleLeftDocks()
+      EXIT
+   CASE "ToggleBuildInfo"
+      ::oDK:toggleBottomDocks()
+      EXIT
+   CASE "ToggleFuncList"
+      ::oDK:toggleRightDocks()
+      EXIT
+   ENDSWITCH
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

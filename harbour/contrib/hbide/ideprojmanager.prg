@@ -201,6 +201,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD populate()
    METHOD loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    METHOD fetchProperties()
+   METHOD getProperties()
    METHOD sortSources( cMode )
    METHOD updateMetaData()
    METHOD save( lCanClose )
@@ -253,6 +254,27 @@ METHOD IdeProjManager:populate()
    FOR EACH cProject IN ::aINI[ INI_PROJECTS ]
       ::loadProperties( cProject, .f., .f., .T. )
    NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getProperties()
+   LOCAL aPrj, cHbi, cTmp, n
+
+   IF Empty( ::cWrkProject )
+      MsgBox( 'No active project detected' )
+   ENDIF
+   cTmp := ::getCurrentProject()
+   IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
+      aPrj := ::aProjects[ n, 3 ]
+      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + ;
+              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+
+      ::loadProperties( cHbi, .f., .t., .t. )
+   ELSE
+      MsgBox( 'Invalid project: ' + cTmp )
+   ENDIF
 
    RETURN Self
 

@@ -514,7 +514,7 @@ FUNCTION hbide_isValidText( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
 
    RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
-                                     ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc" )
+                                     ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.bak" )
 
 /*----------------------------------------------------------------------*/
 
@@ -764,7 +764,7 @@ FUNCTION hbide_parseKeyValPair( s, cKey, cVal )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_dbg( ... )
-   HB_TRACE( HB_TR_ALWAYS, ... )
+   HB_TRACE( HB_TR_ALWAYS, procname(1),... )
    RETURN nil
 
 /*----------------------------------------------------------------------*/

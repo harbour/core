@@ -143,6 +143,8 @@ CLASS IdeObject
    ACCESS lDockBVisible                           INLINE ::oIde:lDockBVisible
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
 
+   ACCESS aMarkTBtns                              INLINE ::oIde:aMarkTBtns
+
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}
    METHOD connect( qWidget, cSlot, bBlock )

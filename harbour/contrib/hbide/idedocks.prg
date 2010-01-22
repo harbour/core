@@ -93,6 +93,7 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD toggleRightDocks()
    METHOD toggleBottomDocks()
    METHOD setStatusText( nPart, xValue )
+   METHOD getMarkWidget( nIndex )
 
    ENDCLASS
 
@@ -398,6 +399,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildStatusBar()
+   LOCAL i
 
    ::oIde:oSBar := XbpStatusBar():new()
    ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[ 1 ], 30 } )
@@ -418,7 +420,27 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
 
+   FOR i := 1 TO 6
+      ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )
+   NEXT
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:getMarkWidget( nIndex )
+   LOCAL aColors  := { "rgb( 255,255,127 )", "rgb( 175,175,255 )", "rgb( 255,175,175 )", ;
+                       "rgb( 175,255,175 )", "rgb( 255,190,125 )", "rgb( 175,255,255 )"  }
+
+   ::oIde:aMarkTBtns[ nIndex ] := QToolButton():new()
+
+   ::oIde:aMarkTBtns[ nIndex ]:setMaximumHeight( 12 )
+   ::oIde:aMarkTBtns[ nIndex ]:setMaximumWidth( 12 )
+   ::oIde:aMarkTBtns[ nIndex ]:setStyleSheet( "background-color: " + aColors[ nIndex ] + ";" )
+   ::oIde:aMarkTBtns[ nIndex ]:hide()
+
+   ::connect( ::oIde:aMarkTBtns[ nIndex ], "clicked()", {|| ::oEM:gotoMark( nIndex ) } )
+
+   RETURN ::oIde:aMarkTBtns[ nIndex ]
 
 /*----------------------------------------------------------------------*/
 

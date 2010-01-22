@@ -128,12 +128,15 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD printPreview()
    METHOD paintRequested( pPrinter )
    METHOD setMark()
-   METHOD gotoMark()
+   METHOD gotoMark( nIndex )
    METHOD goto()
    METHOD formatBraces()
    METHOD removeTabs()
    METHOD RemoveTrailingSpaces()
    METHOD getSelectedText()
+   METHOD duplicateLine()
+   METHOD streamComment()
+   METHOD blockComment()
 
    ENDCLASS
 
@@ -432,6 +435,7 @@ METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
    IF ::qTabWidget:count() == 0 .OR. nIndex >= ::qTabWidget:count()
       nIndex := 0
    ENDIF
+
    ::qTabWidget:setCurrentIndex( nIndex )
    ::getEditorByIndex( nIndex ):setDocumentProperties()
 
@@ -487,6 +491,33 @@ METHOD IdeEditsManager:selectAll()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:duplicateLine()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:duplicateLine()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:streamComment()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:streamComment()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:blockComment()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:blockComment()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:switchToReadOnly()
    IF !empty( ::qCurEdit )
       ::qCurEdit:setReadOnly( !( ::qCurEdit:isReadOnly() ) )
@@ -497,38 +528,20 @@ METHOD IdeEditsManager:switchToReadOnly()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:convertSelection( cKey )
-   LOCAL cBuffer, i, s, nLen, c, nB, nL, qCursor
+   LOCAL oEdit
 
-   IF !empty( ::qCurEdit )
-      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-      IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
-         DO CASE
-         CASE cKey == "ToUpper"
-            cBuffer := upper( cBuffer )
-         CASE cKey == "ToLower"
-            cBuffer := lower( cBuffer )
-         CASE cKey == "Invert"
-            s := ""
-            nLen := len( cBuffer )
-            FOR i := 1 TO nLen
-               c := substr( cBuffer, i, 1 )
-               s += iif( isUpper( c ), lower( c ), upper( c ) )
-            NEXT
-            cBuffer := s
-         ENDCASE
-         nL := len( cBuffer )
-         nB := qCursor:position() - nL
-
-         qCursor:beginEditBlock()
-         qCursor:removeSelectedText()
-         qCursor:insertText( cBuffer )
-         qCursor:setPosition( nB )
-         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-
-         ::qCurEdit:setTextCursor( qCursor )
-
-         qCursor:endEditBlock()
-      ENDIF
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      SWITCH cKey
+      CASE "ToUpper"
+         oEdit:caseUpper()
+         EXIT
+      CASE "ToLower"
+         oEdit:caseLower()
+         EXIT
+      CASE "Invert"
+         oEdit:caseInvert()
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN Self
@@ -730,11 +743,9 @@ METHOD IdeEditsManager:zoom( nKey )
       qFont:setPointSize( nPointSize )
 
       oEdit:qEdit:setFont( qFont )
-      oEdit:qLineNos:setFont( qFont )
 
       FOR EACH oEdit IN oEditor:aEdits
          oEdit:qEdit:setFont( qFont )
-         oEdit:qLineNos:setFont( qFont )
       NEXT
    ENDIF
    RETURN Self
@@ -791,11 +802,11 @@ METHOD IdeEditsManager:setMark()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:gotoMark()
+METHOD IdeEditsManager:gotoMark( nIndex )
    LOCAL oEdit
 
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:gotoLastMark()
+      oEdit:gotoMark( nIndex )
    ENDIF
 
    RETURN Self
@@ -879,13 +890,13 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   aSplits                                 INIT   {}
 
    DATA   qHLayout
-   DATA   qLineNos
    DATA   qLabel
    DATA   nnRow                                   INIT -99
    DATA   qPoint                                  INIT QPoint():new()
 
    DATA   qEvents
    DATA   qSlots
+   DATA   qMarkLayoutOld
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
@@ -899,7 +910,6 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD dispEditInfo( qEdit )
    METHOD setTabImage( qEdit )
    METHOD applyTheme( cTheme )
-   METHOD findLastIndent()
 
    ENDCLASS
 
@@ -992,198 +1002,32 @@ hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isHarbourKeyword( cWord )
-   LOCAL b_:= { 'function','return','static','local','default', ;
-                'if','else','elseif','endif','end', ;
-                'docase','case','endcase','otherwise', ;
-                'do','while','exit',;
-                'for','each','next','step','to',;
-                'class','endclass','method','data','var','destructor','inline','assign','access',;
-                'inherit','init','create','virtual','message',;
-                'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
-                'error','handler' }
-
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_isIndentableKeyword( cWord )
-   LOCAL b_:= { 'function',;
-                'if','else','elseif', ;
-                'docase','case','otherwise', ;
-                'do','while',;
-                'for',;
-                'class','method',;
-                'begin','sequence','try','catch','always','recover','finally' }
-
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_isStartingKeyword( cWord )
-   LOCAL b_:= { 'function','method' }
-
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_handlePreviousWord( qEdit )
-   LOCAL qCursor, qTextBlock, cText, nPos, cWord, nB, nL
-
-   qCursor    := QTextCursor():configure( qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
-   cText      := qTextBlock:text()
-   nPos       := qCursor:columnNumber()
-   cWord      := hbide_getPreviousWord( cText, nPos + 1 )
-
-   IF !empty( cWord )
-      nL := len( cWord + " " )
-      nB := qCursor:position() - nL
-
-      IF hbide_isHarbourKeyword( cWord )
-         qCursor:beginEditBlock()
-         qCursor:setPosition( nB )
-         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         qCursor:removeSelectedText()
-         qCursor:insertText( upper( cWord ) + " " )
-
-         qEdit:setTextCursor( qCursor )
-         qCursor:endEditBlock()
-      ENDIF
-
-      IF hbide_isStartingKeyword( cWord )
-         qCursor:setPosition( nB )
-         nPos := qCursor:columnNumber()
-
-         IF nPos > 0
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_StartOfBlock )
-
-            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nPos )
-            qCursor:removeSelectedText()
-
-            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
-            qCursor:endEditBlock()
-         ENDIF
-      ENDIF
-   ENDIF
-   RETURN .t.
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_getPreviousWord( cText, nPos )
-   LOCAL cWord, n
-
-   cText := alltrim( substr( cText, 1, nPos ) )
-   IF ( n := rat( " ", cText ) ) > 0
-      cWord := substr( cText, n + 1 )
-   ELSE
-      cWord := cText
-   ENDIF
-
-   RETURN cWord
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_getFirstWord( cText )
-   LOCAL cWord, n
-
-   cText := alltrim( cText )
-   IF ( n := at( " ", cText ) ) > 0
-      cWord := left( cText, n-1 )
-   ELSE
-      cWord := cText
-   ENDIF
-
-   RETURN cWord
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
-   LOCAL n := 0
-
-   DO WHILE .t.
-      IF substr( cText, ++n, 1 ) != " "
-         EXIT
-      ENDIF
-   ENDDO
-   n--
-
-   cWord := hbide_getFirstWord( cText )
-
-   RETURN n
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:findLastIndent()
-   LOCAL qCursor, qTextBlock, cText, cWord
-   LOCAL nSpaces := 0
-
-   qCursor := QTextCursor():configure( ::qCqEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
-
-   DO WHILE .t.
-      IF !( qTextBlock:isValid() )
-         EXIT
-      ENDIF
-      IF !empty( cText := qTextBlock:text() )
-         nSpaces := hbide_getFrontSpacesAndWord( cText, @cWord )
-         IF !empty( cWord )
-            IF hbide_isIndentableKeyword( cWord )
-               nSpaces += ::nTabSpaces
-            ENDIF
-            EXIT
-         ENDIF
-      ENDIF
-      qTextBlock := QTextBlock():configure( qTextBlock:previous() )
-   ENDDO
-
-   RETURN nSpaces
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
-   LOCAL qCursor, qChar, nSpaces
+   LOCAL qChar
 
    HB_SYMBOL_UNUSED( o  )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nMode
+
    CASE blockCountChanged
-      hbide_dbg( "blockCountChanged(int)", p )
+      //hbide_dbg( "blockCountChanged(int)", p )
       ::nPrevBlocks := ::nBlocks
       ::nBlocks     := p
-      //
-      IF ::qCoEdit:nPrevLineNo <= 0 .OR. ::qCoEdit:nCurLineNo == ::qCoEdit:nPrevLineNo + 1
-         IF ( nSpaces := ::findLastIndent() ) > 0
-            qCursor := QTextCursor():configure( ::qCqEdit:textCursor() )
-            qCursor:insertText( space( nSpaces ) )
-         ENDIF
-      ENDIF
-      ::qCoEdit:nPrevLineNo := ::qCoEdit:nCurLineNo
-
       EXIT
+
    CASE contentsChange
+      //hbide_dbg( "contentsChange()", p, p1, p2 )
       IF p2 == 1                     /* Characters Added */
          qChar := QChar():configure( ::qDocument:characterAt( p ) )
          SWITCH qChar:toAscii()
-         CASE  9                    /* Tab Key */
-            qCursor := QTextCursor():configure( ::qCqEdit:textCursor() )
-            qCursor:deletePreviousChar()
-            qCursor:insertText( ::cTabSpaces )
-            EXIT
          CASE 32                    /* Space Key */
-            hbide_handlePreviousWord( ::qCqEdit )
+            ::qCoEdit:lUpdatePrevWord := .t.
             EXIT
          ENDSWITCH
       ENDIF
       EXIT
+
    ENDSWITCH
 
    RETURN Nil
@@ -1197,10 +1041,8 @@ METHOD IdeEditor:relay( oEdit )
    FOR EACH oEdt IN ::aEdits
       ::qLayout:removeItem( oEdt:qHLayout )
       //
-      oEdt:qHLayout:removeWidget( oEdt:qLineNos )
       oEdt:qHLayout:removeWidget( oEdt:qEdit )
       oEdt:qHLayout := QHBoxLayout():new()
-      oEdt:qHLayout:addWidget( oEdt:qLineNos )
       oEdt:qHLayout:addWidget( oEdt:qEdit )
    NEXT
 
@@ -1245,12 +1087,13 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
-
+hbide_dbg( "IdeEditor:destroy()", 0 )
    ::disconnect( ::qDocument, "blockCountChanged(int)"      )
    ::disconnect( ::qDocument, "contentsChange(int,int,int)" )
 
    ::qCqEdit := NIL
-   ::qEdit         := NIL
+   ::qCoEdit := NIL
+   ::qEdit   := NIL
    DO WHILE len( ::aEdits ) > 0
       oEdit := ::aEdits[ 1 ]
       hb_adel( ::aEdits, 1, .t. )
@@ -1290,7 +1133,7 @@ METHOD IdeEditor:destroy()
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-
+hbide_dbg( "IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1301,6 +1144,7 @@ METHOD IdeEditor:setDocumentProperties()
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
+      ::qEdit:clear()
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
@@ -1338,6 +1182,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
 
    IF !empty( oEdit := ::oEM:getEditorByTabObject( oXbp ) )
       oEdit:setDocumentProperties()
+      oEdit:qCoEdit:relayMarkButtons()
    ENDIF
 
    RETURN Self
@@ -1440,7 +1285,6 @@ CLASS IdeEdit INHERIT IdeObject
 
    DATA   qEdit
    DATA   qHLayout
-   DATA   qLineNos
    DATA   nOrient                                 INIT  0
 
    DATA   nMode                                   INIT  0
@@ -1464,8 +1308,9 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   aBookMarks                              INIT  {}
 
    DATA   qSlots
-   DATA   lCursorPosChanging                      INIT  .F.
    DATA   lModified                               INIT  .F.
+   DATA   lIndentIt                               INIT  .f.
+   DATA   lUpdatePrevWord                         INIT  .f.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1474,12 +1319,17 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD execEvent( nMode, nEvent, p )
    METHOD connectEditSlots( oEdit )
    METHOD disConnectEditSlots( oEdit )
-   METHOD highlightCurrentLine()
+
    METHOD setNewMark()
-   METHOD gotoLastMark()
-   METHOD getUserDataState( qB )
-   METHOD deHighlightPreviousLine()
+   METHOD gotoMark( nIndex )
    METHOD duplicateLine()
+   METHOD blockComment()
+   METHOD streamComment()
+   METHOD caseUpper()
+   METHOD caseLower()
+   METHOD caseInvert()
+   METHOD findLastIndent()
+   METHOD reLayMarkButtons()
 
    ENDCLASS
 
@@ -1503,50 +1353,69 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::nMode   := nMode
    ::oIde    := ::oEditor:oIde
 
-   ::qEdit   := QPlainTextEdit():new()
+   ::qEdit   := HBQPlainTextEdit():new()
    //
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:setFont( ::oFont:oWidget )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
-
+   ::qEdit:setSpaces( ::nTabSpaces )
    ::qEdit:installEventFilter( ::pEvents )
+   ::qEdit:highlightCurrentLine( .t. )              /* Via user-setup */
+
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|o,p| ::execEvent( 1, QEvent_KeyPress, p, o ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|o,p| ::execEvent( 1, QEvent_Wheel   , p, o ) } )
 
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
 
-   ::qLineNos := QTextEdit():new()
-   ::qLineNos:setTextBackgroundColor( QColor():new( 240,240,240 ) )
-   ::qLineNos:setAcceptRichText( .t. )
-   ::qLineNos:setAlignment( Qt_AlignRight )
-   ::qLineNos:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::qLineNos:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::qLineNos:setFrameStyle( QFrame_NoFrame )
-   ::qLineNos:setReadOnly( .t. )
-   ::qLineNos:setLineWrapMode( QTextEdit_NoWrap )
-   ::qLineNos:setFont( ::oFont:oWidget )
-   ::qLineNos:setContextMenuPolicy( Qt_NoContextMenu )
-   ::qLineNos:setMinimumWidth( EDT_LINNO_WIDTH )
-   ::qLineNos:setMaximumWidth( EDT_LINNO_WIDTH )
-   ::qLineNos:setStyleSheet( "background-color: rgb( 240,240,240 );" )
-   //
-   ::qLineNos:installEventFilter( ::pEvents )
-   Qt_Events_Connect( ::pEvents, ::qLineNos, QEvent_Wheel   , {|o,p| ::execEvent( 2, QEvent_Wheel   , p, o ) } )
-   //
-   ::qHLayout:addWidget( ::qLineNos )
-   ::qHLayout:addWidget( ::qEdit    )
-
-   #if 0
-   ::qActionTab := QAction():new( ::qEdit )
-   ::qActionTab:setText( "Editor Tab" )
-   ::qActionTab:setShortcut( QKeySequence():new( "Ctrl+F2" ) )
-   ::connect( ::qActionTab, "triggered(bool)", {|| ::execSlot( 71, Self ) } )
-   #endif
-
+   ::qHLayout:addWidget( ::qEdit )
    ::connectEditSlots( Self )
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:gotoMark( nIndex )
+   IF len( ::aBookMarks ) >= nIndex
+      ::qEdit:gotoBookmark( ::aBookMarks[ nIndex ] )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:relayMarkButtons()
+   LOCAL oBtn
+   FOR EACH oBtn IN ::aMarkTBtns
+      oBtn:hide()
+   NEXT
+   FOR EACH oBtn IN ::aBookMarks
+      ::aMarkTBtns[ oBtn:__enumIndex() ]:show()
+   NEXT
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:setNewMark()
+   LOCAL qCursor, nBlock, n
+
+   IF !( qCursor := QTextCursor():configure( ::qEdit:textCursor() ) ):isNull()
+      nBlock := qCursor:blockNumber() + 1
+
+      IF ( n := ascan( ::aBookMarks, nBlock ) ) > 0
+         hb_adel( ::aBookMarks, n, .t. )
+         ::aMarkTBtns[ len( ::aBookMarks ) + 1 ]:hide()
+      ELSE
+         IF len( ::aBookMarks ) == 6
+            RETURN Self
+         ENDIF
+         aadd( ::aBookMarks, nBlock )
+         n := len( ::aBookMarks )
+         ::aMarkTBtns[ n ]:show()
+      ENDIF
+
+      ::qEdit:bookMarks( nBlock )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1558,11 +1427,10 @@ METHOD IdeEdit:destroy()
    ::oEditor:qLayout:removeItem( ::qHLayout )
    //
    ::qHLayout:removeWidget( ::qEdit )
-   ::qHLayout:removeWidget( ::qLineNos )
 
-   ::qLineNos := NIL
-   ::qEdit    := NIL
-   ::qHLayout := NIL
+   ::qEdit:pPtr := NIL
+   ::qEdit      := nil
+   ::qHLayout   := NIL
 
    RETURN Self
 
@@ -1600,122 +1468,49 @@ METHOD IdeEdit:connectEditSlots( oEdit )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:deHighlightPreviousLine()
-   LOCAL qB, qDoc
-
-   qDoc := QTextDocument():configure( ::qEdit:document() )
-
-   IF ( qB := QTextBlock():configure( qDoc:findBlockByNumber( ::nLastLine ) ) ):isValid()
-      IF ::getUserDataState( qB ) != 99
-         ::qLastCursor:setBlockFormat( QTextBlockFormat():new() )
-      ENDIF
-   ENDIF
-
+METHOD IdeEdit:blockComment()
+   ::qEdit:blockComment()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:highlightCurrentLine()
-   LOCAL nCurLine, nLastLine, qCursor, qDoc, qEdit, qBlockFmt, qB, lOldModified
+METHOD IdeEdit:streamComment()
+   ::qEdit:streamComment()
+   RETURN Self
 
-   qEdit     := ::qEdit
-   qCursor   := QTextCursor():new( qEdit:textCursor() )
+/*----------------------------------------------------------------------*/
 
-   qDoc := QTextDocument():configure( qEdit:document() )
-   lOldModified := ::lModified
-   ::lModified := qDoc:isModified()
+METHOD IdeEdit:caseUpper()
+   ::qEdit:caseUpper()
+   RETURN Self
 
-   qCursor:beginEditBlock()
+/*----------------------------------------------------------------------*/
 
-   nCurLine  := qCursor:blockNumber()
-   nLastLine := ::nLastLine
+METHOD IdeEdit:caseLower()
+   ::qEdit:caseLower()
+   RETURN Self
 
-   IF !( nCurLine == nLastLine )
+/*----------------------------------------------------------------------*/
 
-      ::deHighlightPreviousLine()
+METHOD IdeEdit:caseInvert()
+   LOCAL qCursor, i, c, s, cBuffer, nLen // qDoc, nBlock
 
-      IF ( qB := QTextBlock():configure( qCursor:block() ) ):isValid()
-         IF ::getUserDataState( qB ) != 99
-            qBlockFmt := QTextBlockFormat():configure( qB:blockFormat() )
-            qBlockFmt:setBackground( ::qBrushCL )
-            qCursor:setBlockFormat( qBlockFmt )
+   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
+      //qDoc := QTextDocument()configure( ::qEdit:document() )
+      s    := ""
+      nLen := len( cBuffer )
+      //nStart := qCursor:startSelection()
+      FOR i := 1 TO nLen
+         c := substr( cBuffer, i, 1 )
+         IF isAlpha( c ) //!( c $ CRLF ) .AND.
+            s += iif( isUpper( c ), lower( c ), upper( c ) )
+         ELSE
+            s += c
          ENDIF
-      ENDIF
-   ENDIF
-
-   qCursor:endEditBlock()
-
-   ::nLastLine := nCurLine
-   IF !( qCursor:isNull() )
-      ::qLastCursor := qCursor
-   ENDIF
-
-   /* Infact these must not be called from here but because changing the format  */
-   /* Qt consider that document has been modified, hence I need to put them here */
-   IF ( lOldModified != ::lModified )
-      qDoc:setModified( ::lModified )
-      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oEditor:oTab:oWidget ), ;
-                                   ::resPath + iif( ::lModified, "tabmodified.png", "tabunmodified.png" ) )
-      ::oDK:setStatusText( SB_PNL_MODIFIED, ::lModified )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:setNewMark()
-   LOCAL qBlockFmt, qTextBlock, qDoc, lModified, nState
-
-   qDoc := QTextDocument():configure( ::qEdit:document() )
-   lModified := qDoc:isModified()
-
-   IF empty( ::qCursorMark )
-      ::qCursorMark := QTextCursor():configure( ::qEdit:textCursor() )
-
-      qTextBlock := QTextBlock():configure( ::qCursorMark:block() )
-      qBlockFmt := QTextBlockFormat():new()
-
-      qBlockFmt:setBackground( ::qBrushMark )
-      ::qCursorMark:setBlockFormat( qBlockFmt )
-
-      ::qMarkUData := HBQTextBlockUserData():new()
-      ::qMarkUData:hbSetState( 99 )
-      qTextBlock:setUserData( ::qMarkUData )
-
-   ELSE
-      IF ( qTextBlock := QTextBlock():configure( ::qCursorMark:block() ) ):isValid()
-         nState := ::getUserDataState( qTextBlock )
-
-         IF nState == 99  /* Marked */
-            ::qMarkUData:hbSetState( -1 )
-            ::qCursorMark:setBlockFormat( QTextBlockFormat():new() )
-            ::qCursorMark:pPtr := NIL  // Should We ?
-            ::qCursorMark      := NIL
-         ENDIF
-      ENDIF
-   ENDIF
-
-   qDoc:setModified( lModified )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:getUserDataState( qB )
-   LOCAL qUData := HBQTextBlockUserData():configure( qB:userData() )
-
-   IF !empty( qUData:pPtr )
-      RETURN qUData:hbState()
-   ENDIF
-
-   RETURN -1
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:gotoLastMark()
-
-   IF !empty( ::qCursorMark )
-      ::qEdit:setTextCursor( ::qCursorMark )
+      NEXT
+hbide_dbg( s )
+      ::qEdit:replaceSelection( s )
    ENDIF
 
    RETURN Self
@@ -1723,30 +1518,13 @@ METHOD IdeEdit:gotoLastMark()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:duplicateLine()
-   LOCAL qCursor, qC, cLine, qEdit
-
-   qEdit   := ::qEdit
-   qCursor := QTextCursor():configure( qEdit:textCursor() )
-   qC      := QTextCursor():configure( qEdit:textCursor() )
-
-   qCursor:beginEditBlock()
-   qCursor:movePosition( QTextCursor_StartOfLine )
-   qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
-   //
-   cLine := qCursor:selectedText()
-   //
-   qCursor:movePosition( QTextCursor_EndOfLine )
-   qEdit:setTextCursor( qCursor )
-   qEdit:insertPlainText( CRLF + cLine )
-   qEdit:setTextCursor( qC )
-   qCursor:endEditBlock()
-
-    RETURN Self
+   ::qEdit:duplicateLine()
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execSlot( nMode, oEdit, o, p, p1 )
-   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nBlocks, nLineNo
+   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nSpaces
 
    HB_SYMBOL_UNUSED( o  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1795,34 +1573,37 @@ METHOD IdeEdit:execSlot( nMode, oEdit, o, p, p1 )
       //hbide_dbg( "redoAvailable(bool)", p )
       EXIT
    CASE selectionChanged
-      //hbide_dbg( "selectionChanged()" )
+      hbide_dbg( "selectionChanged()" )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
+      ::relayMarkButtons()
+
       qCursor := QTextCursor():configure( qEdit:TextCursor() )
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
+
       EXIT
    CASE undoAvailable
       //hbide_dbg( "undoAvailable(bool)", p )
       EXIT
    CASE updateRequest
-      //hbide_dbg( "updateRequest" )
-      qCursor := QTextCursor():configure( qEdit:cursorForPosition( ::qPoint ) )
-      nLineNo := qCursor:blockNumber()
-      nBlocks := ::oEditor:qDocument:blockCount()
-      IF oEdit:nLineNo != nLineNo .OR. !( ::oEditor:lLoaded ) .OR. !( nBlocks == ::oEditor:nPrevBlocks )
-         ::oEditor:nPrevBlocks := nBlocks
-         oEdit:nLineNo := nLineNo
-         oEdit:qLineNos:setHTML( hbide_buildLinesLabel( ::nLineNo + 1, ;
-                                  ::oEditor:qDocument:blockCount(), ::nMaxDigits, ::nMaxRows ) )
-      ENDIF
       EXIT
    CASE cursorPositionChanged
-      // hbide_dbg( "cursorPositionChanged()" )
-      ::lCursorPosChanging := .T.
+      //hbide_dbg( "cursorPositionChanged()" )
       ::oEditor:dispEditInfo( qEdit )
-      ::highlightCurrentLine()
-      ::lCursorPosChanging := .F.
+      IF ::lUpdatePrevWord
+         ::lUpdatePrevWord := .f.
+         hbide_handlePreviousWord( ::qEdit )
+      ENDIF
+
+      IF ::lIndentIt
+         ::lIndentIt := .f.
+         IF ( nSpaces := ::findLastIndent() ) > 0
+            qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+            qCursor:insertText( space( nSpaces ) )
+         ENDIF
+      ENDIF
+      //hbide_dbg( "cursorPositionChanged()   1" )
       EXIT
 
    ENDSWITCH
@@ -1832,7 +1613,7 @@ METHOD IdeEdit:execSlot( nMode, oEdit, o, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, nEvent, p )
-   LOCAL key, kbm, txt, qEvent, qCursor
+   LOCAL key, kbm, txt, qEvent
    LOCAL lAlt   := .f.
    LOCAL lCtrl  := .f.
    LOCAL lShift := .f.
@@ -1857,17 +1638,25 @@ METHOD IdeEdit:execEvent( nMode, nEvent, p )
       ENDIF
 
       SWITCH ( key )
+
+      CASE Qt_Key_Q                   /* All these actions will be pulled from user-setup */
+         IF lCtrl .AND. lShift
+            ::streamComment()
+         ENDIF
+         EXIT
+      CASE Qt_Key_Slash
+         IF lCtrl
+            ::blockComment()
+         ENDIF
+         EXIT
       CASE Qt_Key_D
          IF lCtrl
             ::duplicateLine()
-            RETURN .T.          /* NOTE */
          ENDIF
          EXIT
       CASE Qt_Key_Return
       CASE Qt_Key_Enter
-         qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-         qCursor:setBlockFormat( QTextBlockFormat():new() )
-         ::qEdit:setTextCursor( qCursor )
+         ::lIndentIt := .t.
          EXIT
       CASE Qt_Key_Tab
       CASE Qt_Key_Backtab
@@ -1880,37 +1669,175 @@ METHOD IdeEdit:execEvent( nMode, nEvent, p )
 
       EXIT
    CASE QEvent_Wheel
-      #if 0    /* Of no use */
-      qEvent := QWheelEvent():configure( p )
-
-      IF nMode == 1  /* QPlainTextEdit */
-         IF hb_bitAnd( qEvent:modifiers(), Qt_ControlModifier ) == Qt_ControlModifier
-            IF qEvent:delta() > 0
-               ::oEM:zoom( 1 )
-
-            ELSE
-               ::oEM:zoom( 0 )
-
-            ENDIF
-
-            qEvent:ignore()
-
-            RETURN .t.  /* Tells Qt that we are done, no more processing */
-         ENDIF
-
-      ELSE
-
-         qEvent:setAccepted( .f. )
-         RETURN .f.  /* We do not want it to be processed at all - it is line no area */
-
-      ENDIF
-      #endif
-
       EXIT
+
    ENDSWITCH
 
    hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
    RETURN .F.  /* Important */
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:findLastIndent()
+   LOCAL qCursor, qTextBlock, cText, cWord
+   LOCAL nSpaces := 0
+
+   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   qTextBlock := QTextBlock():configure( qCursor:block() )
+
+   DO WHILE .t.
+      IF !( qTextBlock:isValid() )
+         EXIT
+      ENDIF
+      IF !empty( cText := qTextBlock:text() )
+         nSpaces := hbide_getFrontSpacesAndWord( cText, @cWord )
+         IF !empty( cWord )
+            IF hbide_isIndentableKeyword( cWord )
+               nSpaces += ::nTabSpaces
+            ENDIF
+            EXIT
+         ENDIF
+      ENDIF
+      qTextBlock := QTextBlock():configure( qTextBlock:previous() )
+   ENDDO
+
+   RETURN nSpaces
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isHarbourKeyword( cWord )
+   LOCAL b_:= { 'function','return','static','local','default', ;
+                'if','else','elseif','endif','end', ;
+                'docase','case','endcase','otherwise', ;
+                'do','while','exit',;
+                'for','each','next','step','to',;
+                'class','endclass','method','data','var','destructor','inline','assign','access',;
+                'inherit','init','create','virtual','message',;
+                'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
+                'error','handler' }
+
+   cWord := lower( cWord )
+
+   RETURN ascan( b_, {|e| e == cWord } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isIndentableKeyword( cWord )
+   LOCAL b_:= { 'function',;
+                'if','else','elseif', ;
+                'docase','case','otherwise', ;
+                'do','while',;
+                'for',;
+                'class','method',;
+                'begin','sequence','try','catch','always','recover','finally' }
+
+   cWord := lower( cWord )
+
+   RETURN ascan( b_, {|e| e == cWord } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isStartingKeyword( cWord )
+   LOCAL b_:= { 'function','method' }
+
+   cWord := lower( cWord )
+
+   RETURN ascan( b_, {|e| e == cWord } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_handlePreviousWord( qEdit )
+   LOCAL qCursor, qTextBlock, cText, nPos, cWord, nB, nL
+
+   qCursor    := QTextCursor():configure( qEdit:textCursor() )
+   qTextBlock := QTextBlock():configure( qCursor:block() )
+   cText      := qTextBlock:text()
+   nPos       := qCursor:columnNumber()
+   IF ( substr( cText, nPos - 1, 1 ) == " " )
+      RETURN nil
+   ENDIF
+
+   cWord := hbide_getPreviousWord( cText, nPos + 1 )
+
+   IF !empty( cWord )
+      nL := len( cWord + " " )
+      nB := qCursor:position() - nL
+
+      IF hbide_isHarbourKeyword( cWord )
+         //qEdit:setToolTip( cWord )
+
+         qCursor:beginEditBlock()
+         qCursor:setPosition( nB )
+         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
+         qCursor:removeSelectedText()
+         qCursor:insertText( upper( cWord ) + " " )
+
+         qEdit:setTextCursor( qCursor )
+         qCursor:endEditBlock()
+      ENDIF
+
+      IF hbide_isStartingKeyword( cWord )
+         qCursor:setPosition( nB )
+         nPos := qCursor:columnNumber()
+
+         IF nPos > 0
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_StartOfBlock )
+
+            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nPos )
+            qCursor:removeSelectedText()
+
+            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
+            qCursor:endEditBlock()
+         ENDIF
+      ENDIF
+   ENDIF
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getPreviousWord( cText, nPos )
+   LOCAL cWord, n
+
+   cText := alltrim( substr( cText, 1, nPos ) )
+   IF ( n := rat( " ", cText ) ) > 0
+      cWord := substr( cText, n + 1 )
+   ELSE
+      cWord := cText
+   ENDIF
+
+   RETURN cWord
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getFirstWord( cText )
+   LOCAL cWord, n
+
+   cText := alltrim( cText )
+   IF ( n := at( " ", cText ) ) > 0
+      cWord := left( cText, n-1 )
+   ELSE
+      cWord := cText
+   ENDIF
+
+   RETURN cWord
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
+   LOCAL n := 0
+
+   DO WHILE .t.
+      IF substr( cText, ++n, 1 ) != " "
+         EXIT
+      ENDIF
+   ENDDO
+   n--
+
+   cWord := hbide_getFirstWord( cText )
+
+   RETURN n
+
+/*----------------------------------------------------------------------*/
+
 

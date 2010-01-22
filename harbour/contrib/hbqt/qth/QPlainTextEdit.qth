@@ -146,11 +146,6 @@ QTextCursor textCursor () const
 Qt::TextInteractionFlags textInteractionFlags () const
 QString toPlainText () const
 QTextOption::WrapMode wordWrapMode () const
-15 public functions inherited from QAbstractScrollArea
-13 public functions inherited from QFrame
-207 public functions inherited from QWidget
-29 public functions inherited from QObject
-12 public functions inherited from QPaintDevice
 </PROTOS>
 
 <SLOTS>

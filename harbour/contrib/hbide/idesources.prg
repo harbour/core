@@ -110,15 +110,15 @@ METHOD IdeSourcesManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:loadSources()
-   LOCAL a_
+   LOCAL a_, nIndex
 
    IF !empty( ::aIni[ INI_FILES ] )
       FOR EACH a_ IN ::aIni[ INI_FILES ]
          /*            File     nPos     nVPos    nHPos    cTheme  lAlert lVisible */
          ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], .t., .f. )
       NEXT
-
-      ::oEM:setSourceVisibleByIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+      nIndex := max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+      ::oEM:setSourceVisibleByIndex( nIndex )
    ENDIF
 
    RETURN Self

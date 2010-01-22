@@ -9,6 +9,7 @@
 # --------------------------------------------------------------------
 
 CPP_SOURCES := \
+   HBQPlainTextEdit.cpp \
    HBQSyntaxHighlighter.cpp \
    HBQTableView.cpp \
    HBQTextBlockUserData.cpp \
@@ -226,6 +227,7 @@ CPP_SOURCES := \
 
 
 PRG_SOURCES := \
+   THBQPlainTextEdit.prg \
    THBQSyntaxHighlighter.prg \
    THBQTableView.prg \
    THBQTextBlockUserData.prg \

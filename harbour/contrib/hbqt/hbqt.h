@@ -391,6 +391,7 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBEvents( n )                      ( ( HBEvents                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBQPlainTextEdit( n )              ( ( HBQPlainTextEdit            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQTableView( n )                  ( ( HBQTableView                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQSyntaxHighlighter( n )          ( ( HBQSyntaxHighlighter        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQTextBlockUserData( n )          ( ( HBQTextBlockUserData        * ) hbqt_gcpointer( n ) )
