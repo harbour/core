@@ -569,6 +569,8 @@ void HBQPlainTextEdit::caseLower()
 
 void HBQPlainTextEdit::replaceSelection( const QString & txt )
 {
+   HB_SYMBOL_UNUSED( txt );
+
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
