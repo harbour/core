@@ -137,6 +137,8 @@ HB_FUNC( WAPI_DRAWTEXT )
                           ( UINT ) hb_parni( 4 ) ) );
 
       hb_strfree( hText );
+
+      hbwapi_stor_RECT( &rect, 3 );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

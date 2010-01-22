@@ -50,7 +50,7 @@
 
 %define name      harbour
 %define dname     Harbour
-%define version   2.0.1
+%define version   2.1.0
 %define releasen  dev
 %define hb_pref   hb
 %define hb_etcdir /etc/%{name}

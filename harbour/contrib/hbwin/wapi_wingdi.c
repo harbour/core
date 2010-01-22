@@ -62,6 +62,17 @@
 #include "hbwinuni.h"
 #include "hbwapi.h"
 
+static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
+{
+   PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );
+   PHB_ITEM pValue = hb_itemPutNL( NULL, v );
+
+   hb_hashAdd( pHash, pKey, pValue );
+
+   hb_itemRelease( pValue );
+   hb_itemRelease( pKey );
+}
+
 POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
@@ -84,6 +95,22 @@ POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
    }
    else
       return bMandatory ? p : NULL;
+}
+
+void hbwapi_stor_POINT( POINT * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( HB_IS_HASH( pStru ) )
+   {
+      s_hb_hashSetCItemNL( pStru, "x", p->x );
+      s_hb_hashSetCItemNL( pStru, "y", p->y );
+   }
+   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+   {
+      hb_arraySetNL( pStru, 1, p->x );
+      hb_arraySetNL( pStru, 2, p->y );
+   }
 }
 
 RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
@@ -112,6 +139,26 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
    }
    else
       return bMandatory ? p : NULL;
+}
+
+void hbwapi_stor_RECT( RECT * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( HB_IS_HASH( pStru ) )
+   {
+      s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
+      s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
+      s_hb_hashSetCItemNL( pStru, "right" , p->right  );
+      s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
+   }
+   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   {
+      hb_arraySetNL( pStru, 1, p->left   );
+      hb_arraySetNL( pStru, 2, p->top    );
+      hb_arraySetNL( pStru, 3, p->right  );
+      hb_arraySetNL( pStru, 4, p->bottom );
+   }
 }
 
 DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
@@ -148,6 +195,24 @@ DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
    }
    else
       return bMandatory ? p : NULL;
+}
+
+void hbwapi_stor_DEVMODE( DEVMODE * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( HB_IS_HASH( pStru ) )
+   {
+      s_hb_hashSetCItemNL( pStru, "dmOrientation"  , p->dmOrientation   );
+      s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , p->dmPaperSize     );
+      s_hb_hashSetCItemNL( pStru, "dmPaperLength"  , p->dmPaperLength   );
+      s_hb_hashSetCItemNL( pStru, "dmPaperWidth"   , p->dmPaperWidth    );
+      s_hb_hashSetCItemNL( pStru, "dmScale"        , p->dmScale         );
+      s_hb_hashSetCItemNL( pStru, "dmCopies"       , p->dmCopies        );
+      s_hb_hashSetCItemNL( pStru, "dmDefaultSource", p->dmDefaultSource );
+      s_hb_hashSetCItemNL( pStru, "dmPrintQuality" , p->dmPrintQuality  );
+      s_hb_hashSetCItemNL( pStru, "dmDuplex"       , p->dmDuplex        );
+   }
 }
 
 #if ! defined( HB_OS_WIN_CE )
@@ -472,17 +537,13 @@ HB_FUNC( WAPI_MOVETOEX )
 
    if( hDC )
    {
-      PHB_ITEM pPOINT = hb_param( 4, HB_IT_ARRAY );
+      POINT p;
 
-      if( pPOINT && hb_arrayLen( pPOINT ) >= 2 )
+      if( hbwapi_par_POINT( &p, 4, HB_FALSE ) )
       {
-         POINT p;
-
          hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &p ) );
 
-         /* TODO: Support both hash and array */
-         hb_arraySetNL( pPOINT, 1, p.x );
-         hb_arraySetNL( pPOINT, 2, p.y );
+         hbwapi_stor_POINT( &p, 4 );
       }
       else
          hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );
