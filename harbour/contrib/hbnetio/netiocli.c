@@ -658,7 +658,6 @@ HB_FUNC( NETIO_DECODE )
    const char * pszFullName = hb_parc( 1 );
    const char * pszServer, * pszPasswd, * pszFile;
    int iPort, iTimeOut, iPassLen, iLevel, iStrategy;
-   HB_BOOL fResult;
 
    pszServer = hb_parc( 2 );
    iPort = hb_parni( 3 );
@@ -683,20 +682,13 @@ HB_FUNC( NETIO_DECODE )
    hb_storclen( pszPasswd, iPassLen, 5 );
    hb_storni( iLevel, 6 );
    hb_storni( iStrategy, 7 );
+   if( pszFile != pszFullName )
+      /* the order is important and 1-st parameter
+       * should be assigned at the end
+       */
+      hb_storc( pszFile, 1 );
 
-   fResult = pszFile != pszFullName;
-   if( fResult && HB_ISBYREF( 1 ) )
-   {
-      if( * pszFile )
-      {
-         char * pszFileName = hb_strdup( pszFile );
-         if( !hb_storclen_buffer( pszFileName, strlen( pszFileName ), 1 ) )
-            hb_xfree( pszFileName );
-      }
-      else
-         hb_storc( NULL, 1 );
-   }
-   hb_retl( fResult );
+   hb_retl( pszFile != pszFullName );
 }
 
 /* NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>], ;

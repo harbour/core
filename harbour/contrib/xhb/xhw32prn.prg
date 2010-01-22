@@ -87,13 +87,13 @@ CREATE CLASS WIN32PRN FROM WIN_PRN
 
 ENDCLASS
 
-METHOD StartPage() CLASS WIN32PRN
+METHOD Create() CLASS WIN32PRN
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
       ::FormType := FORM_CUSTOM
    ENDIF
    RETURN ::WIN_PRN:Create()
 
-METHOD Create() CLASS WIN32PRN
+METHOD StartPage() CLASS WIN32PRN
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
       ::FormType := FORM_CUSTOM
    ENDIF

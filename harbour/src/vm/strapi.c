@@ -222,7 +222,7 @@ const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, HB_SIZ
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetStr(%p,%p,%p,%p)", pItem, cdp, phString, pulLen));
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       const char * pString;
       char * pFree = NULL;
@@ -255,7 +255,7 @@ const char * hb_itemGetStrUTF8( PHB_ITEM pItem, void ** phString, HB_SIZE * pulL
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetStrUTF8(%p,%p,%p)", pItem, phString, pulLen));
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       HB_SIZE ulLen = hb_cdpStrAsUTF8Len( cdp, HB_FALSE,
@@ -296,7 +296,7 @@ const HB_WCHAR * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian,
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetStrU16(%p,%d,%p,%p)", pItem, iEndian, phString, pulLen));
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       HB_WCHAR * pszU16;
       PHB_CODEPAGE cdp = hb_vmCDP();
@@ -333,13 +333,20 @@ HB_SIZE hb_itemCopyStr( PHB_ITEM pItem, void * cdp, char * pStrBuffer, HB_SIZE u
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyStr(%p,%p,%p,%lu)", pItem, cdp, pStrBuffer, ulSize));
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
-      return hb_cdpTransTo( pItem->item.asString.value,
-                            pItem->item.asString.length,
-                            pStrBuffer, ulSize,
-                            hb_vmCDP(), ( PHB_CODEPAGE ) cdp );
+      if( pStrBuffer )
+         return hb_cdpTransTo( pItem->item.asString.value,
+                               pItem->item.asString.length,
+                               pStrBuffer, ulSize,
+                               hb_vmCDP(), ( PHB_CODEPAGE ) cdp );
+      else
+         return hb_cdpnDup2Len( pItem->item.asString.value,
+                                pItem->item.asString.length,
+                                ulSize, hb_vmCDP(), ( PHB_CODEPAGE ) cdp );
    }
+   else if( pStrBuffer && ulSize )
+      pStrBuffer[ 0 ] = '\0';
 
    return 0;
 }
@@ -348,7 +355,7 @@ HB_SIZE hb_itemCopyStrUTF8( PHB_ITEM pItem, char * pStrBuffer, HB_SIZE ulSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyStrUTF8(%p,%p,%lu)", pItem, pStrBuffer, ulSize));
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       if( pStrBuffer )
          ulSize = hb_cdpStrToUTF8( hb_vmCDP(), HB_FALSE,
@@ -361,6 +368,8 @@ HB_SIZE hb_itemCopyStrUTF8( PHB_ITEM pItem, char * pStrBuffer, HB_SIZE ulSize )
                                       pItem->item.asString.length, ulSize );
       return ulSize;
    }
+   else if( pStrBuffer && ulSize )
+      pStrBuffer[ 0 ] = '\0';
 
    return 0;
 }
@@ -370,7 +379,7 @@ HB_SIZE hb_itemCopyStrU16( PHB_ITEM pItem, int iEndian, HB_WCHAR * pStrBuffer, H
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyStrU16(%p,%d,%p,%lu)", pItem, iEndian, pStrBuffer, ulSize));
 
-   if( HB_IS_STRING( pItem ) && ulSize )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       if( pStrBuffer )
          ulSize = hb_cdpStrToU16( hb_vmCDP(), HB_FALSE, iEndian,
@@ -383,6 +392,8 @@ HB_SIZE hb_itemCopyStrU16( PHB_ITEM pItem, int iEndian, HB_WCHAR * pStrBuffer, H
                                      pItem->item.asString.length, ulSize );
       return ulSize;
    }
+   else if( pStrBuffer && ulSize )
+      pStrBuffer[ 0 ] = '\0';
 
    return 0;
 }
