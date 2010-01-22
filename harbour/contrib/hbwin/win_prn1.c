@@ -327,9 +327,9 @@ HB_FUNC( WIN_CREATEFONT )
                           DEFAULT_PITCH | FF_DONTCARE,
                           HB_PARSTR( 2, &hFontFace, NULL ) );
 
-      hb_strfree( hFontFace );
-
       hbwapi_ret_HFONT( hFont );
+
+      hb_strfree( hFontFace );
 
       if( hFont )
          SelectObject( hDC, hFont );

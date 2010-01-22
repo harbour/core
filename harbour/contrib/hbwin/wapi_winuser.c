@@ -58,7 +58,12 @@
 #include "hbwinuni.h"
 #include "hbwapi.h"
 
-#include <winuser.h>
+HB_FUNC( WAPI_GETSYSTEMMETRICS )
+{
+   int iResult = GetSystemMetrics( hb_parni( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retni( iResult );
+}
 
 HB_FUNC( WAPI_GETKEYSTATE )
 {

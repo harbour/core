@@ -456,6 +456,7 @@ HB_FUNC( WAPI_SELECTOBJECT )
 
    if( hDC && h )
    {
+      /* TODO: Solve reference counting to 'h' handle. Also for returned one. */
       if( bRegion )
          hb_retni( ( int ) SelectObject( hDC, h ) );
       else
@@ -479,7 +480,7 @@ HB_FUNC( WAPI_MOVETOEX )
 
          hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &p ) );
 
-         /* TODO: Support both has and array */
+         /* TODO: Support both hash and array */
          hb_arraySetNL( pPOINT, 1, p.x );
          hb_arraySetNL( pPOINT, 2, p.y );
       }

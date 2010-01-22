@@ -65,6 +65,7 @@ HB_FUNC( WIN_PRINTDLGDC )
    memset( &pd, 0, sizeof( PRINTDLG ) );
 
    pd.lStructSize = sizeof( PRINTDLG );
+   pd.hwndOwner = GetActiveWindow();
    pd.Flags = PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
    pd.nFromPage = ( WORD ) hb_parnidef( 2, 1 );
    pd.nToPage = ( WORD ) hb_parnidef( 3, 1 );

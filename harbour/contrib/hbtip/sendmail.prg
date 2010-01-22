@@ -135,7 +135,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, aF
       lNoAuth := .F.
    ENDIF
    IF ! ISNUMBER( nTimeOut )
-      nTimeOut := 1000
+      nTimeOut := 10000
    ENDIF
    IF ! ISCHARACTER( cReplyTo )
       cReplyTo := ""
@@ -311,6 +311,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, aF
             ELSEIF "STARTTLS" $ oInMail:cReply
                lAuthTLS := .T.
 #endif
+            ELSEIF Left( oInMail:cReply, 4 ) == "250 "
+               EXIT
             ENDIF
          ENDDO
 
@@ -328,7 +330,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, aF
             ENDIF
          ELSE
             IF ! lConnectPlain
-               oInmail:GetOk()
                lConnect := .F.
             ENDIF
          ENDIF
@@ -359,6 +360,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, aF
       ENDIF
 
       DO WHILE .T.
+         IF Left( oInMail:cReply, 4 ) == "250 "
+            EXIT
+         ENDIF
          IF ! oInMail:GetOk()
             EXIT
          ENDIF
