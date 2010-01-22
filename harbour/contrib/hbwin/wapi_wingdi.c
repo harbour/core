@@ -241,15 +241,6 @@ DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void 
 
       return p;
    }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
-   {
-      p->lpszDocName  = HB_ARRAYGETSTR( pStru, 1, &h[ 0 ], NULL ); /* DEF? */
-      p->lpszOutput   = HB_ARRAYGETSTR( pStru, 2, &h[ 1 ], NULL );
-      p->lpszDatatype = HB_ARRAYGETSTR( pStru, 3, &h[ 2 ], NULL );
-      p->fwType       = ( DWORD ) hb_arrayGetNL( pStru, 4 );
-
-      return p;
-   }
    else if( bMandatory )
       return p;
 

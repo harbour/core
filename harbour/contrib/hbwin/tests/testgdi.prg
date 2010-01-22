@@ -17,7 +17,6 @@
 
 PROCEDURE Main()
    LOCAL hDC
-   LOCAL hDOCINFO
    LOCAL hDEVMODE
    LOCAL hRECT
    LOCAL aRECT
@@ -26,9 +25,7 @@ PROCEDURE Main()
    hDEVMODE := hb_hash()
    ? hDC := wapi_CreateDC( NIL, "Microsoft XPS Document Writer", NIL, hDEVMODE )
 
-   hDOCINFO := hb_hash()
-   hDOCINFO[ "lpszDocName" ] := "test job"
-   ? wapi_StartDoc( hDC, hDOCINFO )
+   ? wapi_StartDoc( hDC, { "lpszDocName" => "test job" } /* DOCINFO */ )
    ? wapi_StartPage( hDC )
    ? hOBJECT := wapi_CreateFont( ,,,,,,,,,,,,, "Arial" )
    ? wapi_SelectObject( hDC, hOBJECT )
