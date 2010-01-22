@@ -79,34 +79,36 @@ POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
 
    memset( p, 0, sizeof( POINT ) );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       p->x = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "x" ) );
       p->y = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "y" ) );
 
       return p;
    }
-   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
    {
       p->x = ( LONG ) hb_arrayGetNL( pStru, 1 );
       p->y = ( LONG ) hb_arrayGetNL( pStru, 2 );
 
       return p;
    }
-   else
-      return bMandatory ? p : NULL;
+   else if( bMandatory )
+      return p;
+
+   return NULL;
 }
 
 void hbwapi_stor_POINT( POINT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       s_hb_hashSetCItemNL( pStru, "x", p->x );
       s_hb_hashSetCItemNL( pStru, "y", p->y );
    }
-   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
    {
       hb_arraySetNL( pStru, 1, p->x );
       hb_arraySetNL( pStru, 2, p->y );
@@ -119,7 +121,7 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 
    memset( p, 0, sizeof( RECT ) );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       p->left   = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "left"   ) );
       p->top    = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "top"    ) );
@@ -128,7 +130,7 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 
       return p;
    }
-   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
    {
       p->left   = ( LONG ) hb_arrayGetNL( pStru, 1 );
       p->top    = ( LONG ) hb_arrayGetNL( pStru, 2 );
@@ -137,22 +139,24 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 
       return p;
    }
-   else
-      return bMandatory ? p : NULL;
+   else if( bMandatory )
+      return p;
+
+   return NULL;
 }
 
 void hbwapi_stor_RECT( RECT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
       s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
       s_hb_hashSetCItemNL( pStru, "right" , p->right  );
       s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
    }
-   else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
    {
       hb_arraySetNL( pStru, 1, p->left   );
       hb_arraySetNL( pStru, 2, p->top    );
@@ -169,7 +173,7 @@ DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
 
    p->dmSize = sizeof( DEVMODE );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       p->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
       p->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
@@ -193,15 +197,17 @@ DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
 
       return p;
    }
-   else
-      return bMandatory ? p : NULL;
+   else if( bMandatory )
+      return p;
+
+   return NULL;
 }
 
 void hbwapi_stor_DEVMODE( DEVMODE * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( HB_IS_HASH( pStru ) )
+   if( pStru && HB_IS_HASH( pStru ) )
    {
       s_hb_hashSetCItemNL( pStru, "dmOrientation"  , p->dmOrientation   );
       s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , p->dmPaperSize     );
@@ -212,6 +218,54 @@ void hbwapi_stor_DEVMODE( DEVMODE * p, int iParam )
       s_hb_hashSetCItemNL( pStru, "dmDefaultSource", p->dmDefaultSource );
       s_hb_hashSetCItemNL( pStru, "dmPrintQuality" , p->dmPrintQuality  );
       s_hb_hashSetCItemNL( pStru, "dmDuplex"       , p->dmDuplex        );
+   }
+}
+
+DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+   void ** h = ( void ** ) hb_xgrabz( 3 * sizeof( void * ) );
+
+   *ph = h;
+
+   memset( p, 0, sizeof( DOCINFO ) );
+
+   p->cbSize = sizeof( DOCINFO );
+
+   if( pStru && HB_IS_HASH( pStru ) )
+   {
+      p->lpszDocName  = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszDocName"  ), &h[ 0 ], NULL );
+      p->lpszOutput   = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszOutput"   ), &h[ 1 ], NULL );
+      p->lpszDatatype = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszDatatype" ), &h[ 2 ], NULL );
+      p->fwType       = ( DWORD ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "fwType" ) );
+
+      return p;
+   }
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   {
+      p->lpszDocName  = HB_ARRAYGETSTR( pStru, 1, &h[ 0 ], NULL ); /* DEF? */
+      p->lpszOutput   = HB_ARRAYGETSTR( pStru, 2, &h[ 1 ], NULL );
+      p->lpszDatatype = HB_ARRAYGETSTR( pStru, 3, &h[ 2 ], NULL );
+      p->fwType       = ( DWORD ) hb_arrayGetNL( pStru, 4 );
+
+      return p;
+   }
+   else if( bMandatory )
+      return p;
+
+   hb_xfree( h );
+   *ph = NULL;
+
+   return NULL;
+}
+
+void hbwapi_strfree_DOCINFO( void ** h )
+{
+   if( h )
+   {
+      int i;
+      for( i = 0; i < 3; ++i )
+         hb_strfree( h[ i ] );
    }
 }
 
@@ -248,31 +302,15 @@ HB_FUNC( WAPI_RESETDC )
 HB_FUNC( WAPI_STARTDOC )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   /* TODO: Use hash */
-   PHB_ITEM pDOCINFO = hb_param( 2, HB_IT_ARRAY );
+   void ** hDOCINFO = NULL;
+   DOCINFO di;
 
-   if( hDC && pDOCINFO && hb_arrayLen( pDOCINFO ) >= 4 )
-   {
-      DOCINFO di;
-
-      void * hDocName;
-      void * hOutput;
-      void * hDatatype;
-
-      di.cbSize       = sizeof( DOCINFO );
-      di.lpszDocName  = HB_ARRAYGETSTR( pDOCINFO, 1, &hDocName , NULL ); /* DEF? */
-      di.lpszOutput   = HB_ARRAYGETSTR( pDOCINFO, 2, &hOutput  , NULL );
-      di.lpszDatatype = HB_ARRAYGETSTR( pDOCINFO, 3, &hDatatype, NULL );
-      di.fwType       = ( DWORD ) hb_arrayGetNL( pDOCINFO, 4 );
-
+   if( hDC && hbwapi_par_DOCINFO( &di, 2, HB_FALSE, &hDOCINFO ) )
       hb_retni( StartDoc( hDC, &di ) );
-
-      hb_strfree( hDocName  );
-      hb_strfree( hOutput   );
-      hb_strfree( hDatatype );
-   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
+   hbwapi_strfree_DOCINFO( hDOCINFO );
 }
 
 HB_FUNC( WAPI_ENDDOC )
@@ -512,9 +550,9 @@ HB_FUNC( WAPI_SELECTOBJECT )
    HB_BOOL bRegion = HB_FALSE;
    HGDIOBJ h;
 
-   if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL );
-   else if( ( h = hbwapi_par_HBRUSH( 2 ) ) != NULL );
-   else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL );
+   if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL ) {}
+   else if( ( h = hbwapi_par_HBRUSH( 2 ) ) != NULL ) {}
+   else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL ) {}
    /* TODO: Add BITMAP, REGION */
    else
       h = NULL;

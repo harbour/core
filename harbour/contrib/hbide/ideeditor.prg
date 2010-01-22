@@ -1706,43 +1706,89 @@ METHOD IdeEdit:findLastIndent()
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_isHarbourKeyword( cWord )
-   LOCAL b_:= { 'function','return','static','local','default', ;
-                'if','else','elseif','endif','end', ;
-                'docase','case','endcase','otherwise', ;
-                'do','while','exit',;
-                'for','each','next','step','to',;
-                'class','endclass','method','data','var','destructor','inline','assign','access',;
-                'inherit','init','create','virtual','message',;
-                'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
-                'error','handler' }
+   STATIC s_b_ := { 'function' => NIL,;
+                    'return' => NIL,;
+                    'static' => NIL,;
+                    'local' => NIL,;
+                    'default' => NIL,;
+                    'if' => NIL,;
+                    'else' => NIL,;
+                    'elseif' => NIL,;
+                    'endif' => NIL,;
+                    'end' => NIL,;
+                    'endswitch' => NIL,;
+                    'docase' => NIL,;
+                    'case' => NIL,;
+                    'endcase' => NIL,;
+                    'otherwise' => NIL,;
+                    'switch' => NIL,;
+                    'do' => NIL,;
+                    'while' => NIL,;
+                    'exit' => NIL,;
+                    'for' => NIL,;
+                    'each' => NIL,;
+                    'next' => NIL,;
+                    'step' => NIL,;
+                    'to' => NIL,;
+                    'class' => NIL,;
+                    'endclass' => NIL,;
+                    'method' => NIL,;
+                    'data' => NIL,;
+                    'var' => NIL,;
+                    'destructor' => NIL,;
+                    'inline' => NIL,;
+                    'assign' => NIL,;
+                    'access' => NIL,;
+                    'inherit' => NIL,;
+                    'init' => NIL,;
+                    'create' => NIL,;
+                    'virtual' => NIL,;
+                    'message' => NIL,;
+                    'begin' => NIL,;
+                    'sequence' => NIL,;
+                    'try' => NIL,;
+                    'catch' => NIL,;
+                    'always' => NIL,;
+                    'recover' => NIL,;
+                    'hb_symbol_unused' => NIL,;
+                    'error' => NIL,;
+                    'handler' => NIL }
 
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
+   RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_isIndentableKeyword( cWord )
-   LOCAL b_:= { 'function',;
-                'if','else','elseif', ;
-                'docase','case','otherwise', ;
-                'do','while',;
-                'for',;
-                'class','method',;
-                'begin','sequence','try','catch','always','recover','finally' }
+   LOCAL s_b_ := { 'function' => NIL,;
+                   'if' => NIL,;
+                   'else' => NIL,;
+                   'elseif' => NIL,;
+                   'docase' => NIL,;
+                   'case' => NIL,;
+                   'otherwise' => NIL,;
+                   'do' => NIL,;
+                   'while' => NIL,;
+                   'switch' => NIL,;
+                   'for' => NIL,;
+                   'class' => NIL,;
+                   'method' => NIL,;
+                   'begin' => NIL,;
+                   'sequence' => NIL,;
+                   'try' => NIL,;
+                   'catch' => NIL,;
+                   'always' => NIL,;
+                   'recover' => NIL,;
+                   'finally' => NIL }
 
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
+   RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_isStartingKeyword( cWord )
-   LOCAL b_:= { 'function','method' }
+   STATIC s_b_ := { 'function' => NIL,;
+                    'method'   => NIL }
 
-   cWord := lower( cWord )
-
-   RETURN ascan( b_, {|e| e == cWord } ) > 0
+   RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
 
@@ -1839,5 +1885,3 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
    RETURN n
 
 /*----------------------------------------------------------------------*/
-
-

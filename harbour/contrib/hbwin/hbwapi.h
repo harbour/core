@@ -105,6 +105,7 @@ HB_EXPORT DWORD     hbwapi_GetLastError( void );
 HB_EXPORT POINT *   hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory );
 HB_EXPORT RECT *    hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory );
 HB_EXPORT DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory );
+HB_EXPORT DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** h );
 
 HB_EXPORT void      hbwapi_stor_POINT( POINT * p, int iParam );
 HB_EXPORT void      hbwapi_stor_RECT( RECT * p, int iParam );

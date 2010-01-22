@@ -178,8 +178,8 @@ METHOD IdeThemes:create( oIde, cIniFile )
 
    /* Harbour Keywords */
    b_:= { 'function','return','static','local','default', ;
-          'if','else','elseif','endif','end', ;
-          'docase','case','endcase','otherwise', ;
+          'if','else','elseif','endif','end', 'endswitch', ;
+          'docase','case','endcase','otherwise', 'switch', ;
           'do','while','exit',;
           'for','each','next','step','to',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
