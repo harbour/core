@@ -61,8 +61,14 @@ PROCEDURE Main( ... )
    LOCAL bKeyUp
    LOCAL bKeyIns
    LOCAL bKeyPaste
+   LOCAL bKeyTab
 
-   LOCAL GetList := {}
+   LOCAL GetList   := {}
+   LOCAL lQuit     := .F.
+   LOCAL hCommands
+   LOCAL nSavedRow
+   LOCAL nPos
+   LOCAL aCmd
 
    LOCAL aHistory, nHistIndex
 
@@ -124,44 +130,60 @@ PROCEDURE Main( ... )
       ShowConfig( netiosrv )
 
       OutStd( hb_osNewLine() )
-      OutStd( "hbnetiosrv command prompt:", hb_osNewLine() )
+      OutStd( "Type a command or '?' for help.", hb_osNewLine() )
 
-      aHistory := { "quit" }
+      lQuit      := .F.
+      aHistory   := { "quit" }
       nHistIndex := Len( aHistory ) + 1
+      hCommands  := hbnetiosrv_LoadCmds( {|| lQuit := .T. },;            /* codeblock to quit */
+                                         {|| ShowConfig( netiosrv ) } )  /* codeblock to display config both uses local vars */
 
       /* Command prompt */
-      DO WHILE .T.
+      DO WHILE !lQuit
 
          cCommand := Space( 128 )
 
          QQOut( "hbnetiosrv$ " )
-         @ Row(), Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
+         nSavedRow := Row()
+
+         @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
 
          SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
-         bKeyIns  := SetKey( K_INS, ;
-            {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
+         bKeyIns   := SetKey( K_INS,;
+            {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
                              SC_NORMAL, SC_INSERT ) ) } )
-         bKeyUp   := SetKey( K_UP, ;
-            {|| iif( nHistIndex > 1, ;
-                     cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ) } )
-         bKeyDown := SetKey( K_DOWN, ;
-            {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ), ;
-                aHistory[ ++nHistIndex ], ;
-                ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ) } )
-         bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+         bKeyUp    := SetKey( K_UP,;
+            {|| iif( nHistIndex > 1,;
+                     cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
+                     ManageCursor( cCommand ) } )
+         bKeyDown  := SetKey( K_DOWN,;
+            {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
+                aHistory[ ++nHistIndex ],;
+                ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
+                     ManageCursor( cCommand ) } )
+         bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+
+         bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
 
          READ
 
-         SetKey( K_DOWN, bKeyPaste )
-         SetKey( K_DOWN, bKeyDown  )
-         SetKey( K_UP,   bKeyUp    )
-         SetKey( K_INS,  bKeyIns   )
+         /* Positions the cursor on the line previously saved */
+         SetPos( nSavedRow, MaxCol() - 1 )
 
-         QQOut( hb_osNewLine() )
+         SetKey( K_ALT_V, bKeyPaste )
+         SetKey( K_DOWN,  bKeyDown  )
+         SetKey( K_UP,    bKeyUp    )
+         SetKey( K_INS,   bKeyIns   )
+         SetKey( K_TAB,   bKeyTab   )
+
          QQOut( hb_osNewLine() )
 
          cCommand := AllTrim( cCommand )
+
+         IF Empty( cCommand )
+            LOOP
+         ENDIF
 
          IF Empty( aHistory ) .OR. ! ATail( aHistory ) == cCommand
             IF Len( aHistory ) < 64
@@ -173,34 +195,13 @@ PROCEDURE Main( ... )
          ENDIF
          nHistIndex := Len( aHistory ) + 1
 
-         /* TODO: - on the fly change of RPC filter modules
-                  - listing active connections
-                  - listing open files
-                  - listing active locks
-                  - activity meters (transferred bytes, bandwidth, etc)
-                  - showing number of connections
-                  - showing number of open files
-                  - listing transferred bytes
-                  - gracefully shutting down server by waiting for connections to close and not accept new ones
-                  - pausing server */
-
-         DO CASE
-         CASE Lower( cCommand ) == "quit"
-            EXIT
-         CASE Lower( cCommand ) == "config"
-            ShowConfig( netiosrv )
-         CASE Lower( cCommand ) == "sysinfo"
-            QQOut( "OS: "         + OS(), hb_osNewLine() )
-            QQOut( "Harbour: "    + Version(), hb_osNewLine() )
-            QQOut( "C Compiler: " + hb_Compiler(), hb_osNewLine() )
-            QQOut( "Memory: "     + hb_ntos( Memory( 0 ) ) + "KB", hb_osNewLine() )
-         CASE Lower( cCommand ) == "help"
-            QQOut( "config  - Show server configuration", hb_osNewLine() )
-            QQOut( "sysinfo - Show system/build information", hb_osNewLine() )
-            QQOut( "quit    - Stop server and exit", hb_osNewLine() )
-         CASE ! Empty( cCommand )
-            QQOut( "Error: Unknown command.", hb_osNewLine() )
-         ENDCASE
+         nPos := iif( Empty(cCommand), 0, hb_HPos( hCommands, Lower( cCommand ) ) )
+         IF nPos > 0
+            aCmd := hb_HValueAt( hCommands, nPos )
+            Eval( aCmd[ 2 ], cCommand, netiosrv )
+         ELSE
+            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_osNewLine() )
+         ENDIF
       ENDDO
 
       netio_serverstop( netiosrv[ _NETIOSRV_pListenSocket ] )
@@ -210,6 +211,29 @@ PROCEDURE Main( ... )
       OutStd( "Server stopped.", hb_osNewLine() )
    ENDIF
 
+   RETURN
+
+/* Complete the command line, based on the first characters that the user typed. [vailtom] */
+STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
+   LOCAL s := Lower( AllTrim( cCommand ) )
+   LOCAL n, c
+
+   /* We need at least one character to search */
+   IF Len( s ) > 1
+      FOR n := 1 TO Len( hCommands )
+          c := hb_hKeyAt( hCommands, n )
+          IF s == Lower( Left( c, Len( s ) ) )
+             cCommand := PadR( c, Len( cCommand ) )
+             ManageCursor( cCommand )
+             RETURN
+          ENDIF
+      NEXT
+   ENDIF
+   RETURN
+
+/* Adjusted the positioning of cursor on navigate through history. [vailtom] */
+STATIC PROCEDURE ManageCursor( cCommand )
+   KEYBOARD Chr( K_HOME ) + iif( ! Empty( cCommand ), Chr( K_END ), "" )
    RETURN
 
 STATIC PROCEDURE ShowConfig( netiosrv )

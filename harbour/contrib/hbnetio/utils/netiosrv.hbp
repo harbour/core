@@ -6,6 +6,8 @@
 hbmk.hbm
 
 netiosrv.prg
+netiocmd.prg
+
 -o{!dos&x86}hbnetio_${hb_plat}
 -o{!dos&!x86}hbnetio_${hb_plat}_${hb_cpu}
 -o{dos}hbnetio
