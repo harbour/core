@@ -141,6 +141,13 @@ METHOD IdeProject:new( aProps )
       ::dotHbp         := ""
       ::compilers      := ""
 
+      IF empty( ::destination )
+         ::destination := ::location
+      ENDIF
+      IF empty( ::wrkDirectory )
+         ::wrkDirectory := ::location
+      ENDIF
+
       FOR EACH a_ IN ::metaData
          a_[ 2 ] := hbide_pathNormalized( a_[ 2 ], .f. )
       NEXT
@@ -904,8 +911,7 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, cHbpPath, qStringList, oEdit
-   LOCAL cTmp, nResult, cTargetFN
+   LOCAL cOutput, cErrors, cHbpPath, qStringList, oEdit, cHbpFN, cTmp, nResult, cTargetFN
    LOCAL aHbp := {}
 
    DEFAULT lLaunch   TO .F.
@@ -933,14 +939,14 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    ::oProject := ::getProjectByTitle( cProject )
 
-   cTargetFN := hbide_pathToOSPath( ::oProject:location + ::pathSep + ;
-                                  iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
-   /*
-    * Creates a temporary file to avoid erase the file. Hbp correct this project.
-    * 26/12/2009 - 04:17:56 - vailtom
-    */
-   //cHbpPath  := cTargetFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
-   cHbpPath  := cTargetFN + iif( ::lPPO, '._tmp', "" ) + ".hbp"
+   cTargetFN  := hbide_pathToOSPath( ::oProject:destination + ::pathSep + ;
+                      iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
+
+   cHbpFN     := hbide_pathToOSPath( ::oProject:wrkDirectory + ::pathSep + ;
+                      iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
+
+   //cHbpPath  := cHbpFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
+   cHbpPath  := cHbpFN + iif( ::lPPO, '._tmp', "" ) + ".hbp"
 
    IF !( ::lPPO )
       IF     ::oProject:type == "Lib"
@@ -961,6 +967,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, " " )
    IF !( ::lPPO )
       aadd( aHbp, "-o" + cTargetFN )
+      aadd( aHbp, "-workdir=" + ::oProject:wrkDirectory + "/${hb_plat}/${hb_comp}" )
    ENDIF
    aadd( aHbp, "-q"             )
    aadd( aHbp, "-trace"         )
@@ -1045,7 +1052,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ENDIF
          qStringList:append( cHbpPath )
          //
-         ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory() )
+         ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory )
          //
          ::qProcess:start( "hbmk2", qStringList )
          #endif
@@ -1165,7 +1172,7 @@ METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject )
-   LOCAL qProcess, cTargetFN, cTmp, aPrj, n
+   LOCAL qProcess, cTargetFN, cTmp, oProject
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
@@ -1174,13 +1181,13 @@ METHOD IdeProjManager:launchProject( cProject )
       RETURN Self
    ENDIF
 
-   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProject } )
-   aPrj := ::aProjects[ n,3 ]
+   oProject := ::getProjectByTitle( cProject )
 
-   cTargetFN := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ]
-   cTargetFN := hbide_pathToOSPath( cTargetFN )
+   cTargetFN := hbide_pathToOSPath( oProject:destination + ::pathSep + ;
+                      iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
+
 #ifdef __PLATFORM__WINDOWS
-   IF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
+   IF::oProject:type == "Executable"
       cTargetFN += '.exe'
    ENDIF
 #endif
@@ -1188,7 +1195,7 @@ METHOD IdeProjManager:launchProject( cProject )
    IF !hb_FileExists( cTargetFN )
       cTmp := "Launch application error: file not found " + cTargetFN + "!"
 
-   ELSEIF aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Executable"
+   ELSEIF ::oProject:type == "Executable"
       cTmp := "Launch application " + cTargetFN + "... "
 
       qProcess := QProcess():new()
