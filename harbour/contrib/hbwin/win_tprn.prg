@@ -250,6 +250,9 @@ METHOD Create() CLASS WIN_PRN
       IF !lResult
          ::hPrinterDC := NIL
       ELSE
+         IF ::BkMode != NIL
+            win_SetBkMode( ::hPrinterDc, ::BkMode )
+         ENDIF
          // Set mapping mode to pixels, topleft down
          win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
 //         win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
