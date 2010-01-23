@@ -746,16 +746,17 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
-   ULONG ulBase = hb_stackGetPrivateStack()->count;
+   ULONG ulBase, ulCount;
    PHB_DYNS pDynVar;
    PHB_ITEM pMemvar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleaseWithMask(%s, %d)", szMask, (int) bInclude));
 
-   while( ulBase > hb_stackGetPrivateStack()->base )
+   ulCount = hb_stackGetPrivateStack()->count;
+   ulBase = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+   while( ulCount-- > ulBase )
    {
-      --ulBase;
-      pDynVar = hb_stackGetPrivateStack()->stack[ ulBase ].pDynSym;
+      pDynVar = hb_stackGetPrivateStack()->stack[ ulCount ].pDynSym;
       /* reset current value to NIL - the overriden variables will be
        * visible after exit from current procedure
        */
@@ -1162,9 +1163,7 @@ HB_FUNC( __MVXRELEASE )
                HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
-               {
                   hb_memvarRelease( hb_arrayGetItemPtr( pMemvar, j ) );
-               }
             }
             else
                hb_memvarRelease( pMemvar );
