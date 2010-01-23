@@ -175,8 +175,18 @@ FUNCTION hbxbp_SetEventLoop( oELoop )
 /*----------------------------------------------------------------------*/
 
 FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
+   LOCAL qEvent
+
+   HB_SYMBOL_UNUSED( mp2 )
 
    SetAppEvent( nEvent, mp1, mp2, oXbp )
+
+   IF nEvent == xbeP_Keyboard
+      IF mp1 == xbeK_TAB
+         qEvent := QEvent():new( QEvent_KeyPress )
+         s_oApp:postEvent( oXbp:oWidget, qEvent )
+      ENDIF
+   ENDIF
 
    RETURN .T.
 
@@ -251,7 +261,7 @@ FUNCTION SetAppFocus( oXbp )
 
    IF hb_isObject( oXbp )
       t_oXbpInFocus := oXbp
-      oXbp:oWidget:setFocus()
+      oXbp:setFocus()
    ENDIF
 
    RETURN oldXbpInFocus

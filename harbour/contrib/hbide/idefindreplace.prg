@@ -236,7 +236,7 @@ METHOD IdeFindReplace:onClickFind()
       qCursor:setPosition( 0 )
       ::qCurEdit:setTextCursor( qCursor )
       IF !( lFound := ::find() )
-         ::qCursor:setPosition( nPos )
+         qCursor:setPosition( nPos )
          ::qCurEdit:setTextCursor( qCursor )
       ENDIF
    ELSE

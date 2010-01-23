@@ -130,8 +130,38 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   dragMotion( xParam )                  SETGET
    METHOD   dragLeave( xParam )                   SETGET
    METHOD   dragDrop( xParam, xParam1 )           SETGET
+   METHOD   hbContextMenu( xParam )               SETGET
 
    METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   METHOD   isEnabled()                           INLINE ::is_enabled
+   METHOD   isVisible()                           INLINE !( ::is_hidden )
+
+   METHOD   hbCreateFromQtPtr()                   VIRTUAL
+   METHOD   destroy()
+   METHOD   disable()
+   METHOD   enable()
+   METHOD   hide()
+   METHOD   lockPS()
+   METHOD   lockUpdate()
+   METHOD   show()
+   METHOD   toBack()
+   METHOD   toFront()
+   METHOD   unlockPS()
+   METHOD   winDevice()
+   METHOD   setColorBG( nRGB )
+   METHOD   setColorFG( nRGB )
+   METHOD   currentPos()
+   METHOD   currentSize()
+   METHOD   getHWND()
+   METHOD   getModalState()
+   METHOD   hasInputFocus()
+
+   METHOD   setFocus()
+   METHOD   sendMessage()
+   METHOD   connectWindowEvents()
+   METHOD   disConnect()
+   METHOD   clearSlots()
 
    CLASSDATA nProperty                            INIT  0
    DATA     qtProperty                            INIT  ""
@@ -201,7 +231,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
-   DATA     resizable                             INIT   .t.
+   DATA     resizable                             INIT   .T.
    DATA     resizeMode                            INIT   0
    DATA     lModal                                INIT   .f.
    DATA     hWnd
@@ -234,89 +264,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
    ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
 
-   METHOD   isEnabled()                           INLINE ::is_enabled
-   METHOD   isVisible()                           INLINE !( ::is_hidden )
-
-*  METHOD   init()
-*  METHOD   create()
-   METHOD   hbCreateFromQtPtr()                   VIRTUAL
-*  METHOD   configure()
-   METHOD   destroy()
-*  METHOD   captureMouse()
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   hide()
-*  METHOD   invalidateRect()
-   METHOD   lockPS()
-   METHOD   lockUpdate()
-*  METHOD   setModalState()
-*  METHOD   setPointer()
-*  METHOD   setTrackPointer()
-*  METHOD   setPos()
-*  METHOD   setPosAndSize()
-*  METHOD   setSize()
-   METHOD   show()
-   METHOD   toBack()
-   METHOD   toFront()
-   METHOD   unlockPS()
-   METHOD   winDevice()
-   METHOD   setColorBG( nRGB )
-   METHOD   setColorFG( nRGB )
-*  METHOD   setFont()
-*  METHOD   setFontCompoundName()
-*  METHOD   setPresParam()
-   METHOD   currentPos()
-   METHOD   currentSize()
-   METHOD   getHWND()
-   METHOD   getModalState()
-   METHOD   hasInputFocus()
-
-
-*  METHOD   enter()                               SETGET
-*  METHOD   leave()                               SETGET
-*  METHOD   lbClick()                             SETGET
-*  METHOD   lbDblClick()                          SETGET
-*  METHOD   lbDown()                              SETGET
-*  METHOD   lbUp()                                SETGET
-*  METHOD   mbClick()                             SETGET
-*  METHOD   mbDblClick()                          SETGET
-*  METHOD   mbDown()                              SETGET
-*  METHOD   mbUp()                                SETGET
-*  METHOD   motion()                              SETGET
-*  METHOD   rbClick()                             SETGET
-*  METHOD   rbDblClick()                          SETGET
-*  METHOD   rbDown()                              SETGET
-*  METHOD   rbUp()                                SETGET
-*  METHOD   wheel()                               SETGET
-*  METHOD   helpRequest()                         SETGET
-*  METHOD   keyboard()                            SETGET
-*  METHOD   killInputFocus()                      SETGET
-*  METHOD   move()                                SETGET
-*  METHOD   paint()                               SETGET
-*  METHOD   quit()                                SETGET
-*  METHOD   resize()                              SETGET
-*  METHOD   setInputFocus()                       SETGET
-*  METHOD   dragEnter()                           SETGET
-*  METHOD   dragMotion()                          SETGET
-*  METHOD   dragLeave()                           SETGET
-*  METHOD   dragDrop()                            SETGET
-*  METHOD   close()                               SETGET
-*  METHOD   setDisplayFocus()                     SETGET
-*  METHOD   killDisplayFocus()                    SETGET
-   METHOD   hbContextMenu( xParam )               SETGET
-   METHOD   setFocus()
-   METHOD   sendMessage()
-*  METHOD   Initialize()
-*  METHOD   handleEvent()
-*  METHOD   grabEvent()
-*  METHOD   isDerivedFrom()
-*  METHOD   connect()
-*  METHOD   connectEvent()
-   METHOD   connectWindowEvents()
-   METHOD   disConnect()
-   METHOD   clearSlots()
-
-
+   METHOD   className()                           INLINE __objGetClsName( Self )
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -457,6 +405,9 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
    IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
+      // HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Succeeded" )
+   ELSE
+      HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Failed" )
    ENDIF
 
    RETURN lSuccess
@@ -1301,7 +1252,7 @@ METHOD XbpWindow:show()
 
 METHOD XbpWindow:toBack()
 
-   // TODO:
+   ::oWidget:lower()
 
    RETURN self
 
@@ -1309,7 +1260,7 @@ METHOD XbpWindow:toBack()
 
 METHOD XbpWindow:toFront()
 
-   // TODO:
+   ::oWidget:raise()
 
    RETURN self
 
@@ -1333,9 +1284,6 @@ METHOD XbpWindow:winDevice()
 
 METHOD XbpWindow:setPresParam( aPPNew )
    LOCAL i
-   //LOCAL aPP
-
-   //aPP := aclone( ::aPresParams )
 
    IF hb_isArray( aPPNew )
       FOR i := 1 TO len( aPPNew )
@@ -1343,7 +1291,6 @@ METHOD XbpWindow:setPresParam( aPPNew )
       NEXT
    ENDIF
 
-   //RETURN aPP
    RETURN ::aPresParams
 
 /*----------------------------------------------------------------------*/
@@ -1894,7 +1841,7 @@ METHOD XbpWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpWindow:setFocus()
 
-   ::oWidget:setFocus()
+   ::oWidget:setFocus_1()
 
    RETURN Self
 

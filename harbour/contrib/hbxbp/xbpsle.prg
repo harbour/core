@@ -115,6 +115,11 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
    ACCESS   typeOut                               INLINE  ::sl_typeOut
    ASSIGN   typeOut( bBlock )                     INLINE  ::sl_typeOut := bBlock
 
+   /* Harbour Extension */
+   DATA     sl_returnPressed
+   ACCESS   returnPressed                          INLINE  ::sl_returnPressed
+   ASSIGN   returnPressed( bBlock )                INLINE  ::sl_returnPressed := bBlock
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -133,6 +138,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QLineEdit():new( ::pParent )
+   ::oWidget:setFocusPolicy( Qt_StrongFocus )
 
    ::oWidget:setAlignment( es_[ ::align ] )
    IF !::editable
@@ -155,7 +161,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|o,i,ii| ::exeBlock( 1, i, ii, o ) } )
    // ::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )
-   // ::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
+   ::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
    // ::connect( ::pWidget, "selectionChanged()"             , {|      | ::exeBlock( 4 ) } )
    ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
    ::connect( ::pWidget, "textEdited(QString)"            , {|o,s   | ::exeBlock( 6, s, o ) } )
@@ -209,6 +215,13 @@ METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
 
    CASE nMsg == 3    // "returnPressed()"
       ::sl_editBuffer := ::oWidget:text()
+      #if 0
+      PostAppEvent( xbeP_Keyboard, xbeK_TAB, , Self )
+      #else
+      IF hb_isBlock( ::sl_returnPressed )
+         eval( ::sl_returnPressed, NIL, NIL, Self )
+      ENDIF
+      #endif
 
    CASE nMsg == 4    // "selectionChanged()"
 

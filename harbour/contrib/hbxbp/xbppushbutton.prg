@@ -92,8 +92,10 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock()
+   METHOD   exeBlock( nMode, p )
    METHOD   setStyle()                            VIRTUAL
+
+   METHOD   setFocus()
 
    METHOD   setCaption( xCaption, cDll )
 
@@ -117,6 +119,7 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QPushButton():new( ::oParent:oWidget )
+   ::oWidget:setFocusPolicy( Qt_StrongFocus )
 
    ::setPosAndSize()
    IF ::visible
@@ -129,7 +132,8 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
-   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
+   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock( 1 ) } )
+   ::Connect( ::pWidget, "pressed()", {|| ::exeBlock( 1 ) } )
 
    ::oParent:AddChild( SELF )
    RETURN Self
@@ -166,11 +170,18 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:exeBlock()
+METHOD XbpPushButton:exeBlock( nMode, p )
 
-   IF hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, NIL, NIL, self )
-   ENDIF
+   DO CASE
+   CASE nMode == 1
+      IF hb_isBlock( ::sl_lbClick )
+         eval( ::sl_lbClick, NIL, NIL, self )
+      ENDIF
+   CASE nMode == 201 /* QEvent_KeyPressed */
+      IF XbpQKeyEventToAppEvent( p ) == xbeK_ENTER
+         ::oWidget:click()
+      ENDIF
+   ENDCASE
 
    RETURN nil
 
@@ -197,6 +208,17 @@ METHOD XbpPushButton:destroy()
 METHOD XbpPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpPushButton:setFocus()
+
+   IF !( ::oWidget:isDefault() )
+      ::oWidget:setDefault( .t. )
+   ENDIF
+   ::oWidget:setFocus_1()
 
    RETURN Self
 

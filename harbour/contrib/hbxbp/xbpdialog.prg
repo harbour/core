@@ -80,6 +80,8 @@ CLASS XbpDialog FROM XbpWindow
    DATA     oMenu
    DATA     aRect
 
+   DATA     maxbutton                             INIT  .t.
+   DATA     minbutton                             INIT  .t.
    DATA     drawingArea
    DATA     tasklist                              INIT  .t.
    DATA     oEventLoop
@@ -119,6 +121,7 @@ METHOD XbpDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL nFlags, nnFlags
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -157,6 +160,31 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ELSE
       ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
       ::oWidget:setCentralWidget( ::drawingArea:oWidget )
+   ENDIF
+
+   nFlags := ::oWidget:windowFlags()
+   nnFlags := nFlags
+   IF !( ::maxButton )
+      IF hb_bitAnd( nFlags, Qt_WindowMaximizeButtonHint ) == Qt_WindowMaximizeButtonHint
+         nFlags -= Qt_WindowMaximizeButtonHint
+      ENDIF
+   ENDIF
+   IF !( ::minButton )
+      IF hb_bitAnd( nFlags, Qt_WindowMinimizeButtonHint ) == Qt_WindowMinimizeButtonHint
+         nFlags -= Qt_WindowMinimizeButtonHint
+      ENDIF
+   ENDIF
+   #if 0
+   IF !( ::taskList )
+      IF hb_bitAnd( nFlags, Qt_Window ) == Qt_Window
+         nFlags -= Qt_Window
+      ENDIF
+      /* This hides the taskbar entry but title bar is not visible */
+      nFlags += Qt_ToolTip + Qt_WindowTitleHint
+   ENDIF
+   #endif
+   IF nnFlags != nFlags
+      ::oWidget:setWindowFlags( nFlags )
    ENDIF
 
    //::setQtProperty()
@@ -237,6 +265,8 @@ METHOD XbpDialog:showModal()
    ::hide()
    ::oWidget:setWindowModality( 2 )
    ::show()
+   ::is_hidden      := .f.
+   ::lHasInputFocus := .t.
 
    RETURN .t.
 
