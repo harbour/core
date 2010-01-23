@@ -16,14 +16,17 @@
 #include "hbwin.ch"
 
 PROCEDURE Main()
+   LOCAL cPrinterName := "Microsoft XPS Document Writer"
+
    LOCAL hDC
-   LOCAL hDEVMODE
+   LOCAL pDEVMODE
    LOCAL hRECT
    LOCAL aRECT
    LOCAL hOBJECT
 
-   hDEVMODE := hb_hash()
-   ? hDC := wapi_CreateDC( NIL, "Microsoft XPS Document Writer", NIL, hDEVMODE )
+   pDEVMODE := __wapi_DEVMODE_New( cPrinterName )
+   __wapi_DEVMODE_Set( pDEVMODE, { "dmPaperSize" => WIN_DMPAPER_A3 } )
+   ? hDC := wapi_CreateDC( NIL, cPrinterName, NIL, pDEVMODE )
 
    ? wapi_StartDoc( hDC, { "lpszDocName" => "test job" } /* DOCINFO */ )
    ? wapi_StartPage( hDC )

@@ -165,62 +165,6 @@ void hbwapi_stor_RECT( RECT * p, int iParam )
    }
 }
 
-DEVMODE * hbwapi_par_DEVMODE( DEVMODE * p, int iParam, HB_BOOL bMandatory )
-{
-   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
-
-   memset( p, 0, sizeof( DEVMODE ) );
-
-   p->dmSize = sizeof( DEVMODE );
-
-   if( pStru && HB_IS_HASH( pStru ) )
-   {
-      p->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
-      p->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
-      p->dmPaperLength   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) );
-      p->dmPaperWidth    = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) );
-      p->dmScale         = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmScale"         ) );
-      p->dmCopies        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmCopies"        ) );
-      p->dmDefaultSource = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) );
-      p->dmPrintQuality  = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) );
-      p->dmDuplex        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) );
-
-      if( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) ) p->dmFields |= DM_ORIENTATION;
-      if( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) ) p->dmFields |= DM_PAPERSIZE;
-      if( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) ) p->dmFields |= DM_PAPERLENGTH;
-      if( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) ) p->dmFields |= DM_PAPERWIDTH;
-      if( hb_hashGetCItemPtr( pStru, "dmScale"         ) ) p->dmFields |= DM_SCALE;
-      if( hb_hashGetCItemPtr( pStru, "dmCopies"        ) ) p->dmFields |= DM_COPIES;
-      if( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) ) p->dmFields |= DM_DEFAULTSOURCE;
-      if( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) ) p->dmFields |= DM_PRINTQUALITY;
-      if( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) ) p->dmFields |= DM_DUPLEX;
-
-      return p;
-   }
-   else if( bMandatory )
-      return p;
-
-   return NULL;
-}
-
-void hbwapi_stor_DEVMODE( DEVMODE * p, int iParam )
-{
-   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
-
-   if( pStru && HB_IS_HASH( pStru ) )
-   {
-      s_hb_hashSetCItemNL( pStru, "dmOrientation"  , p->dmOrientation   );
-      s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , p->dmPaperSize     );
-      s_hb_hashSetCItemNL( pStru, "dmPaperLength"  , p->dmPaperLength   );
-      s_hb_hashSetCItemNL( pStru, "dmPaperWidth"   , p->dmPaperWidth    );
-      s_hb_hashSetCItemNL( pStru, "dmScale"        , p->dmScale         );
-      s_hb_hashSetCItemNL( pStru, "dmCopies"       , p->dmCopies        );
-      s_hb_hashSetCItemNL( pStru, "dmDefaultSource", p->dmDefaultSource );
-      s_hb_hashSetCItemNL( pStru, "dmPrintQuality" , p->dmPrintQuality  );
-      s_hb_hashSetCItemNL( pStru, "dmDuplex"       , p->dmDuplex        );
-   }
-}
-
 DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
@@ -262,17 +206,97 @@ void hbwapi_strfree_DOCINFO( void ** h )
 
 #if ! defined( HB_OS_WIN_CE )
 
+HB_FUNC( __WAPI_DEVMODE_NEW )
+{
+   HANDLE hPrinter;
+   void * hDeviceName;
+   LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
+
+   hb_retptr( NULL );
+
+   if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) )
+   {
+      LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, NULL, NULL, 0 );
+
+      if( lSize > 0 )
+      {
+         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+
+         if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
+            hbwapi_ret_PDEVMODE( pDevMode );
+         else
+            hb_xfree( pDevMode );
+      }
+
+      ClosePrinter( hPrinter );
+   }
+
+   hb_strfree( hDeviceName );
+}
+
+HB_FUNC( __WAPI_DEVMODE_SET )
+{
+   PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+
+   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   {
+      pDevMode->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
+      pDevMode->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
+      pDevMode->dmPaperLength   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) );
+      pDevMode->dmPaperWidth    = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) );
+      pDevMode->dmScale         = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmScale"         ) );
+      pDevMode->dmCopies        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmCopies"        ) );
+      pDevMode->dmDefaultSource = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) );
+      pDevMode->dmPrintQuality  = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) );
+      pDevMode->dmDuplex        = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) );
+
+      pDevMode->dmFields = 0;
+      if( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) ) pDevMode->dmFields |= DM_ORIENTATION;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) ) pDevMode->dmFields |= DM_PAPERSIZE;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperLength"   ) ) pDevMode->dmFields |= DM_PAPERLENGTH;
+      if( hb_hashGetCItemPtr( pStru, "dmPaperWidth"    ) ) pDevMode->dmFields |= DM_PAPERWIDTH;
+      if( hb_hashGetCItemPtr( pStru, "dmScale"         ) ) pDevMode->dmFields |= DM_SCALE;
+      if( hb_hashGetCItemPtr( pStru, "dmCopies"        ) ) pDevMode->dmFields |= DM_COPIES;
+      if( hb_hashGetCItemPtr( pStru, "dmDefaultSource" ) ) pDevMode->dmFields |= DM_DEFAULTSOURCE;
+      if( hb_hashGetCItemPtr( pStru, "dmPrintQuality"  ) ) pDevMode->dmFields |= DM_PRINTQUALITY;
+      if( hb_hashGetCItemPtr( pStru, "dmDuplex"        ) ) pDevMode->dmFields |= DM_DUPLEX;
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( __WAPI_DEVMODE_GET )
+{
+   PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+
+   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   {
+      s_hb_hashSetCItemNL( pStru, "dmOrientation"  , pDevMode->dmOrientation   );
+      s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , pDevMode->dmPaperSize     );
+      s_hb_hashSetCItemNL( pStru, "dmPaperLength"  , pDevMode->dmPaperLength   );
+      s_hb_hashSetCItemNL( pStru, "dmPaperWidth"   , pDevMode->dmPaperWidth    );
+      s_hb_hashSetCItemNL( pStru, "dmScale"        , pDevMode->dmScale         );
+      s_hb_hashSetCItemNL( pStru, "dmCopies"       , pDevMode->dmCopies        );
+      s_hb_hashSetCItemNL( pStru, "dmDefaultSource", pDevMode->dmDefaultSource );
+      s_hb_hashSetCItemNL( pStru, "dmPrintQuality" , pDevMode->dmPrintQuality  );
+      s_hb_hashSetCItemNL( pStru, "dmDuplex"       , pDevMode->dmDuplex        );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( WAPI_CREATEDC )
 {
    void * hDriver;
    void * hDevice;
    void * hOutput;
-   DEVMODE dm;
 
    hbwapi_ret_HDC( CreateDC( HB_PARSTRDEF( 1, &hDriver, NULL ),
                              HB_PARSTRDEF( 2, &hDevice, NULL ),
                              HB_PARSTR( 3, &hOutput, NULL ),
-                             hbwapi_par_DEVMODE( &dm, 4, HB_FALSE ) ) );
+                             hbwapi_par_PDEVMODE( 4 ) ) );
 
    hb_strfree( hDriver );
    hb_strfree( hDevice );
@@ -282,10 +306,10 @@ HB_FUNC( WAPI_CREATEDC )
 HB_FUNC( WAPI_RESETDC )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   DEVMODE dm;
+   PDEVMODE pDEVMODE = hbwapi_par_PDEVMODE( 2 );
 
-   if( hDC && hbwapi_par_DEVMODE( &dm, 2, HB_TRUE ) )
-      hb_retl( ResetDC( hDC, &dm ) == hDC );
+   if( hDC )
+      hb_retl( ResetDC( hDC, pDEVMODE ) == hDC );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

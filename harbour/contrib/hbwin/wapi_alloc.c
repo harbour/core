@@ -94,7 +94,7 @@ HDC hbwapi_par_HDC( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
 
-   return ph ? ( HDC ) * ph : ( HDC ) hb_parptr( iParam );
+   return ph ? ( HDC ) *ph : ( HDC ) hb_parptr( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_HPEN_release )
@@ -102,10 +102,10 @@ static HB_GARBAGE_FUNC( s_gc_HPEN_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      DeleteObject( ( HPEN ) * ph );
+      DeleteObject( ( HPEN ) *ph );
 
       /* set pointer to NULL to avoid multiple freeing */
       *ph = NULL;
@@ -136,7 +136,7 @@ HPEN hbwapi_par_HPEN( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
 
-   return ph ? ( HPEN ) * ph : NULL;
+   return ph ? ( HPEN ) *ph : NULL;
 }
 
 static HB_GARBAGE_FUNC( s_gc_HBRUSH_release )
@@ -144,10 +144,10 @@ static HB_GARBAGE_FUNC( s_gc_HBRUSH_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      DeleteObject( ( HBRUSH ) * ph );
+      DeleteObject( ( HBRUSH ) *ph );
 
       /* set pointer to NULL to avoid multiple freeing */
       *ph = NULL;
@@ -178,7 +178,7 @@ HBRUSH hbwapi_par_HBRUSH( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HBRUSH_funcs, iParam );
 
-   return ph ? ( HBRUSH ) * ph : NULL;
+   return ph ? ( HBRUSH ) *ph : NULL;
 }
 
 static HB_GARBAGE_FUNC( s_gc_HFONT_release )
@@ -186,10 +186,10 @@ static HB_GARBAGE_FUNC( s_gc_HFONT_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      DeleteObject( ( HFONT ) * ph );
+      DeleteObject( ( HFONT ) *ph );
 
       /* set pointer to NULL to avoid multiple freeing */
       *ph = NULL;
@@ -220,5 +220,47 @@ HFONT hbwapi_par_HFONT( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HFONT_funcs, iParam );
 
-   return ph ? ( HFONT ) * ph : NULL;
+   return ph ? ( HFONT ) *ph : NULL;
+}
+
+static HB_GARBAGE_FUNC( s_gc_PDEVMODE_release )
+{
+   void ** ph = ( void ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && *ph )
+   {
+      /* Destroy the object */
+      hb_xfree( *ph );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      *ph = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gc_PDEVMODE_funcs =
+{
+   s_gc_PDEVMODE_release,
+   hb_gcDummyMark
+};
+
+void hbwapi_ret_PDEVMODE( PDEVMODE p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PDEVMODE * ), &s_gc_PDEVMODE_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+PDEVMODE hbwapi_par_PDEVMODE( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_PDEVMODE_funcs, iParam );
+
+   return ph ? ( PDEVMODE ) *ph : NULL;
 }
