@@ -516,7 +516,7 @@ METHOD XbpWindow:destroy()
       hbxbp_SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )
       ::oEventLoop:pPtr := 0
-      SetAppWindow( XbpObject():new() )
+      //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
       ::oMenu := NIL
    ENDIF
 
@@ -537,10 +537,6 @@ METHOD XbpWindow:destroy()
 
    ::XbpPartHandler:destroy()
    ::clearSlots()
-
-   IF cXbp == "XBPDIALOG"
-      hbxbp_ClearEventBuffer()
-   ENDIF
 
    ::oWidget:pPtr := 0
    ::oWidget := NIL

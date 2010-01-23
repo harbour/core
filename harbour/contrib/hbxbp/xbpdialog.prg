@@ -93,7 +93,7 @@ CLASS XbpDialog FROM XbpWindow
 
    METHOD   close()                               INLINE NIL
 
-   METHOD   showModal()                           INLINE NIL
+   METHOD   showModal()
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, ::oWidget:setWindowTitle( cTitle )
    METHOD   getTitle()                            INLINE ::oWidget:windowTitle()
 
@@ -165,7 +165,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   SetAppWindow( Self )
+   //SetAppWindow( Self )  /* This should never be done here, it is programmers responsibility */
 
    /* Install Event Loop per Dialog Basis */
    ::oEventLoop := QEventLoop():new( ::pWidget )
@@ -229,6 +229,16 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::xbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpDialog:showModal()
+
+   ::hide()
+   ::oWidget:setWindowModality( 2 )
+   ::show()
+
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
