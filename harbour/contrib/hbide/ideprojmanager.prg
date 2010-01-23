@@ -104,6 +104,7 @@ CLASS IdeProject
    DATA   metaData                                INIT {}
    DATA   dotHbp                                  INIT ""
    DATA   compilers                               INIT ""
+   DATA   hbmk2dir                                INIT hb_getenv( "HBIDE_DIR_HBMK2" )
 
    METHOD new( aProps )
    METHOD applyMeta( s )
@@ -1054,11 +1055,11 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          //
          ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory )
          //
-         ::qProcess:start( "hbmk2", qStringList )
+         ::qProcess:start( ::oProject:hbmk2dir + "hbmk2", qStringList )
          #endif
       ELSE
          cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ( "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath ), , @cOutput, @cErrors )
+         nResult := hb_processRun( ( ::oProject:hbmk2dir + "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath ), , @cOutput, @cErrors )
 
          cTmp := cOutput + CRLF
          cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
@@ -1225,4 +1226,3 @@ STATIC FUNCTION hbide_outputLine( cLine, nOccur )
    RETURN replicate( cLine, nOccur )
 
 /*----------------------------------------------------------------------*/
-

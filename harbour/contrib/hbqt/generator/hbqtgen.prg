@@ -534,11 +534,11 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
          aadd( cpp_, "typedef struct"                  )
          aadd( cpp_, "{"                               )
-         aadd( cpp_, "  void * ph;"                    )
-         aadd( cpp_, "  bool bNew;"                    )
-         aadd( cpp_, "  QT_G_FUNC_PTR func;"           )
+         aadd( cpp_, "   void * ph;"                    )
+         aadd( cpp_, "   bool bNew;"                    )
+         aadd( cpp_, "   QT_G_FUNC_PTR func;"           )
          IF lObject
-            aadd( cpp_, "  QPointer< "+ cWidget +" > pq;" )
+            aadd( cpp_, "   QPointer< "+ cWidget +" > pq;" )
          ENDIF
          aadd( cpp_, "} QGC_POINTER_" + cWidget + ";"  )
          aadd( cpp_, " "                               )

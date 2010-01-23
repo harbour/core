@@ -220,6 +220,10 @@ REQUEST hbmk_KEYW
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
+#define _VAR_MODE_SET           1
+#define _VAR_MODE_APPEND        2
+#define _VAR_MODE_INSERT        3
+
 #define _COMPEMBED_BASE_        ( "comp" + hb_osPathSeparator() )
 
 #define _WORKDIR_BASE_          ".hbmk"
@@ -296,40 +300,41 @@ REQUEST hbmk_KEYW
 #define _HBMK_lIGNOREERROR      54
 #define _HBMK_lIMPLIB           55
 #define _HBMK_lHBCPPMM          56
+#define _HBMK_aVAR              57
 
-#define _HBMK_lCreateLib        57
-#define _HBMK_lCreateDyn        58
+#define _HBMK_lCreateLib        58
+#define _HBMK_lCreateDyn        59
 
-#define _HBMK_lBLDFLGP          59
-#define _HBMK_lBLDFLGC          60
-#define _HBMK_lBLDFLGL          61
+#define _HBMK_lBLDFLGP          60
+#define _HBMK_lBLDFLGC          61
+#define _HBMK_lBLDFLGL          62
 
-#define _HBMK_cFIRST            62
-#define _HBMK_aPRG              63
-#define _HBMK_aC                64
-#define _HBMK_aCPP              65
-#define _HBMK_aRESSRC           66
-#define _HBMK_aRESCMP           67
-#define _HBMK_aOBJUSER          68
-#define _HBMK_aICON             69
-#define _HBMK_hDEPTS            70
+#define _HBMK_cFIRST            63
+#define _HBMK_aPRG              64
+#define _HBMK_aC                65
+#define _HBMK_aCPP              66
+#define _HBMK_aRESSRC           67
+#define _HBMK_aRESCMP           68
+#define _HBMK_aOBJUSER          69
+#define _HBMK_aICON             70
+#define _HBMK_hDEPTS            71
 
-#define _HBMK_aPO               71
-#define _HBMK_cHBL              72
-#define _HBMK_cHBLDir           73
-#define _HBMK_aLNG              74
-#define _HBMK_cPO               75
+#define _HBMK_aPO               72
+#define _HBMK_cHBL              73
+#define _HBMK_cHBLDir           74
+#define _HBMK_aLNG              75
+#define _HBMK_cPO               76
 
-#define _HBMK_lDEBUGTIME        76
-#define _HBMK_lDEBUGINC         77
-#define _HBMK_lDEBUGSTUB        78
-#define _HBMK_lDEBUGI18N        79
+#define _HBMK_lDEBUGTIME        77
+#define _HBMK_lDEBUGINC         78
+#define _HBMK_lDEBUGSTUB        79
+#define _HBMK_lDEBUGI18N        80
 
-#define _HBMK_cCCPATH           80
-#define _HBMK_cCCPREFIX         81
-#define _HBMK_cCCPOSTFIX        82
+#define _HBMK_cCCPATH           81
+#define _HBMK_cCCPREFIX         82
+#define _HBMK_cCCPOSTFIX        83
 
-#define _HBMK_MAX_              82
+#define _HBMK_MAX_              83
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -735,6 +740,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lIGNOREERROR ] := .F.
    hbmk[ _HBMK_lIMPLIB ] := .F.
    hbmk[ _HBMK_lHBCPPMM ] := .F.
+   hbmk[ _HBMK_aVAR ] := {}
 
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.
@@ -836,6 +842,23 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE cParamL             == "-xhb"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
       CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
+      CASE Left( cParamL, 5 )  == "-env:"
+
+         tmp := SubStr( cParam, 6 )
+         IF ! Empty( tmp )
+            IF     ( tmp1 := At( "=", tmp ) ) > 1
+               tmp2 := _VAR_MODE_SET
+            ELSEIF ( tmp1 := At( "+", tmp ) ) > 1
+               tmp2 := _VAR_MODE_APPEND
+            ELSEIF ( tmp1 := At( "#", tmp ) ) > 1
+               tmp2 := _VAR_MODE_INSERT
+            ELSE
+               tmp2 := _VAR_MODE_SET
+               tmp1 := Len( tmp ) + 1
+            ENDIF
+            AAdd( hbmk[ _HBMK_aVAR ], { tmp2, Left( tmp, tmp1 - 1 ), SubStr( tmp, tmp1 + 1 ) } )
+         ENDIF
+
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
 
@@ -871,6 +894,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          hbmk_OutStd( hb_StrFormat( I_( "Processing environment options: %1$s" ), cEnv ) )
       ENDIF
    ENDIF
+
+   FOR EACH tmp IN hbmk[ _HBMK_aVAR ]
+      SWITCH tmp[ 1 ]
+      CASE _VAR_MODE_SET    ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] ) ; EXIT
+      CASE _VAR_MODE_INSERT ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] + hb_GetEnv( tmp[ 2 ] ) ) ; EXIT
+      CASE _VAR_MODE_APPEND ; hb_SetEnv( tmp[ 2 ], hb_GetEnv( tmp[ 2 ] ) + tmp[ 3 ] ) ; EXIT
+      ENDSWITCH
+   NEXT
 
    /* Initialize Harbour libs */
 
@@ -1509,6 +1540,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            Left( cParamL, 6 )  == "-plat=" .OR. ;
            Left( cParamL, 10 ) == "-platform=" .OR. ;
            Left( cParamL, 6 )  == "-arch=" .OR. ; /* Compatibility */
+           Left( cParamL, 5 )  == "-env:" .OR. ;
            cParamL             == "-hbrun" .OR. ;
            cParamL             == "-hbraw" .OR. ;
            cParamL             == "-hbcmp" .OR. ;
@@ -8135,6 +8167,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file" ) },;
       { "-target"           , I_( "marks beginning of options belonging to a new build target" ) },;
       { "-alltarget"        , I_( "marks beginning of common options belonging to all targets" ) },;
+      NIL,;
+      { "-env:<e>[<o>[<v>]]", I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
       NIL,;
       { "-hbrun"            , I_( "run target" ) },;
       { "-hbraw"            , I_( "stop after running Harbour compiler" ) },;
