@@ -1187,7 +1187,7 @@ METHOD IdeProjManager:launchProject( cProject )
                       iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
 
 #ifdef __PLATFORM__WINDOWS
-   IF::oProject:type == "Executable"
+   IF oProject:type == "Executable"
       cTargetFN += '.exe'
    ENDIF
 #endif
@@ -1195,12 +1195,15 @@ METHOD IdeProjManager:launchProject( cProject )
    IF !hb_FileExists( cTargetFN )
       cTmp := "Launch application error: file not found " + cTargetFN + "!"
 
-   ELSEIF ::oProject:type == "Executable"
+   ELSEIF oProject:type == "Executable"
       cTmp := "Launch application " + cTargetFN + "... "
 
       qProcess := QProcess():new()
+
+      qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
+hbide_dbg( oProject:wrkDirectory, qProcess:workingDirectory()  )
       qProcess:startDetached_2( cTargetFN )
-      qProcess:waitForStarted()
+      //qProcess:waitForStarted()
       qProcess:pPtr := 0
       qProcess := NIL
 
