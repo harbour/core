@@ -947,7 +947,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
                       iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
 
    //cHbpPath  := cHbpFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
-   cHbpPath  := cHbpFN + iif( ::lPPO, '._tmp', "" ) + ".hbp"
+   cHbpPath  := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"
 
    IF !( ::lPPO )
       IF     ::oProject:type == "Lib"
@@ -1059,7 +1059,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          #endif
       ELSE
          cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ( ::oProject:hbmk2dir + "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath ), , @cOutput, @cErrors )
+         nResult := hb_processRun( ::oProject:hbmk2dir + "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath, , @cOutput, @cErrors )
 
          cTmp := cOutput + CRLF
          cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
@@ -1080,10 +1080,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
          ENDIF
       ENDIF
 
-   ENDIF
-
-   IF ::lPPO
-      FErase( cHbpPath )
    ENDIF
 
    RETURN Self
