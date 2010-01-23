@@ -139,7 +139,7 @@ PROCEDURE Main( ... )
                                          {|| ShowConfig( netiosrv ) } )  /* codeblock to display config both uses local vars */
 
       /* Command prompt */
-      DO WHILE !lQuit
+      DO WHILE ! lQuit
 
          cCommand := Space( 128 )
 
@@ -195,7 +195,7 @@ PROCEDURE Main( ... )
          ENDIF
          nHistIndex := Len( aHistory ) + 1
 
-         nPos := iif( Empty(cCommand), 0, hb_HPos( hCommands, Lower( cCommand ) ) )
+         nPos := iif( Empty( cCommand ), 0, hb_HPos( hCommands, Lower( cCommand ) ) )
          IF nPos > 0
             aCmd := hb_HValueAt( hCommands, nPos )
             Eval( aCmd[ 2 ], cCommand, netiosrv )
@@ -216,17 +216,16 @@ PROCEDURE Main( ... )
 /* Complete the command line, based on the first characters that the user typed. [vailtom] */
 STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
    LOCAL s := Lower( AllTrim( cCommand ) )
-   LOCAL n, c
+   LOCAL n
 
    /* We need at least one character to search */
    IF Len( s ) > 1
-      FOR n := 1 TO Len( hCommands )
-          c := hb_hKeyAt( hCommands, n )
-          IF s == Lower( Left( c, Len( s ) ) )
-             cCommand := PadR( c, Len( cCommand ) )
-             ManageCursor( cCommand )
-             RETURN
-          ENDIF
+      FOR EACH n IN hCommands
+         IF s == Lower( Left( n:__enumKey(), Len( s ) ) )
+            cCommand := PadR( n:__enumKey(), Len( cCommand ) )
+            ManageCursor( cCommand )
+            RETURN
+         ENDIF
       NEXT
    ENDIF
    RETURN

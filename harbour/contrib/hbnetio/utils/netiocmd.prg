@@ -27,7 +27,7 @@ FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
                "config"    => { "Show server configuration."    , bShowInfo },;
                "sysinfo"   => { "Show system/build information.", {|| cmdSysInfo() } },;
                "quit"      => { "Stop server and exit."         , bQuit },;
-               "help"      => { "Display this help."            ,  {|| cmdHelp( hCmds ) } };
+               "help"      => { "Display this help."            , {|| cmdHelp( hCmds ) } };
             }
 
    RETURN hCmds
@@ -52,17 +52,16 @@ STATIC PROCEDURE cmdSysInfo()
 
 STATIC PROCEDURE cmdHelp( hCommands )
    LOCAL aTexts := {}
-   LOCAL n, k, v, c, m := 0
+   LOCAL n, c, m
 
+   m := 0
    hb_HEval( hCommands, {| k | m := Max( m, Len( k ) ) } )
 
    AAdd( aTexts, "Commands:" )
 
    /* Processing commands */
-   FOR n := 1 TO Len( hCommands )
-       k := hb_hKeyAt( hCommands, n )
-       v := hb_HValueAt( hCommands, n )
-       AAdd( aTexts, " " + PadR( k, m ) + " - " + v[ 1 ] )
+   FOR EACH n IN hCommands
+      AAdd( aTexts, " " + PadR( n:__enumKey(), m ) + " - " + n[ 1 ] )
    NEXT
 
    ASort( aTexts, 2 )
@@ -77,17 +76,17 @@ STATIC PROCEDURE cmdHelp( hCommands )
    c := 0
    m := MaxRow()
 
-   FOR n := 1 TO Len( aTexts )
-       QQOut( aTexts[ n ], hb_osNewLine() )
+   FOR EACH n IN aTexts
+      QQOut( n, hb_osNewLine() )
 
-       IF ++c == m
-          c := 0
-          QQOut( "Press any key to continue..." )
-          Inkey( 0 )
+      IF ++c == m
+         c := 0
+         QQOut( "Press any key to continue..." )
+         Inkey( 0 )
 
-          Scroll( Row(), 0, Row(), MaxCol(), 0 )
-          SetPos( Row(), 0 )
-       ENDIF
+         Scroll( Row(), 0, Row(), MaxCol(), 0 )
+         SetPos( Row(), 0 )
+      ENDIF
    NEXT
 
    RETURN
