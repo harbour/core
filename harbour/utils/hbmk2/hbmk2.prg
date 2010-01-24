@@ -106,17 +106,17 @@
          1. Gather supported compilers by Harbour installation
             (look for lib/<plat>/*[/<name>] subdirs)
             Show error if nothing is found
-         2. Look if any supported compilers are found embedded or in PATH
-            for target <plat>.
+         2. Look if any supported compilers are found embedded, in PATH
+            or on HB_CCPATH for target <plat>.
             Show error if nothing is found
          3. If HB_COMPILER is set to one of them, select it.
             (TODO: handle multiple installations of the same compiler.
             F.e. embedded mingw and one in PATH, or two versions of MSVC)
          4. If HB_COMPILER is set, but not to one of them, show warning and
             use the highest one on the priority list.
-         5. If HB_COMPILER is not set, or the one set isn't available,
+         5. If HB_COMPILER is not set,
             use the highest one on the priority list.
-         NOTES: - compilers in PATH have higher priority than embedded.
+         NOTES: - Priority list: HB_CCPATH, PATH, embedded.
                 - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
                 - Compilers of native CPU target have higher priority. (extra)
                   On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
@@ -827,7 +827,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
       CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
       CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
-      CASE Left( cParamL, 6 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
+      CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE cParamL             == "-hbrun"     ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
       CASE cParamL             == "-hbraw"     ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .T. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
@@ -1540,6 +1540,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            Left( cParamL, 6 )  == "-plat=" .OR. ;
            Left( cParamL, 10 ) == "-platform=" .OR. ;
            Left( cParamL, 6 )  == "-arch=" .OR. ; /* Compatibility */
+           Left( cParamL, 7 )  == "-build=" .OR. ;
+           Left( cParamL, 6 )  == "-lang=" .OR. ;
            Left( cParamL, 5 )  == "-env:" .OR. ;
            cParamL             == "-hbrun" .OR. ;
            cParamL             == "-hbraw" .OR. ;
@@ -8151,7 +8153,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-runflag=<f>"      , I_( "pass flag to output executable when -run option is used" ) },;
       { "-jobs=<n>"         , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"              , I_( "enable incremental build mode" ) },;
-      { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native, full, partial (default), off" ) },;
+      { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/plat/comp)" ), _WORKDIR_BASE_ ) },;

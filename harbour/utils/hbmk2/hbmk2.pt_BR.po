@@ -585,8 +585,7 @@ msgstr "seta o ícone para o aplicativo. <file> deve possuir um formato compatíve
 #: hbmk2.prg:7942
 #, c-format
 msgid ""
-"control source header parsing (in incremental build mode)\\n"
-"<m> can be: native, full, partial (default), off"
+"control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off"
 msgstr ""
 "controla a análise de cabeçalhos (no modo de compilação incremental)\\n"
 "<m> pode ser: native, full, partial (padrão), off"

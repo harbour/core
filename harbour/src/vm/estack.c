@@ -1105,90 +1105,94 @@ void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
 /* NOTE: DEBUG function */
 void hb_stackDispLocal( void )
 {
+   char buffer[ 1024 ];
    HB_STACK_TLS_PRELOAD
    PHB_ITEM * pBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
 
-   printf( "%s", hb_conNewLine() );
-   printf( HB_I_("Virtual Machine Stack Dump at %s(%i):"),
+   hb_conOutErr( hb_conNewLine(), 0 );
+   hb_snprintf( buffer, sizeof( buffer ), HB_I_("Virtual Machine Stack Dump at %s(%i):"),
            ( *hb_stack.pBase )->item.asSymbol.value->szName,
            ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
-   printf( "%s", hb_conNewLine() );
-   printf( "--------------------------" );
+   hb_conOutErr( buffer, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
+   hb_conOutErr( "--------------------------", 0 );
 
    for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
    {
-      printf( "%s", hb_conNewLine() );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       switch( hb_itemType( *pBase ) )
       {
          case HB_IT_NIL:
-            printf( HB_I_("NIL ") );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("NIL ") );
             break;
 
          case HB_IT_ARRAY:
             if( hb_arrayIsObject( *pBase ) )
-               printf( HB_I_("OBJECT = %s "), hb_objGetClsName( *pBase ) );
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("OBJECT = %s "), hb_objGetClsName( *pBase ) );
             else
-               printf( HB_I_("ARRAY ") );
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("ARRAY ") );
             break;
 
          case HB_IT_BLOCK:
-            printf( HB_I_("BLOCK ") );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("BLOCK ") );
             break;
 
          case HB_IT_DATE:
             {
                char szDate[ 9 ];
-               printf( HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
             }
             break;
 
          case HB_IT_TIMESTAMP:
             {
                char szDateTime[ 24 ];
-               printf( HB_I_("TIMESTAMP = \"%s\" "),
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("TIMESTAMP = \"%s\" "),
                        hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
                                                     ( *pBase )->item.asDateTime.time ) );
             }
             break;
 
          case HB_IT_DOUBLE:
-            printf( HB_I_("DOUBLE = %f "), hb_itemGetND( *pBase ) );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("DOUBLE = %f "), hb_itemGetND( *pBase ) );
             break;
 
          case HB_IT_LOGICAL:
-            printf( HB_I_("LOGICAL = %s "), hb_itemGetL( *pBase ) ? ".T." : ".F." );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LOGICAL = %s "), hb_itemGetL( *pBase ) ? ".T." : ".F." );
             break;
 
          case HB_IT_LONG:
          {
             char szBuf[ 24 ];
-            printf( HB_I_("LONG = %s ") , hb_numToStr( szBuf, sizeof( szBuf ), hb_itemGetNInt( *pBase ) ) );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LONG = %s ") , hb_numToStr( szBuf, sizeof( szBuf ), hb_itemGetNInt( *pBase ) ) );
             break;
          }
 
          case HB_IT_INTEGER:
-            printf( HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );
             break;
 
          case HB_IT_STRING:
-            printf( HB_I_("STRING = \"%s\" "), hb_itemGetCPtr( *pBase ) );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("STRING = \"%s\" "), hb_itemGetCPtr( *pBase ) );
             break;
 
          case HB_IT_SYMBOL:
-            printf( HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
             break;
 
          case HB_IT_POINTER:
-            printf( HB_I_("POINTER = %p "), ( *pBase )->item.asPointer.value );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("POINTER = %p "), ( *pBase )->item.asPointer.value );
             break;
 
          default:
-            printf( HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
             break;
       }
+
+      hb_conOutErr( buffer, 0 );
    }
 }
 

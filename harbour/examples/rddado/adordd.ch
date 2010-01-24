@@ -54,19 +54,19 @@
 #ifndef _ADORDD_CH
 #define _ADORDD_CH
 
-// Cursor Type
+/* Cursor Type */
 #define adOpenForwardOnly               0
 #define adOpenKeyset                    1
 #define adOpenDynamic                   2
 #define adOpenStatic                    3
 
-// Lock Types
+/* Lock Types */
 #define adLockReadOnly                  1
 #define adLockPessimistic               2
 #define adLockOptimistic                3
 #define adLockBatchOptimistic           4
 
-// Field Types
+/* Field Types */
 #define adEmpty                         0
 #define adTinyInt                       16
 #define adSmallInt                      2
@@ -106,7 +106,7 @@
 #define adFileTime                      64
 #define adPropVariant                   138
 #define adVarNumeric                    139
-#define adArray                         // &H2000
+#define adArray                         /* &H2000 */
 
 #define adRecDeleted                    4
 
@@ -117,14 +117,14 @@
 
 #define adKeyForeign                    2
 
-// Constant Group: ObjectStateEnum
+/* Constant Group: ObjectStateEnum */
 #define adStateClosed                   0
 #define adStateOpen                     1
 #define adStateConnecting               2
 #define adStateExecuting                4
 #define adStateFetching                 8
 
-// Constant Group: SchemaEnum
+/* Constant Group: SchemaEnum */
 #define adSchemaProviderSpecific        ( -1 )
 #define adSchemaAsserts                 0
 #define adSchemaCatalogs                1
@@ -172,20 +172,29 @@
 #define adSchemaCommands                42
 #define adSchemaSets                    43
 
-// Constant Group: Supports
-#define adAddNew                        0x1000400 // Supports the AddNew method to add new records.
-#define adApproxPosition                0x0004000 // Supports the AbsolutePosition and AbsolutePage properties.
-#define adBookmark                      0x0002000 // Supports the Bookmark property to gain access to specific records.
-#define adDelete                        0x1000800 // Supports the Delete method to delete records.
-#define adFind                          0x0080000 // Supports the Find method to locate a row in a Recordset.
-#define adHoldRecords                   0x0000100 // Retrieves more records or changes the next position without committing all pending changes.
-#define adIndex                         0x0100000 // Supports the Index property to name an index.
-#define adMovePrevious                  0x0000200 // Supports the MoveFirst and MovePrevious methods, and Move or GetRows methods to move the current record position backward without requiring bookmarks.
-#define adNotify                        0x0040000 // Indicates that the underlying data provider supports notifications (which determines whether Recordset events are supported).
-#define adResync                        0x0020000 // Supports the Resync method to update the cursor with the data that is visible in the underlying database.
-#define adSeek                          0x0200000 // Supports the Seek method to locate a row in a Recordset.
-#define adUpdate                        0x1008000 // Supports the Update method to modify existing data.
+/* Constant Group: Supports */
+#define adAddNew                        0x1000400 /* Supports the AddNew method to add new records. */
+#define adApproxPosition                0x0004000 /* Supports the AbsolutePosition and AbsolutePage properties. */
+#define adBookmark                      0x0002000 /* Supports the Bookmark property to gain access to specific records. */
+#define adDelete                        0x1000800 /* Supports the Delete method to delete records. */
+#define adFind                          0x0080000 /* Supports the Find method to locate a row in a Recordset. */
+#define adHoldRecords                   0x0000100 /* Retrieves more records or changes the next position without committing all pending changes. */
+#define adIndex                         0x0100000 /* Supports the Index property to name an index. */
+#define adMovePrevious                  0x0000200 /* Supports the MoveFirst and MovePrevious methods, and Move or GetRows methods to move the current record position backward without requiring bookmarks. */
+#define adNotify                        0x0040000 /* Indicates that the underlying data provider supports notifications (which determines whether Recordset events are supported). */
+#define adResync                        0x0020000 /* Supports the Resync method to update the cursor with the data that is visible in the underlying database. */
+#define adSeek                          0x0200000 /* Supports the Seek method to locate a row in a Recordset. */
+#define adUpdate                        0x1008000 /* Supports the Update method to modify existing data. */
 #define adUpdateBatch                   0x0010000
+
+/* Command type */
+#define adCmdUnspecified                ( -1 )
+#define adCmdUnknown                    8
+#define adCmdText                       1
+#define adCmdTable                      2
+#define adCmdStoredProc                 4
+#define adCmdFile                       256
+#define adCmdTableDirect                512
 
 #command USE <(db)> [VIA <rdd>] [ALIAS <a>] [<nw: NEW>] ;
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;

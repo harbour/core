@@ -514,6 +514,9 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 {
    HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
 
+   /* Set default return value */
+   hb_retc_null();
+
    if( fhnd != FS_ERROR )
    {
       ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
@@ -528,17 +531,13 @@ HB_FUNC( WIN_LOADBITMAPFILE )
          hb_fsSeek( fhnd, 0, FS_SET );
 
          if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && pbmfh->bfType == *( WORD * ) "BM" )
-            hb_retclen( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
-
-         hb_xfree( pbmfh );
+            hb_retclen_buffer( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
+         else
+            hb_xfree( pbmfh );
       }
-      else
-         hb_retc_null();
 
       hb_fsClose( fhnd );
    }
-   else
-      hb_retc_null();
 }
 
 HB_FUNC( WIN_DRAWBITMAP )

@@ -7755,7 +7755,7 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
 #if 0
       if( fPublic && ( hSymScope & ( HB_FS_INITEXIT | HB_FS_STATIC ) ) != 0 )
       {
-         printf("Registring: %s:%s scope %04x\r\n", szModuleName, pSymbol->szName, hSymScope ); fflush(stdout);
+         HB_TRACE(HB_TR_DEBUG, ("Registering: %s:%s scope %04x", szModuleName, pSymbol->szName, hSymScope));
       }
 #endif
 
