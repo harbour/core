@@ -105,6 +105,12 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   calcClientRect()                      INLINE { 0, 0, ::oWidget:width(), ::oWidget:height() }
    METHOD   calcFrameRect()                       INLINE { ::oWidget:x(), ::oWidget:y(), ;
                                                            ::oWidget:x()+::oWidget:width(), ::oWidget:y()+::oWidget:height() }
+
+   DATA     aMaxSize
+   METHOD   maxSize( aSize )                      SETGET
+   DATA     aMinSize
+   METHOD   minSize( aSize )                      SETGET
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -257,6 +263,30 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::xbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpDialog:maxSize( aSize )
+
+   IF hb_isArray( aSize ) .AND. len( aSize ) == 2 .AND. hb_isNumeric( aSize[ 1 ] ) .AND. hb_isNumeric( aSize[ 2 ] )
+      ::aMaxSize := aSize
+      ::oWidget:setMaximumWidth( aSize[ 1 ] )
+      ::oWidget:setMaximumHeight( aSize[ 2 ] )
+   ENDIF
+
+   RETURN ::aMaxSize
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpDialog:minSize( aSize )
+
+   IF hb_isArray( aSize ) .AND. len( aSize ) == 2 .AND. hb_isNumeric( aSize[ 1 ] ) .AND. hb_isNumeric( aSize[ 2 ] )
+      ::aMinSize := aSize
+      ::oWidget:setMinimumWidth( aSize[ 1 ] )
+      ::oWidget:setMinimumHeight( aSize[ 2 ] )
+   ENDIF
+
+   RETURN ::aMinSize
 
 /*----------------------------------------------------------------------*/
 
