@@ -384,7 +384,7 @@ msgstr "Kérem, válasszon C fordítót a -compiler= kapcsoló segítségével.\\nA köve
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off"
+msgid "control source header parsing (in incremental build mode)\\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off"
 msgstr "finomhangolja a forrásállományok automatikus fejléc detektálást (lépcsõzetes üzemmódban)\\n<m> lehet: native, full, partial (default), off"
 
 #: hbmk2.prg:7850
