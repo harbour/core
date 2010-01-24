@@ -140,6 +140,7 @@
 #define HB_WINFONT_LEN_             4
 
 /* WIN_BITMAPTYPE() return values */
+#define HB_WIN_BITMAP_UNKNOWN       0
 #define HB_WIN_BITMAP_BMP           1
 #define HB_WIN_BITMAP_JPEG          2
 #define HB_WIN_BITMAP_PNG           3

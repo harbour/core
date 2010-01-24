@@ -811,7 +811,7 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
    ELSE
       ::Type := win_bitmapType( ::Bitmap )
    ENDIF
-   RETURN ::Type > 0
+   RETURN ::Type != HB_WIN_BITMAP_UNKNOWN
 
 METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN Self

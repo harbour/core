@@ -510,13 +510,14 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 
 /* Functions for loading & printing bitmaps */
 
+#define HB_WIN_BITMAP_UNKNOWN       0
 #define HB_WIN_BITMAP_BMP           1
 #define HB_WIN_BITMAP_JPEG          2
 #define HB_WIN_BITMAP_PNG           3
 
 static int hbwin_BitmapType( const void * pImgBuf )
 {
-   int iType = 0;
+   int iType = HB_WIN_BITMAP_UNKNOWN;
 
    if( pImgBuf )
    {
@@ -556,7 +557,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
          hb_fsSeek( fhnd, 0, FS_SET );
 
-         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_BitmapType( pbmfh ) )
+         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_BitmapType( pbmfh ) != HB_WIN_BITMAP_UNKNOWN )
             hb_retclen_buffer( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
          else
             hb_xfree( pbmfh );
