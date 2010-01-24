@@ -780,7 +780,7 @@ CREATE CLASS WIN_BMP
    METHOD Create()
    METHOD Destroy()
    METHOD Draw( oPrn, aRectangle, aDimXY )
-   METHOD CheckPrnDrvFormat( oPrn, cErrMsg )
+   METHOD CheckPrnDrvFormat( oPrn, nErrCode )
 
    VAR Type     INIT 0                  // Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG
    VAR DimXY    INIT { 0, 0 }           // Image Dimensions X Y pixels
