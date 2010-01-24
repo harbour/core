@@ -231,6 +231,13 @@ REQUEST hbmk_KEYW
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
 
+/* Macro to check for uppercase extension on case-sensitive file-systems */
+#if defined( __PLATFORM__DOS )
+   #define _EXT_IS_UPPER( f, e ) ( .F. )
+#else
+   #define _EXT_IS_UPPER( f, e ) ( FN_ExtGet( f ) == e )
+#endif
+
 #define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
@@ -2035,25 +2042,26 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             NEXT
          ENDIF
 
+      CASE FN_ExtGet( cParamL ) == ".cpp" .OR. ;
+           FN_ExtGet( cParamL ) == ".cc" .OR. ;
+           FN_ExtGet( cParamL ) == ".cxx" .OR. ;
+           FN_ExtGet( cParamL ) == ".cx" .OR. ;
+           _EXT_IS_UPPER( cParam, ".C" )
+
+         cParam := ArchCompFilter( hbmk, cParam )
+         IF ! Empty( cParam )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+               AAdd( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cParam ) )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
+            NEXT
+         ENDIF
+
       CASE FN_ExtGet( cParamL ) == ".c"
 
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
                AAdd( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cParam ) )
-               DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
-            NEXT
-         ENDIF
-
-      CASE FN_ExtGet( cParamL ) == ".cpp" .OR. ;
-           FN_ExtGet( cParamL ) == ".cc" .OR. ;
-           FN_ExtGet( cParamL ) == ".cxx" .OR. ;
-           FN_ExtGet( cParamL ) == ".cx"
-
-         cParam := ArchCompFilter( hbmk, cParam )
-         IF ! Empty( cParam )
-            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-               AAdd( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cParam ) )
                DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
             NEXT
          ENDIF
@@ -6105,13 +6113,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                CASE FN_ExtGet( cItemL ) == ".o" .OR. ;
                     FN_ExtGet( cItemL ) == ".obj"
                   AAddNew( hbmk[ _HBMK_aOBJUSER ], PathSepToTarget( hbmk, cItem ) )
-               CASE FN_ExtGet( cItemL ) == ".c"
-                  AAddNew( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cItem ) )
                CASE FN_ExtGet( cItemL ) == ".cpp" .OR. ;
                     FN_ExtGet( cItemL ) == ".cc" .OR. ;
                     FN_ExtGet( cItemL ) == ".cxx" .OR. ;
-                    FN_ExtGet( cItemL ) == ".cx"
+                    FN_ExtGet( cItemL ) == ".cx" .OR. ;
+                    _EXT_IS_UPPER( cItem, ".C" )
                   AAddNew( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cItem ) )
+               CASE FN_ExtGet( cItemL ) == ".c"
+                  AAddNew( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cItem ) )
                CASE FN_ExtGet( cItemL ) == ".d"
                   deplst_read( hbmk[ _HBMK_hDEPTS ], PathSepToSelf( cItem ) )
                CASE FN_ExtGet( cItemL ) == ".po" .OR. ;
