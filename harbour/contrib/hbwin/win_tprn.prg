@@ -799,7 +799,7 @@ METHOD New() CLASS WIN_BMP
 
 METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
    ::FileName := cFileName
-   IF ValType( aDimXY ) == "A"
+   IF ISARRAY( aDimXY )
       ::DimXY := aDimXY
    ELSE
       ::DimXY := { 1, 1 } // Driver using the original dimensions
@@ -809,7 +809,7 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
       ::Type := 0
       ::DimXY := { 0, 0 }
    ELSE
-      ::Type := win_TypeBitMap( ::Bitmap )
+      ::Type := win_bitmapType( ::Bitmap )
    ENDIF
    RETURN ::Type > 0
 
@@ -820,10 +820,10 @@ METHOD Destroy() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN NIL
 
 METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array [& Image Dimensions X Y pixels array]
-   IF ValType( aRectangle ) == "A"
+   IF ISARRAY( aRectangle )
       ::Rect := aRectangle
    ENDIF
-   IF ValType( aDimXY ) == "A"
+   IF ISARRAY( aDimXY )
       ::DimXY := aDimXY
    ENDIF
    RETURN oPrn:DrawBitMap( Self )

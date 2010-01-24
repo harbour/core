@@ -510,27 +510,30 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 
 /* Functions for loading & printing bitmaps */
 
-/* Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG [jarabal] */
-static int hbwin_TypeBitMap( const void *pImgBuf )
+#define HB_WIN_BITMAP_BMP           1
+#define HB_WIN_BITMAP_JPEG          2
+#define HB_WIN_BITMAP_PNG           3
+
+static int hbwin_BitmapType( const void * pImgBuf )
 {
    int iType = 0;
 
    if( pImgBuf )
    {
       if( memcmp( pImgBuf, "BM", 2 ) == 0 )
-         iType = 1;
+         iType = HB_WIN_BITMAP_BMP;
       else if( memcmp( pImgBuf, "\377\330\377", 3 ) == 0 )
-         iType = 2;
+         iType = HB_WIN_BITMAP_JPEG;
       else if( memcmp( pImgBuf, "\211PNG", 4 ) == 0 )
-         iType = 3;
+         iType = HB_WIN_BITMAP_PNG;
    }
 
    return iType;
 }
 
-HB_FUNC( WIN_TYPEBITMAP )
+HB_FUNC( WIN_BITMAPTYPE )
 {
-   hb_retni( hbwin_TypeBitMap( hb_parc( 1 ) ) );
+   hb_retni( hbwin_BitmapType( hb_parc( 1 ) ) );
 }
 
 HB_FUNC( WIN_LOADBITMAPFILE )
@@ -553,7 +556,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
          hb_fsSeek( fhnd, 0, FS_SET );
 
-         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_TypeBitMap( pbmfh ) )
+         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_BitmapType( pbmfh ) )
             hb_retclen_buffer( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
          else
             hb_xfree( pbmfh );
@@ -571,15 +574,15 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 #define CHECKPNGFORMAT     4120
 #endif
 
-static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void *pImgBuf, ULONG ulSize, PHB_ITEM pItmErrMsg )
+static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf, ULONG ulSize, PHB_ITEM pItmErrMsg )
 {
    if( hDC && iType && pImgBuf && ulSize >= sizeof( BITMAPCOREHEADER ) )
    {
-      if( iType == 1 )
+      if( iType == HB_WIN_BITMAP_BMP )
          return HB_TRUE;
       else
       {
-         int iRes = iType = (iType == 2 ? CHECKJPEGFORMAT : CHECKPNGFORMAT);
+         int iRes = iType = ( iType == HB_WIN_BITMAP_JPEG ? CHECKJPEGFORMAT : CHECKPNGFORMAT );
 
          iRes = ExtEscape( hDC, QUERYESCSUPPORT, sizeof(iRes), ( LPCSTR ) &iRes, 0, 0 );
          if( iRes > 0 )
@@ -616,7 +619,7 @@ HB_FUNC( WIN_CHECKPRNDRVFORMAT )
 {
    const char * pImgBuf = hb_parc( 2 );
 
-   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_TypeBitMap( pImgBuf ), pImgBuf, hb_parclen( 2 ), hb_param( 3, HB_IT_BYREF ) ) );
+   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf ), pImgBuf, hb_parclen( 2 ), hb_param( 3, HB_IT_BYREF ) ) );
 }
 
 HB_FUNC( WIN_DRAWBITMAP )
@@ -626,14 +629,17 @@ HB_FUNC( WIN_DRAWBITMAP )
    HDC hDC = hbwapi_par_HDC( 1 );
    ULONG ulSize = hb_parclen( 2 );
    BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
-   int cxDib = hb_parni( 7 ), cyDib = hb_parni( 8 ), iType = hbwin_TypeBitMap( pbmfh );
+   int iType = hbwin_BitmapType( pbmfh );
 
    /* TOFIX: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
    if( hbwin_CheckPrnDrvFormat( hDC, iType, pbmfh, ulSize, NULL ) )
    {
-      if( iType == 1 )
+      int cxDib = hb_parni( 7 );
+      int cyDib = hb_parni( 8 );
+
+      if( iType == HB_WIN_BITMAP_BMP )
       {
          pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
          pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
@@ -660,13 +666,13 @@ HB_FUNC( WIN_DRAWBITMAP )
          bmi.bmiHeader.biHeight      = -cyDib; /* top-down image */
          bmi.bmiHeader.biPlanes      = 1;
          bmi.bmiHeader.biBitCount    = 0;
-         bmi.bmiHeader.biCompression = (iType == 2 ? BI_JPEG : BI_PNG);
+         bmi.bmiHeader.biCompression = ( iType == HB_WIN_BITMAP_JPEG ? BI_JPEG : BI_PNG );
          bmi.bmiHeader.biSizeImage   = ulSize;
          pbmi = &bmi;
          pBits = ( BYTE * ) pbmfh;
       }
 
-      if( pBits )
+      if( pbmi && pBits )
       {
          SetStretchBltMode( hDC, COLORONCOLOR );
          hb_retl( StretchDIBits( hDC, hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ),
@@ -684,7 +690,7 @@ HB_FUNC( WIN_BITMAPDIMENSIONS )
 {
    BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 1 );
 
-   if( hb_parclen( 1 ) >= sizeof( BITMAPCOREHEADER ) && hbwin_TypeBitMap( pbmfh ) == 1 )
+   if( hb_parclen( 1 ) >= sizeof( BITMAPCOREHEADER ) && hbwin_BitmapType( pbmfh ) == HB_WIN_BITMAP_BMP )
    {
       int cxDib, cyDib;
       BITMAPINFO * pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );

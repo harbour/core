@@ -139,6 +139,11 @@
 #define HB_WINFONT_CHARSET          4
 #define HB_WINFONT_LEN_             4
 
+/* WIN_BITMAPTYPE() return values */
+#define HB_WIN_BITMAP_BMP           1
+#define HB_WIN_BITMAP_JPEG          2
+#define HB_WIN_BITMAP_PNG           3
+
 #define WIN_RGB( nR, nG, nB )       ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
 /* Color constants for convenience */
