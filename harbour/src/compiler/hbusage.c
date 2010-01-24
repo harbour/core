@@ -260,6 +260,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Viktor Szakats (harbour.01 syenar.hu)\n"
          "Vladimir Kazimirchik <v_kazimirchik yahoo.com>\n"
          "Walter Negro <anegro overnet.com.ar>\n"
+         "Xavi <jarabal gmail.com>\n"
       );
 }
 

@@ -732,7 +732,7 @@ METHOD GetTextHeight( cString ) CLASS WIN_PRN
 METHOD DrawBitMap( oBmp ) CLASS WIN_PRN
    LOCAL lResult := .F.
    IF ::BitMapsOk .AND. ::CheckPage() .AND. ! Empty( oBmp:BitMap )
-      IF ( lResult := win_DrawBitMap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:rect[ 3 ], oBmp:Rect[ 4 ] ) )
+      IF ( lResult := win_DrawBitMap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:Rect[ 3 ], oBmp:Rect[ 4 ], oBmp:DimXY[ 1 ], oBmp:DimXY[ 2 ] ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF
@@ -776,11 +776,14 @@ CREATE CLASS WIN_BMP
    EXPORTED:
 
    METHOD New()
-   METHOD LoadFile( cFileName )
+   METHOD LoadFile( cFileName, aDimXY )
    METHOD Create()
    METHOD Destroy()
-   METHOD Draw( oPrn, aRectangle )
+   METHOD Draw( oPrn, aRectangle, aDimXY )
+   METHOD CheckPrnDrvFormat( oPrn, cErrMsg )
 
+   VAR Type     INIT 0                  // Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG
+   VAR DimXY    INIT { 0, 0 }           // Image Dimensions X Y pixels
    VAR Rect     INIT { 0, 0, 0, 0 }     // Coordinates to print BitMap
                                         //   XDest,                    // x-coord of destination upper-left corner
                                         //   YDest,                    // y-coord of destination upper-left corner
@@ -794,10 +797,21 @@ ENDCLASS
 METHOD New() CLASS WIN_BMP
    RETURN Self
 
-METHOD LoadFile( cFileName ) CLASS WIN_BMP
+METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
    ::FileName := cFileName
+   IF ValType( aDimXY ) == "A"
+      ::DimXY := aDimXY
+   ELSE
+      ::DimXY := { 1, 1 } // Driver using the original dimensions
+   ENDIF
    ::Bitmap := win_LoadBitMapFile( ::FileName )
-   RETURN ! Empty( ::Bitmap )
+   IF Empty( ::Bitmap )
+      ::Type := 0
+      ::DimXY := { 0, 0 }
+   ELSE
+      ::Type := win_TypeBitMap( ::Bitmap )
+   ENDIF
+   RETURN ::Type > 0
 
 METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN Self
@@ -805,9 +819,17 @@ METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
 METHOD Destroy() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN NIL
 
-METHOD Draw( oPrn, aRectangle ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array
-   ::Rect := aRectangle
+METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array [& Image Dimensions X Y pixels array]
+   IF ValType( aRectangle ) == "A"
+      ::Rect := aRectangle
+   ENDIF
+   IF ValType( aDimXY ) == "A"
+      ::DimXY := aDimXY
+   ENDIF
    RETURN oPrn:DrawBitMap( Self )
+
+METHOD CheckPrnDrvFormat( oPrn, cErrMsg ) CLASS WIN_BMP
+   RETURN win_CheckPrnDrvFormat( oPrn:hPrinterDc, ::Bitmap, @cErrMsg )
 
 #ifdef HB_COMPAT_XPP
 
