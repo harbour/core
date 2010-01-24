@@ -6064,6 +6064,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cFile
    LOCAL cLine
    LOCAL cItem
+   LOCAL cItemL
    LOCAL tmp
 
    IF ! hb_FileExists( cFileName )
@@ -6099,27 +6100,28 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
             IF ! Empty( cItem )
+               cItemL := Lower( cItem )
                DO CASE
-               CASE FN_ExtGet( cItem ) == ".o" .OR. ;
-                    FN_ExtGet( cItem ) == ".obj"
+               CASE FN_ExtGet( cItemL ) == ".o" .OR. ;
+                    FN_ExtGet( cItemL ) == ".obj"
                   AAddNew( hbmk[ _HBMK_aOBJUSER ], PathSepToTarget( hbmk, cItem ) )
-               CASE FN_ExtGet( cItem ) == ".c"
+               CASE FN_ExtGet( cItemL ) == ".c"
                   AAddNew( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cItem ) )
-               CASE FN_ExtGet( cItem ) == ".cpp" .OR. ;
-                    FN_ExtGet( cItem ) == ".cc" .OR. ;
-                    FN_ExtGet( cItem ) == ".cxx" .OR. ;
-                    FN_ExtGet( cItem ) == ".cx"
+               CASE FN_ExtGet( cItemL ) == ".cpp" .OR. ;
+                    FN_ExtGet( cItemL ) == ".cc" .OR. ;
+                    FN_ExtGet( cItemL ) == ".cxx" .OR. ;
+                    FN_ExtGet( cItemL ) == ".cx"
                   AAddNew( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cItem ) )
-               CASE FN_ExtGet( cItem ) == ".d"
+               CASE FN_ExtGet( cItemL ) == ".d"
                   deplst_read( hbmk[ _HBMK_hDEPTS ], PathSepToSelf( cItem ) )
-               CASE FN_ExtGet( cItem ) == ".po" .OR. ;
-                    FN_ExtGet( cItem ) == ".pot"
+               CASE FN_ExtGet( cItemL ) == ".po" .OR. ;
+                    FN_ExtGet( cItemL ) == ".pot"
                   AAddNew( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cItem ) )
-               CASE FN_ExtGet( cItem ) == ".rc"
+               CASE FN_ExtGet( cItemL ) == ".rc"
                   FOR EACH tmp IN FN_Expand( cItem )
                      AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
                   NEXT
-               CASE FN_ExtGet( cItem ) == ".res"
+               CASE FN_ExtGet( cItemL ) == ".res"
                   IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
                      /* For MinGW family add .res files as source input, as they
                         will need to be converted to coff format with windres (just
