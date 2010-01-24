@@ -1236,6 +1236,12 @@ METHOD XbpWindow:isDerivedFrom( cClassORoObject )
       ENDIF
    ENDIF
 
+   IF !( lTrue )
+      IF hb_isObject( ::oParent )
+         lTrue := ::oParent:isDerivedFrom( cClassORoObject )
+      ENDIF
+   ENDIF
+
    RETURN lTrue
 
 /*----------------------------------------------------------------------*/
