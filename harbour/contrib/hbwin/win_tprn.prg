@@ -828,8 +828,8 @@ METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object r
    ENDIF
    RETURN oPrn:DrawBitMap( Self )
 
-METHOD CheckPrnDrvFormat( oPrn, cErrMsg ) CLASS WIN_BMP
-   RETURN win_CheckPrnDrvFormat( oPrn:hPrinterDc, ::Bitmap, @cErrMsg )
+METHOD CheckPrnDrvFormat( oPrn, nErrCode ) CLASS WIN_BMP
+   RETURN win_CheckPrnDrvFormat( oPrn:hPrinterDc, ::Bitmap, @nErrCode )
 
 #ifdef HB_COMPAT_XPP
 

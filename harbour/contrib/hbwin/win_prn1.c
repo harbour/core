@@ -575,7 +575,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 #define CHECKPNGFORMAT     4120
 #endif
 
-static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf, ULONG ulSize, PHB_ITEM pItmErrMsg )
+static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf, ULONG ulSize, int * piErrCode )
 {
    if( hDC && iType && pImgBuf && ulSize >= sizeof( BITMAPCOREHEADER ) )
    {
@@ -585,47 +585,56 @@ static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf
       {
          int iRes = iType = ( iType == HB_WIN_BITMAP_JPEG ? CHECKJPEGFORMAT : CHECKPNGFORMAT );
 
-         iRes = ExtEscape( hDC, QUERYESCSUPPORT, sizeof(iRes), ( LPCSTR ) &iRes, 0, 0 );
+         iRes = ExtEscape( hDC, QUERYESCSUPPORT, sizeof( iRes ), ( LPCSTR ) &iRes, 0, 0 );
          if( iRes > 0 )
          {
-            if( ExtEscape( hDC, iType, ulSize, ( LPCSTR ) pImgBuf, sizeof(iRes), ( LPSTR ) &iRes ) > 0 )
+            if( ExtEscape( hDC, iType, ulSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
             {
-               if( pItmErrMsg && iRes != 1 )
-                  hb_itemPutC( pItmErrMsg, "CHECKFORMAT failure" );
-
-               return iRes == 1;
+               if( iRes == 1 )
+                  return HB_TRUE;
+               else
+               {
+                  if( piErrCode )
+                     *piErrCode = 4;
+                  return HB_FALSE;
+               }
             }
             else
             {
-               if( pItmErrMsg )
-                  hb_itemPutC( pItmErrMsg, "Invalid source devmode for ESCSUPPORT" );
-
+               if( piErrCode )
+                  *piErrCode = 3;
                return HB_FALSE;
             }
          }
          else
          {
-            if( pItmErrMsg )
-               hb_itemPutC( pItmErrMsg, "QUERYESCSUPPORT Not Implemented" );
-
+            if( piErrCode )
+               *piErrCode = 2;
             return HB_FALSE;
          }
       }
    }
    else
+   {
+      if( piErrCode )
+         *piErrCode = 1;
       return HB_FALSE;
+   }
 }
 
 HB_FUNC( WIN_CHECKPRNDRVFORMAT )
 {
    const char * pImgBuf = hb_parc( 2 );
+   int iErrCode = 0;
 
-   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf ), pImgBuf, hb_parclen( 2 ), hb_param( 3, HB_IT_BYREF ) ) );
+   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf ), pImgBuf, hb_parclen( 2 ), &iErrCode ) );
+
+   hb_storni( iErrCode, 3 );
 }
 
 HB_FUNC( WIN_DRAWBITMAP )
 {
-   BITMAPINFO * pbmi;
+   BITMAPINFO * pbmi = NULL;
    BYTE * pBits = NULL;
    HDC hDC = hbwapi_par_HDC( 1 );
    ULONG ulSize = hb_parclen( 2 );
