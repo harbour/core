@@ -20,6 +20,7 @@ C_SOURCES := \
    legacycv.c \
    wce_simc.c \
    wce_smsc.c \
+   win_bmp.c \
    win_com.c \
    win_dlg.c \
    win_dll.c \

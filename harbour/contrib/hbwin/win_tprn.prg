@@ -769,7 +769,7 @@ METHOD Inch_To_PosY( nInch ) CLASS WIN_PRN
 METHOD GetDeviceCaps( nCaps ) CLASS WIN_PRN
    RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps )
 
-// Bitmap class
+/* Bitmap class */
 
 CREATE CLASS WIN_BMP
 
@@ -780,7 +780,7 @@ CREATE CLASS WIN_BMP
    METHOD Create()
    METHOD Destroy()
    METHOD Draw( oPrn, aRectangle, aDimXY )
-   METHOD CheckPrnDrvFormat( oPrn, nErrCode )
+   METHOD IsSupported( oPrn, nErrCode )
 
    VAR Type     INIT 0                  // Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG
    VAR DimXY    INIT { 0, 0 }           // Image Dimensions X Y pixels
@@ -828,8 +828,8 @@ METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object r
    ENDIF
    RETURN oPrn:DrawBitMap( Self )
 
-METHOD CheckPrnDrvFormat( oPrn, nErrCode ) CLASS WIN_BMP
-   RETURN win_CheckPrnDrvFormat( oPrn:hPrinterDc, ::Bitmap, @nErrCode )
+METHOD IsSupported( oPrn, nErrCode ) CLASS WIN_BMP
+   RETURN win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap, @nErrCode )
 
 #ifdef HB_COMPAT_XPP
 
