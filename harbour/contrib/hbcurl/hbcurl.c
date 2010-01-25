@@ -604,38 +604,36 @@ HB_FUNC( CURL_EASY_CLEANUP )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x070C01
-
 HB_FUNC( CURL_EASY_RESET )
 {
    if( PHB_CURL_is( 1 ) )
    {
+#if LIBCURL_VERSION_NUM >= 0x070C01
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
          PHB_CURL_free( hb_curl, HB_FALSE );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
-
-#if LIBCURL_VERSION_NUM >= 0x071200
 
 HB_FUNC( CURL_EASY_PAUSE )
 {
    if( PHB_CURL_is( 1 ) )
    {
+#if LIBCURL_VERSION_NUM >= 0x071200
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       hb_retnl( hb_curl ? ( long ) curl_easy_pause( hb_curl->curl, hb_parni( 2 ) ) : HB_CURLE_ERROR );
+#else
+      hb_retnl( HB_CURLE_ERROR );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 HB_FUNC( CURL_EASY_PERFORM )
 {
@@ -649,15 +647,14 @@ HB_FUNC( CURL_EASY_PERFORM )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x071202
-
 /* NOTE: curl_easy_send( curl, cBuffer, @nSentBytes ) -> nResult */
 HB_FUNC( CURL_EASY_SEND )
 {
    if( PHB_CURL_is( 1 ) )
    {
-      PHB_CURL hb_curl = PHB_CURL_par( 1 );
       CURLcode res = ( CURLcode ) HB_CURLE_ERROR;
+#if LIBCURL_VERSION_NUM >= 0x071202
+      PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
       {
@@ -667,7 +664,7 @@ HB_FUNC( CURL_EASY_SEND )
 
          hb_stornl( size, 3 );
       }
-
+#endif
       hb_retnl( ( long ) res );
    }
    else
@@ -679,8 +676,9 @@ HB_FUNC( CURL_EASY_RECV )
 {
    if( PHB_CURL_is( 1 ) )
    {
-      PHB_CURL hb_curl = PHB_CURL_par( 1 );
       CURLcode res = ( CURLcode ) HB_CURLE_ERROR;
+#if LIBCURL_VERSION_NUM >= 0x071202
+      PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
       {
@@ -697,14 +695,12 @@ HB_FUNC( CURL_EASY_RECV )
          if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
             hb_xfree( buffer );
       }
-
+#endif
       hb_retnl( ( long ) res );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 HB_FUNC( CURL_EASY_SETOPT )
 {
@@ -1756,12 +1752,11 @@ HB_FUNC( CURL_EASY_GETINFO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x070F04
-
 HB_FUNC( CURL_EASY_ESCAPE )
 {
    if( PHB_CURL_is( 1 ) )
    {
+#if LIBCURL_VERSION_NUM >= 0x070F04
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
@@ -1771,6 +1766,7 @@ HB_FUNC( CURL_EASY_ESCAPE )
          curl_free( buffer );
       }
       else
+#endif
          hb_retc_null();
    }
    else
@@ -1781,6 +1777,7 @@ HB_FUNC( CURL_EASY_UNESCAPE )
 {
    if( PHB_CURL_is( 1 ) )
    {
+#if LIBCURL_VERSION_NUM >= 0x070F04
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
@@ -1791,13 +1788,12 @@ HB_FUNC( CURL_EASY_UNESCAPE )
          curl_free( buffer );
       }
       else
+#endif
          hb_retc_null();
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 /* ---------------------------------------------------------------------------- */
 /* Harbour interface (session independent) */
@@ -1853,17 +1849,17 @@ HB_FUNC( CURL_VERSION_INFO )
       hb_reta( 0 );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x070C00
-
 HB_FUNC( CURL_EASY_STRERROR )
 {
    if( HB_ISNUM( 1 ) )
+#if LIBCURL_VERSION_NUM >= 0x070C00
       hb_retc( curl_easy_strerror( ( CURLcode ) hb_parnl( 1 ) ) );
+#else
+      hb_retc_null();
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 /* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
 HB_FUNC( CURL_GETDATE )

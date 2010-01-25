@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
+ * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
  *
@@ -515,17 +516,17 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 #define HB_WIN_BITMAP_JPEG          2
 #define HB_WIN_BITMAP_PNG           3
 
-static int hbwin_BitmapType( const void * pImgBuf )
+static int hbwin_BitmapType( const void * pImgBuf, HB_SIZE size )
 {
    int iType = HB_WIN_BITMAP_UNKNOWN;
 
    if( pImgBuf )
    {
-      if( memcmp( pImgBuf, "BM", 2 ) == 0 )
+      if(      size > 2 && memcmp( pImgBuf, "BM", 2 ) == 0 )
          iType = HB_WIN_BITMAP_BMP;
-      else if( memcmp( pImgBuf, "\377\330\377", 3 ) == 0 )
+      else if( size > 3 && memcmp( pImgBuf, "\377\330\377", 3 ) == 0 )
          iType = HB_WIN_BITMAP_JPEG;
-      else if( memcmp( pImgBuf, "\211PNG", 4 ) == 0 )
+      else if( size > 4 && memcmp( pImgBuf, "\211PNG", 4 ) == 0 )
          iType = HB_WIN_BITMAP_PNG;
    }
 
@@ -534,7 +535,7 @@ static int hbwin_BitmapType( const void * pImgBuf )
 
 HB_FUNC( WIN_BITMAPTYPE )
 {
-   hb_retni( hbwin_BitmapType( hb_parc( 1 ) ) );
+   hb_retni( hbwin_BitmapType( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
 HB_FUNC( WIN_LOADBITMAPFILE )
@@ -557,7 +558,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
          hb_fsSeek( fhnd, 0, FS_SET );
 
-         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_BitmapType( pbmfh ) != HB_WIN_BITMAP_UNKNOWN )
+         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_BitmapType( pbmfh, ulSize ) != HB_WIN_BITMAP_UNKNOWN )
             hb_retclen_buffer( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
          else
             hb_xfree( pbmfh );
@@ -575,9 +576,12 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 #define CHECKPNGFORMAT     4120
 #endif
 
-static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf, ULONG ulSize, int * piErrCode )
+static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize, int * piErrCode )
 {
-   if( hDC && iType && pImgBuf && ulSize >= sizeof( BITMAPCOREHEADER ) )
+   if( hDC &&
+       iType != HB_WIN_BITMAP_UNKNOWN &&
+       pImgBuf &&
+       nSize >= sizeof( BITMAPCOREHEADER ) )
    {
       if( iType == HB_WIN_BITMAP_BMP )
          return HB_TRUE;
@@ -588,7 +592,7 @@ static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf
          iRes = ExtEscape( hDC, QUERYESCSUPPORT, sizeof( iRes ), ( LPCSTR ) &iRes, 0, 0 );
          if( iRes > 0 )
          {
-            if( ExtEscape( hDC, iType, ulSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
+            if( ExtEscape( hDC, iType, nSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
             {
                if( iRes == 1 )
                   return HB_TRUE;
@@ -625,9 +629,10 @@ static HB_BOOL hbwin_CheckPrnDrvFormat( HDC hDC, int iType, const void * pImgBuf
 HB_FUNC( WIN_CHECKPRNDRVFORMAT )
 {
    const char * pImgBuf = hb_parc( 2 );
+   HB_SIZE nSize = hb_parclen( 2 );
    int iErrCode = 0;
 
-   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf ), pImgBuf, hb_parclen( 2 ), &iErrCode ) );
+   hb_retl( hbwin_CheckPrnDrvFormat( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf, nSize ), pImgBuf, nSize, &iErrCode ) );
 
    hb_storni( iErrCode, 3 );
 }
@@ -637,17 +642,17 @@ HB_FUNC( WIN_DRAWBITMAP )
    BITMAPINFO * pbmi = NULL;
    BYTE * pBits = NULL;
    HDC hDC = hbwapi_par_HDC( 1 );
-   ULONG ulSize = hb_parclen( 2 );
+   HB_SIZE nSize = hb_parclen( 2 );
    BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
-   int iType = hbwin_BitmapType( pbmfh );
+   int iType = hbwin_BitmapType( pbmfh, nSize );
 
    /* TOFIX: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
-   if( hbwin_CheckPrnDrvFormat( hDC, iType, pbmfh, ulSize, NULL ) )
+   if( hbwin_CheckPrnDrvFormat( hDC, iType, pbmfh, nSize, NULL ) )
    {
-      int cxDib = hb_parni( 7 );
-      int cyDib = hb_parni( 8 );
+      int iWidth = hb_parni( 7 );
+      int iHeight = hb_parni( 8 );
 
       if( iType == HB_WIN_BITMAP_BMP )
       {
@@ -657,27 +662,27 @@ HB_FUNC( WIN_DRAWBITMAP )
          /* Remember there are 2 types of BitMap File */
          if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
          {
-            cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
-            cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
+            iWidth = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
+            iHeight = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
          }
          else
          {
-            cxDib = pbmi->bmiHeader.biWidth;
-            cyDib = abs( pbmi->bmiHeader.biHeight );
+            iWidth = pbmi->bmiHeader.biWidth;
+            iHeight = abs( pbmi->bmiHeader.biHeight );
          }
       }
-      else if( cxDib && cyDib )
+      else if( iWidth && iHeight )
       {
          BITMAPINFO bmi;
 
          memset( &bmi, 0, sizeof( bmi ) );
          bmi.bmiHeader.biSize        = sizeof( BITMAPINFO );
-         bmi.bmiHeader.biWidth       = cxDib;
-         bmi.bmiHeader.biHeight      = -cyDib; /* top-down image */
+         bmi.bmiHeader.biWidth       = iWidth;
+         bmi.bmiHeader.biHeight      = -iHeight; /* top-down image */
          bmi.bmiHeader.biPlanes      = 1;
          bmi.bmiHeader.biBitCount    = 0;
          bmi.bmiHeader.biCompression = ( iType == HB_WIN_BITMAP_JPEG ? BI_JPEG : BI_PNG );
-         bmi.bmiHeader.biSizeImage   = ulSize;
+         bmi.bmiHeader.biSizeImage   = ( DWORD ) nSize;
          pbmi = &bmi;
          pBits = ( BYTE * ) pbmfh;
       }
@@ -686,7 +691,7 @@ HB_FUNC( WIN_DRAWBITMAP )
       {
          SetStretchBltMode( hDC, COLORONCOLOR );
          hb_retl( StretchDIBits( hDC, hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ),
-                                 0, 0, cxDib, cyDib, pBits, pbmi,
+                                 0, 0, iWidth, iHeight, pBits, pbmi,
                                  DIB_RGB_COLORS, SRCCOPY ) != ( int ) GDI_ERROR );
       }
       else
@@ -696,39 +701,153 @@ HB_FUNC( WIN_DRAWBITMAP )
       hb_retl( HB_FALSE );
 }
 
+#define _JPEG_RET_OK                0
+#define _JPEG_RET_OVERRUN           1
+#define _JPEG_RET_INVALID           2
+#define _JPEG_RET_UNSUPPORTED       3
+
+#define _JPEG_CS_GRAYSCALE          1
+#define _JPEG_CS_RGB                2
+#define _JPEG_CS_CMYK               3
+
+static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * piHeight, int * piWidth, int * piColorSpace, int * piBPC )
+{
+   HB_SIZE nPos = 0;
+
+   HB_U16 tag;
+   HB_U16 height = 0;
+   HB_U16 width = 0;
+   HB_BYTE colorspace = 0;
+   HB_BYTE bpc = 0;
+
+   if( piHeight )
+      *piHeight = 0;
+   if( piWidth )
+      *piWidth = 0;
+   if( piColorSpace )
+      *piColorSpace = 0;
+   if( piBPC )
+      *piBPC = 0;
+
+   if( nPos >= nBufferSize )
+      return _JPEG_RET_OVERRUN;
+
+   tag = HB_SWAP_UINT16( ( HB_U16 ) HB_GET_LE_UINT16( buffer + nPos ) ); nPos += 2;
+
+   /* SOI marker */
+   if( tag != 0xFFD8 )
+      return _JPEG_RET_INVALID;
+
+   for( ;; )
+   {
+      HB_U16 size;
+
+      if( nPos >= nBufferSize )
+         return _JPEG_RET_OVERRUN;
+
+      tag = HB_SWAP_UINT16( ( HB_U16 ) HB_GET_LE_UINT16( buffer + nPos ) ); nPos += 2;
+
+      if( nPos >= nBufferSize )
+         return _JPEG_RET_OVERRUN;
+
+      size = HB_SWAP_UINT16( ( HB_U16 ) HB_GET_LE_UINT16( buffer + nPos ) ); nPos += 2;
+
+      /* SOF markers */
+      if( tag == 0xFFC0 ||
+          tag == 0xFFC1 ||
+          tag == 0xFFC2 ||
+          tag == 0xFFC9 )
+      {
+         if( nPos >= nBufferSize )
+            return _JPEG_RET_OVERRUN;
+
+         colorspace = *( buffer + nPos ); nPos += 1;
+
+         if( nPos >= nBufferSize )
+            return _JPEG_RET_OVERRUN;
+
+         height = HB_SWAP_UINT16( ( HB_U16 ) HB_GET_LE_UINT16( buffer + nPos ) ); nPos += 2;
+
+         if( nPos >= nBufferSize )
+            return _JPEG_RET_OVERRUN;
+
+         width = HB_SWAP_UINT16( ( HB_U16 ) HB_GET_LE_UINT16( buffer + nPos ) ); nPos += 2;
+
+         if( nPos >= nBufferSize )
+            return _JPEG_RET_OVERRUN;
+
+         bpc = *( buffer + nPos ); nPos += 1;
+
+         break;
+      }
+      else if( ( tag | 0x00FF ) != 0xFFFF ) /* lost marker */
+         return _JPEG_RET_UNSUPPORTED;
+
+      nPos += size - 2;
+
+      if( nPos >= nBufferSize )
+         return _JPEG_RET_OVERRUN;
+   }
+
+   if( piHeight )
+      *piHeight = ( int ) height;
+   if( piWidth )
+      *piWidth = ( int ) width;
+   if( piBPC )
+      *piBPC = ( int ) bpc;
+   if( piColorSpace )
+   {
+      switch( colorspace )
+      {
+         case 1: *piColorSpace = _JPEG_CS_GRAYSCALE; break;
+         case 3: *piColorSpace = _JPEG_CS_RGB; break;
+         case 4: *piColorSpace = _JPEG_CS_CMYK; break;
+      }
+   }
+
+   return _JPEG_RET_OK;
+}
+
 HB_FUNC( WIN_BITMAPDIMENSIONS )
 {
-   BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 1 );
+   const void * buffer = hb_parc( 1 );
+   HB_SIZE nSize = hb_parclen( 1 );
 
-   if( hb_parclen( 1 ) >= sizeof( BITMAPCOREHEADER ) && hbwin_BitmapType( pbmfh ) == HB_WIN_BITMAP_BMP )
+   int iType = hbwin_BitmapType( buffer, nSize );
+
+   int iHeight = 0;
+   int iWidth = 0;
+   HB_BOOL bRetVal = HB_FALSE;
+
+   if( iType == HB_WIN_BITMAP_BMP && nSize >= sizeof( BITMAPCOREHEADER ) )
    {
-      int cxDib, cyDib;
+      BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) buffer;
       BITMAPINFO * pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
 
       /* Remember there are 2 types of BitMap File */
       if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
       {
-         cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
-         cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
+         iWidth = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
+         iHeight = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
       }
       else
       {
-         cxDib = pbmi->bmiHeader.biWidth;
-         cyDib = abs( pbmi->bmiHeader.biHeight );
+         iWidth = pbmi->bmiHeader.biWidth;
+         iHeight = abs( pbmi->bmiHeader.biHeight );
       }
 
-      hb_storni( cxDib, 2 );
-      hb_storni( cyDib, 3 );
-
-      hb_retl( HB_TRUE );
+      bRetVal = HB_TRUE;
    }
-   else
+   else if( iType == HB_WIN_BITMAP_JPEG )
    {
-      hb_storni( 0, 2 );
-      hb_storni( 0, 3 );
-
-      hb_retl( HB_FALSE );
+      bRetVal = ( hb_jpeg_get_param( ( const HB_BYTE * ) buffer, nSize, &iHeight, &iWidth, NULL, NULL ) == _JPEG_RET_OK );
    }
+   /* TODO: Add PNG support */
+
+   hb_storni( iWidth, 2 );
+   hb_storni( iHeight, 3 );
+
+   hb_retl( bRetVal );
 }
 
 static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
