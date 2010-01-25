@@ -946,7 +946,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
       aadd( aPops, { "" } )
       //
-      IF !empty( ::oEV:getNames )
+      IF !empty( ::oEV:getNames() )
          aadd( aPops, { "" } )
          FOR EACH s IN ::oEV:getNames()
             aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
@@ -975,15 +975,14 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Close This Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
-      /*
-      IF !empty( ::oEV:getNames )
+      IF !empty( ::oEV:getNames() )
          aadd( aPops, { "" } )
          FOR EACH s IN ::oEV:getNames()
             aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
          NEXT
          aadd( aPops, { aSub, "Select an environment" } )
       ENDIF
-      */
+
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
