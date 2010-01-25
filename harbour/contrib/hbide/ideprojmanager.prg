@@ -531,11 +531,11 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
    ::oUI:signal( "buttonPathMk2"     , "clicked()", {|| ::PromptForPath( 'editPathMk2'  , 'Choose hbMK2.exe Folder...'   ) } )
    ::oUI:signal( "buttonPathEnv"     , "clicked()", {|| ::PromptForPath( 'editPathEnv'  , 'Choose hbIDE.env Folder...'   ), ;
-      ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathToOSPath( ::oUI:q_editPathEnv:text() + ::pathSep + "hbide.env" ) ) ) } )
+      ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oUI:q_editPathEnv:text(), "hbide.env" ) ) ) } )
 
    ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
    ::oUI:q_editPathEnv  :setText( ::aINI[ INI_HBIDE, PathEnv ] )
-   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ) )
+   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) ) )
 
    IF empty( ::aPrjProps )
       /*
@@ -1093,14 +1093,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    ::oProject := ::getProjectByTitle( cProject )
 
-   cTargetFN  := hbide_pathToOSPath( ::oProject:destination + ::pathSep + ;
-                      iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
-
-   cHbpFN     := hbide_pathToOSPath( ::oProject:wrkDirectory + ::pathSep + ;
-                      iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
-
-   //cHbpPath  := cHbpFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
-   cHbpPath  := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"
+   cTargetFN  := hbide_pathFile( ::oProject:destination, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
+   cHbpFN     := hbide_pathFile( ::oProject:wrkDirectory, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
+ * cHbpPath   := cHbpFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
+   cHbpPath   := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"
 
    IF !( ::lPPO )
       IF     ::oProject:type == "Lib"
@@ -1151,7 +1147,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
             // pull your settings, even though this is not the active project - vailtom
             aadd( aHbp, hbide_pathToOSPath( oEdit:sourceFile ) )
 
-            ::cPPO := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + '.ppo' )
+            ::cPPO := hbide_pathFile( oEdit:cPath, oEdit:cFile + '.ppo' )
             FErase( ::cPPO )
 
          ELSE
@@ -1239,6 +1235,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
    IF ::lLaunch
       IF nExitCode == 0
          ::launchProject( ::cProjectInProcess )
+      ELSE
+         ::oOutputResult:oWidget:append( "Sorry, cannot launch project because of errors..." )
       ENDIF
    ENDIF
    IF ::lPPO .AND. hb_FileExists( ::cPPO )
@@ -1262,11 +1260,9 @@ METHOD IdeProjManager:launchProject( cProject )
       RETURN Self
    ENDIF
 
-   oProject := ::getProjectByTitle( cProject )
+   oProject  := ::getProjectByTitle( cProject )
 
-   cTargetFN := hbide_pathToOSPath( oProject:destination + ::pathSep + ;
-                      iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
-
+   cTargetFN := hbide_pathFile( oProject:destination, iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
 #ifdef __PLATFORM__WINDOWS
    IF oProject:type == "Executable"
       cTargetFN += '.exe'
@@ -1277,40 +1273,16 @@ METHOD IdeProjManager:launchProject( cProject )
       cTmp := "Launch application error: file not found " + cTargetFN + "!"
 
    ELSEIF oProject:type == "Executable"
+      cTmp := "Launching application [ " + cTargetFN + " ]"
+
       qProcess := QProcess():new()
       //
-      //qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
+      qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
 
-      #if 1
-         cTmp := "Launching application with environment [ " + cTargetFN + " ]"
-
-         #if 0
-         qStrList := QStringList():new()
-         ::cBatch := ::oEV:prepareBatch( ::cWrkEnvironment )  /* at this point we only know default environment */
-         IF empty( ::cBatch )
-            qStrList:append( "/c " + cTargetFN )
-         ELSE
-            qStrList:append( "/c  " + ::cBatch + " && " + cTargetFN )
-         ENDIF
-         qProcess:startDetached_1( "cmd.exe", qStrList )
-         #endif
-
-         qProcess:startDetached_2( cTargetFN )
-         qProcess:waitForStarted()
-         qProcess:pPtr := 0
-         qProcess      := NIL
-
-         //qProcess:start( "cmd.exe", qStrList )
-
-      #else
-         cTmp := "Launching application [ " + cTargetFN + " ]"
-
-         qProcess:startDetached_2( cTargetFN )
-         qProcess:waitForStarted()
-         qProcess:pPtr := 0
-         qProcess      := NIL
-
-      #endif
+      qProcess:startDetached_2( cTargetFN )
+      qProcess:waitForStarted()
+      qProcess:pPtr := 0
+      qProcess      := NIL
 
    ELSE
       cTmp := "Launching application [ " + cTargetFN + " ] ( not applicable )."
@@ -1318,6 +1290,7 @@ METHOD IdeProjManager:launchProject( cProject )
    ENDIF
 
    ::oOutputResult:oWidget:append( cTmp )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
