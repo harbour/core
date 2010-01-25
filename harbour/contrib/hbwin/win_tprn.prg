@@ -780,7 +780,7 @@ CREATE CLASS WIN_BMP
    METHOD Create()
    METHOD Destroy()
    METHOD Draw( oPrn, aRectangle, aDimXY )
-   METHOD IsSupported( oPrn, nErrCode )
+   METHOD IsSupported( oPrn )
 
    VAR Type     INIT 0                  // Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG
    VAR DimXY    INIT { 0, 0 }           // Image Dimensions X Y pixels
@@ -828,7 +828,7 @@ METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object r
    ENDIF
    RETURN oPrn:DrawBitMap( Self )
 
-METHOD IsSupported( oPrn, nErrCode ) CLASS WIN_BMP
+METHOD IsSupported( oPrn ) CLASS WIN_BMP
    RETURN win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) == 0
 
 #ifdef HB_COMPAT_XPP

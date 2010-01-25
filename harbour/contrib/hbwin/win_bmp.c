@@ -133,7 +133,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 #define CHECKPNGFORMAT     4120
 #endif
 
-static int hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize, int * piErrCode )
+static int hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize )
 {
    if( hDC &&
        iType != HB_WIN_BITMAP_UNKNOWN &&
@@ -187,7 +187,7 @@ HB_FUNC( WIN_DRAWBITMAP )
    /* TOFIX: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
-   if( hbwin_BitmapIsSupported( hDC, iType, pbmfh, nSize, NULL ) == 0 )
+   if( hbwin_BitmapIsSupported( hDC, iType, pbmfh, nSize ) == 0 )
    {
       int iWidth = hb_parni( 7 );
       int iHeight = hb_parni( 8 );
@@ -494,7 +494,6 @@ HB_FUNC( WIN_BITMAPDIMENSIONS )
    else if( iType == HB_WIN_BITMAP_PNG )
    {
       bRetVal = ( hb_png_get_param( ( const HB_BYTE * ) buffer, nSize, &iHeight, &iWidth, NULL, NULL ) == _PNG_RET_OK );
-      hb_storni( err, 4 );
    }
 #endif
 
