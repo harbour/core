@@ -60,6 +60,10 @@
 #include "hbwapi.h"
 #include "hbwinuni.h"
 
+#if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
+   #include "png.h"
+#endif
+
 #if ! defined( HB_OS_WIN_CE )
 
 /* Functions for loading & printing bitmaps */
@@ -129,7 +133,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 #define CHECKPNGFORMAT     4120
 #endif
 
-static HB_BOOL hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize, int * piErrCode )
+static int hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize, int * piErrCode )
 {
    if( hDC &&
        iType != HB_WIN_BITMAP_UNKNOWN &&
@@ -137,7 +141,7 @@ static HB_BOOL hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf
        nSize >= sizeof( BITMAPCOREHEADER ) )
    {
       if( iType == HB_WIN_BITMAP_BMP )
-         return HB_TRUE;
+         return 0;
       else
       {
          int iRes = iType = ( iType == HB_WIN_BITMAP_JPEG ? CHECKJPEGFORMAT : CHECKPNGFORMAT );
@@ -148,46 +152,27 @@ static HB_BOOL hbwin_BitmapIsSupported( HDC hDC, int iType, const void * pImgBuf
             if( ExtEscape( hDC, iType, nSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
             {
                if( iRes == 1 )
-                  return HB_TRUE;
+                  return 0;
                else
-               {
-                  if( piErrCode )
-                     *piErrCode = 4;
-                  return HB_FALSE;
-               }
+                  return -4;
             }
             else
-            {
-               if( piErrCode )
-                  *piErrCode = 3;
-               return HB_FALSE;
-            }
+               return -3;
          }
          else
-         {
-            if( piErrCode )
-               *piErrCode = 2;
-            return HB_FALSE;
-         }
+            return -2;
       }
    }
    else
-   {
-      if( piErrCode )
-         *piErrCode = 1;
-      return HB_FALSE;
-   }
+      return -1;
 }
 
 HB_FUNC( WIN_BITMAPISSUPPORTED )
 {
    const char * pImgBuf = hb_parc( 2 );
    HB_SIZE nSize = hb_parclen( 2 );
-   int iErrCode = 0;
 
-   hb_retl( hbwin_BitmapIsSupported( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf, nSize ), pImgBuf, nSize, &iErrCode ) );
-
-   hb_storni( iErrCode, 3 );
+   hb_retni( hbwin_BitmapIsSupported( hbwapi_par_HDC( 1 ), hbwin_BitmapType( pImgBuf, nSize ), pImgBuf, nSize ) );
 }
 
 HB_FUNC( WIN_DRAWBITMAP )
@@ -202,7 +187,7 @@ HB_FUNC( WIN_DRAWBITMAP )
    /* TOFIX: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
-   if( hbwin_BitmapIsSupported( hDC, iType, pbmfh, nSize, NULL ) )
+   if( hbwin_BitmapIsSupported( hDC, iType, pbmfh, nSize, NULL ) == 0 )
    {
       int iWidth = hb_parni( 7 );
       int iHeight = hb_parni( 8 );
@@ -253,6 +238,8 @@ HB_FUNC( WIN_DRAWBITMAP )
    else
       hb_retl( HB_FALSE );
 }
+
+/* .jpeg size detection code. [vszakats] */
 
 #define _JPEG_RET_OK                0
 #define _JPEG_RET_OVERRUN           1
@@ -361,6 +348,114 @@ static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int *
    return _JPEG_RET_OK;
 }
 
+/* .png size detection code. [vszakats] */
+
+#if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
+
+#define _PNG_RET_OK                 0
+#define _PNG_RET_ERR_INVALID1       1
+#define _PNG_RET_ERR_INVALID2       2
+#define _PNG_RET_ERR_INIT1          3
+#define _PNG_RET_ERR_INIT2          4
+#define _PNG_RET_ERR_INIT3          5
+#define _PNG_RET_ERR_READ           6
+
+typedef struct
+{
+   const HB_BYTE * buffer;
+   HB_SIZE nLen;
+   HB_SIZE nPos;
+   HB_BOOL bOk;
+} HB_PNG_READ;
+
+static void hb_png_read_func( png_structp png_ptr, png_bytep data, png_uint_32 length )
+{
+   HB_PNG_READ * hb_png_read_data = ( HB_PNG_READ * ) png_get_io_ptr( png_ptr );
+   png_uint_32 pos;
+
+   for( pos = 0; pos < length && hb_png_read_data->nPos < hb_png_read_data->nLen; )
+      data[ pos++ ] = hb_png_read_data->buffer[ hb_png_read_data->nPos++ ];
+
+   hb_png_read_data->bOk = ( length == pos );
+}
+
+static int hb_png_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * piHeight, int * piWidth, int * piColorSpace, int * piBPC )
+{
+   png_structp png_ptr;
+   png_infop info_ptr;
+   png_byte header[ 8 ];
+
+   HB_PNG_READ hb_png_read_data;
+   int iResult;
+
+   if( piHeight )
+      *piHeight = 0;
+   if( piWidth )
+      *piWidth = 0;
+   if( piColorSpace )
+      *piColorSpace = 0;
+   if( piBPC )
+      *piBPC = 0;
+
+   if( nBufferSize < sizeof( header ) )
+      return _PNG_RET_ERR_INVALID1;
+
+   memcpy( header, buffer, sizeof( header ) );
+
+   if( png_sig_cmp( header, ( png_size_t ) 0, sizeof( header ) ) )
+      return _PNG_RET_ERR_INVALID2;
+
+   png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+   if( ! png_ptr )
+      return _PNG_RET_ERR_INIT1;
+
+   info_ptr = png_create_info_struct( png_ptr );
+   if( ! info_ptr )
+   {
+      png_destroy_read_struct( &png_ptr, ( png_infopp ) NULL, ( png_infopp ) NULL );
+      return _PNG_RET_ERR_INIT2;
+   }
+
+   hb_png_read_data.buffer = buffer;
+   hb_png_read_data.nLen = nBufferSize;
+   hb_png_read_data.nPos = sizeof( header );
+   hb_png_read_data.bOk = HB_TRUE;
+
+   png_set_sig_bytes( png_ptr, sizeof( header ) );
+   png_set_read_fn( png_ptr, ( void * ) &hb_png_read_data, ( png_rw_ptr ) &hb_png_read_func );
+
+   png_read_info( png_ptr, info_ptr );
+
+   if( hb_png_read_data.bOk )
+   {
+      png_uint_32 width;
+      png_uint_32 height;
+      int bit_depth;
+      int color_type;
+
+      png_get_IHDR( png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, NULL, NULL, NULL );
+
+      if( piHeight )
+         *piHeight = ( int ) height;
+      if( piWidth )
+         *piWidth = ( int ) width;
+      if( piBPC )
+         *piBPC = bit_depth;
+      if( piColorSpace )
+         *piColorSpace = color_type;
+
+      iResult = _PNG_RET_OK;
+   }
+   else
+      iResult = _PNG_RET_ERR_READ;
+
+   png_destroy_read_struct( &png_ptr, &info_ptr, ( png_infopp ) NULL );
+
+   return iResult;
+}
+
+#endif
+
 HB_FUNC( WIN_BITMAPDIMENSIONS )
 {
    const void * buffer = hb_parc( 1 );
@@ -395,7 +490,13 @@ HB_FUNC( WIN_BITMAPDIMENSIONS )
    {
       bRetVal = ( hb_jpeg_get_param( ( const HB_BYTE * ) buffer, nSize, &iHeight, &iWidth, NULL, NULL ) == _JPEG_RET_OK );
    }
-   /* TODO: Add PNG support */
+#if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
+   else if( iType == HB_WIN_BITMAP_PNG )
+   {
+      bRetVal = ( hb_png_get_param( ( const HB_BYTE * ) buffer, nSize, &iHeight, &iWidth, NULL, NULL ) == _PNG_RET_OK );
+      hb_storni( err, 4 );
+   }
+#endif
 
    hb_storni( iWidth, 2 );
    hb_storni( iHeight, 3 );

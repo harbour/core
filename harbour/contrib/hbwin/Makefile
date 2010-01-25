@@ -59,6 +59,25 @@ PRG_HEADERS := \
    hbwin.ch \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)
+
+   _DET_DSP_NAME := libpng
+   _DET_VAR_INC_ := HB_INC_PNG
+   _DET_VAR_HAS_ := HB_HAS_PNG
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP :=
+   _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/libpng)
+   _DET_INC_HEAD := /png.h
+   include $(TOP)$(ROOT)config/detfun.mk
+
+   ifneq ($(HB_HAS_PNG),)
+      HB_CFLAGS += -DHB_HAS_PNG $(foreach d,$(HB_HAS_PNG),-I$(d))
+
+      ifneq ($(HB_HAS_ZLIB),)
+         HB_CFLAGS += -DHB_HAS_ZLIB $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+      endif
+   endif
+
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 else

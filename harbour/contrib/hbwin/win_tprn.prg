@@ -829,7 +829,7 @@ METHOD Draw( oPrn, aRectangle, aDimXY ) CLASS WIN_BMP // Pass a WIN_PRN object r
    RETURN oPrn:DrawBitMap( Self )
 
 METHOD IsSupported( oPrn, nErrCode ) CLASS WIN_BMP
-   RETURN win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap, @nErrCode )
+   RETURN win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) == 0
 
 #ifdef HB_COMPAT_XPP
 
