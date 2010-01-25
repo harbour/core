@@ -955,11 +955,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       aLIB_BASE_2_MT    := { "rtlmt", "vmmt" }
       aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
       aLIB_BASE_NULRDD  := { "nulsys" }
-      aLIB_BASE_RDD     := { "rdd"  , "usrrdd"  , "rdds"  , "dbfntx"  , "dbfcdx"  , "dbffpt"  , "rdd"  , "hsx"  , "hbsix"   }
-      aLIB_BASE_RDD_MT  := { "rddmt", "usrrddmt", "rddsmt", "dbfntxmt", "dbfcdxmt", "dbffptmt", "rddmt", "hsxmt", "hbsixmt" }
+      aLIB_BASE_RDD     := { "rdd"  , "usrrdd", "dbfntx", "dbfcdx", "dbfnsx", "dbffpt", "rdd"  , "hsx", "hbsix" }
+      aLIB_BASE_RDD_MT  := { "rddmt", "usrrdd", "dbfntx", "dbfcdx", "dbfnsx", "dbffpt", "rddmt", "hsx", "hbsix" }
       aLIB_BASE_CPLR    := {}
-      aLIB_BASE_3       := { "macro"  , "pp"  , "common" }
-      aLIB_BASE_3_MT    := { "macromt", "ppmt", "common" }
+      aLIB_BASE_3       := { "macro"  , "pp", "common" }
+      aLIB_BASE_3_MT    := { "macromt", "pp", "common" }
       cLIB_BASE_PCRE    := "pcrepos"
       cLIB_BASE_ZLIB    := "zlib"
    ENDIF

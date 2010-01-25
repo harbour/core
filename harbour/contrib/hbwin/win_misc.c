@@ -199,7 +199,7 @@ HB_FUNC( WIN_WIDETOANSI )
 {
    HB_SIZE nLen = hb_parclen( 1 );
    LPCWSTR lpSrcWide = ( LPCWSTR ) hb_parcx( 1 );
-   DWORD dwLength = WideCharToMultiByte( CP_ACP, 0, lpSrcWide, ( int ) nLen, NULL, 0, NULL, NULL ) / sizeof( wchar_t );
+   DWORD dwLength = WideCharToMultiByte( CP_ACP, 0, lpSrcWide, ( int ) nLen, NULL, 0, NULL, NULL );
    LPSTR lpDstMB = ( LPSTR ) hb_xgrab( dwLength + 1 );
 
    WideCharToMultiByte( CP_ACP, 0, lpSrcWide, ( int ) nLen, lpDstMB, dwLength + 1, NULL, NULL );
