@@ -3753,7 +3753,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          /* Do entry function detection on platform required and supported */
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ! lStopAfterCComp .AND. l_cMAIN == NIL
-            tmp := iif( Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) $ ".prg|.clp" .OR. Empty( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ), FN_ExtSet( hbmk[ _HBMK_cFIRST ], ".c" ), hbmk[ _HBMK_cFIRST ] )
+            tmp := iif( Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) $ ".prg|.clp" .OR. Empty( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ), FN_DirExtSet( hbmk[ _HBMK_cFIRST ], cWorkDir, ".c" ), hbmk[ _HBMK_cFIRST ] )
             IF ! Empty( tmp := getFirstFunc( hbmk, tmp ) )
                l_cMAIN := tmp
             ENDIF

@@ -16,8 +16,11 @@
 FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
    LOCAL hCmds
 
+   LOCAL cName
+
    /* We add here a little validation to ensure that we can not be hacked. [vailtom] */
-   IF Lower( ProcName( 1 ) + "-" + ProcFile( 1 ) ) != "main-netiosrv.prg"
+   hb_FNameSplit( ProcFile( 1 ), NIL, @cName )
+   IF Lower( ProcName( 1 ) + "-" + cName ) != "main-netiosrv"
       RETURN NIL
    ENDIF
 
