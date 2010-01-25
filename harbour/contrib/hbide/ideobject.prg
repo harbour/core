@@ -89,6 +89,7 @@ CLASS IdeObject
    ACCESS oDK                                     INLINE ::oIde:oDK
    ACCESS oAC                                     INLINE ::oIde:oAC
    ACCESS oSM                                     INLINE ::oIde:oSM
+   ACCESS oEV                                     INLINE ::oIde:oEV
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
 
@@ -108,6 +109,10 @@ CLASS IdeObject
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
    ACCESS cWrkCodec                               INLINE ::oIde:cWrkCodec
+   ACCESS cWrkPathMk2                             INLINE ::oIde:cWrkPathMk2
+   ACCESS cWrkPathEnv                             INLINE ::oIde:cWrkPathEnv
+   ACCESS cWrkEnvironment                         INLINE ::oIde:cWrkEnvironment
+   //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
    ACCESS cLastFileOpenPath                       INLINE ::oIde:cLastFileOpenPath

@@ -91,6 +91,9 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "ThemesDialogGeometry   = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] )
    aadd( txt_, "CurrentTheme           = " + oIde:cWrkTheme                               )
    aadd( txt_, "CurrentCodec           = " + oIde:cWrkCodec                               )
+   aadd( txt_, "PathMk2                = " + oIde:aIni[ INI_HBIDE, PathMk2              ] )
+   aadd( txt_, "PathEnv                = " + oIde:aIni[ INI_HBIDE, PathEnv              ] )
+   aadd( txt_, "CurrentEnvironment     = " + oIde:cWrkEnvironment                         )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -161,8 +164,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
    LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
                       "functionlistvisible", "functionlistgeometry", "recenttabindex"     , ;
                       "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
-                      "finddialoggeometry" , "themesdialoggeometry", "currenttheme",        ;
-                      "currentcodec" }
+                      "finddialoggeometry" , "themesdialoggeometry", "currenttheme"       , ;
+                      "currentcodec"       , "pathmk2"             , "pathenv"            , ;
+                      "currentenvironment" }
 
    /* Initiate the place holders */
    oIde:aIni := Array( INI_SECTIONS_COUNT )

@@ -7,6 +7,7 @@ DestinationFolder = <IdeSrc>projects
 Output            = hbide
 LaunchParams      = 
 LaunchProgram     = 
+BackupFolder      = 
  
 [ FLAGS ]
 ../../hbxbp/hbxbp.hbc

@@ -98,7 +98,7 @@ PROCEDURE hbide_justACall()
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_execPopup( aPops, aPos, qParent )
-   LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_
+   LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
 
    qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
 
@@ -108,6 +108,13 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
       ELSE
          IF hb_isObject( aPops[ i, 1 ] )
             qPop:addAction_4( aPops[ i, 1 ] )
+         ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
+            qSub := QMenu():new( qPop )
+            FOR EACH a_ IN aPops[ i, 1 ]
+               qSub:addAction( a_[ 1 ] )
+            NEXT
+            qSub:setTitle( aPops[ i,2 ] )
+            qPop:addMenu( qSub )
          ELSE
             qPop:addAction( aPops[ i, 1 ] )
          ENDIF
@@ -125,9 +132,16 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
                xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
                EXIT
             ENDIF
+         ELSEIF hb_isArray( a_[ 1 ] )
+            FOR EACH b_ IN a_[ 1 ]
+               IF b_[ 1 ] == cAct
+                  xRet := eval( b_[ 2 ], cAct )
+                  EXIT
+               ENDIF
+            NEXT
          ELSE
             IF a_[ 1 ] == cAct
-               xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
+               xRet := eval( aPops[ a_:__enumIndex(), 2 ], cAct )
                EXIT
             ENDIF
          ENDIF
@@ -335,7 +349,7 @@ FUNCTION hbide_fetchHbiStructFromFile( cProject )
 STATIC FUNCTION hbide_pullHbiStruct( a_ )
    LOCAL n, s, nPart, cKey, cVal, ss
    LOCAL aPrp := { "Type", "Title", "Location", "WorkingFolder", "DestinationFolder", ;
-                                            "Output", "LaunchParams", "LaunchProgram" }
+                   "Output", "LaunchParams", "LaunchProgram", "BackupFolder" }
 
    LOCAL a1_0 := afill( array( PRJ_PRP_PRP_VRBLS ), "" )
    LOCAL a1_1 := {}
@@ -565,6 +579,12 @@ FUNCTION hbide_pathNormalized( cPath, lLower )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_pathFile( cPath, cFile )
+   cPath := iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, len( cPath ) - 1 ), cPath )
+   RETURN hbide_pathToOSPath( cPath + "\" + cFile )
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_pathToOSPath( cPath )
 
    cPath := strtran( cPath, "/" , hb_osPathSeparator() )
@@ -763,8 +783,22 @@ FUNCTION hbide_parseKeyValPair( s, cKey, cVal )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_parseFilter( s, cKey, cVal )
+   LOCAL n, n1, lYes := .f.
+
+   IF ( n := at( "{", s ) ) > 0
+      IF ( n1 := at( "}", s ) ) > 0
+         cKey := alltrim( substr( s, n+1, n1-n-1 ) )
+         cVal := alltrim( substr( s, n1+1 ) )
+         lYes := .t.
+      ENDIF
+   ENDIF
+   RETURN lYes
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_dbg( ... )
-   HB_TRACE( HB_TR_ALWAYS, procname(1),... )
+   HB_TRACE( HB_TR_ALWAYS, ... )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -805,8 +839,7 @@ FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathProc( cPathR, cPathA )
-   LOCAL cDirA
-   LOCAL cDirR, cDriveR, cNameR, cExtR
+   LOCAL cDirA, cDirR, cDriveR, cNameR, cExtR
 
    IF Empty( cPathA )
       RETURN cPathR

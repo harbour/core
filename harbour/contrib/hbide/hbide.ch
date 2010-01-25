@@ -82,8 +82,11 @@
 #define ThemesDialogGeometry                      11
 #define CurrentTheme                              12
 #define CurrentCodec                              13
+#define PathMk2                                   14
+#define PathEnv                                   15
+#define CurrentEnvironment                        16
 
-#define INI_HBIDE_VRBLS                           13
+#define INI_HBIDE_VRBLS                           16
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
@@ -101,8 +104,9 @@
 #define PRJ_PRP_OUTPUT                            6
 #define PRJ_PRP_LPARAMS                           7
 #define PRJ_PRP_LPROGRAM                          8
+#define PRJ_PRP_BACKUP                            9
 //
-#define PRJ_PRP_PRP_VRBLS                         8
+#define PRJ_PRP_PRP_VRBLS                         9
 
 /* Project Properties array elements */
 #define E_qPrjType                                1
@@ -127,6 +131,7 @@
 #define SB_PNL_SELECTEDCHARS                      6
 #define SB_PNL_MODIFIED                           7
 #define SB_PNL_M_2                                8
+#define SB_PNL_ENVIRON                            8
 #define SB_PNL_STREAM                             9
 #define SB_PNL_EDIT                              10
 #define SB_PNL_SEARCH                            11

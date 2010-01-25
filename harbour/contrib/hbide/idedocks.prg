@@ -72,7 +72,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeDockS INHERIT IdeObject
+CLASS IdeDocks INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
 
@@ -94,6 +94,7 @@ CLASS IdeDockS INHERIT IdeObject
    METHOD toggleBottomDocks()
    METHOD setStatusText( nPart, xValue )
    METHOD getMarkWidget( nIndex )
+   METHOD dispEnvironment( cEnviron )
 
    ENDCLASS
 
@@ -413,7 +414,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  30 )
    ::oSBar:addItem( "", , , , "M_1"      ):oWidget:setMinimumWidth(  30 )
    ::oSBar:addItem( "", , , , "Modified" ):oWidget:setMinimumWidth(  50 )
-   ::oSBar:addItem( "", , , , "M_2"      ):oWidget:setMinimumWidth(  30 )
+   ::oSBar:addItem( "", , , , "Environ"  ):oWidget:setMinimumWidth(  30 )
    ::oSBar:addItem( "", , , , "Stream"   ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Edit"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
@@ -489,6 +490,12 @@ METHOD IdeDocks:toggleBottomDocks()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:dispEnvironment( cEnviron )
+   ::setStatusText( SB_PNL_ENVIRON, cEnviron )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:setStatusText( nPart, xValue )
    LOCAL oPanel := ::oSBar:getItem( nPart )
 
@@ -510,6 +517,8 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       oPanel:caption := iif( xValue, "Modified", "" )
       EXIT
    CASE SB_PNL_M_2
+   CASE SB_PNL_ENVIRON
+      oPanel:caption := "Env: " + xValue
       EXIT
    CASE SB_PNL_STREAM
       EXIT

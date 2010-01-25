@@ -9,6 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbxbp
 
 PRG_SOURCES := \
+   hbpprocess.prg \
    xbp3state.prg \
    xbpappevent.prg \
    xbpbitmap.prg \

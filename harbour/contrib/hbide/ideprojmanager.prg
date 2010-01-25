@@ -70,18 +70,128 @@
 #include "hbclass.ch"
 
 /*----------------------------------------------------------------------*/
+//
+//                           Class IdeEnvironments
+//
+/*----------------------------------------------------------------------*/
 
-#define CHN_BGN                                   1
-#define CHN_OUT                                   2
-#define CHN_ERR                                   3
-#define CHN_FIN                                   4
-#define CHN_STT                                   5
-#define CHN_ERE                                   6
-#define CHN_CLO                                   7
-#define CHN_BYT                                   8
-#define CHN_RCF                                   9
-#define CHN_REA                                   10
+CLASS IdeEnvironments
 
+   DATA   oIde
+   DATA   cEnvFile
+   DATA   aNames                                  INIT {}
+   DATA   aEnvrns                                 INIT {}
+   DATA   aShellContents                          INIT {}
+   DATA   aCommons                                INIT {}
+
+   METHOD new( oIde, cEnvFile )
+   METHOD create( oIde, cEnvFile )
+   METHOD parse( aContents )
+   METHOD prepareBatch( cEnviron )
+   METHOD getNames()                              INLINE ::aNames
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:new( oIde, cEnvFile )
+
+   ::oIde     := oIde
+   ::cEnvFile := cEnvFile
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:create( oIde, cEnvFile )
+   LOCAL a_
+
+   DEFAULT oIde     TO ::oIde
+   DEFAULT cEnvFile TO ::cEnvFile
+
+   ::oIde     := oIde
+   ::cEnvFile := cEnvFile
+
+   IF empty( ::cEnvFile ) .OR. !hb_fileExists( ::cEnvFile )
+      RETURN Self
+   ENDIF
+
+   a_:= hbide_readSource( ::cEnvFile )
+
+   ::parse( a_ )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:parse( aContents )
+   LOCAL s, cPart, cEnv, a_, cKey, cVal
+
+   a_:= {}
+   cEnv := ""
+   FOR EACH s IN aContents
+      s := alltrim( s )
+      IF empty( s ) .OR. left( s, 1 ) == "#"                     /* Remark */
+         LOOP
+      ENDIF
+      IF left( s, 1 ) == "["
+         s := alltrim( strtran( s, "[", "" ) )
+         s := alltrim( strtran( s, "]", "" ) )
+         IF lower( s ) == "common"
+            cPart := "common"
+         ELSE
+            cPart := "environment"
+            IF ( s != cEnv ) .AND. !empty( cEnv )
+               aadd( ::aNames, cEnv )
+               aadd( ::aEnvrns, { cEnv, a_ } )
+            ENDIF
+            cEnv := s
+            a_:= {}
+         ENDIF
+      ELSE
+         IF cPart == "common"
+            IF hbide_parseKeyValPair( s, @cKey, @cVal )
+               aadd( ::aCommons, { lower( cKey ), cVal } )       /* Format Later */
+            ENDIF
+         ELSEIF cPart == "environment"
+            IF hbide_parseFilter( s, @cKey, @cVal )
+               aadd( a_, { lower( cKey ), cVal } )
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+   IF !empty( cEnv ) .AND. !empty( a_ )
+      aadd( ::aNames, cEnv )
+      aadd( ::aEnvrns, { cKey, a_ } )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:prepareBatch( cEnviron )
+   LOCAL n, cFile := space( 255 ), s, k, nHandle, a_
+
+   IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnviron } ) ) > 0
+      IF ( nHandle := HB_FTempCreateEx( @cFile, NIL, "ide_", ".bat" ) ) > 0
+         k := ""
+         FOR EACH a_ IN ::aEnvrns[ n, 2 ]
+            s := a_[ 1 ]
+            IF s == "content"
+               k += a_[ 2 ] + CRLF
+            ENDIF
+         NEXT
+         fWrite( nHandle, k )
+         fClose( nHandle )
+      ENDIF
+   ENDIF
+
+   RETURN cFile
+
+/*----------------------------------------------------------------------*/
+//
+//                             Class IdeProject
+//
 /*----------------------------------------------------------------------*/
 
 CLASS IdeProject
@@ -97,6 +207,7 @@ CLASS IdeProject
    DATA   wrkDirectory                            INIT hb_dirBase() + "projects"
    DATA   destination                             INIT hb_dirBase() + "projects"
    DATA   outputName                              INIT hb_dirBase() + "projects"
+   DATA   backup                                  INIT ""
    DATA   launchParams                            INIT ""
    DATA   launchProgram                           INIT ""
    DATA   hbpFlags                                INIT {}
@@ -104,9 +215,10 @@ CLASS IdeProject
    DATA   metaData                                INIT {}
    DATA   dotHbp                                  INIT ""
    DATA   compilers                               INIT ""
-   DATA   hbmk2dir                                INIT hb_getenv( "HBIDE_DIR_HBMK2" )
+   DATA   cPathMk2                                INIT hb_getenv( "HBIDE_DIR_HBMK2" )
+   DATA   cPathEnv                                INIT hb_DirBase() + "resources"
 
-   METHOD new( aProps )
+   METHOD new( oIde, aProps )
    METHOD applyMeta( s )
    METHOD expandMeta( s )
 
@@ -114,7 +226,7 @@ CLASS IdeProject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProject:new( aProps )
+METHOD IdeProject:new( oIde, aProps )
    LOCAL b_, a_
 
    IF hb_isArray( aProps ) .AND. !empty( aProps )
@@ -147,6 +259,12 @@ METHOD IdeProject:new( aProps )
       ENDIF
       IF empty( ::wrkDirectory )
          ::wrkDirectory := ::location
+      ENDIF
+      IF !empty( oIde:aINI[ INI_HBIDE, PathMk2 ] )
+         ::cPathMk2 := oIde:aINI[ INI_HBIDE, PathMk2 ]
+      ENDIF
+      IF !empty( oIde:aINI[ INI_HBIDE, PathEnv ] )
+         ::cPathEnv := oIde:aINI[ INI_HBIDE, PathEnv ]
       ENDIF
 
       FOR EACH a_ IN ::metaData
@@ -193,7 +311,6 @@ CLASS IdeProjManager INHERIT IdeObject
    DATA   cSaveTo
    DATA   aPrjProps                               INIT {}
 
-   DATA   qProcess
    DATA   nStarted                                INIT 0
 
    DATA   lLaunch                                 INIT .f.
@@ -201,6 +318,8 @@ CLASS IdeProjManager INHERIT IdeObject
    DATA   cPPO                                    INIT ""
    DATA   lPPO                                    INIT .f.
    DATA   oProject
+   DATA   cBatch
+   DATA   oProcess
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -224,10 +343,10 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD closeProject( cProject )
    METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
    METHOD buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   METHOD buildProcess()
-   METHOD readProcessInfo( nMode, i, ii )
    METHOD launchProject( cProject )
-
+   METHOD showOutput( cOutput, mp2, oProcess )
+   METHOD finished( nExitCode, nExitStatus, oProcess )
+   METHOD saveEnvironments()
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -327,7 +446,7 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
 
    IF lFetch
       /* Access/Assign via this object */
-      ::oProject := IdeProject():new( ::aPrjProps )
+      ::oProject := IdeProject():new( ::oIde, ::aPrjProps )
       //
       ::fetchProperties()
       IF !empty( ::cSaveTo ) .and. hb_FileExists( ::cSaveTo )
@@ -380,13 +499,18 @@ METHOD IdeProjManager:fetchProperties()
    ENDCASE
 
    cLukupPng := ::resPath + "folder.png"
+   //
    ::oUI:q_buttonChoosePrjLoc:setIcon( cLukupPng )
-   ::oUI:q_buttonChooseWd:setIcon( cLukupPng )
-   ::oUI:q_buttonChooseDest:setIcon( cLukupPng )
+   ::oUI:q_buttonChooseWd    :setIcon( cLukupPng )
+   ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
+   ::oUI:q_buttonBackup      :setIcon( cLukupPng )
+   ::oUI:q_buttonPathMk2     :setIcon( cLukupPng )
+   ::oUI:q_buttonPathEnv     :setIcon( cLukupPng )
+   ::oUI:q_buttonSaveEnv     :setIcon( ::resPath + "save.png" )
 
-   ::oUI:q_buttonSelect:setIcon( ::resPath + "open.png" )
-   ::oUI:q_buttonSort:setIcon( ::resPath + "toupper.png" )     // TODO: toupper.png => atoz.png
-   ::oUI:q_buttonSortZA:setIcon( ::resPath + "tolower.png" )   //       tolower.png => ztoa.png
+   ::oUI:q_buttonSelect :setIcon( ::resPath + "open.png"       )
+   ::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
+   ::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
    ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
 
    ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close()  } )
@@ -396,14 +520,22 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:signal( "buttonSort"        , "clicked()", {|| ::sortSources( "az"  ) } )
    ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
    ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
+   ::oUI:signal( "buttonSaveEnv"     , "clicked()", {|| ::saveEnvironments() } )
    //
    ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
-   ::oUI:signal( "editMetaData"      , "textChanged()", {|o| ::updateMetaData( o ) } )
+   ::oUI:signal( "editMetaData"      , "textChanged()"      , {|o| ::updateMetaData( o ) } )
 
-   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn',  'Choose the Project Location...'  ) } )//, ;
-                       //                                                       'editOutName', "editWrkFolder", "editDstFolder" ) } )
-   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose a Working Folder...'     ) } )
-   ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose a Destination Folder...' ) } )
+   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
+   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
+   ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
+   ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
+   ::oUI:signal( "buttonPathMk2"     , "clicked()", {|| ::PromptForPath( 'editPathMk2'  , 'Choose hbMK2.exe Folder...'   ) } )
+   ::oUI:signal( "buttonPathEnv"     , "clicked()", {|| ::PromptForPath( 'editPathEnv'  , 'Choose hbIDE.env Folder...'   ), ;
+      ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathToOSPath( ::oUI:q_editPathEnv:text() + ::pathSep + "hbide.env" ) ) ) } )
+
+   ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
+   ::oUI:q_editPathEnv  :setText( ::aINI[ INI_HBIDE, PathEnv ] )
+   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ) )
 
    IF empty( ::aPrjProps )
       /*
@@ -414,16 +546,16 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_editPrjLoctn:setText( hbide_pathNormalized( cPrjLoc, .F. ) )
 
    ELSE
-      ::oUI:q_editPrjTitle:setText( ::oProject:applyMeta( ::oProject:title ) )
-      ::oUI:q_editPrjLoctn:setText( ::oProject:applyMeta( ::oProject:location ) )
+      ::oUI:q_editPrjTitle :setText( ::oProject:applyMeta( ::oProject:title        ) )
+      ::oUI:q_editPrjLoctn :setText( ::oProject:applyMeta( ::oProject:location     ) )
       ::oUI:q_editWrkFolder:setText( ::oProject:applyMeta( ::oProject:wrkDirectory ) )
-      ::oUI:q_editDstFolder:setText( ::oProject:applyMeta( ::oProject:destination ) )
-      ::oUI:q_editOutName:setText( ::oProject:outputName )
+      ::oUI:q_editDstFolder:setText( ::oProject:applyMeta( ::oProject:destination  ) )
+      ::oUI:q_editBackup   :setText( ::oProject:applyMeta( ::oProject:backup       ) )
+      ::oUI:q_editOutName  :setText( ::oProject:outputName )
 
-      ::oUI:q_editFlags:setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-      ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
-      ::oUI:q_editMetaData:setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
-      ::oUI:q_editCompilers:setPlainText( memoread( hb_dirBase() + "hbide.env" ) )
+      ::oUI:q_editFlags    :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
+      ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
+      ::oUI:q_editMetaData :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
 
       #if 0
       ::oUI:q_editLaunchParams:setText()
@@ -450,6 +582,169 @@ METHOD IdeProjManager:fetchProperties()
    ::manageFocusInEditor()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:save( lCanClose )
+   LOCAL a_, lOk, cPath, txt_
+
+   * Validate certain parameters before continuing ... (vailtom)
+
+   /*   Title cannot be the output name, but reverse is possible
+        --------------------------------------------------------
+        We must also consider that user may be building the project in parts
+        OR may be basic definition must be in place
+    */
+   IF Empty( ::oUI:q_editPrjTitle:text() )
+      ::oUI:q_editPrjTitle:setText( ::oUI:q_editOutName:text() )
+   ENDIF
+
+   IF Empty( ::oUI:q_editOutName:text() )
+      MsgBox( 'Invalid Output FileName' )
+      ::oUI:q_editOutName:setFocus()
+      RETURN .F.
+   ENDIF
+
+   /* This must be valid, we cannot skip */
+   IF !hbide_isValidPath( ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ), 'Project Location' )
+      ::oUI:q_editPrjLoctn:setFocus()
+      RETURN .F.
+   ENDIF
+
+   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
+   IF !empty( cPath := ::oUI:q_editWrkFolder:text() )
+      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Working Folder' )
+         // ::oUI:q_editWrkFolder:setText( ::oUI:q_editPrjLoctn:text() )
+         RETURN .F.
+      ENDIF
+   ENDIF
+
+   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
+   IF !empty( cPath := ::oUI:q_editDstFolder:text() )
+      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Destination Folder' )
+         // ::oUI:q_editDstFolder:setText( ::oUI:q_editPrjLoctn:text() )
+         RETURN .F.
+      ENDIF
+   ENDIF
+
+   txt_:= {}
+   //
+   aadd( txt_, "[ PROPERTIES ]" )
+   aadd( txt_, "Type              = " + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex()+1 ] )
+   aadd( txt_, "Title             = " + ::oUI:q_editPrjTitle    :text() )
+   aadd( txt_, "Location          = " + ::oUI:q_editPrjLoctn    :text() )
+   aadd( txt_, "WorkingFolder     = " + ::oUI:q_editWrkFolder   :text() )
+   aadd( txt_, "DestinationFolder = " + ::oUI:q_editDstFolder   :text() )
+   aadd( txt_, "Output            = " + ::oUI:q_editOutName     :text() )
+   aadd( txt_, "LaunchParams      = " + ::oUI:q_editLaunchParams:text() )
+   aadd( txt_, "LaunchProgram     = " + ::oUI:q_editLaunchExe   :text() )
+   aadd( txt_, "BackupFolder      = " + ::oUI:q_editBackup      :text() )
+   aadd( txt_, " " )
+   //
+   aadd( txt_, "[ FLAGS ]" )
+   a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   aadd( txt_, "[ SOURCES ]" )
+   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   aadd( txt_, "[ METADATA ]" )
+   a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+
+   #if 0
+   /* Setup Meta Keys */
+   a4_1 := hbide_setupMetaKeys( a_ )
+
+   ::cSaveTo := hbide_parseWithMetaData( ::oUI:q_editPrjLoctn:text(), a4_1 ) + ;
+                      ::pathSep + ;
+                hbide_parseWithMetaData( ::oUI:q_editOutName:text(), a4_1 ) + ;
+                      ".hbi"
+   ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
+   #endif
+
+   ::cSaveTo := ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ) + ;
+                      ::pathSep + ;
+                ::oProject:expandMeta( ::oUI:q_editOutName:text() ) + ;
+                      ".hbi"
+   ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
+
+   IF ( lOk := hbide_createTarget( ::cSaveTo, txt_ ) )
+*     MsgBox( 'The project file is saved successfully: ' + ::cSaveTo, 'Saving project ...' )
+   ELSE
+      MsgBox( 'Error saving project file: ' + ::cSaveTo, 'Error saving project ...' )
+   ENDIF
+
+   IF lCanClose .AND. lOk
+      ::oUI:oWidget:close()
+   ENDIF
+
+   RETURN lOk
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:saveEnvironments()
+   LOCAL cText
+
+   ::oProject:cPathMk2 := ::oUI:q_editPathMk2:text()
+   ::oProject:cPathEnv := ::oUI:q_editPathEnv:text()
+
+   ::oIde:aINI[ INI_HBIDE, PathMk2 ] := ::oProject:cPathMk2
+   ::oIde:aINI[ INI_HBIDE, PathEnv ] := ::oProject:cPathEnv
+   //
+   ::oIde:cWrkPathMk2 := ::oProject:cPathMk2
+   ::oIde:cWrkPathEnv := ::oProject:cPathEnv
+
+   IF !empty( cText := ::oUI:q_editCompilers:toPlainText() )
+      hb_MemoWrit( hbide_pathFile( ::oProject:cPathEnv, "hbide.env" ), cText )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:updateHbp( iIndex )
+   LOCAL a_, a4_1, txt_, s
+   LOCAL cExt
+
+   IF iIndex != 3
+      RETURN nil
+   ENDIF
+
+   a_:= hb_atokens( strtran( ::oUI:q_editMetaData:toPlainText(), chr( 13 ) ), _EOL )
+   a4_1 := hbide_setupMetaKeys( a_ )
+
+   txt_:= {}
+   /* This block will be absent when submitting to hbmk engine */
+   aadd( txt_, "#   " + hbide_parseWithMetaData( ::oUI:q_editWrkFolder:text(), a4_1 ) + ::pathSep + ;
+                        hbide_parseWithMetaData( ::oUI:q_editOutName:text(), a4_1 ) + ".hbp" )
+   aadd( txt_, " " )
+
+   /* Flags */
+   a_:= hb_atokens( ::oUI:q_editFlags:toPlainText(), _EOL )
+   FOR EACH s IN a_
+      s := alltrim( s )
+      IF !( "#" == left( s,1 ) ) .and. !empty( s )
+         s := hbide_parseWithMetaData( s, a4_1 )
+         aadd( txt_, s )
+      ENDIF
+   NEXT
+   aadd( txt_, " " )
+
+   /* Sources */
+   a_:= hb_atokens( ::oUI:q_editSources:toPlainText(), _EOL )
+   FOR EACH s IN a_
+      s := alltrim( s )
+      IF !( "#" == left( s,1 ) ) .and. !empty( s )
+         s := hbide_parseWithMetaData( s, a4_1 )
+         hb_FNameSplit( s, , , @cExt )
+         IF lower( cExt ) $ ".c,.cpp,.prg,.rc,.res"
+            aadd( txt_, s )
+         ENDIF
+      ENDIF
+   NEXT
+   aadd( txt_, " " )
+
+   /* Final assault */
+   ::oUI:q_editHbp:setPlainText( hbide_arrayToMemo( txt_ ) )
+
+   RETURN txt_
 
 /*----------------------------------------------------------------------*/
 
@@ -528,149 +823,6 @@ METHOD IdeProjManager:updateMetaData()
    ::oProject:metaData := a4_1
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjManager:save( lCanClose )
-   LOCAL a_, lOk, cPath, txt_
-
-   * Validate certain parameters before continuing ... (vailtom)
-
-   /*   Title cannot be the output name, but reverse is possible
-        --------------------------------------------------------
-        We must also consider that user may be building the project in parts
-        OR may be basic definition must be in place
-    */
-   IF Empty( ::oUI:q_editPrjTitle:text() )
-      ::oUI:q_editPrjTitle:setText( ::oUI:q_editOutName:text() )
-   ENDIF
-
-   IF Empty( ::oUI:q_editOutName:text() )
-      MsgBox( 'Invalid Output FileName' )
-      ::oUI:q_editOutName:setFocus()
-      RETURN .F.
-   ENDIF
-
-   /* This must be valid, we cannot skip */
-   IF !hbide_isValidPath( ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ), 'Project Location' )
-      ::oUI:q_editPrjLoctn:setFocus()
-      RETURN .F.
-   ENDIF
-
-   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
-   IF !empty( cPath := ::oUI:q_editWrkFolder:text() )
-      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Working Folder' )
-         // ::oUI:q_editWrkFolder:setText( ::oUI:q_editPrjLoctn:text() )
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   /* This we can skip now: later at project building we can check: TO:RECONSIDER */
-   IF !empty( cPath := ::oUI:q_editDstFolder:text() )
-      IF !hbide_isValidPath( ::oProject:expandMeta( cPath ), 'Destination Folder' )
-         // ::oUI:q_editDstFolder:setText( ::oUI:q_editPrjLoctn:text() )
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   txt_:= {}
-   //
-   aadd( txt_, "[ PROPERTIES ]" )
-   aadd( txt_, "Type              = " + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex()+1 ] )
-   aadd( txt_, "Title             = " + ::oUI:q_editPrjTitle:text() )
-   aadd( txt_, "Location          = " + ::oUI:q_editPrjLoctn:text() )
-   aadd( txt_, "WorkingFolder     = " + ::oUI:q_editWrkFolder:text() )
-   aadd( txt_, "DestinationFolder = " + ::oUI:q_editDstFolder:text() )
-   aadd( txt_, "Output            = " + ::oUI:q_editOutName:text() )
-   aadd( txt_, "LaunchParams      = " + ::oUI:q_editLaunchParams:text() )
-   aadd( txt_, "LaunchProgram     = " + ::oUI:q_editLaunchExe:text() )
-   aadd( txt_, " " )
-   //
-   aadd( txt_, "[ FLAGS ]" )
-   a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ SOURCES ]" )
-   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) ; aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ METADATA ]" )
-   a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-
-   #if 0
-   /* Setup Meta Keys */
-   a4_1 := hbide_setupMetaKeys( a_ )
-
-   ::cSaveTo := hbide_parseWithMetaData( ::oUI:q_editPrjLoctn:text(), a4_1 ) + ;
-                      ::pathSep + ;
-                hbide_parseWithMetaData( ::oUI:q_editOutName:text(), a4_1 ) + ;
-                      ".hbi"
-   ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
-   #endif
-
-   ::cSaveTo := ::oProject:expandMeta( ::oUI:q_editPrjLoctn:text() ) + ;
-                      ::pathSep + ;
-                ::oProject:expandMeta( ::oUI:q_editOutName:text() ) + ;
-                      ".hbi"
-   ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
-
-   IF ( lOk := hbide_createTarget( ::cSaveTo, txt_ ) )
-      *MsgBox( 'The project file was saved successfully: ' + ::cSaveTo, 'Saving project ...' )
-      hb_MemoWrit( hb_dirBase() + "hbide.env", ::oUI:q_editCompilers:toPlainText() )
-   ELSE
-      MsgBox( 'Error saving project file: ' + ::cSaveTo, 'Error saving project ...' )
-   ENDIF
-
-   IF lCanClose .AND. lOk
-      ::oUI:oWidget:close()
-   ENDIF
-
-   RETURN lOk
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjManager:updateHbp( iIndex )
-   LOCAL a_, a4_1, txt_, s
-   LOCAL cExt
-
-   IF iIndex != 3
-      RETURN nil
-   ENDIF
-
-   a_:= hb_atokens( strtran( ::oUI:q_editMetaData:toPlainText(), chr( 13 ) ), _EOL )
-   a4_1 := hbide_setupMetaKeys( a_ )
-
-   txt_:= {}
-   /* This block will be absent when submitting to hbmk engine */
-   aadd( txt_, "#   " + hbide_parseWithMetaData( ::oUI:q_editWrkFolder:text(), a4_1 ) + ::pathSep + ;
-                        hbide_parseWithMetaData( ::oUI:q_editOutName:text(), a4_1 ) + ".hbp" )
-   aadd( txt_, " " )
-
-   /* Flags */
-   a_:= hb_atokens( ::oUI:q_editFlags:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         s := hbide_parseWithMetaData( s, a4_1 )
-         aadd( txt_, s )
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
-
-   /* Sources */
-   a_:= hb_atokens( ::oUI:q_editSources:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         s := hbide_parseWithMetaData( s, a4_1 )
-         hb_FNameSplit( s, , , @cExt )
-         IF lower( cExt ) $ ".c,.cpp,.prg,.rc,.res"
-            aadd( txt_, s )
-         ENDIF
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
-
-   /* Final assault */
-   ::oUI:q_editHbp:setPlainText( hbide_arrayToMemo( txt_ ) )
-
-   RETURN txt_
 
 /*----------------------------------------------------------------------*/
 
@@ -827,7 +979,7 @@ METHOD IdeProjManager:getProjectByFile( cProjectFile )
       aProj := ::aProjects[ n ]
    ENDIF
 
-   RETURN IdeProject():new( aProj )
+   RETURN IdeProject():new( ::oIde, aProj )
 
 /*----------------------------------------------------------------------*/
 
@@ -838,7 +990,7 @@ METHOD IdeProjManager:getProjectByTitle( cProjectTitle )
       aProj := ::aProjects[ n, 3 ]
    ENDIF
 
-   RETURN IdeProject():new( aProj )
+   RETURN IdeProject():new( ::oIde, aProj )
 
 /*----------------------------------------------------------------------*/
 
@@ -912,8 +1064,9 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cOutput, cErrors, cHbpPath, qStringList, oEdit, cHbpFN, cTmp, nResult, cTargetFN
-   LOCAL aHbp := {}
+   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cTargetFN, cExeHbMk2, aHbp, cCmd
+
+   aHbp := {}
 
    DEFAULT lLaunch   TO .F.
    DEFAULT lRebuild  TO .F.
@@ -970,15 +1123,16 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       aadd( aHbp, "-o" + cTargetFN )
       aadd( aHbp, "-workdir=" + ::oProject:wrkDirectory + "/${hb_plat}/${hb_comp}" )
    ENDIF
-   aadd( aHbp, "-q"             )
-   aadd( aHbp, "-trace"         )
-   aadd( aHbp, "-info"          )
+   aadd( aHbp, "-q"          )
+   aadd( aHbp, "-trace"      )
+   aadd( aHbp, "-info"       )
    IF lRebuild
-      aadd( aHbp, "-rebuild"    )
+      aadd( aHbp, "-rebuild" )
    ENDIF
    aadd( aHbp, " " )
 
    IF !( ::lPPO )
+      /* Add all sources to .hbp */
       aadd( aHbp, "# Source Files" )
       aadd( aHbp, " " )
       aeval( hbide_filesToSources( ::oProject:sources ), {|e| aadd( aHbp, e ) } )
@@ -991,7 +1145,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
             aadd( aHbp, "-p"     )
             aadd( aHbp, "  "     )
             aadd( aHbp, "# Source File - PPO" )
-            aadd( aHbp, " " )
+            aadd( aHbp, " "      )
 
             // TODO: We have to test if the current file is part of a project, and we
             // pull your settings, even though this is not the active project - vailtom
@@ -1018,8 +1172,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oOutputResult:oWidget:append( 'Error saving: ' + cHbpPath )
 
    ELSE
-      ::nStarted := seconds()
-
       cTmp := hbide_outputLine() + CRLF + ;
               "Project [ " + cProject                     + " ]    " + ;
               "Launch [ "  + iif( lLaunch , 'Yes', 'No' ) + " ]    " + ;
@@ -1028,140 +1180,72 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
               hbide_outputLine() + CRLF
       ::oOutputResult:oWidget:append( cTmp )
 
-      IF lViaQt
-         ::buildProcess()
+      ::oIde:oEV := IdeEnvironments():new():create( ::oIde, hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) )
+      ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
+      #if 0                           /* This does not works - reason being it picks up hbmk2 from fixed location */
+      cExeHbMk2  := hbide_pathFile( ::oProject:cPathMk2, "hbmk2" )
+      #else                           /* This works properly */
+      cExeHbMk2 := "hbmk2"            /* Needs that path is already set before calling hbmk2 */
+      #endif
 
-         #if 0  /* Mechanism to supply environment variables to called process */
-                /* I do not know nixes but assume that Qt must be issueing proper */
-                /* shell command for the target OS to set them. */
-                /* If I am not wrong, HBMK2 can have these variables alread set */
-                /* and hence developer can choose any compiler of his choice. */
-                /*                                                                */
-                /* Actually, this was the intension in hbIDE.env I commited in IDE root */
-         qStringList := QStringList():new()
-         qStringList:append( "HB_WITH_QT=c:\qt\4.5.3\lib" )
-         ::qProcess:setEnvironment( qStringList )
+      ::oProcess := HbpProcess():new()
+      //
+      ::oProcess:output      := {|cOut, mp2, oHbp| ::showOutput( cOut,mp2,oHbp ) }
+      ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC ,nES,oHbp ) }
+      ::oProcess:workingPath := ::oProject:wrkDirectory
 
-         qStringList := QStringList():new()
-         qStringList:append( [/c  c:\batches\SetMinGW-harbour-E.bat && hbMK2.exe ] + cHbpPath )
-         ::qProcess:start( "cmd.exe", qStringList )
-         #else
-
-         qStringList := QStringList():new()
-         IF ::lPPO
-            qStringList:append( "-hbraw" )
+      #if 1
+         cCmd := "cmd.exe"
+         IF empty( ::cBatch )
+            ::oProcess:addArg( "/c "                     + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
+         ELSE
+            ::oProcess:addArg( "/c " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
          ENDIF
-         qStringList:append( cHbpPath )
-         //
-         ::qProcess:setWorkingDirectory( ::oProject:wrkDirectory )
-         //
-         ::qProcess:start( ::oProject:hbmk2dir + "hbmk2", qStringList )
-         #endif
-      ELSE
-         cOutput := "" ; cErrors := ""
-         nResult := hb_processRun( ::oProject:hbmk2dir + "hbmk2 " + iif( ::lPPO, "-hbraw ", "" ) + cHbpPath, , @cOutput, @cErrors )
+      #else
+         cCmd := "cmd.exe /c " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" )
+      #endif
 
-         cTmp := cOutput + CRLF
-         cTmp += IIF( empty( cErrors ), "", cErrors ) + CRLF
-         cTmp += hbide_outputLine() + CRLF
-         cTmp += "Exit Code [ " + hb_ntos( nResult ) + " ]    " + ;
-                 "Finished at [ " + time() + " ]    " + ;
-                 "Done in [ " + hb_ntos( seconds() - ::nStarted ) + " Secs ]" + CRLF
-         cTmp += hbide_outputLine() + CRLF
-
-         hbide_convertBuildStatusMsgToHtml( cTmp, ::oOutputResult:oWidget )
-
-         IF ( nResult == 0 ) .AND. ( lLaunch )
-            ::LaunchProject( cProject )
-         ENDIF
-
-         IF ::lPPO .AND. hb_FileExists( ::cPPO )
-            ::editSource( ::cPPO )
-         ENDIF
-      ENDIF
-
+      ::oProcess:start( cCmd )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:buildProcess()
+METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 
-   ::qProcess := QProcess():new()
-   ::qProcess:setReadChannel( 1 )
+   hbide_justACall( mp2, oProcess )
 
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::readProcessInfo( CHN_REA, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::readProcessInfo( CHN_RCF, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::readProcessInfo( CHN_CLO, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::readProcessInfo( CHN_BYT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::readProcessInfo( CHN_STT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::readProcessInfo( CHN_ERE, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::readProcessInfo( CHN_BGN, o, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( CHN_OUT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( CHN_ERR, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::readProcessInfo( CHN_FIN, i, ii, o ) } )
+   hbide_convertBuildStatusMsgToHtml( cOutput, ::oOutputResult:oWidget )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:readProcessInfo( nMode, i, ii )
-   LOCAL cLine, cTmp, nSize
+METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
+   LOCAL cTmp
 
-   nSize := 16384
+   hbide_justACall( oProcess )
 
-   DO CASE
-   CASE nMode == CHN_REA   // ReadReady()
+   cTmp := hbide_outputLine() + CRLF
+   cTmp += "Exit Code [ " + hb_ntos( nExitCode ) + " ]    Exit Status [ " + hb_ntos( nExitStatus ) + " ]    " +;
+           "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - oProcess:started ) +" Secs ]" + CRLF
+   cTmp += hbide_outputLine() + CRLF
 
-   CASE nMode == CHN_OUT
-      ::qProcess:setReadChannel( 0 )
-      cLine := space( nSize )
-      ::qProcess:read( @cLine, nSize )
-      IF !empty( cLine )
-         hbide_convertBuildStatusMsgToHtml( trim( cLine ), ::oOutputResult:oWidget )
-      ENDIF
+   ::oOutputResult:oWidget:append( cTmp )
 
-   CASE nMode == CHN_ERR
-      ::qProcess:setReadChannel( 1 )
-      cLine := space( nSize )
-      ::qProcess:read( @cLine, nSize )
-      IF !empty( cLine )
-         hbide_convertBuildStatusMsgToHtml( trim( cLine ), ::oOutputResult:oWidget )
-      ENDIF
+   ferase( ::cBatch )
 
-   CASE nMode == CHN_FIN
-      cTmp := hbide_outputLine() + CRLF
-      cTmp += "Exit Code [ " + hb_ntos( i ) + " ]    Exit Status [ " + hb_ntos( ii ) + " ]    " +;
-              "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - ::nStarted ) +" Secs ]" + CRLF
-      cTmp += hbide_outputLine() + CRLF
-
-      ::oOutputResult:oWidget:append( cTmp )
-
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyRead()"               )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readChannelFinished()"     )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "aboutToClose()"            )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "bytesWritten(int)"         )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "stateChanged(int)"         )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "error(int)"                )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "started()"                 )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
-      Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
-
-      ::qProcess:kill()
-      ::qProcess:pPtr := 0
-      ::qProcess := NIL
-
-      IF ::lLaunch
+   IF ::lLaunch
+      IF nExitCode == 0
          ::launchProject( ::cProjectInProcess )
       ENDIF
-      IF ::lPPO .AND. hb_FileExists( ::cPPO )
-         ::editSource( ::cPPO )
-      ENDIF
-   ENDCASE
+   ENDIF
+   IF ::lPPO .AND. hb_FileExists( ::cPPO )
+      ::editSource( ::cPPO )
+   ENDIF
 
-   RETURN nil
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 /*
@@ -1193,19 +1277,43 @@ METHOD IdeProjManager:launchProject( cProject )
       cTmp := "Launch application error: file not found " + cTargetFN + "!"
 
    ELSEIF oProject:type == "Executable"
-      cTmp := "Launch application " + cTargetFN + "... "
-
       qProcess := QProcess():new()
+      //
+      //qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
 
-      qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
-hbide_dbg( oProject:wrkDirectory, qProcess:workingDirectory()  )
-      qProcess:startDetached_2( cTargetFN )
-      //qProcess:waitForStarted()
-      qProcess:pPtr := 0
-      qProcess := NIL
+      #if 1
+         cTmp := "Launching application with environment [ " + cTargetFN + " ]"
+
+         #if 0
+         qStrList := QStringList():new()
+         ::cBatch := ::oEV:prepareBatch( ::cWrkEnvironment )  /* at this point we only know default environment */
+         IF empty( ::cBatch )
+            qStrList:append( "/c " + cTargetFN )
+         ELSE
+            qStrList:append( "/c  " + ::cBatch + " && " + cTargetFN )
+         ENDIF
+         qProcess:startDetached_1( "cmd.exe", qStrList )
+         #endif
+
+         qProcess:startDetached_2( cTargetFN )
+         qProcess:waitForStarted()
+         qProcess:pPtr := 0
+         qProcess      := NIL
+
+         //qProcess:start( "cmd.exe", qStrList )
+
+      #else
+         cTmp := "Launching application [ " + cTargetFN + " ]"
+
+         qProcess:startDetached_2( cTargetFN )
+         qProcess:waitForStarted()
+         qProcess:pPtr := 0
+         qProcess      := NIL
+
+      #endif
 
    ELSE
-      cTmp := "Launch application " + cTargetFN + "... (not applicable)"
+      cTmp := "Launching application [ " + cTargetFN + " ] ( not applicable )."
 
    ENDIF
 

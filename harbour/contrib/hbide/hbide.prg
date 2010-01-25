@@ -115,6 +115,7 @@ CLASS HbIde
    DATA   oEM                                              /* Editor Tabs Manager            */
    DATA   oSM                                              /* Souces Manager                 */
    DATA   oFR                                              /* Find Replace Manager           */
+   DATA   oEV                                              /* Available Environments         */
    DATA   oThemes
 
    DATA   aMeta                                   INIT   {}  /* Holds current definition only  */
@@ -177,16 +178,22 @@ CLASS HbIde
    DATA   lDockBVisible                           INIT   .f.
    DATA   lTabCloseRequested                      INIT   .f.
 
+   DATA   cWrkProject                             INIT   ""
+   DATA   cWrkTheme                               INIT   ""
+   DATA   cWrkCodec                               INIT   ""
+   DATA   cWrkPathMk2                             INIT   hb_getenv( "HBIDE_DIR_HBMK2" )
+   DATA   cWrkPathEnv                             INIT   hb_DirBase() + "resources"
+   DATA   cWrkEnvironment                         INIT   ""
+
+   DATA   oEnvironment
+
    DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
    DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
    DATA   pathSep                                 INIT   hb_OsPathSeparator()
    DATA   cLastFileOpenPath                       INIT   hb_DirBase() + "projects"
-   DATA   cWrkProject                             INIT   ""
-   DATA   cWrkTheme                               INIT   ""
    DATA   cProcessInfo
    DATA   cIniThemes
-   DATA   cWrkCodec                               INIT   ""
    DATA   cSeparator                              INIT   "/*" + replicate( "-", 70 ) + "*/"
 
    DATA   nTabSpaces                              INIT   3           /* Via User Setup */
@@ -262,8 +269,9 @@ METHOD HbIde:create( cProjIni )
    /* Load IDE Settings */
    hbide_loadINI( Self, cProjIni )
    /* Set variables from last session */
-   ::cWrkTheme := ::aINI[ INI_HBIDE, CurrentTheme ]
-   ::cWrkCodec := ::aINI[ INI_HBIDE, CurrentCodec ]
+   ::cWrkTheme       := ::aINI[ INI_HBIDE, CurrentTheme       ]
+   ::cWrkCodec       := ::aINI[ INI_HBIDE, CurrentCodec       ]
+   ::cWrkEnvironment := ::aINI[ INI_HBIDE, CurrentEnvironment ]
    /* Set Codec at the Begining */
    HbXbp_SetCodec( ::cWrkCodec )
 
@@ -293,6 +301,9 @@ METHOD HbIde:create( cProjIni )
 
    /* Load IDE|User defined Themes */
    hbide_loadThemes( Self )
+
+   /* Load Environments */
+   ::oEV := IdeEnvironments():new( Self, hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ):create()
 
    /* Prepare Editor's Tabs */
    ::oEM:prepareTabWidget()
@@ -333,6 +344,9 @@ METHOD HbIde:create( cProjIni )
    hbide_restSettings( Self )
    /* Again to be displayed in Statusbar */
    HbXbp_SetCodec( ::cWrkCodec )
+
+   /* Display cWrkEnvironment in StatusBar */
+   ::oDK:dispEnvironment( ::cWrkEnvironment )
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -908,8 +922,8 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
-   LOCAL n, cHbi, aPrj
-   LOCAL aPops := {}
+   LOCAL n, cHbi, aPrj, s
+   LOCAL aPops := {}, aSub :={}
 
    HB_SYMBOL_UNUSED( mp2 )
 
@@ -930,6 +944,16 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( , .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
+      aadd( aPops, { "" } )
+      //
+      IF !empty( ::oEV:getNames )
+         aadd( aPops, { "" } )
+         FOR EACH s IN ::oEV:getNames()
+            aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
+         NEXT
+         aadd( aPops, { aSub, "Environment..." } )
+      ENDIF
+      //
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
@@ -951,7 +975,15 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Close This Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
-      //
+      /*
+      IF !empty( ::oEV:getNames )
+         aadd( aPops, { "" } )
+         FOR EACH s IN ::oEV:getNames()
+            aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
+         NEXT
+         aadd( aPops, { aSub, "Select an environment" } )
+      ENDIF
+      */
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
