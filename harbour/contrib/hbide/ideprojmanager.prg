@@ -848,7 +848,7 @@ METHOD IdeProjManager:manageEnvironments()
    ::oUI:signal( "buttonSave"        , "clicked()", {|| ::saveEnvironments()   } )
    ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::saveEnvironments(), ::oUI:oWidget:close() } )
  * ::oUI:signal( "buttonSaveEnv"     , "clicked()", {|| ::saveEnvironments() } )
-   ::oUI:signal( "buttonPathMk2"     , "clicked()", {|| ::PromptForPath( 'editPathMk2'  , 'Choose hbMK2.exe Folder...'   ) } )
+   ::oUI:signal( "buttonPathMk2"     , "clicked()", {|| ::PromptForPath( 'editPathMk2'  , 'Choose hbmk2 Executable Folder...'   ) } )
    ::oUI:signal( "buttonPathEnv"     , "clicked()", {|| ::PromptForPath( 'editPathEnv'  , 'Choose hbIDE.env Folder...'   ), ;
       ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oUI:q_editPathEnv:text(), "hbide.env" ) ) ) } )
 

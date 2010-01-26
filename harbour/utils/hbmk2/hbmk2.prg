@@ -396,6 +396,8 @@ PROCEDURE Main( ... )
       CASE tmp == "rtlink" .OR. ;
            tmp == "exospace" .OR. ;
            tmp == "blinker"                ; AAdd( aArgsProc, "-rtlink" )
+      CASE Right( tmp, 5 ) == "hbexe" .OR. ;
+           Left(  tmp, 5 ) == "hbexe"      ; AAdd( aArgsProc, "-hbexe" )
       CASE Right( tmp, 5 ) == "hblib" .OR. ;
            Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgsProc, "-hblib" )
       CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
@@ -1570,6 +1572,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
+      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T.
       CASE cParamL == "-gui" .OR. ;
@@ -8132,6 +8135,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-static|-shared"   , I_( "link with static/shared libs" ) },;
       { "-mt|-st"           , I_( "link with multi/single-thread VM" ) },;
       { "-gt<name>"         , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) },;
+      { "-hbexe"            , I_( "create executable (default)" ) },;
       { "-hblib"            , I_( "create static library" ) },;
       { "-hbdyn"            , I_( "create dynamic library" ) }}
 
