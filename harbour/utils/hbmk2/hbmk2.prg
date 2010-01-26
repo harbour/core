@@ -7972,11 +7972,14 @@ STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
    LOCAL cSetting
    LOCAL cValue
    LOCAL aValue
+   LOCAL cFile
+
+   LOCAL hLIBPATH := {=>}
 
    LOCAL cMAIN := NIL
 
    LOCAL lFileSection := .F.
-
+#pragma linenumber=on
    hbmk_OutStd( hb_StrFormat( I_( "Loading xhp (xMate) project file: %1$s" ), cSrcName ) )
 
    IF Empty( cDstName )
@@ -7992,7 +7995,33 @@ STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
       ELSEIF lFileSection
          tmp := At( "=", cLine )
          IF tmp > 0
-            AAdd( aDst, StrTran( AllTrim( Left( cLine, tmp - 1 ) ), "%HOME%\" ) )
+            cFile := AllTrim( Left( cLine, tmp - 1 ) )
+            SWITCH Lower( FN_ExtGet( cFile ) )
+            CASE ".c"
+            CASE ".prg"
+               IF !( "%HB_INSTALL%\" $ cFile )
+                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+               ENDIF
+               EXIT
+            CASE ".lib"
+            CASE ".a"
+               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
+                  !( "%HB_LIB_INSTALL%\" $ cFile )
+                  cFile := StrTran( cFile, "%HOME%\" )
+                  IF !( FN_DirGet( cFile ) $ hLIBPATH )
+                     hLIBPATH[ FN_DirGet( cFile ) ] := NIL
+                  ENDIF
+                  AAdd( aDst, "-l" + FN_NameGet( cFile ) )
+               ENDIF
+               EXIT
+            CASE ".obj"
+            CASE ".o"
+               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
+                  !( "%HB_LIB_INSTALL%\" $ cFile )
+                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+               ENDIF
+               EXIT
+            ENDSWITCH
          ENDIF
       ELSE
          tmp := At( "=", cLine )
@@ -8037,6 +8066,10 @@ STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
             ENDIF
          ENDIF
       ENDIF
+   NEXT
+
+   FOR EACH tmp IN hLIBPATH
+      AAdd( aDst, "-L" + tmp:__enumKey() )
    NEXT
 
    cDst := ""

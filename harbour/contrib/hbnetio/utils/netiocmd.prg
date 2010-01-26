@@ -14,24 +14,14 @@
  */
 
 FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
-   LOCAL hCmds
-
-   LOCAL cName
-
-   /* We add here a little validation to ensure that we can not be hacked. [vailtom] */
-   hb_FNameSplit( ProcFile( 1 ), NIL, @cName )
-   IF Lower( ProcName( 1 ) + "-" + cName ) != "main-netiosrv"
-      RETURN NIL
-   ENDIF
-
-   hCmds := { ;
-               "?"         => { "Synonym for 'help'."           , {|| cmdHelp( hCmds ) } },;
-               "clear"     => { "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
-               "config"    => { "Show server configuration."    , bShowInfo },;
-               "sysinfo"   => { "Show system/build information.", {|| cmdSysInfo() } },;
-               "quit"      => { "Stop server and exit."         , bQuit },;
-               "help"      => { "Display this help."            , {|| cmdHelp( hCmds ) } };
-            }
+   LOCAL hCmds := { ;
+                     "?"         => { "Synonym for 'help'."           , {|| cmdHelp( hCmds ) } },;
+                     "clear"     => { "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
+                     "config"    => { "Show server configuration."    , bShowInfo },;
+                     "sysinfo"   => { "Show system/build information.", {|| cmdSysInfo() } },;
+                     "quit"      => { "Stop server and exit."         , bQuit },;
+                     "help"      => { "Display this help."            , {|| cmdHelp( hCmds ) } };
+                  }
 
    RETURN hCmds
 

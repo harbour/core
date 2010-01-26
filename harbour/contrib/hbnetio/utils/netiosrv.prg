@@ -138,11 +138,6 @@ PROCEDURE Main( ... )
       hCommands  := hbnetiosrv_LoadCmds( {|| lQuit := .T. },;            /* codeblock to quit */
                                          {|| ShowConfig( netiosrv ) } )  /* codeblock to display config both uses local vars */
 
-      IF Empty( hCommands )
-         OutStd( "Internal error", hb_osNewLine() )
-         lQuit := .T.
-      ENDIF
-
       /* Command prompt */
       DO WHILE ! lQuit
 
