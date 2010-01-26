@@ -309,6 +309,7 @@ HARBOUR
    HB_WITH_FREEIMAGE=C:\FreeImage\Dist
    HB_WITH_GD=C:\gd\include
    HB_WITH_GPM= (on Linux only)
+   HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
    HB_WITH_MYSQL=C:\mysql\include
    HB_WITH_ODBC= (may only be needed on non-Windows systems)
@@ -1330,6 +1331,8 @@ HARBOUR
          http://freeimage.sourceforge.net/
       HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
          http://www.boutell.com/gd/
+      HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
+         http://www.ijg.org/
       HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
          http://libharu.org/
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]

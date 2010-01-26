@@ -11,6 +11,7 @@ DIRS := \
    sqlite3 \
    libhpdf \
    libpng \
+   jpeg \
    pcre \
    zlib \
 
