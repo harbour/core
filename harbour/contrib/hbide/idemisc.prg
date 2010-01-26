@@ -1121,9 +1121,22 @@ FUNCTION hbide_getShellCommand()
    #elif defined( __PLATFORM__OS2 )
       cShellCmd := hb_getenv( "COMSPEC" )
    #elif defined( __PLATFORM__UNIX )
-      cShellCmd := ""
+      cShellCmd := hb_getenv( "SHELL" )
    #endif
 
    RETURN cShellCmd
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getOS()
+   LOCAL cOS
+   #if   defined( __PLATFORM__WINDOWS )
+      cOS := "win"
+   #elif defined( __PLATFORM__OS2 )
+      cOS := "os"
+   #elif defined( __PLATFORM__UNIX )
+      cOS := "nix"
+   #endif
+   RETURN cOS
 
 /*----------------------------------------------------------------------*/

@@ -1078,7 +1078,7 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cTargetFN, cExeHbMk2, aHbp, cCmd
+   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cTargetFN, cExeHbMk2, aHbp, cCmd, cC, cArg
 
    aHbp := {}
 
@@ -1206,12 +1206,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
       #if 1
          cCmd := hbide_getShellCommand()
-hbide_dbg( cCmd )
-         IF empty( ::cBatch )
-            ::oProcess:addArg( "/C "                     + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
-         ELSE
-            ::oProcess:addArg( "/C " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
-         ENDIF
+         cC   := iif( hbide_getOS() == "nix", "", "/C " )
+         cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
+
+         ::oProcess:addArg( cArg + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
       #else
          cCmd := cCmd + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" )
       #endif
