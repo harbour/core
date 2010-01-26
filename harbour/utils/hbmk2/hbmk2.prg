@@ -7979,6 +7979,10 @@ STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
 
    hbmk_OutStd( hb_StrFormat( I_( "Loading xhp (xMate) project file: %1$s" ), cSrcName ) )
 
+   IF Empty( cDstName )
+      cDstName := FN_ExtSet( cSrcName, ".hbp" )
+   ENDIF
+
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
 
