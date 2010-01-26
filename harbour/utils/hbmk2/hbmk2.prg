@@ -407,7 +407,7 @@ PROCEDURE Main( ... )
 
    FOR EACH tmp IN aArgsIn
       DO CASE
-      CASE Lower( FN_ExtGet( tmp ) ) == ".hbp"
+      CASE !( Left( tmp, 1 ) == "-" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".hbp"
          FOR EACH tmp1 IN FN_Expand( tmp, .T. )
             AAdd( aArgsProc, tmp1 )
          NEXT
@@ -431,7 +431,7 @@ PROCEDURE Main( ... )
 
       FOR EACH tmp IN aArgsProc
          DO CASE
-         CASE Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
+         CASE !( Left( tmp, 1 ) == "-" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
             ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, tmp )
@@ -1502,7 +1502,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    /* Collect all command line parameters */
    FOR EACH cParam IN aArgs
       DO CASE
-      CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" ) .AND. ;
+      CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
          !( Lower( FN_ExtGet( cParam ) ) == ".clp" )
          cParam := SubStr( cParam, 2 )
          IF Empty( FN_ExtGet( cParam ) )
@@ -1516,8 +1516,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ELSE
             HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
          ENDIF
-      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
-           Lower( FN_ExtGet( cParam ) ) == ".hbp"
+      CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
+           ( Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+             Lower( FN_ExtGet( cParam ) ) == ".hbp" )
          HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, { cParam, "", 0 } )
@@ -2594,6 +2595,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE
+         CASE hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+            /* NOTE: Newer xhb version use "-x.y.z" version numbers. */
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt",;
+                                                      "xharbour" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingw64"
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
                                                       "harbour" + cDL_Version_Alter + "-x64" ) }
@@ -2610,10 +2615,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                                                       "harbour" + cDL_Version_Alter ) }
          ENDCASE
 
-         IF hbmk[ _HBMK_lGUI ]
-            l_aLIBSHAREDPOST := { "hbmainwin" }
+         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+            IF ! hbmk[ _HBMK_lGUI ]
+               l_aLIBSHAREDPOST := { "mainstd" }
+            ENDIF
          ELSE
-            l_aLIBSHAREDPOST := { "hbmainstd" }
+            IF hbmk[ _HBMK_lGUI ]
+               l_aLIBSHAREDPOST := { "hbmainwin" }
+            ELSE
+               l_aLIBSHAREDPOST := { "hbmainstd" }
+            ENDIF
          ENDIF
 
          IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
@@ -6509,7 +6520,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                   DO CASE
                   CASE Lower( cParam ) == "-skip"
                      RETURN
-                  CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" ) .AND. ;
+                  CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
                        !( Lower( FN_ExtGet( cParam ) ) == ".clp" )
                      IF nNestingLevel < _HBMK_NEST_MAX
                         cParam := SubStr( cParam, 2 )
@@ -6520,8 +6531,9 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                      ELSE
                         hbmk_OutErr( hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
-                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
-                       Lower( FN_ExtGet( cParam ) ) == ".hbp"
+                  CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
+                       ( Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+                         Lower( FN_ExtGet( cParam ) ) == ".hbp" )
                      IF nNestingLevel < _HBMK_NEST_MAX
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
                      ELSE
@@ -8225,7 +8237,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
-      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
+      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;

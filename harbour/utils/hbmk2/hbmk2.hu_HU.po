@@ -99,8 +99,8 @@ msgstr "Figyelem: Hibás -gt érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:7959
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
-msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<plat>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}"
+msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}"
 
 #: hbmk2.prg:4128
 #, c-format

@@ -1027,10 +1027,10 @@ msgstr "não adicione bibliotecas extras do sistema à lista padrão de bibliotecas
 #, c-format
 msgid ""
 "Platform filters are accepted in each .hbc line and with several options.\\n"
-"Filter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+"Filter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}"
 msgstr ""
 "Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas opções.\\n"
-"Formato de um filtro: {[!][<arquitetura>|<compilador>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+"Formato de um filtro: {[!][<arquitetura>|<compilador>|<cpu>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}"
 
 #: hbmk2.prg:7555
 #: hbmk2.prg:7672
