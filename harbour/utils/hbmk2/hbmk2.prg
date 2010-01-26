@@ -7979,7 +7979,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
    LOCAL cMAIN := NIL
 
    LOCAL lFileSection := .F.
-#pragma linenumber=on
+
    hbmk_OutStd( hb_StrFormat( I_( "Loading xhp (xMate) project file: %1$s" ), cSrcName ) )
 
    IF Empty( cDstName )
