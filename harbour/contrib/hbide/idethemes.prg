@@ -411,7 +411,7 @@ METHOD IdeThemes:fetch()
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      ::oUI := XbpQtUiLoader():new( ::oIde:oDlg )
+      ::oUI := HbpQtUI():new( ::oIde:oDlg )
       ::oUI:file := ::oIde:resPath + "themes.ui"
       ::oUI:create()
       ::oUI:setWindowFlags( Qt_Sheet )
@@ -588,7 +588,7 @@ METHOD IdeThemes:selectTheme()
    LOCAL oSL, oStrList, oStrModel, a_, nDone
    LOCAL pSlots := Qt_Slots_New()
 
-   oSL := XbpQtUiLoader():new( ::oIde:oDlg )
+   oSL := HbpQtUI():new( ::oIde:oDlg )
    oSL:file := ::oIde:resPath + "selectionlist.ui"
    oSL:create()
    oSL:setWindowTitle( "Available Themes" )

@@ -708,6 +708,9 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
 
    SWITCH ( nEvent )
 
+   CASE xbeP_Keyboard
+      ::keyboard( mp1 )
+      EXIT
    CASE xbeM_Motion
       ::motion( mp1, mp2 )
       EXIT

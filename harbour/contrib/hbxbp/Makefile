@@ -10,6 +10,7 @@ LIBNAME := hbxbp
 
 PRG_SOURCES := \
    hbpprocess.prg \
+   hbpqtui.prg \
    xbp3state.prg \
    xbpappevent.prg \
    xbpbitmap.prg \
@@ -30,7 +31,6 @@ PRG_SOURCES := \
    xbpprintdialog.prg \
    xbpprinter.prg \
    xbppushbutton.prg \
-   xbpqtuiloader.prg \
    xbpradiobutton.prg \
    xbprtf.prg \
    xbpscrollbar.prg \

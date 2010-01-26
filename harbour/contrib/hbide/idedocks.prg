@@ -128,7 +128,7 @@ METHOD IdeDocks:buildDialog()
 
    #if 1
    LOCAL oUI
-   oUI := XbpQtUiLoader():new()
+   oUI := HbpQtUI():new()
    oUI:file := ::resPath + "mainWindow.ui"
    oUI:create()
 

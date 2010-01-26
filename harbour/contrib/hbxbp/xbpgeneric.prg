@@ -227,11 +227,13 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    DO WHILE !empty( t_oEventLoop ) //.t.
       t_oEventLoop:processEvents( QEventLoop_AllEvents )
 
-      IF !empty( t_events[ t_nEventOut, 4 ] )
+      IF !empty(   t_events[ t_nEventOut, 4 ] )
+         //
          nEvent := t_events[ t_nEventOut, 1 ]
          mp1    := t_events[ t_nEventOut, 2 ]
          mp2    := t_events[ t_nEventOut, 3 ]
          oXbp   := t_events[ t_nEventOut, 4 ]
+         //
          t_events[ t_nEventOut, 4 ] := NIL
          EXIT
       ENDIF

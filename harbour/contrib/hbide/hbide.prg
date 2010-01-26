@@ -441,6 +441,7 @@ METHOD HbIde:execAction( cKey )
    CASE "Properties"
    CASE "SelectProject"
    CASE "CloseProject"
+   CASE "Environments"
       ::execProjectAction( cKey )
       EXIT
    CASE "New"
@@ -632,6 +633,9 @@ METHOD HbIde:execSourceAction( cKey )
 
 METHOD HbIde:execProjectAction( cKey )
    SWITCH cKey
+   CASE "Environments"
+      ::oPM:manageEnvironments()
+      EXIT
    CASE "NewProject"
       ::oPM:loadProperties( , .t., .t., .t. )
       EXIT

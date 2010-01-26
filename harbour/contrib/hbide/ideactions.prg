@@ -293,6 +293,8 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "StreamComment"        , "Stream Comment"               , "StreamComment"  , "Sh+^Q", "No", "Yes" } )
    aadd( aAct, { "BlockComment"         , "Block Comment"                , "BlockComment"   , "Sh+^/", "No", "Yes" } )
 
+   aadd( aAct, { "Environments"         , "Environments..."              , "Envconfig"      , ""     , "No", "Yes" } )
+
    RETURN aAct
 
 /*----------------------------------------------------------------------*/
@@ -488,6 +490,8 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "SelectProject"       ), {|| oIde:execAction( "SelectProject"  ) } } )
    oSubMenu:addItem( { ::getAction( "CloseProject"        ), {|| oIde:execAction( "CloseProject"   ) } } )
+   hbide_menuAddSep( oSubMenu )
+   oSubMenu:addItem( { ::getAction( "Environments"        ), {|| oIde:execAction( "Environments"   ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
@@ -524,15 +528,13 @@ METHOD IdeActions:buildMainMenu()
    /*                                   Options                                  */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Options"
+   oSubMenu:title := "~Setup"
    oSubMenu:addItem( { ::getAction( "ManageThemes"        ), {|| oIde:oThemes:fetch()              } } )
    oSubMenu:addItem( { ::getAction( "DefaultTheme"        ), {|| oIde:oThemes:setWrkTheme()        } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   Codec                                    */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := hbide_buildCodecMenu( oIde, oMenuBar )
+   hbide_menuAddSep( oSubMenu )
+   oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
+   oSubMenu2:title := "~Codecs"
+   oSubMenu:addItem( { oSubMenu2, NIL } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
@@ -552,11 +554,11 @@ METHOD IdeActions:buildMainMenu()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenuBar )
+STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenu )
    LOCAL oSubMenu, oSub1
 
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Codec"
+   oSubMenu := XbpMenu():new( oMenu ):create()
+
    oSubMenu:addItem( { "Apple Roman "         , {|| oIde:setCodec( "Apple Roman"         ) } } )
    oSubMenu:addItem( { "Big5        "         , {|| oIde:setCodec( "Big5"                ) } } )
    oSubMenu:addItem( { "Big5-HKSCS  "         , {|| oIde:setCodec( "Big5-HKSCS"          ) } } )

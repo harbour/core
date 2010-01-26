@@ -102,7 +102,7 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := XbpQtUiLoader():new( ::oIde:oDlg )
+   ::oUI := HbpQtUI():new( ::oIde:oDlg )
    ::oUI:file := ::oIde:resPath + "finddialog.ui"
    ::oUI:create()
    ::oUI:setWindowFlags( Qt_Sheet )

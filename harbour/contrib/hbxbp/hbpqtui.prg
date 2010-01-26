@@ -56,7 +56,7 @@
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
- *             Xbase++ Syntax Inspired XbpQtUiLoader Class
+ *             Xbase++ Syntax Inspired HbpQtUI Class
  *
  *                 Pritpal Bedi  <pritpal@vouchcac.com>
  *                              18Decy2009
@@ -74,7 +74,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpQtUiLoader INHERIT XbpWindow
+CLASS HbpQtUI INHERIT XbpWindow
 
    DATA     file                                  INIT ""
    DATA     modal                                 INIT .t.
@@ -101,7 +101,7 @@ CLASS XbpQtUiLoader INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD HbpQtUI:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -109,7 +109,7 @@ METHOD XbpQtUiLoader:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD HbpQtUI:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -130,7 +130,7 @@ METHOD XbpQtUiLoader:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:destroy()
+METHOD HbpQtUI:destroy()
    LOCAL a_
 
    FOR EACH a_ IN ::aSignals
@@ -148,7 +148,7 @@ METHOD XbpQtUiLoader:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:event( cWidget, nEvent, bBlock )
+METHOD HbpQtUI:event( cWidget, nEvent, bBlock )
 
    IF hb_hHasKey( ::qObj, cWidget )
       IF Qt_Events_Connect( ::pEvents, ::qObj[ cWidget ], nEvent, bBlock )
@@ -160,7 +160,7 @@ METHOD XbpQtUiLoader:event( cWidget, nEvent, bBlock )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:signal( cWidget, cSignal, bBlock )
+METHOD HbpQtUI:signal( cWidget, cSignal, bBlock )
 
    IF hb_hHasKey( ::qObj, cWidget )
       IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
@@ -172,7 +172,7 @@ METHOD XbpQtUiLoader:signal( cWidget, cSignal, bBlock )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:loadWidgets()
+METHOD HbpQtUI:loadWidgets()
    LOCAL a_, pPtr, bBlock, x, cBlock
 
    FOR EACH a_ IN ::widgets
@@ -196,7 +196,7 @@ METHOD XbpQtUiLoader:loadWidgets()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:loadContents( cUiFull )
+METHOD HbpQtUI:loadContents( cUiFull )
    LOCAL cBuffer := memoread( cUiFull )
    LOCAL n, cClass, cWidget
 
@@ -223,7 +223,7 @@ METHOD XbpQtUiLoader:loadContents( cUiFull )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpQtUiLoader:loadUI( cUiFull )
+METHOD HbpQtUI:loadUI( cUiFull )
    LOCAL qWidget, qUiLoader, qFile, pWidget
 
    qFile := QFile():new( cUiFull )
@@ -247,7 +247,7 @@ METHOD XbpQtUiLoader:loadUI( cUiFull )
 
 /*----------------------------------------------------------------------*/
 
-METHOD OnError( ... )
+METHOD HbpQtUI:OnError( ... )
    LOCAL cMsg
    LOCAL xReturn
 
