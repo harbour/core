@@ -84,13 +84,13 @@ static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int *
    HB_BYTE bpc = 0;
 
    if( piHeight )
-      *piHeight = 0;
+      *piHeight = ( int ) height;
    if( piWidth )
-      *piWidth = 0;
+      *piWidth = ( int ) width;
    if( piColorSpace )
-      *piColorSpace = 0;
+      *piColorSpace = ( int ) colorspace;
    if( piBPC )
-      *piBPC = 0;
+      *piBPC = ( int ) bpc;
 
    if( nPos >= nBufferSize )
       return _JPEG_RET_OVERRUN;
@@ -139,7 +139,7 @@ static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int *
          if( nPos >= nBufferSize )
             return _JPEG_RET_OVERRUN;
 
-         bpc = *( buffer + nPos ); nPos += 1;
+         bpc = *( buffer + nPos ); /* nPos += 1; */
 
          break;
       }
@@ -245,7 +245,7 @@ static int hb_png_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * 
    hb_png_read_data.bOk = HB_TRUE;
 
    png_set_sig_bytes( png_ptr, sizeof( header ) );
-   png_set_read_fn( png_ptr, ( void * ) &hb_png_read_data, ( png_rw_ptr ) &hb_png_read_func );
+   png_set_read_fn( png_ptr, ( void * ) &hb_png_read_data, ( png_rw_ptr ) hb_png_read_func );
 
    png_read_info( png_ptr, info_ptr );
 
