@@ -77,4 +77,16 @@
 #define HB_WIN_COM_DBGQUEUE                  0x20
 #define HB_WIN_COM_DBGALL                    0x3F
 
+/* hbwin_bitmapType() return values */
+#define HB_WIN_BITMAP_UNKNOWN                0
+#define HB_WIN_BITMAP_BMP                    1
+#define HB_WIN_BITMAP_JPEG                   2
+#define HB_WIN_BITMAP_PNG                    3
+
+HB_EXTERN_BEGIN
+
+extern HB_EXPORT int       hbwin_bitmapType( const void * pImgBuf, HB_SIZE size );
+
+HB_EXTERN_END
+
 #endif /* __HBWIN_H */

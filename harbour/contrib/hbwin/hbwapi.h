@@ -99,27 +99,27 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );
-HB_EXPORT DWORD     hbwapi_GetLastError( void );
+extern HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );
+extern HB_EXPORT DWORD     hbwapi_GetLastError( void );
 
-HB_EXPORT POINT *   hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory );
-HB_EXPORT RECT *    hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory );
-HB_EXPORT DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** h );
+extern HB_EXPORT POINT *   hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory );
+extern HB_EXPORT RECT *    hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory );
+extern HB_EXPORT DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** h );
 
-HB_EXPORT void      hbwapi_stor_POINT( POINT * p, int iParam );
-HB_EXPORT void      hbwapi_stor_RECT( RECT * p, int iParam );
+extern HB_EXPORT void      hbwapi_stor_POINT( POINT * p, int iParam );
+extern HB_EXPORT void      hbwapi_stor_RECT( RECT * p, int iParam );
 
-HB_EXPORT HDC       hbwapi_par_HDC( int iParam );
-HB_EXPORT HPEN      hbwapi_par_HPEN( int iParam );
-HB_EXPORT HBRUSH    hbwapi_par_HBRUSH( int iParam );
-HB_EXPORT HFONT     hbwapi_par_HFONT( int iParam );
-HB_EXPORT PDEVMODE  hbwapi_par_PDEVMODE( int iParam );
+extern HB_EXPORT HDC       hbwapi_par_HDC( int iParam );
+extern HB_EXPORT HPEN      hbwapi_par_HPEN( int iParam );
+extern HB_EXPORT HBRUSH    hbwapi_par_HBRUSH( int iParam );
+extern HB_EXPORT HFONT     hbwapi_par_HFONT( int iParam );
+extern HB_EXPORT PDEVMODE  hbwapi_par_PDEVMODE( int iParam );
 
-HB_EXPORT void      hbwapi_ret_HDC( HDC p );
-HB_EXPORT void      hbwapi_ret_HPEN( HPEN p );
-HB_EXPORT void      hbwapi_ret_HBRUSH( HBRUSH p );
-HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
-HB_EXPORT void      hbwapi_ret_PDEVMODE( PDEVMODE p );
+extern HB_EXPORT void      hbwapi_ret_HDC( HDC p );
+extern HB_EXPORT void      hbwapi_ret_HPEN( HPEN p );
+extern HB_EXPORT void      hbwapi_ret_HBRUSH( HBRUSH p );
+extern HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
+extern HB_EXPORT void      hbwapi_ret_PDEVMODE( PDEVMODE p );
 
 HB_EXTERN_END
 

@@ -21,6 +21,7 @@ C_SOURCES := \
    wce_simc.c \
    wce_smsc.c \
    win_bmp.c \
+   win_bmpd.c \
    win_com.c \
    win_dlg.c \
    win_dll.c \
@@ -45,9 +46,10 @@ PRG_SOURCES := \
    oleauto.prg \
    axfunc.prg \
    wce_sim.prg \
-   win_tcom.prg \
    win_os.prg \
    win_reg.prg \
+   win_tbmp.prg \
+   win_tcom.prg \
    win_tprn.prg \
 
 C_HEADERS := \
