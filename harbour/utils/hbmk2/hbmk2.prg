@@ -3827,7 +3827,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   AEval( array, {| tmp | cFile += 'HB_FUNC_EXTERN( ' + tmp + ' );'                + Chr( 10 ) } )
                   IF l_cCMAIN != NIL
                      cFile += ''                                                                  + Chr( 10 )
-                     cFile += 'HB_EXTERN_C void ' + l_cCMAIN + '( void );'                        + Chr( 10 )
+                     IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                        cFile += 'HB_EXTERN_BEGIN'                                                + Chr( 10 ) +;
+                                 'void ' + l_cCMAIN + '( void );'                                 + Chr( 10 ) +;
+                                 'HB_EXTERN_END'                                                  + Chr( 10 )
+                     ELSE
+                        cFile += 'HB_EXTERN_C void ' + l_cCMAIN + '( void );'                     + Chr( 10 )
+                     ENDIF
                   ENDIF
                   cFile += ''                                                                     + Chr( 10 )
                   cFile += 'void _hb_lnk_ForceLink_hbmk( void )'                                  + Chr( 10 )
