@@ -1076,3 +1076,54 @@ FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
    RETURN s
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getShellCommandsTempFile( aCmd )
+   LOCAL cExt
+   LOCAL cPrefix
+   LOCAL fhnd
+   LOCAL cCmdFileName
+   LOCAL cCmdFile
+   LOCAL tmp
+
+   #if   defined( __PLATFORM__WINDOWS )
+      cExt      := ".bat"
+      cPrefix   := ""
+   #elif defined( __PLATFORM__OS2 )
+      cExt      := ".cmd"
+      cPrefix   := ""
+   #elif defined( __PLATFORM__UNIX )
+      cExt      := ".sh"
+      cPrefix   := "#!/bin/sh" + hb_osNewLine()
+   #endif
+
+   IF ! Empty( cExt )
+
+      cCmdFile := cPrefix
+      FOR EACH tmp IN aCmd
+         cCmdFile += tmp + hb_osNewLine()
+      NEXT
+
+      IF ( fhnd := hb_FTempCreateEx( @cCmdFileName, NIL, NIL, cExt ) ) != F_ERROR
+         FWrite( fhnd, cCmdFile )
+         FClose( fhnd )
+      ENDIF
+   ENDIF
+
+   RETURN cCmdFileName
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getShellCommand()
+   LOCAL cShellCmd
+
+   #if   defined( __PLATFORM__WINDOWS )
+      cShellCmd := hb_getenv( "COMSPEC" )
+   #elif defined( __PLATFORM__OS2 )
+      cShellCmd := hb_getenv( "COMSPEC" )
+   #elif defined( __PLATFORM__UNIX )
+      cShellCmd := ""
+   #endif
+
+   RETURN cShellCmd
+
+/*----------------------------------------------------------------------*/

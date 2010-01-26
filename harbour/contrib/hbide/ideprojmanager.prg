@@ -170,9 +170,22 @@ METHOD IdeEnvironments:parse( aContents )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:prepareBatch( cEnviron )
-   LOCAL n, cFile := space( 255 ), s, k, nHandle, a_
+   LOCAL n, s, a_, aCmd
+   LOCAL cFile := space( 255 )
+   //LOCAL k, nHandle
 
    IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnviron } ) ) > 0
+      aCmd := {}
+      FOR EACH a_ IN ::aEnvrns[ n, 2 ]
+         s := a_[ 1 ]
+         IF s == "content"
+            aadd( aCmd, a_[ 2 ] )
+         ENDIF
+      NEXT
+
+      cFile := hbide_getShellCommandsTempFile( aCmd )
+
+      #if 0
       IF ( nHandle := HB_FTempCreateEx( @cFile, NIL, "ide_", ".bat" ) ) > 0
          k := ""
          FOR EACH a_ IN ::aEnvrns[ n, 2 ]
@@ -184,6 +197,7 @@ METHOD IdeEnvironments:prepareBatch( cEnviron )
          fWrite( nHandle, k )
          fClose( nHandle )
       ENDIF
+      #endif
    ENDIF
 
    RETURN cFile
@@ -1191,14 +1205,15 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oProcess:workingPath := ::oProject:wrkDirectory
 
       #if 1
-         cCmd := "cmd.exe"
+         cCmd := hbide_getShellCommand()
+hbide_dbg( cCmd )
          IF empty( ::cBatch )
-            ::oProcess:addArg( "/c "                     + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
+            ::oProcess:addArg( "/C "                     + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
          ELSE
-            ::oProcess:addArg( "/c " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
+            ::oProcess:addArg( "/C " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
          ENDIF
       #else
-         cCmd := "cmd.exe /c " + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" )
+         cCmd := cCmd + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" )
       #endif
 
       ::oProcess:start( cCmd )
