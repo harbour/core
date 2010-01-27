@@ -1182,120 +1182,162 @@ FUNCTION hbide_getOS()
    RETURN cOS
 
 /*----------------------------------------------------------------------*/
-#if 0
-PROCEDURE hbide_convert_xhp_to_hbp( cSrcName )
-   LOCAL cSrc := MemoRead( cSrcName )
-   LOCAL cDst
-   LOCAL aDst := {}
+/*
+ * Harbour Project source code:
+ *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://www.harbour-project.org
+ *
+ */
+#define HBIDE_HBP_PTYPE_FILES           "files"
+#define HBIDE_HBP_PTYPE_OPTIONS         "options"
+#define HBIDE_HBP_PTYPE_HBIDEPARAMS     "hbideparams"
+
+FUNCTION hbide_fetchHbpData( cHBPFileName )
+   LOCAL aParamList
+
+   aParamList := hbide_HBPGetParamList( cHBPFileName )
+
+   hbide_dbg( "hbmk2 files"    ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_FILES       ), {| tmp | hbide_dbg( tmp ) } )
+   hbide_dbg( "hbmk2 options"  ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_OPTIONS     ), {| tmp | hbide_dbg( tmp ) } )
+   hbide_dbg( "hbide comments" ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_HBIDEPARAMS ), {| tmp | hbide_dbg( tmp ) } )
+
+   RETURN  { hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_OPTIONS ), ;
+             hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_FILES   )  }
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_HBPParamListFilter( aParams, nType )
+   LOCAL aArray := {}
    LOCAL tmp
-   LOCAL cLine
-   LOCAL cSetting
-   LOCAL cValue
-   LOCAL aValue
-   LOCAL cFile
-   LOCAL hLIBPATH := {=>}
-   LOCAL cMAIN := NIL
-   LOCAL lFileSection := .F.
+   LOCAL cParamNQ
 
-   LOCAL cHome, cOutname, cType, cDefine, cInclude, aFiles := {}
-   LOCAL cRun, cParams, cDestntn, cMap
-
-
-   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-   cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
-
-   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
-      IF cLine == "[Files]"
-         lFileSection := .T.
-      ELSEIF lFileSection
-         tmp := At( "=", cLine )
-         IF tmp > 0
-            cFile := AllTrim( Left( cLine, tmp - 1 ) )
-            SWITCH Lower( FN_ExtGet( cFile ) )
-            CASE ".c"
-            CASE ".prg"
-               IF !( "%HB_INSTALL%\" $ cFile )
-                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
-               ENDIF
-               EXIT
-            CASE ".lib"
-            CASE ".a"
-               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
-                  !( "%HB_LIB_INSTALL%\" $ cFile )
-                  cFile := StrTran( cFile, "%HOME%\" )
-                  IF !( FN_DirGet( cFile ) $ hLIBPATH )
-                     hLIBPATH[ FN_DirGet( cFile ) ] := NIL
-                  ENDIF
-                  AAdd( aDst, "-l" + FN_NameGet( cFile ) )
-               ENDIF
-               EXIT
-            CASE ".obj"
-            CASE ".o"
-               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
-                  !( "%HB_LIB_INSTALL%\" $ cFile )
-                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
-               ENDIF
-               EXIT
-            ENDSWITCH
+   FOR EACH tmp IN aParams
+      DO CASE
+      CASE Lower( Left( tmp[ 1 ], 7 ) ) == "#hbide."
+         IF nType == HBIDE_HBP_PTYPE_HBIDEPARAMS
+            AAdd( aArray, tmp[ 1 ] )
          ENDIF
-      ELSE
-         tmp := At( "=", cLine )
-         IF tmp > 0
-            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
-            cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
-            aValue := hb_ATokens( cValue )
-            IF ! Empty( cValue )
-               SWITCH cSetting
-               CASE "Create Map/List File"
-                  IF cValue == "Yes"
-                     AAdd( aDst, "-map" )
-                  ENDIF
-                  EXIT
-               CASE "Final Path"
-                  IF ! Empty( cValue )
-                     AAdd( aDst, "-o" + DirAddPathSep( StrTran( cValue, "%HOME%\" ) ) )
-                  ENDIF
-                  EXIT
-               CASE "Include"
-                  FOR EACH tmp IN aValue
-                     IF Left( tmp, 2 ) == "-I"
-                        tmp := SubStr( tmp, 3 )
-                     ENDIF
-                     AAdd( aDst, "-incpath=" + StrTran( StrTran( tmp, Chr( 34 ) ), "%HOME%\" ) )
-                  NEXT
-                  EXIT
-               CASE "Define"
-                  FOR EACH tmp IN aValue
-                     IF Left( tmp, 2 ) == "-D"
-                        tmp := SubStr( tmp, 3 )
-                     ENDIF
-                     AAdd( aDst, "-D" + tmp )
-                  NEXT
-                  EXIT
-               CASE "Params"
-                  FOR EACH tmp IN aValue
-                     AAdd( aDst, "-runflag=" + tmp )
-                  NEXT
-                  EXIT
-               ENDSWITCH
+      CASE Left( tmp[ 1 ], 1 ) == "#"
+         /* misc comment line, always skip */
+      CASE Empty( tmp[ 1 ] )
+         /* empty line, always skip */
+      OTHERWISE
+         cParamNQ := hbide_HBPStrStripQuote( tmp[ 1 ] )
+         IF Left( cParamNQ, 1 ) == "-"
+            /* in conformance with hbmk2, skip remaining hbmk2 parameters if -skip is found */
+            IF Lower( cParamNQ ) == "-skip" .AND. ( nType == HBIDE_HBP_PTYPE_FILES .OR. nType == HBIDE_HBP_PTYPE_OPTIONS )
+               EXIT
+            ENDIF
+            IF nType == HBIDE_HBP_PTYPE_OPTIONS
+               AAdd( aArray, cParamNQ )
+            ENDIF
+         ELSE
+            IF nType == HBIDE_HBP_PTYPE_FILES
+               AAdd( aArray, cParamNQ )
             ENDIF
          ENDIF
+      ENDCASE
+   NEXT
+
+   RETURN aArray
+
+/*----------------------------------------------------------------------*/
+
+/* Load entire .hbp files, with empty lines and comments for
+   further processing. [vszakats] */
+FUNCTION hbide_HBPGetParamList( cFileName )
+   LOCAL aParams := {}
+
+   hbide_HBPLoad( aParams, cFileName )
+
+   RETURN aParams
+
+/*----------------------------------------------------------------------*/
+
+/* Recursive .hbp/.hbm files are not currently supported.
+   It can be added, but it makes updating the options much more
+   complicated. [vszakats] */
+
+#define HBIDE_HBP_EOL Chr( 10 )
+
+STATIC PROCEDURE hbide_HBPLoad( aParams, cFileName )
+   LOCAL cFile
+   LOCAL cLine
+   LOCAL cParam
+   LOCAl cParamNQ
+
+   IF hb_FileExists( cFileName )
+
+      cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
+
+      IF ! hb_osNewLine() == HBIDE_HBP_EOL
+         cFile := StrTran( cFile, hb_osNewLine(), HBIDE_HBP_EOL )
       ENDIF
-   NEXT
+      IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+         cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), HBIDE_HBP_EOL )
+      ENDIF
 
-   FOR EACH tmp IN hLIBPATH
-      AAdd( aDst, "-L" + tmp:__enumKey() )
-   NEXT
-
-   cDst := ""
-   FOR EACH tmp IN aDst
-      cDst += tmp + hb_osNewLine()
-   NEXT
-
-   hbmk_OutStd( hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
-
-   hb_MemoWrit( cDstName, cDst )
+      FOR EACH cLine IN hb_ATokens( cFile, HBIDE_HBP_EOL )
+         IF Empty( cLine ) .OR. ;
+            Left( cLine, 1 ) == "#"
+            AAdd( aParams, { cLine, cFileName, cLine:__enumIndex() } )
+         ELSE
+            FOR EACH cParam IN hb_ATokens( cLine,, .T. )
+               cParamNQ := hbide_HBPStrStripQuote( cParam )
+               IF ! Empty( cParamNQ )
+                  DO CASE
+                  CASE !( Left( cParamNQ, 1 ) == "-" ) .AND. Len( cParamNQ ) >= 1 .AND. Left( cParamNQ, 1 ) == "@" .AND. ;
+                       !( Lower( hbide_HBPExtGet( cParamNQ ) ) == ".clp" )
+                     /* skip recurse */
+                  CASE !( Left( cParamNQ, 1 ) == "-" ) .AND. ;
+                       ( Lower( hbide_HBPExtGet( cParamNQ ) ) == ".hbm" .OR. ;
+                         Lower( hbide_HBPExtGet( cParamNQ ) ) == ".hbp" )
+                     /* skip recurse */
+                  OTHERWISE
+                     AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
+                  ENDCASE
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN
-#endif
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_HBPStrStripQuote( cString )
+   RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
+             SubStr( cString, 2, Len( cString ) - 2 ),;
+             cString )
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_HBPExtGet( cFileName )
+   LOCAL cExt
+
+   hb_FNameSplit( cFileName,,, @cExt )
+
+   RETURN cExt
+
+/*----------------------------------------------------------------------*/
+//
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_parseHbpFilter( s, cFilt, cPath )
+   LOCAL n, n1
+
+   cFilt := ""
+   cPath := s
+   IF ( n := at( "{", s ) ) > 0
+      IF ( n1 := at( "}", s ) ) > 0
+         cFilt := substr( s, n + 1, n1 - n + 1 )
+         cPath := alltrim( substr( s, n1 + 1 ) )
+         RETURN .t.
+      ENDIF
+   ENDIF
+
+   RETURN .f.
+
 /*----------------------------------------------------------------------*/

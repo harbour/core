@@ -216,7 +216,8 @@ CLASS HbIde
    METHOD setPosByIni( qWidget, nPart )
    METHOD setSizeByIni( qWidget, nPart )
    METHOD manageFocusInEditor()
-   METHOD updateProjectTree( aPrj, lRemove )
+   METHOD removeProjectTree( aPrj )
+   METHOD updateProjectTree( aPrj )
    METHOD manageItemSelected( oXbpTreeItem )
    METHOD manageProjectContext( mp1, mp2, oXbpTreeItem )
    METHOD updateFuncList()
@@ -331,7 +332,9 @@ METHOD HbIde:create( cProjIni )
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
    ::oSM:loadSources()
+   #if 0 /* Must not be greyed as we have more options there */
    ::updateProjectMenu()
+   #endif
    ::updateTitleBar()
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
@@ -747,141 +750,109 @@ METHOD HbIde:manageFocusInEditor()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:updateProjectTree( aPrj, lRemove )
-   LOCAL cType, oParent, oP, aSrc, j, cProject, nPath
-   LOCAL aPath, aInUse, cPath, cFile, cExt, oPP, cPathA, nPos
+METHOD HbIde:removeProjectTree( aPrj )
+   LOCAL oProject, nIndex, oParent, oP, n
 
-   DEFAULT lRemove TO .F.
-
-   IF Empty( aPrj )
+   oProject := IdeProject():new( Self, aPrj )
+   IF empty( oProject:title )
       RETURN Self
    ENDIF
-
-   cProject := aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
-
-   IF Empty( cProject )
-      RETURN Self
+   nIndex := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Project Name" .AND. e_[ TRE_ORIGINAL ] == oProject:title } )
+   IF nIndex > 0
+      oParent := ::aProjData[ nIndex, TRE_OITEM ]
+      DO WHILE .t.
+         n := ascan( ::aProjData, {|e_| e_[ TRE_OPARENT ] == oParent } )
+         IF n == 0
+            EXIT
+         ENDIF
+         oParent:delItem( ::aProjData[ n, TRE_OITEM ] )
+         hb_adel( ::aProjData, n, .t. )
+      ENDDO
    ENDIF
 
-   nPos  := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Project Name" .and. e_[ TRE_ORIGINAL ] == cProject } )
-   cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
+   oP := oParent
 
-   DO CASE
-   CASE cType == "Executable"
+   SWITCH oProject:type
+   CASE "Executable"
       oParent := ::aProjData[ 1, 1 ]
-   CASE cType == "Lib"
+      EXIT
+   CASE "Lib"
       oParent := ::aProjData[ 2, 1 ]
-   CASE cType == "Dll"
+      EXIT
+   CASE "Dll"
       oParent := ::aProjData[ 3, 1 ]
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
-   IF !( lRemove )
+   nIndex := aScan( ::aProjData, {|e_| e_[ TRE_OITEM ] == oP } )
+   oParent:delItem( oP )
+   hb_adel( ::aProjData, nIndex, .t. )
 
-    * It is a new node?
-      IF nPos == 0
-         oParent:expand( .t. )
+   RETURN Self
 
-         oP := oParent:addItem( cProject )
-         aadd( ::aProjData, { oP, "Project Name", oParent, cProject, aPrj } )
-         oParent := oP
+/*----------------------------------------------------------------------*/
 
-    * Need to be an update?
-      ELSE
-         nPos := aScan( oParent:aChilds, {|o| o:caption == cProject } )
+METHOD HbIde:updateProjectTree( aPrj )
+   LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent, cPath
 
-         IF nPos <> 00
-            oParent := oParent:aChilds[ nPos ]
-         ENDIF
-      ENDIF
-
-      aSrc  := aClone( aPrj[ PRJ_PRP_SOURCES, 2 ] )
-      aSrc  := ASort( aSrc )
-      aPath := {}
-      aInUse:= {}
-
-    * Load previous aPath used to fill ::aProjData
-    * 03/01/2010 - 16:08:25 - vailtom
-      FOR j := 1 TO LEN( ::aProjData )
-          IF !hb_isChar( ::aProjData[ j, 5 ] )        .OR. ;  // It is not a char?
-                ::aProjData[ j, TRE_TYPE ] != 'Path'  .OR. ;  // Is not an path?
-                ::aProjData[ j, TRE_DATA ] != cProject        // Is not from same project?
-             LOOP
-          ENDIF
-          AAdd( aPath, { ::aProjData[ j, TRE_ORIGINAL ], ::aProjData[ j, 1 ]} )
-      NEXT
-
-    * Add new nodes with file names to tree...
-      FOR j := 1 TO len( aSrc )
-         hb_fNameSplit( aSrc[ j ], @cPath, @cFile, @cExt )
-
-         cPathA := hbide_pathNormalized( cPath, .T. )
-         nPath  := aScan( aPath, {|e_|  e_[ 1 ] == cPathA } )
-
-         AAdd( aInUse, cPathA )
-
-       * Find an node with Caption == cPathA
-         IF ( nPath == 0 )
-            oPP := oParent:addItem( hbide_pathNormalized( cPath, .f. ) )
-            aadd( ::aProjData, { oPP, "Path", oParent, cPathA, cProject } )
-            aadd( aPath, { cPathA, oPP } )
-            nPath := len( aPath )
-         ENDIF
-
-         oPP   := aPath[ nPath,2 ]
-         cFile := cFile + cExt
-         nPos  := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Source File" .AND. ;
-                                            e_[ TRE_ORIGINAL ] == aSrc[ j ] } )
-         IF nPos == 00
-            aadd( ::aProjData, { oPP:addItem( cFile ), "Source File", oPP, aSrc[ j ], cProject } )
-         ENDIF
-      NEXT
-
-    * Remove deleted nodes from tree
-      FOR j := 1 TO LEN( ::aProjData )
-
-        * Is not from same project?
-          IF !hb_isChar( ::aProjData[ j, TRE_DATA ] ) .OR. ;
-                ::aProjData[ j, TRE_DATA ] != cProject
-             LOOP
-          ENDIF
-
-        * It is a path?
-          IF ::aProjData[ j, 2 ] == 'Path'
-             cPathA := ::aProjData[ j, TRE_ORIGINAL ]
-             nPath  := aScan( aInUse, {|e_|  e_ == cPathA } )
-
-             IF nPath == 00
-                ::aProjData[ j, TRE_OPARENT ]:delItem( ::aProjData[ j, 1 ] )
-                hb_aDel( ::aProjData, j, .T. )
-             ENDIF
-
-             LOOP
-          ENDIF
-
-        * It is a filename?
-          IF ::aProjData[ j, 2 ] == 'Source File'
-             cFile := ::aProjData[ j, TRE_ORIGINAL ]
-             nPos  := aScan( aSrc, {|e_|  e_ == cFile } )
-
-             IF nPos == 00
-                ::aProjData[ j, TRE_OPARENT ]:delItem( ::aProjData[ j, TRE_OITEM ] )
-                hb_aDel( ::aProjData, j, .T. )
-             ENDIF
-
-             LOOP
-          ENDIF
-      NEXT
-
-   ELSE
-
-      IF nPos != 0
-         nPos := aScan( oParent:aChilds, {|e_| e_:Caption == cProject } )
-
-         IF nPos > 0
-            oParent:delItem( oParent:aChilds[ nPos ] )
-         ENDIF
-      ENDIF
+   oProject := IdeProject():new( Self, aPrj )
+   IF empty( oProject:title )
+      RETURN Self
    ENDIF
+
+   SWITCH oProject:type
+   CASE "Executable"
+      oParent := ::aProjData[ 1, 1 ]
+      EXIT
+   CASE "Lib"
+      oParent := ::aProjData[ 2, 1 ]
+      EXIT
+   CASE "Dll"
+      oParent := ::aProjData[ 3, 1 ]
+      EXIT
+   ENDSWITCH
+
+   nProjExists := aScan( ::aProjData, {|e_| e_[ TRE_TYPE ] == "Project Name" .AND. e_[ TRE_ORIGINAL ] == oProject:title } )
+
+   IF nProjExists > 0
+      nProjExists := aScan( oParent:aChilds, {|o| o:caption == oProject:title } )
+      IF nProjExists > 0
+         oP := oParent:aChilds[ nProjExists ]
+      ELSE
+         RETURN Self  /* Some Error - It must never happen */
+      ENDIF
+      /* Delete Existing Nodes */
+      DO WHILE .t.
+         n := ascan( ::aProjData, {|e_| e_[ TRE_OPARENT ] == oP } )
+         IF n == 0
+            EXIT
+         ENDIF
+         oP:delItem( ::aProjData[ n, TRE_OITEM ] )
+         hb_adel( ::aProjData, n, .t. )
+      ENDDO
+   ENDIF
+   IF empty( oP )
+      oParent:expand( .t. )
+      oP := oParent:addItem( oProject:title )
+      aadd( ::aProjData, { oP, "Project Name", oParent, oProject:title, aPrj, oProject } )
+   ENDIF
+   oParent := oP
+   /* Reassign all children nodes */
+   FOR EACH cPath IN oProject:hPaths
+      oItem := oParent:addItem( cPath:__enumKey() )
+      aadd( ::aProjData, { oItem, "Path", oParent, cPath:__enumKey(), oProject:title, oProject } )
+   NEXT
+   /* Souces */
+   FOR EACH oSource IN oProject:hSources
+      n := ascan( ::aProjData, {|e_| e_[ TRE_TYPE     ] == "Path"       .AND. ;
+                                     e_[ TRE_ORIGINAL ] == oSource:path .AND. ;
+                                     e_[ TRE_DATA     ] == oProject:title  } )
+      IF n > 0
+         oP := ::aProjData[ n, TRE_OITEM ]
+         oItem := oP:addItem( oSource:file + oSource:ext )
+         aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
+      ENDIF
+   NEXT
 
    RETURN Self
 
@@ -953,7 +924,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       IF !empty( ::oEV:getNames() )
          aadd( aPops, { "" } )
          FOR EACH s IN ::oEV:getNames()
-            aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
+            aadd( aSub, { s                              , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
          NEXT
          aadd( aPops, { aSub, "Environment..." } )
       ENDIF
@@ -978,11 +949,12 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "" } )
       aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close This Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Close this Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Remove this Project"               , {|| ::oPM:removeProject( oXbpTreeItem:caption ) } } )
       IF !empty( ::oEV:getNames() )
          aadd( aPops, { "" } )
          FOR EACH s IN ::oEV:getNames()
-            aadd( aSub, { s                             , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
+            aadd( aSub, { s                              , {|x| ::cWrkEnvironment := x, ::oDK:dispEnvironment( x ) } } )
          NEXT
          aadd( aPops, { aSub, "Select an environment" } )
       ENDIF
