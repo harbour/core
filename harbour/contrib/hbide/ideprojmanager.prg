@@ -689,9 +689,12 @@ METHOD IdeProjManager:save( lCanClose )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:loadXhpProject()
-   LOCAL cXhp, a_, s, n, cPart, cKey, cVal, b_
-   LOCAL cHome, cOutname, cType, cDefine, cInclude, aFiles := {}
+   LOCAL cXhp, a_, s, n, cPart, cKey, cVal
+   LOCAL cHome, cOutname, cType, cDefine, cInclude
    LOCAL cRun, cParams, cDestntn, cMap
+   LOCAL cPath, cFile, cExt
+   LOCAL hLIBPATH := {=>}
+   LOCAL aLibs := {}, aFlags := {}, aFiles := {}, aSrc := {}
 
    cXhp := hbide_fetchAFile( ::oDlg, "Selecet xMate Project File", { { "xMate Project Files", "*.xhp" } } )
 
@@ -716,7 +719,6 @@ METHOD IdeProjManager:loadXhpProject()
             cPart := ""
          ENDIF
       ELSE
-hbide_dbg( cPart )
          SWITCH lower( cPart )
          CASE "version"
             EXIT
@@ -775,48 +777,76 @@ hbide_dbg( cPart )
    NEXT
 
    /* Basic Parsing is complete , parse paths from keywords */
-   hbide_justACall( cType )
+   SWITCH cType
+   CASE "Executable"
+      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+      EXIT
+   CASE "Library"
+      ::oUI:q_comboPrjType:setCurrentIndex( 1 )
+      EXIT
+   CASE "Dll"
+      ::oUI:q_comboPrjType:setCurrentIndex( 2 )
+      EXIT
+   OTHERWISE
+      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+      EXIT
+   ENDSWITCH
 
    ::oUI:q_editPrjTitle :setText( cOutName )
    ::oUI:q_editPrjLoctn :setText( cHome    )
 *  ::oUI:q_editWrkFolder:setText( ""       )
-   ::oUI:q_editDstFolder:setText( iif( cDestntn == "%HOME%", cHome, hbide_xmateMetaToHbMeta( cDestntn ) ) )
+   ::oUI:q_editDstFolder:setText( iif( cDestntn == "%HOME%", cHome, strtran( cDestntn, "%HOME%\", ) ) )
 *  ::oUI:q_editBackup   :setText( ""       )
    ::oUI:q_editOutName  :setText( cOutName )
    ::oUI:q_editLaunchParams:setText( cParams )
    ::oUI:q_editLaunchExe:setText( cRun )
 
-   a_:= {}
-   aadd( a_, iif( empty( cMap ), "", cMap ) )
-   aadd( a_, "" )
+   IF !empty( cMap )
+      aadd( aFlags, cMap )
+   endif
+   aadd( aFlags, "-inc" )
    IF !empty( cDefine )
-      b_:= hb_aTokens( cDefine, ";" )
-      FOR EACH s IN b_
+      FOR EACH s IN hb_aTokens( cDefine, ";" )
          IF !empty( s )
-            s := "-D" + s
+            aadd( aFlags, "-D" + StrTran( s, "%HOME%\", ) )
          ENDIF
       NEXT
    ENDIF
-   aeval( b_, {|e| aadd( a_, e ) } )
    IF !empty( cInclude )
-      b_:= hb_aTokens( cInclude, ";" )
-      FOR EACH s IN b_
+      FOR EACH s IN hb_aTokens( cInclude, ";" )
          IF !empty( s )
-            s := "-incpath=" + strtran( s, "%HOME%\" )
+            IF !( "%HB_INSTALL%" $ s .OR. "%HB_LIB_INSTALL%" $ s .OR. "%C_LIB_INSTALL%" $ s )
+               aadd( aFlags, "-incpath=" + StrTran( s, "%HOME%\", ) )
+            ENDIF
          ENDIF
       NEXT
    ENDIF
-   aeval( b_, {|e| aadd( a_, e ) } )
-   ::oUI:q_editFlags:setPlainText( hbide_arrayToMemo( a_ ) )
-
-   a_:= {}
    FOR EACH s IN aFiles
-      IF !( "%HB_LIB_INSTALL%" $ s .OR. "C_LIB_INSTALL" $ s )
-         aadd( a_, strtran( s, "%HOME%\", ) )
+      IF !( "%HB_INSTALL%" $ s .OR. "%HB_LIB_INSTALL%" $ s .OR. "%C_LIB_INSTALL%" $ s )
+         hb_fNameSplit( s, @cPath, @cFile, @cExt )
+         SWITCH lower( cExt )
+         CASE ".lib"
+         CASE ".a"
+            IF !( cPath $ hLIBPATH )
+               hLIBPATH[ cPath ] := NIL
+            ENDIF
+            aadd( aLibs, cFile )
+            EXIT
+         OTHERWISE
+            aadd( aSrc, StrTran( s, "%HOME%\", ) )
+            EXIT
+         ENDSWITCH
       ENDIF
    NEXT
-   ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( a_ ) )
-*  ::oUI:q_editMetaData :setPlainText( "" )
+   FOR EACH s IN hLIBPATH
+      aadd( aFlags, "-L" + s:__enumKey() )
+   NEXT
+   FOR EACH s IN aLibs
+      aadd( aFlags, "-l" + s )
+   NEXT
+
+   ::oUI:q_editFlags  :setPlainText( hbide_arrayToMemo( aFlags ) )
+   ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( aSrc   ) )
 
    RETURN Self
 
@@ -874,19 +904,19 @@ METHOD IdeProjManager:manageEnvironments()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:saveEnvironments()
-   LOCAL cText
+   LOCAL cText, cPathMk2, cPathEnv
 
-   ::oProject:cPathMk2 := ::oUI:q_editPathMk2:text()
-   ::oProject:cPathEnv := ::oUI:q_editPathEnv:text()
+   cPathMk2 := ::oUI:q_editPathMk2:text()
+   cPathEnv := ::oUI:q_editPathEnv:text()
 
-   ::oIde:aINI[ INI_HBIDE, PathMk2 ] := ::oProject:cPathMk2
-   ::oIde:aINI[ INI_HBIDE, PathEnv ] := ::oProject:cPathEnv
+   ::oIde:aINI[ INI_HBIDE, PathMk2 ] := cPathMk2
+   ::oIde:aINI[ INI_HBIDE, PathEnv ] := cPathEnv
    //
-   ::oIde:cWrkPathMk2 := ::oProject:cPathMk2
-   ::oIde:cWrkPathEnv := ::oProject:cPathEnv
+   ::oIde:cWrkPathMk2 := cPathMk2
+   ::oIde:cWrkPathEnv := cPathEnv
 
    IF !empty( cText := ::oUI:q_editCompilers:toPlainText() )
-      hb_MemoWrit( hbide_pathFile( ::oProject:cPathEnv, "hbide.env" ), cText )
+      hb_MemoWrit( hbide_pathFile( cPathEnv, "hbide.env" ), cText )
    ENDIF
 
    RETURN Self
@@ -1311,7 +1341,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, " " )
    IF !( ::lPPO )
       aadd( aHbp, "-o" + cTargetFN )
-      aadd( aHbp, "-workdir=" + ::oProject:wrkDirectory + "/${hb_plat}/${hb_comp}" )
+ *    aadd( aHbp, "-workdir=" + ::oProject:wrkDirectory + "/${hb_plat}/${hb_comp}" )
    ENDIF
    aadd( aHbp, "-q"          )
    aadd( aHbp, "-trace"      )
@@ -1382,18 +1412,13 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       //
       ::oProcess:output      := {|cOut, mp2, oHbp| ::showOutput( cOut,mp2,oHbp ) }
       ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC ,nES,oHbp ) }
-      ::oProcess:workingPath := ::oProject:wrkDirectory
-
-      #if 1
-         cCmd := hbide_getShellCommand()
-         cC   := iif( hbide_getOS() == "nix", "", "/C " )
-         cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
-
-         ::oProcess:addArg( cArg + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
-      #else
-         cCmd := cCmd + ::cBatch + " && " + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" )
-      #endif
-
+      ::oProcess:workingPath := hbide_pathToOSPath( ::oProject:wrkDirectory )
+      //
+      cCmd := hbide_getShellCommand()
+      cC   := iif( hbide_getOS() == "nix", "", "/C " )
+      cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
+      //
+      ::oProcess:addArg( cArg + cExeHbMk2 + " " + cHbpPath + iif( ::lPPO, " -hbraw", "" ) )
       ::oProcess:start( cCmd )
    ENDIF
 
@@ -1444,7 +1469,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject )
-   LOCAL qProcess, cTargetFN, cTmp, oProject
+   LOCAL cTargetFN, cTmp, oProject
+   LOCAL qProcess
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
@@ -1468,14 +1494,19 @@ METHOD IdeProjManager:launchProject( cProject )
    ELSEIF oProject:type == "Executable"
       cTmp := "Launching application [ " + cTargetFN + " ]"
 
+      #if 1
       qProcess := QProcess():new()
-      //
       qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
-
       qProcess:startDetached_2( cTargetFN )
       qProcess:waitForStarted()
       qProcess:pPtr := 0
-      qProcess      := NIL
+      qProcess := NIL
+      #else
+      ::oProcess := HbpProcess():new()
+      ::oProcess:output := {|s| hbide_dbg( s ) }
+      ::oProcess:finished := {|n,nn| hbide_dbg( "Finished", n, nn ) }
+      ::oProcess:start( cTargetFN )
+      #endif
 
    ELSE
       cTmp := "Launching application [ " + cTargetFN + " ] ( not applicable )."

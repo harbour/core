@@ -205,9 +205,9 @@ METHOD HbpProcess:start( cShellCmd )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::read( CHN_BYT, i, o ) } )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::read( CHN_STT, i, o ) } )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::read( CHN_ERE, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::read( CHN_BGN, i, o ) } )
    #endif
 
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::read( CHN_BGN, i, o ) } )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::read( CHN_OUT, i, o ) } )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::read( CHN_ERR, i, o ) } )
    Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::read( CHN_FIN, i, ii, o ) } )
@@ -233,7 +233,8 @@ METHOD HbpProcess:read( nMode, i, ii )
    nSize := 16384
 
    DO CASE
-   CASE nMode == CHN_REA
+   CASE nMode == CHN_BGN
+      ::outputMe( "Starting in: " + CurDir() + " : " + ::qProcess:workingDirectory() )
 
    CASE nMode == CHN_OUT
       ::qProcess:setReadChannel( 0 )
@@ -278,8 +279,8 @@ METHOD HbpProcess:finish()
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "bytesWritten(int)"         )
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "stateChanged(int)"         )
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "error(int)"                )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "started()"                 )
    #endif
+   Qt_Slots_disConnect( ::pSlots, ::qProcess, "started()"                 )
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
    Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
