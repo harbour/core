@@ -69,10 +69,10 @@ CREATE CLASS WIN_BMP
    VAR Type     INIT 0                  // Type BitMap: 1 == BM, 2 == JPEG, 3 == PNG
    VAR DimXY    INIT { 0, 0 }           // Image Dimensions X Y pixels
    VAR Rect     INIT { 0, 0, 0, 0 }     // Coordinates to print BitMap
-                                        //   XDest,                    // x-coord of destination upper-left corner
-                                        //   YDest,                    // y-coord of destination upper-left corner
-                                        //   nDestWidth,               // width of destination rectangle
-                                        //   nDestHeight,              // height of destination rectangle
+                                        //   XDest,                    : x-coord of destination upper-left corner
+                                        //   YDest,                    : y-coord of destination upper-left corner
+                                        //   nDestWidth,               : width of destination rectangle
+                                        //   nDestHeight,              : height of destination rectangle
                                         // See WinApi StretchDIBits()
    VAR BitMap   INIT ""
    VAR FileName INIT ""

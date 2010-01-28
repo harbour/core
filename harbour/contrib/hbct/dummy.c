@@ -166,9 +166,9 @@ HB_FUNC( SETSCRSTR )  {;}
 HB_FUNC( VIDEOINIT )  {;}
 HB_FUNC( VIDEOSETUP ) {;}
 /* Introduction Disk Utilities */
-HB_FUNC( DIRCHANGE )  {;}
-HB_FUNC( DIRREMOVE )  {;}
-HB_FUNC( DISKCHANGE ) {;}
+/* HB_FUNC( DIRCHANGE )  {;} */ /* Implemented in Harbour core as C5.3 function. */
+/* HB_FUNC( DIRREMOVE )  {;} */ /* Implemented in Harbour core as C5.3 function. */
+/* HB_FUNC( DISKCHANGE ) {;} */ /* Implemented in Harbour core as C5.3 function. */
 HB_FUNC( DISKCHECK )  {;}
 HB_FUNC( DISKFORMAT ) {;}
 HB_FUNC( DISKFREE )   {;}
