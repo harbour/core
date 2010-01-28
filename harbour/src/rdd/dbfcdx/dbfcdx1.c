@@ -3436,6 +3436,17 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    hb_cdxIndexPageWrite( pTag->pIndex, pTag->TagBlock, (BYTE *) &tagHeader, sizeof( CDXTAGHEADER ) );
 }
 
+#if defined( HB_SIXCDX )
+static HB_BOOL hb_cdxIsTemplateFunc( const char * szKeyExpr )
+{
+   /* For CDX format SIx3 really makes sth like that */
+   return hb_strnicmp( szKeyExpr, "sxChar(", 7 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxDate(", 7 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxNum(", 6 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxLog(", 6 ) == 0;
+}
+#endif
+
 /*
  * Read a tag definition from the index file
  */
@@ -3494,16 +3505,12 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
                      ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) == 0;
    pTag->Partial   = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0 ||
                      ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) != 0;
-#if 0
-   /* For CDX format SIx3 really makes sth like that */
-   pTag->Template  = hb_strnicmp( pTag->KeyExpr, "sxChar(", 7 ) == 0 ||
-                     hb_strnicmp( pTag->KeyExpr, "sxDate(", 7 ) == 0 ||
-                     hb_strnicmp( pTag->KeyExpr, "sxNum(", 6 ) == 0 ||
-                     hb_strnicmp( pTag->KeyExpr, "sxLog(", 6 ) == 0 )
+
+   pTag->Template  = hb_cdxIsTemplateFunc( pTag->KeyExpr );
+   if( pTag->Template )
+      pTag->Custom = HB_TRUE;
    /* SIx3 does not support repeated key value for the same record */
    pTag->MultiKey  = HB_FALSE;
-#endif
-   pTag->Template  = pTag->MultiKey = pTag->Custom;
 #else
    pTag->Temporary = ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) != 0;
    pTag->Custom    = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0;
@@ -4547,7 +4554,16 @@ static LPCDXTAG hb_cdxIndexCreateTag( HB_BOOL fStruct, LPCDXINDEX pIndex,
    pTag->UsrUnique = HB_FALSE;
    pTag->IgnoreCase = fNoCase && bType == 'C';
    pTag->Custom = fCustom;
+
+#if defined( HB_SIXCDX )
+   pTag->Template  = pTag->KeyExpr && hb_cdxIsTemplateFunc( pTag->KeyExpr );
+   if( pTag->Template )
+      pTag->Custom = HB_TRUE;
+   /* SIx3 does not support repeated key value for the same record */
+   pTag->MultiKey  = HB_FALSE;
+#else
    pTag->Template = pTag->MultiKey = pTag->Custom;
+#endif
    pTag->Partial = pTag->ChgOnly = HB_FALSE;
    pTag->uiType = bType;
    pTag->bTrail = ( bType == 'C' ) ? ' ' : '\0';
@@ -8381,74 +8397,89 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
       */
 
       case DBOI_KEYADD:
-         if( !pTag )
-         {
-            pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
-         }
-         else
+      {
+         HB_BOOL fResult = HB_FALSE;
+         if( pTag )
          {
             if( pTag->Custom )
             {
                if( pArea->dbfarea.lpdbPendingRel )
                   SELF_FORCEREL( ( AREAP ) pArea );
 
-               if( !pArea->dbfarea.fPositioned ||
-                   ( pTag->pForItem &&
-                     !hb_cdxEvalCond( pArea, pTag->pForItem, HB_TRUE ) ) )
-               {
-                  pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
-               }
-               else
+               if( pArea->dbfarea.fPositioned &&
+                   ( !pTag->pForItem ||
+                     hb_cdxEvalCond( pArea, pTag->pForItem, HB_TRUE ) ) )
                {
                   LPCDXKEY pKey;
                   hb_cdxIndexLockWrite( pTag->pIndex );
+#if defined( HB_SIXCDX )
+                  if( pTag->Template )
+                  {
+                     if( pTag->uiType == hb_cdxItemType( pInfo->itmNewVal ) )
+                        pKey = hb_cdxKeyPutItem( NULL, pInfo->itmNewVal,
+                                                 pArea->dbfarea.ulRecNo, pTag,
+                                                 HB_TRUE, CDX_CMP_EXACT );
+                     else
+                        pKey = NULL;
+                  }
+#else
                   if( pInfo->itmNewVal && !HB_IS_NIL( pInfo->itmNewVal ) &&
                       pTag->Template )
                      pKey = hb_cdxKeyPutItem( NULL, pInfo->itmNewVal,
                                               pArea->dbfarea.ulRecNo, pTag,
                                               HB_TRUE, CDX_CMP_EXACT );
+#endif
                   else
                      pKey = hb_cdxKeyEval( NULL, pTag );
-                  pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                                  hb_cdxTagKeyAdd( pTag, pKey ) );
-                  hb_cdxIndexUnLockWrite( pTag->pIndex );
-                  hb_cdxKeyFree( pKey );
+                  if( pKey )
+                  {
+                     fResult = hb_cdxTagKeyAdd( pTag, pKey );
+                     hb_cdxIndexUnLockWrite( pTag->pIndex );
+                     hb_cdxKeyFree( pKey );
+                  }
                }
             }
+#if !defined( HB_SIXCDX )
             else
-            {
-               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
-            }
+               hb_cdxErrorRT( pArea, EG_ARG, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
+#endif
          }
+         pInfo->itmResult = hb_itemPutL( pInfo->itmResult, fResult );
          break;
-
+      }
       case DBOI_KEYDELETE:
-         if( !pTag )
-         {
-            pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
-         }
-         else
+      {
+         HB_BOOL fResult = HB_FALSE;
+         if( pTag )
          {
             if( pTag->Custom )
             {
                if( pArea->dbfarea.lpdbPendingRel )
                   SELF_FORCEREL( ( AREAP ) pArea );
 
-               if( !pArea->dbfarea.fPositioned ||
-                   ( pTag->pForItem &&
-                     !hb_cdxEvalCond( pArea, pTag->pForItem, HB_TRUE ) ) )
-               {
-                  pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
-               }
-               else
+               if( pArea->dbfarea.fPositioned &&
+                   ( !pTag->pForItem ||
+                     hb_cdxEvalCond( pArea, pTag->pForItem, HB_TRUE ) ) )
                {
                   LPCDXKEY pKey;
                   hb_cdxIndexLockWrite( pTag->pIndex );
+#if defined( HB_SIXCDX )
+                  if( pTag->Template )
+                  {
+                     if( pTag->uiType == hb_cdxItemType( pInfo->itmNewVal ) )
+                        pKey = hb_cdxKeyPutItem( NULL, pInfo->itmNewVal,
+                                                 pArea->dbfarea.ulRecNo, pTag,
+                                                 HB_TRUE, CDX_CMP_EXACT );
+                     else
+                        pKey = NULL;
+                  }
+#else
                   if( pInfo->itmNewVal && !HB_IS_NIL( pInfo->itmNewVal ) &&
                       pTag->Template )
                      pKey = hb_cdxKeyPutItem( NULL, pInfo->itmNewVal,
                                               pArea->dbfarea.ulRecNo, pTag,
                                               HB_TRUE, CDX_CMP_EXACT );
+#endif
                   else
                   {
                      if( pTag->CurKey->rec != pArea->dbfarea.ulRecNo )
@@ -8459,19 +8490,22 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
                      else
                         pKey = hb_cdxKeyEval( NULL, pTag );
                   }
-                  pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                                  hb_cdxTagKeyDel( pTag, pKey ) );
-                  hb_cdxIndexUnLockWrite( pTag->pIndex );
-                  hb_cdxKeyFree( pKey );
+                  if( pKey )
+                  {
+                     fResult = hb_cdxTagKeyDel( pTag, pKey );
+                     hb_cdxIndexUnLockWrite( pTag->pIndex );
+                     hb_cdxKeyFree( pKey );
+                  }
                }
             }
+#if !defined( HB_SIXCDX )
             else
-            {
-               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
-            }
+               hb_cdxErrorRT( pArea, EG_ARG, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
+#endif
          }
+         pInfo->itmResult = hb_itemPutL( pInfo->itmResult, fResult );
          break;
-
+      }
       case DBOI_READLOCK:
          if( pTag )
          {

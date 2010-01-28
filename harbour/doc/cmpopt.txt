@@ -183,6 +183,22 @@ Expressions fully optimized to constant values at compile time can be used
 to intialize static variables, f.e.:
    static s_var := ( 1 + 2 / 3 )
 
+Clipper does not optimize expression used in LOCAL, PRIVATE and
+PUBLIC variables declarations but it optimize expressions for STATIC
+declarations. This code illustrates it:
+
+   proc main()
+      memvar v, p
+      local l := "" $ ""
+      static s := "" $ ""
+      private v := "" $ ""
+      public p := "" $ ""
+      ? l, s, v, p, "" $ ""
+   return
+
+This behavior is not replicated in Harbour even if -kc switch is used
+and Harbour optimize expressions in all declarations.
+
 Harbour has additional optimization phase which operates on generated PCODE.
 It can also reduce expressions, joins jumps, removes death or meaningless
 code which can appear after all other optimizations and were not optimized
