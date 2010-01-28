@@ -131,6 +131,7 @@ METHOD IdeFindReplace:create( oIde )
 METHOD IdeFindReplace:destroy()
 
    ::oUI:hide()
+   ::oUI:destroy()
    ::oUI:oWidget:pPtr := 0
 
    RETURN Self
@@ -305,4 +306,67 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//
+//                         Class IdeFindInFiles
+//
+/*----------------------------------------------------------------------*/
+
+CLASS IdeFindInFiles INHERIT IdeObject
+
+   METHOD new( oIde )
+   METHOD create( oIde )
+   METHOD destroy()
+   METHOD show()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   ::oUI := HbpQtUI():new( ::oIde:oDlg )
+   ::oUI:file := ::oIde:resPath + "findinfiles.ui"
+   ::oUI:create()
+   //::oUI:setWindowFlags( Qt_Sheet )
+   ::oUI:exec()
+
+   ::destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:destroy()
+
+   ::oUI:hide()
+
+   ::oUI:destroy()
+
+   ::oUI:oWidget:pPtr := 0
+   ::oUI:oWidget:pPtr := NIL
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:show()
+
+   ::oUI:show()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 

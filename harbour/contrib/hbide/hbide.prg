@@ -470,6 +470,7 @@ METHOD HbIde:execAction( cKey )
    CASE "BlockComment"
    CASE "StreamComment"
    CASE "switchReadOnly"
+   CASE "Search"
    CASE "Find"
    CASE "SetMark"
    CASE "GotoMark"
@@ -543,6 +544,9 @@ METHOD HbIde:execEditorAction( cKey )
       IF !Empty( ::qCurEdit )
          ::oFR:show()
       ENDIF
+      EXIT
+   CASE "Search"
+      IdeFindInFiles():new( Self ):create():show()
       EXIT
    CASE "SetMark"
       ::oEM:setMark()
