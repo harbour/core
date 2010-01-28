@@ -4,8 +4,6 @@
 
 ROOT := ../
 
-ifeq ($(HB_CONTRIBLIBS),)
-
 # contribs _without_ external dependencies
 DIRS := \
    gtwvg \
@@ -50,14 +48,12 @@ DIRS += \
 DIRS += \
    hbxbp \
 
-else
-
-ifneq ($(HB_CONTRIBLIBS),no)
-   DIRS := $(HB_CONTRIBLIBS)
-else
+ifeq ($(HB_CONTRIBLIBS),no)
    DIRS :=
-endif
-
+else ifeq ($(firstword $(HB_CONTRIBLIBS)),no)
+   DIRS := $(filter-out $(HB_CONTRIBLIBS),$(DIRS))
+else ifneq ($(HB_CONTRIBLIBS),)
+   DIRS := $(HB_CONTRIBLIBS)
 endif
 
 DIRS += $(HB_CONTRIB_ADDONS)

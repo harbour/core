@@ -4,8 +4,6 @@
 
 ROOT := ../
 
-ifeq ($(HB_EXTERNALLIBS),)
-
 # standalone contribs
 DIRS := \
    sqlite3 \
@@ -15,14 +13,12 @@ DIRS := \
    pcre \
    zlib \
 
-else
-
-ifneq ($(HB_EXTERNALLIBS),no)
-   DIRS := $(HB_EXTERNALLIBS)
-else
+ifeq ($(HB_EXTERNALLIBS),no)
    DIRS :=
-endif
-
+else ifeq ($(firstword $(HB_EXTERNALLIBS)),no)
+   DIRS := $(filter-out $(HB_EXTERNALLIBS),$(DIRS))
+else ifneq ($(HB_EXTERNALLIBS),)
+   DIRS := $(HB_EXTERNALLIBS)
 endif
 
 DIRS += $(HB_EXTERNAL_ADDONS)

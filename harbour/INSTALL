@@ -555,114 +555,116 @@ HARBOUR
 
    General
    -------
-   - HB_PLATFORM               Override platform autodetection
-   - HB_COMPILER               Override C compiler autodetection
-                               See this section for possible values:
-                               SUPPORTED PLATFORMS AND C COMPILERS
-                               See also: HB_CC* settings.
+   - HB_PLATFORM                 Override platform autodetection
+   - HB_COMPILER                 Override C compiler autodetection
+                                 See this section for possible values:
+                                 SUPPORTED PLATFORMS AND C COMPILERS
+                                 See also: HB_CC* settings.
 
-   - HB_USER_PRGFLAGS          User Harbour compiler options
-   - HB_USER_CFLAGS            User C compiler options
-   - HB_USER_LDFLAGS           User linker options for executables
-   - HB_USER_AFLAGS            User linker options for libraries
-   - HB_USER_DFLAGS            User linker options for dynamic libraries
+   - HB_USER_PRGFLAGS            User Harbour compiler options
+   - HB_USER_CFLAGS              User C compiler options
+   - HB_USER_LDFLAGS             User linker options for executables
+   - HB_USER_AFLAGS              User linker options for libraries
+   - HB_USER_DFLAGS              User linker options for dynamic libraries
 
-   - HB_INSTALL_PREFIX         Target root directory to install Harbour files.
-                               This will default to Harbour source tree on
-                               non-*nix systems. On *nix systems the default
-                               is set to /usr/local/ or $(PREFIX) if specified,
-                               and /usr/local/harbour-<arch>-<comp> for
-                               cross-builds. It's always set to ./pkg/<arch>/<comp>
-                               when HB_BUILD_PKG is set to 'yes'.
-                               Use absolute paths only. For a peace of mind,
-                               avoid using spaces and quotes in the name.
-                               You have to use path format native to your shell.
-                               F.e. to specify C:\dir on Windows, with Cygwin
-                               you should use /cygdrive/c/dir, with MSYS /c/dir.
-                               It's also possible to use following macros:
-                                  {hb_top}  - Source tree root dir
-                                  {hb_plat} - Target platform
-                                  {hb_comp} - Target compiler
-                                  {hb_cpu}  - Target CPU
+   - HB_INSTALL_PREFIX           Target root directory to install Harbour files.
+                                 This will default to Harbour source tree on
+                                 non-*nix systems. On *nix systems the default
+                                 is set to /usr/local/ or $(PREFIX) if specified,
+                                 and /usr/local/harbour-<arch>-<comp> for
+                                 cross-builds. It's always set to ./pkg/<arch>/<comp>
+                                 when HB_BUILD_PKG is set to 'yes'.
+                                 Use absolute paths only. For a peace of mind,
+                                 avoid using spaces and quotes in the name.
+                                 You have to use path format native to your shell.
+                                 F.e. to specify C:\dir on Windows, with Cygwin
+                                 you should use /cygdrive/c/dir, with MSYS /c/dir.
+                                 It's also possible to use following macros:
+                                    {hb_top}  - Source tree root dir
+                                    {hb_plat} - Target platform
+                                    {hb_comp} - Target compiler
+                                    {hb_cpu}  - Target CPU
 
-   - HB_BIN_INSTALL            Override directory to install executables
-   - HB_LIB_INSTALL            Override directory to install libraries
-   - HB_DYN_INSTALL            Override directory to install dynamic libraries
-   - HB_INC_INSTALL            Override directory to install language headers
-   - HB_DOC_INSTALL            Override directory to install documentation
+   - HB_BIN_INSTALL              Override directory to install executables
+   - HB_LIB_INSTALL              Override directory to install libraries
+   - HB_DYN_INSTALL              Override directory to install dynamic libraries
+   - HB_INC_INSTALL              Override directory to install language headers
+   - HB_DOC_INSTALL              Override directory to install documentation
 
    Special
    -------
-   - HB_BUILD_NAME=[<name>]    Create named build. This allows to keep
-                               multiple builds in parallel for any given
-                               platform/compiler. F.e. debug / release.
-                               NOTE: In current implementation it's
-                               appended to compiler directory name, so all
-                               filesystem/platform name rules and limits
-                               apply. It's valid to use (back)slashes though.
-   - HB_BUILD_PKG=yes          Create release package. Default: no
-                               Requires 'clean install' in root source dir.
-                               (currently on Windows/Windows CE/MS-DOS)
-                               (only when using Windows NT shells)
-   - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
-   - HB_BUILD_SHARED=yes       Create Harbour executables in shared mode.
-                               Default: yes when HB_INSTALL_PREFIX points
-                               to a *nix system location, otherwise no.
-   - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
-                               dependencies (including contribs). Default: no
-                               (for Windows targets created from Windows NT
-                               shells only. Needs GNU Sed.)
-   - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
+   - HB_BUILD_NAME=[<name>]      Create named build. This allows to keep
+                                 multiple builds in parallel for any given
+                                 platform/compiler. F.e. debug / release.
+                                 NOTE: In current implementation it's
+                                 appended to compiler directory name, so all
+                                 filesystem/platform name rules and limits
+                                 apply. It's valid to use (back)slashes though.
+   - HB_BUILD_PKG=yes            Create release package. Default: no
+                                 Requires 'clean install' in root source dir.
+                                 (currently on Windows/Windows CE/MS-DOS)
+                                 (only when using Windows NT shells)
+   - HB_BUILD_DLL=no             Create Harbour dynamic libraries. Default: yes
+   - HB_BUILD_SHARED=yes         Create Harbour executables in shared mode.
+                                 Default: yes when HB_INSTALL_PREFIX points
+                                 to a *nix system location, otherwise no.
+   - HB_BUILD_IMPLIB=yes         Create import libraries for external .dll
+                                 dependencies (including contribs). Default: no
+                                 (for Windows targets created from Windows NT
+                                 shells only. Needs GNU Sed.)
+   - HB_BUILD_DEBUG=yes          Create a debug build. Default: no
    - HB_BUILD_STRIP=
-         [all|bin|lib|no]      Strip symbols and debug information from binaries.
-                               Default: no
-   - HB_BUILD_OPTIM=no         Enable C compiler optimizations. Default: yes
-   - HB_BUILD_UNICODE=yes      Create Unicode build (on Windows/Windows CE).
-                               Default: no
-   - HB_BUILD_MODE=[cpp|c]     Change default build mode to C++ or C.
-                               Default: c, except for msvc* compilers, where it's cpp.
+         [all|bin|lib|no]        Strip symbols and debug information from binaries.
+                                 Default: no
+   - HB_BUILD_OPTIM=no           Enable C compiler optimizations. Default: yes
+   - HB_BUILD_UNICODE=yes        Create Unicode build (on Windows/Windows CE).
+                                 Default: no
+   - HB_BUILD_MODE=[cpp|c]       Change default build mode to C++ or C.
+                                 Default: c, except for msvc* compilers, where it's cpp.
    - HB_BUILD_PARTS=
-         [all|compiler|lib]    Build only specific part of Harbour.
-   - HB_BUILD_NOGPLLIB=yes     Disable components dependent on GPL 3rd party code,
-                               to allow Harbour for commercial (closed-source)
-                               projects. Default: no
-   - HB_BUILD_EXTDEF=no        Enable autodetection of external components
-                               on default systems locations. Default: yes
-   - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes
-   - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
-                               libraries. Build all if left empty.
-   - HB_CONTRIB_ADDONS=<list>  Build space separated <list> of additional
-                               libraries stored in the contrib directory.
-   - HB_EXTERNALLIBS=no        Don't build any external libraries. Default: yes
-   - HB_EXTERNALLIBS=[<list>]  Build space separated <list> of external
-                               libraries. Build all if left empty.
-   - HB_EXTERNAL_ADDONS=<list> Build space separated <list> of additional
-                               libraries stored in the external directory.
-   - HB_UTIL_ADDONS=<list>     Build space separated <list> of additional
-                               utilities stored in the utils directory.
-   - HB_COMPILER_VER=[<ver>]   Set C compiler version. This is used with msvc
-                               targets currently, and in the case of this
-                               compiler, it will be autodetected.
-                               <ver> format:
-                                   <09><00>[.<00>] = <major><minor>[.<revision>]
-                               Default: filled by autodetection or empty
-   - HB_USER_LIBS=[<list>]     Add space separated <list> of libs to link process.
-                               Lib names should be without extension and path.
-                               You only need this in special cases, like CodeGuard
-                               build with bcc.
-   - HB_REBUILD_PARSER=yes     Rebuild language parser sources. Typically
-                               you only need this if your are Harbour core
-                               developer modifying grammar rules (.y).
-                               Requires GNU Bison 1.28 or upper in PATH.
-                               Default: no
-   - HB_CCPATH=[<dir>/]        Used with non-*nix gcc family compilers (and
-                               sunpro) to specify path to compiler/linker/archive
-                               tool to help them run from *nix hosts as cross-build
-                               tools. Ending slash must be added.
-   - HB_CCPREFIX=[<prefix>]    Used with gcc family to specify
-                               compiler/linker/archive tool name prefix.
-   - HB_CCPOSTFIX=[<postfix>]  Used with gcc family to specify compiler/linker
-                               tool name postfix (usually version number).
+         [all|compiler|lib]      Build only specific part of Harbour.
+   - HB_BUILD_NOGPLLIB=yes       Disable components dependent on GPL 3rd party code,
+                                 to allow Harbour for commercial (closed-source)
+                                 projects. Default: no
+   - HB_BUILD_EXTDEF=no          Enable autodetection of external components
+                                 on default systems locations. Default: yes
+   - HB_CONTRIBLIBS=no [<list>]  Don't build any (or space separated <list> of)
+                                 contrib libraries.
+   - HB_CONTRIBLIBS=[<list>]     Build space separated <list> of contrib
+                                 libraries. Build all if left empty (default).
+   - HB_CONTRIB_ADDONS=<list>    Build space separated <list> of additional
+                                 libraries stored in the contrib directory.
+   - HB_EXTERNALLIBS=no [<list>] Don't build any (or space separated <list> of)
+                                 external libraries.
+   - HB_EXTERNALLIBS=[<list>]    Build space separated <list> of external
+                                 libraries. Build all if left empty (default).
+   - HB_EXTERNAL_ADDONS=<list>   Build space separated <list> of additional
+                                 libraries stored in the external directory.
+   - HB_UTIL_ADDONS=<list>       Build space separated <list> of additional
+                                 utilities stored in the utils directory.
+   - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
+                                 targets currently, and in the case of this
+                                 compiler, it will be autodetected.
+                                 <ver> format:
+                                     <09><00>[.<00>] = <major><minor>[.<revision>]
+                                 Default: filled by autodetection or empty
+   - HB_USER_LIBS=[<list>]       Add space separated <list> of libs to link process.
+                                 Lib names should be without extension and path.
+                                 You only need this in special cases, like CodeGuard
+                                 build with bcc.
+   - HB_REBUILD_PARSER=yes       Rebuild language parser sources. Typically
+                                 you only need this if your are Harbour core
+                                 developer modifying grammar rules (.y).
+                                 Requires GNU Bison 1.28 or upper in PATH.
+                                 Default: no
+   - HB_CCPATH=[<dir>/]          Used with non-*nix gcc family compilers (and
+                                 sunpro) to specify path to compiler/linker/archive
+                                 tool to help them run from *nix hosts as cross-build
+                                 tools. Ending slash must be added.
+   - HB_CCPREFIX=[<prefix>]      Used with gcc family to specify
+                                 compiler/linker/archive tool name prefix.
+   - HB_CCPOSTFIX=[<postfix>]    Used with gcc family to specify compiler/linker
+                                 tool name postfix (usually version number).
 
    Cross-building
    --------------
