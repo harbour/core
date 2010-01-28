@@ -77,14 +77,14 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
 
    IF ! lDoVista .AND. win_osIsVistaOrUpper()
       /* do nothing */
-   ELSEIF win_osIs9X()
+   ELSEIF hb_osIsWin9x()
       bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
       cKeyWks := "System\CurrentControlSet\Services\LanmanWorkStation\Parameters"
 
       IF lSetIt
-         lSetIt := ! win_osIsNT() .OR. wapi_IsUserAnAdmin()
+         lSetIt := ! hb_osIsWinNT() .OR. wapi_IsUserAnAdmin()
       ENDIF
 
       /* Server settings */
@@ -118,7 +118,7 @@ FUNCTION WIN_OSNETVREDIROK( /* @ */ nResult )
 
    nResult := 0
 
-   IF win_osIs9X()
+   IF hb_osIsWin9x()
       aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
       IF ! Empty( aFiles )
          IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"

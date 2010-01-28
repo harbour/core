@@ -146,8 +146,6 @@ REQUEST HB_GT_CGI_DEFAULT
 
 #endif
 
-REQUEST hbmk_PLAT
-REQUEST hbmk_COMP
 REQUEST hbmk_KEYW
 
 #define I_( x )                 hb_i18n_gettext( x )
@@ -223,6 +221,7 @@ REQUEST hbmk_KEYW
 #define _VAR_MODE_SET           1
 #define _VAR_MODE_APPEND        2
 #define _VAR_MODE_INSERT        3
+#define _VAR_MODE_DELETE        4
 
 #define _COMPEMBED_BASE_        ( "comp" + hb_osPathSeparator() )
 
@@ -861,6 +860,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                tmp2 := _VAR_MODE_APPEND
             ELSEIF ( tmp1 := At( "#", tmp ) ) > 1
                tmp2 := _VAR_MODE_INSERT
+            ELSEIF ( tmp1 := At( "-", tmp ) ) > 1
+               tmp2 := _VAR_MODE_DELETE
             ELSE
                tmp2 := _VAR_MODE_SET
                tmp1 := Len( tmp ) + 1
@@ -909,6 +910,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE _VAR_MODE_SET    ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] ) ; EXIT
       CASE _VAR_MODE_INSERT ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] + hb_GetEnv( tmp[ 2 ] ) ) ; EXIT
       CASE _VAR_MODE_APPEND ; hb_SetEnv( tmp[ 2 ], hb_GetEnv( tmp[ 2 ] ) + tmp[ 3 ] ) ; EXIT
+      CASE _VAR_MODE_DELETE ; hb_SetEnv( tmp[ 2 ] ) ; EXIT
       ENDSWITCH
    NEXT
 
@@ -6574,9 +6576,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    LOCAL cValue
    LOCAL cChar
 
-   LOCAL cExpr := "( hbmk_PLAT( hbmk ) == Lower( '%1' ) .OR. " +;
-                    "hbmk_COMP( hbmk ) == Lower( '%1' ) .OR. " +;
-                    "hbmk_KEYW( hbmk, Lower( '%1' ) ) )"
+   LOCAL cExpr := "hbmk_KEYW( hbmk, '%1' )"
 
    IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
       !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL ) .AND. ;
@@ -7559,15 +7559,7 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
 
    RETURN cResult
 
-/* Keep this public, it's used from macro. */
-FUNCTION hbmk_PLAT( hbmk )
-   RETURN hbmk[ _HBMK_cPLAT ]
-
-/* Keep this public, it's used from macro. */
-FUNCTION hbmk_COMP( hbmk )
-   RETURN hbmk[ _HBMK_cCOMP ]
-
-FUNCTION hbmk_CPU( hbmk )
+STATIC FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_cPLAT ] $ "dos|os2" .OR. ;
@@ -7598,8 +7590,16 @@ FUNCTION hbmk_CPU( hbmk )
 
    RETURN ""
 
+/* Keep this public, it's used from macro. */
 FUNCTION hbmk_KEYW( hbmk, cKeyword )
    LOCAL tmp
+
+   cKeyword := Lower( cKeyword )
+
+   IF cKeyword == hbmk[ _HBMK_cPLAT ] .OR. ;
+      cKeyword == hbmk[ _HBMK_cCOMP ]
+      RETURN .T.
+   ENDIF
 
    IF cKeyword == iif( hbmk[ _HBMK_lMT ]     , "mt"      , "st"      ) .OR. ;
       cKeyword == iif( hbmk[ _HBMK_lGUI ]    , "gui"     , "std"     ) .OR. ;
@@ -8240,7 +8240,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-target"           , I_( "marks beginning of options belonging to a new build target" ) },;
       { "-alltarget"        , I_( "marks beginning of common options belonging to all targets" ) },;
       NIL,;
-      { "-env:<e>[<o>[<v>]]", I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
+      { "-env:<e>[<o>[<v>]]", I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
       NIL,;
       { "-hbrun"            , I_( "run target" ) },;
       { "-hbraw"            , I_( "stop after running Harbour compiler" ) },;

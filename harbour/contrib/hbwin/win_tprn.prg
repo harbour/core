@@ -389,7 +389,7 @@ METHOD CheckPage() CLASS WIN_PRN
       ::PageInit := .F.
       win_StartPage( ::hPrinterDC )
       ::PageNumber++
-      IF win_osIs9X() // Reset font on Win9X
+      IF hb_osIsWin9x() // Reset font on Win9X
          ::SetFont()
       ENDIF
    ENDIF
@@ -406,7 +406,7 @@ METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
          ::PosY := ::TopMargin
       ELSE
          ::StartPage()
-         IF win_osIs9X() // Reset font on Win9X
+         IF hb_osIsWin9x() // Reset font on Win9X
             ::SetFont()
          ENDIF
       ENDIF
