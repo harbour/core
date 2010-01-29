@@ -220,7 +220,7 @@ METHOD XbpToolbar:destroy()
          ENDIF
 
          IF ::aItems[ i,3 ] == XBPTOOLBAR_BUTTON_DEFAULT
-            ::aItems[ i,2 ]:oAction:pPtr := 0
+            ::aItems[ i,2 ]:oAction:pPtr := NIL
             ::aItems[ i,2 ]:oAction := NIL
          ENDIF
       NEXT

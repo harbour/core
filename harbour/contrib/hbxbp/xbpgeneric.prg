@@ -112,7 +112,7 @@ EXIT PROCEDURE hbxbp_End()
    t_oAppWindow := NIL
 
    IF hb_isObject( s_oDeskTop )
-      s_oDeskTop:oWidget:pPtr := 0
+      s_oDeskTop:oWidget:pPtr := NIL
    endif
 
    /* These must never be called from here as QApplication.cpp's EXIT routine does it */

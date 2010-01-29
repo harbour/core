@@ -417,7 +417,7 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "======================================================" )
 
-   ::qCursor:pPtr := 0
+   ::qCursor:pPtr := NIL
    ::oFont        := NIL
 
    hbide_dbg( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )

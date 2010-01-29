@@ -26,7 +26,7 @@ CPP_SOURCES := \
 PRG_SOURCES := \
    hbqt_misc.prg \
    hbqt_errorsys.prg \
-   THbpQtUI.prg \
+   THbQtUI.prg \
    
 # Don't delete this comment, it's here to ensure empty
 # line above is kept intact.

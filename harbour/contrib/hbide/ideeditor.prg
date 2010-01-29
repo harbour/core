@@ -837,7 +837,7 @@ METHOD IdeEditsManager:goto()
 
    nLine := qGo:intValue() -  nLine
 
-   qGo:pPtr := 0
+   qGo:pPtr := NIL
 
    IF nLine < 0
       qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
@@ -1102,20 +1102,20 @@ hbide_dbg( "IdeEditor:destroy()", 0 )
    ::oEdit:destroy()
 
    IF !Empty( ::qDocument )
-      ::qDocument:pPtr := 0
-      ::qDocument      := nil
+      ::qDocument:pPtr := NIL
+      ::qDocument      := NIL
    ENDIF
 
    IF !Empty( ::qHiliter )
-      ::qHiliter:pPtr  := 0
-      ::qHiliter       := nil
+      ::qHiliter:pPtr  := NIL
+      ::qHiliter       := NIL
    ENDIF
 
    ::oEdit := NIL
 
    IF !Empty( ::qLayout )
-      ::qLayout:pPtr   := 0
-      ::qLayout        := nil
+      ::qLayout:pPtr   := NIL
+      ::qLayout        := NIL
    ENDIF
 
    IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0

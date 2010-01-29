@@ -267,7 +267,7 @@ METHOD XbpTreeView:destroy()
 
    FOR i := len( ::aItems ) TO 1 step -1
       aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
-      ::aItems[ i ]:oWidget:pPtr := 0
+      ::aItems[ i ]:oWidget:pPtr := NIL
    NEXT
    ::aItems := NIL
 
@@ -453,12 +453,10 @@ METHOD XbpTreeViewItem:destroy()
    LOCAL i
 
    FOR i := 1 TO len( ::aChilds )
-      ::aChilds[ i ]:pPtr := 0
       ::aChilds[ i ]:pPtr := NIL
    NEXT
 
-   ::oItem:pPtr := 0
-   ::oItem:pPtr := Nil
+   ::oItem:pPtr := NIL
 
    RETURN NIL
 
@@ -493,7 +491,7 @@ METHOD XbpTreeViewItem:delItem( oItem )
 
    IF ( n := ascan( ::aChilds, {|o| o == oItem } ) ) > 0
       ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
-      ::aChilds[ n ]:oWidget:pPtr := 0
+      ::aChilds[ n ]:oWidget:pPtr := NIL
       adel( ::aChilds, n )
       asize( ::aChilds, len( ::aChilds )-1 )
    ENDIF

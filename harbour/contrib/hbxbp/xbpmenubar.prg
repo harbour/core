@@ -267,7 +267,7 @@ METHOD xbpMenuBar:delItem( nItemIndex )
             Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
          ENDIF
          ::oWidget:removeAction( oAction )
-         oAction:pPtr := 0
+         oAction:pPtr := NIL
          oAction := NIL
       ENDIF
    ENDIF

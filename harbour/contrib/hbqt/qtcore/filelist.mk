@@ -16,6 +16,7 @@ CPP_SOURCES := \
    QAbstractListModel.cpp \
    QAbstractTableModel.cpp \
    QBitArray.cpp \
+   QBuffer.cpp \
    QByteArray.cpp \
    QChar.cpp \
    QCoreApplication.cpp \
@@ -72,6 +73,7 @@ PRG_SOURCES := \
    TQAbstractListModel.prg \
    TQAbstractTableModel.prg \
    TQBitArray.prg \
+   TQBuffer.prg \
    TQByteArray.prg \
    TQChar.prg \
    TQCoreApplication.prg \

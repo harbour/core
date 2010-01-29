@@ -187,7 +187,7 @@ METHOD XbpHTMLViewer:destroy()
    ::oWidget:stop()
    ::disconnect()
    IF !empty( ::oURL )
-      ::oURL:pPtr := 0
+      ::oURL:pPtr := NIL
       ::oURL      := NIL
    ENDIF
    ::sl_beforeNavigate       := NIL

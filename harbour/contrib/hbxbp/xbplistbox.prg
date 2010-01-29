@@ -259,8 +259,8 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpListBox:destroy()
 
    ::disconnect()
-   ::oStrList:pPtr := 0
-   ::oStrModel:pPtr := 0
+   ::oStrList:pPtr := NIL
+   ::oStrModel:pPtr := NIL
 
    ::oStrList := NIL
    ::oStrModel := NIL

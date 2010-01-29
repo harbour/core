@@ -466,7 +466,7 @@ METHOD XbpWindow:destroy()
    IF cXbp == "XBPDIALOG"
       hbxbp_SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )
-      ::oEventLoop:pPtr := 0
+      ::oEventLoop:pPtr := NIL
       //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
       ::oMenu := NIL
    ENDIF
@@ -493,7 +493,7 @@ METHOD XbpWindow:destroy()
       ::qtObject:destroy()
       ::qtObject := NIL
    ENDIF
-   ::oWidget:pPtr := 0
+   ::oWidget:pPtr := NIL
    ::oWidget := NIL
 
 //HBXBP_DBG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
@@ -1233,9 +1233,7 @@ METHOD XbpWindow:isDerivedFrom( cClassORoObject )
    /* Compares without Xbp or Wvg prefixes  */
 
    IF hb_isChar( cClassORoObject )
-      IF upper( substr( cClassORoObject,4 ) ) == upper( substr( cCls,4 ) )
-         lTrue := .t.
-      ENDIF
+      RETURN __clsParent( Self:classH, cClassORoObject )
 
    ELSEIF hb_isObject( cClassORoObject )
       IF upper( substr( cClassORoObject:className,4 ) ) == upper( substr( cCls,4 ) )

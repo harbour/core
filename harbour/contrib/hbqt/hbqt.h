@@ -111,6 +111,7 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QBitmap( n )                       ( ( QBitmap                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QBoxLayout( n )                    ( ( QBoxLayout                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QBrush( n )                        ( ( QBrush                      * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QBuffer( n )                       ( ( QBuffer                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QButtonGroup( n )                  ( ( QButtonGroup                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QByteArray( n )                    ( ( QByteArray                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QCalendarWidget( n )               ( ( QCalendarWidget             * ) hbqt_gcpointer( n ) )

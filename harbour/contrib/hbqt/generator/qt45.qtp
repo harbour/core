@@ -41,6 +41,7 @@ QBitArray.qth
 QBitmap.qth
 QBoxLayout.qth
 QBrush.qth
+QBuffer.qth
 QButtonGroup.qth
 QByteArray.qth
 QCalendarWidget.qth

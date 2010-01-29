@@ -544,7 +544,7 @@ METHOD IdeProjManager:fetchProperties()
    LOCAL cLukupPng
    LOCAL cPrjLoc := hb_dirBase() + "projects"
 
-   ::oUI := HbpQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
 
    ::oUI:q_tabWidget:removeTab( 4 )
 
@@ -953,7 +953,7 @@ METHOD IdeProjManager:loadXhpProject()
 METHOD IdeProjManager:manageEnvironments()
    LOCAL cLukupPng
 
-   ::oUI := HbpQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
 
    cLukupPng := ::resPath + "folder.png"
    //
@@ -1255,7 +1255,7 @@ METHOD IdeProjManager:selectCurrentProject()
       RETURN ::cWrkProject
    ENDIF
 
-   oDlg := HbpQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget )
+   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget )
 
  * Fill ComboBox with current project names
    FOR i := 1 TO Len( ::aProjects )
@@ -1618,7 +1618,7 @@ METHOD IdeProjManager:launchProject( cProject )
       qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
       qProcess:startDetached_2( cTargetFN )
       qProcess:waitForStarted()
-      qProcess:pPtr := 0
+      qProcess:pPtr := NIL
       qProcess := NIL
       #else
       ::oProcess := HbpProcess():new()

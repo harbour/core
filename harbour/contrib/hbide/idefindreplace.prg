@@ -110,7 +110,7 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbpQtUI():new( ::oIde:resPath + "finddialog.ui", ::oIde:oDlg:oWidget )
+   ::oUI := HbQtUI():new( ::oIde:resPath + "finddialog.ui", ::oIde:oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )
 
    aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
@@ -130,6 +130,7 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ;
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -144,12 +145,12 @@ METHOD IdeFindReplace:show()
    ::oIde:setPosByIni( ::oUI:oWidget, FindDialogGeometry )
    ::oUI:q_comboFindWhat:setFocus()
 
+   qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
    IF !empty( cText := ::oEM:getSelectedText() )
-      qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
       qLineEdit:setText( cText )
-      qLineEdit:selectAll()
-      //QLineEdit( ::oUI:q_comboFindWhat:lineEdit() ):setText( cText ):selectAll()
    ENDIF
+   qLineEdit:selectAll()
+
    ::oUI:show()
 
    RETURN Self
@@ -248,6 +249,8 @@ METHOD IdeFindReplace:onClickFind()
       ::oUI:q_buttonReplace:setEnabled( .f. )
       ::oUI:q_checkGlobal:setEnabled( .f. )
       ::oUI:q_checkNoPrompting:setEnabled( .f. )
+
+      ::oUI:q_buttonFind:setFocus_1()
    ENDIF
 
    RETURN Self
@@ -332,7 +335,7 @@ METHOD IdeFindInFiles:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbpQtUI():new( ::oIde:resPath + "findinfiles.ui", ::oIde:oDlg:oWidget )
+   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfiles.ui", ::oIde:oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )
    ::oUI:exec()
 

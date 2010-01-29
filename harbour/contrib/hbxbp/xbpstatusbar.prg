@@ -173,7 +173,7 @@ METHOD XbpStatusBar:destroy()
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
          ::aItems[ i ]:oParent := NIL
-         ::aItems[ i ]:oWidget:pPtr := 0
+         ::aItems[ i ]:oWidget:pPtr := NIL
       NEXT
    ENDIF
 

@@ -148,7 +148,7 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
       NEXT
    ENDIF
 
-   qPop:pPtr := 0
+   qPop:pPtr := NIL
 
    RETURN xRet
 

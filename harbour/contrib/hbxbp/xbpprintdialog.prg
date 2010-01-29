@@ -125,7 +125,7 @@ METHOD XbpPrintDialog:destroy()
       ::aConnections := {}
    ENDIF
 
-   ::oWidget:pPtr := 0
+   ::oWidget:pPtr := NIL
    ::oWidget := NIL
 
    RETURN nil

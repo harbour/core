@@ -461,7 +461,7 @@ METHOD XbpFont:configure( cFontName )
 
 METHOD XbpFont:destroy()
 
-   ::oFontInfo:pPtr := 0
+   ::oFontInfo:pPtr := NIL
    ::oWidget:pPtr   := 0
 
    RETURN NIL

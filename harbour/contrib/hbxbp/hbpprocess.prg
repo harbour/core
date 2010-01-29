@@ -291,7 +291,7 @@ METHOD HbpProcess:finish()
 
    ::qProcess:kill()
    //
-   ::qProcess:pPtr := 0
+   ::qProcess:pPtr := NIL
    ::qProcess := NIL
 
    RETURN Self
