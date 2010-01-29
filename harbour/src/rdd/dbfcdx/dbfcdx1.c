@@ -8434,9 +8434,9 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
                   if( pKey )
                   {
                      fResult = hb_cdxTagKeyAdd( pTag, pKey );
-                     hb_cdxIndexUnLockWrite( pTag->pIndex );
                      hb_cdxKeyFree( pKey );
                   }
+                  hb_cdxIndexUnLockWrite( pTag->pIndex );
                }
             }
 #if !defined( HB_SIXCDX )
@@ -8493,9 +8493,9 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
                   if( pKey )
                   {
                      fResult = hb_cdxTagKeyDel( pTag, pKey );
-                     hb_cdxIndexUnLockWrite( pTag->pIndex );
                      hb_cdxKeyFree( pKey );
                   }
+                  hb_cdxIndexUnLockWrite( pTag->pIndex );
                }
             }
 #if !defined( HB_SIXCDX )
