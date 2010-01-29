@@ -266,9 +266,12 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    RETURN TE_CONFL   // maybe should return something different?
 
+STATIC FUNCTION __tp_timeelapsed( nStartSec, nEndSec )
+     RETURN ( nEndSec - iif( nEndSec < nStartSec, nStartSec - 86399, nStartSec ) )
+
 FUNCTION tp_recv( nPort, nLength, nTimeout )
 
-   LOCAL nDone
+   LOCAL nStartSec
    LOCAL cRet
 
    DEFAULT nLength TO t_aPorts[ nPort, TPFP_INBUF_SIZE  ]
@@ -276,11 +279,10 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    FetchChars( nPort )
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
+   nStartSec := Seconds()
 
-   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
-            ( nTimeout < 0 .OR. Seconds() < nDone )
-
+   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
+            ( nTimeout < 0 .OR. __tp_timeelapsed( nStartSec, Seconds() ) < nTimeout )
       IF ! tp_idle()
          FetchChars( nPort )
       ELSE
@@ -300,7 +302,8 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   LOCAL nWritten, nTotWritten, nDone
+   LOCAL nWritten, nTotWritten
+   LOCAL nStartSec
 
    DEFAULT cString TO ""
    DEFAULT nTimeout TO 0
@@ -313,11 +316,12 @@ FUNCTION tp_send( nPort, cString, nTimeout )
       RETURN 0
    ENDIF
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0)
+   nStartSec := Seconds()
+
    nTotWritten := 0
 
    DO WHILE nTotWritten < Len( cString ) .AND. ;
-         ( nTimeout < 0 .OR. Seconds() <= nDone )
+            ( nTimeout < 0 .OR. __tp_timeelapsed( nStartSec, Seconds() ) < nTimeout )
 
       nWritten := __tp_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
@@ -354,14 +358,15 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    LOCAL cChar
    LOCAL nAt
    LOCAL nStartPos := 1, nFirst := 0
-   LOCAL nDone, cRet := ""
+   LOCAL cRet := ""
+   LOCAL nStartSec
 
    IF ! isopenport( nPort )
-      RETURN ""
+      RETURN cRet
    ENDIF
 
    IF ! ISCHARACTER( cDelim ) .OR. Len( cDelim ) == 0
-      RETURN ""
+      RETURN cRet
    ENDIF
 
    DEFAULT nMaxlen TO 64999      /* dos telepathy def. on xharbour could be higher */
@@ -372,12 +377,12 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
                     delimiter or the input buffer is empty. */
    IF nTimeout == 0 .AND. Len( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
-      RETURN ""
+      RETURN cRet
    ENDIF
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
+   nStartSec := Seconds()
 
-   DO WHILE ( nTimeout < 0 .OR. Seconds() < nDone )
+   DO WHILE __tp_timeelapsed( nStartSec, Seconds() ) < nTimeout
 
       IF Len( cDelim ) == 1
 
@@ -643,7 +648,7 @@ FUNCTION tp_iscts( nPort )
 //     I'll wait as long as it takes to drain the port.
 FUNCTION tp_flush( nPort, nTimeout )
 
-   //LOCAL nStart := Seconds()
+   //LOCAL nStartSec := Seconds()
    LOCAL nRes
 
    DEFAULT nTimeout TO 0
@@ -656,8 +661,8 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    // Sleep rest of timeout
    /*
-   IF nTimeout > 0 .AND. Seconds() - nStart < nTimeout
-      hb_idleSleep( nTimeout - ( Seconds() - nStart ) )
+   IF nTimeout > 0 .AND. __tp_timeelapsed( nStartSec, Seconds() ) > nTimeout
+      hb_idleSleep( nTimeout - __tp_timeelapsed( nStartSec, Seconds() ) )
    ENDIF
    */
 
@@ -669,7 +674,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 
 FUNCTION tp_flush( nPort, nTimeout )
 
-   LOCAL nDone
+   LOCAL nStartSec
 
    DEFAULT nTimeout TO -1
 
@@ -681,10 +686,9 @@ FUNCTION tp_flush( nPort, nTimeout )
       nTimeout := 1800
    ENDIF
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
+   nStartSec := Seconds()
 
-   DO WHILE tp_OutFree( nPort ) > 0 .AND. ;
-         ( nTimeout < 0 .OR. Seconds() < nDone )
+   DO WHILE tp_OutFree( nPort ) > 0 .AND. __tp_timeelapsed( nStartSec, Seconds() ) < nTimeout
       hb_IdleState()
    ENDDO
 
