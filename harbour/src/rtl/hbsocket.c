@@ -2725,6 +2725,9 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    char * szResult = NULL;
    HB_BOOL fTrans = HB_FALSE;
 
+   if( !szAddr || !*szAddr )
+      return NULL;
+
    if( af == HB_SOCKET_PF_INET )
    {
       struct in_addr sin;
