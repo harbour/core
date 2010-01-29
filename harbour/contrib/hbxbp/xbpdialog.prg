@@ -139,6 +139,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF !empty( ::qtObject )
       IF hb_isObject( ::qtObject )
          ::oWidget := ::qtObject
+         ::qtObject := NIL
       ELSE
          ::oWidget := QMainWindow()
          ::oWidget:pPtr := hbqt_ptr( ::qtObject )

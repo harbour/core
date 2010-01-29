@@ -411,9 +411,7 @@ METHOD IdeThemes:fetch()
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      ::oUI := HbpQtUI():new( ::oIde:oDlg )
-      ::oUI:file := ::oIde:resPath + "themes.ui"
-      ::oUI:create()
+      ::oUI := HbpQtUI():new( ::oIde:resPath + "themes.ui", ::oIde:oDlg:oWidget )
       ::oUI:setWindowFlags( Qt_Sheet )
 
       ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|o,i| ::nCurTheme := i+1, ::setTheme( i,o ) } )
@@ -588,9 +586,7 @@ METHOD IdeThemes:selectTheme()
    LOCAL oSL, oStrList, oStrModel, a_, nDone
    LOCAL pSlots := Qt_Slots_New()
 
-   oSL := HbpQtUI():new( ::oIde:oDlg )
-   oSL:file := ::oIde:resPath + "selectionlist.ui"
-   oSL:create()
+   oSL := HbpQtUI():new( ::oIde:resPath + "selectionlist.ui", ::oIde:oDlg:oWidget )
    oSL:setWindowTitle( "Available Themes" )
 
    oStrList := QStringList():new()

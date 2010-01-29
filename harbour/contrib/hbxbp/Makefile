@@ -10,7 +10,6 @@ LIBNAME := hbxbp
 
 PRG_SOURCES := \
    hbpprocess.prg \
-   hbpqtui.prg \
    xbp3state.prg \
    xbpappevent.prg \
    xbpbitmap.prg \

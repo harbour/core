@@ -127,15 +127,10 @@ METHOD IdeDocks:destroy()
 METHOD IdeDocks:buildDialog()
 
    #if 1
-   LOCAL oUI
-   oUI := HbpQtUI():new()
-   oUI:file := ::resPath + "mainWindow.ui"
-   oUI:create()
-
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
    ::oDlg:title := "Harbour-Qt IDE"
-   ::oDlg:qtObject := oUI:oWidget
+   ::oDlg:qtObject := HbpQtUI():new( ::resPath + "mainWindow.ui" )
    ::oDlg:create( , , , , , .f. )
    #else
    ::oIde:oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )

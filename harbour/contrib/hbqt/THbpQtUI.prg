@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
  * http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,10 +56,10 @@
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
- *             Xbase++ Syntax Inspired HbpQtUI Class
+ *                     Harbour Parts HbpQtUI Class
  *
- *                 Pritpal Bedi  <pritpal@vouchcac.com>
- *                              18Decy2009
+ *                 Pritpal Bedi <pritpal@vouchcac.com>
+ *                              28Jan2010
  */
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -67,33 +67,27 @@
 
 #include "hbclass.ch"
 #include "common.ch"
-#include "inkey.ch"
-
-#include "xbp.ch"
-#include "appevent.ch"
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbpQtUI INHERIT XbpWindow
+CLASS HbpQtUI
 
-   DATA     file                                  INIT ""
-   DATA     modal                                 INIT .t.
+   DATA     pSlots
+   DATA     oWidget
    DATA     qObj                                  INIT hb_hash()
    DATA     widgets                               INIT {}
 
    DATA     aSignals                              INIT {}
    DATA     aEvents                               INIT {}
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
+   METHOD   new( cFile, qParent )
    METHOD   destroy()
 
    METHOD   event( cWidget, nEvent, bBlock )
    METHOD   signal( cWidget, cSignal, bBlock )
    METHOD   loadWidgets()
    METHOD   loadContents( cUiFull )
-   METHOD   loadUI( cUiFull )
+   METHOD   loadUI( cUiFull, qParent )
 
    ERROR HANDLER OnError( ... )
 
@@ -101,29 +95,18 @@ CLASS HbpQtUI INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpQtUI:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD HbpQtUI:new( cFile, qParent )
 
-   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpQtUI:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF !empty( ::file ) .and. file( ::file )
+   IF !empty( cFile ) .and. file( cFile )
       hb_hCaseMatch( ::qObj, .f. )
 
-      ::loadContents( ::file )
+      ::loadContents( cFile, qParent )
 
-      ::oWidget := ::loadUI( ::file )
+      ::oWidget := ::loadUI( cFile, qParent )
 
       IF !empty( ::oWidget )
          ::loadWidgets()
       ENDIF
-
    ENDIF
 
    RETURN Self
@@ -131,18 +114,28 @@ METHOD HbpQtUI:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD HbpQtUI:destroy()
-   LOCAL a_
+   LOCAL a_, qObj
+
+   ::oWidget:hide()
 
    FOR EACH a_ IN ::aSignals
       Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
    NEXT
-
    FOR EACH a_ IN ::aEvents
       Qt_Events_disConnect( ::pEvents, a_[ 1 ], a_[ 2 ] )
    NEXT
 
-   ::oWidget:hide()
+   FOR EACH qObj IN ::qObj
+      qObj:pPtr := 0
+      qObj:pPtr := NIL
+   NEXT
+
+   ::oWidget:close()
+
    ::oWidget:pPtr := 0
+   ::oWidget      := NIL
+   ::aEvents      := NIL
+   ::aSignals     := NIL
 
    RETURN NIL
 
@@ -163,6 +156,9 @@ METHOD HbpQtUI:event( cWidget, nEvent, bBlock )
 METHOD HbpQtUI:signal( cWidget, cSignal, bBlock )
 
    IF hb_hHasKey( ::qObj, cWidget )
+      IF empty( ::pSlots )
+         ::pSlots := QT_SLOTS_NEW()
+      ENDIF
       IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
          aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
       ENDIF
@@ -214,8 +210,6 @@ METHOD HbpQtUI:loadContents( cUiFull )
       cWidget := alltrim( strtran( substr( cBuffer, 1, n-1 ), '"', "" ) )
       cWidget := strtran( cWidget, "/", "" )
 
-      HBXBP_DEBUG( pad( cClass,30 ), cWidget )
-
       aadd( ::widgets, { cClass, cWidget } )
    ENDDO
 
@@ -223,40 +217,39 @@ METHOD HbpQtUI:loadContents( cUiFull )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpQtUI:loadUI( cUiFull )
-   LOCAL qWidget, qUiLoader, qFile, pWidget
+METHOD HbpQtUI:loadUI( cUiFull, qParent )
+   LOCAL oWidget, qUiLoader, qFile, pWidget
 
    qFile := QFile():new( cUiFull )
    IF qFile:open( 1 )
       qUiLoader  := QUiLoader():new()
-      pWidget    := qUiLoader:load( qFile, IF( empty( ::oParent ), NIL, ::oParent:oWidget ) )
+      pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
-         qWidget    := QWidget():configure( pWidget )
+         oWidget    := QWidget():configure( pWidget )
       CASE ::widgets[ 1,1 ] == "QDialog"
-         qWidget    := QDialog():configure( pWidget )
+         oWidget    := QDialog():configure( pWidget )
       CASE ::widgets[ 1,1 ] == "QMainWindow"
-         qWidget    := QMainWindow():configure( pWidget )
+         oWidget    := QMainWindow():configure( pWidget )
       OTHERWISE
-         qWidget    := QWidget():configure( pWidget )
+         oWidget    := QWidget():configure( pWidget )
       ENDCASE
       qFile:close()
+      qFile:pPtr := NIL
+      qUiLoader:pPtr := NIL
    ENDIF
 
-   RETURN qWidget
+   RETURN oWidget
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbpQtUI:OnError( ... )
-   LOCAL cMsg
-   LOCAL xReturn
+   LOCAL cMsg, xReturn
 
    cMsg := __GetMessage()
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
-
-   HBXBP_DEBUG( "OnError", cMsg )
 
    IF left( cMsg, 2 ) == "Q_"
       xReturn := ::qObj[ substr( cMsg, 3 ) ]

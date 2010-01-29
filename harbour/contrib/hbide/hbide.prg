@@ -546,7 +546,7 @@ METHOD HbIde:execEditorAction( cKey )
       ENDIF
       EXIT
    CASE "Search"
-      IdeFindInFiles():new( Self ):create():show()
+      IdeFindInFiles():new( Self ):create()
       EXIT
    CASE "SetMark"
       ::oEM:setMark()

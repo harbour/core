@@ -96,15 +96,21 @@ METHOD IdeFindReplace:new( oIde )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeFindReplace:destroy()
+
+   ::oUI:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeFindReplace:create( oIde )
 
    DEFAULT oIde TO ::oIde
 
    ::oIde := oIde
 
-   ::oUI := HbpQtUI():new( ::oIde:oDlg )
-   ::oUI:file := ::oIde:resPath + "finddialog.ui"
-   ::oUI:create()
+   ::oUI := HbpQtUI():new( ::oIde:resPath + "finddialog.ui", ::oIde:oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )
 
    aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
@@ -124,16 +130,6 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ;
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeFindReplace:destroy()
-
-   ::oUI:hide()
-   ::oUI:destroy()
-   ::oUI:oWidget:pPtr := 0
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -336,10 +332,8 @@ METHOD IdeFindInFiles:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbpQtUI():new( ::oIde:oDlg )
-   ::oUI:file := ::oIde:resPath + "findinfiles.ui"
-   ::oUI:create()
-   //::oUI:setWindowFlags( Qt_Sheet )
+   ::oUI := HbpQtUI():new( ::oIde:resPath + "findinfiles.ui", ::oIde:oDlg:oWidget )
+   ::oUI:setWindowFlags( Qt_Sheet )
    ::oUI:exec()
 
    ::destroy()
@@ -350,12 +344,7 @@ METHOD IdeFindInFiles:create( oIde )
 
 METHOD IdeFindInFiles:destroy()
 
-   ::oUI:hide()
-
    ::oUI:destroy()
-
-   ::oUI:oWidget:pPtr := 0
-   ::oUI:oWidget:pPtr := NIL
 
    RETURN Self
 

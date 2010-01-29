@@ -460,8 +460,8 @@ METHOD XbpWindow:destroy()
    LOCAL e_
    LOCAL cXbp := __ObjGetClsName( self )
 
-//HBXBP_DEBUG( ".   " )
-//HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+//HBXBP_DBG( ".   " )
+//HBXBP_DBG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    IF cXbp == "XBPDIALOG"
       hbxbp_SetEventLoop( NIL )
@@ -489,10 +489,14 @@ METHOD XbpWindow:destroy()
    ::XbpPartHandler:destroy()
    ::clearSlots()
 
+   IF !empty( ::qtObject )
+      ::qtObject:destroy()
+      ::qtObject := NIL
+   ENDIF
    ::oWidget:pPtr := 0
    ::oWidget := NIL
 
-//HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+//HBXBP_DBG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN NIL
 

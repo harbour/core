@@ -544,9 +544,7 @@ METHOD IdeProjManager:fetchProperties()
    LOCAL cLukupPng
    LOCAL cPrjLoc := hb_dirBase() + "projects"
 
-   ::oUI := HbpQtUI():new( ::oDlg )
-   ::oUI:file := ::resPath + "projectproperties.ui"
-   ::oUI:create()
+   ::oUI := HbpQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
 
    ::oUI:q_tabWidget:removeTab( 4 )
 
@@ -955,9 +953,7 @@ METHOD IdeProjManager:loadXhpProject()
 METHOD IdeProjManager:manageEnvironments()
    LOCAL cLukupPng
 
-   ::oUI := HbpQtUI():new( ::oDlg )
-   ::oUI:file := ::resPath + "projectproperties.ui"
-   ::oUI:create()
+   ::oUI := HbpQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
 
    cLukupPng := ::resPath + "folder.png"
    //
@@ -1259,9 +1255,7 @@ METHOD IdeProjManager:selectCurrentProject()
       RETURN ::cWrkProject
    ENDIF
 
-   oDlg := HbpQtUI():new( ::oDlg )
-   oDlg:file := ::oIDE:resPath + "selectproject.ui"
-   oDlg:create()
+   oDlg := HbpQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget )
 
  * Fill ComboBox with current project names
    FOR i := 1 TO Len( ::aProjects )
