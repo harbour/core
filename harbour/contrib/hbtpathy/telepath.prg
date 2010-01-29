@@ -661,7 +661,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    // Sleep rest of timeout
    /*
-   IF nTimeout > 0 .AND. __tp_timeelapsed( nStartSec, Seconds() ) > nTimeout
+   IF nTimeout > 0 .AND. nTimeout > __tp_timeelapsed( nStartSec, Seconds() )
       hb_idleSleep( nTimeout - __tp_timeelapsed( nStartSec, Seconds() ) )
    ENDIF
    */
