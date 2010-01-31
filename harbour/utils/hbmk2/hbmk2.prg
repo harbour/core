@@ -1153,7 +1153,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cCCEXT )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
          OTHERWISE
-            hbmk_OutErr( I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
+            hbmk_OutErr( I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
             RETURN 3
          ENDCASE
       ENDIF
@@ -1412,9 +1412,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    IF Empty( l_cHB_LIB_INSTALL )
       /* Autodetect multi-compiler/platform lib structure */
       IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
-                                               hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] +;
-                                               hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] +;
-                                               iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
+                                             hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] +;
+                                             hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] +;
+                                             iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
          l_cHB_LIB_INSTALL := tmp
       ELSE
          l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )

@@ -52,7 +52,7 @@ msgstr "forçar compilação em modo C/C++ ou reseta para o modo padrão"
 
 #: hbmk2.prg:1104
 #, c-format
-msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect."
+msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory."
 msgstr "Erro: HB_INSTALL_PREFIX não definido, falha na detecção automática."
 
 #: hbmk2.prg:953

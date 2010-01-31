@@ -124,7 +124,7 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
          szFile = hb_fsNameConv( szFile, &pszFree );
          if( HB_ISNUM( 2 ) )
             ulAttr = ( HB_FATTR ) hb_parnl( 2 );
-         pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : 0;
+         pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : HB_FA_ALL;
          pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
          if( pszFree )
             hb_xfree( pszFree );

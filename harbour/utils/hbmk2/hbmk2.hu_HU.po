@@ -409,8 +409,8 @@ msgstr ""
 
 #: hbmk2.prg:1105
 #, c-format
-msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect."
-msgstr "Hiba: HB_INSTALL_PREFIX nincs megadva, automata detektálás nem járt sikerrel."
+msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory."
+msgstr "Hiba: HB_INSTALL_PREFIX nincs megadva, automata detektálás nem járt sikerrel.\\nKérem, futtassa ezt a programot a Harbour könyvtárán belüli eredeti helyérõl vagy állítsa be a HB_INSTALL_PREFIX környezeti változót a Harbour gyökér könyvtárára."
 
 #: hbmk2.prg:2096
 #, c-format

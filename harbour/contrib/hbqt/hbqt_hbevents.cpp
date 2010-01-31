@@ -201,7 +201,7 @@ HB_FUNC( QT_EVENTS_CONNECT )
          hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
          int i = object->property( prop ).toInt();
-         if ( i == 0 )  /* No Duplicates of same event with same object - it is a design decision - never alter */
+         if( i == 0 )  /* No Duplicates of same event with same object - it is a design decision - never alter */
          {
             PHB_ITEM codeblock = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_BYREF ) );
 
