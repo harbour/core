@@ -412,14 +412,14 @@ p, li { white-space: pre-wrap; }
           <bool>true</bool>
          </property>
          <property name="plainText">
-          <string>HBIDE will employ the concept of meta-data which will be used to parse the paths or other info supplied to the interface. 
+          <string>HBIDE will employ the concept of meta-data which will be used to parse the paths or other info supplied to the interface.
 
-Usually meta-key is enclosed in curly braces, but due to the fact that HBMK2 already exploits it, HBIDE will recognize meta-key in angled brackets. 
+Usually meta-key is enclosed in curly braces, but due to the fact that HBMK2 already exploits it, HBIDE will recognize meta-key in angled brackets.
 
-Please enter meta-keys and their values like : 
+Please enter meta-keys and their values like :
       MySourcePath = c:/dev_sources/vouch
-in the QTextEdit below. Then whereever you will supply any key anywhere in the input fields of HBIDE interface, just enclose it in angled brackets like : 
-       &lt;MySourcePath&gt;/vouch.prg. 
+in the QTextEdit below. Then whereever you will supply any key anywhere in the input fields of HBIDE interface, just enclose it in angled brackets like :
+       &lt;MySourcePath&gt;/vouch.prg.
 Note that keys are case sensitive. So MySourcePath &lt;&gt; MYSOURCEPath.
 
 HBIDE internally employs few keys which are shown below and are always include in the project. These accompany the value as its relevance and not as literal.
@@ -522,7 +522,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="text">
-            <string>Path to hbMK2.exe</string>
+            <string>Path to hbmk2</string>
            </property>
           </widget>
          </item>
