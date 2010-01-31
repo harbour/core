@@ -10,6 +10,7 @@
 
 extern QT_G_FUNC( hbqt_gcRelease_HBDbfModel );
 extern QT_G_FUNC( hbqt_gcRelease_HBEvents );
+extern QT_G_FUNC( hbqt_gcRelease_HBQMainWindow );
 extern QT_G_FUNC( hbqt_gcRelease_HBQPlainTextEdit );
 extern QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter );
 extern QT_G_FUNC( hbqt_gcRelease_HBQTableView );
@@ -294,6 +295,7 @@ extern QT_G_FUNC( hbqt_gcRelease_QWizardPage );
 
 extern void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_HbQMainWindow( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBQPlainTextEdit( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBQTableView( void * pObj, bool bNew );
