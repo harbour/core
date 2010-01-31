@@ -78,9 +78,9 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextBlock;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlock )
@@ -91,18 +91,19 @@ QT_G_FUNC( hbqt_gcRelease_QTextBlock )
    {
       if( p->ph )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextBlock   /.\\    ph=%p", p->ph ) );
          delete ( ( QTextBlock * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextBlock                 ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextBlock   \\./    ph=%p", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextBlock                  Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextBlock    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextBlock                  Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextBlock    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

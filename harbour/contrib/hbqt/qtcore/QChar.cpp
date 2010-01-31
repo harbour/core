@@ -1,5 +1,5 @@
 /*
- * $Id: hbqtgen.prg 13633 2010-01-18 17:54:15Z vouchcac $
+ * $Id: hbqtgen.prg 13683 2010-01-23 11:20:21Z vszakats $
  */
 
 /* -------------------------------------------------------------------- */
@@ -106,9 +106,9 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
 } QGC_POINTER_QChar;
 
 QT_G_FUNC( hbqt_gcRelease_QChar )

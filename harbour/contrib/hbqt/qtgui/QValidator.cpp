@@ -81,10 +81,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QValidator > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QValidator > pq;
 } QGC_POINTER_QValidator;
 
 QT_G_FUNC( hbqt_gcRelease_QValidator )

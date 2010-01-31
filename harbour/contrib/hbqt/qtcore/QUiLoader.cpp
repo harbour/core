@@ -79,10 +79,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QUiLoader > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QUiLoader > pq;
 } QGC_POINTER_QUiLoader;
 
 QT_G_FUNC( hbqt_gcRelease_QUiLoader )
@@ -96,23 +96,24 @@ QT_G_FUNC( hbqt_gcRelease_QUiLoader )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QUiLoader   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QUiLoader * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QUiLoader                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QUiLoader   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QUiLoader                  ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QUiLoaderph=%p pq=%p", p->ph, (void *)(p->pq) ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QUiLoader                   Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QUiLoader    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QUiLoader                   Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QUiLoader    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

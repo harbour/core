@@ -78,10 +78,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QTimer > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QTimer > pq;
 } QGC_POINTER_QTimer;
 
 QT_G_FUNC( hbqt_gcRelease_QTimer )
@@ -95,23 +95,24 @@ QT_G_FUNC( hbqt_gcRelease_QTimer )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTimer   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QTimer * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTimer                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTimer   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTimer                     ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QTimerph=%p pq=%p", p->ph, (void *)(p->pq) ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTimer                      Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTimer    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTimer                      Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTimer    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

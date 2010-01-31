@@ -586,8 +586,8 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
    ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
    //
-   ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
-   ::oUI:signal( "editMetaData"      , "textChanged()"      , {|o| ::updateMetaData( o ) } )
+   ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|p| ::updateHbp( p ) } )
+   ::oUI:signal( "editMetaData"      , "textChanged()"      , {|| ::updateMetaData() } )
 
    ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
    ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )

@@ -118,6 +118,8 @@ CLASS HbIde
    DATA   oEV                                              /* Available Environments         */
    DATA   oThemes
 
+   DATA   oUI
+
    DATA   aMeta                                   INIT   {}  /* Holds current definition only  */
 
    DATA   mp1, mp2, oXbp, nEvent

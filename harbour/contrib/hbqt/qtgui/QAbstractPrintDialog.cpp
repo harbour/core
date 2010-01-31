@@ -92,10 +92,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QAbstractPrintDialog > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QAbstractPrintDialog > pq;
 } QGC_POINTER_QAbstractPrintDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )

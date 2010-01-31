@@ -71,8 +71,6 @@ public:
    HBEvents( QObject *parent = 0 );
    ~HBEvents();
    QList<PHB_ITEM>     listBlock;
-   QList<bool>         listActv;
-   QList<QObject*>     listObj;
 
    bool hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock );
    bool hbDisconnect( PHB_ITEM pObj, int iEvent );

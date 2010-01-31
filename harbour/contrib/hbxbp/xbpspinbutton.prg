@@ -158,9 +158,9 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::oWidget:installEventFilter( ::pEvents )
 
 HBXBP_DEBUG( "XbpSpinButton:create  2" )
-   ::connectEvent( ::pWidget, QEvent_FocusIn , {|o,e| ::exeBlock( 7, e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut, {|o,e| ::exeBlock( 8, e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_KeyPress, {|o,e| ::exeBlock( 9, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::exeBlock( 7, e ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::exeBlock( 8, e ) } )
+   ::connectEvent( ::pWidget, QEvent_KeyPress, {|e| ::exeBlock( 9, e ) } )
    #endif
 
    ::connect( ::pWidget, "valueChanged(int)" , {|| ::sl_editBuffer := ::oWidget:value() } )

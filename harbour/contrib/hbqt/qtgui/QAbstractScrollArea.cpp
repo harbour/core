@@ -78,10 +78,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QAbstractScrollArea > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QAbstractScrollArea > pq;
 } QGC_POINTER_QAbstractScrollArea;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractScrollArea )

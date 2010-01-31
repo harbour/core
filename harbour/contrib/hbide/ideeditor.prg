@@ -195,7 +195,7 @@ METHOD IdeEditsManager:prepareTabWidget()
    ::qTabWidget:setMovable( .t. )
 
    ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|o,p| ::exeEvent( 1, p, o ) } )
+   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|p| ::exeEvent( 1, p ) } )
 
    RETURN Self
 
@@ -761,7 +761,7 @@ METHOD IdeEditsManager:printPreview()
 
    qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
    Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
 
@@ -903,7 +903,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
-   METHOD exeEvent( nMode, o, p, p1, p2 )
+   METHOD exeEvent( nMode, p, p1, p2 )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -976,8 +976,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
    #if 1
-   ::connect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } )
-   ::connect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
+   ::connect( ::qDocument, "blockCountChanged(int)"     , {|p      | ::exeEvent( 21, p )         } )
+   ::connect( ::qDocument, "contentsChange(int,int,int)", {|p,p1,p2| ::exeEvent( 22, p, p1, p2 ) } )
    #else
 hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } ) )
    ::qSlots:hbConnect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
@@ -1002,14 +1002,12 @@ hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:exeEvent( nMode, o, p, p1, p2 )
+METHOD IdeEditor:exeEvent( nMode, p, p1, p2 )
    LOCAL qChar
 
-   HB_SYMBOL_UNUSED( o  )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nMode
-
    CASE blockCountChanged
       //hbide_dbg( "blockCountChanged(int)", p )
       ::nPrevBlocks := ::nBlocks
@@ -1315,7 +1313,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
    METHOD destroy()
-   METHOD execSlot( nMode, oEdit, o, p, p1 )
+   METHOD execSlot( nMode, oEdit, p, p1 )
    METHOD execEvent( nMode, nEvent, p )
    METHOD connectEditSlots( oEdit )
    METHOD disConnectEditSlots( oEdit )
@@ -1363,8 +1361,8 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:highlightCurrentLine( .t. )              /* Via user-setup */
 
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|o,p| ::execEvent( 1, QEvent_KeyPress, p, o ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|o,p| ::execEvent( 1, QEvent_Wheel   , p, o ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|p| ::execEvent( 1, QEvent_KeyPress, p ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|p| ::execEvent( 1, QEvent_Wheel   , p ) } )
 
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
@@ -1427,9 +1425,10 @@ METHOD IdeEdit:destroy()
    ::oEditor:qLayout:removeItem( ::qHLayout )
    //
    ::qHLayout:removeWidget( ::qEdit )
-
+hbide_dbg( "   IdeEdit:destroy()   ::qEdit:pPtr := NIL    0" )
    ::qEdit:pPtr := NIL
-   ::qEdit      := nil
+hbide_dbg( "   IdeEdit:destroy()   ::qEdit:pPtr := NIL    1" )
+   ::qEdit      := NIL
    ::qHLayout   := NIL
 
    RETURN Self
@@ -1444,7 +1443,7 @@ METHOD IdeEdit:disConnectEditSlots( oEdit )
    ::disConnect( oEdit:qEdit, "modificationChanged(bool)"          )
    ::disConnect( oEdit:qEdit, "redoAvailable(bool)"                )
    ::disConnect( oEdit:qEdit, "selectionChanged()"                 )
- * ::disConnect( oEdit:qEdit, "undoAvailable(bool)"                )
+   ::disConnect( oEdit:qEdit, "undoAvailable(bool)"                )
    ::disConnect( oEdit:qEdit, "updateRequest(QRect,int)"           )
    ::disConnect( oEdit:qEdit, "cursorPositionChanged()"            )
 
@@ -1454,15 +1453,15 @@ METHOD IdeEdit:disConnectEditSlots( oEdit )
 
 METHOD IdeEdit:connectEditSlots( oEdit )
 
-   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|o,p,p1| ::execSlot( 8, oEdit, o, p, p1 ) } )
-   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|o,p   | ::execSlot( 1, oEdit, o, p     ) } )
-   ::Connect( oEdit:qEdit, "textChanged()"                     , {|o     | ::execSlot( 2, oEdit, o        ) } )
-   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|o,p   | ::execSlot( 3, oEdit, o, p     ) } )
-   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|o,p   | ::execSlot( 4, oEdit, o, p     ) } )
-   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|o,p   | ::execSlot( 5, oEdit, o, p     ) } )
-   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|o,p   | ::execSlot( 6, oEdit, o, p     ) } )
- * ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|o,p   | ::execSlot( 7, oEdit, o, p     ) } )
-   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|o     | ::execSlot( 9, oEdit, o        ) } )
+   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execSlot( 8, oEdit, p, p1 ) } )
+   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execSlot( 1, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execSlot( 2, oEdit,       ) } )
+   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execSlot( 3, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execSlot( 4, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execSlot( 5, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execSlot( 6, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execSlot( 7, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execSlot( 9, oEdit,       ) } )
 
    RETURN Self
 
@@ -1523,10 +1522,9 @@ METHOD IdeEdit:duplicateLine()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execSlot( nMode, oEdit, o, p, p1 )
+METHOD IdeEdit:execSlot( nMode, oEdit, p, p1 )
    LOCAL pAct, qAct, n, qCursor, qEdit, oo, nSpaces
 
-   HB_SYMBOL_UNUSED( o  )
    HB_SYMBOL_UNUSED( p1 )
 
    qEdit   := oEdit:qEdit
@@ -1885,3 +1883,6 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
    RETURN n
 
 /*----------------------------------------------------------------------*/
+
+
+

@@ -77,10 +77,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QTextObject > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QTextObject > pq;
 } QGC_POINTER_QTextObject;
 
 QT_G_FUNC( hbqt_gcRelease_QTextObject )

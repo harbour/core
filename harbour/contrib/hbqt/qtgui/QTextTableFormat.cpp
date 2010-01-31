@@ -86,9 +86,9 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextTableFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextTableFormat )
@@ -99,18 +99,19 @@ QT_G_FUNC( hbqt_gcRelease_QTextTableFormat )
    {
       if( p->ph )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextTableFormat   /.\\    ph=%p", p->ph ) );
          delete ( ( QTextTableFormat * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextTableFormat           ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextTableFormat   \\./    ph=%p", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextTableFormat            Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextTableFormat    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextTableFormat            Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextTableFormat    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

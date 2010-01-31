@@ -151,9 +151,9 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget:setFrame( ::XbpSLE:border )
 
-   ::connect( ::pWidget, "highlighted(int)"        , {|o,i| ::exeBlock( 1,i,o ) } )
-   //::connect( ::pWidget, "currentIndexChanged(int)", {|o,i| ::exeBlock( 2,i,o ) } )
-   ::connect( ::pWidget, "activated(int)"          , {|o,i| ::exeBlock( 2,i,o ) } )
+   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::exeBlock( 1, i ) } )
+*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::exeBlock( 2, i ) } )
+   ::connect( ::pWidget, "activated(int)"          , {|i| ::exeBlock( 2, i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -187,9 +187,9 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 
    ENDIF
 
-   ::connect( ::pWidget, "highlighted(int)"        , {|o,i| ::exeBlock( 1,i,o ) } )
-   ::connect( ::pWidget, "activated(int)"          , {|o,i| ::exeBlock( 2,i,o ) } )
-   //::connect( ::pWidget, "currentIndexChanged(int)", {|o,i| ::exeBlock( 2,i,o ) } )
+   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::exeBlock( 1, i ) } )
+   ::connect( ::pWidget, "activated(int)"          , {|i| ::exeBlock( 2, i ) } )
+*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::exeBlock( 2, i ) } )
 
    ::AddAsChild( SELF )
    RETURN Self

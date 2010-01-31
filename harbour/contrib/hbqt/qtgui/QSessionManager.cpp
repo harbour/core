@@ -81,10 +81,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QSessionManager > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QSessionManager > pq;
 } QGC_POINTER_QSessionManager;
 
 QT_G_FUNC( hbqt_gcRelease_QSessionManager )

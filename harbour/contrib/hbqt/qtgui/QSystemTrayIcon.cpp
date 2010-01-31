@@ -84,10 +84,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QSystemTrayIcon > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QSystemTrayIcon > pq;
 } QGC_POINTER_QSystemTrayIcon;
 
 QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
@@ -101,23 +101,24 @@ QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSystemTrayIcon   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QSystemTrayIcon * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSystemTrayIcon            ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QSystemTrayIcon   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSystemTrayIcon            ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QSystemTrayIconph=%p pq=%p", p->ph, (void *)(p->pq) ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSystemTrayIcon             Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QSystemTrayIcon    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSystemTrayIcon             Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QSystemTrayIcon    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

@@ -2,19 +2,11 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated source file. DO NOT EDIT!           */
-/*          Instead, edit corresponding .qth file,                      */
-/*          or the generator tool itself, and run regenarate.           */
-/* -------------------------------------------------------------------- */
-
 /*
  * Harbour Project source code:
- * QT wrapper main header
+ * QT Source Generator for Harbour
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,69 +50,46 @@
  *
  */
 /*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
 
-#include "hbapi.h"
-#include "../hbqt.h"
+<CLASS>
+QObject  = 
+Inherits = QMainWindow
+Type     = 
+New      =
+</CLASS>
 
-/*----------------------------------------------------------------------*/
-#if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
+<SUBCLASS>
+</SUBCLASS>
 
-/*
- *  enum StyleOptionType { Type }
- *  enum StyleOptionVersion { Version }
- */
+<DOC>
+</DOC>
 
-/*
- *  Constructed[ 0/1 [ 0.00% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QRegion region
- */
-
-#include <QtCore/QPointer>
-
-#include <QtGui/QStyleHintReturnMask>
+<CODE>
+#include <QtGui/QMainWindow>
+#include "../hbqt_hbqmainwindow.h"
 
 
 /*
- * QStyleHintReturnMask ()
+ * 
+ * 
  */
-
-typedef struct
+HB_FUNC( QT_HBQMAINWINDOW )
 {
-   void * ph;
-   bool bNew;
-   QT_G_FUNC_PTR func;
-} QGC_POINTER_QStyleHintReturnMask;
-
-QT_G_FUNC( hbqt_gcRelease_QStyleHintReturnMask )
-{
-   HB_SYMBOL_UNUSED( Cargo );
+   hb_retptr( new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
 }
+</CODE>
 
-void * hbqt_gcAllocate_QStyleHintReturnMask( void * pObj, bool bNew )
-{
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+<ENUMS>
+</ENUMS>
 
-   p->ph = pObj;
-   p->bNew = bNew;
-   p->func = hbqt_gcRelease_QStyleHintReturnMask;
+<PROTOS>
+</PROTOS>
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleHintReturnMask       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-   }
-   return p;
-}
+<SLOTS>
+</SLOTS>
 
-HB_FUNC( QT_QSTYLEHINTRETURNMASK )
-{
-}
-
-
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+<SIGNALS>
+</SIGNALS>

@@ -94,6 +94,7 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   exeBlock( nEvent, pEvent )
 
    METHOD   close()                               INLINE NIL
+   METHOD   destroy()
 
    METHOD   showModal()
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, ::oWidget:setWindowTitle( cTitle )
@@ -211,9 +212,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::connectWindowEvents()
    //
-   ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_Close           , {|e| ::exeBlock( QEvent_Close           , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|e| ::exeBlock( QEvent_WindowActivate  , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|e| ::exeBlock( QEvent_WindowDeactivate, e ) } )
 
    RETURN Self
 
@@ -224,6 +225,30 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
    ::qtObjects := pQtObject
 
    ::create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpDialog:destroy()
+
+   HBXBP_DBG( ". " )
+   HBXBP_DBG( ". " )
+   HBXBP_DBG( ". " )
+   HBXBP_DBG( "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
+
+   hbxbp_SetEventLoop( NIL )
+   ::oEventLoop:exit( 0 )
+   ::oEventLoop:pPtr := NIL
+   //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
+   ::oMenu := NIL
+
+   ::XbpWindow:destroy()
+
+   HBXBP_DBG( "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
+   HBXBP_DBG( ". " )
+   HBXBP_DBG( ". " )
+   HBXBP_DBG( ". " )
 
    RETURN Self
 

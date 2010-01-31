@@ -364,7 +364,7 @@ METHOD IdeDocks:buildOutputResults()
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
    ::oDockB2:hide()
 
-   ::connect( ::oIde:oOutputResult:oWidget, "copyAvailable(bool)", {|o,l| ::outputDoubleClicked( l, o ) } )
+   ::connect( ::oIde:oOutputResult:oWidget, "copyAvailable(bool)", {|l| ::outputDoubleClicked( l ) } )
 
    RETURN Self
 

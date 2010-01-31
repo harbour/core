@@ -77,10 +77,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QAbstractTextDocumentLayout > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QAbstractTextDocumentLayout > pq;
 } QGC_POINTER_QAbstractTextDocumentLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractTextDocumentLayout )

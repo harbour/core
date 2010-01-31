@@ -122,7 +122,7 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ENDIF
 
    ::oWidget := QStatusBar():new()
-   oPar:oWidget:setStatusBar( ::pWidget )
+   oPar:oWidget:setStatusBar( ::oWidget )
 
    ::oWidget:setSizeGripEnabled( ::sizeGrip )
 
@@ -168,14 +168,15 @@ METHOD XbpStatusBar:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatusBar:destroy()
-   LOCAL i, nItems
+   LOCAL obj
 
-   IF ( nItems := Len( ::aItems ) ) > 0
-      FOR i := 1 TO nItems
-         ::aItems[ i ]:oParent := NIL
-         ::aItems[ i ]:oWidget:pPtr := NIL
-      NEXT
-   ENDIF
+   FOR EACH obj IN ::aItems
+      ::oWidget:removeWidget( obj )
+      obj:oParent := NIL
+      obj:oWidget:pPtr := NIL
+      obj := NIL
+   NEXT
+   ::aItems := {}
 
    ::xbpWindow:destroy()
 

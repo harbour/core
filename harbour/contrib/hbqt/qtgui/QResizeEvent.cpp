@@ -77,9 +77,9 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
 } QGC_POINTER_QResizeEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QResizeEvent )

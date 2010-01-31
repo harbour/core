@@ -80,10 +80,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QSyntaxHighlighter > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QSyntaxHighlighter > pq;
 } QGC_POINTER_QSyntaxHighlighter;
 
 QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )

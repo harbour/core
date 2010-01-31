@@ -88,10 +88,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QListWidget > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QListWidget > pq;
 } QGC_POINTER_QListWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QListWidget )
@@ -105,23 +105,24 @@ QT_G_FUNC( hbqt_gcRelease_QListWidget )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QListWidget   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QListWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QListWidget                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QListWidget   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QListWidget                ph=%p pq=%p %i B %i KB", p->ph, (void *)(p->pq), ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QListWidgetph=%p pq=%p", p->ph, (void *)(p->pq) ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QListWidget                 Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QListWidget    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QListWidget                 Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QListWidget    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }

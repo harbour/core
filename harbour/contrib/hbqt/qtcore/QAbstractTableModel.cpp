@@ -78,10 +78,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QAbstractTableModel > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QAbstractTableModel > pq;
 } QGC_POINTER_QAbstractTableModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )

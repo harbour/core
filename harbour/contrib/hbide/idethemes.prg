@@ -414,17 +414,17 @@ METHOD IdeThemes:fetch()
       ::oUI := HbQtUI():new( ::oIde:resPath + "themes.ui", ::oIde:oDlg:oWidget )
       ::oUI:setWindowFlags( Qt_Sheet )
 
-      ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|o,i| ::nCurTheme := i+1, ::setTheme( i,o ) } )
-      ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|o,i| ::nCurItem  := i+1, ::setAttributes( i, o ) } )
+      ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|i| ::nCurTheme := i+1, ::setTheme( i ) } )
+      ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|i| ::nCurItem  := i+1, ::setAttributes( i ) } )
 
       ::oUI:signal( "buttonColor"   , "clicked()"               , {|| ::updateColor() } )
       ::oUI:signal( "buttonSave"    , "clicked()"               , {|| ::save( .f. ) } )
       ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {|| ::save( .t. ) } )
       ::oUI:signal( "buttonCopy"    , "clicked()"               , {|| ::copy( .t. ) } )
 
-      ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_ITALIC, i, o ) } )
-      ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_BOLD  , i, o ) } )
-      ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|o,i| ::updateAttribute( THM_ATR_ULINE , i, o ) } )
+      ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
+      ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
+      ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
 
       ::oUI:signal( "buttonClose"   , "clicked()", ;
             {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
@@ -599,9 +599,9 @@ METHOD IdeThemes:selectTheme()
 
    oSL:qObj[ "listOptions" ]:setModel( oStrModel )
 
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|o,p| ::selectThemeProc( 1, p, oSL, @cTheme, o ) } )
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|o,p| ::selectThemeProc( 2, p, oSL, @cTheme, o ) } )
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|o,p| ::selectThemeProc( 3, p, oSL, o ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p, oSL, @cTheme ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|p| ::selectThemeProc( 2, p, oSL, @cTheme ) } )
+   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|p| ::selectThemeProc( 3, p, oSL          ) } )
 
    nDone := oSL:exec()
 

@@ -275,8 +275,8 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget():new( ::pParent )
 
-   ::Connect( ::pWidget, "currentChanged(int)"    , {|o,i| ::exeBlock( 1,i,o ) } )
-   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|o,i| ::exeBlock( 2,i,o ) } )
+   ::Connect( ::pWidget, "currentChanged(int)"    , {|i| ::exeBlock( 1, i ) } )
+   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|i| ::exeBlock( 2, i ) } )
 
    ::setPosAndSize()
    IF ::visible

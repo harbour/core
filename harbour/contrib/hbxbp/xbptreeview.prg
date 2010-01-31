@@ -171,18 +171,18 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Window Events */
    ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
-   //::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|o,p1,p2| ::exeBlock(  1, p1, p2, o ) } )
-   //::connect( ::pWidget, "itemActivated(QTWItem)"      , {|o,p1,p2| ::exeBlock(  2, p1, p2, o ) } )
-   //::connect( ::pWidget, "itemChanged(QTWItem)"        , {|o,p1,p2| ::exeBlock(  3, p1, p2, o ) } )
-   ::connect( ::pWidget, "itemClicked(QTWItem)"        , {|o,p1,p2| ::exeBlock(  4, p1, p2, o ) } )
-   ::connect( ::pWidget, "itemCollapsed(QTWItem)"      , {|o,p1,p2| ::exeBlock(  5, p1, p2, o ) } )
-   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"  , {|o,p1,p2| ::exeBlock(  6, p1, p2, o ) } )
-   //::connect( ::pWidget, "itemEntered(QTWItem)"        , {|o,p1,p2| ::exeBlock(  7, p1, p2, o ) } )
-   ::connect( ::pWidget, "itemExpanded(QTWItem)"       , {|o,p1,p2| ::exeBlock(  8, p1, p2, o ) } )
-   //::connect( ::pWidget, "itemPressed(QTWItem)"        , {|o,p1,p2| ::exeBlock(  9, p1, p2, o ) } )
-   //::connect( ::pWidget, "itemSelectionChanged()"      , {|o,p1,p2| ::exeBlock( 10, p1, p2, o ) } )
+*  ::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|p1,p2| ::exeBlock(  1, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemActivated(QTWItem)"      , {|p1,p2| ::exeBlock(  2, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemChanged(QTWItem)"        , {|p1,p2| ::exeBlock(  3, p1, p2 ) } )
+   ::connect( ::pWidget, "itemClicked(QTWItem)"        , {|p1,p2| ::exeBlock(  4, p1, p2 ) } )
+   ::connect( ::pWidget, "itemCollapsed(QTWItem)"      , {|p1,p2| ::exeBlock(  5, p1, p2 ) } )
+   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"  , {|p1,p2| ::exeBlock(  6, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemEntered(QTWItem)"        , {|p1,p2| ::exeBlock(  7, p1, p2 ) } )
+   ::connect( ::pWidget, "itemExpanded(QTWItem)"       , {|p1,p2| ::exeBlock(  8, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemPressed(QTWItem)"        , {|p1,p2| ::exeBlock(  9, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemSelectionChanged()"      , {|p1,p2| ::exeBlock( 10, p1, p2 ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -266,8 +266,9 @@ METHOD XbpTreeView:destroy()
    ::disconnect()
 
    FOR i := len( ::aItems ) TO 1 step -1
-      aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
-      ::aItems[ i ]:oWidget:pPtr := NIL
+//      aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
+//      ::aItems[ i ]:oWidget:pPtr := NIL
+      ::aItems[ i ]:destroy()
    NEXT
    ::aItems := NIL
 
@@ -453,10 +454,11 @@ METHOD XbpTreeViewItem:destroy()
    LOCAL i
 
    FOR i := 1 TO len( ::aChilds )
-      ::aChilds[ i ]:pPtr := NIL
+      ::aChilds[ i ]:oWidget:pPtr := NIL
    NEXT
 
-   ::oItem:pPtr := NIL
+   //::oItem:pPtr := NIL
+   ::oWidget:pPtr := NIL
 
    RETURN NIL
 

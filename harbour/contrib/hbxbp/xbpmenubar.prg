@@ -127,7 +127,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   exeBlock( nMenuItemID )
 
    METHOD   delAllItems()
-   METHOD   delItem( nItemIndex )
+   METHOD   delItem( aItem )
    METHOD   placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
    METHOD   addItem( aItem )
    METHOD   insItem( nItemIndex, aItem )
@@ -236,43 +236,31 @@ METHOD xbpMenuBar:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:delAllItems()
-   LOCAL lResult:= .T.,  nItems
+   LOCAL aItem
 
-   nItems := ::numItems()
-   DO WHILE nItems > 0 .AND. lResult
-      lResult := ::delItem( nItems )
-      nItems--
-   ENDDO
+   FOR EACH aItem IN ::aMenuItems
+      ::delItem( aItem )
+      aItem := NIL
+   NEXT
+   ::aMenuItems := {}
 
-   RETURN lResult
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:delItem( nItemIndex )
-   LOCAL lResult := .T.
-   LOCAL oAction
+METHOD xbpMenuBar:delItem( aItem )
 
-   IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
-      IF ::aMenuItems[ nItemIndex, 1 ] == QMF_POPUP
-         //::aMenuItems[ nItemIndex, 4 ]:destroy()
-      ELSE
-         oAction := ::aMenuItems[ nItemIndex, 5 ]
+   IF hb_isObject( aItem[ 5 ] ) .AND. __ObjGetClsName( aItem[ 5 ] ) == "QACTION"
+      IF !( aItem[ 5 ]:isSeparator() )
+         ::disConnect( aItem[ 5 ], "triggered(bool)" )
+         ::disConnect( aItem[ 5 ], "hovered()"       )
       ENDIF
-      ADEL( ::aMenuItems, nItemIndex )
-      ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
-
-      IF hb_isObject( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
-         IF !oAction:isSeparator()
-            Qt_Slots_disConnect( ::pSlots, oAction, "triggered(bool)" )
-            Qt_Slots_disConnect( ::pSlots, oAction, "hovered()"       )
-         ENDIF
-         ::oWidget:removeAction( oAction )
-         oAction:pPtr := NIL
-         oAction := NIL
-      ENDIF
+      ::oWidget:removeAction( aItem[ 5 ] )
+      aItem[ 5 ]:pPtr := NIL
+      aItem[ 5 ] := NIL
    ENDIF
 
-   RETURN lResult
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 /*
@@ -741,8 +729,8 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
    ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::oWidget := QMenu():new( ::pParent )
-   ::oParent:oWidget:addMenu( ::pWidget )
+   ::oWidget := QMenu():new()
+   ::oParent:oWidget:addMenu( ::oWidget )
 
    ::oParent:addChild( self )
    RETURN Self

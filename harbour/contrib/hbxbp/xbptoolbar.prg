@@ -205,26 +205,21 @@ METHOD XbpToolbar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpToolbar:destroy()
-   LOCAL i, nItems
+   LOCAL aItem, oBtn
 
-   IF ( nItems := Len( ::aItems ) ) > 0
-      FOR i := 1 TO nItems
-         IF ::aItems[ i,2 ]:image <> NIL
-            //Win_DeleteObject( ::aItems[ i,2 ]:image )
-         ENDIF
-         IF ::aItems[ i,2 ]:disabledImage <> NIL
-            //Win_DeleteObject( ::aItems[ i,2 ]:disabledImage )
-         ENDIF
-         IF ::aItems[ i,2 ]:hotImage <> NIL
-            //Win_DeleteObject( ::aItems[ i,2 ]:hotImage )
-         ENDIF
+   FOR EACH aItem IN ::aItems
+      IF aItem[ 3 ] == XBPTOOLBAR_BUTTON_DEFAULT
+         oBtn := aItem[ 2 ]
+         aItem := NIL
 
-         IF ::aItems[ i,3 ] == XBPTOOLBAR_BUTTON_DEFAULT
-            ::aItems[ i,2 ]:oAction:pPtr := NIL
-            ::aItems[ i,2 ]:oAction := NIL
-         ENDIF
-      NEXT
-   ENDIF
+         ::disConnect( oBtn:oAction, "triggered(bool)" )
+
+         oBtn:oAction:pPtr := NIL
+         oBtn:oAction := NIL
+      ELSE
+         aItem := NIL
+      ENDIF
+   NEXT
 
    ::xbpWindow:destroy()
 

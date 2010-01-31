@@ -180,12 +180,12 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Window Events */
    ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    /* Signal-slots */
-   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|o,i| ::exeBlock( 1,i,o ) } )
-   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|o,i| ::exeBlock( 2,i,o ) } )
-   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|o,i| ::exeBlock( 3,i,o ) } )
+   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|i| ::exeBlock( 1, i ) } )
+   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|i| ::exeBlock( 2, i ) } )
+   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|i| ::exeBlock( 3, i ) } )
 
    ::oStrList  := QStringList():new( ::pWidget )
    ::oStrModel := QStringListModel():new( ::pWidget )

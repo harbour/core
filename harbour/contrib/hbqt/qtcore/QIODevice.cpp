@@ -84,10 +84,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QIODevice > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QIODevice > pq;
 } QGC_POINTER_QIODevice;
 
 QT_G_FUNC( hbqt_gcRelease_QIODevice )

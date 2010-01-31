@@ -94,10 +94,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QInputContext > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QInputContext > pq;
 } QGC_POINTER_QInputContext;
 
 QT_G_FUNC( hbqt_gcRelease_QInputContext )

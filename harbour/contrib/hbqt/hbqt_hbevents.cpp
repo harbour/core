@@ -83,7 +83,6 @@ HBEvents::~HBEvents()
       {
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
-         listObj[ i ] = NULL;
       }
    }
    listBlock.clear();
@@ -100,13 +99,12 @@ bool HBEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
    if( object )
    {
       PHB_ITEM codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-      //PHB_ITEM codeblock = hb_itemNew( bBlock );
 
       char prop[ 20 ];
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );  /* Make it a unique identifier */
 
       listBlock << codeblock;
-      listObj   << object;            /* TOFIX: Reference to GC collected pointer is stored. */
+//      listObj   << object;            /* TOFIX: Reference to GC collected pointer is stored. */
 
       object->setProperty( prop, ( int ) listBlock.size() );
 
@@ -131,7 +129,6 @@ bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
       {
          hb_itemRelease( listBlock.at( i - 1 ) );
          listBlock[ i - 1 ] = NULL;
-         listObj[ i - 1 ]   = NULL;
          object->setProperty( prop, QVariant() );
 
          HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", iEvent ) );
@@ -152,7 +149,6 @@ bool HBEvents::hbClear()
       {
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
-         listObj[ i ] = NULL;
       }
    }
    listBlock.clear();
@@ -164,26 +160,22 @@ bool HBEvents::eventFilter( QObject * object, QEvent * event )
    QEvent::Type eventtype = event->type();
 
    if( ( int ) eventtype == 0 )
-      return HB_FALSE;
+      return false;
 
    char prop[ 20 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
 
    int found = object->property( prop ).toInt();
-
    if( found == 0 )
-      return HB_FALSE;
+      return false;
 
-   bool ret = HB_TRUE;
+   bool ret = true;
 
-   if( found <= listBlock.size() && listObj.at( found - 1 ) == object && hb_vmRequestReenter() )
+   if( found <= listBlock.size() && hb_vmRequestReenter() )
    {
-      PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
       PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
-      ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
-      hb_itemRelease( pObject );
+      ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
       hb_itemRelease( pEvent  );
-
       hb_vmRequestRestore();
 
       if( eventtype == QEvent::Close )
@@ -203,18 +195,22 @@ HB_FUNC( QT_EVENTS_CONNECT )
 
       if( object )
       {
-         int      type      = hb_parni( 3 );
-         PHB_ITEM codeblock = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_BYREF ) );
+         int type = hb_parni( 3 );
 
          char prop[ 20 ];
          hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
-         t_events->listBlock << codeblock;
-         t_events->listObj   << object;      /* TOFIX: Reference to GC collected pointer is stored. */
+         int i = object->property( prop ).toInt();
+         if ( i == 0 )  /* No Duplicates of same event with same object - it is a design decision - never alter */
+         {
+            PHB_ITEM codeblock = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_BYREF ) );
 
-         object->setProperty( prop, ( int ) t_events->listBlock.size() );
+            t_events->listBlock << codeblock;
 
-         bRet = HB_TRUE;
+            object->setProperty( prop, ( int ) t_events->listBlock.size() );
+
+            bRet = HB_TRUE;
+         }
       }
    }
    hb_retl( bRet );
@@ -239,10 +235,11 @@ HB_FUNC( QT_EVENTS_DISCONNECT )
          int i = object->property( prop ).toInt();
          if( i > 0 && i <= t_events->listBlock.size() )
          {
+            object->setProperty( prop, QVariant() );
+
             hb_itemRelease( t_events->listBlock.at( i - 1 ) );
             t_events->listBlock[ i - 1 ] = NULL;
-            t_events->listObj[ i - 1 ]   = NULL;
-            object->setProperty( prop, QVariant() );
+
             bRet = HB_TRUE;
 
             HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", type ) );

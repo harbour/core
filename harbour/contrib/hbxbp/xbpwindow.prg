@@ -83,7 +83,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   connect( pWidget, cSignal, bBlock )
    METHOD   connectEvent( pWidget, nEvent, bBlock )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   grabEvent( nEvent, pEvent, oXbp )
+   METHOD   grabEvent( nEvent, pEvent )
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   captureMouse( lCapture )
    METHOD   invalidateRect( aRect )
@@ -361,6 +361,12 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setQtProperty( cProperty )
+   HB_SYMBOL_UNUSED( cProperty )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+#if 0
+METHOD XbpWindow:setQtProperty( cProperty )
    LOCAL oVariant := QVariant():new()
 
    DEFAULT cProperty TO "YES"
@@ -370,7 +376,7 @@ METHOD XbpWindow:setQtProperty( cProperty )
    ::oWidget:setProperty( ::qtProperty, oVariant )
 
    RETURN Self
-
+#endif
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
@@ -390,10 +396,13 @@ METHOD XbpWindow:disconnect()
    LOCAL e_
 
    IF len( ::aConnections ) > 0
+HBXBP_DBG( "                                                            " )
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
+HBXBP_DBG( ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
       NEXT
       ::aConnections := {}
+HBXBP_DBG( "                                                            " )
    ENDIF
 
    RETURN Self
@@ -416,28 +425,28 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
 METHOD XbpWindow:connectWindowEvents()
 
-   ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|o,e| ::grabEvent( QEvent_MouseButtonPress   , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseButtonRelease , {|o,e| ::grabEvent( QEvent_MouseButtonRelease , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseMove          , {|o,e| ::grabEvent( QEvent_MouseMove          , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseButtonDblClick, {|o,e| ::grabEvent( QEvent_MouseButtonDblClick, e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Enter              , {|o,e| ::grabEvent( QEvent_Enter              , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Leave              , {|o,e| ::grabEvent( QEvent_Leave              , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Wheel              , {|o,e| ::grabEvent( QEvent_Wheel              , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|e| ::grabEvent( QEvent_MouseButtonPress   , e ) } )
+   ::connectEvent( ::pWidget, QEvent_MouseButtonRelease , {|e| ::grabEvent( QEvent_MouseButtonRelease , e ) } )
+   ::connectEvent( ::pWidget, QEvent_MouseMove          , {|e| ::grabEvent( QEvent_MouseMove          , e ) } )
+   ::connectEvent( ::pWidget, QEvent_MouseButtonDblClick, {|e| ::grabEvent( QEvent_MouseButtonDblClick, e ) } )
+   ::connectEvent( ::pWidget, QEvent_Enter              , {|e| ::grabEvent( QEvent_Enter              , e ) } )
+   ::connectEvent( ::pWidget, QEvent_Leave              , {|e| ::grabEvent( QEvent_Leave              , e ) } )
+   ::connectEvent( ::pWidget, QEvent_Wheel              , {|e| ::grabEvent( QEvent_Wheel              , e ) } )
    //
-   ::connectEvent( ::pWidget, QEvent_Move               , {|o,e| ::grabEvent( QEvent_Move               , e, o ) } )
-//   ::connectEvent( ::pWidget, QEvent_Paint              , {|o,e| ::grabEvent( QEvent_Paint              , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Resize             , {|o,e| ::grabEvent( QEvent_Resize             , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
+*  ::connectEvent( ::pWidget, QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
+   ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
    //
-   ::connectEvent( ::pWidget, QEvent_FocusIn            , {|o,e| ::grabEvent( QEvent_FocusIn            , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut           , {|o,e| ::grabEvent( QEvent_FocusOut           , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_DragEnter          , {|o,e| ::grabEvent( QEvent_DragEnter          , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_DragLeave          , {|o,e| ::grabEvent( QEvent_DragLeave          , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_DragMove           , {|o,e| ::grabEvent( QEvent_DragMove           , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Drop               , {|o,e| ::grabEvent( QEvent_Drop               , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_WhatsThis          , {|o,e| ::grabEvent( QEvent_WhatsThis          , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_KeyPress           , {|o,e| ::grabEvent( QEvent_KeyPress           , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
+   ::connectEvent( ::pWidget, QEvent_DragEnter          , {|e| ::grabEvent( QEvent_DragEnter          , e ) } )
+   ::connectEvent( ::pWidget, QEvent_DragLeave          , {|e| ::grabEvent( QEvent_DragLeave          , e ) } )
+   ::connectEvent( ::pWidget, QEvent_DragMove           , {|e| ::grabEvent( QEvent_DragMove           , e ) } )
+   ::connectEvent( ::pWidget, QEvent_Drop               , {|e| ::grabEvent( QEvent_Drop               , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WhatsThis          , {|e| ::grabEvent( QEvent_WhatsThis          , e ) } )
+   ::connectEvent( ::pWidget, QEvent_KeyPress           , {|e| ::grabEvent( QEvent_KeyPress           , e ) } )
 
-   ::connectEvent( ::pWidget, QEvent_ContextMenu        , {|o,e| ::grabEvent( QEvent_ContextMenu        , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_ContextMenu        , {|e| ::grabEvent( QEvent_ContextMenu        , e ) } )
 
    RETURN Self
 
@@ -458,18 +467,14 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpWindow:destroy()
    LOCAL e_
-   LOCAL cXbp := __ObjGetClsName( self )
-
-//HBXBP_DBG( ".   " )
-//HBXBP_DBG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
-
-   IF cXbp == "XBPDIALOG"
-      hbxbp_SetEventLoop( NIL )
-      ::oEventLoop:exit( 0 )
-      ::oEventLoop:pPtr := NIL
-      //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
-      ::oMenu := NIL
-   ENDIF
+#if 0
+HBXBP_DBG( ".   " )
+HBXBP_DBG( ".   " )
+HBXBP_DBG( ".   " )
+HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+#endif
+   ::oParent := NIL
+   ::oOwner  := NIL
 
    ::disconnect()
 
@@ -496,8 +501,12 @@ METHOD XbpWindow:destroy()
    ::oWidget:pPtr := NIL
    ::oWidget := NIL
 
-//HBXBP_DBG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
-
+#if 0
+HBXBP_DBG( ".   " )
+HBXBP_DBG( ".   " )
+HBXBP_DBG( ".   " )
+HBXBP_DBG( hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+#endif
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -552,11 +561,9 @@ METHOD XbpWindow:clearSlots()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
+METHOD XbpWindow:grabEvent( nEvent, pEvent )
    LOCAL oEvent, nXbpKey, oP0, oP1, oObj_O, oObj_N
    LOCAL lRet := .t.
-
-   HB_SYMBOL_UNUSED( oXbp )
 
 //HBXBP_DEBUG(  hb_threadId(), "XbpWindow:grabEvent", nEvent )
 

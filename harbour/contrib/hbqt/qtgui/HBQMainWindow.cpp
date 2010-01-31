@@ -66,20 +66,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  enum StyleOptionType { Type }
- *  enum StyleOptionVersion { Version }
- *  Public Functions
- */
-
 #include <QtCore/QPointer>
 
-#include <QtGui/QStyleOptionProgressBar>
+#include <QtGui/QMainWindow>
+#include "../hbqt_hbqmainwindow.h"
 
 
 /*
- * QStyleOptionProgressBar ()
- * QStyleOptionProgressBar ( const QStyleOptionProgressBar & other )
+ *
+ *
  */
 
 typedef struct
@@ -87,103 +82,65 @@ typedef struct
    void * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-} QGC_POINTER_QStyleOptionProgressBar;
+   QPointer< HBQMainWindow > pq;
+} QGC_POINTER_HBQMainWindow;
 
-QT_G_FUNC( hbqt_gcRelease_QStyleOptionProgressBar )
+QT_G_FUNC( hbqt_gcRelease_HBQMainWindow )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) Cargo;
 
    if( p && p->bNew )
    {
-      if( p->ph )
+      if( p->ph && p->pq )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionProgressBar   /.\\    ph=%p", p->ph ) );
-         delete ( ( QStyleOptionProgressBar * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionProgressBar   \\./    ph=%p", p->ph ) );
-         p->ph = NULL;
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
+         {
+            HB_TRACE( HB_TR_ALWAYS, ( "YES_rel_HBQMainWindow   |||   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            delete ( ( HBQMainWindow * ) p->ph );
+            HB_TRACE( HB_TR_ALWAYS, ( "YES_rel_HBQMainWindow         ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
+         }
+         else
+         {
+            HB_TRACE( HB_TR_ALWAYS, ( "NO__rel_HBQMainWindowph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+         }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionProgressBar    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_ALWAYS, ( "DEL_rel_HBQMainWindow    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionProgressBar    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "PTR_rel_HBQMainWindow    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj, bool bNew )
+void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->bNew = bNew;
-   p->func = hbqt_gcRelease_QStyleOptionProgressBar;
+   p->func = hbqt_gcRelease_HBQMainWindow;
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionProgressBar    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      new( & p->pq ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
+      HB_TRACE( HB_TR_ALWAYS, ( "   _new_HBQMainWindow              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    return p;
 }
 
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
+HB_FUNC( QT_HBQMAINWINDOW )
 {
    void * pObj = NULL;
 
-   pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
+   pObj = new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( pObj, true ) );
-}
-
-/*
- * int maximum
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MAXIMUM )
-{
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->maximum );
-}
-
-/*
- * int minimum
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MINIMUM )
-{
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->minimum );
-}
-
-/*
- * int progress
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_PROGRESS )
-{
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->progress );
-}
-
-/*
- * QString text
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXT )
-{
-   hb_retc( hbqt_par_QStyleOptionProgressBar( 1 )->text.toLatin1().data() );
-}
-
-/*
- * Qt::Alignment textAlignment
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXTALIGNMENT )
-{
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionProgressBar( 1 )->textAlignment );
-}
-
-/*
- * bool textVisible
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXTVISIBLE )
-{
-   hb_retl( hbqt_par_QStyleOptionProgressBar( 1 )->textVisible );
+   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( pObj, true ) );
 }
 
 

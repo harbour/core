@@ -110,7 +110,7 @@ METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox():New( ::oParent:oWidget )
-   ::Connect( ::pWidget, "stateChanged(int)", {|o,i| ::exeBlock( i,o ) } )
+   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::exeBlock( i ) } )
 
    ::setPosAndSize()
    IF ::visible

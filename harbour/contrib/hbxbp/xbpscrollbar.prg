@@ -117,7 +117,7 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setOrientation( IF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
    ::oWidget:setTracking( ::autoTrack )
 
-   ::connect( ::pWidget, "actionTriggered(int)", {|o,i| ::exeBlock( i,o ) } )
+   ::connect( ::pWidget, "actionTriggered(int)", {|i| ::exeBlock( i ) } )
 
    ::setPosAndSize()
    ::setRange( ::range )

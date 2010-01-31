@@ -77,10 +77,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QAbstractProxyModel > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QAbstractProxyModel > pq;
 } QGC_POINTER_QAbstractProxyModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )

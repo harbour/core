@@ -84,10 +84,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QClipboard > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QClipboard > pq;
 } QGC_POINTER_QClipboard;
 
 QT_G_FUNC( hbqt_gcRelease_QClipboard )

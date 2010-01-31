@@ -155,16 +155,16 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    #if 0
    ::oWidget:installEventFilter( ::pEvents )
 
-   ::connectEvent( ::pWidget, QEvent_FocusIn , {|o,e| ::exeBlock( 7, e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut, {|o,e| ::exeBlock( 8, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::exeBlock( 7, e ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::exeBlock( 8, e ) } )
    #endif
 
-   ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|o,i,ii| ::exeBlock( 1, i, ii, o ) } )
-   // ::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )
-   ::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
-   // ::connect( ::pWidget, "selectionChanged()"             , {|      | ::exeBlock( 4 ) } )
-   ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
-   ::connect( ::pWidget, "textEdited(QString)"            , {|o,s   | ::exeBlock( 6, s, o ) } )
+   ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|i,ii| ::exeBlock( 1, i, ii ) } )
+*  ::connect( ::pWidget, "editingFinished()"              , {|    | ::exeBlock( 2 ) } )
+   ::connect( ::pWidget, "returnPressed()"                , {|    | ::exeBlock( 3 ) } )
+*  ::connect( ::pWidget, "selectionChanged()"             , {|    | ::exeBlock( 4 ) } )
+   ::connect( ::pWidget, "textChanged(QString)"           , {|s   | ::exeBlock( 5, s ) } )
+   ::connect( ::pWidget, "textEdited(QString)"            , {|s   | ::exeBlock( 6, s ) } )
 
    ::setPosAndSize()
    IF ::visible

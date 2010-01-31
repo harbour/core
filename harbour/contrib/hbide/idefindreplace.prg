@@ -125,9 +125,9 @@ METHOD IdeFindReplace:create( oIde )
          {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
 
    ::oUI:signal( "comboFindWhat", "currentIndexChanged(text)", ;
-                               {|o,p| o := o, ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
+                               {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
 
-   ::oUI:signal( "checkListOnly", "stateChanged(int)", {|o,p| o := o, ;
+   ::oUI:signal( "checkListOnly", "stateChanged(int)", {|p| ;
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 

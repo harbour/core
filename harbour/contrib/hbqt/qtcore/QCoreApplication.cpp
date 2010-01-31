@@ -83,10 +83,10 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
-  QPointer< QCoreApplication > pq;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   QPointer< QCoreApplication > pq;
 } QGC_POINTER_QCoreApplication;
 
 QT_G_FUNC( hbqt_gcRelease_QCoreApplication )

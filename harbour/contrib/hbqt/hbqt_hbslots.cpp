@@ -259,7 +259,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
    else if( signal == ( QString ) "cursorPositionChanged()"                   ) return object->disconnect( SIGNAL( cursorPositionChanged()                                    ) );
    else if( signal == ( QString ) "redoAvailable(bool)"                       ) return object->disconnect( SIGNAL( redoAvailable( bool )                                      ) );
    else if( signal == ( QString ) "textChanged()"                             ) return object->disconnect( SIGNAL( textChanged()                                              ) );
-   else if( signal == ( QString ) "undoAvailable(available)"                  ) return object->disconnect( SIGNAL( undoAvailable( bool )                                      ) );
+   else if( signal == ( QString ) "undoAvailable(bool)"                       ) return object->disconnect( SIGNAL( undoAvailable( bool )                                      ) );
    else if( signal == ( QString ) "timeout()"                                 ) return object->disconnect( SIGNAL( timeout()                                                  ) );
    else if( signal == ( QString ) "keyPressEvent()"                           ) return object->disconnect( SIGNAL( sg_keyPressEvent( QKeyEvent * )                            ) );
    else if( signal == ( QString ) "keyReleaseEvent()"                         ) return object->disconnect( SIGNAL( sg_keyReleaseEvent( QKeyEvent * )                          ) );
@@ -333,9 +333,7 @@ static void hbqt_SlotsExec( HBSlots * t_slots, QObject * object, const char * ps
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pObject );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 0 );
          hb_vmRequestRestore();
       }
    }
@@ -348,10 +346,8 @@ static void hbqt_SlotsExecBool( HBSlots * t_slots, QObject * object, const char 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pBool = hb_itemPutL( NULL, bBool );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pBool );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pBool );
          hb_itemRelease( pBool );
          hb_vmRequestRestore();
       }
@@ -365,11 +361,9 @@ static void hbqt_SlotsExecInt( HBSlots * t_slots, QObject * object, const char *
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-         PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pState );
-         hb_itemRelease( pObject );
-         hb_itemRelease( pState );
+         PHB_ITEM p1 = hb_itemPutNI( NULL, iValue );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         hb_itemRelease( p1 );
          hb_vmRequestRestore();
       }
    }
@@ -382,11 +376,9 @@ static void hbqt_SlotsExecIntInt( HBSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pValue1, pValue2 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pValue1, pValue2 );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
          hb_vmRequestRestore();
@@ -401,12 +393,10 @@ static void hbqt_SlotsExecIntIntInt( HBSlots * t_slots, QObject * object, const 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 4, pObject, pValue1, pValue2, pValue3 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pValue1, pValue2, pValue3 );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
          hb_itemRelease( pValue3 );
@@ -422,13 +412,11 @@ static void hbqt_SlotsExecIntIntIntInt( HBSlots * t_slots, QObject * object, con
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
          PHB_ITEM pValue4 = hb_itemPutNI( NULL, iValue4 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 5, pObject, pValue1, pValue2, pValue3, pValue4 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 4, pValue1, pValue2, pValue3, pValue4 );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
          hb_itemRelease( pValue3 );
@@ -445,10 +433,8 @@ static void hbqt_SlotsExecString( HBSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pString = hb_itemPutC( NULL, string.toAscii().data() );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pString );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pString );
          hb_itemRelease( pString );
          hb_vmRequestRestore();
       }
@@ -462,10 +448,8 @@ static void hbqt_SlotsExecModel( HBSlots * t_slots, QObject * object, const char
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pState );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pState );
          delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
          hb_itemRelease( pState );
          hb_vmRequestRestore();
@@ -480,10 +464,8 @@ static void hbqt_SlotsExecTextCharFormat( HBSlots * t_slots, QObject * object, c
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( f ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QTextCharFormat * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_vmRequestRestore();
@@ -498,10 +480,8 @@ static void hbqt_SlotsExecFont( HBSlots * t_slots, QObject * object, const char 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( font ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QFont * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_vmRequestRestore();
@@ -516,10 +496,8 @@ static void hbqt_SlotsExecQTextCursor( HBSlots * t_slots, QObject * object, cons
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCursor( cursor ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QTextCursor * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_vmRequestRestore();
@@ -534,10 +512,8 @@ static void hbqt_SlotsExecStringList( HBSlots * t_slots, QObject * object, const
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( stringList ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QStringList * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_vmRequestRestore();
@@ -552,10 +528,8 @@ static void hbqt_SlotsExecPointer( HBSlots * t_slots, QObject * object, const ch
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pP1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pP1 );
          hb_itemRelease( pP1 );
          hb_vmRequestRestore();
       }
@@ -569,11 +543,9 @@ static void hbqt_SlotsExecPointerInt( HBSlots * t_slots, QObject * object, const
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
          PHB_ITEM pI1 = hb_itemPutNI( NULL, iInt );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pP1, pI1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pP1, pI1 );
          hb_itemRelease( pP1 );
          hb_itemRelease( pI1 );
          hb_vmRequestRestore();
@@ -588,11 +560,9 @@ static void hbqt_SlotsExecPointerPointer( HBSlots * t_slots, QObject * object, c
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
          PHB_ITEM pP2 = hb_itemPutPtr( NULL, p2 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pP1, pP2 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pP1, pP2 );
          hb_itemRelease( pP1 );
          hb_itemRelease( pP2 );
          hb_vmRequestRestore();
@@ -605,13 +575,11 @@ static void hbqt_SlotsExecQRectInt( HBSlots * t_slots, QObject * object, const c
    if( object )
    {
       int i = object->property( pszEvent ).toInt();
-      if( i > 0 && i <= t_slots->listBlock.size() && t_slots->listObj[ i - 1 ] == object && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( r ) );
          PHB_ITEM p2 = hb_itemPutNI( NULL, dy );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, p1, p2 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
          delete ( ( QRect * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_itemRelease( p2 );
@@ -627,10 +595,8 @@ static void hbqt_SlotsExecQPoint( HBSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QPoint( pos ) );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
-         hb_itemRelease( pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QPoint * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_vmRequestRestore();
@@ -825,7 +791,7 @@ void HBSlots::currentCharFormatChanged( const QTextCharFormat & f )             
 void HBSlots::cursorPositionChanged()                                                                      { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "cursorPositionChanged()"                                         ); }
 void HBSlots::redoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "redoAvailable(bool)", available                                  ); }
 void HBSlots::textChanged()                                                                                { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "textChanged()"                                                   ); }
-void HBSlots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "undoAvailable(available)", available                             ); }
+void HBSlots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "undoAvailable(bool)", available                                  ); }
 void HBSlots::timeout()                                                                                    { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "timeout()"                                                       ); }
 void HBSlots::scrollContentsBy( int x, int y )                                                             { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "scrollContentsBy(int,int)", x, y                                 ); }
 void HBSlots::geometriesChanged()                                                                          { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "geometriesChanged()"                                             ); }
@@ -884,24 +850,6 @@ void HBSlots::updateRequest( const QRect & rect, int dy )                       
 /**/
 
 /*----------------------------------------------------------------------*/
-
-bool signal_already_connected( HBSlots * t_slots, QObject * object, const char * signal )
-{
-   int i;
-
-   for( i = 0; i < t_slots->listBlock.size(); i++ )
-   {
-      if( t_slots->listBlock[ i ] != NULL && t_slots->listObj[ i ] == object )
-      {
-         if( object->property( signal ).toInt() == i + 1 )
-         {
-            return true;
-         }
-      }
-   }
-   return false;
-}
-
 /*
  * Harbour function to connect signals with slots
  */
@@ -912,26 +860,24 @@ HB_FUNC( QT_SLOTS_CONNECT )
 
    if( t_slots )
    {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );         /* get sender    */
-
+      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );               /* get sender    */
       if( object )
       {
-         QString signal = hb_parcx( 3 );                              /* get signal    */
-
-         if( !signal_already_connected( t_slots, object, hb_parcx( 3 ) ) )
+         int i = object->property( hb_parcx( 3 ) ).toInt();
+         if ( i == 0 )
          {
+            QString signal = hb_parcx( 3 );                                 /* get signal    */
             if( connect_signal( signal, object, t_slots ) )
             {
                PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
                t_slots->listBlock << pBlock;
-               t_slots->listObj << object;
+
                object->setProperty( hb_parcx( 3 ), ( int ) t_slots->listBlock.size() );
                bRet = HB_TRUE;
             }
          }
       }
    }
-
    hb_retl( bRet );
 }
 
@@ -946,26 +892,25 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
    if( t_slots )
    {
       QObject * object = ( QObject* ) hbqt_pPtrFromObj( 2 );
-
       if( object )
       {
-         const char * signal = hb_parcx( 3 );
+         const char * slot = hb_parcx( 3 );
 
-         int i = object->property( signal ).toInt();
+         int i = object->property( slot ).toInt();
 
          if( i > 0 && i <= t_slots->listBlock.size() )
          {
+            object->setProperty( slot, QVariant() );
+
+            bRet = ( disconnect_signal( object, slot ) == true );
+
             hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
             t_slots->listBlock[ i - 1 ] = NULL;
-            t_slots->listObj[ i - 1 ] = NULL;
 
-            bRet = ( disconnect_signal( object, signal ) == true );
-
-            HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", signal ) );
+            HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", slot ) );
          }
       }
    }
-
    hb_retl( bRet );
 }
 

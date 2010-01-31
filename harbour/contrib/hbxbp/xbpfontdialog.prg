@@ -200,11 +200,11 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
 
-   ::connect( ::pwidget, "accepted()"               , {|o,p| ::exeBlock( 1, p, o ) } )
-   ::connect( ::pwidget, "finished(int)"            , {|o,p| ::exeBlock( 2, p, o ) } )
-   ::connect( ::pwidget, "rejected()"               , {|o,p| ::exeBlock( 3, p, o ) } )
-   ::connect( ::pwidget, "currentFontChanged(QFont)", {|o,p| ::exeBlock( 4, p, o ) } )
-   ::connect( ::pwidget, "fontSelected(QFont)"      , {|o,p| ::exeBlock( 5, p, o ) } )
+   ::connect( ::pwidget, "accepted()"               , {|p| ::exeBlock( 1, p ) } )
+   ::connect( ::pwidget, "finished(int)"            , {|p| ::exeBlock( 2, p ) } )
+   ::connect( ::pwidget, "rejected()"               , {|p| ::exeBlock( 3, p ) } )
+   ::connect( ::pwidget, "currentFontChanged(QFont)", {|p| ::exeBlock( 4, p ) } )
+   ::connect( ::pwidget, "fontSelected(QFont)"      , {|p| ::exeBlock( 5, p ) } )
 
    ::oParent:addChild( Self )
    RETURN Self

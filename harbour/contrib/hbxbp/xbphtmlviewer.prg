@@ -157,15 +157,15 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    #if 0  /* Discontinued till QWebKit is integrated separately - Pritpal */
    ::oWidget := QWebView():new( ::pParent )
 
-   ::Connect( ::oWidget, "iconChanged()"            , {|o,p| ::exeBlock( 1,p,o ) } )
-   ::Connect( ::oWidget, "linkClicked(QUrl)"        , {|o,p| ::exeBlock( 2,p,o ) } )
-   ::Connect( ::oWidget, "loadFinished(bool)"       , {|o,p| ::exeBlock( 3,p,o ) } )
-   ::Connect( ::oWidget, "loadProgress(int)"        , {|o,p| ::exeBlock( 4,p,o ) } )
-   ::Connect( ::oWidget, "loadStarted()"            , {|o,p| ::exeBlock( 5,p,o ) } )
-   ::Connect( ::oWidget, "titleChanged(QString)"    , {|o,p| ::exeBlock( 6,p,o ) } )
-   ::Connect( ::oWidget, "urlChanged(QUrl)"         , {|o,p| ::exeBlock( 7,p,o ) } )
-   ::Connect( ::oWidget, "selectionChanged()"       , {|o,p| ::exeBlock( 8,p,o ) } )
-   ::Connect( ::oWidget, "statusBarMessage(QString)", {|o,p| ::exeBlock( 9,p,o ) } )
+   ::Connect( ::oWidget, "iconChanged()"            , {|p| ::exeBlock( 1, p ) } )
+   ::Connect( ::oWidget, "linkClicked(QUrl)"        , {|p| ::exeBlock( 2, p ) } )
+   ::Connect( ::oWidget, "loadFinished(bool)"       , {|p| ::exeBlock( 3, p ) } )
+   ::Connect( ::oWidget, "loadProgress(int)"        , {|p| ::exeBlock( 4, p ) } )
+   ::Connect( ::oWidget, "loadStarted()"            , {|p| ::exeBlock( 5, p ) } )
+   ::Connect( ::oWidget, "titleChanged(QString)"    , {|p| ::exeBlock( 6, p ) } )
+   ::Connect( ::oWidget, "urlChanged(QUrl)"         , {|p| ::exeBlock( 7, p ) } )
+   ::Connect( ::oWidget, "selectionChanged()"       , {|p| ::exeBlock( 8, p ) } )
+   ::Connect( ::oWidget, "statusBarMessage(QString)", {|p| ::exeBlock( 9, p ) } )
    #if 0
    ::mapEvent( evNavigateComplete, {| cURL | ::xNavigateComplete( cURL ) } )
    #endif

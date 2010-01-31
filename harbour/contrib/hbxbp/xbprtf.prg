@@ -171,13 +171,13 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTextEdit():new( ::pParent )
 
-   //::connect( ::pWidget, "copyAvailable(bool)"                      , {|o,p| ::exeBlock( 1, p, o ) } )
-   ::connect( ::pWidget, "currentCharFormatChanged(QTextCharFormat)", {|o,p| ::exeBlock( 2, p, o ) } )
-   ::connect( ::pWidget, "cursorPositionChanged()"                  , {|o,p| ::exeBlock( 3, p, o ) } )
-   ::connect( ::pWidget, "redoAvailable(bool)"                      , {|o,p| ::exeBlock( 4, p, o ) } )
-   ::connect( ::pWidget, "undoAvailable(bool)"                      , {|o,p| ::exeBlock( 5, p, o ) } )
-   ::connect( ::pWidget, "textChanged()"                            , {|o,p| ::exeBlock( 6, p, o ) } )
-   ::connect( ::pWidget, "selectionChanged()"                       , {|o,p| ::exeBlock( 7, p, o ) } )
+*  ::connect( ::pWidget, "copyAvailable(bool)"                      , {|p| ::exeBlock( 1, p ) } )
+   ::connect( ::pWidget, "currentCharFormatChanged(QTextCharFormat)", {|p| ::exeBlock( 2, p ) } )
+   ::connect( ::pWidget, "cursorPositionChanged()"                  , {|p| ::exeBlock( 3, p ) } )
+   ::connect( ::pWidget, "redoAvailable(bool)"                      , {|p| ::exeBlock( 4, p ) } )
+   ::connect( ::pWidget, "undoAvailable(bool)"                      , {|p| ::exeBlock( 5, p ) } )
+   ::connect( ::pWidget, "textChanged()"                            , {|p| ::exeBlock( 6, p ) } )
+   ::connect( ::pWidget, "selectionChanged()"                       , {|p| ::exeBlock( 7, p ) } )
 
    ::setPosAndSize()
    IF ::visible

@@ -199,18 +199,18 @@ METHOD HbpProcess:start( cShellCmd )
    ::qProcess:setReadChannel( 1 )
 
    #if 0
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|o,i| ::read( CHN_REA, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|o,i| ::read( CHN_RCF, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|o,i| ::read( CHN_CLO, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|o,i| ::read( CHN_BYT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|o,i| ::read( CHN_STT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|o,i| ::read( CHN_ERE, i, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|i| ::read( CHN_REA, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|i| ::read( CHN_RCF, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|i| ::read( CHN_CLO, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|i| ::read( CHN_BYT, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|i| ::read( CHN_STT, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|i| ::read( CHN_ERE, i ) } )
    #endif
 
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|o,i| ::read( CHN_BGN, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|o,i| ::read( CHN_OUT, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|o,i| ::read( CHN_ERR, i, o ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|o,i,ii| ::read( CHN_FIN, i, ii, o ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|i| ::read( CHN_BGN, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|i| ::read( CHN_OUT, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|i| ::read( CHN_ERR, i ) } )
+   Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|i,ii| ::read( CHN_FIN, i, ii ) } )
 
    IF !empty( ::cWrkDirectory )
       ::qProcess:setWorkingDirectory( ::cWrkDirectory )

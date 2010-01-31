@@ -83,9 +83,9 @@
 
 typedef struct
 {
-  void * ph;
-  bool bNew;
-  QT_G_FUNC_PTR func;
+   void * ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionTabBarBase;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabBarBase )
@@ -96,18 +96,19 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabBarBase )
    {
       if( p->ph )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionTabBarBase   /.\\    ph=%p", p->ph ) );
          delete ( ( QStyleOptionTabBarBase * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionTabBarBase     ph=%p %i B %i KB", p->ph, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionTabBarBase   \\./    ph=%p", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionTabBarBase      Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionTabBarBase    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionTabBarBase      Object not created with - new" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionTabBarBase    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }
