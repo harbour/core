@@ -21,6 +21,7 @@ C_SOURCES := \
    binnumx.c \
    box.c \
    cdpapi.c \
+   cdpapihb.c \
    chrasc.c \
    colorind.c \
    console.c \
