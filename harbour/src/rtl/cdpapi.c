@@ -52,7 +52,6 @@
  */
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapierr.h"
 #include "hbapicdp.h"
 #include "hbthread.h"
