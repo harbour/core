@@ -598,14 +598,13 @@ HB_FUNC( PQMETADATA )
          for( i = 0; i < nFields; i++ )
          {
             char  buf[ 256 ];
-            Oid   type_oid = PQftype( res, i );
             int   typemod = PQfmod( res, i );
             int   length = 0;
             int   decimal = 0;
 
             PHB_ITEM pField;
 
-            switch( type_oid )
+            switch( PQftype( res, i ) )
             {
                case BITOID:
                   if( typemod >= 0 )
@@ -703,7 +702,7 @@ HB_FUNC( PQMETADATA )
             hb_arraySetNI( pField, 6, PQftablecol( res, i ) );
          }
 
-         hb_itemRelease( hb_itemReturnForward( pResult ) );
+         hb_itemReturnRelease( pResult );
       }
       else
          hb_reta( 0 );
@@ -725,7 +724,7 @@ HB_FUNC( PQRESULT2ARRAY )
 
          PHB_ITEM pResult = hb_itemArrayNew( nRows );
 
-         for( nRow = 0; nRow < nRows ; nRow++ )
+         for( nRow = 0; nRow < nRows; nRow++ )
          {
             PHB_ITEM pRow = hb_arrayGetItemPtr( pResult, nRow + 1 );
             hb_arrayNew( pRow, nCols );
@@ -733,7 +732,7 @@ HB_FUNC( PQRESULT2ARRAY )
                hb_arraySetC( pRow, nCol + 1, PQgetvalue( res, nRow, nCol ) );
          }
 
-         hb_itemRelease( hb_itemReturnForward( pResult ) );
+         hb_itemReturnRelease( pResult );
       }
       else
          hb_reta( 0 );

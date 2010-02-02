@@ -6878,7 +6878,7 @@ HB_FUNC( BM_DBGETFILTERARRAY )
         SELF_GOTO( (AREAP) pArea, ulRecOld );
         hb_itemRelease( pItem );
     }
-    hb_itemRelease( hb_itemReturnForward( pList ) );
+    hb_itemReturnRelease( pList );
 }
 
 HB_FUNC( BM_DBSETFILTERARRAY )
