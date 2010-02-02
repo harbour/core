@@ -273,35 +273,27 @@ static FILE * hb_FILE_par( int iParam )
 
 HB_FUNC( PQCONNECT )
 {
-   if( hb_pcount() == 5 )
-   {
-      char conninfo[ 512 ];
+   char conninfo[ 512 ];
 
-      hb_snprintf( conninfo, sizeof( conninfo ), "dbname = %s host = %s user = %s password = %s port = %i",
-         hb_parcx( 1 ),
-         hb_parcx( 2 ),
-         hb_parcx( 3 ),
-         hb_parcx( 4 ),
-         hb_parni( 5 ) );
+   hb_snprintf( conninfo, sizeof( conninfo ), "dbname = %s host = %s user = %s password = %s port = %i",
+      hb_parcx( 1 ),
+      hb_parcx( 2 ),
+      hb_parcx( 3 ),
+      hb_parcx( 4 ),
+      hb_parni( 5 ) );
 
-      hb_PGconn_ret( PQconnectdb( conninfo ) );
-   }
-   else
-      hb_retptr( NULL );
+   hb_PGconn_ret( PQconnectdb( conninfo ) );
 }
 
 HB_FUNC( PQSETDBLOGIN )
 {
-   if( hb_pcount() == 7 )
-      hb_PGconn_ret( PQsetdbLogin( hb_parcx( 1 ) /* pghost */,
-                                   hb_parcx( 2 ) /* pgport */,
-                                   hb_parcx( 3 ) /* pgoptions */,
-                                   hb_parcx( 4 ) /* pgtty */,
-                                   hb_parcx( 5 ) /* dbName */,
-                                   hb_parcx( 6 ) /* login */,
-                                   hb_parcx( 7 ) /* pwd */ ) );
-   else
-      hb_retptr( NULL );
+   hb_PGconn_ret( PQsetdbLogin( hb_parcx( 1 ) /* pghost */,
+                                hb_parcx( 2 ) /* pgport */,
+                                hb_parcx( 3 ) /* pgoptions */,
+                                hb_parcx( 4 ) /* pgtty */,
+                                hb_parcx( 5 ) /* dbName */,
+                                hb_parcx( 6 ) /* login */,
+                                hb_parcx( 7 ) /* pwd */ ) );
 }
 
 /* NOTE: Deprecated */
@@ -354,7 +346,7 @@ HB_FUNC( PQSETCLIENTENCODING )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retni( PQsetClientEncoding( conn, hb_parcx( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -484,7 +476,7 @@ HB_FUNC( PQEXEC )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_PGresult_ret( PQexec( conn, hb_parcx( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -493,10 +485,10 @@ HB_FUNC( PQEXEC )
 HB_FUNC( PQEXECPARAMS )
 {
    PGconn * conn = hb_PGconn_par( 1 );
+   PHB_ITEM aParam = hb_param( 3, HB_IT_ARRAY );
 
-   if( conn && hb_pcount() == 3 )
+   if( conn && aParam )
    {
-      PHB_ITEM aParam = hb_param( 3, HB_IT_ARRAY );
       HB_ISIZ n = hb_arrayLen( aParam );
       HB_ISIZ i;
 
@@ -852,7 +844,7 @@ HB_FUNC( PQFTABLE )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
+   if( res )
       hb_retnl( ( Oid ) PQftable( res, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -862,7 +854,7 @@ HB_FUNC( PQFTYPE )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
+   if( res )
       hb_retnl( ( Oid ) PQftype( res, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -872,7 +864,7 @@ HB_FUNC( PQFNAME )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
+   if( res )
       hb_retc( PQfname( res, hb_parni( 2 ) - 1 ));
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -882,7 +874,7 @@ HB_FUNC( PQFMOD )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
+   if( res )
       hb_retni( PQfmod( res, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -892,7 +884,7 @@ HB_FUNC( PQFSIZE )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
+   if( res )
       hb_retni( PQfsize( res, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -902,7 +894,7 @@ HB_FUNC( PQGETISNULL )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 3 )
+   if( res )
       hb_retl( PQgetisnull( res, hb_parni( 2 ) - 1 , hb_parni( 3 ) - 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -912,8 +904,8 @@ HB_FUNC( PQFNUMBER )
 {
    PGresult * res = hb_PGresult_par( 1 );
 
-   if( res && hb_pcount() == 2 )
-      hb_retni( PQfnumber( res, hb_parc( 2 ) ) + 1 );
+   if( res )
+      hb_retni( PQfnumber( res, hb_parcx( 2 ) ) + 1 );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -946,7 +938,7 @@ HB_FUNC( PQSENDQUERY )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retl( PQsendQuery( conn, hb_parcx( 2 ) ) ? HB_TRUE : HB_FALSE );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1006,7 +998,7 @@ HB_FUNC( PQSETNONBLOCKING )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retl( PQsetnonblocking( conn, hb_parl( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1029,8 +1021,7 @@ HB_FUNC( PQISNONBLOCKING )
 HB_FUNC( PQCREATETRACE )
 {
 #ifdef NODLL
-   if( HB_ISCHAR( 1 ) )
-      hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );
+   hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );
 #endif
 }
 
@@ -1083,7 +1074,7 @@ HB_FUNC( PQSETERRORVERBOSITY )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retni( ( PGVerbosity ) PQsetErrorVerbosity( conn, ( PGVerbosity ) hb_parni( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1097,7 +1088,7 @@ HB_FUNC( LO_IMPORT )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retni( lo_import( conn, hb_parcx( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1107,7 +1098,7 @@ HB_FUNC( LO_EXPORT )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 3 )
+   if( conn )
       hb_retl( lo_export( conn, ( Oid ) hb_parnl( 2 ), hb_parcx( 3 ) ) == 1 );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1117,7 +1108,7 @@ HB_FUNC( LO_UNLINK )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn && hb_pcount() == 2 )
+   if( conn )
       hb_retl( lo_unlink( conn, ( Oid ) hb_parnl( 2 ) ) == 1 );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1183,7 +1174,7 @@ HB_FUNC( PQESCAPEBYTEACONN )
 {
    PGconn * conn = hb_PGconn_par( 1 );
 
-   if( conn )
+   if( conn && HB_ISCHAR( 2 ) )
    {
       const char * from = hb_parc( 2 );
       size_t from_length = hb_parclen( 2 );
