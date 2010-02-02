@@ -127,12 +127,14 @@
       HANDLE            hFindFile;
       WIN32_FIND_DATA   pFindFileData;
       DWORD             dwAttr;
+      HB_BOOL           fLabelDone;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-   #define HB_WIN_MATCH() \
+   #define _HB_WIN_MASKATTR     ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM )
+   #define _HB_WIN_MATCH() \
       ( \
-        ( ( info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) == 0 ) || \
-        ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) != 0 ) \
+         ( ( info->pFindFileData.dwFileAttributes & _HB_WIN_MASKATTR ) == 0 ) || \
+         ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & _HB_WIN_MASKATTR ) != 0 ) \
       )
 
 #elif defined( HB_OS_UNIX )
@@ -519,50 +521,65 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
+      PHB_FNAME pFileName = NULL;
+      LPTSTR lpFileMask = NULL;
 
       bFound = HB_FALSE;
 
-      if( ffind->attrmask & HB_FA_LABEL )
-      {
 #if !defined( HB_OS_WIN_CE )
-         if( ffind->bFirst )
+      if( ( ffind->attrmask & HB_FA_LABEL ) != 0 && !info->fLabelDone )
+      {
+         TCHAR szName[ HB_PATH_MAX ];
+         const char * mask = NULL;
+
+         info->fLabelDone = HB_TRUE;
+
+         if( ffind->pszFileMask && *ffind->pszFileMask )
          {
-            LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
-            TCHAR szName[ HB_PATH_MAX ];
-
-            ffind->bFirst = HB_FALSE;
-            ffind->szName[ 0 ] = '\0';
-
-            bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ), NULL, NULL, NULL, NULL, 0 );
-
-            HB_TCHAR_FREE( lpFileMask );
+            pFileName = hb_fsFNameSplit( ffind->pszFileMask );
+            mask = pFileName->szName;
+            if( pFileName->szPath && pFileName->szPath[ 0 ] &&
+                ( pFileName->szPath[ 1 ] ||
+                  pFileName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR ) )
+               lpFileMask = HB_TCHAR_CONVTO( pFileName->szPath );
+         }
+         bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ),
+                                        NULL, NULL, NULL, NULL, 0 );
+         if( bFound )
+         {
             HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) );
             ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
+            if( mask && *mask && ! hb_strMatchFile( ffind->szName, mask ) )
+            {
+               ffind->szName[ 0 ] = '\0';
+               bFound = HB_FALSE;
+            }
          }
-#endif
       }
-      else
+#endif
+
+      if( !bFound &&
+          ( ffind->attrmask & ( HB_FA_LABEL | HB_FA_HIDDEN | HB_FA_SYSTEM |
+                                HB_FA_DIRECTORY ) ) != HB_FA_LABEL )
       {
          if( ffind->bFirst )
          {
-            LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
-
             ffind->bFirst = HB_FALSE;
-
+            if( lpFileMask )
+               HB_TCHAR_FREE( lpFileMask );
+            lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
             info->hFindFile = FindFirstFile( lpFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
 
-            if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_MATCH() )
+            if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && _HB_WIN_MATCH() )
                bFound = HB_TRUE;
-
-            HB_TCHAR_FREE( lpFileMask );
          }
 
          if( ! bFound && info->hFindFile != INVALID_HANDLE_VALUE )
          {
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
-               if( HB_WIN_MATCH() )
+               if( _HB_WIN_MATCH() )
                {
                   bFound = HB_TRUE;
                   break;
@@ -614,6 +631,11 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          }
       }
       hb_fsSetIOError( bFound, 0 );
+
+      if( pFileName )
+         hb_xfree( pFileName );
+      if( lpFileMask )
+         HB_TCHAR_FREE( lpFileMask );
    }
 
 #elif defined( HB_OS_UNIX )

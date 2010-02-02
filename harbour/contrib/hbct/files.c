@@ -165,11 +165,7 @@ HB_FUNC( FILESEEK )
 
 HB_FUNC( FILEATTR )
 {
-   /* CT3 uses 63 as attribute mask but the idea was setting ALL
-    * attributes and because we are supporting more attributes
-    * then I decided to use 0xffff value. [druzus]
-    */
-   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, 0xffff );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
 
    hb_retni( ffind ? ffind->attr : 0 );
 }

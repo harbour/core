@@ -128,13 +128,7 @@ HB_FUNC( DIRECTORY )
           | HB_FA_VOLCOMP;
 
    if( szAttributes && *szAttributes )
-   {
-      if( ( ulMask |= hb_fsAttrEncode( szAttributes ) ) & HB_FA_LABEL )
-      {
-         /* NOTE: This is Clipper Doc compatible. (not operationally) */
-         ulMask = HB_FA_LABEL;
-      }
-   }
+      ulMask |= hb_fsAttrEncode( szAttributes );
 
    if( szDirSpec && *szDirSpec )
    {
@@ -146,7 +140,7 @@ HB_FUNC( DIRECTORY )
             /* CA-Cl*pper compatible behavior - add all file mask when
              * last character is directory or drive separator
              */
-            int iLen = strlen( szDirSpec ) - 1;
+            int iLen = ( int ) strlen( szDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
             if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR ||
                 szDirSpec[ iLen ] == HB_OS_DRIVE_DELIM_CHR )
@@ -154,16 +148,11 @@ HB_FUNC( DIRECTORY )
             if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
             {
+               char * pszTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+
                if( pszFree )
-               {
-                  char * pszTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
                   hb_xfree( pszFree );
-                  szDirSpec = pszFree = pszTemp;
-               }
-               else
-               {
-                  szDirSpec = pszFree = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
-               }
+               szDirSpec = pszFree = pszTemp;
             }
          }
          else

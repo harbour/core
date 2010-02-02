@@ -2756,6 +2756,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_WITHOBJECTMESSAGE:
          {
+            PHB_ITEM pWith;
             USHORT wSymPos = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             if( wSymPos != 0xFFFF )
             {
@@ -2765,7 +2766,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                */
                hb_vmPushSymbol( pSymbols + wSymPos );
             }
-            hb_vmPush( hb_stackWithObjectItem() );
+            pWith = hb_stackWithObjectItem();
+            if( pWith )
+               hb_vmPush( pWith );
+            else
+               hb_stackAllocItem()->type = HB_IT_NIL;
             pCode += 3;
             break;
          }
@@ -11155,13 +11160,20 @@ void hb_xvmWithObjectEnd( void )
 
 void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
 {
+   PHB_ITEM pWith;
+
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectMessage(%p)", pSymbol));
 
    if( pSymbol )
       hb_vmPushSymbol( pSymbol );
-   hb_vmPush( hb_stackWithObjectItem() );
+
+   pWith = hb_stackWithObjectItem();
+   if( pWith )
+      hb_vmPush( pWith );
+   else
+      hb_stackAllocItem()->type = HB_IT_NIL;
 }
 
 
