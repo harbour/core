@@ -344,9 +344,9 @@ REQUEST hbmk_KEYW
 
 #ifndef _HBMK_EMBEDDED_
 
-#define hb_DirCreate( d )     MakeDir( d )
-#define hb_DirDelete( d )     DirRemove( d )
-#define hb_CurDrive()         CurDrive()
+#define hb_DirCreate( d )       MakeDir( d )
+#define hb_DirDelete( d )       DirRemove( d )
+#define hb_CurDrive()           CurDrive()
 
 PROCEDURE Main( ... )
    LOCAL aArgsIn := hb_AParams()

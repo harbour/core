@@ -14,7 +14,7 @@ Function main()
 
     conn := PQsetdbLogin( 'localhost', "5432", NIL, NIL, cDb, cUser, cPass)
     ? PQdb(conn), PQuser(conn), PQpass(conn), PQhost(conn), PQport(conn), PQtty(conn), PQoptions(conn)
-    ? PQClose(conn)
+    ? conn := NIL
 
     conn := PQConnect(cDb, 'localhost', cuser, cpass, 5432)
 
@@ -40,11 +40,11 @@ Function main()
 
     res := PQexec('drop table products')
     ? PQresultStatus(res), PQresultErrorMessage(res)
-    PQclear(res)
+    res := NIL
 
     res := PQexec('create table products ( product_no numeric(10), name varchar(20), price numeric(10,2) )')
     ? PQresultStatus(res), PQresultErrorMessage(res)
-    PQclear(res)
+    res := NIL
 
     res := PQexecParams(conn, 'insert into products(product_no, name, price) values ($1, $2, $3)', {'2', 'bread', '10.95'})
     ? "Oid Row: ", PQoidValue(res), PQoidStatus(res)
@@ -52,7 +52,7 @@ Function main()
     if PQresultStatus(res) != PGRES_COMMAND_OK
         ? PQresultStatus(res), PQresultErrorMessage(res)
     endif
-    PQclear(res)
+    res := NIL
 
     res := PQexec(conn, 'select price, name, product_no as "produto" from products')
 
@@ -79,21 +79,21 @@ Function main()
 
     ? PQGetvalue(res,1, 2)
 
-    ? PQclear(res)
+    ? res := NIL
 
     ? "Large Objects, always should be in a transaction..."
 
     res := PQexec(conn, 'begin')
-    PQclear(res)
+    res := NIL
 
     ? (x := lo_Import( conn, 'test.prg' ))
     ? lo_Export( conn, x, 'test.new' )
     ? lo_Unlink( conn, x )
 
     res := PQexec(conn, 'commit')
-    PQclear(res)
+    res := NIL
 
     PQuntrace( conn )
     PQclosetrace( pFile )
-    PQClose(conn)
-    return nil
+    conn := NIL
+    return NIL

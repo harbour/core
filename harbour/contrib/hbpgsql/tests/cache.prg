@@ -570,7 +570,6 @@ Function QuickQuery( cQuery )
             endif
         endif
    endif
-   PQclear(pQuery)
 Return result
 
 

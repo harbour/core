@@ -28,7 +28,7 @@ Function Main( cServer, cDatabase, cUser, cPass )
     ? 'Dropping table...'
 
     res := PQexec(conn, 'DROP TABLE test')
-    PQclear(res)
+    res := NIL
 
     ? 'Creating test table...'
     cQuery := 'CREATE TABLE test('
@@ -44,13 +44,13 @@ Function Main( cServer, cDatabase, cUser, cPass )
     cQuery += '     Description text ) '
 
     res := PQexec(conn, cQuery)
-    PQclear(res)
+    res := NIL
 
     res := PQexec(conn, 'SELECT code, dept, name, sales, salary, creation FROM test')
-    PQclear(res)
+    res := NIL
 
     res := PQexec(conn, 'BEGIN')
-    PQclear(res)
+    res := NIL
 
     For i := 1 to 10000
         @ 15,0 say 'Inserting values....' + str(i)
@@ -59,14 +59,14 @@ Function Main( cServer, cDatabase, cUser, cPass )
         cQuery += 'VALUES( ' + str(i) + ',' + str(i+1) + ", 'DEPARTMENT NAME " + strzero(i) + "', 'y', " + str(300.49+i) + ", '2003-12-28' )"
 
         res := PQexec(conn, cQuery)
-        PQclear(res)
+        res := NIL
 
         if mod(i,100) == 0
             ? res := PQexec(conn, 'COMMIT')
-            ? PQclear(res)
+            ? res := NIL
 
             ? res := PQexec(conn, 'BEGIN')
-            ? PQclear(res)
+            ? res := NIL
         endif
     Next
 
@@ -75,14 +75,14 @@ Function Main( cServer, cDatabase, cUser, cPass )
 
         cQuery := 'DELETE FROM test WHERE code = ' + str(i)
         res := PQexec(conn, cQuery)
-        PQclear(res)
+        res := NIL
 
         if mod(i,100) == 0
             res := PQexec(conn, 'COMMIT')
-            PQclear(res)
+            res := NIL
 
             res := PQexec(conn, 'BEGIN')
-            PQclear(res)
+            res := NIL
         endif
     Next
 
@@ -91,14 +91,14 @@ Function Main( cServer, cDatabase, cUser, cPass )
 
         cQuery := 'UPDATE FROM test SET salary = 400 WHERE code = ' + str(i)
         res := PQexec(conn, cQuery)
-        PQclear(res)
+        res := NIL
 
         if mod(i,100) == 0
             res := PQexec(conn, 'COMMIT')
-            PQclear(res)
+            res := NIL
 
             res := PQexec(conn, 'BEGIN')
-            PQclear(res)
+            res := NIL
         endif
     Next
 
@@ -108,7 +108,7 @@ Function Main( cServer, cDatabase, cUser, cPass )
         @ 18,0 say 'Sum values....' + PQgetvalue(res, 1, 1)
     endif
 
-    PQclear(res)
+    res := NIL
 
     x := 0
     For i := 1 to 4000
@@ -122,6 +122,6 @@ Function Main( cServer, cDatabase, cUser, cPass )
     Next
 
     ? "Closing..."
-    PQclose(conn)
+    conn := NIL
 
 return nil
