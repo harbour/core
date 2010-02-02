@@ -235,7 +235,7 @@ static HB_GARBAGE_FUNC( FILE_release )
    if( ph && * ph )
    {
       /* Destroy the object */
-      PQclear( ( FILE * ) * ph );
+      fclose( ( FILE * ) * ph );
 
       /* set pointer to NULL to avoid multiple freeing */
       * ph = NULL;
@@ -1034,15 +1034,21 @@ HB_FUNC( PQCREATETRACE )
 #endif
 }
 
+/* NOTE: Deprecated */
 HB_FUNC( PQCLOSETRACE )
 {
 #ifdef NODLL
-   FILE * trfile = hb_FILE_par( 1 );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcFILEFuncs, 1 );
 
-   if( trfile )
-      fclose( trfile );
-   else
-      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      fclose( ( FILE * ) * ph );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      * ph = NULL;
+   }
 #endif
 }
 

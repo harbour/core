@@ -94,6 +94,6 @@ Function main()
     res := NIL
 
     PQuntrace( conn )
-    PQclosetrace( pFile )
+    pFile := NIL
     conn := NIL
     return NIL
