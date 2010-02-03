@@ -89,9 +89,9 @@ HB_FUNC( FI_FITOBITMAP )
 
       /* run function */
       hDC = GetDC( NULL );
-      bitmap = CreateDIBitmap(hDC, FreeImage_GetInfoHeader(dib),
-                              CBM_INIT, FreeImage_GetBits(dib),
-                              FreeImage_GetInfo(dib), DIB_RGB_COLORS);
+      bitmap = CreateDIBitmap( hDC, FreeImage_GetInfoHeader( dib ),
+                               CBM_INIT, FreeImage_GetBits( dib ),
+                               FreeImage_GetInfo( dib ), DIB_RGB_COLORS );
       ReleaseDC( NULL, hDC );
 
       /* return value */
@@ -133,11 +133,11 @@ HB_FUNC( FI_BITMAPTOFI )
          BITMAP bm;
          HDC hDC;
 
-         GetObject( bitmap, sizeof(BITMAP), (LPSTR) &bm );
-         dib = FreeImage_Allocate(bm.bmWidth, bm.bmHeight, bm.bmBitsPixel, 0, 0, 0);
+         GetObject( bitmap, sizeof( BITMAP ), ( LPSTR ) &bm );
+         dib = FreeImage_Allocate( bm.bmWidth, bm.bmHeight, bm.bmBitsPixel, 0, 0, 0 );
          hDC = GetDC( NULL );
-         GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight(dib),
-                    FreeImage_GetBits(dib), FreeImage_GetInfo(dib), DIB_RGB_COLORS);
+         GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight( dib ),
+                    FreeImage_GetBits( dib ), FreeImage_GetInfo( dib ), DIB_RGB_COLORS );
          ReleaseDC( NULL, hDC );
       }
 
@@ -187,13 +187,13 @@ HB_FUNC( FI_WINDRAW )
       /* run function */
       SetStretchBltMode( hDC, COLORONCOLOR );
 
-      scanlines = StretchDIBits(hDC, rcDest.left,
-                                     rcDest.top,
-                                     rcDest.right-rcDest.left,
-                                     rcDest.bottom-rcDest.top,
-                                     0, 0, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib),
-                                     FreeImage_GetBits(dib), FreeImage_GetInfo(dib),
-                                     DIB_RGB_COLORS, SRCCOPY);
+      scanlines = StretchDIBits( hDC, rcDest.left,
+                                      rcDest.top,
+                                      rcDest.right-rcDest.left,
+                                      rcDest.bottom-rcDest.top,
+                                      0, 0, FreeImage_GetWidth( dib ), FreeImage_GetHeight( dib ),
+                                      FreeImage_GetBits( dib ), FreeImage_GetInfo( dib ),
+                                      DIB_RGB_COLORS, SRCCOPY );
 
       /* return value */
       hb_retni( scanlines );

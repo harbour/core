@@ -404,7 +404,7 @@ msgstr ""
 
 #: hbmk2.prg:7959
 #, c-format
-msgid "<script> can be <@script> (.hbm format), <script.hbm>, <script.hbp> (marks a new target) or <script.hbc>."
+msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file."
 msgstr ""
 
 #: hbmk2.prg:1105

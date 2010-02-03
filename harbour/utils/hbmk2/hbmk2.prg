@@ -8232,7 +8232,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
-      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file" ) },;
+      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp file" ) },;
       { "-target"           , I_( "marks beginning of options belonging to a new build target" ) },;
       { "-alltarget"        , I_( "marks beginning of common options belonging to all targets" ) },;
       NIL,;
@@ -8273,7 +8273,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       I_( "Notes:" ) }
 
    LOCAL aNotes := {;
-      I_( "<script> can be <@script> (.hbm format), <script.hbm>, <script.hbp> (marks a new target) or <script.hbc>." ),;
+      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file." ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted." ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
