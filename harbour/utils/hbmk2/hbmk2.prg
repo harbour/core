@@ -6652,6 +6652,8 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
       CASE "HB_CURDIR"
          cMacro := hb_pwd() ; EXIT
+      CASE "HB_TEMPDIR"
+         cMacro := hb_DirTemp() ; EXIT
       CASE "HB_PLAT"
       CASE "HB_PLATFORM"
       CASE "HB_ARCH" /* Compatibility */
