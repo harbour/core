@@ -583,6 +583,15 @@ HB_FUNC( PQGETLENGTH )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* PQMETADATA() positions for array returned */
+#define HBPG_META_FIELDNAME             1
+#define HBPG_META_FIELDTYPE             2
+#define HBPG_META_FIELDLEN              3
+#define HBPG_META_FIELDDEC              4
+#define HBPG_META_TABLE                 5
+#define HBPG_META_TABLECOL              6
+#define HBPG_META_LEN_                  6
+
 HB_FUNC( PQMETADATA )
 {
    PGresult * res = hb_PGresult_par( 1 );
@@ -692,13 +701,13 @@ HB_FUNC( PQMETADATA )
             }
 
             pField = hb_arrayGetItemPtr( pResult, i + 1 );
-            hb_arrayNew( pField, 6 );
-            hb_arraySetC(  pField, 1, PQfname( res, i ) );
-            hb_arraySetC(  pField, 2, buf );
-            hb_arraySetNI( pField, 3, length );
-            hb_arraySetNI( pField, 4, decimal );
-            hb_arraySetNL( pField, 5, PQftable( res, i ) );
-            hb_arraySetNI( pField, 6, PQftablecol( res, i ) );
+            hb_arrayNew( pField, HBPG_META_LEN_ );
+            hb_arraySetC(  pField, HBPG_META_FIELDNAME, PQfname( res, i ) );
+            hb_arraySetC(  pField, HBPG_META_FIELDTYPE, buf );
+            hb_arraySetNI( pField, HBPG_META_FIELDLEN , length );
+            hb_arraySetNI( pField, HBPG_META_FIELDDEC , decimal );
+            hb_arraySetNL( pField, HBPG_META_TABLE    , PQftable( res, i ) );
+            hb_arraySetNI( pField, HBPG_META_TABLECOL , PQftablecol( res, i ) );
          }
 
          hb_itemReturnRelease( pResult );

@@ -52,6 +52,9 @@
  *
  */
 
+#ifndef HBPOSTGRES_CH_
+#define HBPOSTGRES_CH_
+
 #define CONNECTION_OK                   0
 #define CONNECTION_BAD                  1
 #define CONNECTION_STARTED              2
@@ -76,3 +79,14 @@
 #define PQTRANS_INTRANS                 2
 #define PQTRANS_INERROR                 3
 #define PQTRANS_UNKNOWN                 4
+
+/* PQMETADATA() positions for array returned */
+#define HBPG_META_FIELDNAME             1
+#define HBPG_META_FIELDTYPE             2
+#define HBPG_META_FIELDLEN              3
+#define HBPG_META_FIELDDEC              4
+#define HBPG_META_TABLE                 5
+#define HBPG_META_TABLECOL              6
+#define HBPG_META_LEN_                  6
+
+#endif
