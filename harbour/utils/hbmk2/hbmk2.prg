@@ -2176,7 +2176,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
       ELSE
-         cWorkDir := ""
+         IF lStopAfterInit .OR. ;
+            lStopAfterHarbour .OR. ;
+            ( lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] )
+            /* It's controlled by -o option in these cases */
+            cWorkDir := ""
+         ELSE
+            DEFAULT cWorkDir TO hb_DirTemp()
+         ENDIF
       ENDIF
    ENDIF
 
@@ -2348,7 +2355,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          cOpt_CompC += " {FC}"
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ! Empty( cWorkDir )
             IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
                /* NOTE: It's also accepted by darwin/clang */
                cOpt_CompC += " {IC} -o{OO}"
@@ -2536,7 +2543,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
             cOpt_CompC += " {LC}"
@@ -2659,7 +2666,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
          ENDIF
          cOpt_CompC += " {FC}"
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
             cOpt_CompC += " {LC}"
@@ -2754,7 +2761,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
          ENDIF
          cOpt_CompC += " {FC}"
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
             cOpt_CompC += " {LC}"
@@ -2877,7 +2884,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_CompC += " -zq -bt=os2 {FC}"
          ENDCASE
          cOptIncMask := "-i{DI}"
-         IF ( hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir ) ) .OR. !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
+         IF ! Empty( cWorkDir ) .OR. !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
             cOpt_CompC += " {LC}"
@@ -3040,10 +3047,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lIMPLIB ]
             AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" )
          ENDIF
-         IF hbmk[ _HBMK_lINC ]
-            IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( PathSepToTarget( hbmk, cWorkDir ), nCmd_Esc ) )
-            ENDIF
+         IF ! Empty( cWorkDir )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( PathSepToTarget( hbmk, cWorkDir ), nCmd_Esc ) )
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3184,10 +3189,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )
             ENDIF
          ENDIF
-         IF hbmk[ _HBMK_lINC ]
-            IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( PathSepToTarget( hbmk, cWorkDir ) + hb_osPathSeparator(), nCmd_Esc ) ) /* NOTE: Ending path sep is important. */
-            ENDIF
+         IF ! Empty( cWorkDir )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( PathSepToTarget( hbmk, cWorkDir ) + hb_osPathSeparator(), nCmd_Esc ) ) /* NOTE: Ending path sep is important. */
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3358,7 +3361,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
             AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" )
          ENDCASE
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
             cOpt_CompC += " {LC}"
@@ -3478,15 +3481,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    NEXT
 
    IF ! lStopAfterInit
-      IF hbmk[ _HBMK_lINC ]
-         IF ! Empty( cWorkDir )
-            /* NOTE: Ending path sep is important. */
-            /* Different escaping for internal and external compiler. */
-            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( cWorkDir + hb_osPathSeparator(), nCmd_Esc ) )
-            ENDIF
+      IF ! Empty( cWorkDir )
+         /* NOTE: Ending path sep is important. */
+         /* Different escaping for internal and external compiler. */
+         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() )
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( cWorkDir + hb_osPathSeparator(), nCmd_Esc ) )
          ENDIF
       ENDIF
    ENDIF
@@ -8222,7 +8223,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
-      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/plat/comp)" ), _WORKDIR_BASE_ ) },;
+      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) },;
       NIL,;
       { "-hbl[=<output>]"   , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
       { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ), _LNG_MARKER ) },;
