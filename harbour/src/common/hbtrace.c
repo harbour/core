@@ -193,10 +193,16 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     *
     *   foo/bar/baz.c
     */
-   while( *file == '.' || *file == '/' || *file == '\\' )
-      file++;
+   if( file )
+   {
+      while( *file == '.' || *file == '/' || *file == '\\' )
+         file++;
+   }
+   else
+      file = "";
 
-   pszLevel = level < 0 ? "(\?\?\?)" : s_slevel[ level ];
+   pszLevel = ( level >= HB_TR_ALWAYS && level <= HB_TR_LAST ) ?
+              s_slevel[ level ] : "(\?\?\?)";
 
    /*
     * Print file and line.
@@ -270,10 +276,6 @@ void hb_tracelog( int level, const char * file, int line, const char * proc,
    }
 }
 
-const char * hb_tr_file_ = "";
-int          hb_tr_line_ = 0;
-int          hb_tr_level_ = 0;
-
 void hb_tr_trace( const char * fmt, ... )
 {
    /*
@@ -281,23 +283,38 @@ void hb_tr_trace( const char * fmt, ... )
     */
    if( s_enabled )
    {
+      PHB_TRACEINFO pTrace = hb_traceinfo();
+
       va_list ap;
       va_start( ap, fmt );
-      hb_tracelog_( hb_tr_level_, hb_tr_file_, hb_tr_line_, NULL, fmt, ap );
+      hb_tracelog_( pTrace->level, pTrace->file, pTrace->line, pTrace->proc, fmt, ap );
       va_end( ap );
 
       /*
        * Reset file and line.
        */
-      hb_tr_level_ = -1;
+      pTrace->level = -1;
       /* NOTE: resetting file name/line number will cause that we will unable
        * to report the location of code that allocated unreleased memory blocks
        * See hb_xalloc/hb_xgrab in src/vm/fm.c
        */
       if( hb_tr_level() < HB_TR_DEBUG )
       {
-         hb_tr_file_ = "";
-         hb_tr_line_ = -1;
+         pTrace->file = "";
+         pTrace->line = -1;
       }
+   }
+}
+
+void hb_tr_stealth( const char * fmt, ... )
+{
+   if( s_enabled )
+   {
+      PHB_TRACEINFO pTrace = hb_traceinfo();
+
+      va_list ap;
+      va_start( ap, fmt );
+      hb_tracelog_( pTrace->level, pTrace->file, pTrace->line, pTrace->proc, fmt, ap );
+      va_end( ap );
    }
 }

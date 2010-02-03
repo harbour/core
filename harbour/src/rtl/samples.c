@@ -58,7 +58,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 {
    int iValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
+   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%p, %lu)", pszTime, ulTime));
 
    iValue = ( int ) ( ( ulTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';

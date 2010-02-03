@@ -1359,7 +1359,7 @@ void  hb_retclen( const char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%.*s, %lu)", ( int ) ulLen, szText, ulLen));
 
    hb_itemPutCL( hb_stackReturnItem(), szText, ulLen );
 }
@@ -1369,7 +1369,7 @@ void  hb_retclen_buffer( char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%.*s, %lu)", ( int ) ulLen, szText, ulLen));
 
    hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
 }
@@ -1624,7 +1624,7 @@ int hb_storclen( const char * szText, HB_SIZE ulLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%.*s, %lu, %d)", ( int ) ulLen, szText, ulLen, iParam));
 
    if( iParam == -1 )
    {
@@ -1649,7 +1649,7 @@ int hb_storclen_buffer( char * szText, HB_SIZE ulLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%s, %lu, %d)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%.*s, %lu, %d)", ( int ) ulLen, szText, ulLen, iParam));
 
    if( iParam == -1 )
    {
@@ -2015,7 +2015,7 @@ int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%.*s, %lu, %d, ...)", ( int ) ulLen, szText, ulLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -2048,7 +2048,7 @@ int hb_storvclen_buffer( char * szText, HB_SIZE ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%s, %lu, %d, ...)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%.*s, %lu, %d, ...)", ( int ) ulLen, szText, ulLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {

@@ -1739,9 +1739,9 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
  * BSD console
  */
 static HB_BOOL hb_gt_trm_BsdGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
-                                       const char * szPost )
+                                          const char * szPost )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%p)", pTerm, iRow, iCol, szPost));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost));
 
    HB_SYMBOL_UNUSED( szPost );
 
@@ -1830,9 +1830,9 @@ static void hb_gt_trm_AnsiSetTermMode( PHB_GTTRM pTerm, int iAM )
 }
 
 static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
-                                        const char * szPost )
+                                           const char * szPost )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetCursorPos(%p,%p,%p,%p)", pTerm, iRow, iCol, szPost));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost));
 
    if( pTerm->fPosAnswer )
    {

@@ -185,6 +185,7 @@ typedef struct
    int        iDynH;          /* number of dynamic symbol handles */
    void *     pStackLst;      /* this stack entry in stack linked list */
    HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
+   HB_TRACEINFO traceInfo;    /* MT safe buffer for HB_TRACE data */
    char *     pDirBuffer;     /* MT safe buffer for hb_fsCurDir() results */
    void *     allocator;      /* memory manager global struct pointer */
 #endif

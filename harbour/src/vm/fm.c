@@ -256,10 +256,6 @@
 #  undef HB_PARANOID_MEM_CHECK
 #endif
 
-#if defined( HB_FM_STATISTICS ) && !defined( HB_TR_LEVEL )
-#  define HB_TR_LEVEL HB_TR_ERROR
-#endif
-
 #ifdef HB_FM_NEED_INIT
 static HB_BOOL s_fInitedFM = HB_FALSE;
 #endif
@@ -588,6 +584,8 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    if( s_fStatistic )
    {
+      PHB_TRACEINFO pTrace;
+
       HB_FM_LOCK
 
       if( ! s_pFirstBlock )
@@ -607,15 +605,20 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
       HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
       pMem->ulSize = ulSize;  /* size of the memory block */
 
-      if( hb_tr_level() >= HB_TR_DEBUG )
+      pTrace = hb_traceinfo();
+      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
       {
          /* NOTE: PRG line number/procname is not very useful during hunting
          * for memory leaks - this is why we are using the previously stored
          * function/line info - this is a location of code that called
          * hb_xalloc/hb_xgrab
          */
-         pMem->uiProcLine = hb_tr_line_; /* C line number */
-         hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
+         pMem->uiProcLine = pTrace->line; /* C line number */
+         if( pTrace->file )
+            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
+         else
+            pMem->szProcName[ 0 ] = '\0';
+         pTrace->level = -1;
       }
       else
       {
@@ -667,6 +670,8 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    if( s_fStatistic )
    {
+      PHB_TRACEINFO pTrace;
+
       HB_FM_LOCK
 
       if( ! s_pFirstBlock )
@@ -686,15 +691,20 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
       HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
       pMem->ulSize = ulSize;  /* size of the memory block */
 
-      if( hb_tr_level() >= HB_TR_DEBUG )
+      pTrace = hb_traceinfo();
+      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
       {
          /* NOTE: PRG line number/procname is not very useful during hunting
          * for memory leaks - this is why we are using the previously stored
          * function/line info - this is a location of code that called
          * hb_xalloc/hb_xgrab
          */
-         pMem->uiProcLine = hb_tr_line_; /* C line number */
-         hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
+         pMem->uiProcLine = pTrace->line; /* C line number */
+         if( pTrace->file )
+            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
+         else
+            pMem->szProcName[ 0 ] = '\0';
+         pTrace->level = -1;
       }
       else
       {

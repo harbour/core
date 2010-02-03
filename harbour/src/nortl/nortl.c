@@ -386,6 +386,24 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSiz
    return szName;
 }
 
+
+/* HB_TRACE */
+static HB_TRACEINFO s_traceInfo;
+
+void hb_traceset( int level, const char * file, int line, const char * proc )
+{
+   s_traceInfo.level = level;
+   s_traceInfo.file = file;
+   s_traceInfo.line = line;
+   s_traceInfo.proc = proc;
+}
+
+PHB_TRACEINFO hb_traceinfo( void )
+{
+   return &s_traceInfo;
+}
+
+
 /* VM */
 void hb_vmLock( void ) {}
 
@@ -396,6 +414,7 @@ void hb_fsSetIOError( HB_BOOL fResult, USHORT uiOperation )
    HB_SYMBOL_UNUSED( fResult );
    HB_SYMBOL_UNUSED( uiOperation );
 }
+
 
 /* file name conversion */
 

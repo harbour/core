@@ -7088,7 +7088,7 @@ void hb_vmPopState( void )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE_STEALTH( HB_TR_DEBUG, ( "hb_vmPopState()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmPopState()" ) );
 
    hb_stackPopReturn();
 }

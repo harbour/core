@@ -986,7 +986,7 @@ PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE errGenCode, 
    PHB_ITEM pError;
    PHB_ITEM pArray;
 
-   HB_TRACE_STEALTH( HB_TR_DEBUG, ( "hb_errRT_SubstParams()") );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_errRT_SubstParams()") );
 
    pError = hb_errRT_New_Subst( ES_ERROR, szSubSystem ? szSubSystem : HB_ERR_SS_BASE,
                errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );

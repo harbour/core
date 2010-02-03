@@ -68,6 +68,8 @@ HB_EXTERN_BEGIN
 #define HB_TR_DEBUG      5
 #define HB_TR_LAST       6
 
+#define HB_TR_FM         10
+
 /*
  * Default tracing level.
  */
@@ -112,9 +114,7 @@ HB_EXTERN_BEGIN
                                 { \
                                    if( hb_tr_level() >= l ) \
                                    { \
-                                      hb_tr_file_ = __FILE__; \
-                                      hb_tr_line_ = __LINE__; \
-                                      hb_tr_level_ = l; \
+                                      hb_traceset( l, __FILE__, __LINE__, NULL ); \
                                       hb_tr_trace x ; \
                                    } \
                                 } while( 0 )
@@ -165,10 +165,7 @@ HB_EXTERN_BEGIN
 #define HB_ECHO_STEALTH( l, x ) do \
                                 { \
                                    if( hb_tr_level() >= l ) \
-                                   { \
-                                      hb_tr_level_ = l; \
-                                      hb_tr_trace x ; \
-                                   } \
+                                      hb_tr_stealth x ; \
                                 } while( 0 )
 
 #if HB_TR_LEVEL >= HB_TR_DEBUG
@@ -212,16 +209,25 @@ HB_EXTERN_BEGIN
  */
 #define HB_TRACE_STEALTH(l, x)            HB_ECHO_STEALTH_##l(x)
 
+typedef struct
+{
+   const char * file;
+   const char * proc;
+   int          line;
+   int          level;
+}
+HB_TRACEINFO, * PHB_TRACEINFO;
+
 extern HB_EXPORT int    hb_tracestate( int new_state );
 extern HB_EXPORT int    hb_tracelevel( int new_level );
 extern HB_EXPORT void   hb_tracelog( int level, const char * file, int line, const char * proc, const char * fmt, ... ) HB_PRINTF_FORMAT( 5, 6 );
 
-extern HB_EXPORT const char * hb_tr_file_;
-extern HB_EXPORT int          hb_tr_line_;
-extern HB_EXPORT int          hb_tr_level_;
+extern HB_EXPORT void   hb_traceset( int level, const char * file, int line, const char * proc );
+extern HB_EXPORT PHB_TRACEINFO hb_traceinfo( void );
 
 extern HB_EXPORT int    hb_tr_level( void );
 extern HB_EXPORT void   hb_tr_trace( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
+extern HB_EXPORT void   hb_tr_stealth( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
 
 HB_EXTERN_END
 

@@ -149,6 +149,7 @@
 
 static char s_szDirBuffer[ HB_PATH_MAX ];
 static HB_IOERRORS s_IOErrors;
+static HB_TRACEINFO s_traceInfo;
 
 /* ------------------------------- */
 
@@ -1333,4 +1334,26 @@ void hb_stackUpdateAllocator( void * pStackId, PHB_ALLOCUPDT_FUNC pFunc, int iCo
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( iCount );
 #endif
+}
+
+PHB_TRACEINFO hb_traceinfo( void )
+{
+#if defined( HB_MT_VM )
+   if( hb_stack_ready() )
+   {
+      HB_STACK_TLS_PRELOAD
+      return &hb_stack.traceInfo;
+   }
+#endif
+   return &s_traceInfo;
+}
+
+void hb_traceset( int level, const char * file, int line, const char * proc )
+{
+   PHB_TRACEINFO pTrace = hb_traceinfo();
+
+   pTrace->level = level;
+   pTrace->file = file;
+   pTrace->line = line;
+   pTrace->proc = proc;
 }

@@ -505,7 +505,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
 {
    int iColorIndex, iPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_ColorsToString(%p,%p,%d,%s,%d)", pGT, pColors, iColorCount, pszColorString, iBufSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_ColorsToString(%p,%p,%d,%p,%d)", pGT, pColors, iColorCount, pszColorString, iBufSize));
 
    HB_SYMBOL_UNUSED( pGT );
 

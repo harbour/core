@@ -295,7 +295,7 @@ void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
 
 void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%.8s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
 
 #if defined( HB_CLP_STRICT ) || 1
    if( szDate )
@@ -355,7 +355,7 @@ long hb_dateEncStr( const char * szDate )
 {
    int  iYear, iMonth, iDay;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%.8s)", szDate));
 
    hb_dateStrGet( szDate, &iYear, &iMonth, &iDay );
 
@@ -573,7 +573,7 @@ void hb_timeStrRawGet( const char * szTime,
                        int * piHour, int * piMinutes,
                        int * piSeconds, int * piMSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStrRawGet(%s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStrRawGet(%.10s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
 
    *piHour = *piMinutes = *piSeconds = *piMSec = 0;
 
