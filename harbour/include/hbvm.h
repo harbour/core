@@ -163,9 +163,11 @@ extern HB_EXPORT void     hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function
 extern HB_EXPORT void     hb_vmPushDynSym( PHB_DYNS pDynSym ); /* pushes a function/method pointer onto the stack */
 extern HB_EXPORT void     hb_vmPushEvalSym( void ); /* pushes a codeblock eval symbol onto the stack */
 extern HB_EXPORT void     hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
+extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
+#ifdef HB_LEGACY_LEVEL3
 extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on stack */
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
-extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
+#endif
 
 extern HB_EXPORT HB_BOOL  hb_vmIsMt( void ); /* return HB_TRUE if HVM is compiled with thread support */
 extern HB_EXPORT void     hb_vmLock( void ); /* lock VM blocking GC execution by other threads */

@@ -6440,6 +6440,7 @@ void hb_vmPush( PHB_ITEM pItem )
    hb_itemCopy( hb_stackAllocItem(), pItem );
 }
 
+#ifdef HB_LEGACY_LEVEL3
 void hb_vmPushState( void )
 {
    HB_STACK_TLS_PRELOAD
@@ -6448,6 +6449,7 @@ void hb_vmPushState( void )
 
    hb_stackPushReturn();
 }
+#endif
 
 void hb_vmPushNil( void )
 {
@@ -7084,6 +7086,7 @@ static void hb_vmSwap( BYTE bCount )
 /* Pop                             */
 /* ------------------------------- */
 
+#ifdef HB_LEGACY_LEVEL3
 void hb_vmPopState( void )
 {
    HB_STACK_TLS_PRELOAD
@@ -7092,6 +7095,7 @@ void hb_vmPopState( void )
 
    hb_stackPopReturn();
 }
+#endif
 
 static HB_BOOL hb_vmPopLogical( void )
 {
