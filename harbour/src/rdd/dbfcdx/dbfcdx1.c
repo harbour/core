@@ -3563,8 +3563,19 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
       {
          pTag->pForItem = pTag->pIndex->pArea->dbfarea.area.valResult;
          pTag->pIndex->pArea->dbfarea.area.valResult = NULL;
+
+         /* CL52 / SIXCDX when index is open evaluates only KEY expression
+          * and do not check the FOR one.
+          * CL53 / COMIX evaluates both KEY and FOR expressions.
+          */
+#if !defined( HB_SIXCDX )
          if( hb_cdxItemType( hb_vmEvalBlockOrMacro( pTag->pForItem ) ) != 'L' )
+         {
+            hb_cdxErrorRT( pTag->pIndex->pArea, EG_DATATYPE, EDBF_INVALIDFOR,
+                           NULL, 0, 0, NULL );
             pTag->RootBlock = 0; /* To force RT error - index corrupted */
+         }
+#endif
       }
    }
    SELF_GOTO( ( AREAP ) pTag->pIndex->pArea, ulRecNo );
@@ -3575,6 +3586,9 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
        ( pTag->uiType == 'T' && pTag->uiLen != 8 ) ||
        ( pTag->uiType == 'L' && pTag->uiLen != 1 ) )
    {
+      hb_cdxErrorRT( pTag->pIndex->pArea,
+                     pTag->uiType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
+                     EDBF_INVALIDKEY, NULL, 0, 0, NULL );
       pTag->RootBlock = 0; /* To force RT error - index corrupted */
    }
 }
