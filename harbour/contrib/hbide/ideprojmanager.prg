@@ -544,7 +544,11 @@ METHOD IdeProjManager:fetchProperties()
    LOCAL cLukupPng
    LOCAL cPrjLoc := hb_dirBase() + "projects"
 
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
+   #ifdef HBIDE_USE_UIC
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.uic", ::oDlg:oWidget ):build()
+   #else
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget ):create()
+   #endif
 
    ::oUI:q_tabWidget:removeTab( 4 )
 
@@ -953,7 +957,11 @@ METHOD IdeProjManager:loadXhpProject()
 METHOD IdeProjManager:manageEnvironments()
    LOCAL cLukupPng
 
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget )
+   #ifdef HBIDE_USE_UIC
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.uic", ::oDlg:oWidget ):build()
+   #else
+   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget ):create()
+   #endif
 
    cLukupPng := ::resPath + "folder.png"
    //
@@ -1255,7 +1263,11 @@ METHOD IdeProjManager:selectCurrentProject()
       RETURN ::cWrkProject
    ENDIF
 
-   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget )
+   #ifdef HBIDE_USE_UIC
+   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.uic", ::oDlg:oWidget ):build()
+   #else
+   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget ):create()
+   #endif
 
  * Fill ComboBox with current project names
    FOR i := 1 TO Len( ::aProjects )

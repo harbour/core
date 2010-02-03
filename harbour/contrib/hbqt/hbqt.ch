@@ -306,7 +306,7 @@
 #define Qt_AlignBottom                            0x0040      // Aligns with the bottom.
 #define Qt_AlignVCenter                           0x0080      // Centers vertically in the available space.
 
-#define Qt_AlignCenter                            Qt_AlignVCenter + Qt_AlignHCenter   // Centers in both dimensions.
+#define Qt_AlignCenter                            hb_bitOR( Qt_AlignVCenter, Qt_AlignHCenter )  // Centers in both dimensions.
 
 #define Qt_AlignAbsolute                          0x0010      // If the widget's layout direction is #define Qt_RightToLeft (instead of #define Qt_LeftToRight, the default), #define Qt_AlignLeft refers to the right edge and #define Qt_AlignRight to the left edge. This is normally the desired behavior. If you want #define Qt_AlignLeft to always mean "left" and #define Qt_AlignRight to always mean "right", combine the flag with #define Qt_AlignAbsolute.
 #define Qt_AlignLeading                           Qt_AlignLeft   // Synonym for #define Qt_AlignLeft.
@@ -515,8 +515,8 @@
 //
 #define Qt_TabFocus                               0x1   // the widget accepts focus by tabbing.
 #define Qt_ClickFocus                             0x2   // the widget accepts focus by clicking.
-#define Qt_StrongFocus                            Qt_TabFocus + Qt_ClickFocus + 0x8   // the widget accepts focus by both tabbing and clicking. On Mac OS X this will also be indicate that the widget accepts tab focus when in 'Text/List focus mode'.
-#define Qt_WheelFocus                             Qt_StrongFocus + 0x4                // like #define Qt_StrongFocus plus the widget accepts focus by using the mouse wheel.
+#define Qt_StrongFocus                            hb_bitOR( hb_bitOR( Qt_TabFocus, Qt_ClickFocus ), 0x8 )  // the widget accepts focus by both tabbing and clicking. On Mac OS X this will also be indicate that the widget accepts tab focus when in 'Text/List focus mode'.
+#define Qt_WheelFocus                             hb_bitOR( Qt_StrongFocus, 0x4 )            // like #define Qt_StrongFocus plus the widget accepts focus by using the mouse wheel.
 #define Qt_NoFocus                                0     // the widget does not accept focus.
 
 // enum #define Qt_FocusReason
@@ -1168,8 +1168,8 @@
 #define Qt_LinksAccessibleByMouse                 4     // Links can be highlighted and activated with the mouse.
 #define Qt_LinksAccessibleByKeyboard              8     // Links can be focused using tab and activated with enter.
 #define Qt_TextEditable                           16    // The text is fully editable.
-#define Qt_TextEditorInteraction                  Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard + Qt_TextEditable              // The default for a text editor.
-#define Qt_TextBrowserInteraction                 Qt_TextSelectableByMouse + Qt_LinksAccessibleByMouse + Qt_LinksAccessibleByKeyboard   // The default for QTextBrowser.
+#define Qt_TextEditorInteraction                  hb_bitOR( hb_bitOR( Qt_TextSelectableByMouse, Qt_TextSelectableByKeyboard ), Qt_TextEditable )             // The default for a text editor.
+#define Qt_TextBrowserInteraction                 hb_bitOR( hb_bitOR( Qt_TextSelectableByMouse, Qt_LinksAccessibleByMouse ), Qt_LinksAccessibleByKeyboard )  // The default for QTextBrowser.
 // The TextInteractionFlags type is a typedef for QFlags<TextInteractionFlag>. It stores an OR combination of TextInteractionFlag values.
 
 // enum #define Qt_TimeSpec
@@ -1349,17 +1349,17 @@
 //
 #define Qt_Widget                                 0x00000000               // This is the default type for QWidget. Widgets of this type are child widgets if they have a parent, and independent windows if they have no parent. // See also #define Qt_Window and #define Qt_SubWindow.
 #define Qt_Window                                 0x00000001               // Indicates that the widget is a window, usually with a window system frame and a title bar, irrespective of whether the widget has a parent or not. Note that it is not possible to unset this flag if the widget does not have a parent.
-#define Qt_Dialog                                 0x00000002 + Qt_Window   // Indicates that the widget is a window that should be decorated as a dialog (i.e., typically no maximize or minimize buttons in the title bar). This is the default type for QDialog. If you want to use it as a modal dialog, it should be launched from another window, or have a parent and used with the QWidget_windowModality property. If you make it modal, the dialog will prevent other top-level windows in the application from getting any input. We refer to a top-level window that has a parent as a secondary window.
-#define Qt_Sheet                                  0x00000004 + Qt_Window   // Indicates that the widget is a Macintosh sheet.
-#define Qt_Drawer                                 0x00000006 + Qt_Window   // Indicates that the widget is a Macintosh drawer.
-#define Qt_Popup                                  0x00000008 + Qt_Window   // Indicates that the widget is a pop-up top-level window, i.e. that it is modal, but has a window system frame appropriate for pop-up menus.
-#define Qt_Tool                                   0x0000000a + Qt_Window   // Indicates that the widget is a tool window. A tool window is often a small window with a smaller than usual title bar and decoration, typically used for collections of tool buttons. It there is a parent, the tool window will always be kept on top of it. If there isn't a parent, you may consider using #define Qt_WindowStaysOnTopHint as well. If the window system supports it, a tool window can be decorated with a somewhat lighter frame. It can also be combined with #define Qt_FramelessWindowHint.
+#define Qt_Dialog                                 hb_bitOR( 0x00000002, Qt_Window )  // Indicates that the widget is a window that should be decorated as a dialog (i.e., typically no maximize or minimize buttons in the title bar). This is the default type for QDialog. If you want to use it as a modal dialog, it should be launched from another window, or have a parent and used with the QWidget_windowModality property. If you make it modal, the dialog will prevent other top-level windows in the application from getting any input. We refer to a top-level window that has a parent as a secondary window.
+#define Qt_Sheet                                  hb_bitOR( 0x00000004, Qt_Window )  // Indicates that the widget is a Macintosh sheet.
+#define Qt_Drawer                                 hb_bitOR( 0x00000006, Qt_Window )  // Indicates that the widget is a Macintosh drawer.
+#define Qt_Popup                                  hb_bitOR( 0x00000008, Qt_Window )  // Indicates that the widget is a pop-up top-level window, i.e. that it is modal, but has a window system frame appropriate for pop-up menus.
+#define Qt_Tool                                   hb_bitOR( 0x0000000a, Qt_Window )  // Indicates that the widget is a tool window. A tool window is often a small window with a smaller than usual title bar and decoration, typically used for collections of tool buttons. It there is a parent, the tool window will always be kept on top of it. If there isn't a parent, you may consider using #define Qt_WindowStaysOnTopHint as well. If the window system supports it, a tool window can be decorated with a somewhat lighter frame. It can also be combined with #define Qt_FramelessWindowHint.
 
 // On Mac OS X, tool windows correspond to the Floating class of windows. This means that the window lives on a level above normal windows; it impossible to put a normal window on top of it. By default, tool windows will disappear when the application is inactive. This can be controlled by the #define Qt_WA_MacAlwaysShowToolWindow attribute.
 //
-#define Qt_ToolTip                                0x0000000c + Qt_Window   // Indicates that the widget is a tooltip. This is used internally to implement tooltips.
-#define Qt_SplashScreen                           0x0000000e + Qt_Window   // Indicates that the window is a splash screen. This is the default type for QSplashScreen.
-#define Qt_Desktop                                0x00000010 + Qt_Window   // Indicates that this widget is the desktop. This is the type for QDesktopWidget.
+#define Qt_ToolTip                                hb_bitOR( 0x0000000c, Qt_Window )  // Indicates that the widget is a tooltip. This is used internally to implement tooltips.
+#define Qt_SplashScreen                           hb_bitOR( 0x0000000e, Qt_Window )  // Indicates that the window is a splash screen. This is the default type for QSplashScreen.
+#define Qt_Desktop                                hb_bitOR( 0x00000010, Qt_Window )  // Indicates that this widget is the desktop. This is the type for QDesktopWidget.
 #define Qt_SubWindow                              0x00000012               // Indicates that this widget is a sub-window, such as a QMdiSubWindow widget.
 
 // There are also a number of flags which you can use to customize the appearance of top-level
@@ -1379,7 +1379,7 @@
 #define Qt_WindowSystemMenuHint                   0x00002000   // Adds a window system menu, and possibly a close button (for example on Mac). If you need to hide or show a close button, it is more portable to use WindowCloseButtonHint.
 #define Qt_WindowMinimizeButtonHint               0x00004000   // Adds a minimize button. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
 #define Qt_WindowMaximizeButtonHint               0x00008000   // Adds a maximize button. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
-#define Qt_WindowMinMaxButtonsHint                Qt_WindowMinimizeButtonHint + Qt_WindowMaximizeButtonHint   // Adds a minimize and a maximize button. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
+#define Qt_WindowMinMaxButtonsHint                hb_bitOR( Qt_WindowMinimizeButtonHint, Qt_WindowMaximizeButtonHint )  // Adds a minimize and a maximize button. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
 #define Qt_WindowCloseButtonHint                  0x08000000   // Adds a close button. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
 #define Qt_WindowContextHelpButtonHint            0x00010000   // Adds a context help button to dialogs. On some platforms this implies #define Qt_WindowSystemMenuHint for it to work.
 #define Qt_MacWindowToolBarButtonHint             0x10000000   // On Mac OS X adds a tool bar button (i.e., the oblong button that is on the top right of windows that have toolbars.
@@ -1410,7 +1410,7 @@
 #define Qt_WStyle_SysMenu                         Qt_WindowSystemMenuHint       // Use #define Qt_WindowSystemMenuHint instead.
 #define Qt_WStyle_Minimize                        Qt_WindowMinimizeButtonHint   // Use #define Qt_WindowMinimizeButtonHint instead.
 #define Qt_WStyle_Maximize                        Qt_WindowMaximizeButtonHint   // Use #define Qt_WindowMaximizeButtonHint instead.
-#define Qt_WStyle_MinMax                          Qt_WStyle_Minimize + WStyle_Maximize   // Use #define Qt_WindowMinMaxButtonsHint instead.
+#define Qt_WStyle_MinMax                          hb_bitOR( Qt_WStyle_Minimize, WStyle_Maximize )  // Use #define Qt_WindowMinMaxButtonsHint instead.
 #define Qt_WStyle_Tool                            Qt_Tool                        // Use #define Qt_Tool instead.
 #define Qt_WStyle_StaysOnTop                      Qt_WindowStaysOnTopHint        // Use #define Qt_WindowStaysOnTopHint instead.
 #define Qt_WStyle_ContextHelp                     Qt_WindowContextHelpButtonHint // Use #define Qt_WindowContextHelpButtonHint instead.
@@ -1424,7 +1424,7 @@
 #define Qt_WNoAutoErase                           0                   // No longer needed.
 #define Qt_WRepaintNoErase                        0                   // No longer needed.
 #define Qt_WNorthWestGravity                      Qt_WStaticContents  // Use #define Qt_WA_StaticContents instead.
-#define Qt_WType_Modal                            Qt_Dialog + Qt_WShowModal   // Use Qt_Dialog and QWidget_windowModality instead.
+#define Qt_WType_Modal                            hb_bitOR( Qt_Dialog, Qt_WShowModal )  // Use Qt_Dialog and QWidget_windowModality instead.
 #define Qt_WStyle_Dialog                          Qt_Dialog                   // Use Qt_Dialog instead.
 #define Qt_WStyle_NoBorderEx                      Qt_FramelessWindowHint      // Use Qt_FramelessWindowHint instead.
 #define Qt_WResizeNoErase                         0                   // No longer needed.
@@ -2112,10 +2112,10 @@
 #define QSizePolicy_Fixed                         0   // The QWidget::sizeHint() is the only acceptable alternative, so the widget can never grow or shrink (e.g. the vertical direction of a push button).
 #define QSizePolicy_Minimum                       QSizePolicy_GrowFlag                                                     // The sizeHint() is minimal, and sufficient. The widget can be expanded, but there is no advantage to it being larger (e.g. the horizontal direction of a push button). It cannot be smaller than the size provided by sizeHint().
 #define QSizePolicy_Maximum                       QSizePolicy_ShrinkFlag                                                   // The sizeHint() is a maximum. The widget can be shrunk any amount without detriment if other widgets need the space (e.g. a separator line). It cannot be larger than the size provided by sizeHint().
-#define QSizePolicy_Preferred                     QSizePolicy_GrowFlag + QSizePolicy_ShrinkFlag                            // The sizeHint() is best, but the widget can be shrunk and still be useful. The widget can be expanded, but there is no advantage to it being larger than sizeHint() (the default QWidget policy).
-#define QSizePolicy_Expanding                     QSizePolicy_GrowFlag + QSizePolicy_ShrinkFlag + QSizePolicy_ExpandFlag   // The sizeHint() is a sensible size, but the widget can be shrunk and still be useful. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
-#define QSizePolicy_MinimumExpanding              QSizePolicy_GrowFlag + QSizePolicy_ExpandFlag                     // The sizeHint() is minimal, and sufficient. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
-#define QSizePolicy_Ignored                       QSizePolicy_ShrinkFlag + QSizePolicy_GrowFlag + QSizePolicy_IgnoreFlag   // The sizeHint() is ignored. The widget will get as much space as possible.
+#define QSizePolicy_Preferred                     hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ShrinkFlag )                 // The sizeHint() is best, but the widget can be shrunk and still be useful. The widget can be expanded, but there is no advantage to it being larger than sizeHint() (the default QWidget policy).
+#define QSizePolicy_Expanding                     hb_bitOR( hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ShrinkFlag ), QSizePolicy_ExpandFlag )  // The sizeHint() is a sensible size, but the widget can be shrunk and still be useful. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
+#define QSizePolicy_MinimumExpanding              hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ExpandFlag )                 // The sizeHint() is minimal, and sufficient. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
+#define QSizePolicy_Ignored                       hb_bitOR( hb_bitOR( QSizePolicy_ShrinkFlag, QSizePolicy_GrowFlag ), QSizePolicy_IgnoreFlag )  // The sizeHint() is ignored. The widget will get as much space as possible.
 
 // enum QSizePolicy::PolicyFlag
 // These flags are combined together to form the various Policy values:
@@ -2201,6 +2201,16 @@
 #define QFile_ReadOther                           0x0004   // The file is readable by anyone.
 #define QFile_WriteOther                          0x0002   // The file is writable by anyone.
 #define QFile_ExeOther                            0x0001   // The file is executable by anyone.
+
+#define QPlainTextEdit_NoWrap                     0
+#define QPlainTextEdit_WidgetWidth                1
+
+#define QLayout_SetDefaultConstraint              0        // The main widget's minimum size is set to minimumSize(), unless the widget already has a minimum size.
+#define QLayout_SetFixedSize                      3        // The main widget's size is set to sizeHint(); it cannot be resized at all.
+#define QLayout_SetMinimumSize                    2        // The main widget's minimum size is set to minimumSize(); it cannot be smaller.
+#define QLayout_SetMaximumSize                    4        // The main widget's maximum size is set to maximumSize(); it cannot be larger.
+#define QLayout_SetMinAndMaxSize                  5        // The main widget's minimum size is set to minimumSize() and its maximum size is set to maximumSize().
+#define QLayout_SetNoConstraint                   1        // The widget is not constrained.
 
 /*----------------------------------------------------------------------*/
 

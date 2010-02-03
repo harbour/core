@@ -128,13 +128,17 @@ METHOD IdeDocks:buildDialog()
 
    #if 1
    ::oIde:oDlg := XbpDialog():new()
-   ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
+   ::oDlg:icon := ::resPath + "vr.png"
    ::oDlg:title := "Harbour-Qt IDE"
-   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainWindow.ui" )
+   #ifdef HBIDE_USE_UIC
+   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
+   #else
+   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.ui" ):create()
+   #endif
    ::oDlg:create( , , , , , .f. )
    #else
    ::oIde:oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
-   ::oDlg:icon := ::resPath + "vr.png" // "hbide.png"
+   ::oDlg:icon := ::resPath + "vr.png"
    ::oDlg:title := "Harbour-Qt IDE"
    ::oDlg:create()
    #endif

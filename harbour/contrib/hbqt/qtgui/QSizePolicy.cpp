@@ -135,7 +135,15 @@ HB_FUNC( QT_QSIZEPOLICY )
 {
    void * pObj = NULL;
 
-   pObj = ( QSizePolicy* ) new QSizePolicy() ;
+   if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+HB_TRACE( HB_TR_ALWAYS, ( "================ %i %i", hb_parni( 1 ), hb_parni( 2 ) ) );
+      pObj = new QSizePolicy( ( QSizePolicy::Policy ) hb_parni( 1 ), ( QSizePolicy::Policy ) hb_parni( 2 ) ) ;
+   }
+   else
+   {
+      pObj = new QSizePolicy() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QSizePolicy( pObj, true ) );
 }

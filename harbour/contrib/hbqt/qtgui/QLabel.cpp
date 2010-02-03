@@ -139,7 +139,7 @@ HB_FUNC( QT_QLABEL )
 {
    void * pObj = NULL;
 
-   pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QLabel( hbqt_par_QWidget( 1 ), HB_ISNUM( 2 ) ? ( Qt::WindowFlags ) hb_parni( 2 ) : ( Qt::WindowFlags ) 0 ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QLabel( pObj, true ) );
 }

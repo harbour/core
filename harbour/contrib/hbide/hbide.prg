@@ -96,7 +96,9 @@ PROCEDURE Main( cProjIni )
 
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
    s_pathSep := hb_OsPathSeparator()
-hbide_dbg( cProjIni )
+
+   hbide_dbg( cProjIni )
+
    oIde := HbIde():new( cProjIni ):create()
    oIde:destroy()
 
@@ -1139,4 +1141,5 @@ METHOD HbIde:setCodec( cCodec )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
 

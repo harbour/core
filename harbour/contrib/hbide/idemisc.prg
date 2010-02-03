@@ -632,13 +632,12 @@ STATIC FUNCTION hbide_buildRegExpressList( aRegList )
    RETURN aRegList
 
 /*----------------------------------------------------------------------*//*
-* Catch source file name & line error from an msg status from compiler result.
+ * Catch source file name & line error from an msg status from compiler result.
  * 29/12/2009 - 13:22:29 - vailtom
  */
 FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    LOCAL regLineN := hb_RegexComp( ".*(\(([0-9]+)\)|:([0-9]+):|\s([0-9]+):).*" )
-   LOCAL aList
-   LOCAL nPos
+   LOCAL aList, nPos
 
    DEFAULT lValidText TO .T.
 
@@ -649,17 +648,16 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
  * 29/12/2009 - 22:51:39 - vailtom
    IF lValidText
       nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cText ) ) } )
-
       IF ( nPos <= 0 )
          RETURN .F.
       ENDIF
    ENDIF
 
-   aList     := hb_RegEx( regLineN, cText )
+   aList := hb_RegEx( regLineN, cText )
 
-   IF !Empty(aList)
-      nLine := alltrim( aList[2] )
-      cText := Substr( cText, 1, At( nLine, cText ) -1 )
+   IF !Empty( aList )
+      nLine := alltrim( aList[ 2 ] )
+      cText := Substr( cText, 1, At( nLine, cText ) - 1 )
       cText := alltrim( cText ) + '('
 
       nLine := strtran( nLine, ":", "" )
@@ -668,11 +666,11 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
       nLine := VAL( alltrim( nLine ) )
    ENDIF
 
-   IF (nPos := hb_At( '(', cText )) > 0
-      cFileName := alltrim( Subst( cText, 1, nPos -1 ) )
+   IF ( nPos := hb_At( '(', cText ) ) > 0
+      cFileName := alltrim( Subst( cText, 1, nPos - 1 ) )
    ELSE
-      IF (nPos := At( 'referenced from', Lower( cText ) )) <> 00
-         cFileName := Subst( cText, nPos + Len( 'referenced from' ) )
+      IF ( nPos := At( 'referenced from', Lower( cText ) ) ) <> 00
+         cFileName := SubStr( cText, nPos + Len( 'referenced from' ) )
       ELSE
        * GCC & MSVC filename detect...
          IF Subst( cText, 2, 1 ) == ':'
@@ -681,7 +679,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
             nPos := hb_At( ':', cText )
          ENDIF
          IF nPos <> 00
-            cFileName := Subst( cText, 1, nPos-1 )
+            cFileName := SubStr( cText, 1, nPos - 1 )
          ENDIF
       ENDIF
    ENDIF
@@ -693,8 +691,8 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    cFileName := strtran( cFileName, "\\", "/" )        && Fix for the BCC
    cFileName := strtran( cFileName, "\" , "/" )
 
-   IF (nPos := Rat( ' ', cFileName )) <> 00
-      cFileName := Subst( cFileName, nPos+1 )
+   IF ( nPos := Rat( ' ', cFileName ) ) <> 00
+      cFileName := SubStr( cFileName, nPos + 1 )
    ENDIF
 
    IF Subst( cFileName, 2, 1 ) == ':'
@@ -704,10 +702,11 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    ENDIF
 
    IF nPos <> 00
-      cFileName := Subst( cFileName, 1, nPos-1 )
+      cFileName := SubStr( cFileName, 1, nPos - 1 )
    ENDIF
 
    cFileName := alltrim( cFileName )
+
    RETURN !Empty( cFileName )
 
 /*----------------------------------------------------------------------*/

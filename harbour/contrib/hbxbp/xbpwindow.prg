@@ -166,6 +166,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    CLASSDATA nProperty                            INIT  0
    DATA     qtProperty                            INIT  ""
    DATA     qtObject
+   DATA     isViaQtObject                         INIT  .f.
 
    /* Called in the initializer - Unique in the application */
    METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
@@ -396,13 +397,13 @@ METHOD XbpWindow:disconnect()
    LOCAL e_
 
    IF len( ::aConnections ) > 0
-HBXBP_DBG( "                                                            " )
+//HBXBP_DBG( "                                                            " )
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
-HBXBP_DBG( ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
+//HBXBP_DBG( ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
       NEXT
       ::aConnections := {}
-HBXBP_DBG( "                                                            " )
+//HBXBP_DBG( "                                                            " )
    ENDIF
 
    RETURN Self
@@ -414,7 +415,7 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
    IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
-      // HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Succeeded" )
+// HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Succeeded" )
    ELSE
       HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Failed" )
    ENDIF
@@ -498,7 +499,6 @@ HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(emp
       ::qtObject:destroy()
       ::qtObject := NIL
    ENDIF
-   ::oWidget:pPtr := NIL
    ::oWidget := NIL
 
 #if 0

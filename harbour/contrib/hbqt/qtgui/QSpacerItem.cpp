@@ -126,7 +126,13 @@ HB_FUNC( QT_QSPACERITEM )
 {
    void * pObj = NULL;
 
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      pObj = new QSpacerItem( hb_parni( 1 ), hb_parni( 2 ),
+                  HB_ISNUM( 3 ) ? ( QSizePolicy::Policy ) hb_parni( 3 ) : QSizePolicy::Minimum,
+                  HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : QSizePolicy::Minimum );
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QSpacerItem( *hbqt_par_QSpacerItem( 1 ) ) ;
    }

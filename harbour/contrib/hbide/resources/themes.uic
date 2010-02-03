@@ -1,0 +1,226 @@
+/********************************************************************************
+** Form generated from reading ui file 'themes.ui'
+**
+** Created: Tue Feb 2 14:13:37 2010
+**      by: Qt User Interface Compiler version 4.5.0
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef THEMES_H
+#define THEMES_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QDialog>
+#include <QtGui/QFrame>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QVBoxLayout>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_dialogThemes
+{
+public:
+    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_6;
+    QLabel *labelTheme;
+    QComboBox *comboThemes;
+    QHBoxLayout *horizontalLayout_5;
+    QPlainTextEdit *plainTextEdit;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *labelItem;
+    QComboBox *comboItems;
+    QPushButton *buttonColor;
+    QHBoxLayout *horizontalLayout_3;
+    QSpacerItem *horizontalSpacer;
+    QCheckBox *checkBold;
+    QCheckBox *checkItalic;
+    QCheckBox *checkUnderline;
+    QSpacerItem *horizontalSpacer_2;
+    QHBoxLayout *horizontalLayout_2;
+    QFrame *line;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *buttonSave;
+    QPushButton *buttonSaveAs;
+    QPushButton *buttonCopy;
+    QPushButton *buttonApply;
+    QPushButton *buttonClose;
+
+    void setupUi(QDialog *dialogThemes)
+    {
+        if (dialogThemes->objectName().isEmpty())
+            dialogThemes->setObjectName(QString::fromUtf8("dialogThemes"));
+        dialogThemes->resize(430, 385);
+        verticalLayout_2 = new QVBoxLayout(dialogThemes);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setSpacing(10);
+        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
+        labelTheme = new QLabel(dialogThemes);
+        labelTheme->setObjectName(QString::fromUtf8("labelTheme"));
+        labelTheme->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_6->addWidget(labelTheme);
+
+        comboThemes = new QComboBox(dialogThemes);
+        comboThemes->setObjectName(QString::fromUtf8("comboThemes"));
+
+        horizontalLayout_6->addWidget(comboThemes);
+
+
+        verticalLayout->addLayout(horizontalLayout_6);
+
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        plainTextEdit = new QPlainTextEdit(dialogThemes);
+        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+
+        horizontalLayout_5->addWidget(plainTextEdit);
+
+
+        verticalLayout->addLayout(horizontalLayout_5);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(10);
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        labelItem = new QLabel(dialogThemes);
+        labelItem->setObjectName(QString::fromUtf8("labelItem"));
+        labelItem->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_4->addWidget(labelItem);
+
+        comboItems = new QComboBox(dialogThemes);
+        comboItems->setObjectName(QString::fromUtf8("comboItems"));
+
+        horizontalLayout_4->addWidget(comboItems);
+
+        buttonColor = new QPushButton(dialogThemes);
+        buttonColor->setObjectName(QString::fromUtf8("buttonColor"));
+        buttonColor->setMaximumSize(QSize(120, 16777215));
+
+        horizontalLayout_4->addWidget(buttonColor);
+
+
+        verticalLayout->addLayout(horizontalLayout_4);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        horizontalSpacer = new QSpacerItem(50, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer);
+
+        checkBold = new QCheckBox(dialogThemes);
+        checkBold->setObjectName(QString::fromUtf8("checkBold"));
+
+        horizontalLayout_3->addWidget(checkBold);
+
+        checkItalic = new QCheckBox(dialogThemes);
+        checkItalic->setObjectName(QString::fromUtf8("checkItalic"));
+
+        horizontalLayout_3->addWidget(checkItalic);
+
+        checkUnderline = new QCheckBox(dialogThemes);
+        checkUnderline->setObjectName(QString::fromUtf8("checkUnderline"));
+
+        horizontalLayout_3->addWidget(checkUnderline);
+
+        horizontalSpacer_2 = new QSpacerItem(120, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_2);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        line = new QFrame(dialogThemes);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        horizontalLayout_2->addWidget(line);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(10);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        buttonSave = new QPushButton(dialogThemes);
+        buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
+
+        horizontalLayout->addWidget(buttonSave);
+
+        buttonSaveAs = new QPushButton(dialogThemes);
+        buttonSaveAs->setObjectName(QString::fromUtf8("buttonSaveAs"));
+
+        horizontalLayout->addWidget(buttonSaveAs);
+
+        buttonCopy = new QPushButton(dialogThemes);
+        buttonCopy->setObjectName(QString::fromUtf8("buttonCopy"));
+
+        horizontalLayout->addWidget(buttonCopy);
+
+        buttonApply = new QPushButton(dialogThemes);
+        buttonApply->setObjectName(QString::fromUtf8("buttonApply"));
+
+        horizontalLayout->addWidget(buttonApply);
+
+        buttonClose = new QPushButton(dialogThemes);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+
+        horizontalLayout->addWidget(buttonClose);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+        verticalLayout->setStretch(1, 1);
+
+        verticalLayout_2->addLayout(verticalLayout);
+
+
+        retranslateUi(dialogThemes);
+
+        QMetaObject::connectSlotsByName(dialogThemes);
+    } // setupUi
+
+    void retranslateUi(QDialog *dialogThemes)
+    {
+        dialogThemes->setWindowTitle(QApplication::translate("dialogThemes", "HBIDE - Source Syntax Highlighting", 0, QApplication::UnicodeUTF8));
+        labelTheme->setText(QApplication::translate("dialogThemes", "Theme", 0, QApplication::UnicodeUTF8));
+        labelItem->setText(QApplication::translate("dialogThemes", "Item", 0, QApplication::UnicodeUTF8));
+        buttonColor->setText(QApplication::translate("dialogThemes", "Color", 0, QApplication::UnicodeUTF8));
+        checkBold->setText(QApplication::translate("dialogThemes", "Bold", 0, QApplication::UnicodeUTF8));
+        checkItalic->setText(QApplication::translate("dialogThemes", "Italic", 0, QApplication::UnicodeUTF8));
+        checkUnderline->setText(QApplication::translate("dialogThemes", "Underline", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("dialogThemes", "Save", 0, QApplication::UnicodeUTF8));
+        buttonSaveAs->setText(QApplication::translate("dialogThemes", "Save As", 0, QApplication::UnicodeUTF8));
+        buttonCopy->setText(QApplication::translate("dialogThemes", "Copy", 0, QApplication::UnicodeUTF8));
+        buttonApply->setText(QApplication::translate("dialogThemes", "Apply", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("dialogThemes", "Close", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(dialogThemes);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class dialogThemes: public Ui_dialogThemes {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // THEMES_H

@@ -1,0 +1,105 @@
+/********************************************************************************
+** Form generated from reading ui file 'selectionlist.ui'
+**
+** Created: Tue Feb 2 14:13:37 2010
+**      by: Qt User Interface Compiler version 4.5.0
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef SELECTIONLIST_H
+#define SELECTIONLIST_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QDialog>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QListView>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QVBoxLayout>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Dialog
+{
+public:
+    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
+    QListView *listOptions;
+    QHBoxLayout *horizontalLayout_2;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *buttonOk;
+    QPushButton *buttonCancel;
+
+    void setupUi(QDialog *Dialog)
+    {
+        if (Dialog->objectName().isEmpty())
+            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+        Dialog->resize(221, 285);
+        verticalLayout_2 = new QVBoxLayout(Dialog);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        listOptions = new QListView(Dialog);
+        listOptions->setObjectName(QString::fromUtf8("listOptions"));
+        listOptions->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+        horizontalLayout->addWidget(listOptions);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+        buttonOk = new QPushButton(Dialog);
+        buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
+        buttonOk->setMaximumSize(QSize(77, 25));
+
+        horizontalLayout_2->addWidget(buttonOk);
+
+        buttonCancel = new QPushButton(Dialog);
+        buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
+        buttonCancel->setMaximumSize(QSize(77, 25));
+
+        horizontalLayout_2->addWidget(buttonCancel);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+
+        verticalLayout_2->addLayout(verticalLayout);
+
+
+        retranslateUi(Dialog);
+
+        QMetaObject::connectSlotsByName(Dialog);
+    } // setupUi
+
+    void retranslateUi(QDialog *Dialog)
+    {
+        Dialog->setWindowTitle(QApplication::translate("Dialog", "Select an Option", 0, QApplication::UnicodeUTF8));
+        buttonOk->setText(QApplication::translate("Dialog", "OK", 0, QApplication::UnicodeUTF8));
+        buttonCancel->setText(QApplication::translate("Dialog", "Cancel", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Dialog);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Dialog: public Ui_Dialog {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // SELECTIONLIST_H

@@ -139,8 +139,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF !empty( ::qtObject )
       IF hb_isObject( ::qtObject )
-         ::oWidget := ::qtObject
-         ::qtObject := NIL
+         ::isViaQtObject := .t.
+         ::oWidget       := ::qtObject
+         ::qtObject      := NIL
       ELSE
          ::oWidget := QMainWindow()
          ::oWidget:pPtr := hbqt_ptr( ::qtObject )
@@ -231,6 +232,7 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:destroy()
+   LOCAL qtObj
 
    HBXBP_DBG( ". " )
    HBXBP_DBG( ". " )
@@ -243,7 +245,13 @@ METHOD XbpDialog:destroy()
    //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
    ::oMenu := NIL
 
+   IF ::isViaQtObject
+      qtObj := ::oWidget
+   ENDIF
    ::XbpWindow:destroy()
+   IF ::isViaQtObject
+      qtObj:destroy()
+   ENDIF
 
    HBXBP_DBG( "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
    HBXBP_DBG( ". " )

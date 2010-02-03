@@ -72,7 +72,14 @@ New      =
  */
 HB_FUNC( QT_QSIZEPOLICY )
 {
-   hb_retptr( ( QSizePolicy* ) new QSizePolicy() );
+   if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( new QSizePolicy( ( QSizePolicy::Policy ) hb_parni( 1 ), ( QSizePolicy::Policy ) hb_parni( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QSizePolicy() );
+   }
 }
 </CODE>
 
