@@ -52,7 +52,7 @@
  */
 
 /*
- * This is an experimental RDD for xharbour/contrib/pgsql interface.
+ * This is an experimental RDD for contrib/pgsql interface.
  * It has been created to test the possibilities of usrrdd.
  * It doesn't support many functions and commands and many things could be optimized.
  */
@@ -80,31 +80,28 @@ FUNCTION DBPGCONNECTION( cConnString )
    LOCAL oServer
    LOCAL nConn
 
-   aParams := HB_ATOKENS( cConnString, ";" )
+   aParams := hb_ATokens( cConnString, ";" )
 
-   asize( aParams, 6 )
+   ASize( aParams, 6 )
 
    oServer := TPQServer():New( aParams[1], aParams[2], aParams[3], aParams[4], aParams[5], aParams[6] )
 
    IF oServer:NetErr()
-      alert( oServer:ErrorMsg() )
       RETURN HB_FAILURE
    ELSE
-      aadd( t_aConnections, oServer )
-      nConn := len( t_aConnections )
+      AAdd( t_aConnections, oServer )
+      nConn := Len( t_aConnections )
    ENDIF
 
    RETURN nConn
 
 FUNCTION DBPGCLEARCONNECTION( nConn )
 
-   LOCAL oServer
-
-   oServer := t_aConnections[ nConn ]
+   LOCAL oServer := t_aConnections[ nConn ]
 
    oServer:Close()
 
-   t_aConnections[ nConn ] := nil
+   t_aConnections[ nConn ] := NIL
 
    RETURN HB_SUCCESS
 
@@ -128,34 +125,35 @@ STATIC FUNCTION PG_INIT( nRDD )
  */
 STATIC FUNCTION PG_NEW( pWA )
 
-   USRRDD_AREADATA( pWA, array( AREA_LEN ) )
+   USRRDD_AREADATA( pWA, Array( AREA_LEN ) )
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    LOCAL aField, oError, lError, cError, nResult
    LOCAL oServer, oQuery, aStruct, aFieldStruct
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
-   if !empty( aOpenInfo[ UR_OI_CONNECT ] ) .and. aOpenInfo[ UR_OI_CONNECT ] <= len( t_aConnections )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+
+   IF ! Empty( aOpenInfo[ UR_OI_CONNECT ] ) .AND. aOpenInfo[ UR_OI_CONNECT ] <= Len( t_aConnections )
       oServer := t_aConnections[ aOpenInfo[ UR_OI_CONNECT ] ]
-   endif
+   ENDIF
 
-   if !empty( oServer )
+   IF ! Empty( oServer )
       oServer:lAllCols := .F.
       oQuery := oServer:Query( aOpenInfo[ UR_OI_NAME ] )
       lError := oQuery:NetErr()
       cError := oQuery:ErrorMsg()
-   else
+   ELSE
       lError := .T.
       cError := "Invalid connection handle"
-   endif
+   ENDIF
 
    IF lError
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1000
-      oError:Description := HB_LANGERRMSG( EG_OPEN ) + ", " + cError
+      oError:Description := hb_langErrMsg( EG_OPEN ) + ", " + cError
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
@@ -170,7 +168,7 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
 
    FOR EACH aFieldStruct IN aStruct
 
-       aField := ARRAY( UR_FI_SIZE )
+       aField := Array( UR_FI_SIZE )
        aField[ UR_FI_NAME ]    := aFieldStruct[ DBS_NAME ]
        aField[ UR_FI_TYPE ]    := aFieldStruct[ DBS_TYPE ]
        aField[ UR_FI_TYPEEXT ] := 0
@@ -186,40 +184,40 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    RETURN nResult
 
 STATIC FUNCTION PG_CLOSE( nWA )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    aWAData[ AREA_QUERY ]:Close()
 
    RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION PG_GETVALUE( nWA, nField, xValue )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   if !empty( aWAData[ AREA_ROW ] )
+   IF ! Empty( aWAData[ AREA_ROW ] )
       xValue := aWAData[ AREA_ROW ]:FieldGet( nField )
-   else
+   ELSE
       xValue := aWAData[ AREA_QUERY ]:FieldGet( nField )
-   endif
+   ENDIF
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_PUTVALUE( nWA, nField, xValue )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   if empty( aWAData[ AREA_ROW ] )
+   IF Empty( aWAData[ AREA_ROW ] )
       aWAData[ AREA_ROW ] := aWAData[ AREA_QUERY ]:GetRow()
-   endif
+   ENDIF
 
    aWAData[ AREA_ROW ]:FieldPut( nField, xValue )
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_SKIP( nWA, nRecords )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   if !empty( aWAData[ AREA_ROW ] )
+   IF ! Empty( aWAData[ AREA_ROW ] )
       PG_FLUSH( nWA )
-   endif
+   ENDIF
 
    aWAData[ AREA_QUERY ]:Skip( nRecords )
 
@@ -235,45 +233,45 @@ STATIC FUNCTION PG_GOTOID( nWA, nRecord )
    RETURN PG_GOTO( nWA, nRecord )
 
 STATIC FUNCTION PG_GOTO( nWA, nRecord )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   if !empty( aWAData[ AREA_ROW ] )
+   IF ! Empty( aWAData[ AREA_ROW ] )
       PG_FLUSH( nWA )
-   endif
+   ENDIF
 
-   if nRecord < 0
+   IF nRecord < 0
       nRecord := aWAData[ AREA_QUERY ]:nLastRec
-   elseif nRecord == 0
+   ELSEIF nRecord == 0
       nRecord := aWAData[ AREA_QUERY ]:nRecno
-   endif
+   ENDIF
 
    aWAData[ AREA_QUERY ]:Goto( nRecord )
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_RECCOUNT( nWA, nRecords )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    nRecords := aWAData[ AREA_QUERY ]:nLastRec
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_BOF( nWA, lBof )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    lBof := aWAData[ AREA_QUERY ]:lBof
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_EOF( nWA, lEof )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    lEof := aWAData[ AREA_QUERY ]:lEof
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_RECID( nWA, nRecNo )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    nRecno := aWAData[ AREA_QUERY ]:nRecNo
 
@@ -286,16 +284,16 @@ STATIC FUNCTION PG_DELETED( nWA, lDeleted )
 
 STATIC FUNCTION PG_FLUSH( nWA )
    LOCAL oError
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL nRecno
 
-   if aWAData[ AREA_ROW ] != nil
-      if !empty( aWAData[ AREA_APPEND ] )
+   IF aWAData[ AREA_ROW ] != NIL
+      IF ! Empty( aWAData[ AREA_APPEND ] )
          aWAData[ AREA_QUERY ]:Append( aWAData[ AREA_ROW ] )
-      else
+      ELSE
          nRecno := aWAData[ AREA_QUERY ]:nRecNo
          aWAData[ AREA_QUERY ]:Update( aWAData[ AREA_ROW ] )
-      endif
+      ENDIF
 
       IF aWAData[ AREA_QUERY ]:lError
          oError := ErrorNew()
@@ -313,21 +311,21 @@ STATIC FUNCTION PG_FLUSH( nWA )
  */
       aWAData[ AREA_QUERY ]:Refresh( .T., .F. )
 
-      if !empty( aWAData[ AREA_APPEND ] )
+      IF ! Empty( aWAData[ AREA_APPEND ] )
          aWAData[ AREA_APPEND ] := .F.
          nRecno := aWAData[ AREA_QUERY ]:nLastRec
-      endif
+      ENDIF
 
-      aWAData[ AREA_ROW ] := nil
+      aWAData[ AREA_ROW ] := NIL
 
       PG_GOTO( nWA, nRecno )
 
-   endif
+   ENDIF
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_APPEND( nWA, nRecords )
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    HB_SYMBOL_UNUSED( nRecords )
 
@@ -339,7 +337,7 @@ STATIC FUNCTION PG_APPEND( nWA, nRecords )
 
 STATIC FUNCTION PG_DELETE( nWA )
    LOCAL oError
-   LOCAL aWAData   := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    aWAData[ AREA_ROW ] := aWAData[ AREA_QUERY ]:GetRow()
 
@@ -354,7 +352,7 @@ STATIC FUNCTION PG_DELETE( nWA )
       RETURN HB_FAILURE
    ENDIF
 
-   aWAData[ AREA_ROW ] := nil
+   aWAData[ AREA_ROW ] := NIL
 
    RETURN HB_SUCCESS
 
@@ -387,7 +385,7 @@ FUNCTION PGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_CLOSE        ] := ( @PG_CLOSE()        )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMyFunc )
+                               cSuperRDD, aMyFunc )
 
 INIT PROC PG_INIT()
    rddRegister( "PGRDD", RDT_FULL )

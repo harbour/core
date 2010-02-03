@@ -4,8 +4,6 @@
 
 ../hbxbp/hbxbp.hbc
 
-#-nohbcppmm 
-
 -inc
 
 -w3 -es2 -gc3
@@ -31,5 +29,4 @@ idethemes.prg
 ideprojmanager.prg
 idesources.prg
 
-#cppstub.cpp
 ideparseexpr.c

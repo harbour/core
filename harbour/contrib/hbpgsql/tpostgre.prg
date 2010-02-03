@@ -113,7 +113,7 @@ METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
             if PQresultStatus(res) == PGRES_TUPLES_OK
                 ::Schema := PQgetvalue( res, 1, 1 )
             endif
-            PQclear(res)
+            res := NIL
         endif
     endif
 
@@ -122,7 +122,7 @@ RETURN self
 
 METHOD Destroy() CLASS TPQserver
     ::TraceOff()
-    PQClose(::pDb)
+    ::pDb := NIL
 RETURN nil
 
 
@@ -134,7 +134,7 @@ METHOD SetSchema( cSchema ) CLASS TPQserver
         ::Schema := cSchema
         res := PQexec( ::pDB, "SET search_path TO " + cSchema )
         result := (PQresultStatus(res) == PGRES_COMMAND_OK)
-        PQclear(res)
+        res := NIL
     endif
 RETURN result
 
@@ -152,7 +152,7 @@ METHOD StartTransaction() CLASS TPQserver
         ::lError := .F.
         ::cError := ""
     endif
-    PQclear(res)
+    res := NIL
 RETURN lError
 
 
@@ -169,7 +169,7 @@ METHOD Commit() CLASS TPQserver
         ::lError := .F.
         ::cError := ""
     endif
-    PQclear(res)
+    res := NIL
 RETURN lError
 
 
@@ -186,7 +186,7 @@ METHOD Rollback() CLASS TPQserver
         ::lError := .F.
         ::cError := ""
     endif
-    PQclear(res)
+    res := NIL
 RETURN lError
 
 
@@ -217,7 +217,7 @@ METHOD TableExists( cTable ) CLASS TPQserver
         ::cError := PQresultErrormessage(res)
     endif
 
-    PQclear(res)
+    res := NIL
 RETURN result
 
 
@@ -244,7 +244,7 @@ METHOD ListTables() CLASS TPQserver
         ::cError := PQresultErrormessage(res)
     endif
 
-    PQclear(res)
+    res := NIL
 RETURN result
 
 METHOD TableStruct( cTable ) CLASS TPQserver
@@ -367,7 +367,7 @@ METHOD TableStruct( cTable ) CLASS TPQserver
         ::cError := PQresultErrormessage(res)
     endif
 
-    PQclear(res)
+    res := NIL
 RETURN result
 
 METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
@@ -416,7 +416,7 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
         ::cError := ""
     endif
 
-    PQclear(res)
+    res := NIL
 RETURN result
 
 
@@ -435,7 +435,7 @@ METHOD DeleteTable( cTable ) CLASS TPQserver
         ::cError := ""
     endif
 
-    PQclear(res)
+    res := NIL
 RETURN result
 
 
@@ -452,7 +452,7 @@ RETURN nil
 METHOD TraceOff() CLASS TPQserver
     if ::pTrace != NIL
         PQuntrace( ::pDb )
-        PQclosetrace( ::pTrace )
+        ::pTrace := NIL
     endif
 
     ::lTrace := .f.
@@ -543,8 +543,8 @@ RETURN self
 
 
 METHOD Destroy() CLASS TPQquery
-    if !( ::nResultStatus == -1 )
-        PQclear( ::pQuery )
+    if ::nResultStatus != -1
+        ::pQuery := NIL
         ::nResultStatus := -1
     endif
 RETURN .T.
@@ -850,7 +850,7 @@ METHOD Delete(oRow) CLASS TPQquery
                 ::cError := ""
                 ::rows   := val(PQcmdTuples(res))
             endif
-            PQclear(res)
+            res := NIL
         endif
     else
         ::lError := .T.
@@ -903,7 +903,7 @@ METHOD Append( oRow ) CLASS TPQquery
                 ::rows   := val(PQcmdTuples(res))
             endif
 
-            PQclear(res)
+            res := NIL
         endif
     else
         ::lError := .T.
@@ -965,7 +965,7 @@ METHOD Update(oRow) CLASS TPQquery
                 ::rows   := val(PQcmdTuples(res))
             endif
 
-            PQclear(res)
+            res := NIL
         endif
     else
         ::lError := .T.
@@ -1136,7 +1136,7 @@ METHOD SetKey() CLASS TPQquery
                         ::Tablename := trim(PQgetvalue(res, 1, 1))
                     endif
 
-                    PQclear(res)
+                    res := NIL
                 endif
             endif
         endif
@@ -1163,7 +1163,7 @@ METHOD SetKey() CLASS TPQquery
                 Next
             endif
 
-            PQclear(res)
+            res := NIL
         endif
     endif
 
