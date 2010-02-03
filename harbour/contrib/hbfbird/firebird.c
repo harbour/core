@@ -71,7 +71,7 @@
 #define MAX_LEN              256
 #define MAX_BUFFER          1024
 
-#define ERREXIT( status ) { hb_retnl( isc_sqlcode( status ) ); return; }
+#define HB_RETNL_FBERROR( status ) { hb_retnl( isc_sqlcode( status ) ); return; }
 
 #ifndef ISC_INT64_FORMAT
    #define ISC_INT64_FORMAT PFLL
@@ -267,9 +267,7 @@ HB_FUNC( FBQUERY )
       trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
    }
    else if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    /* Allocate an output SQLDA. Just to check number of columns */
    sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH ( 1 ) );
@@ -278,21 +276,15 @@ HB_FUNC( FBQUERY )
 
    /* Allocate a statement */
    if( isc_dsql_allocate_statement( status, &db, &stmt ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    /* Prepare the statement. */
    if( isc_dsql_prepare( status, &trans, &stmt, 0, sel_str, dialect, sqlda ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    /* Describe sql contents */
    if( isc_dsql_describe( status, &stmt, dialect, sqlda ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    num_cols = sqlda->sqld;
    aNew = hb_itemArrayNew( num_cols );
@@ -309,9 +301,7 @@ HB_FUNC( FBQUERY )
       sqlda->version = 1;
 
       if( isc_dsql_describe( status, &stmt, dialect, sqlda ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
 
    for( i = 0, var = sqlda->sqlvar; i < sqlda->sqld; i++, var++ )
@@ -355,16 +345,12 @@ HB_FUNC( FBQUERY )
    {
       /* Execute and commit non-select querys */
       if( isc_dsql_execute( status, &trans, &stmt, dialect, NULL ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
    else
    {
       if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
 
    qry_handle = hb_itemArrayNew( 6 );
@@ -399,9 +385,7 @@ HB_FUNC( FBFETCH )
       fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
       if( fetch_stat != 100L )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
 
    hb_retnl( 0 );
@@ -419,16 +403,12 @@ HB_FUNC( FBFREE )
       ISC_STATUS      status[ MAX_FIELDS ];
 
       if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
 
       if( trans )
       {
          if( isc_commit_transaction( status, &trans ) )
-         {
-            ERREXIT( status );
-         }
+            HB_RETNL_FBERROR( status );
       }
 
       /* TOFIX: Freeing pointer received as parameter? We should at least set the item NULL. */
@@ -457,9 +437,7 @@ HB_FUNC( FBGETDATA )
    ISC_QUAD * blob_id;
 
    if( ( pos + 1 ) > sqlda->sqln )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    var = sqlda->sqlvar + pos;
    dtype = var->sqltype & ~1;
@@ -617,21 +595,15 @@ HB_FUNC( FBGETBLOB )
    ISC_STATUS      blob_stat;
 
    if( HB_ISPOINTER( 3 ) )
-   {
       trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 3 );
-   }
    else
    {
       if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
 
    if( isc_open_blob2( status, &db, &trans, &blob_handle, blob_id, 0, NULL ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    /* Get blob segments and their lengths and print each segment. */
    blob_stat = isc_get_segment( status, &blob_handle,
@@ -663,15 +635,11 @@ HB_FUNC( FBGETBLOB )
    }
 
    if( isc_close_blob( status, &blob_handle ) )
-   {
-      ERREXIT( status );
-   }
+      HB_RETNL_FBERROR( status );
 
    if( ! HB_ISPOINTER( 3 ) )
    {
       if( isc_commit_transaction( status, &trans ) )
-      {
-         ERREXIT( status );
-      }
+         HB_RETNL_FBERROR( status );
    }
 }

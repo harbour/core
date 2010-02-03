@@ -59,7 +59,7 @@ Tool/lib versions used to create this package:
    Blat 2.6.2
    Cairo 1.8.8
    libcurl 7.19.6
-   Firebird 2.1.3
+   Firebird 2.5.0rc1
    FreeImage 3.13.0
    GD 2.0.35
    MySQL 5.1.41
@@ -76,6 +76,7 @@ Changes since previous (2.0.0) release:
   for users who obtained commercial license for QT, which means
   for majority of users, it isn't. It can easily be built from
   source though.
+- Built against Firebird 2.5.0rc1.
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------

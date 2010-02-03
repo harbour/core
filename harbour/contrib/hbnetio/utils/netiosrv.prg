@@ -93,7 +93,7 @@ PROCEDURE Main( ... )
          hb_StrClear( @cParam )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
-         netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( netiosrv[ _NETIOSRV_cRPCFFileName ] )
+         netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
          netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) )
          IF ! netiosrv[ _NETIOSRV_lRPC ]
             netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL

@@ -295,6 +295,8 @@ HB_FUNC( PQSETDBLOGIN )
                                 hb_parcx( 7 ) /* pwd */ ) );
 }
 
+#if defined( HB_LEGACY_LEVEL3 )
+
 /* NOTE: Deprecated */
 HB_FUNC( PQCLOSE )
 {
@@ -310,6 +312,8 @@ HB_FUNC( PQCLOSE )
       * ph = NULL;
    }
 }
+
+#endif
 
 HB_FUNC( PQRESET )
 {
@@ -455,6 +459,8 @@ HB_FUNC( PQSTATUS )
  * Query handling functions
  */
 
+#if defined( HB_LEGACY_LEVEL3 )
+
 /* NOTE: Deprecated */
 HB_FUNC( PQCLEAR )
 {
@@ -470,6 +476,8 @@ HB_FUNC( PQCLEAR )
       * ph = NULL;
    }
 }
+
+#endif
 
 HB_FUNC( PQEXEC )
 {
@@ -1032,6 +1040,8 @@ HB_FUNC( PQCREATETRACE )
 #endif
 }
 
+#if defined( HB_LEGACY_LEVEL3 )
+
 /* NOTE: Deprecated */
 HB_FUNC( PQCLOSETRACE )
 {
@@ -1049,6 +1059,8 @@ HB_FUNC( PQCLOSETRACE )
    }
 #endif
 }
+
+#endif
 
 HB_FUNC( PQTRACE )
 {

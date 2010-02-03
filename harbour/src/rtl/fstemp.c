@@ -7,7 +7,7 @@
  * HB_FTEMPCREATE() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
- *                     Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2000-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -133,7 +133,7 @@ static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 }
 #endif
 
-static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName, const char * pszExt )
+HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, HB_FATTR ulAttr )
 {
    /* less attemps */
    int iAttemptLeft = 99, iLen;
@@ -318,10 +318,18 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
    return fResult;
 }
 
+#endif
+
 /* NOTE: The pszName buffer must be at least HB_PATH_MAX chars long */
 
 HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName )
 {
+#if defined( HB_OS_UNIX )
+   return hb_fsCreateTempEx( pszName, pszDir, pszPrefix, NULL, ulAttr );
+#else
+   /* If there was no special extension requested, we're using
+      native temp file generation functions on systems where such
+      API exist. */
    int iAttemptLeft = 999;
 
    while( --iAttemptLeft )
@@ -351,16 +359,85 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATT
    }
 
    return FS_ERROR;
-}
-
-#else /* HB_OS_UNIX */
-
-HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName )
-{
-   return hb_fsCreateTempLow( pszDir, pszPrefix, ulAttr, pszName, NULL );
-}
-
 #endif
+}
+
+/* NOTE: pszTempDir must be at least HB_PATH_MAX long. */
+HB_ERRCODE hb_fsTempDir( char * pszTempDir )
+{
+   HB_ERRCODE nResult = FS_ERROR;
+
+   pszTempDir[ 0 ] = '\0';
+
+#if defined( HB_OS_UNIX )
+   {
+      char * pszTempDirEnv = hb_getenv( "TMPDIR" );
+
+      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
+      {
+#ifdef P_tmpdir
+         if( ! fsGetTempDirByCase( pszTempDir, P_tmpdir ) )
+#endif
+         {
+            pszTempDir[ 0 ] = '.';
+            pszTempDir[ 1 ] = '\0';
+         }
+         else
+            nResult = 0;
+      }
+
+      if( pszTempDirEnv )
+         hb_xfree( pszTempDirEnv );
+
+      if( pszTempDir[ 0 ] != '\0' )
+      {
+         int len = ( int ) strlen( pszTempDir );
+         if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
+         {
+            pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
+            pszTempDir[ len + 1 ] = '\0';
+         }
+      }
+   }
+#elif defined( HB_IO_WIN )
+   {
+      TCHAR lpDir[ HB_PATH_MAX ];
+
+      if( GetTempPath( HB_PATH_MAX, lpDir ) )
+      {
+         nResult = 0;
+         lpDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
+         HB_TCHAR_GETFROM( pszTempDir, lpDir, HB_PATH_MAX );
+      }
+   }
+#else
+   {
+      char szBuffer[ L_tmpnam ];
+
+      if( tmpnam( szBuffer ) != NULL )
+      {
+         nResult = 0;
+
+#        if defined( __DJGPP__ )
+         {
+            /* convert '/' to '\' */
+            char * pszDelim;
+            while( ( pszDelim = strchr( szBuffer, '/' ) ) != NULL )
+               *pszDelim = '\\';
+         }
+#        endif
+
+         {
+            PHB_FNAME pTempName = hb_fsFNameSplit( szBuffer );
+            hb_strncpy( pszTempDir, pTempName->szPath, HB_PATH_MAX - 1 );
+            hb_xfree( pTempName );
+         }
+      }
+   }
+#endif
+
+   return nResult;
+}
 
 HB_FUNC( HB_FTEMPCREATE )
 {
@@ -374,11 +451,6 @@ HB_FUNC( HB_FTEMPCREATE )
    hb_storc( szName, 4 );
 }
 
-HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, HB_FATTR ulAttr )
-{
-   return hb_fsCreateTempLow( pszDir, pszPrefix, ulAttr, pszName, pszExt );
-}
-
 HB_FUNC( HB_FTEMPCREATEEX )
 {
    char szName[ HB_PATH_MAX ];
@@ -390,4 +462,14 @@ HB_FUNC( HB_FTEMPCREATEEX )
                                                  ( HB_FATTR ) ( HB_ISNUM( 5 ) ? hb_parnl( 5 ) : FC_NORMAL ) ) );
 
    hb_storc( szName, 1 );
+}
+
+HB_FUNC( HB_DIRTEMP )
+{
+   char szTempDir[ HB_PATH_MAX ];
+
+   if( hb_fsTempDir( szTempDir ) != ( HB_ERRCODE ) FS_ERROR )
+      hb_retc( szTempDir );
+   else
+      hb_retc_null();
 }
