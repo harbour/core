@@ -300,7 +300,7 @@ HB_FUNC( VIDEOTYPE )
 HB_FUNC( SETFONT )
 {
    const char *font = hb_parcx( 1 );
-   int len = hb_parclen( 1 );
+   unsigned len = ( unsigned ) hb_parclen( 1 );
    int area = hb_parni( 2 );
    int offset = 0;
    int count = 256;

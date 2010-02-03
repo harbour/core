@@ -89,6 +89,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
    include $(TOP)$(ROOT)config/detfun.mk
 
    ifneq ($(HB_HAS_JPEG_LOCAL),)
+      HB_CFLAGS += -DHAVE_STDLIB_H
       include $(TOP)$(ROOT)config/lib.mk
    else
       HB_SKIP_REASON := unused
