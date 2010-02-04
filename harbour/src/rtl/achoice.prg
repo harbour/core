@@ -111,7 +111,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, nItems )
 
 
-   lFinished := .F.
+   lFinished := Empty( acItems )
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
