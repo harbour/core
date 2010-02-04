@@ -641,7 +641,7 @@ HB_FUNC( HB_DISPOUTATBOX )
       iColor = hb_gtGetCurrColor();
 
    while( nStringLen-- )
-      hb_gtPutChar( iRow, iCol++, ( BYTE ) iColor, HB_GT_ATTR_BOX, ( unsigned char ) *pszString++ );
+      hb_gtPutChar( iRow, iCol++, iColor, HB_GT_ATTR_BOX, ( unsigned char ) *pszString++ );
 }
 
 HB_FUNC( HB_GETSTDIN ) /* Return handle for STDIN */

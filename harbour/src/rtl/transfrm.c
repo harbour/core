@@ -100,8 +100,8 @@ HB_FUNC( TRANSFORM )
       HB_SIZE ulPicLen = hb_itemGetCLen( pPic );
       USHORT  uiPicFlags; /* Function flags */
 
-      HB_SIZE   ulParamS = 0; /* To avoid GCC -O2 warning */
-      BYTE    byParamL = '\0'; /* To avoid GCC -O2 warning */
+      HB_SIZE ulParamS = 0; /* To avoid GCC -O2 warning */
+      char    cParamL = '\0'; /* To avoid GCC -O2 warning */
 
       char *  szResult;
       HB_SIZE ulResultPos;
@@ -149,7 +149,7 @@ HB_FUNC( TRANSFORM )
                case 'L':
                case '0':
                   uiPicFlags |= PF_PADL;  /* FoxPro/XPP extension */
-                  byParamL = '0';
+                  cParamL = '0';
                   break;
 #endif
                case 'B':
@@ -500,7 +500,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_PADL )
          {
             for( i = 0; szResult[ i ] == ' '; i++ )
-               szResult[ i ] = byParamL;
+               szResult[ i ] = cParamL;
 
             /* please test it with FoxPro and Xbase++ to check
              * if they made the same [druzus]
@@ -508,7 +508,7 @@ HB_FUNC( TRANSFORM )
             if( i && szResult[ i ] == '-' )
             {
                szResult[ 0 ] = '-';
-               szResult[ i ] = byParamL;
+               szResult[ i ] = cParamL;
             }
          }
 

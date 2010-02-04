@@ -79,12 +79,12 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 #if ! defined( HB_OS_UNIX )
             if( bHandleEOF )
             {
-               BYTE byEOF = HB_CHAR_NUL;
+               char cEOF = HB_CHAR_NUL;
 
                hb_fsSeek( fhnd, -1, FS_END );
-               hb_fsRead( fhnd, &byEOF, sizeof( BYTE ) );
+               hb_fsRead( fhnd, &cEOF, sizeof( char ) );
 
-               if( byEOF == HB_CHAR_EOF )
+               if( cEOF == HB_CHAR_EOF )
                   ulSize--;
             }
 #else
@@ -141,8 +141,8 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
 #if ! defined( HB_OS_UNIX )
          if( bHandleEOF )  /* if true, then write EOF */
          {
-            BYTE byEOF = HB_CHAR_EOF;
-            hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
+            char cEOF = HB_CHAR_EOF;
+            hb_fsWrite( fhnd, &cEOF, sizeof( char ) );
          }
 #else
          HB_SYMBOL_UNUSED( bHandleEOF );
