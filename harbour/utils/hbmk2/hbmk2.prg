@@ -460,7 +460,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Build one target */
-      nResult := hbmk( aArgsTarget, @lPause )
+      nResult := hbmk2( aArgsTarget, @lPause )
 
       /* Exit on first failure */
       IF nResult != 0
@@ -547,7 +547,7 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    RETURN
 
-FUNCTION hbmk( aArgs, /* @ */ lPause )
+FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
 
@@ -3838,7 +3838,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                               'HB_EXTERN_END'                                                     + Chr( 10 )
                   ENDIF
                   cFile += ''                                                                     + Chr( 10 )
-                  cFile += 'void _hb_lnk_ForceLink_hbmk( void )'                                  + Chr( 10 )
+                  cFile += 'void _hb_lnk_ForceLink_hbmk2( void )'                                 + Chr( 10 )
                   cFile += '{'                                                                    + Chr( 10 )
                   AEval( array, {| tmp | cFile += '   HB_FUNC_EXEC( ' + tmp + ' );'               + Chr( 10 ) } )
                   IF l_cCMAIN != NIL
@@ -5803,6 +5803,103 @@ STATIC FUNCTION PathProc( cPathR, cPathA )
    ENDIF
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
+/* NOTE: Not used by hbmk2 code, but could be useful for
+         apps creating hbmk2 script/config files. [vszakats] */
+FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
+   LOCAL tmp
+
+   LOCAL aPathBase
+   LOCAL aPathTarget
+
+   LOCAL cTestBase
+   LOCAL cTestTarget
+
+   LOCAL cTargetFileName
+
+   DEFAULT lForceRelative TO .F.
+
+   cPathBase   := PathProc( DirAddPathSep( cPathBase ), hb_dirBase() )
+   cPathTarget := PathProc( cPathTarget, hb_dirBase() )
+
+   /* TODO: Optimize to operate on strings instead of arrays */
+
+   aPathBase   := FN_ToArray( cPathBase )
+   aPathTarget := FN_ToArray( cPathTarget, @cTargetFileName )
+
+   tmp := 1
+   cTestBase := ""
+   cTestTarget := ""
+   DO WHILE tmp <= Len( aPathTarget ) .AND. tmp <= Len( aPathBase )
+      cTestBase   += aPathBase[ tmp ]
+      cTestTarget += aPathTarget[ tmp ]
+      IF ! hb_FileMatch( cTestBase, cTestTarget )
+         EXIT
+      ENDIF
+      ++tmp
+   ENDDO
+
+   IF tmp > Len( aPathTarget ) .AND. tmp > Len( aPathBase )
+      tmp--
+   ENDIF
+
+   IF tmp == Len( aPathBase )
+      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName )
+   ENDIF
+
+   /* Different drive spec. There is way to solve that using relative dirs. */
+   IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+      tmp == 1 .AND. ;
+      ( Right( aPathBase[ 1 ]  , 1 ) == hb_osDriveSeparator() .OR. ;
+        Right( aPathTarget[ 1 ], 1 ) == hb_osDriveSeparator() )
+      RETURN cPathTarget
+   ENDIF
+
+   /* Force to return relative paths even when base is different. */
+   IF lForceRelative
+      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName, Replicate( ".." + hb_osPathSeparator(), Len( aPathBase ) - tmp ) )
+   ENDIF
+
+   RETURN cPathTarget
+
+STATIC FUNCTION FN_ToArray( cPath, /* @ */ cFileName  )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cPath, @cDir, @cName, @cExt )
+
+   IF ! Empty( cName ) .OR. ! Empty( cExt )
+      cFileName := cName + cExt
+   ENDIF
+
+   RETURN hb_ATokens( cDir, hb_osPathSeparator() )
+
+STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
+   LOCAL cDir
+   LOCAL tmp
+
+   DEFAULT nFrom      TO 1
+   DEFAULT nTo        TO Len( aPath )
+
+   IF nFrom > Len( aPath ) .OR. nTo < 1
+      RETURN ""
+   ENDIF
+
+   DEFAULT cDirPrefix TO ""
+
+   IF nFrom < 1
+      nFrom := 1
+   ENDIF
+
+   IF nTo > Len( aPath )
+      nTo := Len( aPath )
+   ENDIF
+
+   cDir := ""
+   FOR tmp := nFrom TO nTo
+      cDir += aPath[ tmp ] + hb_osPathSeparator()
+   NEXT
+
+   RETURN hb_FNameMerge( DirDelPathSep( DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;

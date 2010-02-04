@@ -3,8 +3,9 @@
  */
 
 #include "common.ch"
+#include "simpleio.ch"
 
-Function Main()
+FUNCTION Main()
    LOCAL cDir, cName
    LOCAL cDBName
    LOCAL nDialect := 1
@@ -19,26 +20,26 @@ Function Main()
    hb_FNameSplit( hb_argv( 0 ), @cDir, @cName, NIL )
    cDBName := hb_FNameMerge( cDir, cName, ".gdb" )
 
-   if hb_FileExists( cDBName )
-       FErase( cDBName )
-   endif
+   IF hb_FileExists( cDBName )
+      FErase( cDBName )
+   ENDIF
 
-   ? FBCreateDB( cDBName, 'sysdba', 'masterkey', 1024, 'ASCII', nDialect )
+   ? FBCreateDB( cDBName, "sysdba", "masterkey", 1024, "ASCII", nDialect )
 
    /* Connect rdbms */
    db := FBConnect( "127.0.0.1:" + cDBName, "sysdba", "masterkey" )
 
-   if ISNUMBER( db )
-      ? 'Error:', FBError( db )
-      quit
-   endif
+   IF ISNUMBER( db )
+      ? "Error:", FBError( db )
+      QUIT
+   ENDIF
 
-   ? FBExecute( db, 'sldjfs;ldjs;djf', nDialect )
+   ? FBExecute( db, "sldjfs;ldjs;djf", nDialect )
 
    ? FBClose( db )
 
    trans := FBStartTransaction( db )
-   FBQuery( db, 'create table teste (code smallint)', nDialect, trans )
+   FBQuery( db, "create table teste (code smallint)", nDialect, trans )
    FBCommit( trans )
 
 
@@ -60,23 +61,23 @@ Function Main()
    num_cols := qry[ 4 ]
    columns := qry[ 6 ]
 
-   For x := 1 to num_cols
+   FOR x := 1 TO num_cols
       ? x, "> "
-      For y := 1 to len( columns[ x ] )
-          ?? columns[ x, y ], ' '
-      Next
-   Next
+      FOR y := 1 TO Len( columns[ x ] )
+         ?? columns[ x, y ], " "
+      NEXT
+   NEXT
 
-   ? '---'
+   ? "---"
 
-   do while ( fetch_stat := FBFetch( qry ) ) == 0
+   DO WHILE ( fetch_stat := FBFetch( qry ) ) == 0
       ? fetch_stat
-      for x := 1 to num_cols
-          ?? FBGetData( qry, x ), ', '
-      next
-   enddo
+      FOR x := 1 TO num_cols
+         ?? FBGetData( qry, x ), ", "
+      NEXT
+   ENDDO
 
-   ? 'Fetch code:', fetch_stat
+   ? "Fetch code:", fetch_stat
 
    ? "Status Free sql: ", FBFree( qry )
 
@@ -84,4 +85,4 @@ Function Main()
    /* Close connection with rdbms */
    ? "Status Fechar Database: ", FBClose( db )
 
-   Return Nil
+   RETURN NIL
