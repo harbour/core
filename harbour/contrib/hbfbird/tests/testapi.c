@@ -20,7 +20,7 @@
 
 #define USER     "sysdba"
 #define PASSWORD "masterkey"
-#define DATABASE "192.168.1.33:d:\\fontes\\lixo\\test.gdb"
+#define DATABASE "127.0.0.1:d:\\fontes\\lixo\\test.gdb"
 #define ERREXIT(status, rc)   {isc_print_status(status); return rc;}
 #define MAX_BUFFER          1024
 

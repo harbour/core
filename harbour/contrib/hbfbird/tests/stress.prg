@@ -29,9 +29,9 @@ FUNCTION Main()
       QUIT
    ENDIF
 
-   IF oServer:TableExists("test")
-      ? oServer:Execute("DROP TABLE Test")
-      ? oServer:Execute("DROP DOMAIN boolean_field")
+   IF oServer:TableExists( "test" )
+      ? oServer:Execute( "DROP TABLE Test" )
+      ? oServer:Execute( "DROP DOMAIN boolean_field" )
    ENDIF
 
    ? "Creating domain for boolean fields..."
@@ -51,77 +51,77 @@ FUNCTION Main()
    cQuery += "     Creation Date, "
    cQuery += "     Description blob sub_type 1 segment size 40 ) "
 
-   ? oServer:Execute(cQuery)
+   ? "CREATE TABLE:", oServer:Execute( cQuery )
 
-   oQuery := oServer:Query("SELECT code, dept, name, sales, salary, creation FROM test")
+   oQuery := oServer:Query( "SELECT code, dept, name, sales, salary, creation FROM test" )
 
    oServer:StartTransaction()
 
    FOR i := 1 TO 10000
-      @ 15,0 say "Inserting values...." + str(i)
+      @ 15, 0 say "Inserting values...." + hb_ntos( i )
 
       oRow := oQuery:Blank()
 
       oRow:Fieldput(1, i)
       oRow:Fieldput(2, i+1)
-      oRow:Fieldput(3, "DEPARTMENT NAME " + strzero(i) )
-      oRow:Fieldput(4, (mod(i,10) == 0) )
+      oRow:Fieldput(3, "DEPARTMENT NAME " + strzero( i ) )
+      oRow:Fieldput(4, (i % 10) == 0) )
       oRow:Fieldput(5, 3000 + i )
       oRow:fieldput(6, Date() )
 
-      oServer:Append(oRow)
+      oServer:Append( oRow )
 
-      IF mod(i,100) == 0
+      IF i % 100 == 0
          oServer:Commit()
          oServer:StartTransaction()
       ENDIF
    NEXT
 
    FOR i := 5000 TO 7000
-      @ 16,0 say "Deleting values...." + str(i)
+      @ 16,0 say "Deleting values...." + str( i )
 
       oRow := oQuery:Blank()
-      oServer:Delete(oRow, "code = " + str(i))
+      oServer:Delete( oRow, "code = " + str( i ) )
 
-      IF mod(i,100) == 0
+      IF i % 100 == 0
          oServer:Commit()
          oServer:StartTransaction()
       ENDIF
    NEXT
 
    FOR i := 2000 TO 3000
-      @ 17,0 say "Updating values...." + str(i)
+      @ 17,0 say "Updating values...." + str( i )
 
       oRow := oQuery:Blank()
-      oRow:Fieldput(5, 4000+i)
-      oServer:update(oRow, "code = " + str(i))
+      oRow:Fieldput( 5, 4000 + i )
+      oServer:update( oRow, "code = " + str( i ) )
 
-      IF mod(i,100) == 0
+      IF i % 100 == 0
          oServer:Commit()
          oServer:StartTransaction()
       ENDIF
    NEXT
 
-   oQuery := oServer:Query("SELECT sum(salary) sum_salary FROM test WHERE code between 1 and 4000")
+   oQuery := oServer:Query( "SELECT sum(salary) sum_salary FROM test WHERE code between 1 and 4000" )
 
    IF ! oQuery:Neterr()
       oQuery:Fetch()
-      @ 18,0 say "Sum values...." + Str(oQuery:Fieldget(1))
+      @ 18,0 say "Sum values...." + Str( oQuery:Fieldget( 1 ) )
       oQuery:Destroy()
    ENDIF
 
    x := 0
    FOR i := 1 TO 4000
-      oQuery := oServer:Query("SELECT * FROM test WHERE code = " + str(i))
+      oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + str( i ) )
 
       IF ! oQuery:Neterr()
          oQuery:Fetch()
          oRow := oQuery:getrow()
 
          oQuery:destroy()
-         x += oRow:fieldget(oRow:fieldpos("salary"))
+         x += oRow:fieldget( oRow:fieldpos( "salary" ) )
 
-         @ 19,0 say "Sum values...." + str(x)
+         @ 19,0 say "Sum values...." + str( x )
       ENDIF
    NEXT
 

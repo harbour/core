@@ -550,6 +550,7 @@ METHOD Refresh() CLASS TFbQuery
    IF ISARRAY( qry )
       ::numcols := qry[ 4 ]
 
+      /* TOFIX: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
       ::aStruct := StructConvert( qry[ 6 ], ::db, ::dialect )
 
       ::lError := .F.
@@ -937,7 +938,7 @@ STATIC FUNCTION DataToSql( xField )
 
    RETURN NIL
 
-STATIC FUNCTION StructConvert( aStru, db, dialect)
+STATIC FUNCTION StructConvert( aStru, db, dialect )
 
    LOCAL aNew := {}
    LOCAL cField
