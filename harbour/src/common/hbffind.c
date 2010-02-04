@@ -7,8 +7,8 @@
  * Harbour File Find API (C level)
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
- *                     Viktor Szakats (harbour.01 syenar.hu)
- *                     Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 2001-2002 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2001-2002 Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

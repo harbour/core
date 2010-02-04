@@ -393,7 +393,7 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
 METHOD Refresh() CLASS TMySQLQuery
 
    // free present result handle
-   mysql_free_result( ::nResultHandle )
+   ::nResultHandle := NIL
 
    ::lError := .F.
 
@@ -608,7 +608,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 // Free result handle and associated resources
 METHOD Destroy() CLASS TMySQLQuery
 
-   mysql_free_result( ::nResultHandle )
+   ::nResultHandle := NIL
 
    RETURN Self
 
@@ -1254,7 +1254,7 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
 METHOD Refresh() CLASS TMySQLTABLE
 
    // free present result handle
-   mysql_free_result( ::nResultHandle )
+   ::nResultHandle := NIL
 
    ::lError := .F.
 
@@ -1371,7 +1371,7 @@ METHOD New( cServer, cUser, cPassword, nPort ) CLASS TMySQLServer
    RETURN Self
 
 METHOD Destroy() CLASS TMySQLServer
-   mysql_close( ::nSocket )
+   ::nSocket := NIL
    RETURN Self
 
 METHOD sql_commit() CLASS TMySQLServer
@@ -1688,8 +1688,6 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
             AAdd( aStruct, aSField )
          ENDIF
       NEXT
-
-      mysql_free_result( nRes )
 
    ENDIF*/
 
