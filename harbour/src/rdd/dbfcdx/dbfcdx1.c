@@ -1364,6 +1364,7 @@ static HB_BOOL hb_cdxIndexUnLockWrite( LPCDXINDEX pIndex )
          pIndex->fFlush = HB_TRUE;
          pIndex->fChanged = HB_FALSE;
       }
+      hb_fileFlush( pIndex->pFile, TRUE );
 #ifdef HB_CDX_DBGCODE
       if( ! pIndex->WrLck || pIndex->RdLck )
          hb_errInternal( 9108, "hb_cdxIndexUnLockWrite: unlock error (*)", NULL, NULL );
@@ -1431,6 +1432,7 @@ static void hb_cdxIndexDiscardBuffers( LPCDXINDEX pIndex )
          pTag->CurKey->rec = 0;
       pTag = pTag->pNext;
    }
+   hb_fileFlush( pIndex->pFile, FALSE );
 }
 
 /*

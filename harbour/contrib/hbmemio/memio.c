@@ -646,6 +646,14 @@ HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, 
 }
 
 
+HB_MEMFS_EXPORT void hb_memfsFlush( HB_FHANDLE hFile, HB_BOOL fDirty )
+{
+   HB_SYMBOL_UNUSED( hFile );
+   HB_SYMBOL_UNUSED( fDirty );
+   return;
+}
+
+
 HB_MEMFS_EXPORT void hb_memfsCommit( HB_FHANDLE hFile )
 {
    HB_SYMBOL_UNUSED( hFile );
@@ -808,6 +816,12 @@ static HB_FOFFSET s_fileSize( PHB_FILE pFile )
 }
 
 
+static void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
+{
+   hb_memfsFlush( pFile->hFile, fDirty );
+}
+
+
 static void s_fileCommit( PHB_FILE pFile )
 {
    hb_memfsCommit( pFile->hFile );
@@ -833,6 +847,7 @@ static const HB_FILE_FUNCS s_fileFuncs =
    s_fileWriteAt,
    s_fileTruncAt,
    s_fileSize,
+   s_fileFlush,
    s_fileCommit,
    s_fileHandle
 };

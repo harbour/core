@@ -531,7 +531,7 @@ typedef struct _HB_COMMON
 {
    /* common to macro compiler members */
    int    mode;               /* HB_MODE_* */
-   ULONG  supported;          /* various flags for supported capabilities */
+   int    supported;          /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 }
 HB_COMMON, * HB_COMMON_PTR;
@@ -558,7 +558,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 {
    /* common to compiler members */
    int    mode;            /* HB_MODE_* */
-   ULONG  supported;       /* various flags for supported capabilities */
+   int    supported;       /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 
    /* macro compiler only members */
@@ -635,7 +635,7 @@ typedef struct _HB_COMP
 {
    /* common to macro compiler members */
    int    mode;            /* HB_MODE_* */
-   ULONG  supported;       /* various flags for supported capabilities */
+   int    supported;       /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 
    /* compiler only members */

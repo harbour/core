@@ -1246,6 +1246,7 @@ static void hb_nsxDiscardBuffers( LPNSXINDEX pIndex )
       pIndex->lpTags[ i ]->stackLevel = 0;
       pIndex->lpTags[ i ]->CurKeyOffset = 0;
    }
+   hb_fileFlush( pIndex->pFile, FALSE );
 }
 
 /*
@@ -2277,6 +2278,7 @@ static HB_BOOL hb_nsxIndexUnLockWrite( LPNSXINDEX pIndex )
    }
    else
    {
+      hb_fileFlush( pIndex->pFile, TRUE );
       pIndex->fValidHeader = HB_FALSE;
       fOK = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
                                FL_UNLOCK, &pIndex->ulLockPos );

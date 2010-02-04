@@ -98,7 +98,7 @@ HB_EXTERN_BEGIN
  */
 extern void hb_macroError( int iError, HB_COMP_DECL );
 extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
-extern ULONG hb_macroSetMacro( HB_BOOL bSet, ULONG ulFlag );
+extern int hb_macroSetMacro( HB_BOOL fSet, int flag );
 extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
 extern HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro );
 extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );

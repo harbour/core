@@ -1176,6 +1176,12 @@ static HB_FOFFSET s_fileSize( PHB_FILE pFile )
    return llOffset;
 }
 
+void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
+{
+   HB_SYMBOL_UNUSED( pFile );
+   HB_SYMBOL_UNUSED( fDirty );
+}
+
 static void s_fileCommit( PHB_FILE pFile )
 {
    if( s_fileConLock( pFile->conn ) )
@@ -1211,6 +1217,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileWriteAt,
       s_fileTruncAt,
       s_fileSize,
+      s_fileFlush,
       s_fileCommit,
       s_fileHandle
    };

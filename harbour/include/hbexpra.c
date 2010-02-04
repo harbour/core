@@ -60,12 +60,13 @@ ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pE
 {
    ULONG ulLen = 0;
 
-   if( pEval && ((pExpr->ExprType == HB_ET_LIST) || (pExpr->ExprType == HB_ET_ARGLIST)) )
+   if( pEval && ( pExpr->ExprType == HB_ET_LIST ||
+                  pExpr->ExprType == HB_ET_ARGLIST ) )
    {
       pExpr = pExpr->value.asList.pExprList;
       while( pExpr )
       {
-         (pEval)( HB_COMP_PARAM, (void *) pExpr );
+         ( pEval )( HB_COMP_PARAM, ( void * ) pExpr );
          pExpr = pExpr->pNext;
          ++ulLen;
       }
@@ -80,26 +81,26 @@ ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2
    if( !pEval )
       return ulLen;
 
-   if( (pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST)
+   if( ( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST )
        &&
-       (pExpr2->ExprType == HB_ET_LIST || pExpr2->ExprType == HB_ET_ARGLIST) )
+       ( pExpr2->ExprType == HB_ET_LIST || pExpr2->ExprType == HB_ET_ARGLIST ) )
    {
       pExpr1 = pExpr1->value.asList.pExprList;
       pExpr2 = pExpr2->value.asList.pExprList;
       while( pExpr1 && pExpr2 )
       {
-         (pEval)( HB_COMP_PARAM, (void *) pExpr1, (void *)pExpr2 );
+         ( pEval )( HB_COMP_PARAM, ( void * ) pExpr1, ( void * ) pExpr2 );
          pExpr1 = pExpr1->pNext;
          pExpr2 = pExpr2->pNext;
          ++ulLen;
       }
    }
-   else if( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST)
+   else if( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST )
    {
       pExpr1 = pExpr1->value.asList.pExprList;
       while( pExpr1 )
       {
-         (pEval)( HB_COMP_PARAM, (void *) pExpr1, (void *)pExpr2 );
+         ( pEval )( HB_COMP_PARAM, ( void * ) pExpr1, ( void * ) pExpr2 );
          pExpr1 = pExpr1->pNext;
          ++ulLen;
       }
@@ -179,7 +180,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                HB_COMP_EXPR_DELETE( pParms );
                HB_COMP_EXPR_DELETE( pName );
                return hb_compExprNewMethodCall( hb_compExprNewSend(
-                        hb_compExprNewVar( szName, HB_COMP_PARAM ),
+                                    hb_compExprNewVar( szName, HB_COMP_PARAM ),
                                     szMessage, NULL, HB_COMP_PARAM ), NULL );
             }
          }
@@ -194,6 +195,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
+         if( !HB_SUPPORT_HARBOUR )
+            pParms = HB_EXPR_USE( pParms, HB_EA_REDUCE );
 #ifdef HB_MACRO_SUPPORT
          pEval = hb_compExprNewMethodCall(
             hb_macroExprNewSend( pParms->value.asList.pExprList, "EVAL", NULL, HB_COMP_PARAM ),
@@ -215,18 +218,22 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_EXPR_PTR pArg, pNext;
          USHORT uiCount;
 
-         pParms->value.asList.pExprList = HB_EXPR_USE( pParms->value.asList.pExprList, HB_EA_REDUCE );
-         pArg = pParms->value.asList.pExprList;
-
-         /* When -kc switch is used expression list is not stripped
-          * in reduce operation
+         /* pArg has to be reduced to eliminate possible problems with
+          * cloned expressions in SETGET block
           */
-         if( !HB_SUPPORT_HARBOUR && pArg->ExprType == HB_ET_LIST )
+         if( HB_SUPPORT_HARBOUR )
          {
+            pParms = HB_EXPR_USE( pParms, HB_EA_REDUCE );
+            pArg = pParms->value.asList.pExprList;
+         }
+         else
+         {
+            pArg = pParms->value.asList.pExprList;
             pNext = pArg->pNext;
             pArg->pNext = NULL;
-            pArg = pParms->value.asList.pExprList = hb_compExprListStrip( pArg, HB_COMP_PARAM );
+            pArg = hb_compExprListStrip( HB_EXPR_USE( pArg, HB_EA_REDUCE ), HB_COMP_PARAM );
             pArg->pNext = pNext;
+            pParms->value.asList.pExprList = pArg;
          }
 
          if( pArg->ExprType == HB_ET_ARRAYAT )
@@ -282,7 +289,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             HB_COMP_EXPR_CLEAR( pArg );
             /* Create an array with index elements
              */
-            pIndex = HB_EXPR_PCODE1( hb_compExprNewArray, hb_compExprNewList( pIndex, HB_COMP_PARAM ) );
+            pIndex = hb_compExprNewArray( hb_compExprNewList( pIndex, HB_COMP_PARAM ), HB_COMP_PARAM );
             /* The array with index elements have to be the sixth argument
              * of __GETA() call
              */
@@ -403,7 +410,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                {
                   /* Undeclared variable name - create a set/get codeblock
                    * at runtime
-                  */
+                   */
                   HB_COMP_EXPR_FREE( pArg );
                   pArg = hb_compExprNewNil( HB_COMP_PARAM );
                }
@@ -435,6 +442,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
    {
       /* My&var.1() executed by macro compiler
        */
+      /* NOTE: direct type change */
       pName->ExprType = HB_ET_FUNNAME;
    }
 #endif
@@ -597,9 +605,9 @@ static void hb_compExprCheckStaticListInitializers( HB_EXPR_PTR pLeftExpr, HB_EX
           *       new one - this will break the linked list of expressions.
           *       (classical case of replacing an item in a linked list)
           */
-         HB_EXPR_PTR pNext = (*pExpr)->pNext;   /* store next expression in case the current will be reduced */
+         HB_EXPR_PTR pNext = ( *pExpr )->pNext; /* store next expression in case the current will be reduced */
          *pExpr = hb_compExprListStrip( *pExpr, HB_COMP_PARAM );
-         (*pExpr)->pNext = pNext;               /* restore the link to next expression */
+         ( *pExpr )->pNext = pNext;             /* restore the link to next expression */
       }
 
       if( (*pExpr)->ExprType == HB_ET_ARRAY ||
@@ -611,7 +619,7 @@ static void hb_compExprCheckStaticListInitializers( HB_EXPR_PTR pLeftExpr, HB_EX
       {
          hb_compExprCheckStaticInitializer( pLeftExpr, *pExpr, HB_COMP_PARAM );
       }
-      pExpr = &(*pExpr)->pNext;
+      pExpr = &( *pExpr )->pNext;
    }
 }
 
@@ -698,8 +706,7 @@ HB_EXPR_PTR hb_macroExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroExprGenPush(%i)", pExpr->ExprType));
 
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
-   HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-   return pExpr;
+   return HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
 }
 
 /* Generates pcode to pop an expressions
@@ -723,8 +730,7 @@ HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenPush(%i)", pExpr->ExprType));
 
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
-   HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-   return pExpr;
+   return HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
 }
 
 /* Generates pcode to pop an expressions

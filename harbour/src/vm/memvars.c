@@ -100,7 +100,7 @@ struct mv_memvarArray_info
    int iScope;
 };
 
-static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue );
+static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM pValue );
 
 static PHB_ITEM hb_memvarValueNew( void )
 {
@@ -623,18 +623,18 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
  * pMemvar - an item that stores the name of variable - it can be either
  *          the HB_IT_SYMBOL (if created by PUBLIC statement) or HB_IT_STRING
  *          (if created by direct call to __MVPUBLIC function)
- * bScope - the scope of created variable - if a variable with the same name
+ * iScope - the scope of created variable - if a variable with the same name
  *          exists already then it's value is hidden by new variable with
  *          passed scope
  * pValue - optional item used to initialize the value of created variable
  *          or NULL
  *
  */
-void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
+void hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue )
 {
    PHB_DYNS pDynVar = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, iScope, pValue));
 
    /* find dynamic symbol or creeate one */
    if( HB_IS_SYMBOL( pMemvar ) )
@@ -644,16 +644,16 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
 
    if( pDynVar )
-      hb_memvarCreateFromDynSymbol( pDynVar, bScope, pValue );
+      hb_memvarCreateFromDynSymbol( pDynVar, iScope, pValue );
    else
       hb_errRT_BASE( EG_ARG, 3008, NULL, "&", HB_ERR_ARGS_BASEPARAMS );
 }
 
-static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
+static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM pValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, bScope, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, iScope, pValue));
 
-   if( bScope & VS_PUBLIC )
+   if( iScope & VS_PUBLIC )
    {
       /* If the variable with the same name exists already
        * then the current value have to be unchanged

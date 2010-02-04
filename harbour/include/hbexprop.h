@@ -65,11 +65,6 @@ typedef  HB_EXPR_FUNC( HB_EXPR_FUNC_ );
 typedef  HB_EXPR_FUNC_ *HB_EXPR_FUNC_PTR;
 
 typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DECL );
-#define HB_EXPR_PCODE0( action ) action( HB_COMP_PARAM )
-#define HB_EXPR_PCODE1( action, p1 ) action( (p1), HB_COMP_PARAM )
-#define HB_EXPR_PCODE2( action, p1, p2 ) action( (p1), (p2), HB_COMP_PARAM )
-#define HB_EXPR_PCODE3( action, p1, p2, p3 ) action( (p1), (p2), (p3), HB_COMP_PARAM )
-#define HB_EXPR_PCODE4( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), HB_COMP_PARAM )
 
 #if defined( HB_MACRO_SUPPORT )
 #define hb_comp_ExprTable     hb_macro_ExprTable

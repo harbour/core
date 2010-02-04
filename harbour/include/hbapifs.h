@@ -337,6 +337,7 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** ps
       ULONG       (* WriteAt ) ( PHB_FILE pFile, const void * buffer, ULONG ulSize, HB_FOFFSET llOffset );
       HB_BOOL     (* TruncAt ) ( PHB_FILE pFile, HB_FOFFSET llOffset );
       HB_FOFFSET  (* Size ) ( PHB_FILE pFile );
+      void        (* Flush ) ( PHB_FILE pFile, HB_BOOL fDirty );
       void        (* Commit ) ( PHB_FILE pFile );
       HB_FHANDLE  (* Handle ) ( PHB_FILE pFile );
    }
@@ -366,6 +367,7 @@ extern HB_EXPORT ULONG        hb_fileReadAt( PHB_FILE pFile, void * buffer, ULON
 extern HB_EXPORT ULONG        hb_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize, HB_FOFFSET llOffset );
 extern HB_EXPORT HB_BOOL      hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset );
 extern HB_EXPORT HB_FOFFSET   hb_fileSize( PHB_FILE pFile );
+extern HB_EXPORT void         hb_fileFlush( PHB_FILE pFile, HB_BOOL fDirty );
 extern HB_EXPORT void         hb_fileCommit( PHB_FILE pFile );
 extern HB_EXPORT HB_FHANDLE   hb_fileHandle( PHB_FILE pFile );
 

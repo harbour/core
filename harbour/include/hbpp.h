@@ -62,6 +62,7 @@ HB_EXTERN_BEGIN
 #define HB_BLOCK_LATEEVAL  2
 #define HB_BLOCK_VPARAMS   4
 #define HB_BLOCK_EXT       8
+#define HB_BLOCK_REDUCE   16
 
 /* #pragma {__text,__stream,__cstream}|functionOut|functionEnd|functionStart */
 #define HB_PP_STREAM_OFF      0 /* standard preprocessing */

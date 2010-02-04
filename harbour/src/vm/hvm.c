@@ -127,7 +127,7 @@ static void    hb_vmInstring( void );        /* check whether string 1 is contai
 static void    hb_vmForTest( void );         /* test for end condition of for */
 static void    hb_vmSeqBlock( void );        /* set begin sequence WITH codeblock */
 static void    hb_vmWithObjectStart( void ); /* prepare WITH OBJECT block */
-static void    hb_vmEnumStart( BYTE nVars, BYTE nDescend ); /* prepare FOR EACH loop */
+static void    hb_vmEnumStart( int nVars, int nDescend ); /* prepare FOR EACH loop */
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
 static void    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
@@ -159,8 +159,8 @@ static void       hb_vmSwapAlias( void );           /* swaps items on the eval s
 
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
-static void    hb_vmFrame( USHORT usLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
-static void    hb_vmVFrame( USHORT usLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
+static void    hb_vmFrame( USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and params suplied */
+static void    hb_vmVFrame( USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
 static void    hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode ); /* mark thread static variables */
@@ -193,7 +193,7 @@ static void    hb_vmPushVParams( void );        /* pusges variable parameters */
 static void    hb_vmPushUnRef( void );          /* push the unreferenced latest value on the stack */
 static void    hb_vmDuplicate( void );          /* duplicates the latest value on the stack */
 static void    hb_vmDuplUnRef( void );          /* duplicates the latest value on the stack and unref the source one */
-static void    hb_vmSwap( BYTE bCount );        /* swap bCount+1 time two items on HVM stack starting from the most top one */
+static void    hb_vmSwap( int iCount );        /* swap bCount+1 time two items on HVM stack starting from the most top one */
 
 /* Pop */
 static HB_BOOL hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
@@ -212,9 +212,9 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex ); /* create object index reference */
 
 #ifndef HB_NO_DEBUG
-static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
-static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
-static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
+static void    hb_vmLocalName( USHORT uiLocal, const char * szLocalName ); /* locals and parameters index and name information for the debugger */
+static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
+static void    hb_vmModuleName( const char * szModuleName ); /* PRG and function name information for the debugger */
 
 static void    hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame );
 static void    hb_vmDebuggerExit( HB_BOOL fRemove );      /* shuts down the debugger */
@@ -1520,7 +1520,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ENUMSTART:
-            hb_vmEnumStart( pCode[ 1 ], pCode[ 2 ] );
+            hb_vmEnumStart( ( unsigned char ) pCode[ 1 ], ( unsigned char ) pCode[ 2 ] );
             pCode += 3;
             break;
 
@@ -1681,22 +1681,22 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_FRAME:
-            hb_vmFrame( pCode[ 1 ], pCode[ 2 ] );
+            hb_vmFrame( ( unsigned char ) pCode[ 1 ], ( unsigned char ) pCode[ 2 ] );
             pCode += 3;
             break;
 
          case HB_P_VFRAME:
-            hb_vmVFrame( pCode[ 1 ], pCode[ 2 ] );
+            hb_vmVFrame( ( unsigned char ) pCode[ 1 ], ( unsigned char ) pCode[ 2 ] );
             pCode += 3;
             break;
 
          case HB_P_LARGEFRAME:
-            hb_vmFrame( HB_PCODE_MKUSHORT( &pCode[ 1 ] ), pCode[ 3 ] );
+            hb_vmFrame( HB_PCODE_MKUSHORT( &pCode[ 1 ] ), ( unsigned char ) pCode[ 3 ] );
             pCode += 4;
             break;
 
          case HB_P_LARGEVFRAME:
-            hb_vmVFrame( HB_PCODE_MKUSHORT( &pCode[ 1 ] ), pCode[ 3 ] );
+            hb_vmVFrame( HB_PCODE_MKUSHORT( &pCode[ 1 ] ), ( unsigned char ) pCode[ 3 ] );
             pCode += 4;
             break;
 
@@ -1721,7 +1721,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_LOCALNAME:
 #ifndef HB_NO_DEBUG
             hb_vmLocalName( HB_PCODE_MKUSHORT( &pCode[ 1 ] ),
-                            ( char * ) pCode + 3 );
+                            ( const char * ) pCode + 3 );
 #endif
             pCode += 3;
             while( *pCode++ ) {};
@@ -1730,7 +1730,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_STATICNAME:
 #ifndef HB_NO_DEBUG
             hb_vmStaticName( pCode[ 1 ], HB_PCODE_MKUSHORT( &pCode[ 2 ] ),
-                             ( char * ) pCode + 4 );
+                             ( const char * ) pCode + 4 );
 #endif
             pCode += 4;
             while( *pCode++ ) {};
@@ -1738,7 +1738,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MODULENAME:
 #ifndef HB_NO_DEBUG
-            hb_vmModuleName( ( char * ) pCode + 1 );
+            hb_vmModuleName( ( const char * ) pCode + 1 );
 #endif
             pCode++;
             while( *pCode++ ) {};
@@ -1968,7 +1968,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Jumps */
 
          case HB_P_JUMPNEAR:
-            pCode += (signed char) pCode[ 1 ];
+            pCode += ( signed char ) pCode[ 1 ];
             break;
 
          case HB_P_JUMP:
@@ -1981,7 +1981,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_JUMPFALSENEAR:
             if( ! hb_vmPopLogical() )
-               pCode += (signed char) pCode[ 1 ];
+               pCode += ( signed char ) pCode[ 1 ];
             else
                pCode += 2;
             break;
@@ -2002,7 +2002,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_JUMPTRUENEAR:
             if( hb_vmPopLogical() )
-               pCode += (signed char) pCode[ 1 ];
+               pCode += ( signed char ) pCode[ 1 ];
             else
                pCode += 2;
             break;
@@ -2121,16 +2121,16 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHDOUBLE:
             hb_vmPushDoubleConst( HB_PCODE_MKDOUBLE( &pCode[ 1 ] ),
-                                  ( int ) * ( UCHAR * ) &pCode[ 1 + sizeof( double ) ],
-                                  ( int ) * ( UCHAR * ) &pCode[ 2 + sizeof( double ) ] );
+                                  ( int ) * ( unsigned char * ) &pCode[ 1 + sizeof( double ) ],
+                                  ( int ) * ( unsigned char * ) &pCode[ 2 + sizeof( double ) ] );
             pCode += 3 + sizeof( double );
             break;
 
          case HB_P_PUSHSTRSHORT:
             if( bDynCode )
-               hb_vmPushString( ( char * ) pCode + 2, ( HB_SIZE ) pCode[ 1 ] - 1 );
+               hb_vmPushString( ( const char * ) pCode + 2, ( HB_SIZE ) pCode[ 1 ] - 1 );
             else
-               hb_vmPushStringPcode( ( char * ) pCode + 2, ( HB_SIZE ) pCode[ 1 ] - 1 );
+               hb_vmPushStringPcode( ( const char * ) pCode + 2, ( HB_SIZE ) pCode[ 1 ] - 1 );
             pCode += 2 + pCode[ 1 ];
             break;
 
@@ -2138,9 +2138,9 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             if( bDynCode )
-               hb_vmPushString( ( char * ) pCode + 3, uiSize - 1 );
+               hb_vmPushString( ( const char * ) pCode + 3, uiSize - 1 );
             else
-               hb_vmPushStringPcode( ( char * ) pCode + 3, uiSize - 1 );
+               hb_vmPushStringPcode( ( const char * ) pCode + 3, uiSize - 1 );
             pCode += 3 + uiSize;
             break;
          }
@@ -2149,9 +2149,9 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             HB_SIZE ulSize = HB_PCODE_MKUINT24( &pCode[ 1 ] );
             if( bDynCode )
-               hb_vmPushString( ( char * ) pCode + 4, ulSize - 1 );
+               hb_vmPushString( ( const char * ) pCode + 4, ulSize - 1 );
             else
-               hb_vmPushStringPcode( ( char * ) pCode + 4, ulSize - 1 );
+               hb_vmPushStringPcode( ( const char * ) pCode + 4, ulSize - 1 );
             pCode += 4 + ulSize;
             break;
          }
@@ -2159,7 +2159,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHSTRHIDDEN:
          {
             HB_SIZE ulSize = ( HB_SIZE ) HB_PCODE_MKUSHORT( &pCode[ 2 ] );
-            char * szText = hb_compDecodeString( pCode[ 1 ], ( char * ) pCode + 4, &ulSize );
+            char * szText = hb_compDecodeString( pCode[ 1 ], ( const char * ) pCode + 4, &ulSize );
             hb_itemPutCLPtr( hb_stackAllocItem(), szText, ulSize );
             pCode += ( 4 + ulSize );
             break;
@@ -2198,7 +2198,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * +7    -> start of table with referenced local variables
              */
             HB_SIZE ulSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
-            hb_vmPushBlock( ( const BYTE * ) ( pCode + 3 ), pSymbols, bDynCode ? ulSize - 7 : 0 );
+            hb_vmPushBlock( pCode + 3, pSymbols, bDynCode ? ulSize - 7 : 0 );
             pCode += ulSize;
             break;
          }
@@ -2211,7 +2211,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * +8       -> start of table with referenced local variables
              */
             HB_SIZE ulSize = HB_PCODE_MKUINT24( &pCode[ 1 ] );
-            hb_vmPushBlock( ( const BYTE * ) ( pCode + 4 ), pSymbols, bDynCode ? ulSize - 8 : 0 );
+            hb_vmPushBlock( pCode + 4, pSymbols, bDynCode ? ulSize - 8 : 0 );
             pCode += ulSize;
             break;
          }
@@ -2221,7 +2221,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * +1    -> size of codeblock
              */
             HB_SIZE ulSize = pCode[ 1 ];
-            hb_vmPushBlockShort( ( const BYTE * ) ( pCode + 2 ), pSymbols, bDynCode ? ulSize - 2 : 0 );
+            hb_vmPushBlockShort( pCode + 2, pSymbols, bDynCode ? ulSize - 2 : 0 );
             pCode += ulSize;
             break;
          }
@@ -2340,7 +2340,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_SWAP:
-            hb_vmSwap( pCode[ 1 ] );
+            hb_vmSwap( ( unsigned char ) pCode[ 1 ] );
             pCode += 2;
             break;
 
@@ -2613,7 +2613,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * +5    -> pcode bytes
              */
             HB_SIZE ulSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
-            hb_vmPushMacroBlock( ( BYTE * ) ( pCode + 5 ), ulSize - 5,
+            hb_vmPushMacroBlock( pCode + 5, ulSize - 5,
                                  HB_PCODE_MKUSHORT( &pCode[ 3 ] ) );
             pCode += ulSize;
             break;
@@ -2631,7 +2631,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * +6       -> pcode bytes
              */
             HB_SIZE ulSize = HB_PCODE_MKUINT24( &pCode[ 1 ] );
-            hb_vmPushMacroBlock( ( BYTE * ) ( pCode + 6 ), ulSize - 6,
+            hb_vmPushMacroBlock( pCode + 6, ulSize - 6,
                                  HB_PCODE_MKUSHORT( &pCode[ 4 ] ) );
             pCode += ulSize;
             break;
@@ -2686,7 +2686,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
 
-            hb_vmPushString( ( char * ) ( pCode + 3 ), uiSize - 1 );
+            hb_vmPushString( ( const char * ) ( pCode + 3 ), uiSize - 1 );
             pCode += 3 + uiSize;
             break;
          }
@@ -2695,7 +2695,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             HB_SIZE ulSize = HB_PCODE_MKUINT24( &pCode[ 1 ] );
 
-            hb_vmPushString( ( char * ) ( pCode + 3 ), ulSize - 1 );
+            hb_vmPushString( ( const char * ) ( pCode + 3 ), ulSize - 1 );
             pCode += 4 + ulSize;
             break;
          }
@@ -4543,7 +4543,7 @@ static void hb_vmEnumReference( PHB_ITEM pBase )
  * -1 -> <the reference to enumerate variable>
  */
  /* Test to check the start point of the FOR EACH loop */
-static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
+static void hb_vmEnumStart( int nVars, int nDescend )
 {
    HB_STACK_TLS_PRELOAD
    HB_BOOL fStart = HB_TRUE;
@@ -4867,8 +4867,7 @@ static const BYTE * hb_vmSwitch( const BYTE * pCode, USHORT casesCnt )
                {
                   /*fFound = hb_itemStrCmp( pItem1, pItem2, bExact );*/
                   fFound = ( HB_SIZE ) pCode[ 1 ] - 1 == pSwitch->item.asString.length &&
-                           memcmp( pSwitch->item.asString.value,
-                                   ( char * ) &pCode[ 2 ],
+                           memcmp( pSwitch->item.asString.value, &pCode[ 2 ],
                                    pSwitch->item.asString.length ) == 0;
                }
                pCode += 2 + pCode[ 1 ];
@@ -6167,7 +6166,7 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
    s_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, NULL );
 }
 
-static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
+static void hb_vmLocalName( USHORT uiLocal, const char * szLocalName ) /* locals and parameters index and name information for the debugger */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6177,7 +6176,7 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
       s_pFunDbgEntry( HB_DBG_LOCALNAME, 0, szLocalName, uiLocal, NULL );
 }
 
-static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ) /* statics vars information for the debugger */
+static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ) /* statics vars information for the debugger */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6189,7 +6188,7 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
       s_pFunDbgEntry( HB_DBG_STATICNAME, 0, szStaticName, uiStatic, ( PHB_ITEM ) hb_stackGetStaticsBase() );
 }
 
-static void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
+static void hb_vmModuleName( const char * szModuleName ) /* PRG and function name information for the debugger */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmModuleName(%s)", szModuleName));
 
@@ -6202,13 +6201,13 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
 }
 #endif
 
-static void hb_vmFrame( USHORT usLocals, BYTE bParams )
+static void hb_vmFrame( USHORT usLocals, unsigned char ucParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pBase;
    int iTotal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmFrame(%d, %d)", (int) usLocals, (int) bParams));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmFrame(%d, %d)", (int) usLocals, (int) ucParams));
 
    pBase = hb_stackBaseItem();
 
@@ -6216,16 +6215,16 @@ static void hb_vmFrame( USHORT usLocals, BYTE bParams )
    /* This old code which clears additional parameters to make space for
     * local variables without updating pBase->item.asSymbol.paramdeclcnt
     */
-   iTotal = pBase->item.asSymbol.paramcnt - bParams;
+   iTotal = pBase->item.asSymbol.paramcnt - ucParams;
    if( iTotal > 0 )
    {
-      pBase->item.asSymbol.paramcnt = bParams;
+      pBase->item.asSymbol.paramcnt = ucParams;
       do
          hb_itemClear( hb_stackItemFromTop( -iTotal ) );
       while( --iTotal > 0 );
    }
 
-   iTotal = usLocals + bParams;
+   iTotal = usLocals + ucParams;
    if( iTotal )
    {
       iTotal -= pBase->item.asSymbol.paramcnt;
@@ -6233,9 +6232,9 @@ static void hb_vmFrame( USHORT usLocals, BYTE bParams )
          hb_vmPushNil();
    }
 #else
-   pBase->item.asSymbol.paramdeclcnt = bParams;
+   pBase->item.asSymbol.paramdeclcnt = ucParams;
 
-   iTotal = bParams - pBase->item.asSymbol.paramcnt;
+   iTotal = ucParams - pBase->item.asSymbol.paramcnt;
    if( iTotal < 0 )
       iTotal = 0;
    iTotal += usLocals;
@@ -6249,19 +6248,19 @@ static void hb_vmFrame( USHORT usLocals, BYTE bParams )
 #endif
 }
 
-static void hb_vmVFrame( USHORT usLocals, BYTE bParams )
+static void hb_vmVFrame( USHORT usLocals, unsigned char ucParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pBase;
    int iTotal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmVFrame(%d, %d)", (int) usLocals, (int) bParams));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmVFrame(%d, %d)", (int) usLocals, (int) ucParams));
 
    pBase = hb_stackBaseItem();
 
-   pBase->item.asSymbol.paramdeclcnt = bParams;
+   pBase->item.asSymbol.paramdeclcnt = ucParams;
 
-   iTotal = bParams - pBase->item.asSymbol.paramcnt;
+   iTotal = ucParams - pBase->item.asSymbol.paramcnt;
    if( iTotal < 0 )
       iTotal = 0;
    iTotal += usLocals;
@@ -6878,7 +6877,7 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
    if( HB_IS_STRING( pAlias ) )
    {
-      char * szAlias = pAlias->item.asString.value;
+      const char * szAlias = pAlias->item.asString.value;
 
       if( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' )
       {
@@ -7067,19 +7066,19 @@ static void hb_vmPushUnRef( void )
                 HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );
 }
 
-static void hb_vmSwap( BYTE bCount )
+static void hb_vmSwap( int iCount )
 {
    HB_STACK_TLS_PRELOAD
    int i = -1;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmSwap(%d)", bCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmSwap(%d)", iCount));
 
    do
    {
       hb_itemSwap( hb_stackItemFromTop( i ), hb_stackItemFromTop( i - 1 ) );
       --i;
    }
-   while( bCount-- );
+   while( iCount-- );
 }
 
 /* ------------------------------- */
@@ -7166,7 +7165,7 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
     */
    if( HB_IS_STRING( pAlias ) )
    {
-      char * szAlias = pAlias->item.asString.value;
+      const char * szAlias = pAlias->item.asString.value;
 
       if( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' )
       {
@@ -8823,7 +8822,7 @@ HB_BOOL hb_xvmSeqBlock( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmEnumStart( BYTE nVars, BYTE nDescend )
+HB_BOOL hb_xvmEnumStart( int nVars, int nDescend )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8891,14 +8890,14 @@ void hb_xvmFrame( int iLocals, int iParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmFrame(%d, %d)", iLocals, iParams));
 
-   hb_vmFrame( ( USHORT ) iLocals, ( BYTE ) iParams );
+   hb_vmFrame( ( USHORT ) iLocals, ( unsigned char ) iParams );
 }
 
 void hb_xvmVFrame( int iLocals, int iParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmVFrame(%d, %d)", iLocals, iParams));
 
-   hb_vmVFrame( ( USHORT ) iLocals, ( BYTE ) iParams );
+   hb_vmVFrame( ( USHORT ) iLocals, ( unsigned char ) iParams );
 }
 
 void hb_xvmSFrame( PHB_SYMB pSymbol )
@@ -9494,7 +9493,7 @@ void hb_xvmSwap( int iCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmSwap(%d)", iCount));
 
-   hb_vmSwap( ( BYTE ) iCount );
+   hb_vmSwap( iCount );
 }
 
 HB_BOOL hb_xvmForTest( void )
@@ -10946,7 +10945,7 @@ void hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE ulSize )
    hb_itemPutCLPtr( hb_stackAllocItem(), szString, ulSize );
 }
 
-void hb_xvmLocalName( USHORT uiLocal, char * szLocalName )
+void hb_xvmLocalName( USHORT uiLocal, const char * szLocalName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalName(%hu, %s)", uiLocal, szLocalName));
 
@@ -10958,7 +10957,7 @@ void hb_xvmLocalName( USHORT uiLocal, char * szLocalName )
 #endif
 }
 
-void hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName )
+void hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticName(%d, %hu, %s)", (int)bIsGlobal, uiStatic, szStaticName));
 
@@ -10971,7 +10970,7 @@ void hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName )
 #endif
 }
 
-void hb_xvmModuleName( char * szModuleName )
+void hb_xvmModuleName( const char * szModuleName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmModuleName(%s)", szModuleName));
 
@@ -11026,13 +11025,13 @@ HB_BOOL hb_xvmMacroSend( USHORT uiArgSets )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPush( BYTE bFlags )
+HB_BOOL hb_xvmMacroPush( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPush(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPush(%d)", iFlags));
 
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), 0, bFlags );
+   hb_macroGetValue( hb_stackItemFromTop( -1 ), 0, iFlags );
 
    HB_XVM_RETURN
 }
@@ -11062,57 +11061,57 @@ HB_BOOL hb_xvmMacroPushIndex( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPushList( BYTE bFlags )
+HB_BOOL hb_xvmMacroPushList( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushList(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushList(%d)", iFlags));
 
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHLIST, bFlags );
+   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHLIST, iFlags );
 
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPushPare( BYTE bFlags )
+HB_BOOL hb_xvmMacroPushPare( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushPare(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushPare(%d)", iFlags));
 
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHPARE, bFlags );
+   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHPARE, iFlags );
 
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPushAliased( BYTE bFlags )
+HB_BOOL hb_xvmMacroPushAliased( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushAliased(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushAliased(%d)", iFlags));
 
-   hb_macroPushAliasedValue( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), bFlags );
+   hb_macroPushAliasedValue( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), iFlags );
 
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPop( BYTE bFlags )
+HB_BOOL hb_xvmMacroPop( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPop(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPop(%d)", iFlags));
 
-   hb_macroSetValue( hb_stackItemFromTop( -1 ), bFlags );
+   hb_macroSetValue( hb_stackItemFromTop( -1 ), iFlags );
 
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroPopAliased( BYTE bFlags )
+HB_BOOL hb_xvmMacroPopAliased( int iFlags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPopAliased(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPopAliased(%d)", iFlags));
 
-   hb_macroPopAliasedValue( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), bFlags );
+   hb_macroPopAliasedValue( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), iFlags );
 
    HB_XVM_RETURN
 }

@@ -77,21 +77,21 @@ static void hb_macroFlagsInit( void * pFlags )
    * ( ( ULONG * ) pFlags ) = HB_SM_DEFAULT;
 }
 
-static HB_TSD_NEW( s_macroFlags, sizeof( ULONG ), hb_macroFlagsInit, NULL );
+static HB_TSD_NEW( s_macroFlags, sizeof( int ), hb_macroFlagsInit, NULL );
 
-static ULONG hb_macroFlags( void )
+static int hb_macroFlags( void )
 {
-   return * ( ( ULONG * ) hb_stackGetTSD( &s_macroFlags ) );
+   return * ( ( int * ) hb_stackGetTSD( &s_macroFlags ) );
 }
 
-static void hb_macroFlagsSet( ULONG flag )
+static void hb_macroFlagsSet( int flag )
 {
-   * ( ( ULONG * ) hb_stackGetTSD( &s_macroFlags ) ) = flag;
+   * ( ( int * ) hb_stackGetTSD( &s_macroFlags ) ) = flag;
 }
 
 #else
 
-   static ULONG s_macroFlags = HB_SM_DEFAULT;
+   static int s_macroFlags = HB_SM_DEFAULT;
 #  define hb_macroFlags()     s_macroFlags
 #  define hb_macroFlagsSet(f) do { s_macroFlags = (f); } while(0)
 
@@ -413,7 +413,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE *pulStringLen )
  *
  */
 
-void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
+void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -497,7 +497,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
  * placed on the left side of the assignment
  * POP operation
  */
-void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
+void hb_macroSetValue( HB_ITEM_PTR pItem, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -587,7 +587,7 @@ void hb_macroPushReference( HB_ITEM_PTR pItem )
  *    instead of
  *    &( "M + M" ) -> &( "M + M" )
  */
-static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag, BYTE bSupported )
+static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag, int iSupported )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -607,7 +607,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       szString[ ulLen ] = '\0';
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : bSupported;
+      struMacro.supported  = (iSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : iSupported;
       struMacro.Flags      = iFlag;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -641,7 +641,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : bSupported;
+      struMacro.supported  = (iSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : iSupported;
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -667,7 +667,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
  *    &alias->var := any
  *    alias->&var := any
  */
-void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
+void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
 
@@ -679,7 +679,7 @@ void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
  *    any := &alias->var
  *    any := alias->&var
  */
-void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
+void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
 
@@ -1025,19 +1025,19 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
  * Set macro capabilities if flag > 0 or get current macro capabilities
  * if flag == 0
  */
-ULONG hb_macroSetMacro( HB_BOOL bSet, ULONG flag )
+int hb_macroSetMacro( HB_BOOL fSet, int flag )
 {
-   ULONG ulCurrentFlags = hb_macroFlags();
+   int currentFlags = hb_macroFlags();
 
    if( flag > 0 )
    {
-      if( bSet )
-         hb_macroFlagsSet( ulCurrentFlags | flag );
+      if( fSet )
+         hb_macroFlagsSet( currentFlags | flag );
       else
-         hb_macroFlagsSet( ulCurrentFlags & ~flag );
+         hb_macroFlagsSet( currentFlags & ~flag );
    }
 
-   return ulCurrentFlags;
+   return currentFlags;
 }
 
 HB_FUNC( HB_SETMACRO )
@@ -1047,10 +1047,10 @@ HB_FUNC( HB_SETMACRO )
 
    if( iPrmCnt > 0 )
    {
-       ULONG ulFlags = ( ULONG ) hb_parnl( 1 );
+       int flags = hb_parni( 1 );
        PHB_ITEM pValue;
 
-       switch( ulFlags )
+       switch( flags )
        {
           case HB_SM_HARBOUR:
              /* enable/disable extended Harbour compatibility */
@@ -1060,10 +1060,10 @@ HB_FUNC( HB_SETMACRO )
              /* enable/disable processing of strings as an array of bytes */
           case HB_SM_SHORTCUTS:
              /* enable/disable support for shortcut logical operators */
-             hb_retl( hb_macroFlags() & ulFlags );
+             hb_retl( hb_macroFlags() & flags );
              pValue = hb_param( 2, HB_IT_LOGICAL );
              if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+                hb_macroSetMacro( hb_itemGetL( pValue ), flags );
              break;
 
           default:
@@ -1256,7 +1256,7 @@ void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
    }
    else if( HB_LIM_INT8( lNumber ) )
    {
-      hb_macroGenPCode2( HB_P_PUSHBYTE, (BYTE) lNumber, HB_COMP_PARAM );
+      hb_macroGenPCode2( HB_P_PUSHBYTE, ( BYTE ) lNumber, HB_COMP_PARAM );
    }
    else if( HB_LIM_INT16( lNumber ) )
    {

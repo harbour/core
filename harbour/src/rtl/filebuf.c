@@ -538,6 +538,12 @@ static HB_FOFFSET s_fileSize( PHB_FILE pFile )
    return hb_fsSeekLarge( pFile->hFile, 0, FS_END );
 }
 
+static void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
+{
+   HB_SYMBOL_UNUSED( pFile );
+   HB_SYMBOL_UNUSED( fDirty );
+}
+
 static void s_fileCommit( PHB_FILE pFile )
 {
    hb_fsCommit( pFile->hFile );
@@ -564,6 +570,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileWriteAt,
       s_fileTruncAt,
       s_fileSize,
+      s_fileFlush,
       s_fileCommit,
       s_fileHandle
    };
@@ -682,6 +689,11 @@ HB_BOOL hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 HB_FOFFSET hb_fileSize( PHB_FILE pFile )
 {
    return pFile->pFuncs->Size( pFile );
+}
+
+void hb_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
+{
+   pFile->pFuncs->Flush( pFile, fDirty );
 }
 
 void hb_fileCommit( PHB_FILE pFile )

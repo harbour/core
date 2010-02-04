@@ -1049,7 +1049,7 @@ extern void       hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE v
 extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
-extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
+extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
 extern int        hb_memvarScope( const char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
@@ -1091,8 +1091,8 @@ typedef struct HB_MACRO_ * HB_MACRO_PTR;
 #else
 typedef void * HB_MACRO_PTR;
 #endif
-extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */
-extern void   hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags ); /* assign a value to a macro-expression item */
+extern void   hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
+extern void   hb_macroSetValue( HB_ITEM_PTR pItem, int flags ); /* assign a value to a macro-expression item */
 extern void   hb_macroPushReference( HB_ITEM_PTR pItem ); /* push reference to given expression */
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
 extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
@@ -1101,8 +1101,8 @@ extern HB_MACRO_PTR hb_macroCompile( const char * szString ); /* compile a strin
 extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
 extern char * hb_macroTextSymbol( const char * szString, HB_SIZE ulLength, HB_BOOL * pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
 extern char * hb_macroExpandString( const char * szString, HB_SIZE ulLength, HB_BOOL * pfNewString ); /* expands valid '&' operator */
-extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
-extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
+extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags ); /* compiles and evaluates an aliased macro expression */
+extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags ); /* compiles and evaluates an aliased macro expression */
 extern const char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
 /* idle states */

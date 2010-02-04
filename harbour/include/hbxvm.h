@@ -84,7 +84,7 @@ extern HB_EXPORT HB_BOOL hb_xvmAlwaysBegin( void );
 extern HB_EXPORT HB_BOOL hb_xvmAlwaysEnd( void );
 extern HB_EXPORT HB_BOOL hb_xvmSeqBlock( void );
 
-extern HB_EXPORT HB_BOOL hb_xvmEnumStart( BYTE, BYTE );            /* prepare FOR EACH loop */
+extern HB_EXPORT HB_BOOL hb_xvmEnumStart( int, int );              /* prepare FOR EACH loop */
 extern HB_EXPORT HB_BOOL hb_xvmEnumNext( void );                   /* increment FOR EACH loop counter */
 extern HB_EXPORT HB_BOOL hb_xvmEnumPrev( void );                   /* decrement FOR EACH loop counter */
 extern HB_EXPORT void    hb_xvmEnumEnd( void );                    /* rewind the stack after FOR EACH loop counter */
@@ -189,23 +189,23 @@ extern HB_EXPORT HB_BOOL hb_xvmArrayPushRef( void );               /* pushes a r
 extern HB_EXPORT HB_BOOL hb_xvmArrayPop( void );                   /* pops a value from the stack */
 extern HB_EXPORT void    hb_xvmHashGen( HB_SIZE ulElements );      /* generates an ulElements Hash and fills it from the stack values */
 
-extern HB_EXPORT void    hb_xvmLocalName( USHORT uiLocal, char * szLocalName );
-extern HB_EXPORT void    hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName );
-extern HB_EXPORT void    hb_xvmModuleName( char * szModuleName );
+extern HB_EXPORT void    hb_xvmLocalName( USHORT uiLocal, const char * szLocalName );
+extern HB_EXPORT void    hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName );
+extern HB_EXPORT void    hb_xvmModuleName( const char * szModuleName );
 
 extern HB_EXPORT HB_BOOL hb_xvmMacroDo( USHORT uiArgSets );
 extern HB_EXPORT HB_BOOL hb_xvmMacroFunc( USHORT uiArgSets );
 extern HB_EXPORT HB_BOOL hb_xvmMacroSend( USHORT uiArgSets );
 extern HB_EXPORT HB_BOOL hb_xvmMacroArrayGen( USHORT uiArgSets );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPush( BYTE bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPush( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushRef( void );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushIndex( void );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPushArg( PHB_SYMB pSymbol, BYTE bFlags );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPushList( BYTE bFlags );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPushAliased( BYTE bFlags );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPushPare( BYTE bFlags );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPop( BYTE bFlags );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPopAliased( BYTE bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPushArg( PHB_SYMB pSymbol, int bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPushList( int bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPushAliased( int bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPushPare( int bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPop( int bFlags );
+extern HB_EXPORT HB_BOOL hb_xvmMacroPopAliased( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroSymbol( void );
 extern HB_EXPORT HB_BOOL hb_xvmMacroText( void );
 

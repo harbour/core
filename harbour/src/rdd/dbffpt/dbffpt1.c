@@ -191,11 +191,31 @@ static HB_BOOL hb_fptFileLockSh( FPTAREAP pArea, HB_BOOL fWait )
 }
 
 /*
- * Unlock memo file.
+ * Unlock memo file - exclusive lock.
  */
-static HB_BOOL hb_fptFileUnLock( FPTAREAP pArea )
+static HB_BOOL hb_fptFileUnLockEx( FPTAREAP pArea )
 {
-   return !pArea->fShared || hb_fileLock( pArea->pMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
+   if( pArea->fShared )
+   {
+      hb_fileFlush( pArea->pMemoFile, FALSE );
+      return hb_fileLock( pArea->pMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
+   }
+   else
+      return HB_TRUE;
+}
+
+/*
+ * Unlock memo file - shared lock
+ */
+static HB_BOOL hb_fptFileUnLockSh( FPTAREAP pArea )
+{
+   if( pArea->fShared )
+   {
+      hb_fileFlush( pArea->pMemoFile, FALSE );
+      return hb_fileLock( pArea->pMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
+   }
+   else
+      return HB_TRUE;
 }
 
 /*
@@ -228,8 +248,13 @@ static HB_BOOL hb_fptRootBlockLock( FPTAREAP pArea )
  */
 static HB_BOOL hb_fptRootBlockUnLock( FPTAREAP pArea )
 {
-   return !pArea->fShared ||
-          hb_fileLock( pArea->pMemoFile, FPT_ROOTBLOCK_OFFSET, 4, FL_UNLOCK );
+   if( pArea->fShared )
+   {
+      hb_fileFlush( pArea->pMemoFile, FALSE );
+      return hb_fileLock( pArea->pMemoFile, FPT_ROOTBLOCK_OFFSET, 4, FL_UNLOCK );
+   }
+   else
+      return HB_TRUE;
 }
 
 /*
@@ -3362,7 +3387,7 @@ static HB_ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
    }
 
    if( fUnLock )
-      hb_fptFileUnLock( pArea );
+      hb_fptFileUnLockSh( pArea );
 
    return errCode;
 }
@@ -3433,7 +3458,7 @@ static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, const char * szFil
       {
          errCode = hb_fptWriteMemo( pArea, ulBlock, 0, NULL, hFile,
                                     0, ulSize, &ulBlock );
-         hb_fptFileUnLock( pArea );
+         hb_fptFileUnLockEx( pArea );
       }
       else
       {
@@ -3501,7 +3526,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
             SELF_GOCOLD( ( AREAP ) pArea );
          }
 #endif
-         hb_fptFileUnLock( pArea );
+         hb_fptFileUnLockEx( pArea );
       }
       else if( pField->uiLen == 3 )
       {
@@ -3676,7 +3701,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
                   SELF_GOCOLD( ( AREAP ) pArea );
 #endif
                }
-               hb_fptFileUnLock( pArea );
+               hb_fptFileUnLockEx( pArea );
             }
          }
          if( pAlloc )
@@ -3734,7 +3759,7 @@ static HB_ERRCODE hb_fptGetVarLen( FPTAREAP pArea, USHORT uiIndex, ULONG * pLeng
          *pLength = 0;
 
       if( fUnLock )
-         hb_fptFileUnLock( pArea );
+         hb_fptFileUnLockSh( pArea );
 
       return errCode;
    }
@@ -4161,7 +4186,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
                }
             }
          }
-         hb_fptFileUnLock( pArea );
+         hb_fptFileUnLockSh( pArea );
       }
    }
 
@@ -4285,7 +4310,7 @@ static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, const char
             SELF_GOCOLD( ( AREAP ) pArea );
          }
 #endif
-         hb_fptFileUnLock( pArea );
+         hb_fptFileUnLockEx( pArea );
          hb_fsClose( hFile );
       }
       /* Exit if any error */
@@ -4793,7 +4818,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                if( hb_fptFileLockEx( pArea, HB_TRUE ) )
                {
                   errCode = hb_fptPutMemo( pArea, 0, pValue, &ulBlock, FPT_DIRECT_TRANS( pArea ) );
-                  hb_fptFileUnLock( pArea );
+                  hb_fptFileUnLockEx( pArea );
                }
                else
                   errCode = EDBF_LOCK;
@@ -4838,7 +4863,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( hb_fptFileLockEx( pArea, HB_TRUE ) )
             {
                errCode = hb_fptPutMemo( pArea, 0, pItem, &ulBlock, FPT_DIRECT_TRANS( pArea ) );
-               hb_fptFileUnLock( pArea );
+               hb_fptFileUnLockEx( pArea );
                if( errCode == HB_SUCCESS )
                   errCode = hb_fptPutRootBlock( pArea, ulBlock );
             }

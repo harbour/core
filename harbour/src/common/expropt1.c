@@ -1421,9 +1421,15 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    HB_EXPR_PTR pIIF;
    HB_EXPR_PTR pSet;
 
+   /* NOTE: this is the only code which uses hb_compExprClone().
+    *       It's important to reduce pExpr before because it should
+    *       not be changed later and our expression optimizer does
+    *       not respect cloned expressions.
+    */
+
    /* create {|var|  expression
-    * NOTE: this is not a valid variable name so there will be no collisions
-   */
+    * NOTE: "~1" is not a valid variable name so there will be no collisions
+    */
    /* create var==NIL */
    pIIF = hb_compExprSetOperand( hb_compExprNewEQ( hb_compExprNewVar( "~1", HB_COMP_PARAM ), HB_COMP_PARAM ),
                                  hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM );
@@ -1439,8 +1445,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    pIIF = hb_compExprAddListExpr( pIIF, pSet );
    /* create IIF() expression */
    pIIF = hb_compExprNewIIF( pIIF );
-   /* create a codeblock
-   */
+   /* create a codeblock */
    return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd(
                      hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ),
                      "~1", ' ', HB_COMP_PARAM ), pIIF );
