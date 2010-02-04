@@ -146,8 +146,8 @@ typedef struct _HB_TASKINFO
 
    HB_LONG        wakeup;
 
-   BYTE *         stack;
-   LONG           stack_size;
+   char *         stack;
+   long           stack_size;
 
 #if defined( HB_HAS_UCONTEXT )
    ucontext_t     context;
@@ -501,7 +501,7 @@ static void hb_taskRun( void )
    /* unreachable code */
 }
 
-static PHB_TASKINFO hb_taskNew( LONG stack_size )
+static PHB_TASKINFO hb_taskNew( long stack_size )
 {
    PHB_TASKINFO pTask;
 
@@ -510,7 +510,7 @@ static PHB_TASKINFO hb_taskNew( LONG stack_size )
 
    pTask = ( PHB_TASKINFO ) memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0,
                                     sizeof( HB_TASKINFO ) );
-   pTask->stack = ( BYTE * ) hb_xgrab( stack_size );
+   pTask->stack = hb_xgrab( stack_size );
 
    stack_size += ( HB_PTRDIFF ) pTask->stack;
    stack_size &= ~( HB_TASK_STACK_ALIGN - 1 );

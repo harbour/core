@@ -65,7 +65,7 @@ HB_FUNC( STRPEEK )
       HB_SIZE ulPos = hb_parnl( 2 );
 
       if( ulPos > 0 && ulPos <= hb_itemGetCLen( pText ) )
-         hb_retni( ( BYTE ) * ( hb_itemGetCPtr( pText ) + ulPos - 1 ) );
+         hb_retni( ( unsigned char ) hb_itemGetCPtr( pText )[ ulPos - 1 ] );
       else
          hb_retni( 0 );
    }

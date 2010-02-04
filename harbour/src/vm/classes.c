@@ -2153,11 +2153,11 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
    HB_STACK_TLS_PRELOAD
    PMETHOD pMethod = pClass->pMethods;
    ULONG   ulLimit = hb_clsMthNum( pClass );
-   BYTE * pbClasses;
+   char * pcClasses;
    USHORT uiClass;
 
-   pbClasses = ( BYTE * ) hb_xgrab( s_uiClasses + 1 );
-   memset( pbClasses, 0, s_uiClasses + 1 );
+   pcClasses = ( char * ) hb_xgrab( s_uiClasses + 1 );
+   memset( pcClasses, 0, s_uiClasses + 1 );
 
    do
    {
@@ -2167,10 +2167,10 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
          {
             PCLASS pSupperClass = s_pClasses[ pMethod->uiSprClass ];
             if( pSupperClass->fHasDestructor && pSupperClass != pClass )
-               pbClasses[ pMethod->uiSprClass ] |= 1;
+               pcClasses[ pMethod->uiSprClass ] |= 1;
          }
          else if( pMethod->pMessage == s___msgDestructor.pDynSym )
-            pbClasses[ pMethod->uiSprClass ] |= 2;
+            pcClasses[ pMethod->uiSprClass ] |= 2;
       }
       ++pMethod;
    }
@@ -2178,26 +2178,26 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
 
    for( uiClass = s_uiClasses; uiClass; --uiClass )
    {
-      if( pbClasses[ uiClass ] == 1 )
+      if( pcClasses[ uiClass ] == 1 )
       {
          PMETHOD pDestructor = hb_clsFindMsg( s_pClasses[ uiClass ],
                                               s___msgDestructor.pDynSym );
          if( pDestructor )
          {
-            if( pbClasses[ pDestructor->uiSprClass ] == 1 )
+            if( pcClasses[ pDestructor->uiSprClass ] == 1 )
             {
                hb_vmPushSymbol( &s___msgDestructor );
                hb_clsMakeSuperObject( hb_stackAllocItem(), pObject, uiClass );
                hb_vmSend( 0 );
                if( hb_vmRequestQuery() != 0 )
                   break;
-               pbClasses[ pDestructor->uiSprClass ] |= 2;
+               pcClasses[ pDestructor->uiSprClass ] |= 2;
             }
          }
       }
    }
 
-   hb_xfree( pbClasses );
+   hb_xfree( pcClasses );
 }
 
 /*

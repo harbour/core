@@ -148,13 +148,6 @@ static const UINT32 T[ 64 ] = {
    0xF7537E82, 0xBD3AF235, 0x2AD7D2BB, 0xEB86D391
 };
 
-static const BYTE pad[ 64 ] = {
-   0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
-
 static void hb_md5go( MD5_BUF * md5 )
 {
    UINT32 X[ 16 ], A[ 4 ];
@@ -279,10 +272,11 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
       hb_md5go( &md5 );
    }
    /* prepare additional block(s) */
+   memset( buf, 0, sizeof( buf ) );
    n = ulLen & 63;
    if( n )
       memcpy( buf, ucdata, n );
-   memcpy( buf + n, pad, 64 );
+   buf[ n ] = 0x80;
    /* count bits length */
    i = 56;
    if( n >= 56 )
@@ -335,9 +329,10 @@ void hb_md5file( HB_FHANDLE hFile, char * digest )
       i += 64;
       n -= 64;
    }
+   memset( buf, 0, sizeof( buf ) );
    if( n )
       memcpy( buf, readbuf + i, n );
-   memcpy( buf + n, pad, 64 );
+   buf[ n ] = 0x80;
    i = 56;
    if( n >= 56 )
    {
