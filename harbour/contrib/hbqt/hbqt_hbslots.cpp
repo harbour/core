@@ -396,7 +396,7 @@ static void hbqt_SlotsExecIntIntInt( HBSlots * t_slots, QObject * object, const 
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pValue1, pValue2, pValue3 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pValue1, pValue2, pValue3 );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
          hb_itemRelease( pValue3 );
@@ -536,35 +536,35 @@ static void hbqt_SlotsExecPointer( HBSlots * t_slots, QObject * object, const ch
    }
 }
 
-static void hbqt_SlotsExecPointerInt( HBSlots * t_slots, QObject * object, const char * pszEvent, void * p1, int iInt )
+static void hbqt_SlotsExecPointerInt( HBSlots * t_slots, QObject * object, const char * pszEvent, void * pP1, int iInt )
 {
    if( object )
    {
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
-         PHB_ITEM pI1 = hb_itemPutNI( NULL, iInt );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pP1, pI1 );
-         hb_itemRelease( pP1 );
-         hb_itemRelease( pI1 );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, pP1 );
+         PHB_ITEM p2 = hb_itemPutNI( NULL, iInt );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
          hb_vmRequestRestore();
       }
    }
 }
 
-static void hbqt_SlotsExecPointerPointer( HBSlots * t_slots, QObject * object, const char * pszEvent, void * p1, void * p2 )
+static void hbqt_SlotsExecPointerPointer( HBSlots * t_slots, QObject * object, const char * pszEvent, void * pP1, void * pP2 )
 {
    if( object )
    {
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
-         PHB_ITEM pP2 = hb_itemPutPtr( NULL, p2 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pP1, pP2 );
-         hb_itemRelease( pP1 );
-         hb_itemRelease( pP2 );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, pP1 );
+         PHB_ITEM p2 = hb_itemPutPtr( NULL, pP2 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
          hb_vmRequestRestore();
       }
    }
