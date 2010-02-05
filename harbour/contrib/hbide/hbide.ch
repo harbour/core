@@ -56,6 +56,7 @@
 #define CRLF                                      chr( 13 )+chr( 10 )
 #define _EOL                                      chr( 10 )
 
+#define HBIDE_USE_UIC
 
 #define INI_HBIDE                                 1
 #define INI_PROJECTS                              2
@@ -64,8 +65,9 @@
 #define INI_REPLACE                               5
 #define INI_RECENTFILES                           6
 #define INI_RECENTPROJECTS                        7
+#define INI_FOLDERS                               8
 
-#define INI_SECTIONS_COUNT                        7
+#define INI_SECTIONS_COUNT                        8
 
 
 /* INI_HBIDE */
@@ -85,8 +87,9 @@
 #define PathMk2                                   14
 #define PathEnv                                   15
 #define CurrentEnvironment                        16
+#define FindInFilesDialogGeometry                 17
 
-#define INI_HBIDE_VRBLS                           16
+#define INI_HBIDE_VRBLS                           17
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

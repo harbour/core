@@ -78,22 +78,23 @@ FUNCTION hbide_saveINI( oIde )
    //    Properties
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, " " )
-   aadd( txt_, "MainWindowGeometry     = " + hbide_posAndSize( oIde:oDlg:oWidget )        )
-   aadd( txt_, "ProjectTreeVisible     = " + IIF( oIde:lProjTreeVisible, "YES", "NO" )    )
-   aadd( txt_, "ProjectTreeGeometry    = " + hbide_posAndSize( oIde:oProjTree:oWidget )   )
-   aadd( txt_, "FunctionListVisible    = " + IIF( oIde:lDockRVisible, "YES", "NO" )       )
-   aadd( txt_, "FunctionListGeometry   = " + hbide_posAndSize( oIde:oFuncList:oWidget )   )
-   aadd( txt_, "RecentTabIndex         = " + hb_ntos( oIde:qTabWidget:currentIndex() )    )
-   aadd( txt_, "CurrentProject         = " + oIde:cWrkProject                             )
-   aadd( txt_, "GotoDialogGeometry     = " + oIde:aIni[ INI_HBIDE, GotoDialogGeometry   ] )
-   aadd( txt_, "PropsDialogGeometry    = " + oIde:aIni[ INI_HBIDE, PropsDialogGeometry  ] )
-   aadd( txt_, "FindDialogGeometry     = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry   ] )
-   aadd( txt_, "ThemesDialogGeometry   = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] )
-   aadd( txt_, "CurrentTheme           = " + oIde:cWrkTheme                               )
-   aadd( txt_, "CurrentCodec           = " + oIde:cWrkCodec                               )
-   aadd( txt_, "PathMk2                = " + oIde:aIni[ INI_HBIDE, PathMk2              ] )
-   aadd( txt_, "PathEnv                = " + oIde:aIni[ INI_HBIDE, PathEnv              ] )
-   aadd( txt_, "CurrentEnvironment     = " + oIde:cWrkEnvironment                         )
+   aadd( txt_, "MainWindowGeometry        = " + hbide_posAndSize( oIde:oDlg:oWidget )             )
+   aadd( txt_, "ProjectTreeVisible        = " + IIF( oIde:lProjTreeVisible, "YES", "NO" )         )
+   aadd( txt_, "ProjectTreeGeometry       = " + hbide_posAndSize( oIde:oProjTree:oWidget )        )
+   aadd( txt_, "FunctionListVisible       = " + IIF( oIde:lDockRVisible, "YES", "NO" )            )
+   aadd( txt_, "FunctionListGeometry      = " + hbide_posAndSize( oIde:oFuncList:oWidget )        )
+   aadd( txt_, "RecentTabIndex            = " + hb_ntos( oIde:qTabWidget:currentIndex() )         )
+   aadd( txt_, "CurrentProject            = " + oIde:cWrkProject                                  )
+   aadd( txt_, "GotoDialogGeometry        = " + oIde:aIni[ INI_HBIDE, GotoDialogGeometry        ] )
+   aadd( txt_, "PropsDialogGeometry       = " + oIde:aIni[ INI_HBIDE, PropsDialogGeometry       ] )
+   aadd( txt_, "FindDialogGeometry        = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry        ] )
+   aadd( txt_, "ThemesDialogGeometry      = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry      ] )
+   aadd( txt_, "CurrentTheme              = " + oIde:cWrkTheme                                    )
+   aadd( txt_, "CurrentCodec              = " + oIde:cWrkCodec                                    )
+   aadd( txt_, "PathMk2                   = " + oIde:aIni[ INI_HBIDE, PathMk2                   ] )
+   aadd( txt_, "PathEnv                   = " + oIde:aIni[ INI_HBIDE, PathEnv                   ] )
+   aadd( txt_, "CurrentEnvironment        = " + oIde:cWrkEnvironment                              )
+   aadd( txt_, "FindInFilesDialogGeometry = " + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -149,7 +150,14 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "[RECENTPROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_RECENTPROJECTS ] )
-      aadd( txt_, oIde:aIni[ INI_RECENTPROJECTS , n ] )
+      aadd( txt_, oIde:aIni[ INI_RECENTPROJECTS, n ] )
+   NEXT
+   aadd( txt_, " " )
+
+   aadd( txt_, "[FOLDERS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( oIde:aIni[ INI_FOLDERS ] )
+      aadd( txt_, oIde:aIni[ INI_FOLDERS, n ] )
    NEXT
    aadd( txt_, " " )
 
@@ -166,7 +174,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentproject"     , "gotodialoggeometry"  , "propsdialoggeometry", ;
                       "finddialoggeometry" , "themesdialoggeometry", "currenttheme"       , ;
                       "currentcodec"       , "pathmk2"             , "pathenv"            , ;
-                      "currentenvironment" }
+                      "currentenvironment" , "findinfilesdialoggeometry" }
 
    /* Initiate the place holders */
    oIde:aIni := Array( INI_SECTIONS_COUNT )
@@ -221,6 +229,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                EXIT
             CASE "[RECENTPROJECTS]"
                nPart := INI_RECENTPROJECTS
+               EXIT
+            CASE "[FOLDERS]"
+               nPart := INI_FOLDERS
                EXIT
             OTHERWISE
                /*
@@ -282,6 +293,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                         AAdd( oIde:aIni[ nPart ], s )
                      ENDIF
                   ENDIF
+
+               CASE nPart == INI_FOLDERS
+                  aadd( oIde:aIni[ nPart ], s )
 
                ENDCASE
                EXIT

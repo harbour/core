@@ -389,6 +389,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD save( lCanClose )
    METHOD updateHbp( iIndex )
    METHOD addSources()
+   METHOD getProjectsTitleList()
    METHOD setCurrentProject( cProjectName )
    METHOD getCurrentProject( lAlert )
    METHOD selectCurrentProject()
@@ -396,6 +397,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD getProjectByFile( cProjectFile )
    METHOD getProjectFileNameFromTitle( cProjectTitle )
    METHOD getProjectByTitle( cProjectTitle )
+   METHOD getSourcesByProjectTitle( cProjectTitle )
    METHOD removeProject( cProjectTitle )
    METHOD closeProject( cProjectTitle )
    METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
@@ -1256,7 +1258,7 @@ METHOD IdeProjManager:getCurrentProject( lAlert )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:selectCurrentProject()
-   LOCAL oDlg, i, p, t
+   LOCAL oDlg, p, t
 
    IF Empty( ::aProjects )
       MsgBox( "No Projects Available" )
@@ -1270,11 +1272,8 @@ METHOD IdeProjManager:selectCurrentProject()
    #endif
 
  * Fill ComboBox with current project names
-   FOR i := 1 TO Len( ::aProjects )
-       p := ::aProjects[i]
-       t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
-
-       IF !Empty( t )
+   FOR EACH p IN ::aProjects
+       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
           oDlg:qObj[ "cbProjects" ]:addItem( t )
        ENDIF
    NEXT
@@ -1288,6 +1287,17 @@ METHOD IdeProjManager:selectCurrentProject()
    oDlg := NIL
 
    RETURN ::cWrkProject
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getProjectsTitleList()
+   LOCAL a_, aList := {}
+
+   FOR EACH a_ IN ::aProjects
+      aadd( aList, a_[ 3, PRJ_PRP_PROPERTIES, 2, PRJ_PRP_TITLE ] )
+   NEXT
+
+   RETURN aList
 
 /*----------------------------------------------------------------------*/
 
@@ -1323,6 +1333,18 @@ METHOD IdeProjManager:getProjectFileNameFromTitle( cProjectTitle )
    ENDIF
 
    RETURN cProjFileName
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getSourcesByProjectTitle( cProjectTitle )
+   LOCAL n, aProj
+
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProjectTitle } ) ) > 0
+      aProj := ::aProjects[ n, 3 ]
+      RETURN aProj[ PRJ_PRP_SOURCES, 2 ] /* 2 == parsed sources */
+   ENDIF
+
+   RETURN {}
 
 /*----------------------------------------------------------------------*/
 
@@ -1650,11 +1672,3 @@ METHOD IdeProjManager:launchProject( cProject )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_outputLine( cLine, nOccur )
-
-   DEFAULT cLine  TO "-"
-   DEFAULT nOccur TO 100
-
-   RETURN replicate( cLine, nOccur )
-
-/*----------------------------------------------------------------------*/

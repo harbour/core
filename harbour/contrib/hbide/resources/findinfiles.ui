@@ -1,34 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>FindReplInFiles</class>
+ <widget class="QDialog" name="FindReplInFiles">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>364</width>
+    <width>422</width>
     <height>472</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Find &amp; Replace in Files</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
+   <item row="2" column="0">
+    <widget class="QLabel" name="labelProjects">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>52</width>
        <height>16777215</height>
       </size>
      </property>
      <property name="text">
       <string>Projects:</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
     </widget>
    </item>
-   <item row="0" column="1" rowspan="8" colspan="3">
-    <widget class="QListWidget" name="listWidget">
+   <item row="2" column="1" rowspan="2" colspan="4">
+    <widget class="QListWidget" name="listProjects">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -36,203 +63,22 @@
       <enum>QAbstractItemView::MultiSelection</enum>
      </property>
      <property name="sortingEnabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="4" rowspan="13">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QCheckBox" name="checkBox_9">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Check all</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="5">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QCheckBox" name="checkBox_14">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.*</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="5">
-    <widget class="QCheckBox" name="checkPrg">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.prg</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="5">
-    <widget class="QCheckBox" name="checkBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.c</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="5">
-    <widget class="QCheckBox" name="checkBox_2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.cpp</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="5">
-    <widget class="QCheckBox" name="checkBox_3">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.ch</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="5" rowspan="2">
-    <widget class="QCheckBox" name="checkBox_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.h</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0" rowspan="2">
-    <widget class="QLabel" name="label_2">
-     <property name="maximumSize">
-      <size>
-       <width>60</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Folder:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="2" rowspan="2" colspan="2">
-    <widget class="QCheckBox" name="checkBox_11">
-     <property name="text">
-      <string>Include sub-projects</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="5" rowspan="2">
-    <widget class="QCheckBox" name="checkBox_5">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.rc</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" rowspan="2" colspan="4">
-    <widget class="QComboBox" name="comboBox"/>
-   </item>
-   <item row="11" column="5">
-    <widget class="QCheckBox" name="checkBox_6">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.hbi</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="0" colspan="2">
-    <widget class="QCheckBox" name="checkBox_10">
-     <property name="text">
-      <string>Include sub-folders</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="2" colspan="2">
-    <widget class="QCheckBox" name="checkBox_8">
-     <property name="text">
-      <string>Include Opened tabs </string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="5">
-    <widget class="QCheckBox" name="checkBox_7">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>*.hbp</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="0" colspan="6">
+   <item row="12" column="0" colspan="5">
     <widget class="Line" name="line_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="14" column="0">
-    <widget class="QLabel" name="label_3">
+   <item row="13" column="0">
+    <widget class="QLabel" name="labelExpr">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>52</width>
        <height>16777215</height>
       </size>
      </property>
@@ -241,28 +87,32 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="1" colspan="5">
-    <widget class="QComboBox" name="comboBox_2"/>
-   </item>
-   <item row="15" column="1" colspan="2">
-    <widget class="QCheckBox" name="checkBox_12">
-     <property name="text">
-      <string>Match case</string>
+   <item row="13" column="1" colspan="4">
+    <widget class="QComboBox" name="comboExpr">
+     <property name="editable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="15" column="5">
-    <widget class="QCheckBox" name="checkBox_13">
+   <item row="14" column="1" colspan="2">
+    <widget class="QCheckBox" name="checkRegEx">
+     <property name="text">
+      <string>RegEx</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="4">
+    <widget class="QCheckBox" name="checkListOnly">
      <property name="text">
       <string>List only</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="0">
-    <widget class="QLabel" name="label_4">
+   <item row="15" column="0">
+    <widget class="QLabel" name="labelRepl">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>52</width>
        <height>16777215</height>
       </size>
      </property>
@@ -271,67 +121,216 @@
      </property>
     </widget>
    </item>
-   <item row="16" column="1" colspan="5">
-    <widget class="QComboBox" name="comboBox_3"/>
+   <item row="15" column="1" colspan="4">
+    <widget class="QComboBox" name="comboRepl">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
-   <item row="17" column="0" colspan="6">
+   <item row="16" column="0" colspan="5">
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="18" column="1" colspan="2">
-    <widget class="QPushButton" name="pushButton">
-     <property name="maximumSize">
-      <size>
-       <width>77</width>
-       <height>16777215</height>
-      </size>
-     </property>
+   <item row="14" column="3">
+    <widget class="QCheckBox" name="checkMatchCase">
      <property name="text">
-      <string>Find</string>
+      <string>Match case</string>
      </property>
     </widget>
    </item>
-   <item row="18" column="4" colspan="2">
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="maximumSize">
-      <size>
-       <width>77</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Close</string>
+   <item row="0" column="0" colspan="5">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="minimumSize">
+        <size>
+         <width>52</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>52</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>File types:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkAll">
+       <property name="text">
+        <string>all</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkPrg">
+       <property name="text">
+        <string>.prg</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkC">
+       <property name="text">
+        <string>.c</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkCpp">
+       <property name="text">
+        <string>.c++</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkCh">
+       <property name="text">
+        <string>.ch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkH">
+       <property name="text">
+        <string>.h</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkRc">
+       <property name="maximumSize">
+        <size>
+         <width>33</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>.rc</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0" colspan="5">
+    <widget class="Line" name="line_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="19" column="0" colspan="6">
-    <widget class="QTreeWidget" name="treeWidget">
-     <attribute name="headerVisible">
+   <item row="10" column="4">
+    <widget class="QCheckBox" name="checkOpenTabs">
+     <property name="text">
+      <string>Include open tabs </string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QCheckBox" name="checkSubProjects">
+     <property name="text">
+      <string>Include sub-projects</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QCheckBox" name="checkSubFolders">
+     <property name="text">
+      <string>Include sub-folders</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="1" colspan="4">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="buttonFind">
+       <property name="text">
+        <string>Find</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonRepl">
+       <property name="text">
+        <string>Replace</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonStop">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonClose">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="19" column="0" colspan="5">
+    <widget class="QTextEdit" name="editResults">
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="5">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="labelFolder">
+       <property name="maximumSize">
+        <size>
+         <width>52</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Folder:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboFolder">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonFolder">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="20" column="0" colspan="5">
+    <widget class="QLabel" name="labelStatus">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="wordWrap">
       <bool>false</bool>
-     </attribute>
-     <attribute name="headerVisible">
-      <bool>false</bool>
-     </attribute>
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
-   </item>
-   <item row="18" column="3">
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="maximumSize">
-      <size>
-       <width>77</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Stop</string>
      </property>
     </widget>
    </item>

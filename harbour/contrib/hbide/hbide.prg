@@ -358,6 +358,8 @@ METHOD HbIde:create( cProjIni )
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
 
+   testPaths()
+
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
@@ -407,13 +409,13 @@ METHOD HbIde:create( cProjIni )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
-   ::oFR:destroy()
-
    /* Very important - destroy resources */
    hbide_dbg( "======================================================" )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oFR:destroy()
+   ::oEM:destroy()
    ::oDlg:destroy()
    ::oAC:destroy()
 
@@ -1142,4 +1144,12 @@ METHOD HbIde:setCodec( cCodec )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION testPaths()
+
+   hbide_dbg( hbide_pathProc( "C:\dev_sources\vouch\abc.prg", "C:\harbour\contrib\hbide\projects\hbide.hbi" ) )
+   hbide_dbg( hbide_pathProc( "C:\harbour\contrib\hbide\projects\vouch\abc.prg", "C:\harbour\contrib\hbide\projects\hbide.hbi" ) )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
 

@@ -183,6 +183,8 @@ METHOD HbQtUI:signal( cWidget, cSignal, bBlock )
       ENDIF
       IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
          aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
+      ELSE
+         hbq_dbg( "Failed:", cSignal )
       ENDIF
    ENDIF
 
@@ -836,7 +838,12 @@ STATIC FUNCTION hbq_getConstants()
          "QAbstractItemView_MultiSelection"       => QAbstractItemView_MultiSelection      , ;
          "QAbstractItemView_SingleSelection"      => QAbstractItemView_SingleSelection     , ;
          "QAbstractItemView_ContiguousSelection"  => QAbstractItemView_ContiguousSelection , ;
-         "QAbstractItemView_ExtendedSelection"    => QAbstractItemView_ExtendedSelection     ;
+         "QAbstractItemView_ExtendedSelection"    => QAbstractItemView_ExtendedSelection   , ;
+         ;
+         "QTextEdit_NoWrap"                       => QTextEdit_NoWrap                      , ;
+         "QTextEdit_WidgetWidth"                  => QTextEdit_WidgetWidth                 , ;
+         "QTextEdit_FixedPixelWidth"              => QTextEdit_FixedPixelWidth             , ;
+         "QTextEdit_FixedColumnWidth"             => QTextEdit_FixedColumnWidth              ;
       }
    ENDIF
    RETURN h_

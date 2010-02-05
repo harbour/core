@@ -314,12 +314,61 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
 //
 /*----------------------------------------------------------------------*/
 
+#define L2S( l )                                  iif( l, "Yes", "No" )
+
+#define F_BLACK                                   '<font color = black>'
+#define F_GREEN                                   '<font color = green>'
+#define F_RED                                     '<font color = red>'
+#define F_CYAN                                    '<font color = cyan>'
+#define F_BLUE                                    '<font color = blue>'
+#define F_YELLOW                                  '<font color = yellow>'
+
+#define F_SECTION                                 '<font color=GoldenRod size="5">'
+#define F_FOLDER                                  '<font color=MidNightBlue size="5">'
+#define F_FILE                                    '<font color=green>'
+
+#define F_END                                     '</font>'
+
+#define LOG_MISSING                               1
+#define LOG_FINDS                                 2
+#define LOG_SEPARATOR                             3
+#define LOG_FLAGS                                 4
+#define LOG_TERMINATED                            5
+#define LOG_SECTION                               6
+#define LOG_FOLDER                                7
+#define LOG_PROJECT                               8
+#define LOG_EMPTY                                 9
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeFindInFiles INHERIT IdeObject
+
+   DATA   aItems                                  INIT {}
+   DATA   lStop                                   INIT .f.
+   DATA   aInfo                                   INIT {}
+
+   DATA   nSearched                               INIT 0
+   DATA   nFounds                                 INIT 0
+   DATA   nMisses                                 INIT 0
+
+   DATA   cOrigExpr
+   DATA   cRegExp
+   DATA   lRegEx                                  INIT .F.
+   DATA   lListOnly                               INIT .T.
+   DATA   lMatchCase                              INIT .F.
+   DATA   lNotDblClick                            INIT .F.
 
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD show()
+   METHOD print()
+   METHOD paintRequested( pPrinter )
+   METHOD find()
+   METHOD findInABunch( aFiles )
+   METHOD showLog( nType, cMsg, p, p1, p2 )
+
+   METHOD execEvent( cEvent, p )
+   METHOD execContextMenu( p )
 
    ENDCLASS
 
@@ -334,6 +383,7 @@ METHOD IdeFindInFiles:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:create( oIde )
+   LOCAL cText, qLineEdit, aProjList, cProj, qItem
 
    DEFAULT oIde TO ::oIde
 
@@ -345,23 +395,64 @@ METHOD IdeFindInFiles:create( oIde )
    ::oUI := HbQtUI():new( ::oIde:resPath + "findinfiles.ui", ::oIde:oDlg:oWidget ):create()
    #endif
    ::oUI:setWindowFlags( Qt_Sheet )
-   ::oUI:exec()
 
-   ::destroy()
 
-   RETURN Self
+   ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
 
-/*----------------------------------------------------------------------*/
+   aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboExpr:addItem( e ) } )
+   aeval( ::oIde:aIni[ INI_REPLACE ], {|e| ::oUI:q_comboRepl:addItem( e ) } )
+   aeval( ::oIde:aIni[ INI_FOLDERS ], {|e| ::oUI:q_comboFolder:addItem( e ) } )
 
-METHOD IdeFindInFiles:destroy()
+   ::oUI:q_comboExpr:setCurrentIndex( 0 )
+   ::oUI:q_comboRepl:setCurrentIndex( -1 )
+   ::oUI:q_comboFolder:setCurrentIndex( -1 )
+   ::oUI:q_buttonRepl:setEnabled( .f. )
+   ::oUI:q_buttonStop:setEnabled( .f. )
+   ::oUI:q_checkListOnly:setChecked( .t. )
+   ::oUI:q_checkPrg:setChecked( .t. )
 
-   ::oUI:destroy()
+   ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
 
-   RETURN Self
+   qLineEdit := QLineEdit():configure( ::oUI:q_comboExpr:lineEdit() )
+   IF !empty( cText := ::oEM:getSelectedText() )
+      qLineEdit:setText( cText )
+   ENDIF
+   qLineEdit:selectAll()
 
-/*----------------------------------------------------------------------*/
+   /* Populate Projects Name */
+   aProjList := ::oPM:getProjectsTitleList()
+   FOR EACH cProj IN aProjList
+      IF !empty( cProj )
+         qItem := QListWidgetItem():new()
+         qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
+         qItem:setText( cProj )
+         qItem:setCheckState( 0 )
+         ::oUI:q_listProjects:addItem_1( qItem )
+         aadd( ::aItems, qItem )
+      ENDIF
+   NEXT
 
-METHOD IdeFindInFiles:show()
+   ::oUI:q_editResults:setReadOnly( .t. )
+   ::oUI:q_editResults:setFontFamily( "Courier New" )
+   ::oUI:q_editResults:setFontPointSize( 10 )
+   ::oUI:q_editResults:setContextMenuPolicy( Qt_CustomContextMenu )
+
+   ::oUI:q_labelStatus:setText( "Ready" )
+   ::oUI:q_comboExpr:setFocus()
+
+   /* Attach all signals */
+   ::connect( ::oUI:oWidget, "rejected()", {|| ::execEvent( "buttonClose" ) } )
+   //
+   ::oUI:signal( "buttonClose"  , "clicked()"                , {| | ::execEvent( "buttonClose"      ) } )
+   ::oUI:signal( "buttonFolder" , "clicked()"                , {| | ::execEvent( "buttonFolder"     ) } )
+   ::oUI:signal( "buttonFind"   , "clicked()"                , {| | ::execEvent( "buttonFind"       ) } )
+   ::oUI:signal( "buttonRepl"   , "clicked()"                , {| | ::execEvent( "buttonRepl"       ) } )
+   ::oUI:signal( "buttonStop"   , "clicked()"                , {| | ::execEvent( "buttonStop"       ) } )
+   ::oUI:signal( "checkAll"     , "stateChanged(int)"        , {|p| ::execEvent( "checkAll", p      ) } )
+   ::oUI:signal( "comboFind"    , "currentIndexChanged(text)", {|p| ::execEvent( "comboFind", p     ) } )
+   ::oUI:signal( "checkListOnly", "stateChanged(int)"        , {|p| ::execEvent( "checkListOnly", p ) } )
+   ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )
+   ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
    ::oUI:show()
 
@@ -369,4 +460,520 @@ METHOD IdeFindInFiles:show()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeFindInFiles:execEvent( cEvent, p )
+   LOCAL cPath, qLineEdit, qCursor, cSource, v, nInfo
+
+   SWITCH cEvent
+
+   CASE "comboFind"
+      ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p
+      EXIT
+
+   CASE "checkListOnly"
+      ::oUI:q_comboRepl:setEnabled( p == 0 )
+      ::oUI:q_buttonRepl:setEnabled( !( p == 1 ) )
+      EXIT
+
+   CASE "buttonFind"
+      ::find()
+      EXIT
+
+   CASE "buttonRepl"
+      EXIT
+
+   CASE "buttonClose"
+      ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
+      ::destroy()
+      EXIT
+
+   CASE "buttonStop"
+      ::lStop := .t.
+      EXIT
+
+   CASE "buttonFolder"
+      cPath := hbide_fetchADir( ::oDlg, "Select a folder for search operation", ::cLastFileOpenPath )
+      IF !empty( cPath )
+         ::oIde:cLastFileOpenPath := cPath
+
+         qLineEdit := QLineEdit():configure( ::oUI:q_comboFolder:lineEdit() )
+         qLineEdit:setText( cPath )
+         IF ascan( ::oIde:aIni[ INI_FOLDERS ], {|e| e == cPath } ) == 0
+            hb_ains( ::oIde:aIni[ INI_FOLDERS ], 1, cPath, .t. )
+         ENDIF
+         ::oUI:q_comboFolder:insertItem( 0, cPath )
+      ENDIF
+      EXIT
+
+   CASE "checkAll"
+      v := !( p == 0 )
+      ::oUI:q_checkPrg:setChecked( v )
+      ::oUI:q_checkC:setChecked( v )
+      ::oUI:q_checkCpp:setChecked( v )
+      ::oUI:q_checkCh:setChecked( v )
+      ::oUI:q_checkH:setChecked( v )
+      ::oUI:q_checkRc:setChecked( v )
+      EXIT
+
+   CASE "editResults-contextMenu"
+      ::execContextMenu( p )
+      EXIT
+
+   CASE "editResults"
+      IF p .AND. ! ::lNotDblClick
+         qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+         nInfo := qCursor:blockNumber() + 1
+
+         IF nInfo <= len( ::aInfo ) .AND. ::aInfo[ nInfo, 1 ] == -2
+            cSource := ::aInfo[ nInfo, 2 ]
+
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
+            qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+            qCursor:setPosition( 0 )
+            qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 3 ] - 1 )
+            qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 4 ] - 1 )
+            qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, len( ::aInfo[ nInfo, 5 ] ) )
+            ::oIde:qCurEdit:setTextCursor( qCursor )
+            ::oIde:manageFocusInEditor()
+         ENDIF
+      ELSE
+         ::lNotDblClick := .F.
+      ENDIF
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:execContextMenu( p )
+   LOCAL nLine, qCursor, qMenu, pAct, qAct, cAct, cFind
+
+   qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+   nLine := qCursor:blockNumber() + 1
+
+   IF nLine <= len( ::aInfo )
+      qMenu := QMenu():new( ::oUI:q_editResults )
+      qMenu:addAction( "Copy"       )
+      qMenu:addAction( "Select All" )
+      qMenu:addAction( "Clear"      )
+      qMenu:addAction( "Print"      )
+      qMenu:addAction( "Save as..." )
+      qMenu:addSeparator()
+      qMenu:addAction( "Find"       )
+      qMenu:addSeparator()
+      IF ::aInfo[ nLine, 1 ] == -2     /* Found Line */
+         qMenu:addAction( "Replace Line" )
+      ELSEIF ::aInfo[ nLine, 1 ] == -1 /* Source File */
+         qMenu:addAction( "Open"        )
+         qMenu:addAction( "Replace All" )
+      ENDIF
+      qMenu:addSeparator()
+      qMenu:addAction( "Zoom In"  )
+      qMenu:addAction( "Zoom Out" )
+
+      pAct := qMenu:exec_1( ::oUI:q_editResults:mapToGlobal( p ) )
+      IF !hbqt_isEmptyQtPointer( pAct )
+         qAct := QAction():configure( pAct )
+         cAct := qAct:text()
+
+         SWITCH cAct
+         CASE "Save as..."
+            EXIT
+         CASE "Find"
+            IF !empty( cFind := hbide_fetchAString( ::oUI:q_editResults, , "Find what?", "Find" ) )
+               ::lNotDblClick := .T.
+               IF !( ::oUI:q_editResults:find( cFind, 0 ) )
+                  MsgBox( "Not Found" )
+               ENDIF
+            ENDIF
+            EXIT
+         CASE "Print"
+            ::print()
+            EXIT
+         CASE "Clear"
+            ::oUI:q_editResults:clear()
+            ::aInfo := {}
+            EXIT
+         CASE "Copy"
+            ::lNotDblClick := .T.
+            ::oUI:q_editResults:copy()
+            EXIT
+         CASE "Select All"
+            ::oUI:q_editResults:selectAll()
+            EXIT
+         CASE "Replace Line"
+            EXIT
+         CASE "Replace Source"
+            EXIT
+         CASE "Zoom In"
+            ::oUI:q_editResults:zoomIn()
+            EXIT
+         CASE "Zoom Out"
+            ::oUI:q_editResults:zoomOut()
+            EXIT
+         ENDSWITCH
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:destroy()
+   LOCAL qItem
+
+   ::disconnect( ::oUI:oWidget, "rejected()" )
+
+   FOR EACH qItem IN ::aItems
+      qItem := NIL
+   NEXT
+
+   ::oUI:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:find()
+   LOCAL lPrg, lC, lCpp, lH, lCh, lRc, a_
+   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, cRepl, aFilter, cExt, cMask
+   LOCAL nStart, nEnd, cSource, aDir, cProjTitle, aProjFiles
+   LOCAL aOpenSrc   := {}
+   LOCAL aFolderSrc := {}
+   LOCAL aProjSrc   := {}
+   LOCAL aProjs     := {}
+
+   IF empty( ::cOrigExpr := ::oUI:q_comboExpr:currentText() )
+      RETURN Self
+   ENDIF
+   IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == ::cOrigExpr } ) == 0
+      hb_ains( ::oIde:aIni[ INI_FIND ], 1, ::cOrigExpr, .t. )
+   ENDIF
+   ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
+
+   ::oUI:q_labelStatus:setText( "Ready" )
+
+   cRepl   := ::oUI:q_comboRepl:currentText()
+   cFolder := ::oUI:q_comboFolder:currentText()
+
+   hbide_justACall( cRepl )
+
+   lTabs        := ::oUI:q_checkOpenTabs:isChecked()
+   lSubF        := ::oUI:q_checkSubFolders:isChecked()
+   lSubP        := ::oUI:q_checkSubProjects:isChecked()
+
+   /* Supress Find button - user must not click it again */
+   ::oUI:q_buttonFind:setEnabled( .f. )
+   ::oUI:q_buttonStop:setEnabled( .t. )
+
+   /* Type of files */
+   lPrg         := ::oUi:q_checkPrg:isChecked()
+   lC           := ::oUI:q_checkC:isChecked()
+   lCpp         := ::oUI:q_checkCpp:isChecked()
+   lH           := ::oUI:q_checkH:isChecked()
+   lCh          := ::oUI:q_checkCh:isChecked()
+   lRc          := ::oUI:q_checkRc:isChecked()
+
+   ::lRegEx     := ::oUI:q_checkRegEx:isChecked()
+   ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
+   ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
+
+   aFilter := {}
+   IF lPrg
+      aadd( aFilter, "*.prg" )
+   ENDIF
+   IF lC
+      aadd( aFilter, "*.c" )
+   ENDIF
+   IF lCpp
+      aadd( aFilter, "*.cpp" )
+   ENDIF
+   IF lh
+      aadd( aFilter, "*.h" )
+   ENDIF
+   IF lCh
+      aadd( aFilter, "*.ch" )
+   ENDIF
+   IF lRc
+      aadd( aFilter, "*.rc" )
+   ENDIF
+
+   /* Process Open Tabs */
+   IF lTabs
+      FOR EACH a_ IN ::aTabs
+         cSource := a_[ 2 ]:sourceFile
+         IF hbide_isSourceOfType( cSource, aFilter )
+            aadd( aOpenSrc, cSource )
+         ENDIF
+      NEXT
+   ENDIF
+
+   /* Process Folder */
+   IF !empty( cFolder )
+      IF right( cFolder, 1 ) != hb_osPathSeparator()
+         cFolder += hb_osPathSeparator()
+      ENDIF
+      FOR EACH cExt IN aFilter
+         cMask := hbide_pathToOsPath( cFolder + cExt )
+         aDir  := directory( cMask, "D" )
+         FOR EACH a_ IN aDir
+            aadd( aFolderSrc, cFolder + a_[ 1 ] )
+         NEXT
+      NEXT
+   ENDIF
+
+   /* Process Projects */
+   IF !empty( ::aItems )
+      FOR EACH qItem IN ::aItems
+         IF qItem:checkState() == 2
+            aadd( aProjs, qItem:text() )
+         ENDIF
+      NEXT
+   ENDIF
+   IF !empty( aProjs )
+      FOR EACH cProjTitle IN aProjs
+         a_:= {}
+         IF !empty( aProjFiles := ::oPM:getSourcesByProjectTitle( cProjTitle ) )
+            FOR EACH cSource IN aProjFiles
+               IF hbide_isSourceOfType( cSource, aFilter )
+                  aadd( a_, cSource )
+               ENDIF
+            NEXT
+         ENDIF
+         IF !empty( a_ )
+            aadd( aProjSrc, { cProjTitle, a_ } )
+         ENDIF
+      NEXT
+   ENDIF
+
+   nStart      := seconds()
+   ::nSearched := 0
+   ::nFounds   := 0
+   ::nMisses   := 0
+
+   /* Fun Begins */
+   ::showLog( LOG_SEPARATOR )
+   ::showLog( LOG_FLAGS, "[ Begins: " + dtoc( date() ) + "  " + time() + " ]  [ " + "Find Expression: " + ::cOrigExpr + " ]" )
+   ::showLog( LOG_FLAGS, hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, ::lRegEx, ::lListOnly, ::lMatchCase ) )
+   ::showLog( LOG_EMPTY )
+
+   IF !empty( aOpenSrc )
+      ::showLog( LOG_SECTION, "Open Tabs" )
+      ::findInABunch( aOpenSrc )
+   ENDIF
+   IF !empty( aFolderSrc )
+      ::showLog( LOG_SECTION, "Folder: " + cFolder )
+      ::findInABunch( aFolderSrc )
+   ENDIF
+   IF !empty( aProjSrc )
+      FOR EACH a_ IN aProjSrc
+         ::showLog( LOG_SECTION, "Project: " + a_[ 1 ] )
+         ::findInABunch( a_[ 2 ] )
+      NEXT
+   ENDIF
+
+   nEnd := seconds()
+
+   ::showLog( LOG_EMPTY )
+   ::showLog( LOG_FLAGS, "[ Ends:" + dtoc( date() ) + "  " + time() + " ] [ Time Taken: " + hb_ntos( nEnd - nStart ) + " ] " + ;
+                         "[ Searched: " + hb_ntos( ::nSearched ) + " ] [ Finds: " + hb_ntos( ::nFounds ) + " ] " + ;
+                         "[ Not on disk: " + hb_ntos( ::nMisses ) + " ]" )
+   ::showLog( LOG_SEPARATOR )
+   ::showLog( LOG_EMPTY )
+
+   ::oUI:q_labelStatus:setText( "[ Time Taken: " + hb_ntos( nEnd - nStart ) + " ] " + ;
+                         "[ Searched: " + hb_ntos( ::nSearched ) + " ] [ Finds: " + hb_ntos( ::nFounds ) + " ] " + ;
+                         "[ Files not found: " + hb_ntos( ::nMisses ) + " ]" )
+   ::lStop := .f.
+   ::oUI:q_buttonStop:setEnabled( .f. )
+   ::oUI:q_buttonFind:setEnabled( .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:findInABunch( aFiles )
+   LOCAL s, cExpr, nLine, aLines, aBuffer, cLine
+
+   FOR EACH s IN aFiles
+      IF ::lStop                                 /* Stop button is pressed */
+         ::showLog( LOG_SEPARATOR )
+         ::showLog( LOG_TERMINATED )
+         EXIT
+      ENDIF
+      aLines := {}
+      s := hbide_pathToOSPath( s )
+      IF hb_fileExists( s )
+         ::nSearched++
+         aBuffer := hb_ATokens( StrTran( hb_MemoRead( s ), Chr( 13 ) ), Chr( 10 ) )
+         nLine := 0
+         IF ::lMatchCase
+            cExpr := ::cOrigExpr
+            FOR EACH cLine IN aBuffer
+               nLine++
+               IF cExpr $ cLine
+                  aadd( aLines, { nLine, cLine } )
+               ENDIF
+            NEXT
+         ELSE
+            cExpr := lower( ::cOrigExpr )
+            FOR EACH cLine IN aBuffer
+               nLine++
+               IF cExpr $ lower( cLine )
+                  aadd( aLines, { nLine, cLine } )
+               ENDIF
+            NEXT
+         ENDIF
+         IF len( aLines ) > 0
+            ::showLog( LOG_FINDS, s, aLines, ::cOrigExpr, ::lMatchCase )
+            ::nFounds++
+         ENDIF
+      ELSE
+         ::showLog( LOG_MISSING, s )
+         ::nMisses++
+      ENDIF
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, lRegEx, lListOnly, lMatchCase )
+   LOCAL s := ""
+
+   HB_SYMBOL_UNUSED( lTabs )
+   HB_SYMBOL_UNUSED( lSubF )
+   HB_SYMBOL_UNUSED( lSubP )
+   HB_SYMBOL_UNUSED( lListOnly )
+
+   s += "[.prg="  + L2S( lPrg        ) + "] "
+   s += "[.c="    + L2S( lC          ) + "] "
+   s += "[.cpp="  + L2S( lCpp        ) + "] "
+   s += "[.h="    + L2S( lH          ) + "] "
+   s += "[.ch="   + L2S( lCh         ) + "] "
+   s += "[.rc="   + L2S( lRc         ) + "] "
+   s += "[RegEx=" + L2S( lRegEx      ) + "] "
+   s += "[Case="  + L2S( lMatchCase  ) + "] "
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
+   LOCAL cExt
+
+   hb_fNameSplit( cSource, , , @cExt )
+   cExt := lower( cExt )
+
+   RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
+   LOCAL a_, n, cPre, cPost, cTkn, nWidth, cText
+   LOCAL qCursor
+
+   qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+
+   SWITCH nType
+
+   CASE LOG_SEPARATOR
+      ::oUI:q_editResults:append( F_BLACK + hbide_outputLine( "=", 70 ) + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_TERMINATED
+
+   CASE LOG_MISSING
+      ::oUI:q_editResults:append( F_RED + cMsg + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_FINDS
+      cText := F_FILE + "<b>" + cMsg + "   ( "+ hb_ntos( len( p ) ) + " )" + "</b>" + F_END
+      ::oUI:q_editResults:append( cText )
+      ::oUI:q_labelStatus:setText( cText )
+      aadd( ::aInfo, { -1, cMsg, NIL } )
+
+      n := 0
+      aeval( p, {|a_| n := max( n, a_[ 1 ] ) } )
+      nWidth := iif( n < 10, 1, iif( n < 100, 2, iif( n < 1000, 3, iif( n < 10000, 4, iif( n < 100000, 5, 7 ) ) ) ) )
+
+      FOR EACH a_ IN p
+         IF p2
+            n  := at( p1, a_[ 2 ] )
+         ELSE
+            n  := at( lower( p1 ), lower( a_[ 2 ] ) )
+         ENDIF
+         cPre  := substr( a_[ 2 ], 1, n - 1 )
+         cPost := substr( a_[ 2 ], n + len( p1 ) )
+         cTkn  := substr( a_[ 2 ], n, len( p1 ) )
+         ::oUI:q_editResults:append( F_BLACK + "&nbsp;&nbsp;&nbsp;(" + strzero( a_[ 1 ], nWidth ) + ")&nbsp;&nbsp;" + ;
+                                     cPre + "<font color = indianred><b>" + cTkn + "</b></font>" + cPost + ;
+                                     F_END )
+         //            mode, source, line#, pos, slctn
+         aadd( ::aInfo, { -2, cMsg, a_[ 1 ], n, cTkn  } )
+
+         qCursor:movePosition( QTextCursor_Down )
+      NEXT
+      EXIT
+
+   CASE LOG_FLAGS
+      ::oUI:q_editResults:append( F_BLACK + cMsg + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_SECTION
+      ::oUI:q_editResults:append( F_SECTION + "<u>" + cMsg + "</u>" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_FOLDER
+      ::oUI:q_editResults:append( F_FOLDER + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "<i><b><u>" + cMsg + "</u></b></i>" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_PROJECT
+      ::oUI:q_editResults:append( F_FOLDER + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "<i><b><u>" + cMsg + "</u></b></i>" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_EMPTY
+      ::oUI:q_editResults:append( F_BLACK + " " + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   ENDSWITCH
+
+   qCursor:movePosition( QTextCursor_Down )
+   ::oUI:q_editResults:setTextCursor( qCursor )
+
+   QApplication():processEvents()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:print()
+   LOCAL qDlg
+
+   qDlg := QPrintPreviewDialog():new( ::oUI )
+   qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:exec()
+   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:paintRequested( pPrinter )
+   LOCAL qPrinter
+
+   qPrinter := QPrinter():configure( pPrinter )
+
+   ::oUI:q_editResults:print( qPrinter )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 

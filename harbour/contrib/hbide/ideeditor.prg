@@ -95,6 +95,7 @@ CLASS IdeEditsManager INHERIT IdeObject
 
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD destroy()
    METHOD prepareTabWidget()
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile )
@@ -180,6 +181,19 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Split V"      , oSub:addAction( "Split Vertically"   ) } )
    aadd( ::aActions, { ""             , oSub:addSeparator() } )
    aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:destroy()
+   LOCAL a_
+
+   FOR EACH a_ IN ::aActions
+      a_[ 2 ] := NIL
+   NEXT
+   ::aActions := NIL
+   ::qContextMenu := NIL
 
    RETURN Self
 
@@ -432,7 +446,11 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
 
 METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
 
-   IF ::qTabWidget:count() == 0 .OR. nIndex >= ::qTabWidget:count()
+   IF ::qTabWidget:count() == 0
+      RETURN .f.
+   ENDIF
+
+   IF nIndex >= ::qTabWidget:count()
       nIndex := 0
    ENDIF
 
@@ -1313,10 +1331,10 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
    METHOD destroy()
-   METHOD execSlot( nMode, oEdit, p, p1 )
-   METHOD execEvent( nMode, nEvent, p )
-   METHOD connectEditSlots( oEdit )
-   METHOD disConnectEditSlots( oEdit )
+   METHOD execEvent( nMode, oEdit, p, p1 )
+   METHOD execKeyEvent( nMode, nEvent, p )
+   METHOD connectEditSignals( oEdit )
+   METHOD disconnectEditSignals( oEdit )
 
    METHOD setNewMark()
    METHOD gotoMark( nIndex )
@@ -1361,14 +1379,14 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:highlightCurrentLine( .t. )              /* Via user-setup */
 
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|p| ::execEvent( 1, QEvent_KeyPress, p ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|p| ::execEvent( 1, QEvent_Wheel   , p ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
 
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
 
    ::qHLayout:addWidget( ::qEdit )
-   ::connectEditSlots( Self )
+   ::connectEditSignals( Self )
 
    RETURN Self
 
@@ -1420,14 +1438,11 @@ METHOD IdeEdit:setNewMark()
 
 METHOD IdeEdit:destroy()
 
-   ::disConnectEditSlots( Self )
+   ::disconnectEditSignals( Self )
 
    ::oEditor:qLayout:removeItem( ::qHLayout )
    //
    ::qHLayout:removeWidget( ::qEdit )
-hbide_dbg( "   IdeEdit:destroy()   ::qEdit:pPtr := NIL    0" )
-   ::qEdit:pPtr := NIL
-hbide_dbg( "   IdeEdit:destroy()   ::qEdit:pPtr := NIL    1" )
    ::qEdit      := NIL
    ::qHLayout   := NIL
 
@@ -1435,7 +1450,7 @@ hbide_dbg( "   IdeEdit:destroy()   ::qEdit:pPtr := NIL    1" )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:disConnectEditSlots( oEdit )
+METHOD IdeEdit:disconnectEditSignals( oEdit )
 
    ::disConnect( oEdit:qEdit, "customContextMenuRequested(QPoint)" )
    ::disConnect( oEdit:qEdit, "textChanged()"                      )
@@ -1451,17 +1466,17 @@ METHOD IdeEdit:disConnectEditSlots( oEdit )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:connectEditSlots( oEdit )
+METHOD IdeEdit:connectEditSignals( oEdit )
 
-   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execSlot( 8, oEdit, p, p1 ) } )
-   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execSlot( 1, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execSlot( 2, oEdit,       ) } )
-   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execSlot( 3, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execSlot( 4, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execSlot( 5, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execSlot( 6, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execSlot( 7, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execSlot( 9, oEdit,       ) } )
+   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
+   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
+   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
 
    RETURN Self
 
@@ -1522,7 +1537,7 @@ METHOD IdeEdit:duplicateLine()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execSlot( nMode, oEdit, p, p1 )
+METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
    LOCAL pAct, qAct, n, qCursor, qEdit, oo, nSpaces
 
    HB_SYMBOL_UNUSED( p1 )
@@ -1610,7 +1625,7 @@ METHOD IdeEdit:execSlot( nMode, oEdit, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execEvent( nMode, nEvent, p )
+METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
    LOCAL key, kbm, txt, qEvent
    LOCAL lAlt   := .f.
    LOCAL lCtrl  := .f.

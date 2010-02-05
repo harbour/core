@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'findinfiles.ui'
 **
-** Created: Tue Feb 2 14:13:37 2010
+** Created: Thu Feb 4 18:06:12 2010
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -19,295 +19,310 @@
 #include <QtGui/QDialog>
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QListWidget>
 #include <QtGui/QPushButton>
-#include <QtGui/QTreeWidget>
+#include <QtGui/QTextEdit>
+#include <QtGui/QToolButton>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Dialog
+class Ui_FindReplInFiles
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *label;
-    QListWidget *listWidget;
-    QFrame *line_2;
-    QCheckBox *checkBox_9;
-    QFrame *line;
-    QCheckBox *checkBox_14;
-    QCheckBox *checkPrg;
-    QCheckBox *checkBox;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox_3;
-    QCheckBox *checkBox_4;
-    QLabel *label_2;
-    QCheckBox *checkBox_11;
-    QCheckBox *checkBox_5;
-    QComboBox *comboBox;
-    QCheckBox *checkBox_6;
-    QCheckBox *checkBox_10;
-    QCheckBox *checkBox_8;
-    QCheckBox *checkBox_7;
+    QLabel *labelProjects;
+    QListWidget *listProjects;
     QFrame *line_3;
-    QLabel *label_3;
-    QComboBox *comboBox_2;
-    QCheckBox *checkBox_12;
-    QCheckBox *checkBox_13;
-    QLabel *label_4;
-    QComboBox *comboBox_3;
+    QLabel *labelExpr;
+    QComboBox *comboExpr;
+    QCheckBox *checkRegEx;
+    QCheckBox *checkListOnly;
+    QLabel *labelRepl;
+    QComboBox *comboRepl;
     QFrame *line_4;
-    QPushButton *pushButton;
-    QPushButton *pushButton_3;
-    QTreeWidget *treeWidget;
-    QPushButton *pushButton_2;
+    QCheckBox *checkMatchCase;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label;
+    QCheckBox *checkAll;
+    QCheckBox *checkPrg;
+    QCheckBox *checkC;
+    QCheckBox *checkCpp;
+    QCheckBox *checkCh;
+    QCheckBox *checkH;
+    QCheckBox *checkRc;
+    QFrame *line_5;
+    QCheckBox *checkOpenTabs;
+    QCheckBox *checkSubProjects;
+    QCheckBox *checkSubFolders;
+    QHBoxLayout *horizontalLayout_2;
+    QPushButton *buttonFind;
+    QPushButton *buttonRepl;
+    QPushButton *buttonStop;
+    QPushButton *buttonClose;
+    QTextEdit *editResults;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *labelFolder;
+    QComboBox *comboFolder;
+    QToolButton *buttonFolder;
+    QLabel *labelStatus;
 
-    void setupUi(QDialog *Dialog)
+    void setupUi(QDialog *FindReplInFiles)
     {
-        if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
-        Dialog->resize(364, 472);
-        gridLayout = new QGridLayout(Dialog);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label = new QLabel(Dialog);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setMaximumSize(QSize(60, 16777215));
-
-        gridLayout->addWidget(label, 0, 0, 1, 1);
-
-        listWidget = new QListWidget(Dialog);
-        listWidget->setObjectName(QString::fromUtf8("listWidget"));
-        listWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        listWidget->setSelectionMode(QAbstractItemView::MultiSelection);
-        listWidget->setSortingEnabled(true);
-
-        gridLayout->addWidget(listWidget, 0, 1, 8, 3);
-
-        line_2 = new QFrame(Dialog);
-        line_2->setObjectName(QString::fromUtf8("line_2"));
-        line_2->setFrameShape(QFrame::VLine);
-        line_2->setFrameShadow(QFrame::Sunken);
-
-        gridLayout->addWidget(line_2, 0, 4, 13, 1);
-
-        checkBox_9 = new QCheckBox(Dialog);
-        checkBox_9->setObjectName(QString::fromUtf8("checkBox_9"));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        if (FindReplInFiles->objectName().isEmpty())
+            FindReplInFiles->setObjectName(QString::fromUtf8("FindReplInFiles"));
+        FindReplInFiles->resize(422, 472);
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(checkBox_9->sizePolicy().hasHeightForWidth());
-        checkBox_9->setSizePolicy(sizePolicy);
+        sizePolicy.setHeightForWidth(FindReplInFiles->sizePolicy().hasHeightForWidth());
+        FindReplInFiles->setSizePolicy(sizePolicy);
+        FindReplInFiles->setMaximumSize(QSize(16777215, 16777215));
+        gridLayout = new QGridLayout(FindReplInFiles);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        labelProjects = new QLabel(FindReplInFiles);
+        labelProjects->setObjectName(QString::fromUtf8("labelProjects"));
+        labelProjects->setMaximumSize(QSize(52, 16777215));
+        labelProjects->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
-        gridLayout->addWidget(checkBox_9, 0, 5, 1, 1);
+        gridLayout->addWidget(labelProjects, 2, 0, 1, 1);
 
-        line = new QFrame(Dialog);
-        line->setObjectName(QString::fromUtf8("line"));
-        line->setFrameShape(QFrame::HLine);
-        line->setFrameShadow(QFrame::Sunken);
+        listProjects = new QListWidget(FindReplInFiles);
+        listProjects->setObjectName(QString::fromUtf8("listProjects"));
+        listProjects->setMinimumSize(QSize(0, 100));
+        listProjects->setMaximumSize(QSize(16777215, 100));
+        listProjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        listProjects->setSelectionMode(QAbstractItemView::MultiSelection);
+        listProjects->setSortingEnabled(false);
 
-        gridLayout->addWidget(line, 1, 5, 1, 1);
+        gridLayout->addWidget(listProjects, 2, 1, 2, 4);
 
-        checkBox_14 = new QCheckBox(Dialog);
-        checkBox_14->setObjectName(QString::fromUtf8("checkBox_14"));
-        sizePolicy.setHeightForWidth(checkBox_14->sizePolicy().hasHeightForWidth());
-        checkBox_14->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_14, 2, 5, 1, 1);
-
-        checkPrg = new QCheckBox(Dialog);
-        checkPrg->setObjectName(QString::fromUtf8("checkPrg"));
-        sizePolicy.setHeightForWidth(checkPrg->sizePolicy().hasHeightForWidth());
-        checkPrg->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkPrg, 3, 5, 1, 1);
-
-        checkBox = new QCheckBox(Dialog);
-        checkBox->setObjectName(QString::fromUtf8("checkBox"));
-        sizePolicy.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
-        checkBox->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox, 4, 5, 1, 1);
-
-        checkBox_2 = new QCheckBox(Dialog);
-        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
-        sizePolicy.setHeightForWidth(checkBox_2->sizePolicy().hasHeightForWidth());
-        checkBox_2->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_2, 5, 5, 1, 1);
-
-        checkBox_3 = new QCheckBox(Dialog);
-        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
-        sizePolicy.setHeightForWidth(checkBox_3->sizePolicy().hasHeightForWidth());
-        checkBox_3->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_3, 6, 5, 1, 1);
-
-        checkBox_4 = new QCheckBox(Dialog);
-        checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
-        sizePolicy.setHeightForWidth(checkBox_4->sizePolicy().hasHeightForWidth());
-        checkBox_4->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_4, 7, 5, 2, 1);
-
-        label_2 = new QLabel(Dialog);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setMaximumSize(QSize(60, 16777215));
-
-        gridLayout->addWidget(label_2, 8, 0, 2, 1);
-
-        checkBox_11 = new QCheckBox(Dialog);
-        checkBox_11->setObjectName(QString::fromUtf8("checkBox_11"));
-
-        gridLayout->addWidget(checkBox_11, 8, 2, 2, 2);
-
-        checkBox_5 = new QCheckBox(Dialog);
-        checkBox_5->setObjectName(QString::fromUtf8("checkBox_5"));
-        sizePolicy.setHeightForWidth(checkBox_5->sizePolicy().hasHeightForWidth());
-        checkBox_5->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_5, 9, 5, 2, 1);
-
-        comboBox = new QComboBox(Dialog);
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
-
-        gridLayout->addWidget(comboBox, 10, 0, 2, 4);
-
-        checkBox_6 = new QCheckBox(Dialog);
-        checkBox_6->setObjectName(QString::fromUtf8("checkBox_6"));
-        sizePolicy.setHeightForWidth(checkBox_6->sizePolicy().hasHeightForWidth());
-        checkBox_6->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_6, 11, 5, 1, 1);
-
-        checkBox_10 = new QCheckBox(Dialog);
-        checkBox_10->setObjectName(QString::fromUtf8("checkBox_10"));
-
-        gridLayout->addWidget(checkBox_10, 12, 0, 1, 2);
-
-        checkBox_8 = new QCheckBox(Dialog);
-        checkBox_8->setObjectName(QString::fromUtf8("checkBox_8"));
-
-        gridLayout->addWidget(checkBox_8, 12, 2, 1, 2);
-
-        checkBox_7 = new QCheckBox(Dialog);
-        checkBox_7->setObjectName(QString::fromUtf8("checkBox_7"));
-        sizePolicy.setHeightForWidth(checkBox_7->sizePolicy().hasHeightForWidth());
-        checkBox_7->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(checkBox_7, 12, 5, 1, 1);
-
-        line_3 = new QFrame(Dialog);
+        line_3 = new QFrame(FindReplInFiles);
         line_3->setObjectName(QString::fromUtf8("line_3"));
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
-        gridLayout->addWidget(line_3, 13, 0, 1, 6);
+        gridLayout->addWidget(line_3, 12, 0, 1, 5);
 
-        label_3 = new QLabel(Dialog);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setMaximumSize(QSize(60, 16777215));
+        labelExpr = new QLabel(FindReplInFiles);
+        labelExpr->setObjectName(QString::fromUtf8("labelExpr"));
+        labelExpr->setMaximumSize(QSize(52, 16777215));
 
-        gridLayout->addWidget(label_3, 14, 0, 1, 1);
+        gridLayout->addWidget(labelExpr, 13, 0, 1, 1);
 
-        comboBox_2 = new QComboBox(Dialog);
-        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
+        comboExpr = new QComboBox(FindReplInFiles);
+        comboExpr->setObjectName(QString::fromUtf8("comboExpr"));
+        comboExpr->setEditable(true);
 
-        gridLayout->addWidget(comboBox_2, 14, 1, 1, 5);
+        gridLayout->addWidget(comboExpr, 13, 1, 1, 4);
 
-        checkBox_12 = new QCheckBox(Dialog);
-        checkBox_12->setObjectName(QString::fromUtf8("checkBox_12"));
+        checkRegEx = new QCheckBox(FindReplInFiles);
+        checkRegEx->setObjectName(QString::fromUtf8("checkRegEx"));
 
-        gridLayout->addWidget(checkBox_12, 15, 1, 1, 2);
+        gridLayout->addWidget(checkRegEx, 14, 1, 1, 2);
 
-        checkBox_13 = new QCheckBox(Dialog);
-        checkBox_13->setObjectName(QString::fromUtf8("checkBox_13"));
+        checkListOnly = new QCheckBox(FindReplInFiles);
+        checkListOnly->setObjectName(QString::fromUtf8("checkListOnly"));
 
-        gridLayout->addWidget(checkBox_13, 15, 5, 1, 1);
+        gridLayout->addWidget(checkListOnly, 14, 4, 1, 1);
 
-        label_4 = new QLabel(Dialog);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setMaximumSize(QSize(60, 16777215));
+        labelRepl = new QLabel(FindReplInFiles);
+        labelRepl->setObjectName(QString::fromUtf8("labelRepl"));
+        labelRepl->setMaximumSize(QSize(52, 16777215));
 
-        gridLayout->addWidget(label_4, 16, 0, 1, 1);
+        gridLayout->addWidget(labelRepl, 15, 0, 1, 1);
 
-        comboBox_3 = new QComboBox(Dialog);
-        comboBox_3->setObjectName(QString::fromUtf8("comboBox_3"));
+        comboRepl = new QComboBox(FindReplInFiles);
+        comboRepl->setObjectName(QString::fromUtf8("comboRepl"));
+        comboRepl->setEditable(true);
 
-        gridLayout->addWidget(comboBox_3, 16, 1, 1, 5);
+        gridLayout->addWidget(comboRepl, 15, 1, 1, 4);
 
-        line_4 = new QFrame(Dialog);
+        line_4 = new QFrame(FindReplInFiles);
         line_4->setObjectName(QString::fromUtf8("line_4"));
         line_4->setFrameShape(QFrame::HLine);
         line_4->setFrameShadow(QFrame::Sunken);
 
-        gridLayout->addWidget(line_4, 17, 0, 1, 6);
+        gridLayout->addWidget(line_4, 16, 0, 1, 5);
 
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setMaximumSize(QSize(77, 16777215));
+        checkMatchCase = new QCheckBox(FindReplInFiles);
+        checkMatchCase->setObjectName(QString::fromUtf8("checkMatchCase"));
 
-        gridLayout->addWidget(pushButton, 18, 1, 1, 2);
+        gridLayout->addWidget(checkMatchCase, 14, 3, 1, 1);
 
-        pushButton_3 = new QPushButton(Dialog);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        pushButton_3->setMaximumSize(QSize(77, 16777215));
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        label = new QLabel(FindReplInFiles);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setMinimumSize(QSize(52, 0));
+        label->setMaximumSize(QSize(52, 16777215));
 
-        gridLayout->addWidget(pushButton_3, 18, 4, 1, 2);
+        horizontalLayout->addWidget(label);
 
-        treeWidget = new QTreeWidget(Dialog);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
-        treeWidget->setHeaderItem(__qtreewidgetitem);
-        treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
-        treeWidget->header()->setVisible(false);
+        checkAll = new QCheckBox(FindReplInFiles);
+        checkAll->setObjectName(QString::fromUtf8("checkAll"));
 
-        gridLayout->addWidget(treeWidget, 19, 0, 1, 6);
+        horizontalLayout->addWidget(checkAll);
 
-        pushButton_2 = new QPushButton(Dialog);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setMaximumSize(QSize(77, 16777215));
+        checkPrg = new QCheckBox(FindReplInFiles);
+        checkPrg->setObjectName(QString::fromUtf8("checkPrg"));
 
-        gridLayout->addWidget(pushButton_2, 18, 3, 1, 1);
+        horizontalLayout->addWidget(checkPrg);
+
+        checkC = new QCheckBox(FindReplInFiles);
+        checkC->setObjectName(QString::fromUtf8("checkC"));
+
+        horizontalLayout->addWidget(checkC);
+
+        checkCpp = new QCheckBox(FindReplInFiles);
+        checkCpp->setObjectName(QString::fromUtf8("checkCpp"));
+
+        horizontalLayout->addWidget(checkCpp);
+
+        checkCh = new QCheckBox(FindReplInFiles);
+        checkCh->setObjectName(QString::fromUtf8("checkCh"));
+
+        horizontalLayout->addWidget(checkCh);
+
+        checkH = new QCheckBox(FindReplInFiles);
+        checkH->setObjectName(QString::fromUtf8("checkH"));
+
+        horizontalLayout->addWidget(checkH);
+
+        checkRc = new QCheckBox(FindReplInFiles);
+        checkRc->setObjectName(QString::fromUtf8("checkRc"));
+        checkRc->setMaximumSize(QSize(33, 16777215));
+
+        horizontalLayout->addWidget(checkRc);
 
 
-        retranslateUi(Dialog);
+        gridLayout->addLayout(horizontalLayout, 0, 0, 1, 5);
 
-        QMetaObject::connectSlotsByName(Dialog);
+        line_5 = new QFrame(FindReplInFiles);
+        line_5->setObjectName(QString::fromUtf8("line_5"));
+        line_5->setFrameShape(QFrame::HLine);
+        line_5->setFrameShadow(QFrame::Sunken);
+
+        gridLayout->addWidget(line_5, 1, 0, 1, 5);
+
+        checkOpenTabs = new QCheckBox(FindReplInFiles);
+        checkOpenTabs->setObjectName(QString::fromUtf8("checkOpenTabs"));
+
+        gridLayout->addWidget(checkOpenTabs, 10, 4, 1, 1);
+
+        checkSubProjects = new QCheckBox(FindReplInFiles);
+        checkSubProjects->setObjectName(QString::fromUtf8("checkSubProjects"));
+
+        gridLayout->addWidget(checkSubProjects, 6, 4, 1, 1);
+
+        checkSubFolders = new QCheckBox(FindReplInFiles);
+        checkSubFolders->setObjectName(QString::fromUtf8("checkSubFolders"));
+
+        gridLayout->addWidget(checkSubFolders, 10, 1, 1, 1);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        buttonFind = new QPushButton(FindReplInFiles);
+        buttonFind->setObjectName(QString::fromUtf8("buttonFind"));
+
+        horizontalLayout_2->addWidget(buttonFind);
+
+        buttonRepl = new QPushButton(FindReplInFiles);
+        buttonRepl->setObjectName(QString::fromUtf8("buttonRepl"));
+
+        horizontalLayout_2->addWidget(buttonRepl);
+
+        buttonStop = new QPushButton(FindReplInFiles);
+        buttonStop->setObjectName(QString::fromUtf8("buttonStop"));
+
+        horizontalLayout_2->addWidget(buttonStop);
+
+        buttonClose = new QPushButton(FindReplInFiles);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+
+        horizontalLayout_2->addWidget(buttonClose);
+
+
+        gridLayout->addLayout(horizontalLayout_2, 17, 1, 1, 4);
+
+        editResults = new QTextEdit(FindReplInFiles);
+        editResults->setObjectName(QString::fromUtf8("editResults"));
+        editResults->setLineWrapMode(QTextEdit::NoWrap);
+
+        gridLayout->addWidget(editResults, 19, 0, 1, 5);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        labelFolder = new QLabel(FindReplInFiles);
+        labelFolder->setObjectName(QString::fromUtf8("labelFolder"));
+        labelFolder->setMaximumSize(QSize(52, 16777215));
+
+        horizontalLayout_3->addWidget(labelFolder);
+
+        comboFolder = new QComboBox(FindReplInFiles);
+        comboFolder->setObjectName(QString::fromUtf8("comboFolder"));
+        comboFolder->setEditable(true);
+
+        horizontalLayout_3->addWidget(comboFolder);
+
+        buttonFolder = new QToolButton(FindReplInFiles);
+        buttonFolder->setObjectName(QString::fromUtf8("buttonFolder"));
+
+        horizontalLayout_3->addWidget(buttonFolder);
+
+
+        gridLayout->addLayout(horizontalLayout_3, 8, 0, 1, 5);
+
+        labelStatus = new QLabel(FindReplInFiles);
+        labelStatus->setObjectName(QString::fromUtf8("labelStatus"));
+        labelStatus->setFrameShape(QFrame::Panel);
+        labelStatus->setFrameShadow(QFrame::Sunken);
+        labelStatus->setWordWrap(false);
+
+        gridLayout->addWidget(labelStatus, 20, 0, 1, 5);
+
+
+        retranslateUi(FindReplInFiles);
+
+        QMetaObject::connectSlotsByName(FindReplInFiles);
     } // setupUi
 
-    void retranslateUi(QDialog *Dialog)
+    void retranslateUi(QDialog *FindReplInFiles)
     {
-        Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("Dialog", "Projects:", 0, QApplication::UnicodeUTF8));
-        checkBox_9->setText(QApplication::translate("Dialog", "Check all", 0, QApplication::UnicodeUTF8));
-        checkBox_14->setText(QApplication::translate("Dialog", "*.*", 0, QApplication::UnicodeUTF8));
-        checkPrg->setText(QApplication::translate("Dialog", "*.prg", 0, QApplication::UnicodeUTF8));
-        checkBox->setText(QApplication::translate("Dialog", "*.c", 0, QApplication::UnicodeUTF8));
-        checkBox_2->setText(QApplication::translate("Dialog", "*.cpp", 0, QApplication::UnicodeUTF8));
-        checkBox_3->setText(QApplication::translate("Dialog", "*.ch", 0, QApplication::UnicodeUTF8));
-        checkBox_4->setText(QApplication::translate("Dialog", "*.h", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("Dialog", "Folder:", 0, QApplication::UnicodeUTF8));
-        checkBox_11->setText(QApplication::translate("Dialog", "Include sub-projects", 0, QApplication::UnicodeUTF8));
-        checkBox_5->setText(QApplication::translate("Dialog", "*.rc", 0, QApplication::UnicodeUTF8));
-        checkBox_6->setText(QApplication::translate("Dialog", "*.hbi", 0, QApplication::UnicodeUTF8));
-        checkBox_10->setText(QApplication::translate("Dialog", "Include sub-folders", 0, QApplication::UnicodeUTF8));
-        checkBox_8->setText(QApplication::translate("Dialog", "Include Opened tabs ", 0, QApplication::UnicodeUTF8));
-        checkBox_7->setText(QApplication::translate("Dialog", "*.hbp", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("Dialog", "Expression", 0, QApplication::UnicodeUTF8));
-        checkBox_12->setText(QApplication::translate("Dialog", "Match case", 0, QApplication::UnicodeUTF8));
-        checkBox_13->setText(QApplication::translate("Dialog", "List only", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("Dialog", "Replace:", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("Dialog", "Find", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("Dialog", "Close", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("Dialog", "Stop", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Dialog);
+        FindReplInFiles->setWindowTitle(QApplication::translate("FindReplInFiles", "Find & Replace in Files", 0, QApplication::UnicodeUTF8));
+        labelProjects->setText(QApplication::translate("FindReplInFiles", "Projects:", 0, QApplication::UnicodeUTF8));
+        labelExpr->setText(QApplication::translate("FindReplInFiles", "Expression", 0, QApplication::UnicodeUTF8));
+        checkRegEx->setText(QApplication::translate("FindReplInFiles", "RegEx", 0, QApplication::UnicodeUTF8));
+        checkListOnly->setText(QApplication::translate("FindReplInFiles", "List only", 0, QApplication::UnicodeUTF8));
+        labelRepl->setText(QApplication::translate("FindReplInFiles", "Replace:", 0, QApplication::UnicodeUTF8));
+        checkMatchCase->setText(QApplication::translate("FindReplInFiles", "Match case", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("FindReplInFiles", "File types:", 0, QApplication::UnicodeUTF8));
+        checkAll->setText(QApplication::translate("FindReplInFiles", "all", 0, QApplication::UnicodeUTF8));
+        checkPrg->setText(QApplication::translate("FindReplInFiles", ".prg", 0, QApplication::UnicodeUTF8));
+        checkC->setText(QApplication::translate("FindReplInFiles", ".c", 0, QApplication::UnicodeUTF8));
+        checkCpp->setText(QApplication::translate("FindReplInFiles", ".c++", 0, QApplication::UnicodeUTF8));
+        checkCh->setText(QApplication::translate("FindReplInFiles", ".ch", 0, QApplication::UnicodeUTF8));
+        checkH->setText(QApplication::translate("FindReplInFiles", ".h", 0, QApplication::UnicodeUTF8));
+        checkRc->setText(QApplication::translate("FindReplInFiles", ".rc", 0, QApplication::UnicodeUTF8));
+        checkOpenTabs->setText(QApplication::translate("FindReplInFiles", "Include open tabs ", 0, QApplication::UnicodeUTF8));
+        checkSubProjects->setText(QApplication::translate("FindReplInFiles", "Include sub-projects", 0, QApplication::UnicodeUTF8));
+        checkSubFolders->setText(QApplication::translate("FindReplInFiles", "Include sub-folders", 0, QApplication::UnicodeUTF8));
+        buttonFind->setText(QApplication::translate("FindReplInFiles", "Find", 0, QApplication::UnicodeUTF8));
+        buttonRepl->setText(QApplication::translate("FindReplInFiles", "Replace", 0, QApplication::UnicodeUTF8));
+        buttonStop->setText(QApplication::translate("FindReplInFiles", "Stop", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("FindReplInFiles", "Close", 0, QApplication::UnicodeUTF8));
+        labelFolder->setText(QApplication::translate("FindReplInFiles", "Folder:", 0, QApplication::UnicodeUTF8));
+        buttonFolder->setText(QApplication::translate("FindReplInFiles", "...", 0, QApplication::UnicodeUTF8));
+        labelStatus->setText(QString());
+        Q_UNUSED(FindReplInFiles);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Dialog: public Ui_Dialog {};
+    class FindReplInFiles: public Ui_FindReplInFiles {};
 } // namespace Ui
 
 QT_END_NAMESPACE
