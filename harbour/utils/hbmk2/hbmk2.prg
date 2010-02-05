@@ -5847,7 +5847,7 @@ FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
       RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName )
    ENDIF
 
-   /* Different drive spec. There is way to solve that using relative dirs. */
+   /* Different drive spec. There is no way to solve that using relative dirs. */
    IF ! Empty( hb_osDriveSeparator() ) .AND. ;
       tmp == 1 .AND. ;
       ( Right( aPathBase[ 1 ]  , 1 ) == hb_osDriveSeparator() .OR. ;
@@ -6889,104 +6889,104 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    RETURN cFuncName
 
 STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
-   LOCAL aUnd
-   LOCAL aDef
+   LOCAL aUn
+   LOCAL aDf
    LOCAL cMacro
    LOCAL nPos
 
    IF !( hbmk[ _HBMK_cPLAT ] == hb_Version( HB_VERSION_BUILD_PLAT ) ) .OR. ;
       !( hbmk[ _HBMK_cCOMP ] == hb_Version( HB_VERSION_BUILD_COMP ) )
 
-      aUnd := {}
-      aDef := {}
+      aUn := {}
+      aDf := {}
 
-      AAdd( aUnd, ".ARCH." )
+      AAdd( aUn, ".ARCH." )
 
       IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
       #if   defined( __PLATFORM__WINDOWS )
-         AAdd( aUnd, "__PLATFORM__Windows" )
+         AAdd( aUn, "__PLATFORM__Windows" )
          #if defined( __PLATFORM__WINCE )
-            AAdd( aUnd, "__PLATFORM__WINCE" )
+            AAdd( aUn, "__PLATFORM__WINCE" )
          #endif
          /* This is defined with Cygwin */
          #if defined( __PLATFORM__UNIX )
-            AAdd( aUnd, "__PLATFORM__UNIX" )
+            AAdd( aUn, "__PLATFORM__UNIX" )
          #endif
       #elif defined( __PLATFORM__DOS )
-         AAdd( aUnd, "__PLATFORM__DOS" )
+         AAdd( aUn, "__PLATFORM__DOS" )
       #elif defined( __PLATFORM__OS2 )
-         AAdd( aUnd, "__PLATFORM__OS2" )
+         AAdd( aUn, "__PLATFORM__OS2" )
       #elif defined( __PLATFORM__LINUX )
-         AAdd( aUnd, "__PLATFORM__Linux" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
+         AAdd( aUn, "__PLATFORM__Linux" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__DARWIN )
-         AAdd( aUnd, "__PLATFORM__DARWIN" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
+         AAdd( aUn, "__PLATFORM__DARWIN" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__BSD )
-         AAdd( aUnd, "__PLATFORM__BSD" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
+         AAdd( aUn, "__PLATFORM__BSD" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__SUNOS )
-         AAdd( aUnd, "__PLATFORM__SUNOS" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
+         AAdd( aUn, "__PLATFORM__SUNOS" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__HPUX )
-         AAdd( aUnd, "__PLATFORM__HPUX" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
+         AAdd( aUn, "__PLATFORM__HPUX" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #endif
 
       #if   defined( __ARCH16BIT__ )
-         AAdd( aUnd, "__ARCH16BIT__" )
+         AAdd( aUn, "__ARCH16BIT__" )
       #elif defined( __ARCH32BIT__ )
-         AAdd( aUnd, "__ARCH32BIT__" )
+         AAdd( aUn, "__ARCH32BIT__" )
       #elif defined( __ARCH64BIT__ )
-         AAdd( aUnd, "__ARCH64BIT__" )
+         AAdd( aUn, "__ARCH64BIT__" )
       #endif
 
       #if   defined( __LITTLE_ENDIAN__ )
-         AAdd( aUnd, "__LITTLE_ENDIAN__" )
+         AAdd( aUn, "__LITTLE_ENDIAN__" )
       #elif defined( __BIG_ENDIAN__ )
-         AAdd( aUnd, "__BIG_ENDIAN__" )
+         AAdd( aUn, "__BIG_ENDIAN__" )
       #elif defined( __PDP_ENDIAN__ )
-         AAdd( aUnd, "__PDP_ENDIAN__" )
+         AAdd( aUn, "__PDP_ENDIAN__" )
       #endif
       ENDIF
 
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "wce"
-         AAdd( aDef, "__PLATFORM__WINDOWS" )
-         AAdd( aDef, "__PLATFORM__WINCE" )
+         AAdd( aDf, "__PLATFORM__WINDOWS" )
+         AAdd( aDf, "__PLATFORM__WINCE" )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
-            AAdd( aDef, "__PLATFORM__Windows" )
+            AAdd( aDf, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "win"
-         AAdd( aDef, "__PLATFORM__WINDOWS" )
+         AAdd( aDf, "__PLATFORM__WINDOWS" )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
-            AAdd( aDef, "__PLATFORM__Windows" )
+            AAdd( aDf, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "dos"
-         AAdd( aDef, "__PLATFORM__DOS" )
+         AAdd( aDf, "__PLATFORM__DOS" )
       CASE hbmk[ _HBMK_cPLAT ] == "os2"
-         AAdd( aDef, "__PLATFORM__OS2" )
+         AAdd( aDf, "__PLATFORM__OS2" )
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
-         AAdd( aDef, "__PLATFORM__LINUX" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__LINUX" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
-            AAdd( aDef, "__PLATFORM__Linux" )
+            AAdd( aDf, "__PLATFORM__Linux" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-         AAdd( aDef, "__PLATFORM__DARWIN" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__DARWIN" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "bsd"
-         AAdd( aDef, "__PLATFORM__BSD" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__BSD" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
-         AAdd( aDef, "__PLATFORM__SUNOS" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__SUNOS" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "hpux"
-         AAdd( aDef, "__PLATFORM__HPUX" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__HPUX" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "beos"
-         AAdd( aDef, "__PLATFORM__BEOS" )
-         AAdd( aDef, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__BEOS" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
@@ -6996,39 +6996,39 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          [vszakats] */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] $ "dos|os2"
-         AAdd( aDef, "__LITTLE_ENDIAN__" )
-         AAdd( aDef, "__ARCH32BIT__" )
+         AAdd( aDf, "__LITTLE_ENDIAN__" )
+         AAdd( aDf, "__ARCH32BIT__" )
       CASE hbmk[ _HBMK_cPLAT ] $ "wce|win"
-         AAdd( aDef, "__LITTLE_ENDIAN__" ) /* Windows is currently little-endian on all supported CPUs. */
+         AAdd( aDf, "__LITTLE_ENDIAN__" ) /* Windows is currently little-endian on all supported CPUs. */
          IF hbmk[ _HBMK_cCOMP ] == "mingw64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "msvc64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "pocc64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "msvcia64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "iccia64"
-            AAdd( aDef, "__ARCH64BIT__" )
+            AAdd( aDf, "__ARCH64BIT__" )
          ELSE
-            AAdd( aDef, "__ARCH32BIT__" )
+            AAdd( aDf, "__ARCH32BIT__" )
          ENDIF
       OTHERWISE
          /* NOTE: Users will have to manually #define fitting macros for
                   given platform + compiler settings. We could only guess.
                   Let's assume the most probable CPU platform (as of 2009). */
-         AAdd( aDef, "__LITTLE_ENDIAN__" )
-         AAdd( aDef, "__ARCH32BIT__" )
+         AAdd( aDf, "__LITTLE_ENDIAN__" )
+         AAdd( aDf, "__ARCH32BIT__" )
       ENDCASE
 
       /* Delete macros present in both lists */
-      FOR EACH cMacro IN aUnd DESCEND
-         IF ( nPos := AScan( aDef, {| tmp | tmp == cMacro } ) ) > 0
-            hb_ADel( aUnd, cMacro:__enumIndex(), .T. )
-            hb_ADel( aDef, nPos, .T. )
+      FOR EACH cMacro IN aUn DESCEND
+         IF ( nPos := AScan( aDf, {| tmp | tmp == cMacro } ) ) > 0
+            hb_ADel( aUn, cMacro:__enumIndex(), .T. )
+            hb_ADel( aDf, nPos, .T. )
          ENDIF
       NEXT
 
-      FOR EACH cMacro IN aUnd
+      FOR EACH cMacro IN aUn
          AAdd( aOPTPRG, "-undef:" + cMacro )
       NEXT
-      FOR EACH cMacro IN aDef
+      FOR EACH cMacro IN aDf
          AAdd( aOPTPRG, "-D" + cMacro )
       NEXT
    ENDIF

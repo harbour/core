@@ -179,8 +179,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemValToStr  ( PHB_ITEM pItem ); /* Convert an
 extern HB_EXPORT char *       hb_itemPadConv   ( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq );
 extern HB_EXPORT void         hb_itemSwap      ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
-extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, ULONG * pulSize );
-extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, ULONG * pulSize );
+extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, HB_SIZE * pulSize );
+extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pulSize );
 
 #if defined( _HB_API_INTERNAL_ )
 

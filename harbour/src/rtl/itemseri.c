@@ -145,23 +145,23 @@ UCHAR [ 1 ] - item type
 #define HB_SERIAL_HASHFLAGS  40
 #define HB_SERIAL_HASHDEFVAL 41
 
-#define HB_SERIAL_DUMMYOFFSET ( ( ULONG ) -1 )
+#define HB_SERIAL_DUMMYOFFSET ( ( HB_SIZE ) -1 )
 
 typedef struct _HB_CYCLIC_REF
 {
    void *   value;
-   ULONG    ulOffset;
+   HB_SIZE  ulOffset;
    HB_BOOL  fRef;
    struct _HB_CYCLIC_REF * pNext;
 } HB_CYCLIC_REF, * PHB_CYCLIC_REF;
 
-static ULONG hb_deserializeItem( PHB_ITEM pItem,
-                                 PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                 const UCHAR * pBuffer, ULONG ulOffset,
-                                 PHB_CYCLIC_REF pRef );
+static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
+                                   PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                   const UCHAR * pBuffer, HB_SIZE ulOffset,
+                                   PHB_CYCLIC_REF pRef );
 
 static HB_BOOL hb_itemSerialValueRef( PHB_CYCLIC_REF * pRefPtr, void * value,
-                                      ULONG ulOffset )
+                                      HB_SIZE ulOffset )
 {
    while( * pRefPtr )
    {
@@ -200,7 +200,7 @@ static void hb_itemSerialUnRefFree( PHB_CYCLIC_REF * pRefPtr )
 }
 
 static HB_BOOL hb_itemSerialValueOffset( PHB_CYCLIC_REF pRef, void * value,
-                                         ULONG ulOffset, ULONG * pulRef )
+                                         HB_SIZE ulOffset, HB_SIZE * pulRef )
 {
    while( pRef )
    {
@@ -217,7 +217,7 @@ static HB_BOOL hb_itemSerialValueOffset( PHB_CYCLIC_REF pRef, void * value,
 }
 
 static HB_BOOL hb_itemSerialOffsetRef( PHB_CYCLIC_REF * pRefPtr, void * value,
-                                       ULONG ulOffset )
+                                       HB_SIZE ulOffset )
 {
    while( * pRefPtr )
    {
@@ -236,7 +236,7 @@ static HB_BOOL hb_itemSerialOffsetRef( PHB_CYCLIC_REF * pRefPtr, void * value,
 }
 
 static void hb_itemSerialOffsetSet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
-                                    ULONG ulOffset )
+                                    HB_SIZE ulOffset )
 {
    while( pRef )
    {
@@ -250,7 +250,7 @@ static void hb_itemSerialOffsetSet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
 }
 
 static void hb_itemSerialOffsetGet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
-                                    ULONG ulOffset )
+                                    HB_SIZE ulOffset )
 {
    while( pRef )
    {
@@ -273,11 +273,11 @@ static void hb_itemSerialRefFree( PHB_CYCLIC_REF pRef )
    }
 }
 
-static ULONG hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
-                                PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                PHB_CYCLIC_REF * pRefPtr, ULONG ulOffset )
+static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
+                                  PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                  PHB_CYCLIC_REF * pRefPtr, HB_SIZE ulOffset )
 {
-   ULONG ulSize, ulLen, u;
+   HB_SIZE ulSize, ulLen, u;
    HB_LONG lVal;
    USHORT uiClass;
    PHB_ITEM pDefVal;
@@ -425,17 +425,17 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
    return ulSize;
 }
 
-static ULONG hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
-                               PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                               UCHAR * pBuffer, ULONG ulOffset,
-                               PHB_CYCLIC_REF pRef )
+static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
+                                 PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                 UCHAR * pBuffer, HB_SIZE ulOffset,
+                                 PHB_CYCLIC_REF pRef )
 {
    HB_LONG lVal;
    double d;
    int iWidth, iDecimal;
-   LONG l, l2;
+   long l, l2;
    const char * szVal;
-   ULONG ulRef, ulLen, ulSize, u;
+   HB_SIZE ulRef, ulLen, ulSize, u;
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -764,10 +764,10 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
    return ulOffset;
 }
 
-static ULONG hb_deserializeHash( PHB_ITEM pItem,
-                                 PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                 const UCHAR * pBuffer, ULONG ulOffset,
-                                 ULONG ulLen, PHB_CYCLIC_REF pRef )
+static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
+                                   PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                   const UCHAR * pBuffer, HB_SIZE ulOffset,
+                                   HB_SIZE ulLen, PHB_CYCLIC_REF pRef )
 {
    hb_hashNew( pItem );
 
@@ -805,12 +805,12 @@ static ULONG hb_deserializeHash( PHB_ITEM pItem,
    return ulOffset;
 }
 
-static ULONG hb_deserializeArray( PHB_ITEM pItem,
-                                  PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                  const UCHAR * pBuffer, ULONG ulOffset,
-                                  ULONG ulLen, PHB_CYCLIC_REF pRef )
+static HB_SIZE hb_deserializeArray( PHB_ITEM pItem,
+                                    PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                    const UCHAR * pBuffer, HB_SIZE ulOffset,
+                                    HB_SIZE ulLen, PHB_CYCLIC_REF pRef )
 {
-   ULONG u;
+   HB_SIZE u;
 
    hb_arrayNew( pItem, ulLen );
    for( u = 1; u <= ulLen; u++ )
@@ -820,12 +820,12 @@ static ULONG hb_deserializeArray( PHB_ITEM pItem,
    return ulOffset;
 }
 
-static ULONG hb_deserializeItem( PHB_ITEM pItem,
-                                 PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                 const UCHAR * pBuffer, ULONG ulOffset,
-                                 PHB_CYCLIC_REF pRef )
+static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
+                                   PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
+                                   const UCHAR * pBuffer, HB_SIZE ulOffset,
+                                   PHB_CYCLIC_REF pRef )
 {
-   ULONG ulLen, ulPad, ulSize;
+   HB_SIZE ulLen, ulPad, ulSize;
    char * szVal;
 
    switch( pBuffer[ ulOffset++ ] )
@@ -1085,11 +1085,11 @@ static ULONG hb_deserializeItem( PHB_ITEM pItem,
    return ulOffset;
 }
 
-static HB_BOOL hb_deserializeTest( const UCHAR ** pBufferPtr, ULONG * pulSize,
-                                   ULONG ulOffset, PHB_CYCLIC_REF * pRefPtr )
+static HB_BOOL hb_deserializeTest( const UCHAR ** pBufferPtr, HB_SIZE * pulSize,
+                                   HB_SIZE ulOffset, PHB_CYCLIC_REF * pRefPtr )
 {
    const UCHAR * pBuffer = * pBufferPtr;
-   ULONG ulSize = * pulSize, ulLen = 0;
+   HB_SIZE ulSize = * pulSize, ulLen = 0;
 
    if( ulSize == 0 )
       return HB_FALSE;
@@ -1278,10 +1278,10 @@ static HB_BOOL hb_deserializeTest( const UCHAR ** pBufferPtr, ULONG * pulSize,
 /*
  * public API functions
  */
-char * hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, ULONG *pulSize )
+char * hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, HB_SIZE *pulSize )
 {
    PHB_CYCLIC_REF pRef = NULL;
-   ULONG ulSize = hb_itemSerialSize( pItem, fNumSize, NULL, NULL, &pRef, 0 );
+   HB_SIZE ulSize = hb_itemSerialSize( pItem, fNumSize, NULL, NULL, &pRef, 0 );
    UCHAR * pBuffer = ( UCHAR * ) hb_xgrab( ulSize + 1 );
 
    hb_itemSerialUnRefFree( &pRef );
@@ -1297,10 +1297,10 @@ char * hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, ULONG *pulSize )
 
 char * hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize,
                            PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                           ULONG *pulSize )
+                           HB_SIZE * pulSize )
 {
    PHB_CYCLIC_REF pRef = NULL;
-   ULONG ulSize = hb_itemSerialSize( pItem, fNumSize, cdpIn, cdpOut, &pRef, 0 );
+   HB_SIZE ulSize = hb_itemSerialSize( pItem, fNumSize, cdpIn, cdpOut, &pRef, 0 );
    UCHAR * pBuffer = ( UCHAR * ) hb_xgrab( ulSize + 1 );
 
    hb_itemSerialUnRefFree( &pRef );
@@ -1314,7 +1314,7 @@ char * hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize,
    return ( char * ) pBuffer;
 }
 
-PHB_ITEM hb_itemDeserialize( const char ** pBufferPtr, ULONG * pulSize )
+PHB_ITEM hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pulSize )
 {
    PHB_CYCLIC_REF pRef = NULL;
    const UCHAR * pBuffer = ( const UCHAR * ) *pBufferPtr;
@@ -1330,7 +1330,7 @@ PHB_ITEM hb_itemDeserialize( const char ** pBufferPtr, ULONG * pulSize )
    return pItem;
 }
 
-PHB_ITEM hb_itemDeserializeCP( const char ** pBufferPtr, ULONG * pulSize,
+PHB_ITEM hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pulSize,
                                PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    PHB_CYCLIC_REF pRef = NULL;
@@ -1356,7 +1356,7 @@ HB_FUNC( HB_SERIALIZE )
       PHB_CODEPAGE cdpIn, cdpOut;
       const char * pszCdpIn, * pszCdpOut;
       char * pBuffer;
-      ULONG ulSize;
+      HB_SIZE ulSize;
 
       pszCdpIn = hb_parc( 3 );
       pszCdpOut = hb_parc( 4 );
@@ -1372,7 +1372,7 @@ HB_FUNC( HB_SERIALIZE )
 HB_FUNC( HB_DESERIALIZE )
 {
    PHB_ITEM pItem, pParam = hb_param( 1, HB_IT_BYREF );
-   ULONG ulSize = hb_parclen( 1 );
+   HB_SIZE ulSize = hb_parclen( 1 );
 
    if( ulSize )
    {

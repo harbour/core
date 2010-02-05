@@ -108,7 +108,7 @@ HB_FUNC( DIRECTORY )
    const char *   szDirSpec = hb_parc( 1 );
    const char *   szAttributes = hb_parc( 2 );
    char *         pszFree = NULL;
-   ULONG          ulMask;
+   HB_FATTR       ulMask;
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
    PHB_FFIND ffind;

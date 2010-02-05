@@ -54,21 +54,21 @@
 
 /* NOTE: szTime must be 9 chars large. */
 
-static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
+static char * hb_SecToTimeStr( char * pszTime, long lTime )
 {
    int iValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%p, %lu)", pszTime, ulTime));
+   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%p, %ld)", pszTime, lTime));
 
-   iValue = ( int ) ( ( ulTime / 3600 ) % 24 );
+   iValue = ( int ) ( ( lTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';
    pszTime[ 1 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 2 ] = ':';
-   iValue = ( int ) ( ( ulTime / 60 ) % 60 );
+   iValue = ( int ) ( ( lTime / 60 ) % 60 );
    pszTime[ 3 ] = ( char ) ( iValue / 10 ) + '0';
    pszTime[ 4 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 5 ] = ':';
-   iValue = ( int ) ( ulTime % 60 );
+   iValue = ( int ) ( lTime % 60 );
    pszTime[ 6 ] = ( char ) ( iValue / 10 ) + '0';
    pszTime[ 7 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 8 ] = '\0';
@@ -76,25 +76,25 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
    return pszTime;
 }
 
-static ULONG hb_TimeStrToSec( const char * pszTime )
+static long hb_TimeStrToSec( const char * pszTime )
 {
    HB_SIZE ulLen;
-   ULONG ulTime = 0;
+   long lTime = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
 
    ulLen = strlen( pszTime );
 
    if( ulLen >= 1 )
-      ulTime += ( ULONG ) hb_strVal( pszTime, ulLen ) * 3600;
+      lTime += ( long ) hb_strVal( pszTime, ulLen ) * 3600;
 
    if( ulLen >= 4 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
+      lTime += ( long ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
 
    if( ulLen >= 7 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 6, ulLen - 6 );
+      lTime += ( long ) hb_strVal( pszTime + 6, ulLen - 6 );
 
-   return ulTime;
+   return lTime;
 }
 
 HB_FUNC( DAYS )
@@ -104,11 +104,11 @@ HB_FUNC( DAYS )
 
 HB_FUNC( ELAPTIME )
 {
-   ULONG ulStart = hb_TimeStrToSec( hb_parcx( 1 ) );
-   ULONG ulEnd = hb_TimeStrToSec( hb_parcx( 2 ) );
+   long lStart = hb_TimeStrToSec( hb_parcx( 1 ) );
+   long lEnd = hb_TimeStrToSec( hb_parcx( 2 ) );
    char szTime[ 9 ];
 
-   hb_retc( hb_SecToTimeStr( szTime, ( ulEnd < ulStart ? 86400 : 0 ) + ulEnd - ulStart ) );
+   hb_retc( hb_SecToTimeStr( szTime, ( lEnd < lStart ? 86400 : 0 ) + lEnd - lStart ) );
 }
 
 HB_FUNC( SECS )

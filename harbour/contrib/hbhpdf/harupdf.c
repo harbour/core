@@ -335,7 +335,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE )
    char * pszFree;
    const char * pszFileName = hb_fsNameConv( hb_parcx( 2 ), &pszFree );
 
-   hb_retc( HPDF_LoadTTFontFromFile( HPDF_Doc_par( 1 ), pszFileName, hb_parl( 3 ) ) );
+   hb_retc( HPDF_LoadTTFontFromFile( HPDF_Doc_par( 1 ), pszFileName, hb_parl( 3 ) ? HPDF_TRUE : HPDF_FALSE ) );
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -348,7 +348,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE2 )
    char * pszFree;
    const char * pszFileName = hb_fsNameConv( hb_parcx( 2 ), &pszFree );
 
-   hb_retc( HPDF_LoadTTFontFromFile2( HPDF_Doc_par( 1 ), pszFileName, hb_parni( 3 ), hb_parl( 4 ) ) );
+   hb_retc( HPDF_LoadTTFontFromFile2( HPDF_Doc_par( 1 ), pszFileName, hb_parni( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE ) );
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -705,7 +705,7 @@ HB_FUNC( HPDF_PAGE_TEXTWIDTH )
 */
 HB_FUNC( HPDF_PAGE_MEASURETEXT )
 {
-   hb_retnl( ( long ) HPDF_Page_MeasureText( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ), ( HPDF_REAL ) hb_parnd( 3 ), hb_parl( 4 ), NULL ) );
+   hb_retnl( ( long ) HPDF_Page_MeasureText( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ), ( HPDF_REAL ) hb_parnd( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE, NULL ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_GetMode( hPage ) -> nGraphicMode
@@ -1548,7 +1548,7 @@ HB_FUNC( HPDF_FONT_MEASURETEXT )
                                     ( HPDF_REAL ) hb_parnd( 5 ),
                                     ( HPDF_REAL ) hb_parnd( 6 ),
                                     ( HPDF_REAL ) hb_parnd( 7 ),
-                                    hb_parl( 8 ),
+                                    hb_parl( 8 ) ? HPDF_TRUE : HPDF_FALSE,
                                     NULL ) );
 }
 /*----------------------------------------------------------------------*/
@@ -1643,7 +1643,7 @@ HB_FUNC( HPDF_TEXTANNOT_SETICON )
 */
 HB_FUNC( HPDF_TEXTANNOT_SETOPENED )
 {
-   hb_retnl( ( long ) HPDF_TextAnnot_SetOpened( ( HPDF_Annotation ) hb_parptr( 1 ), hb_parl( 2 ) ) );
+   hb_retnl( ( long ) HPDF_TextAnnot_SetOpened( ( HPDF_Annotation ) hb_parptr( 1 ), hb_parl( 2 ) ? HPDF_TRUE : HPDF_FALSE ) );
 }
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -1656,7 +1656,7 @@ HB_FUNC( HPDF_TEXTANNOT_SETOPENED )
 */
 HB_FUNC( HPDF_OUTLINE_SETOPENED )
 {
-   hb_retnl( ( long ) HPDF_Outline_SetOpened( ( HPDF_Outline ) hb_parptr( 1 ), hb_parl( 2 ) ) );
+   hb_retnl( ( long ) HPDF_Outline_SetOpened( ( HPDF_Outline ) hb_parptr( 1 ), hb_parl( 2 ) ? HPDF_TRUE : HPDF_FALSE ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPDF_Outline_SetDestination( hOutline, hDestn ) -> hStatus

@@ -78,9 +78,9 @@
    #include <conio.h>
 #endif
 
-static int hb_Inp9x( USHORT usPort )
+static int hb_Inp9x( unsigned short int usPort )
 {
-   USHORT usVal;
+   unsigned short int usVal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_Inp9x(%hu)", usPort));
 
@@ -105,11 +105,11 @@ static int hb_Inp9x( USHORT usPort )
 
    #elif defined( __WATCOMC__ )
 
-      usVal = ( USHORT ) inp( usPort );
+      usVal = ( unsigned short int ) inp( usPort );
 
    #else
 
-      usVal = ( USHORT ) _inp( usPort );
+      usVal = ( unsigned short int ) _inp( usPort );
 
    #endif
 
@@ -118,7 +118,7 @@ static int hb_Inp9x( USHORT usPort )
 
 /* *********************************************************************** */
 
-static int hb_Outp9x( USHORT usPort, USHORT usVal )
+static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_Outp9x(%hu, %hu)", usPort, usVal));
 
@@ -157,8 +157,8 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
 /* dDurat is in seconds */
 static void hb_gt_w9xTone( double dFreq, double dDurat )
 {
-   INT uLSB, uMSB;
-   ULONG lAdjFreq;
+   int uLSB, uMSB;
+   unsigned long lAdjFreq;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat));
 
@@ -173,29 +173,29 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
       /* Setup Sound Control Port Registers and timer channel 2 */
       hb_Outp9x( 67, 182 );
 
-      lAdjFreq = ( ULONG ) ( 1193180 / dFreq );
+      lAdjFreq = ( unsigned long ) ( 1193180 / dFreq );
 
-      if( ( LONG ) lAdjFreq < 0 )
+      if( ( long ) lAdjFreq < 0 )
          uLSB = lAdjFreq + 65536;
       else
          uLSB = lAdjFreq % 256;
 
-      if( ( LONG ) lAdjFreq < 0 )
+      if( ( long ) lAdjFreq < 0 )
          uMSB = lAdjFreq + 65536;
       else
          uMSB = lAdjFreq / 256;
 
       /* set the frequency ( LSB, MSB ) */
 
-      hb_Outp9x( 66, ( USHORT ) uLSB );
-      hb_Outp9x( 66, ( USHORT ) uMSB );
+      hb_Outp9x( 66, ( unsigned short int ) uLSB );
+      hb_Outp9x( 66, ( unsigned short int ) uMSB );
 
       /* Get current Port setting */
       /* enable Speaker Data & Timer gate bits */
       /* (00000011B is bitmask to enable sound) */
       /* Turn on Speaker - sound Tone for duration.. */
 
-      hb_Outp9x( 97, ( USHORT ) hb_Inp9x( 97 ) | 3 );
+      hb_Outp9x( 97, ( unsigned short int ) hb_Inp9x( 97 ) | 3 );
 
       hb_idleSleep( dDurat );
 
@@ -222,7 +222,7 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
       less than < 20 hz.  Windows NT minimum is 37... */
 
    if( dFreq >= 37.0 )
-      Beep( ( ULONG ) dFreq, ( ULONG ) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
+      Beep( ( DWORD ) dFreq, ( DWORD ) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
    else
       hb_idleSleep( dDurat );
 }
