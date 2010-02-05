@@ -60,10 +60,10 @@ HB_FUNC( HB_HMAC_SHA1 )
    HMAC_SHA1_CTX ctx;
 
    HMAC_SHA1_Init( &ctx );
-   HMAC_SHA1_UpdateKey( &ctx, ( unsigned char * ) hb_parcx( 2 ), hb_parclen( 2 ) );
+   HMAC_SHA1_UpdateKey( &ctx, ( const unsigned char * ) hb_parcx( 2 ), hb_parclen( 2 ) );
    HMAC_SHA1_EndKey( &ctx );
    HMAC_SHA1_StartMessage( &ctx );
-   HMAC_SHA1_UpdateMessage( &ctx, ( unsigned char * ) hb_parcx( 1 ), hb_parclen( 1 ) );
+   HMAC_SHA1_UpdateMessage( &ctx, ( const unsigned char * ) hb_parcx( 1 ), hb_parclen( 1 ) );
    HMAC_SHA1_EndMessage( mac, &ctx );
    HMAC_SHA1_Done( &ctx );
 

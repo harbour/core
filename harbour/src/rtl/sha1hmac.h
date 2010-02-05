@@ -73,10 +73,10 @@ typedef struct _HMAC_SHA1_CTX {
 
 #ifndef NOPROTO
 void HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, unsigned char *key, unsigned int keylen);
+void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const unsigned char *key, unsigned int keylen);
 void HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx);
 void HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, unsigned char *data, unsigned int datalen);
+void HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const unsigned char *data, unsigned int datalen);
 void HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx);
 void HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx);
 #else

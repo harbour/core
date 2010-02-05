@@ -101,8 +101,8 @@ C functions:
 /* MD5 buffer */
 typedef struct
 {
-   UINT32   accum[ 4 ];
-   BYTE     buf[ 64 ];
+   HB_U32   accum[ 4 ];
+   HB_BYTE  buf[ 64 ];
 } MD5_BUF;
 
 /*
@@ -129,7 +129,7 @@ typedef struct
 #define MAX_FBUF 0x20000 /* file read buffer size, MUST be 64*n */
 
 /* Static data */
-static const UINT32 T[ 64 ] = {
+static const HB_U32 T[ 64 ] = {
    0xD76AA478, 0xE8C7B756, 0x242070DB, 0xC1BDCEEE,
    0xF57C0FAF, 0x4787C62A, 0xA8304613, 0xFD469501,
    0x698098D8, 0x8B44F7AF, 0xFFFF5BB1, 0x895CD7BE,
@@ -150,8 +150,8 @@ static const UINT32 T[ 64 ] = {
 
 static void hb_md5go( MD5_BUF * md5 )
 {
-   UINT32 X[ 16 ], A[ 4 ];
-   BYTE * ptr;
+   HB_U32 X[ 16 ], A[ 4 ];
+   HB_BYTE * ptr;
    int i;
 
    /* copy accumulators first */
@@ -234,7 +234,7 @@ static void hb_md5go( MD5_BUF * md5 )
    md5->accum[ 3 ] += A[ 3 ];
 }
 
-static void hb_md5accinit( UINT32 accum[] )
+static void hb_md5accinit( HB_U32 accum[] )
 {
    /* fill initial accumulator state */
    accum[ 0 ] = 0x67452301;
@@ -243,7 +243,7 @@ static void hb_md5accinit( UINT32 accum[] )
    accum[ 3 ] = 0x10325476;
 }
 
-static void hb_md5val( UINT32 accum[], char * md5val )
+static void hb_md5val( HB_U32 accum[], char * md5val )
 {
    int i, n;
 
@@ -257,7 +257,7 @@ static void hb_md5val( UINT32 accum[], char * md5val )
 void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
-   UCHAR buf[ 128 ];
+   HB_UCHAR buf[ 128 ];
    MD5_BUF md5;
    int i, n;
 
@@ -285,11 +285,11 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
       memcpy( md5.buf, buf, 64 );
       hb_md5go( &md5 );
    }
-   buf[ i++ ] = ( UCHAR ) ( ( ulLen << 3 ) & 0xF8 );
+   buf[ i++ ] = ( HB_UCHAR ) ( ( ulLen << 3 ) & 0xF8 );
    ulLen >>= 5;
    for( n = 7; n; --n )
    {
-      buf[ i++ ] = ( UCHAR ) ( ulLen & 0xFF );
+      buf[ i++ ] = ( HB_UCHAR ) ( ulLen & 0xFF );
       ulLen >>= 8;
    }
    memcpy( md5.buf, buf + i - 64, 64 );
@@ -304,8 +304,8 @@ void hb_md5file( HB_FHANDLE hFile, char * digest )
    HB_SIZE n;
    int i;
    HB_FOFFSET flen = 0;
-   UCHAR buf[ 128 ];
-   BYTE * readbuf = ( BYTE * ) hb_xgrab( MAX_FBUF );
+   HB_UCHAR buf[ 128 ];
+   HB_BYTE * readbuf = ( HB_BYTE * ) hb_xgrab( MAX_FBUF );
 
    hb_md5accinit( md5.accum );
    n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
@@ -340,11 +340,11 @@ void hb_md5file( HB_FHANDLE hFile, char * digest )
       memcpy( md5.buf, buf, 64 );
       hb_md5go( &md5 );
    }
-   buf[ i++ ] = ( UCHAR ) ( ( flen << 3 ) & 0xF8 );
+   buf[ i++ ] = ( HB_UCHAR ) ( ( flen << 3 ) & 0xF8 );
    flen >>= 5;
    for( n = 7; n; --n )
    {
-      buf[ i++ ] = ( UCHAR ) ( flen & 0xFF );
+      buf[ i++ ] = ( HB_UCHAR ) ( flen & 0xFF );
       flen >>= 8;
    }
    memcpy( md5.buf, buf + i - 64, 64 );

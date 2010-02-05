@@ -67,7 +67,7 @@ typedef struct _SHA_CTX {
 
 #ifndef NOPROTO
 void SHA1_Init(SHA_CTX *context);
-void SHA1_Update(SHA_CTX *context, sha1_byte *data, unsigned int len);
+void SHA1_Update(SHA_CTX *context, const sha1_byte *data, unsigned int len);
 void SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX* context);
 #else
 void SHA1_Init();

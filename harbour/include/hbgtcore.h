@@ -335,7 +335,7 @@ typedef struct _HB_GT_BASE
    PHB_ITEM       pNotifierBlock;
    PHB_ITEM       pCargo;
 
-   void *         pGTData[HB_GT_MAX_];    /* local GT data */
+   void *         pGTData[ HB_GT_MAX_ ];    /* local GT data */
 
 } HB_GT_BASE, * PHB_GT_BASE, * PHB_GT;
 

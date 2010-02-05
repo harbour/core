@@ -56,9 +56,9 @@
 
 HB_FUNC( HB_SHA224 )
 {
-   BYTE digest[ SHA224_DIGEST_SIZE ];
+   HB_BYTE digest[ SHA224_DIGEST_SIZE ];
 
-   sha224( ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
+   sha224( ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -72,9 +72,9 @@ HB_FUNC( HB_SHA224 )
 
 HB_FUNC( HB_SHA256 )
 {
-   BYTE digest[ SHA256_DIGEST_SIZE ];
+   HB_BYTE digest[ SHA256_DIGEST_SIZE ];
 
-   sha256( ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
+   sha256( ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -88,9 +88,9 @@ HB_FUNC( HB_SHA256 )
 
 HB_FUNC( HB_SHA384 )
 {
-   BYTE digest[ SHA384_DIGEST_SIZE ];
+   HB_BYTE digest[ SHA384_DIGEST_SIZE ];
 
-   sha384( ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
+   sha384( ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -104,9 +104,9 @@ HB_FUNC( HB_SHA384 )
 
 HB_FUNC( HB_SHA512 )
 {
-   BYTE digest[ SHA512_DIGEST_SIZE ];
+   HB_BYTE digest[ SHA512_DIGEST_SIZE ];
 
-   sha512( ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
+   sha512( ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {

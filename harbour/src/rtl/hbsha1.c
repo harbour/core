@@ -60,7 +60,7 @@ HB_FUNC( HB_SHA1 )
    SHA_CTX ctx;
 
    SHA1_Init( &ctx );
-   SHA1_Update( &ctx, ( sha1_byte * ) hb_parcx( 1 ), hb_parclen( 1 ) );
+   SHA1_Update( &ctx, ( const sha1_byte * ) hb_parcx( 1 ), hb_parclen( 1 ) );
    SHA1_Final( digest, &ctx );
 
    if( ! hb_parl( 2 ) )
