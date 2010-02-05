@@ -230,26 +230,32 @@
                       to refer to current disk
 */
 
-#if defined( __DJGPP__ )
+#if defined( __DJGPP__ ) || defined( __BORLANDC__ ) || defined( __DMC__ )
+
    #define HB_FS_GETDRIVE(n)  do { n = getdisk(); } while( 0 )
    #define HB_FS_SETDRIVE(n)  setdisk( n )
 
 #elif defined( __WATCOMC__ )
-   #define HB_FS_GETDRIVE(n)  do { _dos_getdrive( &( n ) ); --( n ); } while( 0 )
+
+   #define HB_FS_GETDRIVE(n)  do { \
+                                 unsigned _u = 0; \
+                                 _dos_getdrive( &_u ); n = _u - 1; \
+                              } while( 0 )
    #define HB_FS_SETDRIVE(n)  do { \
-                                 unsigned int uiDummy; \
-                                 _dos_setdrive( ( n ) + 1, &uiDummy ); \
+                                 unsigned int _u = 0; \
+                                 _dos_setdrive( ( n ) + 1, &_u ); \
                               } while( 0 )
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
+   /* 'A' based version */
+
    #define HB_FS_GETDRIVE(n)  do { n = _getdrive() - 'A'; } while( 0 )
    #define HB_FS_SETDRIVE(n)  _chdrive( ( n ) + 'A' )
 
-#else
-   #define HB_FS_GETDRIVE(n)  do { \
-                                 n = _getdrive(); \
-                                 n -= ( ( n ) < 'A' ) ? 1 : 'A'; \
-                              } while( 0 )
+#else /* _MSC_VER, __POCC__, __XCC__, MINGW, __BORLANDC__, __DMC__ */
+   /* 1 based version */
+
+   #define HB_FS_GETDRIVE(n)  do { n = _getdrive() - 1; } while( 0 )
    #define HB_FS_SETDRIVE(n)  _chdrive( ( n ) + 1 )
 
 #endif
@@ -2875,23 +2881,22 @@ HB_ERRCODE hb_fsChDrv( int iDrive )
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
    {
-      /* 'unsigned int' _have to_ be used in Watcom */
-      unsigned int uiSave, uiNewDrive;
+      int iSave, iNewDrive;
 
       hb_vmUnlock();
 
-      HB_FS_GETDRIVE( uiSave );
+      HB_FS_GETDRIVE( iSave );
       HB_FS_SETDRIVE( iDrive );
-      HB_FS_GETDRIVE( uiNewDrive );
+      HB_FS_GETDRIVE( iNewDrive );
 
-      if( ( unsigned int ) iDrive == uiNewDrive )
+      if( iDrive == iNewDrive )
       {
          nResult = 0;
          hb_fsSetError( 0 );
       }
       else
       {
-         HB_FS_SETDRIVE( uiSave );
+         HB_FS_SETDRIVE( iSave );
 
          nResult = ( HB_ERRCODE ) FS_ERROR;
          hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -2913,25 +2918,25 @@ HB_ERRCODE hb_fsChDrv( int iDrive )
 
 int hb_fsCurDrv( void )
 {
-   unsigned int uiDrive;
+   int iDrive;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
 
    hb_vmUnlock();
-   HB_FS_GETDRIVE( uiDrive );
+   HB_FS_GETDRIVE( iDrive );
    hb_fsSetError( 0 );
    hb_vmLock();
 
 #else
 
-   uiDrive = 0;
+   iDrive = 0;
    hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 
 #endif
 
-   return ( int ) uiDrive; /* Return the drive number, base 0. */
+   return iDrive; /* Return the drive number, base 0. */
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
@@ -2952,17 +2957,15 @@ HB_ERRCODE hb_fsIsDrv( int iDrive )
    }
 #elif defined( HB_OS_HAS_DRIVE_LETTER )
    {
-      /* 'unsigned int' _have to_ be used in Watcom
-       */
-      unsigned int uiSave, uiNewDrive;
+      int iSave, iNewDrive;
 
       hb_vmUnlock();
 
-      HB_FS_GETDRIVE( uiSave );
+      HB_FS_GETDRIVE( iSave );
       HB_FS_SETDRIVE( iDrive );
-      HB_FS_GETDRIVE( uiNewDrive );
-      nResult = ( ( unsigned int ) iDrive == uiNewDrive ) ? 0 : ( HB_ERRCODE ) FS_ERROR;
-      HB_FS_SETDRIVE( uiSave );
+      HB_FS_GETDRIVE( iNewDrive );
+      nResult = ( iDrive == iNewDrive ) ? 0 : ( HB_ERRCODE ) FS_ERROR;
+      HB_FS_SETDRIVE( iSave );
       hb_fsSetError( 0 );
 
       hb_vmLock();
