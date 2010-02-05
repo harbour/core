@@ -84,18 +84,24 @@ HB_FUNC( DISKSPACE )
 
 #if defined( HB_OS_DOS )
    {
-      USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-      union REGS regs;
+      int iDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
 
-      regs.HB_XREGS.dx = uiDrive;
-      regs.h.ah = 0x36;
-      HB_DOS_INT86( 0x21, &regs, &regs );
+      if( iDrive >= 0 )
+      {
+         union REGS regs;
 
-      bError = regs.HB_XREGS.ax == 0xFFFF;
-      if( !bError )
-         dSpace = ( double ) regs.HB_XREGS.bx *
-                  ( double ) regs.HB_XREGS.ax *
-                  ( double ) regs.HB_XREGS.cx;
+         regs.HB_XREGS.dx = ( unsigned short int ) iDrive;
+         regs.h.ah = 0x36;
+         HB_DOS_INT86( 0x21, &regs, &regs );
+
+         bError = regs.HB_XREGS.ax == 0xFFFF;
+         if( ! bError )
+            dSpace = ( double ) regs.HB_XREGS.bx *
+                     ( double ) regs.HB_XREGS.ax *
+                     ( double ) regs.HB_XREGS.cx;
+      }
+      else
+         bError = HB_TRUE;
    }
 #elif defined( HB_OS_WIN )
    {
@@ -115,67 +121,75 @@ HB_FUNC( DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 #endif
 
-      ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
-      USHORT uiParam = ( USHORT ) hb_parni( 1 );
-      USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
-      UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+      int iDrive = hb_parni( 1 );
 
-      TCHAR lpPath[ 4 ];
+      if( iDrive >= 0 )
+      {
+         ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
+         UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
-      lpPath[ 0 ] = ( TCHAR ) ( uiDrive + 'A' - 1 );
-      lpPath[ 1 ] = TEXT( ':' );
-      lpPath[ 2 ] = TEXT( '\\' );
-      lpPath[ 3 ] = TEXT( '\0' );
+         TCHAR lpPath[ 4 ];
+
+         if( iDrive == 0 )
+            iDrive = hb_fsCurDrv() + 1;
+
+         lpPath[ 0 ] = ( TCHAR ) ( iDrive + 'A' - 1 );
+         lpPath[ 1 ] = TEXT( ':' );
+         lpPath[ 2 ] = TEXT( '\\' );
+         lpPath[ 3 ] = TEXT( '\0' );
 
 #if defined( HB_OS_WIN_CE )
 
-      bError = ! GetDiskFreeSpaceEx( lpPath,
-                                     ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                     ( PULARGE_INTEGER ) &i64TotalBytes,
-                                     ( PULARGE_INTEGER ) &i64FreeBytes );
-      if( ! bError )
-         dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
+         bError = ! GetDiskFreeSpaceEx( lpPath,
+                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                        ( PULARGE_INTEGER ) &i64TotalBytes,
+                                        ( PULARGE_INTEGER ) &i64FreeBytes );
+         if( ! bError )
+            dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
 #else
-      {
-         typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
-                                            PULARGE_INTEGER, PULARGE_INTEGER );
-         P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                              GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+         {
+            typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
+                                               PULARGE_INTEGER, PULARGE_INTEGER );
+            P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
+                                 GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
 #if defined( UNICODE )
-                                              HBTEXT( "GetDiskFreeSpaceExW" ) );
+                                                 HBTEXT( "GetDiskFreeSpaceExW" ) );
 #else
-                                              HBTEXT( "GetDiskFreeSpaceExA" ) );
+                                                 HBTEXT( "GetDiskFreeSpaceExA" ) );
 #endif
 
-         if( pGetDiskFreeSpaceEx )
-         {
-            bError = pGetDiskFreeSpaceEx( lpPath,
-                                          ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                          ( PULARGE_INTEGER ) &i64TotalBytes,
-                                          ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_FALSE : HB_TRUE;
-            if( ! bError )
-               dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
-         }
-         else
-         {
-            DWORD dwSectorsPerCluster;
-            DWORD dwBytesPerSector;
-            DWORD dwNumberOfFreeClusters;
-            DWORD dwTotalNumberOfClusters;
+            if( pGetDiskFreeSpaceEx )
+            {
+               bError = pGetDiskFreeSpaceEx( lpPath,
+                                             ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                             ( PULARGE_INTEGER ) &i64TotalBytes,
+                                             ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_FALSE : HB_TRUE;
+               if( ! bError )
+                  dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
+            }
+            else
+            {
+               DWORD dwSectorsPerCluster;
+               DWORD dwBytesPerSector;
+               DWORD dwNumberOfFreeClusters;
+               DWORD dwTotalNumberOfClusters;
 
-            bError = GetDiskFreeSpace( lpPath,
-                                       &dwSectorsPerCluster,
-                                       &dwBytesPerSector,
-                                       &dwNumberOfFreeClusters,
-                                       &dwTotalNumberOfClusters ) ? HB_FALSE : HB_TRUE;
-            if( ! bError )
-               dSpace = ( double ) dwNumberOfFreeClusters *
-                        ( double ) dwSectorsPerCluster *
-                        ( double ) dwBytesPerSector;
+               bError = GetDiskFreeSpace( lpPath,
+                                          &dwSectorsPerCluster,
+                                          &dwBytesPerSector,
+                                          &dwNumberOfFreeClusters,
+                                          &dwTotalNumberOfClusters ) ? HB_FALSE : HB_TRUE;
+               if( ! bError )
+                  dSpace = ( double ) dwNumberOfFreeClusters *
+                           ( double ) dwSectorsPerCluster *
+                           ( double ) dwBytesPerSector;
+            }
          }
+#endif
+         SetErrorMode( uiErrMode );
       }
-#endif
-      SetErrorMode( uiErrMode );
+      else
+         bError = HB_TRUE;
    }
 #elif defined( HB_OS_OS2 )
    {
