@@ -122,7 +122,8 @@ void SHA1_Init(SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void SHA1_Update(SHA_CTX *context, const sha1_byte *data, unsigned int len) {
+void SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
+    const sha1_byte * data = ( const sha1_byte * ) datav;
     unsigned int    i, j;
 
     j = (context->count[0] >> 3) & 63;

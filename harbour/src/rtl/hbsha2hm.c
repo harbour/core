@@ -56,9 +56,9 @@
 
 HB_FUNC( HB_HMAC_SHA224 )
 {
-   HB_BYTE mac[ SHA224_DIGEST_SIZE ];
+   unsigned char mac[ SHA224_DIGEST_SIZE ];
 
-   hmac_sha224( ( const HB_BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
+   hmac_sha224( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -72,9 +72,9 @@ HB_FUNC( HB_HMAC_SHA224 )
 
 HB_FUNC( HB_HMAC_SHA256 )
 {
-   HB_BYTE mac[ SHA256_DIGEST_SIZE ];
+   unsigned char mac[ SHA256_DIGEST_SIZE ];
 
-   hmac_sha256( ( const HB_BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
+   hmac_sha256( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -88,9 +88,9 @@ HB_FUNC( HB_HMAC_SHA256 )
 
 HB_FUNC( HB_HMAC_SHA384 )
 {
-   HB_BYTE mac[ SHA384_DIGEST_SIZE ];
+   unsigned char mac[ SHA384_DIGEST_SIZE ];
 
-   hmac_sha384( ( const HB_BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
+   hmac_sha384( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -104,9 +104,9 @@ HB_FUNC( HB_HMAC_SHA384 )
 
 HB_FUNC( HB_HMAC_SHA512 )
 {
-   HB_BYTE mac[ SHA512_DIGEST_SIZE ];
+   unsigned char mac[ SHA512_DIGEST_SIZE ];
 
-   hmac_sha512( ( const HB_BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( const HB_BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
+   hmac_sha512( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
