@@ -232,24 +232,24 @@ HB_FUNC( CURDIRX )
    HB_ERRCODE uiErrorOld = hb_fsError();
    char * pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
    PHB_ITEM pDrv = hb_param( 1, HB_IT_STRING );
-   BYTE cCurDrv = hb_fsCurDrv();
-   BYTE cDrv;
+   int iCurDrv = hb_fsCurDrv();
+   int iDrv;
 
    if( pDrv && hb_parclen( 1 ) > 0 )
    {
-      cDrv = ( BYTE ) ( HB_TOUPPER( *hb_itemGetCPtr( pDrv ) ) - 'A' );
-      if( cDrv != cCurDrv )
-         hb_fsChDrv( cDrv );
+      iDrv = ( int ) ( HB_TOUPPER( *hb_itemGetCPtr( pDrv ) ) - 'A' );
+      if( iDrv != iCurDrv )
+         hb_fsChDrv( iDrv );
    }
    else
-      cDrv = cCurDrv;
+      iDrv = iCurDrv;
 
    /* NOTE: hb_fsCurDirBuffEx() in xhb, but I couldn't decipher the difference. [vszakats] */
-   hb_fsCurDirBuff( cDrv, pbyBuffer, HB_PATH_MAX );
+   hb_fsCurDirBuff( iDrv, pbyBuffer, HB_PATH_MAX );
 
    hb_retc_buffer( pbyBuffer );
 
-   hb_fsChDrv( cCurDrv );
+   hb_fsChDrv( iCurDrv );
 
    hb_fsSetError( uiErrorOld );
 }

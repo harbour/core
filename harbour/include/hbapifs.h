@@ -155,7 +155,7 @@ HB_EXTERN_BEGIN
                                 HB_FA_POSIX_SID(a) )
 
 extern HB_EXPORT HB_BOOL    hb_fsChDir       ( const char * pszDirName ); /* change working directory */
-extern HB_EXPORT HB_ERRCODE hb_fsChDrv       ( BYTE nDrive ); /* change working drive */
+extern HB_EXPORT HB_ERRCODE hb_fsChDrv       ( int iDrive ); /* change working drive */
 extern HB_EXPORT void       hb_fsClose       ( HB_FHANDLE hFileHandle ); /* close a file */
 extern HB_EXPORT void       hb_fsCommit      ( HB_FHANDLE hFileHandle ); /* commit updates of a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreate      ( const char * pszFileName, HB_FATTR ulAttr ); /* create a file */
@@ -163,10 +163,10 @@ extern HB_EXPORT HB_FHANDLE hb_fsCreateEx    ( const char * pszFilename, HB_FATT
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTemp  ( const char * pszDir, const char * pszPrefix, HB_FATTR ulAttr, char * pszName ); /* create a temporary file from components */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, HB_FATTR ulAttr ); /* create a temporary file from components */
 extern HB_EXPORT HB_ERRCODE hb_fsTempDir     ( char * pszDir ); /* full buffer with system temp directory (or empty on error) */
-extern HB_EXPORT const char * hb_fsCurDir    ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
-extern HB_EXPORT HB_ERRCODE hb_fsCurDirBuff  ( USHORT uiDrive, char * pbyBuffer, HB_SIZE ulLen ); /* copy current directory for given drive into a buffer */
+extern HB_EXPORT const char * hb_fsCurDir    ( int iDrive ); /* retrieve a static pointer containing current directory for specified drive */
+extern HB_EXPORT HB_ERRCODE hb_fsCurDirBuff  ( int iDrive, char * pbyBuffer, HB_SIZE ulLen ); /* copy current directory for given drive into a buffer */
 extern HB_EXPORT void       hb_fsBaseDirBuff ( char * pbyBuffer ); /* retrieve the base dir of the executable */
-extern HB_EXPORT BYTE       hb_fsCurDrv      ( void ); /* retrieve current drive number */
+extern HB_EXPORT int        hb_fsCurDrv      ( void ); /* retrieve current drive number */
 extern HB_EXPORT HB_BOOL    hb_fsDelete      ( const char * pszFileName ); /* delete a file */
 extern HB_EXPORT HB_BOOL    hb_fsEof         ( HB_FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
 extern HB_EXPORT HB_ERRCODE hb_fsError       ( void ); /* retrieve file system error */
@@ -178,7 +178,7 @@ extern HB_EXPORT HB_FHANDLE hb_fsExtOpen     ( const char * pszFileName, const c
                                                USHORT uiFlags, const char * pPaths, PHB_ITEM pError ); /* open a file using default extension and a list of paths */
 extern HB_EXPORT char *     hb_fsExtName     ( const char * pFilename, const char * pDefExt,
                                                USHORT uiExFlags, const char * pPaths ); /* convert file name for hb_fsExtOpen, caller must free the returned buffer */
-extern HB_EXPORT HB_ERRCODE hb_fsIsDrv       ( BYTE nDrive ); /* determine if a drive number is a valid drive */
+extern HB_EXPORT HB_ERRCODE hb_fsIsDrv       ( int iDrive ); /* determine if a drive number is a valid drive */
 extern HB_EXPORT HB_BOOL    hb_fsIsDevice    ( HB_FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
 extern HB_EXPORT HB_BOOL    hb_fsLock        ( HB_FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
 extern HB_EXPORT HB_BOOL    hb_fsLockLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,

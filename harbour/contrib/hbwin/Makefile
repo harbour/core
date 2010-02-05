@@ -38,6 +38,7 @@ C_SOURCES := \
    wapi_winbase.c \
    wapi_winbase_mutex.c \
    wapi_wingdi.c \
+   wapi_wingdi_font.c \
    wapi_winnls.c \
    wapi_winuser.c \
 

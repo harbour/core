@@ -90,7 +90,7 @@ HB_FUNC( DIRNAME )
 {
    char * pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX );
    const char * pszDrive = hb_parc( 1 );
-   USHORT uiDrive = 0;
+   int iDrive = 0;
 
    if( pszDrive )
    {
@@ -99,12 +99,12 @@ HB_FUNC( DIRNAME )
        * to create drives after 'Z' letter.
        */
       if( uc >= 'A' && uc < 'A' + 32 )
-         uiDrive = uc - ( 'A' - 1 );
+         iDrive = uc - ( 'A' - 1 );
       else if( uc >= 'a' && uc < 'a' + 32 )
-         uiDrive = uc - ( 'a' - 1 );
+         iDrive = uc - ( 'a' - 1 );
    }
    pbyBuffer[ 0 ] = HB_OS_PATH_DELIM_CHR;
-   hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, HB_PATH_MAX - 1 );
+   hb_fsCurDirBuff( iDrive, pbyBuffer + 1, HB_PATH_MAX - 1 );
 
    hb_retc_buffer( pbyBuffer );
 }

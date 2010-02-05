@@ -179,7 +179,7 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
 
       if( pszName[ 0 ] != '\0' )
       {
-         int len = strlen( pszName );
+         int len = ( int ) strlen( pszName );
          if( pszName[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
          {
             pszName[ len ] = HB_OS_PATH_DELIM_CHR;
@@ -365,7 +365,7 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATT
 /* NOTE: pszTempDir must be at least HB_PATH_MAX long. */
 HB_ERRCODE hb_fsTempDir( char * pszTempDir )
 {
-   HB_ERRCODE nResult = FS_ERROR;
+   HB_ERRCODE nResult = ( HB_ERRCODE ) FS_ERROR;
 
    pszTempDir[ 0 ] = '\0';
 

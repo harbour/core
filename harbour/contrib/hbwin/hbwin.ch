@@ -284,6 +284,10 @@
 #define WIN_HS_HORIZONTAL           0
 #define WIN_HS_VERTICAL             1
 
+/* WAPI_ADDFONTRESOURCEEX()/WAPI_REMOVEFONTRESOURCEEX() flags */
+#define WIN_FR_PRIVATE              0x10
+#define WIN_FR_NOT_ENUM             0x20
+
 /* Windows charset values (WIN_CREATEFONT()) */
 #define WIN_ANSI_CHARSET            0
 #define WIN_DEFAULT_CHARSET         1

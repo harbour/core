@@ -268,18 +268,18 @@ HB_FUNC( FREADSTR )
 HB_FUNC( CURDIR )
 {
    char szBuffer[ HB_PATH_MAX ];
-   USHORT uiDrive = 0;
+   int iDrive = 0;
    const char * szDrive;
 
    szDrive = hb_parc( 1 );
    if( szDrive )
    {
       if( *szDrive >= 'A' && *szDrive <= 'Z' )
-         uiDrive = *szDrive - ( 'A' - 1 );
+         iDrive = *szDrive - ( 'A' - 1 );
       else if( *szDrive >= 'a' && *szDrive <= 'z' )
-         uiDrive = *szDrive - ( 'a' - 1 );
+         iDrive = *szDrive - ( 'a' - 1 );
    }
-   hb_fsCurDirBuff( uiDrive, szBuffer, sizeof( szBuffer ) );
+   hb_fsCurDirBuff( iDrive, szBuffer, sizeof( szBuffer ) );
 
    hb_retc( szBuffer );
 }

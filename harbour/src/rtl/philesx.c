@@ -79,7 +79,7 @@ HB_FUNC( CURDRIVE )
 
       if( iDrive >= 0 )
       {
-         while( hb_fsChDrv( ( BYTE ) iDrive ) != 0 )
+         while( hb_fsChDrv( iDrive ) != 0 )
          {
             USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 6001, "Operating system error",
                                                   HB_ERR_FUNCNAME, 0, EF_CANDEFAULT | EF_CANRETRY,
