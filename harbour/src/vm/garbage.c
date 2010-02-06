@@ -195,7 +195,7 @@ static void hb_gcUnlink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
 }
 
 /* allocates a memory block */
-void * hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
+void * hb_gcAllocate( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
 {
    HB_GARBAGE_PTR pAlloc;
 
@@ -225,7 +225,7 @@ void * hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
 }
 
 /* allocates a memory block */
-void * hb_gcAllocRaw( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
+void * hb_gcAllocRaw( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
 {
    HB_GARBAGE_PTR pAlloc;
 
@@ -769,7 +769,7 @@ static void hb_gcAllocExit( void )
    }
 }
 
-void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
+void * hb_gcAlloc( HB_SIZE ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
 {
    HB_GC_ALLOC_FUNCS * pFuncs = s_pAllocFuncs, ** pFuncsPtr;
 

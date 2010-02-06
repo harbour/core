@@ -486,11 +486,11 @@ extern HB_SYMB  hb_symEval;
 
 extern HB_EXPORT void    hb_xinit( void );                           /* Initialize fixed memory subsystem */
 extern HB_EXPORT void    hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
-extern HB_EXPORT void *  hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
-extern HB_EXPORT void *  hb_xgrab( ULONG ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
+extern HB_EXPORT void *  hb_xalloc( HB_SIZE ulSize );                /* allocates memory, returns NULL on failure */
+extern HB_EXPORT void *  hb_xgrab( HB_SIZE ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
 extern HB_EXPORT void    hb_xfree( void * pMem );                    /* frees memory */
-extern HB_EXPORT void *  hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
-extern HB_EXPORT ULONG   hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
+extern HB_EXPORT void *  hb_xrealloc( void * pMem, HB_SIZE ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
+extern HB_EXPORT HB_SIZE hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG   hb_xquery( int iMode );                     /* Query different types of memory information */
 extern HB_EXPORT HB_BOOL hb_xtraced( void );
 extern HB_EXPORT void    hb_xsetfilename( const char * szValue );
@@ -506,7 +506,7 @@ extern void       hb_xRefInc( void * pMem );    /* increment reference counter *
 extern HB_BOOL    hb_xRefDec( void * pMem );    /* decrement reference counter, return HB_TRUE when 0 reached */
 extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
-extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated );   /* reallocates memory, create copy if reference counter greater then 1 */
+extern void *     hb_xRefResize( void * pMem, HB_SIZE ulSave, HB_SIZE ulSize, HB_SIZE * pulAllocated );   /* reallocates memory, create copy if reference counter greater then 1 */
 
 #if 0
 
@@ -550,22 +550,22 @@ extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen );
 /* virtual memory */
 typedef ULONG HB_VMHANDLE;
 
-extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
+extern HB_EXPORT HB_VMHANDLE hb_xvalloc( HB_SIZE nSize, USHORT nFlags );
 extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags );
+extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, HB_SIZE nSize, USHORT nFlags );
 extern HB_EXPORT void *      hb_xvlock( HB_VMHANDLE h );
 extern HB_EXPORT void        hb_xvunlock( HB_VMHANDLE h );
 extern HB_EXPORT void *      hb_xvwire( HB_VMHANDLE h );
 extern HB_EXPORT void        hb_xvunwire( HB_VMHANDLE h );
-extern HB_EXPORT ULONG       hb_xvlockcount( HB_VMHANDLE h );
-extern HB_EXPORT ULONG       hb_xvsize( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize );
+extern HB_EXPORT HB_SIZE     hb_xvlockcount( HB_VMHANDLE h );
+extern HB_EXPORT HB_SIZE     hb_xvsize( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapnew( HB_SIZE nSize );
 extern HB_EXPORT void        hb_xvheapdestroy( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize );
-extern HB_EXPORT ULONG       hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize );
-extern HB_EXPORT void        hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset );
-extern HB_EXPORT void *      hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset );
-extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, HB_SIZE nSize );
+extern HB_EXPORT HB_SIZE     hb_xvheapalloc( HB_VMHANDLE h, HB_SIZE nSize );
+extern HB_EXPORT void        hb_xvheapfree( HB_VMHANDLE h, HB_SIZE nOffset );
+extern HB_EXPORT void *      hb_xvheaplock( HB_VMHANDLE h, HB_SIZE nOffset );
+extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, HB_SIZE nOffset );
 
 /* garbage collector */
 #define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
@@ -579,7 +579,7 @@ typedef struct
 }
 HB_GC_FUNCS;
 
-extern HB_EXPORT  void *   hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
+extern HB_EXPORT  void *   hb_gcAllocate( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
 extern HB_EXPORT  void     hb_gcFree( void * pAlloc ); /* deallocates a memory allocated by the garbage collector */
 extern HB_EXPORT  void *   hb_gcLock( void * pAlloc ); /* do not release passed memory block */
 extern HB_EXPORT  void *   hb_gcUnlock( void * pAlloc ); /* passed block is allowed to be released */
@@ -593,13 +593,13 @@ extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 
 #ifdef HB_LEGACY_LEVEL2
-extern HB_EXPORT  void *   hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
+extern HB_EXPORT  void *   hb_gcAlloc( HB_SIZE ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
 #endif
 
 #ifdef _HB_API_INTERNAL_
 extern const HB_GC_FUNCS * hb_gcFuncs( void *pBlock );  /* return cleanup function pointer */
 extern void       hb_gcAttach( void * pBlock );
-extern void *     hb_gcAllocRaw( ULONG ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
+extern void *     hb_gcAllocRaw( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
 extern void       hb_gcGripMark( void * Cargo ); /* mark complex variables inside given item as used */
 extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* mark complex variables inside given item as used */
 extern void       hb_vmIsStackRef( void ); /* hvm.c - mark all local variables as used */

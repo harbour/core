@@ -57,7 +57,7 @@
 
 #include "hbapi.h"
 
-HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags )
+HB_VMHANDLE hb_xvalloc( HB_SIZE nSize, USHORT nFlags )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( nSize );
@@ -71,7 +71,7 @@ void hb_xvfree( HB_VMHANDLE h )
    HB_SYMBOL_UNUSED( h );
 }
 
-HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags )
+HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, HB_SIZE nSize, USHORT nFlags )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -111,14 +111,14 @@ void hb_xvunwire( HB_VMHANDLE h )
 
 /* State */
 
-ULONG hb_xvlockcount( HB_VMHANDLE h )
+HB_SIZE hb_xvlockcount( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    return 0;
 }
 
-ULONG hb_xvsize( HB_VMHANDLE h )
+HB_SIZE hb_xvsize( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -127,7 +127,7 @@ ULONG hb_xvsize( HB_VMHANDLE h )
 
 /* Heap */
 
-HB_VMHANDLE hb_xvheapnew( ULONG nSize )
+HB_VMHANDLE hb_xvheapnew( HB_SIZE nSize )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( nSize );
@@ -140,7 +140,7 @@ void hb_xvheapdestroy( HB_VMHANDLE h )
    HB_SYMBOL_UNUSED( h );
 }
 
-HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize )
+HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, HB_SIZE nSize )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -148,7 +148,7 @@ HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize )
    return 0;
 }
 
-ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
+HB_SIZE hb_xvheapalloc( HB_VMHANDLE h, HB_SIZE nSize )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -156,14 +156,14 @@ ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
    return 0;
 }
 
-void hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset )
+void hb_xvheapfree( HB_VMHANDLE h, HB_SIZE nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    HB_SYMBOL_UNUSED( nOffset );
 }
 
-void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
+void * hb_xvheaplock( HB_VMHANDLE h, HB_SIZE nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -171,7 +171,7 @@ void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
    return NULL;
 }
 
-void hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset )
+void hb_xvheapunlock( HB_VMHANDLE h, HB_SIZE nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );

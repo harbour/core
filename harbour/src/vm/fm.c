@@ -270,7 +270,7 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 typedef struct _HB_MEMINFO
 {
    UINT32      u32Signature;
-   ULONG       ulSize;
+   HB_SIZE     ulSize;
    USHORT      uiProcLine;
    char        szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HB_MEMINFO * pPrevBlock;
@@ -561,7 +561,7 @@ void hb_xsetinfo( const char * szValue )
 #endif
 }
 
-void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
+void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
    PHB_MEMINFO pMem;
 
@@ -647,7 +647,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    return HB_MEM_PTR( pMem );
 }
 
-void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
+void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on failure */
 {
    PHB_MEMINFO pMem;
 
@@ -733,7 +733,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    return HB_MEM_PTR( pMem );
 }
 
-void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
 {
    HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
@@ -761,7 +761,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    else if( s_fStatistic )
    {
       PHB_MEMINFO pMemBlock;
-      ULONG ulMemSize;
+      HB_SIZE ulMemSize;
 
       pMemBlock = HB_FM_PTR( pMem );
 
@@ -948,7 +948,7 @@ HB_COUNTER hb_xRefCount( void * pMem )
 
 /* reallocates memory, create copy if reference counter greater then 1 */
 #undef hb_xRefResize
-void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated )
+void * hb_xRefResize( void * pMem, HB_SIZE ulSave, HB_SIZE ulSize, HB_SIZE * pulAllocated )
 {
 
 #ifdef HB_FM_STATISTICS
@@ -1002,7 +1002,7 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAlloca
 /* NOTE: Debug function, it will always return 0 when HB_FM_STATISTICS is
          not defined, don't use it for final code [vszakats] */
 
-ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
+HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
