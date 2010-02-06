@@ -1272,7 +1272,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 #  endif
 #if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
          {
-            struct timeval times[2];
+            struct timeval times[ 2 ];
             times[ 0 ].tv_sec = times[ 1 ].tv_sec = mktime( &new_value );
             times[ 0 ].tv_usec = times[ 1 ].tv_usec = iMSec * 1000;
             fResult = utimes( pszFileName, times ) == 0;
@@ -1509,9 +1509,9 @@ USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const void * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
-ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
+HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount )
 {
-   ULONG ulRead;
+   HB_SIZE ulRead;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLarge(%p, %p, %lu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, ulCount));
 
@@ -1528,14 +1528,14 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
    {
       hb_vmUnlock();
       ulRead = read( hFileHandle, pBuff, ulCount );
-      hb_fsSetIOError( ulRead != ( ULONG ) -1, 0 );
-      if( ulRead == ( ULONG ) -1 )
+      hb_fsSetIOError( ulRead != ( HB_SIZE ) -1, 0 );
+      if( ulRead == ( HB_SIZE ) -1 )
          ulRead = 0;
       hb_vmLock();
    }
    #else
    {
-      ULONG ulLeftToRead = ulCount;
+      HB_SIZE ulLeftToRead = ulCount;
       USHORT uiToRead;
       USHORT uiRead;
       void * pPtr = pBuff;
@@ -1546,10 +1546,10 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
       while( ulLeftToRead )
       {
          /* Determine how much to read this time */
-         if( ulLeftToRead > ( ULONG ) INT_MAX )
+         if( ulLeftToRead > ( HB_SIZE ) INT_MAX )
          {
             uiToRead = INT_MAX;
-            ulLeftToRead -= ( ULONG ) uiToRead;
+            ulLeftToRead -= ( HB_SIZE ) uiToRead;
          }
          else
          {
@@ -1571,7 +1571,7 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
             break;
          }
 
-         ulRead += ( ULONG ) uiRead;
+         ulRead += ( HB_SIZE ) uiRead;
          pPtr += uiRead;
       }
       hb_fsSetIOError( ulLeftToRead == 0, 0 );
@@ -1589,9 +1589,9 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
    return ulRead;
 }
 
-ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount )
+HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCount )
 {
-   ULONG ulWritten;
+   HB_SIZE ulWritten;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteLarge(%p, %p, %lu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, ulCount));
 
@@ -1617,14 +1617,14 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount
          {
             hb_vmUnlock();
             ulWritten = write( hFileHandle, pBuff, ulCount );
-            hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
-            if( ulWritten == ( ULONG ) -1 )
+            hb_fsSetIOError( ulWritten != ( HB_SIZE ) -1, 0 );
+            if( ulWritten == ( HB_SIZE ) -1 )
                ulWritten = 0;
             hb_vmLock();
          }
       #else
          {
-            ULONG ulLeftToWrite = ulCount;
+            HB_SIZE ulLeftToWrite = ulCount;
             USHORT uiToWrite;
             USHORT uiWritten;
             const void * pPtr = pBuff;
@@ -1635,10 +1635,10 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount
             while( ulLeftToWrite )
             {
                /* Determine how much to write this time */
-               if( ulLeftToWrite > ( ULONG ) INT_MAX )
+               if( ulLeftToWrite > ( HB_SIZE ) INT_MAX )
                {
                   uiToWrite = INT_MAX;
-                  ulLeftToWrite -= ( ULONG ) uiToWrite;
+                  ulLeftToWrite -= ( HB_SIZE ) uiToWrite;
                }
                else
                {
@@ -1661,7 +1661,7 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount
                   break;
                }
 
-               ulWritten += ( ULONG ) uiWritten;
+               ulWritten += ( HB_SIZE ) uiWritten;
                pPtr += uiWritten;
             }
             hb_fsSetIOError( ulLeftToWrite == 0, 0 );
@@ -1691,9 +1691,9 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount
    return ulWritten;
 }
 
-ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset )
 {
-   ULONG ulRead;
+   HB_SIZE ulRead;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %p, %lu, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, ulCount, llOffset));
 
@@ -1707,8 +1707,8 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
 #     else
       ulRead = pread( hFileHandle, pBuff, ulCount, llOffset );
 #     endif
-      hb_fsSetIOError( ulRead != ( ULONG ) -1, 0 );
-      if( ulRead == ( ULONG ) -1 )
+      hb_fsSetIOError( ulRead != ( HB_SIZE ) -1, 0 );
+      if( ulRead == ( HB_SIZE ) -1 )
          ulRead = 0;
       hb_vmLock();
    }
@@ -1763,8 +1763,8 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
          else
          {
             ulRead = read( hFileHandle, pBuff, ulCount );
-            hb_fsSetIOError( ulRead != ( ULONG ) -1, 0 );
-            if( ulRead == ( ULONG ) -1 )
+            hb_fsSetIOError( ulRead != ( HB_SIZE ) -1, 0 );
+            if( ulRead == ( HB_SIZE ) -1 )
                ulRead = 0;
          }
       }
@@ -1785,9 +1785,9 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
    return ulRead;
 }
 
-ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset )
 {
-   ULONG ulWritten;
+   HB_SIZE ulWritten;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteAt(%p, %p, %lu, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, ulCount, llOffset));
 
@@ -1801,8 +1801,8 @@ ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, H
 #     else
       ulWritten = pwrite( hFileHandle, pBuff, ulCount, llOffset );
 #     endif
-      hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
-      if( ulWritten == ( ULONG ) -1 )
+      hb_fsSetIOError( ulWritten != ( HB_SIZE ) -1, 0 );
+      if( ulWritten == ( HB_SIZE ) -1 )
          ulWritten = 0;
       hb_vmLock();
    }
@@ -1857,8 +1857,8 @@ ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, H
          else
          {
             ulWritten = write( hFileHandle, pBuff, ulCount );
-            hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
-            if( ulWritten == ( ULONG ) -1 )
+            hb_fsSetIOError( ulWritten != ( HB_SIZE ) -1, 0 );
+            if( ulWritten == ( HB_SIZE ) -1 )
                ulWritten = 0;
          }
       }
@@ -2012,8 +2012,8 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
-                   ULONG ulLength, USHORT uiMode )
+HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
+                   HB_SIZE ulLength, USHORT uiMode )
 {
    HB_BOOL fResult;
 
@@ -2030,7 +2030,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
             OVERLAPPED sOlap;
             DWORD dwFlags;
             memset( &sOlap, 0, sizeof( OVERLAPPED ) );
-            sOlap.Offset = ( ULONG ) ulStart;
+            sOlap.Offset = ( DWORD ) ulStart;
             dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK;
             if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
             {
@@ -2050,7 +2050,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
          {
             OVERLAPPED sOlap;
             memset( &sOlap, 0, sizeof( OVERLAPPED ) );
-            sOlap.Offset = ( ULONG ) ulStart;
+            sOlap.Offset = ( DWORD ) ulStart;
             fResult = UnlockFileEx( DosToWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
          }
          else
@@ -2102,7 +2102,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
    }
 #elif defined( _MSC_VER ) || defined( __DMC__ )
    {
-      ULONG ulOldPos;
+      HB_SIZE ulOldPos;
 
       hb_vmUnlock();
       ulOldPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -2126,7 +2126,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
    }
 #elif defined( __MINGW32__ )
    {
-      ULONG ulOldPos;
+      HB_SIZE ulOldPos;
 
       hb_vmUnlock();
       ulOldPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -2324,15 +2324,15 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
       hb_vmLock();
    }
 #else
-   fResult = hb_fsLock( hFileHandle, ( ULONG ) ulStart, ( ULONG ) ulLength, uiMode );
+   fResult = hb_fsLock( hFileHandle, ( HB_SIZE ) ulStart, ( HB_SIZE ) ulLength, uiMode );
 #endif
 
    return fResult;
 }
 
-ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
+HB_SIZE hb_fsSeek( HB_FHANDLE hFileHandle, HB_ISIZ lOffset, USHORT uiFlags )
 {
-   ULONG ulPos;
+   HB_SIZE ulPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSeek(%p, %ld, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, lOffset, uiFlags));
 
@@ -2363,16 +2363,14 @@ ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
             but maybe OS2 has DosGetFilePtr too, if not then remove this
             comment, Druzus */
          if( DosSetFilePtr( hFileHandle, 0, SEEK_CUR, &ulPos ) != 0 )
-         {
             ulPos = 0;
-         }
       }
    }
    #elif defined( HB_IO_WIN )
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = ( ULONG ) INVALID_SET_FILE_POINTER;
+         ulPos = ( HB_SIZE ) INVALID_SET_FILE_POINTER;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
@@ -2389,21 +2387,19 @@ ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = ( ULONG ) -1;
+         ulPos = ( HB_SIZE ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
          ulPos = lseek( hFileHandle, lOffset, Flags );
-         hb_fsSetIOError( ulPos != ( ULONG ) -1, 0 );
+         hb_fsSetIOError( ulPos != ( HB_SIZE ) -1, 0 );
       }
-      if( ulPos == ( ULONG ) -1 )
+      if( ulPos == ( HB_SIZE ) -1 )
       {
          ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
-         if( ulPos == ( ULONG ) -1 )
-         {
+         if( ulPos == ( HB_SIZE ) -1 )
             ulPos = 0;
-         }
       }
    #endif
    hb_vmLock();
@@ -2476,17 +2472,17 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       hb_vmLock();
    }
 #else
-   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( LONG ) llOffset, uiFlags );
+   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( HB_ISIZ ) llOffset, uiFlags );
 #endif
 
    return llPos;
 }
 
-ULONG hb_fsTell( HB_FHANDLE hFileHandle )
+HB_FOFFSET hb_fsTell( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsTell(%p)", ( void * ) ( HB_PTRDIFF ) hFileHandle));
 
-   return hb_fsSeek( hFileHandle, 0, FS_RELATIVE );
+   return hb_fsSeekLarge( hFileHandle, 0, FS_RELATIVE );
 }
 
 HB_BOOL hb_fsDelete( const char * pFilename )

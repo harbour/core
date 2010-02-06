@@ -99,7 +99,7 @@ static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 #define SYM_DEFERRED 3              /* lately bound function             */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
 
-static int hb_hrbReadHead( const char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
+static int hb_hrbReadHead( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pulBodyOffset )
 {
    const char * pVersion;
 
@@ -114,7 +114,7 @@ static int hb_hrbReadHead( const char * szBody, ULONG ulBodySize, ULONG * pulBod
    return HB_PCODE_MKSHORT( pVersion );
 }
 
-static HB_BOOL hb_hrbReadValue( const char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset, ULONG * pulValue )
+static HB_BOOL hb_hrbReadValue( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pulBodyOffset, ULONG * pulValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%lu,%p,%p)", szBody, ulBodySize, pulBodyOffset, pulValue));
 
@@ -134,7 +134,7 @@ static HB_BOOL hb_hrbReadValue( const char * szBody, ULONG ulBodySize, ULONG * p
 
 /* ReadId
    Read the next (zero terminated) identifier */
-static char * hb_hrbReadId( const char * szBody, ULONG ulBodySize, ULONG * ulBodyOffset )
+static char * hb_hrbReadId( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * ulBodyOffset )
 {
    const char * szIdx;
 
@@ -301,15 +301,16 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
 
 
 
-static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT usMode )
+static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT usMode )
 {
    PHRB_BODY pHrbBody = NULL;
 
    if( szHrbBody )
    {
-      ULONG ulBodyOffset = 0;
-      ULONG ulSize;                                /* Size of function */
-      ULONG ul, ulPos;
+      HB_SIZE ulBodyOffset = 0;
+      HB_SIZE ulSize;                              /* Size of function */
+      HB_SIZE ulPos;
+      ULONG ul;
       char * buffer, ch;
       USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
 
@@ -405,15 +406,19 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
 
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
          {
+            ULONG ulSizeTmp;
+
             /* Read name of function */
             pDynFunc[ ul ].szName = hb_hrbReadId( szHrbBody, ulBodySize, &ulBodyOffset );
             if( pDynFunc[ ul ].szName == NULL )
                break;
 
             /* Read size of function */
-            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulSize ) ||
+            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulSizeTmp ) ||
                 ulBodyOffset + ulSize > ulBodySize )
                break;
+
+            ulSize = ( HB_SIZE ) ulSizeTmp;
 
             /* Copy function body */
             pDynFunc[ ul ].pCode = ( BYTE * ) hb_xgrab( ulSize );
@@ -584,7 +589,7 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, USHORT usMode )
 
    if( hFile != FS_ERROR )
    {
-      ULONG ulBodySize = hb_fsSeek( hFile, 0, FS_END );
+      HB_SIZE ulBodySize = hb_fsSeek( hFile, 0, FS_END );
 
       if( ulBodySize )
       {
@@ -595,7 +600,7 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, USHORT usMode )
          hb_fsReadLarge( hFile, pbyBuffer, ulBodySize );
          pbyBuffer[ ulBodySize ] = '\0';
 
-         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, ( ULONG ) ulBodySize, usMode );
+         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, ulBodySize, usMode );
          hb_xfree( pbyBuffer );
       }
       hb_fsClose( hFile );
@@ -680,7 +685,7 @@ HB_FUNC( HB_HRBRUN )
 {
    USHORT usMode = HB_HRB_BIND_DEFAULT;
    USHORT nParam = 1;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -730,7 +735,7 @@ HB_FUNC( HB_HRBLOAD )
 {
    USHORT usMode = HB_HRB_BIND_DEFAULT;
    USHORT nParam = 1;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    if( HB_ISNUM( 1 ) )
    {

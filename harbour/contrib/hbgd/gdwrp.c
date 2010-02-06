@@ -263,7 +263,7 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 
    /* Read file */
    iptr = hb_xgrab( sz );
-   hb_fsReadLarge( fhandle, iptr, ( ULONG ) sz );
+   hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
    /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
    return iptr;
@@ -286,7 +286,7 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
 
       /* Read file */
       iptr = hb_xgrab( *sz );
-      hb_fsReadLarge( fhandle, iptr, ( ULONG ) *sz );
+      hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) *sz );
       /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
       /* Close file */
@@ -311,7 +311,7 @@ static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
       fhandle = 1; /* 1 = std output */
 
    /* Write Image */
-   hb_fsWriteLarge( fhandle, iptr, ( ULONG ) sz );
+   hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
 }
 
 /* ---------------------------------------------------------------------------*/

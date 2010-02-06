@@ -1030,7 +1030,7 @@ HB_FUNC( NETIO_SERVER )
                         {
                            if( hb_vmRequestReenter() )
                            {
-                              ULONG ulSize = size - size2;
+                              HB_SIZE ulSize = size - size2;
                               USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
 
@@ -1081,11 +1081,11 @@ HB_FUNC( NETIO_SERVER )
                                     hb_vmProc( uiPCount );
                                  if( uiMsg == NETIO_FUNC )
                                  {
-                                    ULONG itmSize;
+                                    HB_SIZE itmSize;
                                     char * itmData = hb_itemSerialize( hb_stackReturnItem(), HB_TRUE, &itmSize );
                                     if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
                                        msg = buffer;
-                                    else if( !ptr || itmSize > ( ULONG ) size - NETIO_MSGLEN )
+                                    else if( !ptr || itmSize > ( HB_SIZE ) size - NETIO_MSGLEN )
                                     {
                                        if( ptr )
                                           hb_xfree( ptr );

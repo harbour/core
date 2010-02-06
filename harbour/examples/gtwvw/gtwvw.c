@@ -1335,7 +1335,7 @@ static void hb_gt_wvw_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USH
 
 /*-------------------------------------------------------------------*/
 
-static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, ULONG ulLen )
+static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
   HB_SYMBOL_UNUSED( pGT );
   hb_fsWriteLarge( s_iStdOut, ( BYTE * ) pbyStr, ulLen );
@@ -1343,7 +1343,7 @@ static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, ULONG ulLen )
 
 /*-------------------------------------------------------------------*/
 
-static void hb_gt_wvw_OutErr( PHB_GT pGT, const char * pbyStr, ULONG ulLen )
+static void hb_gt_wvw_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
   HB_SYMBOL_UNUSED( pGT );
   hb_fsWriteLarge( s_iStdErr, ( BYTE * ) pbyStr, ulLen );

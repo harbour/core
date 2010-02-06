@@ -490,11 +490,11 @@ HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
 }
 
 
-HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+HB_MEMFS_EXPORT HB_SIZE hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE   pFile;
    PHB_MEMFS_INODE  pInode;
-   ULONG            ulRead;
+   HB_SIZE          ulRead;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
       return 0; /* invalid handle */
@@ -510,7 +510,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, ULONG ulCo
    if( pInode->llSize >= llOffset + ( HB_FOFFSET ) ulCount )
       ulRead = ulCount;
    else
-      ulRead = ( ULONG ) ( pInode->llSize - llOffset );
+      ulRead = ( HB_SIZE ) ( pInode->llSize - llOffset );
 
    memcpy( pBuff, pInode->pData + ( ULONG ) llOffset, ulRead );
    HB_MEMFSMT_UNLOCK
@@ -519,7 +519,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, ULONG ulCo
 }
 
 
-HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE   pFile;
    PHB_MEMFS_INODE  pInode;
@@ -559,13 +559,13 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, ULO
 }
 
 #ifdef HB_MEMFS_PUBLIC_API
-HB_MEMFS_EXPORT ULONG hb_memfsRead( HB_FHANDLE hFile, void * pBuff, ULONG ulCount )
+HB_MEMFS_EXPORT HB_SIZE hb_memfsRead( HB_FHANDLE hFile, void * pBuff, HB_SIZE ulCount )
 {
    return hb_memfsReadAt( hFile, pBuff, ulCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
 }
 
 
-HB_MEMFS_EXPORT ULONG hb_memfsWrite( HB_FHANDLE hFile, const void * pBuff, ULONG ulCount )
+HB_MEMFS_EXPORT HB_SIZE hb_memfsWrite( HB_FHANDLE hFile, const void * pBuff, HB_SIZE ulCount )
 {
    return hb_memfsWriteAt( hFile, pBuff, ulCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
 }
@@ -790,15 +790,15 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart,
 }
 
 
-static ULONG s_fileReadAt( PHB_FILE pFile, void * buffer,
-                           ULONG ulSize, HB_FOFFSET llOffset )
+static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer,
+                             HB_SIZE ulSize, HB_FOFFSET llOffset )
 {
    return hb_memfsReadAt( pFile->hFile, buffer, ulSize, llOffset );
 }
 
 
-static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer,
-                               ULONG ulSize, HB_FOFFSET llOffset )
+static HB_SIZE s_fileWriteAt( PHB_FILE pFile, const void * buffer,
+                              HB_SIZE ulSize, HB_FOFFSET llOffset )
 {
    return hb_memfsWriteAt( pFile->hFile, buffer, ulSize, llOffset );
 }

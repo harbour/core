@@ -191,7 +191,7 @@ static int _findbol( char * buf, int buf_len );
 static int _ins_buff( int bytes );
 static int _del_buff( int bytes );
 static long _ft_skip( long recs );
-static int _writeLine( const char * theData, ULONG iDataLen );
+static int _writeLine( const char * theData, HB_SIZE iDataLen );
 static HB_BOOL _writeeol( HB_FHANDLE fhnd );
 
 /* arrays used by the text workareas */
@@ -1957,11 +1957,11 @@ static int _del_buff( int iLen )
 
 /*--------------------------------------------------------------------------*/
 /* writes a line of data to the file, including the terminating CRLF */
-static int _writeLine( const char * theData, ULONG iDataLen )
+static int _writeLine( const char * theData, HB_SIZE iDataLen )
 {
    int   err   = 0;
 
-   if( !( hb_fsWriteLarge( handles[area], theData, iDataLen ) == ( ULONG ) iDataLen ) )
+   if( !( hb_fsWriteLarge( handles[area], theData, iDataLen ) == iDataLen ) )
    {
       err = 1;
       error[area] = hb_fsError();
@@ -1978,9 +1978,9 @@ static int _writeLine( const char * theData, ULONG iDataLen )
 static HB_BOOL _writeeol( HB_FHANDLE fhnd )
 {
    const char * crlf = hb_conNewLine();
-   ULONG len = strlen( crlf );
+   HB_SIZE len = ( HB_SIZE ) strlen( crlf );
 
-   return hb_fsWriteLarge( fhnd, crlf, len ) == ( ULONG ) len;
+   return hb_fsWriteLarge( fhnd, crlf, len ) == len;
 }
 
-/*  fttext.c  eof */
+/* eof */

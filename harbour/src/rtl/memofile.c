@@ -68,7 +68,7 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 
       if( fhnd != FS_ERROR )
       {
-         ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
+         HB_SIZE ulSize = hb_fsSeek( fhnd, 0, FS_END );
 
          if( ulSize != 0 )
          {

@@ -174,19 +174,19 @@ typedef struct _HB_LZSSX_COMPR
 {
    HB_FHANDLE hInput;
    BYTE *     inBuffer;
-   ULONG      inBuffSize;
-   ULONG      inBuffPos;
-   ULONG      inBuffRead;
+   HB_SIZE    inBuffSize;
+   HB_SIZE    inBuffPos;
+   HB_SIZE    inBuffRead;
    HB_BOOL    fInFree;
 
    HB_FHANDLE hOutput;
    BYTE *     outBuffer;
-   ULONG      outBuffSize;
-   ULONG      outBuffPos;
+   HB_SIZE    outBuffSize;
+   HB_SIZE    outBuffPos;
    HB_BOOL    fOutFree;
 
-   ULONG      ulMaxSize;
-   ULONG      ulOutSize;
+   HB_SIZE    ulMaxSize;
+   HB_SIZE    ulOutSize;
    HB_BOOL    fResult;
    HB_BOOL    fContinue;
 

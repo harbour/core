@@ -101,13 +101,13 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parnl( 1 ) );
 }
 
-static LONG ct_StrFile( const char * pFileName, const char * pcStr, ULONG ulLen, HB_BOOL bOverwrite, LONG lOffset,
-                        HB_BOOL bTrunc )
+static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE ulLen, HB_BOOL bOverwrite, LONG lOffset,
+                           HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
    HB_BOOL bOpen = HB_FALSE;
    HB_BOOL bFile = hb_fsFile( pFileName );
-   ULONG ulWrite = 0;
+   HB_SIZE ulWrite = 0;
 
    if( bFile && bOverwrite )
    {
@@ -156,7 +156,8 @@ HB_FUNC( FILESTR )
       if( hFile != FS_ERROR )
       {
          LONG lFileSize = hb_fsSeek( hFile, 0, FS_END );
-         LONG lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET ), lLength;
+         LONG lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET );
+         HB_ISIZ lLength;
          char *pcResult, *pCtrlZ;
          HB_BOOL bCtrlZ = hb_parl( 4 );
 
@@ -171,9 +172,7 @@ HB_FUNC( FILESTR )
 
          pcResult = ( char * ) hb_xgrab( lLength + 1 );
          if( lLength > 0 )
-         {
-            lLength = hb_fsReadLarge( hFile, pcResult, ( ULONG ) lLength );
-         }
+            lLength = hb_fsReadLarge( hFile, pcResult, ( HB_SIZE ) lLength );
 
          if( bCtrlZ )
          {
@@ -196,8 +195,8 @@ HB_FUNC( SCREENFILE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pBuffer;
-      ULONG ulSize;
+      char * pBuffer;
+      HB_SIZE ulSize;
 
       hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
       pBuffer = ( char * ) hb_xgrab( ulSize );
@@ -222,8 +221,8 @@ HB_FUNC( FILESCREEN )
       if( hFile != FS_ERROR )
       {
          char * pBuffer;
-         ULONG ulSize;
-         LONG lLength;
+         HB_SIZE ulSize;
+         HB_SIZE lLength;
 
          if( HB_ISNUM( 2 ) )
             hb_fsSeek( hFile, hb_parnl( 2 ), FS_SET );

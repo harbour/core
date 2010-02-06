@@ -1805,7 +1805,7 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
    if( handle != FS_ERROR )
    {
       char *buffer;
-      ULONG iSize;
+      HB_SIZE iSize;
 
       iSize = ( int ) hb_fsSeek( handle, 0, FS_END );
       iSize -= ( int ) hb_fsSeek( handle, 0, FS_SET );
@@ -1825,7 +1825,7 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
 HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
    HB_FHANDLE handle = hb_fsCreate( hb_parcx(1), FC_NORMAL );
-   ULONG iSize = hb_parcsiz( 2 ) - 1;
+   HB_SIZE iSize = hb_parcsiz( 2 ) - 1;
 
    if( handle != FS_ERROR && iSize > 0 )
    {

@@ -113,12 +113,12 @@ HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    HB_ERRCODE uiError = 0;
-   ULONG ulRead = 0;
+   HB_SIZE ulRead = 0;
 
    if( HB_ISNUM( 1 ) && pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
    {
       char * buffer;
-      ULONG ulSize;
+      HB_SIZE ulSize;
 
       ulRead = hb_parnl( 3 );
 
@@ -147,11 +147,11 @@ HB_FUNC( FWRITE )
 
    if( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
    {
-      ULONG nLen = hb_parclen( 2 );
+      HB_SIZE nLen = hb_parclen( 2 );
 
       if( HB_ISNUM( 3 ) )
       {
-         ULONG nWrite = ( ULONG ) hb_parnl( 3 );
+         HB_SIZE nWrite = ( HB_SIZE ) hb_parnl( 3 );
          if( nWrite < nLen )
             nLen = nWrite;
       }
@@ -237,13 +237,13 @@ HB_FUNC( FREADSTR )
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      ULONG ulToRead = ( ULONG ) hb_parnl( 2 );
+      HB_SIZE ulToRead = ( HB_SIZE ) hb_parnl( 2 );
 
       if( ulToRead > 0 )
       {
          HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
          char * buffer = ( char * ) hb_xgrab( ulToRead + 1 );
-         ULONG ulRead;
+         HB_SIZE ulRead;
 
          ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
          uiError = hb_fsError();

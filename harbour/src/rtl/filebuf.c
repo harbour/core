@@ -516,14 +516,14 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return fResult;
 }
 
-static ULONG s_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
-                           HB_FOFFSET llOffset )
+static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE ulSize,
+                             HB_FOFFSET llOffset )
 {
    return hb_fsReadAt( pFile->hFile, buffer, ulSize, llOffset );
 }
 
-static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
-                            HB_FOFFSET llOffset )
+static HB_SIZE s_fileWriteAt( PHB_FILE pFile, const void * buffer, HB_SIZE ulSize,
+                              HB_FOFFSET llOffset )
 {
    return hb_fsWriteAt( pFile->hFile, buffer, ulSize, llOffset );
 }
@@ -669,14 +669,14 @@ HB_BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return pFile->pFuncs->Lock( pFile, ulStart, ulLen, iType );
 }
 
-ULONG hb_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
-                     HB_FOFFSET llOffset )
+HB_SIZE hb_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE ulSize,
+                       HB_FOFFSET llOffset )
 {
    return pFile->pFuncs->ReadAt( pFile, buffer, ulSize, llOffset );
 }
 
-ULONG hb_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
-                      HB_FOFFSET llOffset )
+HB_SIZE hb_fileWriteAt( PHB_FILE pFile, const void * buffer, HB_SIZE ulSize,
+                        HB_FOFFSET llOffset )
 {
    return pFile->pFuncs->WriteAt( pFile, buffer, ulSize, llOffset );
 }

@@ -68,8 +68,8 @@ typedef struct _HB_FILEBUF
 {
    HB_FHANDLE hFile;
    BYTE *     pBuf;
-   ULONG      ulSize;
-   ULONG      ulPos;
+   HB_SIZE    ulSize;
+   HB_SIZE    ulPos;
 } HB_FILEBUF;
 typedef HB_FILEBUF * PHB_FILEBUF;
 
@@ -89,9 +89,9 @@ static void hb_addToFBuffer( PHB_FILEBUF pFileBuf, char ch )
    pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( BYTE ) ch;
 }
 
-static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, ULONG ulSize )
+static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE ulSize )
 {
-   ULONG ulPos = 0;
+   HB_SIZE ulPos = 0;
    while( ulPos < ulSize )
    {
       if( pFileBuf->ulPos == pFileBuf->ulSize )
@@ -118,7 +118,7 @@ static void hb_destroyFBuffer( PHB_FILEBUF pFileBuf )
    hb_xfree( pFileBuf );
 }
 
-static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, ULONG ulSize )
+static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, HB_SIZE ulSize )
 {
    PHB_FILEBUF pFileBuf = ( PHB_FILEBUF ) hb_xgrab( sizeof( HB_FILEBUF ) );
 
@@ -138,7 +138,8 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
    {
       case HB_IT_STRING:
       {
-         ULONG ulLen = hb_itemGetCLen( pValue ), ulCnt = 0;
+         HB_SIZE ulLen = hb_itemGetCLen( pValue );
+         HB_SIZE ulCnt = 0;
          const char *szVal = hb_itemGetCPtr( pValue );
 
          hb_addStrToFBuffer( pFileBuf, szDelim );
@@ -163,11 +164,11 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 
       case HB_IT_DATE:
       {
-         char szDate[9];
+         char szDate[ 9 ];
 
          hb_addStrToFBuffer( pFileBuf, szDelim );
          hb_itemGetDS( pValue, szDate );
-         if( szDate[0] == ' ' )
+         if( szDate[ 0 ] == ' ' )
          {
             hb_addStrToFBuffer( pFileBuf, "0100-01-01" );
          }

@@ -1075,10 +1075,10 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return fResult;
 }
 
-static ULONG s_fileReadAt( PHB_FILE pFile, void * data, ULONG ulSize,
-                           HB_FOFFSET llOffset )
+static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * data, HB_SIZE ulSize,
+                             HB_FOFFSET llOffset )
 {
-   ULONG ulResult = 0;
+   HB_SIZE ulResult = 0;
 
    if( s_fileConLock( pFile->conn ) )
    {
@@ -1107,10 +1107,10 @@ static ULONG s_fileReadAt( PHB_FILE pFile, void * data, ULONG ulSize,
    return ulResult;
 }
 
-static ULONG s_fileWriteAt( PHB_FILE pFile, const void * data, ULONG ulSize,
-                            HB_FOFFSET llOffset )
+static HB_SIZE s_fileWriteAt( PHB_FILE pFile, const void * data, HB_SIZE ulSize,
+                              HB_FOFFSET llOffset )
 {
-   ULONG ulResult = 0;
+   HB_SIZE ulResult = 0;
 
    if( s_fileConLock( pFile->conn ) )
    {
