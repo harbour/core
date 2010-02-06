@@ -364,12 +364,13 @@ METHOD HbIde:create( cProjIni )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
-         HBXBP_DEBUG( "xbeP_Quit" )
+         hbide_dbg( "----------------- xbeP_Quit" )
          hbide_saveINI( Self )
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
+         hbide_dbg( "================ xbeP_Close" )
          hbide_saveINI( Self )
          ::oSM:closeAllSources()
          EXIT

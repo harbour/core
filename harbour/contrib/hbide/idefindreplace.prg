@@ -353,6 +353,7 @@ CLASS IdeFindInFiles INHERIT IdeObject
 
    DATA   cOrigExpr
    DATA   cRegExp
+   DATA   cReplWith
    DATA   lRegEx                                  INIT .F.
    DATA   lListOnly                               INIT .T.
    DATA   lMatchCase                              INIT .F.
@@ -636,7 +637,7 @@ METHOD IdeFindInFiles:destroy()
 
 METHOD IdeFindInFiles:find()
    LOCAL lPrg, lC, lCpp, lH, lCh, lRc, a_
-   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, cRepl, aFilter, cExt, cMask
+   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, aFilter, cExt, cMask
    LOCAL nStart, nEnd, cSource, aDir, cProjTitle, aProjFiles
    LOCAL aOpenSrc   := {}
    LOCAL aFolderSrc := {}
@@ -648,24 +649,22 @@ METHOD IdeFindInFiles:find()
    ENDIF
    IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == ::cOrigExpr } ) == 0
       hb_ains( ::oIde:aIni[ INI_FIND ], 1, ::cOrigExpr, .t. )
+      ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
    ENDIF
-   ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
 
-   ::oUI:q_labelStatus:setText( "Ready" )
+   ::lRegEx := ::oUI:q_checkRegEx:isChecked()
+   IF ::lRegEx .AND. ! hb_isRegEx( ::lRegEx )
+      MsgBox( "Error in Regular Expression" )
+      RETURN Self
+   ENDIF
+   ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
+   ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
+   ::cReplWith  := ::oUI:q_comboRepl:currentText()
 
-   cRepl   := ::oUI:q_comboRepl:currentText()
-   cFolder := ::oUI:q_comboFolder:currentText()
-
-   hbide_justACall( cRepl )
-
+   cFolder      := ::oUI:q_comboFolder:currentText()
    lTabs        := ::oUI:q_checkOpenTabs:isChecked()
    lSubF        := ::oUI:q_checkSubFolders:isChecked()
    lSubP        := ::oUI:q_checkSubProjects:isChecked()
-
-   /* Supress Find button - user must not click it again */
-   ::oUI:q_buttonFind:setEnabled( .f. )
-   ::oUI:q_buttonStop:setEnabled( .t. )
-
    /* Type of files */
    lPrg         := ::oUi:q_checkPrg:isChecked()
    lC           := ::oUI:q_checkC:isChecked()
@@ -674,29 +673,7 @@ METHOD IdeFindInFiles:find()
    lCh          := ::oUI:q_checkCh:isChecked()
    lRc          := ::oUI:q_checkRc:isChecked()
 
-   ::lRegEx     := ::oUI:q_checkRegEx:isChecked()
-   ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
-   ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
-
-   aFilter := {}
-   IF lPrg
-      aadd( aFilter, "*.prg" )
-   ENDIF
-   IF lC
-      aadd( aFilter, "*.c" )
-   ENDIF
-   IF lCpp
-      aadd( aFilter, "*.cpp" )
-   ENDIF
-   IF lh
-      aadd( aFilter, "*.h" )
-   ENDIF
-   IF lCh
-      aadd( aFilter, "*.ch" )
-   ENDIF
-   IF lRc
-      aadd( aFilter, "*.rc" )
-   ENDIF
+   aFilter := hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lRc )
 
    /* Process Open Tabs */
    IF lTabs
@@ -746,16 +723,23 @@ METHOD IdeFindInFiles:find()
       NEXT
    ENDIF
 
-   nStart      := seconds()
+   /* Supress Find button - user must not click it again */
+   ::oUI:q_buttonFind:setEnabled( .f. )
+   ::oUI:q_buttonStop:setEnabled( .t. )
+
    ::nSearched := 0
    ::nFounds   := 0
    ::nMisses   := 0
+
+   ::oUI:q_labelStatus:setText( "Ready" )
 
    /* Fun Begins */
    ::showLog( LOG_SEPARATOR )
    ::showLog( LOG_FLAGS, "[ Begins: " + dtoc( date() ) + "  " + time() + " ]  [ " + "Find Expression: " + ::cOrigExpr + " ]" )
    ::showLog( LOG_FLAGS, hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, ::lRegEx, ::lListOnly, ::lMatchCase ) )
    ::showLog( LOG_EMPTY )
+
+   nStart := seconds()
 
    IF !empty( aOpenSrc )
       ::showLog( LOG_SECTION, "Open Tabs" )
@@ -797,7 +781,7 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
 
    FOR EACH s IN aFiles
       IF ::lStop                                 /* Stop button is pressed */
-         ::showLog( LOG_SEPARATOR )
+         ::showLog( LOG_EMPTY )
          ::showLog( LOG_TERMINATED )
          EXIT
       ENDIF
@@ -838,40 +822,11 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, lRegEx, lListOnly, lMatchCase )
-   LOCAL s := ""
-
-   HB_SYMBOL_UNUSED( lTabs )
-   HB_SYMBOL_UNUSED( lSubF )
-   HB_SYMBOL_UNUSED( lSubP )
-   HB_SYMBOL_UNUSED( lListOnly )
-
-   s += "[.prg="  + L2S( lPrg        ) + "] "
-   s += "[.c="    + L2S( lC          ) + "] "
-   s += "[.cpp="  + L2S( lCpp        ) + "] "
-   s += "[.h="    + L2S( lH          ) + "] "
-   s += "[.ch="   + L2S( lCh         ) + "] "
-   s += "[.rc="   + L2S( lRc         ) + "] "
-   s += "[RegEx=" + L2S( lRegEx      ) + "] "
-   s += "[Case="  + L2S( lMatchCase  ) + "] "
-
-   RETURN s
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
-   LOCAL cExt
-
-   hb_fNameSplit( cSource, , , @cExt )
-   cExt := lower( cExt )
-
-   RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
    LOCAL a_, n, cPre, cPost, cTkn, nWidth, cText
    LOCAL qCursor
+
+   DEFAULT cMsg TO ""
 
    qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
 
@@ -883,6 +838,9 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
       EXIT
 
    CASE LOG_TERMINATED
+      ::oUI:q_editResults:append( F_RED + "---------------- Terminated ---------------" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
 
    CASE LOG_MISSING
       ::oUI:q_editResults:append( F_RED + cMsg + F_END )
@@ -974,6 +932,63 @@ METHOD IdeFindInFiles:paintRequested( pPrinter )
    ::oUI:q_editResults:print( qPrinter )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lRc )
+   LOCAL aFilter := {}
+
+   IF lPrg
+      aadd( aFilter, "*.prg" )
+   ENDIF
+   IF lC
+      aadd( aFilter, "*.c" )
+   ENDIF
+   IF lCpp
+      aadd( aFilter, "*.cpp" )
+   ENDIF
+   IF lh
+      aadd( aFilter, "*.h" )
+   ENDIF
+   IF lCh
+      aadd( aFilter, "*.ch" )
+   ENDIF
+   IF lRc
+      aadd( aFilter, "*.rc" )
+   ENDIF
+
+   RETURN aFilter
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, lRegEx, lListOnly, lMatchCase )
+   LOCAL s := ""
+
+   HB_SYMBOL_UNUSED( lTabs )
+   HB_SYMBOL_UNUSED( lSubF )
+   HB_SYMBOL_UNUSED( lSubP )
+   HB_SYMBOL_UNUSED( lListOnly )
+
+   s += "[.prg="  + L2S( lPrg        ) + "] "
+   s += "[.c="    + L2S( lC          ) + "] "
+   s += "[.cpp="  + L2S( lCpp        ) + "] "
+   s += "[.h="    + L2S( lH          ) + "] "
+   s += "[.ch="   + L2S( lCh         ) + "] "
+   s += "[.rc="   + L2S( lRc         ) + "] "
+   s += "[RegEx=" + L2S( lRegEx      ) + "] "
+   s += "[Case="  + L2S( lMatchCase  ) + "] "
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
+   LOCAL cExt
+
+   hb_fNameSplit( cSource, , , @cExt )
+   cExt := lower( cExt )
+
+   RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
 
 /*----------------------------------------------------------------------*/
 
