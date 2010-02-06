@@ -323,9 +323,11 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
 #define F_BLUE                                    '<font color = blue>'
 #define F_YELLOW                                  '<font color = yellow>'
 
-#define F_SECTION                                 '<font color=GoldenRod size="5">'
-#define F_FOLDER                                  '<font color=MidNightBlue size="5">'
+#define F_SECTION                                 '<font color=GoldenRod size="6">'
+#define F_SECTION_ITEM                            '<font color=blue size="5">'
+#define F_INFO                                    '<font color=LightBlue>'
 #define F_FILE                                    '<font color=green>'
+#define F_SEARCH                                  '<font color=IndianRed>'
 
 #define F_END                                     '</font>'
 
@@ -335,9 +337,9 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
 #define LOG_FLAGS                                 4
 #define LOG_TERMINATED                            5
 #define LOG_SECTION                               6
-#define LOG_FOLDER                                7
-#define LOG_PROJECT                               8
-#define LOG_EMPTY                                 9
+#define LOG_SECTION_ITEM                          7
+#define LOG_EMPTY                                 8
+#define LOG_INFO                                  9
 
 /*----------------------------------------------------------------------*/
 
@@ -352,21 +354,24 @@ CLASS IdeFindInFiles INHERIT IdeObject
    DATA   nMisses                                 INIT 0
 
    DATA   cOrigExpr
-   DATA   cRegExp
+   DATA   compRegEx
    DATA   cReplWith
    DATA   lRegEx                                  INIT .F.
    DATA   lListOnly                               INIT .T.
    DATA   lMatchCase                              INIT .F.
    DATA   lNotDblClick                            INIT .F.
+   DATA   lShowOnCreate                           INIT .T.
+   DATA   lInDockWindow                           INIT .F.
 
-   METHOD new( oIde )
-   METHOD create( oIde )
+   METHOD new( oIde, lShowOnCreate )
+   METHOD create( oIde, lShowOnCreate )
+   METHOD show()
    METHOD destroy()
    METHOD print()
    METHOD paintRequested( pPrinter )
    METHOD find()
    METHOD findInABunch( aFiles )
-   METHOD showLog( nType, cMsg, p, p1, p2 )
+   METHOD showLog( nType, cMsg, aLines )
 
    METHOD execEvent( cEvent, p )
    METHOD execContextMenu( p )
@@ -375,20 +380,23 @@ CLASS IdeFindInFiles INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindInFiles:new( oIde )
+METHOD IdeFindInFiles:new( oIde, lShowOnCreate )
 
-   ::oIde := oIde
+   ::oIde          := oIde
+   ::lShowOnCreate := lShowOnCreate
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindInFiles:create( oIde )
+METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
    LOCAL cText, qLineEdit, aProjList, cProj, qItem
 
-   DEFAULT oIde TO ::oIde
+   DEFAULT oIde          TO ::oIde
+   DEFAULT lShowOnCreate TO ::lShowOnCreate
 
-   ::oIde := oIde
+   ::oIde          := oIde
+   ::lShowOnCreate := lShowOnCreate
 
    #ifdef HBIDE_USE_UIC
    ::oUI := HbQtUI():new( ::oIde:resPath + "findinfiles.uic", ::oIde:oDlg:oWidget ):build()
@@ -415,27 +423,32 @@ METHOD IdeFindInFiles:create( oIde )
    ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
 
    qLineEdit := QLineEdit():configure( ::oUI:q_comboExpr:lineEdit() )
-   IF !empty( cText := ::oEM:getSelectedText() )
-      qLineEdit:setText( cText )
+   IF !empty( ::oEM )
+      IF !empty( cText := ::oEM:getSelectedText() )
+         qLineEdit:setText( cText )
+      ENDIF
    ENDIF
    qLineEdit:selectAll()
 
    /* Populate Projects Name */
-   aProjList := ::oPM:getProjectsTitleList()
-   FOR EACH cProj IN aProjList
-      IF !empty( cProj )
-         qItem := QListWidgetItem():new()
-         qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
-         qItem:setText( cProj )
-         qItem:setCheckState( 0 )
-         ::oUI:q_listProjects:addItem_1( qItem )
-         aadd( ::aItems, qItem )
-      ENDIF
-   NEXT
+   IF !empty( ::oPM )
+      aProjList := ::oPM:getProjectsTitleList()
+      FOR EACH cProj IN aProjList
+         IF !empty( cProj )
+            qItem := QListWidgetItem():new()
+            qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
+            qItem:setText( cProj )
+            qItem:setCheckState( 0 )
+            ::oUI:q_listProjects:addItem_1( qItem )
+            aadd( ::aItems, qItem )
+         ENDIF
+      NEXT
+   ENDIF
 
    ::oUI:q_editResults:setReadOnly( .t. )
-   ::oUI:q_editResults:setFontFamily( "Courier New" )
-   ::oUI:q_editResults:setFontPointSize( 10 )
+   //::oUI:q_editResults:setFontFamily( "Courier New" )
+   //::oUI:q_editResults:setFontPointSize( 10 )
+   ::oUI:q_editResults:setFont( ::oFont:oWidget )
    ::oUI:q_editResults:setContextMenuPolicy( Qt_CustomContextMenu )
 
    ::oUI:q_labelStatus:setText( "Ready" )
@@ -456,6 +469,20 @@ METHOD IdeFindInFiles:create( oIde )
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
    ::oUI:show()
+   #if 0
+   IF ::lShowOnCreate
+      ::show()
+   ENDIF
+   #endif
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:show()
+
+   IF ! ::lInDockWindow
+      ::oUI:show()
+   ENDIF
 
    RETURN Self
 
@@ -465,6 +492,15 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
    LOCAL cPath, qLineEdit, qCursor, cSource, v, nInfo
 
    SWITCH cEvent
+
+   CASE "buttonClose"
+      IF ::lInDockWindow
+         ::oDockFind:hide()
+      ELSE
+         ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
+         ::destroy()
+      ENDIF
+      EXIT
 
    CASE "comboFind"
       ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p
@@ -480,11 +516,6 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
       EXIT
 
    CASE "buttonRepl"
-      EXIT
-
-   CASE "buttonClose"
-      ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
-      ::destroy()
       EXIT
 
    CASE "buttonStop"
@@ -653,9 +684,12 @@ METHOD IdeFindInFiles:find()
    ENDIF
 
    ::lRegEx := ::oUI:q_checkRegEx:isChecked()
-   IF ::lRegEx .AND. ! hb_isRegEx( ::lRegEx )
-      MsgBox( "Error in Regular Expression" )
-      RETURN Self
+   IF ::lRegEx
+      ::compRegEx := hb_regExComp( ::cOrigExpr )
+      IF ! hb_isRegEx( ::compRegEx )
+         MsgBox( "Error in Regular Expression" )
+         RETURN Self
+      ENDIF
    ENDIF
    ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
    ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
@@ -735,33 +769,49 @@ METHOD IdeFindInFiles:find()
 
    /* Fun Begins */
    ::showLog( LOG_SEPARATOR )
-   ::showLog( LOG_FLAGS, "[ Begins: " + dtoc( date() ) + "  " + time() + " ]  [ " + "Find Expression: " + ::cOrigExpr + " ]" )
+   ::showLog( LOG_FLAGS, "[Begins: " + dtoc( date() ) + "-" + time() + "][" + "Find Expression: " + ::cOrigExpr + "]" )
    ::showLog( LOG_FLAGS, hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSubP, ::lRegEx, ::lListOnly, ::lMatchCase ) )
    ::showLog( LOG_EMPTY )
 
    nStart := seconds()
 
-   IF !empty( aOpenSrc )
-      ::showLog( LOG_SECTION, "Open Tabs" )
-      ::findInABunch( aOpenSrc )
+   IF lTabs
+      ::showLog( LOG_SECTION, "OpenTabs" )
+      IF !empty( aOpenSrc )
+         ::findInABunch( aOpenSrc )
+      ELSE
+         ::showLog( LOG_INFO, "No matching files found" )
+      ENDIF
    ENDIF
-   IF !empty( aFolderSrc )
-      ::showLog( LOG_SECTION, "Folder: " + cFolder )
-      ::findInABunch( aFolderSrc )
+
+   IF !empty( cFolder )
+      ::showLog( LOG_SECTION, "Folders" )
+      IF !empty( aFolderSrc )
+         ::showLog( LOG_SECTION_ITEM, "Folder: " + cFolder )
+         ::findInABunch( aFolderSrc )
+      ELSE
+         ::showLog( LOG_INFO, "No matching files found" )
+      ENDIF
    ENDIF
-   IF !empty( aProjSrc )
-      FOR EACH a_ IN aProjSrc
-         ::showLog( LOG_SECTION, "Project: " + a_[ 1 ] )
-         ::findInABunch( a_[ 2 ] )
-      NEXT
+
+   IF !empty( aProjs )
+      ::showLog( LOG_SECTION, "Projects" )
+      IF !empty( aProjSrc )
+         FOR EACH a_ IN aProjSrc
+            ::showLog( LOG_SECTION_ITEM, "Project: " + a_[ 1 ] )
+            ::findInABunch( a_[ 2 ] )
+         NEXT
+      ELSE
+         ::showLog( LOG_INFO, "No matching files found" )
+      ENDIF
    ENDIF
 
    nEnd := seconds()
 
    ::showLog( LOG_EMPTY )
-   ::showLog( LOG_FLAGS, "[ Ends:" + dtoc( date() ) + "  " + time() + " ] [ Time Taken: " + hb_ntos( nEnd - nStart ) + " ] " + ;
-                         "[ Searched: " + hb_ntos( ::nSearched ) + " ] [ Finds: " + hb_ntos( ::nFounds ) + " ] " + ;
-                         "[ Not on disk: " + hb_ntos( ::nMisses ) + " ]" )
+   ::showLog( LOG_FLAGS, "[Ends:" + dtoc( date() ) + "-" + time() + "-" + hb_ntos( nEnd - nStart ) + " Secs]" + ;
+                         "[Searched: " + hb_ntos( ::nSearched ) + "][Finds: " + hb_ntos( ::nFounds ) + "]" + ;
+                         "[Files not found: " + hb_ntos( ::nMisses ) + "]" )
    ::showLog( LOG_SEPARATOR )
    ::showLog( LOG_EMPTY )
 
@@ -777,8 +827,9 @@ METHOD IdeFindInFiles:find()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:findInABunch( aFiles )
-   LOCAL s, cExpr, nLine, aLines, aBuffer, cLine
+   LOCAL s, cExpr, nLine, aLines, aBuffer, cLine, nNoMatch, aMatch, regEx
 
+   nNoMatch := 0
    FOR EACH s IN aFiles
       IF ::lStop                                 /* Stop button is pressed */
          ::showLog( LOG_EMPTY )
@@ -791,40 +842,60 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
          ::nSearched++
          aBuffer := hb_ATokens( StrTran( hb_MemoRead( s ), Chr( 13 ) ), Chr( 10 ) )
          nLine := 0
-         IF ::lMatchCase
-            cExpr := ::cOrigExpr
+
+         IF ::lRegEx
+            regEx := ::compRegEx
             FOR EACH cLine IN aBuffer
                nLine++
-               IF cExpr $ cLine
-                  aadd( aLines, { nLine, cLine } )
+               //       exp, string, lMatchCase, lNewLine, nMaxMatch, nMatchWhich, lMatchOnly
+               IF !empty( aMatch := hb_regExAll( regEx, cLine, ::lMatchCase, .F., 0, 1, .F.  ) )
+                  aadd( aLines, { nLine, cLine, aMatch } )
                ENDIF
             NEXT
          ELSE
-            cExpr := lower( ::cOrigExpr )
-            FOR EACH cLine IN aBuffer
-               nLine++
-               IF cExpr $ lower( cLine )
-                  aadd( aLines, { nLine, cLine } )
-               ENDIF
-            NEXT
+            IF ::lMatchCase
+               cExpr := ::cOrigExpr
+               FOR EACH cLine IN aBuffer
+                  nLine++
+                  IF cExpr $ cLine
+                     aadd( aLines, { nLine, cLine, NIL } )
+                  ENDIF
+               NEXT
+            ELSE
+               cExpr := lower( ::cOrigExpr )
+               FOR EACH cLine IN aBuffer
+                  nLine++
+                  IF cExpr $ lower( cLine )
+                     aadd( aLines, { nLine, cLine, NIL } )
+                  ENDIF
+               NEXT
+            ENDIF
          ENDIF
+
          IF len( aLines ) > 0
-            ::showLog( LOG_FINDS, s, aLines, ::cOrigExpr, ::lMatchCase )
+            ::showLog( LOG_FINDS, s, aLines )
             ::nFounds++
+         ELSE
+            nNoMatch++
          ENDIF
       ELSE
          ::showLog( LOG_MISSING, s )
          ::nMisses++
       ENDIF
    NEXT
+   IF nNoMatch == len( aFiles )
+      ::showLog( LOG_INFO, "Searched (" + hb_ntos( len( aFiles ) ) + ") files, no matches found" )
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
-   LOCAL a_, n, cPre, cPost, cTkn, nWidth, cText
-   LOCAL qCursor
+METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
+   LOCAL a_, n, cPre, cPost, nWidth, cText, nB, cL, nL, cT, cExp, aM
+   LOCAL qCursor, qResult
+
+   qResult := ::oUI:q_editResults
 
    DEFAULT cMsg TO ""
 
@@ -833,71 +904,85 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
    SWITCH nType
 
    CASE LOG_SEPARATOR
-      ::oUI:q_editResults:append( F_BLACK + hbide_outputLine( "=", 70 ) + F_END )
+      qResult:append( F_BLACK + hbide_outputLine( "=", 68 ) + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
-   CASE LOG_TERMINATED
-      ::oUI:q_editResults:append( F_RED + "---------------- Terminated ---------------" + F_END )
+   CASE LOG_FLAGS
+      qResult:append( F_BLACK + cMsg + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
-   CASE LOG_MISSING
-      ::oUI:q_editResults:append( F_RED + cMsg + F_END )
+   CASE LOG_INFO
+      qResult:append( F_INFO + "<i>" + cMsg + "</i>" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_SECTION
+      qResult:append( F_SECTION + "<u>" + cMsg + "</u>" + F_END )
+      aadd( ::aInfo, { 0, NIL, NIL } )
+      EXIT
+
+   CASE LOG_SECTION_ITEM
+      qResult:append( F_SECTION_ITEM + cMsg + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
    CASE LOG_FINDS
-      cText := F_FILE + "<b>" + cMsg + "   ( "+ hb_ntos( len( p ) ) + " )" + "</b>" + F_END
+      cText := F_FILE + "<b>" + cMsg + "   ( "+ hb_ntos( len( aLines ) ) + " )" + "</b>" + F_END
       ::oUI:q_editResults:append( cText )
       ::oUI:q_labelStatus:setText( cText )
       aadd( ::aInfo, { -1, cMsg, NIL } )
 
       n := 0
-      aeval( p, {|a_| n := max( n, a_[ 1 ] ) } )
+      aeval( aLines, {|a_| n := max( n, a_[ 1 ] ) } )
       nWidth := iif( n < 10, 1, iif( n < 100, 2, iif( n < 1000, 3, iif( n < 10000, 4, iif( n < 100000, 5, 7 ) ) ) ) )
 
-      FOR EACH a_ IN p
-         IF p2
-            n  := at( p1, a_[ 2 ] )
-         ELSE
-            n  := at( lower( p1 ), lower( a_[ 2 ] ) )
-         ENDIF
-         cPre  := substr( a_[ 2 ], 1, n - 1 )
-         cPost := substr( a_[ 2 ], n + len( p1 ) )
-         cTkn  := substr( a_[ 2 ], n, len( p1 ) )
-         ::oUI:q_editResults:append( F_BLACK + "&nbsp;&nbsp;&nbsp;(" + strzero( a_[ 1 ], nWidth ) + ")&nbsp;&nbsp;" + ;
-                                     cPre + "<font color = indianred><b>" + cTkn + "</b></font>" + cPost + ;
-                                     F_END )
-         //            mode, source, line#, pos, slctn
-         aadd( ::aInfo, { -2, cMsg, a_[ 1 ], n, cTkn  } )
+      IF ::lRegEx
+         FOR EACH a_ IN aLines
+            nL := a_[ 1 ]
+            aM := a_[ 3 ]
+            nB := aM[ 1, 2 ]
+            cL := hbide_buildResultLine( a_[ 2 ], aM )
+            cT := aM[ 1, 1 ]
 
-         qCursor:movePosition( QTextCursor_Down )
-      NEXT
+            qResult:append( F_BLACK + "&nbsp;&nbsp;&nbsp;(" + strzero( nL, nWidth ) + ")&nbsp;&nbsp;" + cL + F_END )
+
+            aadd( ::aInfo, { -2, cMsg, nL, nB, cT  } )
+            qCursor:movePosition( QTextCursor_Down )
+         NEXT
+      ELSE
+         cExp := iif( ::lMatchCase, ::cOrigExpr, lower( ::cOrigExpr ) )
+         FOR EACH a_ IN aLines
+            nL    := a_[ 1 ]
+            cL    := a_[ 2 ]
+            nB    := at( cExp, cL )
+            cPre  := substr( cL, 1, nB - 1 )
+            cPost := substr( cL, nB + len( cExp ) )
+            cT    := substr( cL, nB, len( cExp ) )
+            cL    := cPre + F_SEARCH + "<b>" + cT + "</b>" + F_END + cPost
+
+            qResult:append( F_BLACK + "&nbsp;&nbsp;&nbsp;(" + strzero( nL, nWidth ) + ")&nbsp;&nbsp;" + cL + F_END )
+
+            //            mode, source, line#, pos, slctn
+            aadd( ::aInfo, { -2, cMsg, nL, nB, cT  } )
+            qCursor:movePosition( QTextCursor_Down )
+         NEXT
+      ENDIF
       EXIT
 
-   CASE LOG_FLAGS
-      ::oUI:q_editResults:append( F_BLACK + cMsg + F_END )
+   CASE LOG_TERMINATED
+      qResult:append( F_RED + "---------------- Terminated ---------------" + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
-   CASE LOG_SECTION
-      ::oUI:q_editResults:append( F_SECTION + "<u>" + cMsg + "</u>" + F_END )
-      aadd( ::aInfo, { 0, NIL, NIL } )
-      EXIT
-
-   CASE LOG_FOLDER
-      ::oUI:q_editResults:append( F_FOLDER + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "<i><b><u>" + cMsg + "</u></b></i>" + F_END )
-      aadd( ::aInfo, { 0, NIL, NIL } )
-      EXIT
-
-   CASE LOG_PROJECT
-      ::oUI:q_editResults:append( F_FOLDER + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "<i><b><u>" + cMsg + "</u></b></i>" + F_END )
+   CASE LOG_MISSING
+      qResult:append( F_RED + cMsg + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
    CASE LOG_EMPTY
-      ::oUI:q_editResults:append( F_BLACK + " " + F_END )
+      qResult:append( F_BLACK + " " + F_END )
       aadd( ::aInfo, { 0, NIL, NIL } )
       EXIT
 
@@ -908,6 +993,24 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, p, p1, p2 )
 
    QApplication():processEvents()
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_buildResultLine( cLine, aM )
+   LOCAL cT, cR, i
+
+   FOR i := 1 TO len( aM )
+      cR    := aM[ i, 1 ]
+      cT    := replicate( chr( 255 ), len( aM[ i, 1 ] ) )
+      cLine := strtran( cLine, cR, cT, 1, 1 )
+   NEXT
+   FOR i := 1 TO len( aM )
+      cR    := replicate( chr( 255 ), len( aM[ i, 1 ] ) )
+      cT    := F_SEARCH + "<b>" + aM[ i, 1 ] + "</b>" + F_END
+      cLine := strtran( cLine, cR, cT, 1, 1 )
+   NEXT
+
+   RETURN cLine
 
 /*----------------------------------------------------------------------*/
 
@@ -969,14 +1072,14 @@ STATIC FUNCTION hbide_getFlags( lPrg, lC, lCpp, lH, lCh, lRc, lTabs, lSubF, lSub
    HB_SYMBOL_UNUSED( lSubP )
    HB_SYMBOL_UNUSED( lListOnly )
 
-   s += "[.prg="  + L2S( lPrg        ) + "] "
-   s += "[.c="    + L2S( lC          ) + "] "
-   s += "[.cpp="  + L2S( lCpp        ) + "] "
-   s += "[.h="    + L2S( lH          ) + "] "
-   s += "[.ch="   + L2S( lCh         ) + "] "
-   s += "[.rc="   + L2S( lRc         ) + "] "
-   s += "[RegEx=" + L2S( lRegEx      ) + "] "
-   s += "[Case="  + L2S( lMatchCase  ) + "] "
+   s += "[.prg="  + L2S( lPrg        ) + "]"
+   s += "[.c="    + L2S( lC          ) + "]"
+   s += "[.cpp="  + L2S( lCpp        ) + "]"
+   s += "[.h="    + L2S( lH          ) + "]"
+   s += "[.ch="   + L2S( lCh         ) + "]"
+   s += "[.rc="   + L2S( lRc         ) + "]"
+   s += "[RegEx=" + L2S( lRegEx      ) + "]"
+   s += "[Case="  + L2S( lMatchCase  ) + "]"
 
    RETURN s
 

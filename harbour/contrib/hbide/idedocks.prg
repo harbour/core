@@ -87,6 +87,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildCompileResults()
    METHOD buildLinkResults()
    METHOD buildOutputResults()
+   METHOD buildFindInFiles()
    METHOD outputDoubleClicked( lSelected )
    METHOD buildStatusBar()
    METHOD toggleLeftDocks()
@@ -168,6 +169,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildCompileResults()
    ::buildLinkResults()
    ::buildOutputResults()
+   //::buildFindInFiles()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
@@ -359,8 +361,8 @@ METHOD IdeDocks:buildOutputResults()
    ::oDockB2:oWidget:setWindowTitle( "Output Console" )
    ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
 
-   ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
-   ::oOutputResult:oWidget:setAcceptRichText( .t. )
+   ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )
+   ::oOutputResult:oWidget:setAcceptRichText( .T. )
    ::oOutputResult:oWidget:setReadOnly( .T. )
 
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
@@ -534,3 +536,39 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildFindInFiles()
+   LOCAL oXbp
+
+   ::oIde:oDockFind := XbpWindow():new( ::oDa )
+   ::oDockFind:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oDockFind:oWidget:setObjectName( "dockFindInFiles" )
+   ::oDlg:addChild( ::oDockFind )
+   ::oDockFind:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oDockFind:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oDockFind:oWidget:setWindowTitle( "Find in Files" )
+   ::oDockFind:oWidget:setFocusPolicy( Qt_NoFocus )
+
+   ::oIde:oFindInFiles  := IdeFindInFiles():new( ::oIde, .t. )
+   ::oIde:oFindInFiles:lInDockWindow := .t.
+   ::oIde:oFindInFiles:create()
+
+   oXbp := XbpWindow():new( ::oDockFind )
+   oXbp:qtObject := IdeFindInFiles():new( ::oIde, .t. ):create() //::oIde:oFindInFiles
+   oXbp:oWidget  := oXbp:qtObject:oUI
+   //::oIde:oFindInFiles  := XbpWindow():new( ::oDockFind )
+   //::oDockFind:qtObject := ::oIde:oFindInFiles:oUI
+   //::oDockFind:qtObject := HbQtUI():new( ::resPath + "findform.uic", ::oDockFind:oWidget ):build()
+   //::oIde:oFindInFiles:oWidget := ::oDockFind:qtObject
+
+   //::oDockFind:oWidget:setWidget( ::oFindInFiles:oWidget )
+   //::oDockFind:oWidget:setWidget( ::oIde:oFindInFiles:oUI )
+   ::oDockFind:oWidget:setWidget( oXbp:oWidget )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockFind:oWidget, Qt_Horizontal )
+   ::oDockFind:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

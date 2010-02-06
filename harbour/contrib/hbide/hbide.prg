@@ -119,6 +119,8 @@ CLASS HbIde
    DATA   oFR                                              /* Find Replace Manager           */
    DATA   oEV                                              /* Available Environments         */
    DATA   oThemes
+   DATA   oFindInFiles
+   DATA   oDockFind
 
    DATA   oUI
 
@@ -575,6 +577,7 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "MatchPairs"
       //
+      ::oDockFind:show()
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()

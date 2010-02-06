@@ -91,6 +91,9 @@ CLASS IdeObject
    ACCESS oSM                                     INLINE ::oIde:oSM
    ACCESS oEV                                     INLINE ::oIde:oEV
 
+   ACCESS oDockFind                               INLINE ::oIde:oDockFind
+   ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
+
    ACCESS aMeta                                   INLINE ::oIde:aMeta
 
    ACCESS oFont                                   INLINE ::oIde:oFont

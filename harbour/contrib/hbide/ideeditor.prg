@@ -994,8 +994,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
    #if 1
-   ::connect( ::qDocument, "blockCountChanged(int)"     , {|p      | ::exeEvent( 21, p )         } )
-   ::connect( ::qDocument, "contentsChange(int,int,int)", {|p,p1,p2| ::exeEvent( 22, p, p1, p2 ) } )
+   ::connect( ::qDocument, "blockCountChanged(int)"     , {|p      | ::exeEvent( blockCountChanged, p      ) } )
+   ::connect( ::qDocument, "contentsChange(int,int,int)", {|p,p1,p2| ::exeEvent( contentsChange, p, p1, p2 ) } )
    #else
 hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } ) )
    ::qSlots:hbConnect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )

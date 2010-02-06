@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'findinfiles.ui'
 **
-** Created: Thu Feb 4 18:06:12 2010
+** Created: Sat Feb 6 02:13:07 2010
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -91,8 +91,8 @@ public:
 
         listProjects = new QListWidget(FindReplInFiles);
         listProjects->setObjectName(QString::fromUtf8("listProjects"));
-        listProjects->setMinimumSize(QSize(0, 100));
-        listProjects->setMaximumSize(QSize(16777215, 100));
+        listProjects->setMinimumSize(QSize(0, 60));
+        listProjects->setMaximumSize(QSize(16777215, 60));
         listProjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
         listProjects->setSelectionMode(QAbstractItemView::MultiSelection);
         listProjects->setSortingEnabled(false);

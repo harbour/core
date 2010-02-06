@@ -137,8 +137,11 @@ HB_FUNC( QT_QSIZEPOLICY )
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-HB_TRACE( HB_TR_ALWAYS, ( "================ %i %i", hb_parni( 1 ), hb_parni( 2 ) ) );
       pObj = new QSizePolicy( ( QSizePolicy::Policy ) hb_parni( 1 ), ( QSizePolicy::Policy ) hb_parni( 2 ) ) ;
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QSizePolicy( *hbqt_par_QSizePolicy( 1 ) ) ;
    }
    else
    {

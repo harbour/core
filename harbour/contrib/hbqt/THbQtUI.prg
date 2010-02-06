@@ -97,6 +97,7 @@ CLASS HbQtUI
    METHOD   loadContents( cUiFull )
    METHOD   loadUI( cUiFull, qParent )
    METHOD   build( cFileOrBuffer, qParent )
+   METHOD   formatCommand( cCmd, lText )
 
    ERROR HANDLER OnError( ... )
 
@@ -388,7 +389,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
       ELSEIF !empty( cText := hbq_pullSetToolTip( ::org, s:__enumIndex() ) )
          n := at( "->", cText )
          cNam := alltrim( substr( cText, 1, n - 1 ) )
-         cCmd := hbq_cmdFormat( substr( cText, n + 2 ), .t. )
+         cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
          hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
@@ -396,7 +397,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
       ELSEIF !empty( cText := hbq_pullText( ::org, s:__enumIndex() ) )
          n := at( "->", cText )
          cNam := alltrim( substr( cText, 1, n - 1 ) )
-         cCmd := hbq_cmdFormat( substr( cText, n + 2 ), .t. )
+         cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
          hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
@@ -404,7 +405,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
       ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := at( ".", s ) ) > 0  )  /* Assignment to objects on stack */
          cNam := substr( s, 1, n - 1 )
          cCmd := substr( s, n + 1 )
-         cCmd := hbq_cmdFormat( cCmd, .f. )
+         cCmd := ::formatCommand( cCmd, .f. )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
@@ -416,7 +417,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
                      ( at( "->", s ) > n )
          cNam := substr( s, 1, n - 1 )
          cCmd := substr( s, n + 1 )
-         cCmd := hbq_cmdFormat( cCmd, .f. )
+         cCmd := ::formatCommand( cCmd, .f. )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
@@ -425,7 +426,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
       ELSEIF ( n := at( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
          cNam := substr( s, 1, n - 1 )
-         cCmd := hbq_cmdFormat( substr( s, n + 2 ), .f. )
+         cCmd := ::formatCommand( substr( s, n + 2 ), .f. )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
@@ -469,11 +470,11 @@ hbq_dbg( "------------------------------------------------------------" )
       IF a_:__enumIndex() > 1
          IF type( a_[ 3 ] ) == "UI"
             cBlock := "{|o| " + a_[ 4 ] + "}"
+hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
             bBlock := &( cBlock )
 
             x := eval( bBlock, ::qObj )
             IF hb_isObject( x )
-hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), x:pPtr, cBlock )
                ::qObj[ a_[ 2 ] ] := x
             ENDIF
          ELSE
@@ -532,6 +533,49 @@ hbq_dbg( pad( a_[ 1 ], 20 ), cBlock )
    //::oWidget:exec()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtUI:formatCommand( cCmd, lText )
+   LOCAL regDefine, aDefine, n, n1, cNam, cCmd1
+
+   STATIC nn := 100
+
+   DEFAULT lText TO .t.
+
+   cCmd := strtran( cCmd, "QApplication::translate"  , "q__tr"        )
+   cCmd := strtran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
+   cCmd := strtran( cCmd, "QString()"                , '""'           )
+   cCmd := strtran( cCmd, "QSize("                   , "QSize():new(" )
+   cCmd := strtran( cCmd, "QRect("                   , "QRect():new(" )
+
+   IF ( "::" $ cCmd )
+      regDefine := hb_RegexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
+      aDefine := hb_RegEx( regDefine, cCmd )
+      IF !empty( aDefine )
+         cCmd := strtran( cCmd, "::", "_" )    /* Qt Defines  - how to handle */
+      ENDIF
+   ENDIF
+
+   IF ! lText .AND. ( at( ".", cCmd ) ) > 0
+      // sizePolicy     setHeightForWidth(ProjectProperties->sizePolicy().hasHeightForWidth());
+      //
+      IF ( at( "setHeightForWidth(", cCmd ) ) > 0
+         cNam := "__qsizePolicy" + hb_ntos( ++nn )
+         n    := at( "(", cCmd )
+         n1   := at( ".", cCmd )
+         cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), ::widgets )
+         cCmd1 := strtran( cCmd1, "->", ":" )
+         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():configure(" + cCmd1 + ")" } )
+         cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + substr( cCmd, n1 + 1 )
+
+      ELSE
+         cCmd := "pPtr"
+
+      ENDIF
+   ENDIF
+
+   RETURN cCmd
 
 /*----------------------------------------------------------------------*/
 
@@ -625,46 +669,6 @@ STATIC FUNCTION hbq_replaceConstants( s, hConst )
    ENDIF
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbq_cmdFormat( cCmd, lTip )
-   LOCAL regDefine, aDefine, n, n1
-
-   cCmd := strtran( cCmd, "QApplication::translate"  , "q__tr"        )
-   cCmd := strtran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
-   cCmd := strtran( cCmd, "QString()"                , '""'           )
-   cCmd := strtran( cCmd, "QSize("                   , "QSize():new(" )
-   cCmd := strtran( cCmd, "QRect("                   , "QRect():new(" )
-
-   IF ( "::" $ cCmd )
-      regDefine := hb_RegexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
-      aDefine := hb_RegEx( regDefine, cCmd )
-      IF !empty( aDefine )
-         cCmd := strtran( cCmd, "::", "_" )    /* Qt Defines  - how to handle */
-      ENDIF
-   ENDIF
-
-   IF !( lTip )
-//      cCmd := strtran( cCmd, "|" , "+" )    /* C OR              */
-
-      IF ( at( ".", cCmd ) ) > 0
-         /* TODO: call object's contructor in :configure */
-         //
-         // sizePolicy     setHeightForWidth(ProjectProperties->sizePolicy().hasHeightForWidth());
-         //
-         IF ( at( "setHeightForWidth(", cCmd ) ) > 0
-            n    := at( "(", cCmd )
-            n1   := at( ".", cCmd )
-            cCmd := "setHeightForWidth(QSizePolicy():configure(" + ;
-                        substr( cCmd, n + 1, n1 - n - 1 ) + ")" + ':' + substr( cCmd, n1 + 1 )
-         ELSE
-            cCmd := "pPtr"
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN cCmd
 
 /*----------------------------------------------------------------------*/
 
