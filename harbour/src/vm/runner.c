@@ -124,9 +124,7 @@ static HB_BOOL hb_hrbReadValue( const char * szBody, HB_SIZE ulBodySize, HB_SIZE
       *pulBodyOffset += 4;
 
       if( *pulValue <= 0x00FFFFFFUL )
-      {
          return HB_TRUE;
-      }
    }
 
    return HB_FALSE;
@@ -593,9 +591,9 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, USHORT usMode )
 
       if( ulBodySize )
       {
-         BYTE * pbyBuffer;
+         char * pbyBuffer;
 
-         pbyBuffer = ( BYTE * ) hb_xgrab( ulBodySize + sizeof( char ) + 1 );
+         pbyBuffer = ( char * ) hb_xgrab( ulBodySize + sizeof( char ) + 1 );
          hb_fsSeek( hFile, 0, FS_SET );
          hb_fsReadLarge( hFile, pbyBuffer, ulBodySize );
          pbyBuffer[ ulBodySize ] = '\0';

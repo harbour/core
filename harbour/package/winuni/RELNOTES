@@ -45,7 +45,7 @@ Tool/lib versions used to create this package:
    --------------
 
    MinGW GNU C 4.4.1 TDM-2 (included)
-   MinGW w64 GNU C 4.5.0-20091118
+   MinGW w64 GNU C 4.4.4-20100129 (prerelease)
    MinGW CEGCC 4.4.0
    MSVC 2008 (version bundled with MS Windows SDK 7)
    Open Watcom C 1.8
@@ -77,6 +77,7 @@ Changes since previous (2.0.0) release:
   for majority of users, it isn't. It can easily be built from
   source though.
 - Built against Firebird 2.5.0rc1.
+- Downgraded to stable mingw64 version. It fixes .dll handling.
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------

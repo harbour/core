@@ -101,7 +101,7 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parnl( 1 ) );
 }
 
-static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE ulLen, HB_BOOL bOverwrite, LONG lOffset,
+static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE ulLen, HB_BOOL bOverwrite, HB_ISIZ lOffset,
                            HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
@@ -155,8 +155,8 @@ HB_FUNC( FILESTR )
 
       if( hFile != FS_ERROR )
       {
-         LONG lFileSize = hb_fsSeek( hFile, 0, FS_END );
-         LONG lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET );
+         HB_ISIZ lFileSize = hb_fsSeek( hFile, 0, FS_END );
+         HB_ISIZ lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET );
          HB_ISIZ lLength;
          char *pcResult, *pCtrlZ;
          HB_BOOL bCtrlZ = hb_parl( 4 );

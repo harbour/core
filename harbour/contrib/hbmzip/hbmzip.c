@@ -53,6 +53,8 @@
 
 #define INCL_DOSFILEMGR
 
+#define HB_OS_WIN_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -61,9 +63,7 @@
 #include "zip.h"
 #include "unzip.h"
 
-#if defined( HB_OS_WIN )
-   #include "windows.h"
-#elif defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX )
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <unistd.h>
@@ -542,7 +542,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, HB
    if( hFile != FS_ERROR )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE u, ulRead;
+      HB_SIZE ulRead, u;
 
       do
       {
@@ -586,20 +586,20 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, HB
 
 static HB_BOOL hb_zipGetFileInfo( const char * szFileName, ULONG * pulCRC, HB_BOOL * pfText )
 {
-   FILE * file;
+   HB_FHANDLE hFile;
    HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
    ULONG ulCRC = 0;
 
-   /* QUESTION: Any reason why we're not using the hb_fs*() functions here? */
-   file = hb_fopen( szFileName, "rb" );
-   if( file )
+   hFile = hb_fsOpen( szFileName, FO_READ );
+
+   if( hFile != FS_ERROR )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
       HB_SIZE ulRead, u;
 
       do
       {
-         ulRead = ( HB_SIZE ) fread( pString, 1, HB_Z_IOBUF_SIZE, file );
+         ulRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
          if( ulRead > 0 )
          {
             ulCRC = crc32( ulCRC, pString, ulRead );
@@ -624,10 +624,10 @@ static HB_BOOL hb_zipGetFileInfo( const char * szFileName, ULONG * pulCRC, HB_BO
       }
       while( ulRead == HB_Z_IOBUF_SIZE );
 
-      fResult = ferror( file ) == 0;
+      fResult = ( hb_fsError() == 0 );
 
       hb_xfree( pString );
-      fclose( file );
+      hb_fsClose( hFile );
    }
 
    if( pulCRC )
