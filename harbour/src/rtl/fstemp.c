@@ -410,6 +410,32 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
          HB_TCHAR_GETFROM( pszTempDir, lpDir, HB_PATH_MAX );
       }
    }
+
+#elif defined( HB_OS_OS2 )
+   {
+      char * pszTempDirEnv = hb_getenv( "TEMP" );
+
+      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
+      {
+         pszTempDir[ 0 ] = '.';
+         pszTempDir[ 1 ] = '\0';
+      }
+      else
+         nResult = 0;
+
+      if( pszTempDirEnv )
+         hb_xfree( pszTempDirEnv );
+
+      if( pszTempDir[ 0 ] != '\0' )
+      {
+         int len = ( int ) strlen( pszTempDir );
+         if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
+         {
+            pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
+            pszTempDir[ len + 1 ] = '\0';
+         }
+      }
+   }
 #else
    {
       char szBuffer[ L_tmpnam ];
