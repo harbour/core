@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'findinfiles.ui'
 **
-** Created: Sat Feb 6 02:13:07 2010
+** Created: Sat Feb 6 14:38:09 2010
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -68,6 +68,7 @@ public:
     QComboBox *comboFolder;
     QToolButton *buttonFolder;
     QLabel *labelStatus;
+    QCheckBox *checkFolders;
 
     void setupUi(QDialog *FindReplInFiles)
     {
@@ -283,6 +284,11 @@ public:
 
         gridLayout->addWidget(labelStatus, 20, 0, 1, 5);
 
+        checkFolders = new QCheckBox(FindReplInFiles);
+        checkFolders->setObjectName(QString::fromUtf8("checkFolders"));
+
+        gridLayout->addWidget(checkFolders, 6, 1, 1, 1);
+
 
         retranslateUi(FindReplInFiles);
 
@@ -316,6 +322,7 @@ public:
         labelFolder->setText(QApplication::translate("FindReplInFiles", "Folder:", 0, QApplication::UnicodeUTF8));
         buttonFolder->setText(QApplication::translate("FindReplInFiles", "...", 0, QApplication::UnicodeUTF8));
         labelStatus->setText(QString());
+        checkFolders->setText(QApplication::translate("FindReplInFiles", "Include folders", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(FindReplInFiles);
     } // retranslateUi
 

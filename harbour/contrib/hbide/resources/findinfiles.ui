@@ -334,6 +334,13 @@
      </property>
     </widget>
    </item>
+   <item row="6" column="1">
+    <widget class="QCheckBox" name="checkFolders">
+     <property name="text">
+      <string>Include folders</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

@@ -190,6 +190,9 @@ CLASS HbIde
    DATA   cWrkPathMk2                             INIT   hb_getenv( "HBIDE_DIR_HBMK2" )
    DATA   cWrkPathEnv                             INIT   hb_DirBase() + "resources"
    DATA   cWrkEnvironment                         INIT   ""
+   DATA   cWrkFind                                INIT   ""
+   DATA   cWrkFolderFind                          INIT   ""
+   DATA   cWrkReplace                             INIT   ""
 
    DATA   oEnvironment
 
@@ -203,7 +206,7 @@ CLASS HbIde
    DATA   cSeparator                              INIT   "/*" + replicate( "-", 70 ) + "*/"
 
    DATA   nTabSpaces                              INIT   3           /* Via User Setup */
-   DATA   cTabSpaces                              INIT   space( 3 ) //::nTabSpaces )
+   DATA   cTabSpaces                              INIT   space( 3 )  //::nTabSpaces )
 
    DATA   aTags                                   INIT   {}
    DATA   aText                                   INIT   {}
@@ -279,6 +282,9 @@ METHOD HbIde:create( cProjIni )
    ::cWrkTheme       := ::aINI[ INI_HBIDE, CurrentTheme       ]
    ::cWrkCodec       := ::aINI[ INI_HBIDE, CurrentCodec       ]
    ::cWrkEnvironment := ::aINI[ INI_HBIDE, CurrentEnvironment ]
+   ::cWrkFind        := ::aINI[ INI_HBIDE, CurrentFind        ]
+   ::cWrkFolderFind  := ::aINI[ INI_HBIDE, CurrentFolderFind  ]
+   ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
    /* Set Codec at the Begining */
    HbXbp_SetCodec( ::cWrkCodec )
 

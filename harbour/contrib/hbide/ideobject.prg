@@ -115,6 +115,9 @@ CLASS IdeObject
    ACCESS cWrkPathMk2                             INLINE ::oIde:cWrkPathMk2
    ACCESS cWrkPathEnv                             INLINE ::oIde:cWrkPathEnv
    ACCESS cWrkEnvironment                         INLINE ::oIde:cWrkEnvironment
+   ACCESS cWrkFind                                INLINE ::oIde:cWrkFind
+   ACCESS cWrkFolderFind                          INLINE ::oIde:cWrkFolderFind
+   ACCESS cWrkReplace                             INLINE ::oIde:cWrkReplace
    //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep

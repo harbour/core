@@ -390,7 +390,7 @@ METHOD IdeFindInFiles:new( oIde, lShowOnCreate )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
-   LOCAL cText, qLineEdit, aProjList, cProj, qItem
+   LOCAL cText, qLineEdit, aProjList, cProj, qItem, n
 
    DEFAULT oIde          TO ::oIde
    DEFAULT lShowOnCreate TO ::lShowOnCreate
@@ -412,11 +412,23 @@ METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
    aeval( ::oIde:aIni[ INI_REPLACE ], {|e| ::oUI:q_comboRepl:addItem( e ) } )
    aeval( ::oIde:aIni[ INI_FOLDERS ], {|e| ::oUI:q_comboFolder:addItem( e ) } )
 
-   ::oUI:q_comboExpr:setCurrentIndex( 0 )
-   ::oUI:q_comboRepl:setCurrentIndex( -1 )
-   ::oUI:q_comboFolder:setCurrentIndex( -1 )
+   n := ascan( ::oIde:aIni[ INI_FIND    ], {|e| e == ::cWrkFind } )
+   ::oUI:q_comboExpr:setCurrentIndex( n-1 )
+
+   n := ascan( ::oIde:aIni[ INI_REPLACE ], {|e| e == ::cWrkReplace } )
+   ::oUI:q_comboRepl:setCurrentIndex( n - 1 )
+
+   n := ascan( ::oIde:aIni[ INI_FOLDERS ], {|e| e == ::cWrkFolderFind } )
+   ::oUI:q_comboFolder:setCurrentIndex( n - 1 )
+   ::oUI:q_comboFolder:setEnabled( .f. )
+   ::oUI:q_checkFolders:setChecked( .f. )
+   ::oUI:q_checkSubFolders:setChecked( .f. )
+   ::oUI:q_checkSubFolders:setEnabled( .f. )
+
    ::oUI:q_buttonRepl:setEnabled( .f. )
    ::oUI:q_buttonStop:setEnabled( .f. )
+   ::oUI:q_comboRepl:setEnabled( .f. )
+
    ::oUI:q_checkListOnly:setChecked( .t. )
    ::oUI:q_checkPrg:setChecked( .t. )
 
@@ -465,6 +477,7 @@ METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
    ::oUI:signal( "checkAll"     , "stateChanged(int)"        , {|p| ::execEvent( "checkAll", p      ) } )
    ::oUI:signal( "comboFind"    , "currentIndexChanged(text)", {|p| ::execEvent( "comboFind", p     ) } )
    ::oUI:signal( "checkListOnly", "stateChanged(int)"        , {|p| ::execEvent( "checkListOnly", p ) } )
+   ::oUI:signal( "checkFolders" , "stateChanged(int)"        , {|p| ::execEvent( "checkFolders", p  ) } )
    ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
@@ -509,6 +522,11 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
    CASE "checkListOnly"
       ::oUI:q_comboRepl:setEnabled( p == 0 )
       ::oUI:q_buttonRepl:setEnabled( !( p == 1 ) )
+      EXIT
+
+   CASE "checkFolders"
+      ::oUI:q_comboFolder:setEnabled( p == 2 )
+      ::oUI:q_checkSubFolders:setEnabled( p == 2 )
       EXIT
 
    CASE "buttonFind"
@@ -668,7 +686,7 @@ METHOD IdeFindInFiles:destroy()
 
 METHOD IdeFindInFiles:find()
    LOCAL lPrg, lC, lCpp, lH, lCh, lRc, a_
-   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, aFilter, cExt, cMask
+   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, aFilter, cExt, cMask, cWrkFolder
    LOCAL nStart, nEnd, cSource, aDir, cProjTitle, aProjFiles
    LOCAL aOpenSrc   := {}
    LOCAL aFolderSrc := {}
@@ -678,24 +696,22 @@ METHOD IdeFindInFiles:find()
    IF empty( ::cOrigExpr := ::oUI:q_comboExpr:currentText() )
       RETURN Self
    ENDIF
-   IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == ::cOrigExpr } ) == 0
-      hb_ains( ::oIde:aIni[ INI_FIND ], 1, ::cOrigExpr, .t. )
-      ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
-   ENDIF
+
+   ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
+   ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
+   ::cReplWith  := ::oUI:q_comboRepl:currentText()
 
    ::lRegEx := ::oUI:q_checkRegEx:isChecked()
    IF ::lRegEx
-      ::compRegEx := hb_regExComp( ::cOrigExpr )
+      ::compRegEx := hb_regExComp( ::cOrigExpr, ::lMatchCase )
       IF ! hb_isRegEx( ::compRegEx )
          MsgBox( "Error in Regular Expression" )
          RETURN Self
       ENDIF
    ENDIF
-   ::lListOnly  := ::oUI:q_checkListOnly:isChecked()
-   ::lMatchCase := ::oUI:q_checkMatchCase:isChecked()
-   ::cReplWith  := ::oUI:q_comboRepl:currentText()
 
    cFolder      := ::oUI:q_comboFolder:currentText()
+   cWrkFolder   := cFolder
    lTabs        := ::oUI:q_checkOpenTabs:isChecked()
    lSubF        := ::oUI:q_checkSubFolders:isChecked()
    lSubP        := ::oUI:q_checkSubProjects:isChecked()
@@ -720,7 +736,7 @@ METHOD IdeFindInFiles:find()
    ENDIF
 
    /* Process Folder */
-   IF !empty( cFolder )
+   IF ::oUI:q_checkFolders:isChecked() .AND. ! empty( cFolder )
       IF right( cFolder, 1 ) != hb_osPathSeparator()
          cFolder += hb_osPathSeparator()
       ENDIF
@@ -822,6 +838,15 @@ METHOD IdeFindInFiles:find()
    ::oUI:q_buttonStop:setEnabled( .f. )
    ::oUI:q_buttonFind:setEnabled( .t. )
 
+   IF ::nFounds > 0
+      IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == ::cOrigExpr } ) == 0
+         hb_ains( ::oIde:aIni[ INI_FIND ], 1, ::cOrigExpr, .t. )
+         ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
+      ENDIF
+      ::oIde:cWrkFind := ::cOrigExpr
+      ::oIde:cWrkFolderFind := cWrkFolder
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -848,6 +873,7 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
             FOR EACH cLine IN aBuffer
                nLine++
                //       exp, string, lMatchCase, lNewLine, nMaxMatch, nMatchWhich, lMatchOnly
+hbide_dbg( regEx, cLine, ::lMatchCase, .F., 0, 1, .F.  )
                IF !empty( aMatch := hb_regExAll( regEx, cLine, ::lMatchCase, .F., 0, 1, .F.  ) )
                   aadd( aLines, { nLine, cLine, aMatch } )
                ENDIF

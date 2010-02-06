@@ -88,8 +88,11 @@
 #define PathEnv                                   15
 #define CurrentEnvironment                        16
 #define FindInFilesDialogGeometry                 17
+#define CurrentFind                               18
+#define CurrentFolderFind                         19
+#define CurrentReplace                            20
 
-#define INI_HBIDE_VRBLS                           17
+#define INI_HBIDE_VRBLS                           20
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
