@@ -1887,7 +1887,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             switch( pField->uiLen )
             {
                case 1:
-                  dValue = ( SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
+                  dValue = ( HB_SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
                   iLen = 4;
                   break;
                case 2:
@@ -1920,7 +1920,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             switch( pField->uiLen )
             {
                case 1:
-                  hb_itemPutNILen( pItem, ( SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ], 4 );
+                  hb_itemPutNILen( pItem, ( HB_SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ], 4 );
                   break;
                case 2:
                   hb_itemPutNILen( pItem, ( int ) HB_GET_LE_INT16( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 6 );

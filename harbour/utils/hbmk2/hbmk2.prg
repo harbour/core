@@ -3485,9 +3485,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /* NOTE: Ending path sep is important. */
          /* Different escaping for internal and external compiler. */
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() )
+            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + DirAddPathSep( cWorkDir ) )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( cWorkDir + hb_osPathSeparator(), nCmd_Esc ) )
+            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( DirAddPathSep( cWorkDir ), nCmd_Esc ) )
          ENDIF
       ENDIF
    ENDIF

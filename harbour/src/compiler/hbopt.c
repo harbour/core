@@ -89,7 +89,7 @@ static HB_OPT_FUNC( hb_p_pushlocal )
       hb_compNOOPfill( pFunc, lPCodePos, 6, HB_FALSE, HB_FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPLOCALNEAR &&
-            ( SCHAR ) pFunc->pCode[ lPCodePos + 4 ] == iVar &&
+            ( HB_SCHAR ) pFunc->pCode[ lPCodePos + 4 ] == iVar &&
             ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 5, HB_FALSE, HB_FALSE );
@@ -113,7 +113,7 @@ static HB_OPT_FUNC( hb_p_pushlocalnear )
    HB_SYMBOL_UNUSED( cargo );
 
    if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POPLOCAL &&
-      ( SCHAR ) pFunc->pCode[ lPCodePos + 1 ] ==
+      ( HB_SCHAR ) pFunc->pCode[ lPCodePos + 1 ] ==
       HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) &&
       ! hb_compHasJump( pFunc, lPCodePos + 2 ) )
    {

@@ -221,14 +221,15 @@
 #endif
 #endif
 
-typedef enum {
-    SSF_NONE,
-    SSF_LINE,
-    SSF_BOX,
-    SSF_SPLINE1,
-    SSF_SPLINE2,
-    SSF_TRIANGLE,
-    SSF_COLOR
+typedef enum
+{
+   SSF_NONE,
+   SSF_LINE,
+   SSF_BOX,
+   SSF_SPLINE1,
+   SSF_SPLINE2,
+   SSF_TRIANGLE,
+   SSF_COLOR
 } ssfType;
 
 #ifndef SSF_MAXFRAMES
@@ -240,25 +241,28 @@ typedef enum {
 #define THICK_RIGHT     2
 #define THICK_DOWN      3
 
-typedef struct _ssfFrame {
-    char ftype;
-    unsigned short left, top, right, bottom, thick;
-    unsigned short thickdir;
+typedef struct _ssfFrame
+{
+   char ftype;
+   unsigned short left, top, right, bottom, thick;
+   unsigned short thickdir;
 } ssfFrame;
 
-typedef struct _ssfGlyph {
-    int num;
-    ssfFrame frames[SSF_MAXFRAMES];
+typedef struct _ssfGlyph
+{
+   int num;
+   ssfFrame frames[ SSF_MAXFRAMES ];
 } ssfGlyph;
 
-typedef struct _ssfFont {
-    unsigned short fsize;
-    const ssfGlyph **chars;
+typedef struct _ssfFont
+{
+   unsigned short fsize;
+   const ssfGlyph ** chars;
 } ssfFont;
 
-extern void ssfCreateThinFont(ssfFont *sfont);
-extern void ssfSetFontSize(ssfFont *sfont, unsigned short fsize);
-extern unsigned short ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int color);
-extern int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, const char *s, int x, int y, int color);
+extern void ssfCreateThinFont( ssfFont * sfont );
+extern void ssfSetFontSize( ssfFont * sfont, unsigned short fsize );
+extern unsigned short ssfDrawChar( AL_BITMAP * dst, ssfFont * sfont, char c, int x, int y, int color );
+extern int ssfDrawText( AL_BITMAP * dst, ssfFont * sfont, const char * s, int x, int y, int color );
 
 #endif  /* _SSF_H_ */
