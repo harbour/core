@@ -263,23 +263,19 @@ METHOD XbpDialog:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:exeBlock( nEvent, pEvent )
-   LOCAL lRet := .F.
 
    HB_SYMBOL_UNUSED( pEvent )
 
    DO CASE
    CASE nEvent == QEvent_WindowActivate
       SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
-      lRet := .T.
 
    CASE nEvent == QEvent_WindowDeactivate
       SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
-      lRet := .T.
 
    CASE nEvent == QEvent_Close
       IF hb_isBlock( ::sl_close )
-         lRet := eval( ::sl_close, NIL, NIL, Self )
-         IF lRet
+         IF eval( ::sl_close, NIL, NIL, Self )
             SetAppEvent( xbeP_Close, NIL, NIL, Self )
          ENDIF
       ELSE
@@ -288,7 +284,7 @@ METHOD XbpDialog:exeBlock( nEvent, pEvent )
 
    ENDCASE
 
-   RETURN lRet
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
