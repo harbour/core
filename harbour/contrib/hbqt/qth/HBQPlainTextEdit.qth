@@ -124,6 +124,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           streamComment()
    void           duplicateLine()
    void           replaceSelection( const QString & txt )
+   void           blockIndent( int steps )
+   void           deleteLine()
 </SLOTS>
 
 <SIGNALS>

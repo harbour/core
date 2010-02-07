@@ -93,6 +93,8 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  streamComment()
    METHOD  duplicateLine()
    METHOD  replaceSelection( cTxt )
+   METHOD  blockIndent( nSteps )
+   METHOD  deleteLine()
 
    ENDCLASS
 
@@ -208,4 +210,12 @@ METHOD HBQPlainTextEdit:duplicateLine()
 
 METHOD HBQPlainTextEdit:replaceSelection( cTxt )
    RETURN Qt_HBQPlainTextEdit_replaceSelection( ::pPtr, cTxt )
+
+
+METHOD HBQPlainTextEdit:blockIndent( nSteps )
+   RETURN Qt_HBQPlainTextEdit_blockIndent( ::pPtr, nSteps )
+
+
+METHOD HBQPlainTextEdit:deleteLine()
+   RETURN Qt_HBQPlainTextEdit_deleteLine( ::pPtr )
 

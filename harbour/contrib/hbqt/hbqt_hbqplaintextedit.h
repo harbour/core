@@ -136,10 +136,13 @@ public slots:
    void           unescapeDQuotes();
    void           convertQuotes();
    void           convertDQuotes();
+   void           deleteLine();
+   void           blockIndent( int steps );
    void           blockComment();
    void           streamComment();
    void           duplicateLine();
    void           replaceSelection( const QString & txt );
+   void           insertTab( int mode );
 
 private slots:
    void           slotCursorPositionChanged();

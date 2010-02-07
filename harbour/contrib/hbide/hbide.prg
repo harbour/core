@@ -482,8 +482,11 @@ METHOD HbIde:execAction( cKey )
    CASE "Paste"
    CASE "SelectAll"
    CASE "DuplicateLine"
+   CASE "DeleteLine"
    CASE "BlockComment"
    CASE "StreamComment"
+   CASE "BlockIndentR"
+   CASE "BlockIndentL"
    CASE "switchReadOnly"
    CASE "Search"
    CASE "Find"
@@ -546,11 +549,20 @@ METHOD HbIde:execEditorAction( cKey )
    CASE "DuplicateLine"
       ::oEM:duplicateLine()
       EXIT
+   CASE "DeleteLine"
+      ::oEM:deleteLine()
+      EXIT
    CASE "BlockComment"
       ::oEM:blockComment()
       EXIT
    CASE "StreamComment"
       ::oEM:streamComment()
+      EXIT
+   CASE "BlockIndentR"
+      ::oEM:indent( 1 )
+      EXIT
+   CASE "BlockIndentL"
+      ::oEM:indent( -1 )
       EXIT
    CASE "switchReadOnly"
       ::oEM:switchToReadOnly()

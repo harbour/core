@@ -80,6 +80,7 @@
 
 HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent )
 {
+   spaces            = 3;
    spacesTab         = "";
    styleHightlighter = "prg";
    numberBlock       = true;
@@ -330,7 +331,9 @@ void HBQPlainTextEdit::setSpaces( int newSpaces )
    else
    {
       if( spaces == -101 )
+      {
          spacesTab = "\t";
+      }
    }
 }
 
@@ -345,8 +348,14 @@ bool HBQPlainTextEdit::event( QEvent *event )
       }
       else
       {
-         if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) ) {
-            this->insertPlainText( spacesTab );
+         if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) )
+         {
+            this->insertTab( 0 );
+            return true;
+         }
+         else if( ( keyEvent->key() == Qt::Key_Backtab ) && ( keyEvent->modifiers() & Qt::ShiftModifier ) )
+         {
+            this->insertTab( 1 );
             return true;
          }
       }
@@ -371,7 +380,9 @@ int HBQPlainTextEdit::getLine( const QTextCursor &crQTextCursor )
    for( b = document()->begin();b!=document()->end();b = b.next() )
    {
       if( b==cb )
+      {
          return line;
+      }
       line++;
    }
    return( line );
@@ -385,137 +396,6 @@ void HBQPlainTextEdit::slotCursorPositionChanged()
    if( styleHightlighter != "none" )
    {
       braceHighlight();
-   }
-}
-
-void HBQPlainTextEdit::braceHighlight()
-{
-   extraSelections.clear();
-   setExtraSelections( extraSelections );
-   QColor lineColor = QColor( Qt::yellow ).lighter( 160 );
-   selection.format.setBackground( lineColor );
-
-   QTextDocument *doc = document();
-   QTextCursor cursor = textCursor();
-   QTextCursor beforeCursor = cursor;
-
-   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
-   QString brace = cursor.selectedText();
-
-   beforeCursor.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor );
-   QString beforeBrace = beforeCursor.selectedText();
-
-   if(    ( brace != "{" ) && ( brace != "}" )
-       && ( brace != "[" ) && ( brace != "]" )
-       && ( brace != "(" ) && ( brace != ")" )
-       && ( brace != "<" ) && ( brace != ">" ) )
-   {
-      if(    ( beforeBrace == "{" ) || ( beforeBrace == "}" )
-          || ( beforeBrace == "[" ) || ( beforeBrace == "]" )
-          || ( beforeBrace == "(" ) || ( beforeBrace == ")" )
-          || ( beforeBrace == "<" ) || ( beforeBrace == ">" )  )
-      {
-         cursor = beforeCursor;
-         brace = cursor.selectedText();
-      }
-      else
-      {
-         return;
-      }
-   }
-
-   QTextCharFormat format;
-   format.setForeground( Qt::red );
-   format.setFontWeight( QFont::Bold );
-
-   QString openBrace;
-   QString closeBrace;
-
-   if( ( brace == "{" ) || ( brace == "}" ) )
-   {
-      openBrace = "{";
-      closeBrace = "}";
-   }
-
-   if( ( brace == "[" ) || ( brace == "]" ) )
-   {
-      openBrace = "[";
-      closeBrace = "]";
-   }
-
-   if( ( brace == "(" ) || ( brace == ")" ) )
-   {
-      openBrace = "(";
-      closeBrace = ")";
-   }
-
-   if( ( brace == "<" ) || ( brace == ">" ) )
-   {
-      openBrace = "<";
-      closeBrace = ">";
-   }
-
-   if( brace == openBrace )
-   {
-      QTextCursor cursor1 = doc->find( closeBrace, cursor );
-      QTextCursor cursor2 = doc->find( openBrace, cursor );
-      if( cursor2.isNull() )
-      {
-         selection.cursor = cursor;
-         extraSelections.append( selection );
-         selection.cursor = cursor1;
-         extraSelections.append( selection );
-         setExtraSelections( extraSelections );
-      }
-      else
-      {
-         while( cursor1.position() > cursor2.position() )
-         {
-            cursor1 = doc->find( closeBrace, cursor1 );
-            cursor2 = doc->find( openBrace, cursor2 );
-            if( cursor2.isNull() )
-            {
-                break;
-            }
-         }
-         selection.cursor = cursor;
-         extraSelections.append( selection );
-         selection.cursor = cursor1;
-         extraSelections.append( selection );
-         setExtraSelections( extraSelections );
-      }
-   }
-   else
-   {
-      if( brace == closeBrace ) {
-         QTextCursor cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
-         QTextCursor cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
-         if( cursor2.isNull() )
-         {
-            selection.cursor = cursor;
-            extraSelections.append( selection );
-            selection.cursor = cursor1;
-            extraSelections.append( selection );
-            setExtraSelections( extraSelections );
-         }
-         else
-         {
-            while( cursor1.position() < cursor2.position() )
-            {
-               cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward );
-               cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward );
-               if( cursor2.isNull() )
-               {
-                   break;
-               }
-            }
-            selection.cursor = cursor;
-            extraSelections.append( selection );
-            selection.cursor = cursor1;
-            extraSelections.append( selection );
-            setExtraSelections( extraSelections );
-         }
-      }
    }
 }
 
@@ -653,24 +533,131 @@ void HBQPlainTextEdit::convertDQuotes()
    insertPlainText( txt );
 }
 
+void HBQPlainTextEdit::insertTab( int mode )
+{
+   QTextCursor cursor = textCursor();
+   QTextCursor c( cursor );
+
+   c.setPosition( cursor.position() );
+   setTextCursor( c );
+
+   if( mode == 0 )
+   {
+      insertPlainText( spacesTab );
+   }
+   else
+   {
+      int icol = c.columnNumber();
+      int ioff = qMin( icol, spaces );
+      c.setPosition( c.position() - ioff );
+   }
+   setTextCursor( c );
+}
+
+void HBQPlainTextEdit::deleteLine()
+{
+   QTextCursor cursor = textCursor();
+   QTextCursor c = cursor;
+
+   cursor.beginEditBlock();
+
+   cursor.movePosition( QTextCursor::StartOfLine );
+   cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+   cursor.movePosition( QTextCursor::Down, QTextCursor::KeepAnchor );
+
+   QString textUnderCursor = cursor.selectedText();
+   setTextCursor( cursor );
+   insertPlainText( "" );
+   cursor.endEditBlock();
+
+   setTextCursor( c );
+}
+
+void HBQPlainTextEdit::blockIndent( int steps )
+{
+   QTextCursor cursor = textCursor();
+
+   if( cursor.hasSelection() )
+   {
+      QTextCursor c = cursor;
+      QTextDocument * doc = c.document();
+
+      int bs = doc->findBlock( c.selectionStart() ).blockNumber();
+      int be = doc->findBlock( c.selectionEnd() ).blockNumber();
+
+      cursor.beginEditBlock();
+
+      cursor.movePosition( QTextCursor::Start );
+      cursor.movePosition( QTextCursor::NextBlock, QTextCursor::MoveAnchor, bs );
+
+      int s = abs( steps );
+      int i, j;
+      for( i = bs; i <= be; i++ )
+      {
+         setTextCursor( cursor );
+         for( j = 0; j < s; j++ )
+         {
+            cursor.movePosition( QTextCursor::StartOfLine );
+
+            if( steps < 0 )
+            {
+               cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+               QString textUnderCursor = cursor.selectedText();
+               if( textUnderCursor == " " )
+               {
+                  setTextCursor( cursor );
+                  insertPlainText( "" );
+               }
+            }
+            else
+            {
+               setTextCursor( cursor );
+               insertPlainText( " " );
+            }
+         }
+         cursor.movePosition( QTextCursor::NextBlock, QTextCursor::MoveAnchor, 1 );
+      }
+      cursor.endEditBlock();
+
+      setTextCursor( c );
+   }
+}
+
 void HBQPlainTextEdit::blockComment()
 {
    QTextCursor cursor = textCursor();
    QTextCursor c = cursor;
-   cursor.movePosition( QTextCursor::StartOfLine );
-   setTextCursor( cursor );
-   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
-   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
-   QString textUnderCursor = cursor.selectedText();
-   if( textUnderCursor == "//" )
+   QTextDocument * doc = c.document();
+
+   int bs = doc->findBlock( c.selectionStart() ).blockNumber();
+   int be = doc->findBlock( c.selectionEnd() ).blockNumber();
+
+   cursor.beginEditBlock();
+
+   cursor.movePosition( QTextCursor::Start );
+   cursor.movePosition( QTextCursor::NextBlock, QTextCursor::MoveAnchor, bs );
+   int i;
+   for( i = bs; i <= be; i++ )
    {
       setTextCursor( cursor );
-      insertPlainText( "" );
+
+      cursor.movePosition( QTextCursor::StartOfLine );
+      cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+      cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+      QString textUnderCursor = cursor.selectedText();
+      if( textUnderCursor == "//" )
+      {
+         setTextCursor( cursor );
+         insertPlainText( "" );
+      }
+      else
+      {
+         cursor.movePosition( QTextCursor::StartOfLine );
+         insertPlainText( "//" );
+      }
+      cursor.movePosition( QTextCursor::NextBlock, QTextCursor::MoveAnchor, 1 );
    }
-   else
-   {
-      insertPlainText( "//" );
-   }
+   cursor.endEditBlock();
    setTextCursor( c );
 }
 
@@ -694,6 +681,137 @@ void HBQPlainTextEdit::duplicateLine()
    setTextCursor( cursor );
    insertPlainText( "\n" + textUnderCursor );
    setTextCursor( c );
+}
+
+void HBQPlainTextEdit::braceHighlight()
+{
+   extraSelections.clear();
+   setExtraSelections( extraSelections );
+   QColor lineColor = QColor( Qt::yellow ).lighter( 160 );
+   selection.format.setBackground( lineColor );
+
+   QTextDocument *doc = document();
+   QTextCursor cursor = textCursor();
+   QTextCursor beforeCursor = cursor;
+
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+   QString brace = cursor.selectedText();
+
+   beforeCursor.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor );
+   QString beforeBrace = beforeCursor.selectedText();
+
+   if(    ( brace != "{" ) && ( brace != "}" )
+       && ( brace != "[" ) && ( brace != "]" )
+       && ( brace != "(" ) && ( brace != ")" )
+       && ( brace != "<" ) && ( brace != ">" ) )
+   {
+      if(    ( beforeBrace == "{" ) || ( beforeBrace == "}" )
+          || ( beforeBrace == "[" ) || ( beforeBrace == "]" )
+          || ( beforeBrace == "(" ) || ( beforeBrace == ")" )
+          || ( beforeBrace == "<" ) || ( beforeBrace == ">" )  )
+      {
+         cursor = beforeCursor;
+         brace = cursor.selectedText();
+      }
+      else
+      {
+         return;
+      }
+   }
+
+   QTextCharFormat format;
+   format.setForeground( Qt::red );
+   format.setFontWeight( QFont::Bold );
+
+   QString openBrace;
+   QString closeBrace;
+
+   if( ( brace == "{" ) || ( brace == "}" ) )
+   {
+      openBrace = "{";
+      closeBrace = "}";
+   }
+
+   if( ( brace == "[" ) || ( brace == "]" ) )
+   {
+      openBrace = "[";
+      closeBrace = "]";
+   }
+
+   if( ( brace == "(" ) || ( brace == ")" ) )
+   {
+      openBrace = "(";
+      closeBrace = ")";
+   }
+
+   if( ( brace == "<" ) || ( brace == ">" ) )
+   {
+      openBrace = "<";
+      closeBrace = ">";
+   }
+
+   if( brace == openBrace )
+   {
+      QTextCursor cursor1 = doc->find( closeBrace, cursor );
+      QTextCursor cursor2 = doc->find( openBrace, cursor );
+      if( cursor2.isNull() )
+      {
+         selection.cursor = cursor;
+         extraSelections.append( selection );
+         selection.cursor = cursor1;
+         extraSelections.append( selection );
+         setExtraSelections( extraSelections );
+      }
+      else
+      {
+         while( cursor1.position() > cursor2.position() )
+         {
+            cursor1 = doc->find( closeBrace, cursor1 );
+            cursor2 = doc->find( openBrace, cursor2 );
+            if( cursor2.isNull() )
+            {
+                break;
+            }
+         }
+         selection.cursor = cursor;
+         extraSelections.append( selection );
+         selection.cursor = cursor1;
+         extraSelections.append( selection );
+         setExtraSelections( extraSelections );
+      }
+   }
+   else
+   {
+      if( brace == closeBrace ) {
+         QTextCursor cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
+         QTextCursor cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
+         if( cursor2.isNull() )
+         {
+            selection.cursor = cursor;
+            extraSelections.append( selection );
+            selection.cursor = cursor1;
+            extraSelections.append( selection );
+            setExtraSelections( extraSelections );
+         }
+         else
+         {
+            while( cursor1.position() < cursor2.position() )
+            {
+               cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward );
+               cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward );
+               if( cursor2.isNull() )
+               {
+                   break;
+               }
+            }
+            selection.cursor = cursor;
+            extraSelections.append( selection );
+            selection.cursor = cursor1;
+            extraSelections.append( selection );
+            setExtraSelections( extraSelections );
+         }
+      }
+   }
 }
 
 #endif

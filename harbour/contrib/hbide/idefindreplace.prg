@@ -873,7 +873,6 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
             FOR EACH cLine IN aBuffer
                nLine++
                //       exp, string, lMatchCase, lNewLine, nMaxMatch, nMatchWhich, lMatchOnly
-hbide_dbg( regEx, cLine, ::lMatchCase, .F., 0, 1, .F.  )
                IF !empty( aMatch := hb_regExAll( regEx, cLine, ::lMatchCase, .F., 0, 1, .F.  ) )
                   aadd( aLines, { nLine, cLine, aMatch } )
                ENDIF

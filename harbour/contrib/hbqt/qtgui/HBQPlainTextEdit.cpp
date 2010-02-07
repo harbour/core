@@ -363,6 +363,22 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_REPLACESELECTION )
    hbqt_par_HBQPlainTextEdit( 1 )->replaceSelection( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
+/*
+ * void           blockIndent( int steps )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_BLOCKINDENT )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->blockIndent( hb_parni( 2 ) );
+}
+
+/*
+ * void           deleteLine()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_DELETELINE )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->deleteLine();
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -136,8 +136,10 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD RemoveTrailingSpaces()
    METHOD getSelectedText()
    METHOD duplicateLine()
+   METHOD deleteLine()
    METHOD streamComment()
    METHOD blockComment()
+   METHOD indent( nStep )
 
    ENDCLASS
 
@@ -518,6 +520,15 @@ METHOD IdeEditsManager:duplicateLine()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:deleteLine()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:deleteLine()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:streamComment()
    LOCAL qEdit
    IF !empty( qEdit := ::getEditCurrent() )
@@ -531,6 +542,15 @@ METHOD IdeEditsManager:blockComment()
    LOCAL qEdit
    IF !empty( qEdit := ::getEditCurrent() )
       qEdit:blockComment()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:indent( nStep )
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:blockIndent( nStep )
    ENDIF
    RETURN Self
 
@@ -1037,7 +1057,7 @@ METHOD IdeEditor:exeEvent( nMode, p, p1, p2 )
       IF p2 == 1                     /* Characters Added */
          qChar := QChar():configure( ::qDocument:characterAt( p ) )
          SWITCH qChar:toAscii()
-         CASE 32                    /* Space Key */
+         CASE 32                     /* Space Key        */
             ::qCoEdit:lUpdatePrevWord := .t.
             EXIT
          ENDSWITCH
@@ -1118,19 +1138,16 @@ hbide_dbg( "IdeEditor:destroy()", 0 )
    ::oEdit:destroy()
 
    IF !Empty( ::qDocument )
-      ::qDocument:pPtr := NIL
       ::qDocument      := NIL
    ENDIF
 
    IF !Empty( ::qHiliter )
-      ::qHiliter:pPtr  := NIL
       ::qHiliter       := NIL
    ENDIF
 
    ::oEdit := NIL
 
    IF !Empty( ::qLayout )
-      ::qLayout:pPtr   := NIL
       ::qLayout        := NIL
    ENDIF
 
@@ -1221,7 +1238,7 @@ METHOD IdeEditor:buildTabPage( cSource )
    ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::oTab:oWidget ) )
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
 
-   ::oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
+   ::oTab:tabActivate := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
 
    RETURN Self
 
@@ -1339,8 +1356,10 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD setNewMark()
    METHOD gotoMark( nIndex )
    METHOD duplicateLine()
+   METHOD deleteLine()
    METHOD blockComment()
    METHOD streamComment()
+   METHOD blockIndent( nMode )
    METHOD caseUpper()
    METHOD caseLower()
    METHOD caseInvert()
@@ -1482,6 +1501,18 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:duplicateLine()
+   ::qEdit:duplicateLine()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:deleteLine()
+   ::qEdit:deleteLine()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:blockComment()
    ::qEdit:blockComment()
    RETURN Self
@@ -1490,6 +1521,12 @@ METHOD IdeEdit:blockComment()
 
 METHOD IdeEdit:streamComment()
    ::qEdit:streamComment()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:blockIndent( nMode )
+   ::qEdit:blockIndent( nMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1510,7 +1547,7 @@ METHOD IdeEdit:caseInvert()
    LOCAL qCursor, i, c, s, cBuffer, nLen // qDoc, nBlock
 
    qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-   IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
+   IF qCursor:hasSelection() .AND. ! empty( cBuffer := qCursor:selectedText() )
       //qDoc := QTextDocument()configure( ::qEdit:document() )
       s    := ""
       nLen := len( cBuffer )
@@ -1527,12 +1564,6 @@ hbide_dbg( s )
       ::qEdit:replaceSelection( s )
    ENDIF
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:duplicateLine()
-   ::qEdit:duplicateLine()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1672,11 +1703,25 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
          ::lIndentIt := .t.
          EXIT
       CASE Qt_Key_Tab
+         IF lCtrl
+            ::blockIndent( 1 )
+            RETURN .T.
+         ENDIF
+         EXIT
       CASE Qt_Key_Backtab
-
+         IF lCtrl
+            ::blockIndent( -1 )
+            RETURN .t.
+         ENDIF
          EXIT
       CASE Qt_Key_Backspace
-
+         hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
+         EXIT
+      CASE Qt_Key_Delete
+         IF lCtrl
+            ::deleteLine()
+            RETURN .t.
+         ENDIF
          EXIT
       ENDSWITCH
 
@@ -1686,7 +1731,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
 
    ENDSWITCH
 
-   hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
    RETURN .F.  /* Important */
 
 /*----------------------------------------------------------------------*/
