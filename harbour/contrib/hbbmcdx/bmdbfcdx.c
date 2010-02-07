@@ -320,7 +320,7 @@ static void hb_cdxDspTags( LPCDXINDEX pIndex )
 
 #ifdef HB_CDX_DBGTIME
 #include <sys/time.h>
-typedef LONGLONG CDXDBGTIME;
+typedef HB_LONGLONG CDXDBGTIME;
 
 static CDXDBGTIME cdxTimeIntBld = 0;
 static CDXDBGTIME cdxTimeExtBld = 0;

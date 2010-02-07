@@ -810,7 +810,7 @@ void hb_timeStampUnpackDT( double dTimeStamp,
       if( plMilliSec )
          *plMilliSec = ( long ) ( dTime * HB_MILLISECS_PER_DAY );
 #else
-      LONGLONG llMilliSec = ( LONGLONG ) ( dTimeStamp * HB_MILLISECS_PER_DAY + 0.5 );
+      HB_LONGLONG llMilliSec = ( HB_LONGLONG ) ( dTimeStamp * HB_MILLISECS_PER_DAY + 0.5 );
       if( plJulian )
          *plJulian = ( long ) ( llMilliSec / HB_MILLISECS_PER_DAY );
       if( plMilliSec )

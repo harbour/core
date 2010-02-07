@@ -593,8 +593,8 @@ typedef unsigned long HB_COUNTER;
 
 /* type for memory pointer diff */
 #if defined( HB_OS_WIN_64 )
-   typedef LONGLONG HB_PTRDIFF;
-   typedef ULONGLONG HB_PTRUINT;
+   typedef HB_LONGLONG HB_PTRDIFF;
+   typedef HB_ULONGLONG HB_PTRUINT;
 #else
    typedef long HB_PTRDIFF;
    typedef unsigned long HB_PTRUINT;
@@ -605,7 +605,7 @@ typedef unsigned long HB_COUNTER;
    /* we can add hack with double as work around what should
       effectively give 52bit file size limit */
 #else
-   typedef LONGLONG HB_FOFFSET;
+   typedef HB_LONGLONG HB_FOFFSET;
 #endif
 
 #if defined( HB_IO_WIN )
@@ -1450,15 +1450,15 @@ typedef unsigned char       HB_U8;
 #define HB_GET_LE_INT32( p )        (( HB_I32 ) HB_GET_LE_UINT32( p ))
 #define HB_GET_LE_INT64( p )        (( HB_I64 ) HB_GET_LE_UINT64( p ))
 
-#define HB_PCODE_MKSHORT( p )       (( SHORT )     HB_GET_LE_INT16( p ))
-#define HB_PCODE_MKUSHORT( p )      (( USHORT )    HB_GET_LE_UINT16( p ))
-#define HB_PCODE_MKLONG( p )        (( LONG )      HB_GET_LE_INT32( p ))
-#define HB_PCODE_MKULONG( p )       (( ULONG )     HB_GET_LE_UINT32( p ))
-#define HB_PCODE_MKLONGLONG( p )    (( LONGLONG )  HB_GET_LE_INT64( p ))
-#define HB_PCODE_MKULONGLONG( p )   (( ULONGLONG ) HB_GET_LE_UINT64( p ))
-#define HB_PCODE_MKDOUBLE( p )      (( double )    HB_GET_LE_DOUBLE( p ))
-#define HB_PCODE_MKINT24( p )       (( LONG )      HB_GET_LE_INT24( p ))
-#define HB_PCODE_MKUINT24( p )      (( ULONG )     HB_GET_LE_UINT24( p ))
+#define HB_PCODE_MKSHORT( p )       (( SHORT )        HB_GET_LE_INT16( p ))
+#define HB_PCODE_MKUSHORT( p )      (( USHORT )       HB_GET_LE_UINT16( p ))
+#define HB_PCODE_MKLONG( p )        (( LONG )         HB_GET_LE_INT32( p ))
+#define HB_PCODE_MKULONG( p )       (( ULONG )        HB_GET_LE_UINT32( p ))
+#define HB_PCODE_MKLONGLONG( p )    (( HB_LONGLONG )  HB_GET_LE_INT64( p ))
+#define HB_PCODE_MKULONGLONG( p )   (( HB_ULONGLONG ) HB_GET_LE_UINT64( p ))
+#define HB_PCODE_MKDOUBLE( p )      (( double )       HB_GET_LE_DOUBLE( p ))
+#define HB_PCODE_MKINT24( p )       (( LONG )         HB_GET_LE_INT24( p ))
+#define HB_PCODE_MKUINT24( p )      (( ULONG )        HB_GET_LE_UINT24( p ))
 
 /*
  * Below are hacked version of INT64 macros which operates on double

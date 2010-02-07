@@ -1250,7 +1250,7 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.1f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
    return 9;
 #elif LONG_MAX == LONGLONG_MAX
-   LONGLONG llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+   HB_LONGLONG llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
 
    HB_GENC_LABEL();
 

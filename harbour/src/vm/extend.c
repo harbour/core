@@ -588,7 +588,7 @@ long  hb_parnldef( int iParam, long lDefValue )
 }
 
 #ifndef HB_LONG_LONG_OFF
-LONGLONG  hb_parnll( int iParam )
+HB_LONGLONG  hb_parnll( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -602,14 +602,14 @@ LONGLONG  hb_parnll( int iParam )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( LONGLONG ) pItem->item.asLong.value;
+         return ( HB_LONGLONG ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( LONGLONG ) pItem->item.asInteger.value;
+         return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
 #else
-         return ( LONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) pItem->item.asDouble.value;
 #endif
    }
 
@@ -1145,7 +1145,7 @@ long  hb_parvnl( int iParam, ... )
 }
 
 #ifndef HB_LONG_LONG_OFF
-LONGLONG  hb_parvnll( int iParam, ... )
+HB_LONGLONG  hb_parvnll( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1159,14 +1159,14 @@ LONGLONG  hb_parvnll( int iParam, ... )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( LONGLONG ) pItem->item.asLong.value;
+         return ( HB_LONGLONG ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( LONGLONG ) pItem->item.asInteger.value;
+         return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
 #else
-         return ( LONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) pItem->item.asDouble.value;
 #endif
       else if( HB_IS_ARRAY( pItem ) )
       {
@@ -1468,7 +1468,7 @@ void hb_retnl( long lNumber )
 
 #ifndef HB_LONG_LONG_OFF
 #undef hb_retnll
-void hb_retnll( LONGLONG llNumber )
+void hb_retnll( HB_LONGLONG llNumber )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1530,7 +1530,7 @@ void hb_retnllen( long lNumber, int iWidth )
 
 #ifndef HB_LONG_LONG_OFF
 #undef hb_retnlllen
-void hb_retnlllen( LONGLONG llNumber, int iWidth )
+void hb_retnlllen( HB_LONGLONG llNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1848,7 +1848,7 @@ int hb_stornl( long lValue, int iParam )
 }
 
 #ifndef HB_LONG_LONG_OFF
-int hb_stornll( LONGLONG llValue, int iParam )
+int hb_stornll( HB_LONGLONG llValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2311,7 +2311,7 @@ int hb_storvnl( long lValue, int iParam, ... )
 }
 
 #ifndef HB_LONG_LONG_OFF
-int hb_storvnll( LONGLONG llValue, int iParam, ... )
+int hb_storvnll( HB_LONGLONG llValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 

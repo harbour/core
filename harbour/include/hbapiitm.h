@@ -142,9 +142,9 @@ extern HB_EXPORT HB_SIZE      hb_itemSize      ( PHB_ITEM pItem );
 extern HB_EXPORT HB_TYPE      hb_itemType      ( PHB_ITEM pItem );
 extern HB_EXPORT const char * hb_itemTypeStr ( PHB_ITEM pItem );
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG     hb_itemGetNLL    ( PHB_ITEM pItem );
-extern HB_EXPORT PHB_ITEM     hb_itemPutNLL    ( PHB_ITEM pItem, LONGLONG lNumber );
-extern HB_EXPORT PHB_ITEM     hb_itemPutNLLLen ( PHB_ITEM pItem, LONGLONG lNumber, int iWidth );
+extern HB_EXPORT HB_LONGLONG  hb_itemGetNLL    ( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNLL    ( PHB_ITEM pItem, HB_LONGLONG lNumber );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNLLLen ( PHB_ITEM pItem, HB_LONGLONG lNumber, int iWidth );
 #endif
 
 /* Non Clipper compliant internal API */

@@ -675,23 +675,23 @@ HB_LONG hb_itemGetNInt( PHB_ITEM pItem )
 }
 
 #ifndef HB_LONG_LONG_OFF
-LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
+HB_LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNL(%p)", pItem));
 
    if( pItem )
    {
       if( HB_IS_LONG( pItem ) )
-         return ( LONGLONG ) pItem->item.asLong.value;
+         return ( HB_LONGLONG ) pItem->item.asLong.value;
 
       else if( HB_IS_INTEGER( pItem ) )
-         return ( LONGLONG ) pItem->item.asInteger.value;
+         return ( HB_LONGLONG ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
 #else
-         return ( LONGLONG ) pItem->item.asDouble.value;
+         return ( HB_LONGLONG ) pItem->item.asDouble.value;
 #endif
    }
 
@@ -964,7 +964,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 }
 
 #ifndef HB_LONG_LONG_OFF
-PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, LONGLONG llNumber )
+PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNL(%p, %" PFLL "d)", pItem, llNumber));
 
@@ -1032,7 +1032,7 @@ PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_LONG lNumber, int iWidth )
 #ifdef HB_LONG_LONG_OFF
       return hb_itemPutNLLen( pItem, ( long ) lNumber, iWidth );
 #else
-      return hb_itemPutNLLLen( pItem, ( LONGLONG ) lNumber, iWidth );
+      return hb_itemPutNLLLen( pItem, ( HB_LONGLONG ) lNumber, iWidth );
 #endif
    }
 }
@@ -1201,7 +1201,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 }
 
 #ifndef HB_LONG_LONG_OFF
-PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG llNumber, int iWidth )
+PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLLLen(%p, %" PFLL "d, %d)", pItem, llNumber, iWidth));
 
@@ -1250,7 +1250,7 @@ PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1
 #ifdef HB_LONG_LONG_OFF
       return hb_itemPutNL( pItem, ( long ) ( unsigned long ) dNumber );
 #else
-      return hb_itemPutNLL( pItem, ( LONGLONG ) dNumber );
+      return hb_itemPutNLL( pItem, ( HB_LONGLONG ) dNumber );
 #endif
    }
    else

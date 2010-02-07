@@ -178,7 +178,7 @@ static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a 
 static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
 static void    hb_vmPushHBLong( HB_LONG lNumber ); /* pushes a HB_LONG number onto the stack */
 #if !defined( HB_LONG_LONG_OFF )
-   static void hb_vmPushLongLongConst( LONGLONG lNumber );  /* Pushes a long long constant (pcode) */
+   static void hb_vmPushLongLongConst( HB_LONGLONG lNumber );  /* Pushes a long long constant (pcode) */
 #endif
 #if HB_INT_MAX >= INT32_MAX
 static void    hb_vmPushIntegerConst( int iNumber );  /* Pushes a int constant (pcode) */
@@ -6573,7 +6573,7 @@ static void hb_vmPushHBLong( HB_LONG lNumber )
 }
 
 #if !defined( HB_LONG_LONG_OFF )
-static void hb_vmPushLongLongConst( LONGLONG llNumber )
+static void hb_vmPushLongLongConst( HB_LONGLONG llNumber )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
@@ -10926,7 +10926,7 @@ void hb_xvmPushLongLong( double dNumber )
    hb_vmPushDoubleConst( dNumber, HB_DEFAULT_WIDTH, 0 );
 }
 #else
-void hb_xvmPushLongLong( LONGLONG llNumber )
+void hb_xvmPushLongLong( HB_LONGLONG llNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushLongLong(%" PFLL "i)", llNumber));
 

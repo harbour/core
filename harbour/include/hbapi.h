@@ -647,7 +647,7 @@ extern HB_EXPORT HB_LONG      hb_parnint( int iParam ); /* retrieve a numeric pa
 extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG     hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
+extern HB_EXPORT HB_LONGLONG  hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
 #endif
 
 extern HB_EXPORT const char * hb_parvc( int iParam, ... ); /* retrieve a string parameter */
@@ -667,7 +667,7 @@ extern HB_EXPORT HB_LONG      hb_parvnint( int iParam, ... ); /* retrieve a nume
 extern HB_EXPORT void *       hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG     hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
+extern HB_EXPORT HB_LONGLONG  hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
 extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
@@ -697,8 +697,8 @@ extern HB_EXPORT void   hb_reta( HB_SIZE ulLen );  /* returns an array with a sp
 extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
 extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT void   hb_retnll( LONGLONG lNumber );/* returns a long long number */
-extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
+extern HB_EXPORT void   hb_retnll( HB_LONGLONG lNumber );/* returns a long long number */
+extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 #endif
 
 #define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( ULONG ) (idx) <= (max) )
@@ -765,7 +765,7 @@ extern HB_EXPORT int    hb_stornint( HB_LONG lValue, int iParam ); /* stores a H
 extern HB_EXPORT int    hb_storptr( void * pointer, int iParam ); /* stores a pointer on a variable by reference */
 extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam ); /* stores a pointer to GC block on a variable by reference */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam ); /* stores a long long on a variable by reference */
+extern HB_EXPORT int    hb_stornll( HB_LONGLONG lValue, int iParam ); /* stores a long long on a variable by reference */
 #endif
 
 extern HB_EXPORT int    hb_storvc( const char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
@@ -783,7 +783,7 @@ extern HB_EXPORT int    hb_storvnint( HB_LONG lValue, int iParam, ... ); /* stor
 extern HB_EXPORT int    hb_storvptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
 extern HB_EXPORT int    hb_storvptrGC( void * pointer, int iParam, ... ); /* stores a pointer to GC block on a variable by reference */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT int    hb_storvnll( LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
+extern HB_EXPORT int    hb_storvnll( HB_LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
 #endif
 
 /* array management */
@@ -828,7 +828,7 @@ extern HB_EXPORT HB_BOOL      hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, HB
 extern HB_EXPORT HB_BOOL      hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber );
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, LONGLONG llNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber );
 #endif
 extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONG lNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber );
@@ -851,7 +851,7 @@ extern HB_EXPORT PHB_ITEM     hb_arrayFromParams( int iLevel ); /* Creates and r
 extern HB_EXPORT PHB_ITEM     hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
 extern HB_EXPORT PHB_ITEM     hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG     hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the long long numeric value contained on an array element */
+extern HB_EXPORT HB_LONGLONG  hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the long long numeric value contained on an array element */
 #endif
 #ifdef _HB_API_INTERNAL_
 /* internal array API not exported */

@@ -214,7 +214,7 @@ extern HB_EXPORT void    hb_xvmPushDouble( double dNumber, int iWidth, int iDec 
 #ifdef HB_LONG_LONG_OFF
 extern HB_EXPORT void    hb_xvmPushLongLong( double dNumber );
 #else
-extern HB_EXPORT void    hb_xvmPushLongLong( LONGLONG llNumber );
+extern HB_EXPORT void    hb_xvmPushLongLong( HB_LONGLONG llNumber );
 #endif
 
 #define hb_xvmPushLogical( f )            hb_vmPushLogical( f )

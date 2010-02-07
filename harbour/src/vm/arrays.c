@@ -585,7 +585,7 @@ long hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex )
 }
 
 #ifndef HB_LONG_LONG_OFF
-LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex )
+HB_LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %lu)", pArray, ulIndex));
 
@@ -789,7 +789,7 @@ HB_BOOL hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber )
 }
 
 #ifndef HB_LONG_LONG_OFF
-HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, LONGLONG llNumber )
+HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNLL(%p, %lu, %" PFLL "d)", pArray, ulIndex, llNumber));
 

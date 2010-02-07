@@ -391,7 +391,7 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          pVariant->n1.n2.vt = VT_I8;
 #  if defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         * ( ( LONGLONG * ) &pVariant->n1.n2.n3.lVal ) = hb_itemGetNInt( pItem );
+         * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.lVal ) = hb_itemGetNInt( pItem );
 #  else
          pVariant->n1.n2.n3.llVal = hb_itemGetNInt( pItem );
 #  endif
@@ -695,7 +695,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.lVal );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( ( LONGLONG * ) &pVariant->n1.n2.n3.lVal ) );
+         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.lVal ) );
 #else
          hb_itemPutNInt( pItem, pVariant->n1.n2.n3.llVal );
 #endif
@@ -706,7 +706,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.plVal );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
+         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
 #else
          hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pllVal );
 #endif
@@ -742,7 +742,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ulVal );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( ( LONGLONG * ) &pVariant->n1.n2.n3.ulVal ) );
+         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.ulVal ) );
 #else
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ullVal );
 #endif
@@ -754,7 +754,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.pulVal );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
+         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
 #else
          hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.pullVal );
 #endif
@@ -956,9 +956,9 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
          *pVariant->n1.n2.n3.plVal = ( long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         * ( LONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( LONGLONG ) hb_itemGetNInt( pItem );
+         * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
 #else
-         *pVariant->n1.n2.n3.pllVal = ( LONGLONG ) hb_itemGetNInt( pItem );
+         *pVariant->n1.n2.n3.pllVal = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
 #endif
          break;
 
@@ -979,9 +979,9 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
          *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         * ( ULONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( ULONGLONG ) hb_itemGetNInt( pItem );
+         * ( HB_ULONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
 #else
-         *pVariant->n1.n2.n3.pullVal = ( ULONGLONG ) hb_itemGetNInt( pItem );
+         *pVariant->n1.n2.n3.pullVal = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
 #endif
          break;
 
