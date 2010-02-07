@@ -68,17 +68,26 @@ typedef BOOL    Boolean;
 
 /* New types */
 
+#if defined( HB_LEGACY_TYPES_OFF )
+typedef unsigned char BYTE;
+#endif
 typedef BYTE *  BYTEP;
 typedef BYTEP   BYTEPP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef BYTEP   PBYTE;
 #endif
 
+#if defined( HB_LEGACY_TYPES_OFF )
+typedef short SHORT;
+#endif
 typedef SHORT * SHORTP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef SHORTP  PSHORT;
 #endif
 
+#if defined( HB_LEGACY_TYPES_OFF )
+typedef unsigned short USHORT;
+#endif
 typedef USHORT * USHORTP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef USHORTP PUSHORT;
@@ -90,11 +99,17 @@ typedef USHORTP PUSHORT;
    typedef WORDP   PWORD;
 #endif
 
+#if defined( HB_LEGACY_TYPES_OFF )
+typedef long LONG;
+#endif
 typedef LONG *  LONGP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef LONGP   PLONG;
 #endif
 
+#if defined( HB_LEGACY_TYPES_OFF )
+typedef unsigned long ULONG;
+#endif
 typedef ULONG * ULONGP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef ULONGP  PULONG;
@@ -104,6 +119,10 @@ typedef unsigned long DWORD;
 typedef DWORD * DWORDP;
 typedef DWORDP  PDWORD;
 
+#if defined( HB_LEGACY_TYPES_OFF )
+#undef BOOL
+typedef USHORT BOOL;
+#endif
 typedef BOOL *  BOOLP;
 #if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef BOOLP   PBOOL;
@@ -122,18 +141,8 @@ typedef NEARP * NEARPP;
    typedef HB_VMHANDLE HANDLE;
 #endif
 
-#ifndef HB_LEGACY_LEVEL2
+#if ! defined( HB_LEGACY_LEVEL2 )
    #define ERRCODE     HB_ERRCODE
-#endif
-
-#ifndef HB_LEGACY_LEVEL3
-   #undef BOOL
-   typedef int         BOOL;
-
-   #undef FALSE
-   #define FALSE       0
-   #undef TRUE
-   #define TRUE        1
 #endif
 
 typedef ERRCODE IHELP;
@@ -146,6 +155,12 @@ typedef FUNCP * FUNCPP;
 #define HIDE    static
 #define CLIPPER HARBOUR
 
+#if defined( HB_LEGACY_TYPES_OFF )
+   #undef FALSE
+   #define FALSE      0
+   #undef TRUE
+   #define TRUE       1
+#endif
 #ifndef NIL
    #define NIL     '\0'
 #endif
