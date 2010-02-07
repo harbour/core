@@ -252,7 +252,7 @@ typedef struct _HB_FUNC_LIST
 
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
 
-extern HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols ) HB_FLATTEN_ATTR;  /* invokes the virtual machine */
+extern HB_EXPORT void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols ) HB_FLATTEN_ATTR;  /* invokes the virtual machine */
 
 HB_EXTERN_END
 
