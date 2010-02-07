@@ -109,7 +109,6 @@ extern HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_macroExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_macroExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_macroExprNewSend( HB_EXPR_PTR pObject, const char * szMessage, HB_EXPR_PTR pMessage, HB_COMP_DECL );
 
 /* Size of pcode buffer incrementation
  */

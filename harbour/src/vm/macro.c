@@ -1302,23 +1302,26 @@ void hb_macroGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 /* sends a message to an object */
 void hb_macroGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL )
 {
-   BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
+   if( szMsgName )
+   {
+      BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
 
-   /* Find the address of passed symbol - create the symbol if doesn't exist
-    */
-   HB_DYNS_PTR pSym = hb_dynsymGetCase( szMsgName );
+      /* Find the address of passed symbol - create the symbol if doesn't exist
+       */
+      HB_DYNS_PTR pSym = hb_dynsymGetCase( szMsgName );
 
-   byBuf[ 0 ] = HB_P_MMESSAGE;
-   HB_PUT_PTR( &byBuf[ 1 ], pSym );
-   hb_macroGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
-
-   HB_SYMBOL_UNUSED( bIsObject );   /* used in full compiler only */
+      byBuf[ 0 ] = HB_P_MMESSAGE;
+      HB_PUT_PTR( &byBuf[ 1 ], pSym );
+      hb_macroGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
+   }
+   if( !bIsObject )     /* used in full compiler only */
+      hb_macroGenPCode3( HB_P_WITHOBJECTMESSAGE, HB_LOBYTE( 0xFFFF ), HB_HIBYTE( 0xFFFF ), HB_COMP_PARAM );
 }
 
 /* generates an underscore-symbol name for a data assignment */
 void hb_macroGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COMP_DECL )
 {
-   char * szResult;
+   char szResult[ HB_SYMBOL_NAME_LEN + 1 ];
    int iLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenMessageData(%s)", szMsg));
@@ -1326,12 +1329,10 @@ void hb_macroGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COMP_DECL
    iLen = ( int ) strlen( szMsg );
    if( iLen > HB_SYMBOL_NAME_LEN - 1 )
       iLen = HB_SYMBOL_NAME_LEN - 1;
-   szResult = ( char * ) hb_xgrab( iLen + 2 );
    szResult[ 0 ] = '_';
    memcpy( szResult + 1, szMsg, iLen );
    szResult[ iLen + 1 ] = '\0';
    hb_macroGenMessage( szResult, bIsObject, HB_COMP_PARAM );
-   hb_xfree( szResult );
 }
 
 /* generates the pcode to pop a value from the virtual machine stack onto a variable */

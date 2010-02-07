@@ -4637,7 +4637,7 @@ static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, const char * szTagName )
    if( *pTagPtr )
    {
       LPCDXTAG pTag = *pTagPtr;
-      LPCDXKEY pKey = hb_cdxKeyPutC( NULL, szTagName, pIndex->pCompound->uiLen,
+      LPCDXKEY pKey = hb_cdxKeyPutC( NULL, pTag->szName, pIndex->pCompound->uiLen,
                                      pTag->TagBlock );
       if( hb_cdxTagKeyDel( pIndex->pCompound, pKey ) )
       {

@@ -232,6 +232,7 @@ extern void yyerror( HB_MACRO_PTR, const char * );    /* parsing error managemen
 %type <asExpr>  AliasId AliasVar AliasExpr
 %type <asExpr>  VariableAt
 %type <asExpr>  FunCall FunRef
+%type <asExpr>  SendId
 %type <asExpr>  ObjectData
 %type <asExpr>  ObjectMethod
 %type <asExpr>  IfInline
@@ -480,9 +481,12 @@ ExtArgument : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }
 
 /* Object's instance variable
  */
-ObjectData  : LeftExpression ':' IDENTIFIER  { $$ = hb_macroExprNewSend( $1, $3, NULL, HB_COMP_PARAM ); }
-            | LeftExpression ':' MacroVar    { $$ = hb_macroExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
-            | LeftExpression ':' MacroExpr   { $$ = hb_macroExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
+ObjectData  : LeftExpression ':' SendId   { $$ = hb_compExprNewMethodObject( $3, $1 ); }
+            ;
+
+SendId      : IDENTIFIER     { $$ = hb_compExprNewSend( $1, HB_COMP_PARAM ); }
+            | MacroVar       { $$ = hb_compExprNewMacroSend( $1, HB_COMP_PARAM ); }
+            | MacroExpr      { $$ = hb_compExprNewMacroSend( $1, HB_COMP_PARAM ); }
             ;
 
 /* Object's method

@@ -673,6 +673,67 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList,
    return pExpr;
 }
 
+/* Creates new send expression
+ *    : <msgid> -> ( expression )
+ */
+HB_EXPR_PTR hb_compExprNewSend( const char * szMessage, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%s,%p)", szMessage, HB_COMP_PARAM));
+
+   pExpr = HB_COMP_EXPR_NEW( HB_ET_SEND );
+   pExpr->value.asMessage.pObject = NULL;
+   pExpr->value.asMessage.pParms  = NULL;
+
+   pExpr->value.asMessage.szMessage = szMessage;
+   pExpr->value.asMessage.pMessage  = NULL;
+
+   return pExpr;
+}
+
+/* Creates new macro send expression
+ *    : &<msg> -> ( expression )
+ */
+HB_EXPR_PTR hb_compExprNewMacroSend( HB_EXPR_PTR pMessage, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMacroSend(%p,%p)", pMessage, HB_COMP_PARAM));
+
+   pExpr = HB_COMP_EXPR_NEW( HB_ET_SEND );
+   pExpr->value.asMessage.pObject = NULL;
+   pExpr->value.asMessage.pParms  = NULL;
+
+   pExpr->value.asMessage.szMessage = NULL;
+   pExpr->value.asMessage.pMessage  = pMessage;
+
+   if( pMessage->ExprType == HB_ET_MACRO )
+   {
+      /* Signal that macro compiler have to generate a pcode that will
+       * return function name as symbol instead of usual value
+       */
+      pMessage->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
+   }
+
+   return pExpr;
+}
+
+/* Set object in send expression
+ *    pObject : pExpr
+ *
+ *    pExpr   = is an expression returned by hb_compExprNewSend
+ *    pObject = is an object
+ */
+HB_EXPR_PTR hb_compExprNewMethodObject( HB_EXPR_PTR pExpr, HB_EXPR_PTR pObject )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMethodObject(%p,%p,%p)", pExpr, pObject, HB_COMP_PARAM));
+
+   pExpr->value.asMessage.pObject = pObject;
+
+   return pExpr;
+}
+
 /* Creates new method call
  *    pObject : identifier ( pArgList )
  *

@@ -266,7 +266,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 113 "harbour.y"
+#line 114 "harbour.y"
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -303,19 +303,10 @@ typedef union YYSTYPE
       int      length;
       int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
-   struct
-   {
-      HB_BOOL bMacro;
-      union
-      {
-         char * string;
-         HB_EXPR_PTR macro;
-      } value;
-   } asMessage;
    PHB_VARTYPE asVarType;
 }
 /* Line 1495 of yacc.c.  */
-#line 319 "harboury.h"
+#line 310 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

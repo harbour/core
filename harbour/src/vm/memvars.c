@@ -548,7 +548,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
    if( ulLen && szArg && *szArg )
    {
       char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
-      HB_ISIZ iSize = 0;
+      int iSize = 0;
 
       do
       {
