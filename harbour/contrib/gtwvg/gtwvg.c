@@ -1571,7 +1571,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      if( pWVT->inCDP )
                      {
 #if defined( UNICODE )
-                        c = hb_cdpGetChar( pWVT->inCDP, HB_FALSE, ( USHORT ) c );
+                        c = hb_cdpGetChar( pWVT->inCDP, HB_FALSE, ( HB_WCHAR ) c );
 #else
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
                            c = pWVT->keyTransTbl[ c ];
@@ -3969,9 +3969,9 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          RECT rect;
 
-         rect.top = rect.bottom = ( SHORT ) iRow;
-         rect.left = ( SHORT ) iCol;
-         rect.right = ( SHORT ) ( iCol + iSize - 1 );
+         rect.top = rect.bottom = iRow;
+         rect.left = iCol;
+         rect.right = iCol + iSize - 1;
 
          rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
 

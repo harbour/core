@@ -150,7 +150,7 @@ typedef struct
    union
    {
       BYTE     bArg;             /* 1-byte argument */
-      SHORT    usArg;            /* 2-byte argument */
+      WORD     usArg;            /* 2-byte argument */
       DWORD    dwArg;            /* 4-byte argument */
       double   dArg;             /* double argument */
    } numargs;
