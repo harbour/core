@@ -2102,7 +2102,7 @@ static int hb_ctw_gt_ReadKey( PHB_GT pGT, int iEventMask )
 }
 
 /* helper function */
-static UINT32 hb_ctw_gt_cellValue( PHB_GT pGT, int iRow, int iCol )
+static HB_U32 hb_ctw_gt_cellValue( PHB_GT pGT, int iRow, int iCol )
 {
    HB_SCREENCELL cell;
    int iColor;

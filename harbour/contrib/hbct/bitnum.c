@@ -294,9 +294,9 @@ HB_FUNC( INTNEG )
       HB_BOOL f32Bit = hb_parl( 2 );
 
       if( f32Bit )
-         hb_retnint( ( INT16 ) lValue );
+         hb_retnint( ( HB_I32 ) lValue );
       else
-         hb_retnint( ( INT32 ) lValue );
+         hb_retnint( ( HB_I16 ) lValue );
    }
    else
       hb_retni( 0 );
@@ -311,13 +311,13 @@ HB_FUNC( INTPOS )
       HB_BOOL f32Bit = hb_parl( 2 );
 
       if( f32Bit )
-         hb_retnint( ( UINT16 ) lValue );
-      else
 #ifndef HB_LONG_LONG_OFF
-         hb_retnint( ( UINT32 ) lValue );
+         hb_retnint( ( HB_U32 ) lValue );
 #else
-         hb_retnlen( ( UINT32 ) lValue, 0, 0 );
+         hb_retnlen( ( HB_U32 ) lValue, 0, 0 );
 #endif
+      else
+         hb_retnint( ( HB_U16 ) lValue );
    }
    else
       hb_retni( 0 );

@@ -57,7 +57,7 @@ TODO:
 
 TOFIX:
    - remove UNION's as they hide 32/64 size problems
-   - use UINT32 as the standard data type of file reading/writing
+   - use HB_U32 as the standard data type of file reading/writing
    - in-memory btree's cause a fatal error; this is a work in progress
 */
 
@@ -585,7 +585,7 @@ static void HeaderWrite( struct hb_BTree * pBTree )
 {
    BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
    BYTE * pHeader = &TmpHeader[ 0 ];
-   UINT32 uiHeaderSize = HB_BTREE_HEADERSIZE;
+   HB_U32 uiHeaderSize = HB_BTREE_HEADERSIZE;
 
   /*
     header       [4 bytes]
@@ -601,10 +601,10 @@ static void HeaderWrite( struct hb_BTree * pBTree )
 
    hb_xmemcpy( pHeader, HEADER_ID, sizeof( HEADER_ID ) - 1 ); pHeader += sizeof( HEADER_ID ) - 1;
    HB_PUT_LE_UINT32( pHeader, uiHeaderSize       ); pHeader += 4;
-   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usPageSize ); pHeader += 4;
-   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usKeySize  ); pHeader += 4;
-   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usMaxKeys  ); pHeader += 4;
-   HB_PUT_LE_UINT32( pHeader, ( UINT32 ) pBTree->usMinKeys  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( HB_U32 ) pBTree->usPageSize ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( HB_U32 ) pBTree->usKeySize  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( HB_U32 ) pBTree->usMaxKeys  ); pHeader += 4;
+   HB_PUT_LE_UINT32( pHeader, ( HB_U32 ) pBTree->usMinKeys  ); pHeader += 4;
    HB_PUT_LE_UINT32( pHeader, pBTree->ulFlags    );
 
    pHeader = &TmpHeader[ 64 ];
@@ -1489,10 +1489,10 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
       ( usPageSize - ( sizeof count + sizeof branch[0] ) ) / ( sizeof branch[0] + sizeof key ) - 1
   */
 
-   /* this assumes that the count field and a branch field are UINT32 */
+   /* this assumes that the count field and a branch field are HB_U32 */
    #define MAXKEYS( pagesize, keysize, flags ) \
-      ( ( ( pagesize ) - ( sizeof( UINT32 ) + sizeof( UINT32 ) ) ) / \
-        ( sizeof( UINT32 ) \
+      ( ( ( pagesize ) - ( sizeof( HB_U32 ) + sizeof( HB_U32 ) ) ) / \
+        ( sizeof( HB_U32 ) \
           + ( ( ( flags ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY \
                 ? sizeof( PHB_ITEM * ) \
                 : ( keysize ) ) ) - 1 \
@@ -1602,11 +1602,11 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuff
   }
 
   pHeader += sizeof( HEADER_ID ) - 1; /* the trailing null byte */
-  pHeader += sizeof( UINT32 ); /* skip over the header size (HB_BTREE_HEADERSIZE) field */
-  pBTree->usPageSize = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
-  pBTree->usKeySize  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
-  pBTree->usMaxKeys  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
-  pBTree->usMinKeys  = ( UINT16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
+  pHeader += sizeof( HB_U32 ); /* skip over the header size (HB_BTREE_HEADERSIZE) field */
+  pBTree->usPageSize = ( HB_U16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
+  pBTree->usKeySize  = ( HB_U16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
+  pBTree->usMaxKeys  = ( HB_U16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
+  pBTree->usMinKeys  = ( HB_U16 ) HB_GET_LE_UINT32( pHeader ); pHeader += 4;
   pBTree->ulFlags    = HB_GET_LE_UINT32( pHeader ) | ( ulFlags & HB_BTREE_READONLY );
 
   pHeader = &TmpHeader[ 64 ];
@@ -1734,7 +1734,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
    int iPageSize = hb_parni( 2 );
    int iKeySize = hb_parni( 3 );
    ULONG ulFlags = hb_parnl( 4 );
-   int iMaxKeys = MAXKEYS( ( UINT32 ) iPageSize, ( UINT32 ) iKeySize, ulFlags );
+   int iMaxKeys = MAXKEYS( ( HB_U32 ) iPageSize, ( HB_U32 ) iKeySize, ulFlags );
    int iMinKeys = MINKEYS( iMaxKeys );
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );

@@ -262,11 +262,11 @@ typedef union
 {
    struct
    {
-      UINT16   usChar;
+      HB_U16   usChar;
       BYTE     bColor;
       BYTE     bAttr;
    } c;
-   UINT32   uiValue;
+   HB_U32   uiValue;
 } HB_SCREENCELL;
 typedef HB_SCREENCELL * PHB_SCREENCELL;
 

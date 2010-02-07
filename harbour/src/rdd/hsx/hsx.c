@@ -664,8 +664,8 @@ static int hb_hsxHdrFlush( int iHandle )
          uiBits++;
 
       HB_PUT_LE_UINT32( pHeader->recCount,    pHSX->ulRecCount );
-      HB_PUT_LE_UINT32( pHeader->recSize,     ( UINT32 ) pHSX->uiRecordSize );
-      HB_PUT_LE_UINT32( pHeader->recSizeBits, ( UINT32 ) uiBits );
+      HB_PUT_LE_UINT32( pHeader->recSize,     ( HB_U32 ) pHSX->uiRecordSize );
+      HB_PUT_LE_UINT32( pHeader->recSizeBits, ( HB_U32 ) uiBits );
       HB_PUT_LE_UINT16( pHeader->ignoreCase,  pHSX->fIgnoreCase ? 1 : 0 );
       HB_PUT_LE_UINT16( pHeader->filterType,  pHSX->iFilterType );
       HB_PUT_LE_UINT32( pHeader->hashLetters, pHSX->fUseHash ? 1 : 0 );

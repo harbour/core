@@ -3549,7 +3549,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          {
             return EDBF_DATAWIDTH;
          }
-         HB_PUT_LE_UINT32( pFieldBuf, ( UINT32 ) lVal );
+         HB_PUT_LE_UINT32( pFieldBuf, ( HB_U32 ) lVal );
       }
       else if( pField->uiLen < 6 )
       {
@@ -3605,7 +3605,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 
             if( !HB_IS_DOUBLE( pItem ) && HB_LIM_INT32( lVal ) )
             {
-               HB_PUT_LE_UINT32( pFieldBuf, ( UINT32 ) lVal );
+               HB_PUT_LE_UINT32( pFieldBuf, ( HB_U32 ) lVal );
                uiType = HB_VF_INT;
             }
             else
@@ -3965,7 +3965,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
          ulSize = sizeof( FPTHEADER );
          if( pArea->area.rddID == s_uiRddIdBLOB )
          {
-            HB_PUT_LE_UINT16( fptHeader.flexSize, ( UINT16 ) pArea->ulMemoBlockSize );
+            HB_PUT_LE_UINT16( fptHeader.flexSize, ( HB_U16 ) pArea->ulMemoBlockSize );
          }
       }
    }
@@ -3973,12 +3973,12 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
    if( pArea->bMemoType == DB_MEMO_SMT || pArea->bMemoType == DB_MEMO_DBT )
    {
       HB_PUT_LE_UINT32( fptHeader.nextBlock, ulNextBlock );
-      HB_PUT_LE_UINT32( fptHeader.blockSize, ( UINT32 ) pArea->ulMemoBlockSize );
+      HB_PUT_LE_UINT32( fptHeader.blockSize, ( HB_U32 ) pArea->ulMemoBlockSize );
    }
    else
    {
       HB_PUT_BE_UINT32( fptHeader.nextBlock, ulNextBlock );
-      HB_PUT_BE_UINT32( fptHeader.blockSize, ( UINT32 ) pArea->ulMemoBlockSize );
+      HB_PUT_BE_UINT32( fptHeader.blockSize, ( HB_U32 ) pArea->ulMemoBlockSize );
    }
    if( hb_fileWriteAt( pArea->pMemoFile, &fptHeader, ulSize, 0 ) != ulSize )
       return HB_FAILURE;

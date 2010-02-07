@@ -60,9 +60,9 @@
 #define rnd_mul1  0x0de6d
 #define rnd_mul2  0x0278d
 
-static UINT32 hb_sxInitSeed( const char * pKeyVal, UINT16 * puiKey )
+static HB_U32 hb_sxInitSeed( const char * pKeyVal, HB_U16 * puiKey )
 {
-   UINT32 ulSeed = 0;
+   HB_U32 ulSeed = 0;
    int i;
 
    for( i = 0; i < 7; i++ )
@@ -71,22 +71,22 @@ static UINT32 hb_sxInitSeed( const char * pKeyVal, UINT16 * puiKey )
                HB_GET_LE_UINT16( &pKeyVal[i] );
    }
    ulSeed |= 1;
-   *puiKey = ( UINT16 ) ulSeed;
+   *puiKey = ( HB_U16 ) ulSeed;
    return ( ulSeed << 16 ) + ( ulSeed >> 16 );
 }
 
-static UINT32 hb_sxNextSeed( UINT32 ulSeed, const char * pKeyVal, UINT16 * puiKey )
+static HB_U32 hb_sxNextSeed( HB_U32 ulSeed, const char * pKeyVal, HB_U16 * puiKey )
 {
-   UINT32 ulTemp1, ulTemp2;
-   UINT16 uiSeedLo, uiSeedHi;
+   HB_U32 ulTemp1, ulTemp2;
+   HB_U16 uiSeedLo, uiSeedHi;
 
-   uiSeedLo = ( UINT16 ) ulSeed;
-   ulTemp1  = ( UINT32 ) rnd_mul1 * ( UINT32 ) uiSeedLo;
-   ulTemp2  = ( UINT32 ) rnd_mul2 * ( UINT32 ) uiSeedLo + ( ulTemp1 >> 16 );
-   uiSeedLo = ( UINT16 ) ulTemp1;
-   ulTemp1  = ( UINT32 ) rnd_mul1 * ( ulSeed >> 16 );
-   uiSeedHi = ( UINT16 ) ( ulTemp1 + ulTemp2 );
-   ulSeed   = ( ( UINT32 ) uiSeedHi << 16 ) + ( UINT32 ) uiSeedLo;
+   uiSeedLo = ( HB_U16 ) ulSeed;
+   ulTemp1  = ( HB_U32 ) rnd_mul1 * ( HB_U32 ) uiSeedLo;
+   ulTemp2  = ( HB_U32 ) rnd_mul2 * ( HB_U32 ) uiSeedLo + ( ulTemp1 >> 16 );
+   uiSeedLo = ( HB_U16 ) ulTemp1;
+   ulTemp1  = ( HB_U32 ) rnd_mul1 * ( ulSeed >> 16 );
+   uiSeedHi = ( HB_U16 ) ( ulTemp1 + ulTemp2 );
+   ulSeed   = ( ( HB_U32 ) uiSeedHi << 16 ) + ( HB_U32 ) uiSeedLo;
    uiSeedHi |= 1;
    *puiKey  = uiSeedHi + HB_GET_LE_UINT16( pKeyVal );
    return ulSeed;
@@ -94,8 +94,8 @@ static UINT32 hb_sxNextSeed( UINT32 ulSeed, const char * pKeyVal, UINT16 * puiKe
 
 void hb_sxEnCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE ulLen )
 {
-   UINT32 ulSeed;
-   UINT16 uiKey;
+   HB_U32 ulSeed;
+   HB_U16 uiKey;
    UCHAR ucChar, ucShft;
    HB_SIZE ul;
    int i;
@@ -115,8 +115,8 @@ void hb_sxEnCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE
 
 void hb_sxDeCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE ulLen )
 {
-   UINT32 ulSeed;
-   UINT16 uiKey;
+   HB_U32 ulSeed;
+   HB_U16 uiKey;
    UCHAR ucChar, ucShft;
    HB_SIZE ul;
    int i;

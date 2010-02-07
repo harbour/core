@@ -81,7 +81,7 @@ typedef struct _HB_MEMINFO
    struct _HB_MEMINFO * pPrevBlock;
    struct _HB_MEMINFO * pNextBlock;
    ULONG  ulSize;
-   UINT32 Signature;
+   HB_U32 Signature;
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
@@ -107,7 +107,7 @@ void * hb_xgrab( ULONG ulSize )        /* allocates fixed memory, exits on failu
       hb_errInternal( HB_EI_XGRABNULLSIZE, "hb_xgrab requested to allocate zero bytes", NULL, NULL );
 
 #ifdef HB_FM_STATISTICS
-   pMem = malloc( ulSize + HB_MEMINFO_SIZE + sizeof( UINT32 ) );
+   pMem = malloc( ulSize + HB_MEMINFO_SIZE + sizeof( HB_U32 ) );
    if( pMem )
    {
       if( s_pMemBlocks )
@@ -164,7 +164,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
    HB_PUT_LE_UINT32( ( ( BYTE * ) pMem ) + ulMemSize, 0 );
 
-   pResult = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( UINT32 ) );
+   pResult = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( HB_U32 ) );
    if( pResult )
    {
       if( s_pMemBlocks == pMemBlock )

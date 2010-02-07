@@ -694,7 +694,7 @@ HB_FUNC( NETIO_SERVER )
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
          int iFileNo;
-         UINT32 uiMsg;
+         HB_U32 uiMsg;
          USHORT uiFalgs;
          char * szExt;
          PHB_FILE pFile;

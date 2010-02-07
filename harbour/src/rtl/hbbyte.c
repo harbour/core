@@ -71,7 +71,7 @@ HB_FUNC( HB_BYTESWAPI )
 
    if( hb_numParam( 1, &lValue ) )
    {
-      INT16 iVal = ( INT16 ) HB_SWAP_UINT16( lValue );
+      HB_I16 iVal = ( HB_I16 ) HB_SWAP_UINT16( lValue );
       hb_retnint( iVal );
    }
 }
@@ -82,7 +82,7 @@ HB_FUNC( HB_BYTESWAPW )
 
    if( hb_numParam( 1, &lValue ) )
    {
-      UINT16 uiVal = ( UINT16 ) HB_SWAP_UINT16( lValue );
+      HB_U16 uiVal = ( HB_U16 ) HB_SWAP_UINT16( lValue );
       hb_retnint( uiVal );
    }
 }
@@ -93,7 +93,7 @@ HB_FUNC( HB_BYTESWAPL )
 
    if( hb_numParam( 1, &lValue ) )
    {
-      INT32 iVal = ( INT32 ) HB_SWAP_UINT32( lValue );
+      HB_I32 iVal = ( HB_I32 ) HB_SWAP_UINT32( lValue );
       hb_retnint( iVal );
    }
 }
@@ -104,7 +104,7 @@ HB_FUNC( HB_BYTESWAPU )
 
    if( hb_numParam( 1, &lValue ) )
    {
-      UINT32 uiVal = ( UINT32 ) HB_SWAP_UINT32( lValue );
+      HB_U32 uiVal = ( HB_U32 ) HB_SWAP_UINT32( lValue );
       hb_retnint( uiVal );
    }
 }

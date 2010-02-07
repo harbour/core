@@ -581,7 +581,7 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 
 /* type of HB_ITEM */
 /* typedef USHORT HB_TYPE; */
-typedef UINT32 HB_TYPE;
+typedef HB_U32 HB_TYPE;
 
 /* type of reference counter */
 typedef unsigned long HB_COUNTER;
@@ -737,27 +737,27 @@ typedef unsigned char       HB_U8;
 #define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( w ) >>  8 ) & 0xFF ) )
 #define HB_ULBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 16 ) & 0xFF ) )
 #define HB_UHBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 24 ) & 0xFF ) )
-#define HB_LOWORD( l )          ( ( UINT16 ) ( l ) )
-#define HB_HIWORD( l )          ( ( UINT16 ) ( ( ( l ) >> 16 ) & 0xFFFF ) )
-#define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( INT16 ) ( hi ) ) << 8 ) | ( lo ) )
-#define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( UINT16 ) ( hi ) ) << 8 ) | ( lo ) )
+#define HB_LOWORD( l )          ( ( HB_U16 ) ( l ) )
+#define HB_HIWORD( l )          ( ( HB_U16 ) ( ( ( l ) >> 16 ) & 0xFFFF ) )
+#define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( HB_I16 ) ( hi ) ) << 8 ) | ( lo ) )
+#define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( HB_U16 ) ( hi ) ) << 8 ) | ( lo ) )
 #define HB_MKLONG( b1, b2, b3, b4 )  ( ( LONG ) \
-                                       ( ( ( ( INT32 ) ( b4 ) ) << 24 ) | \
-                                         ( ( ( INT32 ) ( b3 ) ) << 16 ) | \
-                                         ( ( ( INT32 ) ( b2 ) ) <<  8 ) | \
-                                         ( ( ( INT32 ) ( b1 ) ) ) ) )
+                                       ( ( ( ( HB_I32 ) ( b4 ) ) << 24 ) | \
+                                         ( ( ( HB_I32 ) ( b3 ) ) << 16 ) | \
+                                         ( ( ( HB_I32 ) ( b2 ) ) <<  8 ) | \
+                                         ( ( ( HB_I32 ) ( b1 ) ) ) ) )
 #define HB_MKULONG( b1, b2, b3, b4 ) ( ( ULONG ) \
-                                       ( ( ( ( UINT32 ) ( b4 ) ) << 24 ) | \
-                                         ( ( ( UINT32 ) ( b3 ) ) << 16 ) | \
-                                         ( ( ( UINT32 ) ( b2 ) ) <<  8 ) | \
-                                         ( ( ( UINT32 ) ( b1 ) ) ) ) )
+                                       ( ( ( ( HB_U32 ) ( b4 ) ) << 24 ) | \
+                                         ( ( ( HB_U32 ) ( b3 ) ) << 16 ) | \
+                                         ( ( ( HB_U32 ) ( b2 ) ) <<  8 ) | \
+                                         ( ( ( HB_U32 ) ( b1 ) ) ) ) )
 
-#define HB_SWAP_UINT16( w )     ( ( UINT16 ) ( ( ( ( UINT16 ) ( w ) & 0xFF00 ) >> 8 ) | \
-                                               ( ( ( UINT16 ) ( w ) & 0x00FF ) << 8 ) ) )
-#define HB_SWAP_UINT32( w )     ( ( UINT32 ) ( ( ( ( UINT32 ) ( w ) & 0x000000FF ) << 24 ) | \
-                                               ( ( ( UINT32 ) ( w ) & 0x0000FF00 ) <<  8 ) | \
-                                               ( ( ( UINT32 ) ( w ) & 0x00FF0000 ) >>  8 ) | \
-                                               ( ( ( UINT32 ) ( w ) & 0xFF000000 ) >> 24 ) ) )
+#define HB_SWAP_UINT16( w )     ( ( HB_U16 ) ( ( ( ( HB_U16 ) ( w ) & 0xFF00 ) >> 8 ) | \
+                                               ( ( ( HB_U16 ) ( w ) & 0x00FF ) << 8 ) ) )
+#define HB_SWAP_UINT32( w )     ( ( HB_U32 ) ( ( ( ( HB_U32 ) ( w ) & 0x000000FF ) << 24 ) | \
+                                               ( ( ( HB_U32 ) ( w ) & 0x0000FF00 ) <<  8 ) | \
+                                               ( ( ( HB_U32 ) ( w ) & 0x00FF0000 ) >>  8 ) | \
+                                               ( ( ( HB_U32 ) ( w ) & 0xFF000000 ) >> 24 ) ) )
 
 
 #ifndef PFLL
@@ -772,14 +772,14 @@ typedef unsigned char       HB_U8;
 #endif
 
 
-#define HB_SWAP_UINT64( w )      ( ( UINT64 ) ( ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000000000FF ) ) << 56 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x000000000000FF00 ) ) << 40 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000000000FF0000 ) ) << 24 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000FF000000 ) ) <<  8 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x000000FF00000000 ) ) >>  8 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000FF0000000000 ) ) >> 24 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x00FF000000000000 ) ) >> 40 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0xFF00000000000000 ) ) >> 56 ) ) )
+#define HB_SWAP_UINT64( w )      ( ( HB_U64 ) ( ( ( ( HB_U64 ) ( w ) & HB_LL( 0x00000000000000FF ) ) << 56 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x000000000000FF00 ) ) << 40 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x0000000000FF0000 ) ) << 24 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x00000000FF000000 ) ) <<  8 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x000000FF00000000 ) ) >>  8 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x0000FF0000000000 ) ) >> 24 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0x00FF000000000000 ) ) >> 40 ) | \
+                                                ( ( ( HB_U64 ) ( w ) & HB_LL( 0xFF00000000000000 ) ) >> 56 ) ) )
 
 /*
  * on some machines it's not safe to directly access pointers stored
@@ -832,27 +832,27 @@ typedef unsigned char       HB_U8;
 #else
 #  if defined( HB_BIG_ENDIAN )
 #     if defined( HB_ARCH_64BIT )
-#        define   HB_PUT_PTR( p, v )   HB_PUT_BE_UINT64( p, ( UINT64 ) ( v ) )
+#        define   HB_PUT_PTR( p, v )   HB_PUT_BE_UINT64( p, ( HB_U64 ) ( v ) )
 #        define   HB_GET_PTR( p )      ( ( void * ) HB_GET_BE_UINT64( p ) )
 #     else
-#        define   HB_PUT_PTR( p, v )   HB_PUT_BE_UINT32( p, ( UINT32 ) ( v ) )
+#        define   HB_PUT_PTR( p, v )   HB_PUT_BE_UINT32( p, ( HB_U32 ) ( v ) )
 #        define   HB_GET_PTR( p )      ( ( void * ) HB_GET_BE_UINT32( p ) )
 #     endif
 #  else
 #     if defined( HB_ARCH_64BIT )
-#        define   HB_PUT_PTR( p, v )   HB_PUT_LE_UINT64( p, ( UINT64 ) ( v ) )
+#        define   HB_PUT_PTR( p, v )   HB_PUT_LE_UINT64( p, ( HB_U64 ) ( v ) )
 #        define   HB_GET_PTR( p )      ( ( void * ) HB_GET_LE_UINT64( p ) )
 #     else
-#        define   HB_PUT_PTR( p, v )   HB_PUT_LE_UINT32( p, ( UINT32 ) ( v ) )
+#        define   HB_PUT_PTR( p, v )   HB_PUT_LE_UINT32( p, ( HB_U32 ) ( v ) )
 #        define   HB_GET_PTR( p )      ( ( void * ) HB_GET_LE_UINT32( p ) )
 #     endif
 #  endif
 #endif
 #if defined( HB_BIG_ENDIAN )
-#  define   HB_PUT_UINT32( p, v )   HB_PUT_BE_UINT32( p, ( UINT32 ) ( v ) )
+#  define   HB_PUT_UINT32( p, v )   HB_PUT_BE_UINT32( p, ( HB_U32 ) ( v ) )
 #  define   HB_GET_UINT32( p )      HB_GET_BE_UINT32( p )
 #else
-#  define   HB_PUT_UINT32( p, v )   HB_PUT_LE_UINT32( p, ( UINT32 ) ( v ) )
+#  define   HB_PUT_UINT32( p, v )   HB_PUT_LE_UINT32( p, ( HB_U32 ) ( v ) )
 #  define   HB_GET_UINT32( p )      HB_GET_LE_UINT32( p )
 #endif
 
@@ -878,20 +878,20 @@ typedef unsigned char       HB_U8;
 
    typedef union
    {
-      UINT16   val;
+      HB_U16   val;
       BYTE     buf[2];
    } HB_U16CAST, * PHB_U16CAST;
 
    typedef union
    {
-      UINT32   val;
+      HB_U32   val;
       BYTE     buf[4];
    } HB_U32CAST, * PHB_U32CAST;
 
 #  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
    typedef union
    {
-      UINT64   val;
+      HB_U64   val;
       BYTE     buf[8];
    } HB_U64CAST, * PHB_U64CAST;
 #  endif
@@ -901,7 +901,7 @@ typedef unsigned char       HB_U8;
       double   val;
       BYTE     buf[8];
 #  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
-      UINT64   i64;
+      HB_U64   i64;
 #  endif
    } HB_DBLCAST, * PHB_DBLCAST;
 
@@ -919,21 +919,21 @@ typedef unsigned char       HB_U8;
       memcpy( buf, u.buf, sizeof( void * ) );
    }
 
-   static __inline__ UINT16 _hb_get_std_uint16( const BYTE * buf )
+   static __inline__ HB_U16 _hb_get_std_uint16( const BYTE * buf )
    {
       HB_U16CAST u;
       memcpy( u.buf, buf, sizeof( u.buf ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_std_uint16( BYTE * buf, UINT16 val )
+   static __inline__ void _hb_put_std_uint16( BYTE * buf, HB_U16 val )
    {
       HB_U16CAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( u.buf ) );
    }
 
-   static __inline__ UINT16 _hb_get_rev_uint16( const BYTE * buf )
+   static __inline__ HB_U16 _hb_get_rev_uint16( const BYTE * buf )
    {
       HB_U16CAST u;
       u.buf[ 0 ] = buf[ 1 ];
@@ -941,7 +941,7 @@ typedef unsigned char       HB_U8;
       return u.val;
    }
 
-   static __inline__ void _hb_put_rev_uint16( BYTE * buf, UINT16 val )
+   static __inline__ void _hb_put_rev_uint16( BYTE * buf, HB_U16 val )
    {
       HB_U16CAST u;
       u.val = val;
@@ -949,21 +949,21 @@ typedef unsigned char       HB_U8;
       buf[ 1 ] = u.buf[ 0 ];
    }
 
-   static __inline__ UINT32 _hb_get_std_uint32( const BYTE * buf )
+   static __inline__ HB_U32 _hb_get_std_uint32( const BYTE * buf )
    {
       HB_U32CAST u;
       memcpy( u.buf, buf, sizeof( u.buf ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_std_uint32( BYTE * buf, UINT32 val )
+   static __inline__ void _hb_put_std_uint32( BYTE * buf, HB_U32 val )
    {
       HB_U32CAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( u.buf ) );
    }
 
-   static __inline__ UINT32 _hb_get_rev_uint32( const BYTE * buf )
+   static __inline__ HB_U32 _hb_get_rev_uint32( const BYTE * buf )
    {
       HB_U32CAST u;
 #  if HB_BUILTIN_BSWAP
@@ -978,7 +978,7 @@ typedef unsigned char       HB_U8;
 #  endif
    }
 
-   static __inline__ void _hb_put_rev_uint32( BYTE * buf, UINT32 val )
+   static __inline__ void _hb_put_rev_uint32( BYTE * buf, HB_U32 val )
    {
       HB_U32CAST u;
 #  if HB_BUILTIN_BSWAP
@@ -994,21 +994,21 @@ typedef unsigned char       HB_U8;
    }
 
 #  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
-      static __inline__ UINT64 _hb_get_std_uint64( const BYTE * buf )
+      static __inline__ HB_U64 _hb_get_std_uint64( const BYTE * buf )
       {
          HB_U64CAST u;
          memcpy( u.buf, buf, sizeof( u.buf ) );
          return u.val;
       }
 
-      static __inline__ void _hb_put_std_uint64( BYTE * buf, UINT64 val )
+      static __inline__ void _hb_put_std_uint64( BYTE * buf, HB_U64 val )
       {
          HB_U64CAST u;
          u.val = val;
          memcpy( buf, u.buf, sizeof( u.buf ) );
       }
 
-      static __inline__ UINT64 _hb_get_rev_uint64( const BYTE * buf )
+      static __inline__ HB_U64 _hb_get_rev_uint64( const BYTE * buf )
       {
          HB_U64CAST u;
 #  if HB_BUILTIN_BSWAP
@@ -1027,7 +1027,7 @@ typedef unsigned char       HB_U8;
 #     endif
       }
 
-      static __inline__ void _hb_put_rev_uint64( BYTE * buf, UINT64 val )
+      static __inline__ void _hb_put_rev_uint64( BYTE * buf, HB_U64 val )
       {
          HB_U64CAST u;
 #  if HB_BUILTIN_BSWAP
@@ -1181,32 +1181,32 @@ typedef unsigned char       HB_U8;
 
 #  if !defined( HB_STRICT_ALIGNMENT ) && defined( HB_LITTLE_ENDIAN )
 
-   #define HB_GET_LE_UINT16( p )    ( *( UINT16 * )( p ) )
-   #define HB_PUT_LE_UINT16( p, w ) ( *( UINT16 * )( p ) = ( UINT16 ) ( w ) )
-   #define HB_GET_LE_UINT32( p )    ( *( UINT32 * )( p ) )
-   #define HB_PUT_LE_UINT32( p, l ) ( *( UINT32 * )( p ) = ( UINT32 ) ( l ) )
-   #define HB_GET_LE_UINT64( p )    ( *( UINT64 * )( p ) )
-   #define HB_PUT_LE_UINT64( p, q ) ( *( UINT64 * )( p ) = ( UINT64 ) ( q ) )
+   #define HB_GET_LE_UINT16( p )    ( *( HB_U16 * )( p ) )
+   #define HB_PUT_LE_UINT16( p, w ) ( *( HB_U16 * )( p ) = ( HB_U16 ) ( w ) )
+   #define HB_GET_LE_UINT32( p )    ( *( HB_U32 * )( p ) )
+   #define HB_PUT_LE_UINT32( p, l ) ( *( HB_U32 * )( p ) = ( HB_U32 ) ( l ) )
+   #define HB_GET_LE_UINT64( p )    ( *( HB_U64 * )( p ) )
+   #define HB_PUT_LE_UINT64( p, q ) ( *( HB_U64 * )( p ) = ( HB_U64 ) ( q ) )
 
 #  else
 
-   #define HB_GET_LE_UINT16( p )    ( ( UINT16 ) \
-                                      ( ( ( UINT16 ) (( BYTE * )( p ))[0] ) | \
-                                        ( ( UINT16 ) (( BYTE * )( p ))[1] <<  8 ) ) )
-   #define HB_GET_LE_UINT32( p )    ( ( UINT32 ) \
-                                      ( ( ( UINT32 ) (( BYTE * )( p ))[0] ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[2] << 16 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[3] << 24 ) ) )
-   #define HB_GET_LE_UINT64( p )    ( ( UINT64 ) \
-                                      ( ( ( UINT64 ) (( BYTE * )( p ))[0] ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[2] << 16 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[3] << 24 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[4] << 32 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[5] << 40 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[6] << 48 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[7] << 56 ) ) )
+   #define HB_GET_LE_UINT16( p )    ( ( HB_U16 ) \
+                                      ( ( ( HB_U16 ) (( BYTE * )( p ))[0] ) | \
+                                        ( ( HB_U16 ) (( BYTE * )( p ))[1] <<  8 ) ) )
+   #define HB_GET_LE_UINT32( p )    ( ( HB_U32 ) \
+                                      ( ( ( HB_U32 ) (( BYTE * )( p ))[0] ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[2] << 16 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[3] << 24 ) ) )
+   #define HB_GET_LE_UINT64( p )    ( ( HB_U64 ) \
+                                      ( ( ( HB_U64 ) (( BYTE * )( p ))[0] ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[2] << 16 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[3] << 24 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[4] << 32 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[5] << 40 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[6] << 48 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[7] << 56 ) ) )
 
    #define HB_PUT_LE_UINT16( p, w )    do { \
                                          (( BYTE * )( p ))[0] = ( BYTE )( w ); \
@@ -1232,32 +1232,32 @@ typedef unsigned char       HB_U8;
 
 #  if !defined( HB_STRICT_ALIGNMENT ) && defined( HB_BIG_ENDIAN )
 
-   #define HB_GET_BE_UINT16( p )    ( *( UINT16 * )( p ) )
-   #define HB_PUT_BE_UINT16( p, w ) ( *( UINT16 * )( p ) = ( UINT16 ) ( w ) )
-   #define HB_GET_BE_UINT32( p )    ( *( UINT32 * )( p ) )
-   #define HB_PUT_BE_UINT32( p, l ) ( *( UINT32 * )( p ) = ( UINT32 ) ( l ) )
-   #define HB_GET_BE_UINT64( p )    ( *( UINT64 * )( p ) )
-   #define HB_PUT_BE_UINT64( p, q ) ( *( UINT64 * )( p ) = ( UINT64 ) ( q ) )
+   #define HB_GET_BE_UINT16( p )    ( *( HB_U16 * )( p ) )
+   #define HB_PUT_BE_UINT16( p, w ) ( *( HB_U16 * )( p ) = ( HB_U16 ) ( w ) )
+   #define HB_GET_BE_UINT32( p )    ( *( HB_U32 * )( p ) )
+   #define HB_PUT_BE_UINT32( p, l ) ( *( HB_U32 * )( p ) = ( HB_U32 ) ( l ) )
+   #define HB_GET_BE_UINT64( p )    ( *( HB_U64 * )( p ) )
+   #define HB_PUT_BE_UINT64( p, q ) ( *( HB_U64 * )( p ) = ( HB_U64 ) ( q ) )
 
 #  else
 
-   #define HB_GET_BE_UINT16( p )    ( ( UINT16 ) \
-                                      ( ( ( UINT16 ) (( BYTE * )( p ))[0] << 8 ) | \
-                                        ( ( UINT16 ) (( BYTE * )( p ))[1] ) ) )
-   #define HB_GET_BE_UINT32( p )    ( ( UINT32 ) \
-                                      ( ( ( UINT32 ) (( BYTE * )( p ))[0] << 24 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[1] << 16 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[2] <<  8 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[3] ) ) )
-   #define HB_GET_BE_UINT64( p )    ( ( UINT64 ) \
-                                      ( ( ( UINT64 ) (( BYTE * )( p ))[0] << 56 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[1] << 48 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[2] << 40 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[3] << 32 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[4] << 24 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[5] << 16 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[6] <<  8 ) | \
-                                        ( ( UINT64 ) (( BYTE * )( p ))[7] ) ) )
+   #define HB_GET_BE_UINT16( p )    ( ( HB_U16 ) \
+                                      ( ( ( HB_U16 ) (( BYTE * )( p ))[0] << 8 ) | \
+                                        ( ( HB_U16 ) (( BYTE * )( p ))[1] ) ) )
+   #define HB_GET_BE_UINT32( p )    ( ( HB_U32 ) \
+                                      ( ( ( HB_U32 ) (( BYTE * )( p ))[0] << 24 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[1] << 16 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[2] <<  8 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[3] ) ) )
+   #define HB_GET_BE_UINT64( p )    ( ( HB_U64 ) \
+                                      ( ( ( HB_U64 ) (( BYTE * )( p ))[0] << 56 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[1] << 48 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[2] << 40 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[3] << 32 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[4] << 24 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[5] << 16 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[6] <<  8 ) | \
+                                        ( ( HB_U64 ) (( BYTE * )( p ))[7] ) ) )
 
    #define HB_PUT_BE_UINT16( p, w )    do { \
                                          (( BYTE * )( p ))[0] = ( BYTE )( (w) >>  8 ); \
@@ -1416,29 +1416,29 @@ typedef unsigned char       HB_U8;
  * 24 bit integers are not directly supported by any processor we used so far
  * so we always have to build them from BYTEs and cannot use C casting
  */
-#define HB_GET_LE_INT24( p )        ( ( INT32 ) \
-                                      ( ( ( INT32 ) (( BYTE * )( p ))[0] ) | \
-                                        ( ( INT32 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( INT32 ) (( BYTE * )( p ))[2] << 16 ) | \
-                                        ( ( INT32 ) ((( BYTE * )( p ))[2] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
-#define HB_GET_LE_UINT24( p )       ( ( UINT32 ) \
-                                      ( ( ( UINT32 ) (( BYTE * )( p ))[0] ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[2] << 16 ) ) )
+#define HB_GET_LE_INT24( p )        ( ( HB_I32 ) \
+                                      ( ( ( HB_I32 ) (( BYTE * )( p ))[0] ) | \
+                                        ( ( HB_I32 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_I32 ) (( BYTE * )( p ))[2] << 16 ) | \
+                                        ( ( HB_I32 ) ((( BYTE * )( p ))[2] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
+#define HB_GET_LE_UINT24( p )       ( ( HB_U32 ) \
+                                      ( ( ( HB_U32 ) (( BYTE * )( p ))[0] ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[2] << 16 ) ) )
 #define HB_PUT_LE_UINT24( p, u )    do { \
                                        (( BYTE * )( p ))[0] = ( BYTE )( u ); \
                                        (( BYTE * )( p ))[1] = ( BYTE )( (u) >>  8 ); \
                                        (( BYTE * )( p ))[2] = ( BYTE )( (u) >> 16 ); \
                                     } while ( 0 )
-#define HB_GET_BE_INT24( p )        ( ( INT32 ) \
-                                      ( ( ( INT32 ) (( BYTE * )( p ))[2] ) | \
-                                        ( ( INT32 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( INT32 ) (( BYTE * )( p ))[0] << 16 ) | \
-                                        ( ( INT32 ) ((( BYTE * )( p ))[0] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
-#define HB_GET_BE_UINT24( p )       ( ( UINT32 ) \
-                                      ( ( ( UINT32 ) (( BYTE * )( p ))[2] ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[1] <<  8 ) | \
-                                        ( ( UINT32 ) (( BYTE * )( p ))[0] << 16 ) ) )
+#define HB_GET_BE_INT24( p )        ( ( HB_I32 ) \
+                                      ( ( ( HB_I32 ) (( BYTE * )( p ))[2] ) | \
+                                        ( ( HB_I32 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_I32 ) (( BYTE * )( p ))[0] << 16 ) | \
+                                        ( ( HB_I32 ) ((( BYTE * )( p ))[0] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
+#define HB_GET_BE_UINT24( p )       ( ( HB_U32 ) \
+                                      ( ( ( HB_U32 ) (( BYTE * )( p ))[2] ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[1] <<  8 ) | \
+                                        ( ( HB_U32 ) (( BYTE * )( p ))[0] << 16 ) ) )
 #define HB_PUT_BE_UINT24( p, u )    do { \
                                        (( BYTE * )( p ))[2] = ( BYTE )( u ); \
                                        (( BYTE * )( p ))[1] = ( BYTE )( (u) >>  8 ); \
@@ -1446,9 +1446,9 @@ typedef unsigned char       HB_U8;
                                     } while ( 0 )
 
 
-#define HB_GET_LE_INT16( p )        (( INT16 ) HB_GET_LE_UINT16( p ))
-#define HB_GET_LE_INT32( p )        (( INT32 ) HB_GET_LE_UINT32( p ))
-#define HB_GET_LE_INT64( p )        (( INT64 ) HB_GET_LE_UINT64( p ))
+#define HB_GET_LE_INT16( p )        (( HB_I16 ) HB_GET_LE_UINT16( p ))
+#define HB_GET_LE_INT32( p )        (( HB_I32 ) HB_GET_LE_UINT32( p ))
+#define HB_GET_LE_INT64( p )        (( HB_I64 ) HB_GET_LE_UINT64( p ))
 
 #define HB_PCODE_MKSHORT( p )       (( SHORT )     HB_GET_LE_INT16( p ))
 #define HB_PCODE_MKUSHORT( p )      (( USHORT )    HB_GET_LE_UINT16( p ))

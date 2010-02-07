@@ -57,7 +57,7 @@
 HB_FUNC( BIN2W )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-   UINT16 uiResult = 0;
+   HB_U16 uiResult = 0;
 
    if( pItem )
    {
@@ -74,7 +74,7 @@ HB_FUNC( BIN2W )
 HB_FUNC( BIN2I )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-   INT16 iResult = 0;
+   HB_I16 iResult = 0;
 
    if( pItem )
    {
@@ -91,7 +91,7 @@ HB_FUNC( BIN2I )
 HB_FUNC( BIN2L )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-   INT32 iResult = 0;
+   HB_I32 iResult = 0;
 
    if( pItem )
    {
@@ -111,7 +111,7 @@ HB_FUNC( BIN2L )
 HB_FUNC( I2BIN )
 {
    char szResult[ 2 ];
-   INT16 iValue = ( INT16 ) hb_parni( 1 );
+   HB_I16 iValue = ( HB_I16 ) hb_parni( 1 );
    HB_PUT_LE_UINT16( szResult, iValue );
    hb_retclen( szResult, 2 );
 }
@@ -119,7 +119,7 @@ HB_FUNC( I2BIN )
 HB_FUNC( L2BIN )
 {
    char szResult[ 4 ];
-   INT32 iValue = ( INT32 ) hb_parnl( 1 );
+   HB_I32 iValue = ( HB_I32 ) hb_parnl( 1 );
    HB_PUT_LE_UINT32( szResult, iValue );
    hb_retclen( szResult, 4 );
 }

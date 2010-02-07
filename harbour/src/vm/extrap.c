@@ -120,15 +120,15 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                 "    CS:RIP:%04X:0x%016" PFLL "X  SS:RSP:%04X:0x%016" PFLL "X\n"
                 "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
                 "    Flags:%08X\n",
-                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
                 ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
                 pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
                 pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
                 pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
                 pCtx->R12, pCtx->R13, pCtx->R14, pCtx->R15,
-                ( UINT32 ) pCtx->SegCs, pCtx->Rip, ( UINT32 ) pCtx->SegSs, pCtx->Rsp,
-                ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs, ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
-                ( UINT32 ) pCtx->EFlags );
+                ( HB_U32 ) pCtx->SegCs, pCtx->Rip, ( HB_U32 ) pCtx->SegSs, pCtx->Rsp,
+                ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
+                ( HB_U32 ) pCtx->EFlags );
 
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
@@ -159,13 +159,13 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                 "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
                 "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
                 "    Flags:%08X\n",
-                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
-                ( UINT32 ) pCtx->Eax, ( UINT32 ) pCtx->Ebx, ( UINT32 ) pCtx->Ecx, ( UINT32 ) pCtx->Edx,
-                ( UINT32 ) pCtx->Esi, ( UINT32 ) pCtx->Edi, ( UINT32 ) pCtx->Ebp,
-                ( UINT32 ) pCtx->SegCs, ( UINT32 ) pCtx->Eip, ( UINT32 ) pCtx->SegSs, ( UINT32 ) pCtx->Esp,
-                ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs, ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
-                ( UINT32 ) pCtx->EFlags );
+                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+                ( HB_U32 ) pCtx->Eax, ( HB_U32 ) pCtx->Ebx, ( HB_U32 ) pCtx->Ecx, ( HB_U32 ) pCtx->Edx,
+                ( HB_U32 ) pCtx->Esi, ( HB_U32 ) pCtx->Edi, ( HB_U32 ) pCtx->Ebp,
+                ( HB_U32 ) pCtx->SegCs, ( HB_U32 ) pCtx->Eip, ( HB_U32 ) pCtx->SegSs, ( HB_U32 ) pCtx->Esp,
+                ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
+                ( HB_U32 ) pCtx->EFlags );
 
       hb_strncat( errmsg, "    CS:EIP:", errmsglen );
       pc = ( unsigned char * ) pCtx->Eip;

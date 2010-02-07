@@ -269,7 +269,7 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 
 typedef struct _HB_MEMINFO
 {
-   UINT32      u32Signature;
+   HB_U32      u32Signature;
    HB_SIZE     ulSize;
    USHORT      uiProcLine;
    char        szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -291,7 +291,7 @@ typedef struct _HB_MEMINFO
 #define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), HB_MEMINFO_SIGNATURE )
 #define HB_FM_CLRSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), 0 )
 
-#define HB_ALLOC_SIZE( n )    ( ( n ) + ( s_fStatistic ? _HB_MEMINFO_SIZE + sizeof( UINT32 ) : HB_COUNTER_OFFSET ) )
+#define HB_ALLOC_SIZE( n )    ( ( n ) + ( s_fStatistic ? _HB_MEMINFO_SIZE + sizeof( HB_U32 ) : HB_COUNTER_OFFSET ) )
 #define HB_FM_PTR( p )        ( ( PHB_MEMINFO ) ( ( BYTE * ) ( p ) - HB_MEMINFO_SIZE ) )
 
 #define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->ulSize : 0 )

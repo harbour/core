@@ -555,7 +555,7 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
       case 'N':
          if( pTag->uiLen == 4 )
          {
-            UINT32 uiVal = ( UINT32 ) hb_itemGetNI( pItem ) + 0x80000000;
+            HB_U32 uiVal = ( HB_U32 ) hb_itemGetNI( pItem ) + 0x80000000;
             HB_PUT_BE_UINT32( ptr, uiVal );
             ulLen = 4;
          }
@@ -627,7 +627,7 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
          case 'N':
             if( pKey->len == 4 )
             {
-               INT32 iVal = ( INT32 ) ( HB_GET_BE_UINT32( pKey->val ) ) - 0x80000000;
+               HB_I32 iVal = ( HB_I32 ) ( HB_GET_BE_UINT32( pKey->val ) ) - 0x80000000;
                pItem = hb_itemPutNI( pItem, iVal );
             }
             else
@@ -2309,7 +2309,7 @@ static void hb_cdxPageStore( LPCDXPAGE pPage )
    else if( pPage->iKeys > pPage->TagParent->MaxKeys )
       hb_cdxErrInternal( "hb_cdxPageStore: number of keys exceed!." );
 #endif
-   HB_PUT_LE_UINT16( pPage->node.intNode.attr, ( UINT16 ) pPage->PageType );
+   HB_PUT_LE_UINT16( pPage->node.intNode.attr, ( HB_U16 ) pPage->PageType );
    HB_PUT_LE_UINT16( pPage->node.intNode.nKeys, pPage->iKeys );
    HB_PUT_LE_UINT32( pPage->node.intNode.leftPtr, pPage->Left );
    HB_PUT_LE_UINT32( pPage->node.intNode.rightPtr, pPage->Right );
@@ -9544,7 +9544,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
                case HB_IT_DOUBLE:
                   if( pTag->uiLen == 4 )
                   {
-                     UINT32 uiVal = ( UINT32 ) hb_itemGetNI( pItem ) + 0x80000000;
+                     HB_U32 uiVal = ( HB_U32 ) hb_itemGetNI( pItem ) + 0x80000000;
                      HB_PUT_BE_UINT32( &cTemp[0], uiVal );
                      hb_cdxSortKeyAdd( pSort, pArea->dbfarea.ulRecNo, cTemp, 4 );
                   }

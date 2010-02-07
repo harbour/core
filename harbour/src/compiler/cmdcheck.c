@@ -76,14 +76,14 @@ static ULONG PackDateTime( void )
    {
       struct
       {
-         UINT32   second : 6;       /* bits:  0 -  5 */
-         UINT32   minute : 6;       /* bits:  6 - 11 */
-         UINT32   hour   : 5;       /* bits: 12 - 16 */
-         UINT32   day    : 5;       /* bits: 16 - 21 */
-         UINT32   month  : 4;       /* bits: 22 - 25 */
-         UINT32   year   : 6;       /* bits: 26 - 31 */
+         HB_U32   second : 6;       /* bits:  0 -  5 */
+         HB_U32   minute : 6;       /* bits:  6 - 11 */
+         HB_U32   hour   : 5;       /* bits: 12 - 16 */
+         HB_U32   day    : 5;       /* bits: 16 - 21 */
+         HB_U32   month  : 4;       /* bits: 22 - 25 */
+         HB_U32   year   : 6;       /* bits: 26 - 31 */
       } ts;
-      UINT32 val;
+      HB_U32 val;
    } u;
    int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMillisec;
 

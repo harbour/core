@@ -176,7 +176,7 @@ void hb_znetEncryptKey( PHB_ZNETSTREAM pStream, const void * keydata, int keylen
 
 static void hb_znetDecrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 {
-   UINT32 xl, xr;
+   HB_U32 xl, xr;
    xl = HB_GET_BE_UINT32( data );
    xr = HB_GET_BE_UINT32( data + 4 );
    hb_blowfishDecrypt( pStream->bf, &xl, &xr );
@@ -186,7 +186,7 @@ static void hb_znetDecrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 
 static void hb_znetEncrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 {
-   UINT32 xl, xr;
+   HB_U32 xl, xr;
    xl = HB_GET_BE_UINT32( data );
    xr = HB_GET_BE_UINT32( data + 4 );
    hb_blowfishEncrypt( pStream->bf, &xl, &xr );
@@ -290,9 +290,9 @@ static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG ti
 
       if( size > 2 )
       {
-         UINT16 uiLen = ( UINT16 ) ( size - 2 );
+         HB_U16 uiLen = ( HB_U16 ) ( size - 2 );
          HB_PUT_BE_UINT16( pStream->crypt_out, uiLen );
-         uiLen = ( UINT16 ) ( ( ( size + 7 ) ^ 0x07 ) & 0x07 );
+         uiLen = ( HB_U16 ) ( ( ( size + 7 ) ^ 0x07 ) & 0x07 );
          if( ( uInt ) uiLen > pStream->wr.avail_out )
          {
             /* it may happen only if encryption was enabled in non empty

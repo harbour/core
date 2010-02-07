@@ -96,7 +96,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
                pszData[ ulSize - 1 ] = ( char ) ( ulSize - ulLen );
             for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
             {
-               UINT32 xl, xr;
+               HB_U32 xl, xr;
                xl = HB_GET_BE_UINT32( &pszData[ ulLen ] );
                xr = HB_GET_BE_UINT32( &pszData[ ulLen + 4 ] );
                hb_blowfishEncrypt( bf, &xl, &xr );
@@ -132,7 +132,7 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
             pszSource = hb_itemGetCPtr( pData );
             for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
             {
-               UINT32 xl, xr;
+               HB_U32 xl, xr;
                xl = HB_GET_BE_UINT32( &pszSource[ ulLen ] );
                xr = HB_GET_BE_UINT32( &pszSource[ ulLen + 4 ] );
                hb_blowfishDecrypt( bf, &xl, &xr );
