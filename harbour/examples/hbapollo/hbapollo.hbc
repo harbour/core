@@ -8,4 +8,6 @@ incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=hbapollo
-libs={win}sde61
+
+libs={win&&HB_WITH_APOLLO_VER61}sde61
+libs={win&&!HB_WITH_APOLLO_VER61}sde7

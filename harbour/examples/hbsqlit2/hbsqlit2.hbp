@@ -6,7 +6,7 @@
 -olib/${hb_plat}/${hb_comp}/hbsqlit2
 -inc
 -q0 -w3 -es2 -l
--i${HB_INC_SQLITE2}
+-i${HB_WITH_SQLITE2}
 
 "-echo={dos}This library doesn't build on DOS."
 -stop{dos}

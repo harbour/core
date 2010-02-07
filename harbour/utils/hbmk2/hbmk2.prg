@@ -6703,6 +6703,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
             cFilterHarb += StrTran( cExpr, "%1", cValue )
          ENDIF
 
+         cFilterHarb := StrTran( cFilterHarb, "&&", "&" )
+         cFilterHarb := StrTran( cFilterHarb, "||", "|" )
+
          cFilterHarb := StrTran( cFilterHarb, "&", ".AND." )
          cFilterHarb := StrTran( cFilterHarb, "|", ".OR." )
 

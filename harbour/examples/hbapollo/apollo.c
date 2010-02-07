@@ -65,7 +65,15 @@
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
-#include "Sde61.h"
+
+#if defined( HB_WITH_APOLLO_VER61 )
+   #include "Sde61.h"
+#else
+   #include "sde7.h"
+#endif
+
+/* Uncomment for previous version */
+/*  */
 
 HB_FUNC( SX_APPENDBLANK )
 {
