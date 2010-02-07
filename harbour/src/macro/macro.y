@@ -150,13 +150,13 @@
    struct
    {
       HB_LONG  lNumber; /* to hold a long number returned by lex */
-      UCHAR    bWidth;  /* to hold the width of the value */
+      HB_UCHAR bWidth;  /* to hold the width of the value */
    } valLong;
    struct
    {
       double   dNumber; /* to hold a double number returned by lex */
-      UCHAR    bWidth;  /* to hold the width of the value */
-      UCHAR    bDec;    /* to hold the number of decimal points in the value */
+      HB_UCHAR bWidth;  /* to hold the width of the value */
+      HB_UCHAR bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
    struct
    {
@@ -975,14 +975,14 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          if( hb_compStrToNum( pToken->value, pToken->len, &lNumber, &dNumber, &iDec, &iWidth ) )
          {
             yylval_ptr->valDouble.dNumber = dNumber;
-            yylval_ptr->valDouble.bDec    = ( UCHAR ) iDec;
-            yylval_ptr->valDouble.bWidth  = ( UCHAR ) iWidth;
+            yylval_ptr->valDouble.bDec    = ( HB_UCHAR ) iDec;
+            yylval_ptr->valDouble.bWidth  = ( HB_UCHAR ) iWidth;
             return NUM_DOUBLE;
          }
          else
          {
             yylval_ptr->valLong.lNumber = lNumber;
-            yylval_ptr->valLong.bWidth  = ( UCHAR ) iWidth;
+            yylval_ptr->valLong.bWidth  = ( HB_UCHAR ) iWidth;
             return NUM_LONG;
          }
       }

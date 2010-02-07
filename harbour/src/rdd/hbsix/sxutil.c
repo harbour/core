@@ -78,7 +78,7 @@ HB_FUNC( SX_SLIMFAST )
          {
             if( c == ' ' && ulDst && szDst[ulDst - 1] == ' ' )
                continue;
-            c = ( char ) hb_charUpper( ( UCHAR ) c );
+            c = ( char ) hb_charUpper( ( HB_UCHAR ) c );
          }
          szDst[ulDst++] = c;
       }

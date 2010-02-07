@@ -469,7 +469,7 @@ static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, ULONG ulLen,
    {
       if( ulLen <= 1 )
       {
-         pToken->value = hb_szAscii[ ulLen ? ( UCHAR ) value[ 0 ] : 0 ];
+         pToken->value = hb_szAscii[ ulLen ? ( HB_UCHAR ) value[ 0 ] : 0 ];
          type |= HB_PP_TOKEN_STATIC;
       }
       else
@@ -498,7 +498,7 @@ static void hb_pp_tokenSetValue( PHB_PP_TOKEN pToken,
       hb_xfree( ( void * ) pToken->value );
    if( ulLen <= 1 )
    {
-      pToken->value = hb_szAscii[ ulLen ? ( UCHAR ) value[ 0 ] : 0 ];
+      pToken->value = hb_szAscii[ ulLen ? ( HB_UCHAR ) value[ 0 ] : 0 ];
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
    else
@@ -664,7 +664,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       {
          if( pState->pFile->ulLineBufLen )
          {
-            ch = ( UCHAR ) pState->pFile->pLineBuf[ 0 ];
+            ch = ( HB_UCHAR ) pState->pFile->pLineBuf[ 0 ];
             pState->pFile->pLineBuf++;
             pState->pFile->ulLineBufLen--;
          }
@@ -5998,7 +5998,7 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
 
       if( pToken->len <= 1 )
       {
-         UCHAR ucVal = pToken->len ? ( UCHAR ) pToken->value[ 1 ] : 0;
+         HB_UCHAR ucVal = pToken->len ? ( HB_UCHAR ) pToken->value[ 1 ] : 0;
          if( HB_PP_TOKEN_ALLOC( pToken->type ) )
          {
             hb_xfree( ( void * ) pToken->value );
@@ -6038,7 +6038,7 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
 
    if( pToken->len <= 1 )
    {
-      UCHAR ucVal = ( UCHAR ) HB_PP_UPPER( pToken->value[ 0 ] );
+      HB_UCHAR ucVal = ( HB_UCHAR ) HB_PP_UPPER( pToken->value[ 0 ] );
       if( HB_PP_TOKEN_ALLOC( pToken->type ) )
       {
          hb_xfree( ( void * ) pToken->value );

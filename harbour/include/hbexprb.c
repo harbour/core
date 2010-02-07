@@ -1356,7 +1356,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             {
                if( HB_IS_VALID_INDEX( lIndex, pExpr->ulLength ) )
                {
-                  UCHAR ucValue = ( UCHAR ) pExpr->value.asString.string[ lIndex - 1 ];
+                  HB_UCHAR ucValue = ( HB_UCHAR ) pExpr->value.asString.string[ lIndex - 1 ];
 
                   HB_COMP_EXPR_DELETE( pSelf );
                   pSelf = hb_compExprNewLong( ucValue, HB_COMP_PARAM );

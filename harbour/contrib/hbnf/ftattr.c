@@ -419,7 +419,7 @@ HB_FUNC( FT_RESTATT )
                BYTE bAttr;
                USHORT usChar;
                hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
-               iColor = ( UCHAR ) *pAttrib++;
+               iColor = ( HB_UCHAR ) *pAttrib++;
                hb_gtPutChar( iTop, iCol, iColor, bAttr, usChar );
                ++iCol;
                --ulLen;

@@ -603,11 +603,11 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
             if( uc != '?' )
                bAttr |= HB_GT_ATTR_BOX;
          }
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes,
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( HB_UCHAR ) s_pCharInfoScreen[ i ].Attributes,
                                bAttr, uc );
 #else
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes, 0,
-                               s_charTransRev[ ( UCHAR ) s_pCharInfoScreen[ i ].Char.AsciiChar ] );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( HB_UCHAR ) s_pCharInfoScreen[ i ].Attributes, 0,
+                               s_charTransRev[ ( HB_UCHAR ) s_pCharInfoScreen[ i ].Char.AsciiChar ] );
 #endif
          ++i;
       }
@@ -1818,7 +1818,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #if defined( UNICODE )
          s_pCharInfoScreen[ i ].Char.UnicodeChar =
                hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? s_cdpBox : s_cdpHost,
-                             HB_TRUE, ( UCHAR ) usChar );
+                             HB_TRUE, ( HB_UCHAR ) usChar );
 #else
          s_pCharInfoScreen[ i ].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
 #endif

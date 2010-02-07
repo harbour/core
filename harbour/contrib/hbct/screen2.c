@@ -86,7 +86,7 @@ HB_FUNC( SAYDOWN )
          hb_gtBeginWrite();
          while( ulLen-- )
          {
-            hb_gtPutChar( iRow++, iCol, iColor, 0, ( UCHAR ) *szText++ );
+            hb_gtPutChar( iRow++, iCol, iColor, 0, ( HB_UCHAR ) *szText++ );
             if( lDelay )
             {
                hb_gtEndWrite();
@@ -139,7 +139,7 @@ HB_FUNC( SAYSPREAD )
          do
          {
             for( ul = 0; ul < ulLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ulPos + ul] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ulPos + ul] );
             ulLen += 2;
             if( lDelay )
             {
@@ -198,14 +198,14 @@ HB_FUNC( SAYMOVEIN )
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < ulChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ul] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < ulChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ul] );
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
                --szText;
             }
             if( ( int ) ulChars + iCol <= iMaxCol )
@@ -232,7 +232,7 @@ HB_FUNC( CLEARSLOW )
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
    int iTop, iLeft, iBottom, iRight;
-   UCHAR ucChar;
+   HB_UCHAR ucChar;
    long lDelay;
 
    lDelay  = hb_parnl( 1 );
@@ -243,11 +243,11 @@ HB_FUNC( CLEARSLOW )
    iRight  = HB_ISNUM( 5 ) ? hb_parni( 5 ) : iMaxCol;
 
    if( HB_ISNUM( 6 ) )
-      ucChar = ( UCHAR ) hb_parni( 6 );
+      ucChar = ( HB_UCHAR ) hb_parni( 6 );
    else if( HB_ISCHAR( 6 ) )
-      ucChar = ( UCHAR ) hb_parc( 6 )[0];
+      ucChar = ( HB_UCHAR ) hb_parc( 6 )[0];
    else
-      ucChar = ( UCHAR ) hb_gtGetClearChar();
+      ucChar = ( HB_UCHAR ) hb_gtGetClearChar();
 
    if( iTop >= 0 && iLeft >= 0 && iTop <= iBottom && iLeft <= iRight )
    {
@@ -386,8 +386,8 @@ HB_FUNC( STRSCREEN )
             iC = iCol;
             do
             {
-               USHORT usChar = ( UCHAR ) *szText++;
-               int iColor = ( UCHAR ) *szText++;
+               USHORT usChar = ( HB_UCHAR ) *szText++;
+               int iColor = ( HB_UCHAR ) *szText++;
                hb_gtPutChar( iRow, iC, iColor, 0, usChar );
                ulLen -= 2;
             }

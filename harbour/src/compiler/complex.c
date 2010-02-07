@@ -481,14 +481,14 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          if( hb_compStrToNum( pToken->value, pToken->len, &lNumber, &dNumber, &iDec, &iWidth ) )
          {
             yylval_ptr->valDouble.dNumber = dNumber;
-            yylval_ptr->valDouble.bDec    = ( UCHAR ) iDec;
-            yylval_ptr->valDouble.bWidth  = ( UCHAR ) iWidth;
+            yylval_ptr->valDouble.bDec    = ( HB_UCHAR ) iDec;
+            yylval_ptr->valDouble.bWidth  = ( HB_UCHAR ) iWidth;
             return NUM_DOUBLE;
          }
          else
          {
             yylval_ptr->valLong.lNumber = lNumber;
-            yylval_ptr->valLong.bWidth  = ( UCHAR ) iWidth;
+            yylval_ptr->valLong.bWidth  = ( HB_UCHAR ) iWidth;
             return NUM_LONG;
          }
       }
@@ -715,7 +715,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             return IDENTIFIER;
          }
          pLex->iState = OPERATOR;
-         return ( UCHAR ) pToken->value[ 0 ];
+         return ( HB_UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_EQ:
          if( HB_SUPPORT_HARBOUR && pToken->pNext && pToken->pNext->spaces == 0 &&
@@ -740,13 +740,13 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
       case HB_PP_TOKEN_GT:
       case HB_PP_TOKEN_REFERENCE:
          pLex->iState = OPERATOR;
-         return ( UCHAR ) pToken->value[ 0 ];
+         return ( HB_UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_EOL:
          pLex->fEol = HB_TRUE;
       case HB_PP_TOKEN_EOC:
          pLex->iState = LOOKUP;
-         return ( UCHAR ) pToken->value[ 0 ];
+         return ( HB_UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_KEYWORD:
       {
@@ -1364,7 +1364,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          return iType;
       }
       default:
-         return ( UCHAR ) pToken->value[ 0 ];
+         return ( HB_UCHAR ) pToken->value[ 0 ];
    }
 }
 

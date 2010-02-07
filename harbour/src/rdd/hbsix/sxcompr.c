@@ -156,9 +156,9 @@
 /* create compressed item from match position and length */
 #define LZSS_ITEM(o, l)    ( ( (o) << LENGTHBITS ) | ( (l) - MINLENGTH ) )
 /* create low byte of compressed item */
-#define LZSS_ITMLO(o, l)   ( ( UCHAR ) (o) )
+#define LZSS_ITMLO(o, l)   ( ( HB_UCHAR ) (o) )
 /* create high byte of compressed item */
-#define LZSS_ITMHI(o, l)   ( ( UCHAR ) ( ( ( (o) >> ( 8 - LENGTHBITS ) ) & ~MATCHMASK ) | \
+#define LZSS_ITMHI(o, l)   ( ( HB_UCHAR ) ( ( ( (o) >> ( 8 - LENGTHBITS ) ) & ~MATCHMASK ) | \
                                          ( (l) - MINLENGTH ) ) )
 /* maximum size of item set: byte with item type bits plus 8 items */
 #define ITEMSETSIZE     ( ( ITEMBITS << 3 ) + 1 )
@@ -190,7 +190,7 @@ typedef struct _HB_LZSSX_COMPR
    HB_BOOL    fResult;
    HB_BOOL    fContinue;
 
-   UCHAR      ring_buffer[ RBUFLENGTH + MAXLENGTH - 1 ];
+   HB_UCHAR   ring_buffer[ RBUFLENGTH + MAXLENGTH - 1 ];
 
    SHORT      match_offset;
    SHORT      match_length;
@@ -269,7 +269,7 @@ static HB_BOOL hb_LZSSxFlush( PHB_LZSSX_COMPR pCompr )
    return pCompr->fResult;
 }
 
-static HB_BOOL hb_LZSSxWrite( PHB_LZSSX_COMPR pCompr, UCHAR ucVal )
+static HB_BOOL hb_LZSSxWrite( PHB_LZSSX_COMPR pCompr, HB_UCHAR ucVal )
 {
    if( pCompr->fResult )
    {
@@ -287,7 +287,7 @@ static HB_BOOL hb_LZSSxWrite( PHB_LZSSX_COMPR pCompr, UCHAR ucVal )
 static int hb_LZSSxRead( PHB_LZSSX_COMPR pCompr )
 {
    if( pCompr->inBuffPos < pCompr->inBuffRead )
-      return ( UCHAR ) pCompr->inBuffer[ pCompr->inBuffPos++ ];
+      return ( HB_UCHAR ) pCompr->inBuffer[ pCompr->inBuffPos++ ];
 
    if( pCompr->hInput != FS_ERROR )
    {
@@ -295,7 +295,7 @@ static int hb_LZSSxRead( PHB_LZSSX_COMPR pCompr )
                                            pCompr->inBuffSize );
       pCompr->inBuffPos = 0;
       if( pCompr->inBuffPos < pCompr->inBuffRead )
-         return ( UCHAR ) pCompr->inBuffer[ pCompr->inBuffPos++ ];
+         return ( HB_UCHAR ) pCompr->inBuffer[ pCompr->inBuffPos++ ];
    }
    return -1;
 }
@@ -325,12 +325,12 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
 
       if( itemMask & 1 ) /* Is the next character normal byte ? */
       {
-         if( ! hb_LZSSxWrite( pCompr, ( UCHAR ) c ) )
+         if( ! hb_LZSSxWrite( pCompr, ( HB_UCHAR ) c ) )
          {
             fResult = HB_FALSE;
             break;
          }
-         pCompr->ring_buffer[ index ] = ( UCHAR ) c;
+         pCompr->ring_buffer[ index ] = ( HB_UCHAR ) c;
          index = RBUFINDEX( index + 1 );
       }
       else /* we have an item pair (ring buffer offset : match length) */
@@ -345,7 +345,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
          for( h = 0; h < length; h++ )
          {
             c = pCompr->ring_buffer[ RBUFINDEX( offset + h ) ];
-            if( ! hb_LZSSxWrite( pCompr, ( UCHAR ) c ) )
+            if( ! hb_LZSSxWrite( pCompr, ( HB_UCHAR ) c ) )
             {
                fResult = HB_FALSE;
                break;
@@ -354,7 +354,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
                overwrite the ring buffer - we have to make exactly
                the same or our results will be differ when
                abs( offset - index ) < length */
-            pCompr->ring_buffer[ index ] = ( UCHAR ) c;
+            pCompr->ring_buffer[ index ] = ( HB_UCHAR ) c;
             index = RBUFINDEX( index + 1 );
          }
       }
@@ -369,7 +369,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
 static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
 {
    int i, p, cmp;
-   UCHAR *key;
+   HB_UCHAR * key;
 
    cmp = 1;
    key = &pCompr->ring_buffer[ r ];
@@ -464,8 +464,8 @@ static void hb_LZSSxNodeDelete( PHB_LZSSX_COMPR pCompr, int p )
 
 static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
 {
-   UCHAR itemSet[ITEMSETSIZE];
-   UCHAR itemMask;
+   HB_UCHAR itemSet[ ITEMSETSIZE ];
+   HB_UCHAR itemMask;
    HB_SIZE ulSize = 0;
    int iItem;
    short int  i, c, len, r, s, last_match_length;
@@ -484,7 +484,7 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
    {
       if( ( c = hb_LZSSxRead( pCompr ) ) == -1 )
          break;
-      pCompr->ring_buffer[ r + len ] = ( UCHAR ) c;
+      pCompr->ring_buffer[ r + len ] = ( HB_UCHAR ) c;
    }
    if( len == 0 )
       return ulSize;
@@ -526,9 +526,9 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
                         ( c = hb_LZSSxRead( pCompr ) ) != -1; i++ )
       {
          hb_LZSSxNodeDelete( pCompr, s );
-         pCompr->ring_buffer[ s ] = ( UCHAR ) c;
+         pCompr->ring_buffer[ s ] = ( HB_UCHAR ) c;
          if( s < MAXLENGTH - 1 )
-            pCompr->ring_buffer[ s + RBUFLENGTH ] = ( UCHAR ) c;
+            pCompr->ring_buffer[ s + RBUFLENGTH ] = ( HB_UCHAR ) c;
          s = ( short int ) RBUFINDEX( s + 1 );
          r = ( short int ) RBUFINDEX( r + 1 );
          hb_LZSSxNodeInsert( pCompr, r );

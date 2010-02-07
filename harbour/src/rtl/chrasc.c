@@ -84,7 +84,7 @@ HB_FUNC( ASC )
    const char * szValue = hb_parc( 1 );
 
    if( szValue )
-      hb_retni( ( UCHAR ) szValue[ 0 ] );
+      hb_retni( ( HB_UCHAR ) szValue[ 0 ] );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

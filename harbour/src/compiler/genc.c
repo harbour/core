@@ -465,13 +465,13 @@ static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
          while( ( c = *tmp++ ) != 0 )
          {
             if( HB_ISNEXTIDCHAR( c ) )
-               fputc( ( UCHAR ) c, yyc );
+               fputc( ( HB_UCHAR ) c, yyc );
             else if( !fStrip || c != '$' || *tmp != 0 )
             {
                /* 'x' is used to force unique name and eliminate possible
                 * collisions with other function names.
                 */
-               fprintf( yyc, "x%02x", ( UCHAR ) c );
+               fprintf( yyc, "x%02x", ( HB_UCHAR ) c );
             }
          }
          if( iFuncSuffix )
@@ -480,7 +480,7 @@ static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
       }
       else
       {
-         fputc( ( UCHAR ) cDecor[ i ], yyc );
+         fputc( ( HB_UCHAR ) cDecor[ i ], yyc );
          i++;
       }
    }
@@ -1517,15 +1517,15 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    ++lPCodePos;
    for( i = 0; i < ( int ) ( sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) ); ++i )
    {
-      fprintf( cargo->yyc, " %i,", ( UCHAR ) pFunc->pCode[ lPCodePos + i ] );
+      fprintf( cargo->yyc, " %i,", ( HB_UCHAR ) pFunc->pCode[ lPCodePos + i ] );
    }
    if( cargo->bVerbose )
    {
       fprintf( cargo->yyc, "\t/* %.*f, %d, %d */",
-      ( UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ],
+      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ],
       HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos ] ),
-      ( UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) ],
-      ( UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] );
+      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) ],
+      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] );
    }
    fprintf( cargo->yyc, "\n" );
 

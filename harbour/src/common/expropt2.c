@@ -321,7 +321,7 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             pSelf->value.asNum.val.d = pLeft->value.asNum.val.d * pRight->value.asNum.val.d;
             pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-            pSelf->value.asNum.bDec = ( UCHAR ) ( pLeft->value.asNum.bDec + pRight->value.asNum.bDec );
+            pSelf->value.asNum.bDec = ( HB_UCHAR ) ( pLeft->value.asNum.bDec + pRight->value.asNum.bDec );
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             break;
          }
@@ -2111,7 +2111,7 @@ HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    if( pArg->ExprType == HB_ET_STRING )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewLong(
-                ( UCHAR ) pArg->value.asString.string[0], HB_COMP_PARAM );
+                ( HB_UCHAR ) pArg->value.asString.string[0], HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );

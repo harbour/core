@@ -698,7 +698,7 @@ HB_SIZE hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE ulLen )
 
    for( ul = ulDst = 0; ul < ulLen; ++ul )
    {
-      if( hb_cdpUTF8ToU16NextChar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
+      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ul ], &n, &uc ) )
       {
          if( n == 0 )
             ++ulDst;
@@ -718,7 +718,7 @@ HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos )
 
       for( ul = 0; ul < ulLen && ulPos; ++ul )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
+         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ul ], &n, &uc ) )
          {
             if( n == 0 )
                --ulPos;
@@ -730,7 +730,7 @@ HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos )
          n = 0;
          do
          {
-            if( hb_cdpUTF8ToU16NextChar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
+            if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ul ], &n, &uc ) )
             {
                if( n == 0 )
                   return uc;
@@ -1044,7 +1044,7 @@ HB_WCHAR hb_cdpGetU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, unsigned char ch )
       return ch;
 }
 
-unsigned char hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
+HB_UCHAR char hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
 {
    if( cdp && ( fCtrl || wc >= 32 ) )
    {
@@ -1058,7 +1058,7 @@ unsigned char hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
             wc = uc;
       }
    }
-   return wc >= 0x100 ? '?' : ( UCHAR ) wc;
+   return wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
 }
 
 HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,

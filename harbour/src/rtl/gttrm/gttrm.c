@@ -327,7 +327,7 @@ typedef struct _HB_GTTRM
    PHB_CODEPAGE cdpIn;
 
    HB_BOOL    fUTF8;
-   UCHAR      keyTransTbl[ 256 ];
+   HB_UCHAR   keyTransTbl[ 256 ];
    int        charmap[ 256 ];
 
    int        chrattr[ 256 ];
@@ -1464,7 +1464,7 @@ again:
       {
          USHORT uc = 0;
          n = i = 0;
-         if( hb_cdpGetFromUTF8( pTerm->cdpIn, HB_FALSE, ( UCHAR ) nKey, &n, &uc ) )
+         if( hb_cdpGetFromUTF8( pTerm->cdpIn, HB_FALSE, ( HB_UCHAR ) nKey, &n, &uc ) )
          {
             while( n > 0 )
             {

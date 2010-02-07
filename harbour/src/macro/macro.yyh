@@ -143,13 +143,13 @@ typedef union YYSTYPE
    struct
    {
       HB_LONG  lNumber; /* to hold a long number returned by lex */
-      UCHAR    bWidth;  /* to hold the width of the value */
+      HB_UCHAR bWidth;  /* to hold the width of the value */
    } valLong;
    struct
    {
       double   dNumber; /* to hold a double number returned by lex */
-      UCHAR    bWidth;  /* to hold the width of the value */
-      UCHAR    bDec;    /* to hold the number of decimal points in the value */
+      HB_UCHAR bWidth;  /* to hold the width of the value */
+      HB_UCHAR bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
    struct
    {
@@ -164,6 +164,3 @@ typedef union YYSTYPE
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
-
-
-

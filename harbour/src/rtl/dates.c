@@ -96,10 +96,10 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
 
       while( format_count < size )
       {
-         digit = HB_TOUPPER( ( UCHAR ) *szPtr );
+         digit = HB_TOUPPER( ( HB_UCHAR ) *szPtr );
          szPtr++;
          digit_count = 1;
-         while( HB_TOUPPER( ( UCHAR ) *szPtr ) == digit && format_count < size )
+         while( HB_TOUPPER( ( HB_UCHAR ) *szPtr ) == digit && format_count < size )
          {
             szPtr++;
             if( format_count + digit_count < size )

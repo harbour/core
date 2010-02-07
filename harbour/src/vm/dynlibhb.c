@@ -120,7 +120,7 @@ HB_FUNC( HB_LIBLOAD )
          }
 #elif defined( HB_OS_OS2 )
          {
-            UCHAR LoadError[ 256 ] = "";  /* Area for load failure information */
+            HB_UCHAR LoadError[ 256 ] = "";  /* Area for load failure information */
             HMODULE hDynModule;
             if( DosLoadModule( ( PSZ ) LoadError, sizeof( LoadError ),
                                ( PCSZ ) hb_parc( 1 ), &hDynModule ) == NO_ERROR )

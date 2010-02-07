@@ -2834,14 +2834,14 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
          ulLen -= 2;
       }
 #endif
-      if( strchr( HB_OS_PATH_DELIM_CHR_LIST, ( UCHAR ) pszStart[ 0 ] ) )
+      if( strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszStart[ 0 ] ) )
       {
          pszStart++;
          ulLen--;
       }
 
       /* Strip the trailing (back)slash if there's one */
-      if( ulLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, ( UCHAR ) pszStart[ ulLen - 1 ] ) )
+      if( ulLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszStart[ ulLen - 1 ] ) )
          ulLen--;
 
       if( ulLen && pszBuffer != pszStart )

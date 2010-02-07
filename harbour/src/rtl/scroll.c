@@ -167,7 +167,7 @@ HB_FUNC( HB_SCROLL )
    if( HB_ISNUM( 8 ) )
       iChar = hb_parni( 8 );
    else if( HB_ISCHAR( 8 ) )
-      iChar = ( UCHAR ) hb_parc( 8 )[0];
+      iChar = ( HB_UCHAR ) hb_parc( 8 )[0];
    else
       iChar = -1;
 

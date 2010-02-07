@@ -253,13 +253,13 @@ static void do_token1( int iSwitch )
             case DO_TOKEN1_TOKENLOWER:
                if( pcSubStr != pc )     /* letters can be tokenizers, too,
                                            but they should not be lowercase'd */
-                  *( pcRet + ( pcSubStr - pcString ) ) = ( char ) hb_charLower( ( UCHAR ) *pcSubStr );
+                  *( pcRet + ( pcSubStr - pcString ) ) = ( char ) hb_charLower( ( HB_UCHAR ) *pcSubStr );
                break;
 
             case DO_TOKEN1_TOKENUPPER:
                if( pcSubStr != pc )     /* letters can be tokenizers, too,
                                            but they should not be uppercase'd */
-                  *( pcRet + ( pcSubStr - pcString ) ) = ( char ) hb_charUpper( ( UCHAR ) *pcSubStr );
+                  *( pcRet + ( pcSubStr - pcString ) ) = ( char ) hb_charUpper( ( HB_UCHAR ) *pcSubStr );
                break;
 
             default:

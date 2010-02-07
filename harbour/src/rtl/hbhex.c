@@ -153,7 +153,7 @@ HB_FUNC( HB_STRTOHEX )
       szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
       do
       {
-         UCHAR uc = ( UCHAR ) *szStr++, ud;
+         HB_UCHAR uc = ( HB_UCHAR ) *szStr++, ud;
          ud = uc >> 4;
          *szPtr++ = ud + ( ud < 10 ? '0' : 'A' - 10 );
          ud = uc & 0x0F;

@@ -138,14 +138,14 @@
 #endif
 
 #if defined( __WATCOMC__ ) && defined( __386__ )
-   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
-   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
+   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
 #elif defined( __DJGPP__ )
    #define HB_PEEK_BYTE(s,o)     _farpeekb( (s), (o) )
    #define HB_POKE_BYTE(s,o,b)   _farpokeb( (s), (o), (b) )
 #else
-   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR FAR * ) MK_FP( (s), (o) ) ) )
-   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR FAR * ) MK_FP( (s), (o) ) ) = (b)
+   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) )
+   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) = (b)
 #endif
 
 static int           s_GtId;
@@ -1359,13 +1359,13 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
 #define HB_BIOS_CAPSLOCK   0x40
 #define HB_BIOS_INSERT     0x80
 
-//   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
-//   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+//   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
+//   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
 
 static int hb_gt_dos_getKbdState( void )
 {
    int iKbdState = 0;
-   UCHAR ucStat;
+   HB_UCHAR ucStat;
 
    ucStat = HB_PEEK_BYTE( 0x0040, 0x0017 );
 
@@ -1382,7 +1382,7 @@ static int hb_gt_dos_getKbdState( void )
 
 static void hb_gt_dos_setKbdState( int iKbdState )
 {
-   UCHAR ucStat = 0;
+   HB_UCHAR ucStat = 0;
 
    ucStat |= ( iKbdState & HB_GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
    ucStat |= ( iKbdState & HB_GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;

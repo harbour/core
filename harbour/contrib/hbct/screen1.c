@@ -176,7 +176,7 @@ HB_FUNC( SCREENMIX )
          i = iCol;
          do
          {
-            if( hb_gtPutChar( iRow, i++, ( UCHAR ) szAttr[ ul ], 0, ( UCHAR ) *szText++ ) != HB_SUCCESS )
+            if( hb_gtPutChar( iRow, i++, ( HB_UCHAR ) szAttr[ ul ], 0, ( HB_UCHAR ) *szText++ ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
@@ -260,7 +260,7 @@ HB_FUNC( SAYSCREEN )
                i = iCol;
             }
             else
-               hb_gtPutChar( iRow, i++, iColor, bAttr, ( UCHAR ) *szText++ );
+               hb_gtPutChar( iRow, i++, iColor, bAttr, ( HB_UCHAR ) *szText++ );
          }
          while( --ulLen );
          hb_gtEndWrite();
@@ -310,7 +310,7 @@ static int hb_ctGetClearChar( int iParam )
    if( HB_ISNUM( iParam ) )
       iChar = hb_parni( iParam );
    else if( HB_ISCHAR( iParam ) )
-      iChar = ( UCHAR ) hb_parc( iParam )[0];
+      iChar = ( HB_UCHAR ) hb_parc( iParam )[0];
    else
       iChar = ( int ) hb_gtGetClearChar();
 
@@ -472,14 +472,14 @@ HB_FUNC( UNTEXTWIN )
       if( HB_ISNUM( 6 ) )
          usInit = ( USHORT ) hb_parni( 6 );
       else if( hb_parclen( 6 ) > 0 )
-         usInit = ( UCHAR ) hb_parc( 6 )[0];
+         usInit = ( HB_UCHAR ) hb_parc( 6 )[0];
       else
          usInit = 176;
 
       if( HB_ISNUM( 7 ) )
          usEnd = ( USHORT ) hb_parni( 7 );
       else if( hb_parclen( 7 ) > 0 )
-         usEnd = ( UCHAR ) hb_parc( 7 )[0];
+         usEnd = ( HB_UCHAR ) hb_parc( 7 )[0];
       else
          usEnd = 223;
 
@@ -559,7 +559,7 @@ HB_FUNC( CHARWIN )
       if( HB_ISNUM( 6 ) )
          usOldChar = ( USHORT ) hb_parni( 6 );
       else if( hb_parclen( 6 ) > 0 )
-         usOldChar = ( UCHAR ) hb_parc( 6 )[0];
+         usOldChar = ( HB_UCHAR ) hb_parc( 6 )[0];
       else
          fAll = HB_TRUE;
 

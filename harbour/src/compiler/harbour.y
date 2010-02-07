@@ -121,14 +121,14 @@ static void hb_compDebugStart( void ) { }
    struct
    {
       HB_LONG  lNumber;    /* to hold a long number returned by lex */
-      UCHAR    bWidth;     /* to hold the width of the value */
+      HB_UCHAR bWidth;     /* to hold the width of the value */
    } valLong;
    struct
    {
       double   dNumber;    /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
-      UCHAR    bWidth;     /* to hold the width of the value */
-      UCHAR    bDec;       /* to hold the number of decimal points in the value */
+      HB_UCHAR bWidth;     /* to hold the width of the value */
+      HB_UCHAR bDec;       /* to hold the number of decimal points in the value */
    } valDouble;
    struct
    {
@@ -1229,7 +1229,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $7->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
-                     HB_COMP_PARAM->pLastDeclared->cType = ( HB_ISUPPER( ( UCHAR ) $7->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( HB_ISUPPER( ( HB_UCHAR ) $7->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -1264,7 +1264,7 @@ DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_C
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $6->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) $6->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( HB_UCHAR ) $6->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -1293,7 +1293,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                      if( ! HB_COMP_PARAM->pLastMethod->pClass )
                      {
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $3->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                        HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) cVarType ) ? 'O' :'o' );
+                        HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( HB_UCHAR ) cVarType ) ? 'O' :'o' );
                      }
                   }
                   else

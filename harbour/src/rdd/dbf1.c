@@ -1826,7 +1826,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          ulLen = pField->uiLen;
          if( hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex ].uiLengthBit ) )
          {
-            ulLen = ( UCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + ulLen - 1 ];
+            ulLen = ( HB_UCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + ulLen - 1 ];
             /* protection against corrupted files */
             if( ulLen > ( ULONG ) pField->uiLen )
                ulLen = pField->uiLen;

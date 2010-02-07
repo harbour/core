@@ -386,7 +386,7 @@ static HB_CRITICAL_NEW( s_hsxMtx );
 #endif
 
 /* the conversion table for ASCII alpha pairs */
-static const UCHAR hb_hsxHashArray[] = {
+static const HB_UCHAR hb_hsxHashArray[] = {
 /*        A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   W   V   X   Y   Z */
 /* A */   7,102,222,185, 19, 48,167,  4,173,  4, 79,251,194,250,  7,187,  7,251,209,249, 41,101, 39, 29, 71, 40,
 /* B */ 156,  3,  7,  7,149,  7,  7,  7,172,  7,  7,100,  7,  7,148,  7,  7,107, 38,  7,126,  7,  7,  7,  7,  7,
@@ -425,8 +425,8 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
       if( iFilter == 3 )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
-         c1 = ( UCHAR ) cdp->upper[ c1 ];
-         c2 = ( UCHAR ) cdp->upper[ c2 ];
+         c1 = ( HB_UCHAR ) cdp->upper[ c1 ];
+         c2 = ( HB_UCHAR ) cdp->upper[ c2 ];
       }
       else
       {
@@ -468,18 +468,18 @@ static void hb_hsxHashStr( const char * pStr, ULONG ulLen, BYTE * pKey, int iKey
 #if 0
 /* This code keeps the strict CFTS behavior which stops string
    manipulating at first chr(0) character */
-   if( pStr && ulLen-- && ( c1 = ( UCHAR ) *pStr++ ) != 0 )
+   if( pStr && ulLen-- && ( c1 = ( HB_UCHAR ) *pStr++ ) != 0 )
    {
-      while( ulLen-- && ( c2 = ( UCHAR ) *pStr++ ) != 0 )
+      while( ulLen-- && ( c2 = ( HB_UCHAR ) *pStr++ ) != 0 )
       {
 #else
    /* This version can work well with embedded 0 characters */
    if( pStr && ulLen-- )
    {
-      c1 = ( UCHAR ) *pStr++;
+      c1 = ( HB_UCHAR ) *pStr++;
       while( ulLen-- )
       {
-         c2 = ( UCHAR ) *pStr++;
+         c2 = ( HB_UCHAR ) *pStr++;
 #endif
          iBitNum = hb_hsxHashVal( c1, c2, iKeyBits, fNoCase, iFilter, fUseHash );
          if( iBitNum-- )
@@ -495,7 +495,7 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
                          HB_BOOL fNoCase, int iFilter )
 {
    HB_BOOL fResult = HB_FALSE;
-   UCHAR c1, c2;
+   HB_UCHAR c1, c2;
    ULONG ul;
 
    if( ulSub == 0 )
@@ -506,15 +506,15 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
       fResult = HB_TRUE;
       for( ul = 0; fResult && ul < ulSub; ul++ )
       {
-         c1 = ( UCHAR ) pSub[ ul ];
-         c2 = ( UCHAR ) pStr[ ul ];
+         c1 = ( HB_UCHAR ) pSub[ ul ];
+         c2 = ( HB_UCHAR ) pStr[ ul ];
          if( fNoCase )
          {
             if( iFilter == 3 )
             {
                PHB_CODEPAGE cdp = hb_vmCDP();
-               c1 = ( UCHAR ) cdp->upper[ c1 ];
-               c2 = ( UCHAR ) cdp->upper[ c2 ];
+               c1 = ( HB_UCHAR ) cdp->upper[ c1 ];
+               c2 = ( HB_UCHAR ) cdp->upper[ c2 ];
             }
             else
             {

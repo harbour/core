@@ -127,13 +127,13 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
          HB_SIZE ulLen = hb_itemGetCLen( pItem );
 
          if( ulLen >= 2
-          && ( ( UCHAR ) szString[ 0 ] == 'O' || ( UCHAR ) szString[ 0 ] == 'o' )
-          && ( ( UCHAR ) szString[ 1 ] == 'N' || ( UCHAR ) szString[ 1 ] == 'n' ) )
+          && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
+          && ( ( HB_UCHAR ) szString[ 1 ] == 'N' || ( HB_UCHAR ) szString[ 1 ] == 'n' ) )
             bLogical = HB_TRUE;
          else if( ulLen >= 3
-          && ( ( UCHAR ) szString[ 0 ] == 'O' || ( UCHAR ) szString[ 0 ] == 'o' )
-          && ( ( UCHAR ) szString[ 1 ] == 'F' || ( UCHAR ) szString[ 1 ] == 'f' )
-          && ( ( UCHAR ) szString[ 2 ] == 'F' || ( UCHAR ) szString[ 2 ] == 'f' ) )
+          && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
+          && ( ( HB_UCHAR ) szString[ 1 ] == 'F' || ( HB_UCHAR ) szString[ 1 ] == 'f' )
+          && ( ( HB_UCHAR ) szString[ 2 ] == 'F' || ( HB_UCHAR ) szString[ 2 ] == 'f' ) )
             bLogical = HB_FALSE;
       }
    }
@@ -418,7 +418,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
       size = strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = HB_TOUPPER( ( UCHAR ) szDateFormat[ count ] );
+         digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 )

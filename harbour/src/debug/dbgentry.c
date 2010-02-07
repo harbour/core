@@ -987,8 +987,8 @@ static PHB_ITEM hb_dbgEvalMacro( const char *szExpr, PHB_ITEM pItem )
 }
 
 
-#define IS_IDENT_START( c ) HB_ISFIRSTIDCHAR( ( UCHAR ) ( c ) )
-#define IS_IDENT_CHAR( c )  HB_ISNEXTIDCHAR( ( UCHAR ) ( c ) )
+#define IS_IDENT_START( c ) HB_ISFIRSTIDCHAR( ( HB_UCHAR ) ( c ) )
+#define IS_IDENT_CHAR( c )  HB_ISNEXTIDCHAR( ( HB_UCHAR ) ( c ) )
 
 static int hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nStart, int nLen )
 {

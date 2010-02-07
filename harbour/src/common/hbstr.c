@@ -136,7 +136,7 @@ char * hb_strupr( char * pszText )
    HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", pszText));
 
    for( pszPos = pszText; *pszPos; pszPos++ )
-      *pszPos = ( char ) HB_TOUPPER( ( UCHAR ) *pszPos );
+      *pszPos = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pszPos );
 
    return pszText;
 }
@@ -148,7 +148,7 @@ char * hb_strlow( char * pszText )
    HB_TRACE(HB_TR_DEBUG, ("hb_strlow(%s)", pszText));
 
    for( pszPos = pszText; *pszPos; pszPos++ )
-      *pszPos = ( char ) HB_TOLOWER( ( UCHAR ) *pszPos );
+      *pszPos = ( char ) HB_TOLOWER( ( HB_UCHAR ) *pszPos );
 
    return pszText;
 }
@@ -847,7 +847,7 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE ulLen )
 
    pDest[ ulLen ] = '\0';
 
-   while( ulLen && ( *pDest++ = ( char ) HB_TOLOWER( ( UCHAR ) *pSource ) ) != '\0' )
+   while( ulLen && ( *pDest++ = ( char ) HB_TOLOWER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
       ulLen--;
       pSource++;
@@ -871,7 +871,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE ulLen )
 
    pDest[ ulLen ] = '\0';
 
-   while( ulLen && ( *pDest++ = ( char ) HB_TOUPPER( ( UCHAR ) *pSource ) ) != '\0' )
+   while( ulLen && ( *pDest++ = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
       ulLen--;
       pSource++;
@@ -902,7 +902,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
       ulSLen--;
 
    while( ulLen && ulSLen &&
-          ( *pDest++ = ( char ) HB_TOUPPER( ( UCHAR ) *pSource ) ) != '\0' )
+          ( *pDest++ = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
       ulSLen--;
       ulLen--;
@@ -1077,9 +1077,9 @@ void hb_strtohex( const char * pSource, HB_SIZE size, char * pDest )
    for( i = 0; i < size; i++ )
    {
       int b;
-      b = ( ( UCHAR ) pSource[ i ] >> 4 ) & 0x0F;
+      b = ( ( HB_UCHAR ) pSource[ i ] >> 4 ) & 0x0F;
       *pDest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
-      b = ( UCHAR ) pSource[ i ] & 0x0F;
+      b = ( HB_UCHAR ) pSource[ i ] & 0x0F;
       *pDest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
    }
 }

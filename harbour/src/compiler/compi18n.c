@@ -228,7 +228,7 @@ static void hb_compI18nEscapeString( FILE* file, const char* szText )
 {
    while( * szText )
    {
-      if( ( UCHAR ) * szText < ' ' )
+      if( ( HB_UCHAR ) * szText < ' ' )
       {
         if( * szText == '\t' )
            fprintf( file, "\\t" );
@@ -236,9 +236,9 @@ static void hb_compI18nEscapeString( FILE* file, const char* szText )
            fprintf( file, "\\n" );
         else if( * szText == '\r' )
            fprintf( file, "\\r" );
-        else if( ( ( UCHAR ) szText[ 1 ] >= '0' && ( UCHAR ) szText[ 1 ] <= '9' ) ||
-                 ( ( UCHAR ) szText[ 1 ] >= 'A' && ( UCHAR ) szText[ 1 ] <= 'F' ) ||
-                 ( ( UCHAR ) szText[ 1 ] >= 'a' && ( UCHAR ) szText[ 1 ] <= 'f' ) )
+        else if( ( ( HB_UCHAR ) szText[ 1 ] >= '0' && ( HB_UCHAR ) szText[ 1 ] <= '9' ) ||
+                 ( ( HB_UCHAR ) szText[ 1 ] >= 'A' && ( HB_UCHAR ) szText[ 1 ] <= 'F' ) ||
+                 ( ( HB_UCHAR ) szText[ 1 ] >= 'a' && ( HB_UCHAR ) szText[ 1 ] <= 'f' ) )
            fprintf( file, "\\%03o", * szText );
         else
            fprintf( file, "\\x%02X", * szText );

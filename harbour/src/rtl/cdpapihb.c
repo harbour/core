@@ -76,7 +76,7 @@ static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE ulLen, HB_SIZE ulUTF8Pos )
 
       for( ul = ul2 = 0; ul < ulLen; ++ul )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( UCHAR ) szUTF8[ ul ], &n, &uc ) )
+         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szUTF8[ ul ], &n, &uc ) )
          {
             if( n == 0 )
             {

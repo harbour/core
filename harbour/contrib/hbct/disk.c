@@ -94,7 +94,7 @@ HB_FUNC( DIRNAME )
 
    if( pszDrive )
    {
-      UCHAR uc = ( UCHAR ) *pszDrive;
+      HB_UCHAR uc = ( HB_UCHAR ) *pszDrive;
       /* some network drivers (f.e. NETX from Novell NetWare) allow
        * to create drives after 'Z' letter.
        */

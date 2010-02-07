@@ -2097,7 +2097,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
          {
             if( *szFirst != *szSecond )
             {
-               iRet = ( ( UCHAR ) *szFirst < ( UCHAR ) *szSecond ) ? -1 : 1;
+               iRet = ( ( HB_UCHAR ) *szFirst < ( HB_UCHAR ) *szSecond ) ? -1 : 1;
                break;
             }
             szFirst++;
@@ -2174,8 +2174,8 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
       {
          do
          {
-            int i1 = HB_TOUPPER( ( UCHAR ) *szFirst );
-            int i2 = HB_TOUPPER( ( UCHAR ) *szSecond );
+            int i1 = HB_TOUPPER( ( HB_UCHAR ) *szFirst );
+            int i2 = HB_TOUPPER( ( HB_UCHAR ) *szSecond );
             if( i1 != i2 )
             {
                iRet = ( i1 < i2 ) ? -1 : 1;
@@ -2603,7 +2603,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
          buffer[ --size ] = '\0';
          do
          {
-            UCHAR uc = ( UCHAR ) ( addr & 0xf );
+            HB_UCHAR uc = ( HB_UCHAR ) ( addr & 0xf );
             buffer[ --size ] = ( char ) ( uc + ( uc < 10 ? '0' : 'A' - 10 ) );
             addr >>= 4;
          }

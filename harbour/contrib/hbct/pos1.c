@@ -125,11 +125,11 @@ static void do_pos1( int iSwitch )
          switch ( iSwitch )
          {
             case DO_POS1_POSALPHA:
-               iDoRet = hb_charIsAlpha( ( UCHAR ) *puc );
+               iDoRet = hb_charIsAlpha( ( HB_UCHAR ) *puc );
                break;
 
             case DO_POS1_POSLOWER:
-               iDoRet = hb_charIsLower( ( UCHAR ) *puc );
+               iDoRet = hb_charIsLower( ( HB_UCHAR ) *puc );
                break;
 
             case DO_POS1_POSRANGE:
@@ -137,7 +137,7 @@ static void do_pos1( int iSwitch )
                break;
 
             case DO_POS1_POSUPPER:
-               iDoRet = hb_charIsUpper( ( UCHAR ) *puc );
+               iDoRet = hb_charIsUpper( ( HB_UCHAR ) *puc );
                break;
          }
 
