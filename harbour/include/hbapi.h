@@ -442,7 +442,7 @@ typedef struct _HB_CODEBLOCK
    PHB_ITEM    pLocals;      /* table with referenced local variables */
    void *      pStatics;     /* STATICs base frame */
    USHORT      uiLocals;     /* number of referenced local variables */
-   SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
+   HB_SHORT    dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );

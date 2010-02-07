@@ -192,11 +192,11 @@ typedef struct _HB_LZSSX_COMPR
 
    HB_UCHAR   ring_buffer[ RBUFLENGTH + MAXLENGTH - 1 ];
 
-   SHORT      match_offset;
-   SHORT      match_length;
-   SHORT      parent[ RBUFLENGTH + 1 ];
-   SHORT      left  [ RBUFLENGTH + 1 ];
-   SHORT      right [ RBUFLENGTH + 257 ];
+   HB_SHORT   match_offset;
+   HB_SHORT   match_length;
+   HB_SHORT   parent[ RBUFLENGTH + 1 ];
+   HB_SHORT   left  [ RBUFLENGTH + 1 ];
+   HB_SHORT   right [ RBUFLENGTH + 257 ];
 }
 HB_LZSSX_COMPR;
 typedef HB_LZSSX_COMPR * PHB_LZSSX_COMPR;

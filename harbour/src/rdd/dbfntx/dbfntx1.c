@@ -197,47 +197,47 @@ static void hb_ntxSetKeyCount( LPPAGEINFO pPage, USHORT uiKeys )
    HB_PUT_LE_UINT16( ptr, uiKeys );
 }
 
-static USHORT hb_ntxGetKeyOffset( LPPAGEINFO pPage, SHORT iKey )
+static USHORT hb_ntxGetKeyOffset( LPPAGEINFO pPage, HB_SHORT iKey )
 {
    char * ptr = hb_ntxPageBuffer( pPage ) + 2 + ( iKey << 1 );
    return HB_GET_LE_UINT16( ptr );
 }
 
-static void hb_ntxSetKeyOffset( LPPAGEINFO pPage, SHORT iKey, USHORT uiOffset )
+static void hb_ntxSetKeyOffset( LPPAGEINFO pPage, HB_SHORT iKey, USHORT uiOffset )
 {
    char * ptr = hb_ntxPageBuffer( pPage ) + 2 + ( iKey << 1 );
    HB_PUT_LE_UINT16( ptr, uiOffset );
 }
 
-static char * hb_ntxGetKeyPtr( LPPAGEINFO pPage, SHORT iKey )
+static char * hb_ntxGetKeyPtr( LPPAGEINFO pPage, HB_SHORT iKey )
 {
    return hb_ntxPageBuffer( pPage ) + hb_ntxGetKeyOffset( pPage, iKey );
 }
 
-static ULONG hb_ntxGetKeyPage( LPPAGEINFO pPage, SHORT iKey )
+static ULONG hb_ntxGetKeyPage( LPPAGEINFO pPage, HB_SHORT iKey )
 {
    char * ptr = hb_ntxGetKeyPtr( pPage, iKey );
    return HB_GET_LE_UINT32( ptr );
 }
 
-static void hb_ntxSetKeyPage( LPPAGEINFO pPage, SHORT iKey, ULONG ulPage )
+static void hb_ntxSetKeyPage( LPPAGEINFO pPage, HB_SHORT iKey, ULONG ulPage )
 {
    char * ptr = hb_ntxGetKeyPtr( pPage, iKey );
    HB_PUT_LE_UINT32( ptr, ulPage );
 }
 
-static char * hb_ntxGetKeyVal( LPPAGEINFO pPage, SHORT iKey )
+static char * hb_ntxGetKeyVal( LPPAGEINFO pPage, HB_SHORT iKey )
 {
    return hb_ntxGetKeyPtr( pPage, iKey ) + 8;
 }
 
-static void hb_ntxSetKeyRec( LPPAGEINFO pPage, SHORT iKey, ULONG ulRec )
+static void hb_ntxSetKeyRec( LPPAGEINFO pPage, HB_SHORT iKey, ULONG ulRec )
 {
    char * ptr = hb_ntxGetKeyPtr( pPage, iKey ) + 4;
    HB_PUT_LE_UINT32( ptr, ulRec );
 }
 
-static ULONG hb_ntxGetKeyRec( LPPAGEINFO pPage, SHORT iKey )
+static ULONG hb_ntxGetKeyRec( LPPAGEINFO pPage, HB_SHORT iKey )
 {
    char * ptr = hb_ntxGetKeyPtr( pPage, iKey ) + 4;
    return HB_GET_LE_UINT32( ptr );
@@ -2479,10 +2479,10 @@ static HB_BOOL hb_ntxTagPrevKey( LPTAGINFO pTag )
  * find a key value in page
  */
 static int hb_ntxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
-                              char* key, SHORT keylen, HB_BOOL fNext,
+                              char* key, HB_SHORT keylen, HB_BOOL fNext,
                               ULONG ulRecNo, HB_BOOL *fStop )
 {
-   SHORT iLast = -1, iBegin = 0, iEnd = pPage->uiKeys - 1, k, i;
+   HB_SHORT iLast = -1, iBegin = 0, iEnd = pPage->uiKeys - 1, k, i;
 
    *fStop = HB_FALSE;
    while( iBegin <= iEnd )
@@ -6523,7 +6523,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          }
       }
       pTag = hb_ntxTagNew( pIndex, szTagName, fTagName,
-                           szKey, pKeyExp, bType, (USHORT) iLen, (USHORT) iDec,
+                           szKey, pKeyExp, bType, ( USHORT ) iLen, ( USHORT ) iDec,
                            szFor, pForExp,
                            fAscend, pOrderInfo->fUnique, fCustom, pData->fSortRecNo );
       pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && !pArea->dbfarea.area.lpdbOrdCondInfo->fAll );

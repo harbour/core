@@ -368,7 +368,7 @@ typedef KEYINFO * LPKEYINFO;
 typedef struct _TREE_STACK
 {
    ULONG    page;
-   SHORT    ikey;
+   HB_SHORT ikey;
    HB_UCHAR * value;
 }  TREE_STACK;
 typedef TREE_STACK * LPTREESTACK;

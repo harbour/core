@@ -340,8 +340,8 @@ static CDXDBGTIME hb_cdxGetTime()
 #ifdef HB_CDX_DBGUPDT
 static ULONG cdxWriteNO = 0;
 static ULONG cdxReadNO = 0;
-static SHORT cdxStackSize = 0;
-static SHORT cdxTmpStackSize = 0;
+static HB_SHORT cdxStackSize = 0;
+static HB_SHORT cdxTmpStackSize = 0;
 #endif
 
 /*
@@ -1712,7 +1712,7 @@ static ULONG hb_cdxPageGetKeyPage( LPCDXPAGE pPage, int iKey )
 /*
  * get number of duplicated keys from key in leaf index page
  */
-static SHORT hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, SHORT iKey )
+static HB_SHORT hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
 {
 #ifdef HB_CDX_DBGCODE_EXT
    if( iKey < 0 || iKey >= pPage->iKeys )

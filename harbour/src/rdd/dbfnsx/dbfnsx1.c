@@ -2696,7 +2696,7 @@ static HB_BOOL hb_nsxTagPrevKey( LPTAGINFO pTag )
  * find a key value in page
  */
 static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
-                              HB_UCHAR * key, SHORT keylen, int mode,
+                              HB_UCHAR * key, HB_SHORT keylen, int mode,
                               HB_BOOL fLast, ULONG ulRecNo, HB_BOOL *fStop )
 {
    int iBegin, iEnd, iLast, k, i;

@@ -282,12 +282,12 @@ typedef struct _CDXPAGE
       CDXINTNODE intNode;
    } node;
    BYTE     bufKeyVal[ CDX_MAXKEY ];      /* buffer for leaf key val or added branch key */
-   SHORT    bufKeyNum;                    /* do not change these vars' order             */
-   SHORT    bufKeyPos;                    /* they have to be just after the node         */
-   SHORT    bufKeyLen;                    /* and maybe temporary overwriten when adding  */
-   SHORT    iFree;                        /* new key to interior node record.            */
+   HB_SHORT bufKeyNum;                    /* do not change these vars' order             */
+   HB_SHORT bufKeyPos;                    /* they have to be just after the node         */
+   HB_SHORT bufKeyLen;                    /* and maybe temporary overwriten when adding  */
+   HB_SHORT iFree;                        /* new key to interior node record.            */
    BYTE *   pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
-   /* SHORT    iKeyInBuf; */
+   /* HB_SHORT iKeyInBuf; */
 
    struct _CDXPAGE * Owner;
    struct _CDXPAGE * Child;

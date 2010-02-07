@@ -990,7 +990,7 @@ void hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock )
    }
    else
    {
-      SHORT iCount;
+      HB_SHORT iCount;
 
       for( iCount = 9; iCount >= 0; iCount-- )
       {
@@ -1111,7 +1111,7 @@ HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
       }
       else
       {
-         SHORT iCount;
+         HB_SHORT iCount;
 
          for( iCount = 9; iCount >= 0; iCount-- )
          {

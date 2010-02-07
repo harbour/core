@@ -732,7 +732,7 @@ typedef HB_U32              HB_FATTR;
 #define HB_UHBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 24 ) & 0xFF ) )
 #define HB_LOWORD( l )          ( ( HB_U16 ) ( l ) )
 #define HB_HIWORD( l )          ( ( HB_U16 ) ( ( ( l ) >> 16 ) & 0xFFFF ) )
-#define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( HB_I16 ) ( hi ) ) << 8 ) | ( lo ) )
+#define HB_MKSHORT( lo, hi )    ( ( HB_SHORT ) ( ( ( HB_I16 ) ( hi ) ) << 8 ) | ( lo ) )
 #define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( HB_U16 ) ( hi ) ) << 8 ) | ( lo ) )
 #define HB_MKLONG( b1, b2, b3, b4 )  ( ( LONG ) \
                                        ( ( ( ( HB_I32 ) ( b4 ) ) << 24 ) | \
@@ -1443,7 +1443,7 @@ typedef HB_U32              HB_FATTR;
 #define HB_GET_LE_INT32( p )        (( HB_I32 ) HB_GET_LE_UINT32( p ))
 #define HB_GET_LE_INT64( p )        (( HB_I64 ) HB_GET_LE_UINT64( p ))
 
-#define HB_PCODE_MKSHORT( p )       (( SHORT )        HB_GET_LE_INT16( p ))
+#define HB_PCODE_MKSHORT( p )       (( HB_SHORT )     HB_GET_LE_INT16( p ))
 #define HB_PCODE_MKUSHORT( p )      (( USHORT )       HB_GET_LE_UINT16( p ))
 #define HB_PCODE_MKLONG( p )        (( LONG )         HB_GET_LE_INT32( p ))
 #define HB_PCODE_MKULONG( p )       (( ULONG )        HB_GET_LE_UINT32( p ))
@@ -1618,7 +1618,7 @@ HB_EXTERN_BEGIN
    typedef PHB_FUNC HB_FUNC_PTR;
 HB_EXTERN_END
 
-typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
+typedef HB_SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
 typedef unsigned char HB_ATTR;
 typedef int           HB_COLOR;

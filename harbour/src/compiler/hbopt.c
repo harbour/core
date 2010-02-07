@@ -62,7 +62,7 @@ typedef HB_OPT_FUNC_ * HB_OPT_FUNC_PTR;
 static HB_OPT_FUNC( hb_p_poplocal )
 {
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
+   HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -78,7 +78,7 @@ static HB_OPT_FUNC( hb_p_poplocal )
 static HB_OPT_FUNC( hb_p_pushlocal )
 {
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
+   HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -137,7 +137,7 @@ static HB_OPT_FUNC( hb_p_pushlocalnear )
 static HB_OPT_FUNC( hb_p_localaddint )
 {
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
+   HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -951,7 +951,7 @@ void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
 
 typedef struct
 {
-  SHORT    isNumber;
+  HB_SHORT isNumber;
   BYTE     bFlags;
 } HB_OPT_LOCAL, * PHB_OPT_LOCAL;
 
@@ -973,7 +973,7 @@ static HB_BOOL hb_compIsUncondJump( BYTE bPCode )
 }
 
 /*
-static SHORT hb_compIsLocalOp( BYTE bCode )
+static HB_SHORT hb_compIsLocalOp( BYTE bCode )
 {
    return bCode == HB_P_POPLOCAL ||
           bCode == HB_P_POPLOCALNEAR ||
@@ -988,7 +988,7 @@ static SHORT hb_compIsLocalOp( BYTE bCode )
 }
 */
 
-static SHORT hb_compLocalGetNumber( BYTE* pCode )
+static HB_SHORT hb_compLocalGetNumber( BYTE* pCode )
 {
    switch( *pCode )
    {
@@ -1041,9 +1041,9 @@ static LONG hb_compJumpGetOffset( BYTE * pCode )
 
 static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   ULONG   ulPos = 0, ulLastPos = 0;
-   SHORT   isVar = 0;
-   HB_BOOL fWasJump = 0;
+   ULONG    ulPos = 0, ulLastPos = 0;
+   HB_SHORT isVar = 0;
+   HB_BOOL  fWasJump = 0;
 
    while( ulPos < pFunc->lPCodePos )
    {
@@ -1195,7 +1195,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 }
 
 
-static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, SHORT isLocal )
+static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 {
    ULONG   ulPos = 0, ulLastPos = 0;
 
@@ -1247,7 +1247,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, SHORT isLocal )
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE * pMap, SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE * pMap, HB_SHORT isLocal )
 {
    for( ;; )
    {
@@ -1323,10 +1323,10 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
 
 static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   BYTE *  pMap;
-   ULONG   ulPos = 0, ulLastPos = 0;
-   SHORT   isLocal;
-   USHORT  usLine = 0;
+   BYTE *   pMap;
+   ULONG    ulPos = 0, ulLastPos = 0;
+   HB_SHORT isLocal;
+   USHORT   usLine = 0;
 
    pMap = ( BYTE * ) hb_xgrab( pFunc->lPCodePos );
 
@@ -1398,8 +1398,8 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
       if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > pFunc->wParamCount )
       {
-         PVAR    pVar = pFunc->pLocals;
-         SHORT   is;
+         PVAR     pVar = pFunc->pLocals;
+         HB_SHORT is;
 
          for( is = 1; is < isLocal; is++ )
             pVar = pVar->pNext;
@@ -1455,8 +1455,8 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
          {
-            BYTE *  pVar = &pFunc->pCode[ ulPos + 1 ];
-            SHORT   isVar = ( signed char ) pVar[ 0 ];
+            BYTE *   pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_SHORT isVar = ( signed char ) pVar[ 0 ];
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
             {
@@ -1483,8 +1483,8 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_LOCALINC:
          case HB_P_LOCALINCPUSH:
          {
-            BYTE *  pVar = &pFunc->pCode[ ulPos + 1 ];
-            SHORT   isVar = HB_PCODE_MKSHORT( pVar );
+            BYTE *   pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_SHORT isVar = HB_PCODE_MKSHORT( pVar );
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
             {

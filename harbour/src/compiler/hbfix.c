@@ -117,7 +117,7 @@ static HB_FIX_FUNC( hb_p_pushblocklarge )
 static HB_FIX_FUNC( hb_p_localfix )
 {
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
+   HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
 

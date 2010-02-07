@@ -900,7 +900,7 @@ static HB_ERRCODE hb_usrSysName( AREAP pArea, char * szSysName )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    hb_strncpy( ( char * ) szSysName, hb_itemGetCPtr( hb_stackItemFromBase( lOffset ) ),
@@ -965,7 +965,7 @@ static HB_ERRCODE hb_usrBof( AREAP pArea, HB_BOOL * pBof )
       return SUPER_BOF( pArea, pBof );
    }
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    if( hb_xvmPopLogical( pBof ) )
@@ -992,7 +992,7 @@ static HB_ERRCODE hb_usrEof( AREAP pArea, HB_BOOL * pEof )
       return SUPER_EOF( pArea, pEof );
    }
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    if( hb_xvmPopLogical( pEof ) )
@@ -1019,7 +1019,7 @@ static HB_ERRCODE hb_usrFound( AREAP pArea, HB_BOOL * pFound )
       return SUPER_FOUND( pArea, pFound );
    }
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    if( hb_xvmPopLogical( pFound ) )
@@ -1163,7 +1163,7 @@ static HB_ERRCODE hb_usrDeleted( AREAP pArea, HB_BOOL * pDeleted )
       return SUPER_DELETED( pArea, pDeleted );
    }
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    if( hb_xvmPopLogical( pDeleted ) )
@@ -1229,7 +1229,7 @@ static HB_ERRCODE hb_usrFieldName( AREAP pArea, USHORT uiIndex, char * szName )
 
    hb_vmPushInteger( pArea->uiArea );
    hb_vmPushInteger( uiIndex );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 3 );
 
    hb_strncpy( ( char * ) szName, hb_itemGetCPtr( hb_stackItemFromBase( lOffset ) ),
@@ -1294,7 +1294,7 @@ static HB_ERRCODE hb_usrFieldCount( AREAP pArea, USHORT * puiFields )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    * puiFields = hb_itemGetNI( hb_stackItemFromBase( lOffset ) );
@@ -1372,7 +1372,7 @@ static HB_ERRCODE hb_usrGetRec( AREAP pArea, BYTE ** pBuffer )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    pItem = hb_stackItemFromBase( lOffset );
@@ -1431,7 +1431,7 @@ static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, USHORT uiIndex, ULONG * pulLengt
 
    hb_vmPushInteger( pArea->uiArea );
    hb_vmPushInteger( uiIndex );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 3 );
 
    * pulLength = hb_itemGetNL( hb_stackItemFromBase( lOffset ) );
@@ -1455,7 +1455,7 @@ static HB_ERRCODE hb_usrRecCount( AREAP pArea, ULONG * pulRecCount )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    * pulRecCount = hb_itemGetNL( hb_stackItemFromBase( lOffset ) );
@@ -1495,7 +1495,7 @@ static HB_ERRCODE hb_usrRecNo( AREAP pArea, ULONG * pulRecNo )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    * pulRecNo = hb_itemGetNL( hb_stackItemFromBase( lOffset ) );
@@ -1582,7 +1582,7 @@ static HB_ERRCODE hb_usrAlias( AREAP pArea, char * szAlias )
    }
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
    hb_strncpy( ( char * ) szAlias, hb_itemGetCPtr( hb_stackItemFromBase( lOffset ) ),
@@ -1706,7 +1706,7 @@ static HB_ERRCODE hb_usrPackRec( AREAP pArea, ULONG ulRecNo, HB_BOOL * pWritten 
 
    hb_vmPushInteger( pArea->uiArea );
    hb_vmPushLong( ulRecNo );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 3 );
 
    if( hb_xvmPopLogical( pWritten ) )
@@ -1904,7 +1904,7 @@ static HB_ERRCODE hb_usrRelArea( AREAP pArea, USHORT uiRelNo, USHORT * puiRelAre
 
    hb_vmPushInteger( pArea->uiArea );
    hb_vmPushInteger( uiRelNo );
-   hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+   hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 3 );
 
    * puiRelArea = hb_itemGetNI( hb_stackItemFromBase( lOffset ) );

@@ -8988,21 +8988,21 @@ void hb_xvmParameter( PHB_SYMB pSymbol, int iParams )
    hb_memvarNewParameter( pSymbol, hb_stackItemFromBase( iParams ) );
 }
 
-void hb_xvmPushLocal( SHORT iLocal )
+void hb_xvmPushLocal( HB_SHORT iLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushLocal(%hd)", iLocal));
 
    hb_vmPushLocal( iLocal );
 }
 
-void hb_xvmPushLocalByRef( SHORT iLocal )
+void hb_xvmPushLocalByRef( HB_SHORT iLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushLocalByRef(%hd)", iLocal));
 
    hb_vmPushLocalByRef( iLocal );
 }
 
-void hb_xvmPopLocal( SHORT iLocal )
+void hb_xvmPopLocal( HB_SHORT iLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPopLocal(%hd)", iLocal));
 
