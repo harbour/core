@@ -591,6 +591,45 @@ typedef unsigned long HB_COUNTER;
 #  define HB_COUNTER_SIZE     8
 #endif
 
+/* New Harbour types */
+
+/*
+  ANSI C types:
+     void,
+     [ [un]signed ] char, [ [un]signed ] short, [ [un]signed ] int,
+     [ [un]signed ] long, double
+*/
+
+/* TODO: Remove dependence on old types */
+/* TODO: Solve HB_LONG/HB_ULONG. It currently means something else that it would later. */
+
+/* Harbour overloaded types: */
+
+#define HB_FALSE 0
+#define HB_TRUE  (!0)
+
+typedef int                 HB_BOOL;
+typedef unsigned char       HB_BYTE;
+typedef char                HB_CHAR;
+typedef signed char         HB_SCHAR;
+typedef unsigned char       HB_UCHAR;
+typedef short               HB_SHORT;
+typedef unsigned short      HB_USHORT;
+typedef int                 HB_INT;
+typedef unsigned int        HB_UINT;
+#if !defined( HB_LONG_LONG_OFF )
+   typedef LONGLONG            HB_LONGLONG;
+   typedef ULONGLONG           HB_ULONGLONG;
+#endif
+typedef double              HB_DOUBLE;
+typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
+typedef long                HB_ISIZ;           /* TOFIX: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
+typedef void *              HB_PTRVAL;         /* TOFIX */
+/* typedef                     HB_POINTER;    */    /* TOFIX */
+
+
+typedef HB_U32              HB_FATTR;
+
 /* type for memory pointer diff */
 #if defined( HB_OS_WIN_64 )
    typedef HB_LONGLONG HB_PTRDIFF;
@@ -684,51 +723,6 @@ typedef unsigned long HB_COUNTER;
 #  endif
 
 #endif
-
-
-/* New Harbour types (Planning stage) */
-
-/*
-  ANSI C types:
-     void,
-     [ [un]signed ] char, [ [un]signed ] short, [ [un]signed ] int,
-     [ [un]signed ] long, double
-*/
-
-/* TODO: Remove dependence on old types */
-/* TODO: Solve HB_LONG/HB_ULONG. It currently means something else that it would later. */
-
-/* Harbour overloaded types: */
-
-#define HB_FALSE 0
-#define HB_TRUE  (!0)
-
-typedef int                 HB_BOOL;
-typedef unsigned char       HB_BYTE;
-typedef char                HB_CHAR;
-typedef signed char         HB_SCHAR;
-typedef unsigned char       HB_UCHAR;
-typedef short               HB_SHORT;
-typedef unsigned short      HB_USHORT;
-typedef int                 HB_INT;
-typedef unsigned int        HB_UINT;
-/* typedef long                HB_LONG;  */ /* TOFIX: need to deprecate current usage first */
-/* typedef unsigned long       HB_ULONG; */ /* TOFIX: need to deprecate current usage first */
-#if !defined( HB_LONG_LONG_OFF )
-   typedef LONGLONG            HB_LONGLONG;
-   typedef ULONGLONG           HB_ULONGLONG;
-#endif
-typedef double              HB_DOUBLE;
-typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
-typedef long                HB_ISIZ;           /* TOFIX: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
-typedef void *              HB_PTRVAL;         /* TOFIX */
-/* typedef                     HB_POINTER;    */    /* TOFIX */
-
-typedef HB_U32              HB_FATTR;
-
-/* Harbour strict bit types: */
-typedef signed char         HB_I8;
-typedef unsigned char       HB_U8;
 
 #define HB_MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #define HB_MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
