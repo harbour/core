@@ -488,6 +488,8 @@
 
 #if defined( __GNUC__ ) && ( __GNUC__ - 0 >= 3 )
 
+   #define HB_DEPRECATED __attribute__ (( __deprecated__ ))
+
    #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
                      __attribute__ (( format (printf, _nStr, _nParam)))
    #define HB_MALLOC_ATTR \
@@ -524,6 +526,7 @@
    #define HB_RESTRICT  __restrict
 
 #else
+   #define HB_DEPRECATED
    #define HB_PRINTF_FORMAT( _nStr, _nParam )
    #define HB_MALLOC_ATTR
    #define HB_NORETURN_ATTR

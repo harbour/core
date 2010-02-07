@@ -404,19 +404,15 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
 
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
          {
-            ULONG ulSizeTmp;
-
             /* Read name of function */
             pDynFunc[ ul ].szName = hb_hrbReadId( szHrbBody, ulBodySize, &ulBodyOffset );
             if( pDynFunc[ ul ].szName == NULL )
                break;
 
             /* Read size of function */
-            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulSizeTmp ) ||
+            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulSize ) ||
                 ulBodyOffset + ulSize > ulBodySize )
                break;
-
-            ulSize = ( HB_SIZE ) ulSizeTmp;
 
             /* Copy function body */
             pDynFunc[ ul ].pCode = ( BYTE * ) hb_xgrab( ulSize );
