@@ -251,7 +251,7 @@ HB_FUNC( HB_READLINE )
    }
 
    ulTextLen = hb_parclen(1);
-   uiTabLen  = (USHORT) hb_parclen(4);
+   uiTabLen  = ( USHORT ) hb_parclen(4);
 
    if( HB_ISNUM( 6 ) )
    {

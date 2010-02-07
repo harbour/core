@@ -135,8 +135,8 @@ HB_EXTERN_BEGIN
 #define CURKEY_REFRESH(pTag)
 */
 
-#define HB_CDXMAXKEY( x )     ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
-#define HB_CDXBITMASK( x )    ((LONG) ((1L<<(x))-1))
+#define HB_CDXMAXKEY( x )     ( ( USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
+#define HB_CDXBITMASK( x )    ( ( LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 #define FAST_GOCOLD( A )      SELF_GOCOLD(A)
 

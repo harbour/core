@@ -192,11 +192,11 @@ static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, BYTE bType, USHORT uiL
    {
       case 'C':
          ul = hb_itemGetCLen( pItem );
-         if( ul > (ULONG) uiLen )
+         if( ul > ( ULONG ) uiLen )
             ul = uiLen;
          memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
-         if( ul < (ULONG) uiLen )
-            memset( pKey->val + ul, ' ', (ULONG) uiLen - ul );
+         if( ul < ( ULONG ) uiLen )
+            memset( pKey->val + ul, ' ', ( ULONG ) uiLen - ul );
          break;
 
       case 'N':
@@ -649,7 +649,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
       return SUPER_SEEK( ( AREAP ) pArea, bSoftSeek, pKey, bFindLast );
 
    /* TODO: pKey type validation, EG_DATATYPE runtime error */
-   pMixKey = mixKeyNew( pKey, bFindLast ? (ULONG) (-1) : 0, pArea->pTagCurrent->bType,
+   pMixKey = mixKeyNew( pKey, bFindLast ? ( ULONG ) ( -1 ) : 0, pArea->pTagCurrent->bType,
                         pArea->pTagCurrent->uiLen );
 
    /* reset any pending relations - I hope ACE make the same and the problem
@@ -724,8 +724,8 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, LONG lToSkip )
       pKey = mixKeyEval( pArea->pTagCurrent, pArea );
 
       if( mixFindKey( pArea->pTagCurrent, pKey, &ulKeyPos ) &&
-           pArea->pTagCurrent->ulRecCount > (ULONG) lToSkip &&
-           ulKeyPos < pArea->pTagCurrent->ulRecCount - (ULONG) lToSkip )
+           pArea->pTagCurrent->ulRecCount > ( ULONG ) lToSkip &&
+           ulKeyPos < pArea->pTagCurrent->ulRecCount - ( ULONG ) lToSkip )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
@@ -756,8 +756,8 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, LONG lToSkip )
       pKey = mixKeyEval( pArea->pTagCurrent, pArea );
 
       if( mixFindKey( pArea->pTagCurrent, pKey, &ulKeyPos ) &&
-           pArea->pTagCurrent->ulRecCount >= (ULONG) (-lToSkip) &&
-           ulKeyPos >= (ULONG) (-lToSkip) )
+           pArea->pTagCurrent->ulRecCount >= ( ULONG ) ( -lToSkip ) &&
+           ulKeyPos >= ( ULONG ) ( -lToSkip ) )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
@@ -946,7 +946,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       case HB_IT_STRING:
       case HB_IT_STRING | HB_IT_MEMO:
          bType = 'C';
-         uiLen = (USHORT) hb_itemGetCLen( pResult );
+         uiLen = ( USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )  uiLen = MIX_MAXKEYLEN;
          break;
 
@@ -1201,7 +1201,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO 
          {
             ULONG      ulPos;
 
-            ulPos = (ULONG) ( hb_itemGetND( pOrderInfo->itmNewVal ) * (double) pTag->ulRecCount );
+            ulPos = ( ULONG ) ( hb_itemGetND( pOrderInfo->itmNewVal ) * (double) pTag->ulRecCount );
 
             if( ulPos > 0 && ulPos <= pTag->ulRecCount )
                SELF_GOTO( ( AREAP ) pArea, pTag->pKeys[ ulPos - 1 ]->rec );

@@ -177,7 +177,7 @@ void nxs_partial_scramble(
    {
       cipher[ pos + scramble[ kpos ] ] = source[ pos + kpos ];
       kpos++;
-      if ( kpos >= (USHORT) keylen )
+      if ( kpos >= ( USHORT ) keylen )
       {
          kpos = 0;
          pos += keylen;
@@ -231,7 +231,7 @@ void nxs_partial_unscramble(
    {
       buf[ kpos ] = cipher[ pos + scramble[ kpos ]  ];
       kpos++;
-      if ( kpos >= (USHORT) keylen )
+      if ( kpos >= ( USHORT ) keylen )
       {
          memcpy( cipher + pos, buf, keylen );
          kpos = 0;
@@ -256,7 +256,7 @@ void nxs_xorcode(
    {
       cipher[pos] <<= 3;
 
-      if (keypos == (USHORT) keylen-1 || pos == cipherlen -1 )
+      if (keypos == ( USHORT ) keylen-1 || pos == cipherlen -1 )
       {
          cipher[pos] |= c_bitrest;
       }
@@ -269,7 +269,7 @@ void nxs_xorcode(
       keypos ++;
       pos++;
 
-      if (keypos == (USHORT) keylen )
+      if (keypos == ( USHORT ) keylen )
       {
          keypos = 0;
          c_bitrest = cipher[ pos ] >>5;
@@ -304,7 +304,7 @@ void nxs_xordecode(
       keypos ++;
       pos ++;
 
-      if (keypos == (USHORT) keylen )
+      if (keypos == ( USHORT ) keylen )
       {
          keypos = 0;
          /* last block */

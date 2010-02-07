@@ -2493,7 +2493,7 @@ static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, BYTE color, U
 
 static ULONG hb_gt_xwc_HashCurrChar( BYTE attr, BYTE color, USHORT chr )
 {
-   return ((ULONG)attr<<24)|((ULONG)color<<16)|(ULONG)chr;
+   return ( ( ULONG ) attr << 24 ) | ( ( ULONG ) color << 16 ) | ( ULONG ) chr;
 }
 
 /* *********************************************************************** */
@@ -2502,7 +2502,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 {
    USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
    BYTE oldColor = 0, color, attr;
-   USHORT usCh16, usChBuf[XWC_MAX_COLS];
+   USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    ULONG ulCurr = 0xFFFFFFFFL;
    int i, iColor;
    XWC_CharTrans * chTrans;

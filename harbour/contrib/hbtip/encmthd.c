@@ -59,8 +59,8 @@
 
 HB_FUNC( TIPENCODERBASE64_ENCODE )
 {
-   const char *cData = hb_parc( 1 );
-   char *cRet;
+   const char * cData = hb_parc( 1 );
+   char * cRet;
    int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0;
    int nPosBlock = 0, nLineCount = 0;
@@ -93,14 +93,14 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       bExcept = hb_parl( -1 );
    }
    /* we know exactly the renturned length. */
-   nFinalLen = (ULONG) ((nLen / 3 + 2) * 4);
+   nFinalLen = ( ULONG ) ( ( nLen / 3 + 2 ) * 4 );
    /* add line termination padding, CRLF each 76 output bytes */
-   nFinalLen += (nFinalLen / 72 +1) * 2;
+   nFinalLen += ( nFinalLen / 72 + 1 ) * 2;
    cRet = ( char * ) hb_xgrab( nFinalLen );
 
    while( nPos < nLen )
    {
-      cElem = (unsigned char) cData[ nPos ];
+      cElem = ( unsigned char ) cData[ nPos ];
       /* NOT using trailing 0 here as some buggy 3dparty func
          will create strings without trailing 0. */
 
@@ -112,13 +112,13 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
             cElem = cElem >> 2;
             break;
          case 2:
-            cElem1 = nPos < nLen -1 ? (unsigned char) cData[ nPos + 1] : 0;
-            cElem = ((cElem & 0x3) << 4) | (cElem1 >> 4);
+            cElem1 = nPos < nLen -1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem = ( ( cElem & 0x3 ) << 4 ) | ( cElem1 >> 4 );
             nPos++;
             break;
          case 3:
-            cElem1 = nPos < nLen -1 ? (unsigned char) cData[ nPos + 1] : 0;
-            cElem = ((cElem & 0xF) << 2) | (cElem1 >> 6);
+            cElem1 = nPos < nLen -1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem = ( ( cElem & 0xF ) << 2 ) | ( cElem1 >> 6 );
             nPos++;
             break;
          case 4:
@@ -130,23 +130,23 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
       if( cElem < 26 )
       {
-         cRet[nPosRet++] = cElem + 'A';
+         cRet[ nPosRet++ ] = cElem + 'A';
       }
       else if( cElem < 52 )
       {
-         cRet[nPosRet++] = ( cElem - 26 ) + 'a';
+         cRet[ nPosRet++ ] = ( cElem - 26 ) + 'a';
       }
       else if( cElem < 62 )
       {
-         cRet[nPosRet++] = ( cElem - 52 ) + '0';
+         cRet[ nPosRet++ ] = ( cElem - 52 ) + '0';
       }
       else if( cElem == 62 )
       {
-         cRet[nPosRet++] = '+';
+         cRet[ nPosRet++ ] = '+';
       }
       else
       {
-         cRet[nPosRet++] = '/';
+         cRet[ nPosRet++ ] = '/';
       }
 
       if( ! bExcept )
@@ -157,8 +157,8 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
             practice is to limit line size to 72 chars */
          if( nLineCount == 72 )
          {
-            cRet[nPosRet++] = '\r';
-            cRet[nPosRet++] = '\n';
+            cRet[ nPosRet++ ] = '\r';
+            cRet[ nPosRet++ ] = '\n';
             nLineCount = 0;
          }
       }
@@ -178,8 +178,8 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       during encoding phase */
    if( ! bExcept )
    {
-      cRet[nPosRet++] = '\r';
-      cRet[nPosRet++] = '\n';
+      cRet[ nPosRet++ ] = '\r';
+      cRet[ nPosRet++ ] = '\n';
    }
 
    /* this function also adds a zero */
@@ -188,8 +188,8 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
 HB_FUNC( TIPENCODERBASE64_DECODE )
 {
-   const char *cData = hb_parc( 1 );
-   unsigned char *cRet;
+   const char * cData = hb_parc( 1 );
+   unsigned char * cRet;
    int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0, nPosBlock = 0;
    unsigned char cElem;

@@ -1689,8 +1689,8 @@ static void hb_cdxPageCheckDupTrl( LPCDXPAGE pPage, BYTE * pKeyBuf, int iKeys, H
          {
             printf( "\r\nikey=%d, iKeys=%d, K=%d, ulRecPrev=%ld, ulRec=%ld",
                     iKey, iKeys, K,
-                    (ULONG) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ),
-                    (ULONG) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) );
+                    ( ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ),
+                    ( ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) );
             printf( "\r\npbValPrev=[%s] pbVal=[%s], [%d], pKeyBuf=%p",
                     &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ],
                     memcmp( &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ], iNum ),
@@ -1987,7 +1987,7 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
 #ifdef HB_CDX_DSPDBG_INFO
    printf("\r\ndelkey: Page=%lx, iKey=%d/%d, rec=%ld, iFree=%d",
           pPage->Page, iKey, pPage->iKeys,
-          (ULONG) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
+          ( ULONG ) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
           pPage->iFree );
    fflush(stdout);
 #endif
@@ -2228,7 +2228,7 @@ static void hb_cdxPageIntDelKey( LPCDXPAGE pPage, int iKey )
 #ifdef HB_CDX_DSPDBG_INFO
    printf("\r\nintDelKey: Page=%lx, iKey=%d/%d, ulPag=%lx",
           pPage->Page, iKey, pPage->iKeys,
-          (ULONG) HB_GET_BE_UINT32( &pPage->node.intNode.keyPool[ (iKey+1) * iLen - 4 ] ) );
+          ( ULONG ) HB_GET_BE_UINT32( &pPage->node.intNode.keyPool[ (iKey+1) * iLen - 4 ] ) );
    fflush(stdout);
 #endif
 #ifdef HB_CDX_DBGCODE
@@ -2723,7 +2723,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             {
 #ifdef HB_CDX_DSPDBG_INFO
                printf("\r\ninserting bDup=%d #keys=%d/%d (%d) parent=%lx, child=%lx (%d), rec=%ld",
-                      j, iKeys, lpTmpPage->iKeys, i, pPage->Page, lpTmpPage->Page, iSize, (ULONG) HB_GET_LE_UINT32( pPtr + iLen - 6 ));
+                      j, iKeys, lpTmpPage->iKeys, i, pPage->Page, lpTmpPage->Page, iSize, ( ULONG ) HB_GET_LE_UINT32( pPtr + iLen - 6 ));
                fflush(stdout);
 #endif
                if( iBufSize >= iKeys + lpTmpPage->iKeys )
@@ -6040,7 +6040,7 @@ static HB_ERRCODE hb_cdxDBOIKeyGoto( CDXAREAP pArea, LPCDXTAG pTag, ULONG ulKeyN
                hb_cdxPageFree( pPage, HB_FALSE );
                pPage = pOwnerPage->Child;
             }
-            if( (ULONG) pPage->iKeys >= ulKeyCnt )
+            if( ( ULONG ) pPage->iKeys >= ulKeyCnt )
             {
                pPage->iCurKey = pTag->UsrAscend ? ( int ) ulKeyCnt - 1 : pPage->iKeys - ( int ) ulKeyCnt;
                hb_cdxSetCurKey( pPage );

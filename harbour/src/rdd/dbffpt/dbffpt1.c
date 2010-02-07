@@ -2230,11 +2230,11 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * 
             if( iDec )
             {
                iLen -= iDec + 1;
-               hb_itemPutNDLen( pItem, (LONG) HB_GET_LE_UINT32( *pbMemoBuf ), iLen, iDec );
+               hb_itemPutNDLen( pItem, ( LONG ) HB_GET_LE_UINT32( *pbMemoBuf ), iLen, iDec );
             }
             else
             {
-               hb_itemPutNLLen( pItem, (LONG) HB_GET_LE_UINT32( *pbMemoBuf ), iLen );
+               hb_itemPutNLLen( pItem, ( LONG ) HB_GET_LE_UINT32( *pbMemoBuf ), iLen );
             }
             *pbMemoBuf += 6;
          }
@@ -2250,11 +2250,11 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * 
             if( iDec )
             {
                iLen -= iDec + 1;
-               hb_itemPutNDLen( pItem, (ULONG) HB_GET_LE_UINT32( *pbMemoBuf ), iLen, iDec );
+               hb_itemPutNDLen( pItem, ( ULONG ) HB_GET_LE_UINT32( *pbMemoBuf ), iLen, iDec );
             }
             else
             {
-               hb_itemPutNIntLen( pItem, (ULONG) HB_GET_LE_UINT32( *pbMemoBuf ), iLen );
+               hb_itemPutNIntLen( pItem, ( ULONG ) HB_GET_LE_UINT32( *pbMemoBuf ), iLen );
             }
             *pbMemoBuf += 6;
          }

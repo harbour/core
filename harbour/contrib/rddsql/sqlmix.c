@@ -1024,14 +1024,14 @@ static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
       {
          if ( pNode->Leaf )
          {
-            if ( (LONG) (pNode->KeyCount - 1 - uiPos) >= lSkip )
+            if ( ( LONG ) (pNode->KeyCount - 1 - uiPos) >= lSkip )
             {
                uiPos += lSkip;
                lSkip = 0;
             }
             else if ( pNode->KeyCount - 1 > uiPos )
             {
-               lSkip -= (LONG) (pNode->KeyCount - 1 - uiPos);
+               lSkip -= ( LONG ) (pNode->KeyCount - 1 - uiPos);
                uiPos = pNode->KeyCount - 1;
             }
             if ( lSkip )
@@ -1083,7 +1083,7 @@ static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
       {
          if ( pNode->Leaf )
          {
-            if ( (LONG) uiPos >= lSkip )
+            if ( ( LONG ) uiPos >= lSkip )
             {
                uiPos -= lSkip;
                lSkip = 0;

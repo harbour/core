@@ -2327,7 +2327,7 @@ PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ...
          }
          va_end( ap );
       }
-      hb_vmSend( (USHORT) ulArg );
+      hb_vmSend( ( USHORT ) ulArg );
    }
    else
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
@@ -2354,7 +2354,7 @@ PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
       }
       va_end( ap );
    }
-   hb_vmSend( (USHORT) ulArg );
+   hb_vmSend( ( USHORT ) ulArg );
 
    {
       HB_STACK_TLS_PRELOAD

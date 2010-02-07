@@ -1831,8 +1831,8 @@ static void hb_cdxPageCheckDupTrl( LPCDXPAGE pPage, BYTE * pKeyBuf, int iKeys, H
          {
             printf( "\r\nikey=%d, iKeys=%d, K=%d, ulRecPrev=%ld, ulRec=%ld",
                     iKey, iKeys, K,
-                    (ULONG) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ),
-                    (ULONG) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) );
+                    ( ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ),
+                    ( ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) );
             printf( "\r\npbValPrev=[%s] pbVal=[%s], [%d], pKeyBuf=%p",
                     &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ],
                     memcmp( &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ], iNum ),
@@ -2129,7 +2129,7 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
 #ifdef HB_CDX_DSPDBG_INFO
    printf("\r\ndelkey: Page=%lx, iKey=%d/%d, rec=%ld, iFree=%d",
           pPage->Page, iKey, pPage->iKeys,
-          (ULONG) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
+          ( ULONG ) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
           pPage->iFree );
    fflush(stdout);
 #endif
@@ -2369,7 +2369,7 @@ static void hb_cdxPageIntDelKey( LPCDXPAGE pPage, int iKey )
 #ifdef HB_CDX_DSPDBG_INFO
    printf("\r\nintDelKey: Page=%lx, iKey=%d/%d, ulPag=%lx",
           pPage->Page, iKey, pPage->iKeys,
-          (ULONG) HB_GET_BE_UINT32( &pPage->node.intNode.keyPool[ (iKey+1) * iLen - 4 ] ) );
+          ( ULONG ) HB_GET_BE_UINT32( &pPage->node.intNode.keyPool[ (iKey+1) * iLen - 4 ] ) );
    fflush(stdout);
 #endif
 #ifdef HB_CDX_DBGCODE
@@ -2864,7 +2864,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             {
 #ifdef HB_CDX_DSPDBG_INFO
                printf("\r\ninserting bDup=%d #keys=%d/%d (%d) parent=%lx, child=%lx (%d), rec=%ld",
-                      j, iKeys, lpTmpPage->iKeys, i, pPage->Page, lpTmpPage->Page, iSize, (ULONG) HB_GET_LE_UINT32( pPtr + iLen - 6 ));
+                      j, iKeys, lpTmpPage->iKeys, i, pPage->Page, lpTmpPage->Page, iSize, ( ULONG ) HB_GET_LE_UINT32( pPtr + iLen - 6 ));
                fflush(stdout);
 #endif
                if( iBufSize >= iKeys + lpTmpPage->iKeys )
@@ -6118,7 +6118,7 @@ static HB_ERRCODE hb_cdxDBOIKeyGoto( CDXAREAP pArea, LPCDXTAG pTag, ULONG ulKeyN
                hb_cdxPageFree( pPage, HB_FALSE );
                pPage = pOwnerPage->Child;
             }
-            if( (ULONG) pPage->iKeys >= ulKeyCnt )
+            if( ( ULONG ) pPage->iKeys >= ulKeyCnt )
             {
                pPage->iCurKey = pTag->UsrAscend ? ( int ) ulKeyCnt - 1 : pPage->iKeys - ( int ) ulKeyCnt;
                hb_cdxSetCurKey( pPage );
@@ -6905,7 +6905,7 @@ HB_FUNC( BM_DBSETFILTERARRAY )
 
             ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size = ulRecCount;
             ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap = ( ULONG * ) hb_xgrab( sizeof( ULONG ) * (((ulRecCount+1) >> 5) + 1) );
-            memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof(ULONG) * (((ulRecCount+1) >> 5) + 1 ) );
+            memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof( ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
 
             for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
                 BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ulRecCount, ( ULONG ) hb_arrayGetNL( pArray, ulPos ) );
@@ -6936,9 +6936,9 @@ HB_FUNC( BM_DBSETFILTERARRAYADD )
              LPCDXTAG pTag;
 
              for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-                 if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, (ULONG) hb_arrayGetNL( pArray, ulPos ) ) )
+                 if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
                  {
-                     BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, (ULONG) hb_arrayGetNL( pArray, ulPos ) );
+                     BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( ULONG ) hb_arrayGetNL( pArray, ulPos ) );
                      ulAdd++;
                  }
              pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
@@ -6965,9 +6965,9 @@ HB_FUNC( BM_DBSETFILTERARRAYDEL )
             LPCDXTAG pTag;
 
             for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-                if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, (ULONG) hb_arrayGetNL( pArray, ulPos ) ) )
+                if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
                 {
-                    BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, (ULONG) hb_arrayGetNL( pArray, ulPos ) );
+                    BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( ULONG ) hb_arrayGetNL( pArray, ulPos ) );
                     ulDel++;
                 }
             pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
@@ -7294,7 +7294,7 @@ static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
 
             if( ( (ulRecCount) >> 5 ) + 1 < bytes )
             {
-                ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = (ULONG *) hb_xrealloc( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, bytes << 2 );
+                ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = ( ULONG * ) hb_xrealloc( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, bytes << 2 );
                 ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size = ulRecCount;
             }
             pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
@@ -9309,8 +9309,8 @@ static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
         pTag = hb_cdxGetActiveTag( pArea );
         SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
         ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size = ulRecCount;
-        ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = (ULONG *) hb_xgrab( sizeof(ULONG) * (((ulRecCount+1) >> 5) + 1 ) );
-        memset( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, 0, sizeof(ULONG) * (((ulRecCount+1) >> 5) + 1 ) );
+        ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = ( ULONG * ) hb_xgrab( sizeof( ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
+        memset( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, 0, sizeof( ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
 
         if( pTag ) /* with active index */
         {

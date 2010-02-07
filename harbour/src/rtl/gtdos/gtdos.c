@@ -1302,7 +1302,7 @@ static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
 #if !defined( __DJGPP__ )
-   USHORT FAR *pScreenPtr = (USHORT FAR *) hb_gt_dos_ScreenPtr( iRow, iCol );
+   USHORT FAR *pScreenPtr = ( USHORT FAR * ) hb_gt_dos_ScreenPtr( iRow, iCol );
 #endif
    int iColor;
    BYTE bAttr;

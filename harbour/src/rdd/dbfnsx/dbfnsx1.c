@@ -6897,7 +6897,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    if( errCode == HB_SUCCESS )
    {
       pTag = hb_nsxTagNew( pIndex, szTagName,
-                           szKey, pKeyExp, bType, (USHORT) iLen, bTrail,
+                           szKey, pKeyExp, bType, ( USHORT ) iLen, bTrail,
                            szFor, pForExp,
                            fAscend, pOrderInfo->fUnique, fCustom );
       pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && !pArea->dbfarea.area.lpdbOrdCondInfo->fAll );
