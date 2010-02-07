@@ -142,17 +142,17 @@ HB_FUNC( STRDIFF )
    {
       /* get parameters */
       const char *pcStr1, *pcStr2;
-      size_t sStrLen1, sStrLen2;
+      HB_SIZE sStrLen1, sStrLen2;
       int iReplace, iDelete, iInsert;
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       int *piPenalty;
-      size_t sRowCnt, sColCnt;
+      HB_SIZE sRowCnt, sColCnt;
 
       if( HB_ISCHAR( 1 ) )
       {
          pcStr1 = hb_parc( 1 );
-         sStrLen1 = ( size_t ) hb_parclen( 1 );
+         sStrLen1 = hb_parclen( 1 );
       }
       else
       {
@@ -163,7 +163,7 @@ HB_FUNC( STRDIFF )
       if( HB_ISCHAR( 2 ) )
       {
          pcStr2 = hb_parc( 2 );
-         sStrLen2 = ( size_t ) hb_parclen( 2 );
+         sStrLen2 = hb_parclen( 2 );
       }
       else
       {

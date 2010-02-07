@@ -63,14 +63,14 @@
 
 
 /* static const data */
-static const char *spcSeparatorStr =
+static const char *s_pcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
-static const size_t ssSeparatorStrLen = 26;
+static const HB_SIZE s_sSeparatorStrLen = 26;
 
 /* static data */
 /* even if these are chars, variable must be int, since we need an extra -1 */
-static int siPreSeparator = -1;     /* TODO: make this threadsafe */
-static int siPostSeparator = -1;    /* TODO: make this threadsafe */
+static int s_iPreSeparator = -1;     /* TODO: make this threadsafe */
+static int s_iPostSeparator = -1;    /* TODO: make this threadsafe */
 
 /* defines */
 #define DO_TOKEN1_TOKEN         0
@@ -88,7 +88,7 @@ static void do_token1( int iSwitch )
    switch ( iSwitch )
    {
       case DO_TOKEN1_TOKEN:
-         siPreSeparator = siPostSeparator = -1;
+         s_iPreSeparator = s_iPostSeparator = -1;
          /* no "break" here !! */
       case DO_TOKEN1_ATTOKEN:
       case DO_TOKEN1_NUMTOKEN:
@@ -101,15 +101,15 @@ static void do_token1( int iSwitch )
    if( iParamCheck )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
-      size_t sSeparatorStrLen;
+      HB_SIZE sSeparatorStrLen;
       ULONG ulTokenCounter = 0;
       ULONG ulSkip;
       const char *pcSubStr;
       char *pcRet = NULL;
-      size_t sSubStrLen;
-      size_t sRetStrLen = 0;
+      HB_SIZE sSubStrLen;
+      HB_SIZE sRetStrLen = 0;
       ULONG ulToken = 0;
       ULONG ulSkipCnt;
       const char *pc;
@@ -120,8 +120,8 @@ static void do_token1( int iSwitch )
          pcSeparatorStr = hb_parc( 2 );
       else
       {
-         pcSeparatorStr = ( char * ) spcSeparatorStr;
-         sSeparatorStrLen = ssSeparatorStrLen;
+         pcSeparatorStr = ( char * ) s_pcSeparatorStr;
+         sSeparatorStrLen = s_sSeparatorStrLen;
       }
 
       /* token counter */
@@ -173,7 +173,7 @@ static void do_token1( int iSwitch )
 
       while( ulToken < ulTokenCounter )
       {
-         size_t sMatchedPos = sSeparatorStrLen;
+         HB_SIZE sMatchedPos = sSeparatorStrLen;
 
          /* Skip the left ulSkip successive separators */
          ulSkipCnt = 0;
@@ -185,11 +185,11 @@ static void do_token1( int iSwitch )
                                         pcSeparatorStr, sSeparatorStrLen, &sMatchedPos );
             if( iSwitch == DO_TOKEN1_TOKEN )
             {
-               siPreSeparator = siPostSeparator;
+               s_iPreSeparator = s_iPostSeparator;
                if( sMatchedPos < sSeparatorStrLen )
-                  siPostSeparator = pcSeparatorStr[sMatchedPos];
+                  s_iPostSeparator = pcSeparatorStr[sMatchedPos];
                else
-                  siPostSeparator = -1;
+                  s_iPostSeparator = -1;
             }
             ulSkipCnt++;
          }
@@ -208,13 +208,13 @@ static void do_token1( int iSwitch )
                   hb_retc_null();
                   if( HB_ISBYREF( 5 ) )
                   {
-                     cRet = ( char ) siPreSeparator;
-                     hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
+                     cRet = ( char ) s_iPreSeparator;
+                     hb_storclen( &cRet, ( s_iPreSeparator != -1 ? 1 : 0 ), 5 );
                   }
                   if( HB_ISBYREF( 6 ) )
                   {
-                     cRet = ( char ) siPostSeparator;
-                     hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
+                     cRet = ( char ) s_iPostSeparator;
+                     hb_storclen( &cRet, ( s_iPostSeparator != -1 ? 1 : 0 ), 6 );
                   }
                   break;
                }
@@ -315,13 +315,13 @@ static void do_token1( int iSwitch )
 
             if( HB_ISBYREF( 5 ) )
             {
-               cRet = ( char ) siPreSeparator;
-               hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
+               cRet = ( char ) s_iPreSeparator;
+               hb_storclen( &cRet, ( s_iPreSeparator != -1 ? 1 : 0 ), 5 );
             }
             if( HB_ISBYREF( 6 ) )
             {
-               cRet = ( char ) siPostSeparator;
-               hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
+               cRet = ( char ) s_iPostSeparator;
+               hb_storclen( &cRet, ( s_iPostSeparator != -1 ? 1 : 0 ), 6 );
             }
             break;
          }
@@ -364,13 +364,13 @@ static void do_token1( int iSwitch )
 
             if( HB_ISBYREF( 5 ) )
             {
-               cRet = ( char ) siPreSeparator;
-               hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
+               cRet = ( char ) s_iPreSeparator;
+               hb_storclen( &cRet, ( s_iPreSeparator != -1 ? 1 : 0 ), 5 );
             }
             if( HB_ISBYREF( 6 ) )
             {
-               cRet = ( char ) siPostSeparator;
-               hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
+               cRet = ( char ) s_iPostSeparator;
+               hb_storclen( &cRet, ( s_iPostSeparator != -1 ? 1 : 0 ), 6 );
             }
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
@@ -795,9 +795,9 @@ HB_FUNC( TOKENSEP )
    if( hb_parl( 1 ) )
    {
       /* return the separator char BEHIND the last token */
-      if( siPostSeparator != -1 )
+      if( s_iPostSeparator != -1 )
       {
-         cRet = ( char ) siPostSeparator;
+         cRet = ( char ) s_iPostSeparator;
          hb_retclen( &cRet, 1 );
       }
       else
@@ -806,9 +806,9 @@ HB_FUNC( TOKENSEP )
    else
    {
       /* return the separator char BEFORE the last token */
-      if( siPreSeparator != -1 )
+      if( s_iPreSeparator != -1 )
       {
-         cRet = ( char ) siPreSeparator;
+         cRet = ( char ) s_iPreSeparator;
          hb_retclen( &cRet, 1 );
       }
       else

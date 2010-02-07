@@ -87,8 +87,8 @@ static void do_charop( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
 
-      size_t sStrLen = hb_parclen( 1 );
-      size_t sPos;
+      HB_SIZE sStrLen = hb_parclen( 1 );
+      HB_SIZE sPos;
       unsigned char *pucString = ( unsigned char * ) hb_parc( 1 );
       unsigned char *pucResult;
 
@@ -199,7 +199,7 @@ static void do_charop( int iSwitch )
             if( HB_ISCHAR( 2 ) )
             {
                const char *pucString2 = hb_parc( 2 );
-               size_t sStrLen2 = hb_parclen( 2 );
+               HB_SIZE sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
                   pucResult[sPos] = ( char ) ( pucString[sPos] + pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
@@ -225,7 +225,7 @@ static void do_charop( int iSwitch )
             if( HB_ISCHAR( 2 ) )
             {
                const char *pucString2 = hb_parc( 2 );
-               size_t sStrLen2 = hb_parclen( 2 );
+               HB_SIZE sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
                   pucResult[sPos] = ( char ) ( pucString[sPos] - pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
@@ -251,7 +251,7 @@ static void do_charop( int iSwitch )
             if( HB_ISCHAR( 2 ) )
             {
                const char *pucString2 = hb_parc( 2 );
-               size_t sStrLen2 = hb_parclen( 2 );
+               HB_SIZE sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
                   pucResult[sPos] = ( char ) ( pucString[sPos] & pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
@@ -276,7 +276,7 @@ static void do_charop( int iSwitch )
             if( HB_ISCHAR( 2 ) )
             {
                const char *pucString2 = hb_parc( 2 );
-               size_t sStrLen2 = hb_parclen( 2 );
+               HB_SIZE sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
                   pucResult[sPos] = ( char ) ( pucString[sPos] | pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
@@ -301,7 +301,7 @@ static void do_charop( int iSwitch )
             if( HB_ISCHAR( 2 ) )
             {
                const char *pucString2 = hb_parc( 2 );
-               size_t sStrLen2 = hb_parclen( 2 );
+               HB_SIZE sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
                   pucResult[sPos] = ( char ) ( pucString[sPos] ^ pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );

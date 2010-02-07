@@ -75,9 +75,9 @@ static void do_charswap( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet;
-      size_t sRetIndex = 0;
+      HB_SIZE sRetIndex = 0;
       int iShift, iMod;
       const char *pcSub;
 

@@ -66,9 +66,9 @@
 static void do_charone( int iSwitch )
 {
    const char *pcString;
-   size_t sStrLen;
+   HB_SIZE sStrLen;
    const char *pcDeleteSet;
-   size_t sDeleteSetLen;
+   HB_SIZE sDeleteSetLen;
 
    /* param check */
    if( HB_ISCHAR( 1 ) )
@@ -76,14 +76,14 @@ static void do_charone( int iSwitch )
       if( HB_ISCHAR( 2 ) )
       {
          pcString = hb_parc( 2 );
-         sStrLen = ( size_t ) hb_parclen( 2 );
+         sStrLen = hb_parclen( 2 );
          pcDeleteSet = hb_parc( 1 );
-         sDeleteSetLen = ( size_t ) hb_parclen( 1 );
+         sDeleteSetLen = hb_parclen( 1 );
       }
       else
       {
          pcString = hb_parc( 1 );
-         sStrLen = ( size_t ) hb_parclen( 1 );
+         sStrLen = hb_parclen( 1 );
          pcDeleteSet = NULL;
          sDeleteSetLen = 0;
       }
@@ -95,7 +95,7 @@ static void do_charone( int iSwitch )
             {
                const char *pcSub;
                char *pcRet;
-               size_t sRetStrLen = 0;
+               HB_SIZE sRetStrLen = 0;
                char cCurrent = *pcString;
 
                pcRet = ( char * ) hb_xgrab( sStrLen );
@@ -130,7 +130,7 @@ static void do_charone( int iSwitch )
             {
                const char *pcSub;
                char *pcRet;
-               size_t sRetStrLen = 0;
+               HB_SIZE sRetStrLen = 0;
                char cCurrent1 = pcString[0];
                char cCurrent2 = pcString[1];
 
@@ -152,7 +152,7 @@ static void do_charone( int iSwitch )
                   {
                      const char *pc = NULL;
                      const char *pStart = pcDeleteSet;
-                     size_t sLen = sDeleteSetLen;
+                     HB_SIZE sLen = sDeleteSetLen;
 
                      while( sLen >= 2 &&
                             ( pc = ct_at_exact_forward( pStart, sLen, pcSub,

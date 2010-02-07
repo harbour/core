@@ -64,10 +64,10 @@ static void do_pad( int iSwitch )
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet, *pc;
       LONG lRetLen;
-      size_t sRetLen;
+      HB_SIZE sRetLen;
       char cFill;
 
       lRetLen = hb_parnl( 2 );
@@ -86,7 +86,7 @@ static void do_pad( int iSwitch )
          hb_retc_null();
          return;
       }
-      sRetLen = ( size_t ) lRetLen;
+      sRetLen = ( HB_SIZE ) lRetLen;
 
       if( hb_parclen( 3 ) > 0 )
          cFill = *( hb_parc( 3 ) );

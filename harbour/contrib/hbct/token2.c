@@ -74,8 +74,8 @@
 
 typedef struct _TOKEN_POSITION
 {
-   size_t sStartPos;            /* relative 0-based index of first char of token */
-   size_t sEndPos;              /* relative 0-based index of first char BEHIND token,
+   HB_SIZE sStartPos;            /* relative 0-based index of first char of token */
+   HB_SIZE sEndPos;              /* relative 0-based index of first char BEHIND token,
                                    so that length = sEndPos-sStartPos */
 } TOKEN_POSITION;
 typedef TOKEN_POSITION *TOKEN_ENVIRONMENT;
@@ -107,7 +107,7 @@ static TOKEN_ENVIRONMENT sTokEnvNew( void )
 
 static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
 {
-   size_t index;
+   HB_SIZE index;
    TOKEN_ENVIRONMENT env = *pEnv;
 
    /* new memory needed ? */
@@ -143,7 +143,7 @@ static int sTokEnvEnd( TOKEN_ENVIRONMENT env )
 /* get size of token environment in memory                              */
 /* -------------------------------------------------------------------- */
 
-static size_t sTokEnvGetSize( TOKEN_ENVIRONMENT env )
+static HB_SIZE sTokEnvGetSize( TOKEN_ENVIRONMENT env )
 {
    return sizeof( TOKEN_POSITION ) * ( 2 + env[0].sEndPos );
 }
@@ -164,7 +164,7 @@ static TOKEN_POSITION *sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 /* get position element pointed to by given 0-based index               */
 /* -------------------------------------------------------------------- */
 
-static TOKEN_POSITION *sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, size_t index )
+static TOKEN_POSITION *sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
 {
    if( index >= env[0].sStartPos )
       return NULL;
@@ -191,7 +191,7 @@ static int sTokEnvIncPtr( TOKEN_ENVIRONMENT env )
 /* set tokenizing pointer to 0-based value                              */
 /* -------------------------------------------------------------------- */
 
-static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, size_t sCnt )
+static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 {
    if( sCnt >= env[0].sStartPos )
       return 0;
@@ -222,7 +222,7 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, size_t sCnt )
 /* get value of tokenizing pointer                                      */
 /* -------------------------------------------------------------------- */
 
-static size_t sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
+static HB_SIZE sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
 {
    return env[1].sStartPos;
 }
@@ -231,7 +231,7 @@ static size_t sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
 /* get token count                                                      */
 /* -------------------------------------------------------------------- */
 
-static size_t sTokEnvGetCnt( TOKEN_ENVIRONMENT env )
+static HB_SIZE sTokEnvGetCnt( TOKEN_ENVIRONMENT env )
 {
    return env[0].sStartPos;
 }
@@ -252,7 +252,7 @@ static void sTokEnvDel( TOKEN_ENVIRONMENT env )
 /* static data */
 static const char *spcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
-static const size_t ssSeparatorStrLen = 26;
+static const HB_SIZE ssSeparatorStrLen = 26;
 
 /* TODO: make thread safe */
 static TOKEN_ENVIRONMENT s_sTokenEnvironment = NULL;
@@ -372,12 +372,12 @@ HB_FUNC( TOKENINIT )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
-      size_t sSeparatorStrLen;
+      HB_SIZE sSeparatorStrLen;
       ULONG ulSkipCnt, ulSkip;
       const char *pcSubStr, *pc;
-      size_t sSubStrLen;
+      HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
       TOKEN_POSITION sTokenPosition;
 
@@ -422,7 +422,7 @@ HB_FUNC( TOKENINIT )
 
       for( ;; )
       {
-         size_t sMatchedPos = sSeparatorStrLen;
+         HB_SIZE sMatchedPos = sSeparatorStrLen;
 
          /* ulSkip */
          ulSkipCnt = 0;
@@ -578,7 +578,7 @@ HB_FUNC( TOKENNEXT )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
 
       TOKEN_ENVIRONMENT sTokenEnvironment;
       TOKEN_POSITION *psTokenPosition;
@@ -586,7 +586,7 @@ HB_FUNC( TOKENNEXT )
       /* token environment by parameter ... */
       if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       {
-         size_t sStrLen3 = ( size_t ) hb_parclen( 3 );
+         HB_SIZE sStrLen3 = hb_parclen( 3 );
 
          if( sStrLen3 < sizeof( TOKEN_POSITION ) * 2 )
          {
@@ -937,7 +937,7 @@ HB_FUNC( TOKENEXIT )
 HB_FUNC( TOKENAT )
 {
    int iSeparatorPos = 0;
-   size_t sCurrentIndex;
+   HB_SIZE sCurrentIndex;
    TOKEN_ENVIRONMENT sTokenEnvironment;
    TOKEN_POSITION *psTokenPosition;
 
@@ -1065,11 +1065,11 @@ HB_FUNC( SAVETOKEN )
 HB_FUNC( RESTTOKEN )
 {
    TOKEN_ENVIRONMENT sTokenEnvironment = NULL;
-   size_t sStrLen = 1;
+   HB_SIZE sStrLen = 1;
 
    if( HB_ISCHAR( 1 ) )
    {
-      sStrLen = ( size_t ) hb_parclen( 1 );
+      sStrLen = hb_parclen( 1 );
       if( sStrLen >= sizeof( TOKEN_POSITION ) )
       {
          TOKEN_ENVIRONMENT env = ( TOKEN_ENVIRONMENT ) hb_parc( 1 );

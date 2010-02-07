@@ -72,11 +72,11 @@ static void do_justify( int iSwitch )
    {
 
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char cJustChar;
       const char *pc;
       char *pcRet, *pcw;
-      size_t sJustOffset;
+      HB_SIZE sJustOffset;
 
       if( sStrLen == 0 )
       {

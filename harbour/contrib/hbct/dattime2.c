@@ -236,23 +236,17 @@ HB_FUNC( DMY )
    HB_BOOL bMode = HB_FALSE;
 
    if( HB_ISDATETIME( 1 ) )
-   {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-   }
    else
-   {
       hb_dateToday( &iYear, &iMonth, &iDay );
-   }
 
    if( HB_ISLOG( 2 ) )
-   {
       bMode = hb_parl( 2 );
-   }
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
       const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
-      int iMonLen = strlen( szMonth );
+      int iMonLen = ( int ) strlen( szMonth );
       int iLen = 0, iBufLen = iMonLen + 10;
       char *szMDY = ( char * ) hb_xgrab( iBufLen );
 
@@ -295,9 +289,7 @@ HB_FUNC( DMY )
       hb_xfree( szMDY );
    }
    else
-   {
       hb_retc_null();
-   }
 }
 
 
@@ -335,18 +327,14 @@ HB_FUNC( MDY )
    int iYear, iMonth, iDay;
 
    if( HB_ISDATETIME( 1 ) )
-   {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-   }
    else
-   {
       hb_dateToday( &iYear, &iMonth, &iDay );
-   }
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
       const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
-      int iLen = strlen( szMonth );
+      int iLen = ( int ) strlen( szMonth );
       int iBufLen = iLen + 9;
       char *szMDY = ( char * ) hb_xgrab( iBufLen );
 
@@ -379,9 +367,7 @@ HB_FUNC( MDY )
       hb_xfree( szMDY );
    }
    else
-   {
       hb_retc_null();
-   }
 }
 
 
@@ -497,9 +483,7 @@ HB_FUNC( DOY )
    long lDate;
 
    if( HB_ISDATETIME( 1 ) )
-   {
       lDate = hb_pardl( 1 );
-   }
    else
    {
       int iYear, iMonth, iDay;
@@ -543,13 +527,9 @@ HB_FUNC( ISLEAP )
    int iYear, iMonth, iDay;
 
    if( HB_ISDATETIME( 1 ) )
-   {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-   }
    else
-   {
       hb_dateToday( &iYear, &iMonth, &iDay );
-   }
 
    hb_retl( ct_isleap( iYear ) );
 }
@@ -663,13 +643,9 @@ HB_FUNC( QUARTER )
    int iYear, iMonth, iDay;
 
    if( HB_ISDATETIME( 1 ) )
-   {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-   }
    else
-   {
       hb_dateToday( &iYear, &iMonth, &iDay );
-   }
 
    hb_retni( ( iMonth + 2 ) / 3 );
 }
@@ -711,19 +687,14 @@ HB_FUNC( LASTDAYOM )
    int iYear, iMonth, iDay;
 
    if( HB_ISNUM( 1 ) )
-   {
       iMonth = hb_parni( 1 );
-   }
    else
    {
       if( HB_ISDATETIME( 1 ) )
-      {
          hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-      }
       else
-      {
          hb_dateToday( &iYear, &iMonth, &iDay );
-      }
+
       bLeap = ct_isleap( iYear );
    }
 

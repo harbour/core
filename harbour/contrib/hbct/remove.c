@@ -74,10 +74,10 @@ static void do_remove( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcRet;
       const char *pc;
-      size_t sRetLen;
+      HB_SIZE sRetLen;
       char cSearch;
 
       if( hb_parclen( 2 ) > 0 )

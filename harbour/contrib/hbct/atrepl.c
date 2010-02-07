@@ -126,25 +126,25 @@ HB_FUNC( ATREPL )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       const char *pcStringToMatch = hb_parc( 1 );
-      size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrToMatchLen = hb_parclen( 1 );
       const char *pcString = hb_parc( 2 );
-      size_t sStrLen = ( size_t ) hb_parclen( 2 );
+      HB_SIZE sStrLen = hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
-      size_t sIgnore, sMatchStrLen = 0;
+      HB_SIZE sIgnore, sMatchStrLen = 0;
       ULONG ulCounter;
       char *pc;
 
       const char *pcReplacement;
-      size_t sReplaceLen;
+      HB_SIZE sReplaceLen;
       int iReplaceMode;
       char *pcRetStr;
-      size_t sRetStrLen;
+      HB_SIZE sRetStrLen;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 6 ) )
-         sIgnore = ( size_t ) hb_parnl( 6 );
+         sIgnore = ( HB_SIZE ) hb_parnl( 6 );
       else
          sIgnore = 0;
 
@@ -196,7 +196,7 @@ HB_FUNC( ATREPL )
             NOTE: if iReplaceMode = false and the nth occurence does not exist,
             all occurences are replaced */
          char *pcRetSubStr;
-         size_t sRetSubStrLen;
+         HB_SIZE sRetSubStrLen;
          ULONG ulMatchCounter = 0;
 
          sRetStrLen = sStrLen;
@@ -239,7 +239,7 @@ HB_FUNC( ATREPL )
                {
                   /* pcRetStr grows, so realloc memory */
                   /* save pc pointer */
-                  size_t sPCPos = pc - pcRetStr;
+                  HB_SIZE sPCPos = pc - pcRetStr;
 
                   pcRetStr = ( char * ) hb_xrealloc( pcRetStr,
                                  sRetStrLen + ( sReplaceLen - sMatchStrLen ) );
@@ -306,7 +306,7 @@ HB_FUNC( ATREPL )
          {
             /* pcRetStr grows, so realloc memory */
             /* save pc pointer */
-            size_t sPCPos = pc - pcRetStr;
+            HB_SIZE sPCPos = pc - pcRetStr;
 
             pcRetStr = ( char * ) hb_xrealloc( pcRetStr,
                                  sRetStrLen + ( sReplaceLen - sMatchStrLen ) );

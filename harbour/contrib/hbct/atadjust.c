@@ -103,26 +103,26 @@ HB_FUNC( ATADJUST )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) )
    {
       const char *pcStringToMatch = hb_parc( 1 );
-      size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrToMatchLen = hb_parclen( 1 );
       const char *pcString = hb_parc( 2 );
-      size_t sStrLen = ( size_t ) hb_parclen( 2 );
-      size_t sAdjustPosition = hb_parnl( 3 );
+      HB_SIZE sStrLen = hb_parclen( 2 );
+      HB_SIZE sAdjustPosition = hb_parnl( 3 );
 
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
-      size_t sIgnore, sMatchStrLen = 0;
+      HB_SIZE sIgnore, sMatchStrLen = 0;
       ULONG ulCounter;
       const char *pc = NULL;
 
       char cFillChar;
       const char *pcCheckFill;
       char *pcRetStr;
-      size_t sRetStrLen;
+      HB_SIZE sRetStrLen;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 5 ) )
-         sIgnore = ( size_t ) hb_parnl( 5 );
+         sIgnore = ( HB_SIZE ) hb_parnl( 5 );
       else
          sIgnore = 0;
 
@@ -165,7 +165,7 @@ HB_FUNC( ATADJUST )
       {
          /* find the <ulCounter>th match */
          const char *pcSubStr;
-         size_t sSubStrLen;
+         HB_SIZE sSubStrLen;
          ULONG ulMatchCounter = 0;
 
          pcSubStr = pcString;

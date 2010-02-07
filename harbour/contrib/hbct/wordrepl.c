@@ -125,24 +125,24 @@ HB_FUNC( WORDREPL )
    int iNoRet;
    int iMultiPass;
 
-   size_t sSearchLen, sReplaceLen;
+   HB_SIZE sSearchLen, sReplaceLen;
 
    /* suppressing return value ? */
    iNoRet = ct_getref() && HB_ISBYREF( 2 );
    iMultiPass = ct_getatmupa();
 
    /* param check */
-   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
-       ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) / 2 > 0 )
+   if( ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
+       ( sReplaceLen = hb_parclen( 3 ) ) / 2 > 0 )
    {
       /* get parameters */
       const char *pcSearch = hb_parc( 1 );
       const char *pcString = hb_parc( 2 );
-      size_t sStrLen = ( size_t ) hb_parclen( 2 );
+      HB_SIZE sStrLen = hb_parclen( 2 );
       const char *pcReplace = hb_parc( 3 );
       int iMode;
       char *pcRet;
-      size_t sIndex;
+      HB_SIZE sIndex;
 
       if( HB_ISLOG( 4 ) )
          iMode = hb_parl( 4 );
@@ -155,9 +155,9 @@ HB_FUNC( WORDREPL )
       for( sIndex = 0; sIndex < ( sSearchLen & 0xFFFFFFFE ); sIndex += 2 )
       {
 
-         size_t sMatchStrLen;
+         HB_SIZE sMatchStrLen;
          const char *pc;
-         size_t sReplIndex = sIndex;
+         HB_SIZE sReplIndex = sIndex;
 
          if( sReplIndex > ( sReplaceLen & 0xFFFFFFFE ) )
          {
@@ -214,8 +214,8 @@ HB_FUNC( WORDREPL )
          hb_retclen_buffer( pcRet, sStrLen );
       }
    }
-   else  /* ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
-            ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) / 2 > 0 */
+   else  /* ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
+            ( sReplaceLen = hb_parclen( 3 ) ) / 2 > 0 */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

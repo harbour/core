@@ -68,10 +68,10 @@
 static void do_list( int iSwitch )
 {
    const char *pcString;
-   size_t sStrLen;
+   HB_SIZE sStrLen;
 
-   size_t asCharCnt[256];
-   size_t sCnt;
+   HB_SIZE asCharCnt[256];
+   HB_SIZE sCnt;
 
    /* init asCharCnt */
    for( sCnt = 0; sCnt < 256; sCnt++ )
@@ -83,7 +83,7 @@ static void do_list( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
       pcString = hb_parc( 1 );
-      sStrLen = ( size_t ) hb_parclen( 1 );
+      sStrLen = hb_parclen( 1 );
    }
    else
    {
@@ -95,14 +95,14 @@ static void do_list( int iSwitch )
    if( iSwitch == DO_LIST_CHARLIST )
    {
       char pcRet[256];
-      size_t sRetStrLen = 0;
+      HB_SIZE sRetStrLen = 0;
 
       for( sCnt = 0; sCnt < sStrLen; sCnt++ )
       {
-         if( asCharCnt[( size_t ) ( pcString[sCnt] )] == 0 )
+         if( asCharCnt[( HB_SIZE ) ( pcString[sCnt] )] == 0 )
          {
             pcRet[sRetStrLen++] = pcString[sCnt];
-            asCharCnt[( size_t ) ( pcString[sCnt] )] = 1;
+            asCharCnt[( HB_SIZE ) ( pcString[sCnt] )] = 1;
          }
       }
       hb_retclen( pcRet, sRetStrLen );
@@ -111,7 +111,7 @@ static void do_list( int iSwitch )
    {
       for( sCnt = 0; sCnt < sStrLen; sCnt++ )
       {
-         size_t sIndex = ( size_t ) ( unsigned char ) ( *( pcString + sCnt ) );
+         HB_SIZE sIndex = ( HB_SIZE ) ( unsigned char ) ( *( pcString + sCnt ) );
          asCharCnt[sIndex] = asCharCnt[sIndex] + 1;
       }
 
@@ -120,7 +120,7 @@ static void do_list( int iSwitch )
          case DO_LIST_CHARSLIST:
          {
             char *pcRet;
-            size_t sRetStrLen = 0;
+            HB_SIZE sRetStrLen = 0;
 
             pcRet = ( char * ) hb_xgrab( 256 );
 
@@ -138,7 +138,7 @@ static void do_list( int iSwitch )
          case DO_LIST_CHARNOLIST:
          {
             char *pcRet;
-            size_t sRetStrLen = 0;
+            HB_SIZE sRetStrLen = 0;
 
             pcRet = ( char * ) hb_xgrab( 256 );
 

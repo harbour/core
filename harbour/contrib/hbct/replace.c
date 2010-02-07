@@ -78,7 +78,7 @@ static void do_replace( int iSwitch )
    if( HB_ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet, *pc;
       char cSearch, cReplace;
 

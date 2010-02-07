@@ -111,16 +111,16 @@ HB_FUNC( TABEXPAND )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet;
-      size_t sRetLen;
-      size_t sTabWidth = 0;
+      HB_SIZE sRetLen;
+      HB_SIZE sTabWidth = 0;
       char cFill, cTab, cCR;
       const char *pcNewLine;
-      size_t sNewLineLen;
+      HB_SIZE sNewLineLen;
       int iIgnore141;
-      size_t sIndex, sLineIndex;
-      size_t sTabCnt = 0;
+      HB_SIZE sIndex, sLineIndex;
+      HB_SIZE sTabCnt = 0;
 
       if( HB_ISNUM( 2 ) )
          sTabWidth = hb_parnl( 2 );
@@ -188,7 +188,7 @@ HB_FUNC( TABEXPAND )
          if( cChar == cTab )
          {
             /* tab character */
-            size_t sFillIndex;
+            HB_SIZE sFillIndex;
 
             for( sFillIndex = sTabWidth - ( sLineIndex % sTabWidth ); sFillIndex > 0; sFillIndex-- )
             {
@@ -312,15 +312,15 @@ HB_FUNC( TABPACK )
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet;
-      size_t sRetLen;
-      size_t sTabWidth = 0;
+      HB_SIZE sRetLen;
+      HB_SIZE sTabWidth = 0;
       char cFill, cTab, cCR;
       const char *pcNewLine;
-      size_t sNewLineLen;
+      HB_SIZE sNewLineLen;
       int iIgnore141;
-      size_t sIndex, sTabIndex, sFillCount;
+      HB_SIZE sIndex, sTabIndex, sFillCount;
 
       if( HB_ISNUM( 2 ) )
          sTabWidth = hb_parnl( 2 );
@@ -340,7 +340,7 @@ HB_FUNC( TABPACK )
       else
       {
          pcNewLine = hb_conNewLine();
-         sNewLineLen = strlen( pcNewLine );
+         sNewLineLen = ( HB_SIZE ) strlen( pcNewLine );
       }
       if( sNewLineLen > 0 )
          cCR = *( pcNewLine );

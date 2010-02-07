@@ -55,8 +55,8 @@
 #include "ct.h"
 
 /* statics */
-static size_t ssCompareLen;     /* TODO: make this thread safe */
-static size_t ssElementPos;     /* TODO: make this thread safe */
+static HB_SIZE s_sCompareLen;     /* TODO: make this thread safe */
+static HB_SIZE s_sElementPos;     /* TODO: make this thread safe */
 
 /* qsort function */
 #ifdef __IBMCPP__
@@ -69,10 +69,10 @@ _hb_do_sortascend( const void *p1, const void *p2 )
    char *pc1 = ( char * ) p1;
    char *pc2 = ( char * ) p2;
 
-   pc1 += ssElementPos;
-   pc2 += ssElementPos;
+   pc1 += s_sElementPos;
+   pc2 += s_sElementPos;
 
-   return strncmp( pc1, pc2, ssCompareLen );
+   return strncmp( pc1, pc2, s_sCompareLen );
 }
 
 #ifdef __IBMCPP__
@@ -85,10 +85,10 @@ _hb_do_sortdescend( const void *p1, const void *p2 )
    char *pc1 = ( char * ) p1;
    char *pc2 = ( char * ) p2;
 
-   pc1 += ssElementPos;
-   pc2 += ssElementPos;
+   pc1 += s_sElementPos;
+   pc2 += s_sElementPos;
 
-   return -strncmp( pc1, pc2, ssCompareLen );
+   return -strncmp( pc1, pc2, s_sCompareLen );
 }
 
 
@@ -186,8 +186,8 @@ HB_FUNC( CHARSORT )
       /* get parameters */
       const char *pcString = hb_parc( 1 );
       char *pcRet;
-      size_t sStrLen = ( size_t ) hb_parclen( 1 );
-      size_t sElementLen, sIgnore, sSortLen;
+      HB_SIZE sStrLen = hb_parclen( 1 );
+      HB_SIZE sElementLen, sIgnore, sSortLen;
       int iDescend;
 
       if( HB_ISNUM( 2 ) )
@@ -196,9 +196,9 @@ HB_FUNC( CHARSORT )
          sElementLen = 1;
 
       if( HB_ISNUM( 3 ) )
-         ssCompareLen = hb_parnl( 3 );
+         s_sCompareLen = hb_parnl( 3 );
       else
-         ssCompareLen = sElementLen;
+         s_sCompareLen = sElementLen;
 
       if( HB_ISNUM( 4 ) )
          sIgnore = hb_parnl( 4 );
@@ -206,9 +206,9 @@ HB_FUNC( CHARSORT )
          sIgnore = 0;
 
       if( HB_ISNUM( 5 ) )
-         ssElementPos = hb_parnl( 5 );
+         s_sElementPos = hb_parnl( 5 );
       else
-         ssElementPos = 0;
+         s_sElementPos = 0;
 
       if( HB_ISNUM( 6 ) )
          sSortLen = hb_parnl( 6 );
@@ -221,9 +221,9 @@ HB_FUNC( CHARSORT )
          iDescend = 0;
 
       /* param check II */
-      if( sElementLen == 0 || ssCompareLen > sElementLen ||
+      if( sElementLen == 0 || s_sCompareLen > sElementLen ||
           sIgnore + sElementLen > sStrLen ||
-          ssElementPos + ssCompareLen > sElementLen ||
+          s_sElementPos + s_sCompareLen > sElementLen ||
           sSortLen + sIgnore > sStrLen )
       {
          int iArgErrorMode = ct_getargerrormode();

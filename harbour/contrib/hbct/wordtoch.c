@@ -88,14 +88,14 @@
 HB_FUNC( WORDTOCHAR )
 {
    int iMultiPass;
-   size_t sSearchLen, sStrLen, sReplaceLen;
+   HB_SIZE sSearchLen, sStrLen, sReplaceLen;
 
    iMultiPass = ct_getatmupa();
 
    /* param check */
-   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 &&
-       ( sStrLen = ( size_t ) hb_parclen( 2 ) ) / 2 > 0 &&
-       ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 )
+   if( ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 &&
+       ( sStrLen = hb_parclen( 2 ) ) / 2 > 0 &&
+       ( sReplaceLen = hb_parclen( 3 ) ) > 0 )
    {
 
       /* get parameters */
@@ -103,7 +103,7 @@ HB_FUNC( WORDTOCHAR )
       const char *pcString = hb_parc( 2 );
       const char *pcReplace = hb_parc( 3 );
       char *pcRet;
-      size_t sRetIndex, sIndex;
+      HB_SIZE sRetIndex, sIndex;
       int iNoReplace;
 
       pcRet = ( char * ) hb_xgrab( sStrLen );
@@ -115,9 +115,9 @@ HB_FUNC( WORDTOCHAR )
 
       do
       {
-         size_t sMatchStrLen;
+         HB_SIZE sMatchStrLen;
          const char *pc;
-         size_t sReplIndex;
+         HB_SIZE sReplIndex;
 
          *( pcRet + sRetIndex + 1 ) = *( pcString + sIndex + 1 );
 
@@ -149,9 +149,9 @@ HB_FUNC( WORDTOCHAR )
       hb_retclen( pcRet, sRetIndex + 1 );
       hb_xfree( pcRet );
    }
-   else  /* ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 &&
-            ( sStrLen = ( size_t ) hb_parclen( 2 ) ) / 2 > 0 &&
-            ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 */
+   else  /* ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 &&
+            ( sStrLen = hb_parclen( 2 ) ) / 2 > 0 &&
+            ( sReplaceLen = hb_parclen( 3 ) ) > 0 */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

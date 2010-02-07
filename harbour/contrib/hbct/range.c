@@ -97,11 +97,11 @@ HB_FUNC( RANGEREM )
        ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) && HB_ISCHAR( 3 ) )
    {
       const char *pcString = hb_parc( 3 );
-      size_t sStrLen = ( size_t ) hb_parclen( 3 );
+      HB_SIZE sStrLen = hb_parclen( 3 );
       char *pcRet;
       unsigned char *pc;
       unsigned char ucChar1, ucChar2;
-      size_t sRetIndex;
+      HB_SIZE sRetIndex;
       int iMode, iBool;
 
       if( HB_ISCHAR( 1 ) )
@@ -204,11 +204,11 @@ HB_FUNC( RANGEREPL )
        HB_ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || HB_ISNUM( 4 ) ) )
    {
       const char *pcString = hb_parc( 3 );
-      size_t sStrLen = ( size_t ) hb_parclen( 3 );
+      HB_SIZE sStrLen = hb_parclen( 3 );
       char *pcRet;
       unsigned char *pc;
       unsigned char ucChar1, ucChar2, ucReplace;
-      size_t sRetIndex;
+      HB_SIZE sRetIndex;
       int iMode, iBool;
 
       if( HB_ISCHAR( 1 ) )

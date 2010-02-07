@@ -88,19 +88,19 @@ HB_FUNC( NUMAT )
    if( ( HB_ISCHAR( 1 ) ) && ( HB_ISCHAR( 2 ) ) )
    {
       const char *pcStringToMatch = hb_parc( 1 );
-      size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
+      HB_SIZE sStrToMatchLen = hb_parclen( 1 );
       const char *pcString = hb_parc( 2 );
-      size_t sStrLen = ( size_t ) hb_parclen( 2 );
+      HB_SIZE sStrLen = hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
-      size_t sIgnore, sMatchStrLen = 0, sSubStrLen;
+      HB_SIZE sIgnore, sMatchStrLen = 0, sSubStrLen;
       ULONG ulCounter;
       const char *pc, *pcSubStr;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 3 ) )
-         sIgnore = ( size_t ) hb_parnl( 3 );
+         sIgnore = ( HB_SIZE ) hb_parnl( 3 );
       else
          sIgnore = 0;
 

@@ -85,18 +85,18 @@
 
 HB_FUNC( STRSWAP )
 {
-   size_t sStrLen1, sStrLen2;
+   HB_SIZE sStrLen1, sStrLen2;
 
    /* param check */
-   if( ( sStrLen1 = ( size_t ) hb_parclen( 1 ) ) > 0 &&
-       ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 )
+   if( ( sStrLen1 = hb_parclen( 1 ) ) > 0 &&
+       ( sStrLen2 = hb_parclen( 2 ) ) > 0 )
    {
       /* get parameters */
       const char *pcString1 = hb_parc( 1 );
       const char *pcString2 = hb_parc( 2 );
       char *pcRet1 = NULL, *pcRet2 = NULL;
       int iChange1, iChange2;
-      size_t sIndex, sCmpLen;
+      HB_SIZE sIndex, sCmpLen;
 
       if( ( iChange1 = HB_ISBYREF( 1 ) ) != 0 )
       {
@@ -145,8 +145,8 @@ HB_FUNC( STRSWAP )
 
       hb_retc_null();
    }
-   else  /* ( sStrLen1 = ( size_t ) hb_parclen( 1 ) ) > 0 &&
-            ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 */
+   else  /* ( sStrLen1 = hb_parclen( 1 ) ) > 0 &&
+            ( sStrLen2 = hb_parclen( 2 ) ) > 0 */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

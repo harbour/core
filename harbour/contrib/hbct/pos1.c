@@ -73,10 +73,10 @@ static void do_pos1( int iSwitch )
            HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
       unsigned char *pcString;
-      size_t sStrLen;
+      HB_SIZE sStrLen;
       unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
       int iMode;
-      size_t sIgnore;
+      HB_SIZE sIgnore;
       int iParamShift = 0;
 
       if( iSwitch == DO_POS1_POSRANGE )
@@ -106,7 +106,7 @@ static void do_pos1( int iSwitch )
       }
 
       pcString = ( unsigned char * ) hb_parc( iParamShift + 1 );
-      sStrLen = ( size_t ) hb_parclen( iParamShift + 1 );
+      sStrLen = hb_parclen( iParamShift + 1 );
 
       if( HB_ISLOG( iParamShift + 2 ) )
          iMode = hb_parl( iParamShift + 2 );
@@ -114,7 +114,7 @@ static void do_pos1( int iSwitch )
          iMode = 0;
 
       if( HB_ISNUM( iParamShift + 3 ) )
-         sIgnore = ( size_t ) hb_parnl( iParamShift + 3 );
+         sIgnore = ( HB_SIZE ) hb_parnl( iParamShift + 3 );
       else
          sIgnore = 0;
 

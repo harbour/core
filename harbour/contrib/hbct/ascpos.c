@@ -67,9 +67,9 @@ static void do_ascpos( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      size_t sStrSize = hb_parclen( 1 );
+      HB_SIZE sStrSize = hb_parclen( 1 );
       const BYTE *pcString = ( const BYTE * ) hb_parc( 1 );
-      size_t sPos;
+      HB_SIZE sPos;
 
       if( HB_ISNUM( 2 ) )
          sPos = hb_parnl( 2 );
@@ -84,8 +84,8 @@ static void do_ascpos( int iSwitch )
       {
          if( iSwitch == DO_ASCPOS_VALPOS )
          {
-            if( HB_ISDIGIT( ( size_t ) pcString[sPos - 1] ) )
-               hb_retnl( pcString[sPos - 1] - 48 );
+            if( HB_ISDIGIT( ( HB_UCHAR ) pcString[ sPos - 1 ] ) )
+               hb_retnl( pcString[ sPos - 1 ] - 48 );
             else
                hb_retni( 0 );
          }
