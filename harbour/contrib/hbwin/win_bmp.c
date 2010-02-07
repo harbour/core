@@ -107,7 +107,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
          hb_fsSeek( fhnd, 0, FS_SET );
 
          if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_bitmapType( pbmfh, ulSize ) != HB_WIN_BITMAP_UNKNOWN )
-            hb_retclen_buffer( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
+            hb_retclen_buffer( ( char * ) pbmfh, ulSize );
          else
             hb_xfree( pbmfh );
       }

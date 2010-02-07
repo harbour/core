@@ -55,7 +55,7 @@
 
 /* X^32+X^26+X^23+X^22+X^16+X^12+X^11+X^10+X^8+X^7+X^5+X^4+X^2+X^1+X^0 */
 /* 0x104C11DB7 => 0xEDB88320 */
-static const ULONG crc32_tab[ 256 ] = {
+static const HB_U32 crc32_tab[ 256 ] = {
    0x00000000L, 0x77073096L, 0xEE0E612CL, 0x990951BAL, 0x076DC419L,
    0x706AF48FL, 0xE963A535L, 0x9E6495A3L, 0x0EDB8832L, 0x79DCB8A4L,
    0xE0D5E91EL, 0x97D2D988L, 0x09B64C2BL, 0x7EB17CBDL, 0xE7B82D07L,
@@ -112,7 +112,7 @@ static const ULONG crc32_tab[ 256 ] = {
 
 /* X^16+X^15+X^2+X^0 */
 /* 0x18005 => 0xA001 */
-static const ULONG crc16_tab[] =
+static const HB_U16 crc16_tab[] =
 {
    0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
    0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
@@ -149,7 +149,7 @@ static const ULONG crc16_tab[] =
 };
 
 
-ULONG hb_crc32( ULONG crc, const void * buf, HB_SIZE len )
+HB_U32 hb_crc32( HB_U32 crc, const void * buf, HB_SIZE len )
 {
    crc ^= 0xffffffffL;
    if( buf && len )
@@ -162,7 +162,7 @@ ULONG hb_crc32( ULONG crc, const void * buf, HB_SIZE len )
    return crc ^ 0xffffffffL;
 }
 
-ULONG hb_crc16( ULONG crc, const void * buf, HB_SIZE len )
+HB_U16 hb_crc16( HB_U16 crc, const void * buf, HB_SIZE len )
 {
    crc ^= 0xffff;
    if( buf && len )
@@ -256,7 +256,7 @@ HB_FUNC( HB_CRC32 )
    const char * szString = hb_parc( 1 );
 
    if( szString )
-      hb_retnint( hb_crc32( ( ULONG ) hb_parnl( 2 ), szString, hb_parclen( 1 ) ) );
+      hb_retnint( hb_crc32( ( HB_U32 ) hb_parnl( 2 ), szString, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -266,7 +266,7 @@ HB_FUNC( HB_CRC16 )
    const char * szString = hb_parc( 1 );
 
    if( szString )
-      hb_retnint( hb_crc16( ( ULONG ) hb_parnl( 2 ), szString, hb_parclen( 1 ) ) );
+      hb_retnint( hb_crc16( ( HB_U16 ) hb_parnl( 2 ), szString, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

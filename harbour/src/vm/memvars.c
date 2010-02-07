@@ -539,7 +539,7 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, ULONG ulLen )
+static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
 {
    HB_DYNS_PTR pDynSym = NULL;
 
@@ -548,7 +548,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, ULONG ulLen )
    if( ulLen && szArg && *szArg )
    {
       char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
-      int iSize = 0;
+      HB_ISIZ iSize = 0;
 
       do
       {
@@ -583,7 +583,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, ULONG ulLen )
    return pDynSym;
 }
 
-char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
+char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen )
 {
    HB_DYNS_PTR pDynVar;
    char * szValue = NULL;
@@ -799,7 +799,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
 
 /* This function checks the scope of passed variable name
  */
-int hb_memvarScope( const char * szVarName, ULONG ulLength )
+int hb_memvarScope( const char * szVarName, HB_SIZE ulLength )
 {
    PHB_DYNS pDynVar;
 
@@ -1047,7 +1047,7 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
 
 void hb_memvarRestoreFromArray( PHB_ITEM pArray )
 {
-   ULONG ulCount, ulPos;
+   HB_SIZE ulCount, ulPos;
 
    ulCount = hb_arrayLen( pArray );
    for( ulPos = 1; ulPos <= ulCount; ++ulPos )

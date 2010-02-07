@@ -445,7 +445,7 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
    if( pI18N )
    {
       HB_SIZE ulSize;
-      ULONG ulCRC;
+      HB_U32 ulCRC;
       char * pBuffer = hb_itemSerialize( pI18N->table, HB_FALSE, &ulSize );
       char * pI18Nbuffer;
       PHB_ITEM pKey, pValue;

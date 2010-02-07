@@ -534,10 +534,10 @@ HB_FUNC( HB_UNZIPFILECLOSE )
  *
  */
 
-static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, HB_BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
    HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
-   ULONG ulCRC = 0;
+   HB_U32 ulCRC = 0;
 
    if( hFile != FS_ERROR )
    {
@@ -584,11 +584,11 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, HB
    return fResult;
 }
 
-static HB_BOOL hb_zipGetFileInfo( const char * szFileName, ULONG * pulCRC, HB_BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
    HB_FHANDLE hFile;
    HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
-   ULONG ulCRC = 0;
+   HB_U32 ulCRC = 0;
 
    hFile = hb_fsOpen( szFileName, FO_READ );
 
@@ -646,7 +646,7 @@ HB_FUNC( HB_ZIPFILECRC32 )
 
    if( szFileName )
    {
-      ULONG ulCRC = 0;
+      HB_U32 ulCRC = 0;
       if( !hb_zipGetFileInfo( szFileName, &ulCRC, NULL ) )
          ulCRC = 0;
       hb_retnint( ulCRC );
@@ -695,7 +695,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    int           iResult;
    HB_BOOL       fError;
    HB_BOOL       fText;
-   ULONG         ulCRC;
+   HB_U32        ulCRC;
 
    if( szName )
    {
@@ -969,7 +969,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    zip_fileinfo  zfi;
    int           iResult;
    HB_BOOL       fText;
-   ULONG         ulCRC;
+   HB_U32        ulCRC;
 
    if( hFile == FS_ERROR || szName == NULL )
       return -200;

@@ -548,7 +548,7 @@ extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen );
 #endif
 
 /* virtual memory */
-typedef ULONG HB_VMHANDLE;
+typedef unsigned long HB_VMHANDLE;
 
 extern HB_EXPORT HB_VMHANDLE hb_xvalloc( HB_SIZE nSize, USHORT nFlags );
 extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
@@ -1048,9 +1048,9 @@ extern ULONG      hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE 
 extern void       hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
 extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
-extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
+extern char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen );
 extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
-extern int        hb_memvarScope( const char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
+extern int        hb_memvarScope( const char * szVarName, HB_SIZE ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
 extern PHB_ITEM   hb_memvarSaveInArray( int iScope, HB_BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
