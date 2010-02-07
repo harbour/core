@@ -554,6 +554,51 @@ void HBQPlainTextEdit::insertTab( int mode )
    setTextCursor( c );
 }
 
+void HBQPlainTextEdit::moveLine( int iDirection )
+{
+   QTextCursor cursor = textCursor();
+   QTextCursor c = cursor;
+
+   cursor.beginEditBlock();
+
+   cursor.movePosition( QTextCursor::StartOfLine );
+   cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+   QString textCurrentLine = cursor.selectedText();
+
+   if( iDirection == -1 && cursor.blockNumber() > 0 )
+   {
+      cursor.movePosition( QTextCursor::StartOfLine );
+      cursor.movePosition( QTextCursor::Up );
+      cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+      QString textPrevLine = cursor.selectedText();
+      setTextCursor( cursor );
+      insertPlainText( textCurrentLine );
+      cursor.movePosition( QTextCursor::Down );
+      cursor.movePosition( QTextCursor::StartOfLine );
+      cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+      setTextCursor( cursor );
+      insertPlainText( textPrevLine );
+      c.movePosition( QTextCursor::Up );
+   }
+   else if( iDirection == 1 && cursor.blockNumber() < cursor.document()->blockCount() - 1 )
+   {
+      cursor.movePosition( QTextCursor::StartOfLine );
+      cursor.movePosition( QTextCursor::Down );
+      cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+      QString textPrevLine = cursor.selectedText();
+      setTextCursor( cursor );
+      insertPlainText( textCurrentLine );
+      cursor.movePosition( QTextCursor::Up );
+      cursor.movePosition( QTextCursor::StartOfLine );
+      cursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+      setTextCursor( cursor );
+      insertPlainText( textPrevLine );
+      c.movePosition( QTextCursor::Down );
+   }
+   cursor.endEditBlock();
+   setTextCursor( c );
+}
+
 void HBQPlainTextEdit::deleteLine()
 {
    QTextCursor cursor = textCursor();

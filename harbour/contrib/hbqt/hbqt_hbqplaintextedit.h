@@ -137,6 +137,7 @@ public slots:
    void           convertQuotes();
    void           convertDQuotes();
    void           deleteLine();
+   void           moveLine( int iDirection );
    void           blockIndent( int steps );
    void           blockComment();
    void           streamComment();

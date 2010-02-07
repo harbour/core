@@ -95,6 +95,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  replaceSelection( cTxt )
    METHOD  blockIndent( nSteps )
    METHOD  deleteLine()
+   METHOD  moveLine( nIDirection )
 
    ENDCLASS
 
@@ -218,4 +219,8 @@ METHOD HBQPlainTextEdit:blockIndent( nSteps )
 
 METHOD HBQPlainTextEdit:deleteLine()
    RETURN Qt_HBQPlainTextEdit_deleteLine( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:moveLine( nIDirection )
+   RETURN Qt_HBQPlainTextEdit_moveLine( ::pPtr, nIDirection )
 

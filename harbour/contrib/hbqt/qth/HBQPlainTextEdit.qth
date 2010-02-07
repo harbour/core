@@ -126,6 +126,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           replaceSelection( const QString & txt )
    void           blockIndent( int steps )
    void           deleteLine()
+   void           moveLine( int iDirection )
 </SLOTS>
 
 <SIGNALS>

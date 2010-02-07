@@ -137,6 +137,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD getSelectedText()
    METHOD duplicateLine()
    METHOD deleteLine()
+   METHOD moveLine( nDirection )
    METHOD streamComment()
    METHOD blockComment()
    METHOD indent( nStep )
@@ -515,6 +516,15 @@ METHOD IdeEditsManager:duplicateLine()
    LOCAL qEdit
    IF !empty( qEdit := ::getEditCurrent() )
       qEdit:duplicateLine()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:moveLine( nDirection )
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:moveLine( nDirection )
    ENDIF
    RETURN Self
 
@@ -1360,6 +1370,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD blockComment()
    METHOD streamComment()
    METHOD blockIndent( nMode )
+   METHOD moveLine( nDirection )
    METHOD caseUpper()
    METHOD caseLower()
    METHOD caseInvert()
@@ -1509,6 +1520,12 @@ METHOD IdeEdit:duplicateLine()
 
 METHOD IdeEdit:deleteLine()
    ::qEdit:deleteLine()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:moveLine( nDirection )
+   ::qEdit:moveLine( nDirection )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1723,6 +1740,16 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
             RETURN .t.
          ENDIF
          EXIT
+      CASE Qt_Key_Up
+         IF lCtrl .AND. lShift
+            ::moveLine( -1 )
+            RETURN .t.
+         ENDIF
+      CASE Qt_Key_Down
+         IF lCtrl .AND. lShift
+            ::moveLine( 1 )
+            RETURN .t.
+         ENDIF
       ENDSWITCH
 
       EXIT

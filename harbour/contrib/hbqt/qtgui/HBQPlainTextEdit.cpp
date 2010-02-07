@@ -379,6 +379,14 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_DELETELINE )
    hbqt_par_HBQPlainTextEdit( 1 )->deleteLine();
 }
 
+/*
+ * void           moveLine( int iDirection )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_MOVELINE )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->moveLine( hb_parni( 2 ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

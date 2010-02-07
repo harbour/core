@@ -483,6 +483,8 @@ METHOD HbIde:execAction( cKey )
    CASE "SelectAll"
    CASE "DuplicateLine"
    CASE "DeleteLine"
+   CASE "MoveLineUp"
+   CASE "MoveLineDown"
    CASE "BlockComment"
    CASE "StreamComment"
    CASE "BlockIndentR"
@@ -548,6 +550,12 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "DuplicateLine"
       ::oEM:duplicateLine()
+      EXIT
+   CASE "MoveLineUp"
+      ::oEM:moveLine( -1 )
+      EXIT
+   CASE "MoveLineDown"
+      ::oEM:moveLine( 1 )
       EXIT
    CASE "DeleteLine"
       ::oEM:deleteLine()
