@@ -316,9 +316,9 @@ typedef struct _HB_GT_BASE
    HB_BOOL        fMouseVisible;
    int            iMouseLastRow;
    int            iMouseLastCol;
-   HB_LONG        iMouseLeftTimer;
-   HB_LONG        iMouseRightTimer;
-   HB_LONG        iMouseMiddleTimer;
+   HB_MAXINT      iMouseLeftTimer;
+   HB_MAXINT      iMouseRightTimer;
+   HB_MAXINT      iMouseMiddleTimer;
 
    int            defaultKeyBuffer[ HB_DEFAULT_INKEY_BUFSIZE + 1 ];
 

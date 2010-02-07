@@ -158,7 +158,7 @@ HB_FUNC( XHB__KEYBOARD )
 HB_FUNC( HB_CREATELEN8 )
 {
    char buffer[ 8 ];
-   HB_LONG llValue;
+   HB_MAXINT llValue;
 
    if( HB_ISNUM( 1 ) )
    {

@@ -2462,7 +2462,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( ( HB_LONG )
+                                    MAKEINTRESOURCE( ( HB_MAXINT )
                                          hb_itemGetNInt( pInfo->pNewVal ) ) );
 
             if( pWVT->hWnd )

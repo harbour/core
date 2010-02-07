@@ -130,13 +130,13 @@ double hb_secondsCPU( int n )
    {
       if( n & 1 )
       {
-         d += ( double ) ( ( ( HB_LONG ) User.dwHighDateTime << 32 ) +
-                             ( HB_LONG ) User.dwLowDateTime );
+         d += ( double ) ( ( ( HB_MAXINT ) User.dwHighDateTime << 32 ) +
+                             ( HB_MAXINT ) User.dwLowDateTime );
       }
       if( n & 2 )
       {
-         d += ( double ) ( ( ( HB_LONG ) Kernel.dwHighDateTime << 32 ) +
-                             ( HB_LONG ) Kernel.dwLowDateTime );
+         d += ( double ) ( ( ( HB_MAXINT ) Kernel.dwHighDateTime << 32 ) +
+                             ( HB_MAXINT ) Kernel.dwLowDateTime );
       }
       d /= 10000000.0;
    }

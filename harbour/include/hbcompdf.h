@@ -268,8 +268,8 @@ typedef struct HB_EXPR_
       struct
       {
          union {
-            HB_LONG  l;             /* long value */
-            double   d;             /* double value */
+            HB_MAXINT l;            /* long value */
+            double    d;            /* double value */
          } val;
          unsigned char bWidth;   /* unsigned char used intentionally */
          unsigned char bDec;     /* unsigned char used intentionally */

@@ -1215,7 +1215,7 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
    else
       ts.tv_sec = ts.tv_nsec = 0;
 #else
-   HB_ULONG timer;
+   HB_MAXUINT timer;
 
    if( ulMilliSec != HB_THREAD_INFINITE_WAIT )
       timer = hb_dateMilliSeconds() + ulMilliSec;
@@ -1273,7 +1273,7 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
 #  endif
       if( !fExit && timer )
       {
-         HB_ULONG curr = hb_dateMilliSeconds();
+         HB_MAXUINT curr = hb_dateMilliSeconds();
          if( timer <= curr )
             fExit = HB_TRUE;
          else

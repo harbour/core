@@ -270,14 +270,14 @@ typedef union YYSTYPE
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
-   HB_LONG lNumber;     /* to hold a temporary long number */
+   HB_MAXINT lNumber;   /* to hold a temporary long number */
    HB_BOOL bTrue;
    HB_EXPR_PTR asExpr;
    void * pVoid;        /* to hold any memory structure we may need */
    struct
    {
-      HB_LONG  lNumber;    /* to hold a long number returned by lex */
-      HB_UCHAR bWidth;     /* to hold the width of the value */
+      HB_MAXINT lNumber;   /* to hold a long number returned by lex */
+      HB_UCHAR  bWidth;    /* to hold the width of the value */
    } valLong;
    struct
    {

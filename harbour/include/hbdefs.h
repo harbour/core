@@ -601,7 +601,6 @@ typedef unsigned long HB_COUNTER;
 */
 
 /* TODO: Remove dependence on old types */
-/* TODO: Solve HB_LONG/HB_ULONG. It currently means something else that it would later. */
 
 /* Harbour overloaded types: */
 

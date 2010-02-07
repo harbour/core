@@ -413,7 +413,7 @@ static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 
       case HB_FT_LONG:
          {
-            HB_LONG lVal;
+            HB_MAXINT lVal;
             double dVal;
             HB_BOOL fDbl;
 

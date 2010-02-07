@@ -319,7 +319,7 @@ static PHB_ITEM hb_ntxStrToNum( PHB_ITEM pItem, char* szKeyVal, USHORT length, U
    char szBuffer[ NTX_MAX_KEY + 1 ];
    char *ptr = szKeyVal, *ptr2, c;
    int iLen, iDec;
-   HB_LONG lValue;
+   HB_MAXINT lValue;
    double dValue;
 
    HB_SYMBOL_UNUSED( dec );

@@ -79,7 +79,7 @@ extern const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ];
 extern HB_EXPR_PTR hb_compExprNewEmpty( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewNil( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewLong( HB_LONG, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDate( long, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewTimeStamp( long, long, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewString( const char *, ULONG, HB_BOOL, HB_COMP_DECL );
@@ -162,7 +162,7 @@ extern int hb_compExprAsInteger( HB_EXPR_PTR );
 extern int hb_compExprAsNumSign( HB_EXPR_PTR );
 extern int hb_compExprIsString( HB_EXPR_PTR );
 extern int hb_compExprAsStringLen( HB_EXPR_PTR );
-extern HB_LONG hb_compExprAsLongNum( HB_EXPR_PTR );
+extern HB_MAXINT hb_compExprAsLongNum( HB_EXPR_PTR );
 extern const char * hb_compExprAsString( HB_EXPR_PTR );
 extern const char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
@@ -205,7 +205,7 @@ extern HB_BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_LONG, HB_BOOL, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_MAXINT, HB_BOOL, HB_COMP_DECL );
 
 HB_EXTERN_END
 

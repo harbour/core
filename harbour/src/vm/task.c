@@ -144,7 +144,7 @@ typedef struct _HB_TASKINFO
    HB_BOOL        detached;
    HB_BOOL        stop;
 
-   HB_LONG        wakeup;
+   HB_MAXINT      wakeup;
 
    char *         stack;
    long           stack_size;
@@ -205,7 +205,7 @@ static PHB_TASKMTX s_mutexList = NULL;
 
 static int s_iTaskID = 0;
 
-static HB_LONG hb_taskTimeStop( unsigned long ulMilliSec )
+static HB_MAXINT hb_taskTimeStop( unsigned long ulMilliSec )
 {
    if( ulMilliSec == HB_TASK_INFINITE_WAIT )
       return HB_TASK_INFINITE_DELAY;
@@ -213,22 +213,22 @@ static HB_LONG hb_taskTimeStop( unsigned long ulMilliSec )
    {
 #if defined( __DJGPP__ )
       /* uclock_t uclock() * 1000 / UCLOCKS_PER_SEC */
-      return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
+      return ( HB_MAXINT ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
 #elif _POSIX_C_SOURCE >= 199309L
       struct timespec ts;
       clock_gettime( CLOCK_REALTIME, &ts );
-      return ( HB_LONG ) ts.tv_sec * 1000 + ts.tv_nsec / 1000000 + ulMilliSec;
+      return ( HB_MAXINT ) ts.tv_sec * 1000 + ts.tv_nsec / 1000000 + ulMilliSec;
 #elif defined( HB_OS_UNIX )
       struct timeval tv;
       gettimeofday( &tv, NULL );
-      return ( HB_LONG ) tv.tv_sec * 1000 + tv.tv_usec / 1000 + ulMilliSec;
+      return ( HB_MAXINT ) tv.tv_sec * 1000 + tv.tv_usec / 1000 + ulMilliSec;
 #else
-      return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
+      return ( HB_MAXINT ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
 #endif
    }
 }
 
-static void hb_taskFreeze( HB_LONG wakeup )
+static void hb_taskFreeze( HB_MAXINT wakeup )
 {
 #if defined( HB_OS_DOS )
    while( wakeup > hb_taskTimeStop( 0 ) )

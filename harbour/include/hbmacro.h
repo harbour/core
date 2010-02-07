@@ -130,7 +130,7 @@ extern void hb_macroGenJumpHere( ULONG ulOffset, HB_COMP_DECL );
 extern ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL );
 
 extern void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL );
-extern void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL );
+extern void hb_macroGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL );
 extern void hb_macroGenPushDate( long lDate, HB_COMP_DECL );
 extern void hb_macroGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL );
 extern void hb_macroGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL );
@@ -140,14 +140,14 @@ extern void hb_macroGenPopMemvar( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPopAliasedVar( const char * szVarName,
                                       HB_BOOL bPushAliasValue,
                                       const char * szAlias,
-                                      HB_LONG lWorkarea, HB_COMP_DECL );
+                                      HB_MAXINT lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL );
 extern void hb_macroGenPushVarRef( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushAliasedVar( const char * szVarName,
                                        HB_BOOL bPushAliasValue,
                                        const char * szAlias,
-                                       HB_LONG lWorkarea, HB_COMP_DECL );
+                                       HB_MAXINT lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushLogical( int iTrueFalse, HB_COMP_DECL );
 extern void hb_macroGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL );
 extern void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL );

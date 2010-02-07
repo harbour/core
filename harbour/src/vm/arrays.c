@@ -596,7 +596,7 @@ HB_LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex )
 }
 #endif
 
-HB_LONG hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex )
+HB_MAXINT hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %lu)", pArray, ulIndex));
 
@@ -803,7 +803,7 @@ HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber )
 }
 #endif
 
-HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONG lNumber )
+HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_MAXINT lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNInt(%p, %lu, %" PFHL "d)", pArray, ulIndex, lNumber));
 

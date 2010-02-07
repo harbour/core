@@ -105,18 +105,18 @@ HB_FUNC( HB_RANDOMINT )
    if( ! HB_ISNUM( 1 ) )
       hb_retni( dRnd >= 0.5 ? 0 : 1 );
    else if( ! HB_ISNUM( 2 ) )
-      hb_retnint( ( HB_LONG ) ( 1 + ( dRnd * hb_parnint( 1 ) ) ) );
+      hb_retnint( ( HB_MAXINT ) ( 1 + ( dRnd * hb_parnint( 1 ) ) ) );
    else
    {
-      HB_LONG lX = hb_parnint( 1 );
-      HB_LONG lY = hb_parnint( 2 );
+      HB_MAXINT lX = hb_parnint( 1 );
+      HB_MAXINT lY = hb_parnint( 2 );
       if( lX > lY )
       {
-         HB_LONG lZ = lY;
+         HB_MAXINT lZ = lY;
          lY = lX;
          lX = lZ;
       }
-      hb_retnint( ( HB_LONG ) ( lX + ( dRnd * ( lY - lX + 1 ) ) ) );
+      hb_retnint( ( HB_MAXINT ) ( lX + ( dRnd * ( lY - lX + 1 ) ) ) );
    }
 }
 

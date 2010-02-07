@@ -60,7 +60,7 @@ HB_FUNC( HB_HEXTONUM )
 
    if( szHex )
    {
-      HB_ULONG ulNum = 0;
+      HB_MAXUINT ulNum = 0;
 
       while( *szHex == ' ' ) szHex++;
       while( *szHex )
@@ -88,10 +88,10 @@ HB_FUNC( HB_HEXTONUM )
 
 HB_FUNC( HB_NUMTOHEX )
 {
-   HB_ULONG ulNum;
-   int      iLen;
-   HB_BOOL  fDefaultLen;
-   char     ret[ 33 ];
+   HB_MAXUINT ulNum;
+   int        iLen;
+   HB_BOOL    fDefaultLen;
+   char       ret[ 33 ];
 
    if( HB_ISNUM( 2 ) )
    {

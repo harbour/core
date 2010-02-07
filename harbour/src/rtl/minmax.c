@@ -65,8 +65,8 @@ HB_FUNC( MAX )
    {
       if( HB_IS_NUMINT( p1 ) && HB_IS_NUMINT( p2 ) )
       {
-         HB_LONG l1 = hb_itemGetNInt( p1 );
-         HB_LONG l2 = hb_itemGetNInt( p2 );
+         HB_MAXINT l1 = hb_itemGetNInt( p1 );
+         HB_MAXINT l2 = hb_itemGetNInt( p2 );
 
          if( l1 >= l2 )
             hb_itemReturn( p1 );
@@ -126,8 +126,8 @@ HB_FUNC( MIN )
    {
       if( HB_IS_NUMINT( p1 ) && HB_IS_NUMINT( p2 ) )
       {
-         HB_LONG l1 = hb_itemGetNInt( p1 );
-         HB_LONG l2 = hb_itemGetNInt( p2 );
+         HB_MAXINT l1 = hb_itemGetNInt( p1 );
+         HB_MAXINT l2 = hb_itemGetNInt( p2 );
 
          if( l1 <= l2 )
             hb_itemReturn( p1 );

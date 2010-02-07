@@ -219,7 +219,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
             fSign = 0;
             if( HB_IS_NUMERIC( pItem ) )
             {
-               iSize = sizeof( HB_LONG ) * 3 + 1;
+               iSize = sizeof( HB_MAXINT ) * 3 + 1;
                pStr2 = pStr = ( char * ) hb_xgrab( iSize + 1 );
                hb_itemStrBuf( pStr, pItem, iSize, 0 );
                while( *pStr2 == ' ' )

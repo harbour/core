@@ -1793,7 +1793,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         usCount && pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC )
                {
                   HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
-                  HB_LONG lResult = 0;
+                  HB_MAXINT lResult = 0;
                   HB_BOOL fOptimize = HB_FALSE, fBool = HB_FALSE;
 
                   if( usCount >= 2 )
@@ -1847,28 +1847,28 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         }
                         else if( strcmp( "TEST", pName->value.asSymbol + 6 ) == 0 )
                         {
-                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
                            lResult = ( hb_compExprAsLongNum( pArg ) &
-                                       ( ( HB_LONG ) 1 << lBit ) ) != 0;
+                                       ( ( HB_MAXINT ) 1 << lBit ) ) != 0;
                            fOptimize = fBool = HB_TRUE;
                         }
                         else if( strcmp( "SET", pName->value.asSymbol + 6 ) == 0 )
                         {
-                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
                            lResult = hb_compExprAsLongNum( pArg ) |
-                                     ( ( HB_LONG ) 1 << lBit );
+                                     ( ( HB_MAXINT ) 1 << lBit );
                            fOptimize = HB_TRUE;
                         }
                         else if( strcmp( "RESET", pName->value.asSymbol + 6 ) == 0 )
                         {
-                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
                            lResult = hb_compExprAsLongNum( pArg ) &
-                                     ( ~ ( ( HB_LONG ) 1 << lBit ) );
+                                     ( ~ ( ( HB_MAXINT ) 1 << lBit ) );
                            fOptimize = HB_TRUE;
                         }
                         else if( strcmp( "SHIFT", pName->value.asSymbol + 6 ) == 0 )
                         {
-                           HB_LONG lBits = hb_compExprAsLongNum( pArg->pNext );
+                           HB_MAXINT lBits = hb_compExprAsLongNum( pArg->pNext );
                            lResult = hb_compExprAsLongNum( pArg );
                            if( lBits < 0 )
                               lResult >>= -lBits;

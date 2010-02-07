@@ -77,7 +77,7 @@ HB_FUNC( FIELDNUM )
 
 HB_FUNC( DBFSIZE )
 {
-   HB_LONG llSize = 0;
+   HB_MAXINT llSize = 0;
    AREAP pArea;
 
    if( ( pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer() ) != NULL )
@@ -93,7 +93,7 @@ HB_FUNC( DBFSIZE )
             ulRecSize = hb_itemGetNL( pSize );
             if( SELF_RECCOUNT( pArea, &ulRecCount ) == HB_SUCCESS )
             {
-               llSize += ( HB_LONG ) ulRecCount *ulRecSize;
+               llSize += ( HB_MAXINT ) ulRecCount * ulRecSize;
             }
          }
       }

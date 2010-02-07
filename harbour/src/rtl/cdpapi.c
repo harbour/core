@@ -1044,7 +1044,7 @@ HB_WCHAR hb_cdpGetU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, unsigned char ch )
       return ch;
 }
 
-HB_UCHAR char hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
+HB_UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
 {
    if( cdp && ( fCtrl || wc >= 32 ) )
    {

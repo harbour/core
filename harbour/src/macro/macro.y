@@ -134,9 +134,9 @@
 %union                  /* special structure used by lex and yacc to share info */
 {
    const char * string; /* to hold a string returned by lex */
-   int      iNumber;    /* to hold a temporary integer number */
-   HB_LONG  lNumber;    /* to hold a temporary long number */
-   void *   pVoid;      /* to hold any memory structure we may need */
+   int       iNumber;   /* to hold a temporary integer number */
+   HB_MAXINT lNumber;   /* to hold a temporary long number */
+   void *    pVoid;     /* to hold any memory structure we may need */
    HB_EXPR_PTR asExpr;
    struct
    {
@@ -149,8 +149,8 @@
    } valInteger;
    struct
    {
-      HB_LONG  lNumber; /* to hold a long number returned by lex */
-      HB_UCHAR bWidth;  /* to hold the width of the value */
+      HB_MAXINT lNumber; /* to hold a long number returned by lex */
+      HB_UCHAR  bWidth;  /* to hold the width of the value */
    } valLong;
    struct
    {
@@ -968,7 +968,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 
       case HB_PP_TOKEN_NUMBER:
       {
-         HB_LONG lNumber;
+         HB_MAXINT lNumber;
          double dNumber;
          int iDec, iWidth;
 

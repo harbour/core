@@ -153,7 +153,7 @@ extern HB_EXPORT void     hb_vmPushNumber( double dNumber, int iDec ); /* pushes
 extern HB_EXPORT void     hb_vmPushInteger( int iNumber ); /* pushes a integer number onto the stack */
 extern HB_EXPORT void     hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
 extern HB_EXPORT void     hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
-extern HB_EXPORT void     hb_vmPushNumInt( HB_LONG lNumber );  /* pushes a number on to the stack and decides if it is integer or HB_LONG */
+extern HB_EXPORT void     hb_vmPushNumInt( HB_MAXINT lNumber );  /* pushes a number on to the stack and decides if it is integer or HB_MAXINT */
 extern HB_EXPORT void     hb_vmPushLogical( HB_BOOL bValue );    /* pushes a logical value onto the stack */
 extern HB_EXPORT void     hb_vmPushString( const char * szText, HB_SIZE length );  /* pushes a string on to the stack */
 extern HB_EXPORT void     hb_vmPushStringPcode( const char * szText, HB_SIZE length );  /* pushes a string from pcode on to the stack */

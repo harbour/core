@@ -64,7 +64,7 @@ HB_FUNC( VAL )
       const char * szText = hb_itemGetCPtr( pText );
       int iWidth, iDec, iLen = ( int ) hb_itemGetCLen( pText );
       HB_BOOL fDbl;
-      HB_LONG lValue;
+      HB_MAXINT lValue;
       double dValue;
 
       fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );

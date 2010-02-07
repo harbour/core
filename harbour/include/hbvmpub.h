@@ -78,8 +78,8 @@ struct _HB_SYMB;
 #  endif
 
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
-                                        ( HB_LONG ) (p)->item.asInteger.value : \
-                                        ( HB_LONG ) (p)->item.asLong.value )
+                                        ( HB_MAXINT ) (p)->item.asInteger.value : \
+                                        ( HB_MAXINT ) (p)->item.asLong.value )
 
 #  define HB_ITEM_PUT_NUMINTRAW( p, v )  \
                do { \

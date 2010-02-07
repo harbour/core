@@ -1838,7 +1838,7 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
    {
       char rdbuf[ 64 ];
       int i, j, n, d, y, x;
-      HB_ULONG end_timer, time;
+      HB_MAXUINT end_timer, time;
 
       hb_gt_trm_termOut( pTerm, "\x1B[6n", 4 );
       if( szPost )

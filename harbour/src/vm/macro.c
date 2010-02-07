@@ -1244,7 +1244,7 @@ void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COM
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
-void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
+void hb_macroGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL )
 {
    if( lNumber == 0 )
    {
@@ -1365,7 +1365,7 @@ void hb_macroGenPopMemvar( const char * szVarName, HB_COMP_DECL )
 void hb_macroGenPopAliasedVar( const char * szVarName,
                                HB_BOOL bPushAliasValue,
                                const char * szAlias,
-                               HB_LONG lWorkarea, HB_COMP_DECL )
+                               HB_MAXINT lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPopAliasedVar(%s->%s)",szAlias,szVarName));
 
@@ -1457,7 +1457,7 @@ void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL )
 void hb_macroGenPushAliasedVar( const char * szVarName,
                                 HB_BOOL bPushAliasValue,
                                 const char * szAlias,
-                                HB_LONG lWorkarea, HB_COMP_DECL )
+                                HB_MAXINT lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPushAliasedVar(%s->%s)",szAlias,szVarName));
 

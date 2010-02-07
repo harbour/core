@@ -278,7 +278,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
                                   PHB_CYCLIC_REF * pRefPtr, HB_SIZE ulOffset )
 {
    HB_SIZE ulSize, ulLen, u;
-   HB_LONG lVal;
+   HB_MAXINT lVal;
    USHORT uiClass;
    PHB_ITEM pDefVal;
    const char * szVal;
@@ -430,7 +430,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
                                  HB_UCHAR * pBuffer, HB_SIZE ulOffset,
                                  PHB_CYCLIC_REF pRef )
 {
-   HB_LONG lVal;
+   HB_MAXINT lVal;
    double d;
    int iWidth, iDecimal;
    long l, l2;

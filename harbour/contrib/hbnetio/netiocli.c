@@ -473,7 +473,7 @@ static const char * s_fileDecode( const char * pszFilename,
                   if( iLen > 0 )
                   {
                      int iOverflow;
-                     HB_LONG llPort;
+                     HB_MAXINT llPort;
 
                      port_buf[ iLen ] = '\0';
                      llPort = hb_strValInt( port_buf, &iOverflow );

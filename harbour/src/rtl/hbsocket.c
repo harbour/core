@@ -476,7 +476,7 @@ int hb_socketListen( HB_SOCKET sd, int iBacklog )
    return -1;
 }
 
-HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_LONG timeout )
+HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( pSockAddr );
@@ -486,7 +486,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    return HB_NO_SOCKET;
 }
 
-int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_LONG timeout )
+int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( pSockAddr );
@@ -496,7 +496,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_L
    return -1;
 }
 
-long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LONG timeout )
+long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( data );
@@ -507,7 +507,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LON
    return -1;
 }
 
-long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout )
+long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( data );
@@ -520,7 +520,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, cons
    return -1;
 }
 
-long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout )
+long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( data );
@@ -531,7 +531,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG time
    return -1;
 }
 
-long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout )
+long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( data );
@@ -625,7 +625,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    return -1;
 }
 
-int hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectRead( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
@@ -633,7 +633,7 @@ int hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout )
    return -1;
 }
 
-int hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectWrite( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
@@ -642,7 +642,7 @@ int hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout )
 }
 
 
-int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectWriteEx( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
@@ -653,7 +653,7 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
 int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                      PHB_ITEM pArrayWR, HB_BOOL fSetWR,
                      PHB_ITEM pArrayEX, HB_BOOL fSetEX,
-                     HB_LONG timeout, HB_SOCKET_FUNC pFunc )
+                     HB_MAXINT timeout, HB_SOCKET_FUNC pFunc )
 {
    HB_SYMBOL_UNUSED( pArrayRD );
    HB_SYMBOL_UNUSED( fSetRD );
@@ -1361,13 +1361,13 @@ static int hb_socketTransType( int type, int *err )
 }
 #endif
 
-static int hb_socketSelectRD( HB_SOCKET sd, HB_LONG timeout )
+static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set rfds;
    int iResult;
 #if !defined( HB_HAS_SELECT_TIMER )
-   HB_ULONG timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
    for( ;; )
@@ -1392,7 +1392,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_LONG timeout )
          continue;
 #else
       {
-         HB_ULONG timecurr = hb_dateMilliSeconds();
+         HB_MAXUINT timecurr = hb_dateMilliSeconds();
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
@@ -1409,13 +1409,13 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_LONG timeout )
           ( iResult > 0 && FD_ISSET( sd, &rfds ) ? 1 : 0 );
 }
 
-static int hb_socketSelectWR( HB_SOCKET sd, HB_LONG timeout )
+static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set wfds;
    int iResult;
 #if !defined( HB_HAS_SELECT_TIMER )
-   HB_ULONG timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
    for( ;; )
@@ -1440,7 +1440,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_LONG timeout )
          continue;
 #else
       {
-         HB_ULONG timecurr = hb_dateMilliSeconds();
+         HB_MAXUINT timecurr = hb_dateMilliSeconds();
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
@@ -1457,7 +1457,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_LONG timeout )
           ( iResult > 0 && FD_ISSET( sd, &wfds ) ? 1 : 0 );
 }
 
-static int hb_socketSelectWRE( HB_SOCKET sd, HB_LONG timeout )
+static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set wfds, * pefds;
@@ -1466,7 +1466,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_LONG timeout )
 #endif
    int iResult;
 #if !defined( HB_HAS_SELECT_TIMER )
-   HB_ULONG timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
    for( ;; )
@@ -1502,7 +1502,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_LONG timeout )
          continue;
 #else
       {
-         HB_ULONG timecurr = hb_dateMilliSeconds();
+         HB_MAXUINT timecurr = hb_dateMilliSeconds();
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
@@ -2085,7 +2085,7 @@ int hb_socketListen( HB_SOCKET sd, int iBacklog )
    return ret;
 }
 
-HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_LONG timeout )
+HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_MAXINT timeout )
 {
    HB_SOCKET newsd = HB_NO_SOCKET;
    int ret;
@@ -2139,7 +2139,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    return newsd;
 }
 
-int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_LONG timeout )
+int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
    int ret, blk;
 
@@ -2171,7 +2171,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_L
    return ret;
 }
 
-long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LONG timeout )
+long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAXINT timeout )
 {
    long lSent = 0;
 
@@ -2209,7 +2209,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LON
 }
 
 long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
-                      const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout )
+                      const void * pSockAddr, unsigned uiSockLen, HB_MAXINT timeout )
 {
    long lSent = 0;
 
@@ -2243,7 +2243,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
    return lSent;
 }
 
-long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout )
+long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT timeout )
 {
    long lReceived = 0;
 
@@ -2272,7 +2272,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG time
    return lReceived;
 }
 
-long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout )
+long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_MAXINT timeout )
 {
    long lReceived = 0;
 
@@ -2506,7 +2506,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    return -1;
 }
 
-int hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectRead( HB_SOCKET sd, HB_MAXINT timeout )
 {
    int ret;
 
@@ -2517,7 +2517,7 @@ int hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout )
    return ret;
 }
 
-int hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectWrite( HB_SOCKET sd, HB_MAXINT timeout )
 {
    int ret;
 
@@ -2528,7 +2528,7 @@ int hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout )
    return ret;
 }
 
-int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
+int hb_socketSelectWriteEx( HB_SOCKET sd, HB_MAXINT timeout )
 {
    int ret;
 
@@ -2542,7 +2542,7 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
 int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                      PHB_ITEM pArrayWR, HB_BOOL fSetWR,
                      PHB_ITEM pArrayEX, HB_BOOL fSetEX,
-                     HB_LONG timeout, HB_SOCKET_FUNC pFunc )
+                     HB_MAXINT timeout, HB_SOCKET_FUNC pFunc )
 {
    HB_SOCKET maxsd, sd;
    int i, ret;

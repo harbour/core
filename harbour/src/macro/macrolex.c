@@ -243,7 +243,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
 
 static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, ULONG ulLen )
 {
-   HB_LONG lNumber;
+   HB_MAXINT lNumber;
    double dNumber;
    int iDec, iWidth;
 

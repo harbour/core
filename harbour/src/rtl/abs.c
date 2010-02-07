@@ -74,7 +74,7 @@ HB_FUNC( ABS )
 #if -HB_INT_MAX > HB_INT_MIN
          else if( iNumber < -HB_INT_MAX )
 #if HB_LONG_MAX > HB_INT_MAX
-            hb_retnint( - ( HB_LONG ) iNumber );
+            hb_retnint( - ( HB_MAXINT ) iNumber );
 #else
             hb_retndlen( - ( double ) iNumber, 0, iDec );
 #endif
@@ -84,7 +84,7 @@ HB_FUNC( ABS )
       }
       else if( HB_IS_LONG( pNumber ) )
       {
-         HB_LONG lNumber = hb_itemGetNInt( pNumber );
+         HB_MAXINT lNumber = hb_itemGetNInt( pNumber );
 
          if( lNumber >= 0 )
             hb_retnintlen( lNumber, iWidth );

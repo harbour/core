@@ -1157,7 +1157,7 @@ static ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       {
-         HB_LONG iVal;
+         HB_MAXINT iVal;
          iVal = hb_itemGetNInt( pItem );
          if( HB_LIM_INT32( iVal ) )
          {
@@ -1238,7 +1238,7 @@ static HB_ERRCODE hb_fptCountSMTDataLength( FPTAREAP pArea, HB_FOFFSET * pfOffse
 static ULONG hb_fptStoreSMTItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr, HB_BOOL fTrans )
 {
    ULONG ulLen, u, ulSize = 0;
-   HB_LONG iVal;
+   HB_MAXINT iVal;
    LONG lVal;
    double dVal;
    int iWidth, iDec;
@@ -1607,7 +1607,7 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr, HB_BOOL fTrans )
 {
    ULONG ulLen, u, ulSize;
-   HB_LONG iVal;
+   HB_MAXINT iVal;
    LONG lVal;
    double dVal;
    int iWidth, iDec;
@@ -1819,7 +1819,7 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
                                         ULONG * pulArrayCount, HB_BOOL fTrans )
 {
    ULONG ulLen, u, ulSize = 1;
-   HB_LONG iVal;
+   HB_MAXINT iVal;
 
    switch ( hb_itemType( pItem ) )
    {
@@ -1872,7 +1872,7 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr, HB_BOOL fTrans )
 {
    ULONG ulLen, u;
-   HB_LONG iVal;
+   HB_MAXINT iVal;
    LONG lVal;
    double dVal;
    int iWidth, iDec;
@@ -2925,7 +2925,7 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    BYTE itmBuffer[FLEX_ITEM_BUFSIZE];
    BYTE  *bBufPtr = NULL, *bBufAlloc = NULL;
    HB_ERRCODE errCode;
-   HB_LONG iVal;
+   HB_MAXINT iVal;
    LONG lVal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptPutMemo(%p, %hu, %p, %p)", pArea, uiIndex, pItem, pulBlock));
@@ -3239,7 +3239,7 @@ static HB_ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       if( pField->uiLen == 3 || uiType == HB_VF_DATE )
          hb_itemPutDL( pItem, hb_sxPtoD( ( char * ) pFieldBuf ) );
       else if( pField->uiLen == 4 || uiType == HB_VF_INT )
-         hb_itemPutNIntLen( pItem, ( HB_LONG ) HB_GET_LE_INT32( pFieldBuf ), 10 );
+         hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT32( pFieldBuf ), 10 );
       else if( pField->uiLen == 2 )
          hb_itemPutNIntLen( pItem, ( int ) HB_GET_LE_INT16( pFieldBuf ), 10 );
       else if( pField->uiLen == 1 )
@@ -3538,7 +3538,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       }
       else if( pField->uiLen == 4 )
       {
-         HB_LONG lVal;
+         HB_MAXINT lVal;
 
          if( ! HB_IS_NUMBER( pItem ) )
             return EDBF_DATATYPE;
@@ -3600,7 +3600,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          }
          else if( HB_IS_NUMBER( pItem ) )
          {
-            HB_LONG lVal;
+            HB_MAXINT lVal;
             lVal = hb_itemGetNInt( pItem );
 
             if( !HB_IS_DOUBLE( pItem ) && HB_LIM_INT32( lVal ) )

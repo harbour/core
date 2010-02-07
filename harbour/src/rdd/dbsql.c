@@ -235,7 +235,7 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 }
 
 /* Export DBF content to a SQL script file */
-static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
+static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
                         PHB_ITEM pWhile, PHB_ITEM pFor,
                         const char * szDelim, const char * szSep,
                         const char * szEsc, const char * szTable,
@@ -363,7 +363,7 @@ HB_FUNC( __DBSQL )
       const char * szSep      = hb_parcx( 13 );
       const char * szDelim    = hb_parcx( 14 );
       const char * szEsc      = hb_parcx( 15 );
-      HB_LONG llNext          = HB_LONG_MAX;
+      HB_MAXINT llNext        = HB_LONG_MAX;
       HB_FHANDLE hFile;
       HB_ERRCODE errCode;
 

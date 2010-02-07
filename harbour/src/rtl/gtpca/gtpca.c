@@ -233,7 +233,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
    {
       char rdbuf[ 64 ];
       int i, j, n, d, y, x;
-      HB_ULONG end_timer, time;
+      HB_MAXUINT end_timer, time;
 
       hb_gt_pca_termOut( "\x1B[6n", 4 );
       hb_gt_pca_termFlush();

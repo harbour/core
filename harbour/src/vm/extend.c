@@ -617,7 +617,7 @@ HB_LONGLONG  hb_parnll( int iParam )
 }
 #endif
 
-HB_LONG  hb_parnint( int iParam )
+HB_MAXINT hb_parnint( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -631,14 +631,14 @@ HB_LONG  hb_parnint( int iParam )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( HB_LONG ) pItem->item.asLong.value;
+         return ( HB_MAXINT ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_LONG ) pItem->item.asInteger.value;
+         return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
 #else
-         return ( HB_LONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) pItem->item.asDouble.value;
 #endif
    }
 
@@ -1185,7 +1185,7 @@ HB_LONGLONG  hb_parvnll( int iParam, ... )
 }
 #endif
 
-HB_LONG  hb_parvnint( int iParam, ... )
+HB_MAXINT hb_parvnint( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1199,14 +1199,14 @@ HB_LONG  hb_parvnint( int iParam, ... )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( HB_LONG ) pItem->item.asLong.value;
+         return ( HB_MAXINT ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_LONG ) pItem->item.asInteger.value;
+         return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
 #else
-         return ( HB_LONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) pItem->item.asDouble.value;
 #endif
       else if( HB_IS_ARRAY( pItem ) )
       {
@@ -1479,7 +1479,7 @@ void hb_retnll( HB_LONGLONG llNumber )
 #endif
 
 #undef hb_retnint
-void hb_retnint( HB_LONG lNumber )
+void hb_retnint( HB_MAXINT lNumber )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1541,7 +1541,7 @@ void hb_retnlllen( HB_LONGLONG llNumber, int iWidth )
 #endif
 
 #undef hb_retnintlen
-void hb_retnintlen( HB_LONG lNumber, int iWidth )
+void hb_retnintlen( HB_MAXINT lNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1874,7 +1874,7 @@ int hb_stornll( HB_LONGLONG llValue, int iParam )
 }
 #endif
 
-int hb_stornint( HB_LONG lValue, int iParam )
+int hb_stornint( HB_MAXINT lValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2345,7 +2345,7 @@ int hb_storvnll( HB_LONGLONG llValue, int iParam, ... )
 }
 #endif
 
-int hb_storvnint( HB_LONG lValue, int iParam, ... )
+int hb_storvnint( HB_MAXINT lValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 

@@ -196,7 +196,7 @@ static void hb_znetEncrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 
 /* read data using stream structure
  */
-long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_LONG timeout )
+long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_MAXINT timeout )
 {
    long rec = 0;
 
@@ -279,7 +279,7 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
    return len == 0 ? rec : len;
 }
 
-static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
+static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
 {
    long tosnd = HB_ZNET_BUFSIZE - pStream->wr.avail_out;
    long snd = 0, rest =  0;
@@ -355,7 +355,7 @@ static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG ti
 /* flush data in stream structure - return number of bytes left in the
  * buffer which were not sent
  */
-long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
+long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
 {
    uInt uiSize = HB_ZNET_BUFSIZE - ( pStream->crypt ? -2 : 0 );
 
@@ -378,7 +378,7 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_LONG timeout )
 
 /* write data using stream structure
  */
-long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_LONG timeout, long * plast )
+long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_MAXINT timeout, long * plast )
 {
    long snd = 0;
 

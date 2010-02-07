@@ -267,14 +267,14 @@ int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
       return 0;
 }
 
-HB_LONG hb_compExprAsLongNum( HB_EXPR_PTR pExpr )
+HB_MAXINT hb_compExprAsLongNum( HB_EXPR_PTR pExpr )
 {
    if( pExpr->ExprType == HB_ET_NUMERIC )
    {
       if( pExpr->value.asNum.NumType == HB_ET_LONG )
          return pExpr->value.asNum.val.l;
       else
-         return ( HB_LONG ) pExpr->value.asNum.val.d;
+         return ( HB_MAXINT ) pExpr->value.asNum.val.d;
    }
    else
       return 0;
@@ -320,7 +320,7 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucWidth, BYTE ucDec,
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT lValue, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 

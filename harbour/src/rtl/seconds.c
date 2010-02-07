@@ -60,7 +60,7 @@ HB_FUNC( SECONDS )
 
 HB_FUNC( HB_MILLISECONDS )
 {
-   hb_retnint( ( HB_LONG ) hb_dateMilliSeconds() );
+   hb_retnint( ( HB_MAXINT ) hb_dateMilliSeconds() );
 }
 
 HB_FUNC( HB_CLOCKS2SECS )

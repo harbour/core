@@ -56,7 +56,7 @@
 
 #include "hbapi.h"
 
-static HB_BOOL __numParam( int iParam, HB_LONG * plNum )
+static HB_BOOL __numParam( int iParam, HB_MAXINT * plNum )
 {
    const char *szHex = hb_parc( iParam );
 
@@ -96,7 +96,7 @@ static HB_BOOL __numParam( int iParam, HB_LONG * plNum )
 HB_FUNC( NUMAND )
 {
    int iPCount = hb_pcount(), i = 1;
-   HB_LONG lValue = -1, lNext = 0;
+   HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && __numParam( 1, &lValue ) )
    {
@@ -112,7 +112,7 @@ HB_FUNC( NUMAND )
 HB_FUNC( NUMOR )
 {
    int iPCount = hb_pcount(), i = 1;
-   HB_LONG lValue = -1, lNext = 0;
+   HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && __numParam( 1, &lValue ) )
    {
@@ -128,7 +128,7 @@ HB_FUNC( NUMOR )
 HB_FUNC( NUMXOR )
 {
    int iPCount = hb_pcount(), i = 1;
-   HB_LONG lValue = -1, lNext = 0;
+   HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && __numParam( 1, &lValue ) )
    {
@@ -143,7 +143,7 @@ HB_FUNC( NUMXOR )
 
 HB_FUNC( NUMNOT )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
       lValue = ( ~lValue ) & 0xffff;
@@ -153,7 +153,7 @@ HB_FUNC( NUMNOT )
 
 HB_FUNC( NUMLOW )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
       lValue &= 0xff;
@@ -163,7 +163,7 @@ HB_FUNC( NUMLOW )
 
 HB_FUNC( NUMHIGH )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) /* && lValue == lValue & 0xffff */  )
       lValue = ( lValue >> 8 ) & 0xff;
@@ -173,7 +173,7 @@ HB_FUNC( NUMHIGH )
 
 HB_FUNC( NUMROL )
 {
-   HB_LONG lValue, lShift;
+   HB_MAXINT lValue, lShift;
 
    if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) && __numParam( 2, &lShift )
        && lShift == ( lShift & 0xffff ) )
@@ -199,7 +199,7 @@ HB_FUNC( NUMROL )
 
 HB_FUNC( NUMMIRR )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) )
    {
@@ -226,7 +226,7 @@ HB_FUNC( NUMMIRR )
 HB_FUNC( CLEARBIT )
 {
    int iPCount = hb_pcount(), iBit, i = 1;
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
    {
@@ -235,7 +235,7 @@ HB_FUNC( CLEARBIT )
          iBit = hb_parni( ++i );
          if( iBit < 1 || iBit > 64 )
             break;
-         lValue &= ~( ( ( HB_LONG ) 1 ) << ( iBit - 1 ) );
+         lValue &= ~( ( ( HB_MAXINT ) 1 ) << ( iBit - 1 ) );
       }
 
       if( iPCount )
@@ -248,7 +248,7 @@ HB_FUNC( CLEARBIT )
 HB_FUNC( SETBIT )
 {
    int iPCount = hb_pcount(), iBit, i = 1;
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
    {
@@ -257,7 +257,7 @@ HB_FUNC( SETBIT )
          iBit = hb_parni( ++i );
          if( iBit < 1 || iBit > 64 )
             break;
-         lValue |= ( ( HB_LONG ) 1 ) << ( iBit - 1 );
+         lValue |= ( ( HB_MAXINT ) 1 ) << ( iBit - 1 );
       }
 
       if( iPCount )
@@ -269,7 +269,7 @@ HB_FUNC( SETBIT )
 
 HB_FUNC( ISBIT )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
    {
@@ -277,7 +277,7 @@ HB_FUNC( ISBIT )
 
       if( iBit )
          --iBit;
-      lValue &= ( ( HB_LONG ) 1 ) << iBit;
+      lValue &= ( ( HB_MAXINT ) 1 ) << iBit;
    }
    else
       lValue = 0;
@@ -287,7 +287,7 @@ HB_FUNC( ISBIT )
 
 HB_FUNC( INTNEG )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
    {
@@ -304,7 +304,7 @@ HB_FUNC( INTNEG )
 
 HB_FUNC( INTPOS )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( __numParam( 1, &lValue ) )
    {

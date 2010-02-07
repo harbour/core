@@ -83,7 +83,7 @@ HB_EXTERN_BEGIN
 
 #  include "hbtask.h"
 
-   typedef HB_LONG            HB_THREAD_NO;
+   typedef HB_MAXINT          HB_THREAD_NO;
    typedef void *             HB_THREAD_ID;
    typedef void *             HB_CRITICAL_T;
    typedef void *             HB_COND_T;
@@ -122,7 +122,7 @@ HB_EXTERN_BEGIN
 
 #elif defined( HB_PTHREAD_API )
 
-   typedef HB_LONG         HB_THREAD_NO;
+   typedef HB_MAXINT       HB_THREAD_NO;
    typedef pthread_t       HB_THREAD_ID;
    typedef pthread_t       HB_THREAD_HANDLE;
    typedef pthread_mutex_t HB_RAWCRITICAL_T;
@@ -173,7 +173,7 @@ HB_EXTERN_BEGIN
 
 #elif defined( HB_OS_WIN )
 
-   typedef HB_LONG            HB_THREAD_NO;
+   typedef HB_MAXINT          HB_THREAD_NO;
    typedef HANDLE             HB_THREAD_HANDLE;
    typedef CRITICAL_SECTION   HB_RAWCRITICAL_T;
    typedef HANDLE             HB_OSCOND_T;
@@ -216,7 +216,7 @@ HB_EXTERN_BEGIN
     * it may cause troubles when code will be ported to other platforms.
     */
    /* typedef TID                HB_THREAD_NO; */
-   typedef HB_LONG            HB_THREAD_NO;
+   typedef HB_MAXINT          HB_THREAD_NO;
    typedef TID                HB_THREAD_ID;
    typedef TID                HB_THREAD_HANDLE;
    typedef HMTX               HB_RAWCRITICAL_T;

@@ -121,7 +121,7 @@ static HB_ERRCODE hb_dbfErrorRT( DBFAREAP pArea,
    return errCode;
 }
 
-static HB_LONG hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_LONG * pValue )
+static HB_MAXINT hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_MAXINT * pValue )
 {
    DBFFIELD dbField;
    HB_BOOL fLck = HB_FALSE;
@@ -153,9 +153,9 @@ static HB_LONG hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_LONG * pValue
    return HB_SUCCESS;
 }
 
-static HB_LONG hb_dbfGetNextValue( DBFAREAP pArea, USHORT uiField )
+static HB_MAXINT hb_dbfGetNextValue( DBFAREAP pArea, USHORT uiField )
 {
-   HB_LONG nValue = 0;
+   HB_MAXINT nValue = 0;
    DBFFIELD dbField;
 
    if( hb_fileReadAt( pArea->pDataFile, &dbField, sizeof( dbField ),
@@ -174,7 +174,7 @@ static HB_LONG hb_dbfGetNextValue( DBFAREAP pArea, USHORT uiField )
 static void hb_dbfUpdateStampFields( DBFAREAP pArea )
 {
    long lJulian = 0, lMilliSec = 0;
-   HB_LONG nRowVer = 0;
+   HB_MAXINT nRowVer = 0;
    LPFIELD pField;
    USHORT uiCount;
 
@@ -298,9 +298,9 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
          }
          else if( bNext == HB_BLANK_AUTOINC )
          {
-            HB_LONG nValue = hb_dbfGetNextValue( pArea, uiCount );
+            HB_MAXINT nValue = hb_dbfGetNextValue( pArea, uiCount );
             if( pField->uiDec )
-               nValue = ( HB_LONG ) hb_numDecConv( ( double ) nValue, - ( int ) pField->uiDec );
+               nValue = ( HB_MAXINT ) hb_numDecConv( ( double ) nValue, - ( int ) pField->uiDec );
             if( pField->uiType == HB_FT_INTEGER ||
                 pField->uiType == HB_FT_AUTOINC )
             {
@@ -1926,14 +1926,14 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                   hb_itemPutNILen( pItem, ( int ) HB_GET_LE_INT16( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 6 );
                   break;
                case 3:
-                  hb_itemPutNIntLen( pItem, ( HB_LONG ) HB_GET_LE_INT24( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
+                  hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT24( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
                   break;
                case 4:
-                  hb_itemPutNIntLen( pItem, ( HB_LONG ) HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
+                  hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
                   break;
                case 8:
 #ifndef HB_LONG_LONG_OFF
-                  hb_itemPutNIntLen( pItem, ( HB_LONG ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 20 );
+                  hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 20 );
 #else
                   hb_itemPutNLen( pItem, ( double ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 20, 0 );
 #endif
@@ -1964,7 +1964,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          else
          */
          {
-            HB_LONG lVal;
+            HB_MAXINT lVal;
             double dVal;
             HB_BOOL fDbl;
 
@@ -1995,7 +1995,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          }
          else if( pField->uiLen == 4 )
          {
-            hb_itemPutNIntLen( pItem, ( HB_LONG ) HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
+            hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
          }
          else
          {
@@ -2351,14 +2351,14 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          }
          else if( pField->uiType == HB_FT_INTEGER )
          {
-            HB_LONG lVal;
+            HB_MAXINT lVal;
             double dVal;
             int iSize;
 
             if( pField->uiDec )
             {
                dVal = hb_numDecConv( hb_itemGetND( pItem ), - ( int ) pField->uiDec );
-               lVal = ( HB_LONG ) dVal;
+               lVal = ( HB_MAXINT ) dVal;
                if( ! HB_DBL_LIM_INT64( dVal ) )
                   iSize = 99;
                else
@@ -2377,7 +2377,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             else if( HB_IS_DOUBLE( pItem ) )
             {
                dVal = hb_itemGetND( pItem );
-               lVal = ( HB_LONG ) dVal;
+               lVal = ( HB_MAXINT ) dVal;
                if( ! HB_DBL_LIM_INT64( dVal ) )
                   iSize = 99;
                else
@@ -2395,7 +2395,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             }
             else
             {
-               lVal = ( HB_LONG ) hb_itemGetNInt( pItem );
+               lVal = ( HB_MAXINT ) hb_itemGetNInt( pItem );
 #ifdef HB_LONG_LONG_OFF
                dVal = ( double ) lVal;
 #endif
@@ -2444,7 +2444,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          }
          else if( pField->uiType == HB_FT_ANY && pField->uiLen == 4 )
          {
-            HB_LONG lVal = hb_itemGetNInt( pItem );
+            HB_MAXINT lVal = hb_itemGetNInt( pItem );
             if( HB_IS_DOUBLE( pItem ) ?
                         HB_DBL_LIM_INT32( hb_itemGetND( pItem ) ) :
                         HB_LIM_INT32( lVal ) )
@@ -3242,12 +3242,12 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_FILEHANDLE:
          hb_itemPutNInt( pItem, !pArea->pDataFile ? FS_ERROR :
-               ( HB_LONG ) ( HB_NHANDLE ) hb_fileHandle( pArea->pDataFile ) );
+               ( HB_MAXINT ) ( HB_NHANDLE ) hb_fileHandle( pArea->pDataFile ) );
          break;
 
       case DBI_MEMOHANDLE:
          hb_itemPutNInt( pItem, ! pArea->pMemoFile ? FS_ERROR :
-               ( HB_LONG ) ( HB_NHANDLE ) hb_fileHandle( pArea->pMemoFile ) );
+               ( HB_MAXINT ) ( HB_NHANDLE ) hb_fileHandle( pArea->pMemoFile ) );
          break;
 
       case DBI_SHARED:

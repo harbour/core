@@ -291,7 +291,7 @@ static const char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_
 #if defined( HB_COMPAT_FOXPRO ) || 1
 static HB_BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, long * plTime )
 {
-   HB_LONG lHour, lMinute, lMilliSec;
+   HB_MAXINT lHour, lMinute, lMilliSec;
    double dNumber;
    int iDec, iWidth;
 
@@ -325,7 +325,7 @@ static HB_BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, long * plTime )
       {
          if( dNumber < 0.0 || dNumber >= 60.0 )
             return HB_FALSE;
-         lMilliSec = ( HB_LONG ) ( dNumber * 1000 + 0.05 / HB_MILLISECS_PER_DAY );
+         lMilliSec = ( HB_MAXINT ) ( dNumber * 1000 + 0.05 / HB_MILLISECS_PER_DAY );
          if( lMilliSec == 60000 )
             --lMilliSec;
       }
@@ -385,7 +385,7 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
 
    /* Now support for dates constatns: {^YYYY/MM/DD} or {^YYYY-MM-DD} */
    PHB_PP_TOKEN pYear, pMonth, pDay;
-   HB_LONG lYear, lMonth, lDay;
+   HB_MAXINT lYear, lMonth, lDay;
    long lDate = 0, lTime = 0;
    double dNumber;
    int iDec, iWidth, iType = 0;
@@ -473,7 +473,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
    {
       case HB_PP_TOKEN_NUMBER:
       {
-         HB_LONG lNumber;
+         HB_MAXINT lNumber;
          double dNumber;
          int iDec, iWidth;
 

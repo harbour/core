@@ -321,7 +321,7 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
             }
             else
             {
-               HB_LONG lVal;
+               HB_MAXINT lVal;
                double dVal;
                HB_BOOL fDbl;
 
@@ -590,7 +590,7 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
 
       case HB_FT_LONG:
       {
-         HB_LONG lVal;
+         HB_MAXINT lVal;
          double dVal;
          HB_BOOL fDbl;
 

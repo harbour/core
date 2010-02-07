@@ -504,7 +504,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
       {
          char rdbuf[ 64 ];
          int i, j, n, d, y, x;
-         HB_ULONG end_timer, time;
+         HB_MAXUINT end_timer, time;
 
          n = j = x = y = 0;
          /* wait up to 2 seconds for answer */

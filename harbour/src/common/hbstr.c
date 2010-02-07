@@ -535,7 +535,7 @@ double hb_numDecConv( double dNum, int iDec )
       return hb_numRound( dNum, 0 );
 }
 
-static HB_BOOL hb_str2number( HB_BOOL fPCode, const char* szNum, HB_SIZE ulLen, HB_LONG * lVal, double * dVal, int * piDec, int * piWidth )
+static HB_BOOL hb_str2number( HB_BOOL fPCode, const char* szNum, HB_SIZE ulLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
    HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
    HB_SIZE ulPos = 0;
@@ -587,7 +587,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char* szNum, HB_SIZE ulLen, 
    }
    else
    {
-      HB_LONG lLimV;
+      HB_MAXINT lLimV;
       int iLimC;
 
       lLimV = HB_LONG_MAX / 10;
@@ -700,25 +700,25 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char* szNum, HB_SIZE ulLen, 
    return fDbl;
 }
 
-HB_BOOL hb_compStrToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_BOOL hb_compStrToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( HB_TRUE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
-HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_valStrnToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
-HB_BOOL hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal )
+HB_BOOL hb_strToNum( const char* szNum, HB_MAXINT * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %p, %p)", szNum, plVal, pdVal ));
    return hb_str2number( HB_FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
-HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double * pdVal )
+HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strnToNum(%.*s, %lu, %p, %p)", ( int ) ulLen, szNum, ulLen, plVal, pdVal ));
    return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
@@ -727,7 +727,7 @@ HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_LONG * plVal, double 
 /* returns the numeric value of a character string representation of a number */
 double hb_strVal( const char * szText, HB_SIZE ulLen )
 {
-   HB_LONG lVal;
+   HB_MAXINT lVal;
    double dVal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%.*s, %lu)", ( int ) ulLen, szText, ulLen));
@@ -737,9 +737,9 @@ double hb_strVal( const char * szText, HB_SIZE ulLen )
    return dVal;
 }
 
-HB_LONG hb_strValInt( const char * szText, int * iOverflow )
+HB_MAXINT hb_strValInt( const char * szText, int * iOverflow )
 {
-   HB_LONG lVal;
+   HB_MAXINT lVal;
    double dVal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
@@ -753,7 +753,7 @@ HB_LONG hb_strValInt( const char * szText, int * iOverflow )
    return lVal;
 }
 
-char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_LONG lNumber )
+char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_MAXINT lNumber )
 {
    int iPos = ( int ) ulSize;
    HB_BOOL fNeg = HB_FALSE;

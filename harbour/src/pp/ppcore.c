@@ -4612,7 +4612,7 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
    return pNext;
 }
 
-static HB_BOOL hb_pp_calcReduce( HB_LONG * plValue, int iOperation )
+static HB_BOOL hb_pp_calcReduce( HB_MAXINT * plValue, int iOperation )
 {
    switch( iOperation )
    {
@@ -4632,8 +4632,8 @@ static HB_BOOL hb_pp_calcReduce( HB_LONG * plValue, int iOperation )
    return HB_FALSE;
 }
 
-static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
-                                    int iOperation, HB_BOOL * pfError )
+static HB_MAXINT hb_pp_calcOperation( HB_MAXINT lValueLeft, HB_MAXINT lValueRight,
+                                      int iOperation, HB_BOOL * pfError )
 {
    switch( iOperation )
    {
@@ -4708,7 +4708,7 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
 }
 
 static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
-                                     HB_LONG * plValue, HB_BOOL * pfError,
+                                     HB_MAXINT * plValue, HB_BOOL * pfError,
                                      HB_BOOL * pfUndef )
 {
    if( HB_PP_TOKEN_ISEOC( pToken ) )
@@ -4780,7 +4780,7 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
       else if( iNextPrec > iPrecedense )
       {
          HB_BOOL fDefined = ( ! * pfUndef ) && hb_pp_calcReduce( plValue, iNextOper );
-         HB_LONG lValue = 0;
+         HB_MAXINT lValue = 0;
          * pfError = HB_TRUE;
          pToken = hb_pp_calcValue( pNext, iNextPrec, &lValue, pfError, pfUndef );
          if( ! * pfError )
@@ -4795,11 +4795,11 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
    return pToken;
 }
 
-static HB_LONG hb_pp_calculateValue( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
-                                     HB_BOOL fNoError )
+static HB_MAXINT hb_pp_calculateValue( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
+                                       HB_BOOL fNoError )
 {
    HB_BOOL fError = HB_TRUE, fUndef = HB_FALSE;
-   HB_LONG lValue = 0;
+   HB_MAXINT lValue = 0;
 
    pToken = hb_pp_calcValue( pToken, HB_PP_PREC_NUL, &lValue, &fError, &fUndef );
    if( !HB_PP_TOKEN_ISEOC( pToken ) || fUndef )

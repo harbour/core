@@ -92,12 +92,12 @@ HB_EXPORT extern int          hb_socketClose( HB_SOCKET sd );
 HB_EXPORT extern int          hb_socketShutdown( HB_SOCKET sd, int iMode );
 HB_EXPORT extern int          hb_socketBind( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen );
 HB_EXPORT extern int          hb_socketListen( HB_SOCKET sd, int iBacklog );
-HB_EXPORT extern HB_SOCKET    hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout );
+HB_EXPORT extern HB_SOCKET    hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_MAXINT timeout );
+HB_EXPORT extern int          hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout );
+HB_EXPORT extern long         hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAXINT timeout );
+HB_EXPORT extern long         hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_MAXINT timeout );
+HB_EXPORT extern long         hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT timeout );
+HB_EXPORT extern long         hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_MAXINT timeout );
 HB_EXPORT extern int          hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking );
 HB_EXPORT extern int          hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay );
 HB_EXPORT extern int          hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse );
@@ -108,13 +108,13 @@ HB_EXPORT extern int          hb_socketSetRcvBufSize( HB_SOCKET sd, int iSize );
 HB_EXPORT extern int          hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize );
 HB_EXPORT extern int          hb_socketGetSndBufSize( HB_SOCKET sd, int * piSize );
 HB_EXPORT extern int          hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr );
-HB_EXPORT extern int          hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketSelectRead( HB_SOCKET sd, HB_MAXINT timeout );
+HB_EXPORT extern int          hb_socketSelectWrite( HB_SOCKET sd, HB_MAXINT timeout );
+HB_EXPORT extern int          hb_socketSelectWriteEx( HB_SOCKET sd, HB_MAXINT timeout );
 HB_EXPORT extern int          hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                                                PHB_ITEM pArrayWR, HB_BOOL fSetWR,
                                                PHB_ITEM pArrayEX, HB_BOOL fSetEX,
-                                               HB_LONG timeout, HB_SOCKET_FUNC pFunc );
+                                               HB_MAXINT timeout, HB_SOCKET_FUNC pFunc );
 
 HB_EXTERN_END
 

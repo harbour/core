@@ -61,7 +61,7 @@ extern HB_EXPORT double hb_secondsCPU( int n );
 
 extern HB_EXPORT double hb_dateSeconds( void );
 /* return UTC julian timestamp in milliseconds */
-extern HB_EXPORT HB_ULONG hb_dateMilliSeconds( void );
+extern HB_EXPORT HB_MAXUINT hb_dateMilliSeconds( void );
 
 /* functions to operate on julian date values */
 

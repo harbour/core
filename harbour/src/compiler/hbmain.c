@@ -2776,7 +2776,7 @@ void hb_compGenPushMemvarRef( const char * szVarName, HB_COMP_DECL ) /* generate
 void hb_compGenPopAliasedVar( const char * szVarName,
                               HB_BOOL bPushAliasValue,
                               const char * szAlias,
-                              HB_LONG lWorkarea,
+                              HB_MAXINT lWorkarea,
                               HB_COMP_DECL )
 {
    if( bPushAliasValue )
@@ -2821,7 +2821,7 @@ void hb_compGenPopAliasedVar( const char * szVarName,
 void hb_compGenPushAliasedVar( const char * szVarName,
                                HB_BOOL bPushAliasValue,
                                const char * szAlias,
-                               HB_LONG lWorkarea,
+                               HB_MAXINT lWorkarea,
                                HB_COMP_DECL )
 {
    if( bPushAliasValue )
@@ -2940,7 +2940,7 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
-void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
+void hb_compGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->fLongOptimize )
    {

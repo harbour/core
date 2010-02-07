@@ -651,23 +651,23 @@ long hb_itemGetNL( PHB_ITEM pItem )
    return 0;
 }
 
-HB_LONG hb_itemGetNInt( PHB_ITEM pItem )
+HB_MAXINT hb_itemGetNInt( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNL(%p)", pItem));
 
    if( pItem )
    {
       if( HB_IS_LONG( pItem ) )
-         return ( HB_LONG ) pItem->item.asLong.value;
+         return ( HB_MAXINT ) pItem->item.asLong.value;
 
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_LONG ) pItem->item.asInteger.value;
+         return ( HB_MAXINT ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
 #else
-         return ( HB_LONG ) pItem->item.asDouble.value;
+         return ( HB_MAXINT ) pItem->item.asDouble.value;
 #endif
    }
 
@@ -978,7 +978,7 @@ PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
 
 #if HB_LONG_MAX >= LONGLONG_MAX
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = ( HB_LONG ) llNumber;
+   pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
    pItem->item.asLong.length = HB_LONG_LENGTH( llNumber );
 #else
    pItem->type = HB_IT_DOUBLE;
@@ -990,7 +990,7 @@ PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
 }
 #endif
 
-PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_LONG lNumber )
+PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_MAXINT lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNInt(%p, %" PFHL "d)", pItem, lNumber));
 
@@ -1019,7 +1019,7 @@ PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_LONG lNumber )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_LONG lNumber, int iWidth )
+PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT lNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNIntLen(%p, %" PFHL "d, %d)", pItem, lNumber, iWidth));
 
@@ -1049,7 +1049,7 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
    if( iDec == 0 )
    {
-      HB_LONG lNumber = ( HB_LONG ) dNumber;
+      HB_MAXINT lNumber = ( HB_MAXINT ) dNumber;
 
       if( ( double ) lNumber == dNumber )
       {
@@ -1193,7 +1193,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
       iWidth = HB_LONG_LENGTH( lNumber );
 
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = ( HB_LONG ) lNumber;
+   pItem->item.asLong.value = ( HB_MAXINT ) lNumber;
    pItem->item.asLong.length = iWidth;
 #endif
 
@@ -1218,7 +1218,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
       iWidth = HB_LONG_LENGTH( llNumber );
 
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = ( HB_LONG ) llNumber;
+   pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
    pItem->item.asLong.length = ( USHORT ) iWidth;
 #else
    pItem->type = HB_IT_DOUBLE;
@@ -2390,7 +2390,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
    }
    else
    {
-      HB_LONG lNumber;
+      HB_MAXINT lNumber;
 
       if( HB_IS_INTEGER( pNumber ) )
          lNumber = pNumber->item.asInteger.value;

@@ -1865,7 +1865,7 @@ HB_FUNC( CURL_EASY_STRERROR )
 HB_FUNC( CURL_GETDATE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retnint( ( HB_LONG ) curl_getdate( hb_parc( 1 ), NULL ) );
+      hb_retnint( ( HB_MAXINT ) curl_getdate( hb_parc( 1 ), NULL ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

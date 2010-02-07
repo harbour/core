@@ -2445,14 +2445,14 @@ static int hb_gt_def_InkeyNext( PHB_GT pGT, int iEventMask )
 /* Wait for keyboard input */
 static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int iEventMask )
 {
-   HB_ULONG end_timer;
+   HB_MAXUINT end_timer;
    HB_BOOL fPop;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyGet(%p,%d,%f,%d)", pGT, (int) fWait, dSeconds, iEventMask));
 
    /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
    if( fWait && dSeconds * 100 >= 1 )
-      end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
+      end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
    else
       end_timer = 0;
 
@@ -2794,8 +2794,8 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
    {
       if( iEventMask & INKEY_LDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 0, &iRow, &iCol ) )
       {
-         HB_ULONG timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseLeftTimer <= ( HB_ULONG ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         HB_MAXUINT timer = hb_dateMilliSeconds();
+         if( timer - pGT->iMouseLeftTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_LDBLCLK;
          else
             iKey = K_LBUTTONDOWN;
@@ -2807,8 +2807,8 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( iEventMask & INKEY_RDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 1, &iRow, &iCol ) )
       {
-         HB_ULONG timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseRightTimer <= ( HB_ULONG ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         HB_MAXUINT timer = hb_dateMilliSeconds();
+         if( timer - pGT->iMouseRightTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_RDBLCLK;
          else
             iKey = K_RBUTTONDOWN;
@@ -2820,8 +2820,8 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( iEventMask & INKEY_MMIDDLE && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 2, &iRow, &iCol ) )
       {
-         HB_ULONG timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseMiddleTimer <= ( HB_ULONG ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         HB_MAXUINT timer = hb_dateMilliSeconds();
+         if( timer - pGT->iMouseMiddleTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_MDBLCLK;
          else
             iKey = K_MBUTTONDOWN;

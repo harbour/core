@@ -2137,7 +2137,7 @@ HB_BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       {
          HB_MAXDBL dVal = ( HB_MAXDBL ) pArg->value.asNum.val.d;
          if( HB_DBL_LIM_LONG( dVal ) )
-            pExpr = hb_compExprNewLong( ( HB_LONG ) pArg->value.asNum.val.d, HB_COMP_PARAM );
+            pExpr = hb_compExprNewLong( ( HB_MAXINT ) pArg->value.asNum.val.d, HB_COMP_PARAM );
          else
             pExpr = hb_compExprNewDouble( pArg->value.asNum.val.d,
                                           pArg->value.asNum.bWidth, 0,
@@ -2513,7 +2513,7 @@ HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_LONG lResult, HB_BOOL fBool, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_MAXINT lResult, HB_BOOL fBool, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pExpr = fBool ? hb_compExprNewLogical( lResult != 0, HB_COMP_PARAM ) :

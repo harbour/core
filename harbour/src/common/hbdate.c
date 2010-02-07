@@ -158,7 +158,7 @@ void hb_timeStampGetLocal( int * piYear, int * piMonth, int * piDay,
 }
 
 /* return UTC julian timestamp in milliseconds */
-HB_ULONG hb_dateMilliSeconds( void )
+HB_MAXUINT hb_dateMilliSeconds( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
 
@@ -166,7 +166,7 @@ HB_ULONG hb_dateMilliSeconds( void )
    {
       SYSTEMTIME st;
       GetSystemTime( &st );
-      return ( HB_ULONG ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) *
+      return ( HB_MAXUINT ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) *
              HB_MILLISECS_PER_DAY +
              hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
    }
@@ -174,16 +174,16 @@ HB_ULONG hb_dateMilliSeconds( void )
    {
       struct timeval tv;
       gettimeofday( &tv, NULL );
-      return ( ( HB_ULONG ) tv.tv_sec +
-               ( HB_ULONG ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
+      return ( ( HB_MAXUINT ) tv.tv_sec +
+               ( HB_MAXUINT ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
              tv.tv_usec / 1000;
    }
 #else
    {
       struct timeb tb;
       ftime( &tb );
-      return ( ( HB_ULONG ) tb.time +
-               ( HB_ULONG ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
+      return ( ( HB_MAXUINT ) tb.time +
+               ( HB_MAXUINT ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
              tb.time;
    }
 #endif

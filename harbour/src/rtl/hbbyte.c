@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-static HB_BOOL hb_numParam( int iParam, HB_LONG * plNum )
+static HB_BOOL hb_numParam( int iParam, HB_MAXINT * plNum )
 {
    if( HB_ISNUM( iParam ) )
    {
@@ -67,7 +67,7 @@ static HB_BOOL hb_numParam( int iParam, HB_LONG * plNum )
 
 HB_FUNC( HB_BYTESWAPI )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( hb_numParam( 1, &lValue ) )
    {
@@ -78,7 +78,7 @@ HB_FUNC( HB_BYTESWAPI )
 
 HB_FUNC( HB_BYTESWAPW )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( hb_numParam( 1, &lValue ) )
    {
@@ -89,7 +89,7 @@ HB_FUNC( HB_BYTESWAPW )
 
 HB_FUNC( HB_BYTESWAPL )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( hb_numParam( 1, &lValue ) )
    {
@@ -100,7 +100,7 @@ HB_FUNC( HB_BYTESWAPL )
 
 HB_FUNC( HB_BYTESWAPU )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( hb_numParam( 1, &lValue ) )
    {
@@ -111,14 +111,14 @@ HB_FUNC( HB_BYTESWAPU )
 
 HB_FUNC( HB_BYTESWAPLL )
 {
-   HB_LONG lValue;
+   HB_MAXINT lValue;
 
    if( hb_numParam( 1, &lValue ) )
    {
 #if defined( HB_LONG_LONG_OFF )
-      HB_LONG iVal = ( HB_LONG ) HB_SWAP_UINT32( lValue );
+      HB_MAXINT iVal = ( HB_MAXINT ) HB_SWAP_UINT32( lValue );
 #else
-      HB_LONG iVal = ( HB_LONG ) HB_SWAP_UINT64( lValue );
+      HB_MAXINT iVal = ( HB_MAXINT ) HB_SWAP_UINT64( lValue );
 #endif
       hb_retnint( iVal );
    }
