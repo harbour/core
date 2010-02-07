@@ -586,7 +586,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 typedef struct _HB_I18NPOS
 {
    const char *   szFile;
-   UINT           uiLine;
+   HB_UINT        uiLine;
 } HB_I18NPOS, *PHB_I18NPOS;
 
 typedef struct _HB_I18NSTRING
@@ -594,10 +594,10 @@ typedef struct _HB_I18NSTRING
    const char *   szText;
    const char *   szContext;
    const char *   szPlurals[ HB_I18N_PLURAL_MAX ];
-   UINT           uiPlurals;
+   HB_UINT        uiPlurals;
    HB_I18NPOS     pPos;
    HB_I18NPOS *   pPosLst;
-   UINT           uiPosCount;
+   HB_UINT        uiPosCount;
 } HB_I18NSTRING, * PHB_I18NSTRING;
 
 typedef struct _HB_I18NTABLE

@@ -23,7 +23,7 @@ int main()
    printf("\nHarbour types:\n");
    printf("\t       sizeof(BYTE)=%d %s\n", (int) sizeof(BYTE       ), sizeof(BYTE    )==1 ? "OK" : "BAD" );
    printf("\t      sizeof(SHORT)=%d %s\n", (int) sizeof(SHORT      ), sizeof(SHORT   )==2 ? "OK" : "BAD" );
-   printf("\t       sizeof(UINT)=%d %s\n", (int) sizeof(UINT       ), sizeof(UINT)==4 || sizeof(UINT)==8 ? "OK" : "BAD" );
+   printf("\t    sizeof(HB_UINT)=%d %s\n", (int) sizeof(HB_UINT    ), sizeof(HB_UINT)==4 || sizeof(HB_UINT)==8 ? "OK" : "BAD" );
    printf("\t       sizeof(LONG)=%d %s\n", (int) sizeof(LONG       ), sizeof(LONG)==4 || sizeof(LONG)==8 ? "OK" : "BAD" );
    printf("\tsizeof(HB_LONGLONG)=%d %s\n", (int) sizeof(HB_LONGLONG), sizeof(HB_LONGLONG)==8 ? "OK" : "BAD" );
    printf("\t     sizeof(double)=%d %s\n", (int) sizeof(double     ), sizeof(double  )==8 ? "OK" : "BAD" );

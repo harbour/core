@@ -1052,10 +1052,10 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
    of pMem memory block */
 
 #ifdef HB_FM_STATISTICS
-static char * hb_mem2str( char * membuffer, void * pMem, UINT uiSize )
+static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE uiSize )
 {
-   BYTE *cMem = ( BYTE * ) pMem;
-   UINT uiIndex, uiPrintable;
+   BYTE * cMem = ( BYTE * ) pMem;
+   HB_SIZE uiIndex, uiPrintable;
 
    uiPrintable = 0;
    for( uiIndex = 0; uiIndex < uiSize; uiIndex++ )

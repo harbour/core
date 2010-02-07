@@ -116,12 +116,12 @@ s_sigTable containing all the available translations */
 
 typedef struct
 {
-   UINT sig;
-   UINT subsig;
-   UINT translated;
+   HB_UINT sig;
+   HB_UINT subsig;
+   HB_UINT translated;
 } S_TUPLE;
 
-static int s_translateSignal( UINT sig, UINT subsig );
+static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 
 /*****************************************************************************
 * Unix specific signal handling implementation
@@ -157,8 +157,8 @@ static void s_signalHandler( int sig )
 static void s_signalHandler( int sig, siginfo_t * info, void * v )
 #endif
 {
-   UINT uiMask;
-   UINT uiSig;
+   HB_UINT uiMask;
+   HB_UINT uiSig;
    PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE ulPos;
    int iRet;
@@ -180,12 +180,12 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    bSignalEnabled = HB_FALSE;
    ulPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
-   uiSig = ( UINT ) s_translateSignal( ( UINT ) sig, 0 );
+   uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) sig, 0 );
 
    while( ulPos > 0 )
    {
       pFunction = hb_arrayGetItemPtr( sp_hooks, ulPos );
-      uiMask = ( UINT ) hb_arrayGetNI( pFunction, 1 );
+      uiMask = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( uiMask & uiSig )
       {
          /* we don't unlock the mutex now, even if it is
@@ -415,7 +415,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
    PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE ulPos;
-   UINT uiSig, uiMask;
+   HB_UINT uiSig, uiMask;
    int iRet;
 
    /* let's find the right signal handler. */
@@ -431,12 +431,12 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
    bSignalEnabled = HB_FALSE;
    ulPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
-   uiSig = ( UINT ) s_translateSignal( ( UINT ) type, ( UINT ) sig );
+   uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) type, ( HB_UINT ) sig );
 
    while( ulPos > 0 )
    {
       pFunction = hb_arrayGetItemPtr( sp_hooks, ulPos );
-      uiMask = ( UINT ) hb_arrayGetNI( pFunction, 1 );
+      uiMask = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( ( uiMask & uiSig ) == uiSig )
       {
          /* we don't unlock the mutex now, even if it is
@@ -690,7 +690,7 @@ static void s_serviceSetDflSig( void )
    from os specific representation
 */
 
-static int s_translateSignal( UINT sig, UINT subsig )
+static int s_translateSignal( HB_UINT sig, HB_UINT subsig )
 {
    int i = 0;
    while( s_sigTable[i].sig != 0 || s_sigTable[i].subsig !=0 || s_sigTable[i].translated != 0 )

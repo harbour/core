@@ -97,7 +97,7 @@ static PHB_SYM_HOLDER s_pAllocSyms = NULL;/* symbols allocated dynamically */
 /* Insert new symbol into dynamic symbol table.
  * In MT mode caller should protected it by HB_DYNSYM_LOCK
  */
-static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, UINT uiPos )
+static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, HB_UINT uiPos )
 {
    PHB_DYNS pDynSym;
 
@@ -133,9 +133,9 @@ static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, UINT uiPos )
  * If not found set position for insert operation.
  * In MT mode caller should protected it by HB_DYNSYM_LOCK
  */
-static PHB_DYNS hb_dynsymPos( const char * szName, UINT * puiPos )
+static PHB_DYNS hb_dynsymPos( const char * szName, HB_UINT * puiPos )
 {
-   UINT uiFirst, uiLast, uiMiddle;
+   HB_UINT uiFirst, uiLast, uiMiddle;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymPos(%s,%p)", szName, puiPos));
 
@@ -191,7 +191,7 @@ static PHB_SYMB hb_symbolAlloc( const char * szName )
 /* Find symbol in dynamic symbol table */
 PHB_DYNS hb_dynsymFind( const char * szName )
 {
-   UINT uiFirst, uiLast;
+   HB_UINT uiFirst, uiLast;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFind(%s)", szName));
 
@@ -202,7 +202,7 @@ PHB_DYNS hb_dynsymFind( const char * szName )
 
    while( uiFirst < uiLast )
    {
-      UINT uiMiddle = ( uiFirst + uiLast ) >> 1;
+      HB_UINT uiMiddle = ( uiFirst + uiLast ) >> 1;
       int iCmp = strcmp( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName );
 
       if( iCmp == 0 )
@@ -241,7 +241,7 @@ PHB_SYMB hb_symbolNew( const char * szName )
 PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
 {
    PHB_DYNS pDynSym;
-   UINT uiPos;
+   HB_UINT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymNew(%p)", pSymbol));
 
@@ -361,7 +361,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
 PHB_DYNS hb_dynsymGetCase( const char * szName )
 {
    PHB_DYNS pDynSym;
-   UINT uiPos;
+   HB_UINT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGetCase(%s)", szName));
 
@@ -616,7 +616,7 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
 {
    HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym;
-   UINT uiPos = 0;
+   HB_UINT uiPos = 0;
    const char * szName = hb_parc( 1 );
 
    if( szName )

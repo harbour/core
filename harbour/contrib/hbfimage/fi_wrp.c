@@ -199,15 +199,15 @@ HB_FUNC( FI_ALLOCATE )
      )
    {
       int width, height, bpp;
-      UINT red_mask, green_mask, blue_mask;
+      unsigned red_mask, green_mask, blue_mask;
 
       /* Retrieve parameters */
       width      = hb_parni( 1 );
       height     = hb_parni( 2 );
       bpp        = hb_parni( 3 );
-      red_mask   = hb_parni( 4 );
-      green_mask = hb_parni( 5 );
-      blue_mask  = hb_parni( 6 );
+      red_mask   = ( unsigned ) hb_parni( 4 );
+      green_mask = ( unsigned ) hb_parni( 5 );
+      blue_mask  = ( unsigned ) hb_parni( 6 );
 
       /* run function & return value */
       hb_retptr( FreeImage_Allocate(width, height, bpp, red_mask, green_mask, blue_mask) );
@@ -234,16 +234,16 @@ HB_FUNC( FI_ALLOCATET )
    {
       FREE_IMAGE_TYPE type;
       int width, height, bpp;
-      UINT red_mask, green_mask, blue_mask;
+      unsigned red_mask, green_mask, blue_mask;
 
       /* Retrieve parameters */
       type       = ( FREE_IMAGE_TYPE ) hb_parni( 1 );
       width      = hb_parni( 2 );
       height     = hb_parni( 3 );
       bpp        = hb_parni( 3 );
-      red_mask   = hb_parni( 4 );
-      green_mask = hb_parni( 5 );
-      blue_mask  = hb_parni( 6 );
+      red_mask   = ( unsigned ) hb_parni( 4 );
+      green_mask = ( unsigned ) hb_parni( 5 );
+      blue_mask  = ( unsigned ) hb_parni( 6 );
 
       /* run function & return value */
       hb_retptr( FreeImage_AllocateT(type, width, height, bpp, red_mask, green_mask, blue_mask) );
@@ -1200,11 +1200,11 @@ HB_FUNC( FI_SETDOTSPERMETERX )
      )
    {
       FIBITMAP * dib;
-      UINT res;
+      unsigned res;
 
       /* Retrieve parameters */
       dib = ( FIBITMAP * ) hb_parptr( 1 );
-      res = hb_parni( 2 );
+      res = ( unsigned ) hb_parni( 2 );
 
       /* run function & return value */
       FreeImage_SetDotsPerMeterX(dib, res);
@@ -1229,11 +1229,11 @@ HB_FUNC( FI_SETDOTSPERMETERY )
      )
    {
       FIBITMAP * dib;
-      UINT res;
+      unsigned res;
 
       /* Retrieve parameters */
       dib = ( FIBITMAP * ) hb_parptr( 1 );
-      res = hb_parni( 2 );
+      res = ( unsigned ) hb_parni( 2 );
 
       /* run function & return value */
       FreeImage_SetDotsPerMeterY(dib, res);

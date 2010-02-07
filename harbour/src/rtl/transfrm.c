@@ -200,8 +200,8 @@ HB_FUNC( TRANSFORM )
       if( HB_IS_STRING( pValue ) )
       {
          const char * szExp = hb_itemGetCPtr( pValue );
-         HB_SIZE  ulExpLen = hb_itemGetCLen( pValue );
-         HB_SIZE  ulExpPos = 0;
+         HB_SIZE ulExpLen = hb_itemGetCLen( pValue );
+         HB_SIZE ulExpPos = 0;
          HB_BOOL bAnyPic = HB_FALSE;
          HB_BOOL bFound  = HB_FALSE;
 
@@ -659,7 +659,7 @@ HB_FUNC( TRANSFORM )
          const char * szDateFormat;
          char szNewFormat[ 11 ];
          char szDate[ 9 ];
-         UINT nFor;
+         HB_SIZE nFor;
 
          szResult = ( char * ) hb_xgrab( 13 );
          szDateFormat = hb_setGetDateFormat();
@@ -760,7 +760,7 @@ HB_FUNC( TRANSFORM )
          const char * szDateFormat = NULL, * szTimeFormat = NULL;
          char szNewFormat[ 11 ];
          long lDate, lTime;
-         UINT nFor;
+         HB_SIZE nFor;
 
          szResult = ( char * ) hb_xgrab( 29 );
          if( ( uiPicFlags & ( PF_DATE | PF_TIME ) ) != PF_TIME )

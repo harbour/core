@@ -86,8 +86,8 @@ typedef struct _HB_FILE
    HB_FHANDLE     hFile;
    HB_FHANDLE     hFileRO;
    PHB_FLOCK      pLocks;
-   UINT           uiLocks;
-   UINT           uiSize;
+   HB_UINT        uiLocks;
+   HB_UINT        uiSize;
    struct _HB_FILE * pNext;
    struct _HB_FILE * pPrev;
 }
@@ -102,7 +102,7 @@ static PHB_FILE s_openFiles = NULL;
 /*
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
 {
-   UINT uiPos = 0;
+   HB_UINT uiPos = 0;
    fprintf( stderr, "\r\n[%s][", szMsg );
    while( uiPos < pFile->uiLocks )
    {
@@ -166,9 +166,9 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, HB_BOOL fShared, HB_BOOL fReadonly
    return pFile;
 }
 
-static UINT hb_fileFindOffset( PHB_FILE pFile, HB_FOFFSET ulOffset )
+static HB_UINT hb_fileFindOffset( PHB_FILE pFile, HB_FOFFSET ulOffset )
 {
-   UINT uiFirst, uiLast, uiMiddle;
+   HB_UINT uiFirst, uiLast, uiMiddle;
 
    uiFirst = 0;
    uiLast = pFile->uiLocks;
@@ -188,7 +188,7 @@ static UINT hb_fileFindOffset( PHB_FILE pFile, HB_FOFFSET ulOffset )
    return uiMiddle;
 }
 
-static void hb_fileInsertLock( PHB_FILE pFile, UINT uiPos,
+static void hb_fileInsertLock( PHB_FILE pFile, HB_UINT uiPos,
                                HB_FOFFSET ulStart, HB_FOFFSET ulLen )
 {
    if( pFile->uiLocks == pFile->uiSize )
@@ -206,7 +206,7 @@ static void hb_fileInsertLock( PHB_FILE pFile, UINT uiPos,
    pFile->uiLocks++;
 }
 
-static void hb_fileDeleteLock( PHB_FILE pFile, UINT uiPos )
+static void hb_fileDeleteLock( PHB_FILE pFile, HB_UINT uiPos )
 {
    pFile->uiLocks--;
    memmove( &pFile->pLocks[ uiPos ], &pFile->pLocks[ uiPos + 1 ],
@@ -223,7 +223,7 @@ static HB_BOOL hb_fileSetLock( PHB_FILE pFile, HB_BOOL * pfLockFS,
                                HB_FOFFSET ulStart, HB_FOFFSET ulLen )
 {
    HB_BOOL fLJoin, fRJoin;
-   UINT uiPos;
+   HB_UINT uiPos;
 
    uiPos = hb_fileFindOffset( pFile, ulStart );
    fLJoin = fRJoin = HB_FALSE;
@@ -268,7 +268,7 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
                               HB_FOFFSET ulStart, HB_FOFFSET ulLen )
 {
    HB_BOOL fResult = HB_FALSE;
-   UINT uiPos;
+   HB_UINT uiPos;
 
    uiPos = hb_fileFindOffset( pFile, ulStart );
    if( uiPos < pFile->uiLocks )

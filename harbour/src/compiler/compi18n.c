@@ -75,7 +75,7 @@ void hb_compI18nFree( HB_COMP_DECL )
    {
       if( pI18n->pString )
       {
-         UINT ui;
+         HB_UINT ui;
 
          for( ui = 0; ui < pI18n->uiCount; ui++ )
          {
@@ -101,11 +101,11 @@ static int hb_compI18nCompare( PHB_I18NSTRING pString, const char* pText, const 
 }
 
 static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, const char* szContext,
-                                            const char * szModule, UINT uiLine )
+                                            const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NTABLE  pI18n;
    PHB_I18NSTRING pString;
-   UINT           uiLeft, uiRight, uiMiddle;
+   HB_UINT        uiLeft, uiRight, uiMiddle;
    int            iCompare;
 
    if( !HB_COMP_PARAM->pI18n )
@@ -183,12 +183,12 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, co
 }
 
 void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext,
-                     const char * szModule, UINT uiLine )
+                     const char * szModule, HB_UINT uiLine )
 {
    hb_compI18nAddSingle( HB_COMP_PARAM, szText, szContext, szModule, uiLine );
 }
 
-void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, ULONG ulCount, const char* szContext, const char * szModule, UINT uiLine )
+void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, ULONG ulCount, const char* szContext, const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NSTRING pString;
 
@@ -256,7 +256,7 @@ static void hb_compI18nEscapeString( FILE* file, const char* szText )
 
 static char * hb_compI18nFileName( char* szBuffer, const char* szFileName )
 {
-   UINT ui = 0;
+   HB_UINT ui = 0;
    char ch;
 
    do
@@ -283,7 +283,7 @@ HB_BOOL hb_compI18nSave( HB_COMP_DECL, HB_BOOL fFinal )
    HB_FNAME         FileName;
    char             szFileName[ HB_PATH_MAX ];
    char*            szText;
-   UINT             uiIndex, uiLine;
+   HB_UINT          uiIndex, uiLine;
    FILE*            file;
 
    pI18n = HB_COMP_PARAM->pI18n;

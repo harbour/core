@@ -345,8 +345,8 @@ extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of iden
 /* compi18n.c */
 extern void hb_compI18nFree( HB_COMP_DECL );
 extern HB_BOOL hb_compI18nSave( HB_COMP_DECL, HB_BOOL fFinal );
-extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, const char * szModule, UINT uiLine );
-extern void hb_compI18nAddPlural( HB_COMP_DECL, const char** szTexts, ULONG ulCount, const char* szContext, const char * szModule, UINT uiLine );
+extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, const char * szModule, HB_UINT uiLine );
+extern void hb_compI18nAddPlural( HB_COMP_DECL, const char** szTexts, ULONG ulCount, const char* szContext, const char * szModule, HB_UINT uiLine );
 
 /* global readonly variables used by compiler
  */
