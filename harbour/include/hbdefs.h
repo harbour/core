@@ -193,27 +193,21 @@
 #define HB_TRUE  (!0)
 
 typedef int                 HB_BOOL;
-typedef unsigned char       HB_BYTE;
-typedef signed char         HB_CHAR;
+typedef signed char         HB_SCHAR;
+typedef unsigned char       HB_UCHAR;          /* QUESTION: HB_BYTE or HB_UCHAR? */
+typedef unsigned char       HB_BYTE;           /* QUESTION: HB_BYTE or HB_UCHAR? */
 typedef short               HB_SHORT;
 typedef unsigned short      HB_USHORT;
-/* typedef long                HB_LONG; */
-/* typedef unsigned long       HB_ULONG; */
+typedef long                HB_LONG;           /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
+typedef unsigned long       HB_ULONG;          /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
 typedef int                 HB_INT;
 typedef unsigned int        HB_UINT;
-typedef unsigned long       HB_SIZE;           /* TOFIX: Currently 'unsigned long', to be changed to 'long' */
-typedef long                HB_ISIZ;           /* TOFIX: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
-typedef void *              HB_PTRVAL;         /* TOFIX */
-/* typedef double              HB_DOUBLE; */
-/* typedef                     HB_POINTER;    */    /* TOFIX */
-
-/* legacy. TODO: Change these to new types in codebase */
-typedef HB_BYTE             HB_UCHAR;  /* legacy */
-typedef HB_CHAR             HB_SCHAR;  /* legacy */
+typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to 'long' */
+typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
 
 /* Guaranteed 8-bit types */
+typedef HB_SCHAR            HB_I8;
 typedef HB_BYTE             HB_U8;
-typedef HB_CHAR             HB_I8;
 
 #if ! defined( HB_LEGACY_TYPES_OFF )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
@@ -523,11 +517,6 @@ typedef HB_CHAR             HB_I8;
    typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
-#endif
-
-#if ! defined( HB_LEGACY_TYPES_OFF )
-   typedef HB_MAXINT    HB_LONG;
-   typedef HB_MAXUINT   HB_ULONG;
 #endif
 
 typedef HB_MAXINT    HB_VMMAXINT;
