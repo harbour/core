@@ -56,7 +56,7 @@ HB_FUNC( FT_DESCEND )
       HB_TYPE uiType = hb_itemType( iP );
 
       PHB_ITEM iR = NULL;
-      USHORT uiLen, n;
+      HB_SIZE uiLen, n;
       char * pDescend;
 
       if ( ( uiType & HB_IT_NUMERIC ) && ( uiType & HB_IT_DOUBLE ) )
@@ -76,9 +76,9 @@ HB_FUNC( FT_DESCEND )
 
       else if ( uiType & HB_IT_STRING )
       {
-         uiLen = ( USHORT ) hb_itemSize( iP );
+         uiLen = hb_itemSize( iP );
 
-         pDescend = ( char *) hb_xgrab( uiLen );
+         pDescend = ( char * ) hb_xgrab( uiLen );
 
          hb_itemCopyC( iP, pDescend, uiLen );
 

@@ -512,6 +512,8 @@ typedef void *              HB_PTRVAL;         /* TOFIX */
 #  define HB_LONG_MAX            LONG_MAX
 #  define HB_LONG_MIN            LONG_MIN
 #  define HB_ULONG_MAX           ULONG_MAX
+   typedef long                  HB_MAXINT;
+   typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #endif
 

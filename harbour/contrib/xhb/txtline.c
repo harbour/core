@@ -56,13 +56,13 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USHORT uiTabLen, HB_BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, HB_BOOL * bFound, HB_BOOL * bEOF, HB_ISIZ * lEnd, HB_SIZE * ulEndOffset )
+void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, HB_SIZE uiTabLen, HB_BOOL bWrap, char ** Term, HB_SIZE * iTermSizes, HB_SIZE uiTerms, HB_BOOL * bFound, HB_BOOL * bEOF, HB_ISIZ * lEnd, HB_SIZE * ulEndOffset )
 {
-   USHORT uiPosTerm, uiPosition;
+   HB_SIZE uiPosTerm, uiPosition;
    HB_SIZE ulPos, ulCurrCol, ulLastBlk;
    HB_BOOL bBreak = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %lu, %lu, %hu, %d, %p, %p, %hu, %p, %p, %p, %p)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, Term, iTermSizes, uiTerms, bFound, bEOF, lEnd, ulEndOffset ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %lu, %lu, %lu, %d, %p, %p, %lu, %p, %p, %p, %p)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, Term, iTermSizes, uiTerms, bFound, bEOF, lEnd, ulEndOffset ));
 
    *bFound    = 0;
    *bEOF      = 0;
@@ -79,9 +79,7 @@ void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USH
    }
 
    if( uiTabLen == 0 )
-   {
       uiTabLen = 4;
-   }
 
    for( ulPos = 0; ulPos < ulTextLen; ulPos++ )
    {
@@ -133,14 +131,10 @@ void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USH
          ulPos++;
       }
       else
-      {
          ulCurrCol++;
-      }
 
       if( *bFound )
-      {
          break;
-      }
 
       if( szText[ulPos] == ' ' || szText[ulPos] == HB_CHAR_HT )
       {
@@ -174,7 +168,7 @@ void hb_readLine( const char * szText, HB_SIZE ulTextLen, HB_SIZE uiLineLen, USH
    }
 }
 
-HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ lEnd, USHORT uiTabLen )
+HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ lEnd, HB_SIZE uiTabLen )
 {
    HB_ISIZ lPos, lSpAdded = 0;
 
@@ -201,8 +195,8 @@ HB_FUNC( HB_TABEXPAND )
 {
    const char * szText = hb_parcx( 1 );
    HB_ISIZ lStrLen = hb_parclen( 1 );
-   USHORT uiTabLen = ( USHORT ) hb_parni( 2 );
-   USHORT uiTabCount = 0;
+   HB_SIZE uiTabLen = hb_parnl( 2 );
+   HB_SIZE uiTabCount = 0;
    HB_ISIZ lPos, lSize;
    char * szRet;
 
@@ -232,10 +226,10 @@ HB_FUNC( HB_READLINE )
    PHB_ITEM pTerm1;
    const char * szText = hb_parcx( 1 );
    char ** Term;
-   int * iTermSizes;
-   USHORT uiTabLen, uiTerms;
+   HB_SIZE * iTermSizes;
+   HB_SIZE uiTabLen, uiTerms;
    HB_SIZE ulLineSize = hb_parni(3);
-   USHORT i;
+   HB_SIZE i;
    HB_BOOL bWrap = hb_parl(5);
    HB_BOOL bFound, bEOF;
    HB_SIZE ulStartOffset;
@@ -251,16 +245,9 @@ HB_FUNC( HB_READLINE )
    }
 
    ulTextLen = hb_parclen(1);
-   uiTabLen  = ( USHORT ) hb_parclen(4);
+   uiTabLen  = hb_parclen(4);
 
-   if( HB_ISNUM( 6 ) )
-   {
-      ulStartOffset = hb_parnl( 6 );
-   }
-   else
-   {
-      ulStartOffset = 0;
-   }
+   ulStartOffset = hb_parnl( 6 );
 
    if( ! ( HB_ISARRAY( 2 ) || HB_ISCHAR( 2 ) ) )
    {
@@ -276,17 +263,15 @@ HB_FUNC( HB_READLINE )
       bAlloc_Term1 = HB_TRUE;
    }
    else
-   {
       pTerm1 = hb_param( 2, HB_IT_ANY );
-   }
 
    pOpt = hb_itemNew( NULL );
 
    if( HB_IS_ARRAY( pTerm1 ) )
    {
-      uiTerms = ( USHORT ) hb_arrayLen( pTerm1 );
-      Term  = ( char** ) hb_xgrab( sizeof(char*) * uiTerms );
-      iTermSizes = ( int * ) hb_xgrab( sizeof(int) * uiTerms );
+      uiTerms = hb_arrayLen( pTerm1 );
+      Term  = ( char ** ) hb_xgrab( sizeof( char * ) * uiTerms );
+      iTermSizes = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * uiTerms );
 
       for( i = 0; i < uiTerms; i++ )
       {
@@ -297,8 +282,8 @@ HB_FUNC( HB_READLINE )
    }
    else
    {
-      Term            = ( char** ) hb_xgrab( sizeof( char * ) );
-      iTermSizes      = ( int * ) hb_xgrab( sizeof( int ) );
+      Term            = ( char ** ) hb_xgrab( sizeof( char * ) );
+      iTermSizes      = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * 1 );
       Term[ 0 ]       = ( char * ) hb_itemGetCPtr( pTerm1 );
       iTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
       uiTerms         = 1;
@@ -316,9 +301,7 @@ HB_FUNC( HB_READLINE )
    hb_stornl( ulEndOffset + ulStartOffset + 1, 10 );
 
    if( bAlloc_Term1 )
-   {
       hb_itemRelease( pTerm1 );
-   }
 
    hb_xfree( Term );
    hb_xfree( iTermSizes );

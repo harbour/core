@@ -184,7 +184,7 @@ HB_FUNC( PRINTSEND )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      const char *string = hb_parcx( 1 );
+      const char * string = hb_parcx( 1 );
       int i, len = hb_parclen( 1 );
 
       r.h.ah = 0;
@@ -204,7 +204,7 @@ HB_FUNC( PRINTSEND )
    char szChr[ 2 ] = { ' ', '\0' };
    char szPort[ 5 ] = { 'l', 'p', 't', '1', '\0' };
    const char * szStr = NULL;
-   USHORT usLen = 0, usRet = 0;
+   HB_SIZE usLen = 0, usRet = 0;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -215,7 +215,7 @@ HB_FUNC( PRINTSEND )
    else if( HB_ISCHAR( 1 ) )
    {
       szStr = hb_parc( 1 );
-      usLen = ( USHORT ) hb_parclen( 1 );
+      usLen = hb_parclen( 1 );
    }
 
    if( HB_ISNUM( 2 ) )
@@ -226,15 +226,15 @@ HB_FUNC( PRINTSEND )
       HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
       if( hFile != FS_ERROR )
       {
-         usRet = hb_fsWrite( hFile, szStr, usLen );
+         usRet = hb_fsWriteLarge( hFile, szStr, usLen );
          hb_fsClose( hFile );
       }
    }
-   hb_retni( usRet );
+   hb_retnl( usRet );
 
 #else
 
-   hb_retni( 0 );
+   hb_retnl( 0 );
 
 #endif
 }
