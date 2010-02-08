@@ -88,6 +88,7 @@ public:
    void hbSetSingleLineCommentFormat( const QTextCharFormat & format );
    void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
    void hbSetFormat( QString name, const QTextCharFormat & format );
+   void hbSetFormatColumnSelection( int start, int count, const QColor & color );
 
 protected:
    void highlightBlock( const QString &text );

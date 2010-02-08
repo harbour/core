@@ -118,6 +118,10 @@ private:
    QTextEdit::ExtraSelection selection;
    void           braceHighlight();
 
+   int            columnBegins;
+   int            columnEnds;
+   bool           isColumnSelectionEnabled;
+
 protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
@@ -144,10 +148,12 @@ public slots:
    void           duplicateLine();
    void           replaceSelection( const QString & txt );
    void           insertTab( int mode );
+   void           highlightSelectedColumns( bool yes );
 
 private slots:
    void           slotCursorPositionChanged();
    void           updateLineNumberArea( const QRect &, int );
+   void           paintColumnSelection( QPaintEvent * );
 };
 
 

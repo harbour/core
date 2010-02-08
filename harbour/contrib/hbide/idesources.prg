@@ -420,7 +420,7 @@ METHOD IdeSourcesManager:openSource()
 METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
    LOCAL oDlg, cPath
 
-   oDlg := XbpFileDialog():new():create( ::oDa, , { 10,10 } )
+   oDlg := XbpFileDialog():new():create( ::oDlg, , { 10,10 } )
 
    IF cMode == "open"
       oDlg:title       := "Select a Source File"

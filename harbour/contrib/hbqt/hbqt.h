@@ -270,6 +270,7 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QSpinBox( n )                      ( ( QSpinBox                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSplashScreen( n )                 ( ( QSplashScreen               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSplitter( n )                     ( ( QSplitter                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QStackedWidget( n )                ( ( QStackedWidget              * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QStandardItem( n )                 ( ( QStandardItem               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QStandardItemModel( n )            ( ( QStandardItemModel          * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QStatusBar( n )                    ( ( QStatusBar                  * ) hbqt_gcpointer( n ) )

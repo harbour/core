@@ -193,6 +193,7 @@ QSpacerItem.qth
 QSpinBox.qth
 QSplashScreen.qth
 QSplitter.qth
+QStackedWidget.qth
 QStandardItem.qth
 QStandardItemModel.qth
 QStatusBar.qth

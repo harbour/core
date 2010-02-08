@@ -141,6 +141,7 @@ CPP_SOURCES := \
    QSpinBox.cpp \
    QSplashScreen.cpp \
    QSplitter.cpp \
+   QStackedWidget.cpp \
    QStandardItem.cpp \
    QStandardItemModel.cpp \
    QStatusBar.cpp \
@@ -360,6 +361,7 @@ PRG_SOURCES := \
    TQSpinBox.prg \
    TQSplashScreen.prg \
    TQSplitter.prg \
+   TQStackedWidget.prg \
    TQStandardItem.prg \
    TQStandardItemModel.prg \
    TQStatusBar.prg \

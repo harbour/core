@@ -63,44 +63,69 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, QSyntaxHighlighter
+CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, QFrame
 
    METHOD  new( ... )
 
-   METHOD  hbSetMultiLineCommentFormat( pFormat )
-   METHOD  hbSetSingleLineCommentFormat( pFormat )
-   METHOD  hbSetRule( cName, cPattern, pFormat )
-   METHOD  hbSetFormat( cName, pFormat )
-   METHOD  hbSetFormatColumnSelection( nStart, nCount, pColor )
+   METHOD  addWidget( pWidget )
+   METHOD  count()
+   METHOD  currentIndex()
+   METHOD  currentWidget()
+   METHOD  indexOf( pWidget )
+   METHOD  insertWidget( nIndex, pWidget )
+   METHOD  removeWidget( pWidget )
+   METHOD  widget( nIndex )
+   METHOD  setCurrentIndex( nIndex )
+   METHOD  setCurrentWidget( pWidget )
 
    ENDCLASS
 
 
-METHOD HBQSyntaxHighlighter:new( ... )
+METHOD QStackedWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   ::pPtr := Qt_HBQSyntaxHighlighter( ... )
+   ::pPtr := Qt_QStackedWidget( ... )
    RETURN Self
 
 
-METHOD HBQSyntaxHighlighter:hbSetMultiLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetMultiLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QStackedWidget:addWidget( pWidget )
+   RETURN Qt_QStackedWidget_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
-METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetSingleLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QStackedWidget:count()
+   RETURN Qt_QStackedWidget_count( ::pPtr )
 
 
-METHOD HBQSyntaxHighlighter:hbSetRule( cName, cPattern, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetRule( ::pPtr, cName, cPattern, hbqt_ptr( pFormat ) )
+METHOD QStackedWidget:currentIndex()
+   RETURN Qt_QStackedWidget_currentIndex( ::pPtr )
 
 
-METHOD HBQSyntaxHighlighter:hbSetFormat( cName, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormat( ::pPtr, cName, hbqt_ptr( pFormat ) )
+METHOD QStackedWidget:currentWidget()
+   RETURN Qt_QStackedWidget_currentWidget( ::pPtr )
 
 
-METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( nStart, nCount, pColor )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormatColumnSelection( ::pPtr, nStart, nCount, hbqt_ptr( pColor ) )
+METHOD QStackedWidget:indexOf( pWidget )
+   RETURN Qt_QStackedWidget_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
+
+
+METHOD QStackedWidget:insertWidget( nIndex, pWidget )
+   RETURN Qt_QStackedWidget_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ) )
+
+
+METHOD QStackedWidget:removeWidget( pWidget )
+   RETURN Qt_QStackedWidget_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
+
+
+METHOD QStackedWidget:widget( nIndex )
+   RETURN Qt_QStackedWidget_widget( ::pPtr, nIndex )
+
+
+METHOD QStackedWidget:setCurrentIndex( nIndex )
+   RETURN Qt_QStackedWidget_setCurrentIndex( ::pPtr, nIndex )
+
+
+METHOD QStackedWidget:setCurrentWidget( pWidget )
+   RETURN Qt_QStackedWidget_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
 

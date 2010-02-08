@@ -86,6 +86,10 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    numberBlock       = true;
    lineNumberArea    = new LineNumberArea( this );
 
+   columnBegins      = -1;
+   columnEnds        = -1;
+   isColumnSelectionEnabled = false;
+
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( updateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( updateLineNumberArea( const QRect &, int ) ) );
 
@@ -142,6 +146,8 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
          painter.fillRect( r, QBrush( m_currentLineColor ) );
       }
    }
+   this->paintColumnSelection( event );
+
    painter.end();
    QPlainTextEdit::paintEvent( event );
 }
@@ -531,6 +537,63 @@ void HBQPlainTextEdit::convertDQuotes()
    }
    QString txt = selTxt.replace( QString( "\'" ), QString( "\"" ) );
    insertPlainText( txt );
+}
+
+
+void HBQPlainTextEdit::paintColumnSelection( QPaintEvent *event )
+{
+   QTextCursor c = textCursor();
+
+   if( isColumnSelectionEnabled && c.hasSelection() )
+   {
+      if( columnBegins >= 0 && columnEnds >= 0 )
+      {
+         QTextBlock b = c.document()->findBlock( c.selectionStart() );
+         QTextBlock e = c.document()->findBlock( c.selectionEnd() );
+
+         if( b.isVisible() || e.isVisible() )
+         {
+            if( b.isVisible() )
+            {
+               QPainter p( viewport() );
+
+               if( b.isValid() && b.isVisible() )
+               {
+                  int fontWidth = fontMetrics().averageCharWidth();
+
+                  int x = ( columnBegins + 1 ) * fontWidth;
+                  int w = ( c.columnNumber() - columnBegins ) * fontWidth;
+                  QRect r( x, 0, w, viewport()->height() );
+
+                  p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
+               }
+            }
+         }
+      }
+   }
+}
+
+void HBQPlainTextEdit::highlightSelectedColumns( bool yes )
+{
+   if( yes )
+   {
+      isColumnSelectionEnabled = true;
+
+      QTextCursor c = textCursor();
+      if( columnBegins == -1 && c.hasSelection() )
+      {
+         int b        = c.document()->findBlock( c.selectionStart() ).position();
+         columnBegins = c.selectionStart() - b;
+         columnEnds   = c.columnNumber();
+      }
+   }
+   else
+   {
+      columnBegins = -1;
+      columnEnds   = -1;
+      isColumnSelectionEnabled = false;
+   }
+   update();
 }
 
 void HBQPlainTextEdit::insertTab( int mode )

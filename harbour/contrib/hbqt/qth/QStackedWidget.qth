@@ -2,19 +2,11 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated source file. DO NOT EDIT!           */
-/*          Instead, edit corresponding .qth file,                      */
-/*          or the generator tool itself, and run regenarate.           */
-/* -------------------------------------------------------------------- */
-
 /*
  * Harbour Project source code:
- * QT wrapper main header
+ * QT Source Generator for Harbour
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,49 +50,58 @@
  *
  */
 /*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = 
+Inherits = QFrame
+Type     = 
+New      =
+</CLASS>
+
+<SUBCLASS>
+</SUBCLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtGui/QStackedWidget>
 
 
-#include "hbclass.ch"
+/*
+ * QStackedWidget ( QWidget * parent = 0 )
+ * ~QStackedWidget ()
+ * 
+ */
+HB_FUNC( QT_QSTACKEDWIDGET )
+{
+   hb_retptr( new QStackedWidget( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
 
+<ENUMS>
+</ENUMS>
 
-CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, QSyntaxHighlighter
+<PROTOS>
+int addWidget ( QWidget * widget )
+int count () const
+int currentIndex () const
+QWidget * currentWidget () const
+int indexOf ( QWidget * widget ) const
+int insertWidget ( int index, QWidget * widget )
+void removeWidget ( QWidget * widget )
+QWidget * widget ( int index ) const
+</PROTOS>
 
-   METHOD  new( ... )
+<SLOTS>
+void setCurrentIndex ( int index )
+void setCurrentWidget ( QWidget * widget )
+</SLOTS>
 
-   METHOD  hbSetMultiLineCommentFormat( pFormat )
-   METHOD  hbSetSingleLineCommentFormat( pFormat )
-   METHOD  hbSetRule( cName, cPattern, pFormat )
-   METHOD  hbSetFormat( cName, pFormat )
-   METHOD  hbSetFormatColumnSelection( nStart, nCount, pColor )
-
-   ENDCLASS
-
-
-METHOD HBQSyntaxHighlighter:new( ... )
-   LOCAL p
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   ::pPtr := Qt_HBQSyntaxHighlighter( ... )
-   RETURN Self
-
-
-METHOD HBQSyntaxHighlighter:hbSetMultiLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetMultiLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetSingleLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:hbSetRule( cName, cPattern, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetRule( ::pPtr, cName, cPattern, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:hbSetFormat( cName, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormat( ::pPtr, cName, hbqt_ptr( pFormat ) )
-
-
-METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( nStart, nCount, pColor )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormatColumnSelection( ::pPtr, nStart, nCount, hbqt_ptr( pColor ) )
-
+<SIGNALS>
+void currentChanged ( int index )
+void widgetRemoved ( int index )
+</SIGNALS>

@@ -155,6 +155,7 @@ CLASS HbIde
    DATA   oSBar
    DATA   oMenu
    DATA   oTBar
+   DATA   oStackedWidget
    DATA   oFont
    DATA   oProjTree
    DATA   oEditTree
@@ -183,6 +184,7 @@ CLASS HbIde
    DATA   lDockRVisible                           INIT   .f.
    DATA   lDockBVisible                           INIT   .f.
    DATA   lTabCloseRequested                      INIT   .f.
+   DATA   isColumnSelectionEnabled                INIT   .f.
 
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
@@ -242,6 +244,8 @@ CLASS HbIde
    METHOD execSourceAction( cKey )
    METHOD execEditorAction( cKey )
    METHOD execWindowsAction( cKey )
+
+   DATA   oFrame
 
    ENDCLASS
 
@@ -318,19 +322,6 @@ METHOD HbIde:create( cProjIni )
    /* Load Environments */
    ::oEV := IdeEnvironments():new( Self, hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ):create()
 
-   /* Prepare Editor's Tabs */
-   ::oEM:prepareTabWidget()
-
-   /* Attach GRID Layout to Editor Area - Futuristic */
-   ::qLayout := QGridLayout():new()
-   ::qLayout:setContentsMargins( 0,0,0,0 )
-   ::qLayout:setHorizontalSpacing( 0 )
-   ::qLayout:setVerticalSpacing( 0 )
-   //
-   ::oDa:oWidget:setLayout( ::qLayout )
-   //
-   ::qLayout:addWidget_1( ::oDa:oTabWidget:oWidget, 0, 0, 1, 1 )
-
    /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
    ::qBrushWrkProject := QBrush():new( "QColor", QColor():new( 255,0,0 ) )
@@ -344,9 +335,7 @@ METHOD HbIde:create( cProjIni )
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
    ::oSM:loadSources()
-   #if 0 /* Must not be greyed as we have more options there */
-   ::updateProjectMenu()
-   #endif
+
    ::updateTitleBar()
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
@@ -481,6 +470,7 @@ METHOD HbIde:execAction( cKey )
    CASE "Copy"
    CASE "Paste"
    CASE "SelectAll"
+   CASE "SelectionMode"
    CASE "DuplicateLine"
    CASE "DeleteLine"
    CASE "MoveLineUp"
@@ -548,6 +538,10 @@ METHOD HbIde:execEditorAction( cKey )
    CASE "SelectAll"
       ::oEM:selectAll()
       EXIT
+   CASE "SelectionMode"
+      ::isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
+      ::oEM:toggleSelectionMode()
+      EXIT
    CASE "DuplicateLine"
       ::oEM:duplicateLine()
       EXIT
@@ -603,7 +597,8 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "MatchPairs"
       //
-      ::oDockFind:show()
+      //::oDockFind:show()
+      ::oStackedWidget:oWidget:setCurrentIndex( iif( ::oStackedWidget:oWidget:currentIndex() == 1, 0, 1 ) )
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()

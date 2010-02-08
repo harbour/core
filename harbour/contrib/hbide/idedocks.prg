@@ -80,6 +80,8 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD buildDialog()
+   METHOD buildTabWidget()
+   METHOD buildStackWidget()
    METHOD buildDockWidgets()
    METHOD buildProjectTree()
    METHOD buildEditorTree()
@@ -127,22 +129,15 @@ METHOD IdeDocks:destroy()
 
 METHOD IdeDocks:buildDialog()
 
-   #if 1
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := ::resPath + "vr.png"
    ::oDlg:title := "Harbour-Qt IDE"
    #ifdef HBIDE_USE_UIC
-   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
+      ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    #else
-   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.ui" ):create()
+      ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.ui" ):create()
    #endif
    ::oDlg:create( , , , , , .f. )
-   #else
-   ::oIde:oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
-   ::oDlg:icon := ::resPath + "vr.png"
-   ::oDlg:title := "Harbour-Qt IDE"
-   ::oDlg:create()
-   #endif
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
 
@@ -156,6 +151,82 @@ METHOD IdeDocks:buildDialog()
 
    ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
    ::oDlg:Show()
+
+   /* Attach GRID Layout to Editor Area - Futuristic */
+   ::oIde:qLayout := QGridLayout():new()
+   ::oIde:qLayout:setContentsMargins( 0,0,0,0 )
+   ::oIde:qLayout:setHorizontalSpacing( 0 )
+   ::oIde:qLayout:setVerticalSpacing( 0 )
+   //
+
+   #if 0
+   ::buildTabWidget()
+   ::qLayout:addWidget_1( ::oDa:oTabWidget:oWidget, 0, 0, 1, 1 )
+   #else
+   ::buildStackWidget()
+   ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
+   ::buildTabWidget()
+   #endif
+
+   ::oDa:oWidget:setLayout( ::oIde:qLayout )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildStackWidget()
+
+   /* Its parent will be drawing area and pages will be XbpTabWidgets() */
+
+   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
+   ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
+   ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
+   ::oDa:addChild( ::oStackedWidget )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildTabWidget()
+   #if 0
+
+   ::oIde:oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
+   ::oIde:qTabWidget := ::oDa:oTabWidget:oWidget
+
+   ::qTabWidget:setUsesScrollButtons( .f. )
+   ::qTabWidget:setMovable( .t. )
+
+   ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|p| ::exeEvent( 1, p ) } )
+
+   #else
+      #if 0
+   ::oIde:oFrame := XbpWindow():new( ::oIde:oStackedWidget )
+   ::oFrame:oWidget := QWidget():new( ::oIde:oStackedWidget:oWidget )
+   ::oStackedWidget:addChild( ::oFrame )
+   ::oFrame:oTabWidget := XbpTabWidget():new():create( ::oFrame, , {0,0}, {200,200}, , .t. )
+   ::oIde:qTabWidget := ::oIde:oFrame:oTabWidget:oWidget
+   ::qTabWidget:setUsesScrollButtons( .f. )
+   ::qTabWidget:setMovable( .t. )
+   ::oStackedWidget:oWidget:addWidget( ::oFrame:oWidget )
+   ::oStackedWidget:oWidget:setCurrentIndex( 1 )
+      #else  /* Below Works */
+      LOCAL oTabWidget
+      STATIC qTabWidget
+
+   oTabWidget := XbpTabWidget():new():create( ::oIde:oStackedWidget , {0,0}, {10,10}, , .t. )
+   ::oIde:oDa:oTabWidget := oTabWidget             /* Important - Look deep why it be so */
+   ::oIde:qTabWidget     := oTabWidget:oWidget
+   ::qTabWidget:setUsesScrollButtons( .f. )
+   ::qTabWidget:setMovable( .t. )
+   ::oStackedWidget:oWidget:addWidget( ::qTabWidget  )
+
+   qTabWidget := QTabWidget():new( ::oStackedWidget:oWidget )
+   ::oStackedWidget:oWidget:addWidget( qTabWidget  )
+
+   ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+      #endif
+   #endif
 
    RETURN Self
 
@@ -181,7 +252,7 @@ METHOD IdeDocks:buildDockWidgets()
 METHOD IdeDocks:buildProjectTree()
    LOCAL i
 
-   ::oIde:oDockPT := XbpWindow():new( ::oDa )
+   ::oIde:oDockPT := XbpWindow():new()
    ::oDockPT:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockPT:oWidget:setObjectName( "dockProjectTree" )
    ::oDlg:addChild( ::oDockPT )
@@ -193,7 +264,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oIde:oProjTree := XbpTreeView():new()
    ::oProjTree:hasLines   := .T.
    ::oProjTree:hasButtons := .T.
-   ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
+   ::oProjTree:create( ::oDockPT, , { 0,0 }, { 10,10 }, , .t. )
 
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
 
@@ -231,7 +302,7 @@ METHOD IdeDocks:buildProjectTree()
 
 METHOD IdeDocks:buildEditorTree()
 
-   ::oIde:oDockED := XbpWindow():new( ::oDa )
+   ::oIde:oDockED := XbpWindow():new()
    ::oDockED:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockED:oWidget:setObjectName( "dockEditorTabs" )
    ::oDlg:addChild( ::oDockED )
@@ -243,9 +314,7 @@ METHOD IdeDocks:buildEditorTree()
    ::oIde:oEditTree := XbpTreeView():new()
    ::oEditTree:hasLines   := .T.
    ::oEditTree:hasButtons := .T.
-   ::oEditTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-
- * ::oEditTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+   ::oEditTree:create( ::oDockED, , { 0,0 }, { 10,10 }, , .t. )
 
    //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
@@ -273,7 +342,7 @@ METHOD IdeDocks:buildEditorTree()
 
 METHOD IdeDocks:buildFuncList()
 
-   ::oIde:oDockR := XbpWindow():new( ::oDa )
+   ::oIde:oDockR := XbpWindow():new()
    ::oDockR:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockR:oWidget:setObjectName( "dockFuncList" )
    ::oDlg:addChild( ::oDockR )
@@ -283,7 +352,6 @@ METHOD IdeDocks:buildFuncList()
    ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oIde:oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
- * ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
 
    //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
    ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::oIde:gotoFunction( mp1, mp2, oXbp ) }
@@ -310,7 +378,7 @@ METHOD IdeDocks:buildFuncList()
 
 METHOD IdeDocks:buildCompileResults()
 
-   ::oIde:oDockB := XbpWindow():new( ::oDa )
+   ::oIde:oDockB := XbpWindow():new()
    ::oDockB:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockB:oWidget:setObjectName( "dockCompileResults" )
    ::oDlg:addChild( ::oDockB )
@@ -331,7 +399,7 @@ METHOD IdeDocks:buildCompileResults()
 
 METHOD IdeDocks:buildLinkResults()
 
-   ::oIde:oDockB1 := XbpWindow():new( ::oDa )
+   ::oIde:oDockB1 := XbpWindow():new()
    ::oDockB1:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockB1:oWidget:setObjectName( "dockLinkResults" )
    ::oDlg:addChild( ::oDockB1 )
@@ -352,7 +420,7 @@ METHOD IdeDocks:buildLinkResults()
 
 METHOD IdeDocks:buildOutputResults()
 
-   ::oIde:oDockB2 := XbpWindow():new( ::oDa )
+   ::oIde:oDockB2 := XbpWindow():new()
    ::oDockB2:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockB2:oWidget:setObjectName( "dockOutputResults" )
    ::oDlg:addChild( ::oDockB2 )

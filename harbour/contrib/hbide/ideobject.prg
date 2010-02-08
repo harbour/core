@@ -103,10 +103,11 @@ CLASS IdeObject
    ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
    ACCESS oDA                                     INLINE ::oIde:oDA
 
+   ACCESS qLayout                                 INLINE ::oIde:qLayout
    ACCESS qCurEdit                                INLINE ::oIde:qCurEdit
    ACCESS qCurDocument                            INLINE ::oIde:qCurDocument
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
-   ACCESS qTabWidget                              INLINE ::oIde:oDA:oTabWidget:oWidget
+   ACCESS qTabWidget                              INLINE ::oIde:qTabWidget
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
@@ -148,11 +149,14 @@ CLASS IdeObject
    ACCESS oLinkResult                             INLINE ::oIde:oLinkResult
    ACCESS oDockB2                                 INLINE ::oIde:oDockB2
    ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
+   ACCESS oStackedWidget                          INLINE ::oIde:oStackedWidget
+   ACCESS oFrame                                  INLINE ::oIde:oFrame
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible
    ACCESS lDockBVisible                           INLINE ::oIde:lDockBVisible
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
+   ACCESS isColumnSelectionEnabled                INLINE ::oIde:isColumnSelectionEnabled
 
    ACCESS aMarkTBtns                              INLINE ::oIde:aMarkTBtns
 

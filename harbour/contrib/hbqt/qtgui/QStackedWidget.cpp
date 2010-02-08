@@ -68,11 +68,12 @@
 
 #include <QtCore/QPointer>
 
-#include <QtGui/QSyntaxHighlighter>
-#include "../hbqt_hbqsyntaxhighlighter.h"
+#include <QtGui/QStackedWidget>
+
 
 /*
- *
+ * QStackedWidget ( QWidget * parent = 0 )
+ * ~QStackedWidget ()
  *
  */
 
@@ -81,12 +82,12 @@ typedef struct
    void * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< HBQSyntaxHighlighter > pq;
-} QGC_POINTER_HBQSyntaxHighlighter;
+   QPointer< QStackedWidget > pq;
+} QGC_POINTER_QStackedWidget;
 
-QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
+QT_G_FUNC( hbqt_gcRelease_QStackedWidget )
 {
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) Cargo;
+   QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -95,91 +96,131 @@ QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_HBQSyntaxHighlighter   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( HBQSyntaxHighlighter * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_HBQSyntaxHighlighter   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStackedWidget   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            delete ( ( QStackedWidget * ) p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStackedWidget   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_HBQSyntaxHighlighterph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QStackedWidgetph=%p pq=%p", p->ph, (void *)(p->pq) ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_HBQSyntaxHighlighter    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStackedWidget    :     Object already deleted!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_HBQSyntaxHighlighter    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStackedWidget    :    Object not created with new()" ) );
       p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew )
+void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
+   QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QStackedWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->bNew = bNew;
-   p->func = hbqt_gcRelease_HBQSyntaxHighlighter;
+   p->func = hbqt_gcRelease_QStackedWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_HBQSyntaxHighlighter       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      new( & p->pq ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStackedWidget             ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    return p;
 }
 
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
+HB_FUNC( QT_QSTACKEDWIDGET )
 {
    void * pObj = NULL;
 
-   pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
+   pObj = new QStackedWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBQSyntaxHighlighter( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStackedWidget( pObj, true ) );
 }
 
 /*
- * void hbSetMultiLineCommentFormat( const QTextCharFormat & format )
+ * int addWidget ( QWidget * widget )
  */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETMULTILINECOMMENTFORMAT )
+HB_FUNC( QT_QSTACKEDWIDGET_ADDWIDGET )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   hb_retni( hbqt_par_QStackedWidget( 1 )->addWidget( hbqt_par_QWidget( 2 ) ) );
 }
 
 /*
- * void hbSetSingleLineCommentFormat( const QTextCharFormat & format )
+ * int count () const
  */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETSINGLELINECOMMENTFORMAT )
+HB_FUNC( QT_QSTACKEDWIDGET_COUNT )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetSingleLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   hb_retni( hbqt_par_QStackedWidget( 1 )->count() );
 }
 
 /*
- * void hbSetRule( QString name, QString pattern, QTextCharFormat & format )
+ * int currentIndex () const
  */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETRULE )
+HB_FUNC( QT_QSTACKEDWIDGET_CURRENTINDEX )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetRule( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), HBQSyntaxHighlighter::tr( hb_parc( 3 ) ), *hbqt_par_QTextCharFormat( 4 ) );
+   hb_retni( hbqt_par_QStackedWidget( 1 )->currentIndex() );
 }
 
 /*
- * void hbSetFormat( QString name, const QTextCharFormat & format )
+ * QWidget * currentWidget () const
  */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMAT )
+HB_FUNC( QT_QSTACKEDWIDGET_CURRENTWIDGET )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetFormat( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QTextCharFormat( 3 ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QStackedWidget( 1 )->currentWidget(), false ) );
 }
 
 /*
- * void hbSetFormatColumnSelection( int start, int count, const QColor & color )
+ * int indexOf ( QWidget * widget ) const
  */
-HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMATCOLUMNSELECTION )
+HB_FUNC( QT_QSTACKEDWIDGET_INDEXOF )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetFormatColumnSelection( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   hb_retni( hbqt_par_QStackedWidget( 1 )->indexOf( hbqt_par_QWidget( 2 ) ) );
+}
+
+/*
+ * int insertWidget ( int index, QWidget * widget )
+ */
+HB_FUNC( QT_QSTACKEDWIDGET_INSERTWIDGET )
+{
+   hb_retni( hbqt_par_QStackedWidget( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+}
+
+/*
+ * void removeWidget ( QWidget * widget )
+ */
+HB_FUNC( QT_QSTACKEDWIDGET_REMOVEWIDGET )
+{
+   hbqt_par_QStackedWidget( 1 )->removeWidget( hbqt_par_QWidget( 2 ) );
+}
+
+/*
+ * QWidget * widget ( int index ) const
+ */
+HB_FUNC( QT_QSTACKEDWIDGET_WIDGET )
+{
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QStackedWidget( 1 )->widget( hb_parni( 2 ) ), false ) );
+}
+
+/*
+ * void setCurrentIndex ( int index )
+ */
+HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTINDEX )
+{
+   hbqt_par_QStackedWidget( 1 )->setCurrentIndex( hb_parni( 2 ) );
+}
+
+/*
+ * void setCurrentWidget ( QWidget * widget )
+ */
+HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTWIDGET )
+{
+   hbqt_par_QStackedWidget( 1 )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
 }
 
 

@@ -68,6 +68,7 @@
 #include "hbclass.ch"
 #include "hbqt.ch"
 #include "hbide.ch"
+#include "xbp.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -96,7 +97,6 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD prepareTabWidget()
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile )
    METHOD exeEvent( nMode, p )
@@ -141,6 +141,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD streamComment()
    METHOD blockComment()
    METHOD indent( nStep )
+   METHOD toggleSelectionMode()
 
    ENDCLASS
 
@@ -197,22 +198,6 @@ METHOD IdeEditsManager:destroy()
    NEXT
    ::aActions := NIL
    ::qContextMenu := NIL
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:prepareTabWidget()
-
-   ::oIde:oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-   ::oIde:oTabWidget := ::oDa:oTabWidget
-   ::oIde:qTabWidget := ::oDa:oTabWidget:oWidget
-
-   ::qTabWidget:setUsesScrollButtons( .f. )
-   ::qTabWidget:setMovable( .t. )
-
-   ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|p| ::exeEvent( 1, p ) } )
 
    RETURN Self
 
@@ -507,6 +492,15 @@ METHOD IdeEditsManager:paste()
 METHOD IdeEditsManager:selectAll()
    IF !empty( ::qCurEdit )
       ::qCurEdit:selectAll()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleSelectionMode()
+
+   IF !empty( ::qCurEdit )
+      ::qCurEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
    ENDIF
    RETURN Self
 
@@ -1133,6 +1127,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
+
 hbide_dbg( "IdeEditor:destroy()", 0 )
    ::disconnect( ::qDocument, "blockCountChanged(int)"      )
    ::disconnect( ::qDocument, "contentsChange(int,int,int)" )
@@ -1345,6 +1340,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   qBrushMark                              INIT  QBrush():new( "QColor", QColor():new(   0,255,255 ) )
    DATA   qActionTab
    DATA   qLastCursor                             INIT  QTextCursor():new()
+   DATA   qSelColor                               INIT  QColor():new( 255,0,255 )
 
    DATA   qCursorMark
    DATA   qMarkUData                              INIT  HBQTextBlockUserData():new()
@@ -1638,9 +1634,14 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
+      qCursor := QTextCursor():configure( qEdit:TextCursor() )
+
+      /* Book Marks reach-out buttons */
       ::relayMarkButtons()
 
-      qCursor := QTextCursor():configure( qEdit:TextCursor() )
+      /* An experimental move but seems a lot is required to achieve column selection */
+*     qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
+
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
 
       EXIT

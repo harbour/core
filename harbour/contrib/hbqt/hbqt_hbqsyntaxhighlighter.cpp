@@ -138,6 +138,11 @@ void HBQSyntaxHighlighter::hbSetSingleLineCommentFormat( const QTextCharFormat &
    singleLineCommentFormat = format;
 }
 
+void HBQSyntaxHighlighter::hbSetFormatColumnSelection( int start, int count, const QColor & color )
+{
+   setFormat( start, count, color );
+}
+
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
    #if 0
@@ -159,6 +164,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
    #endif
+//HB_TRACE( HB_TR_ALWAYS, ( "SYNTSX HIGHLIGHTING" ) );
 
    int index = 0;
 
