@@ -129,7 +129,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char **
             pBuff[ *plBuffLen ] = '\0';
 
             /* Set handle pointer in the end of the line */
-            hb_fsSeek( hFileHandle, (((lRead-(( LONG ) iPos )))*-1)+1, FS_RELATIVE );
+            hb_fsSeek( hFileHandle, ((lRead-iPos)*-1)+1, FS_RELATIVE );
 
             return pBuff;
          }

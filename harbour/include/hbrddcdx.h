@@ -129,7 +129,7 @@ HB_EXTERN_BEGIN
 #define CURKEY_REFRESH(pTag)
 */
 
-#define HB_CDXMAXKEY( x )     ( ( USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
+#define HB_CDXMAXKEY( x )     ( ( HB_USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
 #define HB_CDXBITMASK( x )    ( ( HB_LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 /* #define FAST_GOCOLD( A )      ((A)->dbfarea.fRecordChanged || (A)->fCdxAppend ? (SELF_GOCOLD((AREAP)(A))) : HB_SUCCESS) */
@@ -249,8 +249,8 @@ struct _CDXTAG;   /* forward declaration */
 typedef struct _CDXKEY
 {
    HB_BYTE * val;
-   USHORT    len;
-   USHORT    mode;
+   HB_USHORT len;
+   HB_USHORT mode;
    HB_ULONG  rec;
 } CDXKEY;
 typedef CDXKEY * LPCDXKEY;

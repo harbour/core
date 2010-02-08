@@ -382,8 +382,8 @@ typedef struct
 #endif
 
 #if !defined( UNICODE )
-   BYTE     keyTransTbl[ 256 ];
-   BYTE     chrTransTbl[ 256 ];
+   HB_BYTE  keyTransTbl[ 256 ];
+   HB_BYTE  chrTransTbl[ 256 ];
 #endif
 
    HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
@@ -588,8 +588,8 @@ HB_BOOL     HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, 
 HB_BOOL     HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
 HB_BOOL     HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
-void        HB_EXPORT   hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
-void        HB_EXPORT   hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
+void        HB_EXPORT   hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
+void        HB_EXPORT   hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 
 LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
 int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );

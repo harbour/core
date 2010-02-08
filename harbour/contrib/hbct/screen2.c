@@ -342,7 +342,7 @@ HB_FUNC( SCREENSTR )
          do
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             HB_USHORT usChar;
             hb_gtGetChar( iRow, iC, &iColor, &bAttr, &usChar );
             *szText++ = ( char ) usChar;

@@ -548,7 +548,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 {
    BOOL bHandled;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_CtrlHandler(%lu)", ( ULONG ) dwCtrlType));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_CtrlHandler(%lu)", ( HB_ULONG ) dwCtrlType));
 
    switch( dwCtrlType )
    {
