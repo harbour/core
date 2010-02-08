@@ -242,8 +242,8 @@ static HB_CRITICAL_NEW( s_atInitMtx );
 #endif /* HB_MT_VM */
 
 #ifndef HB_NO_PROFILER
-static ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ]; /* array to profile opcodes calls */
-static ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ];  /* array to profile opcodes consumed time */
+static HB_ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ]; /* array to profile opcodes calls */
+static HB_ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ];  /* array to profile opcodes consumed time */
 static HB_BOOL hb_bProfiler = HB_FALSE;                        /* profiler status is off */
 #endif
 
@@ -266,7 +266,7 @@ static int      s_nErrorLevel = 0;     /* application exit errorlevel */
 static PHB_SYMB s_pSymStart = NULL;    /* start symbol of the application. MAIN() is not required */
 
 static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
-static ULONG       s_ulFreeSymbols = 0;/* number of free module symbols */
+static HB_ULONG    s_ulFreeSymbols = 0;/* number of free module symbols */
 static void *      s_hDynLibID = NULL; /* unique identifer to mark symbol tables loaded from dynamic libraries */
 static HB_BOOL     s_fCloneSym = HB_FALSE;/* clone registered symbol tables */
 
@@ -275,7 +275,7 @@ static void * s_main_thread = NULL;
 
 /* Various compatibility flags
 */
-static ULONG      s_VMFlags = HB_VMFLAG_HARBOUR;
+static HB_ULONG   s_VMFlags = HB_VMFLAG_HARBOUR;
 #undef hb_vmFlagEnabled
 #define hb_vmFlagEnabled(flag)      (s_VMFlags & (flag))
 
@@ -948,7 +948,7 @@ void hb_vmInit( HB_BOOL bStartMainProc )
 #ifndef HB_NO_PROFILER
    /* Initialize opcodes profiler support arrays */
    {
-      ULONG ul;
+      HB_ULONG ul;
 
       for( ul = 0; ul < HB_P_LAST_PCODE; ul++ )
       {
@@ -1169,8 +1169,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
    HB_BOOL bCanRecover = HB_FALSE;
    HB_BOOL bDynCode = pSymbols == NULL || ( pSymbols->scope.value & HB_FS_DYNCODE ) != 0;
 #ifndef HB_NO_PROFILER
-   ULONG ulLastOpcode = 0; /* opcodes profiler support */
-   ULONG ulPastClock = 0;  /* opcodes profiler support */
+   HB_ULONG ulLastOpcode = 0; /* opcodes profiler support */
+   HB_ULONG ulPastClock = 0;  /* opcodes profiler support */
 #endif
 #if !defined( HB_GUI )
    int * piKeyPolls = hb_stackKeyPolls();
@@ -1180,7 +1180,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
 #ifndef HB_NO_PROFILER
    if( hb_bProfiler )
-      ulPastClock = ( ULONG ) clock();
+      ulPastClock = ( HB_ULONG ) clock();
 #endif
 
    for( ;; )
@@ -1188,7 +1188,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 #ifndef HB_NO_PROFILER
       if( hb_bProfiler )
       {
-         ULONG ulActualClock = ( ULONG ) clock();
+         HB_ULONG ulActualClock = ( HB_ULONG ) clock();
 
          hb_ulOpcodesTime[ ulLastOpcode ] += ( ulActualClock - ulPastClock );
          ulPastClock = ulActualClock;
@@ -1714,7 +1714,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
          {
             HB_USHORT uiCount = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             hb_vmInitThreadStatics( uiCount, &pCode[ 3 ] );
-            pCode += 3 + ( ( ULONG ) uiCount << 1 );
+            pCode += 3 + ( ( HB_ULONG ) uiCount << 1 );
             break;
          }
 
@@ -5701,7 +5701,7 @@ void hb_vmProc( HB_USHORT uiParams )
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
 #ifndef HB_NO_PROFILER
-   ULONG ulClock = 0;
+   HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
@@ -5711,7 +5711,7 @@ void hb_vmProc( HB_USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
-      ulClock = ( ULONG ) clock();
+      ulClock = ( HB_ULONG ) clock();
 #endif
 
    /* Poll the console keyboard
@@ -5761,7 +5761,7 @@ void hb_vmDo( HB_USHORT uiParams )
    PHB_SYMB pSym;
    PHB_ITEM pSelf;
 #ifndef HB_NO_PROFILER
-   ULONG ulClock = 0;
+   HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
@@ -5771,7 +5771,7 @@ void hb_vmDo( HB_USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
-      ulClock = ( ULONG ) clock();
+      ulClock = ( HB_ULONG ) clock();
 #endif
 
    /* Poll the console keyboard
@@ -5850,7 +5850,7 @@ void hb_vmSend( HB_USHORT uiParams )
    PHB_SYMB pExecSym;
    PHB_ITEM pSelf;
 #ifndef HB_NO_PROFILER
-   ULONG ulClock = 0;
+   HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
@@ -5860,7 +5860,7 @@ void hb_vmSend( HB_USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
-      ulClock = ( ULONG ) clock();
+      ulClock = ( HB_ULONG ) clock();
 #endif
 
    /* Poll the console keyboard
@@ -5973,11 +5973,11 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
  * for example:
  *  retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
 */
-HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
+HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, HB_ULONG ulArgCount, ... )
 {
    HB_STACK_TLS_PRELOAD
    va_list va;
-   ULONG i;
+   HB_ULONG i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %lu, ...)", pBlock, ulArgCount));
 
@@ -7376,9 +7376,9 @@ static void hb_vmStaticsRelease( void )
    }
 }
 
-static ULONG hb_vmStaticsCount( void )
+static HB_ULONG hb_vmStaticsCount( void )
 {
-   ULONG ulStatics = 0;
+   HB_ULONG ulStatics = 0;
 
    if( hb_vmLockModuleSymbols() )
    {
@@ -7436,7 +7436,7 @@ static PHB_ITEM hb_vmStaticsArray( void )
 }
 
 static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, HB_USHORT uiSymbols,
-                                        const char * szModuleName, ULONG ulID )
+                                        const char * szModuleName, HB_ULONG ulID )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFindFreeModule(%p,%hu,%s,%lu)", pSymbols, uiSymbols, szModuleName, ulID));
 
@@ -7646,7 +7646,7 @@ void hb_vmExitSymbolGroup( void * hDynLib )
 }
 
 PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
-                                  const char * szModuleName, ULONG ulID,
+                                  const char * szModuleName, HB_ULONG ulID,
                                   HB_BOOL fDynLib, HB_BOOL fClone )
 {
    PHB_SYMBOLS pNewSymbols;
@@ -7670,18 +7670,18 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
       if( fClone )
       {
-         ULONG ulSymSize = ( ULONG ) uiSymbols * sizeof( HB_SYMB ), ulSize;
+         HB_ULONG ulSymSize = ( HB_ULONG ) uiSymbols * sizeof( HB_SYMB ), ulSize;
          char * buffer;
 
          ulSize = ulSymSize;
          for( ui = 0; ui < uiSymbols; ui++ )
-            ulSize += ( ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+            ulSize += ( HB_ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
          buffer = ( char * ) memcpy( hb_xgrab( ulSize ), pModuleSymbols, ulSymSize );
          pModuleSymbols = ( PHB_SYMB ) buffer;
          for( ui = 0; ui < uiSymbols; ui++ )
          {
             buffer += ulSymSize;
-            ulSymSize = ( ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+            ulSymSize = ( HB_ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
             memcpy( buffer, pModuleSymbols[ ui ].szName, ulSymSize );
             pModuleSymbols[ ui ].szName = buffer;
          }
@@ -7827,7 +7827,7 @@ static void hb_vmVerifyPCodeVersion( const char * szModuleName, HB_USHORT uiPCod
  * module symbols initialization with extended information
  */
 PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
-                              const char * szModuleName, ULONG ulID,
+                              const char * szModuleName, HB_ULONG ulID,
                               HB_USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
@@ -7838,7 +7838,7 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
 }
 
 PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
-                                              const char * szModuleName, ULONG ulID,
+                                              const char * szModuleName, HB_ULONG ulID,
                                               HB_USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDynLibSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
@@ -11182,17 +11182,17 @@ void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
 
 
 #undef hb_vmFlagEnabled
-ULONG hb_vmFlagEnabled( ULONG flags )
+HB_ULONG hb_vmFlagEnabled( HB_ULONG flags )
 {
    return s_VMFlags & flags;
 }
 
-void hb_vmFlagSet( ULONG flags )
+void hb_vmFlagSet( HB_ULONG flags )
 {
    s_VMFlags |= flags;
 }
 
-void hb_vmFlagClear( ULONG flags )
+void hb_vmFlagClear( HB_ULONG flags )
 {
    s_VMFlags &= ~flags;
 }
@@ -11251,7 +11251,7 @@ PHB_ITEM hb_dbg_vmVarSGet( PHB_ITEM pStaticsBase, int nOffset )
       return NULL;
 }
 
-ULONG hb_dbg_ProcLevel( void )
+HB_ULONG hb_dbg_ProcLevel( void )
 {
    return hb_stackCallDepth();
 }
@@ -11325,7 +11325,7 @@ HB_FUNC( __DBGPROCLEVEL )
  * compatibility with xHarbour debugger - Harbour does not support
  * GLOBALs
  */
-ULONG hb_dbg_vmVarGCount( void )
+HB_ULONG hb_dbg_vmVarGCount( void )
 {
 #if 0
    return hb_arrayLen( &s_aGlobals );
@@ -11479,7 +11479,7 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
 {
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER
-   ULONG ulOpcode = hb_parnl( 1 );
+   HB_ULONG ulOpcode = hb_parnl( 1 );
 
    hb_reta( 2 );
    if( ulOpcode < HB_P_LAST_PCODE )

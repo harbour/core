@@ -314,11 +314,11 @@ HB_FUNC( FILESMAX )
 #if defined( __DJGPP__ )
    __dpmi_regs r;
    unsigned handles;
-   ULONG psp;
+   HB_ULONG psp;
 
    r.h.ah = 0x62;               /* Get PSP address */
    __dpmi_int( 0x21, &r );
-   psp = ( ( ( ULONG ) r.x.bx ) << 4 ) & 0xFFFFF;
+   psp = ( ( ( HB_ULONG ) r.x.bx ) << 4 ) & 0xFFFFF;
 
    handles = _farpeekw( _dos_ds, psp + 0x32 );
    hb_retni( handles );

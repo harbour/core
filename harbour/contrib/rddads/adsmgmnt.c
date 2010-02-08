@@ -489,7 +489,7 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_arraySetC( pArray, ( ULONG ) ulCount, ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
+         hb_arraySetC( pArray, ( HB_ULONG ) ulCount, ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
 
       hb_itemReturnRelease( pArray );
    }
@@ -560,7 +560,7 @@ HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserNa
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_arraySetC( pArray, ( ULONG ) ulCount, ( char * ) astOpenIndexInfo[ ulCount - 1 ].aucIndexName );
+         hb_arraySetC( pArray, ( HB_ULONG ) ulCount, ( char * ) astOpenIndexInfo[ ulCount - 1 ].aucIndexName );
 
       hb_itemReturnRelease( pArray );
    }
@@ -593,7 +593,7 @@ HB_FUNC( ADSMGGETLOCKS )
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_arraySetNL( pArray, ( ULONG ) ulCount, astRecordInfo[ ulCount - 1 ].ulRecordNumber );
+         hb_arraySetNL( pArray, ( HB_ULONG ) ulCount, astRecordInfo[ ulCount - 1 ].ulRecordNumber );
 
       hb_itemReturnRelease( pArray );
    }

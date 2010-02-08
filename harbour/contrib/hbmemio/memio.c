@@ -111,11 +111,11 @@ typedef struct _HB_MEMFS_FILE
 
 typedef struct _HB_MEMFS_FS
 {
-   ULONG              ulInodeCount;
-   ULONG              ulInodeAlloc;
+   HB_ULONG           ulInodeCount;
+   HB_ULONG           ulInodeAlloc;
    PHB_MEMFS_INODE *  pInodes;
-   ULONG              ulFileAlloc;
-   ULONG              ulFileLast;
+   HB_ULONG           ulFileAlloc;
+   HB_ULONG           ulFileLast;
    PHB_MEMFS_FILE *   pFiles;
 } HB_MEMFS_FS, * PHB_MEMFS_FS;
 
@@ -133,7 +133,7 @@ static void memfsInodeFree( PHB_MEMFS_INODE pInode );
 
 static void memfsExit( void * cargo )
 {
-   ULONG  ul;
+   HB_ULONG ul;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -167,10 +167,10 @@ static void memfsInit( void )
 
 
 /* Note: returns 1 based index! */
-static ULONG memfsInodeFind( const char * szName, ULONG * pulPos )
+static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
-   ULONG   ulLeft, ulRight, ulMiddle;
-   int     i;
+   HB_ULONG ulLeft, ulRight, ulMiddle;
+   int i;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
@@ -193,12 +193,12 @@ static ULONG memfsInodeFind( const char * szName, ULONG * pulPos )
 
 static PHB_MEMFS_INODE memfsInodeAlloc( const char* szName )
 {
-   PHB_MEMFS_INODE  pInode = ( PHB_MEMFS_INODE ) hb_xgrab( sizeof( HB_MEMFS_INODE ) );
-   ULONG            ulInode = 0;
+   PHB_MEMFS_INODE pInode = ( PHB_MEMFS_INODE ) hb_xgrab( sizeof( HB_MEMFS_INODE ) );
+   HB_ULONG ulInode = 0;
 
    pInode->llSize = 0;
    pInode->llAlloc = HB_MEMFS_INITSIZE;
-   pInode->pData = ( char * ) hb_xgrab( ( ULONG ) pInode->llAlloc );
+   pInode->pData = ( char * ) hb_xgrab( ( HB_ULONG ) pInode->llAlloc );
    memset( pInode->pData, 0, pInode->llAlloc );
    pInode->szName = hb_strdup( szName );
 
@@ -251,19 +251,19 @@ static PHB_MEMFS_FILE memfsFileAlloc( PHB_MEMFS_INODE pInode )
 
 static PHB_MEMFS_FILE memfsHandleToFile( HB_FHANDLE hFile )
 {
-   if( hFile == FS_ERROR || ( ULONG ) hFile == 0 || ( ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( ULONG ) hFile - 1 ] == NULL )
+   if( hFile == FS_ERROR || ( HB_ULONG ) hFile == 0 || ( HB_ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ] == NULL )
    {
       /* hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL ); */
       return NULL;
    }
    else
-      return s_fs.pFiles[ ( ULONG ) hFile - 1 ];
+      return s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ];
 }
 
 
 static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 {
-   ULONG   ul;
+   HB_ULONG ul;
 
    /* This allocation will help to avoid reallocation of just released file handle. */
    for( ul = s_fs.ulFileLast; ul < s_fs.ulFileAlloc; ul++ )
@@ -317,8 +317,8 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsFileExists( const char * szName )
 
 HB_MEMFS_EXPORT HB_BOOL hb_memfsDelete( const char * szName )
 {
-   PHB_MEMFS_INODE  pInode;
-   ULONG            ulFile;
+   PHB_MEMFS_INODE pInode;
+   HB_ULONG ulFile;
 
    HB_MEMFSMT_LOCK
    if( ( ulFile = memfsInodeFind( szName, NULL ) ) == 0 )
@@ -342,7 +342,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsDelete( const char * szName )
 
 HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewName )
 {
-   ULONG  ulInode;
+   HB_ULONG ulInode;
 
    HB_MEMFSMT_LOCK
    if( ( ulInode = memfsInodeFind( szName, NULL ) ) == 0 )
@@ -368,7 +368,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 {
    PHB_MEMFS_FILE  pFile = NULL;
    HB_FHANDLE      hFile;
-   ULONG           ulInode;
+   HB_ULONG        ulInode;
    HB_ERRCODE      uiError = 0;
 
    /*
@@ -512,7 +512,7 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, HB_SIZE 
    else
       ulRead = ( HB_SIZE ) ( pInode->llSize - llOffset );
 
-   memcpy( pBuff, pInode->pData + ( ULONG ) llOffset, ulRead );
+   memcpy( pBuff, pInode->pData + ( HB_ULONG ) llOffset, ulRead );
    HB_MEMFSMT_UNLOCK
    pFile->llPos = llOffset + ( HB_FOFFSET ) ulCount;
    return ulRead;
@@ -544,11 +544,11 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, H
       if( llNewAlloc < llOffset + ( HB_FOFFSET ) ulCount )
          llNewAlloc = llOffset + ( HB_FOFFSET ) ulCount;
 
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
-      memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( HB_ULONG ) llNewAlloc );
+      memset( pInode->pData + ( HB_ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
       pInode->llAlloc = llNewAlloc;
    }
-   memcpy( pInode->pData + ( ULONG ) llOffset, pBuff, ulCount );
+   memcpy( pInode->pData + ( HB_ULONG ) llOffset, pBuff, ulCount );
 
    if( pInode->llSize < llOffset + ( HB_FOFFSET ) ulCount )
       pInode->llSize = llOffset + ( HB_FOFFSET ) ulCount;
@@ -598,17 +598,17 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
 
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
-      memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( HB_ULONG ) llNewAlloc );
+      memset( pInode->pData + ( HB_ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
       pInode->llAlloc = llNewAlloc;
    }
    else if( ( pInode->llAlloc >> 2 ) > ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE ) )
    {
       pInode->llAlloc = ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE );
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) pInode->llAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( HB_ULONG ) pInode->llAlloc );
    }
 
-   memset( pInode->pData + ( ULONG ) llOffset, 0, pInode->llAlloc - llOffset );
+   memset( pInode->pData + ( HB_ULONG ) llOffset, 0, pInode->llAlloc - llOffset );
 
    pInode->llSize = llOffset;
    HB_MEMFSMT_UNLOCK
@@ -732,7 +732,7 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHOR
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX + 1 ];
    HB_USHORT  uiFlags;
-   ULONG      ulLen;
+   HB_ULONG   ulLen;
 
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );

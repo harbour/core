@@ -137,7 +137,7 @@ static HB_BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_ITEM pItem = NULL;
-   ULONG ulKey;
+   HB_SIZE ulKey;
 
    if( ! ( hb_itemType( pKeyItem ) & HB_IT_STRING ) )
    {

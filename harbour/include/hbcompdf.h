@@ -325,8 +325,8 @@ typedef struct HB_EXPR_
       } asOperator;
       struct HB_EXPR_ * asReference;
    } value;
-   ULONG ulLength;
-   ULONG Counter;
+   HB_ULONG ulLength;
+   HB_ULONG Counter;
    HB_EXPRTYPE ExprType;      /* internal expression type */
    HB_USHORT ValType;         /* language level value type */
    struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
@@ -342,7 +342,7 @@ typedef struct HB_ENUMERATOR_
 /* support structure for else if pcode fixups */
 typedef struct HB_ELSEIF_
 {
-   ULONG    ulOffset;
+   HB_ULONG ulOffset;
    struct   HB_ELSEIF_ * pElseif;   /* next ELSEIF in the current IF statement */
    struct   HB_ELSEIF_ * pPrev;     /* previous IF statement */
 } HB_ELSEIF, * HB_ELSEIF_PTR;
@@ -350,7 +350,7 @@ typedef struct HB_ELSEIF_
 /* support structure for EXIT and LOOP statements */
 typedef struct HB_LOOPEXIT_
 {
-   ULONG     ulOffset;
+   HB_ULONG  ulOffset;
    HB_BOOL   fCanLoop;
    HB_USHORT wSeqCounter;
    HB_USHORT wAlwaysCounter;
@@ -363,18 +363,18 @@ typedef struct HB_LOOPEXIT_
 /* support structure for SWITCH statement */
 typedef struct HB_SWITCHCASE_
 {
-   ULONG ulOffset;
+   HB_ULONG ulOffset;
    HB_EXPR_PTR pExpr;
    struct HB_SWITCHCASE_ *pNext;
 } HB_SWITCHCASE, * HB_SWITCHCASE_PTR;
 
 typedef struct HB_SWITCHCMD_
 {
-   ULONG ulOffset;
+   HB_ULONG ulOffset;
    HB_SWITCHCASE_PTR pCases;
    HB_SWITCHCASE_PTR pLast;
    HB_EXPR_PTR pExpr;
-   ULONG ulDefault;
+   HB_ULONG ulDefault;
    struct HB_SWITCHCMD_ *pPrev;
 } HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
 
@@ -402,14 +402,14 @@ typedef struct __FUNC
    PVAR         pDetached;                /* pointer to detached local variables list */
    PVAR         pPrivates;                /* pointer to private variables list */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
-   ULONG        lPCodePos;                /* actual pcode offset */
+   HB_ULONG     lPCodeSize;               /* total memory size for pcode */
+   HB_ULONG     lPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
    int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
-   ULONG *      pNOOPs;                   /* pointer to the NOOP array */
-   ULONG *      pJumps;                   /* pointer to the Jumps array */
-   ULONG        iNOOPs;                   /* NOOPs Counter */
-   ULONG        iJumps;                   /* Jumps Counter */
+   HB_ULONG *   pNOOPs;                   /* pointer to the NOOP array */
+   HB_ULONG *   pJumps;                   /* pointer to the Jumps array */
+   HB_ULONG     iNOOPs;                   /* NOOPs Counter */
+   HB_ULONG     iJumps;                   /* Jumps Counter */
    HB_BOOL      bLateEval;                /* HB_TRUE if accessing of declared (compile time) variables is allowed */
    HB_BOOL      fVParams;                 /* HB_TRUE if variable number of parameters is used */
    HB_BOOL      bError;                   /* error during function compilation */
@@ -436,7 +436,7 @@ typedef struct __INLINE
 {
    const char * szName;                   /* name of a inline function */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
+   HB_ULONG     lPCodeSize;               /* total memory size for pcode */
    const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
    struct __INLINE * pNext;               /* pointer to the next defined inline */
@@ -502,22 +502,22 @@ typedef struct _HB_MODULE
 typedef struct _HB_DEBUGINFO
 {
    char *    pszModuleName;
-   ULONG     ulFirstLine;
-   ULONG     ulLastLine;
-   ULONG     ulAllocated;
+   HB_ULONG  ulFirstLine;
+   HB_ULONG  ulLastLine;
+   HB_ULONG  ulAllocated;
    HB_BYTE * pLineMap;
    struct _HB_DEBUGINFO * pNext;
 } HB_DEBUGINFO, * PHB_DEBUGINFO;
 
 typedef struct _HB_LABEL_INFO
 {
-   FILE *   yyc;
-   HB_BOOL  fVerbose;
-   HB_BOOL  fSetSeqBegin;
-   HB_BOOL  fCondJump;
-   HB_BOOL  fEndRequest;
-   int      iNestedBlock;
-   ULONG *  pulLabels;
+   FILE *     yyc;
+   HB_BOOL    fVerbose;
+   HB_BOOL    fSetSeqBegin;
+   HB_BOOL    fCondJump;
+   HB_BOOL    fEndRequest;
+   int        iNestedBlock;
+   HB_ULONG * pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
 #define HB_MODE_COMPILER      1
@@ -547,8 +547,8 @@ HB_COMMON, * HB_COMMON_PTR;
 typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
    HB_BYTE * pCode;        /* pointer to a memory block where pcode is stored */
-   ULONG   lPCodeSize;     /* total memory size for pcode */
-   ULONG   lPCodePos;      /* actual pcode offset */
+   HB_ULONG lPCodeSize;    /* total memory size for pcode */
+   HB_ULONG lPCodePos;     /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
    struct HB_PCODE_INFO_ * pPrev;
    HB_CBVAR_PTR pLocals;
@@ -557,23 +557,23 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 typedef struct HB_MACRO_      /* a macro compiled pcode container */
 {
    /* common to compiler members */
-   int    mode;              /* HB_MODE_* */
-   int    supported;         /* various flags for supported capabilities */
+   int      mode;             /* HB_MODE_* */
+   int      supported;        /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 
    /* macro compiler only members */
-   char * string;            /* compiled string */
-   ULONG  length;            /* length of the string */
-   int    Flags;             /* some flags we may need */
-   int    status;            /* status of compilation */
-   HB_ITEM_PTR pError;       /* error object returned from the parser */
+   char *   string;           /* compiled string */
+   HB_ULONG length;           /* length of the string */
+   int      Flags;            /* some flags we may need */
+   int      status;           /* status of compilation */
+   HB_ITEM_PTR pError;        /* error object returned from the parser */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
-   void * pLex;              /* lexer buffer pointer */
-   void * pExprLst;          /* list with allocated expressions */
-   void * pIdentLst;         /* list with allocated identifiers */
-   int    exprType;          /* type of successfully compiled expression */
-   HB_USHORT uiListElements; /* number of elements in macro list expression */
-   HB_USHORT uiNameLen;      /* the maximum symbol name length */
+   void *   pLex;             /* lexer buffer pointer */
+   void *   pExprLst;         /* list with allocated expressions */
+   void *   pIdentLst;        /* list with allocated identifiers */
+   int      exprType;         /* type of successfully compiled expression */
+   HB_USHORT uiListElements;  /* number of elements in macro list expression */
+   HB_USHORT uiNameLen;       /* the maximum symbol name length */
 } HB_MACRO;
 
 #else
@@ -603,8 +603,8 @@ typedef struct _HB_I18NSTRING
 typedef struct _HB_I18NTABLE
 {
    PHB_I18NSTRING    pString;
-   ULONG             uiCount;
-   ULONG             uiAllocated;
+   HB_ULONG          uiCount;
+   HB_ULONG          uiAllocated;
 } HB_I18NTABLE, * PHB_I18NTABLE;
 
 typedef struct _HB_COMP_LEX
@@ -671,10 +671,10 @@ typedef struct _HB_COMP
    void              ( * outErrFunc ) ( void *, const char* );
    void *            cargo;
 
-   ULONG             ulOutBufSize;        /* memory output buffer size */
+   HB_ULONG          ulOutBufSize;        /* memory output buffer size */
    HB_BYTE *         pOutBuf;             /* memory output buffer address */
 
-   ULONG             lastLinePos;         /* position of last opcode with line number */
+   HB_ULONG          lastLinePos;         /* position of last opcode with line number */
    int               lastLine;            /* last generated in PCODE line number */
    int               currLine;            /* currently compiled line number */
    const char *      lastModule;          /* last generated in PCODE module name */

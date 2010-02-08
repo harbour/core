@@ -90,8 +90,8 @@ typedef struct _SDFAREA
    HB_FOFFSET  ulRecordOffset;       /* Current record offest */
    HB_FOFFSET  ulNextOffset;         /* Next record offest */
    HB_FOFFSET  ulFileSize;           /* File table size in export mode */
-   ULONG       ulRecNo;              /* Current record */
-   ULONG       ulRecCount;           /* Number of records (in export) */
+   HB_ULONG    ulRecNo;              /* Current record */
+   HB_ULONG    ulRecCount;           /* Number of records (in export) */
    HB_BOOL     fTransRec;            /* Can put whole records */
    HB_BOOL     fFlush;               /* Data was written to SDF and not commited */
    HB_BOOL     fShared;              /* Shared file */

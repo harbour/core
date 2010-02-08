@@ -57,7 +57,7 @@
 
 static void STAItm( PHB_ITEM pItmPar )
 {
-   ULONG i, ulItmPar = hb_itemGetCLen( pItmPar );
+   HB_SIZE i, ulItmPar = hb_itemGetCLen( pItmPar );
    const char *cItmPar = hb_itemGetCPtr( pItmPar ), *c;
    char *cRes;
 
@@ -74,9 +74,9 @@ static void STAItm( PHB_ITEM pItmPar )
    hb_itemPutCLPtr( pItmPar, cRes, i );
 }
 
-static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
+static HB_SIZE SCItm( char *cBuffer, HB_SIZE ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
 {
-   ULONG s;
+   HB_SIZE s;
 
    /* NOTE: In DJGPP (4.2.3) hb_snprintf() will be preprocessed to sprintf(), which
             makes ulMaxBuf unused, and this in turn causes a warning, so we're
@@ -186,7 +186,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 
 HB_FUNC( SQL_SPRINTF )
 {
-   ULONG ulItmFrm;
+   HB_SIZE ulItmFrm;
    const char *cItmFrm;
    char *cRes;
    int argc = hb_pcount() - 1;
@@ -205,7 +205,7 @@ HB_FUNC( SQL_SPRINTF )
       char *cIntMod, *cBuffer, *cParFrm;
       const char *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
-      ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
+      HB_SIZE s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
       static char cToken[] = "stTcdiouxXaAeEfgGpnSC";
 
       cIntMod = NULL;

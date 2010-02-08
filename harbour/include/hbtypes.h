@@ -62,7 +62,7 @@ HB_EXTERN_BEGIN
 
 typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS )
                         ( PHB_SYMB pModuleSymbols, HB_USHORT uiModuleSymbols,
-                          const char * szModuleName, ULONG ulID, HB_USHORT uiPcodeVer );
+                          const char * szModuleName, HB_ULONG ulID, HB_USHORT uiPcodeVer );
 
 typedef void ( * VM_EXECUTE ) ( const HB_BYTE * pCode, PHB_SYMB pSymbols );
 
@@ -88,7 +88,7 @@ typedef void     ( * HB_RETNILEN )( int iNumber, int iWidth );
 typedef void     ( * HB_RETNLLEN )( long lNumber, int iWidth );
 typedef void     ( * HB_RETA )( HB_SIZE ulLen );
 typedef HB_SIZE  ( * HB_PARINFA )( int iParamNum, HB_SIZE uiArrayIndex );
-typedef ULONG    ( * HB_PARINFO )( int iParam );
+typedef HB_ULONG ( * HB_PARINFO )( int iParam );
 typedef HB_SIZE  ( * HB_PARCLEN )( int iParam );
 typedef HB_SIZE  ( * HB_PARCSIZ )( int iParam );
 typedef char *   ( * HB_PARDS )( int iParam );
@@ -129,13 +129,13 @@ typedef HB_BOOL  ( * HB_ARRAYSIZE )( PHB_ITEM pArray, HB_SIZE ulLen );
 typedef HB_BOOL  ( * HB_ARRAYLAST )( PHB_ITEM pArray, PHB_ITEM pResult );
 typedef HB_BOOL  ( * HB_ARRAYSET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
 typedef HB_BOOL  ( * HB_ARRAYGET )( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
-typedef void     ( * HB_XINIT )( void );                         /* Initialize fixed memory subsystem */
-typedef void     ( * HB_XEXIT )( void );                         /* Deinitialize fixed memory subsystem */
-typedef void *   ( * HB_XALLOC )( ULONG ulSize );                /* allocates memory, returns NULL on failure */
-typedef void *   ( * HB_XGRAB )( ULONG ulSize );                 /* allocates memory, exits on failure */
-typedef void     ( * HB_XFREE )( void * pMem );                  /* frees memory */
-typedef void *   ( * HB_XREALLOC )( void * pMem, ULONG ulSize ); /* reallocates memory */
-typedef ULONG    ( * HB_XSIZE )( void * pMem );                  /* returns the size of an allocated memory block */
+typedef void     ( * HB_XINIT )( void );                            /* Initialize fixed memory subsystem */
+typedef void     ( * HB_XEXIT )( void );                            /* Deinitialize fixed memory subsystem */
+typedef void *   ( * HB_XALLOC )( HB_ULONG ulSize );                /* allocates memory, returns NULL on failure */
+typedef void *   ( * HB_XGRAB )( HB_ULONG ulSize );                 /* allocates memory, exits on failure */
+typedef void     ( * HB_XFREE )( void * pMem );                     /* frees memory */
+typedef void *   ( * HB_XREALLOC )( void * pMem, HB_ULONG ulSize ); /* reallocates memory */
+typedef HB_ULONG ( * HB_XSIZE )( void * pMem );                     /* returns the size of an allocated memory block */
 
 HB_EXTERN_END
 

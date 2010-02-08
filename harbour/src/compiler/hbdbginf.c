@@ -55,7 +55,7 @@
 PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
 {
    PHB_DEBUGINFO pLineInfo = NULL, pInfo = NULL;
-   ULONG ulPos, ulSkip, ulLine, ulOffset;
+   HB_ULONG ulPos, ulSkip, ulLine, ulOffset;
    const char * pszModuleName = "", * ptr;
    PFUNCTION pFunc;
 
@@ -137,7 +137,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                ulOffset = ulLine >> 3;
                if( pInfo->ulAllocated <= ulOffset )
                {
-                  ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
+                  HB_ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
                   pInfo->pLineMap = ( HB_BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
                   memset( pInfo->pLineMap + pInfo->ulAllocated, 0, ulNewSize - pInfo->ulAllocated + 1 );
                   pInfo->ulAllocated = ulNewSize;

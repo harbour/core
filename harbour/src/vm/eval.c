@@ -200,7 +200,7 @@ HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
          evaluated, you must use '(PHB_ITEM *) 0' as the third parameter.
 */
 
-PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
+PHB_ITEM hb_itemDo( PHB_ITEM pItem, HB_ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
@@ -242,7 +242,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
 
             if( ulPCount )
             {
-               ULONG ulParam;
+               HB_ULONG ulParam;
                va_list va;
                va_start( va, ulPCount );
                for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
@@ -270,7 +270,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
          being called, you must use '(PHB_ITEM *) 0' as the third parameter.
 */
 
-PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
+PHB_ITEM hb_itemDoC( const char * szFunc, HB_ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
@@ -288,7 +288,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
             hb_vmPushNil();
             if( ulPCount )
             {
-               ULONG ulParam;
+               HB_ULONG ulParam;
                va_list va;
                va_start( va, ulPCount );
                for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
@@ -418,7 +418,7 @@ HB_FUNC( HB_EXECFROMARRAY )
    PHB_ITEM pSelf = NULL;
    PHB_ITEM pArray = NULL;
    PHB_ITEM pItem;
-   ULONG ulParamOffset = 0;
+   HB_ULONG ulParamOffset = 0;
    int iPCount = hb_pcount();
 
    /* decode parameters */
@@ -507,7 +507,7 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
    PHB_SYMB pExecSym = NULL;
    PHB_ITEM pArray = NULL;
    PHB_ITEM pSelf = NULL;
-   ULONG ulParamOffset = 0;
+   HB_ULONG ulParamOffset = 0;
    int iPCount = 0;
 
    if( pParam && HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )

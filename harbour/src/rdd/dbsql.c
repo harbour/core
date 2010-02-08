@@ -235,14 +235,14 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 }
 
 /* Export DBF content to a SQL script file */
-static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
-                        PHB_ITEM pWhile, PHB_ITEM pFor,
-                        const char * szDelim, const char * szSep,
-                        const char * szEsc, const char * szTable,
-                        HB_FHANDLE hFile, HB_BOOL fInsert, HB_BOOL fRecno )
+static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
+                           PHB_ITEM pWhile, PHB_ITEM pFor,
+                           const char * szDelim, const char * szSep,
+                           const char * szEsc, const char * szTable,
+                           HB_FHANDLE hFile, HB_BOOL fInsert, HB_BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
-   ULONG ulRecords = 0;
+   HB_ULONG ulRecords = 0;
    HB_USHORT uiFields = 0, ui;
    PHB_ITEM pTmp;
    HB_BOOL fWriteSep = HB_FALSE;
@@ -286,7 +286,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
 
          if( fRecno )
          {
-            ULONG ulRec = ulRecords;
+            HB_ULONG ulRec = ulRecords;
             char szRecno[ 13 ], * szVal;
 
             szVal = szRecno + sizeof( szRecno );

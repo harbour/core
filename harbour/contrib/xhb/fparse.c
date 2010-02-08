@@ -515,7 +515,7 @@ HB_FUNC( FWORDCOUNT )
    char **tokens;
    int iCharCount = 0;
    HB_BYTE nByte = ' ';
-   ULONG ulWordCount = 0;
+   HB_ULONG ulWordCount = 0;
 
    /* file parameter correctly passed */
    if ( !pSrc )
@@ -571,7 +571,7 @@ HB_FUNC( FLINECOUNT )
 {
    FILE *inFile ;
    PHB_ITEM pSrc = hb_param(1, HB_IT_STRING);
-   ULONG ulLineCount = 0;
+   HB_ULONG ulLineCount = 0;
    int ch;
 
    /* file parameter correctly passed */
@@ -618,7 +618,7 @@ HB_FUNC( FCHARCOUNT )
 {
    FILE *inFile ;
    PHB_ITEM pSrc = hb_param(1, HB_IT_STRING);
-   ULONG ulResult = 0;
+   HB_ULONG ulResult = 0;
    int ch;
 
    /* file parameter correctly passed */

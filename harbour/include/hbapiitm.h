@@ -76,8 +76,8 @@ extern HB_EXPORT void         hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pPara
 
 extern HB_EXPORT HB_BOOL      hb_execFromArray ( PHB_ITEM pParam );
 
-extern HB_EXPORT PHB_ITEM     hb_itemDo        ( PHB_ITEM pItem, ULONG ulPCount, ... );
-extern HB_EXPORT PHB_ITEM     hb_itemDoC       ( const char * szFunc, ULONG ulPCount, ... );
+extern HB_EXPORT PHB_ITEM     hb_itemDo        ( PHB_ITEM pItem, HB_ULONG ulPCount, ... );
+extern HB_EXPORT PHB_ITEM     hb_itemDoC       ( const char * szFunc, HB_ULONG ulPCount, ... );
 
 extern HB_EXPORT PHB_ITEM     hb_itemArrayGet  ( PHB_ITEM pArray, HB_SIZE ulIndex );
 extern HB_EXPORT PHB_ITEM     hb_itemArrayNew  ( HB_SIZE ulLen );

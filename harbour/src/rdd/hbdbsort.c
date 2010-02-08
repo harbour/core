@@ -96,7 +96,7 @@ HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount )
    return ( hb_fsWrite( pQuickSort->hFile, pQuickSort->pBuffer, uiSize ) == uiSize );
 }
 
-static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
+static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )
 {
    HB_USHORT uiCount, uiField;
    DBFAREAP pArea;
@@ -168,7 +168,7 @@ static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG
    return HB_FALSE;
 }
 
-static void hb_dbQSortSwap( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
+static void hb_dbQSortSwap( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )
 {
    /* Swap records */
    hb_fsSeek( pQuickSort->hFile, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
@@ -181,9 +181,9 @@ static void hb_dbQSortSwap( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRe
    hb_fsWrite( pQuickSort->hFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen );
 }
 
-static void hb_dbQSortDo( LPDBQUICKSORT pQuickSort, ULONG ulFirst, ULONG ulLast )
+static void hb_dbQSortDo( LPDBQUICKSORT pQuickSort, HB_ULONG ulFirst, HB_ULONG ulLast )
 {
-   ULONG ulPivot, ulLeft, ulRight;
+   HB_ULONG ulPivot, ulLeft, ulRight;
 
    /* Select pivot */
    if( hb_dbQSortIsLess( pQuickSort, ulFirst, ulLast ) )
@@ -223,7 +223,7 @@ static void hb_dbQSortDo( LPDBQUICKSORT pQuickSort, ULONG ulFirst, ULONG ulLast 
 
 void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
 {
-   ULONG ulRecCount;
+   HB_ULONG ulRecCount;
    AREAP pArea;
 
    ulRecCount = hb_fsSeek( pQuickSort->hFile, 0, FS_END ) / pQuickSort->uiRecordLen;

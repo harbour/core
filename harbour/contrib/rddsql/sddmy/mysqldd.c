@@ -76,7 +76,7 @@ static HB_ERRCODE mysqlDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea );
-static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
@@ -171,7 +171,7 @@ static HB_ERRCODE mysqlDisconnect( SQLDDCONNECTION * pConnection )
 static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    MYSQL_RES *  pResult;
-   ULONG        ulAffectedRows;
+   HB_ULONG     ulAffectedRows;
    PHB_ITEM     pNewID = NULL;
 
    if ( mysql_real_query( ( MYSQL * ) pConnection->hConnection, hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) )
@@ -183,7 +183,7 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    pResult = mysql_store_result( ( MYSQL * ) pConnection->hConnection );
    if ( pResult )
    {
-      ulAffectedRows = ( ULONG ) mysql_num_rows( pResult );
+      ulAffectedRows = ( HB_ULONG ) mysql_num_rows( pResult );
       mysql_free_result( pResult );
       hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), NULL, ulAffectedRows );
    }
@@ -191,7 +191,7 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    {
       if ( mysql_field_count( ( MYSQL * ) pConnection->hConnection ) == 0 )
       {
-         ulAffectedRows = ( ULONG ) mysql_affected_rows( ( MYSQL * ) pConnection->hConnection );
+         ulAffectedRows = ( HB_ULONG ) mysql_affected_rows( ( MYSQL * ) pConnection->hConnection );
          if( mysql_insert_id( ( MYSQL * ) pConnection->hConnection ) != 0 )
          {
             pNewID = hb_itemPutNInt( NULL, mysql_insert_id( ( MYSQL * ) pConnection->hConnection ) );
@@ -213,7 +213,7 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 {
    PHB_ITEM      pItemEof, pItem;
-   ULONG         ulIndex;
+   HB_ULONG      ulIndex;
    HB_USHORT     uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
    HB_BOOL       bError;
@@ -392,7 +392,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
      return HB_FAILURE;
    }
 
-   pArea->ulRecCount = ( ULONG ) mysql_num_rows( ( MYSQL_RES * ) pArea->pResult );
+   pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( ( MYSQL_RES * ) pArea->pResult );
 
    pArea->pRow = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
@@ -427,7 +427,7 @@ static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
@@ -461,7 +461,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
    PHB_ITEM  pError;
-   ULONG     ulLen;
+   HB_ULONG  ulLen;
 
    bError = HB_FALSE;
    uiIndex--;
@@ -489,7 +489,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          if ( pValue )
             memcpy( pStr, pValue, ulLen );
 
-         if ( ( ULONG )pField->uiLen > ulLen )
+         if ( ( HB_ULONG )pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
 
          pStr[ pField->uiLen ] = '\0';

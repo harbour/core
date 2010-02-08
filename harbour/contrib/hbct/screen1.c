@@ -146,13 +146,13 @@ HB_FUNC( SCREENATTR )
 
 HB_FUNC( SCREENMIX )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen )
    {
       const char * szText = hb_parc( 1 );
       const char * szAttr;
-      ULONG ulAttr = hb_parclen( 2 ), ul = 0;
+      HB_SIZE ulAttr = hb_parclen( 2 ), ul = 0;
       int iRow, iCol, i;
 
       if( ulAttr == 0 )
@@ -229,7 +229,7 @@ HB_FUNC( SCREENMIX )
 
 HB_FUNC( SAYSCREEN )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen )
    {
@@ -702,11 +702,11 @@ HB_FUNC( SCREENTEXT )
 {
    int iTop, iLeft, iBottom, iRight;
    char * pBuffer, * szText;
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      ulSize = ( ULONG ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      ulSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       szText = pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
       while( iTop <= iBottom )
       {

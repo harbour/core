@@ -195,7 +195,7 @@ typedef struct
    HB_BOOL        fShared;          /* Share mode of the data store */
    HB_BOOL        fReadonly;        /* Readonly mode of the data store */
    const char *   cdpId;            /* Id of a codepage */
-   ULONG          ulConnection;     /* connection handler for RDDs which support it */
+   HB_ULONG       ulConnection;     /* connection handler for RDDs which support it */
    void *         lpdbHeader;       /* Pointer to a header of the data store */
 } DBOPENINFO;
 
@@ -535,7 +535,7 @@ typedef FIELD * LPFIELD;
  * prototype for function to evaluate against index keys
  * only for local RDDs (DBFNTX, DBFCDX, ...)
  */
-typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, HB_BYTE *, ULONG, void * );
+typedef void ( * HB_EVALSCOPE_FUNC )( HB_ULONG, HB_BYTE *, HB_ULONG, void * );
 
 
 /*--------------------* WORKAREA structure *----------------------*/
@@ -592,7 +592,7 @@ typedef HB_ERRCODE ( * DBENTRYP_V     )( AREAP area );
 typedef HB_ERRCODE ( * DBENTRYP_BP    )( AREAP area, HB_BOOL * param );
 typedef HB_ERRCODE ( * DBENTRYP_B     )( AREAP area, HB_BOOL param );
 typedef HB_ERRCODE ( * DBENTRYP_L     )( AREAP area, HB_LONG param );
-typedef HB_ERRCODE ( * DBENTRYP_UL    )( AREAP area, ULONG param );
+typedef HB_ERRCODE ( * DBENTRYP_UL    )( AREAP area, HB_ULONG param );
 typedef HB_ERRCODE ( * DBENTRYP_I     )( AREAP area, PHB_ITEM param );
 typedef HB_ERRCODE ( * DBENTRYP_SI    )( AREAP area, HB_USHORT index, PHB_ITEM param );
 typedef HB_ERRCODE ( * DBENTRYP_VO    )( AREAP area, LPDBOPENINFO param );
@@ -616,26 +616,26 @@ typedef HB_ERRCODE ( * DBENTRYP_CC    )( AREAP area, const char * param );
 typedef HB_ERRCODE ( * DBENTRYP_PP    )( AREAP area, HB_BYTE ** param );
 typedef HB_ERRCODE ( * DBENTRYP_S     )( AREAP area, HB_USHORT param );
 typedef HB_ERRCODE ( * DBENTRYP_LP    )( AREAP area, HB_LONG * param );
-typedef HB_ERRCODE ( * DBENTRYP_ULP   )( AREAP area, ULONG * param );
+typedef HB_ERRCODE ( * DBENTRYP_ULP   )( AREAP area, HB_ULONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_SVP   )( AREAP area, HB_USHORT index, void * param );
 typedef HB_ERRCODE ( * DBENTRYP_SSP   )( AREAP area, HB_USHORT index, HB_USHORT * param );
 typedef HB_ERRCODE ( * DBENTRYP_SCP   )( AREAP area, HB_USHORT index, char * param );
 typedef HB_ERRCODE ( * DBENTRYP_SCCS  )( AREAP area, HB_USHORT index, const char * param, HB_USHORT p3 );
-typedef HB_ERRCODE ( * DBENTRYP_VSP   )( AREAP area, HB_USHORT action, ULONG lRecord );
-typedef HB_ERRCODE ( * DBENTRYP_SVL   )( AREAP area, HB_USHORT index, ULONG * param );
+typedef HB_ERRCODE ( * DBENTRYP_VSP   )( AREAP area, HB_USHORT action, HB_ULONG lRecord );
+typedef HB_ERRCODE ( * DBENTRYP_SVL   )( AREAP area, HB_USHORT index, HB_ULONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_SSI   )( AREAP area, HB_USHORT p1, HB_USHORT p2, PHB_ITEM p3 );
 typedef HB_ERRCODE ( * DBENTRYP_ISI   )( AREAP area, PHB_ITEM p1, HB_USHORT p2, PHB_ITEM p3 );
 typedef HB_ERRCODE ( * DBENTRYP_BIB   )( AREAP area, HB_BOOL p1, PHB_ITEM p2, HB_BOOL p3 );
 typedef HB_ERRCODE ( * DBENTRYP_VPL   )( AREAP area, void * p1, HB_LONG p2 );
 typedef HB_ERRCODE ( * DBENTRYP_VPLP  )( AREAP area, void * p1, HB_LONG * p2 );
-typedef HB_ERRCODE ( * DBENTRYP_LSP   )( AREAP area, ULONG p1, HB_BOOL * p2 );
+typedef HB_ERRCODE ( * DBENTRYP_LSP   )( AREAP area, HB_ULONG p1, HB_BOOL * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */
 
 typedef HB_ERRCODE ( * DBENTRYP_R     )( struct _RDDNODE * pRDD );
-typedef HB_ERRCODE ( * DBENTRYP_RVVL  )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2, ULONG p3 );
-typedef HB_ERRCODE ( * DBENTRYP_RVVVL )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2, PHB_ITEM p3, ULONG p4 );
-typedef HB_ERRCODE ( * DBENTRYP_RSLV  )( struct _RDDNODE * pRDD, HB_USHORT index, ULONG p1, PHB_ITEM p2 );
+typedef HB_ERRCODE ( * DBENTRYP_RVVL  )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2, HB_ULONG p3 );
+typedef HB_ERRCODE ( * DBENTRYP_RVVVL )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2, PHB_ITEM p3, HB_ULONG p4 );
+typedef HB_ERRCODE ( * DBENTRYP_RSLV  )( struct _RDDNODE * pRDD, HB_USHORT index, HB_ULONG p1, PHB_ITEM p2 );
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef struct _RDDFUNCS
@@ -1195,18 +1195,18 @@ extern HB_EXPORT HB_ERRCODE   hb_rddOpenTable(
                                  const char * szFileName, const char * szDriver,
                                  HB_USHORT uiArea, const char *szAlias,
                                  HB_BOOL fShared, HB_BOOL fReadonly,
-                                 const char * szCpId, ULONG ulConnection,
+                                 const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct, PHB_ITEM pDelim );
 extern HB_EXPORT HB_ERRCODE   hb_rddCreateTable(
                                  const char * szFileName, const char * szDriver,
                                  HB_USHORT uiArea, const char *szAlias,
                                  HB_BOOL fKeepOpen,
-                                 const char * szCpId, ULONG ulConnection,
+                                 const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct, PHB_ITEM pDelim );
 extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
                                  const char * szDriver,
                                  const char * szAlias,
-                                 const char * szCpId, ULONG ulConnection,
+                                 const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
                                  AREAP lpaSource, AREAP lpaDest,
@@ -1215,7 +1215,7 @@ extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
 extern HB_EXPORT HB_ERRCODE   hb_rddTransRecords(
                                  AREAP pArea,
                                  const char *szFileName, const char *szDriver,
-                                 ULONG ulConnection,
+                                 HB_ULONG ulConnection,
                                  PHB_ITEM pFields, HB_BOOL fExport,
                                  PHB_ITEM pCobFor, PHB_ITEM pStrFor,
                                  PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,

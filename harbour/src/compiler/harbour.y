@@ -75,7 +75,7 @@ static void hb_compLoopExit( HB_COMP_DECL );
 static void hb_compLoopHere( HB_COMP_DECL );
 static long hb_compLoopCount( HB_COMP_DECL );
 
-static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, HB_BOOL );
@@ -1061,9 +1061,9 @@ CodeBlock   : BlockHead
             {  /* 6 */
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                $$ = hb_compExprSetCodeblockBody( $1,
-                     HB_COMP_PARAM->functions.pLast->pCode + ( ULONG ) $<lNumber>3,
-                     HB_COMP_PARAM->functions.pLast->lPCodePos - ( ULONG ) $<lNumber>3 );
-               HB_COMP_PARAM->functions.pLast->lPCodePos = ( ULONG ) $<lNumber>3;
+                     HB_COMP_PARAM->functions.pLast->pCode + ( HB_ULONG ) $<lNumber>3,
+                     HB_COMP_PARAM->functions.pLast->lPCodePos - ( HB_ULONG ) $<lNumber>3 );
+               HB_COMP_PARAM->functions.pLast->lPCodePos = ( HB_ULONG ) $<lNumber>3;
                HB_COMP_PARAM->lastLinePos = 0;
             }
             ;
@@ -1504,11 +1504,11 @@ DoWhile    : WhileBegin ExpList Crlf
              EmptyStats
                {
                   hb_compLoopHere( HB_COMP_PARAM );
-                  hb_compGenJump( ( ULONG ) $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJump( ( HB_ULONG ) $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                }
              EndWhile
                {
-                  hb_compGenJumpHere( ( ULONG ) $<lNumber>4, HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>4, HB_COMP_PARAM );
                   if( HB_COMP_PARAM->functions.pLast->wWhileCounter )
                      --HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -1577,7 +1577,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      iSign = 1;
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
-                  hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>9, HB_COMP_PARAM );
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $7, HB_COMP_PARAM ) );   /* end */
                   if( iSign )
                   {
@@ -1591,7 +1591,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
-                  hb_compGenJumpFalse( ( ULONG ) $<lNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJumpFalse( ( HB_ULONG ) $<lNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( $<asExpr>2 ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
@@ -1666,9 +1666,9 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
              {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, $2, $6 );
-                hb_compGenJump( ( ULONG ) $<lNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                hb_compGenJump( ( HB_ULONG ) $<lNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
 
-                hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
+                hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>9, HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
                 HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, $2 );
@@ -1765,7 +1765,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                    */
                   if( $<lNumber>3 )
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
-                  hb_compGenJumpHere( ( ULONG ) $<lNumber>2, HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>2, HB_COMP_PARAM );
                   $<lNumber>$ = hb_compSequenceEnd( HB_COMP_PARAM );
                   $<lNumber>4 = hb_compLoopCount( HB_COMP_PARAM );
                }
@@ -1775,7 +1775,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
                    */
                   if( $<lNumber>7 )
-                     hb_compGenJumpThere( ( ULONG ) $<lNumber>2, ( ULONG ) $<lNumber>7, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( HB_ULONG ) $<lNumber>2, ( HB_ULONG ) $<lNumber>7, HB_COMP_PARAM );
                   else if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                }
@@ -1793,19 +1793,19 @@ BeginSeq    : BEGINSEQ        /* 1 */
                      --HB_COMP_PARAM->functions.pLast->wAlwaysCounter;
                      /* replace END address with ALWAYS address in
                         HB_P_SEQEND opcode */
-                     hb_compGenJumpThere( ( ULONG ) $<lNumber>6, ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( HB_ULONG ) $<lNumber>6, ( HB_ULONG ) $<lNumber>9, HB_COMP_PARAM );
                      /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
-                     hb_compGenJumpThere( ( ULONG ) $<lNumber>2 - 4, ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( HB_ULONG ) $<lNumber>2 - 4, ( HB_ULONG ) $<lNumber>9, HB_COMP_PARAM );
                      /* Fix ALWAYSEND address in HB_P_ALWAYSBEGIN opcode */
-                     hb_compGenJumpHere( ( ULONG ) $<lNumber>9 + 1, HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>9 + 1, HB_COMP_PARAM );
                      hb_compGenPCode1( HB_P_ALWAYSEND, HB_COMP_PARAM );
                   }
                   else
                   {
                      /* Fix END address in HB_P_SEQEND opcode */
-                     hb_compGenJumpHere( ( ULONG ) $<lNumber>6, HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( HB_ULONG ) $<lNumber>6, HB_COMP_PARAM );
                   }
-                  hb_compSequenceFinish( HB_COMP_PARAM, ( ULONG ) $<lNumber>2, ( ULONG ) $<lNumber>6, ( ULONG ) $<lNumber>9,
+                  hb_compSequenceFinish( HB_COMP_PARAM, ( HB_ULONG ) $<lNumber>2, ( HB_ULONG ) $<lNumber>6, ( HB_ULONG ) $<lNumber>9,
                                          $<lNumber>5 != 0, $<lNumber>7 != 0, $<lNumber>4 == lLoopCount );
                }
                EndSeqID       /* 10 */
@@ -1918,7 +1918,7 @@ WithObject : WITHOBJECT Expression Crlf
                   else
                   {
                      hb_compNOOPfill( HB_COMP_PARAM->functions.pLast,
-                                      ( ULONG ) $<lNumber>4, 1, HB_FALSE, HB_TRUE );
+                                      ( HB_ULONG ) $<lNumber>4, 1, HB_FALSE, HB_TRUE );
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                   }
                }
@@ -2216,7 +2216,7 @@ void hb_compLoopKill( PFUNCTION pFunc )
    }
 }
 
-static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, ULONG ulOffset )
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_ULONG ulOffset )
 {
    HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
@@ -2504,7 +2504,7 @@ static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 
 static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
 {
-   ULONG ulLen;
+   HB_ULONG ulLen;
 
    if( hb_compExprListLen(pVars) != hb_compExprListLen(pExprs) )
    {
@@ -2617,7 +2617,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    HB_SWITCHCMD_PTR pSwitch = pFunc->pSwitch;
    HB_EXPR_PTR pExpr = pSwitch->pExpr;
    HB_SWITCHCASE_PTR pCase, pTmp;
-   ULONG ulExitPos, ulCountPos;
+   HB_ULONG ulExitPos, ulCountPos;
    int iCount = 0;
 
    /* skip switch pcode if there was no EXIT in the last CASE

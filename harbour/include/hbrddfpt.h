@@ -206,9 +206,9 @@ typedef FPTBLOCK * LPFPTBLOCK;
 /* MEMO internal memory structures */
 typedef struct _MEMOGCITEM
 {
-   ULONG   ulOffset;                /* Number of blocks */
-   ULONG   ulSize;                  /* Block number */
-   HB_BOOL fChanged;                /* Mark the free page as changed */
+   HB_ULONG ulOffset;               /* Number of blocks */
+   HB_ULONG ulSize;                 /* Block number */
+   HB_BOOL  fChanged;               /* Mark the free page as changed */
 } MEMOGCITEM;
 typedef MEMOGCITEM * LPMEMOGCITEM;
 
@@ -216,12 +216,12 @@ typedef struct _MEMOGCTABLE
 {
    HB_BYTE   bType;                 /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
    HB_BYTE   bChanged;              /* Should we write GC data to disk */
-   ULONG     ulNextBlock;           /* Next free block in the file */
-   ULONG     ulPrevBlock;           /* Previous next free block in the file */
-   ULONG     ulRevPage;             /* FLEX Rev GC page offset */
-   ULONG     ulDirPage;             /* FLEX Dir GC page offset */
-   ULONG     ulCounter;             /* FLEX cyclic counter */
-   ULONG     ulSize;                /* FLEX GC page size in bytes */
+   HB_ULONG  ulNextBlock;           /* Next free block in the file */
+   HB_ULONG  ulPrevBlock;           /* Previous next free block in the file */
+   HB_ULONG  ulRevPage;             /* FLEX Rev GC page offset */
+   HB_ULONG  ulDirPage;             /* FLEX Dir GC page offset */
+   HB_ULONG  ulCounter;             /* FLEX cyclic counter */
+   HB_ULONG  ulSize;                /* FLEX GC page size in bytes */
    HB_USHORT usMaxItem;             /* max number of items in pGCitems */
    HB_USHORT usItems;               /* number of items in pGCitems */
    LPMEMOGCITEM pGCitems;           /* free block list */

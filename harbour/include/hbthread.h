@@ -247,7 +247,7 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_INFINITE_WAIT   SEM_INDEFINITE_WAIT
 
 #  ifndef SEM_INDEFINITE_WAIT
-#     define SEM_INDEFINITE_WAIT    ( ( ULONG ) -1 )
+#     define SEM_INDEFINITE_WAIT    ( ( HB_ULONG ) -1 )
 #  endif
 
 #else
@@ -355,7 +355,7 @@ HB_EXTERN_BEGIN
 #endif
 
 #ifndef HB_THREAD_INFINITE_WAIT
-#  define HB_THREAD_INFINITE_WAIT   ( ( ULONG ) -1 )
+#  define HB_THREAD_INFINITE_WAIT   ( ( HB_ULONG ) -1 )
 #endif
 
 typedef HB_THREAD_STARTFUNC( PHB_THREAD_STARTFUNC );
@@ -406,7 +406,7 @@ extern void hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical );
 extern HB_BOOL hb_threadCondSignal( HB_COND_T * cond );
 extern HB_BOOL hb_threadCondBroadcast( HB_COND_T * cond );
 extern HB_BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex );
-extern HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMilliSec );
+extern HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULONG ulMilliSec );
 
 extern HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo );
 extern HB_BOOL     hb_threadJoin( HB_THREAD_HANDLE th_h );
@@ -415,17 +415,17 @@ extern HB_BOOL     hb_threadDetach( HB_THREAD_HANDLE th_h );
 /* used by .prg code */
 extern PHB_ITEM hb_threadMutexCreate( void );
 extern HB_BOOL  hb_threadMutexLock( PHB_ITEM pItem );
-extern HB_BOOL  hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec );
+extern HB_BOOL  hb_threadMutexTimedLock( PHB_ITEM pItem, HB_ULONG ulMilliSec );
 extern HB_BOOL  hb_threadMutexUnlock( PHB_ITEM pItem );
 extern void     hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting );
 extern PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear );
-extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, HB_BOOL fClear );
+extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_BOOL fClear );
 
 #if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
 
 extern void    hb_threadMutexUnlockAll( void );
 extern void    hb_threadMutexSyncSignal( PHB_ITEM pItemMtx );
-extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec, PHB_ITEM pItemSync );
+extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, PHB_ITEM pItemSync );
 
 #if defined( HB_NO_TLS ) || defined( HB_TASK_THREAD )
 #  undef HB_USE_TLS

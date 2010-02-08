@@ -80,30 +80,30 @@ HB_EXTERN_BEGIN
 
 typedef struct HB_BACKGROUNDTASK_
 {
-   ULONG    ulTaskID;     /* task identifier */
+   HB_ULONG ulTaskID;     /* task identifier */
    PHB_ITEM pTask;        /* pointer to the task item */
    double   dSeconds;     /* internal - last time this task has gone */
    int      millisec;     /* milliseconds after this task must run */
    HB_BOOL  bActive;      /* task is active ? */
 } HB_BACKGROUNDTASK, * PHB_BACKGROUNDTASK, * HB_BACKGROUNDTASK_PTR;
 
-extern void     hb_backgroundRunSingle( ULONG ulID ); /* run a single background routine */
+extern void     hb_backgroundRunSingle( HB_ULONG ulID ); /* run a single background routine */
 extern void     hb_backgroundRunForced( void ); /* run all background routines also if them are not active*/
 extern void     hb_backgroundRun( void ); /* run all background routines but only if them are active*/
 extern void     hb_backgroundReset( void ); /* reset internal counter */
 extern void     hb_backgroundShutDown( void ); /* closes all background tasks */
-extern ULONG    hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive ); /* Adds a codeblock or an executable array */
-extern PHB_ITEM hb_backgroundDelFunc( ULONG ulID ); /* Deletes a prevuiously added task */
-extern PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID );
-extern HB_BOOL  hb_backgroundActive( ULONG ulID, HB_BOOL bActive );
-extern int      hb_backgroundTime( ULONG ulID, int nMillisec );
+extern HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive ); /* Adds a codeblock or an executable array */
+extern PHB_ITEM hb_backgroundDelFunc( HB_ULONG ulID ); /* Deletes a prevuiously added task */
+extern PHB_BACKGROUNDTASK hb_backgroundFind( HB_ULONG ulID );
+extern HB_BOOL  hb_backgroundActive( HB_ULONG ulID, HB_BOOL bActive );
+extern int      hb_backgroundTime( HB_ULONG ulID, int nMillisec );
 
 HB_EXTERN_END
 
 #ifndef HB_THREAD_SUPPORT
 
 /* Task ID */
-static ULONG s_ulBackgroundID = 0;
+static HB_ULONG s_ulBackgroundID = 0;
 
 /* list of background tasks
  * A pointer into an array of pointers to items with a codeblock
@@ -132,7 +132,7 @@ static HB_USHORT s_uiBackgroundMaxTask = 0;
 
 /* ------------------------  C  LEVEL ------------------------------ */
 
-ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
+HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
 {
    PHB_BACKGROUNDTASK pBkgTask;
 
@@ -236,7 +236,7 @@ void hb_backgroundRunForced( void )
 }
 
 /* RUN only one tasks, intentionally no check if bacground are active is done */
-void hb_backgroundRunSingle( ULONG ulID )
+void hb_backgroundRunSingle( HB_ULONG ulID )
 {
    PHB_BACKGROUNDTASK pBkgTask;
 
@@ -280,7 +280,7 @@ void hb_backgroundShutDown( void )
 }
 
 /* caller have to free return ITEM by hb_itemRelease() if it's not NULL */
-PHB_ITEM hb_backgroundDelFunc( ULONG ulID )
+PHB_ITEM hb_backgroundDelFunc( HB_ULONG ulID )
 {
    int iTask;
    PHB_BACKGROUNDTASK pBkgTask;
@@ -325,7 +325,7 @@ PHB_ITEM hb_backgroundDelFunc( ULONG ulID )
 }
 
 /* Find a task */
-PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID )
+PHB_BACKGROUNDTASK hb_backgroundFind( HB_ULONG ulID )
 {
    int iTask;
    PHB_BACKGROUNDTASK pBkgTask;
@@ -344,7 +344,7 @@ PHB_BACKGROUNDTASK hb_backgroundFind( ULONG ulID )
 }
 
 /* Set task as active */
-HB_BOOL hb_backgroundActive( ULONG ulID, HB_BOOL bActive )
+HB_BOOL hb_backgroundActive( HB_ULONG ulID, HB_BOOL bActive )
 {
    PHB_BACKGROUNDTASK pBkgTask;
    HB_BOOL bOldState = HB_FALSE;
@@ -361,7 +361,7 @@ HB_BOOL hb_backgroundActive( ULONG ulID, HB_BOOL bActive )
 }
 
 /* Set task time */
-int hb_backgroundTime( ULONG ulID, int nMillisec )
+int hb_backgroundTime( HB_ULONG ulID, int nMillisec )
 {
    PHB_BACKGROUNDTASK pBkgTask;
    int nOldState = 0;

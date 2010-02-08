@@ -56,9 +56,9 @@
 /* ************************************************************************ */
 
 #ifndef HB_MACRO_SUPPORT
-ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
+HB_ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
 {
-   ULONG ulLen = 0;
+   HB_ULONG ulLen = 0;
 
    if( pEval && ( pExpr->ExprType == HB_ET_LIST ||
                   pExpr->ExprType == HB_ET_ARGLIST ) )
@@ -74,9 +74,9 @@ ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pE
    return ulLen;
 }
 
-ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval )
+HB_ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval )
 {
-   ULONG ulLen = 0;
+   HB_ULONG ulLen = 0;
 
    if( !pEval )
       return ulLen;
@@ -312,7 +312,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             pVar = pParms->value.asList.pExprList->pNext;
             if( pVar->ExprType == HB_ET_STRING )
             {
-               ULONG i = 0;
+               HB_ULONG i = 0;
                char *szVar = pVar->value.asString.string;
 
                /* NOTE: Clipper strips a string at the first '[' character too
@@ -621,7 +621,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, ULONG ulLen )
+HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%lu)", pExpr, pCode, ulLen));
 

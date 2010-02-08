@@ -145,10 +145,10 @@ typedef struct _ADSAREA_
    LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */
 
    char *    szDataFileName;      /* Name of data file */
-   ULONG     ulRecordLen;         /* Size of record */
-   ULONG     ulRecNo;             /* Current record */
+   HB_ULONG  ulRecordLen;         /* Size of record */
+   HB_ULONG  ulRecNo;             /* Current record */
    HB_BYTE * pRecord;             /* Buffer of record data */
-   ULONG     maxFieldLen;         /* Max field length in table record */
+   HB_ULONG  maxFieldLen;         /* Max field length in table record */
 
    HB_BOOL   fPositioned;         /* HB_TRUE if we are not at phantom record */
    HB_BOOL   fShared;             /* Shared file */
@@ -200,8 +200,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern HB_BOOL hb_ads_bOEM;
-   extern char *  hb_adsOemToAnsi( const char * pcString, ULONG ulLen );
-   extern char *  hb_adsAnsiToOem( const char * pcString, ULONG ulLen );
+   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE ulLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE ulLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */

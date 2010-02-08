@@ -278,7 +278,7 @@ static const char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_
    yylval_ptr->valChar.dealloc = HB_FALSE;
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
    {
-      yylval_ptr->valChar.dealloc = ( ULONG ) pToken->len != strlen( pToken->value );
+      yylval_ptr->valChar.dealloc = ( HB_ULONG ) pToken->len != strlen( pToken->value );
       pToken->value = hb_compIdentifierNew( HB_COMP_PARAM, pToken->value,
                yylval_ptr->valChar.dealloc ? HB_IDENT_COPY : HB_IDENT_FREE );
       if( !yylval_ptr->valChar.dealloc )

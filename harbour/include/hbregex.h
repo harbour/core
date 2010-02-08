@@ -103,7 +103,7 @@ typedef HB_REGEX * PHB_REGEX;
 
 typedef void ( * HB_REG_FREE )( PHB_REGEX );
 typedef int  ( * HB_REG_COMP )( PHB_REGEX, const char * );
-typedef int  ( * HB_REG_EXEC )( PHB_REGEX, const char *, ULONG, int, HB_REGMATCH * );
+typedef int  ( * HB_REG_EXEC )( PHB_REGEX, const char *, HB_SIZE, int, HB_REGMATCH * );
 
 extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExec );
 extern HB_BOOL hb_regexIs( PHB_ITEM pItem );
@@ -135,10 +135,10 @@ typedef void * PHB_REGEX;
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT PHB_REGEX hb_regexCompile( const char * szRegEx, ULONG ulLen, int iFlags );
+extern HB_EXPORT PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE ulLen, int iFlags );
 extern HB_EXPORT PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags );
 extern HB_EXPORT void      hb_regexFree( PHB_REGEX pRegEx );
-extern HB_EXPORT HB_BOOL   hb_regexMatch( PHB_REGEX pRegEx, const char * szString, ULONG UlLen, HB_BOOL fFull );
+extern HB_EXPORT HB_BOOL   hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE UlLen, HB_BOOL fFull );
 
 HB_EXTERN_END
 

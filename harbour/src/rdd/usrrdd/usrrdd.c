@@ -170,7 +170,7 @@ static AREAP hb_usrGetAreaPointer( int iArea )
  * RDD structures conversions
  */
 
-static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, ULONG ulPos, HB_TYPE uiType )
+static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, HB_SIZE ulPos, HB_TYPE uiType )
 {
    PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
 
@@ -180,7 +180,7 @@ static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, ULONG ulPos, HB_TYPE uiType )
       return NULL;
 }
 
-static const char * hb_usrArrayGetC( PHB_ITEM pArray, ULONG ulPos )
+static const char * hb_usrArrayGetC( PHB_ITEM pArray, HB_SIZE ulPos )
 {
    PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
 
@@ -463,7 +463,7 @@ static HB_BOOL hb_usrItemToTransInfo( PHB_ITEM pItem, LPDBTRANSINFO pTransInfo )
       HB_USHORT uiItemCount = hb_arrayGetNI( pItem, UR_TI_ITEMCOUNT ), uiCount;
       PHB_ITEM pItems = hb_arrayGetItemPtr( pItem, UR_TI_ITEMS ), pItm;
 
-      if( hb_arrayLen( pItems ) == ( ULONG ) uiItemCount &&
+      if( hb_arrayLen( pItems ) == ( HB_SIZE ) uiItemCount &&
           hb_usrItemToScopeInfo( hb_arrayGetItemPtr( pItem, UR_TI_SCOPE ),
                                  &pTransInfo->dbsci ) )
       {
@@ -536,7 +536,7 @@ static HB_BOOL hb_usrItemToSortInfo( PHB_ITEM pItem, LPDBSORTINFO pSortInfo )
       HB_USHORT uiItemCount = hb_arrayGetNI( pItem, UR_SRI_ITEMCOUNT ), uiCount;
       PHB_ITEM pItems = hb_arrayGetItemPtr( pItem, UR_SRI_ITEMS ), pItm;
 
-      if( hb_arrayLen( pItems ) == ( ULONG ) uiItemCount &&
+      if( hb_arrayLen( pItems ) == ( HB_SIZE ) uiItemCount &&
           hb_usrItemToTransInfo( hb_arrayGetItemPtr( pItem, UR_SRI_TRANSINFO ),
                                  &pSortInfo->dbtri ) )
       {
@@ -797,7 +797,7 @@ static HB_ERRCODE hb_usrInit( LPRDDNODE pRDD )
 
    if( pRDD->rddID >= s_uiUsrNodes )
    {
-      ULONG ulSize = ( pRDD->rddID + 1 ) * sizeof( LPUSRRDDNODE );
+      HB_SIZE ulSize = ( pRDD->rddID + 1 ) * sizeof( LPUSRRDDNODE );
       if( s_uiUsrNodes )
          s_pUsrRddNodes = ( LPUSRRDDNODE * ) hb_xrealloc( s_pUsrRddNodes, ulSize );
       else
@@ -1058,7 +1058,7 @@ static HB_ERRCODE hb_usrGoTop( AREAP pArea )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrGoTo( AREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE hb_usrGoTo( AREAP pArea, HB_ULONG ulRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrGoTo(%p,%lu)", pArea, ulRecNo));
 
@@ -1415,7 +1415,7 @@ static HB_ERRCODE hb_usrPutValue( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, HB_USHORT uiIndex, ULONG * pulLength )
+static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, HB_USHORT uiIndex, HB_ULONG * pulLength )
 {
    HB_LONG lOffset;
 
@@ -1440,7 +1440,7 @@ static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, HB_USHORT uiIndex, ULONG * pulLe
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrRecCount( AREAP pArea, ULONG * pulRecCount )
+static HB_ERRCODE hb_usrRecCount( AREAP pArea, HB_ULONG * pulRecCount )
 {
    HB_LONG lOffset;
 
@@ -1480,7 +1480,7 @@ static HB_ERRCODE hb_usrRecInfo( AREAP pArea, PHB_ITEM pRecID, HB_USHORT uiInfoT
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrRecNo( AREAP pArea, ULONG * pulRecNo )
+static HB_ERRCODE hb_usrRecNo( AREAP pArea, HB_ULONG * pulRecNo )
 {
    HB_LONG lOffset;
 
@@ -1690,7 +1690,7 @@ static HB_ERRCODE hb_usrPack( AREAP pArea )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrPackRec( AREAP pArea, ULONG ulRecNo, HB_BOOL * pWritten )
+static HB_ERRCODE hb_usrPackRec( AREAP pArea, HB_ULONG ulRecNo, HB_BOOL * pWritten )
 {
    HB_LONG lOffset;
 
@@ -2351,7 +2351,7 @@ static HB_ERRCODE hb_usrEvalBlock( AREAP pArea, PHB_ITEM pBlock )
  * Network operations
  */
 
-static HB_ERRCODE hb_usrRawLock( AREAP pArea, HB_USHORT uiAction, ULONG ulRecNo )
+static HB_ERRCODE hb_usrRawLock( AREAP pArea, HB_USHORT uiAction, HB_ULONG ulRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRawLock(%p,%hu,%lu)", pArea, uiAction, ulRecNo));
 
@@ -2528,7 +2528,7 @@ static HB_ERRCODE hb_usrWriteDBHeader( AREAP pArea )
  * non WorkArea functions
  */
 
-static HB_ERRCODE hb_usrDrop( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, ULONG ulConnection )
+static HB_ERRCODE hb_usrDrop( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, HB_ULONG ulConnection )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrDrop(%p,%p,%p,%lu)", pRDD, pTable, pIndex, ulConnection));
 
@@ -2544,7 +2544,7 @@ static HB_ERRCODE hb_usrDrop( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, 
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrExists( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, ULONG ulConnection )
+static HB_ERRCODE hb_usrExists( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, HB_ULONG ulConnection )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrExists(%p,%p,%p,%lu)", pRDD, pTable, pIndex, ulConnection));
 
@@ -2560,7 +2560,7 @@ static HB_ERRCODE hb_usrExists( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrRename( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, PHB_ITEM pNewName, ULONG ulConnection )
+static HB_ERRCODE hb_usrRename( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, PHB_ITEM pNewName, HB_ULONG ulConnection )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRename(%p,%p,%p,%p,%lu)", pRDD, pTable, pIndex, pNewName, ulConnection));
 
@@ -2577,7 +2577,7 @@ static HB_ERRCODE hb_usrRename( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrRddInfo( LPRDDNODE pRDD, HB_USHORT uiInfoType, ULONG ulConnection, PHB_ITEM pInfo )
+static HB_ERRCODE hb_usrRddInfo( LPRDDNODE pRDD, HB_USHORT uiInfoType, HB_ULONG ulConnection, PHB_ITEM pInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRddInfo(%p,%hu,%lu,%p)", pRDD, uiInfoType, ulConnection, pInfo));
 
@@ -3416,7 +3416,7 @@ HB_FUNC_UR_SUPER( GETVARLEN )
 
    if( pArea )
    {
-      ULONG ulLength;
+      HB_ULONG ulLength;
 
       hb_retni( SUPER_GETVARLEN( pArea, hb_parni( 2 ), &ulLength ) );
       hb_stornl( ulLength, 3 );
@@ -3429,7 +3429,7 @@ HB_FUNC_UR_SUPER( RECCOUNT )
 
    if( pArea )
    {
-      ULONG ulRecCount;
+      HB_ULONG ulRecCount;
 
       hb_retni( SUPER_RECCOUNT( pArea, &ulRecCount ) );
       hb_stornl( ulRecCount, 2 );
@@ -3451,7 +3451,7 @@ HB_FUNC_UR_SUPER( RECNO )
 
    if( pArea )
    {
-      ULONG ulRecNo;
+      HB_ULONG ulRecNo;
 
       hb_retni( SUPER_RECNO( pArea, &ulRecNo ) );
       hb_stornl( ulRecNo, 2 );

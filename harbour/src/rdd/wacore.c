@@ -514,7 +514,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 {
    AREAP * pHolder;
    PHB_ITEM pDetachedArea;
-   ULONG ulPos;
+   HB_SIZE ulPos;
    int iArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddDetachArea(%p,%p)", pArea, pCargo));
@@ -617,7 +617,7 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
    {
       if( s_pDetachedAreas )
       {
-         ULONG ulLen = hb_arrayLen( s_pDetachedAreas ), ulPos = 1;
+         HB_SIZE ulLen = hb_arrayLen( s_pDetachedAreas ), ulPos = 1;
          if( pSymAlias )
          {
             for( ulPos = 1; ulPos <= ulLen; ++ulPos )

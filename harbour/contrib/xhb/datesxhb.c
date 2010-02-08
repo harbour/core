@@ -58,23 +58,23 @@
 
 /* NOTE: szTime must be 9 chars large. */
 
-static ULONG hb_TimeStrToSec( const char * pszTime )
+static HB_ULONG hb_TimeStrToSec( const char * pszTime )
 {
    HB_SIZE ulLen;
-   ULONG ulTime = 0;
+   HB_ULONG ulTime = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
 
    ulLen = strlen( pszTime );
 
    if( ulLen >= 1 )
-      ulTime += ( ULONG ) hb_strVal( pszTime, ulLen ) * 3600;
+      ulTime += ( HB_ULONG ) hb_strVal( pszTime, ulLen ) * 3600;
 
    if( ulLen >= 4 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
+      ulTime += ( HB_ULONG ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
 
    if( ulLen >= 7 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 6, ulLen - 6 );
+      ulTime += ( HB_ULONG ) hb_strVal( pszTime + 6, ulLen - 6 );
 
    return ulTime;
 }

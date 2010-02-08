@@ -789,7 +789,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
       }
       case DBI_POSITIONED:
       {
-         ULONG ulRecCount, ulRecNo;
+         HB_ULONG ulRecCount, ulRecNo;
          if( SELF_RECNO( pArea, &ulRecNo ) != HB_SUCCESS )
             return HB_FAILURE;
          if( ulRecNo == 0 )
@@ -1720,7 +1720,7 @@ static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 /*
  * RDD info
  */
-static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnection, PHB_ITEM pItem )
+static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnection, PHB_ITEM pItem )
 {
    HB_BOOL fResult;
    int iResult;

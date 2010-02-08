@@ -61,8 +61,8 @@ typedef struct _HB_MACRO_LEX
 {
    char *   pString;
    char *   pDst;
-   ULONG    ulLen;
-   ULONG    ulSrc;
+   HB_SIZE  ulLen;
+   HB_SIZE  ulSrc;
    HB_BOOL  quote;
    char     pBuffer[ 2 ];
 }
@@ -209,7 +209,7 @@ static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
 static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                                 PHB_MACRO_LEX pLex )
 {
-   ULONG ulLen;
+   HB_SIZE ulLen;
    pLex->quote = HB_FALSE;
    yylval_ptr->valChar.string = pLex->pDst;
    while( pLex->ulSrc < pLex->ulLen )
@@ -241,7 +241,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
    return LITERAL;
 }
 
-static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, ULONG ulLen )
+static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, HB_SIZE ulLen )
 {
    HB_MAXINT lNumber;
    double dNumber;
@@ -441,7 +441,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             if( pLex->ulSrc < pLex->ulLen &&
                 HB_ISDIGIT( pLex->pString[ pLex->ulSrc ] ) )
             {
-               ULONG ul = pLex->ulSrc;
+               HB_SIZE ul = pLex->ulSrc;
                while( ++ul < pLex->ulLen &&
                       HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
                ul -= --pLex->ulSrc;
@@ -566,7 +566,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          default:
             if( HB_ISDIGIT( ch ) )
             {
-               ULONG ul = pLex->ulSrc;
+               HB_SIZE ul = pLex->ulSrc;
 
                pLex->quote = HB_FALSE;
                if( ch == '0' && ul < pLex->ulLen )
@@ -636,7 +636,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             }
             else if( HB_ISFIRSTIDCHAR( ch ) )
             {
-               ULONG ulLen;
+               HB_SIZE ulLen;
                pLex->quote = HB_FALSE;
                yylval_ptr->string = pLex->pDst;
                *pLex->pDst++ = ch - ( ( ch >= 'a' && ch <= 'z' ) ? 'a' - 'A' : 0 );
@@ -746,7 +746,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                            if( pLex->ulSrc < pLex->ulLen &&
                                pLex->pString[ pLex->ulSrc ] == '(' )
                            {
-                              ULONG ul = pLex->ulSrc;
+                              HB_SIZE ul = pLex->ulSrc;
                               while( ++ul < pLex->ulLen )
                               {
                                  if( pLex->pString[ ul ] == ')' )

@@ -367,7 +367,7 @@ HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( const char *szValue, ULONG ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_ULONG ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -462,7 +462,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
    return pHashList;
 }
 
-HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, ULONG ulLen, int iFlags, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_ULONG ulLen, int iFlags, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -1266,9 +1266,9 @@ HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR pExpr )
 
 /*  Return a number of elements on the linked list
  */
-ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
+HB_ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
 {
-   ULONG ulLen = 0;
+   HB_ULONG ulLen = 0;
 
    pExpr = pExpr->value.asList.pExprList;
    while( pExpr )
@@ -1300,9 +1300,9 @@ HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
 
 /*  Return a number of parameters passed to function or method
  */
-ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
+HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
 {
-   ULONG ulLen = 0;
+   HB_ULONG ulLen = 0;
 
    if( pExpr )
    {
@@ -1325,9 +1325,9 @@ ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
 
 /*  Return a number of macro group elements on the linked list
  */
-ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
+HB_ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
 {
-   ULONG ulLen = 0, ulItems = 0;
+   HB_ULONG ulLen = 0, ulItems = 0;
 
    pExpr = pExpr->value.asList.pExprList;
    while( pExpr )
@@ -1352,9 +1352,9 @@ ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
    return ulLen;
 }
 
-ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+HB_ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   ULONG ulLen = 0, ulItems = 0;
+   HB_ULONG ulLen = 0, ulItems = 0;
    if( pExpr )
    {
       HB_EXPR_PTR pElem;

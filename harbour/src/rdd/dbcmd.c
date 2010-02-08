@@ -338,7 +338,7 @@ HB_FUNC( DBCREATE )
    HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
-   ULONG ulConnection;
+   HB_ULONG ulConnection;
 
    /*
     * NOTE: 4-th, 5-th and 6-th parameters are undocumented Clipper ones
@@ -406,7 +406,7 @@ HB_FUNC( HB_DBCREATETEMP )
    const char * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc;
-   ULONG ulConnection;
+   HB_ULONG ulConnection;
 
    szAlias = hb_parc( 1 );
    pStruct = hb_param( 2, HB_IT_ARRAY );
@@ -465,7 +465,7 @@ HB_FUNC( __DBOPENSDF )
    HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
-   ULONG ulConnection;
+   HB_ULONG ulConnection;
    HB_ERRCODE errCode;
 
    /*
@@ -1071,7 +1071,7 @@ HB_FUNC( INDEXORD )
 /* Same as RECCOUNT() */
 HB_FUNC( LASTREC )
 {
-   ULONG ulRecCount = 0;
+   HB_ULONG ulRecCount = 0;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
@@ -1822,7 +1822,7 @@ HB_FUNC( __DBARRANGE )
    if( pArea )
    {
       HB_USHORT uiNewArea, uiCount, uiDest;
-      ULONG ulSize;
+      HB_SIZE ulSize;
       char * szFieldLine, * szPos;
       PHB_ITEM pStruct, pFields;
       DBSORTINFO dbSortInfo;
@@ -1889,7 +1889,7 @@ HB_FUNC( __DBARRANGE )
          ulSize = 0;
          for( uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
          {
-            ULONG ulLine = hb_arrayGetCLen( pFields, uiCount );
+            HB_SIZE ulLine = hb_arrayGetCLen( pFields, uiCount );
             if( ulLine > ulSize )
                ulSize = ulLine;
          }
@@ -2070,15 +2070,14 @@ HB_FUNC( HB_RDDINFO )
 {
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
-   ULONG      ulConnection;
+   HB_ULONG   ulConnection;
    PHB_ITEM   pIndex, pParam;
    const char * szDriver;
 
    szDriver = hb_parc( 3 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
-   {
       szDriver = hb_rddDefaultDrv( NULL );
-   }
+
    ulConnection = hb_parnl( 4 );
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
@@ -2092,16 +2091,14 @@ HB_FUNC( HB_RDDINFO )
       hb_itemReturnRelease( pInfo );
    }
    else
-   {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-   }
 }
 
 HB_FUNC( HB_DBDROP )
 {
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
-   ULONG      ulConnection;
+   HB_ULONG   ulConnection;
    const char * szDriver;
    PHB_ITEM   pName;
 
@@ -2126,15 +2123,14 @@ HB_FUNC( HB_DBEXISTS )
 {
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
-   ULONG      ulConnection;
+   HB_ULONG   ulConnection;
    const char * szDriver;
    PHB_ITEM   pName;
 
    szDriver = hb_parc( 3 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
-   {
       szDriver = hb_rddDefaultDrv( NULL );
-   }
+
    ulConnection = hb_parnl( 4 );
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
@@ -2151,15 +2147,14 @@ HB_FUNC( HB_DBRENAME )
 {
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
-   ULONG      ulConnection;
+   HB_ULONG   ulConnection;
    const char * szDriver;
    PHB_ITEM   pTable, pIndex, pNewName;
 
    szDriver = hb_parc( 4 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
-   {
       szDriver = hb_rddDefaultDrv( NULL );
-   }
+
    ulConnection = hb_parnl( 5 );
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */

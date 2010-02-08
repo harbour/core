@@ -754,9 +754,9 @@ static const char * s_netio_params( int iMsg, const char * pszName, HB_U32 * pSi
 {
    int iPCount = iMsg == NETIO_PROCIS ? 0 : hb_pcount(), i;
    char * data = NULL, * itmData;
-   ULONG size, itmSize;
+   HB_SIZE size, itmSize;
 
-   size = ( ULONG ) strlen( pszName ) + 1;
+   size = ( HB_SIZE ) strlen( pszName ) + 1;
 
    for( i = 2; i <= iPCount; ++i )
    {
@@ -800,7 +800,7 @@ static HB_BOOL s_netio_procexec( const char * pszProcName, int iMsg )
             fResult = s_fileSendMsg( conn, msgbuf, data, size, iMsg != NETIO_PROC );
             if( fResult && iMsg == NETIO_FUNC )
             {
-               ULONG ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
+               HB_ULONG ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
 
                if( ulResult > 0 )
                {

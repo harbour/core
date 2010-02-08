@@ -180,7 +180,7 @@ HB_FUNC( FT_SAVEATT )
    int iBottom = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
    int iRight  = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
 
-   ULONG  ulSize;
+   HB_SIZE ulSize;
    char * pBuffer;
    char * pAttrib;
 
@@ -388,7 +388,7 @@ End
 
 HB_FUNC( FT_RESTATT )
 {
-   ULONG ulLen = hb_parclen( 5 );
+   HB_SIZE ulLen = hb_parclen( 5 );
    if( ulLen )
    {
       int iTop    = hb_parni( 1 ); /* Defaults to zero on bad type */

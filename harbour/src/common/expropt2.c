@@ -60,7 +60,7 @@
 #include "hbdate.h"
 #include "hbmath.h"
 
-static HB_BOOL hb_compExprHasMacro( const char * szText, ULONG ulLen, HB_COMP_DECL )
+static HB_BOOL hb_compExprHasMacro( const char * szText, HB_ULONG ulLen, HB_COMP_DECL )
 {
    while( ulLen-- )
    {
@@ -105,7 +105,7 @@ static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR 
 static HB_EXPR_PTR hb_compExprReduceMinusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
 {
    char * szText = pLeft->value.asString.string;
-   ULONG ulLen = pLeft->ulLength;
+   HB_ULONG ulLen = pLeft->ulLength;
 
    while( ulLen && szText[ ulLen - 1 ] == ' ' )
       --ulLen;
@@ -598,7 +598,7 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          if( HB_SUPPORT_MACROTEXT )
          {
             char * szText = pLeft->value.asString.string;
-            ULONG ulLen = pLeft->ulLength;
+            HB_ULONG ulLen = pLeft->ulLength;
             while( ulLen && szText[ ulLen - 1 ] == ' ' )
                --ulLen;
             while( ulLen-- )
@@ -903,7 +903,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          if( HB_SUPPORT_MACROTEXT )
          {
             char * szText = pLeft->value.asString.string;
-            ULONG ulLen = pLeft->ulLength;
+            HB_ULONG ulLen = pLeft->ulLength;
 
             while( ulLen-- )
             {
@@ -2264,7 +2264,7 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pArg->ExprType == HB_ET_STRING )
    {
-      ULONG ulLen = pArg->ulLength;
+      HB_ULONG ulLen = pArg->ulLength;
       HB_BOOL fLower = HB_FALSE;
 
       if( ulLen )

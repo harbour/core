@@ -96,7 +96,7 @@ struct mv_memvarArray_info
 {
    PHB_ITEM pArray;
    PHB_DYNS * pDyns;
-   ULONG ulCount;
+   HB_ULONG ulCount;
    int iScope;
 };
 
@@ -235,7 +235,7 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
     */
    if( pMemvar )
    {
-      ULONG ulCount = pPrivateStack->count;
+      HB_ULONG ulCount = pPrivateStack->count;
       while( ulCount > pPrivateStack->base )
       {
          if( pDynSym == pPrivateStack->stack[ ulCount - 1 ].pDynSym )
@@ -288,10 +288,10 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
 /*
  * This function returns current PRIVATE variables stack base
  */
-ULONG hb_memvarGetPrivatesBase( void )
+HB_ULONG hb_memvarGetPrivatesBase( void )
 {
    HB_STACK_TLS_PRELOAD
-   ULONG ulBase;
+   HB_ULONG ulBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
 
@@ -303,7 +303,7 @@ ULONG hb_memvarGetPrivatesBase( void )
 /*
  * This function releases PRIVATE variables created after passed base
  */
-void hb_memvarSetPrivatesBase( ULONG ulBase )
+void hb_memvarSetPrivatesBase( HB_ULONG ulBase )
 {
    HB_STACK_TLS_PRELOAD
    PHB_PRIVATE_STACK pPrivateStack;
@@ -709,7 +709,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
       {
          HB_STACK_TLS_PRELOAD
-         ULONG ulBase = hb_stackGetPrivateStack()->count;
+         HB_ULONG ulBase = hb_stackGetPrivateStack()->count;
 
          /* Find the variable with a requested name that is currently visible
           * Start from the top of the stack.
@@ -746,7 +746,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
-   ULONG ulBase, ulCount;
+   HB_ULONG ulBase, ulCount;
    PHB_DYNS pDynVar;
    PHB_ITEM pMemvar;
 
@@ -781,7 +781,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
    else
    {
       HB_STACK_TLS_PRELOAD
-      ULONG ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
+      HB_ULONG ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
 
       while( ulBase )
       {
@@ -862,7 +862,7 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
    return HB_TRUE;
 }
 
-static ULONG hb_memvarGetBaseOffset( int iProcLevel )
+static HB_ULONG hb_memvarGetBaseOffset( int iProcLevel )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -961,7 +961,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
       else
       {
          HB_STACK_TLS_PRELOAD
-         if( ( ULONG ) iPos < hb_stackGetPrivateStack()->count )
+         if( ( HB_ULONG ) iPos < hb_stackGetPrivateStack()->count )
          {
             HB_DYNS_PTR pDynSym = hb_stackGetPrivateStack()->stack[ iPos ].pDynSym;
 

@@ -58,7 +58,7 @@
 
 HB_FUNC( SAYDOWN )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen )
    {
@@ -80,8 +80,8 @@ HB_FUNC( SAYDOWN )
       {
          int iColor = hb_gtGetCurrColor();
 
-         if( ulLen > ( ULONG ) ( iMaxRow - iRow + 1 ) )
-            ulLen = ( ULONG ) ( iMaxRow - iRow + 1 );
+         if( ulLen > ( HB_SIZE ) ( iMaxRow - iRow + 1 ) )
+            ulLen = ( HB_SIZE ) ( iMaxRow - iRow + 1 );
 
          hb_gtBeginWrite();
          while( ulLen-- )
@@ -103,12 +103,12 @@ HB_FUNC( SAYDOWN )
 
 HB_FUNC( SAYSPREAD )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen )
    {
       const char * szText = hb_parc( 1 );
-      ULONG ulPos, ul;
+      HB_SIZE ulPos, ul;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
@@ -159,12 +159,12 @@ HB_FUNC( SAYSPREAD )
 
 HB_FUNC( SAYMOVEIN )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen )
    {
       const char * szText = hb_parc( 1 );
-      ULONG ulChars, ul;
+      HB_SIZE ulChars, ul;
       int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
       long lDelay;
       HB_BOOL fBack;
@@ -316,7 +316,7 @@ HB_FUNC( SCREENSTR )
 {
    int iRow, iCol, iMaxRow, iMaxCol, iC;
    char * pBuffer, * szText;
-   ULONG ulSize, ulCount = ULONG_MAX;
+   HB_SIZE ulSize, ulCount = ULONG_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
    if( HB_ISNUM( 1 ) )
@@ -330,7 +330,7 @@ HB_FUNC( SCREENSTR )
 
    if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && ulCount )
    {
-      ulSize = ( ULONG ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
+      ulSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
       if( ulSize > ulCount )
          ulSize = ulCount;
       ulCount = ulSize;
@@ -360,7 +360,7 @@ HB_FUNC( SCREENSTR )
 
 HB_FUNC( STRSCREEN )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen & 1 )
       ulLen--;

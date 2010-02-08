@@ -285,7 +285,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 #else
    if( pTSD->iHandle == 0 )
    {
-      ULONG ulSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
+      HB_ULONG ulSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
       if( hb_stack.iTSD == 0 )
       {
          hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrab( ulSize );
@@ -578,7 +578,7 @@ void hb_stackDec( void )
 }
 
 #undef hb_stackDecrease
-void hb_stackDecrease( ULONG ulItems )
+void hb_stackDecrease( HB_ULONG ulItems )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1245,7 +1245,7 @@ static void hb_stackIsMemvarRef( PHB_STACK pStack )
 {
    /* 1. Mark all hidden memvars (PRIVATEs and PUBLICs) */
    PHB_PRIVATE_STACK pPrivateStack = &pStack->privates;
-   ULONG ulCount = pPrivateStack->count;
+   HB_ULONG ulCount = pPrivateStack->count;
 
    while( ulCount )
    {

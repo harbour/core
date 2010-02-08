@@ -960,7 +960,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_GEN_FUNC1( PCode1, HB_P_POP );  /* remove a value if used in statement */
 #else
-         ULONG ulPosFalse, ulPosEnd;
+         HB_ULONG ulPosFalse, ulPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -1315,7 +1315,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
             if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
-               ULONG ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
+               HB_ULONG ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
 
                if( pExpr->ExprType == HB_ET_MACROARGLIST )
                   /* restore original expression type */
@@ -1891,7 +1891,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   HB_EXPR_PTR pArg = pParms->value.asList.pExprList, pCount = NULL;
                   HB_BOOL     fStrict, fNoop, fPlural, fI18nFunc;
-                  ULONG       ulPos = 8;
+                  HB_ULONG    ulPos = 8;
 
                   fStrict = fNoop = fPlural = fI18nFunc = HB_FALSE;
                   if( pName->value.asSymbol[ ulPos ] == 'N' )
@@ -1974,7 +1974,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                            {
                               if( HB_COMP_PARAM->fI18n )
                               {
-                                 ULONG ulLen = hb_compExprListLen( pArg ), ul;
+                                 HB_ULONG ulLen = hb_compExprListLen( pArg ), ul;
                                  HB_EXPR_PTR pArgExp = pArg->value.asList.pExprList;
 
                                  if( ulLen > HB_I18N_PLURAL_MAX )
@@ -5311,7 +5311,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
 
    if( HB_ISFIRSTIDCHAR( *szAlias ) )
    {
-      ULONG ulLen = pAlias->ulLength;
+      HB_ULONG ulLen = pAlias->ulLength;
       if( ulLen <= HB_SYMBOL_NAME_LEN )
       {
          HB_BOOL fLower = HB_FALSE;

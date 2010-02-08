@@ -904,10 +904,10 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, HB_USHORT uiFlags )
    return pError;
 }
 
-PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
+PHB_ITEM hb_errPutArgs( PHB_ITEM pError, HB_ULONG ulArgCount, ... )
 {
    PHB_ITEM pArray;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
    va_list va;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %lu, ...)", pError, ulArgCount));
@@ -1047,14 +1047,14 @@ HB_FUNC( __ERRRT_SBASE )
                          hb_param( 6, HB_IT_ANY ) );
 }
 
-HB_USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+HB_USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ULONG ulArgCount, ... )
 {
    HB_USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
     * If it's wrong and I missed sth please fix me, Druzus.
@@ -1108,14 +1108,14 @@ HB_USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const cha
    return uiAction;
 }
 
-HB_USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode, HB_USHORT uiFlags, ULONG ulArgCount, ... )
+HB_USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode, HB_USHORT uiFlags, HB_ULONG ulArgCount, ... )
 {
    HB_USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags );
 
@@ -1165,14 +1165,14 @@ HB_USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, cons
    return uiAction;
 }
 
-PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 
@@ -1222,13 +1222,13 @@ PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, cons
    return pRetVal;
 }
 
-void hb_errRT_BASE_SubstR( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+void hb_errRT_BASE_SubstR( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ULONG ulArgCount, ... )
 {
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 

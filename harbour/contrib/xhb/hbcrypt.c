@@ -86,9 +86,7 @@ void nxs_crypt(
 {
 
    if( keylen > NXS_MAX_KEYLEN )
-   {
       keylen = NXS_MAX_KEYLEN;
-   }
 
 #ifdef DEBUG_0
    memcpy( cipher, source, srclen );
@@ -113,9 +111,7 @@ void nxs_decrypt(
    unsigned char *result )
 {
    if( keylen > NXS_MAX_KEYLEN )
-   {
       keylen = NXS_MAX_KEYLEN;
-   }
 
    memcpy( result, cipher, cipherlen );
 
@@ -140,15 +136,11 @@ void nxs_scramble(
    int scramble[ NXS_MAX_KEYLEN ];
    HB_SIZE len;
 
-   if ( keylen > NXS_MAX_KEYLEN )
-   {
+   if( keylen > NXS_MAX_KEYLEN )
       keylen = NXS_MAX_KEYLEN;
-   }
 
-   if ( keylen > srclen )
-   {
+   if( keylen > srclen )
       keylen = srclen;
-   }
 
    /* First step: find key ordering */
    nxs_make_scramble( scramble, key, keylen );
@@ -177,7 +169,7 @@ void nxs_partial_scramble(
    {
       cipher[ pos + scramble[ kpos ] ] = source[ pos + kpos ];
       kpos++;
-      if ( kpos >= ( HB_USHORT ) keylen )
+      if( kpos >= ( HB_USHORT ) keylen )
       {
          kpos = 0;
          pos += keylen;
@@ -193,15 +185,11 @@ void nxs_unscramble(
    int scramble[ NXS_MAX_KEYLEN ];
    HB_SIZE len;
 
-   if ( keylen > NXS_MAX_KEYLEN )
-   {
+   if( keylen > NXS_MAX_KEYLEN )
       keylen = NXS_MAX_KEYLEN;
-   }
 
-   if ( keylen > cipherlen )
-   {
+   if( keylen > cipherlen )
       keylen = cipherlen;
-   }
 
    /* First step: find key ordering */
    nxs_make_scramble( scramble, key, keylen );
@@ -231,7 +219,7 @@ void nxs_partial_unscramble(
    {
       buf[ kpos ] = cipher[ pos + scramble[ kpos ]  ];
       kpos++;
-      if ( kpos >= ( HB_USHORT ) keylen )
+      if( kpos >= ( HB_USHORT ) keylen )
       {
          memcpy( cipher + pos, buf, keylen );
          kpos = 0;
@@ -252,24 +240,20 @@ void nxs_xorcode(
 
    c_bitrest = cipher[ 0 ] >>5;
 
-   while ( pos < cipherlen )
+   while( pos < cipherlen )
    {
       cipher[pos] <<= 3;
 
-      if (keypos == ( HB_USHORT ) keylen-1 || pos == cipherlen -1 )
-      {
+      if(keypos == ( HB_USHORT ) keylen-1 || pos == cipherlen -1 )
          cipher[pos] |= c_bitrest;
-      }
       else
-      {
          cipher[pos] |= cipher[pos+1] >> 5;
-      }
 
       cipher[pos] ^= key[ keypos ];
       keypos ++;
       pos++;
 
-      if (keypos == ( HB_USHORT ) keylen )
+      if(keypos == ( HB_USHORT ) keylen )
       {
          keypos = 0;
          c_bitrest = cipher[ pos ] >>5;
@@ -286,13 +270,12 @@ void nxs_xordecode(
    unsigned char c_bitrest, c_bitleft;
 
    /* A very short block? */
-   if ( keylen > cipherlen - pos )
-   {
+   if( keylen > cipherlen - pos )
       keylen = ( HB_USHORT ) ( cipherlen - pos);
-   }
+
    c_bitleft = ( cipher[ keylen -1 ] ^ key[ keylen -1 ])<< 5;
 
-   while ( pos < cipherlen )
+   while( pos < cipherlen )
    {
       cipher[pos] ^= key[ keypos ];
 
@@ -304,11 +287,11 @@ void nxs_xordecode(
       keypos ++;
       pos ++;
 
-      if (keypos == ( HB_USHORT ) keylen )
+      if(keypos == ( HB_USHORT ) keylen )
       {
          keypos = 0;
          /* last block */
-         if ( keylen > cipherlen - pos )
+         if( keylen > cipherlen - pos )
          {
             keylen = ( HB_USHORT ) (cipherlen - pos);
          }
@@ -320,12 +303,12 @@ void nxs_xordecode(
 
 /* pass three: xor the source with the cyclic key */
 void nxs_xorcyclic(
-   unsigned char *cipher, HB_SIZE cipherlen,
-   const unsigned char *key, HB_SIZE keylen )
+   unsigned char * cipher, HB_SIZE cipherlen,
+   const unsigned char * key, HB_SIZE keylen )
 {
-   HB_SIZE pos=0l, crcpos=0l;
-   ULONG crc1, crc2, crc3;
-   ULONG crc1l, crc2l, crc3l;
+   HB_SIZE pos = 0l, crcpos = 0l;
+   HB_U32 crc1, crc2, crc3;
+   HB_U32 crc1l, crc2l, crc3l;
 
    /* Build the cyclic key seed */
    crc1 = keylen >= 2 ? hb_adler32( 0, ( const char * ) key + 0, keylen - 2 ) : 1;
@@ -336,27 +319,28 @@ void nxs_xorcyclic(
    crc2l = crc2 = nxs_cyclic_sequence( crc2 );
    crc3l = crc3 = nxs_cyclic_sequence( crc3 );
 
-   while ( pos < cipherlen)
+   while( pos < cipherlen )
    {
-      if ( crcpos < 4 )
+      if( crcpos < 4 )
       {
          /* this ensures portability across platforms */
          cipher[ pos ] ^= (unsigned char) (crc1l % 256 );
          crc1l /= 256l;
       }
-      else if ( crcpos < 8 )
+      else if( crcpos < 8 )
       {
          cipher[ pos ] ^= (unsigned char) (crc2l % 256 );
          crc2l /= 256l;
       }
-      else {
+      else
+      {
          cipher[ pos ] ^= (unsigned char) (crc3l % 256 );
          crc3l /= 256l;
       }
       crcpos++;
       pos++;
 
-      if (crcpos == 12 )
+      if( crcpos == 12 )
       {
          crcpos = 0;
          crc1l = crc1 = nxs_cyclic_sequence( crc1 );
@@ -366,11 +350,11 @@ void nxs_xorcyclic(
    }
 }
 
-ULONG nxs_cyclic_sequence( ULONG input )
+HB_U32 nxs_cyclic_sequence( HB_U32 input )
 {
-   ULONG first = input & 0xffff;
-   ULONG second = input >> 16;
-   ULONG ret = ( ( second * BASE * BASE ) & 0xffff ) |
+   HB_U32 first = input & 0xffff;
+   HB_U32 second = input >> 16;
+   HB_U32 ret = ( ( second * BASE * BASE ) & 0xffff ) |
          ( (first * BASE * BASE) &0xffff0000);
 
    return ret;
@@ -379,12 +363,10 @@ ULONG nxs_cyclic_sequence( ULONG input )
 
 void nxs_make_scramble( int *scramble, const unsigned char *key, HB_SIZE keylen )
 {
-   HB_SIZE i,j, tmp;
+   HB_SIZE i, j, tmp;
 
-   for (i = 0; i < keylen; i ++ )
-   {
+   for( i = 0; i < keylen; i ++ )
       scramble[ i ] = i;
-   }
 
    for( i = 0; i < keylen; i ++ )
    {

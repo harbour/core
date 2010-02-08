@@ -294,11 +294,11 @@ extern HB_EXPORT HB_BOOL   hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* functions to create, wait and terminate processes */
-extern HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
-                                    HB_FHANDLE *phStdin, HB_FHANDLE *phStdout,
-                                    HB_FHANDLE *phStderr,
-                                    HB_BOOL fDetach, ULONG *pulPID );
-extern int hb_fsProcessRun( const char *pszFilename,
+extern HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
+                                    HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
+                                    HB_FHANDLE * phStderr,
+                                    HB_BOOL fDetach, HB_ULONG * pulPID );
+extern int hb_fsProcessRun( const char * pszFilename,
                             const char * pStdInBuf, HB_SIZE ulStdInLen,
                             char ** pStdOutPtr, HB_SIZE * pulStdOut,
                             char ** pStdErrPtr, HB_SIZE * pulStdErr,

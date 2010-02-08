@@ -62,10 +62,10 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
 }
 
 /* returns a hash key */
-static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
+static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_ULONG func (void *Value, void *Cargo) */
 {
-   ULONG ulSum = 0;
-   const char *szName = ( char * )Value;
+   HB_ULONG ulSum = 0;
+   const char * szName = ( char * )Value;
 
    while( *szName )
      ulSum += *szName++;
@@ -89,7 +89,7 @@ static HB_HASH_FUNC( hb_comp_IdentDel )
 static HB_HASH_FUNC( hb_comp_IdentComp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
-   return strcmp( (char *)Value, (char *)Cargo );
+   return strcmp( ( char * ) Value, (char *)Cargo );
 }
 
 /* initialize the hash table for identifiers */

@@ -101,9 +101,9 @@ static void hb_delimClearRecordBuffer( DELIMAREAP pArea )
    memset( pArea->pRecord, ' ', pArea->uiRecordLen );
 }
 
-static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
+static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
 {
-   ULONG ulSize;
+   HB_SIZE ulSize;
    HB_USHORT uiField, uiLen;
    LPFIELD pField;
    HB_BYTE * pBuffer, * pFieldBuf;
@@ -199,7 +199,7 @@ static int hb_delimNextChar( DELIMAREAP pArea )
        ( pArea->ulBufferRead == 0 ||
          pArea->ulBufferRead >= pArea->ulBufferSize - 1 ) )
    {
-      ULONG ulLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
+      HB_SIZE ulLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
 
       if( ulLeft )
          memcpy( pArea->pBuffer,
@@ -250,7 +250,7 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    if( pArea->ulBufferStart <= pArea->ulRecordOffset &&
        pArea->ulBufferStart + ( HB_FOFFSET ) pArea->ulBufferRead > pArea->ulRecordOffset )
    {
-      pArea->ulBufferIndex = ( ULONG ) ( pArea->ulRecordOffset - pArea->ulBufferStart );
+      pArea->ulBufferIndex = ( HB_SIZE ) ( pArea->ulRecordOffset - pArea->ulBufferStart );
    }
    else
    {
@@ -449,7 +449,7 @@ static HB_ERRCODE hb_delimDeleted( DELIMAREAP pArea, HB_BOOL * pDeleted )
 /*
  * Obtain number of records in WorkArea.
  */
-static HB_ERRCODE hb_delimRecCount( DELIMAREAP pArea, ULONG * pRecCount )
+static HB_ERRCODE hb_delimRecCount( DELIMAREAP pArea, HB_ULONG * pRecCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecCount(%p,%p)", pArea, pRecCount));
 
@@ -461,7 +461,7 @@ static HB_ERRCODE hb_delimRecCount( DELIMAREAP pArea, ULONG * pRecCount )
 /*
  * Obtain physical row number at current WorkArea cursor position.
  */
-static HB_ERRCODE hb_delimRecNo( DELIMAREAP pArea, ULONG * pulRecNo )
+static HB_ERRCODE hb_delimRecNo( DELIMAREAP pArea, HB_ULONG * pulRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecNo(%p,%p)", pArea, pulRecNo));
 
@@ -476,7 +476,7 @@ static HB_ERRCODE hb_delimRecNo( DELIMAREAP pArea, ULONG * pulRecNo )
 static HB_ERRCODE hb_delimRecId( DELIMAREAP pArea, PHB_ITEM pRecNo )
 {
    HB_ERRCODE errCode;
-   ULONG ulRecNo;
+   HB_ULONG ulRecNo;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecId(%p,%p)", pArea, pRecNo));
 
@@ -557,7 +557,7 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
       case HB_FT_STRING:
          if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
-            ULONG ulLen = pField->uiLen;
+            HB_SIZE ulLen = pField->uiLen;
             char * pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                         &ulLen, pArea->area.cdPage, hb_vmCDP() );
             hb_itemPutCLPtr( pItem, pszVal, ulLen );
@@ -641,7 +641,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
    char szBuffer[ 256 ];
    HB_ERRCODE errCode;
    LPFIELD pField;
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutValue(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -670,12 +670,12 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
             else
             {
                ulSize = hb_itemGetCLen( pItem );
-               if( ulSize > ( ULONG ) pField->uiLen )
+               if( ulSize > ( HB_SIZE ) pField->uiLen )
                   ulSize = pField->uiLen;
                memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        hb_itemGetCPtr( pItem ), ulSize );
             }
-            if( ulSize < ( ULONG ) pField->uiLen )
+            if( ulSize < ( HB_SIZE ) pField->uiLen )
                memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + ulSize,
                        ' ', pField->uiLen - ulSize );
          }
@@ -822,7 +822,7 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
 
    if( pArea->fRecordChanged )
    {
-      ULONG ulSize = hb_delimEncodeBuffer( pArea );
+      HB_SIZE ulSize = hb_delimEncodeBuffer( pArea );
 
       if( hb_fileWriteAt( pArea->pFile, pArea->pBuffer, ulSize,
                           pArea->ulRecordOffset ) != ulSize )
@@ -1432,7 +1432,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 /*
  * Retrieve information about the current driver.
  */
-static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRddInfo(%p,%hu,%lu,%p)", pRDD, uiIndex, ulConnect, pItem));
 

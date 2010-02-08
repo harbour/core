@@ -739,7 +739,7 @@ typedef HB_U32 HB_FATTR;
                                          ( ( ( HB_I32 ) ( b3 ) ) << 16 ) | \
                                          ( ( ( HB_I32 ) ( b2 ) ) <<  8 ) | \
                                          ( ( ( HB_I32 ) ( b1 ) ) ) ) )
-#define HB_MKULONG( b1, b2, b3, b4 ) ( ( ULONG ) \
+#define HB_MKULONG( b1, b2, b3, b4 ) ( ( HB_ULONG ) \
                                        ( ( ( ( HB_U32 ) ( b4 ) ) << 24 ) | \
                                          ( ( ( HB_U32 ) ( b3 ) ) << 16 ) | \
                                          ( ( ( HB_U32 ) ( b2 ) ) <<  8 ) | \
@@ -1446,12 +1446,12 @@ typedef HB_U32 HB_FATTR;
 #define HB_PCODE_MKSHORT( p )       (( HB_SHORT )     HB_GET_LE_INT16( p ))
 #define HB_PCODE_MKUSHORT( p )      (( HB_USHORT )    HB_GET_LE_UINT16( p ))
 #define HB_PCODE_MKLONG( p )        (( HB_LONG )      HB_GET_LE_INT32( p ))
-#define HB_PCODE_MKULONG( p )       (( ULONG )        HB_GET_LE_UINT32( p ))
+#define HB_PCODE_MKULONG( p )       (( HB_ULONG )     HB_GET_LE_UINT32( p ))
 #define HB_PCODE_MKLONGLONG( p )    (( HB_LONGLONG )  HB_GET_LE_INT64( p ))
 #define HB_PCODE_MKULONGLONG( p )   (( HB_ULONGLONG ) HB_GET_LE_UINT64( p ))
 #define HB_PCODE_MKDOUBLE( p )      (( double )       HB_GET_LE_DOUBLE( p ))
 #define HB_PCODE_MKINT24( p )       (( HB_LONG )      HB_GET_LE_INT24( p ))
-#define HB_PCODE_MKUINT24( p )      (( ULONG )        HB_GET_LE_UINT24( p ))
+#define HB_PCODE_MKUINT24( p )      (( HB_ULONG )     HB_GET_LE_UINT24( p ))
 
 /*
  * Below are hacked version of INT64 macros which operates on double

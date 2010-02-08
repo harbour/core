@@ -132,7 +132,7 @@ HB_FUNC( DBSKIPPER )
       HB_LONG lSkipped = 0;
       HB_LONG lRecs = 1;
       HB_BOOL fBEof;
-      ULONG ulRecords = 0;
+      HB_ULONG ulRecords = 0;
 
       if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )
       {

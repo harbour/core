@@ -73,8 +73,8 @@ HB_EXTERN_BEGIN
 typedef void (*PHB_TSD_FUNC)(void *);
 typedef struct
 {
-   int      iHandle;
-   int      iSize;
+   int          iHandle;
+   int          iSize;
    PHB_TSD_FUNC pInitFunc;
    PHB_TSD_FUNC pCleanFunc;
 }
@@ -136,9 +136,9 @@ HB_PRIVATE_ITEM, * PHB_PRIVATE_ITEM;
 typedef struct
 {
    PHB_PRIVATE_ITEM stack;
-   ULONG       size;
-   ULONG       count;
-   ULONG       base;
+   HB_ULONG         size;
+   HB_ULONG         count;
+   HB_ULONG         base;
 }
 HB_PRIVATE_STACK, * PHB_PRIVATE_STACK;
 
@@ -312,7 +312,7 @@ extern PHB_STACKRDD hb_stackRDD( void );
 extern void **     hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
-extern void        hb_stackDecrease( ULONG ulItems );
+extern void        hb_stackDecrease( HB_ULONG ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );

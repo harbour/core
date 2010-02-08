@@ -134,7 +134,7 @@ HB_FUNC( WAITPERIOD )
    hb_retl( d < s_dTimeCounter );
 }
 
-static HB_BOOL _hb_timeValid( const char * szTime, ULONG ulLen, int * piDecode )
+static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE ulLen, int * piDecode )
 {
    HB_BOOL fValid = HB_FALSE;
 
@@ -142,7 +142,7 @@ static HB_BOOL _hb_timeValid( const char * szTime, ULONG ulLen, int * piDecode )
    {
       static const int s_iMax[] = { 23, 59, 59, 99 };
       int i, iVal;
-      ULONG ul;
+      HB_SIZE ul;
 
       fValid = HB_TRUE;
       for( ul = 0; fValid && ul < ulLen; ++ul )
@@ -298,7 +298,7 @@ HB_FUNC( SETTIME )
       fResult = SetLocalTime( &st );
 #elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
 /* stime exists only in SVr4, SVID, X/OPEN and Linux */
-      ULONG lNewTime;
+      HB_ULONG lNewTime;
       time_t tm;
 
       lNewTime = iTime[0] * 3600 + iTime[1] * 60 + iTime[2];

@@ -82,10 +82,10 @@ extern HB_EXPR_PTR hb_compExprNewDouble( double, HB_BYTE, HB_BYTE, HB_COMP_DECL 
 extern HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDate( long, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewTimeStamp( long, long, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewString( const char *, ULONG, HB_BOOL, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewString( const char *, HB_ULONG, HB_BOOL, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewLogical( int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewSelf( HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, ULONG, int, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, HB_ULONG, int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewVar( const char *, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
@@ -141,7 +141,7 @@ extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, const char *, HB_BYTE, HB_COMP_DECL );
 extern void hb_compExprCBVarDel( HB_CBVAR_PTR );
 extern HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, ULONG ulLen );
+extern HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_ULONG ulLen );
 extern HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
@@ -149,10 +149,10 @@ extern HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 extern HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType );
-extern ULONG hb_compExprListLen( HB_EXPR_PTR );
-extern ULONG hb_compExprParamListLen( HB_EXPR_PTR );
-extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
-extern ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_ULONG hb_compExprListLen( HB_EXPR_PTR );
+extern HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR );
+extern HB_ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
+extern HB_ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR );
 
 extern const char * hb_compExprDescription( HB_EXPR_PTR );
 extern int hb_compExprType( HB_EXPR_PTR );
@@ -167,7 +167,7 @@ extern const char * hb_compExprAsString( HB_EXPR_PTR );
 extern const char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
 extern HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_BOOL hb_compExprIsValidMacro( const char *, ULONG, HB_BOOL *, HB_COMP_DECL );
+extern HB_BOOL hb_compExprIsValidMacro( const char *, HB_ULONG, HB_BOOL *, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL );

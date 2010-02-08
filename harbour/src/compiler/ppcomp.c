@@ -79,7 +79,7 @@ static void hb_pp_Disp( void * cargo, const char * szMessage )
    hb_compOutStd( HB_COMP_PARAM, szMessage );
 }
 
-static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
+static void hb_pp_PragmaDump( void * cargo, char * pBuffer, HB_SIZE ulSize,
                               int iLine )
 {
    PINLINE pInline;
@@ -92,7 +92,7 @@ static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
 }
 
 static void hb_pp_hb_inLine( void * cargo, char * szFunc,
-                             char * pBuffer, ULONG ulSize, int iLine )
+                             char * pBuffer, HB_SIZE ulSize, int iLine )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
 

@@ -188,7 +188,7 @@ void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext,
    hb_compI18nAddSingle( HB_COMP_PARAM, szText, szContext, szModule, uiLine );
 }
 
-void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, ULONG ulCount, const char* szContext, const char * szModule, HB_UINT uiLine )
+void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount, const char* szContext, const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NSTRING pString;
 
@@ -204,7 +204,7 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, ULONG ulCount, c
    }
    else
    {
-      ULONG ul, ulPlural;
+      HB_ULONG ul, ulPlural;
 
       for( ul = 1; ul < ulCount && pString->uiPlurals < HB_I18N_PLURAL_MAX; ++ul )
       {

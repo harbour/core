@@ -358,8 +358,8 @@ struct _NSXINDEX;
 
 typedef struct _KEYINFO
 {
-   ULONG    page;     /* page number */
-   ULONG    rec;      /* record number */
+   HB_ULONG page;     /* page number */
+   HB_ULONG rec;      /* record number */
    int      mode;     /* comparison mode NSX_CMP_* */
    HB_UCHAR val[ 1 ]; /* key value */
 } KEYINFO;
@@ -367,7 +367,7 @@ typedef KEYINFO * LPKEYINFO;
 
 typedef struct _TREE_STACK
 {
-   ULONG    page;
+   HB_ULONG page;
    HB_SHORT ikey;
    HB_UCHAR * value;
 }  TREE_STACK;
@@ -375,7 +375,7 @@ typedef TREE_STACK * LPTREESTACK;
 
 typedef struct _HB_PAGEINFO
 {
-   ULONG      Page;
+   HB_ULONG   Page;
    HB_BOOL    Changed;
    int        iUsed;
    HB_USHORT  uiKeys;
@@ -424,8 +424,8 @@ typedef struct _TAGINFO
    HB_BOOL     TagEOF;
    HB_BOOL     HotFor;
 
-   ULONG       HeadBlock;
-   ULONG       RootBlock;
+   HB_ULONG    HeadBlock;
+   HB_ULONG    RootBlock;
 
    HB_UCHAR    TagFlags;
    HB_UCHAR    KeyType;
@@ -442,7 +442,7 @@ typedef struct _TAGINFO
    HB_USHORT   stackLevel;
    LPTREESTACK stack;
 
-   ULONG       keyCount;
+   HB_ULONG    keyCount;
    LPKEYINFO   CurKeyInfo;
    LPKEYINFO   HotKeyInfo;
 
@@ -454,9 +454,9 @@ typedef struct _NSXINDEX
 {
    char *      IndexName;
    char *      RealName;
-   ULONG       Version;       /* index VERSION filed to signal index updates for other stations */
-   ULONG       NextAvail;     /* next free page in index file */
-   ULONG       FileSize;      /* index file size */
+   HB_ULONG    Version;       /* index VERSION filed to signal index updates for other stations */
+   HB_ULONG    NextAvail;     /* next free page in index file */
+   HB_ULONG    FileSize;      /* index file size */
    struct     _NSXAREA * pArea;
    PHB_FILE    pFile;
    HB_BOOL     fDelete;       /* delete on close flag */
@@ -476,9 +476,9 @@ typedef struct _NSXINDEX
    int         iTags;
    LPTAGINFO * lpTags;
 
-   ULONG       ulPages;
-   ULONG       ulPageLast;
-   ULONG       ulPagesDepth;
+   HB_ULONG    ulPages;
+   HB_ULONG    ulPageLast;
+   HB_ULONG    ulPagesDepth;
    LPPAGEINFO *pages;
    LPPAGEINFO  pChanged;
    LPPAGEINFO  pFirst;
@@ -492,9 +492,9 @@ typedef NSXINDEX * LPNSXINDEX;
 typedef struct
 {
    HB_FOFFSET  nOffset;    /* offset in temporary file */
-   ULONG       ulKeys;     /* number of keys in page */
-   ULONG       ulKeyBuf;   /* number of keys in memory buffer */
-   ULONG       ulCurKey;   /* current key in memory buffer */
+   HB_ULONG    ulKeys;     /* number of keys in page */
+   HB_ULONG    ulKeyBuf;   /* number of keys in memory buffer */
+   HB_ULONG    ulCurKey;   /* current key in memory buffer */
    HB_UCHAR *  pKeyPool;   /* memory buffer */
 } NSXSWAPPAGE;
 typedef NSXSWAPPAGE * LPNSXSWAPPAGE;
@@ -509,28 +509,28 @@ typedef struct
    HB_UCHAR    recSize;          /* record size in leaf keys */
    HB_BOOL     fUnique;          /* HB_TRUE if index is unique */
    HB_BOOL     fReindex;         /* HB_TRUE if reindexing is in process */
-   ULONG       ulMaxRec;         /* the highest record number */
-   ULONG       ulTotKeys;        /* total number of keys indexed */
-   ULONG       ulKeys;           /* keys in curently created page */
-   ULONG       ulPages;          /* number of pages */
-   ULONG       ulCurPage;        /* current page */
-   ULONG       ulPgKeys;         /* maximum number of key in page memory buffer */
-   ULONG       ulMaxKey;         /* maximum number of keys in single page */
+   HB_ULONG    ulMaxRec;         /* the highest record number */
+   HB_ULONG    ulTotKeys;        /* total number of keys indexed */
+   HB_ULONG    ulKeys;           /* keys in curently created page */
+   HB_ULONG    ulPages;          /* number of pages */
+   HB_ULONG    ulCurPage;        /* current page */
+   HB_ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
+   HB_ULONG    ulMaxKey;         /* maximum number of keys in single page */
    HB_UCHAR *  pKeyPool;         /* memory buffer for current page then for pages */
    HB_UCHAR *  pStartKey;        /* begining of key pool after sorting */
    LPNSXSWAPPAGE pSwapPage;      /* list of pages */
    LPPAGEINFO  NodeList[ NSX_STACKSIZE ]; /* Stack of pages */
-   ULONG       ulFirst;
-   ULONG *     pSortedPages;
+   HB_ULONG    ulFirst;
+   HB_ULONG *  pSortedPages;
    HB_UCHAR    pLastKey[ NSX_MAXKEYLEN ]; /* last key val */
-   ULONG       ulLastRec;
-   ULONG       ulLastLeaf;       /* last non empty leaf page written to tag */
+   HB_ULONG    ulLastRec;
+   HB_ULONG    ulLastLeaf;       /* last non empty leaf page written to tag */
 
    HB_UCHAR *  pBuffIO;          /* index IO buffer */
-   ULONG       ulSizeIO;         /* size of IO buffer in index pages */
-   ULONG       ulPagesIO;        /* number of index pages in buffer */
-   ULONG       ulFirstIO;        /* first page in buffer */
-   ULONG       ulLastIO;         /* last page in buffer */
+   HB_ULONG    ulSizeIO;         /* size of IO buffer in index pages */
+   HB_ULONG    ulPagesIO;        /* number of index pages in buffer */
+   HB_ULONG    ulFirstIO;        /* first page in buffer */
+   HB_ULONG    ulLastIO;         /* last page in buffer */
 } NSXSORTINFO;
 typedef NSXSORTINFO * LPNSXSORTINFO;
 

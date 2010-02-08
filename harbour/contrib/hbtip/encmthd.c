@@ -61,10 +61,10 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 {
    const char * cData = hb_parc( 1 );
    char * cRet;
-   int nLen = hb_parclen( 1 );
-   int nPos = 0, nPosRet = 0;
-   int nPosBlock = 0, nLineCount = 0;
-   ULONG nFinalLen;
+   HB_ISIZ nLen = hb_parclen( 1 );
+   HB_ISIZ nPos = 0, nPosRet = 0, nPosBlock = 0;
+   HB_SIZE nFinalLen;
+   int nLineCount = 0;
    unsigned char cElem, cElem1;
    HB_BOOL bExcept;
 
@@ -93,7 +93,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       bExcept = hb_parl( -1 );
    }
    /* we know exactly the renturned length. */
-   nFinalLen = ( ULONG ) ( ( nLen / 3 + 2 ) * 4 );
+   nFinalLen = ( HB_SIZE ) ( ( nLen / 3 + 2 ) * 4 );
    /* add line termination padding, CRLF each 76 output bytes */
    nFinalLen += ( nFinalLen / 72 + 1 ) * 2;
    cRet = ( char * ) hb_xgrab( nFinalLen );

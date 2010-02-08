@@ -95,7 +95,7 @@ HB_FUNC( NUMAT )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0, sSubStrLen;
-      ULONG ulCounter;
+      HB_SIZE ulCounter;
       const char *pc, *pcSubStr;
 
       /* eventually ignore some characters */

@@ -163,7 +163,7 @@ HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, 
 }
 
 /* module symbols initialization with extended information */
-PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, ULONG ulID, HB_USHORT uiPcodeVer )
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_USHORT uiPcodeVer )
 {
    static FARPROC s_pProcessSymbols = NULL;
 
@@ -343,7 +343,7 @@ HB_SIZE hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ) /* retrieve length or 
    return pParinfa ? ( ( HB_PARINFA ) pParinfa )( iParamNum, uiArrayIndex ) : 0;
 }
 
-ULONG hb_parinfo( int iParam ) /* Determine the param count or data type */
+HB_ULONG hb_parinfo( int iParam ) /* Determine the param count or data type */
 {
    FARPROC pParinfo = hb_getProcAddress( HBTEXT( "_hb_parinfo" ) );
    return pParinfo ? ( ( HB_PARINFO ) pParinfo )( iParam ) : 0;
@@ -828,13 +828,13 @@ void hb_xexit( void )                           /* Deinitialize fixed memory sub
       pXexit();
 }
 
-void * hb_xalloc( ULONG ulSize )                /* allocates memory, returns NULL on failure */
+void * hb_xalloc( HB_ULONG ulSize )                /* allocates memory, returns NULL on failure */
 {
    HB_XALLOC pXalloc = ( HB_XALLOC ) hb_getProcAddress( HBTEXT( "_hb_xalloc" ) );
    return pXalloc ? pXalloc( ulSize ) : NULL;
 }
 
-void * hb_xgrab( ULONG ulSize )                 /* allocates memory, exits on failure */
+void * hb_xgrab( HB_ULONG ulSize )                 /* allocates memory, exits on failure */
 {
    HB_XGRAB pXgrab = ( HB_XGRAB ) hb_getProcAddress( HBTEXT( "_hb_xgrab" ) );
    return pXgrab ? pXgrab( ulSize ) : NULL;
@@ -847,13 +847,13 @@ void hb_xfree( void * pMem )                    /* frees memory */
       pXfree( pMem );
 }
 
-void * hb_xrealloc( void * pMem, ULONG ulSize ) /* reallocates memory */
+void * hb_xrealloc( void * pMem, HB_ULONG ulSize ) /* reallocates memory */
 {
    HB_XREALLOC pXrealloc = ( HB_XREALLOC ) hb_getProcAddress( HBTEXT( "_hb_xrealloc" ) );
    return pXrealloc ? ( void * ) pXrealloc( pMem, ulSize ) : NULL;
 }
 
-ULONG hb_xsize( void * pMem )                   /* returns the size of an allocated memory block */
+HB_ULONG hb_xsize( void * pMem )                   /* returns the size of an allocated memory block */
 {
    HB_XSIZE pXsize = ( HB_XSIZE ) hb_getProcAddress( HBTEXT( "_hb_xsize" ) );
    return pXsize ? pXsize( ( void * ) pMem ) : 0;

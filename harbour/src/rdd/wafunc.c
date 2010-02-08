@@ -586,7 +586,7 @@ HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
                             HB_USHORT uiArea, const char *szAlias,
                             HB_BOOL fShared, HB_BOOL fReadonly,
-                            const char * szCpId, ULONG ulConnection,
+                            const char * szCpId, HB_ULONG ulConnection,
                             PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
    char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
@@ -674,7 +674,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
 HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
                               HB_USHORT uiArea, const char *szAlias,
                               HB_BOOL fKeepOpen,
-                              const char * szCpId, ULONG ulConnection,
+                              const char * szCpId, HB_ULONG ulConnection,
                               PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
    char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
@@ -746,7 +746,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
 
 HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
                                   const char * szAlias,
-                                  const char * szCpId, ULONG ulConnection,
+                                  const char * szCpId, HB_ULONG ulConnection,
                                   PHB_ITEM pStruct )
 {
    char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
@@ -1071,7 +1071,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
 
 HB_ERRCODE hb_rddTransRecords( AREAP pArea,
                                const char *szFileName, const char *szDriver,
-                               ULONG ulConnection,
+                               HB_ULONG ulConnection,
                                PHB_ITEM pFields, HB_BOOL fExport,
                                PHB_ITEM pCobFor, PHB_ITEM pStrFor,
                                PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,

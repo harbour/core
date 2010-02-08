@@ -129,7 +129,7 @@ static void hb_pp_writeTokenList( FILE * fout, PHB_PP_TOKEN pTokenLst, const cha
 static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szName )
 {
    char szMatch[ 16 ], szResult[ 16 ];
-   ULONG ulRepeatBits, ulBit;
+   HB_ULONG ulRepeatBits, ulBit;
    PHB_PP_RULE pRule;
    int iRule;
    HB_USHORT u;
@@ -265,7 +265,7 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
 static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
 {
    int iResult = 0;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    while( hb_pp_nextLine( pState, &ulLen ) != NULL && ulLen ) {};
 

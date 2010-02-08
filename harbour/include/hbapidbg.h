@@ -63,10 +63,10 @@ HB_EXTERN_BEGIN
 typedef void (*HB_DBGENTRY_FUNC) ( int , int , const char *, int , PHB_ITEM );
 extern HB_DBGENTRY_FUNC hb_dbg_SetEntry( HB_DBGENTRY_FUNC pFunDbgEntry );
 extern HB_BOOL hb_dbg_InvokeDebug( HB_BOOL bInvoke );
-extern ULONG hb_dbg_ProcLevel( void );
+extern HB_ULONG hb_dbg_ProcLevel( void );
 extern PHB_ITEM hb_dbg_vmVarSGet( PHB_ITEM pStaticsBase, int nOffset );
 extern PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal );
-extern ULONG hb_dbg_vmVarGCount( void );
+extern HB_ULONG hb_dbg_vmVarGCount( void );
 extern PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset );
 
 /* internal debugger function */

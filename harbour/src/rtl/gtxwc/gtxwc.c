@@ -365,8 +365,8 @@ typedef struct tag_x_wnddef
    int lastCursorType;
 
    HB_BOOL cursorState;
-   ULONG cursorBlinkRate;
-   ULONG cursorStateTime;
+   HB_ULONG cursorBlinkRate;
+   HB_ULONG cursorStateTime;
 
    /* Mouse informations */
    int mouseCol;
@@ -375,15 +375,15 @@ typedef struct tag_x_wnddef
    int mouseGotoRow;
    int mouseNumButtons;
    int mouseButtonsState;
-   unsigned char mouseButtonsMap[XWC_MAX_BUTTONS];
-   Time mouseButtonsTime[XWC_MAX_BUTTONS];
+   unsigned char mouseButtonsMap[ XWC_MAX_BUTTONS ];
+   Time mouseButtonsTime[ XWC_MAX_BUTTONS ];
 
    /* current screen contents (attr<<24)|(color<<16)|char */
-   ULONG *pCurrScr;
+   HB_ULONG * pCurrScr;
 
    /* character translation table, it changes characters in screen buffer into UNICODE or graphs primitives */
-   XWC_CharTrans charTrans[256];
-   XWC_CharTrans boxTrans[256];
+   XWC_CharTrans charTrans[ 256 ];
+   XWC_CharTrans boxTrans[ 256 ];
 
    HB_BOOL fInvalidChr;
    XWC_RECT rInvalidChr;
@@ -399,7 +399,7 @@ typedef struct tag_x_wnddef
 
    /* Clipboard buffer */
    unsigned char * ClipboardData;
-   ULONG ClipboardSize;
+   HB_SIZE ClipboardSize;
    Atom ClipboardRequest;
    Time ClipboardTime;
    HB_BOOL ClipboardOwner;
@@ -1854,7 +1854,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
    if( n > 0 )
    {
       unsigned char keystr[ 32 ];
-      ULONG u = sizeof( keystr );
+      HB_ULONG u = sizeof( keystr );
 
 #ifndef HB_XWC_USE_LOCALE
       hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
@@ -2236,7 +2236,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             /* TODO: for s_atomString convert data to ISO-8859-1 */
             if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
             {
-               ULONG ulLen = wnd->ClipboardSize;
+               HB_SIZE ulLen = wnd->ClipboardSize;
                unsigned char * pBuffer = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
                                  wnd->hostCDP, wnd->inCDP );
@@ -2255,7 +2255,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          }
          else if( req->target == s_atomUTF8String )
          {
-            ULONG ulLen = wnd->ClipboardSize;
+            HB_SIZE ulLen = wnd->ClipboardSize;
             unsigned char * pBuffer = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
                                  wnd->hostCDP, wnd->utf8CDP );
@@ -2491,9 +2491,9 @@ static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color
 
 /* *********************************************************************** */
 
-static ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr )
+static HB_ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr )
 {
-   return ( ( ULONG ) attr << 24 ) | ( ( ULONG ) color << 16 ) | ( ULONG ) chr;
+   return ( ( HB_ULONG ) attr << 24 ) | ( ( HB_ULONG ) color << 16 ) | ( HB_ULONG ) chr;
 }
 
 /* *********************************************************************** */
@@ -2503,7 +2503,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    HB_USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
-   ULONG ulCurr = 0xFFFFFFFFL;
+   HB_ULONG ulCurr = 0xFFFFFFFFL;
    int i, iColor;
    XWC_CharTrans * chTrans;
 
@@ -2891,7 +2891,7 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static ULONG hb_gt_xwc_CurrentTime( void )
+static HB_ULONG hb_gt_xwc_CurrentTime( void )
 {
    struct timeval tv;
    gettimeofday( &tv, NULL );
@@ -2910,7 +2910,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
       }
       else
       {
-         ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
+         HB_ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
 
          if( ulCurrentTime - wnd->cursorStateTime > wnd->cursorBlinkRate )
          {
@@ -2996,11 +2996,11 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows 
       wnd->rows = rows;
 
       if( wnd->pCurrScr == NULL )
-         wnd->pCurrScr = ( ULONG* ) hb_xgrab( iSize * sizeof( ULONG ) );
+         wnd->pCurrScr = ( HB_ULONG * ) hb_xgrab( iSize * sizeof( HB_ULONG ) );
       else
-         wnd->pCurrScr = ( ULONG* ) hb_xrealloc( wnd->pCurrScr, iSize * sizeof( ULONG ) );
+         wnd->pCurrScr = ( HB_ULONG * ) hb_xrealloc( wnd->pCurrScr, iSize * sizeof( HB_ULONG ) );
 
-      memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( ULONG ) );
+      memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( HB_ULONG ) );
       hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
       HB_GTSELF_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
    }
@@ -3092,7 +3092,7 @@ static void hb_gt_xwc_ClearSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char *szData, ULONG ulSize )
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize )
 {
    HB_XWC_XLIB_LOCK
 
@@ -3134,7 +3134,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
    if( !wnd->ClipboardOwner )
    {
       Atom aRequest;
-      ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
+      HB_ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
       int iConnFD = ConnectionNumber( wnd->dpy );
 
       wnd->ClipboardRcvd = HB_FALSE;
@@ -3175,7 +3175,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             hb_gt_xwc_ProcessMessages( wnd );
             if( !wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
             {
-               ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
+               HB_ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
                struct timeval timeout;
                fd_set readfds;
 
@@ -4101,7 +4101,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                      if( wnd->dpy && hb_gt_xwc_setPalette( wnd ) )
                      {
-                        memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
+                        memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                      }
                   }
@@ -4129,7 +4129,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                if( wnd->dpy && hb_gt_xwc_setPalette( wnd ) )
                {
-                  memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
+                  memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                }
             }

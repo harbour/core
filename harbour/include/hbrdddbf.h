@@ -141,7 +141,7 @@ typedef struct _DBFDATA
    HB_BYTE   bMemoType;        /* DB_MEMO_FPT */
    HB_BYTE   bMemoExtType;     /* DB_MEMOVER_FLEX */
    HB_USHORT uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
-   ULONG     ulMemoBlockSize;  /* 0 */
+   HB_ULONG  ulMemoBlockSize;  /* 0 */
 
    HB_BOOL   fSortRecNo;
    HB_BOOL   fMultiKey;
@@ -183,8 +183,8 @@ typedef struct _DBFAREA
    char *      szMemoFileName;      /* Name of memo file */
    HB_USHORT   uiHeaderLen;         /* Size of header */
    HB_USHORT   uiRecordLen;         /* Size of record */
-   ULONG       ulMemoBlockSize;     /* Size of memo block */
-   ULONG       ulNewBlockSize;      /* Size of new memo block */
+   HB_ULONG    ulMemoBlockSize;     /* Size of memo block */
+   HB_ULONG    ulNewBlockSize;      /* Size of new memo block */
    HB_USHORT   uiMemoVersion;       /* MEMO file version */
    HB_USHORT   uiDirtyRead;         /* Index dirty read bit filed */
    HB_USHORT   uiNullOffset;        /* Offset to _NullFlags filed */
@@ -197,8 +197,8 @@ typedef struct _DBFAREA
    HB_USHORT * pFieldOffset;        /* Pointer to field offset array */
    PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
    HB_BYTE *   pRecord;             /* Buffer of record data */
-   ULONG       ulRecCount;          /* Total records */
-   ULONG       ulRecNo;             /* Current record */
+   HB_ULONG    ulRecCount;          /* Total records */
+   HB_ULONG    ulRecNo;             /* Current record */
    HB_BOOL     fAutoInc;            /* WorkArea with auto increment fields */
    HB_BOOL     fHasMemo;            /* WorkArea with Memo fields */
    HB_BOOL     fHasTags;            /* WorkArea with MDX or CDX index */
@@ -222,8 +222,8 @@ typedef struct _DBFAREA
    HB_BOOL     fTrigger;            /* Execute trigger function */
    LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
-   ULONG *     pLocksPos;           /* List of records locked */
-   ULONG       ulNumLocksPos;       /* Number of records locked */
+   HB_ULONG *  pLocksPos;           /* List of records locked */
+   HB_ULONG    ulNumLocksPos;       /* Number of records locked */
    char *      pCryptKey;           /* Pointer to encryption key */
    PHB_DYNS    pTriggerSym;         /* DynSym pointer to trigger function */
 } DBFAREA;
@@ -236,15 +236,15 @@ typedef DBFAREA * LPDBFAREA;
 
 #define SUPERTABLE                         ( &dbfSuper )
 
-extern HB_EXPORT ULONG      hb_dbfGetMemoBlock( DBFAREAP pArea, HB_USHORT uiIndex );
+extern HB_EXPORT HB_ULONG   hb_dbfGetMemoBlock( DBFAREAP pArea, HB_USHORT uiIndex );
 extern HB_EXPORT void       hb_dbfPutMemoBlock( DBFAREAP pArea, HB_USHORT uiIndex,
-                                                ULONG ulBlock );
+                                                HB_ULONG ulBlock );
 extern HB_EXPORT HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
-                                               ULONG * pulBlock, ULONG * pulSize,
-                                               ULONG * pulType );
+                                               HB_ULONG * pulBlock, HB_ULONG * pulSize,
+                                               HB_ULONG * pulType );
 extern HB_EXPORT HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
-                                               ULONG ulBlock, ULONG ulSize,
-                                               ULONG ulType );
+                                               HB_ULONG ulBlock, HB_ULONG ulSize,
+                                               HB_ULONG ulType );
 extern HB_EXPORT HB_ERRCODE hb_dbfGetEGcode( HB_ERRCODE errCode );
 extern HB_EXPORT HB_BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, HB_USHORT usMode, HB_FOFFSET *pPoolPos );
 extern HB_EXPORT HB_BOOL    hb_dbfLockIdxGetData( HB_BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );

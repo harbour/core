@@ -542,7 +542,7 @@ static void filebot()
 HB_FUNC( _FT_DFINIT )
 {
     int rval, i, j;
-    ULONG ulSize;
+    HB_SIZE ulSize;
 
     rval = 0;
 

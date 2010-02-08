@@ -148,9 +148,9 @@ struct _HB_SYMB;
 #  endif /* !HB_MT_VM */
       HB_USHORT uiSymNum;         /* dynamic symbol number */
 #  if !defined( HB_NO_PROFILER )
-      ULONG     ulCalls;          /* profiler support */
-      ULONG     ulTime;           /* profiler support */
-      ULONG     ulRecurse;        /* profiler support */
+      HB_ULONG  ulCalls;          /* profiler support */
+      HB_ULONG  ulTime;           /* profiler support */
+      HB_ULONG  ulRecurse;        /* profiler support */
 #  endif /* !HB_NO_PROFILER */
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 

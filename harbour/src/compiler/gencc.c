@@ -61,7 +61,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 #define HB_GENC_GETLABEL(l)   ( (l) < pFunc->lPCodePos ? cargo->pulLabels[ (l) ] : 0 )
 
 #define HB_GENC_LABEL()       do { \
-                                 ULONG ulLab = HB_GENC_GETLABEL( lPCodePos ); \
+                                 HB_ULONG ulLab = HB_GENC_GETLABEL( lPCodePos ); \
                                  if( ulLab != 0 ) \
                                     fprintf( cargo->yyc, "lab%05ld: ;\n", ulLab ); \
                               } while( 0 )
@@ -70,9 +70,9 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, ULONG ulLen )
+void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_ULONG ulLen )
 {
-   ULONG ulPos;
+   HB_ULONG ulPos;
 
    fputc( '"', yyc );
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
@@ -108,7 +108,7 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
       fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
 }
 
-static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo,
+static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo,
                                         const char * szFunc )
 {
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
@@ -167,7 +167,7 @@ static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG l
    return 1;
 }
 
-static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
@@ -244,7 +244,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG lPCode
    return 0;
 }
 
-static int hb_gencc_checkPlusAhead( PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkPlusAhead( PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
@@ -1077,7 +1077,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
 
 static HB_GENC_FUNC( hb_p_pushblocklarge )
 {
-   ULONG ulSize, ul;
+   HB_ULONG ulSize, ul;
 
    HB_GENC_LABEL();
 
@@ -1351,7 +1351,7 @@ static HB_GENC_FUNC( hb_p_pushstr )
 
 static HB_GENC_FUNC( hb_p_pushstrlarge )
 {
-   ULONG ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
+   HB_ULONG ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
 
    HB_GENC_LABEL();
 
@@ -1567,12 +1567,12 @@ static HB_GENC_FUNC( hb_p_staticname )
 static HB_GENC_FUNC( hb_p_threadstatics )
 {
    HB_USHORT w;
-   ULONG ulSize, ul;
+   HB_ULONG ulSize, ul;
 
    HB_GENC_LABEL();
 
    w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
-   ulSize = ( ULONG ) w << 1;
+   ulSize = ( HB_ULONG ) w << 1;
 
    fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE statics[ %lu ] = {", ulSize );
 
@@ -1681,7 +1681,7 @@ static HB_GENC_FUNC( hb_p_enumend )
 static HB_GENC_FUNC( hb_p_switch )
 {
    HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
-   ULONG ulStart = lPCodePos, ulNewPos;
+   HB_ULONG ulStart = lPCodePos, ulNewPos;
    HB_BOOL fNum = HB_FALSE, fStr = HB_FALSE, fDefault = HB_FALSE;
 
    HB_GENC_LABEL();
@@ -1727,7 +1727,7 @@ static HB_GENC_FUNC( hb_p_switch )
    {
       fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch;\n\t\tHB_TYPE type;\n" );
       if( fStr )
-         fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tULONG ulLen;\n" );
+         fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tHB_SIZE ulLen;\n" );
       if( fNum )
          fprintf( cargo->yyc, "\t\tlong lVal;\n" );
       fprintf( cargo->yyc, "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
@@ -2275,8 +2275,8 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
       label_info.pulLabels = NULL;
    else
    {
-      label_info.pulLabels = ( ULONG * ) hb_xgrab( pFunc->lPCodePos * sizeof( ULONG ) );
-      memset( label_info.pulLabels, 0, pFunc->lPCodePos * sizeof( ULONG ) );
+      label_info.pulLabels = ( HB_ULONG * ) hb_xgrab( pFunc->lPCodePos * sizeof( HB_ULONG ) );
+      memset( label_info.pulLabels, 0, pFunc->lPCodePos * sizeof( HB_ULONG ) );
       hb_compGenLabelTable( pFunc, &label_info );
    }
 

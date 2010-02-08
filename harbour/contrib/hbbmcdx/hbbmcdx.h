@@ -256,15 +256,15 @@ typedef struct _CDXKEY
    HB_BYTE * val;
    HB_USHORT len;
    HB_USHORT mode;
-   ULONG     rec;
+   HB_ULONG  rec;
 } CDXKEY;
 typedef CDXKEY * LPCDXKEY;
 
 typedef struct _CDXPAGE
 {
-   ULONG    Page;
-   ULONG    Left;
-   ULONG    Right;
+   HB_ULONG Page;
+   HB_ULONG Left;
+   HB_ULONG Right;
 
    HB_BYTE  PageType;
    int      iKeys;
@@ -273,7 +273,7 @@ typedef struct _CDXPAGE
    HB_BOOL  fChanged;
    HB_BYTE  bUsed;
 
-   ULONG    RNMask;
+   HB_ULONG RNMask;
    HB_BYTE  ReqByte;
    HB_BYTE  RNBits;
    HB_BYTE  DCBits;
@@ -311,7 +311,7 @@ typedef CDXSTACK * LPCDXSTACK;
 
 typedef struct _CDXLIST
 {
-   ULONG    ulAddr;
+   HB_ULONG ulAddr;
    HB_BOOL  fStat;
    struct _CDXLIST * pNext;
 } CDXLIST;
@@ -347,15 +347,15 @@ typedef struct _CDXTAG
 
    HB_BOOL   fRePos;
    int       curKeyState;     /* see: CDX_CURKEY_* */
-   ULONG     rawKeyCount;
-   ULONG     rawKeyPos;
-   ULONG     rawKeyRec;
-   ULONG     logKeyCount;
-   ULONG     logKeyPos;
-   ULONG     logKeyRec;
+   HB_ULONG  rawKeyCount;
+   HB_ULONG  rawKeyPos;
+   HB_ULONG  rawKeyRec;
+   HB_ULONG  logKeyCount;
+   HB_ULONG  logKeyPos;
+   HB_ULONG  logKeyRec;
 
-   ULONG     TagBlock;        /* a page offset where a tag header is stored */
-   ULONG     RootBlock;       /* a page offset with the root of keys tree */
+   HB_ULONG  TagBlock;        /* a page offset where a tag header is stored */
+   HB_ULONG  RootBlock;       /* a page offset with the root of keys tree */
    HB_USHORT MaxKeys;         /* maximum number of keys in Interior node */
 
    struct _CDXINDEX * pIndex; /* a parent index info */
@@ -388,8 +388,8 @@ typedef struct _CDXINDEX
    HB_BOOL     fShared;       /* Shared file */
    HB_BOOL     fReadonly;     /* Read only file */
    HB_BOOL     fDelete;       /* delete on close flag */
-   ULONG       nextAvail;     /* offset to next free page in the end of index file */
-   ULONG       freePage;      /* offset to next free page inside index file */
+   HB_ULONG    nextAvail;     /* offset to next free page in the end of index file */
+   HB_ULONG    freePage;      /* offset to next free page inside index file */
    LPCDXLIST   freeLst;       /* list of free pages in index file */
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
@@ -399,7 +399,7 @@ typedef struct _CDXINDEX
    HB_BOOL     WrLck;
 #endif
    HB_BOOL     fChanged;      /* changes written to index, need upadte ulVersion */
-   ULONG       ulVersion;     /* network version/update flag */
+   HB_ULONG    ulVersion;     /* network version/update flag */
    HB_BOOL     fFlush;        /* changes written to index, need upadte ulVersion */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
@@ -408,39 +408,39 @@ typedef CDXINDEX * LPCDXINDEX;
 typedef struct
 {
    HB_FOFFSET  nOffset;    /* offset in temporary file */
-   ULONG       ulKeys;     /* number of keys in page */
-   ULONG       ulKeyBuf;   /* number of keys in memory buffer */
-   ULONG       ulCurKey;   /* current key in memory buffer */
+   HB_ULONG    ulKeys;     /* number of keys in page */
+   HB_ULONG    ulKeyBuf;   /* number of keys in memory buffer */
+   HB_ULONG    ulCurKey;   /* current key in memory buffer */
    HB_BYTE *   pKeyPool;   /* memory buffer */
 } CDXSWAPPAGE;
 typedef CDXSWAPPAGE * LPCDXSWAPPAGE;
 
 typedef struct
 {
-   LPCDXTAG pTag;             /* current Tag */
+   LPCDXTAG   pTag;           /* current Tag */
    HB_FHANDLE hTempFile;      /* handle to temporary file */
-   char *   szTempFileName;   /* temporary file name */
-   int      keyLen;           /* key length */
-   HB_BYTE  bTrl;             /* filler char for shorter keys */
-   HB_BOOL  fUnique;          /* HB_TRUE if index is unique */
-   HB_BOOL  fReindex;         /* HB_TRUE if reindexing is in process */
-   ULONG    ulMaxRec;         /* the highest record number */
-   ULONG    ulTotKeys;        /* total number of keys indexed */
-   ULONG    ulKeys;           /* keys in curently created page */
-   ULONG    ulPages;          /* number of pages */
-   ULONG    ulCurPage;        /* current page */
-   ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
-   ULONG    ulMaxKey;         /* maximum number of keys in single page */
-   HB_BYTE * pKeyPool;        /* memory buffer for current page then for pages */
+   char *     szTempFileName; /* temporary file name */
+   int        keyLen;         /* key length */
+   HB_BYTE    bTrl;           /* filler char for shorter keys */
+   HB_BOOL    fUnique;        /* HB_TRUE if index is unique */
+   HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
+   HB_ULONG   ulMaxRec;       /* the highest record number */
+   HB_ULONG   ulTotKeys;      /* total number of keys indexed */
+   HB_ULONG   ulKeys;         /* keys in curently created page */
+   HB_ULONG   ulPages;        /* number of pages */
+   HB_ULONG   ulCurPage;      /* current page */
+   HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
+   HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
+   HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
    LPCDXSWAPPAGE pSwapPage;   /* list of pages */
-   LPCDXPAGE NodeList[ CDX_STACKSIZE ];   /* Stack of pages */
-   ULONG    ulFirst;
-   ULONG *  pSortedPages;
-   HB_BYTE  pLastKey[ CDX_MAXKEY ]; /* last key val */
-   ULONG    ulLastRec;
-   HB_BYTE * pRecBuff;
+   LPCDXPAGE  NodeList[ CDX_STACKSIZE ];   /* Stack of pages */
+   HB_ULONG   ulFirst;
+   HB_ULONG * pSortedPages;
+   HB_BYTE    pLastKey[ CDX_MAXKEY ]; /* last key val */
+   HB_ULONG   ulLastRec;
+   HB_BYTE *  pRecBuff;
 #ifndef HB_CDX_PACKTRAIL
-   int      iLastTrl;         /* last key trailing spaces */
+   int        iLastTrl;       /* last key trailing spaces */
 #endif
 } CDXSORTINFO;
 typedef CDXSORTINFO * LPCDXSORTINFO;
@@ -487,12 +487,12 @@ typedef CDXAREA * LPCDXAREA;
 
 typedef struct _BM_FILTER_
 {
-   PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
-   PHB_ITEM abFilterText;     /* String representation of FILTER expression */
-   HB_BOOL  fFilter;          /* flag to indicate that filter is active */
-   HB_BOOL  fOptimized;       /* Is (should be) filter optimized */
-   ULONG *  rmap;
-   ULONG    Size;
+   PHB_ITEM   itmCobExpr;       /* Block representation of the FILTER expression */
+   PHB_ITEM   abFilterText;     /* String representation of FILTER expression */
+   HB_BOOL    fFilter;          /* flag to indicate that filter is active */
+   HB_BOOL    fOptimized;       /* Is (should be) filter optimized */
+   HB_ULONG * rmap;
+   HB_ULONG   Size;
 } BM_FILTER;
 
 typedef BM_FILTER * LPBM_FILTER;
@@ -603,7 +603,7 @@ static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxDrop                                 NULL
 #define hb_cdxExists                               NULL
 #define hb_cdxRename                               NULL
-static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
 
 HB_EXTERN_END

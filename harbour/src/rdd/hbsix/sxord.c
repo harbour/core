@@ -366,7 +366,7 @@ HB_FUNC( SX_STEP )
 HB_FUNC( SX_KEYSINCLUDED )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   ULONG ulKeys = 0;
+   HB_ULONG ulKeys = 0;
 
    if( pArea )
    {
@@ -571,7 +571,7 @@ HB_FUNC( SX_KEYSKIP )
 HB_FUNC( SX_KEYCOUNT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   ULONG ulKeys = 0;
+   HB_ULONG ulKeys = 0;
 
    if( pArea )
    {
@@ -591,7 +591,7 @@ HB_FUNC( SX_KEYCOUNT )
 HB_FUNC( SX_KEYNO )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   ULONG ulKeyNo = 0;
+   HB_ULONG ulKeyNo = 0;
 
    if( pArea )
    {

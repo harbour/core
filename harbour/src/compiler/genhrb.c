@@ -36,11 +36,11 @@
 #define SYM_EXTERN   2              /* function defined in other module  */
 #define SYM_DEFERRED 3              /* lately bound function             */
 
-static ULONG hb_compHrbSize( HB_COMP_DECL, ULONG * pulSymbols, ULONG * pulFunctions )
+static HB_ULONG hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * pulFunctions )
 {
    PFUNCTION pFunc;
    PCOMSYMBOL pSym;
-   ULONG ulSize;
+   HB_ULONG ulSize;
 
    * pulSymbols = * pulFunctions = 0;
 
@@ -69,11 +69,11 @@ static ULONG hb_compHrbSize( HB_COMP_DECL, ULONG * pulSymbols, ULONG * pulFuncti
    return ulSize;
 }
 
-void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, ULONG * pulSize )
+void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_ULONG * pulSize )
 {
    PFUNCTION pFunc;
    PCOMSYMBOL pSym;
-   ULONG ulSymbols, ulFunctions, ulLen;
+   HB_ULONG ulSymbols, ulFunctions, ulLen;
    HB_BYTE * ptr;
 
    * pulSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
@@ -140,7 +140,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, ULONG * pulSize )
 void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ HB_PATH_MAX ];
-   ULONG ulSize;
+   HB_ULONG ulSize;
    HB_BYTE * pHrbBody;
    FILE * yyc;
 

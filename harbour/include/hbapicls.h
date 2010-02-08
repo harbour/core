@@ -105,7 +105,7 @@ extern void       hb_objDestructorCall( PHB_ITEM pObject );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */
-extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
+extern void       hb_mthAddTime( HB_ULONG );       /* profiler from classes.c */
 #endif
 
 #endif   /* _HB_API_INTERNAL_ */
@@ -125,8 +125,8 @@ HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char
 
 HB_EXPORT extern HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns HB_TRUE/HB_FALSE whether szString is an existing message for object */
 HB_EXPORT extern HB_BOOL    hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
-HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
-HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
+HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, HB_ULONG ulArg, ... );
+HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, HB_ULONG ulArg, ... );
 
 /* send message which allows to set execution context for debugger */
 HB_EXPORT extern void       hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset );

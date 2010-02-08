@@ -104,11 +104,11 @@ typedef struct _HB_GTSTD
 
    int            iLineBufSize;
    char *         sLineBuf;
-   ULONG          ulTransBufSize;
+   HB_SIZE        ulTransBufSize;
    char *         sTransBuf;
    HB_BOOL        fFullRedraw;
    char *         szCrLf;
-   ULONG          ulCrLf;
+   HB_SIZE        ulCrLf;
 
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;

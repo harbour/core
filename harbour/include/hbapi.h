@@ -271,7 +271,7 @@ struct _HB_EXTREF;
 typedef struct _HB_STACK_STATE
 {
    HB_LONG   lBaseItem;        /* stack base offset of previous func/proc */
-   ULONG     ulPrivateBase;    /* memvars base offset of previous func/proc */
+   HB_ULONG  ulPrivateBase;    /* memvars base offset of previous func/proc */
    void *    pStatics;         /* statics frame of previous func/proc */
    HB_USHORT uiClass;          /* class when message is sent */
    HB_USHORT uiMethod;         /* number of class method */
@@ -385,7 +385,7 @@ struct hb_struSymbol
 struct hb_struRecover
 {
    const HB_BYTE * recover;    /* address of recover code */
-   ULONG           base;       /* previous recover base */
+   HB_ULONG        base;       /* previous recover base */
    HB_USHORT       flags;      /* previous recovery state and recover type */
    HB_USHORT       request;    /* requested action */
 };
@@ -484,17 +484,17 @@ typedef unsigned int HB_ERRCODE;
 
 extern HB_SYMB  hb_symEval;
 
-extern HB_EXPORT void    hb_xinit( void );                           /* Initialize fixed memory subsystem */
-extern HB_EXPORT void    hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
-extern HB_EXPORT void *  hb_xalloc( HB_SIZE ulSize );                /* allocates memory, returns NULL on failure */
-extern HB_EXPORT void *  hb_xgrab( HB_SIZE ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
-extern HB_EXPORT void    hb_xfree( void * pMem );                    /* frees memory */
-extern HB_EXPORT void *  hb_xrealloc( void * pMem, HB_SIZE ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
-extern HB_EXPORT HB_SIZE hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
-extern HB_EXPORT ULONG   hb_xquery( int iMode );                     /* Query different types of memory information */
-extern HB_EXPORT HB_BOOL hb_xtraced( void );
-extern HB_EXPORT void    hb_xsetfilename( const char * szValue );
-extern HB_EXPORT void    hb_xsetinfo( const char * szValue );
+extern HB_EXPORT void     hb_xinit( void );                           /* Initialize fixed memory subsystem */
+extern HB_EXPORT void     hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
+extern HB_EXPORT void *   hb_xalloc( HB_SIZE ulSize );                /* allocates memory, returns NULL on failure */
+extern HB_EXPORT void *   hb_xgrab( HB_SIZE ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
+extern HB_EXPORT void     hb_xfree( void * pMem );                    /* frees memory */
+extern HB_EXPORT void *   hb_xrealloc( void * pMem, HB_SIZE ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
+extern HB_EXPORT HB_SIZE  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
+extern HB_EXPORT HB_ULONG hb_xquery( int iMode );                     /* Query different types of memory information */
+extern HB_EXPORT HB_BOOL  hb_xtraced( void );
+extern HB_EXPORT void     hb_xsetfilename( const char * szValue );
+extern HB_EXPORT void     hb_xsetinfo( const char * szValue );
 #ifdef _HB_API_INTERNAL_
 extern void hb_xinit_thread( void );
 extern void hb_xexit_thread( void );
@@ -537,12 +537,12 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE ulSave, HB_SIZE ulSize, HB
    and only on 16bit platforms, so the below condition seems to be
    more reasonable. */
 #if UINT_MAX > USHRT_MAX
-   /* NOTE: memcpy/memset can work with ULONG data blocks */
+   /* NOTE: memcpy/memset can work with HB_ULONG data blocks */
    #define  hb_xmemcpy  memcpy
    #define  hb_xmemset  memset
 #else
    /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
-            will be used to copy and/or set ULONG data blocks */
+            will be used to copy and/or set HB_ULONG data blocks */
 extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen ); /* copy more than memcpy() can */
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen ); /* set more than memset() can */
 #endif
@@ -620,7 +620,7 @@ extern void       hb_gcCollect( void ); /* checks if a single memory block can b
 extern void       hb_gcCollectAll( HB_BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
-extern HB_EXPORT ULONG        hb_parinfo( int iParam ); /* Determine the param count or data type */
+extern HB_EXPORT HB_ULONG     hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern HB_EXPORT HB_SIZE      hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT PHB_ITEM     hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM     hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
@@ -701,7 +701,7 @@ extern HB_EXPORT void   hb_retnll( HB_LONGLONG lNumber );/* returns a long long 
 extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 #endif
 
-#define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( ULONG ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( HB_ULONG ) (idx) <= (max) )
 
 #ifdef HB_LEGACY_LEVEL2
    /* xHarbour compatible functions */
@@ -1024,7 +1024,7 @@ extern HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* 
 extern HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern ULONG         hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
+extern HB_ULONG      hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
 extern HB_EXPORT void    hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
@@ -1044,8 +1044,8 @@ extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); 
 extern HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
 extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
-extern ULONG      hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
-extern void       hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
+extern HB_ULONG   hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
+extern void       hb_memvarSetPrivatesBase( HB_ULONG ulBase ); /* release PRIVATE variables created after specified base */
 extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen );

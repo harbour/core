@@ -133,7 +133,7 @@ HB_FUNC( ATREPL )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
-      ULONG ulCounter;
+      HB_SIZE ulCounter;
       char *pc;
 
       const char *pcReplacement;
@@ -197,7 +197,7 @@ HB_FUNC( ATREPL )
             all occurences are replaced */
          char *pcRetSubStr;
          HB_SIZE sRetSubStrLen;
-         ULONG ulMatchCounter = 0;
+         HB_SIZE ulMatchCounter = 0;
 
          sRetStrLen = sStrLen;
          pcRetStr = ( char * ) hb_xgrab( sRetStrLen );

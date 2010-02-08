@@ -95,7 +95,7 @@ HB_FUNC( TIP_TIMESTAMP )
    /* For compatibility */
    if( HB_ISNUM( 2 ) )
    {
-      ULONG ulHour = hb_parnl( 2 );
+      HB_SIZE ulHour = hb_parnl( 2 );
 
       iHour   = ( int )   ( ulHour / 3600 );
       iMinute = ( int ) ( ( ulHour % 3600 ) / 60 );
@@ -476,7 +476,7 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
 {
    char buf[ 512 ];
    int iLen;
-   ULONG ulPos;
+   HB_SIZE ulPos;
 
    ulPos = hb_fsSeek( fileIn, 0, FS_RELATIVE );
    hb_fsSeek( fileIn, 0, FS_SET );

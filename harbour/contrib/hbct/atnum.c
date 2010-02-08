@@ -75,7 +75,7 @@ static void do_atnum( int iSwitch )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
-      ULONG ulCounter;
+      HB_SIZE ulCounter;
       const char *pc = NULL;
 
       /* eventually ignore some characters */
@@ -142,7 +142,7 @@ static void do_atnum( int iSwitch )
          /* find the <ulCounter>th match */
          const char *pcSubStr;
          HB_SIZE sSubStrLen;
-         ULONG ulMatchCounter = 0;
+         HB_SIZE ulMatchCounter = 0;
 
          pcSubStr = pcString;
          sSubStrLen = sStrLen;

@@ -52,7 +52,7 @@
 
 #include "hbhash.h"
 
-static HB_HASH_ITEM_PTR hb_hashItemNew( ULONG ulKey, const void * pKey, const void * pValue )
+static HB_HASH_ITEM_PTR hb_hashItemNew( HB_ULONG ulKey, const void * pKey, const void * pValue )
 {
    HB_HASH_ITEM_PTR pItem = (HB_HASH_ITEM_PTR) hb_xgrab( sizeof( HB_HASH_ITEM ) );
 
@@ -147,7 +147,7 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSiz
          pItem = pTable->pItems[ ulSize ];
          while( pItem )
          {
-            ULONG ulKey;
+            HB_ULONG ulKey;
             HB_HASH_ITEM_PTR pNewItem, pNext;
 
             pNext = pItem->next;
@@ -181,7 +181,7 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSiz
 /* add a new value into th ehash table */
 HB_BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue )
 {
-   ULONG ulKey;
+   HB_ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
 
    ulKey = ( pTable->pKeyFunc )( pTable, pKey, pValue );
@@ -206,7 +206,7 @@ HB_BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void
 */
 const void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, const void * pKey )
 {
-   ULONG ulKey;
+   HB_ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    const void * pFound = NULL;
 
@@ -230,7 +230,7 @@ const void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, const void * pKey )
 */
 HB_BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void *pKey )
 {
-   ULONG ulKey;
+   HB_ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    HB_HASH_ITEM_PTR pPrev = NULL;
    HB_BOOL bFound = HB_FALSE;

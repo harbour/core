@@ -177,7 +177,7 @@ static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
 
 static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, int iLeft, int iBottom, int iRight, int iNested )
 {
-   ULONG lIndex;
+   HB_SIZE lIndex;
    int i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetMap(%p,%p,%d,%d,%d,%d,%d,%d)", pCTW, piMap, iWindow, iTop, iLeft, iBottom, iRight, iNested));
@@ -215,11 +215,11 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
 
 static void hb_ctw_ClearMap( PHB_GTCTW pCTW )
 {
-   ULONG ulSize;
+   HB_SIZE ulSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_ClearMap(%p)", pCTW));
 
-   ulSize = ( ULONG ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+   ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
    memset( pCTW->pWindowMap, 0, ulSize );
    memset( pCTW->pShadowMap, 0, ulSize );
 }
@@ -594,13 +594,13 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
 
       if( pCTW->iMaxWindow == 0 )
       {
-         ULONG ulSize;
+         HB_SIZE ulSize;
 
          HB_GTSELF_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
          pCTW->iShadowWidth = hb_ctw_CalcShadowWidth( pCTW->iMapHeight, pCTW->iMapWidth );
          if( !pCTW->fBoardSet )
             hb_ctw_SetWindowBoard( pCTW, 0, 0, pCTW->iMapHeight - 1, pCTW->iMapWidth - 1 );
-         ulSize = ( ULONG ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+         ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
          pCTW->pWindowMap = ( int * ) hb_xgrab( ulSize );
          pCTW->pShadowMap = ( int * ) hb_xgrab( ulSize );
          hb_ctw_ClearMap( pCTW );
@@ -669,7 +669,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
 
    HB_GTSELF_GETCOLORDATA( pCTW->pGT, &pWnd->piColors, &pWnd->iColorCount, &pWnd->iColorIndex );
 
-   pWnd->screenBuffer = ( PHB_SCREENCELL ) hb_xgrab( ( ULONG ) pWnd->iHeight *
+   pWnd->screenBuffer = ( PHB_SCREENCELL ) hb_xgrab( ( HB_SIZE ) pWnd->iHeight *
                                     pWnd->iWidth * sizeof( HB_SCREENCELL ) );
 
    if( pWnd->iShadowAttr >= 0 )
@@ -1318,7 +1318,7 @@ static int hb_ctw_gt_MaxRow( PHB_GT pGT )
  */
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, ULONG ulLength )
+static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength )
 {
    int iLen = 0;
    HB_BOOL bDisp = HB_FALSE;
@@ -1814,12 +1814,12 @@ static HB_BOOL hb_ctw_gt_Resize( PHB_GT pGT, int iRows, int iCols )
 
       if( pCTW->iMaxWindow > 0 )
       {
-         ULONG ulSize;
+         HB_SIZE ulSize;
 
          pCTW->iMapHeight = iRows;
          pCTW->iMapWidth  = iCols;
          pCTW->iShadowWidth = hb_ctw_CalcShadowWidth( pCTW->iMapHeight, pCTW->iMapWidth );
-         ulSize = ( ULONG ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+         ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
          pCTW->pWindowMap = ( int * ) hb_xrealloc( pCTW->pWindowMap, ulSize );
          pCTW->pShadowMap = ( int * ) hb_xrealloc( pCTW->pShadowMap, ulSize );
       }
@@ -1919,11 +1919,11 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       if( fScreen )
       {
          PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
-         ULONG ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
+         HB_SIZE ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
          int iKey, iDspCount, iLines = 0, iTop, iLeft, iBottom, iRight,
              iMnuCol, iPos, iClr, iWnd, iPrevWnd, i;
          const char * szMessage = hb_itemGetCPtr( pMessage );
-         ULONG ulLen = hb_itemGetCLen( pMessage );
+         HB_SIZE ulLen = hb_itemGetCLen( pMessage );
 
          ulMaxWidth = iCols - 4;
          while( ul < ulLen )

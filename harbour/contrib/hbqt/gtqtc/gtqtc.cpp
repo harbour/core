@@ -1390,7 +1390,7 @@ void DrawingArea::copyTextOnClipboard( void )
    int right  = rectRC.right();
    int bottom = rectRC.bottom();
 
-   ULONG ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+   HB_SIZE ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
    char * sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
 
    int j, irow, icol;

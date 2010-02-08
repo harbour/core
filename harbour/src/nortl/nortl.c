@@ -80,8 +80,8 @@ typedef struct _HB_MEMINFO
 {
    struct _HB_MEMINFO * pPrevBlock;
    struct _HB_MEMINFO * pNextBlock;
-   ULONG  ulSize;
-   HB_U32 Signature;
+   HB_SIZE ulSize;
+   HB_U32  Signature;
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
@@ -99,7 +99,7 @@ static long s_ulMemoryConsumed = 0;    /* memory max size consumed */
 
 #endif /* HB_FM_STATISTICS */
 
-void * hb_xgrab( ULONG ulSize )        /* allocates fixed memory, exits on failure */
+void * hb_xgrab( HB_SIZE ulSize )        /* allocates fixed memory, exits on failure */
 {
    void * pMem;
 
@@ -137,11 +137,11 @@ void * hb_xgrab( ULONG ulSize )        /* allocates fixed memory, exits on failu
    return pMem;
 }
 
-void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
 {
 #ifdef HB_FM_STATISTICS
    PHB_MEMINFO pMemBlock;
-   ULONG ulMemSize;
+   HB_SIZE ulMemSize;
    void * pResult;
 
    if( ulSize == 0 )
@@ -226,9 +226,9 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       hb_errInternal( HB_EI_XFREENULL, "hb_xfree called with a NULL pointer", NULL, NULL );
 }
 
-ULONG hb_xquery( int iMode )
+HB_ULONG hb_xquery( int iMode )
 {
-   ULONG ulResult = 0;
+   HB_ULONG ulResult = 0;
 
 #ifdef HB_FM_STATISTICS
    switch( iMode )
@@ -248,7 +248,7 @@ ULONG hb_xquery( int iMode )
 }
 
 #ifdef HB_FM_STATISTICS
-static char * hb_memToStr( char * szBuffer, void * pMem, ULONG ulSize )
+static char * hb_memToStr( char * szBuffer, void * pMem, HB_SIZE ulSize )
 {
    unsigned char * byMem = ( HB_BYTE * ) pMem;
    char * pDest = szBuffer;
@@ -349,7 +349,7 @@ void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar
 }
 
 /* console */
-void hb_conOutErr( const char * pStr, ULONG ulLen )
+void hb_conOutErr( const char * pStr, HB_SIZE ulLen )
 {
    if( ulLen == 0 )
       ulLen = strlen( pStr );
@@ -372,14 +372,14 @@ int hb_charLower( int iChar )
    return HB_TOLOWER( iChar );
 }
 
-const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
+const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
 {
    HB_SYMBOL_UNUSED( pulSize );
    HB_SYMBOL_UNUSED( pszFree );
    return szName;
 }
 
-const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
+const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
 {
    HB_SYMBOL_UNUSED( pulSize );
    HB_SYMBOL_UNUSED( pszFree );
@@ -429,7 +429,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      ULONG ulLen;
+      HB_SIZE ulLen;
 
       if( pszFree )
       {

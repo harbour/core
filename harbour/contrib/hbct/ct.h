@@ -79,10 +79,10 @@ HB_EXTERN_BEGIN
 
 /* CT subsystem error throwing functions */
 extern USHORT ct_error( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                        const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG uiArgCount, ... );
+                        const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, HB_ULONG uiArgCount, ... );
 
 extern PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                                const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG uiArgCount, ... );
+                                const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, HB_ULONG uiArgCount, ... );
 
 /* set argument error behaviour */
 extern void ct_setargerrormode( int iMode );

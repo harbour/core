@@ -66,7 +66,7 @@ HB_FUNC( HB_PROCESSOPEN )
    HB_BOOL fDetach = hb_parl( 5 );
    HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
    HB_FHANDLE hProcess;
-   ULONG ulPID;
+   HB_ULONG ulPID;
 
    if( szName &&
        ( pStdIn  || HB_ISNIL( 2 ) ) &&

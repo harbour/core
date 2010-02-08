@@ -64,8 +64,8 @@
 
 static HB_USHORT          s_rddidSQLBASE = 0;
 static SQLDDCONNECTION *  s_pConnection = NULL;
-static ULONG              s_ulConnectionCount = 0;
-static ULONG              s_ulConnectionCurrent = 0;
+static HB_ULONG           s_ulConnectionCount = 0;
+static HB_ULONG           s_ulConnectionCurrent = 0;
 static char *             s_szError = NULL;
 static HB_ERRCODE         s_errCode = 0;
 static char *             s_szQuery = NULL;
@@ -126,9 +126,9 @@ static HB_ERRCODE sddDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE sddExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE sddOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE sddClose( SQLBASEAREAP pArea );
-static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
 
 
 static SDDNODE sddNull = {
@@ -186,7 +186,7 @@ static HB_ERRCODE sddClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
@@ -216,7 +216,7 @@ static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM p
 }
 
 
-static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
@@ -273,7 +273,7 @@ static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
       return HB_FAILURE;
 
 
-   if ( ! pArea->fFetched && pArea->pSDD->GoTo( pArea, ( ULONG ) -1 ) == HB_FAILURE )
+   if ( ! pArea->fFetched && pArea->pSDD->GoTo( pArea, ( HB_ULONG ) -1 ) == HB_FAILURE )
       return HB_FAILURE;
 
    pArea->area.fTop = HB_FALSE;
@@ -286,7 +286,7 @@ static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    if ( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -400,7 +400,7 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, HB_LONG lToSkip )
       pArea->area.fBof = bBof;
       pArea->area.fEof = bEof;
    }
-   else if ( lToSkip < 0 && ( ULONG ) ( -lToSkip ) >= pArea->ulRecNo )
+   else if ( lToSkip < 0 && ( HB_ULONG ) ( -lToSkip ) >= pArea->ulRecNo )
    {
       errCode = SELF_GOTO( ( AREAP ) pArea, 1 );
       pArea->area.fBof = HB_TRUE;
@@ -471,7 +471,7 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 }
 
 
-static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
   /*  TODO: should we use this code?
   if ( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
@@ -576,14 +576,14 @@ static HB_ERRCODE sqlbaseRecall( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlbaseRecCount( SQLBASEAREAP pArea, ULONG * pRecCount )
+static HB_ERRCODE sqlbaseRecCount( SQLBASEAREAP pArea, HB_ULONG * pRecCount )
 {
    * pRecCount = pArea->ulRecCount;
    return HB_SUCCESS;
 }
 
 
-static HB_ERRCODE sqlbaseRecNo( SQLBASEAREAP pArea, ULONG * ulRecNo )
+static HB_ERRCODE sqlbaseRecNo( SQLBASEAREAP pArea, HB_ULONG * ulRecNo )
 {
    * ulRecNo = pArea->ulRecNo;
    return HB_SUCCESS;
@@ -593,7 +593,7 @@ static HB_ERRCODE sqlbaseRecNo( SQLBASEAREAP pArea, ULONG * ulRecNo )
 static HB_ERRCODE sqlbaseRecId( SQLBASEAREAP pArea, PHB_ITEM pRecNo )
 {
    HB_ERRCODE errCode;
-   ULONG ulRecNo;
+   HB_ULONG ulRecNo;
 
    errCode = SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
    hb_itemPutNInt( pRecNo, ulRecNo );
@@ -613,7 +613,7 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
 
    if ( pArea->pRow )
    {
-      ULONG    ulIndex;
+      HB_ULONG ulIndex;
 
       for ( ulIndex = 0; ulIndex <= pArea->ulRecCount; ulIndex++ )
       {
@@ -902,7 +902,7 @@ static HB_ERRCODE sqlbaseInit( LPRDDNODE pRDD )
 
 static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 {
-   ULONG     ul;
+   HB_ULONG ul;
 
    HB_SYMBOL_UNUSED( pRDD );
 
@@ -938,10 +938,10 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 }
 
 
-static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem )
 {
-   ULONG            ulConn;
-   SQLDDCONNECTION*   pConn;
+   HB_ULONG ulConn;
+   SQLDDCONNECTION * pConn;
 
    HB_SYMBOL_UNUSED( pRDD );
 
@@ -960,7 +960,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulCon
 
       case RDDI_CONNECTION:
       {
-         ULONG ulNewConnection = 0;
+         HB_ULONG ulNewConnection = 0;
 
          if ( hb_itemType( pItem ) & HB_IT_NUMERIC )
          {
@@ -985,9 +985,9 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulCon
 
       case RDDI_CONNECT:
       {
-         PSDDNODE    pNode = NULL;
-         ULONG       ul;
-         const char* pStr;
+         PSDDNODE     pNode = NULL;
+         HB_ULONG     ul;
+         const char * pStr;
 
          /* Find free connection handle */
          for ( ul = 0; ul < s_ulConnectionCount; ul++ )

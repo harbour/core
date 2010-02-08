@@ -105,7 +105,7 @@ PHB_ITEM hb_param( int iParam, long lMask )
    return NULL;
 }
 
-PHB_ITEM  hb_paramError( int iParam )
+PHB_ITEM hb_paramError( int iParam )
 {
    static HB_ITEM s_NIL;
 
@@ -120,14 +120,14 @@ PHB_ITEM  hb_paramError( int iParam )
    return pParam;
 }
 
-ULONG  hb_parinfo( int iParam )
+HB_ULONG hb_parinfo( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
 
    if( iParam == 0 )
-      return ( ULONG ) hb_pcount();
+      return ( HB_ULONG ) hb_pcount();
    else
    {
       if( iParam >= -1 && iParam <= hb_pcount() )
@@ -138,7 +138,7 @@ ULONG  hb_parinfo( int iParam )
          if( uiType & HB_IT_BYREF )
             uiType |= HB_ITEM_TYPE( hb_itemUnRef( pItem ) );
 
-         return ( ULONG ) uiType;
+         return ( HB_ULONG ) uiType;
       }
       else
          return 0;

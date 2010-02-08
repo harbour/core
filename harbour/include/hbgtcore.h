@@ -329,8 +329,8 @@ typedef struct _HB_GT_BASE
    int            iLastPut;
    int            inkeyLast;
    HB_BYTE *      StrBuffer;
-   ULONG          StrBufferSize;
-   ULONG          StrBufferPos;
+   HB_SIZE        StrBufferSize;
+   HB_SIZE        StrBufferPos;
 
    PHB_ITEM       pNotifierBlock;
    PHB_ITEM       pCargo;

@@ -92,7 +92,7 @@ typedef struct _HB_GTCGI
    int            iLineBufSize;
    char *         sLineBuf;
    char *         szCrLf;
-   ULONG          ulCrLf;
+   HB_SIZE        ulCrLf;
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;

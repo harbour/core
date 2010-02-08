@@ -638,7 +638,7 @@ long hb_itemGetNL( PHB_ITEM pItem )
 
       else if( HB_IS_DOUBLE( pItem ) )
 #if defined( __GNUC__ )
-         return ( long ) ( ULONG ) pItem->item.asDouble.value;
+         return ( long ) ( HB_ULONG ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
 #endif

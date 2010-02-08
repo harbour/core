@@ -74,7 +74,7 @@ static HB_ERRCODE fbDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE fbExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE fbOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE fbClose( SQLBASEAREAP pArea );
-static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
 static SDDNODE firebirddd = {
@@ -144,7 +144,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    isc_db_handle    db = ( isc_db_handle ) 0;
    char             parambuf[ 520 ];
    int              i;
-   ULONG            ul;
+   HB_ULONG         ul;
 
    i = 0;
    parambuf[ i++ ] = isc_dpb_version1;
@@ -441,7 +441,7 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    ISC_STATUS      status[ 5 ];
    XSQLVAR*        pVar;

@@ -381,10 +381,10 @@ static int hb_fsProcessExec( const char *pszFilename,
 }
 #endif
 
-HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
-                             HB_FHANDLE *phStdin, HB_FHANDLE *phStdout,
-                             HB_FHANDLE *phStderr,
-                             HB_BOOL fDetach, ULONG *pulPID )
+HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
+                             HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
+                             HB_FHANDLE * phStderr,
+                             HB_BOOL fDetach, HB_ULONG * pulPID )
 {
    HB_FHANDLE hResult = FS_ERROR;
    char * pszFree = NULL;

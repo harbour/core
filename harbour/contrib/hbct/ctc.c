@@ -62,14 +62,14 @@
    - function adapted from errorapi.c */
 HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                     const char * szDescription, const char * szOperation,
-                    HB_ERRCODE errOsCode, HB_USHORT uiFlags, ULONG ulArgCount, ... )
+                    HB_ERRCODE errOsCode, HB_USHORT uiFlags, HB_ULONG ulArgCount, ... )
 {
    HB_USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_error(%hu, %d, %d, %s, %s, %d, %hu, %lu)",
              uiSeverity, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags, ulArgCount ) );
@@ -130,14 +130,14 @@ HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errS
    - function adapted from errorapi.c */
 PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                          const char * szDescription, const char * szOperation,
-                         HB_ERRCODE errOsCode, HB_USHORT uiFlags, ULONG ulArgCount, ... )
+                         HB_ERRCODE errOsCode, HB_USHORT uiFlags, HB_ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   ULONG ulArgPos;
+   HB_ULONG ulArgPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_error_subst(%hu, %d, %d, %s, %s, %d, %hu, %lu)",
              uiSeverity, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags, ulArgCount ) );

@@ -119,7 +119,7 @@ static PHB_ITEM s_pOnceMutex = NULL;
    static int s_waiting_for_threads = 0;
 
 #  if defined( HB_PTHREAD_API )
-   static void hb_threadTimeInit( struct timespec * ts, ULONG ulMilliSec )
+   static void hb_threadTimeInit( struct timespec * ts, HB_ULONG ulMilliSec )
    {
 #     if _POSIX_C_SOURCE >= 199309L
       clock_gettime( CLOCK_REALTIME, ts );
@@ -320,7 +320,7 @@ static PHB_WAIT_LIST _hb_thread_wait_list( void )
 static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
 {
 #if defined( HB_OS_OS2 )
-   ULONG ulPostCount = 0;
+   HB_ULONG ulPostCount = 0;
    DosResetEventSem( pWaiting->cond, &ulPostCount );
 #elif defined( HB_OS_WIN )
    /* It's not necessary because we have workaround for possible race
@@ -404,7 +404,7 @@ static HB_BOOL _hb_thread_cond_broadcast( HB_COND_T * cond )
    return HB_TRUE;
 }
 
-static HB_BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critical, ULONG ulMillisec )
+static HB_BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critical, HB_ULONG ulMillisec )
 {
    PHB_WAIT_LIST pWaiting = _hb_thread_wait_list();
    HB_BOOL fResult = HB_FALSE;
@@ -693,7 +693,7 @@ HB_BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
 #endif
 }
 
-HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMilliSec )
+HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULONG ulMilliSec )
 {
 #if !defined( HB_MT_VM )
 
@@ -922,7 +922,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 {
 #if defined( HB_MT_VM )
    PHB_ITEM pThItm = ( PHB_ITEM ) Cargo;
-   ULONG ulPCount, ulParam;
+   HB_ULONG ulPCount, ulParam;
    PHB_THREADSTATE pThread;
    HB_BOOL fSend = HB_FALSE;
 
@@ -1042,7 +1042,7 @@ static PHB_THREADSTATE hb_thParam( int iParam, int iPos )
 
 HB_FUNC( HB_THREADSTART )
 {
-   ULONG ulAttr = 0, ulStart = 1;
+   HB_ULONG ulAttr = 0, ulStart = 1;
    const char * szFuncName = NULL;
    PHB_SYMB pSymbol = NULL;
    PHB_ITEM pStart;
@@ -1050,7 +1050,7 @@ HB_FUNC( HB_THREADSTART )
    pStart = hb_param( ulStart, HB_IT_ANY );
    while( pStart && HB_IS_NUMERIC( pStart ) )
    {
-      ulAttr |= ( ULONG ) hb_itemGetNL( pStart );
+      ulAttr |= ( HB_ULONG ) hb_itemGetNL( pStart );
       pStart = hb_param( ++ulStart, HB_IT_ANY );
    }
 
@@ -1084,7 +1084,7 @@ HB_FUNC( HB_THREADSTART )
       HB_STACK_TLS_PRELOAD
       PHB_ITEM pReturn;
       PHB_THREADSTATE pThread;
-      ULONG ulPCount, ulParam;
+      HB_ULONG ulPCount, ulParam;
 
       pThread = hb_threadStateNew();
       pReturn = pThread->pThItm;
@@ -1202,7 +1202,7 @@ HB_FUNC( HB_THREADID )
 
 #if defined( HB_MT_VM )
 static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
-                          HB_BOOL fAll, ULONG ulMilliSec )
+                          HB_BOOL fAll, HB_ULONG ulMilliSec )
 {
    int i, iFinished, iResult = 0;
    HB_BOOL fExit = ulMilliSec == 0;
@@ -1277,7 +1277,7 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
          if( timer <= curr )
             fExit = HB_TRUE;
          else
-            ulMilliSec = ( ULONG ) ( timer - curr );
+            ulMilliSec = ( HB_ULONG ) ( timer - curr );
       }
 #endif
 
@@ -1364,7 +1364,7 @@ HB_FUNC( HB_THREADWAIT )
 #  define HB_THREAD_WAIT_ALLOC  16
    HB_STACK_TLS_PRELOAD
    HB_BOOL fAll;
-   ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
+   HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
    PHB_THREADSTATE * pThreads, pAlloc[ HB_THREAD_WAIT_ALLOC ];
    int iThreads = -1;
 
@@ -1403,7 +1403,7 @@ HB_FUNC( HB_THREADWAIT )
       if( HB_ISNUM( 2 ) )
       {
          double dTimeOut = hb_parnd( 2 );
-         ulMilliSec = dTimeOut > 0 ? ( ULONG ) ( dTimeOut * 1000 ) : 0;
+         ulMilliSec = dTimeOut > 0 ? ( HB_ULONG ) ( dTimeOut * 1000 ) : 0;
       }
 
       fAll = hb_parl( 3 );
@@ -1717,7 +1717,7 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
          }
          else
          {
-            ULONG ulLen = hb_arrayLen( pMutex->events );
+            HB_ULONG ulLen = hb_arrayLen( pMutex->events );
             iCount -= ulLen;
             if( iCount > 0 )
                hb_arraySize( pMutex->events, ulLen + iCount );
@@ -1737,7 +1737,7 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
    }
 }
 
-HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
+HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec,
                                 PHB_ITEM pItemSync )
 {
    PHB_MUTEX pMutex = hb_mutexPtr( pItemMtx ), pSyncMutex = NULL;
@@ -1954,7 +1954,7 @@ HB_BOOL hb_threadMutexLock( PHB_ITEM pItem )
    return fResult;
 }
 
-HB_BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
+HB_BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, HB_ULONG ulMilliSec )
 {
    PHB_MUTEX pMutex = hb_mutexPtr( pItem );
    HB_BOOL fResult = HB_FALSE;
@@ -2057,7 +2057,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting 
       else if( pMutex->waiters )
       {
          int iCount = pMutex->waiters;
-         ULONG ulLen;
+         HB_ULONG ulLen;
 
          if( pMutex->events )
          {
@@ -2104,7 +2104,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting 
       else if( pMutex->waiters )
       {
          int iCount = pMutex->waiters;
-         ULONG ulLen;
+         HB_ULONG ulLen;
 
          if( pMutex->events )
          {
@@ -2238,7 +2238,7 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear )
    return pResult;
 }
 
-PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, HB_BOOL fClear )
+PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_BOOL fClear )
 {
    PHB_MUTEX pMutex = hb_mutexPtr( pItem );
    PHB_ITEM pResult = NULL;
@@ -2370,10 +2370,10 @@ HB_FUNC( HB_MUTEXLOCK )
       HB_STACK_TLS_PRELOAD
       if( HB_ISNUM( 2 ) )
       {
-         ULONG ulMilliSec = 0;
+         HB_ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
-            ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
+            ulMilliSec = ( HB_ULONG ) ( dTimeOut * 1000 );
          hb_retl( hb_threadMutexTimedLock( pItem, ulMilliSec ) );
       }
       else
@@ -2419,10 +2419,10 @@ HB_FUNC( HB_MUTEXSUBSCRIBE )
 
       if( HB_ISNUM( 2 ) )
       {
-         ULONG ulMilliSec = 0;
+         HB_ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
-            ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
+            ulMilliSec = ( HB_ULONG ) ( dTimeOut * 1000 );
          pResult = hb_threadMutexTimedSubscribe( pItem, ulMilliSec, HB_FALSE );
       }
       else
@@ -2450,10 +2450,10 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
 
       if( HB_ISNUM( 2 ) )
       {
-         ULONG ulMilliSec = 0;
+         HB_ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
-            ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
+            ulMilliSec = ( HB_ULONG ) ( dTimeOut * 1000 );
          pResult = hb_threadMutexTimedSubscribe( pItem, ulMilliSec, HB_TRUE );
       }
       else

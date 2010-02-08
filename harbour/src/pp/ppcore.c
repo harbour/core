@@ -264,7 +264,7 @@ static void hb_pp_operatorsFree( PHB_PP_OPERATOR pOperators, int iOperators )
 }
 
 static const HB_PP_OPERATOR * hb_pp_operatorFind( PHB_PP_STATE pState,
-                                                  char * buffer, ULONG ulLen )
+                                                  char * buffer, HB_SIZE ulLen )
 {
    const HB_PP_OPERATOR * pOperator = pState->pOperators;
    int i = pState->iOperators;
@@ -319,14 +319,14 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
 }
 
 #ifdef HB_PP_MULTILINE_STRING
-static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, ULONG ulLeft )
+static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, HB_SIZE ulLeft )
 {
    if( ulLeft < pBuffer->ulLen )
       pBuffer->ulLen = ulLeft;
 }
 #endif
 
-static ULONG hb_membufLen( const PHB_MEM_BUFFER pBuffer )
+static HB_SIZE hb_membufLen( const PHB_MEM_BUFFER pBuffer )
 {
    return pBuffer->ulLen;
 }
@@ -346,7 +346,7 @@ static void hb_membufAddCh( PHB_MEM_BUFFER pBuffer, char ch )
    pBuffer->pBufPtr[ pBuffer->ulLen++ ] = ch;
 }
 
-static void hb_membufAddData( PHB_MEM_BUFFER pBuffer, const char * data, ULONG ulLen )
+static void hb_membufAddData( PHB_MEM_BUFFER pBuffer, const char * data, HB_SIZE ulLen )
 {
    if( pBuffer->ulLen + ulLen > pBuffer->ulAllocated )
    {
@@ -458,7 +458,7 @@ static PHB_PP_TOKEN hb_pp_tokenResultEnd( PHB_PP_TOKEN * pTokenPtr, HB_BOOL fDir
    return pNext;
 }
 
-static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, ULONG ulLen,
+static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, HB_SIZE ulLen,
                                     int iSpaces, HB_USHORT type )
 {
    PHB_PP_TOKEN pToken = ( PHB_PP_TOKEN ) hb_xgrab( sizeof( HB_PP_TOKEN ) );
@@ -492,7 +492,7 @@ static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, ULONG ulLen,
 }
 
 static void hb_pp_tokenSetValue( PHB_PP_TOKEN pToken,
-                                 const char * value, ULONG ulLen )
+                                 const char * value, HB_SIZE ulLen )
 {
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
       hb_xfree( ( void * ) pToken->value );
@@ -527,7 +527,7 @@ static PHB_PP_TOKEN hb_pp_tokenClone( PHB_PP_TOKEN pSource )
 }
 
 static void hb_pp_tokenAdd( PHB_PP_TOKEN ** pTokenPtr,
-                            const char * value, ULONG ulLen,
+                            const char * value, HB_SIZE ulLen,
                             int iSpaces, HB_USHORT type )
 {
    PHB_PP_TOKEN pToken = hb_pp_tokenNew( value, ulLen, iSpaces, type );
@@ -549,7 +549,7 @@ static void hb_pp_tokenAddCmdSep( PHB_PP_STATE pState )
    }
 }
 
-static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG ulLen,
+static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, HB_SIZE ulLen,
                                 HB_USHORT type )
 {
    if( pState->fCanNextLine )
@@ -631,7 +631,7 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
 }
 
 static void hb_pp_tokenAddStreamFunc( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
-                                      const char * value, ULONG ulLen )
+                                      const char * value, HB_SIZE ulLen )
 {
    while( pToken )
    {
@@ -714,8 +714,8 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
    }
 }
 
-static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, ULONG ulLen,
-                               ULONG ul, ULONG * pulAt )
+static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, HB_SIZE ulLen,
+                               HB_SIZE ul, HB_SIZE * pulAt )
 {
    char cQuote = 0;
 
@@ -729,7 +729,7 @@ static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, ULONG ulLen,
       {
          if( cQuote && !fQuote )
          {
-            ULONG u = ul + 1;
+            HB_SIZE u = ul + 1;
             cQuote = 0;
             while( u < ulLen )
             {
@@ -769,9 +769,9 @@ static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, ULONG ulLen,
    return HB_FALSE;
 }
 
-static HB_BOOL hb_pp_hasCommand( char * pBuffer, ULONG ulLen, ULONG * pulAt, int iCmds, ... )
+static HB_BOOL hb_pp_hasCommand( char * pBuffer, HB_SIZE ulLen, HB_SIZE * pulAt, int iCmds, ... )
 {
-   ULONG ul = 0, u;
+   HB_SIZE ul = 0, u;
    char * cmd;
    va_list va;
    int i;
@@ -837,7 +837,7 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
       {
          int iLines = 0;
          char * pBuffer;
-         ULONG ulLen;
+         HB_SIZE ulLen;
 
          if( pState->pFile->fGenLineInfo )
          {
@@ -877,7 +877,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 {
    PHB_PP_TOKEN * pInLinePtr;
    char * pBuffer, ch;
-   ULONG ulLen, ul;
+   HB_SIZE ulLen, ul;
    HB_BOOL fDump = HB_FALSE;
    int iLines = 0;
 
@@ -1101,7 +1101,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          else if( ( ( ch == 'e' || ch == 'E' ) && ulLen > 1 &&
                     pBuffer[ 1 ] == '"' ) || ( ch == '"' && pState->fEscStr ) )
          {
-            ULONG ulStrip, u;
+            HB_SIZE ulStrip, u;
 
             if( ch != '"' )
                ++ul;
@@ -1148,7 +1148,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                                 HB_PP_TOKEN_STRING );
             if( ul == ulLen )
             {
-               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
+               HB_SIZE ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
                hb_membufAddCh( pState->pBuffer, '\0' );
                pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
                hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer + u - 1 );
@@ -1164,7 +1164,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                                 HB_PP_TOKEN_TIMESTAMP );
             if( ul == ulLen )
             {
-               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
+               HB_SIZE ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
                hb_membufAddCh( pState->pBuffer, '\0' );
                pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
                hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
@@ -1180,7 +1180,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                                 HB_PP_TOKEN_DATE );
             if( ul == ulLen )
             {
-               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
+               HB_SIZE ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
                hb_membufAddCh( pState->pBuffer, '\0' );
                pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
                hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
@@ -1197,7 +1197,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 #ifdef HB_PP_MULTILINE_STRING
             while( ul == ulLen )
             {
-               ULONG u = 1;
+               HB_SIZE u = 1;
                while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
                if( ul >= u && pBuffer[ ul - u ] == ';' )
                {
@@ -1222,7 +1222,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                                 HB_PP_TOKEN_STRING );
             if( ul == ulLen )
             {
-               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
+               HB_SIZE ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
                hb_membufAddCh( pState->pBuffer, '\0' );
                pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
                hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
@@ -1955,7 +1955,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
    return pFile;
 }
 
-static PHB_PP_FILE hb_pp_FileBufNew( const char * pLineBuf, ULONG ulLineBufLen )
+static PHB_PP_FILE hb_pp_FileBufNew( const char * pLineBuf, HB_SIZE ulLineBufLen )
 {
    PHB_PP_FILE pFile;
 
@@ -2139,7 +2139,7 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
    if( pFile )
    {
       char * pBuffer = ( char * ) hb_xgrab( MAX_STREAM_SIZE + 1 );
-      ULONG ulSize;
+      HB_SIZE ulSize;
 
       if( ! pState->pStreamBuffer )
          pState->pStreamBuffer = hb_membufNew();
@@ -2188,7 +2188,7 @@ static HB_BOOL hb_pp_pragmaOperatorNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken
 
    if( !HB_PP_TOKEN_ISEOC( pToken ) && HB_PP_TOKEN_CANJOIN( pToken->type ) )
    {
-      ULONG ulLen;
+      HB_SIZE ulLen;
 
       hb_membufFlush( pState->pBuffer );
       do
@@ -2211,7 +2211,7 @@ static HB_BOOL hb_pp_pragmaOperatorNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken
       {
          PHB_PP_OPERATOR pOperator;
          char * pBuffer = hb_membufPtr( pState->pBuffer ), * pDstBuffer;
-         ULONG ulDstLen = hb_membufLen( pState->pBuffer ) - ulLen;
+         HB_SIZE ulDstLen = hb_membufLen( pState->pBuffer ) - ulLen;
 
          if( ulDstLen )
             pDstBuffer = pBuffer + ulLen;
@@ -4310,7 +4310,7 @@ static void hb_pp_processCondDefined( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
          if( szValue )
          {
-            hb_pp_tokenSetValue( pToken, szValue, ( ULONG ) strlen( szValue ) );
+            hb_pp_tokenSetValue( pToken, szValue, ( HB_SIZE ) strlen( szValue ) );
             HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_NUMBER );
             pToken->pNext = pNext->pNext->pNext->pNext;
             pNext->pNext->pNext->pNext = NULL;
@@ -5257,7 +5257,7 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
       if( pDefRule->markers > 0 )
       {
          HB_USHORT marker;
-         ULONG ulBit;
+         HB_ULONG ulBit;
 
          pMarkers = ( PHB_PP_MARKER ) hb_xgrab( pDefRule->markers * sizeof( HB_PP_MARKER ) );
          memset( pMarkers, '\0', pDefRule->markers * sizeof( HB_PP_MARKER ) );
@@ -5575,7 +5575,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 /*
  * close all open input files and set the given buffer as input stream
  */
-HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, ULONG ulLen )
+HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE ulLen )
 {
    hb_pp_InFileFree( pState );
 
@@ -5838,7 +5838,7 @@ void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
 /*
  * return next preprocessed line
  */
-char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
+char * hb_pp_nextLine( PHB_PP_STATE pState, HB_SIZE * pulLen )
 {
    if( pState->pFile )
    {
@@ -5881,13 +5881,13 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
 /*
  * preprocess given buffer
  */
-char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, ULONG * pulLen )
+char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, HB_SIZE * pulLen )
 {
    PHB_PP_TOKEN pToken;
    PHB_PP_FILE pFile;
    HB_BOOL fError = HB_FALSE;
    HB_USHORT ltype;
-   ULONG ulLen;
+   HB_SIZE ulLen;
 
    if( !pState->pOutputBuffer )
       pState->pOutputBuffer = hb_membufNew();
@@ -5937,7 +5937,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, ULONG * pulLen 
 /*
  * create new PP context for macro compiler
  */
-PHB_PP_STATE hb_pp_lexNew( const char * pMacroString, ULONG ulLen )
+PHB_PP_STATE hb_pp_lexNew( const char * pMacroString, HB_SIZE ulLen )
 {
    PHB_PP_STATE pState = hb_pp_new();
 

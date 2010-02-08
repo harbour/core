@@ -735,7 +735,7 @@ static const char * hb_inet_ntoa( struct in_addr * addr, char * pBuffer )
     * in many systems inet_ntoa() returns pointer to
     * static buffer and is not MT safe.
     */
-   ULONG u = ntohl( addr->s_addr );
+   HB_ULONG u = ntohl( addr->s_addr );
    hb_snprintf( pBuffer, INET_ADDRSTRLEN, "%hd.%hd.%hd.%hd",
                 HB_UHBYTE( u ), HB_ULBYTE( u ), HB_HIBYTE( u ), HB_LOBYTE( u ) );
    return pBuffer;

@@ -80,7 +80,7 @@
 
 typedef struct _MIXKEY
 {
-   ULONG     rec;
+   HB_ULONG  rec;
    HB_BYTE   val[ 1 ];
 } MIXKEY, *LPMIXKEY;
 
@@ -98,12 +98,12 @@ typedef struct _MIXTAG
    HB_USHORT        uiLen;
 
    LPMIXKEY*        pKeys;
-   ULONG            ulRecMax;
-   ULONG            ulRecCount;
+   HB_ULONG         ulRecMax;
+   HB_ULONG         ulRecCount;
 
    PHB_CODEPAGE     pCodepage;  /* National sorttable for character key tags, NULL otherwise */
 
-   ULONG            ulKeyNo;
+   HB_ULONG         ulKeyNo;
 } MIXTAG, *LPMIXTAG;
 
 
@@ -178,25 +178,25 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 *  Memory Index
 *************************************************************************/
 
-static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
+static LPMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
    LPMIXKEY    pKey;
-   ULONG       ul;
+   HB_ULONG    ul;
    double      dbl;
    HB_BYTE     buf[ 8 ];
 
-   pKey = (LPMIXKEY) hb_xgrab( sizeof( ULONG ) + uiLen );
+   pKey = (LPMIXKEY) hb_xgrab( sizeof( HB_ULONG ) + uiLen );
    pKey->rec = ulRecNo;
 
    switch ( bType )
    {
       case 'C':
          ul = hb_itemGetCLen( pItem );
-         if( ul > ( ULONG ) uiLen )
+         if( ul > ( HB_ULONG ) uiLen )
             ul = uiLen;
          memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
-         if( ul < ( ULONG ) uiLen )
-            memset( pKey->val + ul, ' ', ( ULONG ) uiLen - ul );
+         if( ul < ( HB_ULONG ) uiLen )
+            memset( pKey->val + ul, ' ', ( HB_ULONG ) uiLen - ul );
          break;
 
       case 'N':
@@ -283,7 +283,7 @@ static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, HB_USHORT uiLen, PHB_CODEP
 
    if( pCodepage )
    {
-      i = hb_cdpcmp( ( const char * ) p1->val, ( ULONG ) uiLen, ( const char * ) p2->val, ( ULONG ) uiLen, pCodepage, 0 );
+      i = hb_cdpcmp( ( const char * ) p1->val, ( HB_ULONG ) uiLen, ( const char * ) p2->val, ( HB_ULONG ) uiLen, pCodepage, 0 );
    }
    else
      i = memcmp( p1->val, p2->val, uiLen );
@@ -306,9 +306,9 @@ static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, HB_USHORT uiLen, PHB_CODEP
 }
 
 
-static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
+static void mixQSort( LPMIXKEY* pKeys, HB_ULONG left, HB_ULONG right, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
-   ULONG     l, r;
+   HB_ULONG  l, r;
    LPMIXKEY  x, h;
 
    l = left;
@@ -338,9 +338,9 @@ static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, HB_USHORT uiLen,
 }
 
 
-static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, ULONG* ulKeyPos )
+static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, HB_ULONG* ulKeyPos )
 {
-   ULONG      l, r;
+   HB_ULONG   l, r;
    int        i = 1;
 
    if( ! pTag->ulRecCount )
@@ -379,7 +379,7 @@ static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, ULONG* ulKeyPos )
 }
 
 
-static int mixCompareKey( LPMIXTAG pTag, ULONG ulKeyPos, LPMIXKEY pKey )
+static int mixCompareKey( LPMIXTAG pTag, HB_ULONG ulKeyPos, LPMIXKEY pKey )
 {
    return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, pTag->uiLen, pTag->pCodepage );
 }
@@ -393,7 +393,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
    LPMIXKEY             pKey;
    LPDBORDERCONDINFO    pOrdCondInfo = pArea->adsarea.area.lpdbOrdCondInfo;
    ADSHANDLE            hOrder;
-   ULONG                ulRec, ulStartRec, ulNextCount = 0;
+   HB_ULONG             ulRec, ulStartRec, ulNextCount = 0;
    HB_LONG              lStep = 0;
    PHB_ITEM             pItem, pEvalItem = NULL;
 
@@ -527,7 +527,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
 
 static void mixTagDestroy( LPMIXTAG pTag )
 {
-   ULONG   ul;
+   HB_ULONG ul;
 
    hb_xfree( pTag->szName );
    hb_xfree( pTag->szKeyExpr );
@@ -585,7 +585,7 @@ static LPMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 {
    LPMIXTAG  pTag;
-   ULONG     ulRecNo;
+   HB_ULONG  ulRecNo;
 
    pTag = pArea->pTagCurrent;
 
@@ -613,7 +613,7 @@ static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 static HB_ERRCODE adsxGoTop( ADSXAREAP pArea )
 {
    LPMIXTAG  pTag;
-   ULONG     ulRecNo;
+   HB_ULONG  ulRecNo;
 
    pTag = pArea->pTagCurrent;
 
@@ -641,7 +641,7 @@ static HB_ERRCODE adsxGoTop( ADSXAREAP pArea )
 static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast )
 {
    LPMIXKEY     pMixKey;
-   ULONG        ulKeyPos, ulRecNo;
+   HB_ULONG     ulKeyPos, ulRecNo;
    HB_ERRCODE   errCode;
    HB_BOOL      fFound = HB_FALSE;
 
@@ -649,7 +649,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
       return SUPER_SEEK( ( AREAP ) pArea, bSoftSeek, pKey, bFindLast );
 
    /* TODO: pKey type validation, EG_DATATYPE runtime error */
-   pMixKey = mixKeyNew( pKey, bFindLast ? ( ULONG ) ( -1 ) : 0, pArea->pTagCurrent->bType,
+   pMixKey = mixKeyNew( pKey, bFindLast ? ( HB_ULONG ) ( -1 ) : 0, pArea->pTagCurrent->bType,
                         pArea->pTagCurrent->uiLen );
 
    /* reset any pending relations - I hope ACE make the same and the problem
@@ -698,7 +698,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
 static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
 {
    LPMIXKEY    pKey;
-   ULONG       ulKeyPos;
+   HB_ULONG    ulKeyPos;
    HB_ERRCODE  errCode = HB_SUCCESS;
 
    if( ! pArea->pTagCurrent || lToSkip == 0 )
@@ -724,8 +724,8 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
       pKey = mixKeyEval( pArea->pTagCurrent, pArea );
 
       if( mixFindKey( pArea->pTagCurrent, pKey, &ulKeyPos ) &&
-           pArea->pTagCurrent->ulRecCount > ( ULONG ) lToSkip &&
-           ulKeyPos < pArea->pTagCurrent->ulRecCount - ( ULONG ) lToSkip )
+           pArea->pTagCurrent->ulRecCount > ( HB_ULONG ) lToSkip &&
+           ulKeyPos < pArea->pTagCurrent->ulRecCount - ( HB_ULONG ) lToSkip )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
@@ -756,8 +756,8 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
       pKey = mixKeyEval( pArea->pTagCurrent, pArea );
 
       if( mixFindKey( pArea->pTagCurrent, pKey, &ulKeyPos ) &&
-           pArea->pTagCurrent->ulRecCount >= ( ULONG ) ( -lToSkip ) &&
-           ulKeyPos >= ( ULONG ) ( -lToSkip ) )
+           pArea->pTagCurrent->ulRecCount >= ( HB_ULONG ) ( -lToSkip ) &&
+           ulKeyPos >= ( HB_ULONG ) ( -lToSkip ) )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
@@ -871,7 +871,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 {
    LPMIXTAG     pTagNew, pTag;
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
-   ULONG        ulRecNo;
+   HB_ULONG     ulRecNo;
    HB_USHORT    uiLen;
    HB_BYTE      bType;
    UNSIGNED16   bValidExpr;
@@ -1169,7 +1169,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
       case DBOI_KEYNORAW :
          if( uiIndex == DBOI_POSITION && pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) )
          {
-            ULONG      ulPos;
+            HB_ULONG ulPos;
 
             ulPos = hb_itemGetNL( pOrderInfo->itmNewVal ) ;
 
@@ -1180,8 +1180,8 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          }
          else
          {
-            LPMIXKEY   pKey;
-            ULONG      ulKeyPos;
+            LPMIXKEY pKey;
+            HB_ULONG ulKeyPos;
 
             if( !pArea->adsarea.fPositioned )
                SELF_GOTO( ( AREAP ) pArea, pArea->adsarea.ulRecNo );
@@ -1199,9 +1199,9 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
       case DBOI_RELKEYPOS:
          if( pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) )
          {
-            ULONG      ulPos;
+            HB_ULONG ulPos;
 
-            ulPos = ( ULONG ) ( hb_itemGetND( pOrderInfo->itmNewVal ) * (double) pTag->ulRecCount );
+            ulPos = ( HB_ULONG ) ( hb_itemGetND( pOrderInfo->itmNewVal ) * (double) pTag->ulRecCount );
 
             if( ulPos > 0 && ulPos <= pTag->ulRecCount )
                SELF_GOTO( ( AREAP ) pArea, pTag->pKeys[ ulPos - 1 ]->rec );
@@ -1210,8 +1210,8 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          }
          else
          {
-            LPMIXKEY   pKey;
-            ULONG      ulKeyPos;
+            LPMIXKEY pKey;
+            HB_ULONG ulKeyPos;
 
             if( !pArea->adsarea.fPositioned )
                SELF_GOTO( ( AREAP ) pArea, pArea->adsarea.ulRecNo );

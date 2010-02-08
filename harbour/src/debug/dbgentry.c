@@ -334,7 +334,7 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
 void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame )
 {
    int i;
-   ULONG nProcLevel;
+   HB_ULONG nProcLevel;
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_DEBUGINFO ** infoPtr = ( HB_DEBUGINFO ** ) hb_stackDebugInfo();
    HB_DEBUGINFO *info = *infoPtr;

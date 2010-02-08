@@ -101,10 +101,10 @@ HB_FUNC( ASCIISUM )
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrSize = hb_parclen( 1 );
       HB_SIZE sPos;
-      ULONG ulResult = 0;
+      HB_ULONG ulResult = 0;
 
       for( sPos = 0; sPos < sStrSize; sPos++ )
-         ulResult += ( ULONG ) pcString[ sPos ];
+         ulResult += ( HB_ULONG ) pcString[ sPos ];
 
       hb_retnl( ulResult );
    }

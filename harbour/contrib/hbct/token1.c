@@ -104,14 +104,14 @@ static void do_token1( int iSwitch )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      ULONG ulTokenCounter = 0;
-      ULONG ulSkip;
+      HB_ULONG ulTokenCounter = 0;
+      HB_ULONG ulSkip;
       const char *pcSubStr;
       char *pcRet = NULL;
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
-      ULONG ulToken = 0;
-      ULONG ulSkipCnt;
+      HB_ULONG ulToken = 0;
+      HB_ULONG ulSkipCnt;
       const char *pc;
 
       /* separator string */

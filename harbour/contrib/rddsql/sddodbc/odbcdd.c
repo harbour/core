@@ -85,7 +85,7 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE odbcClose( SQLBASEAREAP pArea );
-static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
 static SDDNODE odbcdd =
@@ -425,7 +425,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             {
                char*    pStr;
 
-               pStr = ( char * ) hb_xgrab( ( ULONG ) pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( ( HB_ULONG ) pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
@@ -521,7 +521,7 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    SQLHSTMT     hStmt = ( SQLHSTMT ) pArea->pStmt;
    SQLRETURN    res;
@@ -556,7 +556,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_CHAR, ( SQLCHAR * ) val, 1024, &iLen ) ) )
                {
                   if( iLen > 0 )
-                     pItem = hb_itemPutCL( NULL, val, ( ULONG ) iLen );
+                     pItem = hb_itemPutCL( NULL, val, ( HB_ULONG ) iLen );
                }
                hb_xfree( val );
                break;

@@ -63,7 +63,7 @@ HB_FUNC( SX_FNAMEPARSER )
    {
       char szPathBuf[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
-      ULONG ulLen;
+      HB_SIZE ulLen;
       char * pszFree;
 
       szFileName = hb_fsNameConv( szFileName, &pszFree );

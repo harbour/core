@@ -78,8 +78,8 @@ HB_FLOCK, * PHB_FLOCK;
 typedef struct _HB_FILE
 {
    const HB_FILE_FUNCS * pFuncs;
-   ULONG          device;
-   ULONG          inode;
+   HB_ULONG       device;
+   HB_ULONG       inode;
    int            used;
    HB_BOOL        shared;
    HB_BOOL        readonly;
@@ -115,7 +115,7 @@ void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
 }
 */
 
-static PHB_FILE hb_fileFind( ULONG device, ULONG inode )
+static PHB_FILE hb_fileFind( HB_ULONG device, HB_ULONG inode )
 {
    if( s_openFiles && ( device || inode ) )
    {
@@ -132,7 +132,7 @@ static PHB_FILE hb_fileFind( ULONG device, ULONG inode )
 }
 
 static PHB_FILE hb_fileNew( HB_FHANDLE hFile, HB_BOOL fShared, HB_BOOL fReadonly,
-                            ULONG device, ULONG inode, HB_BOOL fBind )
+                            HB_ULONG device, HB_ULONG inode, HB_BOOL fBind )
 {
    PHB_FILE pFile = hb_fileFind( device, inode );
 
@@ -378,13 +378,13 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
       hFile = hb_fsExtOpen( pFilename, pDefExt, uiExFlags, pPaths, pError );
       if( hFile != FS_ERROR )
       {
-         ULONG device = 0, inode = 0;
+         HB_ULONG device = 0, inode = 0;
 #if defined( HB_OS_UNIX )
          hb_vmUnlock();
          if( fstat( hFile, &statbuf ) == 0 )
          {
-            device = ( ULONG ) statbuf.st_dev;
-            inode  = ( ULONG ) statbuf.st_ino;
+            device = ( HB_ULONG ) statbuf.st_dev;
+            inode  = ( HB_ULONG ) statbuf.st_ino;
          }
          hb_vmLock();
 #endif

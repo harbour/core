@@ -82,7 +82,7 @@ ADSHANDLE hb_ads_hConnect = 0;
 
 HB_BOOL hb_ads_bOEM = HB_FALSE;
 
-char * hb_adsOemToAnsi( const char * pszSrc, ULONG nLen )
+char * hb_adsOemToAnsi( const char * pszSrc, HB_SIZE nLen )
 {
    if( hb_ads_bOEM )
    {
@@ -106,7 +106,7 @@ char * hb_adsOemToAnsi( const char * pszSrc, ULONG nLen )
    return ( char * ) pszSrc;
 }
 
-char * hb_adsAnsiToOem( const char * pszSrc, ULONG nLen )
+char * hb_adsAnsiToOem( const char * pszSrc, HB_SIZE nLen )
 {
    if( hb_ads_bOEM )
    {
@@ -319,7 +319,7 @@ HB_FUNC( ADSISRECORDLOCKED )
 
    if( pArea )
    {
-      ULONG ulRec;
+      HB_ULONG ulRec;
       UNSIGNED16 pbLocked = 0;
 
       if( HB_ISNUM( 1 ) )
@@ -605,7 +605,7 @@ HB_FUNC( ADSKEYCOUNT )
 
                if( usBufLen )             /* had a scope with AOF or filter, walk it. Skips obey filters */
                {
-                  ULONG ulRecNo;
+                  HB_ULONG ulRecNo;
                   UNSIGNED16 u16eof;
 
                   SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
@@ -939,7 +939,7 @@ HB_FUNC( ADSGETFILTER )
       }
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ( ULONG ) ulRetVal));
+         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ( HB_ULONG ) ulRetVal));
          hb_retc_null();
       }
 
@@ -1586,11 +1586,11 @@ HB_FUNC( ADSVERSION )
    {
       case 0:
          hb_snprintf( ucVersion, sizeof( ucVersion ), "%lu.%lu%c",
-                   ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
+                   ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       case 3:
          hb_snprintf( ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
-                   ( char * ) ucDesc, ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
+                   ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       default:
          ucVersion[ 0 ] = '\0';

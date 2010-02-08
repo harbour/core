@@ -85,15 +85,15 @@ typedef struct _SQLBASEAREA
 
    LPDBRELINFO                lpdbPendingRel;
 
-   ULONG                      ulConnection;
+   HB_ULONG                   ulConnection;
    struct _SQLDDCONNECTION *  pConnection;
    struct _SDDNODE *          pSDD;
 
    char *                     szQuery;       /* SQL query */
 
-   ULONG                      ulRecNo;       /* Current record number */
-   ULONG                      ulRecCount;    /* Total records */
-   ULONG                      ulRecMax;      /* Size of pRow, pRowFlags buffer */
+   HB_ULONG                   ulRecNo;       /* Current record number */
+   HB_ULONG                   ulRecCount;    /* Total records */
+   HB_ULONG                   ulRecMax;      /* Size of pRow, pRowFlags buffer */
 
    void **                    pRow;          /* array of native pointers or cached PHB_ITEM */
    HB_BYTE *                  pRowFlags;
@@ -139,7 +139,7 @@ typedef struct _SQLDDCONNECTION
 
 typedef struct _MIXKEY
 {
-   ULONG     rec;
+   HB_ULONG  rec;
    HB_BYTE   notnul;
    HB_BYTE   val[ 1 ];
 } MIXKEY, * PMIXKEY;
@@ -219,9 +219,9 @@ typedef HB_ERRCODE (* SDDFUNC_DISCONNECT )( SQLDDCONNECTION * pConnection );
 typedef HB_ERRCODE (* SDDFUNC_EXECUTE    )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 typedef HB_ERRCODE (* SDDFUNC_OPEN       )( SQLBASEAREAP pArea );
 typedef HB_ERRCODE (* SDDFUNC_CLOSE      )( SQLBASEAREAP pArea );
-typedef HB_ERRCODE (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, ULONG ulRecNo );
+typedef HB_ERRCODE (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 typedef HB_ERRCODE (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
-typedef HB_ERRCODE (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength );
+typedef HB_ERRCODE (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
 
 
 typedef struct _SDDNODE

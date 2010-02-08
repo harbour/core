@@ -444,7 +444,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
      return HB_FAILURE;
    }
 
-   pArea->ulRecCount = ( ULONG ) PQntuples( pResult );
+   pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
 
    pArea->pRow = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
@@ -475,7 +475,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char*     pValue;
    HB_BOOL   bError;
    PHB_ITEM  pError;
-   ULONG     ulLen;
+   HB_ULONG  ulLen;
 
    bError = HB_FALSE;
    uiIndex--;
@@ -485,7 +485,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       return HB_SUCCESS;
 
    pValue = PQgetvalue( ( PGresult * ) pArea->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen = ( ULONG ) PQgetlength( ( PGresult * ) pArea->pResult, pArea->ulRecNo - 1, uiIndex );
+   ulLen = ( HB_ULONG ) PQgetlength( ( PGresult * ) pArea->pResult, pArea->ulRecNo - 1, uiIndex );
 
 /*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
 

@@ -320,7 +320,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
          {
             HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
             HB_LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
-            ULONG ulNewPos = lPCodePos + 1 + lOffset;
+            HB_ULONG ulNewPos = lPCodePos + 1 + lOffset;
             HB_BOOL fNot = HB_FALSE, fOK = HB_TRUE, fRepeat = HB_TRUE;
 
             do
@@ -478,7 +478,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
-   ULONG ulNewPos = lPCodePos + lOffset;
+   HB_ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -533,7 +533,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
-   ULONG ulNewPos = lPCodePos + lOffset;
+   HB_ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -577,7 +577,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
-   ULONG ulNewPos = lPCodePos + lOffset;
+   HB_ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -620,7 +620,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
 static HB_OPT_FUNC( hb_p_switch )
 {
    HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
-   ULONG ulStart = lPCodePos;
+   HB_ULONG ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -1041,7 +1041,7 @@ static HB_LONG hb_compJumpGetOffset( HB_BYTE * pCode )
 
 static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   ULONG    ulPos = 0, ulLastPos = 0;
+   HB_ULONG ulPos = 0, ulLastPos = 0;
    HB_SHORT isVar = 0;
    HB_BOOL  fWasJump = 0;
 
@@ -1100,7 +1100,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHLOCALREF:
             if( isVar > 0 )
             {
-               ULONG   ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+               HB_ULONG ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
                HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
                HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
 
@@ -1197,7 +1197,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 
 static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 {
-   ULONG   ulPos = 0, ulLastPos = 0;
+   HB_ULONG ulPos = 0, ulLastPos = 0;
 
    while( ulPos < pFunc->lPCodePos )
    {
@@ -1247,7 +1247,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, HB_BYTE * pMap, HB_SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_ULONG ulPos, HB_BYTE * pMap, HB_SHORT isLocal )
 {
    for( ;; )
    {
@@ -1285,7 +1285,7 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, HB_BYT
 
       if( hb_compIsJump( pFunc->pCode[ ulPos ] ) )
       {
-         ULONG  ulPos2 = ulPos + hb_compJumpGetOffset( &pFunc->pCode[ ulPos ] );
+         HB_ULONG ulPos2 = ulPos + hb_compJumpGetOffset( &pFunc->pCode[ ulPos ] );
 
          if( hb_compIsUncondJump( pFunc->pCode[ ulPos ] ) )
          {
@@ -1324,7 +1324,7 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, HB_BYT
 static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
    HB_BYTE * pMap;
-   ULONG     ulPos = 0, ulLastPos = 0;
+   HB_ULONG  ulPos = 0, ulLastPos = 0;
    HB_SHORT  isLocal;
    HB_USHORT usLine = 0;
 
@@ -1349,7 +1349,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
       if( !fCheck && pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
       {
-         ULONG ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+         HB_ULONG ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
          HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
          HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
 
@@ -1445,7 +1445,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
 static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   ULONG   ulPos = 0;
+   HB_ULONG ulPos = 0;
 
    while( ulPos < pFunc->lPCodePos )
    {
@@ -1564,7 +1564,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    /* TOFIX: Support for PARAMETER sentence is not implemented.
              The temporary solution is to disable optmisation at all if PARAMETER is used.  */
    {
-      ULONG   ulPos = 0;
+      HB_ULONG ulPos = 0;
 
       while( ulPos < pFunc->lPCodePos )
       {
