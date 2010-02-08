@@ -80,7 +80,7 @@ typedef struct _HB_UNITABLE
 {
    const char *      uniID;
    const HB_WCHAR *  uniCodes;
-   unsigned char *   uniTrans;
+   HB_UCHAR *        uniTrans;
    HB_WCHAR          wcMax;
 } HB_UNITABLE, * PHB_UNITABLE;
 
@@ -99,11 +99,11 @@ typedef struct _HB_CODEPAGE
    const char *            id;
    const char *            info;
    PHB_UNITABLE            uniTable;
-   const unsigned char *   flags;
-   const unsigned char *   upper;
-   const unsigned char *   lower;
-   const unsigned char *   sort;
-   const unsigned char *   acc;
+   const HB_UCHAR *        flags;
+   const HB_UCHAR *        upper;
+   const HB_UCHAR *        lower;
+   const HB_UCHAR *        sort;
+   const HB_UCHAR *        acc;
    int                     nACSort;
    int                     nMulti;
    int                     nMultiUC;
@@ -361,9 +361,9 @@ extern HB_EXPORT int          hb_cdpTranslateChar( int iChar, HB_BOOL fCtrl, PHB
 extern HB_EXPORT HB_SIZE      hb_cdpTransLen( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT HB_SIZE      hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc, char * pDst, HB_SIZE ulDst, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 
-extern HB_EXPORT HB_WCHAR     hb_cdpGetU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, unsigned char ch );
+extern HB_EXPORT HB_WCHAR     hb_cdpGetU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_UCHAR ch );
 extern HB_EXPORT HB_UCHAR     hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc );
-extern HB_EXPORT HB_BOOL      hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl, unsigned char ch, int * n, HB_WCHAR * pwc );
+extern HB_EXPORT HB_BOOL      hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_UCHAR ch, int * n, HB_WCHAR * pwc );
 
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE ulLen );
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos );
@@ -381,7 +381,7 @@ extern HB_EXPORT HB_SIZE      hb_cdpStrToU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, i
 
 extern HB_EXPORT int          hb_cdpUTF8CharSize( HB_WCHAR wc );
 extern HB_EXPORT int          hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc );
-extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( unsigned char ucChar, int * n, HB_WCHAR * pwc );
+extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc );
 
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pulSize );

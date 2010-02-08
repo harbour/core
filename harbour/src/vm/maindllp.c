@@ -59,12 +59,9 @@
 
 #include "hbtypes.h"
 
-#define HB_DLLSTR_( n )  HB_DLLSTR__( n )
-#define HB_DLLSTR__( n ) #n
-
 #define HB_DLL_PREF     TEXT( "harbour" )
 #define HB_DLL_PREF_MT  TEXT( "harbourmt" )
-#define HB_DLL_VER      TEXT( "-" ) TEXT( HB_DLLSTR_( HB_VER_MAJOR ) ) TEXT( HB_DLLSTR_( HB_VER_MINOR ) )
+#define HB_DLL_VER      TEXT( "-" ) TEXT( HB_MACRO2STRING( HB_VER_MAJOR ) ) TEXT( HB_MACRO2STRING( HB_VER_MINOR ) )
 #define HB_DLL_EXT      TEXT( ".dll" )
 
 #define HB_DLL_NAME     HB_DLL_PREF    HB_DLL_EXT
@@ -114,13 +111,16 @@ static FARPROC hb_getProcAddress( LPCSTR szProcName )
    if( s_hModule == NULL )
    {
       s_hModule = GetModuleHandle( HB_DLL_NAME );
-#ifdef HB_DLL_NAME2
+      if( s_hModule == NULL )
+         s_hModule = GetModuleHandle( HB_DLL_NAMEMT );
       if( s_hModule == NULL )
          s_hModule = GetModuleHandle( HB_DLL_NAME2 );
-#endif
+      if( s_hModule == NULL )
+         s_hModule = GetModuleHandle( HB_DLL_NAMEMT2 );
       if( s_hModule == NULL )
          s_hModule = GetModuleHandle( NULL );
    }
+
    if( s_hModule )
    {
       pProcAddr = GetProcAddress( s_hModule, szProcName );

@@ -58,7 +58,7 @@
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
 #if defined( HB_OS_WIN_CE )
-   hb_retnint( -1 );
+   hb_retni( -1 );
 #else
    void * hOperation;
    void * hFile;

@@ -92,10 +92,12 @@ static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE ulLen, HB_SIZE ulUTF8Pos )
 
 HB_FUNC( HB_CDPSELECT )
 {
+   const char * id = hb_parc( 1 );
+
    hb_retc( hb_cdpID() );
 
-   if( HB_ISCHAR( 1 ) )
-      hb_cdpSelectID( hb_parc( 1 ) );
+   if( id )
+      hb_cdpSelectID( id );
 }
 
 HB_FUNC( HB_CDPUNIID )
