@@ -362,7 +362,7 @@ static void hb_cdxErrInternal( const char * szMsg )
 static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                  const char * filename, HB_ERRCODE errOsCode,
-                              HB_USHORT uiFlags, PHB_ITEM * pErrorPtr )
+                                 HB_USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -654,7 +654,7 @@ static HB_BYTE hb_cdxItemTypeCmp( HB_BYTE bType )
  */
 static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LPCDXTAG pTag, HB_BOOL fTrans, int iMode )
 {
-   HB_BYTE buf[CDX_MAXKEY], *ptr;
+   HB_BYTE buf[ CDX_MAXKEY ], *ptr;
    ULONG ulLen = 0;
    double d;
 
@@ -1131,7 +1131,7 @@ static void hb_cdxIndexCheckBuffers( LPCDXINDEX pIndex )
 static ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
 {
    PHB_FILE pFile = pIndex->pFile;
-   HB_BYTE byBuf[4];
+   HB_BYTE byBuf[ 4 ];
    ULONG ulPos;
 
    if( pIndex->fReadonly )
@@ -3727,7 +3727,7 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
             hb_cdxErrorRT( pTag->pIndex->pArea, EG_DATATYPE, EDBF_INVALIDFOR,
                            NULL, 0, 0, NULL );
             pTag->RootBlock = 0; /* To force RT error - index corrupted */
-      }
+         }
 #endif
       }
    }
@@ -8196,7 +8196,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       return HB_FAILURE;
    }
 
-   if( SELF_COMPILE( (AREAP) pArea, hb_itemGetCPtr( pOrderInfo->abExpr ) ) == HB_FAILURE )
+   if( SELF_COMPILE( ( AREAP ) pArea, hb_itemGetCPtr( pOrderInfo->abExpr ) ) == HB_FAILURE )
    {
       if( pOrderInfo->itmCobExpr )
       {
@@ -8258,23 +8258,23 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
 
    /* Make sure KEY has proper type and length */
    if( bType == 'U' || uiLen == 0 )
-      {
-        hb_vmDestroyBlockOrMacro( pKeyExp );
-        SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+   {
+      hb_vmDestroyBlockOrMacro( pKeyExp );
+      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
-        return HB_FAILURE;
-      }
+      return HB_FAILURE;
+   }
 #if defined( HB_COMPAT_C53 ) && defined( HB_CLP_STRICT )
    else if( bType == 'C' && uiLen > CDX_MAXKEY )
    {
       if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT, NULL ) == E_DEFAULT )
         uiLen = CDX_MAXKEY;
       else
-   {
-      hb_vmDestroyBlockOrMacro( pKeyExp );
-      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      return HB_FAILURE;
-   }
+      {
+        hb_vmDestroyBlockOrMacro( pKeyExp );
+        SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+        return HB_FAILURE;
+      }
    }
 #endif
    if( pArea->dbfarea.area.lpdbOrdCondInfo )
@@ -8602,7 +8602,7 @@ static HB_ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pInfo )
 {
    LPCDXTAG pTag;
-   HB_USHORT   uiTag = 0;
+   HB_USHORT uiTag = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
 
@@ -8902,8 +8902,9 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
 
       case DBOI_SKIPUNIQUE:
          pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                        hb_cdxDBOISkipUnique( pArea, pTag,
-                           hb_itemGetNI( pInfo->itmNewVal ) >= 0 ) == HB_SUCCESS );
+                     hb_cdxDBOISkipUnique( pArea, pTag,
+                        pInfo->itmNewVal && HB_IS_NUMERIC( pInfo->itmNewVal ) ?
+                        hb_itemGetNL( pInfo->itmNewVal ) : 1 ) == HB_SUCCESS );
          break;
 
       case DBOI_SKIPEVAL:
