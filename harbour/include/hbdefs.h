@@ -194,18 +194,26 @@
 
 typedef int                 HB_BOOL;
 typedef unsigned char       HB_BYTE;
-typedef char                HB_CHAR;
-typedef signed char         HB_SCHAR;
-typedef unsigned char       HB_UCHAR;
+typedef signed char         HB_CHAR;
 typedef short               HB_SHORT;
 typedef unsigned short      HB_USHORT;
+/* typedef long                HB_LONG; */
+/* typedef unsigned long       HB_ULONG; */
 typedef int                 HB_INT;
 typedef unsigned int        HB_UINT;
-/* typedef double              HB_DOUBLE; */
-typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
+typedef unsigned long       HB_SIZE;           /* TOFIX: Currently 'unsigned long', to be changed to 'long' */
 typedef long                HB_ISIZ;           /* TOFIX: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
 typedef void *              HB_PTRVAL;         /* TOFIX */
+/* typedef double              HB_DOUBLE; */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
+
+/* legacy. TODO: Change these to new types in codebase */
+typedef HB_BYTE             HB_UCHAR;  /* legacy */
+typedef HB_CHAR             HB_SCHAR;  /* legacy */
+
+/* Guaranteed 8-bit types */
+typedef HB_BYTE             HB_U8;
+typedef HB_CHAR             HB_I8;
 
 #if ! defined( HB_LEGACY_TYPES_OFF )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
