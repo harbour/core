@@ -679,18 +679,18 @@ HB_FUNC( WVT_SETMENU )
    RECT wi = { 0, 0, 0, 0 };
    RECT ci = { 0, 0, 0, 0 };
    RECT rc = { 0, 0, 0, 0 };
-   USHORT height, width;
+   int height, width;
 
    SetMenu( _s->hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ;
 
    GetWindowRect( _s->hWnd, &wi );
    GetClientRect( _s->hWnd, &ci );
 
-   height = ( USHORT ) ( _s->PTEXTSIZE.y * _s->ROWS );
-   width  = ( USHORT ) ( _s->PTEXTSIZE.x * _s->COLS );
+   height = ( int ) ( _s->PTEXTSIZE.y * _s->ROWS );
+   width  = ( int ) ( _s->PTEXTSIZE.x * _s->COLS );
 
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+   width  += ( int ) ( wi.right - wi.left - ci.right );
+   height += ( int ) ( wi.bottom - wi.top - ci.bottom );
 
    if( _s->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rc, 0 ) )
    {

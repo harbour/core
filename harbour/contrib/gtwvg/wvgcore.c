@@ -113,7 +113,7 @@ void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
       {
          int iColor;
          HB_BYTE bAttr;
-         USHORT usChar;
+         HB_USHORT usChar;
 
          if( hb_gtGetScrChar( irow, icol, &iColor, &bAttr, &usChar ) == HB_FAILURE )
             break;

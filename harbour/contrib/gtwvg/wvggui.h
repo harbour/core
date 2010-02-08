@@ -265,8 +265,8 @@ typedef struct
    HINSTANCE hInstance;
    int       iCmdShow;
 
-   USHORT   ROWS;                           /* number of displayable rows in window */
-   USHORT   COLS;                           /* number of displayable columns in window */
+   int      ROWS;                           /* number of displayable rows in window */
+   int      COLS;                           /* number of displayable columns in window */
 
    POINT    MousePos;                       /* the last mouse position */
    HB_BOOL  MouseMove;                      /* Flag to say whether to return mouse movement events */
@@ -390,20 +390,6 @@ typedef enum
    GTEVENT_DEICONIZE  = 6,
    GTEVENT_SHUTDOWN   = 7
 } HB_gt_event_enum;
-
-typedef struct _tag_HB_GT_GCOLOR
-{
-   USHORT usAlpha;
-   USHORT usRed;
-   USHORT usGreen;
-   USHORT usBlue;
-} HB_GT_GCOLOR;
-
-typedef struct _tag_HB_GT_COLDEF
-{
-   char *name;
-   HB_GT_GCOLOR color;
-} HB_GT_COLDEF;
 
 /*----------------------------------------------------------------------*/
 

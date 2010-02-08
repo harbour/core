@@ -1304,7 +1304,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
-            ch = hb_cdpGetChar( s_cdpIn, HB_FALSE, ( USHORT ) ch );
+            ch = hb_cdpGetChar( s_cdpIn, HB_FALSE, ( HB_WCHAR ) ch );
 #else
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
@@ -1807,7 +1807,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       int iColor;
       HB_BYTE bAttr;
-      USHORT usChar;
+      HB_USHORT usChar;
       int iFirst = iCol;
       int i = ( iRow * _GetScreenWidth() + iCol );
 

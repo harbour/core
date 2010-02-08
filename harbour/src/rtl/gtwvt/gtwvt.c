@@ -1068,7 +1068,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   {
                      int iColor;
                      HB_BYTE bAttr;
-                     USHORT usChar;
+                     HB_USHORT usChar;
 
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
                         break;
@@ -1559,7 +1559,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 #if ! defined( UNICODE )
    HFONT       hFont, hOldFont = NULL;
 #endif
-   USHORT      usChar;
+   HB_USHORT   usChar;
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
 #if defined( UNICODE )

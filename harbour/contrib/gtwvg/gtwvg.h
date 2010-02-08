@@ -534,20 +534,6 @@ typedef enum
    GTEVENT_SHUTDOWN   = 7
 } HB_gt_event_enum;
 
-typedef struct _tag_HB_GT_GCOLOR
-{
-   USHORT usAlpha;
-   USHORT usRed;
-   USHORT usGreen;
-   USHORT usBlue;
-} HB_GT_GCOLOR;
-
-typedef struct _tag_HB_GT_COLDEF
-{
-   char *name;
-   HB_GT_GCOLOR color;
-} HB_GT_COLDEF;
-
 /*----------------------------------------------------------------------*/
 
 /* xHarbour compatible definitions */

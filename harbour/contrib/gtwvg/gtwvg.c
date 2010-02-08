@@ -1240,7 +1240,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   {
                      int iColor;
                      HB_BYTE bAttr;
-                     USHORT usChar;
+                     HB_USHORT usChar;
 
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
                         break;
@@ -1726,7 +1726,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
  * hb_gt_wvt_TextOut converts col and row to x and y ( pixels ) and calls
  * the Windows function TextOut with the expected coordinates
  */
-static HB_BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int iColor, LPCTSTR lpString, USHORT cbString )
+static HB_BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int iColor, LPCTSTR lpString, UINT cbString )
 {
    POINT xy;
    RECT  rClip;
@@ -1756,7 +1756,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 #if ! defined( UNICODE )
    HFONT       hFont, hOldFont = NULL;
 #endif
-   USHORT      usChar;
+   HB_USHORT   usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
 
    if( pWVT->bGui && pWVT->bKillFocus )
@@ -1825,7 +1825,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
             iOldColor = iColor;
             startCol = iCol;
             len = 0;
@@ -1844,7 +1844,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor || hFont != hOldFont )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
             if( hFont != hOldFont )
             {
                SelectObject( hdc, hFont );
@@ -1859,7 +1859,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          iCol++;
       }
       if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
+         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
    }
 
    /* Transfer on screen from bitmap */
@@ -2725,7 +2725,7 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 /* ********************************************************************** */
 
 static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
-                               int iColor, HB_BYTE bAttr, USHORT usChar )
+                               int iColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
    if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
    {

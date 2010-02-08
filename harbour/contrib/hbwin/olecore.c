@@ -1089,7 +1089,7 @@ static void PutParams( DISPPARAMS * dispparam )
          if( !pItem )
             pItem = hb_itemNew( NULL );
          hb_oleVariantToItem( pItem, &dispparam->rgvarg[ dispparam->cArgs - uiArg ] );
-         hb_itemParamStoreForward( ( USHORT ) uiArg, pItem );
+         hb_itemParamStoreForward( ( HB_USHORT ) uiArg, pItem );
          VariantClear( pRefs );
          pRefs++;
       }

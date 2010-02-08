@@ -253,6 +253,17 @@
 #define WIN_TRANSPARENT             1
 #define WIN_OPAQUE                  2
 
+/* WAPI_EXTTEXTOUT() options */
+#define WIN_ETO_OPAQUE              0x00002
+#define WIN_ETO_CLIPPED             0x00004
+#define WIN_ETO_GLYPH_INDEX         0x00010
+#define WIN_ETO_RTLREADING          0x00080
+#define WIN_ETO_NUMERICSLOCAL       0x00400
+#define WIN_ETO_NUMERICSLATIN       0x00800
+#define WIN_ETO_IGNORELANGUAGE      0x01000
+#define WIN_ETO_PDY                 0x02000
+#define WIN_ETO_REVERSE_INDEX_MAP   0x10000
+
 /* WAPI_DRAWTEXT() format methods */
 #define WIN_DT_BOTTOM               0x00008
 #define WIN_DT_CALCRECT             0x00400

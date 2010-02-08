@@ -388,9 +388,9 @@ HB_FUNC( WIN_PRINTFILERAW )
                {
                   HB_BYTE pbyBuffer[ 32 * 1024 ];
                   DWORD dwWritten = 0;
-                  USHORT nRead;
+                  HB_SIZE nRead;
 
-                  while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
+                  while( ( nRead = hb_fsReadLarge( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
                   {
 #if 0
                      /* TOFIX: This check seems wrong for any input files
@@ -401,7 +401,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                         nRead--;   /* Skip the EOF() character */
 #endif
 
-                     WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
+                     WritePrinter( hPrinter, pbyBuffer, ( DWORD ) nRead, &dwWritten );
                   }
 
                   iResult = 1;

@@ -479,12 +479,12 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          int    iParts;
          RECT   rc = { 0, 0, 0, 0 };
          int    n;
-         USHORT width;
+         int    width;
 
          iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
 
          GetClientRect( hWndSB, &rc );
-         width = ( USHORT ) ( rc.right / ( iParts + 1 ) );
+         width = ( int ) ( rc.right / ( iParts + 1 ) );
          for( n = 0; n < iParts; n++ )
             ptArray[ n ] = ( width * ( n + 1 ) );
 

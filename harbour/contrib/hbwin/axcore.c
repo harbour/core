@@ -380,7 +380,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                                  &pParams->rgvarg[ iCount - i ] );
       }
 
-      hb_vmSend( ( USHORT ) ( iCount + ( pKey == NULL ? 1 : 0 ) ) );
+      hb_vmSend( ( HB_USHORT ) ( iCount + ( pKey == NULL ? 1 : 0 ) ) );
 
       if( pVarResult )
          hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );

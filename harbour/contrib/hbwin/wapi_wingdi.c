@@ -459,6 +459,57 @@ HB_FUNC( WAPI_TEXTOUT )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( WAPI_EXTTEXTOUT )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+
+   if( hDC )
+   {
+      void * hData;
+      HB_SIZE nDataLen;
+      LPCTSTR lpData = HB_PARSTR( 6, &hData, &nDataLen );
+      RECT rect;
+      PHB_ITEM pFontWidths = hb_param( 7, HB_IT_ARRAY );
+      int * lpFontWidths;
+
+      if( pFontWidths )
+      {
+         HB_SIZE nFontWidthsLen = hb_arrayLen( pFontWidths );
+         HB_SIZE tmp;
+         int iWidth = 0;
+
+         lpFontWidths = ( int * ) hb_xgrab( nDataLen * sizeof( int ) );
+
+         for( tmp = 0; tmp < nDataLen; ++tmp )
+         {
+            /* Pad width array with last known value if passed array was smaller than length of the string. */
+            if( tmp < nFontWidthsLen )
+               iWidth = hb_arrayGetNI( pFontWidths, tmp + 1 );
+
+            lpFontWidths[ tmp ] = iWidth;
+         }
+      }
+      else
+         lpFontWidths = NULL;
+
+
+      hb_retl( ExtTextOut( hDC, hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                ( UINT ) hb_parni( 4 ) /* fuOptions */,
+                                hbwapi_par_RECT( &rect, 5, HB_FALSE ),
+                                lpData,
+                                nDataLen,
+                                lpFontWidths ) );
+
+      if( lpFontWidths )
+         hb_xfree( lpFontWidths );
+
+      hb_strfree( hData );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( WAPI_SETTEXTCOLOR )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
