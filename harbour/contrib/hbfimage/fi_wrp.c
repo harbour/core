@@ -52,15 +52,16 @@
 
 /* TOFIX: To use GC collected pointers. */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
 
-#if defined( HB_OS_WIN ) && !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
-   #define _WINDOWS_
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
+      #define _WINDOWS_
+   #endif
 #endif
 
 #ifdef HAVE_CONFIG_H

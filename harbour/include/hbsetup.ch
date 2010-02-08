@@ -70,7 +70,7 @@
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
 /* ***********************************************************************
- * Leave this #define if you want to allow usage of legacy Harbour 1.0.0/Clipper
+ * Leave this #define if you want to allow usage of legacy Harbour 2.0.0/Clipper
  * #defines/types/functions in your 3rd party C code. In later Harbour
  * versions this macro will be first disabled by default, then completely
  * removed, leaving the only default the strict Harbour namespace without
@@ -80,6 +80,8 @@
  */
 #ifndef HB_LEGACY_OFF
 #define HB_LEGACY_LEVEL3
+#else
+#define HB_LEGACY_TYPES_OFF
 #endif
 
 /* Future level of legacy cleanup */

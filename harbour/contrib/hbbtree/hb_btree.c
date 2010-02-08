@@ -393,8 +393,7 @@ static void ioBufferScan( struct hb_BTree * pBTree, HB_ULONG page )
      or the last buffer in the list */
   for ( thisptr = pBTree->ioBuffer;
         thisptr && !BTREENODEISNULL( pBTree, thisptr->xPage.ulPage ) && thisptr->xPage.ulPage != page && thisptr->next;
-        thisptr = thisptr->next )
-    {};
+        thisptr = thisptr->next ) {}
 
   /* only shuffle the buffers if the target buffer is not the root buffer */
   if ( thisptr != pBTree->ioBuffer )
@@ -668,8 +667,7 @@ static void Prune( struct hb_BTree * pBTree, HB_ULONG ulNode )
     ioBuffer_T * thisptr;
     HB_ULONG n;
 
-    for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->xPage.ulPage != ulNode; thisptr = thisptr->next )
-      {};
+    for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->xPage.ulPage != ulNode; thisptr = thisptr->next ) {}
 
     if ( thisptr->prev )   thisptr->prev->next = thisptr->next;
     if ( thisptr->next )   thisptr->next->prev = thisptr->prev;
@@ -1206,8 +1204,8 @@ static void Successor( struct hb_BTree * pBTree, HB_ULONG ulNode, int iPosition 
 
   for ( tmpnode = BranchGet( pBTree, ulNode, iPosition );
         !BTREENODEISNULL( pBTree, BranchGet( pBTree, tmpnode, 0 ) );
-        tmpnode = BranchGet( pBTree, tmpnode, 0 ) )
-    {};
+        tmpnode = BranchGet( pBTree, tmpnode, 0 ) ) {}
+
   KeySet(    pBTree, ulNode, iPosition, ( buffer = KeyGet(  pBTree, tmpnode, 1, NULL ) ) );
   BufferRelease( buffer );
 }
@@ -1362,7 +1360,7 @@ HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char *target, HB_LONG lD
     }
 #if 0
     else
-      {};  /* error - key does not exist */
+      {}  /* error - key does not exist */
 #endif
   }
   else
@@ -1381,8 +1379,7 @@ void hb_BTreeGoTop( struct hb_BTree * pBTree )
   HB_ULONG ulNode;
   HB_ULONG ulLastNode;
 
-  for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, 0 ) )
-    {};
+  for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, 0 ) ) {}
 
   if ( BTREENODEISNULL( pBTree, ulLastNode ) )
     CLEARKEYDATA( pBTree );
@@ -1395,8 +1392,8 @@ void hb_BTreeGoBottom( struct hb_BTree * pBTree )
   HB_ULONG ulNode;
   HB_ULONG ulLastNode;
 
-  for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, CountGet( pBTree, ulNode ) ) )
-    {};
+  for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, CountGet( pBTree, ulNode ) ) ) {}
+
   if ( BTREENODEISNULL( pBTree, ulLastNode ) )
     CLEARKEYDATA( pBTree );
   else
@@ -1686,8 +1683,7 @@ static int BTree_SetTreeIndex( struct hb_BTree * pBTree )
   if ( pBTree == NULL )
     return -1;
 
-  for ( n = 0; n < s_BTree_List_Count && s_BTree_List[ n ] != NULL; n++ )
-    {};
+  for ( n = 0; n < s_BTree_List_Count && s_BTree_List[ n ] != NULL; n++ ) {}
 
   if ( n == s_BTree_List_Count )
   {
