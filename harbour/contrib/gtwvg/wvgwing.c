@@ -1013,7 +1013,7 @@ HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
    HDC hdc = HB_ISNUM( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
 
-   hb_retnl( ( LONG ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) );
+   hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) );
 
    if( !HB_ISNUM( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
@@ -1027,7 +1027,7 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
    HDC hdc = HB_ISNUM( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
 
-   hb_retnl( ( LONG ) -MulDiv( hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) );
+   hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) );
 
    if( !HB_ISNUM( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );

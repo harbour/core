@@ -659,8 +659,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       if( hFont )
       {
          HDC        hdc;
-         LONG       width;
-         LONG       height;
+         int        width;
+         int        height;
          TEXTMETRIC tm;
 
          hdc       = GetDC( pWVT->hWnd );
@@ -1041,11 +1041,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
             {
-               ULONG  ulSize;
-               int    irow, icol, j, top, left, bottom, right;
-               char * sBuffer;
-               RECT   rect = { 0, 0, 0, 0 };
-               RECT   colrowRC = { 0, 0, 0, 0 };
+               HB_SIZE ulSize;
+               int     irow, icol, j, top, left, bottom, right;
+               char *  sBuffer;
+               RECT    rect = { 0, 0, 0, 0 };
+               RECT    colrowRC = { 0, 0, 0, 0 };
 
                rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
                rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );

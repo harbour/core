@@ -238,7 +238,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
 
    if( HB_IS_HASH( pAction ) )
    {
-      pKey = hb_itemPutNL( pKey, ( LONG ) dispid );
+      pKey = hb_itemPutNL( pKey, ( long ) dispid );
       pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
       hb_itemRelease( pKey );
    }
@@ -258,7 +258,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
       hb_vmPushEvalSym();
       hb_vmPush( pAction );
       if( pKey == NULL )
-         hb_vmPushLong( ( LONG ) dispid );
+         hb_vmPushLong( ( long ) dispid );
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {

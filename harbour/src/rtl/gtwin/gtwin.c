@@ -146,26 +146,26 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static HB_BOOL s_bSpecialKeyHandling;
-static HB_BOOL s_bAltKeyHandling;
-static DWORD   s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
-static HB_BOOL s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
-static int     s_iCursorStyle;
-static int     s_iOldCurStyle;
-static int     s_iCurRow;
-static int     s_iCurCol;
-static int     s_iUpdtTop;
-static int     s_iUpdtBottom;
-static int     s_iUpdtLeft;
-static int     s_iUpdtRight;
+static HB_BOOL     s_bSpecialKeyHandling;
+static HB_BOOL     s_bAltKeyHandling;
+static DWORD       s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
+static HB_BOOL     s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static int         s_iCursorStyle;
+static int         s_iOldCurStyle;
+static int         s_iCurRow;
+static int         s_iCurCol;
+static int         s_iUpdtTop;
+static int         s_iUpdtBottom;
+static int         s_iUpdtLeft;
+static int         s_iUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
-static ULONG   s_ulScreenBuffSize = 0;
+static HB_SIZE     s_ulScreenBuffSize = 0;
 
-static HB_FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
+static HB_FHANDLE  s_hStdIn, s_hStdOut, s_hStdErr;
 
-static HANDLE  s_HInput  = INVALID_HANDLE_VALUE;
-static HANDLE  s_HOutput = INVALID_HANDLE_VALUE;
-static DWORD   s_dwimode, s_dwomode;
+static HANDLE      s_HInput  = INVALID_HANDLE_VALUE;
+static HANDLE      s_HOutput = INVALID_HANDLE_VALUE;
+static DWORD       s_dwimode, s_dwomode;
 static CONSOLE_SCREEN_BUFFER_INFO s_csbi,     /* active screen mode */
                                   s_origCsbi; /* to restore screen mode on exit */
 
@@ -626,8 +626,8 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    {
       COORD coDest;
       SMALL_RECT srWin;
-      ULONG ulSize = ( ULONG ) _GetScreenWidth() * _GetScreenHeight() *
-                     sizeof( CHAR_INFO );
+      HB_SIZE ulSize = ( HB_SIZE ) _GetScreenWidth() * _GetScreenHeight() *
+                       sizeof( CHAR_INFO );
 
       HB_GTSELF_RESIZE( pGT, _GetScreenHeight(), _GetScreenWidth() );
 

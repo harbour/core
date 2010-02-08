@@ -182,7 +182,7 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       hb_reta( 9 );
       hb_storvc(  szFaceName        , -1, 1 );
-      hb_storvnl( ( LONG ) PointSize, -1, 2 );
+      hb_storvnl( ( long ) PointSize, -1, 2 );
       hb_storvni( lf.lfWidth        , -1, 3 );
       hb_storvni( lf.lfWeight       , -1, 4 );
       hb_storvni( lf.lfQuality      , -1, 5 );
@@ -196,8 +196,8 @@ HB_FUNC( WVT_CHOOSEFONT )
    else
    {
       hb_reta( 9 );
-      hb_storvc(  ""        , -1, 1 );
-      hb_storvnl( ( LONG ) 0, -1, 2 );
+      hb_storvc(  NULL      , -1, 1 );
+      hb_storvnl( ( long ) 0, -1, 2 );
       hb_storvni( 0         , -1, 3 );
       hb_storvni( 0         , -1, 4 );
       hb_storvni( 0         , -1, 5 );

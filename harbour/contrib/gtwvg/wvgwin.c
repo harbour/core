@@ -132,12 +132,12 @@ HB_FUNC( WVG_SENDMESSAGE )
 {
    LPTSTR cText = HB_ISBYREF( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
 
-   hb_retnl( ( ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                                    ( UINT ) hb_parni( 2 ),
-                                    ( !HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                    ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
-                                       ( HB_ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
-                                           ( LPARAM ) hb_parnint( 4 ) ) ) ) )
+   hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
+                                       ( UINT ) hb_parni( 2 ),
+                                       ( !HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
+                                       ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
+                                          ( HB_ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
+                                              ( LPARAM ) hb_parnint( 4 ) ) ) ) )
            );
 
    if( cText )
@@ -164,7 +164,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen + 1 );
    }
 
-   hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
+   hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
                                           ( int )  hb_parni( 2 ) ,
                                           ( UINT ) hb_parni( 3 ) ,
                                           ( HB_ISNUM( 4 ) ? ( WPARAM ) hb_parnint( 4 ) : 0 ),
@@ -198,14 +198,14 @@ HB_FUNC( WVG_SETFOCUS )
 
 HB_FUNC( WVG_SETTEXTCOLOR )
 {
-   hb_retnl( ( ULONG ) SetTextColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( HB_ULONG ) SetTextColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_SETBKCOLOR )
 {
-   hb_retnl( ( ULONG ) SetBkColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( HB_ULONG ) SetBkColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -254,14 +254,14 @@ HB_FUNC( WVG_HIWORD )
 #if 0
 HB_FUNC( WVG_MULDIV )
 {
-   hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retnl( MulDiv( hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_GETDIALOGBASEUNITS )
 {
-   hb_retnl( ( LONG ) GetDialogBaseUnits() );
+   hb_retnl( ( long ) GetDialogBaseUnits() );
 }
 
 /*----------------------------------------------------------------------*/
