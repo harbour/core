@@ -133,7 +133,7 @@ HB_FUNC( ADDASCII )
       HB_SIZE sLen = hb_parclen( 1 );
       char *pcResult;
       HB_SIZE sPos;
-      LONG lValue;
+      HB_LONG lValue;
       int iCarryOver;
 
       if( HB_ISNUM( 3 ) )
@@ -170,11 +170,11 @@ HB_FUNC( ADDASCII )
       if( iCarryOver )
       {
          HB_SIZE sCurrent;
-         LONG lResult;
+         HB_LONG lResult;
 
          for( sCurrent = sPos; sCurrent > 0 && lValue != 0; sCurrent-- )
          {
-            lResult = ( LONG ) pcSource[sCurrent - 1] + ( lValue % 256 );
+            lResult = ( HB_LONG ) pcSource[sCurrent - 1] + ( lValue % 256 );
 
             lValue /= 256;
             if( lResult > 255 )
@@ -187,7 +187,7 @@ HB_FUNC( ADDASCII )
       }
       else
       {
-         pcResult[sPos - 1] = ( char ) ( ( ( LONG ) pcResult[sPos - 1] + lValue ) % 256 );
+         pcResult[sPos - 1] = ( char ) ( ( ( HB_LONG ) pcResult[sPos - 1] + lValue ) % 256 );
       }
 
       if( HB_ISBYREF( 1 ) )

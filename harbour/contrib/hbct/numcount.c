@@ -53,7 +53,7 @@
 
 #include "hbapi.h"
 
-static LONG s_lCounter = 0;
+static HB_LONG s_lCounter = 0;
 
 HB_FUNC( NUMCOUNT )
 {

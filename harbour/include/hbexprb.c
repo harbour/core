@@ -916,7 +916,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       {
          /* this is called if all three parts of IIF expression should be generated
          */
-         LONG lPosFalse, lPosEnd;
+         HB_LONG lPosFalse, lPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -936,7 +936,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       {
          /* this is called if all three parts of IIF expression should be generated
          */
-         LONG lPosFalse, lPosEnd;
+         HB_LONG lPosFalse, lPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -1306,12 +1306,12 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          if( pIdx->ExprType == HB_ET_NUMERIC )
          {
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList; /* the expression that holds an array */
-            LONG lIndex;
+            HB_LONG lIndex;
 
             if( pIdx->value.asNum.NumType == HB_ET_LONG )
-               lIndex = ( LONG ) pIdx->value.asNum.val.l;
+               lIndex = ( HB_LONG ) pIdx->value.asNum.val.l;
             else
-               lIndex = ( LONG ) pIdx->value.asNum.val.d;
+               lIndex = ( HB_LONG ) pIdx->value.asNum.val.d;
 
             if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
@@ -3087,7 +3087,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
       case HB_EA_PUSH_PCODE:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            LONG lEndPos;
+            HB_LONG lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, HB_P_DUPLICATE );
@@ -3110,7 +3110,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
       case HB_EA_PUSH_POP:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            LONG lEndPos;
+            HB_LONG lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             lEndPos = HB_GEN_FUNC1( JumpTrue, 0 );
             /* NOTE: This will not generate a runtime error if incompatible
@@ -3172,7 +3172,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
       case HB_EA_PUSH_PCODE:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            LONG lEndPos;
+            HB_LONG lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, HB_P_DUPLICATE );
@@ -3195,7 +3195,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
       case HB_EA_PUSH_POP:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            LONG lEndPos;
+            HB_LONG lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             lEndPos = HB_GEN_FUNC1( JumpFalse, 0 );
             /* NOTE: This will not generate a runtime error if incompatible

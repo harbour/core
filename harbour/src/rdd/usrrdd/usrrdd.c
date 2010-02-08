@@ -885,7 +885,7 @@ static HB_ERRCODE hb_usrStructSize( AREAP pArea, HB_USHORT * puiSize )
 
 static HB_ERRCODE hb_usrSysName( AREAP pArea, char * szSysName )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrSysName(%p,%p)", pArea, szSysName));
 
@@ -953,7 +953,7 @@ static HB_ERRCODE hb_usrRelease( AREAP pArea )
 
 static HB_ERRCODE hb_usrBof( AREAP pArea, HB_BOOL * pBof )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrBof(%p, %p)", pArea, pBof));
 
@@ -980,7 +980,7 @@ static HB_ERRCODE hb_usrBof( AREAP pArea, HB_BOOL * pBof )
 
 static HB_ERRCODE hb_usrEof( AREAP pArea, HB_BOOL * pEof )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrEof(%p, %p)", pArea, pEof));
 
@@ -1007,7 +1007,7 @@ static HB_ERRCODE hb_usrEof( AREAP pArea, HB_BOOL * pEof )
 
 static HB_ERRCODE hb_usrFound( AREAP pArea, HB_BOOL * pFound )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrFound(%p, %p)", pArea, pFound));
 
@@ -1102,7 +1102,7 @@ static HB_ERRCODE hb_usrSeek( AREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pItem, HB
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrSkip( AREAP pArea, LONG lRecords )
+static HB_ERRCODE hb_usrSkip( AREAP pArea, HB_LONG lRecords )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrSkip(%p,%ld)", pArea, lRecords));
 
@@ -1116,7 +1116,7 @@ static HB_ERRCODE hb_usrSkip( AREAP pArea, LONG lRecords )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrSkipFilter( AREAP pArea, LONG lDirect )
+static HB_ERRCODE hb_usrSkipFilter( AREAP pArea, HB_LONG lDirect )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrSkipFilter(%p,%ld)", pArea, lDirect));
 
@@ -1130,7 +1130,7 @@ static HB_ERRCODE hb_usrSkipFilter( AREAP pArea, LONG lDirect )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrSkipRaw( AREAP pArea, LONG lRecords )
+static HB_ERRCODE hb_usrSkipRaw( AREAP pArea, HB_LONG lRecords )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrSkipRaw(%p,%ld)", pArea, lRecords));
 
@@ -1151,7 +1151,7 @@ static HB_ERRCODE hb_usrSkipRaw( AREAP pArea, LONG lRecords )
 
 static HB_ERRCODE hb_usrDeleted( AREAP pArea, HB_BOOL * pDeleted )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrDeleted(%p, %p)", pArea, pDeleted));
 
@@ -1215,7 +1215,7 @@ static HB_ERRCODE hb_usrFieldDisplay( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 
 static HB_ERRCODE hb_usrFieldName( AREAP pArea, HB_USHORT uiIndex, char * szName )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrFieldName(%p,%hu,%p)", pArea, uiIndex, szName));
 
@@ -1281,7 +1281,7 @@ static HB_ERRCODE hb_usrRecall( AREAP pArea )
 
 static HB_ERRCODE hb_usrFieldCount( AREAP pArea, HB_USHORT * puiFields )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrFieldCount(%p,%p)", pArea, puiFields));
 
@@ -1359,7 +1359,7 @@ static HB_ERRCODE hb_usrPutRec( AREAP pArea, const HB_BYTE * pBuffer )
 static HB_ERRCODE hb_usrGetRec( AREAP pArea, HB_BYTE ** pBuffer )
 {
    PHB_ITEM pItem;
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrGetRec(%p,%p)", pArea, pBuffer));
 
@@ -1417,7 +1417,7 @@ static HB_ERRCODE hb_usrPutValue( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
 
 static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, HB_USHORT uiIndex, ULONG * pulLength )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrGetVarLen(%p,%hu,%p)", pArea, uiIndex, pulLength));
 
@@ -1442,7 +1442,7 @@ static HB_ERRCODE hb_usrGetVarLen( AREAP pArea, HB_USHORT uiIndex, ULONG * pulLe
 
 static HB_ERRCODE hb_usrRecCount( AREAP pArea, ULONG * pulRecCount )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRecCount(%p,%p)", pArea, pulRecCount));
 
@@ -1482,7 +1482,7 @@ static HB_ERRCODE hb_usrRecInfo( AREAP pArea, PHB_ITEM pRecID, HB_USHORT uiInfoT
 
 static HB_ERRCODE hb_usrRecNo( AREAP pArea, ULONG * pulRecNo )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRecNo(%p,%p)", pArea, pulRecNo));
 
@@ -1569,7 +1569,7 @@ static HB_ERRCODE hb_usrSetFieldExtent( AREAP pArea, HB_USHORT uiFieldExtent )
 
 static HB_ERRCODE hb_usrAlias( AREAP pArea, char * szAlias )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrAlias(%p,%p)", pArea, szAlias));
 
@@ -1692,7 +1692,7 @@ static HB_ERRCODE hb_usrPack( AREAP pArea )
 
 static HB_ERRCODE hb_usrPackRec( AREAP pArea, ULONG ulRecNo, HB_BOOL * pWritten )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrPackRec(%p,%lu,%p)", pArea, ulRecNo, pWritten));
 
@@ -1890,7 +1890,7 @@ static HB_ERRCODE hb_usrForceRel( AREAP pArea )
 
 static HB_ERRCODE hb_usrRelArea( AREAP pArea, HB_USHORT uiRelNo, HB_USHORT * puiRelArea )
 {
-   LONG lOffset;
+   HB_LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRelArea(%p,%hu,%p)", pArea, uiRelNo, puiRelArea));
 

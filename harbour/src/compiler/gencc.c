@@ -108,12 +108,12 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
       fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
 }
 
-static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo,
+static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo,
                                         const char * szFunc )
 {
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
    {
-      LONG lOffset = 0;
+      HB_LONG lOffset = 0;
       HB_BOOL fNot = HB_FALSE;
       int iSize = 0;
 
@@ -167,7 +167,7 @@ static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCo
    return 1;
 }
 
-static int hb_gencc_checkNumAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
@@ -525,7 +525,7 @@ static HB_GENC_FUNC( hb_p_instring )
 
 static HB_GENC_FUNC( hb_p_jumpnear )
 {
-   LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -536,7 +536,7 @@ static HB_GENC_FUNC( hb_p_jumpnear )
 
 static HB_GENC_FUNC( hb_p_jump )
 {
-   LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -547,7 +547,7 @@ static HB_GENC_FUNC( hb_p_jump )
 
 static HB_GENC_FUNC( hb_p_jumpfar )
 {
-   LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -558,7 +558,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
 
 static HB_GENC_FUNC( hb_p_jumpfalsenear )
 {
-   LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -569,7 +569,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
 
 static HB_GENC_FUNC( hb_p_jumpfalse )
 {
-   LONG lOffset = HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_LONG lOffset = HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -580,7 +580,7 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
 
 static HB_GENC_FUNC( hb_p_jumpfalsefar )
 {
-   LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -591,7 +591,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsefar )
 
 static HB_GENC_FUNC( hb_p_jumptruenear )
 {
-   LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -602,7 +602,7 @@ static HB_GENC_FUNC( hb_p_jumptruenear )
 
 static HB_GENC_FUNC( hb_p_jumptrue )
 {
-   LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -613,7 +613,7 @@ static HB_GENC_FUNC( hb_p_jumptrue )
 
 static HB_GENC_FUNC( hb_p_jumptruefar )
 {
-   LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -1226,7 +1226,7 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
 static HB_GENC_FUNC( hb_p_pushlong )
 {
-   LONG lVal = HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+   HB_LONG lVal = HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
 
    HB_GENC_LABEL();
 
@@ -1509,7 +1509,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
 
 static HB_GENC_FUNC( hb_p_seqend )
 {
-   LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 

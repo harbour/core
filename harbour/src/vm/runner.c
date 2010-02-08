@@ -84,7 +84,7 @@ typedef struct
    ULONG          ulFuncs;                      /* Number of functions      */
    HB_BOOL        fInit;                        /* should be INIT functions executed */
    HB_BOOL        fExit;                        /* should be EXIT functions executed */
-   LONG           lSymStart;                    /* Startup Symbol           */
+   HB_LONG        lSymStart;                    /* Startup Symbol           */
    PHB_SYMB       pSymRead;                     /* Symbols read             */
    PHB_DYNF       pDynFunc;                     /* Functions read           */
    PHB_SYMBOLS    pModuleSymbols;

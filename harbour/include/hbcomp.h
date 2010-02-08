@@ -75,7 +75,7 @@ typedef void * HB_VOID_PTR;
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
-extern LONG hb_compPCodeSize( PFUNCTION, ULONG );
+extern HB_LONG hb_compPCodeSize( PFUNCTION, ULONG );
 extern void hb_compPCodeEval( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compPCodeTrace( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
 
@@ -178,9 +178,9 @@ extern void hb_compLoopKill( PFUNCTION );
 extern void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
-extern ULONG hb_compGenJump( LONG, HB_COMP_DECL );                /* generates the pcode to jump to a specific offset */
-extern ULONG hb_compGenJumpFalse( LONG, HB_COMP_DECL );           /* generates the pcode to jump if false */
-extern ULONG hb_compGenJumpTrue( LONG, HB_COMP_DECL );            /* generates the pcode to jump if true */
+extern ULONG hb_compGenJump( HB_LONG, HB_COMP_DECL );                /* generates the pcode to jump to a specific offset */
+extern ULONG hb_compGenJumpFalse( HB_LONG, HB_COMP_DECL );           /* generates the pcode to jump if false */
+extern ULONG hb_compGenJumpTrue( HB_LONG, HB_COMP_DECL );            /* generates the pcode to jump if true */
 extern void  hb_compGenJumpHere( ULONG, HB_COMP_DECL );           /* returns the pcode pos where to set a jump offset */
 extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL );   /* sets a jump offset */
 

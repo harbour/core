@@ -159,9 +159,9 @@ typedef struct
    PHB_ITEM * pItems;         /* pointer to the stack items */
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
    HB_ITEM    Return;         /* latest returned value */
-   LONG       wItems;         /* total items that may be holded on the stack */
-   LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
-   LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
+   HB_LONG    wItems;         /* total items that may be holded on the stack */
+   HB_LONG    lWithObject;    /* stack offset to base current WITH OBJECT item */
+   HB_LONG    lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    HB_USHORT  uiActionRequest;/* request for some action - stop processing of opcodes */
    HB_USHORT  uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
@@ -270,9 +270,9 @@ typedef struct
 
 HB_EXPORT extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern LONG        hb_stackTopOffset( void );
-extern LONG        hb_stackBaseOffset( void );
-extern LONG        hb_stackTotalItems( void );
+extern HB_LONG     hb_stackTopOffset( void );
+extern HB_LONG     hb_stackBaseOffset( void );
+extern HB_LONG     hb_stackTotalItems( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackItem( long iItemPos );
 extern HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
@@ -286,11 +286,11 @@ extern void        hb_stackPush( void );       /* pushes an item on to the stack
 extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern void        hb_stackPushReturn( void );
 extern void        hb_stackPopReturn( void );
-extern void        hb_stackRemove( LONG lUntilPos );
+extern void        hb_stackRemove( HB_LONG lUntilPos );
 
 /* stack management functions */
 extern int        hb_stackCallDepth( void );
-extern LONG       hb_stackBaseProcOffset( int iLevel );
+extern HB_LONG    hb_stackBaseProcOffset( int iLevel );
 extern void       hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
 extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
 extern void       hb_stackDispCall( void );
@@ -320,8 +320,8 @@ extern void        hb_stackClearMemvarsBase( void );
 extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
-extern LONG        hb_stackGetRecoverBase( void );
-extern void        hb_stackSetRecoverBase( LONG lBase );
+extern HB_LONG     hb_stackGetRecoverBase( void );
+extern void        hb_stackSetRecoverBase( HB_LONG lBase );
 extern HB_USHORT   hb_stackGetActionRequest( void );
 extern void        hb_stackSetActionRequest( HB_USHORT uiAction );
 
@@ -329,8 +329,8 @@ extern void        hb_stackSetStaticsBase( void * pBase );
 extern void *      hb_stackGetStaticsBase( void );
 
 extern PHB_ITEM    hb_stackWithObjectItem( void );
-extern LONG        hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( LONG );
+extern HB_LONG     hb_stackWithObjectOffset( void );
+extern void        hb_stackWithObjectSetOffset( HB_LONG );
 
 extern int *       hb_stackKeyPolls( void );
 extern HB_BOOL *   hb_stackDebugRequest( void );

@@ -244,7 +244,7 @@ static HB_ERRCODE hb_sdfGoTop( SDFAREAP pArea )
 /*
  * Reposition cursor, regardless of filter.
  */
-static HB_ERRCODE hb_sdfSkipRaw( SDFAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_sdfSkipRaw( SDFAREAP pArea, HB_LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfSkipRaw(%p,%ld)", pArea, lToSkip));
 

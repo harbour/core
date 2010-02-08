@@ -56,13 +56,13 @@
 #include "hbapierr.h"
 #include "hbstack.h"
 
-static PHB_ITEM hb_vmWithObjectItem( LONG lLevel )
+static PHB_ITEM hb_vmWithObjectItem( HB_LONG lLevel )
 {
-   LONG lOffset = hb_stackWithObjectOffset();
+   HB_LONG lOffset = hb_stackWithObjectOffset();
 
    while( lOffset && lLevel > 0 )
    {
-      LONG * plOffset = ( LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
+      HB_LONG * plOffset = ( HB_LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
       if( !plOffset )
          break;
       --lLevel;
@@ -72,13 +72,13 @@ static PHB_ITEM hb_vmWithObjectItem( LONG lLevel )
    return ( lOffset && !lLevel ) ? hb_stackItem( lOffset ) : NULL;
 }
 
-static LONG hb_vmWithObjectCount( void )
+static HB_LONG hb_vmWithObjectCount( void )
 {
-   LONG lOffset = hb_stackWithObjectOffset(), lCount = 0;
+   HB_LONG lOffset = hb_stackWithObjectOffset(), lCount = 0;
 
    while( lOffset )
    {
-      LONG * plOffset = ( LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
+      HB_LONG * plOffset = ( HB_LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
       if( !plOffset )
          break;
       ++lCount;

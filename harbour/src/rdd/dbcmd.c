@@ -767,7 +767,7 @@ HB_FUNC( DBSELECTAREA )
    }
    else
    {
-      LONG lNewArea = hb_parnl( 1 );
+      HB_LONG lNewArea = hb_parnl( 1 );
 
       /*
        * NOTE: lNewArea >= HB_RDD_MAX_AREA_NUM used intentionally

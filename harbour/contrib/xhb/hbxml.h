@@ -164,8 +164,8 @@ typedef struct tag_mxml_refil
    int bufpos;   /* current position */
 
    /* lenght of the stream for implementing progress indicators */
-   LONG streampos;
-   LONG streamlen;
+   HB_ISIZ streampos;
+   HB_ISIZ streamlen;
 
    /* callback funcs */
    MXML_REFIL_FUNC refil_func;

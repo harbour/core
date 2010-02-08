@@ -394,7 +394,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
    LPDBORDERCONDINFO    pOrdCondInfo = pArea->adsarea.area.lpdbOrdCondInfo;
    ADSHANDLE            hOrder;
    ULONG                ulRec, ulStartRec, ulNextCount = 0;
-   LONG                 lStep = 0;
+   HB_LONG              lStep = 0;
    PHB_ITEM             pItem, pEvalItem = NULL;
 
 
@@ -695,7 +695,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
 }
 
 
-static HB_ERRCODE adsxSkip( ADSXAREAP pArea, LONG lToSkip )
+static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
 {
    LPMIXKEY    pKey;
    ULONG       ulKeyPos;

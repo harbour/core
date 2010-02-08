@@ -174,7 +174,7 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
 {
    HB_BYTE buffer[ 2048 ];
    HB_BYTE * msg, * ptr = NULL;
-   LONG lSent = 0, lLast = 1, l;
+   HB_LONG lSent = 0, lLast = 1, l;
    HB_BOOL fResult = HB_FALSE;
 
    if( len == 0 )

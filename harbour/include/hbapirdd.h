@@ -217,9 +217,9 @@ typedef struct _DBORDERCONDINFO
    PHB_ITEM       itmCobFor;
    PHB_ITEM       itmCobWhile;
    PHB_ITEM       itmCobEval;
-   LONG           lStep;
+   HB_LONG        lStep;
    PHB_ITEM       itmStartRecID;
-   LONG           lNextCount;
+   HB_LONG        lNextCount;
    PHB_ITEM       itmRecID;
    HB_BOOL        fRest;
    HB_BOOL        fDescending;
@@ -591,7 +591,7 @@ typedef AREA * LPAREA;
 typedef HB_ERRCODE ( * DBENTRYP_V     )( AREAP area );
 typedef HB_ERRCODE ( * DBENTRYP_BP    )( AREAP area, HB_BOOL * param );
 typedef HB_ERRCODE ( * DBENTRYP_B     )( AREAP area, HB_BOOL param );
-typedef HB_ERRCODE ( * DBENTRYP_L     )( AREAP area, LONG param );
+typedef HB_ERRCODE ( * DBENTRYP_L     )( AREAP area, HB_LONG param );
 typedef HB_ERRCODE ( * DBENTRYP_UL    )( AREAP area, ULONG param );
 typedef HB_ERRCODE ( * DBENTRYP_I     )( AREAP area, PHB_ITEM param );
 typedef HB_ERRCODE ( * DBENTRYP_SI    )( AREAP area, HB_USHORT index, PHB_ITEM param );
@@ -615,7 +615,7 @@ typedef HB_ERRCODE ( * DBENTRYP_CP    )( AREAP area, char * param );
 typedef HB_ERRCODE ( * DBENTRYP_CC    )( AREAP area, const char * param );
 typedef HB_ERRCODE ( * DBENTRYP_PP    )( AREAP area, HB_BYTE ** param );
 typedef HB_ERRCODE ( * DBENTRYP_S     )( AREAP area, HB_USHORT param );
-typedef HB_ERRCODE ( * DBENTRYP_LP    )( AREAP area, LONG * param );
+typedef HB_ERRCODE ( * DBENTRYP_LP    )( AREAP area, HB_LONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_ULP   )( AREAP area, ULONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_SVP   )( AREAP area, HB_USHORT index, void * param );
 typedef HB_ERRCODE ( * DBENTRYP_SSP   )( AREAP area, HB_USHORT index, HB_USHORT * param );
@@ -626,8 +626,8 @@ typedef HB_ERRCODE ( * DBENTRYP_SVL   )( AREAP area, HB_USHORT index, ULONG * pa
 typedef HB_ERRCODE ( * DBENTRYP_SSI   )( AREAP area, HB_USHORT p1, HB_USHORT p2, PHB_ITEM p3 );
 typedef HB_ERRCODE ( * DBENTRYP_ISI   )( AREAP area, PHB_ITEM p1, HB_USHORT p2, PHB_ITEM p3 );
 typedef HB_ERRCODE ( * DBENTRYP_BIB   )( AREAP area, HB_BOOL p1, PHB_ITEM p2, HB_BOOL p3 );
-typedef HB_ERRCODE ( * DBENTRYP_VPL   )( AREAP area, void * p1, LONG p2 );
-typedef HB_ERRCODE ( * DBENTRYP_VPLP  )( AREAP area, void * p1, LONG * p2 );
+typedef HB_ERRCODE ( * DBENTRYP_VPL   )( AREAP area, void * p1, HB_LONG p2 );
+typedef HB_ERRCODE ( * DBENTRYP_VPLP  )( AREAP area, void * p1, HB_LONG * p2 );
 typedef HB_ERRCODE ( * DBENTRYP_LSP   )( AREAP area, ULONG p1, HB_BOOL * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */

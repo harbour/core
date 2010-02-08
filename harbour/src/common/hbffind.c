@@ -485,7 +485,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          bFound = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
                                 &info->hFindFile,
-                                ( LONG ) hb_fsAttrToRaw( ffind->attrmask ),
+                                ( ULONG ) hb_fsAttrToRaw( ffind->attrmask ),
                                 &info->entry,
                                 sizeof( info->entry ),
                                 &info->findCount,

@@ -350,10 +350,10 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 
 HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 {
-   LONG lStart = hb_parnl( 1 ), lEnd;
+   HB_LONG lStart = hb_parnl( 1 ), lEnd;
    PHB_ITEM pEndBlock = hb_param( 2, HB_IT_BLOCK );
    PHB_ITEM pCodeBlock = hb_param( 3, HB_IT_BLOCK );
-   LONG lStep = ( hb_pcount() > 3 ) ? hb_parnl( 4 ) : 1;
+   HB_LONG lStep = ( hb_pcount() > 3 ) ? hb_parnl( 4 ) : 1;
 
    if( pCodeBlock )
    {

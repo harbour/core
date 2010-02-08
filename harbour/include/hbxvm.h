@@ -134,7 +134,7 @@ extern HB_EXPORT HB_BOOL hb_xvmPushAlias( void );
 extern HB_EXPORT HB_BOOL hb_xvmPopAlias( void );                   /* select the workarea using a given item or a substituted value */
 extern HB_EXPORT HB_BOOL hb_xvmPopLogical( HB_BOOL * );            /* pops the stack latest value and returns its logical value */
 extern HB_EXPORT HB_BOOL hb_xvmSwapAlias( void );                  /* swaps items on the eval stack and pops the workarea number */
-extern HB_EXPORT HB_BOOL hb_xvmLocalAddInt( int iLocal, LONG lAdd ); /* add integer to given local variable */
+extern HB_EXPORT HB_BOOL hb_xvmLocalAddInt( int iLocal, HB_LONG lAdd ); /* add integer to given local variable */
 extern HB_EXPORT HB_BOOL hb_xvmLocalInc( int iLocal );             /* increment given local variable */
 extern HB_EXPORT HB_BOOL hb_xvmLocalDec( int iLocal );             /* decrement given local variable */
 extern HB_EXPORT HB_BOOL hb_xvmLocalIncPush( int iLocal );         /* increment given local variable and pussh it on HVM stack */
@@ -232,25 +232,25 @@ extern HB_EXPORT void    hb_xvmPushLongLong( HB_LONGLONG llNumber );
  */
 extern HB_EXPORT HB_BOOL hb_xvmArrayItemPush( HB_SIZE ulIndex );
 extern HB_EXPORT HB_BOOL hb_xvmArrayItemPop( HB_SIZE ulIndex );
-extern HB_EXPORT HB_BOOL hb_xvmMultByInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmDivideByInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmAddInt( LONG lValue );
-extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmMultByInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmDivideByInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmAddInt( HB_LONG lValue );
+extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, HB_LONG lValue );
 /*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, HB_SIZE ulLen );*/
 extern HB_EXPORT void hb_xvmPushFuncSymbol( PHB_SYMB pSym );
 
-extern HB_EXPORT HB_BOOL hb_xvmLessThenInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmLessThenIntIs( LONG lValue, HB_BOOL * fValue );
-extern HB_EXPORT HB_BOOL hb_xvmLessEqualThenInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmLessEqualThenIntIs( LONG lValue, HB_BOOL * fValue );
-extern HB_EXPORT HB_BOOL hb_xvmGreaterThenInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmGreaterThenIntIs( LONG lValue, HB_BOOL * fValue );
-extern HB_EXPORT HB_BOOL hb_xvmGreaterEqualThenInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, HB_BOOL * fValue );
-extern HB_EXPORT HB_BOOL hb_xvmEqualInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmEqualIntIs( LONG lValue, HB_BOOL * fValue );
-extern HB_EXPORT HB_BOOL hb_xvmNotEqualInt( LONG lValue );
-extern HB_EXPORT HB_BOOL hb_xvmNotEqualIntIs( LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmLessThenInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmLessThenIntIs( HB_LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmLessEqualThenInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmLessEqualThenIntIs( HB_LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmGreaterThenInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmGreaterThenIntIs( HB_LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmGreaterEqualThenInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmGreaterEqualThenIntIs( HB_LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmEqualInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmEqualIntIs( HB_LONG lValue, HB_BOOL * fValue );
+extern HB_EXPORT HB_BOOL hb_xvmNotEqualInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmNotEqualIntIs( HB_LONG lValue, HB_BOOL * fValue );
 
 extern HB_EXPORT HB_BOOL hb_xvmLocalAdd( int iLocal );
 extern HB_EXPORT HB_BOOL hb_xvmStaticAdd( HB_USHORT uiStatic );

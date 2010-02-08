@@ -177,7 +177,7 @@ static HB_LABEL_FUNC( hb_p_seqbegin )
 static HB_LABEL_FUNC( hb_p_seqend )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   LONG lOffset = HB_PCODE_MKINT24( pAddr );
+   HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
 
    if( cargo->fSetSeqBegin || lOffset != 4 )

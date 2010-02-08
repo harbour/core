@@ -46,11 +46,11 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, HB_USHORT usPageSize, HB_U
 struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
 HB_BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
-HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, LONG lData );
+HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, HB_LONG lData );
 void hb_BTreeGoTop( struct hb_BTree * pBTree );
 void hb_BTreeGoBottom( struct hb_BTree * pBTree );
-HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, LONG lData, HB_BOOL bSoftSeek );
-LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records );
+HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, HB_LONG lData, HB_BOOL bSoftSeek );
+LONG hb_BTreeSkip( struct hb_BTree * pBTree, HB_LONG records );
 const char * hb_BTreeKey( struct hb_BTree * pBTree );
 LONG hb_BTreeData( struct hb_BTree * pBTree );
 PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree );

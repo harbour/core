@@ -272,7 +272,7 @@ extern HB_EXPORT HB_FHANDLE hb_spCreateEx( const char * pFilename, HB_FATTR ulAt
 typedef struct
 {
    char        szName[ HB_PATH_MAX ];
-   LONG        lDate;
+   long        lDate;
    char        szDate[ 9 ]; /* in YYYYMMDD format */
    char        szTime[ 9 ]; /* in HH:MM:SS format */
    HB_FATTR    attr;

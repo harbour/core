@@ -57,7 +57,7 @@
 
 HB_FUNC( HB_PVALUE )
 {
-   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem;
+   HB_LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem;
    HB_USHORT uiParam = ( HB_USHORT ) hb_parni( 1 );
 
    if( uiParam && uiParam <= hb_stackItem( lOffset )->item.asSymbol.paramcnt )

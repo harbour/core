@@ -160,7 +160,7 @@ HB_FUNC( HB_COMPRESS )
    {
       if (pDestLen != NULL )
       {
-         hb_stornl( iFirst + 4, ( LONG ) ulDstlen );
+         hb_stornl( iFirst + 4, ( long ) ulDstlen );
          hb_retni( Z_OK );
       }
       else

@@ -495,7 +495,7 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
 
 LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )
 {
-   LONG lSize = 0;
+   HB_LONG lSize = 0;
    HB_BYTE opcode = pFunc->pCode[ ulOffset ];
 
    if( opcode < HB_P_LAST_PCODE )

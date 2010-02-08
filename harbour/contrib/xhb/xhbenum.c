@@ -57,7 +57,7 @@
 
 HB_FUNC( HB_ENUMINDEX )
 {
-   LONG lFuncOffset = hb_stackBaseOffset() - 1, lIndex = 0;
+   HB_LONG lFuncOffset = hb_stackBaseOffset() - 1, lIndex = 0;
    while( --lFuncOffset > 0 )
    {
       PHB_ITEM pItem = hb_stackItem( lFuncOffset );

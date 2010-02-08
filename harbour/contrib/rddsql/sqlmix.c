@@ -798,7 +798,7 @@ static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_IT
    PMIXKEY            pKey = NULL;
    LPDBORDERCONDINFO  pOrdCondInfo = pArea->sqlarea.area.lpdbOrdCondInfo;
    ULONG              ulStartRec, ulNextCount = 0;
-   LONG               lStep = 0;
+   HB_LONG            lStep = 0;
    PHB_ITEM           pItem, pEvalItem = NULL;
 
    pTag = ( PMIXTAG ) hb_xgrab( sizeof( MIXTAG ) );
@@ -1007,7 +1007,7 @@ static void hb_mixTagGoBottom( PMIXTAG pTag )
 }
 
 
-static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
+static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
 {
    PMIXNODE      pNode, pNode2;
    unsigned int  uiPos, uiPos2;
@@ -1024,14 +1024,14 @@ static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
       {
          if ( pNode->Leaf )
          {
-            if ( ( LONG ) (pNode->KeyCount - 1 - uiPos) >= lSkip )
+            if ( ( HB_LONG ) (pNode->KeyCount - 1 - uiPos) >= lSkip )
             {
                uiPos += lSkip;
                lSkip = 0;
             }
             else if ( pNode->KeyCount - 1 > uiPos )
             {
-               lSkip -= ( LONG ) (pNode->KeyCount - 1 - uiPos);
+               lSkip -= ( HB_LONG ) (pNode->KeyCount - 1 - uiPos);
                uiPos = pNode->KeyCount - 1;
             }
             if ( lSkip )
@@ -1083,7 +1083,7 @@ static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
       {
          if ( pNode->Leaf )
          {
-            if ( ( LONG ) uiPos >= lSkip )
+            if ( ( HB_LONG ) uiPos >= lSkip )
             {
                uiPos -= lSkip;
                lSkip = 0;
@@ -1419,7 +1419,7 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pIt
 }
 
 
-static HB_ERRCODE sqlmixSkipRaw( SQLMIXAREAP pArea, LONG lToSkip )
+static HB_ERRCODE sqlmixSkipRaw( SQLMIXAREAP pArea, HB_LONG lToSkip )
 {
    PMIXTAG    pTag = pArea->pTag;
    HB_BOOL    fOut = HB_FALSE;

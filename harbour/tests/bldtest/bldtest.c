@@ -24,13 +24,13 @@ int main()
    printf("\t    sizeof(HB_BYTE)=%d %s\n", (int) sizeof(HB_BYTE    ), sizeof(HB_BYTE    )==1 ? "OK" : "BAD" );
    printf("\t   sizeof(HB_SHORT)=%d %s\n", (int) sizeof(HB_SHORT   ), sizeof(HB_SHORT   )==2 ? "OK" : "BAD" );
    printf("\t    sizeof(HB_UINT)=%d %s\n", (int) sizeof(HB_UINT    ), sizeof(HB_UINT    )==4 || sizeof(HB_UINT)==8 ? "OK" : "BAD" );
-   printf("\t       sizeof(LONG)=%d %s\n", (int) sizeof(LONG       ), sizeof(LONG       )==4 || sizeof(LONG)==8 ? "OK" : "BAD" );
+   printf("\t    sizeof(HB_LONG)=%d %s\n", (int) sizeof(HB_LONG    ), sizeof(HB_LONG    )==4 || sizeof(HB_LONG)==8 ? "OK" : "BAD" );
    printf("\tsizeof(HB_LONGLONG)=%d %s\n", (int) sizeof(HB_LONGLONG), sizeof(HB_LONGLONG)==8 ? "OK" : "BAD" );
    printf("\t     sizeof(double)=%d %s\n", (int) sizeof(double     ), sizeof(double     )==8 ? "OK" : "BAD" );
 
    if ( sizeof(HB_BYTE)!=1 ||
         sizeof(HB_SHORT)!=2 ||
-        (sizeof(LONG)!=4 && sizeof(LONG)!=8) ||
+        (sizeof(HB_LONG)!=4 && sizeof(HB_LONG)!=8) ||
         (sizeof(HB_LONGLONG)!=4 && sizeof(HB_LONGLONG)!=8) ||
         sizeof(double)!=8 )
    {

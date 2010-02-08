@@ -1461,7 +1461,7 @@ static HB_ERRCODE hb_dbfGoTop( DBFAREAP pArea )
 /*
  * Reposition cursor relative to current position.
  */
-static HB_ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_dbfSkip( DBFAREAP pArea, HB_LONG lToSkip )
 {
    HB_ERRCODE errCode;
 
@@ -1505,7 +1505,7 @@ static HB_ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip )
 /*
  * Reposition cursor, regardless of filter.
  */
-static HB_ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, HB_LONG lToSkip )
 {
    HB_ERRCODE errCode;
 

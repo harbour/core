@@ -319,7 +319,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
          if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
          {
             HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
-            LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
+            HB_LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
             ULONG ulNewPos = lPCodePos + 1 + lOffset;
             HB_BOOL fNot = HB_FALSE, fOK = HB_TRUE, fRepeat = HB_TRUE;
 
@@ -347,7 +347,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
                         ( pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPTRUEFAR ||
                           pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPFALSEFAR ) )
                {
-                  LONG lJump;
+                  HB_LONG lJump;
                   if( pFunc->pCode[ ulNewPos + 1 ] != pFunc->pCode[ lPCodePos + 1 ] )
                      fNot = !fNot;
                   lJump = fNot ? 4 : HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 2 ] );
@@ -430,7 +430,7 @@ static HB_OPT_FUNC( hb_p_not )
              pFunc->pCode[ lPCodePos + 6 ] == HB_P_POP )
          {
             HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 3 ];
-            LONG lOffset = HB_PCODE_MKINT24( pAddr );
+            HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
 
             if( lOffset > 0 )
             {
@@ -477,7 +477,7 @@ static HB_OPT_FUNC( hb_p_not )
 static HB_OPT_FUNC( hb_p_jumpfar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   LONG lOffset = HB_PCODE_MKINT24( pAddr );
+   HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
@@ -532,7 +532,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 static HB_OPT_FUNC( hb_p_jumpfalsefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   LONG lOffset = HB_PCODE_MKINT24( pAddr );
+   HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
@@ -576,7 +576,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
 static HB_OPT_FUNC( hb_p_jumptruefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   LONG lOffset = HB_PCODE_MKINT24( pAddr );
+   HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
 
@@ -1011,7 +1011,7 @@ static HB_SHORT hb_compLocalGetNumber( HB_BYTE * pCode )
 }
 
 
-static LONG hb_compJumpGetOffset( HB_BYTE * pCode )
+static HB_LONG hb_compJumpGetOffset( HB_BYTE * pCode )
 {
    switch( *pCode )
    {

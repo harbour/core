@@ -142,7 +142,7 @@ typedef struct ioBuffer_tag
   ULONG * pulPageCount; /* TODO: use LE get macro to retrieve this; better yet, dont use this */
   ULONG * pulBranch;
   union {
-    LONG  * plData; /* not in-memory */
+    HB_LONG * plData; /* not in-memory */
     PHB_ITEM * ppData; /* in-memory */
   } xData;
   HB_BYTE * szKey;
@@ -178,7 +178,7 @@ typedef int hb_BTreeFlags_T;
 typedef struct hb_KeyData_Tag
 {
   union {
-    LONG lData;     /* lData is placed first for alignment, thought it is secondary */
+    HB_LONG lData;     /* lData is placed first for alignment, thought it is secondary */
     PHB_ITEM pData;
   } xData;
   HB_BYTE szKey[ 1 ];
@@ -282,7 +282,7 @@ static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * pre
   }
   else
   {
-    thisptr->xData.plData = ( LONG * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
+    thisptr->xData.plData = ( HB_LONG * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
     thisptr->szKey        = ( HB_BYTE * )&thisptr->xData.plData[ pBTree->usMaxKeys ];
   }
 
@@ -465,11 +465,11 @@ static void StackPeek( BTreeStack **pStack, ULONG *pulNode, int *piPosition )
   }
 }
 
-static LONG StackSkip( struct hb_BTree * pBTree, BTreeStack **pStack, LONG records )
+static HB_LONG StackSkip( struct hb_BTree * pBTree, BTreeStack **pStack, HB_LONG records )
 {
   ULONG ulNode;
   int iPosition;
-  LONG recordsskipped = 0;
+  HB_LONG recordsskipped = 0;
 
   if ( ( *pStack )->usCount == 0 )
   {
@@ -709,7 +709,7 @@ static void CountSet( struct hb_BTree * pBTree, ULONG ulNode, ULONG newPageCount
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
 
-static HB_USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, LONG adjPageCount )
+static HB_USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, HB_LONG adjPageCount )
 {
   READPAGE_IF_NEEDED( pBTree, ulNode );
 
@@ -722,7 +722,7 @@ static HB_USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, LONG adjPageC
 static void NodeCopy( struct hb_BTree * pBTree, ULONG toNode, int toPosition, ULONG fromNode, int fromPosition, hb_KeyData_T *buffer )
 {
   ULONG ulBranch;
-  LONG lData = 0;
+  HB_LONG lData = 0;
   PHB_ITEM pData = NULL;
 
   READPAGE_IF_NEEDED( pBTree, fromNode );
@@ -842,10 +842,10 @@ static void KeySet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, hb_Ke
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
 
-static LONG KeyCompare( struct hb_BTree * pBTree, hb_KeyData_T *left, hb_KeyData_T *right )
+static HB_LONG KeyCompare( struct hb_BTree * pBTree, hb_KeyData_T *left, hb_KeyData_T *right )
 {
-/*  LONG lResults = strnicmp( left->szKey, right->szKey, pBTree->usKeySize );*/
-  LONG lResults = ( pBTree->pStrCompare )( ( const char * ) left->szKey, ( const char * ) right->szKey, pBTree->usKeySize );
+/*  HB_LONG lResults = strnicmp( left->szKey, right->szKey, pBTree->usKeySize );*/
+  HB_LONG lResults = ( pBTree->pStrCompare )( ( const char * ) left->szKey, ( const char * ) right->szKey, pBTree->usKeySize );
 
   if ( lResults == 0 && GETFLAG( pBTree, IsUnique ) )
   {
@@ -1334,7 +1334,7 @@ static HB_BOOL RecDelete( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG 
  }
 #endif
 
-HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char *target, LONG lData )
+HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char *target, HB_LONG lData )
 {
   ULONG ulNode;
   int iPosition;
@@ -1403,9 +1403,9 @@ void hb_BTreeGoBottom( struct hb_BTree * pBTree )
     KeyGet( pBTree, ulLastNode, CountGet( pBTree, ulLastNode ), pBTree->pThisKeyData );
 }
 
-LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records )
+LONG hb_BTreeSkip( struct hb_BTree * pBTree, HB_LONG records )
 {
-  LONG results = 0;
+  HB_LONG results = 0;
   int iPosition;
   hb_KeyData_T *keydata;
   BTreeStack *pStack = NULL;
@@ -1436,7 +1436,7 @@ LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records )
   return results;
 }
 
-HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, LONG lData, HB_BOOL bSoftSeek )
+HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, HB_LONG lData, HB_BOOL bSoftSeek )
 {
   HB_BOOL results = HB_FALSE;
   int iPosition;
@@ -1759,7 +1759,7 @@ HB_FUNC( HB_BTREECLOSE )  /* hb_BTreeClose( hb_BTree_Handle ) -> NIL */
   s_BTree_List[ hb_parni( 1 ) - 1 ] = NULL;
 }
 
-HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG lData | ANY xData ) -> lSuccess */
+HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, HB_LONG lData | ANY xData ) -> lSuccess */
 {
   struct hb_BTree * pBTree = BTree_GetTreeIndex( "hb_btreeinsert" );
   /* PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC ); */
@@ -1784,7 +1784,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
   }
 }
 
-HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG lData ) -> lSuccess */
+HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, HB_LONG lData ) -> lSuccess */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || HB_ISNUM( 3 ) ) )
@@ -1813,8 +1813,8 @@ HB_FUNC( HB_BTREEKEY )  /* hb_BTreeKey( hb_BTree_Handle ) -> CHAR cKey */
   hb_retc( ( char * ) BTree_GetTreeIndex( "hb_btreekey" )->pThisKeyData->szKey );
 }
 
-HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | xOldData */
-{  /*, [ LONG lNewData | ANY xNewData ]  ???  */
+HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> HB_LONG lOldData | xOldData */
+{  /*, [ HB_LONG lNewData | ANY xNewData ]  ???  */
   struct hb_BTree * pBTree = BTree_GetTreeIndex( "hb_btreeinfo" );
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( GETFLAG( pBTree, IsInMemory ) )
@@ -1846,12 +1846,12 @@ HB_FUNC( HB_BTREEGOBOTTOM )  /* hb_BTreeGoBottom( hb_BTree_Handle ) --> NIL */
   hb_BTreeGoBottom( BTree_GetTreeIndex( "hb_btreegobottom" ) );
 }
 
-HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LONG nRecordsSkipped */
+HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, HB_LONG nRecords ) -> HB_LONG nRecordsSkipped */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && ( hb_pcount() == 1 || HB_ISNUM( 2 ) ) )
   {
-    LONG nSkip = hb_pcount() == 1 ? 1 : hb_parnl( 2 );
+    HB_LONG nSkip = hb_pcount() == 1 ? 1 : hb_parnl( 2 );
     hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), nSkip ) );
   }
   else
@@ -1861,7 +1861,7 @@ HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LO
   }
 }
 
-HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData, BOOL lSoftSeek ) -> lSuccess */
+HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, HB_LONG lData, BOOL lSoftSeek ) -> lSuccess */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )

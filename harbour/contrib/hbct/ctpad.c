@@ -66,7 +66,7 @@ static void do_pad( int iSwitch )
       const char *pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet, *pc;
-      LONG lRetLen;
+      HB_ISIZ lRetLen;
       HB_SIZE sRetLen;
       char cFill;
 

@@ -270,7 +270,7 @@ struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
 {
-   LONG      lBaseItem;        /* stack base offset of previous func/proc */
+   HB_LONG   lBaseItem;        /* stack base offset of previous func/proc */
    ULONG     ulPrivateBase;    /* memvars base offset of previous func/proc */
    void *    pStatics;         /* statics frame of previous func/proc */
    HB_USHORT uiClass;          /* class when message is sent */
@@ -350,15 +350,15 @@ struct hb_struRefer
       struct _HB_ITEM * itemPtr;          /* item pointer  */
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
-   LONG offset;                           /* 0 for static variables */
-   LONG value;
+   HB_LONG offset;                        /* 0 for static variables */
+   HB_LONG value;
 };
 
 struct hb_struEnum
 {
    struct _HB_ITEM * basePtr;             /* base item pointer */
    struct _HB_ITEM * valuePtr;            /* value item pointer */
-   LONG offset;
+   HB_LONG offset;
 };
 
 struct hb_struExtRef
@@ -1034,8 +1034,8 @@ extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevI
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
 extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, HB_USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen );
-extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos ); /* get local variable passed by reference */
+extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, HB_LONG iItemPos ); /* get local variable referenced in a codeblock */
+extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, HB_LONG iItemPos ); /* get local variable passed by reference */
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */

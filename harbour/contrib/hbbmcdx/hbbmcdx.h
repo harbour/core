@@ -136,7 +136,7 @@ HB_EXTERN_BEGIN
 */
 
 #define HB_CDXMAXKEY( x )     ( ( HB_USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
-#define HB_CDXBITMASK( x )    ( ( LONG ) ( ( 1L << ( x ) ) - 1 ) )
+#define HB_CDXBITMASK( x )    ( ( HB_LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 #define FAST_GOCOLD( A )      SELF_GOCOLD(A)
 
@@ -513,9 +513,9 @@ static HB_ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
 #define hb_cdxGoToId                               NULL
 static HB_ERRCODE hb_cdxGoTop( CDXAREAP pArea );
 static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast );
-static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip );
-static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown );
-static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
+static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, HB_LONG lToSkip );
+static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, HB_LONG lUpDown );
+static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, HB_LONG lToSkip );
 #define hb_cdxAddField                             NULL
 static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll );
 #define hb_cdxCreateFields                         NULL
@@ -577,7 +577,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
 static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
 #define hb_cdxClearLocate                          NULL
 #define hb_cdxClearScope                           NULL
-static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec );
+static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec );
 #define hb_cdxFilterText                           NULL
 #define hb_cdxScopeInfo                            NULL
 static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );

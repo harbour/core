@@ -1071,7 +1071,7 @@ static void hb_nsxTagRefreshScope( LPTAGINFO pTag )
  */
 static HB_BOOL hb_nsxCheckRecordScope( NSXAREAP pArea, ULONG ulRec )
 {
-   LONG lRecNo = ( LONG ) ulRec;
+   HB_LONG lRecNo = ( HB_LONG ) ulRec;
 
    if( SELF_COUNTSCOPE( ( AREAP ) pArea, NULL, &lRecNo ) == HB_SUCCESS && lRecNo == 0 )
    {
@@ -4415,7 +4415,7 @@ static void hb_nsxOrdSetRelKeyPos( LPTAGINFO pTag, double dPos )
 /*
  * skip to next/previous unique key
  */
-static HB_BOOL hb_nsxOrdSkipUnique( LPTAGINFO pTag, LONG lToSkip )
+static HB_BOOL hb_nsxOrdSkipUnique( LPTAGINFO pTag, HB_LONG lToSkip )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
    HB_BOOL fOut = HB_FALSE, fEof = HB_FALSE, fForward = ( lToSkip >= 0 );
@@ -4989,12 +4989,12 @@ static int hb_nsxQuickSortCompare( LPNSXSORTINFO pSort, HB_UCHAR * pKey1, HB_UCH
    return i;
 }
 
-static HB_BOOL hb_nsxQSort( LPNSXSORTINFO pSort, HB_UCHAR * pSrc, HB_UCHAR * pBuf, LONG lKeys )
+static HB_BOOL hb_nsxQSort( LPNSXSORTINFO pSort, HB_UCHAR * pSrc, HB_UCHAR * pBuf, HB_LONG lKeys )
 {
    if( lKeys > 1 )
    {
       int iLen = pSort->keyLen + 4;
-      LONG l1, l2;
+      HB_LONG l1, l2;
       HB_UCHAR * pPtr1, * pPtr2, *pDst;
       HB_BOOL f1, f2;
 
@@ -5248,7 +5248,7 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, ULONG ulPage,
 static void hb_nsxSortOrderPages( LPNSXSORTINFO pSort )
 {
    int iLen = pSort->keyLen, i;
-   LONG l, r, m;
+   HB_LONG l, r, m;
    ULONG n, ulPage, ulRec;
    HB_UCHAR *pKey = NULL, *pTmp;
 
@@ -5286,7 +5286,7 @@ static void hb_nsxSortOrderPages( LPNSXSORTINFO pSort )
 static HB_BOOL hb_nsxSortKeyGet( LPNSXSORTINFO pSort, HB_UCHAR ** pKeyVal, ULONG *pulRec )
 {
    int iLen = pSort->keyLen, i;
-   LONG l, r, m;
+   HB_LONG l, r, m;
    ULONG ulPage;
 
    ulPage = pSort->pSortedPages[ pSort->ulFirst ];
@@ -5322,7 +5322,7 @@ static HB_BOOL hb_nsxSortKeyGet( LPNSXSORTINFO pSort, HB_UCHAR ** pKeyVal, ULONG
          else
             r = m - 1;
       }
-      if( l > ( LONG ) pSort->ulFirst + 1 )
+      if( l > ( HB_LONG ) pSort->ulFirst + 1 )
       {
          ulPage = pSort->pSortedPages[ pSort->ulFirst ];
          for( r = pSort->ulFirst + 1; r < l; r++ )
@@ -5736,7 +5736,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
    PHB_ITEM pForItem, pWhileItem = NULL, pEvalItem = NULL, pItem = NULL;
    ULONG ulRecCount, ulRecNo = pArea->dbfarea.ulRecNo;
    LPNSXSORTINFO pSort;
-   LONG lStep = 0;
+   HB_LONG lStep = 0;
    HB_ERRCODE errCode = HB_SUCCESS;
 
    if( pArea->dbfarea.area.lpdbOrdCondInfo )
@@ -6201,7 +6201,7 @@ static HB_ERRCODE hb_nsxSeek( NSXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pItem,
    }
 }
 
-static HB_ERRCODE hb_nsxSkipRaw( NSXAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_nsxSkipRaw( NSXAREAP pArea, HB_LONG lToSkip )
 {
    HB_ERRCODE retval;
    HB_BOOL fOut = HB_FALSE, fForward;
@@ -7723,7 +7723,7 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE hb_nsxCountScope( NSXAREAP pArea, void * pPtr, LONG * plRecNo )
+static HB_ERRCODE hb_nsxCountScope( NSXAREAP pArea, void * pPtr, HB_LONG * plRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo));
 

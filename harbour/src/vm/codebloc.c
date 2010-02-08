@@ -311,7 +311,7 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
+PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, HB_LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
@@ -323,7 +323,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 
 /* Get local variable passed by reference
  */
-PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos )
+PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, HB_LONG iItemPos )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %ld)", pCBlock, iItemPos));
 

@@ -58,11 +58,11 @@
 
 #define READING_BLOCK      4096
 
-char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Term, int * iTermSizes, int iTerms, HB_BOOL * bFound, HB_BOOL * bEOF )
+char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char ** Term, HB_ISIZ * iTermSizes, HB_ISIZ iTerms, HB_BOOL * bFound, HB_BOOL * bEOF )
 {
-   int iPosTerm = 0, iPos, iPosition;
+   HB_ISIZ iPosTerm = 0, iPos, iPosition;
    int nTries;
-   LONG lRead = 0, lOffset, lSize;
+   HB_ISIZ lRead = 0, lOffset, lSize;
    char * pBuff;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %i, %i, %i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
@@ -168,9 +168,9 @@ HB_FUNC( HB_FREADLINE )
    HB_FHANDLE hFileHandle  = ( HB_FHANDLE ) hb_parnint( 1 );
    const char ** Term;
    char * pBuffer;
-   int * iTermSizes;
-   LONG lSize = hb_parnl( 4 );
-   int i, iTerms;
+   HB_ISIZ * iTermSizes;
+   HB_ISIZ lSize = hb_parnl( 4 );
+   HB_ISIZ i, iTerms;
    HB_BOOL bFound, bEOF;
 
    if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
@@ -188,7 +188,7 @@ HB_FUNC( HB_FREADLINE )
       if( HB_ISARRAY( 3 ) )
       {
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
-         iTerms = ( int ) hb_arrayLen( pTerm1 );
+         iTerms = hb_arrayLen( pTerm1 );
 
          if( iTerms <= 0 )
          {
@@ -201,7 +201,7 @@ HB_FUNC( HB_FREADLINE )
          }
 
          Term = ( const char ** ) hb_xgrab( sizeof( char * ) * iTerms );
-         iTermSizes = ( int * ) hb_xgrab( sizeof( int ) * iTerms );
+         iTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * iTerms );
 
          for( i = 0; i < iTerms; i++ )
          {
@@ -213,7 +213,7 @@ HB_FUNC( HB_FREADLINE )
       {
          pTerm1          = hb_param( 3, HB_IT_STRING );
          Term            = ( const char ** ) hb_xgrab( sizeof( char * ) );
-         iTermSizes      = ( int * ) hb_xgrab( sizeof( int ) );
+         iTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
          Term[ 0 ]       = hb_itemGetCPtr( pTerm1 );
          iTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
          iTerms          = 1;
@@ -222,7 +222,7 @@ HB_FUNC( HB_FREADLINE )
    else
    {
       Term            = ( const char ** ) hb_xgrab( sizeof( char * ) );
-      iTermSizes      = ( int * ) hb_xgrab( sizeof( int ) );
+      iTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
       Term[ 0 ]       = "\r\n";    /* Should be preplaced with the default EOL sequence */
       iTerms          = 1;
       iTermSizes[ 0 ] = 2;

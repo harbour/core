@@ -419,7 +419,7 @@ static HB_ERRCODE hb_delimGoTop( DELIMAREAP pArea )
 /*
  * Reposition cursor, regardless of filter.
  */
-static HB_ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, HB_LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimSkipRaw(%p,%ld)", pArea, lToSkip));
 

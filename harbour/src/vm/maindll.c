@@ -87,21 +87,21 @@ BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserve
    return TRUE;
 }
 
-LONG PASCAL HBDLLENTRY( char * cProcName )
+LONG PASCAL HBDLLENTRY( const char * cProcName )
 {
    hb_itemDoC( cProcName, 0, 0 );
 
    return 0;
 }
 
-LONG PASCAL HBDLLENTRY1( char * cProcName, LONG pItem )
+LONG PASCAL HBDLLENTRY1( const char * cProcName, void * pItem )
 {
    hb_itemDoC( cProcName, 1, ( PHB_ITEM ) pItem, 0 );
 
    return 0;
 }
 
-LONG PASCAL HBDLLENTRY2( char * cProcName, LONG pItem1, LONG pItem2 )
+LONG PASCAL HBDLLENTRY2( const char * cProcName, void * pItem1, void * pItem2 )
 {
    hb_itemDoC( cProcName, 2, ( PHB_ITEM ) pItem1, ( PHB_ITEM ) pItem2, 0 );
 

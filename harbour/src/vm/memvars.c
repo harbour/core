@@ -871,7 +871,7 @@ static ULONG hb_memvarGetBaseOffset( int iProcLevel )
       int iLevel = hb_stackCallDepth();
       if( iProcLevel < iLevel )
       {
-         LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
+         HB_LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
          if( lOffset > 0 )
             return hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase;
       }

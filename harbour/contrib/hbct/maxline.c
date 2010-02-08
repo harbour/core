@@ -55,18 +55,18 @@
 
 HB_FUNC( MAXLINE )
 {
-   LONG lLength = 0;
+   HB_ISIZ lLength = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
       const char *pcString = hb_parc( 1 );
       const char *pBuffer;
-      LONG lStrLen = hb_parclen( 1 );
+      HB_ISIZ lStrLen = hb_parclen( 1 );
 
       while( lStrLen > 0 )
       {
          pBuffer = ( char * ) memchr( pcString, 13, lStrLen );
-         if( !pBuffer )
+         if( ! pBuffer )
             pBuffer = pcString + lStrLen;
 
          if( pBuffer - pcString > lLength )

@@ -737,7 +737,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 
       ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
 
-      if( ( LONG ) ulExtAttr != -1 )
+      if( ( HB_LONG ) ulExtAttr != -1 )
       {
          ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName ) &
                      ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |

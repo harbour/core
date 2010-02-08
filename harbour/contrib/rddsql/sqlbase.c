@@ -341,7 +341,7 @@ static HB_ERRCODE sqlbaseGoTop( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, LONG lToSkip )
+static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, HB_LONG lToSkip )
 {
    HB_ERRCODE errCode;
 
@@ -375,7 +375,7 @@ static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, LONG lToSkip )
 }
 
 
-static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
+static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, HB_LONG lToSkip )
 {
    HB_ERRCODE errCode;
 

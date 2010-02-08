@@ -348,7 +348,7 @@ HB_FUNC( SX_ISREINDEX )
 HB_FUNC( SX_STEP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   LONG lStep = 0;
+   HB_LONG lStep = 0;
 
    if( pArea )
    {

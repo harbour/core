@@ -123,11 +123,11 @@ extern void hb_macroGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_C
 extern void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL );
 extern void hb_macroGenPCodeN( HB_BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL );
 
-extern ULONG hb_macroGenJump( LONG lOffset, HB_COMP_DECL );
-extern ULONG hb_macroGenJumpFalse( LONG lOffset, HB_COMP_DECL );
+extern ULONG hb_macroGenJump( HB_LONG lOffset, HB_COMP_DECL );
+extern ULONG hb_macroGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL );
 extern void hb_macroGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL );
 extern void hb_macroGenJumpHere( ULONG ulOffset, HB_COMP_DECL );
-extern ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL );
+extern ULONG hb_macroGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL );
 
 extern void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL );
 extern void hb_macroGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL );

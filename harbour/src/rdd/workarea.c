@@ -105,9 +105,9 @@ static HB_ERRCODE hb_waFound( AREAP pArea, HB_BOOL * pFound )
 /*
  * Reposition cursor relative to current position.
  */
-static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_waSkip( AREAP pArea, HB_LONG lToSkip )
 {
-   LONG lSkip;
+   HB_LONG lSkip;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waSkip(%p, %ld)", pArea, lToSkip));
 
@@ -146,7 +146,7 @@ static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
 /*
  * Reposition cursor respecting any filter setting.
  */
-static HB_ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
+static HB_ERRCODE hb_waSkipFilter( AREAP pArea, HB_LONG lUpDown )
 {
    HB_BOOL fBottom, fDeleted;
    HB_ERRCODE errCode;
@@ -958,7 +958,7 @@ static HB_ERRCODE hb_waSysName( AREAP pArea, char * pBuffer )
  */
 static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 {
-   LONG lNext = 1;
+   HB_LONG lNext = 1;
    HB_BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waEval(%p, %p)", pArea, pEvalInfo));
@@ -1030,7 +1030,7 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
  */
 static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
 {
-   LONG lNext = 1;
+   HB_LONG lNext = 1;
    HB_BOOL fEof;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waLocate(%p, %d)", pArea, fContinue));
@@ -1115,7 +1115,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
  */
 static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 {
-   LONG lNext = 1;
+   HB_LONG lNext = 1;
    HB_BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waTrans(%p, %p)", pArea, pTransInfo));
@@ -2219,10 +2219,8 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNC
       hb_strncpyUpper( szSuperName, szDrvName, sizeof( szSuperName ) - 1 );
       pRddNode = hb_rddFindNode( szSuperName, NULL );
 
-      if( !pRddNode )
-      {
+      if( ! pRddNode )
          return HB_FAILURE;
-      }
 
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
@@ -2248,11 +2246,11 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNC
  */
 HB_FUNC( __RDDPREALLOCATE )
 {
-   LONG lNewSize = hb_parnl( 1 );
+   HB_LONG lNewSize = hb_parnl( 1 );
 
-   if( lNewSize > ( LONG ) USHRT_MAX )
+   if( lNewSize > ( HB_LONG ) USHRT_MAX )
       lNewSize = USHRT_MAX;
-   if( lNewSize > ( LONG ) s_uiRddMax )
+   if( lNewSize > ( HB_LONG ) s_uiRddMax )
    {
       s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
       s_RddList = ( LPRDDNODE * )

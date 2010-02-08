@@ -129,8 +129,8 @@ HB_FUNC( DBSKIPPER )
 
    if( pArea )
    {
-      LONG lSkipped = 0;
-      LONG lRecs = 1;
+      HB_LONG lSkipped = 0;
+      HB_LONG lRecs = 1;
       HB_BOOL fBEof;
       ULONG ulRecords = 0;
 

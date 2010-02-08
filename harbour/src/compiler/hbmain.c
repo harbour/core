@@ -1255,7 +1255,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
    for( iPass = 0; iPass < 4 && !HB_COMP_PARAM->fExit; ++iPass )
    {
-      LONG lOffset;
+      HB_LONG lOffset;
 
       if( iPass == 3 && fLineStrip )
       {
@@ -1426,13 +1426,13 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
       if( HB_COMP_PARAM->functions.pLast->iJumps )
       {
-         LONG * plSizes, * plShifts;
+         HB_LONG * plSizes, * plShifts;
          ULONG ulSize;
 
          pJumps = HB_COMP_PARAM->functions.pLast->pJumps;
-         ulSize = sizeof( LONG ) * HB_COMP_PARAM->functions.pLast->iJumps;
-         plSizes = ( LONG * ) hb_xgrab( ulSize );
-         plShifts = ( LONG * ) hb_xgrab( ulSize );
+         ulSize = sizeof( HB_LONG ) * HB_COMP_PARAM->functions.pLast->iJumps;
+         plSizes = ( HB_LONG * ) hb_xgrab( ulSize );
+         plShifts = ( HB_LONG * ) hb_xgrab( ulSize );
 
          for( iJump = 0; iJump < HB_COMP_PARAM->functions.pLast->iJumps; iJump++ )
             plSizes[ iJump ] = plShifts[ iJump ] = 0;
@@ -2237,7 +2237,7 @@ static void hb_compPrepareJumps( HB_COMP_DECL )
    pFunc->pJumps[ pFunc->iJumps++ ] = ( ULONG ) ( pFunc->lPCodePos - 4 );
 }
 
-ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
+ULONG hb_compGenJump( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
@@ -2248,7 +2248,7 @@ ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
-ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
+ULONG hb_compGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
@@ -2259,7 +2259,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
-ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
+ULONG hb_compGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
@@ -2273,7 +2273,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
 void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_COMP_PARAM->functions.pLast->pCode;
-   LONG lOffset = ulTo - ulFrom + 1;
+   HB_LONG lOffset = ulTo - ulFrom + 1;
 
    if( HB_LIM_INT24( lOffset ) )
    {

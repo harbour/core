@@ -297,7 +297,7 @@ HB_FUNC( XHB_GREATEREQ )
  * data from tail
  */
 #undef HB_IS_VALID_INDEX
-#define HB_IS_VALID_INDEX( idx, max )  ( ( ( LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
 
 HB_FUNC( XHB_INDEX )
 {

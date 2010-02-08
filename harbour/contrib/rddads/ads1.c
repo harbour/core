@@ -413,7 +413,7 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
          /* hack for timestamp values, we need sth better yo detect timestamp indexes */
          if( pArea->iFileType == ADS_ADT && pKeyBuf[ 0 ] == 0 && ( iKeyLen == 8 || iKeyLen == 4 ) )
          {
-            LONG lDate, lTime;
+            long lDate, lTime;
             lDate = HB_GET_BE_UINT32( pKeyBuf );
             if( iKeyLen == 8 )
             {
@@ -478,7 +478,7 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
          else /* ADS_CDX, ADS_ADT, ADS_VFP */
          {
             HB_ORD2DBL( pKeyBuf, &dValue );
-            hb_itemPutDL( pItem, ( LONG ) dValue );
+            hb_itemPutDL( pItem, ( long ) dValue );
          }
          break;
 
@@ -1211,7 +1211,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
+static HB_ERRCODE adsSkip( ADSAREAP pArea, HB_LONG lToSkip )
 {
    UNSIGNED32 u32RetVal;
 
@@ -1274,7 +1274,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    else
    {
       HB_ERRCODE errCode = HB_SUCCESS;
-      LONG lSkipper;
+      HB_LONG lSkipper;
 
       if( !pArea->fPositioned && lToSkip < 0 )
       {
@@ -1348,7 +1348,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    }
 }
 
-static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
+static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, HB_LONG lUpDown )
 {
    UNSIGNED32 u32RetVal;
    HB_BOOL fBottom;
@@ -2189,7 +2189,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             if( pField->uiTypeExtended == ADS_SHORTINT )
                hb_itemPutNILen( pItem, ( int ) lVal, 6 );
             else
-               hb_itemPutNLLen( pItem, ( LONG ) lVal, 11 );
+               hb_itemPutNLLen( pItem, ( long ) lVal, 11 );
          }
          break;
       }
@@ -3129,7 +3129,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
          if( uRetVal != AE_SUCCESS )
             return HB_FAILURE;
 
-         hb_itemPutNL( pItem, ( LONG ) u16Count );
+         hb_itemPutNL( pItem, ( long ) u16Count );
          break;
       }
 
@@ -4462,8 +4462,8 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO
 #if ADS_LIB_VERSION >= 900
       case DBOI_SKIPUNIQUE:
       {
-         LONG lToSkip = pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) ?
-                        hb_itemGetNL( pOrderInfo->itmNewVal ) : 1;
+         HB_LONG lToSkip = pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) ?
+                           hb_itemGetNL( pOrderInfo->itmNewVal ) : 1;
          if( hIndex )
          {
             hb_itemPutL( pOrderInfo->itmResult,

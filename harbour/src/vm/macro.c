@@ -1111,7 +1111,7 @@ HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
    return HB_FALSE;
 }
 
-ULONG hb_macroGenJump( LONG lOffset, HB_COMP_DECL )
+ULONG hb_macroGenJump( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1127,7 +1127,7 @@ ULONG hb_macroGenJump( LONG lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-ULONG hb_macroGenJumpFalse( LONG lOffset, HB_COMP_DECL )
+ULONG hb_macroGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1143,7 +1143,7 @@ ULONG hb_macroGenJumpFalse( LONG lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL )
+ULONG hb_macroGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1162,7 +1162,7 @@ ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL )
 void hb_macroGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_PCODE_DATA->pCode;
-   LONG lOffset = ulTo - ulFrom + 1;
+   HB_LONG lOffset = ulTo - ulFrom + 1;
 
    if( HB_LIM_INT24( lOffset ) )
       HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );

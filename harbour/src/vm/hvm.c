@@ -107,7 +107,7 @@ static void    hb_vmNegate( void );          /* negates (-) the latest value on 
 static void    hb_vmInc( HB_ITEM_PTR pItem );   /* increment the latest numeric value on the stack */
 static void    hb_vmDec( HB_ITEM_PTR pItem );   /* decrements the latest numeric value on the stack */
 static void    hb_vmFuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
-static void    hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd );      /* add integer to given item */
+static void    hb_vmAddInt( HB_ITEM_PTR pResult, HB_LONG lAdd );      /* add integer to given item */
 static void    hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );        /* sums given values */
 static void    hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );       /* substracts given values */
 static void    hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );        /* multiplies given values */
@@ -2923,7 +2923,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 /*             character / misc )  */
 /* ------------------------------- */
 
-static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
+static void hb_vmAddInt( HB_ITEM_PTR pResult, HB_LONG lAdd )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmAddInt(%p,%ld)", pResult, lAdd));
 
@@ -4408,7 +4408,7 @@ static void hb_vmSeqBlock( void )
 static HB_GARBAGE_FUNC( hb_withObjectDestructor )
 {
    HB_STACK_TLS_PRELOAD
-   LONG * plWithObjectBase = ( LONG * ) Cargo;
+   HB_LONG * plWithObjectBase = ( HB_LONG * ) Cargo;
    hb_stackWithObjectSetOffset( * plWithObjectBase );
 }
 
@@ -4422,13 +4422,13 @@ static const HB_GC_FUNCS s_gcWithObjectFuncs =
 static void hb_vmWithObjectStart( void )
 {
    HB_STACK_TLS_PRELOAD
-   LONG * plWithObjectBase;
+   HB_LONG * plWithObjectBase;
    PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
 
    pItem = hb_stackAllocItem();
-   plWithObjectBase = ( LONG * ) hb_gcAllocRaw( sizeof( LONG ),
+   plWithObjectBase = ( HB_LONG * ) hb_gcAllocRaw( sizeof( HB_LONG ),
                                                 &s_gcWithObjectFuncs );
    * plWithObjectBase = hb_stackWithObjectOffset();
    pItem->type = HB_IT_POINTER;
@@ -5464,10 +5464,10 @@ static void hb_vmMacroPushIndex( void )
  *    (-1)     2 // number of arguments
  * we should join them into one continuous list
  */
-static LONG hb_vmArgsJoin( LONG lLevel, HB_USHORT uiArgSets )
+static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   LONG lArgs, lRestArgs, lOffset;
+   HB_LONG lArgs, lRestArgs, lOffset;
    PHB_ITEM pArgs = hb_stackItemFromTop( lLevel ) ;
 
 
@@ -5494,7 +5494,7 @@ static LONG hb_vmArgsJoin( LONG lLevel, HB_USHORT uiArgSets )
 static void hb_vmMacroDo( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   LONG lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroDo(%hu)", uiArgSets));
 
@@ -5506,7 +5506,7 @@ static void hb_vmMacroDo( HB_USHORT uiArgSets )
 static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   LONG lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroFunc(%hu)", uiArgSets));
 
@@ -5520,7 +5520,7 @@ static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 static void hb_vmMacroSend( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   LONG lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroSend(%hu)", uiArgSets));
 
@@ -5534,7 +5534,7 @@ static void hb_vmMacroSend( HB_USHORT uiArgSets )
 static void hb_vmMacroArrayGen( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   LONG lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroArrayGen(%hu)", uiArgSets));
 
@@ -6920,7 +6920,7 @@ static void hb_vmPushLocal( int iLocal )
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( LONG ) iLocal );
+      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( HB_LONG ) iLocal );
    }
 
    hb_itemCopy( hb_stackAllocItem(),
@@ -9025,7 +9025,7 @@ static PHB_ITEM hb_xvmLocalPtr( int iLocal )
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( LONG ) iLocal );
+      return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( HB_LONG ) iLocal );
    }
 }
 
@@ -9273,7 +9273,7 @@ HB_BOOL hb_xvmPopAliasedVar( PHB_SYMB pSymbol )
    HB_XVM_RETURN
 }
 
-void hb_xvmLocalSetInt( int iLocal, LONG lValue )
+void hb_xvmLocalSetInt( int iLocal, HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pLocal;
@@ -9308,7 +9308,7 @@ void hb_xvmLocalSetInt( int iLocal, LONG lValue )
    }
 }
 
-HB_BOOL hb_xvmLocalAddInt( int iLocal, LONG lAdd )
+HB_BOOL hb_xvmLocalAddInt( int iLocal, HB_LONG lAdd )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -9536,7 +9536,7 @@ HB_BOOL hb_xvmExactlyEqual( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmEqualInt( LONG lValue )
+HB_BOOL hb_xvmEqualInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9546,7 +9546,7 @@ HB_BOOL hb_xvmEqualInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value == lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value == lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9589,7 +9589,7 @@ HB_BOOL hb_xvmEqualInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmEqualIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmEqualIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9599,7 +9599,7 @@ HB_BOOL hb_xvmEqualIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value == lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value == lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9655,7 +9655,7 @@ HB_BOOL hb_xvmNotEqual( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmNotEqualInt( LONG lValue )
+HB_BOOL hb_xvmNotEqualInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9665,7 +9665,7 @@ HB_BOOL hb_xvmNotEqualInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value != lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value != lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9708,7 +9708,7 @@ HB_BOOL hb_xvmNotEqualInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmNotEqualIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmNotEqualIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9718,7 +9718,7 @@ HB_BOOL hb_xvmNotEqualIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value != lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value != lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9774,7 +9774,7 @@ HB_BOOL hb_xvmLess( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmLessThenInt( LONG lValue )
+HB_BOOL hb_xvmLessThenInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9784,7 +9784,7 @@ HB_BOOL hb_xvmLessThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value < lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value < lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9822,7 +9822,7 @@ HB_BOOL hb_xvmLessThenInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmLessThenIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmLessThenIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9832,7 +9832,7 @@ HB_BOOL hb_xvmLessThenIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value < lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value < lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9883,7 +9883,7 @@ HB_BOOL hb_xvmLessEqual( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmLessEqualThenInt( LONG lValue )
+HB_BOOL hb_xvmLessEqualThenInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9893,7 +9893,7 @@ HB_BOOL hb_xvmLessEqualThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value <= lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value <= lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9931,7 +9931,7 @@ HB_BOOL hb_xvmLessEqualThenInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmLessEqualThenIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmLessEqualThenIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -9941,7 +9941,7 @@ HB_BOOL hb_xvmLessEqualThenIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value <= lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value <= lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -9992,7 +9992,7 @@ HB_BOOL hb_xvmGreater( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmGreaterThenInt( LONG lValue )
+HB_BOOL hb_xvmGreaterThenInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -10002,7 +10002,7 @@ HB_BOOL hb_xvmGreaterThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value > lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value > lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -10040,7 +10040,7 @@ HB_BOOL hb_xvmGreaterThenInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmGreaterThenIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmGreaterThenIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -10050,7 +10050,7 @@ HB_BOOL hb_xvmGreaterThenIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value > lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value > lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -10101,7 +10101,7 @@ HB_BOOL hb_xvmGreaterEqual( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
+HB_BOOL hb_xvmGreaterEqualThenInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -10111,7 +10111,7 @@ HB_BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value >= lValue;
+      pItem->item.asLogical.value = ( HB_LONG ) pItem->item.asInteger.value >= lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( HB_IS_LONG( pItem ) )
@@ -10149,7 +10149,7 @@ HB_BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, HB_BOOL * pfValue )
+HB_BOOL hb_xvmGreaterEqualThenIntIs( HB_LONG lValue, HB_BOOL * pfValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem;
@@ -10159,7 +10159,7 @@ HB_BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, HB_BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = ( LONG ) pItem->item.asInteger.value >= lValue;
+      * pfValue = ( HB_LONG ) pItem->item.asInteger.value >= lValue;
       hb_stackDec();
    }
    else if( HB_IS_LONG( pItem ) )
@@ -10210,7 +10210,7 @@ HB_BOOL hb_xvmInstring( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmAddInt( LONG lAdd )
+HB_BOOL hb_xvmAddInt( HB_LONG lAdd )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -10311,7 +10311,7 @@ HB_BOOL hb_xvmMinusEqPop( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMultByInt( LONG lValue )
+HB_BOOL hb_xvmMultByInt( HB_LONG lValue )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pValue;
@@ -10397,7 +10397,7 @@ HB_BOOL hb_xvmMultEqPop( void )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmDivideByInt( LONG lDivisor )
+HB_BOOL hb_xvmDivideByInt( HB_LONG lDivisor )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pValue;
