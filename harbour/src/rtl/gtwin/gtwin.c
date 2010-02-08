@@ -184,9 +184,9 @@ static PHB_CODEPAGE  s_cdpHost;
 static PHB_CODEPAGE  s_cdpBox;
 static PHB_CODEPAGE  s_cdpIn;
 #else
-static BYTE          s_charTransRev[ 256 ];
-static BYTE          s_charTrans[ 256 ];
-static BYTE          s_keyTrans[ 256 ];
+static HB_BYTE       s_charTransRev[ 256 ];
+static HB_BYTE       s_charTrans[ 256 ];
+static HB_BYTE       s_keyTrans[ 256 ];
 #endif
 static int           s_altisdown = 0;
 static int           s_altnum = 0;
@@ -590,7 +590,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 #if defined( UNICODE )
          HB_WCHAR wc = s_pCharInfoScreen[ i ].Char.UnicodeChar;
          unsigned char uc;
-         BYTE bAttr = 0;
+         HB_BYTE bAttr = 0;
 
          /* TODO: optimize it by creating conversion table - it can be
           *       very slow in some cases
@@ -1557,9 +1557,9 @@ static HB_BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 
       for( i = 0; i < 256; i++ )
       {
-         s_charTrans[ i ] = ( BYTE )
+         s_charTrans[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
-         s_charTransRev[ i ] = ( BYTE )
+         s_charTransRev[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_TRUE, cdpTerm, cdpHost );
       }
    }
@@ -1607,7 +1607,7 @@ static HB_BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
       cdpHost = hb_cdpFind( pszHostCDP );
 
       for( i = 0; i < 256; i++ )
-         s_keyTrans[ i ] = ( BYTE )
+         s_keyTrans[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 #  endif
@@ -1806,7 +1806,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
        iRow < ( int ) _GetScreenHeight() && iCol < ( int ) _GetScreenWidth() )
    {
       int iColor;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
       int iFirst = iCol;
       int i = ( iRow * _GetScreenWidth() + iCol );

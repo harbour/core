@@ -331,7 +331,7 @@ static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szTe
 static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iLineFeed, iHeight, iWidth, iLen;
    PHB_GTCGI pGTCGI;

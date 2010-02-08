@@ -138,8 +138,8 @@ static HB_FHANDLE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
 
 HB_FUNC( SX_MAKESEM )
 {
-   char szFileName[HB_PATH_MAX];
-   BYTE buffer[2];
+   char szFileName[ HB_PATH_MAX ];
+   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
    HB_BOOL fError = HB_FALSE, fNewFile = HB_FALSE;
 
@@ -176,8 +176,8 @@ HB_FUNC( SX_MAKESEM )
 
 HB_FUNC( SX_KILLSEM )
 {
-   char szFileName[HB_PATH_MAX];
-   BYTE buffer[2];
+   char szFileName[ HB_PATH_MAX ];
+   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
 
    if( hb_sxSemName( szFileName ) )
@@ -203,7 +203,7 @@ HB_FUNC( SX_KILLSEM )
 
 HB_FUNC( SX_ISSEM )
 {
-   char szFileName[HB_PATH_MAX];
+   char szFileName[ HB_PATH_MAX ];
    HB_FHANDLE hFile = FS_ERROR;
 
    if( hb_sxSemName( szFileName ) )

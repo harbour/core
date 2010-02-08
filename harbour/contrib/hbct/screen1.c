@@ -103,7 +103,7 @@ HB_FUNC( SCREENATTR )
 {
    int iRow, iCol;
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
 
    hb_gtGetPos( &iRow, &iCol );
@@ -250,7 +250,7 @@ HB_FUNC( SAYSCREEN )
          do
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
             if( hb_gtGetChar( iRow, i, &iColor, &bAttr, &usChar ) != HB_SUCCESS )
             {
@@ -393,7 +393,7 @@ HB_FUNC( INVERTWIN )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
@@ -490,7 +490,7 @@ HB_FUNC( UNTEXTWIN )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
@@ -570,7 +570,7 @@ HB_FUNC( CHARWIN )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
@@ -650,7 +650,7 @@ HB_FUNC( COLORWIN )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
@@ -714,7 +714,7 @@ HB_FUNC( SCREENTEXT )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
             *szText++ = ( char ) usChar;
@@ -781,7 +781,7 @@ HB_FUNC( COLORREPL )
       while( iCol <= iMaxCol )
       {
          int iColor;
-         BYTE bAttr;
+         HB_BYTE bAttr;
          USHORT usChar;
 
          hb_gtGetChar( iRow, iCol, &iColor, &bAttr, &usChar );

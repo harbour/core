@@ -196,7 +196,7 @@ public:
    void   displayCell( int iRow, int iCol );
    void   displayBlock( int iRow, int iCol );
    void   resizeImage( const QSize &newSize );
-   void   drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y );
+   void   drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor, int x, int y );
    void   copyTextOnClipboard( void );
    void   paintCopyOperation( void );
 
@@ -337,8 +337,8 @@ typedef struct
 #endif
 
 #if !defined( UNICODE )
-   BYTE         keyTransTbl[ 256 ];
-   BYTE         chrTransTbl[ 256 ];
+   HB_BYTE      keyTransTbl[ 256 ];
+   HB_BYTE      chrTransTbl[ 256 ];
 #endif
 
 } HB_GTWVT, * PHB_GTWVT;

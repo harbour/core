@@ -69,16 +69,16 @@ static ULONG hb_compHrbSize( HB_COMP_DECL, ULONG * pulSymbols, ULONG * pulFuncti
    return ulSize;
 }
 
-void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
+void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, ULONG * pulSize )
 {
    PFUNCTION pFunc;
    PCOMSYMBOL pSym;
    ULONG ulSymbols, ulFunctions, ulLen;
-   BYTE * ptr;
+   HB_BYTE * ptr;
 
    * pulSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
    /* additional 0 byte is for passing buffer directly as string item */
-   ptr = * pBufPtr = ( BYTE * ) hb_xgrab( * pulSize + 1 );
+   ptr = * pBufPtr = ( HB_BYTE * ) hb_xgrab( * pulSize + 1 );
 
    /* signature */
    *ptr++ = 0xC0;
@@ -104,7 +104,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
        *        for .hrb files in which this field will have at least
        *        16bit [druzus]
        */
-      *ptr++ = ( BYTE ) pSym->cScope;
+      *ptr++ = ( HB_BYTE ) pSym->cScope;
       /* symbol type */
       if( pSym->cScope & HB_FS_LOCAL )
          *ptr++ = SYM_FUNC;      /* function defined in this module */
@@ -141,7 +141,7 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ HB_PATH_MAX ];
    ULONG ulSize;
-   BYTE * pHrbBody;
+   HB_BYTE * pHrbBody;
    FILE * yyc;
 
    if( ! pFileName->szExtension )

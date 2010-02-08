@@ -157,7 +157,7 @@ struct _HB_SYMB;
    /* pCode dynamic function - HRB */
    typedef struct _HB_PCODEFUNC
    {
-      BYTE *      pCode;         /* function body - PCODE */
+      HB_BYTE *   pCode;         /* function body - PCODE */
       struct _HB_SYMB * pSymbols;/* module symbol table */
    } HB_PCODEFUNC, * PHB_PCODEFUNC;
 

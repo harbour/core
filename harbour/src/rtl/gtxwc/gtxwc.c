@@ -2356,10 +2356,10 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
       int     i, iClosestColor;
       double  dDiff, dDistance, dClosestColorDist = 0;
       XColor *colorTable;
-      BYTE   *checkTable;
+      HB_BYTE *checkTable;
 
       colorTable = ( XColor * ) hb_xgrab( iCMapSize * sizeof( XColor ) );
-      checkTable = ( BYTE * ) hb_xgrab( iCMapSize * sizeof( BYTE ) );
+      checkTable = ( HB_BYTE * ) hb_xgrab( iCMapSize * sizeof( HB_BYTE ) );
       for( i = 0; i  < iCMapSize; i++ )
       {
          colorTable[i].pixel = (HB_GT_PIXELTYPE) i;
@@ -2464,7 +2464,7 @@ static HB_BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, BYTE color, USHORT *usChBuf, int len )
+static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color, USHORT *usChBuf, int len )
 {
    if( wnd->fClearBkg )
    {
@@ -2491,7 +2491,7 @@ static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, BYTE color, U
 
 /* *********************************************************************** */
 
-static ULONG hb_gt_xwc_HashCurrChar( BYTE attr, BYTE color, USHORT chr )
+static ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, USHORT chr )
 {
    return ( ( ULONG ) attr << 24 ) | ( ( ULONG ) color << 16 ) | ( ULONG ) chr;
 }
@@ -2501,7 +2501,7 @@ static ULONG hb_gt_xwc_HashCurrChar( BYTE attr, BYTE color, USHORT chr )
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
    USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
-   BYTE oldColor = 0, color, attr;
+   HB_BYTE oldColor = 0, color, attr;
    USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    ULONG ulCurr = 0xFFFFFFFFL;
    int i, iColor;
@@ -2536,7 +2536,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
          else
          {
             usCh16 &= 0xFF;
-            color = ( BYTE ) iColor;
+            color = ( HB_BYTE ) iColor;
          }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          chTrans = ( attr & HB_GT_ATTR_BOX ) ? &wnd->boxTrans[ usCh16 ] :
@@ -2802,7 +2802,7 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
          if( size )
          {
             int color;
-            BYTE attr;
+            HB_BYTE attr;
             USHORT usChar;
 
             HB_GTSELF_GETSCRCHAR( wnd->pGT, wnd->row, wnd->col, &color, &attr, &usChar );
@@ -4333,7 +4333,7 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          int iDefColor = HB_GTSELF_GETCOLOR( pGT );
          int iColor;
-         BYTE bAttr;
+         HB_BYTE bAttr;
          USHORT usChar;
 
          while( iSize-- )

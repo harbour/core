@@ -445,7 +445,6 @@ typedef union YYSTYPE
    struct
    {
       double   dNumber;    /* to hold a double number returned by lex */
-      /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
       HB_UCHAR bWidth;     /* to hold the width of the value */
       HB_UCHAR bDec;       /* to hold the number of decimal points in the value */
    } valDouble;
@@ -6097,7 +6096,7 @@ yyreduce:
                   HB_COMP_PARAM->pLastMethod->cType = cVarType;
                   HB_COMP_PARAM->pLastMethod->iParamCount = 1;
 
-                  HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+                  HB_COMP_PARAM->pLastMethod->cParamTypes = ( HB_BYTE * ) hb_xgrab( 1 );
                   HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
 
                   HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
@@ -6457,7 +6456,7 @@ yyreduce:
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(7) - (12)].asExpr), HB_COMP_PARAM ) );   /* end */
                   if( iSign )
                   {
-                     hb_compGenPCode1( ( BYTE ) ( iSign > 0 ? HB_P_GREATER : HB_P_LESS ), HB_COMP_PARAM );
+                     hb_compGenPCode1( ( HB_BYTE ) ( iSign > 0 ? HB_P_GREATER : HB_P_LESS ), HB_COMP_PARAM );
                      if( (yyvsp[(8) - (12)].asExpr) )
                         HB_COMP_EXPR_DELETE( (yyvsp[(8) - (12)].asExpr) );
                   }
@@ -7495,7 +7494,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
    if( usCount > 255 )
       hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), HB_COMP_PARAM );
    else
-      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount, HB_COMP_PARAM );
+      hb_compGenPCode2( HB_P_DOSHORT, ( HB_BYTE ) usCount, HB_COMP_PARAM );
 
    /* pop initial values */
    while( pVar )
@@ -7690,7 +7689,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
    }
    else
    {
-      hb_compGenPCode3( HB_P_ENUMSTART, ( BYTE ) ( ulLen & 0xFF ), ( BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
+      hb_compGenPCode3( HB_P_ENUMSTART, ( HB_BYTE ) ( ulLen & 0xFF ), ( HB_BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
    }
 }
 

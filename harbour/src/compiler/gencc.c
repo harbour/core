@@ -70,14 +70,14 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-void hb_compGenCString( FILE * yyc, const BYTE * pText, ULONG ulLen )
+void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, ULONG ulLen )
 {
    ULONG ulPos;
 
    fputc( '"', yyc );
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
-      BYTE uchr = ( BYTE ) pText[ ulPos ];
+      HB_BYTE uchr = ( HB_BYTE ) pText[ ulPos ];
       /*
        * NOTE: After optimization some CHR(n) can be converted
        *       into a string containing nonprintable characters.
@@ -87,14 +87,14 @@ void hb_compGenCString( FILE * yyc, const BYTE * pText, ULONG ulLen )
        */
       if( uchr == '"' || uchr == '\\' || uchr == '?' )
          fprintf( yyc, "\\%c", uchr );
-      else if( uchr < ( BYTE ) ' ' || uchr >= 127 )
+      else if( uchr < ( HB_BYTE ) ' ' || uchr >= 127 )
       {
-         BYTE uchrnext = ulPos < ulLen - 1 ? pText[ ulPos + 1 ] : 0;
+         HB_BYTE uchrnext = ulPos < ulLen - 1 ? pText[ ulPos + 1 ] : 0;
 
          fprintf( yyc, "\\x%02X%s", uchr,
-                  ( uchrnext >= ( BYTE ) '0' && uchrnext <= ( BYTE ) '9' ) ||
-                  ( uchrnext >= ( BYTE ) 'a' && uchrnext <= ( BYTE ) 'z' ) ||
-                  ( uchrnext >= ( BYTE ) 'A' && uchrnext <= ( BYTE ) 'Z' ) ? "\" \"" : "" );
+                  ( uchrnext >= ( HB_BYTE ) '0' && uchrnext <= ( HB_BYTE ) '9' ) ||
+                  ( uchrnext >= ( HB_BYTE ) 'a' && uchrnext <= ( HB_BYTE ) 'z' ) ||
+                  ( uchrnext >= ( HB_BYTE ) 'A' && uchrnext <= ( HB_BYTE ) 'Z' ) ? "\" \"" : "" );
       }
       else
          fprintf( yyc, "%c", uchr );
@@ -1106,10 +1106,10 @@ static HB_GENC_FUNC( hb_p_pushdouble )
 
 #if 0
    fprintf( cargo->yyc, "\thb_xvmPushDouble( %.*f, %d, %d );\n",
-            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] + 1,
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( HB_BYTE ) ] + 1,
             HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos + 1 ] ),
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
-            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( HB_BYTE ) ] );
 #else
    /*
     * This version keeps double calculation compatible with RT FL functions
@@ -1117,13 +1117,13 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    fprintf( cargo->yyc, "\thb_xvmPushDouble( * ( double * ) " );
    {
       double d = HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos + 1 ] );
-      hb_compGenCString( cargo->yyc, ( BYTE * ) &d, sizeof( double ) );
+      hb_compGenCString( cargo->yyc, ( HB_BYTE * ) &d, sizeof( double ) );
    }
    fprintf( cargo->yyc, ", %d, %d );\n",
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
-            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( HB_BYTE ) ] );
 #endif
-   return sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1;
+   return sizeof( double ) + sizeof( HB_BYTE ) + sizeof( HB_BYTE ) + 1;
 }
 
 static HB_GENC_FUNC( hb_p_pushfield )

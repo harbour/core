@@ -537,7 +537,7 @@ static LPKEYINFO hb_nsxKeyCopy( LPKEYINFO pKeyDest, LPKEYINFO pKey, int keylen )
 /*
  * get NSX key type for given item
  */
-static BYTE hb_nsxItemType( PHB_ITEM pItem )
+static HB_BYTE hb_nsxItemType( PHB_ITEM pItem )
 {
    switch( hb_itemType( pItem ) )
    {
@@ -567,7 +567,7 @@ static BYTE hb_nsxItemType( PHB_ITEM pItem )
 /*
  * convert NSX (Clipper) type of key expression to internal one
  */
-static HB_UCHAR hb_nsxKeyType( USHORT uiType, BYTE * pbTrail )
+static HB_UCHAR hb_nsxKeyType( USHORT uiType, HB_BYTE * pbTrail )
 {
    switch( uiType )
    {
@@ -1175,7 +1175,7 @@ static void hb_nsxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
 /*
  * read a given block from index file
  */
-static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, ULONG ulBlock, BYTE *buffer, int iSize )
+static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, ULONG ulBlock, HB_BYTE *buffer, int iSize )
 {
    if( !pIndex->lockRead && !pIndex->lockWrite )
       hb_errInternal( 9103, "hb_nsxBlockRead on not locked index file.", NULL, NULL );
@@ -1193,7 +1193,7 @@ static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, ULONG ulBlock, BYTE *buffer, 
 /*
  * write a given block into index file
  */
-static HB_BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, ULONG ulBlock, BYTE *buffer, int iSize )
+static HB_BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, ULONG ulBlock, HB_BYTE *buffer, int iSize )
 {
    if( !pIndex->lockWrite )
       hb_errInternal( 9102, "hb_nsxBlockWrite on not locked index file.", NULL, NULL );
@@ -1219,7 +1219,7 @@ static HB_BOOL hb_nsxPageSave( LPNSXINDEX pIndex, LPPAGEINFO pPage )
       hb_nsxLeafSetFreeOffset( pPage, pPage->uiOffset );
    }
    if( !hb_nsxBlockWrite( pIndex, pPage->Page,
-                          (BYTE *) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
+                          ( HB_BYTE * ) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
       return HB_FALSE;
    pPage->Changed = HB_FALSE;
    pIndex->fFlush = HB_TRUE;
@@ -1270,7 +1270,7 @@ static HB_BOOL hb_nsxTagHeaderCheck( LPTAGINFO pTag )
    {
       if( pTag->HeadBlock )
       {
-         BYTE buffer[ NSX_TAGHEAD_HEADSIZE ];
+         HB_BYTE buffer[ NSX_TAGHEAD_HEADSIZE ];
          if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, buffer, NSX_TAGHEAD_HEADSIZE ) )
          {
             LPNSXTAGHEADER pHeader = ( LPNSXTAGHEADER ) ( void * ) buffer;
@@ -1525,7 +1525,7 @@ static LPPAGEINFO hb_nsxPageLoad( LPTAGINFO pTag, ULONG ulPage )
       pPage = hb_nsxPageGetBuffer( pTag, ulPage );
       pPage->Changed = HB_FALSE;
       if( !hb_nsxBlockRead( pTag->pIndex, ulPage,
-                            (BYTE *) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
+                            ( HB_BYTE * ) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
       {
          hb_nsxPageRelease( pTag, pPage );
          return NULL;
@@ -1655,7 +1655,7 @@ static ULONG hb_nsxPageGetFree( LPTAGINFO pTag )
  */
 static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
                                const char *szKeyExpr, PHB_ITEM pKeyExpr,
-                               HB_UCHAR ucKeyType, USHORT uiKeyLen, BYTE bTrail,
+                               HB_UCHAR ucKeyType, USHORT uiKeyLen, HB_BYTE bTrail,
                                const char *szForExpr, PHB_ITEM pForExpr,
                                HB_BOOL fAscendKey, HB_BOOL fUnique, HB_BOOL fCustom )
 {
@@ -1910,7 +1910,7 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       USHORT type = hb_nsxKeyTypeRaw( pTag->KeyType );
       int iLen;
 
-      memset( ( BYTE * ) &Header + NSX_TAGHEAD_HEADSIZE, 0,
+      memset( ( HB_BYTE * ) &Header + NSX_TAGHEAD_HEADSIZE, 0,
               sizeof( Header ) - NSX_TAGHEAD_HEADSIZE );
 
       HB_PUT_LE_UINT16( Header.KeyType, type );
@@ -1932,7 +1932,7 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       iSize = sizeof( Header );
    }
 
-   if( !hb_nsxBlockWrite( pIndex, pTag->HeadBlock, ( BYTE * ) &Header, iSize ) )
+   if( !hb_nsxBlockWrite( pIndex, pTag->HeadBlock, ( HB_BYTE * ) &Header, iSize ) )
       return HB_FAILURE;
 
    pTag->HdrChanged = HB_FALSE;
@@ -2001,7 +2001,7 @@ static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
    HB_PUT_LE_UINT32( pIndex->HeaderBuff.FreePage, pIndex->NextAvail );
    HB_PUT_LE_UINT32( pIndex->HeaderBuff.FileSize, pIndex->FileSize );
 
-   if( !hb_nsxBlockWrite( pIndex, 0, ( BYTE * ) &pIndex->HeaderBuff, iSize ) )
+   if( !hb_nsxBlockWrite( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, iSize ) )
       return HB_FAILURE;
 
    pIndex->Changed = pIndex->Update = HB_FALSE;
@@ -2015,11 +2015,11 @@ static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
 static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
 {
    LPTAGINFO pTag;
-   BYTE signature;
+   HB_BYTE signature;
 
    if( !pIndex->fValidHeader )
    {
-      if( !hb_nsxBlockRead( pIndex, 0, ( BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
+      if( !hb_nsxBlockRead( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
          return HB_FAILURE;
       pIndex->fValidHeader = HB_TRUE;
    }
@@ -2052,7 +2052,7 @@ static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
          if( ulBlock == 0 || pTagItem->TagName[ 0 ] <= 0x20 )
             return HB_FAILURE;
          if( !hb_nsxBlockRead( pIndex, ulBlock,
-                               ( BYTE * ) &tagbuffer, sizeof( NSXTAGHEADER ) ) )
+                               ( HB_BYTE * ) &tagbuffer, sizeof( NSXTAGHEADER ) ) )
             return HB_FAILURE;
          pTag = hb_nsxTagLoad( pIndex, ulBlock, ( const char * ) pTagItem->TagName, &tagbuffer );
          if( !pTag )
@@ -2069,7 +2069,7 @@ static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
  */
 static HB_ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
 {
-   if( !hb_nsxBlockRead( pIndex, 0, ( BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
+   if( !hb_nsxBlockRead( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
       return HB_FAILURE;
 
    if( pIndex->HeaderBuff.Signature[0] !=
@@ -3437,7 +3437,7 @@ static HB_BOOL hb_nsxCurKeyRefresh( LPTAGINFO pTag )
    else if( pTag->stackLevel == 0 || pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo )
    {
       HB_BOOL fValidBuf = pArea->dbfarea.fValidBuffer;
-      BYTE buf[ NSX_MAXKEYLEN ];
+      HB_BYTE buf[ NSX_MAXKEYLEN ];
       HB_BOOL fBuf = HB_FALSE;
       LPKEYINFO pKey = NULL;
       /* Try to find previous if it's key for the same record */
@@ -4957,7 +4957,7 @@ static ULONG hb_nsxOrdScopeEval( LPTAGINFO pTag,
       hb_nsxTagGoTop( pTag );
       while( !pTag->TagEOF )
       {
-         pFunc( pTag->CurKeyInfo->rec, (BYTE *) pTag->CurKeyInfo->val, ulLen, pParam );
+         pFunc( pTag->CurKeyInfo->rec, ( HB_BYTE * ) pTag->CurKeyInfo->val, ulLen, pParam );
          ulCount++;
          hb_nsxTagSkipNext( pTag );
       }
@@ -5790,7 +5790,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
       LPTAGINFO pSaveTag = pArea->lpCurTag;
       ULONG ulStartRec = 0, ulNextCount = 0;
       HB_BOOL fDirectRead, fUseFilter = HB_FALSE;
-      BYTE * pSaveRecBuff = pArea->dbfarea.pRecord;
+      HB_BYTE * pSaveRecBuff = pArea->dbfarea.pRecord;
       char szBuffer[ NSX_MAXKEYLEN ];
       int iRecBuff = 0, iRecBufSize, iRec;
       double d;
@@ -6616,7 +6616,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    ULONG ulRecNo;
    HB_BOOL fNewFile, fProd, fLocked = HB_FALSE, fAscend = HB_TRUE, fCustom = HB_FALSE,
         fTemporary = HB_FALSE, fExclusive = HB_FALSE;
-   BYTE bType, bTrail;
+   HB_BYTE bType, bTrail;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxOrderCreate(%p, %p)", pArea, pOrderInfo));
 

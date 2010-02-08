@@ -142,20 +142,20 @@ typedef struct _ADSAREA_
     *  example.
     */
 
-   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
+   LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */
 
-   char *   szDataFileName;      /* Name of data file */
-   ULONG    ulRecordLen;         /* Size of record */
-   ULONG    ulRecNo;             /* Current record */
-   BYTE *   pRecord;             /* Buffer of record data */
-   ULONG    maxFieldLen;         /* Max field length in table record */
+   char *    szDataFileName;      /* Name of data file */
+   ULONG     ulRecordLen;         /* Size of record */
+   ULONG     ulRecNo;             /* Current record */
+   HB_BYTE * pRecord;             /* Buffer of record data */
+   ULONG     maxFieldLen;         /* Max field length in table record */
 
-   HB_BOOL  fPositioned;         /* HB_TRUE if we are not at phantom record */
-   HB_BOOL  fShared;             /* Shared file */
-   HB_BOOL  fReadonly;           /* Read only file */
-   HB_BOOL  fFLocked;            /* HB_TRUE if file is locked */
+   HB_BOOL   fPositioned;         /* HB_TRUE if we are not at phantom record */
+   HB_BOOL   fShared;             /* Shared file */
+   HB_BOOL   fReadonly;           /* Read only file */
+   HB_BOOL   fFLocked;            /* HB_TRUE if file is locked */
 
-   int      iFileType;           /* adt/cdx/ntx/vfp */
+   int       iFileType;           /* adt/cdx/ntx/vfp */
 
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;

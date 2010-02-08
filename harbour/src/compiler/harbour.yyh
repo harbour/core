@@ -282,7 +282,6 @@ typedef union YYSTYPE
    struct
    {
       double   dNumber;    /* to hold a double number returned by lex */
-      /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
       HB_UCHAR bWidth;     /* to hold the width of the value */
       HB_UCHAR bDec;       /* to hold the number of decimal points in the value */
    } valDouble;

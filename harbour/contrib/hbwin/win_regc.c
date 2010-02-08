@@ -137,36 +137,36 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
              dwType == REG_EXPAND_SZ ||
              dwType == REG_MULTI_SZ )
          {
-            LPTSTR lpValue = ( LPTSTR ) hb_xgrab( ( dwSize + 1 ) * sizeof( TCHAR ) );
+            LPBYTE lpValue = ( LPBYTE ) hb_xgrab( ( dwSize + 1 ) * sizeof( TCHAR ) );
 
             RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                              lpKey,
                              NULL,
                              &dwType,
-                             ( LPBYTE ) lpValue,
+                             lpValue,
                              &dwSize );
 
             #if defined( UNICODE )
                 dwSize >>= 1;
             #endif
 
-            HB_STORSTRLEN( lpValue, dwSize, 5 );
+            HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
 
             hb_xfree( lpValue );
          }
          else /* No translation for binary data */
          {
-            BYTE * cValue = ( BYTE * ) hb_xgrab( dwSize + 1 );
+            LPBYTE lpValue = ( LPBYTE ) hb_xgrab( dwSize + 1 );
 
             RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                              lpKey,
                              NULL,
                              &dwType,
-                             ( LPBYTE ) cValue,
+                             lpValue,
                              &dwSize );
 
-            if( ! hb_storclen_buffer( ( char * ) cValue, dwSize, 5 ) )
-               hb_xfree( cValue );
+            if( ! hb_storclen_buffer( ( char * ) lpValue, dwSize, 5 ) )
+               hb_xfree( lpValue );
          }
       }
       else

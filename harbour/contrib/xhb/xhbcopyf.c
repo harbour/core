@@ -96,7 +96,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
          struct stat struFileInfo;
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
-         BYTE * buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
+         HB_BYTE * buffer = ( HB_BYTE * ) hb_xgrab( BUFFER_SIZE );
          USHORT usRead;
 
          bRetVal = HB_TRUE;

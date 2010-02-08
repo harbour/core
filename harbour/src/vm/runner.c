@@ -75,7 +75,7 @@ typedef struct
 {
    char *         szName;                       /* Name of the function     */
    PHB_PCODEFUNC  pCodeFunc;                    /* Dynamic function info    */
-   BYTE *         pCode;                        /* P-code                   */
+   HB_BYTE *      pCode;                        /* P-code                   */
 } HB_DYNF, * PHB_DYNF;
 
 typedef struct
@@ -90,7 +90,7 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
-static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
+static const HB_BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK   0              /* symbol does not have to be linked */
@@ -373,7 +373,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
          do
             ch = *buffer++ = szHrbBody[ ulBodyOffset++ ];
          while( ch );
-         pSymRead[ ul ].scope.value = ( BYTE ) szHrbBody[ ulBodyOffset++ ];
+         pSymRead[ ul ].scope.value = ( HB_BYTE ) szHrbBody[ ulBodyOffset++ ];
          pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) ( HB_PTRDIFF ) szHrbBody[ ulBodyOffset++ ];
          pSymRead[ ul ].pDynSym = NULL;
 
@@ -415,7 +415,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
                break;
 
             /* Copy function body */
-            pDynFunc[ ul ].pCode = ( BYTE * ) hb_xgrab( ulSize );
+            pDynFunc[ ul ].pCode = ( HB_BYTE * ) hb_xgrab( ulSize );
             memcpy( ( char * ) pDynFunc[ ul ].pCode, szHrbBody + ulBodyOffset, ulSize );
             ulBodyOffset += ulSize;
 

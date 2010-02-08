@@ -535,7 +535,7 @@ typedef FIELD * LPFIELD;
  * prototype for function to evaluate against index keys
  * only for local RDDs (DBFNTX, DBFCDX, ...)
  */
-typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, BYTE *, ULONG, void * );
+typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, HB_BYTE *, ULONG, void * );
 
 
 /*--------------------* WORKAREA structure *----------------------*/
@@ -610,10 +610,10 @@ typedef HB_ERRCODE ( * DBENTRYP_VOS   )( AREAP area, LPDBORDSCOPEINFO param );
 typedef HB_ERRCODE ( * DBENTRYP_VOI   )( AREAP area, LPDBORDERINFO param );
 typedef HB_ERRCODE ( * DBENTRYP_SVOI  )( AREAP area, USHORT index, LPDBORDERINFO param );
 typedef HB_ERRCODE ( * DBENTRYP_SP    )( AREAP area, USHORT * param );
-typedef HB_ERRCODE ( * DBENTRYP_P     )( AREAP area, const BYTE * param );
+typedef HB_ERRCODE ( * DBENTRYP_P     )( AREAP area, const HB_BYTE * param );
 typedef HB_ERRCODE ( * DBENTRYP_CP    )( AREAP area, char * param );
 typedef HB_ERRCODE ( * DBENTRYP_CC    )( AREAP area, const char * param );
-typedef HB_ERRCODE ( * DBENTRYP_PP    )( AREAP area, BYTE ** param );
+typedef HB_ERRCODE ( * DBENTRYP_PP    )( AREAP area, HB_BYTE ** param );
 typedef HB_ERRCODE ( * DBENTRYP_S     )( AREAP area, USHORT param );
 typedef HB_ERRCODE ( * DBENTRYP_LP    )( AREAP area, LONG * param );
 typedef HB_ERRCODE ( * DBENTRYP_ULP   )( AREAP area, ULONG * param );

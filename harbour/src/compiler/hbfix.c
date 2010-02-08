@@ -66,7 +66,7 @@ typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
 
 static HB_FIX_FUNC( hb_p_pushblock )
 {
-   BYTE * pLocal = &pFunc->pCode[ lPCodePos + 7 ];
+   HB_BYTE * pLocal = &pFunc->pCode[ lPCodePos + 7 ];
    USHORT wVar;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -91,7 +91,7 @@ static HB_FIX_FUNC( hb_p_pushblock )
 
 static HB_FIX_FUNC( hb_p_pushblocklarge )
 {
-   BYTE * pLocal = &pFunc->pCode[ lPCodePos + 8 ];
+   HB_BYTE * pLocal = &pFunc->pCode[ lPCodePos + 8 ];
    USHORT wVar;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -116,7 +116,7 @@ static HB_FIX_FUNC( hb_p_pushblocklarge )
 
 static HB_FIX_FUNC( hb_p_localfix )
 {
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );

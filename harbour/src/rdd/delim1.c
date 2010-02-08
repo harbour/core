@@ -83,13 +83,13 @@ static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* allocate record buffer, one additional byte is for deleted flag */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen + 1 );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen + 1 );
    /* pseudo deleted flag */
    *pArea->pRecord++ = ' ';
 
    /* Allocate IO buffer */
    pArea->ulBufferSize += pArea->uiEolLen;
-   pArea->pBuffer = ( BYTE * ) hb_xgrab( pArea->ulBufferSize );
+   pArea->pBuffer = ( HB_BYTE * ) hb_xgrab( pArea->ulBufferSize );
 
    pArea->ulRecCount = 0;
    pArea->ulFileSize = 0;
@@ -106,7 +106,7 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
    ULONG ulSize;
    USHORT uiField, uiLen;
    LPFIELD pField;
-   BYTE * pBuffer, * pFieldBuf;
+   HB_BYTE * pBuffer, * pFieldBuf;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimEncodeBuffer(%p)", pArea));
 
@@ -241,7 +241,7 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    USHORT uiField, uiLen, uiSize;
    HB_TYPE uiType;
    LPFIELD pField;
-   BYTE * pFieldBuf, buffer[ 256 ];
+   HB_BYTE * pFieldBuf, buffer[ 256 ];
    char cStop;
    int ch = 0;
 
@@ -296,7 +296,7 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
             while( ch >= 0 && ch != cStop )
             {
                if( uiSize < uiLen )
-                  pFieldBuf[ uiSize++ ] = ( BYTE ) ch;
+                  pFieldBuf[ uiSize++ ] = ( HB_BYTE ) ch;
                ch = hb_delimNextChar( pArea );
             }
          }
@@ -304,7 +304,7 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
          {
             while( ch >= 0 && ch != cStop && uiSize < uiLen )
             {
-               buffer[ uiSize++ ] = ( BYTE ) ch;
+               buffer[ uiSize++ ] = ( HB_BYTE ) ch;
                ch = hb_delimNextChar( pArea );
             }
             buffer[ uiSize ] = '\0';
@@ -754,7 +754,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
 /*
  * Replace the current record.
  */
-static HB_ERRCODE hb_delimPutRec( DELIMAREAP pArea, BYTE * pBuffer )
+static HB_ERRCODE hb_delimPutRec( DELIMAREAP pArea, HB_BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutRec(%p,%p)", pArea, pBuffer));
 
@@ -773,7 +773,7 @@ static HB_ERRCODE hb_delimPutRec( DELIMAREAP pArea, BYTE * pBuffer )
 /*
  * Retrieve current record buffer
  */
-static HB_ERRCODE hb_delimGetRec( DELIMAREAP pArea, BYTE ** pBufferPtr )
+static HB_ERRCODE hb_delimGetRec( DELIMAREAP pArea, HB_BYTE ** pBufferPtr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGetRec(%p,%p)", pArea, pBufferPtr));
 

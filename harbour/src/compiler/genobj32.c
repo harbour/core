@@ -28,8 +28,8 @@
 
 #include "hbcomp.h"
 
-static BYTE s_prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
-                                0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
+static HB_BYTE s_prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
+                                   0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
 static char * * s_externNames = NULL;
 static USHORT s_wExternals = 1; /* _hb_vmExecute is always added */
@@ -140,10 +140,10 @@ static void GenerateLocalNames( FILE * hObjFile )
 
 static void GenerateSymbolsSegment( HB_COMP_DECL, FILE * hObjFile )
 {
-   BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0, 0, 0 };
-   BYTE groupDGroup[]   = { 2, 3, 4, 0 }; /* segments defined order for DGROUP */
-   BYTE groupSymGroup[] = { 5, 6, 7, 0 }; /* segments defined order for SYMGROUP */
-   BYTE groupInitData[] = { 8, 9, 10, 0 }; /* segments defined order for INITDATA */
+   HB_BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0, 0, 0 };
+   HB_BYTE groupDGroup[]   = { 2, 3, 4, 0 }; /* segments defined order for DGROUP */
+   HB_BYTE groupSymGroup[] = { 5, 6, 7, 0 }; /* segments defined order for SYMGROUP */
+   HB_BYTE groupInitData[] = { 8, 9, 10, 0 }; /* segments defined order for INITDATA */
 
    DefineSegment( hObjFile, 10,   /* HB_STARTSYMBOLS position + 1 into localnames */
                              6,   /* "DATA" position + 1 into localNames */
@@ -203,7 +203,7 @@ static void GenerateDataSegment( HB_COMP_DECL, FILE * hObjFile )
                      ( USHORT ) ulSize ); /* segment length */
 
    memset( &symbol, 0, sizeof( symbol ) );
-   DataSegment( HB_COMP_PARAM, hObjFile, (BYTE *) &symbol,
+   DataSegment( HB_COMP_PARAM, hObjFile, ( HB_BYTE * ) &symbol,
                 sizeof( symbol ), GetSymbolsAmount( HB_COMP_PARAM ), ulSize );
 
    pSymbol = GetFirstSymbol( HB_COMP_PARAM );
@@ -294,13 +294,13 @@ static void GenerateExternals( HB_COMP_DECL, FILE * hObjFile )
    }
 }
 
-static void putbyte( BYTE b, FILE * hObjFile, BYTE * pbChecksum )
+static void putbyte( HB_BYTE b, FILE * hObjFile, HB_BYTE * pbChecksum )
 {
    fputc( b, hObjFile );
    * pbChecksum += b;
 }
 
-static void putword( USHORT w, FILE * hObjFile, BYTE * pbChecksum )
+static void putword( USHORT w, FILE * hObjFile, HB_BYTE * pbChecksum )
 {
    putbyte( HB_LOBYTE( w ), hObjFile, pbChecksum );
    putbyte( HB_HIBYTE( w ), hObjFile, pbChecksum );
@@ -309,13 +309,13 @@ static void putword( USHORT w, FILE * hObjFile, BYTE * pbChecksum )
 static void CompiledFileName( FILE * hObjFile, char * szFileName )
 {
    USHORT wLen = strlen( szFileName );
-   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
-   BYTE bChar;
+   HB_BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
+   HB_BYTE bChar;
 
    putbyte( 0x80, hObjFile, &bChk );  /* this tells the linker the kind of OBJ record this is */
    putbyte( 1 + 1 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
    putbyte( 0, hObjFile, &bChk );
-   putbyte( (BYTE) wLen, hObjFile, &bChk );     /* szFileName length */
+   putbyte( ( HB_BYTE ) wLen, hObjFile, &bChk );     /* szFileName length */
 
    while( ( bChar = * szFileName++ ) != 0 )
       putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
@@ -326,8 +326,8 @@ static void CompiledFileName( FILE * hObjFile, char * szFileName )
 static void CompilerVersion( FILE * hObjFile, char * szVersion )
 {
    USHORT wLen = strlen( szVersion );
-   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
-   BYTE bChar;
+   HB_BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
+   HB_BYTE bChar;
 
    putbyte( 0x88, hObjFile, &bChk );  /* this tells the linker the kind of OBJ record this is */
    putword( 3 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
@@ -341,9 +341,9 @@ static void CompilerVersion( FILE * hObjFile, char * szVersion )
 
 static void LocalNames( FILE * hObjFile, char * szNames[] )
 {
-   BYTE b = 0, c;
+   HB_BYTE b = 0, c;
    USHORT wTotalLen = 0;
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
 
    while( szNames[ b ] )
       wTotalLen += strlen( szNames[ b++ ] );
@@ -368,9 +368,9 @@ static void LocalNames( FILE * hObjFile, char * szNames[] )
 
 static void ExternalNames( FILE * hObjFile, char * szNames[] )
 {
-   BYTE b = 0, c;
+   HB_BYTE b = 0, c;
    USHORT wTotalLen = 0;
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
 
    while( szNames[ b ] )
    {
@@ -409,9 +409,9 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void CodeSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
+static void CodeSegment( HB_COMP_DECL, FILE * hObjFile, HB_BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
    USHORT y;
    USHORT wTotalLen = ( USHORT ) ( ulPrgLen * wFunctions ) + 4;
    ULONG ul;
@@ -438,10 +438,10 @@ static void CodeSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * prgCode, ULONG ul
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void DataSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols,
+static void DataSegment( HB_COMP_DECL, FILE * hObjFile, HB_BYTE * symbol, ULONG wSymLen, ULONG wSymbols,
                          ULONG ulSize )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
    ULONG w, y;
    USHORT wTotalLen = 4 + ( USHORT ) ulSize;
    PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
@@ -505,9 +505,9 @@ static void DataSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * symbol, ULONG wSy
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen )
+static void DefineSegment( FILE * hObjFile, HB_BYTE bName, HB_BYTE bClass, USHORT wLen )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
 
    putbyte( 0x98, hObjFile, &bChk );
    putbyte( 7, hObjFile, &bChk );      /* SegDef records have always this length */
@@ -524,15 +524,15 @@ static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen
 
 static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset )
 {
-   BYTE bChk = 0;
-   BYTE bChar;
+   HB_BYTE bChk = 0;
+   HB_BYTE bChar;
    USHORT wLen = 2 + 2 + strlen( s_szPrefix ) + strlen( szName ) + 2 + 1;
    const char * szTemp;
 
    putbyte( 0x90, hObjFile, &bChk );
    putword( wLen, hObjFile, &bChk );
    putbyte( 0x00, hObjFile, &bChk );
-   putbyte( (BYTE) wSegment, hObjFile, &bChk );
+   putbyte( ( HB_BYTE ) wSegment, hObjFile, &bChk );
    putbyte( strlen( s_szPrefix ) + strlen( szName ), hObjFile, &bChk );
 
    szTemp = s_szPrefix;
@@ -548,9 +548,9 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol )
+static void Fixup( FILE * hObjFile, HB_BYTE bType, USHORT wOffset, HB_BYTE bFlags, HB_BYTE bSymbol )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
 
    putbyte( 0x9D, hObjFile, &bChk );
    putword( 5, hObjFile, &bChk );
@@ -562,9 +562,9 @@ static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYT
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, USHORT wLen, USHORT wOffset )
+static void EnumeratedData( FILE * hObjFile, HB_BYTE bSegment, HB_BYTE * pData, USHORT wLen, USHORT wOffset )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
    USHORT w;
 
    putbyte( 0xA0, hObjFile, &bChk );
@@ -580,7 +580,7 @@ static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, USHORT
 
 static void End( FILE * hObjFile )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
 
    putbyte( 0x8A, hObjFile, &bChk );
    putbyte( 0x02, hObjFile, &bChk );
@@ -589,9 +589,9 @@ static void End( FILE * hObjFile )
    putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs )
+static void GroupDef( FILE * hObjFile, HB_BYTE bName, HB_BYTE * aSegs )
 {
-   BYTE bChk = 0;
+   HB_BYTE bChk = 0;
    USHORT wRecLen = 2;
    USHORT w       = 0;
 

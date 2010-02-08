@@ -635,7 +635,7 @@ HB_ERRCODE hb_gtRest( int iTop, int iLeft, int iBottom, int iRight, const void *
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetChar( int iRow, int iCol, int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
@@ -652,7 +652,7 @@ HB_ERRCODE hb_gtGetChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHOR
    return errCode;
 }
 
-HB_ERRCODE hb_gtPutChar( int iRow, int iCol, int iColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutChar( int iRow, int iCol, int iColor, HB_BYTE bAttr, USHORT usChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
@@ -1173,7 +1173,7 @@ HB_ERRCODE hb_gtSetClearChar( USHORT usChar )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
@@ -1190,7 +1190,7 @@ HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, US
    return errCode;
 }
 
-HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, int iColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, int iColor, HB_BYTE bAttr, USHORT usChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;

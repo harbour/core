@@ -1188,7 +1188,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
 {
    HB_BOOL bDeleted;
-   BYTE *pRecord;
+   HB_BYTE * pRecord;
    HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waTransRec(%p, %p)", pArea, pTransInfo));

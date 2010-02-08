@@ -382,7 +382,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          if( pInline->pCode )
          {
             fprintf( yyc, "#line %i ", pInline->iLine );
-            hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
+            hb_compGenCString( yyc, ( HB_BYTE * ) pInline->szFileName,
                                strlen( pInline->szFileName ) );
             fprintf( yyc, "\n" );
 
@@ -407,7 +407,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                fHasHbInline = HB_TRUE;
             }
             fprintf( yyc, "#line %i ", pInline->iLine );
-            hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
+            hb_compGenCString( yyc, ( HB_BYTE * ) pInline->szFileName,
                                strlen( pInline->szFileName ) );
             fprintf( yyc, "\n" );
 
@@ -437,7 +437,7 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, 
 */
    fprintf( yyc, "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, ",
                  HB_COMP_PARAM->szPrefix, szModulname );
-   hb_compGenCString( yyc, ( BYTE * ) szSourceFile, strlen( szSourceFile ) );
+   hb_compGenCString( yyc, ( HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
    fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
    fprintf( yyc, "#if defined( HB_PRAGMA_STARTUP )\n"
@@ -486,19 +486,19 @@ static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
    }
 }
 
-static void hb_compGenCByteStr( FILE * yyc, const BYTE * pText, ULONG ulLen )
+static void hb_compGenCByteStr( FILE * yyc, const HB_BYTE * pText, ULONG ulLen )
 {
    ULONG ulPos;
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
-      BYTE uchr = ( BYTE ) pText[ ulPos ];
+      HB_BYTE uchr = ( HB_BYTE ) pText[ ulPos ];
       /*
        * NOTE: After optimization some CHR(n) can be converted
        *    into a string containing nonprintable characters.
        *
        * TODO: add switch to use hexadecimal format "%#04x"
        */
-      fprintf( yyc, ( uchr < ( BYTE ) ' ' || uchr >= 127 || uchr == '\\' ||
+      fprintf( yyc, ( uchr < ( HB_BYTE ) ' ' || uchr >= 127 || uchr == '\\' ||
                       uchr == '\'' ) ? "%i, " : "\'%c\', ", uchr );
    }
 }
@@ -1515,21 +1515,21 @@ static HB_GENC_FUNC( hb_p_pushdouble )
 
    fprintf( cargo->yyc, "\tHB_P_PUSHDOUBLE," );
    ++lPCodePos;
-   for( i = 0; i < ( int ) ( sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) ); ++i )
+   for( i = 0; i < ( int ) ( sizeof( double ) + sizeof( HB_BYTE ) + sizeof( HB_BYTE ) ); ++i )
    {
       fprintf( cargo->yyc, " %i,", ( HB_UCHAR ) pFunc->pCode[ lPCodePos + i ] );
    }
    if( cargo->bVerbose )
    {
       fprintf( cargo->yyc, "\t/* %.*f, %d, %d */",
-      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ],
+      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( HB_BYTE ) ],
       HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos ] ),
       ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) ],
-      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] );
+      ( HB_UCHAR ) pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( HB_BYTE ) ] );
    }
    fprintf( cargo->yyc, "\n" );
 
-   return sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1;
+   return sizeof( double ) + sizeof( HB_BYTE ) + sizeof( HB_BYTE ) + 1;
 }
 
 static HB_GENC_FUNC( hb_p_pushfield )

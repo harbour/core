@@ -3487,7 +3487,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    PHB_GTTRM pTerm;
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iLen = 0, iAttribute = 0, iColor2;
 

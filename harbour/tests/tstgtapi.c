@@ -6,8 +6,8 @@
 
 void main( void )
 {
-   BYTE * test = "Testing GT API Functions";
-   BYTE * test2 = "This message wraps!";
+   HB_BYTE * test = "Testing GT API Functions";
+   HB_BYTE * test2 = "This message wraps!";
    int iRow, iCol;
 
    /* NOTE: always have to initialze video subsystem */
@@ -15,11 +15,11 @@ void main( void )
 
    /* save screen (doesn't work under DOS) */
    /*
-   BYTE * scr;
-   USHORT size;
+   HB_BYTE * scr;
+   HB_SIZE size;
 
    hb_gtRectSize( 1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size );
-   scr = ( BYTE * ) hb_xgrab( size );
+   scr = ( HB_BYTE * ) hb_xgrab( size );
    hb_gtSave( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
    */
 
@@ -74,4 +74,3 @@ void main( void )
    hb_xfree( scr );
    */
 }
-

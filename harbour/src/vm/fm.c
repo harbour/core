@@ -287,12 +287,12 @@ typedef struct _HB_MEMINFO
 
 #define HB_MEMINFO_SIZE       ( s_fStatistic ? sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET : HB_COUNTER_OFFSET )
 
-#define HB_FM_GETSIG( p, n )  HB_GET_UINT32( ( BYTE * ) ( p ) + ( n ) )
-#define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), HB_MEMINFO_SIGNATURE )
-#define HB_FM_CLRSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), 0 )
+#define HB_FM_GETSIG( p, n )  HB_GET_UINT32( ( HB_BYTE * ) ( p ) + ( n ) )
+#define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( HB_BYTE * ) ( p ) + ( n ), HB_MEMINFO_SIGNATURE )
+#define HB_FM_CLRSIG( p, n )  HB_PUT_UINT32( ( HB_BYTE * ) ( p ) + ( n ), 0 )
 
 #define HB_ALLOC_SIZE( n )    ( ( n ) + ( s_fStatistic ? _HB_MEMINFO_SIZE + sizeof( HB_U32 ) : HB_COUNTER_OFFSET ) )
-#define HB_FM_PTR( p )        ( ( PHB_MEMINFO ) ( ( BYTE * ) ( p ) - HB_MEMINFO_SIZE ) )
+#define HB_FM_PTR( p )        ( ( PHB_MEMINFO ) ( ( HB_BYTE * ) ( p ) - HB_MEMINFO_SIZE ) )
 
 #define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->ulSize : 0 )
 
@@ -324,7 +324,7 @@ typedef void * PHB_MEMINFO;
 
 #endif /* HB_FM_STATISTICS */
 
-#define HB_MEM_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
+#define HB_MEM_PTR( p )       ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
 
 
 #if !defined( HB_MT_VM )
@@ -785,7 +785,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
          if( ulSize > ulMemSize )
          {
             memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulMemSize ) );
-            memset( ( BYTE * ) pMem + HB_ALLOC_SIZE( ulMemSize ), HB_MEMFILER, ulSize - ulMemSize );
+            memset( ( HB_BYTE * ) pMem + HB_ALLOC_SIZE( ulMemSize ), HB_MEMFILER, ulSize - ulMemSize );
          }
          else
             memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulSize ) );
@@ -1054,7 +1054,7 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #ifdef HB_FM_STATISTICS
 static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE uiSize )
 {
-   BYTE * cMem = ( BYTE * ) pMem;
+   HB_BYTE * cMem = ( HB_BYTE * ) pMem;
    HB_SIZE uiIndex, uiPrintable;
 
    uiPrintable = 0;

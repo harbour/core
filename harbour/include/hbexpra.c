@@ -621,7 +621,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, BYTE * pCode, ULONG ulLen )
+HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%lu)", pExpr, pCode, ulLen));
 

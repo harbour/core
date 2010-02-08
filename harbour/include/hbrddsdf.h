@@ -86,7 +86,7 @@ typedef struct _SDFAREA
    USHORT   uiEolLen;               /* Size of EOL marker */
    USHORT   uiRecordLen;            /* Size of record */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
-   BYTE *   pRecord;                /* Buffer of record data */
+   HB_BYTE *   pRecord;                /* Buffer of record data */
    HB_FOFFSET ulRecordOffset;       /* Current record offest */
    HB_FOFFSET ulNextOffset;         /* Next record offest */
    HB_FOFFSET ulFileSize;           /* File table size in export mode */

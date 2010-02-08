@@ -128,7 +128,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                       * parameter to hb_compGenPushString(). [druzus]
                       */
                      pInfo->ulAllocated = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
-                     pInfo->pLineMap = ( BYTE * ) hb_xgrab( pInfo->ulAllocated + 1 );
+                     pInfo->pLineMap = ( HB_BYTE * ) hb_xgrab( pInfo->ulAllocated + 1 );
                      memset( pInfo->pLineMap, 0, pInfo->ulAllocated + 1 );
                      pInfo->pNext = pLineInfo;
                      pLineInfo = pInfo;
@@ -138,7 +138,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                if( pInfo->ulAllocated <= ulOffset )
                {
                   ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
-                  pInfo->pLineMap = ( BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
+                  pInfo->pLineMap = ( HB_BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
                   memset( pInfo->pLineMap + pInfo->ulAllocated, 0, ulNewSize - pInfo->ulAllocated + 1 );
                   pInfo->ulAllocated = ulNewSize;
                }

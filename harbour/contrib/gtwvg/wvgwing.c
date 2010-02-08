@@ -255,26 +255,6 @@ static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
 }
 #endif
 
-#if 0
-static RGBQUAD * PackedDibGetColorTablePtr( BITMAPINFO * pPackedDib )
-{
-   if( PackedDibGetNumColors( pPackedDib ) == 0 )
-      return 0;
-
-   return ( RGBQUAD * ) ( ( ( BYTE * ) pPackedDib ) + PackedDibGetInfoHeaderSize( pPackedDib ) );
-}
-
-static RGBQUAD * PackedDibGetColorTableEntry( BITMAPINFO * pPackedDib, int i )
-{
-   if( PackedDibGetNumColors( pPackedDib ) == 0 )
-      return 0;
-
-   if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
-      return ( RGBQUAD * ) ( ( ( RGBTRIPLE * ) PackedDibGetColorTablePtr( pPackedDib ) ) + i );
-   else
-      return PackedDibGetColorTablePtr( pPackedDib ) + i;
-}
-#endif
 #if ! defined( HB_OS_WIN_CE )
 static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 {
@@ -915,12 +895,12 @@ HB_FUNC( WVG_CHOOSEFONT )
    Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
 
    #if 0
-   Flags = Flags | CF_TTONLY;
-   Flags = Flags | CF_FIXEDPITCHONLY;
-   Flags = Flags | CF_SCALABLEONLY;
-   Flags = Flags | CF_NOVECTORFONTS;
-   Flags = Flags | CF_NOSCRIPTSEL;
-   Flags = Flags | CF_NOSIMULATIONS;        /* ::synthesizeFonts  == .f. */
+   Flags |= CF_TTONLY;
+   Flags |= CF_FIXEDPITCHONLY;
+   Flags |= CF_SCALABLEONLY;
+   Flags |= CF_NOVECTORFONTS;
+   Flags |= CF_NOSCRIPTSEL;
+   Flags |= CF_NOSIMULATIONS;        /* ::synthesizeFonts  == .f. */
    #endif
 
    if( hb_parl( 5 ) )

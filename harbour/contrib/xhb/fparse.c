@@ -266,7 +266,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
 }
 
 /*----------------------------------------------------------------------------*/
-static char ** hb_tokensplit ( char *string, BYTE delimiter, int iCharCount, int *iWord )
+static char ** hb_tokensplit ( char *string, HB_BYTE delimiter, int iCharCount, int *iWord )
 {
    char *buffer, *bufptr;
    char **token_list;
@@ -369,7 +369,7 @@ HB_FUNC( FPARSE )
    char *string ;
    char **tokens;
    int iToken, iCharCount = 0;
-   BYTE nByte;
+   HB_BYTE nByte;
 
    /* file parameter correctly passed */
    if ( !pSrc )
@@ -395,7 +395,7 @@ HB_FUNC( FPARSE )
    }
 
    /* default delimiter to comma, chr(44) */
-   nByte = pDelim ? (BYTE) hb_itemGetCPtr( pDelim )[0] : (BYTE) 44;
+   nByte = pDelim ? (HB_BYTE) hb_itemGetCPtr( pDelim )[0] : (HB_BYTE) 44;
 
    /* the main array */
    pArray = hb_itemArrayNew( 0 );
@@ -449,7 +449,7 @@ HB_FUNC( FPARSEEX )
    PHB_ITEM pSubArray;
    char *string;
    int iCharCount = 0;
-   BYTE nByte;
+   HB_BYTE nByte;
 
    /* file parameter correctly passed */
    if ( !pSrc )
@@ -475,7 +475,7 @@ HB_FUNC( FPARSEEX )
    }
 
    /* default delimiter to comma, chr(44) */
-   nByte = pDelim ? (BYTE) hb_itemGetCPtr( pDelim )[0] : (BYTE) 44;
+   nByte = pDelim ? (HB_BYTE) hb_itemGetCPtr( pDelim )[0] : (HB_BYTE) 44;
 
    /* the main array */
    pArray = hb_itemArrayNew( 0 );
@@ -514,7 +514,7 @@ HB_FUNC( FWORDCOUNT )
    char *string ;
    char **tokens;
    int iCharCount = 0;
-   BYTE nByte = ' ';
+   HB_BYTE nByte = ' ';
    ULONG ulWordCount = 0;
 
    /* file parameter correctly passed */

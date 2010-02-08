@@ -81,7 +81,7 @@
 typedef struct _MIXKEY
 {
    ULONG     rec;
-   BYTE      val[ 1 ];
+   HB_BYTE   val[ 1 ];
 } MIXKEY, *LPMIXKEY;
 
 
@@ -94,7 +94,7 @@ typedef struct _MIXTAG
    char*            szForExpr;
    PHB_ITEM         pKeyItem;
    PHB_ITEM         pForItem;
-   BYTE             bType;
+   HB_BYTE          bType;
    USHORT           uiLen;
 
    LPMIXKEY*        pKeys;
@@ -178,12 +178,12 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 *  Memory Index
 *************************************************************************/
 
-static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, BYTE bType, USHORT uiLen )
+static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, HB_BYTE bType, USHORT uiLen )
 {
    LPMIXKEY    pKey;
    ULONG       ul;
    double      dbl;
-   BYTE        buf[ 8 ];
+   HB_BYTE     buf[ 8 ];
 
    pKey = (LPMIXKEY) hb_xgrab( sizeof( ULONG ) + uiLen );
    pKey->rec = ulRecNo;
@@ -212,7 +212,7 @@ static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, BYTE bType, USHORT uiL
          break;
 
       case 'L':
-         pKey->val[ 0 ] = ( BYTE ) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
+         pKey->val[ 0 ] = ( HB_BYTE ) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
          break;
 
       default:
@@ -386,7 +386,7 @@ static int mixCompareKey( LPMIXTAG pTag, ULONG ulKeyPos, LPMIXKEY pKey )
 
 
 static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem,
-                              PHB_ITEM pForItem, PHB_ITEM pWhileItem, BYTE bType,
+                              PHB_ITEM pForItem, PHB_ITEM pWhileItem, HB_BYTE bType,
                               USHORT uiLen, ADSXAREAP pArea )
 {
    LPMIXTAG             pTag;
@@ -873,7 +873,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
    ULONG        ulRecNo;
    USHORT       uiLen;
-   BYTE         bType;
+   HB_BYTE      bType;
    UNSIGNED16   bValidExpr;
    HB_BOOL      bUseADS;
 

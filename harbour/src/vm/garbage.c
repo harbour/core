@@ -114,11 +114,11 @@ typedef struct HB_GARBAGE_
 #  define HB_GARBAGE_SIZE     sizeof( HB_GARBAGE )
 #endif
 
-#define HB_GC_PTR( p )        ( ( HB_GARBAGE_PTR ) ( ( BYTE * ) ( p ) - HB_GARBAGE_SIZE ) )
+#define HB_GC_PTR( p )        ( ( HB_GARBAGE_PTR ) ( ( HB_BYTE * ) ( p ) - HB_GARBAGE_SIZE ) )
 
 #endif /* !defined( HB_GC_PTR ) */
 
-#define HB_BLOCK_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
+#define HB_BLOCK_PTR( p )       ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
 
 /* we may use a cache later */
 #define HB_GARBAGE_NEW( ulSize )    ( ( HB_GARBAGE_PTR ) hb_xgrab( HB_GARBAGE_SIZE + ( ulSize ) ) )

@@ -145,8 +145,8 @@ typedef struct ioBuffer_tag
     LONG  * plData; /* not in-memory */
     PHB_ITEM * ppData; /* in-memory */
   } xData;
-  BYTE  * szKey;
-  BYTE    Buffer[ 1 ];
+  HB_BYTE * szKey;
+  HB_BYTE   Buffer[ 1 ];
 } ioBuffer_T;
 
 typedef int hb_BTreeFlags_T;
@@ -181,7 +181,7 @@ typedef struct hb_KeyData_Tag
     LONG lData;     /* lData is placed first for alignment, thought it is secondary */
     PHB_ITEM pData;
   } xData;
-  BYTE szKey[ 1 ];
+  HB_BYTE szKey[ 1 ];
 } hb_KeyData_T;
 
 typedef int ( * BTreeCmpFunc )( const char * l, const char * r, size_t n );
@@ -278,12 +278,12 @@ static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * pre
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
     thisptr->xData.ppData = ( PHB_ITEM * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
-    thisptr->szKey        = ( BYTE * )&thisptr->xData.ppData[ pBTree->usMaxKeys ];
+    thisptr->szKey        = ( HB_BYTE * )&thisptr->xData.ppData[ pBTree->usMaxKeys ];
   }
   else
   {
     thisptr->xData.plData = ( LONG * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
-    thisptr->szKey        = ( BYTE * )&thisptr->xData.plData[ pBTree->usMaxKeys ];
+    thisptr->szKey        = ( HB_BYTE * )&thisptr->xData.plData[ pBTree->usMaxKeys ];
   }
 
   thisptr->xPage.ulPage  = NULLPAGE;
@@ -583,8 +583,8 @@ static void StackRelease( BTreeStack **pStack )
 
 static void HeaderWrite( struct hb_BTree * pBTree )
 {
-   BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
-   BYTE * pHeader = &TmpHeader[ 0 ];
+   HB_BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
+   HB_BYTE * pHeader = &TmpHeader[ 0 ];
    HB_U32 uiHeaderSize = HB_BTREE_HEADERSIZE;
 
   /*
@@ -639,7 +639,7 @@ static ULONG Grow( struct hb_BTree * pBTree )
 
     if ( BTREENODEISNULL( pBTree, pBTree->ulFreePage ) )
     {
-      BYTE *buffer = pBTree->ioBuffer->Buffer;
+      HB_BYTE *buffer = pBTree->ioBuffer->Buffer;
 
       pBTree->ioBuffer->xPage.ulPage = hb_fsSeek( pBTree->hFile, 0, FS_END );
       hb_xmemset( buffer, '\0', pBTree->usPageSize );
@@ -1580,8 +1580,8 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
-  BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
-  BYTE * pHeader = &TmpHeader[ 0 ];
+  HB_BYTE TmpHeader[ HB_BTREE_HEADERSIZE ];
+  HB_BYTE * pHeader = &TmpHeader[ 0 ];
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 

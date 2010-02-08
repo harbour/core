@@ -93,7 +93,7 @@
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )
-   static BYTE * s_signal_stack[ SIGSTKSZ ];
+   static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )

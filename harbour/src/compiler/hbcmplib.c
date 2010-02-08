@@ -122,7 +122,7 @@ HB_FUNC( HB_COMPILEBUF )
 {
    int iResult, argc;
    const char ** argv;
-   BYTE * pBuffer;
+   HB_BYTE * pBuffer;
    ULONG ulLen;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
@@ -137,7 +137,7 @@ HB_FUNC( HB_COMPILEFROMBUF )
    int iResult, argc;
    const char ** argv;
    const char * szSource;
-   BYTE * pBuffer;
+   HB_BYTE * pBuffer;
    ULONG ulLen;
 
    szSource = hb_parc( 1 );

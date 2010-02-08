@@ -101,7 +101,7 @@ HB_FUNC( WVT_CORE )
 
 /*----------------------------------------------------------------------*/
 
-void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib )
+void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib )
 {
    int irow, icol, j;
 
@@ -112,14 +112,14 @@ void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sB
       for( icol = left; icol <= right; icol++ )
       {
          int iColor;
-         BYTE bAttr;
+         HB_BYTE bAttr;
          USHORT usChar;
 
          if( hb_gtGetScrChar( irow, icol, &iColor, &bAttr, &usChar ) == HB_FAILURE )
             break;
 
-         sBuffer[ j ] = ( BYTE ) usChar;
-         sAttrib[ j ] = ( BYTE ) iColor;
+         sBuffer[ j ] = ( HB_BYTE ) usChar;
+         sAttrib[ j ] = ( HB_BYTE ) iColor;
          j++;
       }
    }
@@ -127,7 +127,7 @@ void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sB
 
 /*----------------------------------------------------------------------*/
 
-void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib )
+void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib )
 {
    int irow, icol, j;
 

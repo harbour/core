@@ -203,7 +203,7 @@ HB_FUNC( FT_SAVEATT )
          while( iCol <= iRight )
          {
             int iColor;
-            BYTE bAttr;
+            HB_BYTE bAttr;
             USHORT usChar;
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
             *pBuffer++ = ( char ) iColor;
@@ -416,7 +416,7 @@ HB_FUNC( FT_RESTATT )
             while( ulLen && iCol <= iRight )
             {
                int iColor;
-               BYTE bAttr;
+               HB_BYTE bAttr;
                USHORT usChar;
                hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
                iColor = ( HB_UCHAR ) *pAttrib++;

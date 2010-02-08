@@ -151,18 +151,18 @@ typedef struct
    int      (* GetCursorStyle) ( HB_GT_PTR );
    void     (* SetCursorStyle) ( HB_GT_PTR, int );
    void     (* GetScrCursor) ( HB_GT_PTR, int *, int *, int * );
-   HB_BOOL  (* GetScrChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
-   HB_BOOL  (* PutScrChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
+   HB_BOOL  (* GetScrChar) ( HB_GT_PTR, int, int, int *, HB_BYTE *, USHORT * );
+   HB_BOOL  (* PutScrChar) ( HB_GT_PTR, int, int, int, HB_BYTE, USHORT );
    void     (* DispBegin) ( HB_GT_PTR );
    void     (* DispEnd) ( HB_GT_PTR );
    int      (* DispCount) ( HB_GT_PTR );
-   HB_BOOL  (* GetChar) ( HB_GT_PTR, int, int, int *, BYTE *, USHORT * );
-   HB_BOOL  (* PutChar) ( HB_GT_PTR, int, int, int, BYTE, USHORT );
+   HB_BOOL  (* GetChar) ( HB_GT_PTR, int, int, int *, HB_BYTE *, USHORT * );
+   HB_BOOL  (* PutChar) ( HB_GT_PTR, int, int, int, HB_BYTE, USHORT );
    long     (* RectSize) ( HB_GT_PTR, int, int, int, int );
    void     (* Save) ( HB_GT_PTR, int, int, int, int, void * );
    void     (* Rest) ( HB_GT_PTR, int, int, int, int, const void * );
    void     (* PutText) ( HB_GT_PTR, int, int, int, const char *, HB_SIZE );
-   void     (* Replicate) ( HB_GT_PTR, int, int, int, BYTE, USHORT, HB_SIZE );
+   void     (* Replicate) ( HB_GT_PTR, int, int, int, HB_BYTE, USHORT, HB_SIZE );
    void     (* WriteAt) ( HB_GT_PTR, int, int, const char *, HB_SIZE );
    void     (* Write) ( HB_GT_PTR, const char *, HB_SIZE );
    void     (* WriteCon) ( HB_GT_PTR, const char *, HB_SIZE );
@@ -263,8 +263,8 @@ typedef union
    struct
    {
       HB_U16   usChar;
-      BYTE     bColor;
-      BYTE     bAttr;
+      HB_BYTE  bColor;
+      HB_BYTE  bAttr;
    } c;
    HB_U32   uiValue;
 } HB_SCREENCELL;
@@ -328,7 +328,7 @@ typedef struct _HB_GT_BASE
    int            inkeyTail;
    int            iLastPut;
    int            inkeyLast;
-   BYTE *         StrBuffer;
+   HB_BYTE *      StrBuffer;
    ULONG          StrBufferSize;
    ULONG          StrBufferPos;
 

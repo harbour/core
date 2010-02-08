@@ -395,8 +395,8 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = ( ULONG ) mysql_num_rows( ( MYSQL_RES * ) pArea->pResult );
 
    pArea->pRow = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    pArea->ulRecMax = pArea->ulRecCount + 1;
 
    pRow = pArea->pRow;

@@ -67,11 +67,11 @@ typedef struct _DBQUICKSORT
 {
    HB_FHANDLE hFile;
    char szTempName[ HB_PATH_MAX ];
-   BYTE * pBuffer;
-   BYTE * pSwapBufferA;
-   BYTE * pSwapBufferB;
-   BYTE * pCmpBufferA;
-   BYTE * pCmpBufferB;
+   HB_BYTE * pBuffer;
+   HB_BYTE * pSwapBufferA;
+   HB_BYTE * pSwapBufferB;
+   HB_BYTE * pCmpBufferA;
+   HB_BYTE * pCmpBufferB;
    USHORT uiRecordLen;
    USHORT uiMaxRecords;
    LPDBSORTINFO pSortInfo;

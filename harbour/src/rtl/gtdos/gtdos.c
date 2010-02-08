@@ -162,9 +162,9 @@ static int  s_iScreenMode;
 
 static HB_BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 
-static BYTE s_charTransRev[ 256 ];
-static BYTE s_charTrans[ 256 ];
-static BYTE s_keyTrans[ 256 ];
+static HB_BYTE s_charTransRev[ 256 ];
+static HB_BYTE s_charTrans[ 256 ];
+static HB_BYTE s_keyTrans[ 256 ];
 
 #if defined( __RSX32__ )
 static int kbhit( void )
@@ -263,7 +263,7 @@ static char FAR * hb_gt_dos_ScreenAddress( PHB_GT pGT )
    return ptr;
 }
 
-BYTE FAR * hb_gt_dos_ScreenPtr( int iRow, int iCol )
+HB_BYTE FAR * hb_gt_dos_ScreenPtr( int iRow, int iCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_ScreenPtr(%d, %d)", iRow, iCol));
 
@@ -274,9 +274,9 @@ BYTE FAR * hb_gt_dos_ScreenPtr( int iRow, int iCol )
 static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
 {
    int iRow, iCol;
-   BYTE bAttr, bChar;
+   HB_BYTE bAttr, bChar;
 #if !defined( __DJGPP__ )
-   BYTE * pScreenPtr = s_pScreenAddres;
+   HB_BYTE * pScreenPtr = s_pScreenAddres;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenContents(%p)", pGT));
@@ -329,8 +329,8 @@ static void hb_gt_dos_SetCursorPosition( int iRow, int iCol )
    {
       regs.h.ah = 0x02;
       regs.h.bh = 0;
-      regs.h.dh = ( BYTE ) iRow;
-      regs.h.dl = ( BYTE ) iCol;
+      regs.h.dh = ( HB_BYTE ) iRow;
+      regs.h.dl = ( HB_BYTE ) iCol;
       HB_DOS_INT86( 0x10, &regs, &regs );
       s_iCurRow = iRow;
       s_iCurCol = iCol;
@@ -676,7 +676,7 @@ static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, void * pBuffer )
       sregs.es = FP_SEG( pBuffer );
       HB_DOS_INT86X( 0x33, &regs, &regs, &sregs );
 #endif
-      ( ( BYTE * ) pBuffer )[ s_iMouseStorageSize ] = HB_GTSELF_MOUSEGETCURSOR( pGT ) ? 1 : 0;
+      ( ( HB_BYTE * ) pBuffer )[ s_iMouseStorageSize ] = HB_GTSELF_MOUSEGETCURSOR( pGT ) ? 1 : 0;
    }
 }
 
@@ -695,7 +695,7 @@ static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const void * pBuffer )
        * because the real mouse cursor state will be also recovered
        * by status restoring
        */
-      HB_GTSELF_MOUSESETCURSOR( pGT, ( ( BYTE * ) pBuffer )[ s_iMouseStorageSize ] );
+      HB_GTSELF_MOUSESETCURSOR( pGT, ( ( HB_BYTE * ) pBuffer )[ s_iMouseStorageSize ] );
 
 #if defined( __DJGPP__ )
 {
@@ -984,15 +984,15 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
    #define inportb( p ) 0       /* Return 0 */
    #define outport( p, w )      /* Do nothing */
    #define outportb( p, b )     /* Do nothing */
-   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
+   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
 #elif defined( __WATCOMC__ )
    #define outportb outp        /* Use correct function name */
    #define outport outpw        /* Use correct function name */
    #define inport inpw          /* Use correct function name */
    #define inportb inp          /* Use correct function name */
-   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
+   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
 #else
-   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
+   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
 #endif
 
 static void vmode12x40( void )
@@ -1259,9 +1259,9 @@ static HB_BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 
    for( i = 0; i < 256; i++ )
    {
-      s_charTrans[ i ] = ( BYTE )
+      s_charTrans[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpHost, cdpTerm );
-      s_charTransRev[ i ] = ( BYTE )
+      s_charTransRev[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 
@@ -1290,7 +1290,7 @@ static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 
    for( i = 0; i < 256; i++ )
    {
-      s_keyTrans[ i ] = ( BYTE )
+      s_keyTrans[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
 
@@ -1305,7 +1305,7 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    USHORT FAR *pScreenPtr = ( USHORT FAR * ) hb_gt_dos_ScreenPtr( iRow, iCol );
 #endif
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iLen = 0;
 

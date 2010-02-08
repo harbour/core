@@ -2896,7 +2896,7 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    if( s_ioBase )
    {
       int iColor;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
       chtype ch;
 

@@ -96,7 +96,7 @@ HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE ulSubLen, const char * szT
 
          if( szText[ ulPos ] == '[' && szSub[0] != '[' )
          {
-            if( ! ( HB_ISALPHA( (BYTE) cLastChar ) || HB_ISDIGIT( (BYTE) cLastChar ) || strchr( "])}_.", cLastChar ) ) )
+            if( ! ( HB_ISALPHA( (HB_BYTE) cLastChar ) || HB_ISDIGIT( (HB_BYTE) cLastChar ) || strchr( "])}_.", cLastChar ) ) )
             {
                while( ++ulPos < ulLen && szText[ ulPos ] != ']' )
                {
@@ -177,7 +177,7 @@ static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szT
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
-         if( HB_TOLOWER( ( BYTE ) szText[ ulPos ] ) == HB_TOLOWER( ( BYTE ) szSub[ ulSubPos ] ) )
+         if( HB_TOLOWER( ( HB_BYTE ) szText[ ulPos ] ) == HB_TOLOWER( ( HB_BYTE ) szSub[ ulSubPos ] ) )
          {
             ulSubPos++;
             ulPos++;

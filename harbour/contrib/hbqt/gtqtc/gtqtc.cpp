@@ -81,21 +81,6 @@ static  PHB_GTWVT       s_wvtWindows[ WVT_MAX_WINDOWS ];
 static  int             s_wvtCount = 0;
 
 /*----------------------------------------------------------------------*/
-#if 0
-static void DebugIt( char* text, int iVal, int iVal2 )
-{
-   char   buf[ 100 ];
-   wsprintf( buf, text, iVal, iVal2 );
-   OutputDebugString( buf );
-
-#if 0
-   HB_SYMBOL_UNUSED( text );
-   HB_SYMBOL_UNUSED( iVal );
-   HB_SYMBOL_UNUSED( iVal2 );
-#endif
-}
-#endif
-/*----------------------------------------------------------------------*/
 
 static bool hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
@@ -212,7 +197,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    {
       int i;
       for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( HB_BYTE ) i;
    }
 #endif
 
@@ -399,40 +384,6 @@ int hb_gt_wvt_getKbdState( void )
 
    return iKbdState;
 }
-#if 0
-void hb_gt_wvt_setKbdState( int iKbdState )
-{
-   BYTE kbState[256];
-
-   GetKeyboardState( kbState );
-
-   kbState[VK_SHIFT  ] = ( iKbdState & HB_GTI_KBD_SHIFT    ) ? 0x80 : 0;
-   kbState[VK_CONTROL] = ( iKbdState & HB_GTI_KBD_CTRL     ) ? 0x80 : 0;
-   kbState[VK_MENU   ] = ( iKbdState & HB_GTI_KBD_ALT      ) ? 0x80 : 0;
-   kbState[VK_LWIN   ] = ( iKbdState & HB_GTI_KBD_LWIN     ) ? 0x80 : 0;
-   kbState[VK_RWIN   ] = ( iKbdState & HB_GTI_KBD_RWIN     ) ? 0x80 : 0;
-   kbState[VK_APPS   ] = ( iKbdState & HB_GTI_KBD_MENU     ) ? 0x80 : 0;
-   kbState[VK_SCROLL ] = ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? 0x01 : 0;
-   kbState[VK_NUMLOCK] = ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? 0x01 : 0;
-   kbState[VK_CAPITAL] = ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? 0x01 : 0;
-   kbState[VK_INSERT ] = ( iKbdState & HB_GTI_KBD_INSERT   ) ? 0x01 : 0;
-
-   SetKeyboardState( kbState );
-}
-#endif
-
-#if 0
-static int hb_gt_wvt_key_ansi_to_oem( int c )
-{
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
-
-   pszAnsi[ 0 ] = ( CHAR ) c;
-   pszAnsi[ 1 ] = 0;
-//   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
-   return * pszOem;
-}
-#endif
 
 static void hb_gt_wvt_QResetWindowSize( PHB_GTWVT pWVT )
 {
@@ -802,7 +753,7 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
 
       for( i = 0; i < 256; i++ )
       {
-         pWVT->chrTransTbl[ i ] = ( BYTE )
+         pWVT->chrTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
       }
    }
@@ -846,7 +797,7 @@ static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
       cdpHost = hb_cdpFind( pszHostCDP );
 
       for( i = 0; i < 256; i++ )
-         pWVT->keyTransTbl[ i ] = ( BYTE )
+         pWVT->keyTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
       pWVT->inCDP = cdpTerm;
    }
@@ -1448,7 +1399,7 @@ void DrawingArea::copyTextOnClipboard( void )
       for( icol = left; icol <= right; icol++ )
       {
          int bColor;
-         BYTE bAttr;
+         HB_BYTE bAttr;
          USHORT usChar;
 
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
@@ -1508,7 +1459,8 @@ void DrawingArea::redrawBuffer( const QRect & rect )
    USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
    int    bColor;
-   BYTE   bAttr, bOldColor = 0, bOldAttr = 0;
+   HB_BYTE   bAttr, bOldAttr = 0;
+   int    bOldColor = 0;
    char   text[ WVT_MAX_COLS ];
    QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
 
@@ -1630,7 +1582,7 @@ void DrawingArea::displayCell( int iRow, int iCol )
    painter.setFont( font );
 
    USHORT usChar;
-   BYTE   bAttr;
+   HB_BYTE   bAttr;
    int    bColor = 0;
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
@@ -2434,7 +2386,7 @@ void MainWindow::setWindowSize( void )
    resize( _drawingArea->_wndWidth, _drawingArea->_wndHeight );
 }
 
-void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y )
+void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor, int x, int y )
 {
    /* Common to all drawing operations except characters */
    int iGap  = 2;
@@ -2446,8 +2398,8 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColo
 
    /* painter->setPen( QPen( QBrush( _COLORS[ bColor & 0x0F ] ),1 ) ); */
    painter->setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
-   painter->setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
-   painter->fillRect( x, y, _fontWidth, _fontHeight, QBrush( _COLORS[ bColor >> 4 ] ) );
+   painter->setBackground( QBrush( _COLORS[ ( bColor >> 4 ) & 0x0F ] ) );
+   painter->fillRect( x, y, _fontWidth, _fontHeight, QBrush( _COLORS[ ( bColor >> 4 ) & 0x0F ] ) );
 
    switch( usChar )
    {

@@ -66,15 +66,15 @@
 #ifndef hb_xmemcpy
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen )
 {
-   BYTE *  pDest;
-   BYTE *  pSource;
-   HB_SIZE ulRemaining;
-   int     iCopySize;
+   HB_BYTE * pDest;
+   HB_BYTE * pSource;
+   HB_SIZE   ulRemaining;
+   int       iCopySize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
 
-   pDest = ( BYTE * ) pDestArg;
-   pSource = ( BYTE * ) pSourceArg;
+   pDest = ( HB_BYTE * ) pDestArg;
+   pSource = ( HB_BYTE * ) pSourceArg;
    ulRemaining = ulLen;
 
    while( ulRemaining )
@@ -102,13 +102,13 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen )
 #ifndef hb_xmemset
 void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen )
 {
-   BYTE *  pDest;
-   HB_SIZE ulRemaining;
-   int     iSetSize;
+   HB_BYTE * pDest;
+   HB_SIZE   ulRemaining;
+   int       iSetSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
 
-   pDest = ( BYTE * ) pDestArg;
+   pDest = ( HB_BYTE * ) pDestArg;
    ulRemaining = ulLen;
 
    while( ulRemaining )

@@ -96,46 +96,46 @@ HB_EXTERN_BEGIN
 #define NTX_ROOTHEAD_HEADSIZE            12
 #define NTX_TAGHEAD_HEADSIZE              8
 
-/* index file structures - defined as BYTEs to avoid alignment problems */
+/* index file structures - defined as HB_BYTEs to avoid alignment problems */
 
 typedef struct _NTXHEADER     /* Header of NTX file */
 {
-   BYTE  type[2];
-   BYTE  version[2];
-   BYTE  root[4];
-   BYTE  next_page[4];
-   BYTE  item_size[2];
-   BYTE  key_size[2];
-   BYTE  key_dec[2];
-   BYTE  max_item[2];
-   BYTE  half_page[2];
-   BYTE  key_expr[ NTX_MAX_EXP ];
-   BYTE  unique[1];
-   BYTE  unknown1[1];
-   BYTE  descend[1];
-   BYTE  unknown2[1];
-   BYTE  for_expr[ NTX_MAX_EXP ];
-   BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
-   BYTE  custom[1];
-   BYTE  unused[ NTX_HDR_UNUSED ];
+   HB_BYTE  type[2];
+   HB_BYTE  version[2];
+   HB_BYTE  root[4];
+   HB_BYTE  next_page[4];
+   HB_BYTE  item_size[2];
+   HB_BYTE  key_size[2];
+   HB_BYTE  key_dec[2];
+   HB_BYTE  max_item[2];
+   HB_BYTE  half_page[2];
+   HB_BYTE  key_expr[ NTX_MAX_EXP ];
+   HB_BYTE  unique[1];
+   HB_BYTE  unknown1[1];
+   HB_BYTE  descend[1];
+   HB_BYTE  unknown2[1];
+   HB_BYTE  for_expr[ NTX_MAX_EXP ];
+   HB_BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
+   HB_BYTE  custom[1];
+   HB_BYTE  unused[ NTX_HDR_UNUSED ];
 } NTXHEADER;
 typedef NTXHEADER * LPNTXHEADER;
 
 typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */
 {
-   BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
-   BYTE  tag_header[ 4 ];
+   HB_BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
+   HB_BYTE  tag_header[ 4 ];
 } CTXTAGITEM;
 typedef CTXTAGITEM * LPCTXTAGITEM;
 
 typedef struct _CTXHEADER     /* Header of xHarbour CTX file */
 {
-   BYTE  type[ 2 ];     /* 0x9591 LE */
-   BYTE  ntags[ 2 ];    /* number of tag entries MAX63 */
-   BYTE  version[ 4 ];  /* update counter LE */
-   BYTE  freepage[ 4 ]; /* first free page in index file */
-   BYTE  filesize[ 4 ]; /* size of index file in pages */
-   BYTE  tags[ CTX_MAX_TAGS * NTX_TAGITEMSIZE ];
+   HB_BYTE  type[ 2 ];     /* 0x9591 LE */
+   HB_BYTE  ntags[ 2 ];    /* number of tag entries MAX63 */
+   HB_BYTE  version[ 4 ];  /* update counter LE */
+   HB_BYTE  freepage[ 4 ]; /* first free page in index file */
+   HB_BYTE  filesize[ 4 ]; /* size of index file in pages */
+   HB_BYTE  tags[ CTX_MAX_TAGS * NTX_TAGITEMSIZE ];
 } CTXHEADER;
 typedef CTXHEADER * LPCTXHEADER;
 
@@ -148,9 +148,9 @@ typedef CTXHEADER * LPCTXHEADER;
 */
 typedef struct _CTXHEADER     /* Header of CLIP CTX file */
 {
-   BYTE  type[ 2 ];     /* 0x9591 in LE */
-   BYTE  ntags[ 1 ];    /* number of tag entries */
-   BYTE  unused[ 13 ];
+   HB_BYTE  type[ 2 ];     /* 0x9591 in LE */
+   HB_BYTE  ntags[ 1 ];    /* number of tag entries */
+   HB_BYTE  unused[ 13 ];
    CTX_TAG tags[ 63 ];
 } CTXHEADER
 #endif
@@ -232,7 +232,7 @@ typedef struct _TAGINFO
    ULONG       HeadBlock;
    ULONG       RootBlock;
    USHORT      uiNumber;
-   BYTE        KeyType;
+   HB_BYTE        KeyType;
    USHORT      nField;
    USHORT      KeyLength;
    USHORT      KeyDec;
@@ -271,7 +271,7 @@ typedef struct _NTXINDEX
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
 
-   BYTE *      HeaderBuff;    /* TODO: make it member */
+   HB_BYTE *      HeaderBuff;    /* TODO: make it member */
    HB_BOOL     fValidHeader;
    int         iTags;
    LPTAGINFO * lpTags;
@@ -295,7 +295,7 @@ typedef struct
    ULONG       ulKeys;     /* number of keys in page */
    ULONG       ulKeyBuf;   /* number of keys in memory buffer */
    ULONG       ulCurKey;   /* current key in memory buffer */
-   BYTE *      pKeyPool;   /* memory buffer */
+   HB_BYTE *      pKeyPool;   /* memory buffer */
 } NTXSWAPPAGE;
 typedef NTXSWAPPAGE * LPNTXSWAPPAGE;
 
@@ -314,16 +314,16 @@ typedef struct
    ULONG    ulCurPage;        /* current page */
    ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
    ULONG    ulMaxKey;         /* maximum number of keys in single page */
-   BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
-   BYTE *   pStartKey;        /* begining of key pool after sorting */
+   HB_BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
+   HB_BYTE *   pStartKey;        /* begining of key pool after sorting */
    LPNTXSWAPPAGE pSwapPage;   /* list of pages */
    LPPAGEINFO NodeList[ NTX_STACKSIZE ];   /* Stack of pages */
    ULONG    ulFirst;
    ULONG *  pSortedPages;
-   BYTE     pLastKey[ NTX_MAX_KEY ]; /* last key val */
+   HB_BYTE     pLastKey[ NTX_MAX_KEY ]; /* last key val */
    ULONG    ulLastRec;
 
-   BYTE *   pBuffIO;          /* index IO buffer */
+   HB_BYTE *   pBuffIO;          /* index IO buffer */
    ULONG    ulSizeIO;         /* size of IO buffer in index pages */
    ULONG    ulPagesIO;        /* number of index pages in buffer */
    ULONG    ulFirstIO;        /* first page in buffer */

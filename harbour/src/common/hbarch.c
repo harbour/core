@@ -71,7 +71,7 @@
 #define HB_EXPONENT_MASK      ( ( 1 << HB_EXPONENT_BITS ) - 1 )
 #define HB_EXPONENT_ADD       0x3ff
 
-void hb_put_ieee754( BYTE * ptr, double d )
+void hb_put_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
    double df;
@@ -119,7 +119,7 @@ void hb_put_ieee754( BYTE * ptr, double d )
 #endif
 }
 
-double hb_get_ieee754( const BYTE * ptr )
+double hb_get_ieee754( const HB_BYTE * ptr )
 {
    int iExp, iSig;
 #if defined( HB_LONG_LONG_OFF )
@@ -159,7 +159,7 @@ double hb_get_ieee754( const BYTE * ptr )
 #endif
 }
 
-void hb_put_ord_ieee754( BYTE * ptr, double d )
+void hb_put_ord_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
    double df;
@@ -194,7 +194,7 @@ void hb_put_ord_ieee754( BYTE * ptr, double d )
    HB_PUT_BE_UINT32( ptr + 4, l1 );
 }
 
-double hb_get_ord_ieee754( const BYTE * ptr )
+double hb_get_ord_ieee754( const HB_BYTE * ptr )
 {
    int iExp, iSig;
    HB_U32 l1, l2;
@@ -225,7 +225,7 @@ double hb_get_ord_ieee754( const BYTE * ptr )
  * some compilers does not like constraction used by in HB_GET_LE_DOUBLE
  * macro => d = { ... }
  */
-double hb_get_rev_double( const BYTE * ptr )
+double hb_get_rev_double( const HB_BYTE * ptr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_get_rev_double(%p)", ptr));
 
@@ -235,7 +235,7 @@ double hb_get_rev_double( const BYTE * ptr )
 #else
       union {
          double dbl;
-         BYTE buffer[ 8 ];
+         HB_BYTE buffer[ 8 ];
       } u;
 
       u.buffer[ 0 ] = ptr[ 7 ];
@@ -252,7 +252,7 @@ double hb_get_rev_double( const BYTE * ptr )
    }
 }
 
-double hb_get_std_double( const BYTE * ptr )
+double hb_get_std_double( const HB_BYTE * ptr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_get_std_double(%p)", ptr));
 
@@ -262,7 +262,7 @@ double hb_get_std_double( const BYTE * ptr )
 #else
       union {
          double dbl;
-         BYTE buffer[ 8 ];
+         HB_BYTE buffer[ 8 ];
       } u;
 
       u.buffer[ 0 ] = ptr[ 0 ];
@@ -287,7 +287,7 @@ double hb_get_std_double( const BYTE * ptr )
  * values. They are necessary for extracting such number from PCODE,
  * databases or serialization streams in RPC
  */
-double hb_get_le_uint64( const BYTE * ptr )
+double hb_get_le_uint64( const HB_BYTE * ptr )
 {
    HB_U32 l1, l2;
 
@@ -298,7 +298,7 @@ double hb_get_le_uint64( const BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-double hb_get_le_int64( const BYTE * ptr )
+double hb_get_le_int64( const HB_BYTE * ptr )
 {
    HB_U32 l1;
    HB_I32 l2;
@@ -310,7 +310,7 @@ double hb_get_le_int64( const BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-void hb_put_le_uint64( BYTE * ptr, double d )
+void hb_put_le_uint64( HB_BYTE * ptr, double d )
 {
    HB_U32 l1, l2;
 

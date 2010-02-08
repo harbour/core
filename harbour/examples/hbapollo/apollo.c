@@ -62,8 +62,6 @@
 
 #define HB_OS_WIN_USED
 
-#define MAX_STR_LEN 255
-
 #include "hbapi.h"
 
 #if defined( HB_WITH_APOLLO_VER61 )

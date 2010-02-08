@@ -101,7 +101,7 @@ extern HB_EXPORT void    hb_xvmFrame( int iLocals, int iParams );  /* increases 
 extern HB_EXPORT void    hb_xvmVFrame( int iLocals, int iParams ); /* increases the stack pointer for the amount of locals and variable params */
 extern HB_EXPORT void    hb_xvmSFrame( PHB_SYMB pSymbol );
 extern HB_EXPORT void    hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics );
-extern HB_EXPORT void    hb_xvmThreadStatics( USHORT uiStatics, const BYTE * statics );
+extern HB_EXPORT void    hb_xvmThreadStatics( USHORT uiStatics, const HB_BYTE * statics );
 extern HB_EXPORT void    hb_xvmParameter( PHB_SYMB pSymbol, int iParams );
 extern HB_EXPORT void    hb_xvmRetValue( void );                   /* pops the latest stack value into stack.Return */
 extern HB_EXPORT HB_BOOL hb_xvmDo( USHORT uiParams );
@@ -113,9 +113,9 @@ extern HB_EXPORT void    hb_xvmPushStaticByRef( USHORT uiStatic );
 extern HB_EXPORT void    hb_xvmPopStatic( USHORT uiStatic );
 extern HB_EXPORT HB_BOOL hb_xvmPushVariable( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopVariable( PHB_SYMB pSymbol );
-extern HB_EXPORT void    hb_xvmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
-extern HB_EXPORT void    hb_xvmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
-extern HB_EXPORT void    hb_xvmPushBlockLarge( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+extern HB_EXPORT void    hb_xvmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+extern HB_EXPORT void    hb_xvmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+extern HB_EXPORT void    hb_xvmPushBlockLarge( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void    hb_xvmPushSelf( void );
 extern HB_EXPORT void    hb_xvmPushVParams( void );
 extern HB_EXPORT void    hb_xvmPushLocal( HB_SHORT iLocal );          /* pushes the containts of a local onto the stack */
@@ -190,7 +190,7 @@ extern HB_EXPORT HB_BOOL hb_xvmArrayPop( void );                   /* pops a val
 extern HB_EXPORT void    hb_xvmHashGen( HB_SIZE ulElements );      /* generates an ulElements Hash and fills it from the stack values */
 
 extern HB_EXPORT void    hb_xvmLocalName( USHORT uiLocal, const char * szLocalName );
-extern HB_EXPORT void    hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName );
+extern HB_EXPORT void    hb_xvmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName );
 extern HB_EXPORT void    hb_xvmModuleName( const char * szModuleName );
 
 extern HB_EXPORT HB_BOOL hb_xvmMacroDo( USHORT uiArgSets );

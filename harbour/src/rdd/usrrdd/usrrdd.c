@@ -64,7 +64,7 @@
 #include "hbusrrdd.ch"
 
 #define SELF_USRNODE( w )     ( s_pUsrRddNodes[ (w)->rddID ] )
-#define SELF_USRDATA( w )     ( ( LPUSRRDDDATA ) ( ( BYTE * )( w ) + \
+#define SELF_USRDATA( w )     ( ( LPUSRRDDDATA ) ( ( HB_BYTE * )( w ) + \
                                  SELF_USRNODE( w )->uiDataOffset ) )
 
 #undef _SUPERTABLE
@@ -1342,7 +1342,7 @@ static HB_ERRCODE hb_usrGoHot( AREAP pArea )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrPutRec( AREAP pArea, const BYTE * pBuffer )
+static HB_ERRCODE hb_usrPutRec( AREAP pArea, const HB_BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrPutRec(%p,%p)", pArea, pBuffer));
 
@@ -1356,7 +1356,7 @@ static HB_ERRCODE hb_usrPutRec( AREAP pArea, const BYTE * pBuffer )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrGetRec( AREAP pArea, BYTE ** pBuffer )
+static HB_ERRCODE hb_usrGetRec( AREAP pArea, HB_BYTE ** pBuffer )
 {
    PHB_ITEM pItem;
    LONG lOffset;
@@ -1377,9 +1377,9 @@ static HB_ERRCODE hb_usrGetRec( AREAP pArea, BYTE ** pBuffer )
 
    pItem = hb_stackItemFromBase( lOffset );
    if( HB_IS_STRING( pItem ) )
-      * pBuffer = ( BYTE * ) hb_itemGetCPtr( pItem );
+      * pBuffer = ( HB_BYTE * ) hb_itemGetCPtr( pItem );
    else
-      * pBuffer = ( BYTE * ) hb_itemGetPtr( pItem );
+      * pBuffer = ( HB_BYTE * ) hb_itemGetPtr( pItem );
    hb_stackPop();
 
    return hb_usrReturn();
@@ -3367,11 +3367,11 @@ HB_FUNC_UR_SUPER( PUTREC )
    {
       if( HB_ISPOINTER( 2 ) )
       {
-         hb_retni( SUPER_PUTREC( pArea, ( const BYTE * ) hb_parptr( 2 ) ) );
+         hb_retni( SUPER_PUTREC( pArea, ( const HB_BYTE * ) hb_parptr( 2 ) ) );
       }
       else if( HB_ISCHAR( 2 ) )
       {
-         hb_retni( SUPER_PUTREC( pArea, ( const BYTE * ) hb_parc( 2 ) ) );
+         hb_retni( SUPER_PUTREC( pArea, ( const HB_BYTE * ) hb_parc( 2 ) ) );
       }
       else
       {
@@ -3387,7 +3387,7 @@ HB_FUNC_UR_SUPER( GETREC )
 
    if( pArea )
    {
-      BYTE * pBuffer;
+      HB_BYTE * pBuffer;
 
       hb_retni( SUPER_GETREC( pArea, &pBuffer ) );
       hb_storptr( pBuffer, 2 );

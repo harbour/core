@@ -2032,7 +2032,7 @@ static HB_ERRCODE adsFlush( ADSAREAP pArea )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
+static HB_ERRCODE adsGetRec( ADSAREAP pArea, HB_BYTE ** pBuffer )
 {
    UNSIGNED32 u32Len = ( UNSIGNED32 ) pArea->ulRecordLen, u32Result;
 
@@ -2057,7 +2057,7 @@ static HB_ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
 static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD    pField;
-   BYTE *     pBuffer = pArea->pRecord;
+   HB_BYTE *  pBuffer = pArea->pRecord;
    UNSIGNED32 u32Length;
    UNSIGNED32 u32RetVal;
 
@@ -2435,7 +2435,7 @@ static HB_ERRCODE adsGetVarLen( ADSAREAP pArea, USHORT uiIndex, ULONG * ulLen )
 #define  adsGoCold                NULL
 #define  adsGoHot                 NULL
 
-static HB_ERRCODE adsPutRec( ADSAREAP pArea, const BYTE * pBuffer )
+static HB_ERRCODE adsPutRec( ADSAREAP pArea, const HB_BYTE * pBuffer )
 {
    UNSIGNED32 u32Len = ( UNSIGNED32 ) pArea->ulRecordLen, u32Result;
 
@@ -2464,7 +2464,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
    USHORT uiCount;
-   BYTE * szText;
+   HB_BYTE * szText;
    HB_BOOL bTypeError = HB_TRUE;
    UNSIGNED32 u32RetVal = 0;
 
@@ -3025,7 +3025,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->ulRecordLen = u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
 
    return SELF_GOTOP( ( AREAP ) pArea );
 }
@@ -3494,7 +3494,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->ulRecordLen = u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
 
    /* If successful call SUPER_OPEN to finish system jobs */
    if( SUPER_OPEN( ( AREAP ) pArea, pOpenInfo ) == HB_FAILURE )
@@ -3529,7 +3529,7 @@ static HB_ERRCODE adsStructSize( ADSAREAP pArea, USHORT * StructSize )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
+static HB_ERRCODE adsSysName( ADSAREAP pArea, HB_BYTE * pBuffer )
 {
    UNSIGNED16 u16TableType;
    UNSIGNED32 u32RetVal;

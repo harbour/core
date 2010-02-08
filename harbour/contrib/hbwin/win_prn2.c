@@ -386,7 +386,7 @@ HB_FUNC( WIN_PRINTFILERAW )
 
                if( fhnd != FS_ERROR )
                {
-                  BYTE pbyBuffer[ 32 * 1024 ];
+                  HB_BYTE pbyBuffer[ 32 * 1024 ];
                   DWORD dwWritten = 0;
                   USHORT nRead;
 

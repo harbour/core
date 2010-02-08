@@ -447,8 +447,8 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = ( ULONG ) PQntuples( pResult );
 
    pArea->pRow = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
    * pArea->pRow = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;

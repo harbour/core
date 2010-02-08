@@ -184,7 +184,7 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
       {
          case HB_FT_MODTIME:
          {
-            BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
+            HB_BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
             if( lJulian == 0 )
                hb_timeStampGet( &lJulian, &lMilliSec );
             HB_PUT_LE_UINT32( pPtr, lJulian );
@@ -194,7 +194,7 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
          }
          case HB_FT_ROWVER:
          {
-            BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
+            HB_BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
             if( nRowVer == 0 )
                hb_dbfGetRowVer( pArea, uiCount, &nRowVer );
             HB_PUT_LE_UINT64( pPtr, nRowVer );
@@ -206,7 +206,7 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
 
 static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
 {
-   BYTE * pPtr = pArea->pRecord, bFill = ' ', bNext;
+   HB_BYTE * pPtr = pArea->pRecord, bFill = ' ', bNext;
    ULONG ulSize = 1; /* 1 byte ' ' for DELETE flag */
    USHORT uiCount;
    LPFIELD pField;
@@ -324,7 +324,7 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
                USHORT ui = uiLen;
                do
                {
-                  pPtr[ --ui ] = ( BYTE ) nValue % 10 + '0';
+                  pPtr[ --ui ] = ( HB_BYTE ) nValue % 10 + '0';
                   nValue /= 10;
                }
                while( ui && nValue >= 1 );
@@ -373,12 +373,12 @@ static HB_BOOL hb_dbfGetNullFlag( DBFAREAP pArea, USHORT uiBit )
             ( 1 << ( uiBit & 0x07 ) ) ) != 0;
 }
 
-static void hb_dbfSetNullFlag( BYTE * pRecord, USHORT uiNullOffset, USHORT uiBit )
+static void hb_dbfSetNullFlag( HB_BYTE * pRecord, USHORT uiNullOffset, USHORT uiBit )
 {
    pRecord[ uiNullOffset + ( uiBit >> 3 ) ] |= 1 << ( uiBit & 0x07 );
 }
 
-static void hb_dbfClearNullFlag( BYTE * pRecord, USHORT uiNullOffset, USHORT uiBit )
+static void hb_dbfClearNullFlag( HB_BYTE * pRecord, USHORT uiNullOffset, USHORT uiBit )
 {
    pRecord[ uiNullOffset + ( uiBit >> 3 ) ] &= ~( 1 << ( uiBit & 0x07 ) );
 }
@@ -960,7 +960,7 @@ ULONG hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex )
    else
    {
       USHORT uiCount;
-      BYTE bByte;
+      HB_BYTE bByte;
 
       for( uiCount = 0; uiCount < 10; uiCount++ )
       {
@@ -996,7 +996,7 @@ void hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock )
       {
          if( ulBlock > 0 )
          {
-            pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ( BYTE )( ulBlock % 10 ) + '0';
+            pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ( HB_BYTE )( ulBlock % 10 ) + '0';
             ulBlock /= 10;
          }
          else
@@ -1055,7 +1055,7 @@ HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
       else if( pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] != 0 )
       {
          USHORT uiCount;
-         BYTE bByte;
+         HB_BYTE bByte;
 
          ulValue = 0;
          for( uiCount = 0; uiCount < 10; uiCount++ )
@@ -1117,7 +1117,7 @@ HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
          {
             if( ulBlock > 0 )
             {
-               pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ( BYTE )( ulBlock % 10 ) + '0';
+               pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ( HB_BYTE )( ulBlock % 10 ) + '0';
                ulBlock /= 10;
             }
             else
@@ -1137,7 +1137,7 @@ HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
+HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
 {
    switch( bScheme )
    {
@@ -1179,7 +1179,7 @@ HB_BOOL hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPoo
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
+HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
 {
    HB_FOFFSET ulPos, ulPool, ulSize = 1;
    HB_BOOL fRet = HB_FALSE;
@@ -1746,7 +1746,7 @@ static HB_ERRCODE hb_dbfFlush( DBFAREAP pArea )
 /*
  * Retrieve current record buffer
  */
-static HB_ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer )
+static HB_ERRCODE hb_dbfGetRec( DBFAREAP pArea, HB_BYTE ** pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetRec(%p, %p)", pArea, pBuffer));
 
@@ -2111,7 +2111,7 @@ static HB_ERRCODE hb_dbfGoHot( DBFAREAP pArea )
 /*
  * Replace the current record.
  */
-static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const BYTE * pBuffer )
+static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const HB_BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutRec(%p, %p)", pArea, pBuffer));
 
@@ -2148,7 +2148,7 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const BYTE * pBuffer )
    }
    else /* if( pArea->fRecordChanged ) */
    {
-      BYTE * pRecord = pArea->pRecord;
+      HB_BYTE * pRecord = pArea->pRecord;
       USHORT uiWritten;
 
       if( pArea->pCryptKey )
@@ -2159,7 +2159,7 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const BYTE * pBuffer )
 
          if( pArea->bCryptType == DB_CRYPT_SIX && pArea->fEncrypted )
          {
-            pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
+            pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen );
             pRecord[ 0 ] = pArea->fDeleted ? 'D' : 'E';
             hb_sxEnCrypt( ( const char * ) pArea->pRecord + 1,
                           ( char * ) pRecord + 1,
@@ -2199,7 +2199,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    char szBuffer[ 256 ];
    const char * pszPtr;
    ULONG ulSize, ulLen;
-   BYTE * ptr;
+   HB_BYTE * ptr;
    PHB_ITEM pError;
    HB_ERRCODE errCode;
 
@@ -2281,7 +2281,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 
             if( ulLen < ( ULONG ) pField->uiLen )
             {
-               pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( BYTE ) ulLen;
+               pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( HB_BYTE ) ulLen;
                hb_dbfSetNullFlag( pArea->pRecord, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
             }
             else
@@ -2730,7 +2730,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    USHORT uiCount;
    HB_BOOL fError, fRawBlob;
    DBFFIELD * pThisField;
-   BYTE * pBuffer;
+   HB_BYTE * pBuffer;
    PHB_FNAME pFileName;
    PHB_ITEM pItem = NULL, pError;
    char szFileName[ HB_PATH_MAX ];
@@ -2797,7 +2797,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          pArea->lpdbOpenInfo = NULL;
          return HB_FAILURE;
       }
-      pArea->bMemoType = ( BYTE ) hb_itemGetNI( pItem );
+      pArea->bMemoType = ( HB_BYTE ) hb_itemGetNI( pItem );
    }
 
    pArea->bCryptType = DB_CRYPT_NONE;
@@ -2845,7 +2845,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    ulSize = ( ULONG ) pArea->area.uiFieldCount * sizeof( DBFFIELD ) +
             ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 );
-   pBuffer = ( BYTE * ) hb_xgrab( ulSize + sizeof( DBFFIELD ) + 1 );
+   pBuffer = ( HB_BYTE * ) hb_xgrab( ulSize + sizeof( DBFFIELD ) + 1 );
    memset( pBuffer, 0, ulSize + sizeof( DBFFIELD ) + 1 );
    pThisField = ( DBFFIELD * ) pBuffer;
 
@@ -2863,14 +2863,14 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* field offset */
       if( pArea->bTableType == DB_DBF_VFP )
          HB_PUT_LE_UINT16( pThisField->bReserved1, pArea->uiRecordLen );
-      pThisField->bFieldFlags = ( BYTE ) pField->uiFlags;
+      pThisField->bFieldFlags = ( HB_BYTE ) pField->uiFlags;
 
       switch( pField->uiType )
       {
          case HB_FT_STRING:
             pThisField->bType = 'C';
-            pThisField->bLen = ( BYTE ) pField->uiLen;
-            pThisField->bDec = ( BYTE ) ( pField->uiLen >> 8 );
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+            pThisField->bDec = ( HB_BYTE ) ( pField->uiLen >> 8 );
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -2884,7 +2884,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'M';
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
             break;
@@ -2893,7 +2893,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'W';
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bFieldFlags = HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
@@ -2903,7 +2903,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'P';
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bFieldFlags = HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
@@ -2913,7 +2913,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'G';
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bFieldFlags = HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
@@ -2929,8 +2929,8 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
                {
                   pField->uiLen = 6;
                }
-               pThisField->bLen = ( BYTE ) pField->uiLen;
-               pThisField->bDec = ( BYTE ) ( pField->uiLen >> 8 );
+               pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+               pThisField->bDec = ( HB_BYTE ) ( pField->uiLen >> 8 );
                pArea->uiRecordLen += pField->uiLen;
                if( pThisField->bLen >= 6 )
                {
@@ -2946,21 +2946,21 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             {
                pField->uiLen = pThisField->bLen = 8;
             }
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_FT_LONG:
             pThisField->bType = 'N';
-            pThisField->bLen = ( BYTE ) pField->uiLen;
-            pThisField->bDec = ( BYTE ) pField->uiDec;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+            pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_FT_FLOAT:
             pThisField->bType = 'F';
-            pThisField->bLen = ( BYTE ) pField->uiLen;
-            pThisField->bDec = ( BYTE ) pField->uiDec;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+            pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -2968,8 +2968,8 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_CURDOUBLE:
             pThisField->bType = 'B';
             pField->uiLen = 8;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
-            pThisField->bDec = ( BYTE ) pField->uiDec;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+            pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -2983,8 +2983,8 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             {
                pField->uiLen = 4;
             }
-            pThisField->bLen = ( BYTE ) pField->uiLen;
-            pThisField->bDec = ( BYTE ) pField->uiDec;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
+            pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -2997,7 +2997,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
                pThisField->bType = 'V';
             else
                pThisField->bType = 'Q';
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
             hb_dbfAllocNullFlag( pArea, uiCount, HB_TRUE );
             break;
@@ -3005,14 +3005,14 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_TIME:
             pThisField->bType = 'T';
             pField->uiLen = 4;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_FT_TIMESTAMP:
             pThisField->bType = pArea->bTableType == DB_DBF_VFP ? 'T' : '@';
             pField->uiLen = 8;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bFieldFlags = HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             break;
@@ -3020,7 +3020,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_MODTIME:
             pThisField->bType = '=';
             pField->uiLen = 8;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fModStamp = HB_TRUE;
             break;
@@ -3028,7 +3028,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_ROWVER:
             pThisField->bType = '^';
             pField->uiLen = 8;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
             pThisField->bStep = 1;
             pArea->uiRecordLen += pField->uiLen;
@@ -3038,7 +3038,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_AUTOINC:
             pThisField->bType = '+';
             pField->uiLen = 4;
-            pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
             pThisField->bStep = 1;
             pArea->uiRecordLen += pField->uiLen;
@@ -3066,8 +3066,8 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pThisField->bType = '0';
       pThisField->bFieldFlags = HB_FF_HIDDEN;
       uiCount = ( pArea->uiNullCount + 7 ) >> 3;
-      pThisField->bLen = ( BYTE ) uiCount;
-      pThisField->bDec = ( BYTE ) ( uiCount >> 8 );
+      pThisField->bLen = ( HB_BYTE ) uiCount;
+      pThisField->bDec = ( HB_BYTE ) ( uiCount >> 8 );
       pArea->uiNullOffset = pArea->uiRecordLen;
       pArea->uiRecordLen += uiCount;
       ulSize += sizeof( DBFFIELD );
@@ -3174,7 +3174,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
 
    /* Alloc buffer */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen );
    pArea->fValidBuffer = HB_FALSE;
 
    /* Update the number of record for corrupted headers */
@@ -3333,7 +3333,7 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 #ifndef HB_LONG_LONG_OFF
             case DB_DBFLOCK_HB64:
 #endif
-               pArea->bLockType = ( BYTE ) iScheme;
+               pArea->bLockType = ( HB_BYTE ) iScheme;
          }
          break;
       }
@@ -3517,7 +3517,7 @@ static HB_ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoT
       case DBRI_RAWDATA:
       {
          USHORT uiFields;
-         BYTE *pResult;
+         HB_BYTE * pResult;
          ULONG ulLength, ulLen;
 
          if( !pArea->fValidBuffer && !hb_dbfReadRecord( pArea ) )
@@ -3526,7 +3526,7 @@ static HB_ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoT
             break;
          }
          ulLength = uiInfoType == DBRI_RAWDATA ? pArea->uiRecordLen : 0;
-         pResult = ( BYTE * ) hb_xgrab( ulLength + 1 );
+         pResult = ( HB_BYTE * ) hb_xgrab( ulLength + 1 );
          if( ulLength )
          {
             memcpy( pResult, pArea->pRecord, ulLength );
@@ -3547,7 +3547,7 @@ static HB_ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoT
                   ulLen = hb_itemGetCLen( pInfo );
                   if( ulLen > 0 )
                   {
-                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + ulLen + 1 );
+                     pResult = ( HB_BYTE * ) hb_xrealloc( pResult, ulLength + ulLen + 1 );
                      memcpy( pResult + ulLength, hb_itemGetCPtr( pInfo ), ulLen );
                      ulLength += ulLen;
                   }
@@ -3608,7 +3608,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    HB_BOOL fRawBlob;
    PHB_ITEM pError, pItem;
    PHB_FNAME pFileName;
-   BYTE * pBuffer;
+   HB_BYTE * pBuffer;
    LPDBFFIELD pField;
    DBFIELDINFO dbFieldInfo;
    char szFileName[ HB_PATH_MAX ];
@@ -3772,7 +3772,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       uiSkip = 0;
       uiFields = ( pArea->uiHeaderLen - sizeof( DBFHEADER ) ) / sizeof( DBFFIELD );
       ulSize = ( ULONG ) uiFields * sizeof( DBFFIELD );
-      pBuffer = uiFields ? ( BYTE * ) hb_xgrab( ulSize ) : NULL;
+      pBuffer = uiFields ? ( HB_BYTE * ) hb_xgrab( ulSize ) : NULL;
 
       /* Read fields and exit if error */
       do
@@ -4105,7 +4105,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    /* Alloc buffer */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen );
    pArea->fValidBuffer = HB_FALSE;
 
    /* Update the number of record for corrupted headers */
@@ -4286,7 +4286,7 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
    return SELF_GOTO( ( AREAP ) pArea, 1 );
 }
 
-void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
+void hb_dbfTranslateRec( DBFAREAP pArea, HB_BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
 {
    char * pTmpBuf = NULL;
    ULONG ulLen;
@@ -4314,7 +4314,7 @@ void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, P
          {
             if( ulLen < ( ULONG ) pField->uiLen )
             {
-               pBuffer[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( BYTE ) ulLen;
+               pBuffer[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( HB_BYTE ) ulLen;
                hb_dbfSetNullFlag( pBuffer, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
             }
             else
@@ -4336,7 +4336,7 @@ static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
    HB_BOOL bMoreRecords, bLimited, bValidRecord;
    HB_ERRCODE errCode;
    DBQUICKSORT dbQuickSort;
-   BYTE * pBuffer;
+   HB_BYTE * pBuffer;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfSort(%p, %p)", pArea, pSortInfo));
 
@@ -5161,9 +5161,9 @@ static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    }
 
    hb_dateToday( &iYear, &iMonth, &iDay );
-   pArea->dbfHeader.bYear = ( BYTE ) ( iYear - 1900 );
-   pArea->dbfHeader.bMonth = ( BYTE ) iMonth;
-   pArea->dbfHeader.bDay = ( BYTE ) iDay;
+   pArea->dbfHeader.bYear = ( HB_BYTE ) ( iYear - 1900 );
+   pArea->dbfHeader.bMonth = ( HB_BYTE ) iMonth;
+   pArea->dbfHeader.bDay = ( HB_BYTE ) iDay;
 
    /* Update record count */
    if( pArea->fShared )

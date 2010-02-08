@@ -67,7 +67,7 @@
 typedef struct _HB_FILEBUF
 {
    HB_FHANDLE hFile;
-   BYTE *     pBuf;
+   HB_BYTE *  pBuf;
    HB_SIZE    ulSize;
    HB_SIZE    ulPos;
 } HB_FILEBUF;
@@ -86,7 +86,7 @@ static void hb_addToFBuffer( PHB_FILEBUF pFileBuf, char ch )
 {
    if( pFileBuf->ulPos == pFileBuf->ulSize )
       hb_flushFBuffer( pFileBuf );
-   pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( BYTE ) ch;
+   pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) ch;
 }
 
 static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE ulSize )
@@ -96,7 +96,7 @@ static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE
    {
       if( pFileBuf->ulPos == pFileBuf->ulSize )
          hb_flushFBuffer( pFileBuf );
-      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( BYTE ) str[ ulPos++ ];
+      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) str[ ulPos++ ];
    }
 }
 
@@ -106,7 +106,7 @@ static void hb_addStrToFBuffer( PHB_FILEBUF pFileBuf, const char * szStr )
    {
       if( pFileBuf->ulPos == pFileBuf->ulSize )
          hb_flushFBuffer( pFileBuf );
-      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( BYTE ) *szStr++;
+      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) *szStr++;
    }
 }
 
@@ -123,7 +123,7 @@ static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, HB_SIZE ulSize )
    PHB_FILEBUF pFileBuf = ( PHB_FILEBUF ) hb_xgrab( sizeof( HB_FILEBUF ) );
 
    pFileBuf->hFile = hFile;
-   pFileBuf->pBuf = ( BYTE * ) hb_xgrab( ulSize );
+   pFileBuf->pBuf = ( HB_BYTE * ) hb_xgrab( ulSize );
    pFileBuf->ulSize = ulSize;
    pFileBuf->ulPos = 0;
    return pFileBuf;

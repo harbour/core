@@ -68,20 +68,20 @@
 
 
 #define MIX_KEY( tag, node, index ) \
-   ( ( PMIXKEY ) & ( ( BYTE * ) (node) ) [ ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (index) * (tag)->uiTotalLen ] )
+   ( ( PMIXKEY ) & ( ( HB_BYTE * ) (node) ) [ ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (index) * (tag)->uiTotalLen ] )
 
 #define MIX_COPY_KEYS_INTERNAL( tag, node, dst, src, count ) \
-   memmove( ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
-            ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
+   memmove( ( ( HB_BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+            ( ( HB_BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
             (count) * (tag)->uiTotalLen )
 
 #define MIX_COPY_KEYS_EXTERNAL( tag, ndst, dst, nsrc, src, count ) \
-   memmove( ( ( BYTE * ) (ndst) ) + ( (ndst)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
-            ( ( BYTE * ) (nsrc) ) + ( (nsrc)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
+   memmove( ( ( HB_BYTE * ) (ndst) ) + ( (ndst)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+            ( ( HB_BYTE * ) (nsrc) ) + ( (nsrc)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
             (count) * (tag)->uiTotalLen )
 
 #define MIX_ASSIGN_KEY( tag, node, dst, src ) \
-   memmove( ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+   memmove( ( ( HB_BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
             (src), (tag)->uiTotalLen )
 
 #define MIX_COPY_CHILDS_INTERNAL( tag, node, dst, src, count ) \
@@ -146,7 +146,7 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, ULONG ulRecNo, PM
 {
    ULONG       ul;
    double      dbl;
-   BYTE        buf[ 8 ];
+   HB_BYTE     buf[ 8 ];
 
    if ( ! pKey )
       pKey = hb_mixKeyNew( pTag );
@@ -183,7 +183,7 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, ULONG ulRecNo, PM
          break;
 
       case 'L':
-         pKey->val[ 0 ] = ( BYTE ) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
+         pKey->val[ 0 ] = ( HB_BYTE ) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
          break;
 
       default:
@@ -792,7 +792,7 @@ static HB_BOOL hb_mixTagDelKey( PMIXTAG pTag, PMIXKEY pKey )
 }
 
 
-static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem, PHB_ITEM pForItem, PHB_ITEM pWhileItem, BYTE bType, unsigned int uiKeyLen, SQLMIXAREAP pArea )
+static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem, PHB_ITEM pForItem, PHB_ITEM pWhileItem, HB_BYTE bType, unsigned int uiKeyLen, SQLMIXAREAP pArea )
 {
    PMIXTAG            pTag;
    PMIXKEY            pKey = NULL;
@@ -1609,7 +1609,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
    ULONG        ulRecNo;
    USHORT       uiLen;
-   BYTE         bType;
+   HB_BYTE      bType;
 
    /* Obtain key codeblock */
    if ( pOrderInfo->itmCobExpr )

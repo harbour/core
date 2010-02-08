@@ -113,7 +113,7 @@ typedef struct _HB_GTSTD
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;
-   BYTE           keyTransTbl[ 256 ];
+   HB_BYTE        keyTransTbl[ 256 ];
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    struct termios saved_TIO;
@@ -181,7 +181,7 @@ static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_C
    int i;
 
    for( i = 0; i < 256; ++i )
-      pGTSTD->keyTransTbl[ i ] = ( BYTE )
+      pGTSTD->keyTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
 }
 
@@ -346,7 +346,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
       FD_SET( pGTSTD->hStdin, &rfds );
       if( select( pGTSTD->hStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
       {
-         BYTE bChar;
+         HB_BYTE bChar;
          if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
             ch = pGTSTD->keyTransTbl[ bChar ];
       }
@@ -370,7 +370,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
    }
    else if( !_eof( ( int ) pGTSTD->hStdin ) )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( _read( ( int ) pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
@@ -378,7 +378,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
    if( !pGTSTD->fStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == 0x0000 )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
@@ -401,7 +401,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
    }
    else if( !eof( pGTSTD->hStdin ) )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
@@ -569,7 +569,7 @@ static HB_BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 {
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iCol, iMin = 0;
    PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
@@ -601,7 +601,7 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iLineFeed, iBackSpace, iLen, iMin;
    PHB_GTSTD pGTSTD;

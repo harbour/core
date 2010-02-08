@@ -180,7 +180,7 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * 
 }
 
 /* execute PCODE function */
-void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 {
    static FARPROC s_pExecute = NULL;
 

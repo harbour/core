@@ -453,11 +453,11 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
        *     or for DOS, we'll mostly request unavailable resolutions
        */
       if( AL_SCREEN_W != s_byFontWidth * s_iScrWidth )
-         ixFP = ( BYTE ) ( AL_SCREEN_W / s_iScrWidth ) * 2;
+         ixFP = ( HB_BYTE ) ( AL_SCREEN_W / s_iScrWidth ) * 2;
 
       if( AL_SCREEN_H != s_byFontSize * s_iScrHeight )
       {
-         iyFP = ( BYTE ) ( AL_SCREEN_H / s_iScrHeight );
+         iyFP = ( HB_BYTE ) ( AL_SCREEN_H / s_iScrHeight );
          if( iyFP & 1 )
             iyFP--;
       }
@@ -1060,7 +1060,7 @@ static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char * 
 static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );

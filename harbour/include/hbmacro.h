@@ -117,11 +117,11 @@ extern HB_EXPR_PTR hb_macroExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms
 /* Declarations for functions macro.c */
 #if defined( HB_MACRO_SUPPORT )
 
-extern void hb_macroGenPCode1( BYTE byte, HB_COMP_DECL );
-extern void hb_macroGenPCode2( BYTE byte1, BYTE byte2, HB_COMP_DECL );
-extern void hb_macroGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_COMP_DECL );
-extern void hb_macroGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_COMP_DECL );
-extern void hb_macroGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL );
+extern void hb_macroGenPCode1( HB_BYTE byte, HB_COMP_DECL );
+extern void hb_macroGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL );
+extern void hb_macroGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL );
+extern void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL );
+extern void hb_macroGenPCodeN( HB_BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL );
 
 extern ULONG hb_macroGenJump( LONG lOffset, HB_COMP_DECL );
 extern ULONG hb_macroGenJumpFalse( LONG lOffset, HB_COMP_DECL );
@@ -149,7 +149,7 @@ extern void hb_macroGenPushAliasedVar( const char * szVarName,
                                        const char * szAlias,
                                        HB_MAXINT lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushLogical( int iTrueFalse, HB_COMP_DECL );
-extern void hb_macroGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL );
+extern void hb_macroGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP_DECL );
 extern void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL );
 extern void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL );
 extern void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL );

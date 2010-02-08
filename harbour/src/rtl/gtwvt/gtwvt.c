@@ -343,7 +343,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    {
       int i;
       for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( HB_BYTE ) i;
    }
 #endif
 
@@ -1067,7 +1067,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   for( icol = left; icol <= right; icol++ )
                   {
                      int iColor;
-                     BYTE bAttr;
+                     HB_BYTE bAttr;
                      USHORT usChar;
 
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
@@ -1555,7 +1555,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    RECT        rcRect;
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
-   BYTE        bAttr;
+   HB_BYTE     bAttr;
 #if ! defined( UNICODE )
    HFONT       hFont, hOldFont = NULL;
 #endif
@@ -1583,7 +1583,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
           */
          iColor &= 0xff;
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, HB_TRUE, ( BYTE ) usChar );
+         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, HB_TRUE, ( HB_BYTE ) usChar );
          if( len == 0 )
          {
             iOldColor = iColor;
@@ -2982,7 +2982,7 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
 
       for( i = 0; i < 256; i++ )
       {
-         pWVT->chrTransTbl[ i ] = ( BYTE )
+         pWVT->chrTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
       }
    }
@@ -3026,7 +3026,7 @@ static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
       cdpHost = hb_cdpFind( pszHostCDP );
 
       for( i = 0; i < 256; i++ )
-         pWVT->keyTransTbl[ i ] = ( BYTE )
+         pWVT->keyTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
       pWVT->inCDP = cdpTerm;
    }

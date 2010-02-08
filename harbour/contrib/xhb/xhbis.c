@@ -99,7 +99,7 @@ HB_FUNC( ISALNUM )
    const char * szString = hb_parc( 1 );
 
    if( szString != NULL )
-      hb_retl( HB_ISALNUM( ( BYTE ) * szString ) );
+      hb_retl( HB_ISALNUM( ( HB_BYTE ) * szString ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -114,7 +114,7 @@ HB_FUNC( ISSPACE )
    const char * szString = hb_parc( 1 );
 
    if( szString != NULL )
-      hb_retl( HB_ISSPACE( ( BYTE ) * szString ) );
+      hb_retl( HB_ISSPACE( ( HB_BYTE ) * szString ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -127,7 +127,7 @@ HB_FUNC( ISXDIGIT )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && HB_ISXDIGIT( ( BYTE ) * szString ) );
+   hb_retl( szString && HB_ISXDIGIT( ( HB_BYTE ) * szString ) );
 }
 
 /* determines if first char of a string is a control character;
@@ -138,7 +138,7 @@ HB_FUNC( ISCNTRL )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && iscntrl( ( BYTE ) * szString ) );
+   hb_retl( szString && iscntrl( ( HB_BYTE ) * szString ) );
 }
 
 /* determines if first char of a string is a printable character.
@@ -149,7 +149,7 @@ HB_FUNC( ISGRAPH )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isgraph( ( BYTE ) * szString ) );
+   hb_retl( szString && isgraph( ( HB_BYTE ) * szString ) );
 }
 
 /* determines if first char of a string is a printable character.
@@ -161,7 +161,7 @@ HB_FUNC( ISPRINT )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isprint( ( BYTE ) * szString ) ) ;
+   hb_retl( szString && isprint( ( HB_BYTE ) * szString ) ) ;
 }
 
 /* determines if first char of a string is a punctuation character.
@@ -173,7 +173,7 @@ HB_FUNC( ISPUNCT )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && ispunct( ( BYTE ) * szString ) );
+   hb_retl( szString && ispunct( ( HB_BYTE ) * szString ) );
 }
 
 /* determines if first char of a string is a member of the 7-bit ASCII
@@ -184,5 +184,5 @@ HB_FUNC( ISASCII )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isascii( ( BYTE ) * szString ) );
+   hb_retl( szString && isascii( ( HB_BYTE ) * szString ) );
 }

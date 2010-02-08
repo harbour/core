@@ -58,17 +58,17 @@ HB_FUNC( CRYPT )
 
    if( ulCryptLen >= 2 )
    {
-      const BYTE *pbyCrypt = ( const BYTE * ) hb_parc( 2 );
+      const HB_BYTE * pbyCrypt = ( const HB_BYTE * ) hb_parc( 2 );
       HB_SIZE ulCryptPos = 0;
 
-      const BYTE *pbyString = ( const BYTE * ) hb_parc( 1 );
+      const HB_BYTE * pbyString = ( const HB_BYTE * ) hb_parc( 1 );
       HB_SIZE ulStringLen = hb_parclen( 1 );
       HB_SIZE ulStringPos;
 
-      BYTE *pbyResult = ( BYTE * ) hb_xgrab( ulStringLen + 1 );
+      HB_BYTE * pbyResult = ( HB_BYTE * ) hb_xgrab( ulStringLen + 1 );
 
       USHORT uiCount2 =
-         ( ( ( USHORT ) ( pbyCrypt[ulCryptPos] + ( USHORT ) ( pbyCrypt[ulCryptPos + 1] * 256 ) ) ) &
+         ( ( ( USHORT ) ( pbyCrypt[ ulCryptPos ] + ( USHORT ) ( pbyCrypt[ ulCryptPos + 1 ] * 256 ) ) ) &
            0xFFFF ) ^ ( ( USHORT ) ulCryptLen & 0xFFFF );
       USHORT uiCount1 = 0xAAAA;
 
@@ -76,7 +76,7 @@ HB_FUNC( CRYPT )
       {
          USHORT uiTmpCount1 = uiCount1;
          USHORT uiTmpCount2 = uiCount2;
-         BYTE byte = pbyString[ulStringPos] ^ pbyCrypt[ulCryptPos++];
+         HB_BYTE byte = pbyString[ ulStringPos ] ^ pbyCrypt[ ulCryptPos++ ];
          USHORT tmp;
 
          uiTmpCount2 =
@@ -96,7 +96,7 @@ HB_FUNC( CRYPT )
 
          do
          {
-            BYTE byTmp;
+            HB_BYTE byTmp;
 
             uiTmpCount2--;
 
@@ -119,7 +119,7 @@ HB_FUNC( CRYPT )
 
          uiCount1 = uiTmpCount1;
 
-         pbyResult[ulStringPos++] = byte ^ HB_LOBYTE( uiTmpCount1 );
+         pbyResult[ ulStringPos++ ] = byte ^ HB_LOBYTE( uiTmpCount1 );
 
          if( ulCryptPos == ulCryptLen )
             ulCryptPos = 0;

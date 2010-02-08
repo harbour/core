@@ -84,9 +84,9 @@ struct _COMCLASS;    /* forward declaration */
 typedef struct _COMDECLARED
 {
    const char          * szName;              /* the name of the symbol */
-   BYTE                  cType;
+   HB_BYTE               cType;
    USHORT                iParamCount;
-   BYTE                * cParamTypes;
+   HB_BYTE             * cParamTypes;
    struct _COMCLASS    * pClass;
    struct _COMCLASS    * ( * pParamClasses );
    struct _COMDECLARED * pNext;               /* pointer to the next declared function */
@@ -109,7 +109,7 @@ typedef struct _VAR
    int            iUsed;            /* number of times used */
    int            iDeclLine;        /* declaration line number */
    USHORT         uiFlags;          /* optional falgs, f.e. THREAD STATIC */
-   BYTE           cType;            /* optional strong typing */
+   HB_BYTE        cType;            /* optional strong typing */
    PCOMCLASS      pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
@@ -118,7 +118,7 @@ typedef struct _VAR
 typedef struct HB_CBVAR_
 {
    const char * szName;
-   BYTE bType;
+   HB_BYTE bType;
    HB_BOOL bUsed;
    struct HB_CBVAR_ * pNext;
 } HB_CBVAR, * HB_CBVAR_PTR;
@@ -401,7 +401,7 @@ typedef struct __FUNC
    PVAR         pMemvars;                 /* pointer to memvar variables list */
    PVAR         pDetached;                /* pointer to detached local variables list */
    PVAR         pPrivates;                /* pointer to private variables list */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
    ULONG        lPCodeSize;               /* total memory size for pcode */
    ULONG        lPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
@@ -435,7 +435,7 @@ typedef struct __FUNC
 typedef struct __INLINE
 {
    const char * szName;                   /* name of a inline function */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
    ULONG        lPCodeSize;               /* total memory size for pcode */
    const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
@@ -501,11 +501,11 @@ typedef struct _HB_MODULE
 
 typedef struct _HB_DEBUGINFO
 {
-   char *   pszModuleName;
-   ULONG    ulFirstLine;
-   ULONG    ulLastLine;
-   ULONG    ulAllocated;
-   BYTE *   pLineMap;
+   char *    pszModuleName;
+   ULONG     ulFirstLine;
+   ULONG     ulLastLine;
+   ULONG     ulAllocated;
+   HB_BYTE * pLineMap;
    struct _HB_DEBUGINFO * pNext;
 } HB_DEBUGINFO, * PHB_DEBUGINFO;
 
@@ -546,7 +546,7 @@ HB_COMMON, * HB_COMMON_PTR;
 
 typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
-   BYTE *  pCode;          /* pointer to a memory block where pcode is stored */
+   HB_BYTE * pCode;        /* pointer to a memory block where pcode is stored */
    ULONG   lPCodeSize;     /* total memory size for pcode */
    ULONG   lPCodePos;      /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
@@ -672,7 +672,7 @@ typedef struct _HB_COMP
    void *            cargo;
 
    ULONG             ulOutBufSize;        /* memory output buffer size */
-   BYTE *            pOutBuf;             /* memory output buffer address */
+   HB_BYTE *         pOutBuf;             /* memory output buffer address */
 
    ULONG             lastLinePos;         /* position of last opcode with line number */
    int               lastLine;            /* last generated in PCODE line number */

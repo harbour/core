@@ -68,7 +68,7 @@ static void do_ascpos( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
       HB_SIZE sStrSize = hb_parclen( 1 );
-      const BYTE *pcString = ( const BYTE * ) hb_parc( 1 );
+      const HB_BYTE * pcString = ( const HB_BYTE * ) hb_parc( 1 );
       HB_SIZE sPos;
 
       if( HB_ISNUM( 2 ) )

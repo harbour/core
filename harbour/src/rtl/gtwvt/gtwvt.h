@@ -156,8 +156,8 @@ typedef struct
 #endif
 
 #if !defined( UNICODE )
-   BYTE     keyTransTbl[ 256 ];
-   BYTE     chrTransTbl[ 256 ];
+   HB_BYTE  keyTransTbl[ 256 ];
+   HB_BYTE  chrTransTbl[ 256 ];
 #endif
 
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */

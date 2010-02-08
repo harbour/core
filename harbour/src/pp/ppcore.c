@@ -1782,7 +1782,7 @@ static void hb_pp_ruleListSetStd( PHB_PP_RULE pRule )
    }
 }
 
-static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch, BYTE id )
+static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch, HB_BYTE id )
 {
    if( HB_PP_TOKEN_ISMATCH( pMatch ) )
    {
@@ -1794,7 +1794,7 @@ static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch, BYTE id )
       pState->pMap[ HB_PP_HASHID( pMatch ) ] |= id;
 }
 
-static void hb_pp_ruleListSetId( PHB_PP_STATE pState, PHB_PP_RULE pRule, BYTE id )
+static void hb_pp_ruleListSetId( PHB_PP_STATE pState, PHB_PP_RULE pRule, HB_BYTE id )
 {
    while( pRule )
    {

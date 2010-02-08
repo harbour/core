@@ -120,14 +120,15 @@ static HB_BOOL hb_gt_tpl_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static void hb_gt_tpl_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   HB_BYTE bAttr;
    USHORT usChar;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iSize-- )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
          break;
       /* TODO: display usChar at iRow, iCol position with color bColor */
       ++iCol;

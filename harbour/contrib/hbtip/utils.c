@@ -589,11 +589,11 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          /* Giving maximum final length possible */
          char * cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
          int nPos = 0, nPosRet = 0;
-         BYTE cElem;
+         HB_BYTE cElem;
 
          while( nPos < nLen )
          {
-            cElem = ( BYTE ) cData[ nPos ];
+            cElem = ( HB_BYTE ) cData[ nPos ];
 
             if( cElem == '&' )
             {

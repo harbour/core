@@ -61,7 +61,7 @@ typedef HB_OPT_FUNC_ * HB_OPT_FUNC_PTR;
 
 static HB_OPT_FUNC( hb_p_poplocal )
 {
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
@@ -77,7 +77,7 @@ static HB_OPT_FUNC( hb_p_poplocal )
 
 static HB_OPT_FUNC( hb_p_pushlocal )
 {
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
@@ -136,7 +136,7 @@ static HB_OPT_FUNC( hb_p_pushlocalnear )
 
 static HB_OPT_FUNC( hb_p_localaddint )
 {
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
@@ -318,7 +318,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
       case HB_P_JUMPFALSEFAR:
          if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
          {
-            BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
+            HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
             LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
             ULONG ulNewPos = lPCodePos + 1 + lOffset;
             HB_BOOL fNot = HB_FALSE, fOK = HB_TRUE, fRepeat = HB_TRUE;
@@ -395,7 +395,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
 
 static HB_OPT_FUNC( hb_p_not )
 {
-   BYTE opcode;
+   HB_BYTE opcode;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -429,7 +429,7 @@ static HB_OPT_FUNC( hb_p_not )
                pFunc->pCode[ lPCodePos + 2 ] == HB_P_JUMPFALSEFAR ) &&
              pFunc->pCode[ lPCodePos + 6 ] == HB_P_POP )
          {
-            BYTE * pAddr = &pFunc->pCode[ lPCodePos + 3 ];
+            HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 3 ];
             LONG lOffset = HB_PCODE_MKINT24( pAddr );
 
             if( lOffset > 0 )
@@ -476,7 +476,7 @@ static HB_OPT_FUNC( hb_p_not )
 
 static HB_OPT_FUNC( hb_p_jumpfar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
@@ -531,7 +531,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 
 static HB_OPT_FUNC( hb_p_jumpfalsefar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
@@ -575,7 +575,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
 
 static HB_OPT_FUNC( hb_p_jumptruefar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
    HB_BOOL fLine = HB_FALSE;
@@ -952,11 +952,11 @@ void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
 typedef struct
 {
   HB_SHORT isNumber;
-  BYTE     bFlags;
+  HB_BYTE  bFlags;
 } HB_OPT_LOCAL, * PHB_OPT_LOCAL;
 
 
-static HB_BOOL hb_compIsJump( BYTE bPCode )
+static HB_BOOL hb_compIsJump( HB_BYTE bPCode )
 {
    return ( bPCode >= HB_P_JUMPNEAR && bPCode <= HB_P_JUMPTRUEFAR ) || /* All jumps */
             bPCode == HB_P_SEQBEGIN || bPCode == HB_P_SEQEND ||
@@ -964,7 +964,7 @@ static HB_BOOL hb_compIsJump( BYTE bPCode )
 }
 
 
-static HB_BOOL hb_compIsUncondJump( BYTE bPCode )
+static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
 {
    return bPCode == HB_P_JUMPNEAR ||
           bPCode == HB_P_JUMP ||
@@ -973,7 +973,7 @@ static HB_BOOL hb_compIsUncondJump( BYTE bPCode )
 }
 
 /*
-static HB_SHORT hb_compIsLocalOp( BYTE bCode )
+static HB_SHORT hb_compIsLocalOp( HB_BYTE bCode )
 {
    return bCode == HB_P_POPLOCAL ||
           bCode == HB_P_POPLOCALNEAR ||
@@ -988,7 +988,7 @@ static HB_SHORT hb_compIsLocalOp( BYTE bCode )
 }
 */
 
-static HB_SHORT hb_compLocalGetNumber( BYTE* pCode )
+static HB_SHORT hb_compLocalGetNumber( HB_BYTE * pCode )
 {
    switch( *pCode )
    {
@@ -1011,7 +1011,7 @@ static HB_SHORT hb_compLocalGetNumber( BYTE* pCode )
 }
 
 
-static LONG hb_compJumpGetOffset( BYTE * pCode )
+static LONG hb_compJumpGetOffset( HB_BYTE * pCode )
 {
    switch( *pCode )
    {
@@ -1100,9 +1100,9 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHLOCALREF:
             if( isVar > 0 )
             {
-               ULONG  ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
-               BYTE   bCodeNext = pFunc->pCode[ ulPosNext ];
-               BYTE   bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+               ULONG   ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+               HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
+               HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
 
                if( ( bCodeNext == HB_P_PUSHBLOCK ||
                      bCodeNext == HB_P_PUSHBLOCKSHORT ||
@@ -1168,8 +1168,8 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHBLOCK:
          case HB_P_PUSHBLOCKLARGE:
          {
-            BYTE *  pCode = &pFunc->pCode[ ulPos + 5 ];
-            USHORT  usVarCount, usVar;
+            HB_BYTE * pCode = &pFunc->pCode[ ulPos + 5 ];
+            USHORT usVarCount, usVar;
 
             if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
                pCode++;
@@ -1247,7 +1247,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE * pMap, HB_SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, HB_BYTE * pMap, HB_SHORT isLocal )
 {
    for( ;; )
    {
@@ -1323,12 +1323,12 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
 
 static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   BYTE *   pMap;
-   ULONG    ulPos = 0, ulLastPos = 0;
-   HB_SHORT isLocal;
-   USHORT   usLine = 0;
+   HB_BYTE * pMap;
+   ULONG     ulPos = 0, ulLastPos = 0;
+   HB_SHORT  isLocal;
+   USHORT    usLine = 0;
 
-   pMap = ( BYTE * ) hb_xgrab( pFunc->lPCodePos );
+   pMap = ( HB_BYTE * ) hb_xgrab( pFunc->lPCodePos );
 
    while( ulPos < pFunc->lPCodePos )
    {
@@ -1349,9 +1349,9 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
       if( !fCheck && pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
       {
-         ULONG  ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
-         BYTE   bCodeNext = pFunc->pCode[ ulPosNext ];
-         BYTE   bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+         ULONG ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+         HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
+         HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
 
          if( ( bCodeNext == HB_P_PUSHBLOCK ||
                bCodeNext == HB_P_PUSHBLOCKSHORT ||
@@ -1455,7 +1455,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
          {
-            BYTE *   pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 1 ];
             HB_SHORT isVar = ( signed char ) pVar[ 0 ];
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
@@ -1483,7 +1483,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_LOCALINC:
          case HB_P_LOCALINCPUSH:
          {
-            BYTE *   pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 1 ];
             HB_SHORT isVar = HB_PCODE_MKSHORT( pVar );
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
@@ -1505,8 +1505,8 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHBLOCK:
          case HB_P_PUSHBLOCKLARGE:
          {
-            BYTE *  pVar = &pFunc->pCode[ ulPos + 5 ];
-            USHORT  usVarCount, isVar;
+            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 5 ];
+            USHORT usVarCount, isVar;
 
             if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
                pVar++;

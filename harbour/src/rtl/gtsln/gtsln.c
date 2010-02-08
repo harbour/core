@@ -145,7 +145,7 @@ static void hb_sln_colorTrans( void )
       /*
        * bit 7 is a blinking attribute - not used when console is not in
        * UTF-8 mode because we are using it for changing into ACSC
-       * In SLANG 2.0 the character attributes are hold in USHORT not BYTE
+       * In SLANG 2.0 the character attributes are hold in USHORT not HB_BYTE
        * so we can use all colors, blinking bit and ACSC switch without
        * any problems also when console is not in UTF-8 mode.
        */
@@ -356,7 +356,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_
    for( i = 0; i < 256; i++ )
    {
       if( hb_sln_Is_Unicode )
-         iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
+         iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
       else
          iDst = i;
 
@@ -391,10 +391,10 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_
             if( hb_cdpIsAlpha( cdpHost, i ) )
             {
 #ifdef HB_SLN_UNICODE
-               iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
+               iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
 #else
                if( hb_sln_Is_Unicode )
-                  iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( BYTE ) i );
+                  iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
                else
                   iDst = hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
 #endif
@@ -644,7 +644,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                characters using it's UNICODE values so we can use
                blink bit as in Clipper.
                In SLANG 2.0 the character attributes are hold in USHORT
-               not BYTE so we can use all colors, blinking bit and ACSC
+               not HB_BYTE so we can use all colors, blinking bit and ACSC
                switch without any problems also when console is not in
                UTF-8 mode.
              */
@@ -988,7 +988,7 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       SLsmg_Char_Type SLchar;
       int iColor;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
 
       while( iSize-- > 0 )

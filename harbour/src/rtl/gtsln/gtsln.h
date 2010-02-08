@@ -101,10 +101,10 @@
             do { \
                SLsmg_Char_Type * outTab = (attr) & HB_GT_ATTR_BOX ? \
                                           s_outboxTab : s_outputTab; \
-               (slch).color = outTab[ (BYTE) (ch) ].color | \
-                              s_colorTab[ (BYTE) (clr) ]; \
+               (slch).color = outTab[ ( HB_BYTE ) (ch) ].color | \
+                              s_colorTab[ ( HB_BYTE ) (clr) ]; \
                (slch).nchars = 1; \
-               (slch).wchars[ 0 ] = outTab[ (BYTE) (ch) ].wchars[ 0 ]; \
+               (slch).wchars[ 0 ] = outTab[ ( HB_BYTE ) (ch) ].wchars[ 0 ]; \
             } while( 0 )
 
 #define HB_SLN_BUILD_RAWCHAR( slch, ch, attr )  \
@@ -149,8 +149,8 @@
 #define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )     \
             do { \
                (slch) = ( (attr) & HB_GT_ATTR_BOX ? \
-                        s_outboxTab : s_outputTab )[ (BYTE) (ch) ] | \
-                        s_colorTab[ (BYTE) (clr) ]; \
+                        s_outboxTab : s_outputTab )[ ( HB_BYTE ) (ch) ] | \
+                        s_colorTab[ ( HB_BYTE ) (clr) ]; \
             } while( 0 )
 
 #define HB_SLN_BUILD_RAWCHAR( slch, ch, attr )  \

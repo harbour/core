@@ -61,11 +61,11 @@ HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT
 
    /* Alloc buffers */
    pQuickSort->uiMaxRecords = USHRT_MAX / uiRecordLen;
-   pQuickSort->pBuffer = ( BYTE * ) hb_xgrab( pQuickSort->uiMaxRecords * uiRecordLen );
-   pQuickSort->pSwapBufferA = ( BYTE * ) hb_xgrab( uiRecordLen );
-   pQuickSort->pSwapBufferB = ( BYTE * ) hb_xgrab( uiRecordLen );
-   pQuickSort->pCmpBufferA = ( BYTE * ) hb_xgrab( uiRecordLen );
-   pQuickSort->pCmpBufferB = ( BYTE * ) hb_xgrab( uiRecordLen );
+   pQuickSort->pBuffer = ( HB_BYTE * ) hb_xgrab( pQuickSort->uiMaxRecords * uiRecordLen );
+   pQuickSort->pSwapBufferA = ( HB_BYTE * ) hb_xgrab( uiRecordLen );
+   pQuickSort->pSwapBufferB = ( HB_BYTE * ) hb_xgrab( uiRecordLen );
+   pQuickSort->pCmpBufferA = ( HB_BYTE * ) hb_xgrab( uiRecordLen );
+   pQuickSort->pCmpBufferB = ( HB_BYTE * ) hb_xgrab( uiRecordLen );
 
    /* Fill structure */
    pQuickSort->uiRecordLen = uiRecordLen;
@@ -242,7 +242,7 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
 
          if( pArea->cdPage != hb_vmCDP() )
          {
-            hb_dbfTranslateRec( ( DBFAREAP ) pArea, ( BYTE * ) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
+            hb_dbfTranslateRec( ( DBFAREAP ) pArea, ( HB_BYTE * ) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
          }
 
          /* Append a new record and copy data */

@@ -135,11 +135,11 @@ typedef struct _DBFDATA
    char *   szTrigger;
    char *   szPendingTrigger;
 
-   BYTE     bLockType;        /* 0 */
-   BYTE     bTableType;       /* DB_DBF_STD */
-   BYTE     bCryptType;       /* DB_CRYPT_NONE */
-   BYTE     bMemoType;        /* DB_MEMO_FPT */
-   BYTE     bMemoExtType;     /* DB_MEMOVER_FLEX */
+   HB_BYTE     bLockType;        /* 0 */
+   HB_BYTE     bTableType;       /* DB_DBF_STD */
+   HB_BYTE     bCryptType;       /* DB_CRYPT_NONE */
+   HB_BYTE     bMemoType;        /* DB_MEMO_FPT */
+   HB_BYTE     bMemoExtType;     /* DB_MEMOVER_FLEX */
    USHORT   uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
    ULONG    ulMemoBlockSize;  /* 0 */
 
@@ -189,14 +189,14 @@ typedef struct _DBFAREA
    USHORT   uiDirtyRead;            /* Index dirty read bit filed */
    USHORT   uiNullOffset;           /* Offset to _NullFlags filed */
    USHORT   uiNullCount;            /* Number of null flags */
-   BYTE     bTableType;             /* DBF type */
-   BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
-   BYTE     bLockType;              /* Type of locking shemes */
-   BYTE     bCryptType;             /* Type of used encryption */
+   HB_BYTE     bTableType;             /* DBF type */
+   HB_BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
+   HB_BYTE     bLockType;              /* Type of locking shemes */
+   HB_BYTE     bCryptType;             /* Type of used encryption */
    DBFHEADER dbfHeader;             /* DBF header buffer */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
    PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
-   BYTE *   pRecord;                /* Buffer of record data */
+   HB_BYTE *   pRecord;                /* Buffer of record data */
    ULONG    ulRecCount;             /* Total records */
    ULONG    ulRecNo;                /* Current record */
    HB_BOOL  fAutoInc;               /* WorkArea with auto increment fields */
@@ -246,10 +246,10 @@ extern HB_EXPORT HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
                                                ULONG ulBlock, ULONG ulSize,
                                                ULONG ulType );
 extern HB_EXPORT HB_ERRCODE hb_dbfGetEGcode( HB_ERRCODE errCode );
-extern HB_EXPORT HB_BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
-extern HB_EXPORT HB_BOOL    hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
+extern HB_EXPORT HB_BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
+extern HB_EXPORT HB_BOOL    hb_dbfLockIdxGetData( HB_BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
 
-extern HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
+extern HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, HB_BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
 
 HB_EXTERN_END
 

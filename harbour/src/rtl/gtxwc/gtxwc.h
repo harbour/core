@@ -282,7 +282,7 @@ typedef struct tag_XWC_CharTrans
       XRectangle  *rect;
       USHORT      ch16;
    } u;
-   BYTE    size;
+   HB_BYTE size;
    HB_BOOL inverse;
 } XWC_CharTrans;
 

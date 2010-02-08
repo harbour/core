@@ -399,8 +399,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = 0;
 
    pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags = ( BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( BYTE ) );
-   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    pArea->ulRecMax = SQLDD_ROWSET_INIT;
 
    * pArea->pRow = pItemEof;
@@ -506,7 +506,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
          if ( pArea->ulRecCount + 1 <= pArea->ulRecMax )
          {
             pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
-            pArea->pRowFlags = ( BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( BYTE ) );
+            pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
             pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
          }
 

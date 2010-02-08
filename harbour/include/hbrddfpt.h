@@ -180,25 +180,25 @@ HB_EXTERN_BEGIN
 /* MEMO file strucutres */
 typedef struct _FPTHEADER
 {
-   BYTE  nextBlock[ 4 ];            /* Next free block in the file */
-   BYTE  blockSize[ 4 ];            /* Size of block */
-   BYTE  signature1[ 10 ];          /* Signature: "SixMemo", "Harbour", "Made by CLIP"-overwrites next bytes*/
-   BYTE  nGCitems[ 2 ];             /* number of GC items in reserved2 (max 82)*/
-   BYTE  reserved2[ 492 ];          /* */
-   BYTE  signature2[ 12 ];          /* Signature: "FlexFile3\003" */
-   BYTE  flexRev[ 4 ];              /* Offset of reversed GC page */
-   BYTE  flexDir[ 4 ];              /* Offset of GC page */
-   BYTE  counter[ 4 ];              /* cyclic counter to sign changes in network env. */
-   BYTE  rootBlock[ 4 ];            /* Clipper 5.3 ROOT data block */
-   BYTE  flexSize[ 2 ];             /* FlexFile3 alternative block size */
-   BYTE  reserved4[ 482 ];          /* */
+   HB_BYTE  nextBlock[ 4 ];            /* Next free block in the file */
+   HB_BYTE  blockSize[ 4 ];            /* Size of block */
+   HB_BYTE  signature1[ 10 ];          /* Signature: "SixMemo", "Harbour", "Made by CLIP"-overwrites next bytes*/
+   HB_BYTE  nGCitems[ 2 ];             /* number of GC items in reserved2 (max 82)*/
+   HB_BYTE  reserved2[ 492 ];          /* */
+   HB_BYTE  signature2[ 12 ];          /* Signature: "FlexFile3\003" */
+   HB_BYTE  flexRev[ 4 ];              /* Offset of reversed GC page */
+   HB_BYTE  flexDir[ 4 ];              /* Offset of GC page */
+   HB_BYTE  counter[ 4 ];              /* cyclic counter to sign changes in network env. */
+   HB_BYTE  rootBlock[ 4 ];            /* Clipper 5.3 ROOT data block */
+   HB_BYTE  flexSize[ 2 ];             /* FlexFile3 alternative block size */
+   HB_BYTE  reserved4[ 482 ];          /* */
 } FPTHEADER;
 typedef FPTHEADER * LPFPTHEADER;
 
 typedef struct _FPTBLOCK
 {
-   BYTE  type[ 4 ];                 /* see: FPTIT_ */
-   BYTE  size[ 4 ];                 /* length of data in bytes */
+   HB_BYTE  type[ 4 ];                 /* see: FPTIT_ */
+   HB_BYTE  size[ 4 ];                 /* length of data in bytes */
 } FPTBLOCK;
 typedef FPTBLOCK * LPFPTBLOCK;
 
@@ -214,8 +214,8 @@ typedef MEMOGCITEM * LPMEMOGCITEM;
 
 typedef struct _MEMOGCTABLE
 {
-   BYTE   bType;                    /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
-   BYTE   bChanged;                 /* Should we write GC data to disk */
+   HB_BYTE   bType;                    /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
+   HB_BYTE   bChanged;                 /* Should we write GC data to disk */
    ULONG  ulNextBlock;              /* Next free block in the file */
    ULONG  ulPrevBlock;              /* Previous next free block in the file */
    ULONG  ulRevPage;                /* FLEX Rev GC page offset */

@@ -173,14 +173,14 @@
 typedef struct _HB_LZSSX_COMPR
 {
    HB_FHANDLE hInput;
-   BYTE *     inBuffer;
+   HB_BYTE *  inBuffer;
    HB_SIZE    inBuffSize;
    HB_SIZE    inBuffPos;
    HB_SIZE    inBuffRead;
    HB_BOOL    fInFree;
 
    HB_FHANDLE hOutput;
-   BYTE *     outBuffer;
+   HB_BYTE *  outBuffer;
    HB_SIZE    outBuffSize;
    HB_SIZE    outBuffPos;
    HB_BOOL    fOutFree;
@@ -211,8 +211,8 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 }
 
 static PHB_LZSSX_COMPR hb_LZSSxInit(
-                        HB_FHANDLE hInput, BYTE * pSrcBuf, HB_SIZE ulSrcBuf,
-                        HB_FHANDLE hOutput, BYTE * pDstBuf, HB_SIZE ulDstBuf )
+                        HB_FHANDLE hInput, HB_BYTE * pSrcBuf, HB_SIZE ulSrcBuf,
+                        HB_FHANDLE hOutput, HB_BYTE * pDstBuf, HB_SIZE ulDstBuf )
 {
    PHB_LZSSX_COMPR pCompr = ( PHB_LZSSX_COMPR ) hb_xgrab( sizeof( HB_LZSSX_COMPR ) );
 
@@ -239,9 +239,9 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
    pCompr->fContinue   = HB_FALSE;
 
    if( pCompr->fInFree )
-      pCompr->inBuffer    = ( BYTE * ) hb_xgrab( ulDstBuf );
+      pCompr->inBuffer    = ( HB_BYTE * ) hb_xgrab( ulDstBuf );
    if( pCompr->fOutFree )
-      pCompr->outBuffer   = ( BYTE * ) hb_xgrab( ulDstBuf );
+      pCompr->outBuffer   = ( HB_BYTE * ) hb_xgrab( ulDstBuf );
 
    /* initialize the ring buffer with spaces, because SIX uses
       dynamic ring buffer then we do not have to fill last MAXLENGTH
@@ -567,8 +567,8 @@ HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_SIZE ulSize;
 
-   pCompr = hb_LZSSxInit( FS_ERROR, ( BYTE * ) pSrcBuf, ulSrcLen,
-                          FS_ERROR, ( BYTE * ) pDstBuf, ulDstLen );
+   pCompr = hb_LZSSxInit( FS_ERROR, ( HB_BYTE * ) pSrcBuf, ulSrcLen,
+                          FS_ERROR, ( HB_BYTE * ) pDstBuf, ulDstLen );
    ulSize = hb_LZSSxEncode( pCompr );
    hb_LZSSxExit( pCompr );
    if( pulSize )
@@ -582,8 +582,8 @@ HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE ulSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_BOOL fResult;
 
-   pCompr = hb_LZSSxInit( FS_ERROR, ( BYTE * ) pSrcBuf, ulSrcLen,
-                          FS_ERROR, ( BYTE * ) pDstBuf, ulDstLen );
+   pCompr = hb_LZSSxInit( FS_ERROR, ( HB_BYTE * ) pSrcBuf, ulSrcLen,
+                          FS_ERROR, ( HB_BYTE * ) pDstBuf, ulDstLen );
    fResult = hb_LZSSxDecode( pCompr );
    hb_LZSSxExit( pCompr );
    return fResult;
@@ -618,7 +618,7 @@ HB_FUNC( SX_FCOMPRESS )
    HB_BOOL fRet = HB_FALSE;
    HB_FHANDLE hInput, hOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
-   BYTE buf[ 4 ];
+   HB_BYTE buf[ 4 ];
    HB_SIZE ulSize;
 
    if( szSource && *szSource && szDestin && *szDestin )

@@ -1350,7 +1350,7 @@ typedef struct
 {
    const char * pszMask;
    HB_BOOL bIncludeMask;
-   BYTE * buffer;
+   HB_BYTE * buffer;
    HB_FHANDLE fhnd;
 } MEMVARSAVE_CARGO;
 
@@ -1360,7 +1360,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
 {
    const char * pszMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
    HB_BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
-   BYTE * buffer     = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
+   HB_BYTE * buffer  = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
    HB_FHANDLE fhnd   = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
    PHB_ITEM pMemvar;
 
@@ -1413,12 +1413,12 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 11 ] = 'N' + 128;
 #ifdef HB_CLP_STRICT
 /* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
-            buffer[ 16 ] = ( BYTE ) iWidth + ( HB_IS_DOUBLE( pMemvar ) ? ( BYTE ) ( iDec + 1 ) : 0 );
+            buffer[ 16 ] = ( HB_BYTE ) iWidth + ( HB_IS_DOUBLE( pMemvar ) ? ( HB_BYTE ) ( iDec + 1 ) : 0 );
 #else
 /* NOTE: This would be the correct method, but Clipper is buggy here. [vszakats] */
-            buffer[ 16 ] = ( BYTE ) iWidth + ( iDec == 0 ? 0 : ( BYTE ) ( iDec + 1 ) );
+            buffer[ 16 ] = ( HB_BYTE ) iWidth + ( iDec == 0 ? 0 : ( HB_BYTE ) ( iDec + 1 ) );
 #endif
-            buffer[ 17 ] = ( BYTE ) iDec;
+            buffer[ 17 ] = ( HB_BYTE ) iDec;
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
          }
@@ -1498,7 +1498,7 @@ HB_FUNC( __MVSAVE )
 
       if( fhnd != FS_ERROR )
       {
-         BYTE buffer[ HB_MEM_REC_LEN + HB_MEM_NUM_LEN ];
+         HB_BYTE buffer[ HB_MEM_REC_LEN + HB_MEM_NUM_LEN ];
          MEMVARSAVE_CARGO msc;
 
          msc.pszMask      = hb_memvarGetMask( 2 );
@@ -1589,7 +1589,7 @@ HB_FUNC( __MVRESTORE )
       if( fhnd != FS_ERROR )
       {
          HB_BOOL bIncludeMask;
-         BYTE buffer[ HB_MEM_REC_LEN ];
+         HB_BYTE buffer[ HB_MEM_REC_LEN ];
          const char * pszMask;
          char *szName;
          PHB_ITEM pItem = NULL;
@@ -1619,10 +1619,10 @@ HB_FUNC( __MVRESTORE )
             {
                case 'C':
                {
-                  BYTE * pbyString;
+                  HB_BYTE * pbyString;
 
                   uiWidth += uiDec * 256;
-                  pbyString = ( BYTE * ) hb_xgrab( uiWidth );
+                  pbyString = ( HB_BYTE * ) hb_xgrab( uiWidth );
 
                   if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
                      pItem = hb_itemPutCLPtr( pItem, ( char * ) pbyString, uiWidth - 1 );
@@ -1637,7 +1637,7 @@ HB_FUNC( __MVRESTORE )
 
                case 'N':
                {
-                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+                  HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutNLen( pItem, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
@@ -1649,7 +1649,7 @@ HB_FUNC( __MVRESTORE )
 
                case 'D':
                {
-                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+                  HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutDL( pItem, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
@@ -1661,7 +1661,7 @@ HB_FUNC( __MVRESTORE )
 
                case 'T':
                {
-                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+                  HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutTD( pItem, HB_GET_LE_DOUBLE( pbyNumber ) );
@@ -1673,7 +1673,7 @@ HB_FUNC( __MVRESTORE )
 
                case 'L':
                {
-                  BYTE pbyLogical[ 1 ];
+                  HB_BYTE pbyLogical[ 1 ];
 
                   if( hb_fsRead( fhnd, pbyLogical, 1 ) == 1 )
                      pItem = hb_itemPutL( pItem, pbyLogical[ 0 ] != 0 );

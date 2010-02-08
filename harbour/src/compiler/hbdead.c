@@ -56,13 +56,13 @@
 /* helper structure to pass information */
 typedef struct _HB_CODETRACE_INFO
 {
-   BYTE  *  pCodeMark;
-   ULONG *  plJumps;
-   ULONG    ulJumpPos;
-   ULONG    ulJumpSize;
-   ULONG    ulJumpCount;
-   ULONG    ulPCodeSize;
-   HB_BOOL  fFinished;
+   HB_BYTE * pCodeMark;
+   ULONG *   plJumps;
+   ULONG     ulJumpPos;
+   ULONG     ulJumpSize;
+   ULONG     ulJumpCount;
+   ULONG     ulPCodeSize;
+   HB_BOOL   fFinished;
 } HB_CODETRACE_INFO, * PHB_CODETRACE_INFO;
 
 #define HB_CODETRACE_FUNC( func ) HB_PCODE_FUNC( func, PHB_CODETRACE_INFO )
@@ -142,7 +142,7 @@ static HB_CODETRACE_FUNC( hb_p_jumpnear )
 
 static HB_CODETRACE_FUNC( hb_p_jump )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 3 );
@@ -151,7 +151,7 @@ static HB_CODETRACE_FUNC( hb_p_jump )
 
 static HB_CODETRACE_FUNC( hb_p_jumpfar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -170,7 +170,7 @@ static HB_CODETRACE_FUNC( hb_p_jumpfalsenear )
 
 static HB_CODETRACE_FUNC( hb_p_jumpfalse )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 3 );
@@ -181,7 +181,7 @@ static HB_CODETRACE_FUNC( hb_p_jumpfalse )
 
 static HB_CODETRACE_FUNC( hb_p_jumpfalsefar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -202,7 +202,7 @@ static HB_CODETRACE_FUNC( hb_p_jumptruenear )
 
 static HB_CODETRACE_FUNC( hb_p_jumptrue )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 3 );
@@ -213,7 +213,7 @@ static HB_CODETRACE_FUNC( hb_p_jumptrue )
 
 static HB_CODETRACE_FUNC( hb_p_jumptruefar )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -224,7 +224,7 @@ static HB_CODETRACE_FUNC( hb_p_jumptruefar )
 
 static HB_CODETRACE_FUNC( hb_p_seqalways )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulAlwaysPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -235,7 +235,7 @@ static HB_CODETRACE_FUNC( hb_p_seqalways )
 
 static HB_CODETRACE_FUNC( hb_p_alwaysbegin )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulAlwaysEndPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -246,7 +246,7 @@ static HB_CODETRACE_FUNC( hb_p_alwaysbegin )
 
 static HB_CODETRACE_FUNC( hb_p_seqbegin )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulRecoverPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    /* this is a hack for -gc3 output - it's not really necessary
@@ -266,7 +266,7 @@ static HB_CODETRACE_FUNC( hb_p_seqbegin )
 
 static HB_CODETRACE_FUNC( hb_p_seqend )
 {
-   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    hb_compCodeTraceMark( cargo, lPCodePos, 4 );
@@ -562,7 +562,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
    code_info.ulPCodeSize = pFunc->lPCodePos;
    code_info.fFinished = HB_FALSE;
 
-   code_info.pCodeMark = ( BYTE * ) hb_xgrab( code_info.ulPCodeSize );
+   code_info.pCodeMark = ( HB_BYTE * ) hb_xgrab( code_info.ulPCodeSize );
    memset( code_info.pCodeMark, 0, code_info.ulPCodeSize );
 
    hb_compPCodeTrace( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &code_info );
@@ -570,7 +570,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
    if( code_info.fFinished )
    {
       ULONG ulPos = 0, ulCount = 0;
-      BYTE bLastCode = HB_P_LAST_PCODE;
+      HB_BYTE bLastCode = HB_P_LAST_PCODE;
 
       do
       {

@@ -83,7 +83,7 @@ static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* Alloc buffer */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen + pArea->uiEolLen + 3 );
+   pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen + pArea->uiEolLen + 3 );
    /* pseudo deleted flag */
    *pArea->pRecord++ = ' ';
 
@@ -583,7 +583,7 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 /*
  * Replace the current record.
  */
-static HB_ERRCODE hb_sdfPutRec( SDFAREAP pArea, BYTE * pBuffer )
+static HB_ERRCODE hb_sdfPutRec( SDFAREAP pArea, HB_BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfPutRec(%p,%p)", pArea, pBuffer));
 
@@ -602,7 +602,7 @@ static HB_ERRCODE hb_sdfPutRec( SDFAREAP pArea, BYTE * pBuffer )
 /*
  * Retrieve current record buffer
  */
-static HB_ERRCODE hb_sdfGetRec( SDFAREAP pArea, BYTE ** pBufferPtr )
+static HB_ERRCODE hb_sdfGetRec( SDFAREAP pArea, HB_BYTE ** pBufferPtr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfGetRec(%p,%p)", pArea, pBufferPtr));
 

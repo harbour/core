@@ -119,7 +119,7 @@ static void * hb_gt_def_New( PHB_GT pGT )
    HB_SIZE ulSize, ulIndex;
    USHORT usChar;
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    int i;
 
    hb_gt_def_BaseInit( pGT );
@@ -143,7 +143,7 @@ static void * hb_gt_def_New( PHB_GT pGT )
    for( ulIndex = 0; ulIndex < ulSize; ++ulIndex )
    {
       pGT->screenBuffer[ ulIndex ].c.usChar = usChar;
-      pGT->screenBuffer[ ulIndex ].c.bColor = ( BYTE ) iColor;
+      pGT->screenBuffer[ ulIndex ].c.bColor = ( HB_BYTE ) iColor;
       pGT->screenBuffer[ ulIndex ].c.bAttr = bAttr;
       pGT->prevBuffer[ ulIndex ].c.bAttr = HB_GT_ATTR_REFRESH;
    }
@@ -741,7 +741,7 @@ static const char * hb_gt_def_Version( PHB_GT pGT, int iType )
 }
 
 static HB_BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
-                                  int * piColor, BYTE * pbAttr, USHORT * pusChar )
+                                  int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
 {
    long lIndex;
 
@@ -756,14 +756,14 @@ static HB_BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
 }
 
 static HB_BOOL hb_gt_def_PutChar( PHB_GT pGT, int iRow, int iCol,
-                                  int iColor, BYTE bAttr, USHORT usChar )
+                                  int iColor, HB_BYTE bAttr, USHORT usChar )
 {
    long lIndex;
 
    if( HB_GTSELF_CHECKPOS( pGT, iRow, iCol, &lIndex ) )
    {
       pGT->screenBuffer[ lIndex ].c.usChar = usChar;
-      pGT->screenBuffer[ lIndex ].c.bColor = ( BYTE ) iColor;
+      pGT->screenBuffer[ lIndex ].c.bColor = ( HB_BYTE ) iColor;
       pGT->screenBuffer[ lIndex ].c.bAttr  = bAttr;
       pGT->pLines[ iRow ] = HB_TRUE;
       pGT->fRefresh = HB_TRUE;
@@ -783,7 +783,7 @@ static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const
 }
 
 static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
-                                 BYTE bAttr, USHORT usChar, HB_SIZE ulLen )
+                                 HB_BYTE bAttr, USHORT usChar, HB_SIZE ulLen )
 {
    if( iCol < 0 )
    {
@@ -978,12 +978,12 @@ static long hb_gt_def_RectSize( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
 static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             void * pBuffer )
 {
-   BYTE * pbyBuffer = ( BYTE * ) pBuffer;
+   HB_BYTE * pbyBuffer = ( HB_BYTE * ) pBuffer;
 
    while( iTop <= iBottom )
    {
       int iColor;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
       int iCol;
 
@@ -997,14 +997,14 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
          }
          if( pGT->fVgaCell )
          {
-            *pbyBuffer++ = ( BYTE ) usChar;
-            *pbyBuffer++ = ( BYTE ) iColor;
+            *pbyBuffer++ = ( HB_BYTE ) usChar;
+            *pbyBuffer++ = ( HB_BYTE ) iColor;
          }
          else
          {
             HB_PUT_LE_UINT16( pbyBuffer, usChar );
             pbyBuffer += 2;
-            *pbyBuffer++ = ( BYTE ) iColor;
+            *pbyBuffer++ = ( HB_BYTE ) iColor;
             *pbyBuffer++ = bAttr;
          }
       }
@@ -1015,12 +1015,12 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             const void * pBuffer )
 {
-   const BYTE * pbyBuffer = ( const BYTE * ) pBuffer;
+   const HB_BYTE * pbyBuffer = ( const HB_BYTE * ) pBuffer;
 
    while( iTop <= iBottom )
    {
       int iColor;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
       int iCol;
 
@@ -1051,7 +1051,7 @@ static void hb_gt_def_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
    while( iTop <= iBottom )
    {
       int iColorOld;
-      BYTE bAttr;
+      HB_BYTE bAttr;
       USHORT usChar;
       int iCol;
 
@@ -1253,7 +1253,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, USHORT usChar
    {
       int i, j, iHeight, iWidth;
       long lIndex = 0, lOffset;
-      BYTE bAttr = 0;
+      HB_BYTE bAttr = 0;
 
       HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
       lOffset = ( long ) iRows * iWidth;
@@ -1274,7 +1274,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, USHORT usChar
          for( j = 0; j < iWidth; ++j )
          {
             pGT->screenBuffer[ lIndex ].c.usChar = usChar;
-            pGT->screenBuffer[ lIndex ].c.bColor = ( BYTE ) iColor;
+            pGT->screenBuffer[ lIndex ].c.bColor = ( HB_BYTE ) iColor;
             pGT->screenBuffer[ lIndex ].c.bAttr  = bAttr;
             ++lIndex;
          }
@@ -1327,7 +1327,7 @@ static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
          HB_GTSELF_VERTLINE( pGT, iLeft, iTop, iBottom, szBox[ 3 ], iColor );
       else
       {
-         BYTE bAttr = HB_GT_ATTR_BOX;
+         HB_BYTE bAttr = HB_GT_ATTR_BOX;
          iRows = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
                  ( iTop < 0 ? -1 : iTop ) - 1;
          iCols = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
@@ -2036,7 +2036,7 @@ static HB_BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
          for( ulIndex = 0; ulIndex < ulLen; ++ulIndex )
          {
             pGT->screenBuffer[ ulIndex ].c.usChar = HB_GTSELF_GETCLEARCHAR( pGT );
-            pGT->screenBuffer[ ulIndex ].c.bColor = ( BYTE ) HB_GTSELF_GETCLEARCOLOR( pGT );
+            pGT->screenBuffer[ ulIndex ].c.bColor = ( HB_BYTE ) HB_GTSELF_GETCLEARCOLOR( pGT );
             pGT->screenBuffer[ ulIndex ].c.bAttr  = 0x00;
             pGT->prevBuffer[ ulIndex ].c.bAttr = HB_GT_ATTR_REFRESH;
          }
@@ -2521,7 +2521,7 @@ static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE ulL
 
    if( szText && ulLen )
    {
-      pGT->StrBuffer = ( BYTE * ) hb_xgrab( ulLen );
+      pGT->StrBuffer = ( HB_BYTE * ) hb_xgrab( ulLen );
       memcpy( pGT->StrBuffer, szText, ulLen );
       pGT->StrBufferSize = ulLen;
       pGT->StrBufferPos = 0;

@@ -565,7 +565,7 @@ typedef struct
    int            iDefinitions;    /* number of rules in pDefinitions */
    int            iTranslations;   /* number of rules in pTranslations */
    int            iCommands;       /* number of rules in pCommands */
-   BYTE           pMap[ HB_PP_HASHID_MAX ]; /* translation map */
+   HB_BYTE        pMap[ HB_PP_HASHID_MAX ]; /* translation map */
 
    PHB_PP_TOKEN   pTokenOut;       /* preprocessed tokens */
    PHB_PP_TOKEN * pNextTokenPtr;   /* pointer to the last NULL pointer in token list */

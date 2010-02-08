@@ -257,7 +257,7 @@ sx_thermometer() => if ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) -> 4
          4 - NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE
 */
 
-/* index file structures - defined in BYTEs to avoid alignment problems */
+/* index file structures - defined in HB_BYTEs to avoid alignment problems */
 
 typedef struct _NSXTAGITEM
 {
@@ -328,7 +328,7 @@ typedef NSXBRANCHKEY * LPNSXBRANCHKEY;
 typedef struct _NSXLEAFKEY
 {
    HB_UCHAR RecNo[n];         /* where n is RecNoLen */
-   HB_UCHAR Size[1];          /* key data size with this byte and n RecNo BYTEs
+   HB_UCHAR Size[1];          /* key data size with this byte and n RecNo HB_BYTEs
                                * if Size == n + 1 then key is fully duplicated
                                */
    HB_UCHAR DupCount[1];      /* number of bytes from previous key */

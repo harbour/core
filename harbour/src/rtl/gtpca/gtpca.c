@@ -115,7 +115,7 @@ static HB_BOOL      s_bStderrConsole;
 static HB_BOOL      s_fDispTrans;
 static PHB_CODEPAGE s_cdpTerm;
 static PHB_CODEPAGE s_cdpHost;
-static BYTE         s_keyTransTbl[ 256 ];
+static HB_BYTE      s_keyTransTbl[ 256 ];
 
 static int          s_iOutBufSize = 0;
 static int          s_iOutBufIndex = 0;
@@ -442,7 +442,7 @@ static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, const char * s
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%d,%p,%d)", iRow, iCol, iColor, szStr, iLen));
 
-   hb_gt_pca_AnsiSetAttributes( ( BYTE ) iColor );
+   hb_gt_pca_AnsiSetAttributes( ( HB_BYTE ) iColor );
    hb_gt_pca_AnsiSetCursorPos( iRow, iCol );
    hb_gt_pca_AnsiSetAutoMargin( 0 );
    hb_gt_pca_termOut( szStr, iLen );
@@ -454,7 +454,7 @@ static void hb_gt_pca_setKeyTrans( PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
    int i;
 
    for( i = 0; i < 256; ++i )
-      s_keyTransTbl[ i ] = ( BYTE )
+      s_keyTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
 }
 
@@ -623,7 +623,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       FD_SET( s_hFilenoStdin, &rfds );
       if( select( s_hFilenoStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
       {
-         BYTE bChar;
+         HB_BYTE bChar;
          if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
             ch = s_keyTransTbl[ bChar ];
       }
@@ -647,7 +647,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    }
    else if( !_eof( ( int ) s_hFilenoStdin ) )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( _read( ( int ) s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
@@ -655,7 +655,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    if( !s_bStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
@@ -678,7 +678,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    }
    else if( !eof( s_hFilenoStdin ) )
    {
-      BYTE bChar;
+      HB_BYTE bChar;
       if( read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
@@ -813,7 +813,7 @@ static HB_BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
-   BYTE bAttr;
+   HB_BYTE bAttr;
    USHORT usChar;
    int iLen = 0, iColor2 = 0;
 

@@ -64,7 +64,7 @@
    to freed by GC codeblock in .prg destructors and then (after
    catching RT EG_DESTRUCTOR error) try to execute them
  */
-static const BYTE s_pCode[ 2 ] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
+static const HB_BYTE s_pCode[ 2 ] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
 
 /* Release all allocated memory when called from the garbage collector
  */
@@ -81,7 +81,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
       pCBlock->dynBuffer = HB_FALSE;
       hb_xfree( pCBlock->pCode );
    }
-   pCBlock->pCode = ( BYTE * ) s_pCode;
+   pCBlock->pCode = ( HB_BYTE * ) s_pCode;
 
    /* free space allocated for local variables
     */
@@ -138,16 +138,16 @@ static const HB_GC_FUNCS s_gcCodeblockFuncs =
  * Note: pLocalPosTable cannot be used if uiLocals is ZERO
  *
  */
-HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
+HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
                                   USHORT uiLocals,
-                                  const BYTE * pLocalPosTable,
+                                  const HB_BYTE * pLocalPosTable,
                                   PHB_SYMB pSymbols,
                                   HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pLocals, pBase;
-   BYTE * pCode;
+   HB_BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %lu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
 
@@ -164,7 +164,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
        * can be deallocated after creation of a codeblock. We have to duplicate
        * the passed buffer
        */
-      pCode = ( BYTE * ) hb_xgrab( ulLen );
+      pCode = ( HB_BYTE * ) hb_xgrab( ulLen );
       memcpy( pCode, pBuffer, ulLen );
    }
    else
@@ -174,7 +174,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
        * The only allowed operation on a codeblock is evaluating it then
        * there is no need to duplicate its pcode - just store the pointer to it
        */
-      pCode     = ( BYTE * ) pBuffer;
+      pCode     = ( HB_BYTE * ) pBuffer;
    }
 
    if( uiLocals )
@@ -254,12 +254,12 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    return pCBlock;
 }
 
-HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, HB_SIZE ulLen )
+HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pBase;
-   BYTE * pCode;
+   HB_BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %lu)", pBuffer, ulLen));
 
@@ -273,7 +273,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, HB_SIZE ulLen )
     * to be safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
-   pCode = ( BYTE * ) hb_xgrab( ulLen );
+   pCode = ( HB_BYTE * ) hb_xgrab( ulLen );
    memcpy( pCode, pBuffer, ulLen );
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );

@@ -67,5 +67,5 @@ HB_FUNC( FT_SETATTR )
                       hb_parni( 2 ),
                       hb_parni( 3 ),
                       hb_parni( 4 ),
-                      ( BYTE ) hb_parni( 5 ) );
+                      hb_parni( 5 ) );
 }

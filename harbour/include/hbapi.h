@@ -384,10 +384,10 @@ struct hb_struSymbol
 
 struct hb_struRecover
 {
-   const BYTE *   recover;    /* address of recover code */
-   ULONG          base;       /* previous recover base */
-   USHORT         flags;      /* previous recovery state and recover type */
-   USHORT         request;    /* requested action */
+   const HB_BYTE * recover;    /* address of recover code */
+   ULONG           base;       /* previous recover base */
+   USHORT          flags;      /* previous recovery state and recover type */
+   USHORT          request;    /* requested action */
 };
 
 /* items hold at the virtual machine stack */
@@ -436,7 +436,7 @@ typedef struct _HB_BASEHASH
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
-   BYTE *      pCode;        /* codeblock pcode */
+   HB_BYTE *   pCode;        /* codeblock pcode */
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    PHB_ITEM    pLocals;      /* table with referenced local variables */
@@ -976,17 +976,17 @@ extern HB_EXPORT void      hb_strtohex( const char * pSource, HB_SIZE size, char
 extern HB_EXPORT PHB_ITEM  hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray );
 
 /* architecture dependent number conversions */
-extern HB_EXPORT void      hb_put_ieee754( BYTE * ptr, double d );
-extern HB_EXPORT double    hb_get_ieee754( const BYTE * ptr );
-extern HB_EXPORT void      hb_put_ord_ieee754( BYTE * ptr, double d );
-extern HB_EXPORT double    hb_get_ord_ieee754( const BYTE * ptr );
-extern HB_EXPORT double    hb_get_rev_double( const BYTE * ptr );
-extern HB_EXPORT double    hb_get_std_double( const BYTE * ptr );
+extern HB_EXPORT void      hb_put_ieee754( HB_BYTE * ptr, double d );
+extern HB_EXPORT double    hb_get_ieee754( const HB_BYTE * ptr );
+extern HB_EXPORT void      hb_put_ord_ieee754( HB_BYTE * ptr, double d );
+extern HB_EXPORT double    hb_get_ord_ieee754( const HB_BYTE * ptr );
+extern HB_EXPORT double    hb_get_rev_double( const HB_BYTE * ptr );
+extern HB_EXPORT double    hb_get_std_double( const HB_BYTE * ptr );
 
 #if defined( HB_LONG_LONG_OFF )
-extern HB_EXPORT double    hb_get_le_int64( const BYTE * ptr );
-extern HB_EXPORT double    hb_get_le_uint64( const BYTE * ptr );
-extern HB_EXPORT void      hb_put_le_uint64( const BYTE * ptr, double d );
+extern HB_EXPORT double    hb_get_le_int64( const HB_BYTE * ptr );
+extern HB_EXPORT double    hb_get_le_uint64( const HB_BYTE * ptr );
+extern HB_EXPORT void      hb_put_le_uint64( const HB_BYTE * ptr, double d );
 #endif
 
 /* dynamic symbol table management */
@@ -1032,8 +1032,8 @@ extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevI
 
 /* Codeblock management */
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
-extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, HB_SIZE ulLen );
+extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
+extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen );
 extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
 extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos ); /* get local variable passed by reference */
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */

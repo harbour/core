@@ -123,7 +123,7 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
  *    HB_ET_NIL is used for an ordinary values and post- operators
  *    HB_ET_NONE is used for invalid syntax, e.g. var := var1 += 2
  */
-static const BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
+static const HB_BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_NONE = 0,    */
    HB_ET_NIL,                 /*   HB_ET_NIL,         */
    HB_ET_NIL,                 /*   HB_ET_NUMERIC,     */
@@ -302,7 +302,7 @@ HB_EXPR_PTR hb_compExprNewEmpty( HB_COMP_DECL )
    return HB_COMP_EXPR_NEW( HB_ET_NONE );
 }
 
-HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucWidth, BYTE ucDec,
+HB_EXPR_PTR hb_compExprNewDouble( double dValue, HB_BYTE ucWidth, HB_BYTE ucDec,
                                   HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
@@ -1176,7 +1176,7 @@ void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem, HB_COMP_DECL )
 {
-   BYTE ucRight;
+   HB_BYTE ucRight;
 
    ucRight = s_PrecedTable[ pItem->ExprType ];
 
@@ -1211,7 +1211,7 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem, HB_COMP
        *   We have to set the proper order of evaluation using
        * precedence rules
        */
-      BYTE ucLeft = s_PrecedTable[ pExpr->ExprType ];
+      HB_BYTE ucLeft = s_PrecedTable[ pExpr->ExprType ];
       if( ucLeft < ucRight ||
           ( ucLeft == ucRight && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) &&
             ( ucLeft == HB_EO_OR || ucLeft == HB_EO_AND ) ) )
@@ -1409,7 +1409,7 @@ ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 /* Create a new declaration for codeblock local variable
  */
-static HB_CBVAR_PTR hb_compExprCBVarNew( const char * szVarName, BYTE bType )
+static HB_CBVAR_PTR hb_compExprCBVarNew( const char * szVarName, HB_BYTE bType )
 {
    HB_CBVAR_PTR pVar;
 
@@ -1427,7 +1427,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( const char * szVarName, BYTE bType )
 
 /* Add a new local variable declaration
  */
-HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, const char * szVarName, BYTE bType,
+HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, const char * szVarName, HB_BYTE bType,
                                  HB_COMP_DECL )
 {
    HB_CBVAR_PTR pVar;

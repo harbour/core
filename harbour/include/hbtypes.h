@@ -64,7 +64,7 @@ typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS )
                         ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
                           const char * szModuleName, ULONG ulID, USHORT uiPcodeVer );
 
-typedef void ( * VM_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
+typedef void ( * VM_EXECUTE ) ( const HB_BYTE * pCode, PHB_SYMB pSymbols );
 
 typedef HB_BOOL  ( * EXT_IS_ARRAY ) ( int iParam );
 typedef char *   ( * EXT_PARC1 )  ( int iParam );

@@ -131,7 +131,7 @@ static void    hb_vmEnumStart( int nVars, int nDescend ); /* prepare FOR EACH lo
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
 static void    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
-static const BYTE * hb_vmSwitch( const BYTE * pCode, USHORT );  /* make a SWITCH statement */
+static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, USHORT );  /* make a SWITCH statement */
 
 /* Operators (logical) */
 static void    hb_vmNot( void );             /* changes the latest logical value on the stack */
@@ -163,16 +163,16 @@ static void    hb_vmFrame( USHORT usLocals, unsigned char ucParams ); /* increas
 static void    hb_vmVFrame( USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
-static void    hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode ); /* mark thread static variables */
+static void    hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode ); /* mark thread static variables */
 static void    hb_vmStaticsClear( void );       /* clear complex static variables */
 static void    hb_vmStaticsRelease( void );     /* release arrays with static variables */
 /* Push */
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
-static void    hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
-static void    hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
-static void    hb_vmPushMacroBlock( const BYTE * pCode, HB_SIZE ulSize, USHORT usParams ); /* creates a macro-compiled codeblock */
+static void    hb_vmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
+static void    hb_vmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
+static void    hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, USHORT usParams ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
@@ -213,7 +213,7 @@ static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_IT
 
 #ifndef HB_NO_DEBUG
 static void    hb_vmLocalName( USHORT uiLocal, const char * szLocalName ); /* locals and parameters index and name information for the debugger */
-static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
+static void    hb_vmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( const char * szModuleName ); /* PRG and function name information for the debugger */
 
 static void    hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame );
@@ -1163,7 +1163,7 @@ int hb_vmQuit( void )
    return s_nErrorLevel;
 }
 
-void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 {
    HB_STACK_TLS_PRELOAD
    HB_BOOL bCanRecover = HB_FALSE;
@@ -4841,7 +4841,7 @@ static PHB_ITEM hb_vmSwitchGet( void )
    return pSwitch;
 }
 
-static const BYTE * hb_vmSwitch( const BYTE * pCode, USHORT casesCnt )
+static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, USHORT casesCnt )
 {
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR pSwitch = hb_vmSwitchGet();
@@ -6176,7 +6176,7 @@ static void hb_vmLocalName( USHORT uiLocal, const char * szLocalName ) /* locals
       s_pFunDbgEntry( HB_DBG_LOCALNAME, 0, szLocalName, uiLocal, NULL );
 }
 
-static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ) /* statics vars information for the debugger */
+static void hb_vmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ) /* statics vars information for the debugger */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6400,7 +6400,7 @@ static void hb_vmTSVReference( PHB_ITEM pStatic )
    hb_itemMove( pStatic, pRefer );
 }
 
-static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
+static void hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6415,7 +6415,7 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
    }
 }
 #else
-static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
+static void hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%hu,%p)", uiCount, pCode));
 
@@ -6734,7 +6734,7 @@ void hb_vmPushEvalSym( void )
  *
  * NOTE: pCode points to static memory
  */
-static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen )
+static void hb_vmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
    USHORT uiLocals;
@@ -6771,7 +6771,7 @@ static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen
  *
  * NOTE: pCode points to static memory
  */
-static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen )
+static void hb_vmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
@@ -6804,7 +6804,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE 
  *
  * NOTE: pCode points to dynamically allocated memory
  */
-static void hb_vmPushMacroBlock( const BYTE * pCode, HB_SIZE ulSize, USHORT usParams )
+static void hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, USHORT usParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
@@ -8972,7 +8972,7 @@ void hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics )
    hb_vmStatics( pSymbol, uiStatics );
 }
 
-void hb_xvmThreadStatics( USHORT uiStatics, const BYTE * statics )
+void hb_xvmThreadStatics( USHORT uiStatics, const HB_BYTE * statics )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmThreadStatics(%hu,%p)", uiStatics, statics));
 
@@ -9090,14 +9090,14 @@ HB_BOOL hb_xvmPopVariable( PHB_SYMB pSymbol )
    HB_XVM_RETURN
 }
 
-void hb_xvmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols )
+void hb_xvmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushBlockShort(%p, %p)", pCode, pSymbols));
 
    hb_vmPushBlockShort( pCode, pSymbols, HB_FALSE );
 }
 
-void hb_xvmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols )
+void hb_xvmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushBlock(%p, %p)", pCode, pSymbols));
 
@@ -10957,7 +10957,7 @@ void hb_xvmLocalName( USHORT uiLocal, const char * szLocalName )
 #endif
 }
 
-void hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName )
+void hb_xvmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticName(%d, %hu, %s)", (int)bIsGlobal, uiStatic, szStaticName));
 
