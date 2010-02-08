@@ -137,9 +137,9 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
 
 
 /*=====================================================================================*/
-static USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
+static HB_USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   USHORT uiAction;
+   HB_USHORT uiAction;
    PHB_ITEM pError;
 
    pError = hb_errRT_New( ES_ERROR, "SDDODBC", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
@@ -296,7 +296,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    PHB_ITEM     pItemEof, pItem;
    DBFIELDINFO  pFieldInfo;
    HB_BOOL      bError;
-   USHORT       uiFields, uiIndex;
+   HB_USHORT    uiFields, uiIndex;
    HB_ERRCODE   errCode;
    char *       szError;
 
@@ -331,7 +331,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   uiFields = ( USHORT ) iNameLen;
+   uiFields = ( HB_USHORT ) iNameLen;
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -356,7 +356,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       hb_strUpper( ( char * ) cName, MAX_FIELD_NAME + 1 );
       pFieldInfo.atomName = ( char * ) cName;
 
-      pFieldInfo.uiLen = ( USHORT ) uiSize;
+      pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;
 
       /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) ); */
@@ -528,7 +528,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    SQLLEN       iLen;
    PHB_ITEM     pArray, pItem;
    LPFIELD      pField;
-   USHORT       ui;
+   HB_USHORT    ui;
 
    while ( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {

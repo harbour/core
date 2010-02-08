@@ -121,7 +121,7 @@ typedef struct stack_item
 
 typedef struct stack_tag
 {
-  USHORT usCount;
+  HB_USHORT usCount;
   BTreeStackItem items[ 1 ];
 } BTreeStack;
 
@@ -192,10 +192,10 @@ struct hb_BTree
   HB_FHANDLE      hFile;
   ULONG           ulRootPage;
   ULONG           ulFreePage;
-  USHORT          usPageSize;
-  USHORT          usKeySize;
-  USHORT          usMaxKeys;
-  USHORT          usMinKeys;
+  HB_USHORT       usPageSize;
+  HB_USHORT       usKeySize;
+  HB_USHORT       usMaxKeys;
+  HB_USHORT       usMinKeys;
   hb_BTreeFlags_T ulFlags;
   ULONG           ulKeyCount;
   hb_KeyData_T  * pThisKeyData;
@@ -218,7 +218,7 @@ static int s_BTree_List_Count = 0;
 
 /* forward declarations */
 
-static USHORT CountGet( struct hb_BTree * pBTree, ULONG ulNode );
+static HB_USHORT CountGet( struct hb_BTree * pBTree, ULONG ulNode );
 static hb_KeyData_T *KeyGet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, hb_KeyData_T *buffer );
 static ULONG BranchGet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition );
 
@@ -227,14 +227,14 @@ static ULONG BranchGet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition );
 static void raiseError( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, int uiArguments )
 {
     PHB_ITEM pErr = hb_errRT_New(
-       ES_ERROR        /* USHORT uiSeverity */,
+       ES_ERROR        /* HB_USHORT uiSeverity */,
        "HB_BTREE"      /* const char * szSubSystem */,
        ulGenCode       /* ULONG  ulGenCode */,
        ulSubCode       /* ULONG  ulSubCode */,
        szDescription   /* const char * szDescription */,
        szOperation     /* const char * szOperation */,
-       0               /* USHORT uiOsCode */,
-       EF_NONE         /* USHORT uiFlags */
+       0               /* HB_ERRCODE uiOsCode */,
+       EF_NONE         /* HB_USHORT uiFlags */
    );
 
   if ( uiArguments > 0 )
@@ -696,10 +696,10 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
   }
 }
 
-static USHORT CountGet( struct hb_BTree * pBTree, ULONG ulNode )
+static HB_USHORT CountGet( struct hb_BTree * pBTree, ULONG ulNode )
 {
   READPAGE_IF_NEEDED( pBTree, ulNode );
-  return ( USHORT )( *pBTree->ioBuffer->pulPageCount );
+  return ( HB_USHORT )( *pBTree->ioBuffer->pulPageCount );
 }
 
 static void CountSet( struct hb_BTree * pBTree, ULONG ulNode, ULONG newPageCount )
@@ -709,14 +709,14 @@ static void CountSet( struct hb_BTree * pBTree, ULONG ulNode, ULONG newPageCount
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
 
-static USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, LONG adjPageCount )
+static HB_USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, LONG adjPageCount )
 {
   READPAGE_IF_NEEDED( pBTree, ulNode );
 
   *pBTree->ioBuffer->pulPageCount += adjPageCount;
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 
-  return ( USHORT )*pBTree->ioBuffer->pulPageCount;
+  return ( HB_USHORT )*pBTree->ioBuffer->pulPageCount;
 }
 
 static void NodeCopy( struct hb_BTree * pBTree, ULONG toNode, int toPosition, ULONG fromNode, int fromPosition, hb_KeyData_T *buffer )
@@ -1472,7 +1472,7 @@ static int hb_BTstrncmp( const char *s1, const char *s2, size_t n )
 }
 
 /* allocate hb_BTree structure */
-struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers )
+struct hb_BTree * hb_BTreeNew( const char * FileName, HB_USHORT usPageSize, HB_USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
   int iFileIOmode;
@@ -1545,8 +1545,8 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
   pBTree->ulRootPage = NULLPAGE;
   pBTree->usPageSize = usPageSize;
   pBTree->usKeySize  = usKeySize;
-  pBTree->usMaxKeys  = ( USHORT ) MAXKEYS( usPageSize, usKeySize, ulFlags );
-  pBTree->usMinKeys  = ( USHORT ) MINKEYS( pBTree->usMaxKeys );
+  pBTree->usMaxKeys  = ( HB_USHORT ) MAXKEYS( usPageSize, usKeySize, ulFlags );
+  pBTree->usMinKeys  = ( HB_USHORT ) MINKEYS( pBTree->usMaxKeys );
   pBTree->ulFlags    = ulFlags;
   pBTree->ulKeyCount = 0;
   pBTree->pStack     = NULL;
@@ -1743,7 +1743,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
        ( ( ulFlags & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ( HB_ISNUM( 3 ) && iKeySize >= 4 && iMinKeys > 0 && iMaxKeys > 2 ) ) &&
        ( 1 == 1 ) )
   {
-    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), ( USHORT ) iPageSize, ( USHORT ) iKeySize, ulFlags, hb_parnl( 5 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), ( HB_USHORT ) iPageSize, ( HB_USHORT ) iKeySize, ulFlags, hb_parnl( 5 ) ) ) );
   }
   else
   {

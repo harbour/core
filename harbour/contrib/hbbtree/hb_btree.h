@@ -42,7 +42,7 @@ HB_EXTERN_BEGIN
 
 struct hb_BTree;
 
-struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers );
+struct hb_BTree * hb_BTreeNew( const char * FileName, HB_USHORT usPageSize, HB_USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers );
 struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
 HB_BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );

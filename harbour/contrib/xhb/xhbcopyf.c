@@ -72,7 +72,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
 
    while( ( fhndSource = hb_spOpen( szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {
-      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
+      HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
       if( uiAction != E_RETRY )
          break;
@@ -84,7 +84,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
 
       while( ( fhndDest = hb_spCreate( szDest, FC_NORMAL ) ) == FS_ERROR )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
+         HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
          if( uiAction != E_RETRY )
             break;
@@ -97,7 +97,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
          HB_BYTE * buffer = ( HB_BYTE * ) hb_xgrab( BUFFER_SIZE );
-         USHORT usRead;
+         HB_USHORT usRead;
 
          bRetVal = HB_TRUE;
 
@@ -108,7 +108,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
          {
             while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
             {
-               USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
+               HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
                if( uiAction != E_RETRY )
                {

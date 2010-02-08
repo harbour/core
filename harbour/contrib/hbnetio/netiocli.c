@@ -110,7 +110,7 @@ typedef struct _HB_FILE
 {
    const HB_FILE_FUNCS * pFuncs;
    PHB_CONCLI     conn;
-   USHORT         fd;
+   HB_USHORT      fd;
 }
 HB_FILE;
 
@@ -980,7 +980,7 @@ static HB_BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
 }
 
 static PHB_FILE s_fileOpen( const char * pFilename, const char * pDefExt,
-                            USHORT uiExFlags, const char * pPaths,
+                            HB_USHORT uiExFlags, const char * pPaths,
                             PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -1063,7 +1063,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       HB_PUT_LE_UINT16( &msgbuf[  4 ], pFile->fd );
       HB_PUT_LE_UINT64( &msgbuf[  6 ], ulStart );
       HB_PUT_LE_UINT64( &msgbuf[ 14 ], ulLen );
-      HB_PUT_LE_UINT16( &msgbuf[ 22 ], ( USHORT ) iType );
+      HB_PUT_LE_UINT16( &msgbuf[ 22 ], ( HB_USHORT ) iType );
 #if NETIO_MSGLEN > 24
       memset( msgbuf + 24, '\0', sizeof( msgbuf ) - 24 );
 #endif

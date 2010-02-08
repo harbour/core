@@ -77,7 +77,7 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea );
 static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
 static SDDNODE mysqldd =
@@ -131,9 +131,9 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 
 
 /*=====================================================================================*/
-static USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
+static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   USHORT uiAction;
+   HB_USHORT uiAction;
    PHB_ITEM pError;
 
    pError = hb_errRT_New( ES_ERROR, "SDDMY", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
@@ -214,7 +214,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 {
    PHB_ITEM      pItemEof, pItem;
    ULONG         ulIndex;
-   USHORT        uiFields, uiCount;
+   HB_USHORT     uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
    HB_BOOL       bError;
    char *        pBuffer;
@@ -236,7 +236,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   uiFields = ( USHORT ) mysql_num_fields( ( MYSQL_RES * ) pArea->pResult );
+   uiFields = ( HB_USHORT ) mysql_num_fields( ( MYSQL_RES * ) pArea->pResult );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -253,7 +253,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
       pFieldInfo.atomName = pBuffer;
 
-      pFieldInfo.uiLen = ( USHORT ) pMyField->length;
+      pFieldInfo.uiLen = ( HB_USHORT ) pMyField->length;
       pFieldInfo.uiDec = 0;
 
       switch( pMyField->type )
@@ -274,7 +274,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_FLOAT:
          case MYSQL_TYPE_DOUBLE:
            pFieldInfo.uiType = HB_FT_DOUBLE;
-           pFieldInfo.uiDec = ( USHORT ) pMyField->decimals;
+           pFieldInfo.uiDec = ( HB_USHORT ) pMyField->decimals;
            break;
 
          case MYSQL_TYPE_STRING:
@@ -454,7 +454,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 }
 
 
-static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD   pField;
    char*     pValue;

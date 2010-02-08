@@ -92,7 +92,7 @@
 
 
 
-static USHORT s_uiRddIdSQLMIX = ( USHORT ) -1;
+static HB_USHORT s_uiRddIdSQLMIX = ( HB_USHORT ) -1;
 
 static RDDFUNCS sqlmixSuper;
 
@@ -104,7 +104,7 @@ static RDDFUNCS sqlmixSuper;
 */
 
 
-static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, USHORT uiFlags )
+static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, HB_USHORT uiFlags )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -1564,7 +1564,7 @@ static HB_ERRCODE sqlmixClose( SQLMIXAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlmixStructSize( SQLMIXAREAP pArea, USHORT* StructSize )
+static HB_ERRCODE sqlmixStructSize( SQLMIXAREAP pArea, HB_USHORT* StructSize )
 {
    HB_SYMBOL_UNUSED( pArea );
 
@@ -1608,7 +1608,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    PMIXTAG      pTagNew, pTag;
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
    ULONG        ulRecNo;
-   USHORT       uiLen;
+   HB_USHORT    uiLen;
    HB_BYTE      bType;
 
    /* Obtain key codeblock */
@@ -1642,7 +1642,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       case HB_IT_STRING:
       case HB_IT_STRING | HB_IT_MEMO:
          bType = 'C';
-         uiLen = ( USHORT ) hb_itemGetCLen( pResult );
+         uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if ( uiLen > MIX_MAXKEYLEN )  uiLen = MIX_MAXKEYLEN;
          break;
 
@@ -1773,10 +1773,10 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
 }
 
 
-static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
    PMIXTAG   pTag;
-   USHORT    uiTag = 0;
+   HB_USHORT uiTag = 0;
 
    switch( uiIndex )
    {
@@ -2173,12 +2173,12 @@ static RDDFUNCS sqlmixTable =
 HB_FUNC( SQLMIX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
+   HB_USHORT * uiCount, uiRddId;
 
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   uiCount = ( HB_USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = ( USHORT ) hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    if ( pTable )
    {

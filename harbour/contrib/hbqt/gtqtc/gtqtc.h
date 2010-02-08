@@ -196,7 +196,7 @@ public:
    void   displayCell( int iRow, int iCol );
    void   displayBlock( int iRow, int iCol );
    void   resizeImage( const QSize &newSize );
-   void   drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor, int x, int y );
+   void   drawBoxCharacter( QPainter *painter, HB_USHORT usChar, int iColor, int x, int y );
    void   copyTextOnClipboard( void );
    void   paintCopyOperation( void );
 
@@ -281,8 +281,8 @@ typedef struct
 
    int          iCmdShow;
 
-   USHORT       ROWS;                         /* number of displayable rows in window */
-   USHORT       COLS;                         /* number of displayable columns in window */
+   int          ROWS;                         /* number of displayable rows in window */
+   int          COLS;                         /* number of displayable columns in window */
 
    bool         CaretExist;                   /* TRUE if a caret has been created */
    bool         CaretHidden;                  /* TRUE if a caret has been hiden */

@@ -62,7 +62,7 @@
 
 #define CONNECTION_LIST_EXPAND    4
 
-static USHORT             s_rddidSQLBASE = 0;
+static HB_USHORT          s_rddidSQLBASE = 0;
 static SQLDDCONNECTION *  s_pConnection = NULL;
 static ULONG              s_ulConnectionCount = 0;
 static ULONG              s_ulConnectionCurrent = 0;
@@ -127,8 +127,8 @@ static HB_ERRCODE sddExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE sddOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE sddClose( SQLBASEAREAP pArea );
 static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE sddNull = {
@@ -206,7 +206,7 @@ static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 }
 
 
-static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
@@ -216,7 +216,7 @@ static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
 }
 
 
-static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
@@ -460,7 +460,7 @@ static HB_ERRCODE sqlbaseDeleted( SQLBASEAREAP pArea, HB_BOOL* pDeleted )
 }
 
 
-static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    if ( pArea->bRecordFlags & SQLDD_FLAG_CACHED )
    {
@@ -471,7 +471,7 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM 
 }
 
 
-static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength )
 {
   /*  TODO: should we use this code?
   if ( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
@@ -505,7 +505,7 @@ static HB_ERRCODE sqlbaseGoCold( SQLBASEAREAP pArea )
 static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
 {
    PHB_ITEM   pArray, pItem;
-   USHORT     us;
+   HB_USHORT  us;
 
    pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
    for ( us = 1; us <= pArea->area.uiFieldCount; us++ )
@@ -522,7 +522,7 @@ static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD    pField;
    HB_ERRCODE    errCode;
@@ -643,7 +643,7 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
 static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    PHB_ITEM    pItemEof, pItem;
-   USHORT      uiCount;
+   HB_USHORT   uiCount;
    HB_BOOL     bError;
 
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
@@ -764,7 +764,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 }
 
 
-static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    switch( uiIndex )
    {
@@ -820,7 +820,7 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 }
 
 
-static HB_ERRCODE sqlbaseStructSize( SQLBASEAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE sqlbaseStructSize( SQLBASEAREAP pArea, HB_USHORT * uiSize )
 {
    HB_SYMBOL_UNUSED( pArea );
 
@@ -938,7 +938,7 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 }
 
 
-static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    ULONG            ulConn;
    SQLDDCONNECTION*   pConn;
@@ -1229,12 +1229,12 @@ HB_FUNC( SQLBASE ) {;}
 HB_FUNC( SQLBASE_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
+   HB_USHORT * uiCount, uiRddId;
 
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   uiCount = ( HB_USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = ( USHORT ) hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    if ( pTable )
    {

@@ -95,7 +95,7 @@ typedef struct _MIXTAG
    PHB_ITEM         pKeyItem;
    PHB_ITEM         pForItem;
    HB_BYTE          bType;
-   USHORT           uiLen;
+   HB_USHORT        uiLen;
 
    LPMIXKEY*        pKeys;
    ULONG            ulRecMax;
@@ -119,10 +119,10 @@ typedef struct _ADSXAREA_
 
 
 
-static USHORT   s_uiRddIdADSX    = ( USHORT ) -1;
-static USHORT   s_uiRddIdADSNTXX = ( USHORT ) -1;
-static USHORT   s_uiRddIdADSCDXX = ( USHORT ) -1;
-static USHORT   s_uiRddIdADSADTX = ( USHORT ) -1;
+static HB_USHORT s_uiRddIdADSX    = ( HB_USHORT ) -1;
+static HB_USHORT s_uiRddIdADSNTXX = ( HB_USHORT ) -1;
+static HB_USHORT s_uiRddIdADSCDXX = ( HB_USHORT ) -1;
+static HB_USHORT s_uiRddIdADSADTX = ( HB_USHORT ) -1;
 static RDDFUNCS adsxSuper;
 
 
@@ -133,7 +133,7 @@ static RDDFUNCS adsxSuper;
 static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                  char* filename, HB_ERRCODE errOsCode,
-                                 USHORT uiFlags )
+                                 HB_USHORT uiFlags )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -178,7 +178,7 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 *  Memory Index
 *************************************************************************/
 
-static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, HB_BYTE bType, USHORT uiLen )
+static LPMIXKEY mixKeyNew( PHB_ITEM pItem, ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
    LPMIXKEY    pKey;
    ULONG       ul;
@@ -277,7 +277,7 @@ static void mixKeyFree( LPMIXKEY pKey )
 }
 
 
-static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, USHORT uiLen, PHB_CODEPAGE pCodepage )
+static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    int   i;
 
@@ -306,7 +306,7 @@ static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, USHORT uiLen, PHB_CODEPAGE
 }
 
 
-static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, USHORT uiLen, PHB_CODEPAGE pCodepage )
+static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    ULONG     l, r;
    LPMIXKEY  x, h;
@@ -387,7 +387,7 @@ static int mixCompareKey( LPMIXTAG pTag, ULONG ulKeyPos, LPMIXKEY pKey )
 
 static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem,
                               PHB_ITEM pForItem, PHB_ITEM pWhileItem, HB_BYTE bType,
-                              USHORT uiLen, ADSXAREAP pArea )
+                              HB_USHORT uiLen, ADSXAREAP pArea )
 {
    LPMIXTAG             pTag;
    LPMIXKEY             pKey;
@@ -832,7 +832,7 @@ static HB_ERRCODE adsxOpen( ADSXAREAP pArea, LPDBOPENINFO pOpenInfo )
 }
 
 
-static HB_ERRCODE adsxStructSize( ADSXAREAP pArea, USHORT* StructSize )
+static HB_ERRCODE adsxStructSize( ADSXAREAP pArea, HB_USHORT* StructSize )
 {
    HB_SYMBOL_UNUSED( pArea );
 
@@ -872,7 +872,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    LPMIXTAG     pTagNew, pTag;
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
    ULONG        ulRecNo;
-   USHORT       uiLen;
+   HB_USHORT    uiLen;
    HB_BYTE      bType;
    UNSIGNED16   bValidExpr;
    HB_BOOL      bUseADS;
@@ -946,7 +946,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       case HB_IT_STRING:
       case HB_IT_STRING | HB_IT_MEMO:
          bType = 'C';
-         uiLen = ( USHORT ) hb_itemGetCLen( pResult );
+         uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )  uiLen = MIX_MAXKEYLEN;
          break;
 
@@ -1114,7 +1114,7 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 }
 
 
-static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
    LPMIXTAG        pTag = pArea->pTagCurrent;
 
@@ -1408,15 +1408,15 @@ static RDDFUNCS adsxTable = { NULL,
                               NULL  };
 
 
-static void adsxRegisterRDD( USHORT * pusRddId, const char * szRddName )
+static void adsxRegisterRDD( HB_USHORT * pusRddId, const char * szRddName )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
+   HB_USHORT * uiCount, uiRddId;
 
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   uiCount = ( HB_USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = ( USHORT ) hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    if( pTable )
    {

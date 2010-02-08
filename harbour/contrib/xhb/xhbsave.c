@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
+static void hb_getScreenRange( int * pusMin, int * pusMax,
                                HB_BOOL fNoCheck, HB_BOOL fVertical )
 {
    int iFrom, iTo, iMax;
@@ -83,19 +83,19 @@ static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
 
    if( iFrom > iTo )
    {
-      *pusMin = ( USHORT ) iTo;
-      *pusMax = ( USHORT ) iFrom;
+      *pusMin = iTo;
+      *pusMax = iFrom;
    }
    else
    {
-      *pusMin = ( USHORT ) iFrom;
-      *pusMax = ( USHORT ) iTo;
+      *pusMin = iFrom;
+      *pusMax = iTo;
    }
 }
 
 HB_FUNC( XHB_SAVESCREEN )
 {
-   USHORT uiTop, uiLeft, uiBottom, uiRight;
+   int uiTop, uiLeft, uiBottom, uiRight;
    HB_SIZE ulSize;
    void * pBuffer;
    HB_BOOL fNoCheck = hb_parl( 5 );
@@ -114,7 +114,7 @@ HB_FUNC( XHB_RESTSCREEN )
 {
    if( HB_ISCHAR( 5 ) )
    {
-      USHORT uiTop, uiLeft, uiBottom, uiRight;
+      int uiTop, uiLeft, uiBottom, uiRight;
       HB_BOOL fNoCheck = hb_parl( 6 );
 
       hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, HB_TRUE );

@@ -99,7 +99,7 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
-static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
 static SDDNODE pgsqldd = {
@@ -150,9 +150,9 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 
 
 /* ===================================================================================== */
-static USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
+static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   USHORT uiAction;
+   HB_USHORT uiAction;
    PHB_ITEM pError;
 
    pError = hb_errRT_New( ES_ERROR, "SDDPG", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
@@ -235,7 +235,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    PGresult*       pResult;
    ExecStatusType  status;
    PHB_ITEM        pItemEof, pItem;
-   USHORT          uiFields, uiCount;
+   HB_USHORT       uiFields, uiCount;
    HB_BOOL         bError;
    char*           pBuffer;
    DBFIELDINFO     pFieldInfo;
@@ -257,7 +257,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    pArea->pResult = pResult;
 
-   uiFields = ( USHORT ) PQnfields( pResult );
+   uiFields = ( HB_USHORT ) PQnfields( pResult );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -279,7 +279,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          case BPCHAROID:
          case VARCHAROID:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = ( USHORT ) PQfsize( pResult, uiCount ) - 4;
+            pFieldInfo.uiLen = ( HB_USHORT ) PQfsize( pResult, uiCount ) - 4;
             break;
 
          case NUMERICOID:
@@ -339,7 +339,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          case BITOID:
          case VARBITOID:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = ( USHORT ) PQfsize( pResult, uiCount );
+            pFieldInfo.uiLen = ( HB_USHORT ) PQfsize( pResult, uiCount );
             break;
 
          case TIMEOID:
@@ -469,7 +469,7 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD   pField;
    char*     pValue;

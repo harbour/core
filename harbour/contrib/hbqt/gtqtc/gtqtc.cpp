@@ -395,8 +395,8 @@ static bool hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
 {
    if( HB_GTSELF_RESIZE( pWVT->pGT, iRows, iCols ) )
    {
-      pWVT->ROWS = ( USHORT ) iRows;
-      pWVT->COLS = ( USHORT ) iCols;
+      pWVT->ROWS = iRows;
+      pWVT->COLS = iCols;
 
       pWVT->qWnd->_drawingArea->_iROWS = iRows;
       pWVT->qWnd->_drawingArea->_iCOLS = iCols;
@@ -948,7 +948,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.y() ), pWVT->COLS );
+            HB_GTSELF_SETMODE( pGT, ( int ) ( iVal / pWVT->PTEXTSIZE.y() ), pWVT->COLS );
          }
          break;
 
@@ -957,7 +957,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.x() ) );
+            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( int ) ( iVal / pWVT->PTEXTSIZE.x() ) );
          }
          break;
 
@@ -1080,7 +1080,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                bool bOldCentre = pWVT->CenterWindow;
                pWVT->CenterWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
-               HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
+               HB_GTSELF_SETMODE( pGT, ( int ) ( iY / pWVT->PTEXTSIZE.y() ), ( int ) ( iX / pWVT->PTEXTSIZE.x() ) );
                pWVT->CenterWindow = bOldCentre;
             }
          }
@@ -1400,7 +1400,7 @@ void DrawingArea::copyTextOnClipboard( void )
       {
          int bColor;
          HB_BYTE bAttr;
-         USHORT usChar;
+         HB_USHORT usChar;
 
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
             break;
@@ -1456,7 +1456,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
    painter.setFont( font );
    painter.setBackgroundMode( Qt::OpaqueMode );
 
-   USHORT usChar;
+   HB_USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
    int    bColor;
    HB_BYTE   bAttr, bOldAttr = 0;
@@ -1581,14 +1581,14 @@ void DrawingArea::displayCell( int iRow, int iCol )
    QFont font( _qFont, painter.device() );
    painter.setFont( font );
 
-   USHORT usChar;
+   HB_USHORT usChar;
    HB_BYTE   bAttr;
-   int    bColor = 0;
+   int       iColor = 0;
 
-   if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+   if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
    {
-      painter.setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
-      painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
+      painter.setPen( QPen( _COLORS[ iColor & 0x0F ] ) );
+      painter.setBackground( QBrush( _COLORS[ iColor >> 4 ] ) );
       painter.drawText( QPoint( iCol*_fontWidth, ( iRow*_fontHeight ) + _fontAscent ), QString( usChar ) );
    }
    /* We need immediate painting */
@@ -2386,7 +2386,7 @@ void MainWindow::setWindowSize( void )
    resize( _drawingArea->_wndWidth, _drawingArea->_wndHeight );
 }
 
-void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor, int x, int y )
+void DrawingArea::drawBoxCharacter( QPainter *painter, HB_USHORT usChar, int iColor, int x, int y )
 {
    /* Common to all drawing operations except characters */
    int iGap  = 2;
@@ -2394,12 +2394,12 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor
    int iMidX = x + _fontWidth / 2;
    int iEndY = y + _fontHeight;
    int iEndX = x + _fontWidth;
-   int x1,x2,y1,y2;
+   int x1, x2, y1, y2;
 
-   /* painter->setPen( QPen( QBrush( _COLORS[ bColor & 0x0F ] ),1 ) ); */
-   painter->setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
-   painter->setBackground( QBrush( _COLORS[ ( bColor >> 4 ) & 0x0F ] ) );
-   painter->fillRect( x, y, _fontWidth, _fontHeight, QBrush( _COLORS[ ( bColor >> 4 ) & 0x0F ] ) );
+   /* painter->setPen( QPen( QBrush( _COLORS[ iColor & 0x0F ] ),1 ) ); */
+   painter->setPen( QPen( _COLORS[ iColor & 0x0F ] ) );
+   painter->setBackground( QBrush( _COLORS[ ( iColor >> 4 ) & 0x0F ] ) );
+   painter->fillRect( x, y, _fontWidth, _fontHeight, QBrush( _COLORS[ ( iColor >> 4 ) & 0x0F ] ) );
 
    switch( usChar )
    {
@@ -2649,15 +2649,15 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, int bColor
    /*                           B_THIN     B_FAT                              */
    /*  ---------------------------------------------------------------------  */
    case 219:      /* Full Column  */
-      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ bColor & 0x0F ] );
+      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ iColor & 0x0F ] );
       break;
    case 223:      /* Upper Half Column  */
-      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ bColor >> 4 ] );
-      painter->fillRect( x, y, _fontWidth, _fontWidth, _COLORS[ bColor & 0x0F ] );
+      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ iColor >> 4 ] );
+      painter->fillRect( x, y, _fontWidth, _fontWidth, _COLORS[ iColor & 0x0F ] );
       break;
    case 220:      /* Lower Half Half Column  */
-      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ bColor >> 4 ] );
-      painter->fillRect( x, y+_fontHeight-_fontWidth, _fontWidth, _fontWidth, _COLORS[ bColor & 0x0F ] );
+      painter->fillRect( x, y, _fontWidth, _fontHeight, _COLORS[ iColor >> 4 ] );
+      painter->fillRect( x, y+_fontHeight-_fontWidth, _fontWidth, _fontWidth, _COLORS[ iColor & 0x0F ] );
       break;
    default:
       painter->drawText( QPoint( x,y+_fontAscent ), QString( usChar ) );

@@ -695,7 +695,7 @@ HB_FUNC( NETIO_SERVER )
          long len = 0, size, size2;
          int iFileNo;
          HB_U32 uiMsg;
-         USHORT uiFalgs;
+         HB_USHORT uiFalgs;
          char * szExt;
          PHB_FILE pFile;
          HB_FOFFSET llOffset, llSize;
@@ -1031,7 +1031,7 @@ HB_FUNC( NETIO_SERVER )
                            if( hb_vmRequestReenter() )
                            {
                               HB_SIZE ulSize = size - size2;
-                              USHORT uiPCount = 0;
+                              HB_USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
 
                               data += size2;

@@ -289,9 +289,9 @@ HB_FUNC( HB_EXEC )
       else
          hb_vmPushNil();
       if( fSend )
-         hb_vmSend( ( USHORT ) iParams );
+         hb_vmSend( ( HB_USHORT ) iParams );
       else
-         hb_vmDo( ( USHORT ) iParams );
+         hb_vmDo( ( HB_USHORT ) iParams );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

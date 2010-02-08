@@ -88,7 +88,7 @@ static HB_BOOL hb_fsFileStats(
    if( stat( pszFileName, &statbuf ) == 0 )
    {
       // determine if we can read/write/execute the file
-      USHORT usAttr, ushbAttr = 0;
+      HB_FATTR usAttr, ushbAttr = 0;
       time_t ftime;
 #if _POSIX_C_SOURCE >= 199506L
       struct tm tms;

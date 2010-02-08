@@ -169,7 +169,7 @@ void nxs_partial_scramble(
    HB_SIZE len, HB_SIZE keylen )
 {
    HB_SIZE pos;
-   USHORT kpos;
+   HB_USHORT kpos;
 
    pos = 0l;
    kpos = 0;
@@ -177,7 +177,7 @@ void nxs_partial_scramble(
    {
       cipher[ pos + scramble[ kpos ] ] = source[ pos + kpos ];
       kpos++;
-      if ( kpos >= ( USHORT ) keylen )
+      if ( kpos >= ( HB_USHORT ) keylen )
       {
          kpos = 0;
          pos += keylen;
@@ -222,7 +222,7 @@ void nxs_partial_unscramble(
    HB_SIZE len, HB_SIZE keylen )
 {
    HB_SIZE pos;
-   USHORT kpos;
+   HB_USHORT kpos;
    unsigned char buf[ NXS_MAX_KEYLEN ];
 
    pos = 0l;
@@ -231,7 +231,7 @@ void nxs_partial_unscramble(
    {
       buf[ kpos ] = cipher[ pos + scramble[ kpos ]  ];
       kpos++;
-      if ( kpos >= ( USHORT ) keylen )
+      if ( kpos >= ( HB_USHORT ) keylen )
       {
          memcpy( cipher + pos, buf, keylen );
          kpos = 0;
@@ -247,7 +247,7 @@ void nxs_xorcode(
    const unsigned char *key, HB_SIZE keylen )
 {
    HB_SIZE pos = 0l;
-   USHORT keypos = 0;
+   HB_USHORT keypos = 0;
    unsigned char c_bitrest;
 
    c_bitrest = cipher[ 0 ] >>5;
@@ -256,7 +256,7 @@ void nxs_xorcode(
    {
       cipher[pos] <<= 3;
 
-      if (keypos == ( USHORT ) keylen-1 || pos == cipherlen -1 )
+      if (keypos == ( HB_USHORT ) keylen-1 || pos == cipherlen -1 )
       {
          cipher[pos] |= c_bitrest;
       }
@@ -269,7 +269,7 @@ void nxs_xorcode(
       keypos ++;
       pos++;
 
-      if (keypos == ( USHORT ) keylen )
+      if (keypos == ( HB_USHORT ) keylen )
       {
          keypos = 0;
          c_bitrest = cipher[ pos ] >>5;
@@ -282,13 +282,13 @@ void nxs_xordecode(
    const unsigned char *key, HB_SIZE keylen )
 {
    HB_SIZE pos = 0l;
-   USHORT keypos = 0;
+   HB_USHORT keypos = 0;
    unsigned char c_bitrest, c_bitleft;
 
    /* A very short block? */
    if ( keylen > cipherlen - pos )
    {
-      keylen = ( USHORT ) ( cipherlen - pos);
+      keylen = ( HB_USHORT ) ( cipherlen - pos);
    }
    c_bitleft = ( cipher[ keylen -1 ] ^ key[ keylen -1 ])<< 5;
 
@@ -304,13 +304,13 @@ void nxs_xordecode(
       keypos ++;
       pos ++;
 
-      if (keypos == ( USHORT ) keylen )
+      if (keypos == ( HB_USHORT ) keylen )
       {
          keypos = 0;
          /* last block */
          if ( keylen > cipherlen - pos )
          {
-            keylen = ( USHORT ) (cipherlen - pos);
+            keylen = ( HB_USHORT ) (cipherlen - pos);
          }
 
          c_bitleft = ( cipher[ pos + keylen -1 ] ^ key[ keylen -1 ])<< 5;

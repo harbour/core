@@ -169,8 +169,8 @@ HB_FUNC( DBF2TEXT )
    /* Export DBF content to text file */
 
    int iSepLen;
-   USHORT uiFields = 0;
-   USHORT ui;
+   HB_USHORT uiFields = 0;
+   HB_USHORT ui;
    PHB_ITEM pTmp;
    HB_BOOL bWriteSep = HB_FALSE;
 
@@ -239,8 +239,8 @@ HB_FUNC( DBF2TEXT )
          /* Only requested fields are exported here */
          else
          {
-            USHORT uiFieldCopy = ( USHORT ) hb_arrayLen( pFields );
-            USHORT uiItter;
+            HB_USHORT uiFieldCopy = ( HB_USHORT ) hb_arrayLen( pFields );
+            HB_USHORT uiItter;
 
             for( uiItter = 1; uiItter <= uiFieldCopy; uiItter++ )
             {
@@ -254,7 +254,7 @@ HB_FUNC( DBF2TEXT )
                      if( bWriteSep )
                         hb_fsWriteLarge( handle, cSep, iSepLen );
 
-                     SELF_GETVALUE( pArea, ( USHORT ) iPos, pTmp );
+                     SELF_GETVALUE( pArea, ( HB_USHORT ) iPos, pTmp );
                      bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
                      hb_itemClear( pTmp );
                   }

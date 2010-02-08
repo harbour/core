@@ -220,8 +220,8 @@ typedef HB_ERRCODE (* SDDFUNC_EXECUTE    )( SQLDDCONNECTION * pConnection, PHB_I
 typedef HB_ERRCODE (* SDDFUNC_OPEN       )( SQLBASEAREAP pArea );
 typedef HB_ERRCODE (* SDDFUNC_CLOSE      )( SQLBASEAREAP pArea );
 typedef HB_ERRCODE (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, ULONG ulRecNo );
-typedef HB_ERRCODE (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-typedef HB_ERRCODE (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+typedef HB_ERRCODE (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
+typedef HB_ERRCODE (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, HB_USHORT uiIndex, ULONG * pLength );
 
 
 typedef struct _SDDNODE

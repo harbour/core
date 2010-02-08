@@ -97,7 +97,7 @@ typedef struct _HB_MEMFS_INODE
    char *         szName;
    unsigned int   uiCount;
    unsigned int   uiCountRead, uiCountWrite;
-   USHORT         uiDeny;
+   HB_USHORT      uiDeny;
 } HB_MEMFS_INODE, * PHB_MEMFS_INODE;
 
 
@@ -105,7 +105,7 @@ typedef struct _HB_MEMFS_FILE
 {
    PHB_MEMFS_INODE  pInode;
    HB_FOFFSET       llPos;
-   USHORT           uiFlags;
+   HB_USHORT        uiFlags;
 } HB_MEMFS_FILE, * PHB_MEMFS_FILE;
 
 
@@ -121,7 +121,7 @@ typedef struct _HB_MEMFS_FS
 
 
 static HB_MEMFS_FS s_fs;
-static USHORT      s_error;
+static HB_ERRCODE  s_error;
 
 static HB_CRITICAL_NEW( s_mtx );
 
@@ -298,7 +298,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 
 /* ======== Public Memory FS functions ======== */
 
-HB_MEMFS_EXPORT USHORT hb_memfsError( void )
+HB_MEMFS_EXPORT HB_ERRCODE hb_memfsError( void )
 {
    return s_error;
 }
@@ -364,12 +364,12 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 }
 
 
-HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
+HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags )
 {
    PHB_MEMFS_FILE  pFile = NULL;
    HB_FHANDLE      hFile;
    ULONG           ulInode;
-   USHORT          uiError = 0;
+   HB_ERRCODE      uiError = 0;
 
    /*
      Recalculate flags. Bit should indicate feature: 1=read, 2=write, 16=denyread, 32=denywrite.
@@ -616,7 +616,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 }
 
 
-HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, USHORT uiFlags )
+HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, HB_USHORT uiFlags )
 {
    PHB_MEMFS_FILE   pFile;
    PHB_MEMFS_INODE  pInode;
@@ -727,11 +727,11 @@ static HB_BOOL s_fileRename( const char * szName, const char * szNewName )
 }
 
 
-static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, USHORT uiExFlags, const char * pPaths, PHB_ITEM pError )
+static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHORT uiExFlags, const char * pPaths, PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX + 1 ];
-   USHORT     uiFlags;
+   HB_USHORT  uiFlags;
    ULONG      ulLen;
 
    HB_SYMBOL_UNUSED( pPaths );
@@ -769,7 +769,7 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, USHORT u
       {
          hb_errPutFileName( pError, szName );
          hb_errPutOsCode( pError, hb_memfsError() );
-         hb_errPutGenCode( pError, ( USHORT ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
       return NULL;
    }

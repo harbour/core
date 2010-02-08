@@ -135,7 +135,7 @@ HB_EXTERN_BEGIN
 #define CURKEY_REFRESH(pTag)
 */
 
-#define HB_CDXMAXKEY( x )     ( ( USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
+#define HB_CDXMAXKEY( x )     ( ( HB_USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
 #define HB_CDXBITMASK( x )    ( ( LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 #define FAST_GOCOLD( A )      SELF_GOCOLD(A)
@@ -254,8 +254,8 @@ struct _CDXTAG;   /* forward declaration */
 typedef struct _CDXKEY
 {
    HB_BYTE * val;
-   USHORT    len;
-   USHORT    mode;
+   HB_USHORT len;
+   HB_USHORT mode;
    ULONG     rec;
 } CDXKEY;
 typedef CDXKEY * LPCDXKEY;
@@ -319,44 +319,44 @@ typedef CDXLIST * LPCDXLIST;
 
 typedef struct _CDXTAG
 {
-   char *   szName;           /* Name of tag */
-   char *   KeyExpr;          /* a tag key expression as text */
-   char *   ForExpr;          /* a tag for expression as text */
-   PHB_ITEM pKeyItem;         /* item with a macro pcode for a tag key expression */
-   PHB_ITEM pForItem;         /* item with a macro pcode for a tag for expression */
-   USHORT   uiType;           /* a type of key expression value */
-   USHORT   uiLen;            /* length of the key expression value */
-   USHORT   nField;           /* Field number for simple (one field) key expersion */
-   HB_BYTE  bTrail;           /* trailing character for shorter key value */
-   HB_BYTE  OptFlags;         /* index options flag */
-   HB_BOOL  AscendKey;        /* ascending/descending order flag */
-   HB_BOOL  UniqueKey;        /* unique order flag */
-   HB_BOOL  Temporary;        /* temporary order flag */
-   HB_BOOL  Custom;           /* custom order flag */
-   HB_BOOL  Template;         /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
-   HB_BOOL  MultiKey;         /* repeated key values in custom indexes accepted */
-   HB_BOOL  Partial;          /* order is updated only partially - missing keys possible */
-   HB_BOOL  ChgOnly;          /* only existing key modifications are updated, no new key added */
-   HB_BOOL  UsrAscend;        /* user settable ascending/descending order flag */
-   HB_BOOL  UsrUnique;        /* user settable unique order flag */
-   HB_BOOL  IgnoreCase;       /* ignore case (upper keys) */
+   char *    szName;          /* Name of tag */
+   char *    KeyExpr;         /* a tag key expression as text */
+   char *    ForExpr;         /* a tag for expression as text */
+   PHB_ITEM  pKeyItem;        /* item with a macro pcode for a tag key expression */
+   PHB_ITEM  pForItem;        /* item with a macro pcode for a tag for expression */
+   HB_USHORT uiType;          /* a type of key expression value */
+   HB_USHORT uiLen;           /* length of the key expression value */
+   HB_USHORT nField;          /* Field number for simple (one field) key expersion */
+   HB_BYTE   bTrail;          /* trailing character for shorter key value */
+   HB_BYTE   OptFlags;        /* index options flag */
+   HB_BOOL   AscendKey;       /* ascending/descending order flag */
+   HB_BOOL   UniqueKey;       /* unique order flag */
+   HB_BOOL   Temporary;       /* temporary order flag */
+   HB_BOOL   Custom;          /* custom order flag */
+   HB_BOOL   Template;        /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
+   HB_BOOL   MultiKey;        /* repeated key values in custom indexes accepted */
+   HB_BOOL   Partial;         /* order is updated only partially - missing keys possible */
+   HB_BOOL   ChgOnly;         /* only existing key modifications are updated, no new key added */
+   HB_BOOL   UsrAscend;       /* user settable ascending/descending order flag */
+   HB_BOOL   UsrUnique;       /* user settable unique order flag */
+   HB_BOOL   IgnoreCase;      /* ignore case (upper keys) */
 
-   HB_BOOL  TagChanged;
-   HB_BOOL  TagBOF;
-   HB_BOOL  TagEOF;
+   HB_BOOL   TagChanged;
+   HB_BOOL   TagBOF;
+   HB_BOOL   TagEOF;
 
-   HB_BOOL  fRePos;
-   int      curKeyState;      /* see: CDX_CURKEY_* */
-   ULONG    rawKeyCount;
-   ULONG    rawKeyPos;
-   ULONG    rawKeyRec;
-   ULONG    logKeyCount;
-   ULONG    logKeyPos;
-   ULONG    logKeyRec;
+   HB_BOOL   fRePos;
+   int       curKeyState;     /* see: CDX_CURKEY_* */
+   ULONG     rawKeyCount;
+   ULONG     rawKeyPos;
+   ULONG     rawKeyRec;
+   ULONG     logKeyCount;
+   ULONG     logKeyPos;
+   ULONG     logKeyRec;
 
-   ULONG    TagBlock;         /* a page offset where a tag header is stored */
-   ULONG    RootBlock;        /* a page offset with the root of keys tree */
-   USHORT   MaxKeys;          /* maximum number of keys in Interior node */
+   ULONG     TagBlock;        /* a page offset where a tag header is stored */
+   ULONG     RootBlock;       /* a page offset with the root of keys tree */
+   HB_USHORT MaxKeys;         /* maximum number of keys in Interior node */
 
    struct _CDXINDEX * pIndex; /* a parent index info */
    struct _CDXTAG   * pNext;  /* pointer to next tag in index */
@@ -468,7 +468,7 @@ typedef struct _CDXAREA
 
    HB_BOOL        fCdxAppend;    /* Appended record changed */
    LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
-   USHORT         uiTag;         /* current tag focus */
+   HB_USHORT      uiTag;         /* current tag focus */
    LPCDXSORTINFO  pSort;         /* Index build structure */
    HB_BYTE *      bCdxSortTab;   /* Table with storted characters */
 
@@ -546,7 +546,7 @@ static HB_ERRCODE hb_cdxClose( CDXAREAP pArea );
 #define hb_cdxNewArea                              NULL
 static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_cdxRelease                              NULL
-static HB_ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
+static HB_ERRCODE hb_cdxStructSize( CDXAREAP pArea, HB_USHORT * uiSize );
 #define hb_cdxSysName                              NULL
 #define hb_cdxEval                                 NULL
 static HB_ERRCODE hb_cdxPack ( CDXAREAP pArea );
@@ -573,7 +573,7 @@ static HB_ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 #define hb_cdxOrderCondition                       NULL
 static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
 static HB_ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
 #define hb_cdxClearLocate                          NULL
 #define hb_cdxClearScope                           NULL
@@ -603,7 +603,7 @@ static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxDrop                                 NULL
 #define hb_cdxExists                               NULL
 #define hb_cdxRename                               NULL
-static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
 
 HB_EXTERN_END

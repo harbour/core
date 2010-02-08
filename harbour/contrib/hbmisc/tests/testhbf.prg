@@ -15,7 +15,6 @@ inplementation of :
   * hb_fgoto()
   * hb_fgotop()
   * hb_fgobottom()
-tested with Borland 32bit only
 */
 
 function main()

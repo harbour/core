@@ -125,9 +125,9 @@ HB_CALL_ON_STARTUP_END( _hb_firebirddd_init_ )
 
 
 /* ===================================================================================== */
-static USHORT hb_errRT_FireBirdDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
+static HB_USHORT hb_errRT_FireBirdDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   USHORT uiAction;
+   HB_USHORT uiAction;
    PHB_ITEM pError;
 
    pError = hb_errRT_New( ES_ERROR, "SDDFB", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
@@ -202,7 +202,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    DBFIELDINFO      pFieldInfo;
    HB_BOOL          bError;
    char*            pBuffer;
-   USHORT           uiFields, uiCount;
+   HB_USHORT        uiFields, uiCount;
    int              iType;
 
 
@@ -446,7 +446,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    ISC_STATUS      status[ 5 ];
    XSQLVAR*        pVar;
    PHB_ITEM        pItem, pArray;
-   USHORT          ui;
+   HB_USHORT       ui;
    ISC_STATUS      lErr;
    short           iType;
 
