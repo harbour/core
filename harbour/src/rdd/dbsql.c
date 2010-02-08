@@ -243,7 +243,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
 {
    PHB_FILEBUF pFileBuf;
    ULONG ulRecords = 0;
-   USHORT uiFields = 0, ui;
+   HB_USHORT uiFields = 0, ui;
    PHB_ITEM pTmp;
    HB_BOOL fWriteSep = HB_FALSE;
    const char * szNewLine = hb_conNewLine();

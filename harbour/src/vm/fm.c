@@ -271,7 +271,7 @@ typedef struct _HB_MEMINFO
 {
    HB_U32      u32Signature;
    HB_SIZE     ulSize;
-   USHORT      uiProcLine;
+   HB_USHORT   uiProcLine;
    char        szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HB_MEMINFO * pPrevBlock;
    struct _HB_MEMINFO * pNextBlock;
@@ -1100,7 +1100,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    {
       char membuffer[ HB_MAX_MEM2STR_BLOCK * 2 + 1 ]; /* multiplied by 2 to allow hex format */
       PHB_MEMINFO pMemBlock;
-      USHORT ui;
+      HB_USHORT ui;
       char buffer[ 100 ];
       FILE * hLog = NULL;
 

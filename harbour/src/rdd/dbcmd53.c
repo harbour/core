@@ -400,7 +400,7 @@ HB_FUNC( DBFIELDINFO )
 
    if( pArea )
    {
-      USHORT uiFields, uiIndex;
+      HB_USHORT uiFields, uiIndex;
       PHB_ITEM pType;
 
       pType = hb_param( 1 , HB_IT_NUMERIC );
@@ -453,7 +453,7 @@ HB_FUNC( DBFILEGET )
 
    if( pArea )
    {
-      USHORT uiFields, uiIndex;
+      HB_USHORT uiFields, uiIndex;
       PHB_ITEM pMode;
       const char * szField = hb_parc( 1 );
 
@@ -486,7 +486,7 @@ HB_FUNC( DBFILEPUT )
 
    if( pArea )
    {
-      USHORT uiFields, uiIndex;
+      HB_USHORT uiFields, uiIndex;
       const char * szField = hb_parc( 1 );
 
       if( szField )

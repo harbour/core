@@ -180,7 +180,7 @@ HB_FUNC( NUMROL )
    {
       if( hb_parl( 3 ) )
       {
-         USHORT us = ( USHORT ) ( lValue & 0xff ) << ( lShift & 0x07 );
+         HB_USHORT us = ( HB_USHORT ) ( lValue & 0xff ) << ( lShift & 0x07 );
 
          lValue = ( lValue & 0xff00 ) | ( us & 0xff ) | ( us >> 8 );
       }
@@ -203,8 +203,8 @@ HB_FUNC( NUMMIRR )
 
    if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) )
    {
-      USHORT usBits = hb_parl( 2 ) ? 8 : 16;
-      USHORT usResult = ( USHORT ) ( lValue >> usBits );
+      HB_USHORT usBits = hb_parl( 2 ) ? 8 : 16;
+      HB_USHORT usResult = ( HB_USHORT ) ( lValue >> usBits );
 
       do
       {

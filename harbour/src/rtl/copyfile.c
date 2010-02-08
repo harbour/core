@@ -110,7 +110,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
          void * buffer;
-         USHORT usRead;
+         HB_USHORT usRead;
 
          buffer = hb_xgrab( BUFFER_SIZE );
 

@@ -7228,7 +7228,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
       }
       else
       {
-         USHORT wWithObjectCnt = pLast->wWithObjectCnt;
+         HB_USHORT wWithObjectCnt = pLast->wWithObjectCnt;
 
          pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
          pLoop->pLoopList = NULL;
@@ -7284,7 +7284,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
       }
       else
       {
-         USHORT wWithObjectCnt = pLast->wWithObjectCnt;
+         HB_USHORT wWithObjectCnt = pLast->wWithObjectCnt;
 
          pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
          pLoop->pExitList = NULL;
@@ -7472,7 +7472,7 @@ static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, HB_BOOL bPopIn
 
 static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 {
-   USHORT usCount = 0;
+   HB_USHORT usCount = 0;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    HB_RTVAR_PTR pVar = pFunc->rtvars;
    HB_RTVAR_PTR pDel;
@@ -7527,7 +7527,7 @@ void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION pFunc )
 
 static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
-   USHORT uCount = ( USHORT ) hb_compExprListLen( pInitValue );
+   HB_USHORT uCount = ( HB_USHORT ) hb_compExprListLen( pInitValue );
 
    if( uCount == 1 && hb_compExprIsInteger( pInitValue->value.asList.pExprList ) &&
        hb_compExprAsInteger( pInitValue->value.asList.pExprList ) == 0 )

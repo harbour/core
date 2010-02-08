@@ -163,7 +163,7 @@ HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, 
 }
 
 /* module symbols initialization with extended information */
-PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer )
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, ULONG ulID, HB_USHORT uiPcodeVer )
 {
    static FARPROC s_pProcessSymbols = NULL;
 

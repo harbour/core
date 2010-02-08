@@ -71,7 +71,7 @@
 /* The 5-th parameter is Harbour extensions */
 HB_FUNC( AFIELDS )
 {
-   USHORT uiFields, uiCount;
+   HB_USHORT uiFields, uiCount;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    PHB_ITEM pName = hb_param( 1, HB_IT_ARRAY );
    PHB_ITEM pType = hb_param( 2, HB_IT_ARRAY );
@@ -94,32 +94,32 @@ HB_FUNC( AFIELDS )
 
    if( pName )
    {
-      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pName );
+      HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pName );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
    if( pType )
    {
-      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pType );
+      HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pType );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
    if( pLen )
    {
-      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pLen );
+      HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pLen );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
    if( pDec )
    {
-      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pDec );
+      HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pDec );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
 
    if( pFlags )
    {
-      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pFlags );
+      HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pFlags );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
@@ -335,7 +335,7 @@ HB_FUNC( DBCOMMITALL )
 HB_FUNC( DBCREATE )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
-   USHORT uiSize, uiLen;
+   HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    ULONG ulConnection;
@@ -373,7 +373,7 @@ HB_FUNC( DBCREATE )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return;
    }
-   uiLen = ( USHORT ) hb_arrayLen( pStruct );
+   uiLen = ( HB_USHORT ) hb_arrayLen( pStruct );
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
@@ -404,7 +404,7 @@ HB_FUNC( DBCREATE )
 HB_FUNC( HB_DBCREATETEMP )
 {
    const char * szAlias, * szDriver, * szCpId;
-   USHORT uiSize, uiLen;
+   HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc;
    ULONG ulConnection;
 
@@ -430,7 +430,7 @@ HB_FUNC( HB_DBCREATETEMP )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return;
    }
-   uiLen = ( USHORT ) hb_arrayLen( pStruct );
+   uiLen = ( HB_USHORT ) hb_arrayLen( pStruct );
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
@@ -462,7 +462,7 @@ HB_FUNC( HB_DBCREATETEMP )
 HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
-   USHORT uiSize, uiLen;
+   HB_USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    ULONG ulConnection;
@@ -491,7 +491,7 @@ HB_FUNC( __DBOPENSDF )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return;
    }
-   uiLen = ( USHORT ) hb_arrayLen( pStruct );
+   uiLen = ( HB_USHORT ) hb_arrayLen( pStruct );
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
@@ -856,7 +856,7 @@ HB_FUNC( DBTABLEEXT )
    if( !pArea )
    {
       LPRDDNODE pRddNode;
-      USHORT uiRddID;
+      HB_USHORT uiRddID;
       pRddNode = hb_rddFindNode( hb_rddDefaultDrv( NULL ), &uiRddID );
       if( pRddNode )
       {
@@ -932,7 +932,7 @@ HB_FUNC( EOF )
 
 HB_FUNC( FCOUNT )
 {
-   USHORT uiFields = 0;
+   HB_USHORT uiFields = 0;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
@@ -944,7 +944,7 @@ HB_FUNC( FIELDGET )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   USHORT uiField = hb_parni( 1 );
+   HB_USHORT uiField = hb_parni( 1 );
 
    if( pArea && uiField )
    {
@@ -958,7 +958,7 @@ HB_FUNC( FIELDNAME )
 {
    char * szName;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   USHORT uiFields, uiIndex = hb_parni( 1 );
+   HB_USHORT uiFields, uiIndex = hb_parni( 1 );
 
    if( pArea && uiIndex )
    {
@@ -995,7 +995,7 @@ HB_FUNC( FIELDPUT )
 
    if( pArea )
    {
-      USHORT uiIndex = hb_parni( 1 );
+      HB_USHORT uiIndex = hb_parni( 1 );
       if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
@@ -1130,7 +1130,7 @@ HB_FUNC( ORDBAGEXT )
    if( !pArea )
    {
       LPRDDNODE pRddNode;
-      USHORT uiRddID;
+      HB_USHORT uiRddID;
       pRddNode = hb_rddFindNode( hb_rddDefaultDrv( NULL ), &uiRddID );
       if( pRddNode )
       {
@@ -1561,10 +1561,10 @@ HB_FUNC( RDDNAME )
 
 HB_FUNC( RDDREGISTER )
 {
-   USHORT uiLen;
+   HB_USHORT uiLen;
    char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
 
-   uiLen = ( USHORT ) hb_parclen( 1 );
+   uiLen = ( HB_USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
       if( uiLen > HB_RDD_MAX_DRIVERNAME_LEN )
@@ -1694,7 +1694,7 @@ HB_FUNC( ORDSCOPE )
    if( pArea )
    {
       DBORDERINFO pInfo;
-      USHORT uiAction;
+      HB_USHORT uiAction;
       int iScope = hb_parni( 1 );
 
       memset( &pInfo, 0, sizeof( DBORDERINFO ) );
@@ -1734,7 +1734,7 @@ HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
    if( pArea )
    {
       PHB_ITEM pRelExpr = hb_itemPutC( NULL, NULL );
-      USHORT uiRelNo = ( USHORT ) hb_parni( 1 );
+      HB_USHORT uiRelNo = ( HB_USHORT ) hb_parni( 1 );
       SELF_RELTEXT( pArea, uiRelNo ? uiRelNo : 1, pRelExpr );
       hb_itemReturnRelease( pRelExpr );
    }
@@ -1744,7 +1744,7 @@ HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
 
 HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
 {
-   USHORT uiWorkArea = 0;
+   HB_USHORT uiWorkArea = 0;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
@@ -1769,7 +1769,7 @@ HB_FUNC( DBSETRELATION )
    {
       DBRELINFO dbRelations;
       AREAP pChildArea;
-      USHORT uiChildArea;
+      HB_USHORT uiChildArea;
       char * szAlias = NULL;
 
       if( hb_pcount() < 2 || ( !( hb_parinfo( 1 ) & HB_IT_NUMERIC ) && ( hb_parinfo( 1 ) != HB_IT_STRING ) ) || !( HB_ISNIL( 4 ) || HB_ISLOG( 4 ) )  )
@@ -1821,7 +1821,7 @@ HB_FUNC( __DBARRANGE )
 
    if( pArea )
    {
-      USHORT uiNewArea, uiCount, uiDest;
+      HB_USHORT uiNewArea, uiCount, uiDest;
       ULONG ulSize;
       char * szFieldLine, * szPos;
       PHB_ITEM pStruct, pFields;
@@ -1835,7 +1835,7 @@ HB_FUNC( __DBARRANGE )
       pStruct = hb_param( 2 , HB_IT_ARRAY );
       if( pStruct )
       {
-         dbSortInfo.dbtri.uiItemCount = ( USHORT ) hb_arrayLen( pStruct );
+         dbSortInfo.dbtri.uiItemCount = ( HB_USHORT ) hb_arrayLen( pStruct );
          if( dbSortInfo.dbtri.uiItemCount > 0 )
          {
             dbSortInfo.dbtri.lpTransItems = ( LPDBTRANSITEM )
@@ -1882,7 +1882,7 @@ HB_FUNC( __DBARRANGE )
       dbSortInfo.dbtri.dbsci.fIncludeDeleted = HB_TRUE;
 
       pFields = hb_param( 8, HB_IT_ARRAY );
-      dbSortInfo.uiItemCount = pFields ? ( USHORT ) hb_arrayLen( pFields ) : 0;
+      dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
       if( dbSortInfo.uiItemCount > 0 )
       {
          dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
@@ -1949,7 +1949,7 @@ HB_FUNC( __DBTRANS )
 {
    if( HB_ISNUM( 1 ) )
    {
-      USHORT uiSrcArea, uiDstArea;
+      HB_USHORT uiSrcArea, uiDstArea;
       AREAP pSrcArea, pDstArea;
 
       uiSrcArea = hb_rddGetCurrentWorkAreaNumber();
@@ -2069,7 +2069,7 @@ HB_FUNC( __RDDGETTEMPALIAS )
 HB_FUNC( HB_RDDINFO )
 {
    LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
+   HB_USHORT  uiRddID;
    ULONG      ulConnection;
    PHB_ITEM   pIndex, pParam;
    const char * szDriver;
@@ -2100,7 +2100,7 @@ HB_FUNC( HB_RDDINFO )
 HB_FUNC( HB_DBDROP )
 {
    LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
+   HB_USHORT  uiRddID;
    ULONG      ulConnection;
    const char * szDriver;
    PHB_ITEM   pName;
@@ -2125,7 +2125,7 @@ HB_FUNC( HB_DBDROP )
 HB_FUNC( HB_DBEXISTS )
 {
    LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
+   HB_USHORT  uiRddID;
    ULONG      ulConnection;
    const char * szDriver;
    PHB_ITEM   pName;
@@ -2150,7 +2150,7 @@ HB_FUNC( HB_DBEXISTS )
 HB_FUNC( HB_DBRENAME )
 {
    LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
+   HB_USHORT  uiRddID;
    ULONG      ulConnection;
    const char * szDriver;
    PHB_ITEM   pTable, pIndex, pNewName;
@@ -2185,7 +2185,7 @@ HB_FUNC( HB_FIELDLEN )
 
    if( pArea )
    {
-      USHORT uiIndex;
+      HB_USHORT uiIndex;
 
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
@@ -2209,7 +2209,7 @@ HB_FUNC( HB_FIELDDEC )
 
    if( pArea )
    {
-      USHORT uiIndex;
+      HB_USHORT uiIndex;
 
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
@@ -2233,7 +2233,7 @@ HB_FUNC( HB_FIELDTYPE )
 
    if( pArea )
    {
-      USHORT uiIndex;
+      HB_USHORT uiIndex;
 
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {

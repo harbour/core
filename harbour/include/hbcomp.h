@@ -147,14 +147,14 @@ extern void      hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName
 extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
 extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int * piScope );
-extern const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar );   /* returns the name of local variable */
-extern const char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
+extern const char * hb_compLocalVariableName( PFUNCTION pFunc, HB_USHORT wVar );   /* returns the name of local variable */
+extern const char * hb_compStaticVariableName( HB_COMP_DECL, HB_USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   HB_FALSE
 #define HB_SYM_ALIAS    HB_FALSE
 #define HB_SYM_MSGNAME  HB_FALSE
 #define HB_SYM_FUNCNAME HB_TRUE
-extern const char * hb_compSymbolName( HB_COMP_DECL, USHORT );   /* returns a symbol name based on its index on the symbol table */
+extern const char * hb_compSymbolName( HB_COMP_DECL, HB_USHORT );   /* returns a symbol name based on its index on the symbol table */
 
 extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * );
 

@@ -180,16 +180,16 @@ typedef TREE_STACK * LPTREESTACK;
 
 typedef struct _HB_PAGEINFO
 {
-   ULONG    Page;
-   HB_BOOL  Changed;
-   int      iUsed;
-   USHORT   uiKeys;
-   struct  _HB_PAGEINFO * pNext;
-   struct  _HB_PAGEINFO * pPrev;
+   ULONG     Page;
+   HB_BOOL   Changed;
+   int       iUsed;
+   HB_USHORT uiKeys;
+   struct _HB_PAGEINFO * pNext;
+   struct _HB_PAGEINFO * pPrev;
 #ifdef HB_NTX_EXTERNAL_PAGEBUFFER
-   char *   buffer;
+   char *    buffer;
 #else
-   char     buffer[ NTXBLOCKSIZE ];
+   char      buffer[ NTXBLOCKSIZE ];
 #endif
 } HB_PAGEINFO;
 typedef HB_PAGEINFO * LPPAGEINFO;
@@ -198,7 +198,7 @@ typedef struct _HB_NTXSCOPE
 {
    PHB_ITEM   scopeItem;
    LPKEYINFO  scopeKey;
-   USHORT     scopeKeyLen;
+   HB_USHORT  scopeKeyLen;
 } HB_NTXSCOPE;
 typedef HB_NTXSCOPE * PHB_NTXSCOPE;
 
@@ -212,7 +212,7 @@ typedef struct _TAGINFO
    HB_NTXSCOPE top;
    HB_NTXSCOPE bottom;
 
-   USHORT      Signature;
+   HB_USHORT   Signature;
 
    HB_BOOL     fTagName;
    HB_BOOL     fUsrDescend;
@@ -231,15 +231,15 @@ typedef struct _TAGINFO
    HB_BOOL     TagEOF;
    ULONG       HeadBlock;
    ULONG       RootBlock;
-   USHORT      uiNumber;
-   HB_BYTE        KeyType;
-   USHORT      nField;
-   USHORT      KeyLength;
-   USHORT      KeyDec;
-   USHORT      MaxKeys;
+   HB_USHORT   uiNumber;
+   HB_BYTE     KeyType;
+   HB_USHORT   nField;
+   HB_USHORT   KeyLength;
+   HB_USHORT   KeyDec;
+   HB_USHORT   MaxKeys;
    LPTREESTACK stack;
-   USHORT      stackSize;
-   USHORT      stackLevel;
+   HB_USHORT   stackSize;
+   HB_USHORT   stackLevel;
    ULONG       keyCount;
    LPKEYINFO   CurKeyInfo;
    LPKEYINFO   HotKeyInfo;
@@ -271,7 +271,7 @@ typedef struct _NTXINDEX
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
 
-   HB_BYTE *      HeaderBuff;    /* TODO: make it member */
+   HB_BYTE *   HeaderBuff;    /* TODO: make it member */
    HB_BOOL     fValidHeader;
    int         iTags;
    LPTAGINFO * lpTags;
@@ -295,39 +295,39 @@ typedef struct
    ULONG       ulKeys;     /* number of keys in page */
    ULONG       ulKeyBuf;   /* number of keys in memory buffer */
    ULONG       ulCurKey;   /* current key in memory buffer */
-   HB_BYTE *      pKeyPool;   /* memory buffer */
+   HB_BYTE *   pKeyPool;   /* memory buffer */
 } NTXSWAPPAGE;
 typedef NTXSWAPPAGE * LPNTXSWAPPAGE;
 
 typedef struct
 {
-   LPTAGINFO pTag;            /* current Tag */
+   LPTAGINFO  pTag;           /* current Tag */
    HB_FHANDLE hTempFile;      /* handle to temporary file */
-   char *   szTempFileName;   /* temporary file name */
-   int      keyLen;           /* key length */
-   HB_BOOL  fUnique;          /* HB_TRUE if index is unique */
-   HB_BOOL  fReindex;         /* HB_TRUE if reindexing is in process */
-   ULONG    ulMaxRec;         /* the highest record number */
-   ULONG    ulTotKeys;        /* total number of keys indexed */
-   ULONG    ulKeys;           /* keys in curently created page */
-   ULONG    ulPages;          /* number of pages */
-   ULONG    ulCurPage;        /* current page */
-   ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
-   ULONG    ulMaxKey;         /* maximum number of keys in single page */
-   HB_BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
-   HB_BYTE *   pStartKey;        /* begining of key pool after sorting */
+   char *     szTempFileName; /* temporary file name */
+   int        keyLen;         /* key length */
+   HB_BOOL    fUnique;        /* HB_TRUE if index is unique */
+   HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
+   ULONG      ulMaxRec;       /* the highest record number */
+   ULONG      ulTotKeys;      /* total number of keys indexed */
+   ULONG      ulKeys;         /* keys in curently created page */
+   ULONG      ulPages;        /* number of pages */
+   ULONG      ulCurPage;      /* current page */
+   ULONG      ulPgKeys;       /* maximum number of key in page memory buffer */
+   ULONG      ulMaxKey;       /* maximum number of keys in single page */
+   HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
+   HB_BYTE *  pStartKey;      /* begining of key pool after sorting */
    LPNTXSWAPPAGE pSwapPage;   /* list of pages */
    LPPAGEINFO NodeList[ NTX_STACKSIZE ];   /* Stack of pages */
-   ULONG    ulFirst;
-   ULONG *  pSortedPages;
-   HB_BYTE     pLastKey[ NTX_MAX_KEY ]; /* last key val */
-   ULONG    ulLastRec;
+   ULONG      ulFirst;
+   ULONG *    pSortedPages;
+   HB_BYTE    pLastKey[ NTX_MAX_KEY ]; /* last key val */
+   ULONG      ulLastRec;
 
-   HB_BYTE *   pBuffIO;          /* index IO buffer */
-   ULONG    ulSizeIO;         /* size of IO buffer in index pages */
-   ULONG    ulPagesIO;        /* number of index pages in buffer */
-   ULONG    ulFirstIO;        /* first page in buffer */
-   ULONG    ulLastIO;         /* last page in buffer */
+   HB_BYTE *  pBuffIO;        /* index IO buffer */
+   ULONG      ulSizeIO;       /* size of IO buffer in index pages */
+   ULONG      ulPagesIO;      /* number of index pages in buffer */
+   ULONG      ulFirstIO;      /* first page in buffer */
+   ULONG      ulLastIO;       /* last page in buffer */
 } NTXSORTINFO;
 typedef NTXSORTINFO * LPNTXSORTINFO;
 

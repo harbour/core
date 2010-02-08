@@ -67,17 +67,17 @@ HB_FUNC( CRYPT )
 
       HB_BYTE * pbyResult = ( HB_BYTE * ) hb_xgrab( ulStringLen + 1 );
 
-      USHORT uiCount2 =
-         ( ( ( USHORT ) ( pbyCrypt[ ulCryptPos ] + ( USHORT ) ( pbyCrypt[ ulCryptPos + 1 ] * 256 ) ) ) &
-           0xFFFF ) ^ ( ( USHORT ) ulCryptLen & 0xFFFF );
-      USHORT uiCount1 = 0xAAAA;
+      HB_USHORT uiCount2 =
+         ( ( ( HB_USHORT ) ( pbyCrypt[ ulCryptPos ] + ( HB_USHORT ) ( pbyCrypt[ ulCryptPos + 1 ] * 256 ) ) ) &
+           0xFFFF ) ^ ( ( HB_USHORT ) ulCryptLen & 0xFFFF );
+      HB_USHORT uiCount1 = 0xAAAA;
 
       for( ulStringPos = 0; ulStringPos < ulStringLen; )
       {
-         USHORT uiTmpCount1 = uiCount1;
-         USHORT uiTmpCount2 = uiCount2;
+         HB_USHORT uiTmpCount1 = uiCount1;
+         HB_USHORT uiTmpCount2 = uiCount2;
          HB_BYTE byte = pbyString[ ulStringPos ] ^ pbyCrypt[ ulCryptPos++ ];
-         USHORT tmp;
+         HB_USHORT tmp;
 
          uiTmpCount2 =
             HB_MKUSHORT( ( HB_LOBYTE( uiTmpCount2 ) ^ HB_HIBYTE( uiTmpCount2 ) ),

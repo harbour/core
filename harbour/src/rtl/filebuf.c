@@ -314,7 +314,7 @@ static HB_BOOL s_fileAccept( const char * pFilename )
 }
 
 static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
-                               USHORT uiExFlags, const char * pPaths,
+                               HB_USHORT uiExFlags, const char * pPaths,
                                PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -490,7 +490,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       fResult = hb_fileUnlock( pFile, &fLockFS, ulStart, ulLen );
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
-         hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( USHORT ) iType );
+         hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( HB_USHORT ) iType );
       else
          hb_fsSetError( fResult ? 0 : 33 );
    }
@@ -501,7 +501,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
       {
-         fResult = hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( USHORT ) iType );
+         fResult = hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( HB_USHORT ) iType );
          if( !fResult )
          {
             hb_threadEnterCriticalSection( &s_fileMtx );
@@ -645,7 +645,7 @@ HB_BOOL hb_fileRename( const char * pFilename, const char * pszNewName )
 }
 
 PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
-                         USHORT uiExFlags, const char * pPaths,
+                         HB_USHORT uiExFlags, const char * pPaths,
                          PHB_ITEM pError )
 {
    int i = s_iFileTypes;

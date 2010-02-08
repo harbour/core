@@ -80,31 +80,31 @@ typedef struct _DELIMAREA
    *  example.
    */
 
-   PHB_FILE pFile;                  /* Data file handle */
-   char *   szFileName;             /* Name of data file */
-   char *   szEol;                  /* EOL marker */
-   USHORT   uiEolLen;               /* Size of EOL marker */
-   char     cDelim;                 /* Character field delimiter */
-   char     cSeparator;             /* Field separator */
-   USHORT   uiRecordLen;            /* Size of record */
-   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   PHB_FILE    pFile;                  /* Data file handle */
+   char *      szFileName;             /* Name of data file */
+   char *      szEol;                  /* EOL marker */
+   HB_USHORT   uiEolLen;               /* Size of EOL marker */
+   char        cDelim;                 /* Character field delimiter */
+   char        cSeparator;             /* Field separator */
+   HB_USHORT   uiRecordLen;            /* Size of record */
+   HB_USHORT * pFieldOffset;           /* Pointer to field offset array */
    HB_BYTE *   pRecord;                /* Buffer of record data */
    HB_BYTE *   pBuffer;                /* Read/Write */
-   ULONG    ulBufferSize;           /* IO buffer size */
-   ULONG    ulBufferRead;           /* Number of bytes in read buffer */
-   ULONG    ulBufferIndex;          /* Index to read read buffer */
-   HB_FOFFSET ulRecordOffset;       /* Current record offest */
-   HB_FOFFSET ulNextOffset;         /* Next record offest */
-   HB_FOFFSET ulFileSize;           /* File table size in export mode */
-   HB_FOFFSET ulBufferStart;        /* Start offset of read buffer */
-   ULONG    ulRecNo;                /* Current record */
-   ULONG    ulRecCount;             /* Number of records (in export) */
-   HB_BOOL  fTransRec;              /* Can put whole records */
-   HB_BOOL  fFlush;                 /* Data was written to table and not commited */
-   HB_BOOL  fShared;                /* Shared file */
-   HB_BOOL  fReadonly;              /* Read only file */
-   HB_BOOL  fPositioned;            /* Positioned record */
-   HB_BOOL  fRecordChanged;         /* Record changed */
+   ULONG       ulBufferSize;           /* IO buffer size */
+   ULONG       ulBufferRead;           /* Number of bytes in read buffer */
+   ULONG       ulBufferIndex;          /* Index to read read buffer */
+   HB_FOFFSET  ulRecordOffset;         /* Current record offest */
+   HB_FOFFSET  ulNextOffset;           /* Next record offest */
+   HB_FOFFSET  ulFileSize;             /* File table size in export mode */
+   HB_FOFFSET  ulBufferStart;          /* Start offset of read buffer */
+   ULONG       ulRecNo;                /* Current record */
+   ULONG       ulRecCount;             /* Number of records (in export) */
+   HB_BOOL     fTransRec;              /* Can put whole records */
+   HB_BOOL     fFlush;                 /* Data was written to table and not commited */
+   HB_BOOL     fShared;                /* Shared file */
+   HB_BOOL     fReadonly;              /* Read only file */
+   HB_BOOL     fPositioned;            /* Positioned record */
+   HB_BOOL     fRecordChanged;         /* Record changed */
 } DELIMAREA;
 
 typedef DELIMAREA * LPDELIMAREA;

@@ -409,7 +409,7 @@ void hb_vmLock( void ) {}
 
 void hb_vmUnlock( void ) {}
 
-void hb_fsSetIOError( HB_BOOL fResult, USHORT uiOperation )
+void hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
 {
    HB_SYMBOL_UNUSED( fResult );
    HB_SYMBOL_UNUSED( uiOperation );

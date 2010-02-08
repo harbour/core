@@ -61,8 +61,8 @@
 HB_EXTERN_BEGIN
 
 typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS )
-                        ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
-                          const char * szModuleName, ULONG ulID, USHORT uiPcodeVer );
+                        ( PHB_SYMB pModuleSymbols, HB_USHORT uiModuleSymbols,
+                          const char * szModuleName, ULONG ulID, HB_USHORT uiPcodeVer );
 
 typedef void ( * VM_EXECUTE ) ( const HB_BYTE * pCode, PHB_SYMB pSymbols );
 

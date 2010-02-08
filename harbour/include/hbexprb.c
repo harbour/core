@@ -578,7 +578,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
 
       case HB_EA_PUSH_PCODE:
       {
-         USHORT usItems = ( USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf );
+         HB_USHORT usItems = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf );
 
          if( usItems == 0 )
          {
@@ -673,7 +673,7 @@ static HB_EXPR_FUNC( hb_compExprUseHash )
 
       case HB_EA_PUSH_PCODE:
       {
-         USHORT usItems = ( USHORT ) ( pSelf->ulLength >> 1 );
+         HB_USHORT usItems = ( HB_USHORT ) ( pSelf->ulLength >> 1 );
          /* Note: direct type change */
          pSelf->ExprType = HB_ET_ARGLIST;
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
@@ -1219,7 +1219,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
-            USHORT usItems = 0;
+            HB_USHORT usItems = 0;
 
             while( pExpr )
             {
@@ -1718,7 +1718,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          {
             HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
             HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-            USHORT usCount = ( USHORT ) hb_compExprParamListLen( pParms );
+            HB_USHORT usCount = ( HB_USHORT ) hb_compExprParamListLen( pParms );
 
 #ifndef HB_MACRO_SUPPORT
             if( hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount ) )
@@ -2086,7 +2086,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
       case HB_EA_PUSH_PCODE:
       {
          HB_BOOL fArgsList = HB_FALSE;
-         USHORT usCount = 0;
+         HB_USHORT usCount = 0;
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
@@ -2103,7 +2103,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
           */
          if( pSelf->value.asFunCall.pParms )
          {
-            usCount = ( USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
+            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
             fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
             if( usCount )
                HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
@@ -2128,7 +2128,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
       case HB_EA_STATEMENT:
       {
          HB_BOOL fArgsList = HB_FALSE;
-         USHORT usCount = 0;
+         HB_USHORT usCount = 0;
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
@@ -2142,7 +2142,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
          if( pSelf->value.asFunCall.pParms )
          {
-            usCount = ( USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
+            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
             fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
             if( usCount )
                HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
@@ -4680,7 +4680,7 @@ static void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, HB_BYTE bOpEq, HB_COMP_DEC
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
-         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          if( usType == HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
@@ -4831,7 +4831,7 @@ static void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, HB_BYTE bOpEq, HB_COMP_DECL
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
-         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          if( usType == HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
@@ -4947,7 +4947,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
           pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
       {
-         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -5054,7 +5054,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DEC
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
           pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
       {
-         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -5163,7 +5163,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL 
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
           pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
       {
-         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );

@@ -192,7 +192,7 @@ static void do_charone( int iSwitch )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+         pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_CHARONE_CHARONE ?
                                   CT_ERROR_CHARONE : CT_ERROR_WORDONE,
                                   NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,

@@ -90,7 +90,7 @@ HB_SYM_HOLDER, * PHB_SYM_HOLDER;
 
 
 static PDYNHB_ITEM s_pDynItems = NULL;    /* Pointer to dynamic items */
-static USHORT      s_uiDynSymbols = 0;    /* Number of symbols present */
+static HB_USHORT   s_uiDynSymbols = 0;    /* Number of symbols present */
 
 static PHB_SYM_HOLDER s_pAllocSyms = NULL;/* symbols allocated dynamically */
 
@@ -497,7 +497,7 @@ void hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymSetAreaHandle(%p,%d)", pDynSym, iArea));
 
-   hb_dynsymHandles( pDynSym )->uiArea = ( USHORT ) iArea;
+   hb_dynsymHandles( pDynSym )->uiArea = ( HB_USHORT ) iArea;
 }
 
 static PHB_DYNS hb_dynsymGetByIndex( long lIndex )
@@ -524,7 +524,7 @@ long hb_dynsymCount( void )
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    PHB_DYNS pDynSym = NULL;
-   USHORT uiPos = 0;
+   HB_USHORT uiPos = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymEval(%p, %p)", pFunction, Cargo));
 
@@ -558,7 +558,7 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 
 void hb_dynsymProtectEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
-   USHORT uiPos = 0;
+   HB_USHORT uiPos = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymProtectEval(%p, %p)", pFunction, Cargo));
 

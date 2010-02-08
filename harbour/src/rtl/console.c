@@ -366,13 +366,13 @@ HB_FUNC( QOUT )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
             memset( pBuf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, pBuf, ( USHORT ) pPrnPos->col );
+            hb_fsWrite( hFile, pBuf, ( HB_USHORT ) pPrnPos->col );
             hb_xfree( pBuf );
          }
          else
          {
             memset( buf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, buf, ( USHORT ) pPrnPos->col );
+            hb_fsWrite( hFile, buf, ( HB_USHORT ) pPrnPos->col );
          }
       }
    }
@@ -443,7 +443,7 @@ static void hb_conDevPos( int iRow, int iCol )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
-                  hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
+                  hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
                   iPtr = 0;
                }
                memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
@@ -462,7 +462,7 @@ static void hb_conDevPos( int iRow, int iCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
-               hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
+               hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
                iPtr = 0;
             }
             buf[ iPtr++ ] = ' ';
@@ -470,7 +470,7 @@ static void hb_conDevPos( int iRow, int iCol )
          }
 
          if( iPtr )
-            hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
+            hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
       }
    }
    else

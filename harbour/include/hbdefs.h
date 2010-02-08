@@ -736,7 +736,7 @@ typedef HB_U32 HB_FATTR;
 #define HB_LOWORD( l )          ( ( HB_U16 ) ( l ) )
 #define HB_HIWORD( l )          ( ( HB_U16 ) ( ( ( l ) >> 16 ) & 0xFFFF ) )
 #define HB_MKSHORT( lo, hi )    ( ( HB_SHORT ) ( ( ( HB_I16 ) ( hi ) ) << 8 ) | ( lo ) )
-#define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( HB_U16 ) ( hi ) ) << 8 ) | ( lo ) )
+#define HB_MKUSHORT( lo, hi )   ( ( HB_USHORT ) ( ( ( HB_U16 ) ( hi ) ) << 8 ) | ( lo ) )
 #define HB_MKLONG( b1, b2, b3, b4 )  ( ( LONG ) \
                                        ( ( ( ( HB_I32 ) ( b4 ) ) << 24 ) | \
                                          ( ( ( HB_I32 ) ( b3 ) ) << 16 ) | \
@@ -1447,7 +1447,7 @@ typedef HB_U32 HB_FATTR;
 #define HB_GET_LE_INT64( p )        (( HB_I64 ) HB_GET_LE_UINT64( p ))
 
 #define HB_PCODE_MKSHORT( p )       (( HB_SHORT )     HB_GET_LE_INT16( p ))
-#define HB_PCODE_MKUSHORT( p )      (( USHORT )       HB_GET_LE_UINT16( p ))
+#define HB_PCODE_MKUSHORT( p )      (( HB_USHORT )    HB_GET_LE_UINT16( p ))
 #define HB_PCODE_MKLONG( p )        (( LONG )         HB_GET_LE_INT32( p ))
 #define HB_PCODE_MKULONG( p )       (( ULONG )        HB_GET_LE_UINT32( p ))
 #define HB_PCODE_MKLONGLONG( p )    (( HB_LONGLONG )  HB_GET_LE_INT64( p ))

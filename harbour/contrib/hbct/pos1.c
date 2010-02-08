@@ -175,7 +175,7 @@ static void do_pos1( int iSwitch )
                iError = CT_ERROR_POSUPPER;
                break;
          }
-         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, iError,
+         pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG, iError,
                                   NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }

@@ -619,7 +619,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
 
 static HB_OPT_FUNC( hb_p_switch )
 {
-   USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
+   HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
    ULONG ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
@@ -1169,7 +1169,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHBLOCKLARGE:
          {
             HB_BYTE * pCode = &pFunc->pCode[ ulPos + 5 ];
-            USHORT usVarCount, usVar;
+            HB_USHORT usVarCount, usVar;
 
             if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
                pCode++;
@@ -1298,7 +1298,7 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, HB_BYT
       }
       else if( pFunc->pCode[ ulPos ] == HB_P_SWITCH ) /* Switch is multiplace jump */
       {
-         USHORT us, usCount = HB_PCODE_MKUSHORT( pFunc->pCode + ulPos + 1 );
+         HB_USHORT us, usCount = HB_PCODE_MKUSHORT( pFunc->pCode + ulPos + 1 );
 
          ulPos += 3;
          for( us = 0; us < usCount; us++ )
@@ -1326,7 +1326,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
    HB_BYTE * pMap;
    ULONG     ulPos = 0, ulLastPos = 0;
    HB_SHORT  isLocal;
-   USHORT    usLine = 0;
+   HB_USHORT usLine = 0;
 
    pMap = ( HB_BYTE * ) hb_xgrab( pFunc->lPCodePos );
 
@@ -1506,7 +1506,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHBLOCKLARGE:
          {
             HB_BYTE * pVar = &pFunc->pCode[ ulPos + 5 ];
-            USHORT usVarCount, isVar;
+            HB_USHORT usVarCount, isVar;
 
             if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
                pVar++;
@@ -1540,7 +1540,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    PFUNCTION       pFunc = HB_COMP_PARAM->functions.pLast;
    PHB_OPT_LOCAL   pLocals;
    PVAR            pVar, * ppVar;
-   USHORT          usLocalCount, usIndex;
+   HB_USHORT       usLocalCount, usIndex;
    HB_BOOL         fBool;
 
    /* Many (perhaps ALL) functions of pcode trace optimization dependes on pcodes.

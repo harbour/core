@@ -390,10 +390,10 @@ typedef struct _HB_PP_TOKEN
    struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
 
    const char * value;              /* token value */
-   USHORT len;                      /* token value length */
-   USHORT spaces;                   /* leading spaces for stringify */
-   USHORT type;                     /* token type, see HB_PP_TOKEN_* */
-   USHORT index;                    /* index to match marker or 0 */
+   HB_USHORT len;                   /* token value length */
+   HB_USHORT spaces;                /* leading spaces for stringify */
+   HB_USHORT type;                  /* token type, see HB_PP_TOKEN_* */
+   HB_USHORT index;                 /* index to match marker or 0 */
 }
 HB_PP_TOKEN, * PHB_PP_TOKEN;
 
@@ -473,7 +473,7 @@ typedef struct _HB_PP_MARKERPTR
    struct _HB_PP_MARKERPTR * pNext;
    PHB_PP_TOKEN   pToken;
    PHB_PP_TOKEN   pMTokens;
-   USHORT         type;
+   HB_USHORT      type;
 }
 HB_PP_MARKERPTR, * PHB_PP_MARKERPTR;
 
@@ -481,16 +481,16 @@ typedef struct _HB_PP_MARKERLST
 {
    struct _HB_PP_MARKERLST * pNext;
    PHB_PP_MARKERPTR  pMatchMarkers;
-   USHORT            canrepeat;
-   USHORT            index;
+   HB_USHORT         canrepeat;
+   HB_USHORT         index;
 }
 HB_PP_MARKERLST, * PHB_PP_MARKERLST;
 
 typedef struct
 {
-   USHORT   canrepeat;
+   HB_USHORT canrepeat;
    /* filled when pattern matches for substitution, cleared after */
-   USHORT   matches;
+   HB_USHORT matches;
    PHB_PP_RESULT  pResult;
 }
 HB_PP_MARKER, * PHB_PP_MARKER;
@@ -500,8 +500,8 @@ typedef struct _HB_PP_RULE
    struct _HB_PP_RULE * pPrev;      /* previous rule */
    PHB_PP_TOKEN   pMatch;           /* match patern or NULL */
    PHB_PP_TOKEN   pResult;          /* result patern or NULL */
-   USHORT         mode;             /* comparison mode HB_PP_CMP_* */
-   USHORT         markers;          /* number of markers in marker table */
+   HB_USHORT      mode;             /* comparison mode HB_PP_CMP_* */
+   HB_USHORT      markers;          /* number of markers in marker table */
    /* filled when pattern matches for substitution, cleared after */
    PHB_PP_MARKER  pMarkers;         /* marker table */
    PHB_PP_TOKEN   pNextExpr;        /* next expression after match pattern */
@@ -512,8 +512,8 @@ typedef struct _HB_PP_DEFRULE
 {
    PHB_PP_TOKEN   pMatch;
    PHB_PP_TOKEN   pResult;
-   USHORT         mode;
-   USHORT         markers;
+   HB_USHORT      mode;
+   HB_USHORT      markers;
    ULONG          repeatbits;
 }
 HB_PP_DEFRULE, * PHB_PP_DEFRULE;
@@ -523,7 +523,7 @@ typedef struct
    const char *   name;       /* input name */
    ULONG          len;        /* input name length */
    const char *   value;      /* output name */
-   USHORT         type;       /* HB_PP_TOKEN_* */
+   HB_USHORT      type;       /* HB_PP_TOKEN_* */
 }
 HB_PP_OPERATOR, * PHB_PP_OPERATOR;
 
@@ -557,78 +557,78 @@ HB_PP_FILE, * PHB_PP_FILE;
 typedef struct
 {
    /* common for all included files */
-   PHB_PP_OPERATOR pOperators;     /* user defined operators */
-   PHB_PP_RULE    pDefinitions;    /* #define table */
-   PHB_PP_RULE    pTranslations;   /* #[x]translate table */
-   PHB_PP_RULE    pCommands;       /* #[x]command table */
-   int            iOperators;      /* number of user defined operators */
-   int            iDefinitions;    /* number of rules in pDefinitions */
-   int            iTranslations;   /* number of rules in pTranslations */
-   int            iCommands;       /* number of rules in pCommands */
+   PHB_PP_OPERATOR pOperators;      /* user defined operators */
+   PHB_PP_RULE    pDefinitions;     /* #define table */
+   PHB_PP_RULE    pTranslations;    /* #[x]translate table */
+   PHB_PP_RULE    pCommands;        /* #[x]command table */
+   int            iOperators;       /* number of user defined operators */
+   int            iDefinitions;     /* number of rules in pDefinitions */
+   int            iTranslations;    /* number of rules in pTranslations */
+   int            iCommands;        /* number of rules in pCommands */
    HB_BYTE        pMap[ HB_PP_HASHID_MAX ]; /* translation map */
 
-   PHB_PP_TOKEN   pTokenOut;       /* preprocessed tokens */
-   PHB_PP_TOKEN * pNextTokenPtr;   /* pointer to the last NULL pointer in token list */
+   PHB_PP_TOKEN   pTokenOut;        /* preprocessed tokens */
+   PHB_PP_TOKEN * pNextTokenPtr;    /* pointer to the last NULL pointer in token list */
 
-   PHB_MEM_BUFFER pDumpBuffer;     /* buffer for dump output */
-   PHB_MEM_BUFFER pOutputBuffer;   /* buffer for preprocessed line */
+   PHB_MEM_BUFFER pDumpBuffer;      /* buffer for dump output */
+   PHB_MEM_BUFFER pOutputBuffer;    /* buffer for preprocessed line */
 
-   int      iLineTot;              /* total number of parsed lines */
-   int      iCycle;                /* translation counter */
-   int      iMaxCycles;            /* maximum number of translations */
-   int      iHideStrings;          /* hidden string mode */
-   HB_BOOL  fTracePragmas;         /* display information about set pragmas */
-   HB_BOOL  fWritePreprocesed;     /* write preprocessed data to file (.ppo) */
-   HB_BOOL  fWriteTrace;           /* write translation to file (.ppt) */
+   int      iLineTot;               /* total number of parsed lines */
+   int      iCycle;                 /* translation counter */
+   int      iMaxCycles;             /* maximum number of translations */
+   int      iHideStrings;           /* hidden string mode */
+   HB_BOOL  fTracePragmas;          /* display information about set pragmas */
+   HB_BOOL  fWritePreprocesed;      /* write preprocessed data to file (.ppo) */
+   HB_BOOL  fWriteTrace;            /* write translation to file (.ppt) */
 
-   HB_PATHNAMES * pIncludePath;    /* search path(s) for included files */
+   HB_PATHNAMES * pIncludePath;     /* search path(s) for included files */
 
-   char *   szOutFileName;         /* output file name */
-   FILE *   file_out;              /* output file handle */
-   char *   szTraceFileName;       /* trace output file name */
-   FILE *   file_trace;            /* trace output file handle */
+   char *   szOutFileName;          /* output file name */
+   FILE *   file_out;               /* output file handle */
+   char *   szTraceFileName;        /* trace output file name */
+   FILE *   file_trace;             /* trace output file handle */
 
-   HB_BOOL  fQuiet;                /* do not show standard information */
-   HB_BOOL  fEscStr;               /* use \ in strings as escape character */
-   HB_BOOL  fError;                /* indicates error in last operation */
-   int      iErrors;               /* number of error during preprocessing */
-   int      iCondCompile;          /* current conditional compilation flag, when not 0 disable preprocessing and output */
-   int      iCondCount;            /* number of nested #if[n]def directive */
-   int      iCondStackSize;        /* size of conditional compilation stack */
-   int *    pCondStack;            /* conditional compilation stack */
+   HB_BOOL   fQuiet;                /* do not show standard information */
+   HB_BOOL   fEscStr;               /* use \ in strings as escape character */
+   HB_BOOL   fError;                /* indicates error in last operation */
+   int       iErrors;               /* number of error during preprocessing */
+   int       iCondCompile;          /* current conditional compilation flag, when not 0 disable preprocessing and output */
+   int       iCondCount;            /* number of nested #if[n]def directive */
+   int       iCondStackSize;        /* size of conditional compilation stack */
+   int *     pCondStack;            /* conditional compilation stack */
 
    /* used to divide line per tokens and tokens manipulations */
-   PHB_MEM_BUFFER pBuffer;         /* buffer for input and output line */
-   int      iSpaces;               /* leading spaces for next token */
-   int      iSpacesNL;             /* leading spaces ';' token (fCanNextLine) if it will not be line concatenator */
-   int      iSpacesMin;            /* minimal number of leading spaces for next token */
-   USHORT   usLastType;            /* last token type */
-   HB_BOOL  fCanNextLine;          /* ';' token found and we do not know yet if it's command separator or line concatenator */
-   HB_BOOL  fDirective;            /* # directives is parsed */
-   HB_BOOL  fNewStatement;         /* set to HB_TRUE at line begining or after each ';' token */
-   PHB_PP_TOKEN   pFuncOut;        /* function used for each line in HB_PP_STREAM_* dumping */
-   PHB_PP_TOKEN   pFuncEnd;        /* end function for HB_PP_STREAM_* dumping */
-   PHB_MEM_BUFFER pStreamBuffer;   /* buffer for stream output */
-   int      iStreamDump;           /* stream output, see HB_PP_STREAM_* */
-   int      iDumpLine;             /* line where current dump output begins */
-   int      iInLineCount;          /* number of hb_inLine() functions */
-   int      iInLineState;          /* hb_inLine() state */
-   int      iInLineBraces;         /* braces counter for hb_inLine() */
-   int      iNestedBlock;          /* nested extended block counter */
-   int      iBlockState;           /* state of extended block declaration */
+   PHB_MEM_BUFFER pBuffer;          /* buffer for input and output line */
+   int       iSpaces;               /* leading spaces for next token */
+   int       iSpacesNL;             /* leading spaces ';' token (fCanNextLine) if it will not be line concatenator */
+   int       iSpacesMin;            /* minimal number of leading spaces for next token */
+   HB_USHORT usLastType;            /* last token type */
+   HB_BOOL   fCanNextLine;          /* ';' token found and we do not know yet if it's command separator or line concatenator */
+   HB_BOOL   fDirective;            /* # directives is parsed */
+   HB_BOOL   fNewStatement;         /* set to HB_TRUE at line begining or after each ';' token */
+   PHB_PP_TOKEN   pFuncOut;         /* function used for each line in HB_PP_STREAM_* dumping */
+   PHB_PP_TOKEN   pFuncEnd;         /* end function for HB_PP_STREAM_* dumping */
+   PHB_MEM_BUFFER pStreamBuffer;    /* buffer for stream output */
+   int       iStreamDump;           /* stream output, see HB_PP_STREAM_* */
+   int       iDumpLine;             /* line where current dump output begins */
+   int       iInLineCount;          /* number of hb_inLine() functions */
+   int       iInLineState;          /* hb_inLine() state */
+   int       iInLineBraces;         /* braces counter for hb_inLine() */
+   int       iNestedBlock;          /* nested extended block counter */
+   int       iBlockState;           /* state of extended block declaration */
 
-   PHB_PP_FILE pFile;              /* currently preprocessed file structure */
-   int      iFiles;                /* number of open files */
+   PHB_PP_FILE pFile;               /* currently preprocessed file structure */
+   int       iFiles;                /* number of open files */
 
-   void *   cargo;                 /* parameter passed to user functions */
-   PHB_PP_OPEN_FUNC   pOpenFunc;   /* function to open files */
-   PHB_PP_CLOSE_FUNC  pCloseFunc;  /* function to close files */
-   PHB_PP_ERROR_FUNC  pErrorFunc;  /* function to generate errors */
-   PHB_PP_DISP_FUNC   pDispFunc;   /* function to redirect stdout messages */
-   PHB_PP_DUMP_FUNC   pDumpFunc;   /* function for catching #pragma dump data */
-   PHB_PP_INC_FUNC    pIncFunc;    /* function to register included files */
-   PHB_PP_INLINE_FUNC pInLineFunc; /* function for hb_inLine(...) {...} blocks */
-   PHB_PP_SWITCH_FUNC pSwitchFunc; /* function for compiler switches with #pragma ... */
+   void *   cargo;                  /* parameter passed to user functions */
+   PHB_PP_OPEN_FUNC   pOpenFunc;    /* function to open files */
+   PHB_PP_CLOSE_FUNC  pCloseFunc;   /* function to close files */
+   PHB_PP_ERROR_FUNC  pErrorFunc;   /* function to generate errors */
+   PHB_PP_DISP_FUNC   pDispFunc;    /* function to redirect stdout messages */
+   PHB_PP_DUMP_FUNC   pDumpFunc;    /* function for catching #pragma dump data */
+   PHB_PP_INC_FUNC    pIncFunc;     /* function to register included files */
+   PHB_PP_INLINE_FUNC pInLineFunc;  /* function for hb_inLine(...) {...} blocks */
+   PHB_PP_SWITCH_FUNC pSwitchFunc;  /* function for compiler switches with #pragma ... */
 }
 HB_PP_STATE, * PHB_PP_STATE;
 

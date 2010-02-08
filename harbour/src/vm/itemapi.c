@@ -106,7 +106,7 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
    return hb_gcGripGet( pNull );
 }
 
-PHB_ITEM hb_itemParam( USHORT uiParam )
+PHB_ITEM hb_itemParam( HB_USHORT uiParam )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParam(%hu)", uiParam));
 
@@ -115,14 +115,14 @@ PHB_ITEM hb_itemParam( USHORT uiParam )
 
 /* Internal Item API. Use this with care. */
 
-PHB_ITEM hb_itemParamPtr( USHORT uiParam, long lMask )
+PHB_ITEM hb_itemParamPtr( HB_USHORT uiParam, long lMask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParamPtr(%hu, %ld)", uiParam, lMask));
 
    return hb_param( ( int ) uiParam, lMask );
 }
 
-HB_BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
+HB_BOOL hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStore(%hu, %p)", uiParam, pItem));
 
@@ -136,7 +136,7 @@ HB_BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
    return HB_FALSE;
 }
 
-HB_BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
+HB_BOOL hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStoreForward(%hu, %p)", uiParam, pItem));
 
@@ -150,13 +150,13 @@ HB_BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
    return HB_FALSE;
 }
 
-USHORT hb_itemPCount( void )
+HB_USHORT hb_itemPCount( void )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPCount()"));
 
-   return ( USHORT ) hb_pcount();
+   return ( HB_USHORT ) hb_pcount();
 }
 
 HB_BOOL hb_itemRelease( PHB_ITEM pItem )
@@ -921,7 +921,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
-   pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
+   pItem->item.asDouble.decimal = ( HB_USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
@@ -1085,8 +1085,8 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    }
 
    pItem->type = HB_IT_DOUBLE;
-   pItem->item.asDouble.length = ( USHORT ) iWidth;
-   pItem->item.asDouble.decimal = ( USHORT ) iDec;
+   pItem->item.asDouble.length = ( HB_USHORT ) iWidth;
+   pItem->item.asDouble.decimal = ( HB_USHORT ) iDec;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
@@ -1110,11 +1110,11 @@ PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
    if( iDec == HB_DEFAULT_DECIMALS )
    {
       HB_STACK_TLS_PRELOAD
-      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    }
    else
    {
-      pItem->item.asDouble.decimal = ( USHORT ) iDec;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) iDec;
    }
 
    pItem->item.asDouble.value = dNumber;
@@ -1163,7 +1163,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
       iWidth = HB_INT_LENGTH( iNumber );
 
    pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.length = ( USHORT ) iWidth;
+   pItem->item.asInteger.length = ( HB_USHORT ) iWidth;
    pItem->item.asInteger.value = iNumber;
 
    return pItem;
@@ -1187,7 +1187,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 
    pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.value = ( int ) lNumber;
-   pItem->item.asInteger.length = ( USHORT ) iWidth;
+   pItem->item.asInteger.length = ( HB_USHORT ) iWidth;
 #else
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = HB_LONG_LENGTH( lNumber );
@@ -1219,7 +1219,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
-   pItem->item.asLong.length = ( USHORT ) iWidth;
+   pItem->item.asLong.length = ( HB_USHORT ) iWidth;
 #else
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.value = ( double ) llNumber;

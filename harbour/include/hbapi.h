@@ -270,13 +270,13 @@ struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
 {
-   LONG     lBaseItem;        /* stack base offset of previous func/proc */
-   ULONG    ulPrivateBase;    /* memvars base offset of previous func/proc */
-   void *   pStatics;         /* statics frame of previous func/proc */
-   USHORT   uiClass;          /* class when message is sent */
-   USHORT   uiMethod;         /* number of class method */
-   USHORT   uiLineNo;         /* current line number */
-   USHORT   fDebugging;       /* debugger active */
+   LONG      lBaseItem;        /* stack base offset of previous func/proc */
+   ULONG     ulPrivateBase;    /* memvars base offset of previous func/proc */
+   void *    pStatics;         /* statics frame of previous func/proc */
+   HB_USHORT uiClass;          /* class when message is sent */
+   HB_USHORT uiMethod;         /* number of class method */
+   HB_USHORT uiLineNo;         /* current line number */
+   HB_USHORT fDebugging;       /* debugger active */
 } HB_STACK_STATE, * PHB_STACK_STATE; /* used to save/restore stack state in hb_vmDo)_ */
 
 
@@ -294,10 +294,10 @@ struct hb_struHash
 struct hb_struBlock
 {
    struct _HB_CODEBLOCK * value;
-   USHORT paramcnt;
-   USHORT lineno;
-   USHORT hclass;
-   USHORT method;
+   HB_USHORT paramcnt;
+   HB_USHORT lineno;
+   HB_USHORT hclass;
+   HB_USHORT method;
 };
 
 struct hb_struPointer
@@ -316,20 +316,20 @@ struct hb_struDateTime
 struct hb_struDouble
 {
    double value;
-   USHORT length;
-   USHORT decimal;
+   HB_USHORT length;
+   HB_USHORT decimal;
 };
 
 struct hb_struInteger
 {
-   int    value;
-   USHORT length;
+   int value;
+   HB_USHORT length;
 };
 
 struct hb_struLong
 {
    HB_MAXINT value;
-   USHORT length;
+   HB_USHORT length;
 };
 
 struct hb_struLogical
@@ -378,16 +378,16 @@ struct hb_struSymbol
 {
    PHB_SYMB        value;
    PHB_STACK_STATE stackstate;      /* function stack state */
-   USHORT          paramcnt;        /* number of passed parameters in function call */
-   USHORT          paramdeclcnt;    /* number of declared parameters in function definition */
+   HB_USHORT       paramcnt;        /* number of passed parameters in function call */
+   HB_USHORT       paramdeclcnt;    /* number of declared parameters in function definition */
 };
 
 struct hb_struRecover
 {
    const HB_BYTE * recover;    /* address of recover code */
    ULONG           base;       /* previous recover base */
-   USHORT          flags;      /* previous recovery state and recover type */
-   USHORT          request;    /* requested action */
+   HB_USHORT       flags;      /* previous recovery state and recover type */
+   HB_USHORT       request;    /* requested action */
 };
 
 /* items hold at the virtual machine stack */
@@ -421,8 +421,8 @@ typedef struct _HB_BASEARRAY
    PHB_ITEM    pItems;       /* pointer to the array items */
    HB_SIZE     ulLen;        /* number of items in the array */
    HB_SIZE     ulAllocated;  /* number of allocated items */
-   USHORT      uiClass;      /* offset to the classes base if it is an object */
-   USHORT      uiPrevCls;    /* for fixing after access super */
+   HB_USHORT   uiClass;      /* offset to the classes base if it is an object */
+   HB_USHORT   uiPrevCls;    /* for fixing after access super */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
 #ifndef _HB_HASH_INTERNAL_
@@ -441,7 +441,7 @@ typedef struct _HB_CODEBLOCK
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    PHB_ITEM    pLocals;      /* table with referenced local variables */
    void *      pStatics;     /* STATICs base frame */
-   USHORT      uiLocals;     /* number of referenced local variables */
+   HB_USHORT   uiLocals;     /* number of referenced local variables */
    HB_SHORT    dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
@@ -550,9 +550,9 @@ extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen );
 /* virtual memory */
 typedef unsigned long HB_VMHANDLE;
 
-extern HB_EXPORT HB_VMHANDLE hb_xvalloc( HB_SIZE nSize, USHORT nFlags );
+extern HB_EXPORT HB_VMHANDLE hb_xvalloc( HB_SIZE nSize, HB_USHORT nFlags );
 extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, HB_SIZE nSize, USHORT nFlags );
+extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, HB_SIZE nSize, HB_USHORT nFlags );
 extern HB_EXPORT void *      hb_xvlock( HB_VMHANDLE h );
 extern HB_EXPORT void        hb_xvunlock( HB_VMHANDLE h );
 extern HB_EXPORT void *      hb_xvwire( HB_VMHANDLE h );
@@ -846,7 +846,7 @@ extern HB_EXPORT HB_BOOL      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArr
 extern HB_EXPORT PHB_ITEM     hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
 extern HB_EXPORT PHB_ITEM     hb_arrayCloneTo( PHB_ITEM pDest, PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
 extern HB_EXPORT HB_BOOL      hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
-extern HB_EXPORT PHB_ITEM     hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
+extern HB_EXPORT PHB_ITEM     hb_arrayFromStack( HB_USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
 extern HB_EXPORT PHB_ITEM     hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
 extern HB_EXPORT PHB_ITEM     hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
@@ -1032,7 +1032,7 @@ extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevI
 
 /* Codeblock management */
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
+extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, HB_USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen );
 extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
 extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos ); /* get local variable passed by reference */
@@ -1082,7 +1082,7 @@ extern char *       hb_compDecodeString( int iMethod, const char * szText, HB_SI
 
 /* misc */
 extern char *   hb_procname( int iLevel, char * szName, HB_BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
-extern HB_BOOL  hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile );
+extern HB_BOOL  hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile );
 
 /* macro compiler */
 #if defined( HB_MACRO_SUPPORT )

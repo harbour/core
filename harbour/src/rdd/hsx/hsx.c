@@ -308,7 +308,7 @@ typedef struct _HSXINFO
 {
    int        iHandle;          /* HSX handle */
    ULONG      ulRecCount;       /* number of records */
-   USHORT     uiRecordSize;     /* record size in bytes */
+   HB_USHORT  uiRecordSize;     /* record size in bytes */
    HB_BOOL    fIgnoreCase;      /* ignore case */
    int        iFilterType;      /* character filter */
    HB_BOOL    fUseHash;         /* use Hash functions for alphas */
@@ -658,7 +658,7 @@ static int hb_hsxHdrFlush( int iHandle )
    {
       HB_BYTE headrBuf[ HSXHEADER_LEN ];
       LPHSXHEADER pHeader = ( LPHSXHEADER ) ( void * ) headrBuf;
-      USHORT uiBits = 0, uiSize = pHSX->uiRecordSize;
+      HB_USHORT uiBits = 0, uiSize = pHSX->uiRecordSize;
 
       while( uiSize >>= 1 )
          uiBits++;
@@ -1383,7 +1383,7 @@ static int hb_hsxCreate( const char * szFile, int iBufSize, int iKeySize,
    const char * szExpr = NULL;
    PHB_ITEM pKeyExpr = NULL;
    ULONG ulBufSize;
-   USHORT uiRecordSize;
+   HB_USHORT uiRecordSize;
    LPHSXINFO pHSX;
    PHB_FILE pFile;
    int iRetVal;
@@ -1405,7 +1405,7 @@ static int hb_hsxCreate( const char * szFile, int iBufSize, int iKeySize,
       ulBufSize = HSXMINBUF_LEN;
    else if( ulBufSize > HSXMAXBUF_LEN )
       ulBufSize = HSXMAXBUF_LEN;
-   uiRecordSize = ( USHORT ) 0x08 << iKeySize;
+   uiRecordSize = ( HB_USHORT ) 0x08 << iKeySize;
    ulBufSize /= uiRecordSize;
    if( ulBufSize == 0 )
       ulBufSize = 1;
@@ -1472,7 +1472,7 @@ static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
    HB_BOOL fShared, fReadonly;
    PHB_FILE pFile;
    ULONG ulBufSize;
-   USHORT uiFlags;
+   HB_USHORT uiFlags;
    LPHSXINFO pHSX;
    int iRetVal, iRet;
 

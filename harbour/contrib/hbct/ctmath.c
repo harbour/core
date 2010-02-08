@@ -129,7 +129,7 @@ HB_FUNC( SETPREC )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETPREC, NULL,
+         ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETPREC, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
    }
    hb_retc_null();
@@ -173,7 +173,7 @@ HB_FUNC( GETPREC )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_GETPREC, NULL,
+         ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_GETPREC, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
    }
 }

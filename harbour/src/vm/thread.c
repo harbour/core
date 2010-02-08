@@ -964,9 +964,9 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
       pThread->pParams = NULL;
 
       if( fSend )
-         hb_vmSend( ( USHORT ) ( ulPCount - 1 ) );
+         hb_vmSend( ( HB_USHORT ) ( ulPCount - 1 ) );
       else
-         hb_vmProc( ( USHORT ) ( ulPCount - 1 ) );
+         hb_vmProc( ( HB_USHORT ) ( ulPCount - 1 ) );
    }
    else
    {

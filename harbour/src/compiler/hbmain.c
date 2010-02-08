@@ -263,7 +263,7 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
 /* ------------------------------------------------------------------------- */
 
 
-static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, USHORT * pwPos, HB_BOOL bFunction )
+static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
 {
    PCOMSYMBOL pSym;
 
@@ -293,10 +293,10 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, USH
    return pSym;
 }
 
-static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, USHORT * pwPos, HB_BOOL bFunction )
+static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
 {
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
-   USHORT wCnt = 0;
+   HB_USHORT wCnt = 0;
    int iFunc = bFunction ? HB_COMP_PARAM->iModulesCount : 0;
 
    while( pSym )
@@ -323,7 +323,7 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, US
 /* returns a symbol name based on its index on the symbol table
  * index starts from 0
  */
-const char * hb_compSymbolName( HB_COMP_DECL, USHORT uiSymbol )
+const char * hb_compSymbolName( HB_COMP_DECL, HB_USHORT uiSymbol )
 {
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
 
@@ -350,9 +350,9 @@ static void hb_compCheckDuplVars( HB_COMP_DECL, PVAR pVar, const char * szVarNam
    }
 }
 
-static USHORT hb_compVarListAdd( PVAR * pVarLst, PVAR pVar )
+static HB_USHORT hb_compVarListAdd( PVAR * pVarLst, PVAR pVar )
 {
-   USHORT uiVar = 1;
+   HB_USHORT uiVar = 1;
    while( *pVarLst )
    {
       pVarLst = &( *pVarLst )->pNext;
@@ -474,7 +474,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    if( HB_COMP_PARAM->iVarScope & VS_MEMVAR )
    {
       PCOMSYMBOL pSym;
-      USHORT wPos;
+      HB_USHORT wPos;
 
       if( HB_COMP_PARAM->fAutoMemvarAssume || HB_COMP_PARAM->iVarScope == VS_MEMVAR )
       {
@@ -561,7 +561,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
          case VS_LOCAL:
          case VS_PARAMETER:
          {
-            USHORT wLocal = hb_compVarListAdd( &pFunc->pLocals, pVar );
+            HB_USHORT wLocal = hb_compVarListAdd( &pFunc->pLocals, pVar );
 
             if( HB_COMP_PARAM->iVarScope == VS_PARAMETER )
             {
@@ -645,7 +645,7 @@ static PVAR hb_compVariableGet( PVAR pVars, const char * szVarName, int * piPos 
 }
 
 /* returns variable pointer if defined or NULL */
-static PVAR hb_compVariableGetVar( PVAR pVars, USHORT wOrder )
+static PVAR hb_compVariableGetVar( PVAR pVars, HB_USHORT wOrder )
 {
    while( pVars && --wOrder )
       pVars = pVars->pNext;
@@ -653,9 +653,9 @@ static PVAR hb_compVariableGetVar( PVAR pVars, USHORT wOrder )
 }
 
 /* returns the order + 1 of a variable if defined or zero */
-static USHORT hb_compVariableGetPos( PVAR pVars, const char * szVarName )
+static HB_USHORT hb_compVariableGetPos( PVAR pVars, const char * szVarName )
 {
-   USHORT wVar = 1;
+   HB_USHORT wVar = 1;
 
    while( pVars )
    {
@@ -851,7 +851,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
 }
 
 /* return local variable name using its order after final fixing */
-const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar )
+const char * hb_compLocalVariableName( PFUNCTION pFunc, HB_USHORT wVar )
 {
    PVAR pVar;
 
@@ -862,14 +862,14 @@ const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar )
    return pVar ? pVar->szName : NULL;
 }
 
-const char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar )
+const char * hb_compStaticVariableName( HB_COMP_DECL, HB_USHORT wVar )
 {
    PVAR pVar;
    PFUNCTION pTmp = HB_COMP_PARAM->functions.pFirst;
 
    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
       pTmp = pTmp->pNext;
-   pVar = hb_compVariableGetVar( pTmp->pStatics, ( USHORT ) ( wVar - pTmp->iStaticsBase ) );
+   pVar = hb_compVariableGetVar( pTmp->pStatics, ( HB_USHORT ) ( wVar - pTmp->iStaticsBase ) );
 
    return pVar ? pVar->szName : NULL;
 }
@@ -1566,7 +1566,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
 static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
 {
-   USHORT w;
+   HB_USHORT w;
 
    if( pFunc == NULL )
       return;
@@ -2424,7 +2424,7 @@ void hb_compGenStaticName( const char *szVarName, HB_COMP_DECL )
  */
 static void hb_compGenVarPCode( HB_BYTE bPCode, const char * szVarName, HB_COMP_DECL )
 {
-   USHORT wVar;
+   HB_USHORT wVar;
    PCOMSYMBOL pSym;
 
    /* Check if this variable name is placed into the symbol table
@@ -2502,7 +2502,7 @@ static void hb_compGenFieldPCode( HB_COMP_DECL, HB_BYTE bPCode, PVAR pField )
 */
 void hb_compGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL )
 {
-   USHORT wSym;
+   HB_USHORT wSym;
    PCOMSYMBOL pSym;
 
    if( szMsgName )
@@ -2892,7 +2892,7 @@ void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP
 void hb_compGenPushFunCall( const char * szFunName, HB_COMP_DECL )
 {
    const char * szFunction;
-   USHORT wSym;
+   HB_USHORT wSym;
 
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
@@ -2928,7 +2928,7 @@ void hb_compGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 /* generates the pcode to push a symbol on the virtual machine stack */
 void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL )
 {
-   USHORT wSym;
+   HB_USHORT wSym;
 
    if( !hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) )
       hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
@@ -3332,7 +3332,7 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->pInitFunc )
    {
-      USHORT uiCount = 0, uiVar = 0;
+      HB_USHORT uiCount = 0, uiVar = 0;
       PFUNCTION pFunc;
       PVAR pVar;
 
@@ -3444,9 +3444,9 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
    const char * pFuncName;
    ULONG  ulSize;
-   USHORT wLocals = 0;     /* number of referenced local variables */
-   USHORT wLocalsCnt, wLocalsLen;
-   USHORT wPos;
+   HB_USHORT wLocals = 0;  /* number of referenced local variables */
+   HB_USHORT wLocalsCnt, wLocalsLen;
+   HB_USHORT wPos;
    int iLocalPos;
    PVAR pVar;
 
@@ -3525,7 +3525,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    }
    else
    {
-      /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
+      /* NOTE: 8 = HB_P_PUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + HB_USHORT( wLocals ) + _ENDBLOCK */
       ulSize += 5 + wLocals * 2;
       if( ulSize <= USHRT_MAX )
          hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_COMP_PARAM );

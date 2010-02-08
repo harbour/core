@@ -649,7 +649,7 @@ static HB_GENC_FUNC( hb_p_line )
 
 static HB_GENC_FUNC( hb_p_localname )
 {
-   USHORT usLen;
+   HB_USHORT usLen;
 
    HB_GENC_LABEL();
 
@@ -801,7 +801,7 @@ static HB_GENC_FUNC( hb_p_minus )
 
 static HB_GENC_FUNC( hb_p_modulename )
 {
-   USHORT usLen;
+   HB_USHORT usLen;
 
    HB_GENC_LABEL();
 
@@ -1027,7 +1027,7 @@ static HB_GENC_FUNC( hb_p_pushaliasedvar )
 
 static HB_GENC_FUNC( hb_p_pushblockshort )
 {
-   USHORT usSize, us;
+   HB_USHORT usSize, us;
 
    HB_GENC_LABEL();
 
@@ -1052,7 +1052,7 @@ static HB_GENC_FUNC( hb_p_pushblockshort )
 
 static HB_GENC_FUNC( hb_p_pushblock )
 {
-   USHORT usSize, us;
+   HB_USHORT usSize, us;
 
    HB_GENC_LABEL();
 
@@ -1325,7 +1325,7 @@ static HB_GENC_FUNC( hb_p_pushstaticref )
 
 static HB_GENC_FUNC( hb_p_pushstrshort )
 {
-   USHORT usLen = pFunc->pCode[ lPCodePos + 1 ] - 1;
+   HB_USHORT usLen = pFunc->pCode[ lPCodePos + 1 ] - 1;
 
    HB_GENC_LABEL();
 
@@ -1338,7 +1338,7 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
 
 static HB_GENC_FUNC( hb_p_pushstr )
 {
-   USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
+   HB_USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
 
    HB_GENC_LABEL();
 
@@ -1364,7 +1364,7 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
 
 static HB_GENC_FUNC( hb_p_pushstrhidden )
 {
-   USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+   HB_USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
 
    HB_GENC_LABEL();
 
@@ -1551,13 +1551,13 @@ static HB_GENC_FUNC( hb_p_statics )
 
 static HB_GENC_FUNC( hb_p_staticname )
 {
-   USHORT usLen;
+   HB_USHORT usLen;
 
    HB_GENC_LABEL();
 
    usLen = strlen( ( char * ) &pFunc->pCode[ lPCodePos + 4 ] );
    fprintf( cargo->yyc, "\thb_xvmStaticName( %hu, %hu, ",
-            ( USHORT ) pFunc->pCode[ lPCodePos + 1 ],
+            ( HB_USHORT ) pFunc->pCode[ lPCodePos + 1 ],
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] ) );
    hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], usLen );
    fprintf( cargo->yyc, " );\n" );
@@ -1566,7 +1566,7 @@ static HB_GENC_FUNC( hb_p_staticname )
 
 static HB_GENC_FUNC( hb_p_threadstatics )
 {
-   USHORT w;
+   HB_USHORT w;
    ULONG ulSize, ul;
 
    HB_GENC_LABEL();
@@ -1680,7 +1680,7 @@ static HB_GENC_FUNC( hb_p_enumend )
 
 static HB_GENC_FUNC( hb_p_switch )
 {
-   USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
+   HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
    ULONG ulStart = lPCodePos, ulNewPos;
    HB_BOOL fNum = HB_FALSE, fStr = HB_FALSE, fDefault = HB_FALSE;
 
@@ -2015,7 +2015,7 @@ static HB_GENC_FUNC( hb_p_withobjectend )
 
 static HB_GENC_FUNC( hb_p_withobjectmessage )
 {
-   USHORT usSym = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_USHORT usSym = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 

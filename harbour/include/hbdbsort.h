@@ -72,8 +72,8 @@ typedef struct _DBQUICKSORT
    HB_BYTE * pSwapBufferB;
    HB_BYTE * pCmpBufferA;
    HB_BYTE * pCmpBufferB;
-   USHORT uiRecordLen;
-   USHORT uiMaxRecords;
+   HB_USHORT uiRecordLen;
+   HB_USHORT uiMaxRecords;
    LPDBSORTINFO pSortInfo;
 } DBQUICKSORT;
 
@@ -83,9 +83,9 @@ typedef DBQUICKSORT * LPDBQUICKSORT;
  *  PROTOTYPES
  *  ----------
  */
-extern HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen );
+extern HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, HB_USHORT uiRecordLen );
 extern void    hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
-extern HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount );
+extern HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount );
 extern void    hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
 
 HB_EXTERN_END

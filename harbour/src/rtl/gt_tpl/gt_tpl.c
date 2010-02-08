@@ -122,7 +122,7 @@ static void hb_gt_tpl_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 

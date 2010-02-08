@@ -1671,7 +1671,7 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pCodeblock;   /* pointer to the current codeblock */
    ULONG ulSize;
-   USHORT wParms = 0;   /* number of codeblock parameters */
+   HB_USHORT wParms = 0;   /* number of codeblock parameters */
    HB_CBVAR_PTR pVar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockEnd(%p)", HB_COMP_PARAM));
@@ -1696,7 +1696,7 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
       ++wParms;
    }
 
-   /*NOTE:  6 = HB_P_MPUSHBLOCK + USHORT( size ) + USHORT( wParams ) + _ENDBLOCK
+   /*NOTE:  6 = HB_P_MPUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + _ENDBLOCK
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */

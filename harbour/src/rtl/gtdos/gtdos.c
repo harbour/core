@@ -1123,7 +1123,7 @@ static void vmode50x80( void )
  *  FFh    unknown display type
  ****************************************************************************/
 
-static USHORT hb_gt_dos_GetDisplay( void )
+static HB_USHORT hb_gt_dos_GetDisplay( void )
 {
    union REGS regs;
 
@@ -1302,11 +1302,11 @@ static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
 #if !defined( __DJGPP__ )
-   USHORT FAR *pScreenPtr = ( USHORT FAR * ) hb_gt_dos_ScreenPtr( iRow, iCol );
+   HB_USHORT FAR *pScreenPtr = ( HB_USHORT FAR * ) hb_gt_dos_ScreenPtr( iRow, iCol );
 #endif
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iLen = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );

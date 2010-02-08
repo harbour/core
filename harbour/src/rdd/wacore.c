@@ -74,7 +74,7 @@
  */
 static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
 {
-   USHORT uiWaPos;
+   HB_USHORT uiWaPos;
 
    if( pRddInfo->uiCurrArea >= pRddInfo->uiWaNumMax )
    {
@@ -85,13 +85,13 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
 
       if( pRddInfo->uiWaNumMax == 0 )
       {
-         pRddInfo->waNums = ( USHORT * ) hb_xgrab( iSize * sizeof( USHORT ) );
+         pRddInfo->waNums = ( HB_USHORT * ) hb_xgrab( iSize * sizeof( HB_USHORT ) );
       }
       else
       {
-         pRddInfo->waNums = ( USHORT * ) hb_xrealloc( pRddInfo->waNums, iSize * sizeof( USHORT ) );
+         pRddInfo->waNums = ( HB_USHORT * ) hb_xrealloc( pRddInfo->waNums, iSize * sizeof( HB_USHORT ) );
       }
-      memset( &pRddInfo->waNums[ pRddInfo->uiWaNumMax ], 0, ( iSize - pRddInfo->uiWaNumMax ) * sizeof( USHORT ) );
+      memset( &pRddInfo->waNums[ pRddInfo->uiWaNumMax ], 0, ( iSize - pRddInfo->uiWaNumMax ) * sizeof( HB_USHORT ) );
       pRddInfo->uiWaNumMax = iSize;
    }
 
@@ -132,7 +132,7 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
  */
 static void hb_waNodeDelete( PHB_STACKRDD pRddInfo )
 {
-   USHORT uiWaPos;
+   HB_USHORT uiWaPos;
 
    uiWaPos = pRddInfo->waNums[ pRddInfo->uiCurrArea ];
    pRddInfo->waNums[ pRddInfo->uiCurrArea ] = 0;
@@ -169,7 +169,7 @@ static void hb_waNodeDelete( PHB_STACKRDD pRddInfo )
 HB_ERRCODE hb_rddSelectFirstAvailable( void )
 {
    PHB_STACKRDD pRddInfo;
-   USHORT uiArea;
+   HB_USHORT uiArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectFirstAvailable()"));
 
@@ -191,11 +191,11 @@ HB_ERRCODE hb_rddSelectFirstAvailable( void )
 /*
  * Create and insert the new WorkArea node
  */
-USHORT hb_rddInsertAreaNode( const char *szDriver )
+HB_USHORT hb_rddInsertAreaNode( const char *szDriver )
 {
    PHB_STACKRDD pRddInfo;
    LPRDDNODE pRddNode;
-   USHORT uiRddID;
+   HB_USHORT uiRddID;
    AREAP pArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddInsertAreaNode(%s)", szDriver));
@@ -261,7 +261,7 @@ void hb_rddCloseAll( void )
    {
       HB_BOOL isParents, isFinish = HB_FALSE;
       AREAP pArea;
-      USHORT uiIndex;
+      HB_USHORT uiIndex;
 
       do
       {
@@ -304,7 +304,7 @@ void hb_rddCloseAll( void )
 void hb_rddFlushAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
-   USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
+   HB_USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
 
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; ++uiIndex )
    {
@@ -317,7 +317,7 @@ void hb_rddFlushAll( void )
 void hb_rddUnLockAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
-   USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
+   HB_USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
 
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; ++uiIndex )
    {
@@ -334,7 +334,7 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
 {
    PHB_STACKRDD pRddInfo;
    HB_ERRCODE errCode = HB_SUCCESS;
-   USHORT uiIndex;
+   HB_USHORT uiIndex;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo));
 
@@ -372,7 +372,7 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    if( szDriver && *szDriver )
    {
       char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
-      USHORT uiRddID;
+      HB_USHORT uiRddID;
 
       hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
       if( !hb_rddFindNode( szNewDriver, &uiRddID ) )

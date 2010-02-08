@@ -310,8 +310,8 @@ HB_FUNC( SX_SETPASS )
           * 3-rd and 4-th parameters are optional Harbour extensions
           * with RDD name and connection number.
           */
-         LPRDDNODE  pRDDNode;
-         USHORT     uiRddID;
+         LPRDDNODE pRDDNode;
+         HB_USHORT uiRddID;
          const char * szDriver;
 
          if( iPCount == 2 ) /* no RDD parameter, use default */
@@ -430,8 +430,8 @@ HB_FUNC( SX_TURBOAREA )
 
 HB_FUNC( SX_SETTURBO )
 {
-   LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
+   LPRDDNODE pRDDNode;
+   HB_USHORT uiRddID;
    const char * szDriver;
 
    szDriver = hb_parc( 2 );

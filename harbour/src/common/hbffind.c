@@ -422,9 +422,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          /* tzset(); */
 
 #if defined( __WATCOMC__ )
-         bFound = ( _dos_findfirst( ffind->pszFileMask, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
+         bFound = ( _dos_findfirst( ffind->pszFileMask, ( HB_USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
 #else
-         bFound = ( findfirst( ffind->pszFileMask, &info->entry, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ) ) == 0 );
+         bFound = ( findfirst( ffind->pszFileMask, &info->entry, ( HB_USHORT ) hb_fsAttrToRaw( ffind->attrmask ) ) == 0 );
 #endif
       }
       else

@@ -216,7 +216,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          /* Reserved Clipper function used to handle GET variables
           */
          HB_EXPR_PTR pArg, pNext;
-         USHORT uiCount;
+         HB_USHORT uiCount;
 
          /* pArg has to be reduced to eliminate possible problems with
           * cloned expressions in SETGET block

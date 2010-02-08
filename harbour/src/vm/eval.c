@@ -122,7 +122,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
    {
       PHB_ITEM pItem = pEvalInfo->pItems[ 0 ];
       PHB_SYMB pSymbol = NULL;
-      USHORT uiParam = 0;
+      HB_USHORT uiParam = 0;
 
       if( HB_IS_STRING( pItem ) )
       {
@@ -174,7 +174,7 @@ HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 
    if( pEvalInfo )
    {
-      USHORT uiParam;
+      HB_USHORT uiParam;
 
       for( uiParam = 0; uiParam <= pEvalInfo->paramCount; uiParam++ )
       {
@@ -250,9 +250,9 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
                va_end( va );
             }
             if( pItem )
-               hb_vmSend( ( USHORT ) ulPCount );
+               hb_vmSend( ( HB_USHORT ) ulPCount );
             else
-               hb_vmProc( ( USHORT ) ulPCount );
+               hb_vmProc( ( HB_USHORT ) ulPCount );
 
             pResult = hb_itemNew( hb_stackReturnItem() );
             hb_vmRequestRestore();
@@ -295,7 +295,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
                   hb_vmPush( va_arg( va, PHB_ITEM ) );
                va_end( va );
             }
-            hb_vmProc( ( USHORT ) ulPCount );
+            hb_vmProc( ( HB_USHORT ) ulPCount );
             pResult = hb_itemNew( hb_stackReturnItem() );
             hb_vmRequestRestore();
          }
@@ -331,7 +331,7 @@ void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
 void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 {
    va_list args;
-   USHORT uiParams = 0;
+   HB_USHORT uiParams = 0;
    PHB_ITEM pParam;
 
    hb_vmPushSymbol( &hb_symEval );
@@ -494,9 +494,9 @@ HB_FUNC( HB_EXECFROMARRAY )
       }
 
       if( pSelf )
-         hb_vmSend( ( USHORT ) iPCount );
+         hb_vmSend( ( HB_USHORT ) iPCount );
       else
-         hb_vmProc( ( USHORT ) iPCount );
+         hb_vmProc( ( HB_USHORT ) iPCount );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -556,9 +556,9 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
          }
 
          if( pSelf )
-            hb_vmSend( ( USHORT ) iPCount );
+            hb_vmSend( ( HB_USHORT ) iPCount );
          else
-            hb_vmProc( ( USHORT ) iPCount );
+            hb_vmProc( ( HB_USHORT ) iPCount );
 
          return HB_TRUE;
       }
@@ -580,7 +580,7 @@ HB_FUNC( HB_EXECMSG )
    {
       PHB_ITEM pBase = hb_stackBaseItem();
       pBase->item.asSymbol.paramcnt = pBase->item.asSymbol.paramdeclcnt = 0;
-      hb_vmProc( ( USHORT ) ( iParams - 2 ) );
+      hb_vmProc( ( HB_USHORT ) ( iParams - 2 ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

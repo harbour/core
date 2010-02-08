@@ -2152,7 +2152,7 @@ HB_BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;
@@ -2183,7 +2183,7 @@ HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;

@@ -132,7 +132,7 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szNam
    ULONG ulRepeatBits, ulBit;
    PHB_PP_RULE pRule;
    int iRule;
-   USHORT u;
+   HB_USHORT u;
 
    iRule = 0;
    pRule = pFirst;

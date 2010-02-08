@@ -267,7 +267,7 @@ HB_FUNC( SX_THERMOMETER )
          i = hb_itemGetNI( Info.itmResult );
          if( i )
          {
-            static const USHORT s_iStates[] =
+            static const HB_USHORT s_iStates[] =
                      { DBOI_CUSTOM, DBOI_CHGONLY, DBOI_PARTIAL };
             iTemperature = 4;
             for( i = 0; i < 3; ++i, --iTemperature )
@@ -321,7 +321,7 @@ HB_FUNC( SX_SETSCOPE )
          Info.itmResult = hb_itemNew( NULL );
          if( ! HB_ISNIL( 2 ) )
             Info.itmNewVal = hb_param( 2, HB_IT_ANY );
-         SELF_ORDINFO( pArea, ( USHORT ) ( iScope ? DBOI_SCOPEBOTTOM : DBOI_SCOPETOP ), &Info );
+         SELF_ORDINFO( pArea, ( HB_USHORT ) ( iScope ? DBOI_SCOPEBOTTOM : DBOI_SCOPETOP ), &Info );
          hb_itemReturnRelease( Info.itmResult );
       }
    }

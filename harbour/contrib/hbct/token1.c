@@ -375,7 +375,7 @@ static void do_token1( int iSwitch )
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
-               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+               pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         CT_ERROR_TOKEN, NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE,
                                         HB_ERR_ARGS_BASEPARAMS );
@@ -397,7 +397,7 @@ static void do_token1( int iSwitch )
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
-               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+               pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         iSwitch == DO_TOKEN1_TOKENLOWER ?
                                         CT_ERROR_TOKENLOWER : CT_ERROR_TOKENUPPER,
                                         NULL, HB_ERR_FUNCNAME, 0,
@@ -420,7 +420,7 @@ static void do_token1( int iSwitch )
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
-               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+               pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         iSwitch == DO_TOKEN1_NUMTOKEN ?
                                         CT_ERROR_NUMTOKEN : CT_ERROR_ATTOKEN,
                                         NULL, HB_ERR_FUNCNAME, 0,

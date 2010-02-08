@@ -66,7 +66,7 @@
 #define SUPERTABLE   (&sdfSuper)
 
 static RDDFUNCS sdfSuper;
-static const USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
+static const HB_USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
 
 static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
 {
@@ -100,7 +100,7 @@ static void hb_sdfClearRecordBuffer( SDFAREAP pArea )
 
 static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
 {
-   USHORT uiRead, uiToRead, uiEolPos;
+   HB_USHORT uiRead, uiToRead, uiEolPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfReadRecord(%p)", pArea));
 
@@ -120,7 +120,7 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
    {
       pArea->area.fEof = HB_FALSE;
       pArea->fPositioned = HB_TRUE;
-      uiEolPos = ( USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
+      uiEolPos = ( HB_USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
                                       ( char * ) pArea->pRecord, uiRead );
       if( uiEolPos )
       {
@@ -162,7 +162,7 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
    {
       if( pArea->ulNextOffset == 0 )
       {
-         USHORT uiRead, uiToRead, uiEolPos, uiRest = 0;
+         HB_USHORT uiRead, uiToRead, uiEolPos, uiRest = 0;
          HB_FOFFSET ulOffset = pArea->ulRecordOffset;
 
          uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
@@ -175,7 +175,7 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;
 
-            uiEolPos = ( USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
+            uiEolPos = ( HB_USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
                                             ( char * ) pArea->pRecord, uiRead );
             if( uiEolPos )
             {
@@ -367,7 +367,7 @@ static HB_ERRCODE hb_sdfDeleteRec( SDFAREAP pArea )
 /*
  * Obtain the current value of a field.
  */
-static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
 
@@ -465,7 +465,7 @@ static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 /*
  * Assign a value to a field.
  */
-static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    char szBuffer[ 256 ];
    HB_ERRCODE errCode;
@@ -725,7 +725,7 @@ static HB_ERRCODE hb_sdfFlush( SDFAREAP pArea )
 /*
  * Retrieve information about the current table/driver.
  */
-static HB_ERRCODE hb_sdfInfo( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_sdfInfo( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfInfo(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -896,7 +896,7 @@ static HB_ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
 /*
  * Establish the extent of the array of fields for a WorkArea.
  */
-static HB_ERRCODE hb_sdfSetFieldExtent( SDFAREAP pArea, USHORT uiFieldExtent )
+static HB_ERRCODE hb_sdfSetFieldExtent( SDFAREAP pArea, HB_USHORT uiFieldExtent )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfSetFieldExtent(%p,%hu)", pArea, uiFieldExtent));
 
@@ -906,8 +906,8 @@ static HB_ERRCODE hb_sdfSetFieldExtent( SDFAREAP pArea, USHORT uiFieldExtent )
    /* Alloc field offsets array */
    if( uiFieldExtent )
    {
-      pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT ) );
+      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrab( uiFieldExtent * sizeof( HB_USHORT ) );
+      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( HB_USHORT ) );
    }
 
    return HB_SUCCESS;
@@ -933,7 +933,7 @@ static HB_ERRCODE hb_sdfNewArea( SDFAREAP pArea )
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static HB_ERRCODE hb_sdfStructSize( SDFAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_sdfStructSize( SDFAREAP pArea, HB_USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfStrucSize(%p,%p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
@@ -1076,7 +1076,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM pError = NULL;
    PHB_FNAME pFileName;
    HB_ERRCODE errCode;
-   USHORT uiFlags;
+   HB_USHORT uiFlags;
    HB_BOOL fRetry;
    char szFileName[ HB_PATH_MAX ];
    char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
@@ -1173,7 +1173,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
 /*
  * Retrieve information about the current driver.
  */
-static HB_ERRCODE hb_sdfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_sdfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfRddInfo(%p,%hu,%lu,%p)", pRDD, uiIndex, ulConnect, pItem));
 
@@ -1304,9 +1304,9 @@ HB_FUNC( SDF ) { ; }
 HB_FUNC( SDF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount;
+   HB_USHORT * uiCount;
 
-   uiCount = ( USHORT * ) hb_parptr( 1 );
+   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
 
    HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%p, %p)", uiCount, pTable));

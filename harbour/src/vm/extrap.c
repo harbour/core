@@ -304,7 +304,7 @@ static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
       char file[ HB_PATH_MAX ];
-      USHORT uiLine;
+      HB_USHORT uiLine;
       int iLevel = 0;
 
       fprintf( stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress );

@@ -61,7 +61,7 @@ HB_EXTERN_BEGIN
 
 typedef struct
 {
-   USHORT   paramCount;
+   HB_USHORT paramCount;
    PHB_ITEM pItems[ HB_EVAL_PARAM_MAX_ + 1 ];
 } HB_EVALINFO, * PHB_EVALINFO;
 
@@ -104,8 +104,8 @@ extern HB_EXPORT void *       hb_itemGetPtrGC  ( PHB_ITEM pItem, const HB_GC_FUN
 extern HB_EXPORT PHB_SYMB     hb_itemGetSymbol ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemNew       ( PHB_ITEM pNull );
 extern HB_EXPORT void         hb_itemInit      ( PHB_ITEM pItem );
-extern HB_EXPORT USHORT       hb_itemPCount    ( void );
-extern HB_EXPORT PHB_ITEM     hb_itemParam     ( USHORT uiParam );
+extern HB_EXPORT HB_USHORT    hb_itemPCount    ( void );
+extern HB_EXPORT PHB_ITEM     hb_itemParam     ( HB_USHORT uiParam );
 extern HB_EXPORT PHB_ITEM     hb_itemPutC      ( PHB_ITEM pItem, const char * szText );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCL     ( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCConst ( PHB_ITEM pItem, const char * szText );
@@ -149,9 +149,9 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutNLLLen ( PHB_ITEM pItem, HB_LONGLONG lNu
 
 /* Non Clipper compliant internal API */
 
-extern HB_EXPORT PHB_ITEM     hb_itemParamPtr  ( USHORT uiParam, long lMask );
-extern HB_EXPORT HB_BOOL      hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem );
-extern HB_EXPORT HB_BOOL      hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM     hb_itemParamPtr  ( HB_USHORT uiParam, long lMask );
+extern HB_EXPORT HB_BOOL      hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL      hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT int          hb_itemStrCmp    ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT int          hb_itemStrICmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT void         hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */

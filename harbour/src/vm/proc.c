@@ -221,7 +221,7 @@ char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
  *       szFile szie must be an at least:
  *          HB_PATH_MAX
  */
-HB_BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
+HB_BOOL hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
 

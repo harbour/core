@@ -145,7 +145,7 @@ static void hb_sln_colorTrans( void )
       /*
        * bit 7 is a blinking attribute - not used when console is not in
        * UTF-8 mode because we are using it for changing into ACSC
-       * In SLANG 2.0 the character attributes are hold in USHORT not HB_BYTE
+       * In SLANG 2.0 the character attributes are hold in HB_USHORT not HB_BYTE
        * so we can use all colors, blinking bit and ACSC switch without
        * any problems also when console is not in UTF-8 mode.
        */
@@ -643,7 +643,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                to switch into ACSC because we can display all supported
                characters using it's UNICODE values so we can use
                blink bit as in Clipper.
-               In SLANG 2.0 the character attributes are hold in USHORT
+               In SLANG 2.0 the character attributes are hold in HB_USHORT
                not HB_BYTE so we can use all colors, blinking bit and ACSC
                switch without any problems also when console is not in
                UTF-8 mode.
@@ -989,7 +989,7 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       SLsmg_Char_Type SLchar;
       int iColor;
       HB_BYTE bAttr;
-      USHORT usChar;
+      HB_USHORT usChar;
 
       while( iSize-- > 0 )
       {

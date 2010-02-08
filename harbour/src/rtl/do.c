@@ -65,7 +65,7 @@
 
 HB_FUNC( DO )
 {
-   USHORT uiPCount = ( USHORT ) hb_pcount();
+   HB_USHORT uiPCount = ( HB_USHORT ) hb_pcount();
    PHB_ITEM pSelf = NULL;
 
    if( uiPCount > 0 )
@@ -96,7 +96,7 @@ HB_FUNC( DO )
 
    if( uiPCount > 0 )
    {
-      USHORT uiParam;
+      HB_USHORT uiParam;
 
       if( pSelf )
          hb_vmPush( pSelf );
@@ -107,9 +107,9 @@ HB_FUNC( DO )
          hb_vmPush( hb_stackItemFromBase( uiParam ) );
 
       if( pSelf )
-         hb_vmSend( ( USHORT ) ( uiPCount - 1 ) );
+         hb_vmSend( ( HB_USHORT ) ( uiPCount - 1 ) );
       else
-         hb_vmProc( ( USHORT ) ( uiPCount - 1 ) );
+         hb_vmProc( ( HB_USHORT ) ( uiPCount - 1 ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

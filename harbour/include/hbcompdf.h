@@ -85,7 +85,7 @@ typedef struct _COMDECLARED
 {
    const char          * szName;              /* the name of the symbol */
    HB_BYTE               cType;
-   USHORT                iParamCount;
+   HB_USHORT             iParamCount;
    HB_BYTE             * cParamTypes;
    struct _COMCLASS    * pClass;
    struct _COMCLASS    * ( * pParamClasses );
@@ -108,7 +108,7 @@ typedef struct _VAR
    const char *   szAlias;          /* variable alias namespace */
    int            iUsed;            /* number of times used */
    int            iDeclLine;        /* declaration line number */
-   USHORT         uiFlags;          /* optional falgs, f.e. THREAD STATIC */
+   HB_USHORT      uiFlags;          /* optional falgs, f.e. THREAD STATIC */
    HB_BYTE        cType;            /* optional strong typing */
    PCOMCLASS      pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */
@@ -247,7 +247,7 @@ typedef enum
 
 #define HB_EXPR_COUNT   ( HB_EO_PREDEC + 1 )
 
-typedef USHORT HB_EXPRTYPE;
+typedef HB_USHORT HB_EXPRTYPE;
 
 typedef struct HB_EXPR_
 {
@@ -284,7 +284,7 @@ typedef struct HB_EXPR_
       {
          const char * szMacro;         /* identifier after the macro operator */
          struct HB_EXPR_ * pExprList;  /* list elements if &(...) was used */
-         USHORT SubType;               /* context in which macro is used */
+         HB_USHORT SubType;            /* context in which macro is used */
          unsigned char cMacroOp;       /* macro operator */
       } asMacro;
       struct
@@ -297,8 +297,8 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ * pExprList;  /* list elements */
          HB_CBVAR_PTR pLocals;         /* list of local variables */
-         char *   string;              /* source code of a codeblock */
-         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
+         char * string;                /* source code of a codeblock */
+         HB_USHORT flags;              /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
       } asCodeblock;
       struct
       {
@@ -328,7 +328,7 @@ typedef struct HB_EXPR_
    ULONG ulLength;
    ULONG Counter;
    HB_EXPRTYPE ExprType;      /* internal expression type */
-   USHORT ValType;            /* language level value type */
+   HB_USHORT ValType;         /* language level value type */
    struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
 } HB_EXPR, *HB_EXPR_PTR;
 
@@ -350,11 +350,11 @@ typedef struct HB_ELSEIF_
 /* support structure for EXIT and LOOP statements */
 typedef struct HB_LOOPEXIT_
 {
-   ULONG    ulOffset;
-   HB_BOOL  fCanLoop;
-   USHORT   wSeqCounter;
-   USHORT   wAlwaysCounter;
-   USHORT   wWithObjectCnt;
+   ULONG     ulOffset;
+   HB_BOOL   fCanLoop;
+   HB_USHORT wSeqCounter;
+   HB_USHORT wAlwaysCounter;
+   HB_USHORT wWithObjectCnt;
    struct HB_LOOPEXIT_ * pLoopList;
    struct HB_LOOPEXIT_ * pExitList;
    struct HB_LOOPEXIT_ * pNext;
@@ -392,9 +392,9 @@ typedef struct __FUNC
 {
    const char * szName;                   /* name of a defined Clipper function */
    HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
-   USHORT       funFlags;                 /* some flags we may need */
-   USHORT       wParamCount;              /* number of declared parameters */
-   USHORT       wParamNum;                /* current parameter number */
+   HB_USHORT    funFlags;                 /* some flags we may need */
+   HB_USHORT    wParamCount;              /* number of declared parameters */
+   HB_USHORT    wParamNum;                /* current parameter number */
    PVAR         pLocals;                  /* pointer to local variables list */
    PVAR         pStatics;                 /* pointer to static variables list */
    PVAR         pFields;                  /* pointer to fields variables list */
@@ -421,14 +421,14 @@ typedef struct __FUNC
    HB_SWITCHCMD_PTR  pSwitch;
    HB_ELSEIF_PTR     elseif;
    HB_RTVAR_PTR      rtvars;
-   USHORT            wSeqCounter;
-   USHORT            wAlwaysCounter;
-   USHORT            wForCounter;
-   USHORT            wIfCounter;
-   USHORT            wWhileCounter;
-   USHORT            wCaseCounter;
-   USHORT            wSwitchCounter;
-   USHORT            wWithObjectCnt;
+   HB_USHORT         wSeqCounter;
+   HB_USHORT         wAlwaysCounter;
+   HB_USHORT         wForCounter;
+   HB_USHORT         wIfCounter;
+   HB_USHORT         wWhileCounter;
+   HB_USHORT         wCaseCounter;
+   HB_USHORT         wSwitchCounter;
+   HB_USHORT         wWithObjectCnt;
 } _FUNC, * PFUNCTION;
 
 /* structure to hold an INLINE block of source */
@@ -554,26 +554,26 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
    HB_CBVAR_PTR pLocals;
 } HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
 
-typedef struct HB_MACRO_    /* a macro compiled pcode container */
+typedef struct HB_MACRO_      /* a macro compiled pcode container */
 {
    /* common to compiler members */
-   int    mode;            /* HB_MODE_* */
-   int    supported;       /* various flags for supported capabilities */
+   int    mode;              /* HB_MODE_* */
+   int    supported;         /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 
    /* macro compiler only members */
-   char * string;          /* compiled string */
-   ULONG  length;          /* length of the string */
-   int    Flags;           /* some flags we may need */
-   int    status;          /* status of compilation */
-   HB_ITEM_PTR pError;     /* error object returned from the parser */
+   char * string;            /* compiled string */
+   ULONG  length;            /* length of the string */
+   int    Flags;             /* some flags we may need */
+   int    status;            /* status of compilation */
+   HB_ITEM_PTR pError;       /* error object returned from the parser */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
-   void * pLex;            /* lexer buffer pointer */
-   void * pExprLst;        /* list with allocated expressions */
-   void * pIdentLst;       /* list with allocated identifiers */
-   int    exprType;        /* type of successfully compiled expression */
-   USHORT uiListElements;  /* number of elements in macro list expression */
-   USHORT uiNameLen;       /* the maximum symbol name length */
+   void * pLex;              /* lexer buffer pointer */
+   void * pExprLst;          /* list with allocated expressions */
+   void * pIdentLst;         /* list with allocated identifiers */
+   int    exprType;          /* type of successfully compiled expression */
+   HB_USHORT uiListElements; /* number of elements in macro list expression */
+   HB_USHORT uiNameLen;      /* the maximum symbol name length */
 } HB_MACRO;
 
 #else

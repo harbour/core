@@ -147,7 +147,7 @@ static void do_justify( int iSwitch )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+         pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_JUSTIFY_JUSTLEFT ?
                                   CT_ERROR_JUSTLEFT : CT_ERROR_JUSTRIGHT,
                                   NULL, HB_ERR_FUNCNAME, 0,

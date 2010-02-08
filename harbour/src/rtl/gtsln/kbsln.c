@@ -426,7 +426,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    if ( hb_sln_Is_Unicode && ch < 256 )
    {
       int n = 0;
-      USHORT uc = 0;
+      HB_USHORT uc = 0;
 
       if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, ( HB_BYTE ) ch, &n, &uc ) )
       {

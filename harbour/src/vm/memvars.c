@@ -1607,9 +1607,9 @@ HB_FUNC( __MVRESTORE )
             /* FoxPro does not add 128 to item type: 'N', 'C', 'D', 'L'
              * CA-Cl*pper respects it and read such files so we also should.
              */
-            USHORT uiType = ( USHORT ) ( buffer[ 11 ] & 0x7f );
-            USHORT uiWidth = ( USHORT ) buffer[ 16 ];
-            USHORT uiDec = ( USHORT ) buffer[ 17 ];
+            HB_USHORT uiType = ( HB_USHORT ) ( buffer[ 11 ] & 0x7f );
+            HB_USHORT uiWidth = ( HB_USHORT ) buffer[ 16 ];
+            HB_USHORT uiDec = ( HB_USHORT ) buffer[ 17 ];
 
             /* protect against corrupted files */
             buffer[ 10 ] = '\0';

@@ -139,7 +139,7 @@ static int     s_iLineBufSize = 0;
 static char *  s_sLineBuf;
 
 /* Code page ID of active codepage at the time harbour program was start */
-static USHORT s_usOldCodePage;
+static HB_USHORT s_usOldCodePage;
 
 /* Instead of calling VioGetMode() every time I need MaxRow() or MaxCol() I
    use this static which contains active mode info */
@@ -789,7 +789,7 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    char * pBufPtr = s_sLineBuf;
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iLen = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );

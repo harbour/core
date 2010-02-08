@@ -117,7 +117,7 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 static void * hb_gt_def_New( PHB_GT pGT )
 {
    HB_SIZE ulSize, ulIndex;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iColor;
    HB_BYTE bAttr;
    int i;
@@ -327,12 +327,12 @@ static void hb_gt_def_SetClearColor( PHB_GT pGT, int iColor )
    pGT->iClearColor = ( iColor & 0xFF );
 }
 
-static USHORT hb_gt_def_GetClearChar( PHB_GT pGT )
+static HB_USHORT hb_gt_def_GetClearChar( PHB_GT pGT )
 {
    return pGT->usClearChar;
 }
 
-static void hb_gt_def_SetClearChar( PHB_GT pGT, USHORT usChar )
+static void hb_gt_def_SetClearChar( PHB_GT pGT, HB_USHORT usChar )
 {
    pGT->usClearChar = usChar;
 }
@@ -741,7 +741,7 @@ static const char * hb_gt_def_Version( PHB_GT pGT, int iType )
 }
 
 static HB_BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
-                                  int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
+                                  int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
 {
    long lIndex;
 
@@ -756,7 +756,7 @@ static HB_BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
 }
 
 static HB_BOOL hb_gt_def_PutChar( PHB_GT pGT, int iRow, int iCol,
-                                  int iColor, HB_BYTE bAttr, USHORT usChar )
+                                  int iColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
    long lIndex;
 
@@ -783,7 +783,7 @@ static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const
 }
 
 static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
-                                 HB_BYTE bAttr, USHORT usChar, HB_SIZE ulLen )
+                                 HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE ulLen )
 {
    if( iCol < 0 )
    {
@@ -984,7 +984,7 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
    {
       int iColor;
       HB_BYTE bAttr;
-      USHORT usChar;
+      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
@@ -1021,7 +1021,7 @@ static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
    {
       int iColor;
       HB_BYTE bAttr;
-      USHORT usChar;
+      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
@@ -1052,7 +1052,7 @@ static void hb_gt_def_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
    {
       int iColorOld;
       HB_BYTE bAttr;
-      USHORT usChar;
+      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
@@ -1103,7 +1103,7 @@ static void hb_gt_def_DrawShadow( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 }
 
 static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, USHORT usChar, int iRows, int iCols )
+                              int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
    int iColOld, iColNew, iColSize, iColClear, iClrs, iLength;
 
@@ -1164,7 +1164,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 }
 
 static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                                  int iColor, USHORT usChar, int iRows, int iCols )
+                                  int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
    if( iRows || iCols )
    {
@@ -1247,7 +1247,7 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
    }
 }
 
-static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, USHORT usChar )
+static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, HB_USHORT usChar )
 {
    if( iRows > 0 )
    {
@@ -1383,7 +1383,7 @@ static void hb_gt_def_BoxD( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 }
 
 static void hb_gt_def_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight,
-                                 USHORT usChar, int iColor )
+                                 HB_USHORT usChar, int iColor )
 {
    int iLength, iCol;
 
@@ -1402,7 +1402,7 @@ static void hb_gt_def_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight,
 }
 
 static void hb_gt_def_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom,
-                                USHORT usChar, int iColor )
+                                HB_USHORT usChar, int iColor )
 {
    int iLength, iRow;
 

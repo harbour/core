@@ -501,7 +501,7 @@ static HB_BOOL hb_gt_std_Resume( PHB_GT pGT )
 }
 
 static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, USHORT usChar, int iRows, int iCols )
+                              int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
@@ -570,7 +570,7 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 {
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iCol, iMin = 0;
    PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
 
@@ -602,7 +602,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iLineFeed, iBackSpace, iLen, iMin;
    PHB_GTSTD pGTSTD;
 

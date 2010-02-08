@@ -307,17 +307,17 @@ typedef struct tag_x_wnddef
    HB_BOOL fRefresh;
 
    /* window size in character cells */
-   USHORT cols;
-   USHORT rows;
+   HB_USHORT cols;
+   HB_USHORT rows;
 
    /* window size in pixels */
-   USHORT width;
-   USHORT height;
+   HB_USHORT width;
+   HB_USHORT height;
 
    /* Set to true when Windows is resized */
    HB_BOOL fWinResize;
-   USHORT newWidth;
-   USHORT newHeight;
+   HB_USHORT newWidth;
+   HB_USHORT newHeight;
 
    HB_BOOL fResizable;
    HB_BOOL fClosable;
@@ -505,7 +505,7 @@ static void hb_gt_xwc_Enable( void )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, USHORT usCh, XWC_CharTrans *bxCh )
+static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharTrans *bxCh )
 {
    XSegment       segs[9];
    XPoint         pts[XWC_MAX_CHAR_POINTS];
@@ -1545,8 +1545,8 @@ static void hb_gt_xwc_DestroyCharTrans( PXWND_DEF wnd )
 static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
 {
    int i;
-   USHORT usCh16;
-   USHORT usBx16;
+   HB_USHORT usCh16;
+   HB_USHORT usBx16;
 
    hb_gt_xwc_DestroyCharTrans( wnd );
 
@@ -2464,7 +2464,7 @@ static HB_BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color, USHORT *usChBuf, int len )
+static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color, HB_USHORT *usChBuf, int len )
 {
    if( wnd->fClearBkg )
    {
@@ -2491,7 +2491,7 @@ static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color
 
 /* *********************************************************************** */
 
-static ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, USHORT chr )
+static ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr )
 {
    return ( ( ULONG ) attr << 24 ) | ( ( ULONG ) color << 16 ) | ( ULONG ) chr;
 }
@@ -2500,9 +2500,9 @@ static ULONG hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, USHORT chr )
 
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
-   USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
+   HB_USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
-   USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
+   HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    ULONG ulCurr = 0xFFFFFFFFL;
    int i, iColor;
    XWC_CharTrans * chTrans;
@@ -2773,9 +2773,9 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
       }
       if( cursorType != SC_NONE )
       {
-         USHORT basex = wnd->col * wnd->fontWidth,
-                basey = wnd->row * wnd->fontHeight,
-                size;
+         HB_USHORT basex = wnd->col * wnd->fontWidth,
+                   basey = wnd->row * wnd->fontHeight,
+                   size;
 
          switch( cursorType )
          {
@@ -2803,7 +2803,7 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
          {
             int color;
             HB_BYTE attr;
-            USHORT usChar;
+            HB_USHORT usChar;
 
             HB_GTSELF_GETSCRCHAR( wnd->pGT, wnd->row, wnd->col, &color, &attr, &usChar );
             XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0f].pixel );
@@ -2985,7 +2985,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, USHORT cols, USHORT rows )
+static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows )
 {
    if( rows <= XWC_MAX_ROWS && cols <= XWC_MAX_COLS &&
        ( wnd->cols != cols || wnd->rows != rows || wnd->pCurrScr == NULL ) )
@@ -3008,11 +3008,11 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, USHORT cols, USHORT rows )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_Resize( PXWND_DEF wnd, USHORT cols, USHORT rows )
+static HB_BOOL hb_gt_xwc_Resize( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows )
 {
    if( rows <= XWC_MAX_ROWS && cols <= XWC_MAX_COLS )
    {
-      USHORT width, height;
+      HB_USHORT width, height;
 
       hb_gt_xwc_SetScrBuff( wnd, cols, rows );
 
@@ -4334,7 +4334,7 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          int iDefColor = HB_GTSELF_GETCOLOR( pGT );
          int iColor;
          HB_BYTE bAttr;
-         USHORT usChar;
+         HB_USHORT usChar;
 
          while( iSize-- )
          {

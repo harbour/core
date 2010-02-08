@@ -102,7 +102,7 @@ static void do_ascpos( int iSwitch )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+         pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_ASCPOS_VALPOS ?
                                   CT_ERROR_VALPOS : CT_ERROR_ASCPOS, NULL,
                                   HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,

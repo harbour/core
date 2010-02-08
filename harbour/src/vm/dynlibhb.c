@@ -210,7 +210,7 @@ HB_FUNC( HB_LIBDO )
          for( iParam = 2; iParam <= iPCount; iParam++ )
             hb_vmPush( hb_stackItemFromBase( iParam ) );
 
-         hb_vmProc( ( USHORT ) ( iPCount - 1 ) );
+         hb_vmProc( ( HB_USHORT ) ( iPCount - 1 ) );
       }
    }
 }

@@ -60,11 +60,11 @@
 
 /* throwing a CT-subsystem error without value substitution
    - function adapted from errorapi.c */
-USHORT ct_error( USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
-                 const char * szDescription, const char * szOperation,
-                 HB_ERRCODE errOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                    const char * szDescription, const char * szOperation,
+                    HB_ERRCODE errOsCode, HB_USHORT uiFlags, ULONG ulArgCount, ... )
 {
-   USHORT uiAction;
+   HB_USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
@@ -128,9 +128,9 @@ USHORT ct_error( USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode
 
 /* throwing a CT-subsystem error with value substitution
    - function adapted from errorapi.c */
-PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                          const char * szDescription, const char * szOperation,
-                         HB_ERRCODE errOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+                         HB_ERRCODE errOsCode, HB_USHORT uiFlags, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -269,7 +269,7 @@ HB_FUNC( CSETARGERR )
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
-            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR,
+            ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR,
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
       }
@@ -280,7 +280,7 @@ HB_FUNC( CSETARGERR )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR, NULL,
+         ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
    }

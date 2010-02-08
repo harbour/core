@@ -459,7 +459,7 @@ static PHB_PP_TOKEN hb_pp_tokenResultEnd( PHB_PP_TOKEN * pTokenPtr, HB_BOOL fDir
 }
 
 static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, ULONG ulLen,
-                                    int iSpaces, USHORT type )
+                                    int iSpaces, HB_USHORT type )
 {
    PHB_PP_TOKEN pToken = ( PHB_PP_TOKEN ) hb_xgrab( sizeof( HB_PP_TOKEN ) );
 
@@ -481,8 +481,8 @@ static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, ULONG ulLen,
    else
       pToken->value = ( char * ) value;
 
-   pToken->len    = ( USHORT ) ulLen;
-   pToken->spaces = ( USHORT ) iSpaces;
+   pToken->len    = ( HB_USHORT ) ulLen;
+   pToken->spaces = ( HB_USHORT ) iSpaces;
    pToken->type   = type;
    pToken->index  = 0;
    pToken->pNext  = NULL;
@@ -507,7 +507,7 @@ static void hb_pp_tokenSetValue( PHB_PP_TOKEN pToken,
       pToken->value = ( char * ) memcpy( hb_xgrab( ulLen + 1 ), value, ulLen );
       ( ( char * ) pToken->value )[ ulLen ] = '\0';
    }
-   pToken->len = ( USHORT ) ulLen;
+   pToken->len = ( HB_USHORT ) ulLen;
 }
 
 static PHB_PP_TOKEN hb_pp_tokenClone( PHB_PP_TOKEN pSource )
@@ -528,7 +528,7 @@ static PHB_PP_TOKEN hb_pp_tokenClone( PHB_PP_TOKEN pSource )
 
 static void hb_pp_tokenAdd( PHB_PP_TOKEN ** pTokenPtr,
                             const char * value, ULONG ulLen,
-                            int iSpaces, USHORT type )
+                            int iSpaces, HB_USHORT type )
 {
    PHB_PP_TOKEN pToken = hb_pp_tokenNew( value, ulLen, iSpaces, type );
    ** pTokenPtr = pToken;
@@ -550,7 +550,7 @@ static void hb_pp_tokenAddCmdSep( PHB_PP_STATE pState )
 }
 
 static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG ulLen,
-                                USHORT type )
+                                HB_USHORT type )
 {
    if( pState->fCanNextLine )
       hb_pp_tokenAddCmdSep( pState );
@@ -1505,7 +1505,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 }
 
 static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
-                           HB_BOOL fSpaces, HB_BOOL fQuote, USHORT ltype )
+                           HB_BOOL fSpaces, HB_BOOL fQuote, HB_USHORT ltype )
 {
    int iLines = 0, iSpace = fSpaces ? pToken->spaces : 0;
 
@@ -1644,7 +1644,7 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
    return iLines;
 }
 
-static HB_BOOL hb_pp_tokenValueCmp( PHB_PP_TOKEN pToken, const char * szValue, USHORT mode )
+static HB_BOOL hb_pp_tokenValueCmp( PHB_PP_TOKEN pToken, const char * szValue, HB_USHORT mode )
 {
    if( pToken->len )
    {
@@ -1662,7 +1662,7 @@ static HB_BOOL hb_pp_tokenValueCmp( PHB_PP_TOKEN pToken, const char * szValue, U
 }
 
 static HB_BOOL hb_pp_tokenEqual( PHB_PP_TOKEN pToken, PHB_PP_TOKEN pMatch,
-                                 USHORT mode )
+                                 HB_USHORT mode )
 {
    return pToken == pMatch ||
          ( mode != HB_PP_CMP_ADDR &&
@@ -1692,7 +1692,7 @@ static void hb_pp_patternClearResults( PHB_PP_RULE pRule )
    pRule->pNextExpr = NULL;
 }
 
-static HB_BOOL hb_pp_patternAddResult( PHB_PP_RULE pRule, USHORT marker,
+static HB_BOOL hb_pp_patternAddResult( PHB_PP_RULE pRule, HB_USHORT marker,
                                        PHB_PP_TOKEN pFirst, PHB_PP_TOKEN pNext )
 {
    PHB_PP_MARKER pMarker = &pRule->pMarkers[ marker - 1 ];
@@ -1716,7 +1716,7 @@ static HB_BOOL hb_pp_patternAddResult( PHB_PP_RULE pRule, USHORT marker,
 }
 
 static PHB_PP_RULE hb_pp_ruleNew( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN pResult,
-                                  USHORT mode, USHORT markers,
+                                  HB_USHORT mode, HB_USHORT markers,
                                   PHB_PP_MARKER pMarkers )
 {
    PHB_PP_RULE pRule = ( PHB_PP_RULE ) hb_xgrab( sizeof( HB_PP_RULE ) );
@@ -1819,8 +1819,8 @@ static PHB_PP_RULE hb_pp_defineFind( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    return pRule;
 }
 
-static void hb_pp_defineAdd( PHB_PP_STATE pState, USHORT mode,
-                             USHORT markers, PHB_PP_MARKER pMarkers,
+static void hb_pp_defineAdd( PHB_PP_STATE pState, HB_USHORT mode,
+                             HB_USHORT markers, PHB_PP_MARKER pMarkers,
                              PHB_PP_TOKEN pMatch, PHB_PP_TOKEN pResult )
 {
    PHB_PP_RULE pRule = hb_pp_defineFind( pState, pMatch );
@@ -2670,13 +2670,13 @@ static void hb_pp_defineNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, HB_BOOL f
    {
       PHB_PP_TOKEN pResult, pLast = pMatch->pNext, pParam;
       PHB_PP_MARKER pMarkers = NULL;
-      USHORT usPCount = 0, usParam;
+      HB_USHORT usPCount = 0, usParam;
 
       /* pseudo function? */
       if( pLast && HB_PP_TOKEN_TYPE( pLast->type ) == HB_PP_TOKEN_LEFT_PB &&
           pLast->spaces == 0 )
       {
-         USHORT type = HB_PP_TOKEN_KEYWORD;
+         HB_USHORT type = HB_PP_TOKEN_KEYWORD;
          for( ;; )
          {
             pLast = pLast->pNext;
@@ -2790,7 +2790,7 @@ static HB_BOOL hb_pp_tokenUnQuotedGet( PHB_PP_TOKEN ** pTokenPtr, HB_BOOL * pfQu
 static HB_BOOL hb_pp_matchMarkerNew( PHB_PP_TOKEN * pTokenPtr,
                                      PHB_PP_MARKERLST * pMarkerListPtr )
 {
-   USHORT type = HB_PP_TOKEN_NUL;
+   HB_USHORT type = HB_PP_TOKEN_NUL;
    PHB_PP_TOKEN pMarkerId = NULL, pMTokens = NULL;
    HB_BOOL fQuoted;
 
@@ -3046,9 +3046,9 @@ static HB_BOOL hb_pp_resultMarkerNew( PHB_PP_STATE pState,
                                       PHB_PP_TOKEN * pTokenPtr,
                                       PHB_PP_MARKERLST * pMarkerListPtr,
                                       HB_BOOL fDump, HB_BOOL fOptional,
-                                      USHORT * pusPCount, USHORT spaces )
+                                      HB_USHORT * pusPCount, HB_USHORT spaces )
 {
-   USHORT type = HB_PP_TOKEN_NUL, rtype;
+   HB_USHORT type = HB_PP_TOKEN_NUL, rtype;
    PHB_PP_TOKEN pMarkerId = NULL, pToken;
    HB_BOOL fQuoted;
 
@@ -3187,8 +3187,8 @@ static HB_BOOL hb_pp_patternCompare( PHB_PP_TOKEN pToken1, PHB_PP_TOKEN pToken2 
 }
 
 static void hb_pp_directiveDel( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch,
-                                USHORT markers, PHB_PP_MARKER pMarkers,
-                                USHORT mode, HB_BOOL fCommand )
+                                HB_USHORT markers, PHB_PP_MARKER pMarkers,
+                                HB_USHORT mode, HB_BOOL fCommand )
 {
    PHB_PP_RULE pRule, * pRulePtr = fCommand ? &pState->pCommands :
                                               &pState->pTranslations;
@@ -3197,7 +3197,7 @@ static void hb_pp_directiveDel( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch,
       pRule = * pRulePtr;
       if( HB_PP_CMP_MODE( pRule->mode ) == mode && pRule->markers == markers )
       {
-         USHORT u;
+         HB_USHORT u;
          for( u = 0; u < markers; ++u )
          {
             if( pRule->pMarkers[ u ].canrepeat != pMarkers[ u ].canrepeat )
@@ -3219,7 +3219,7 @@ static void hb_pp_directiveDel( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch,
 }
 
 static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
-                                USHORT mode, HB_BOOL fCommand, HB_BOOL fDirect,
+                                HB_USHORT mode, HB_BOOL fCommand, HB_BOOL fDirect,
                                 HB_BOOL fDelete )
 {
    PHB_PP_TOKEN pResult, pMatch, pStart, pLast;
@@ -3275,7 +3275,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       PHB_PP_MARKERLST pMarkerList = NULL, pMrkLst;
       PHB_PP_MARKERPTR pMrkPtr;
       PHB_PP_MARKER pMarkers = NULL;
-      USHORT usPCount = 0;
+      HB_USHORT usPCount = 0;
 
       fValid = hb_pp_matchPatternNew( pState, &pMatch, &pMarkerList, NULL );
       if( fValid )
@@ -3305,7 +3305,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
                   }
                   else if( HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) == HB_PP_TOKEN_LT )
                   {
-                     USHORT spaces = ( * pTokenPtr )->spaces;
+                     HB_USHORT spaces = ( * pTokenPtr )->spaces;
                      /* Free the string dump token: '#'. Clipper PP always
                         does it without checking type of next marker */
                      if( pDumpPtr )
@@ -3443,11 +3443,11 @@ static HB_BOOL hb_pp_tokenStartExtBlock( PHB_PP_TOKEN * pTokenPtr )
    if( pToken && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB &&
        pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PIPE )
    {
-      USHORT prevtype = HB_PP_TOKEN_COMMA;
+      HB_USHORT prevtype = HB_PP_TOKEN_COMMA;
       pToken = pToken->pNext->pNext;
       while( pToken )
       {
-         USHORT type = HB_PP_TOKEN_TYPE( pToken->type );
+         HB_USHORT type = HB_PP_TOKEN_TYPE( pToken->type );
          if( ( ( type == HB_PP_TOKEN_KEYWORD || type == HB_PP_TOKEN_EPSILON ) &&
                prevtype == HB_PP_TOKEN_COMMA ) ||
              ( type == HB_PP_TOKEN_COMMA && prevtype == HB_PP_TOKEN_KEYWORD ) )
@@ -3482,9 +3482,9 @@ static HB_BOOL hb_pp_tokenStopExtBlock( PHB_PP_TOKEN * pTokenPtr )
 }
 
 static HB_BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
-                                   USHORT mode, HB_BOOL * pfStop )
+                                   HB_USHORT mode, HB_BOOL * pfStop )
 {
-   USHORT curtype, prevtype = 0, lbrtype = 0, rbrtype = 0;
+   HB_USHORT curtype, prevtype = 0, lbrtype = 0, rbrtype = 0;
    PHB_PP_TOKEN pToken = * pTokenPtr, pPrev;
    int iBraces = 0;
    HB_BOOL fMatch;
@@ -3614,10 +3614,10 @@ static HB_BOOL hb_pp_tokenCanStartExp( PHB_PP_TOKEN pToken )
 }
 
 static HB_BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
-                                 PHB_PP_TOKEN pStop, USHORT mode )
+                                 PHB_PP_TOKEN pStop, HB_USHORT mode )
 {
    HB_BOOL fMatch = HB_FALSE;
-   USHORT type;
+   HB_USHORT type;
 
    type = HB_PP_TOKEN_TYPE( pMatch->type );
    if( type == HB_PP_MMARKER_REGULAR )
@@ -3777,7 +3777,7 @@ static HB_BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
 
 static HB_BOOL hb_pp_patternMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
                                    PHB_PP_TOKEN pStop,
-                                   USHORT mode, PHB_PP_RULE pRule )
+                                   HB_USHORT mode, PHB_PP_RULE pRule )
 {
    PHB_PP_TOKEN pToken = * pTokenPtr;
    PHB_PP_TOKEN pFirst;
@@ -3869,8 +3869,8 @@ static HB_BOOL hb_pp_patternCmp( PHB_PP_RULE pRule, PHB_PP_TOKEN pToken,
    return HB_FALSE;
 }
 
-static PHB_PP_RESULT hb_pp_matchResultGet( PHB_PP_RULE pRule, USHORT usMatch,
-                                           USHORT usIndex )
+static PHB_PP_RESULT hb_pp_matchResultGet( PHB_PP_RULE pRule, HB_USHORT usMatch,
+                                           HB_USHORT usIndex )
 {
    PHB_PP_MARKER pMarker = &pRule->pMarkers[ usIndex - 1];
    PHB_PP_RESULT pMarkerResult;
@@ -3892,7 +3892,7 @@ static PHB_PP_RESULT hb_pp_matchResultGet( PHB_PP_RULE pRule, USHORT usMatch,
 }
 
 static PHB_PP_TOKEN * hb_pp_matchResultLstAdd( PHB_PP_STATE pState,
-                                               USHORT spaces, USHORT type,
+                                               HB_USHORT spaces, HB_USHORT type,
                                                PHB_PP_TOKEN * pResultPtr,
                                                PHB_PP_TOKEN pToken,
                                                PHB_PP_TOKEN pStop )
@@ -4032,7 +4032,7 @@ static PHB_PP_TOKEN * hb_pp_matchResultLstAdd( PHB_PP_STATE pState,
 
 static PHB_PP_TOKEN * hb_pp_matchResultAdd( PHB_PP_STATE pState,
                                  PHB_PP_RULE pRule, PHB_PP_TOKEN * pResultPtr,
-                                 PHB_PP_TOKEN pMatch, USHORT usMatch )
+                                 PHB_PP_TOKEN pMatch, HB_USHORT usMatch )
 {
    PHB_PP_RESULT pMarkerResult = hb_pp_matchResultGet( pRule, usMatch, pMatch->index );
    PHB_PP_TOKEN pToken, pStop;
@@ -4121,7 +4121,7 @@ static PHB_PP_TOKEN * hb_pp_matchResultAdd( PHB_PP_STATE pState,
 }
 
 static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
-                                           PHB_PP_RULE pRule, USHORT usMatch,
+                                           PHB_PP_RULE pRule, HB_USHORT usMatch,
                                            PHB_PP_TOKEN pResultPattern,
                                            PHB_PP_TOKEN * pResultPtr )
 {
@@ -4133,7 +4133,7 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
       }
       else if( HB_PP_TOKEN_TYPE( pResultPattern->type ) == HB_PP_RMARKER_OPTIONAL )
       {
-         USHORT usMaxMatch = 0, matches;
+         HB_USHORT usMaxMatch = 0, matches;
          PHB_PP_TOKEN pToken = pResultPattern->pMTokens;
          while( pToken )
          {
@@ -4187,7 +4187,7 @@ static char * hb_pp_tokenListStr( PHB_PP_TOKEN pToken, PHB_PP_TOKEN pStop,
                                   HB_BOOL fStop, PHB_MEM_BUFFER pBuffer,
                                   HB_BOOL fQuote, HB_BOOL fEol )
 {
-   USHORT ltype = HB_PP_TOKEN_NUL;
+   HB_USHORT ltype = HB_PP_TOKEN_NUL;
    HB_BOOL fSpaces = HB_FALSE;
 
    hb_membufFlush( pBuffer );
@@ -5256,7 +5256,7 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
       pDefRule = ( PHB_PP_DEFRULE ) pDefRules + iDefRules;
       if( pDefRule->markers > 0 )
       {
-         USHORT marker;
+         HB_USHORT marker;
          ULONG ulBit;
 
          pMarkers = ( PHB_PP_MARKER ) hb_xgrab( pDefRule->markers * sizeof( HB_PP_MARKER ) );
@@ -5844,7 +5844,7 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
    {
       PHB_PP_TOKEN pToken;
       HB_BOOL fError = HB_FALSE;
-      USHORT ltype;
+      HB_USHORT ltype;
 
       if( !pState->pOutputBuffer )
          pState->pOutputBuffer = hb_membufNew();
@@ -5886,7 +5886,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, ULONG * pulLen 
    PHB_PP_TOKEN pToken;
    PHB_PP_FILE pFile;
    HB_BOOL fError = HB_FALSE;
-   USHORT ltype;
+   HB_USHORT ltype;
    ULONG ulLen;
 
    if( !pState->pOutputBuffer )
@@ -6127,7 +6127,7 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
    hb_membufFlush( pState->pBuffer );
    if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
    {
-      USHORT ltype = HB_PP_TOKEN_NUL;
+      HB_USHORT ltype = HB_PP_TOKEN_NUL;
       int iBraces = 0;
       do
       {

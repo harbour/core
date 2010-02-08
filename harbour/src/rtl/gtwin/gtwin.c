@@ -112,10 +112,10 @@ static HB_BOOL b_MouseEnable = HB_TRUE;
 #else
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
       #undef WORD                            /* 2 bytes unsigned */
-      typedef USHORT WORD;
+      typedef unsigned short int WORD;
 
       #undef DWORD                           /* 4 bytes unsigned */
-      typedef ULONG DWORD;
+      typedef unsigned long int DWORD;
    #endif
 #endif
 

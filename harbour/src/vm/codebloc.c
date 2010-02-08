@@ -88,7 +88,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
    if( pCBlock->pLocals )
    {
       PHB_ITEM pLocals = pCBlock->pLocals;
-      USHORT uiLocals = pCBlock->uiLocals;
+      HB_USHORT uiLocals = pCBlock->uiLocals;
 
       /* clear pCBlock->pLocals to avoid infinit loop in cross
        * referenced items
@@ -114,7 +114,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageMark )
    if( pCBlock->uiLocals )
    {
       PHB_ITEM pLocals = pCBlock->pLocals;
-      USHORT uiLocals = pCBlock->uiLocals;
+      HB_USHORT uiLocals = pCBlock->uiLocals;
 
       do
          hb_gcItemRef( &pLocals[ uiLocals] );
@@ -139,7 +139,7 @@ static const HB_GC_FUNCS s_gcCodeblockFuncs =
  *
  */
 HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
-                                  USHORT uiLocals,
+                                  HB_USHORT uiLocals,
                                   const HB_BYTE * pLocalPosTable,
                                   PHB_SYMB pSymbols,
                                   HB_SIZE ulLen )
@@ -183,7 +183,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
        * uiLocal have to be ZERO
        * uiLocal will be also ZERO if it is a nested codeblock
        */
-      USHORT ui = 1;
+      HB_USHORT ui = 1;
       PHB_ITEM pLocal;
 
       /* Create a table that will store the values of local variables

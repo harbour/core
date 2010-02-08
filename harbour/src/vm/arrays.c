@@ -1523,11 +1523,11 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pArray )
    return hb_arrayCloneTo( hb_itemNew( NULL ), pArray );
 }
 
-PHB_ITEM hb_arrayFromStack( USHORT uiLen )
+PHB_ITEM hb_arrayFromStack( HB_USHORT uiLen )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray = hb_itemNew( NULL );
-   USHORT uiPos;
+   HB_USHORT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromStack(%hu)", uiLen));
 
@@ -1543,7 +1543,7 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
-   USHORT uiPos, uiPCount;
+   HB_USHORT uiPos, uiPCount;
    LONG lBaseOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
@@ -1565,7 +1565,7 @@ PHB_ITEM hb_arrayBaseParams( void )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
-   USHORT uiPos, uiPCount;
+   HB_USHORT uiPos, uiPCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayBaseParams()"));
 
@@ -1584,7 +1584,7 @@ PHB_ITEM hb_arraySelfParams( void )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
-   USHORT uiPos, uiPCount;
+   HB_USHORT uiPos, uiPCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySelfParams()"));
 

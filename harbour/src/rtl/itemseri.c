@@ -279,7 +279,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
 {
    HB_SIZE ulSize, ulLen, u;
    HB_MAXINT lVal;
-   USHORT uiClass;
+   HB_USHORT uiClass;
    PHB_ITEM pDefVal;
    const char * szVal;
 
@@ -657,7 +657,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
          }
          else
          {
-            USHORT uiClass = hb_objGetClass( pItem );
+            HB_USHORT uiClass = hb_objGetClass( pItem );
             if( uiClass )
             {
                const char * szClass = hb_clsName( uiClass ),

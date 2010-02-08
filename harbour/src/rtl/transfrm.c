@@ -98,7 +98,7 @@ HB_FUNC( TRANSFORM )
       char szPicDate[ 11 ];
       const char * szPic = hb_itemGetCPtr( pPic );
       HB_SIZE ulPicLen = hb_itemGetCLen( pPic );
-      USHORT  uiPicFlags; /* Function flags */
+      HB_USHORT uiPicFlags; /* Function flags */
 
       HB_SIZE ulParamS = 0; /* To avoid GCC -O2 warning */
       char    cParamL = '\0'; /* To avoid GCC -O2 warning */

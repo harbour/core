@@ -143,14 +143,14 @@ struct _HB_SYMB;
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
 #  if !defined( HB_MT_VM )
-      void *   pMemvar;          /* memvar pointer ( publics & privates ) */
-      USHORT   uiArea;           /* Workarea number */
+      void *    pMemvar;          /* memvar pointer ( publics & privates ) */
+      HB_USHORT uiArea;           /* Workarea number */
 #  endif /* !HB_MT_VM */
-      USHORT   uiSymNum;         /* dynamic symbol number */
+      HB_USHORT uiSymNum;         /* dynamic symbol number */
 #  if !defined( HB_NO_PROFILER )
-      ULONG    ulCalls;          /* profiler support */
-      ULONG    ulTime;           /* profiler support */
-      ULONG    ulRecurse;        /* profiler support */
+      ULONG     ulCalls;          /* profiler support */
+      ULONG     ulTime;           /* profiler support */
+      ULONG     ulRecurse;        /* profiler support */
 #  endif /* !HB_NO_PROFILER */
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 

@@ -303,7 +303,7 @@ static int hb_LZSSxRead( PHB_LZSSX_COMPR pCompr )
 static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
 {
    HB_BOOL fResult = HB_TRUE;
-   USHORT itemMask;
+   HB_USHORT itemMask;
    int offset, length, index, c, h;
 
    index = RBUFLENGTH - MAXLENGTH;

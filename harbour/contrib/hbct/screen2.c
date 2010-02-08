@@ -343,7 +343,7 @@ HB_FUNC( SCREENSTR )
          {
             int iColor;
             BYTE bAttr;
-            USHORT usChar;
+            HB_USHORT usChar;
             hb_gtGetChar( iRow, iC, &iColor, &bAttr, &usChar );
             *szText++ = ( char ) usChar;
             *szText++ = ( char ) iColor;
@@ -386,7 +386,7 @@ HB_FUNC( STRSCREEN )
             iC = iCol;
             do
             {
-               USHORT usChar = ( HB_UCHAR ) *szText++;
+               HB_USHORT usChar = ( HB_UCHAR ) *szText++;
                int iColor = ( HB_UCHAR ) *szText++;
                hb_gtPutChar( iRow, iC, iColor, 0, usChar );
                ulLen -= 2;

@@ -83,7 +83,7 @@
 /************************************************************/
 /* Utility functions                                        */
 typedef unsigned long HB_GT_PIXELTYPE;
-typedef USHORT HB_GT_CELLTYPE;
+typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define XWC_CHAR_QUEUE_SIZE         128
 #define XWC_CHAR_BUFFER            1024
@@ -280,7 +280,7 @@ typedef struct tag_XWC_CharTrans
       XPoint      *pts;
       XSegment    *seg;
       XRectangle  *rect;
-      USHORT      ch16;
+      HB_USHORT    ch16;
    } u;
    HB_BYTE size;
    HB_BOOL inverse;

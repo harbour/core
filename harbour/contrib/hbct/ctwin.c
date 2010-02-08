@@ -582,7 +582,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
 {
    PHB_CT_WND pWnd;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iRow, iCol, iHeight, iWidth, iTmp;
    long lIndex;
 
@@ -1618,7 +1618,7 @@ static void hb_ctw_gt_GetScrCursor( PHB_GT pGT, int * piRow, int * piCol, int * 
 }
 
 static HB_BOOL hb_ctw_gt_GetScrChar( PHB_GT pGT, int iRow, int iCol,
-                                     int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
+                                     int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
 {
    PHB_GTCTW pCTW;
    int iWindow, iShadow;
@@ -1676,7 +1676,7 @@ static HB_BOOL hb_ctw_gt_GetScrChar( PHB_GT pGT, int iRow, int iCol,
 }
 
 static HB_BOOL hb_ctw_gt_GetChar( PHB_GT pGT, int iRow, int iCol,
-                                  int * piColor, HB_BYTE * pbAttr, USHORT * pusChar )
+                                  int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
 {
    PHB_GTCTW pCTW;
    PHB_CT_WND pWnd;
@@ -1707,7 +1707,7 @@ static HB_BOOL hb_ctw_gt_GetChar( PHB_GT pGT, int iRow, int iCol,
 }
 
 static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
-                                  int iColor, HB_BYTE bAttr, USHORT usChar )
+                                  int iColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
    PHB_GTCTW pCTW;
    int iWindow, iCurrWindow;
@@ -1741,7 +1741,7 @@ static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
             {
                int iClr;
                HB_BYTE bAtr;
-               USHORT usCh;
+               HB_USHORT usCh;
                if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iClr, &bAtr, &usCh ) )
                {
                   if( usCh == usChar && iClr == iColor )

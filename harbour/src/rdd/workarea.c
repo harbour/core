@@ -273,7 +273,7 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
  */
 static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
-   USHORT uiItems, uiCount, uiLen, uiDec;
+   HB_USHORT uiItems, uiCount, uiLen, uiDec;
    HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO pFieldInfo;
    PHB_ITEM pFieldDesc;
@@ -281,7 +281,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waCreateFields(%p, %p)", pArea, pStruct));
 
-   uiItems = ( USHORT ) hb_arrayLen( pStruct );
+   uiItems = ( HB_USHORT ) hb_arrayLen( pStruct );
    if( SELF_SETFIELDEXTENT( pArea, uiItems ) != HB_SUCCESS )
       return HB_FAILURE;
 
@@ -293,11 +293,11 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
       iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
-      uiLen = pFieldInfo.uiLen = ( USHORT ) iData;
+      uiLen = pFieldInfo.uiLen = ( HB_USHORT ) iData;
       iData = hb_arrayGetNI( pFieldDesc, DBS_DEC );
       if( iData < 0 )
          iData = 0;
-      uiDec = ( USHORT ) iData;
+      uiDec = ( HB_USHORT ) iData;
       pFieldInfo.uiDec = 0;
 #ifdef DBS_FLAG
       pFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
@@ -466,7 +466,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 /*
  * Determine the number of fields in the WorkArea.
  */
-static HB_ERRCODE hb_waFieldCount( AREAP pArea, USHORT * uiFields )
+static HB_ERRCODE hb_waFieldCount( AREAP pArea, HB_USHORT * uiFields )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waFieldCount(%p, %p)", pArea, uiFields));
 
@@ -477,7 +477,7 @@ static HB_ERRCODE hb_waFieldCount( AREAP pArea, USHORT * uiFields )
 /*
  * Retrieve information about a field.
  */
-static HB_ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem )
+static HB_ERRCODE hb_waFieldInfo( AREAP pArea, HB_USHORT uiIndex, HB_USHORT uiType, PHB_ITEM pItem )
 {
    LPFIELD pField;
 
@@ -606,7 +606,7 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PH
 /*
  * Determine the name associated with a field number.
  */
-static HB_ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, char * szName )
+static HB_ERRCODE hb_waFieldName( AREAP pArea, HB_USHORT uiIndex, char * szName )
 {
    LPFIELD pField;
 
@@ -624,7 +624,7 @@ static HB_ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, char * szName )
 /*
  * Establish the extent of the array of fields for a WorkArea.
  */
-static HB_ERRCODE hb_waSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
+static HB_ERRCODE hb_waSetFieldExtent( AREAP pArea, HB_USHORT uiFieldExtent )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waSetFieldExtent(%p, %hu)", pArea, uiFieldExtent));
 
@@ -679,7 +679,7 @@ static HB_ERRCODE hb_waClose( AREAP pArea )
 /*
  * Retrieve information about the current driver.
  */
-static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -718,7 +718,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_CHILDCOUNT:
       {
          LPDBRELINFO lpdbRelations = pArea->lpdbRelations;
-         USHORT uiCount = 0;
+         HB_USHORT uiCount = 0;
          while( lpdbRelations )
          {
             uiCount++;
@@ -822,7 +822,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  * Retrieve information about the current order that SELF could not.
  * Called by SELF_ORDINFO if uiIndex is not supported.
  */
-static HB_ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO pInfo )
+static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT index, LPDBORDERINFO pInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waOrderInfo(%p, %hu, %p)", pArea, index, pInfo));
 
@@ -931,7 +931,7 @@ static HB_ERRCODE hb_waRelease( AREAP pArea )
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static HB_ERRCODE hb_waStructSize( AREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_waStructSize( AREAP pArea, HB_USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waStrucSize(%p, %p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
@@ -1216,7 +1216,7 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
    {
       LPDBTRANSITEM pTransItem;
       PHB_ITEM pItem;
-      USHORT uiCount;
+      HB_USHORT uiCount;
 
       /* Append a new record */
       errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, HB_TRUE );
@@ -1350,10 +1350,10 @@ static HB_ERRCODE hb_waClearRel( AREAP pArea )
 /*
  * Obtain the workarea number of the specified relation.
  */
-static HB_ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, USHORT * pRelArea )
+static HB_ERRCODE hb_waRelArea( AREAP pArea, HB_USHORT uiRelNo, HB_USHORT * pRelArea )
 {
    LPDBRELINFO lpdbRelations;
-   USHORT uiIndex = 1;
+   HB_USHORT uiIndex = 1;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pRelArea));
 
@@ -1445,10 +1445,10 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 /*
  * Obtain the character expression of the specified relation.
  */
-static HB_ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, PHB_ITEM pExpr )
+static HB_ERRCODE hb_waRelText( AREAP pArea, HB_USHORT uiRelNo, PHB_ITEM pExpr )
 {
    LPDBRELINFO lpdbRelations;
-   USHORT uiIndex = 1;
+   HB_USHORT uiIndex = 1;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelText(%p, %hu, %p)", pArea, uiRelNo, pExpr));
 
@@ -1720,7 +1720,7 @@ static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 /*
  * RDD info
  */
-static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection, PHB_ITEM pItem )
+static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnection, PHB_ITEM pItem )
 {
    HB_BOOL fResult;
    int iResult;
@@ -2028,22 +2028,22 @@ static const RDDFUNCS waTable =
 /* common for all threads list of registered RDDs */
 static HB_CRITICAL_NEW( s_rddMtx );
 static LPRDDNODE * s_RddList    = NULL;   /* Registered RDDs pool */
-static USHORT      s_uiRddMax   = 0;      /* Size of RDD pool */
-static USHORT      s_uiRddCount = 0;      /* Number of registered RDD */
+static HB_USHORT   s_uiRddMax   = 0;      /* Size of RDD pool */
+static HB_USHORT   s_uiRddCount = 0;      /* Number of registered RDD */
 
 /*
  * Get RDD node poionter
  */
-LPRDDNODE hb_rddGetNode( USHORT uiNode )
+LPRDDNODE hb_rddGetNode( HB_USHORT uiNode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetNode(%hu)", uiNode));
 
    return uiNode < s_uiRddCount ? s_RddList[ uiNode ] : NULL;
 }
 
-PHB_ITEM hb_rddList( USHORT uiType )
+PHB_ITEM hb_rddList( HB_USHORT uiType )
 {
-   USHORT uiCount, uiIndex, uiRdds;
+   HB_USHORT uiCount, uiIndex, uiRdds;
    PHB_ITEM pRddArray;
    LPRDDNODE pNode;
 
@@ -2067,9 +2067,9 @@ PHB_ITEM hb_rddList( USHORT uiType )
 /*
  * Find a RDD node.
  */
-LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
+LPRDDNODE hb_rddFindNode( const char * szDriver, HB_USHORT * uiIndex )
 {
-   USHORT uiCount;
+   HB_USHORT uiCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddFindNode(%s, %p)", szDriver, uiIndex));
 
@@ -2093,7 +2093,7 @@ LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
  */
 void hb_rddShutDown( void )
 {
-   USHORT uiCount;
+   HB_USHORT uiCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddShutDown()"));
 
@@ -2118,12 +2118,12 @@ void hb_rddShutDown( void )
 /*
  * Register a RDD driver.
  */
-int hb_rddRegister( const char * szDriver, USHORT uiType )
+int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
 {
    LPRDDNODE pRddNewNode;
    PHB_DYNS pGetFuncTable;
    char szGetFuncTable[ HB_RDD_MAX_DRIVERNAME_LEN + 14 ];
-   USHORT uiFunctions;
+   HB_USHORT uiFunctions;
    int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddRegister(%s, %hu)", szDriver, uiType));
@@ -2196,7 +2196,7 @@ int hb_rddRegister( const char * szDriver, USHORT uiType )
 HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName )
 {
    LPRDDNODE pRddNode;
-   USHORT uiCount;
+   HB_USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddInherit(%p, %p, %p, %s)", pTable, pSubTable, pSuperTable, szDrvName));

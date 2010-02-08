@@ -217,7 +217,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
                hb_vmPushNil();
                for( i = 0; i < iPCount; i++ )
                   hb_vmPush( pParams[ i ] );
-               hb_vmProc( ( USHORT ) iPCount );
+               hb_vmProc( ( HB_USHORT ) iPCount );
                if( hb_vmRequestQuery() != 0 )
                   break;
             }
@@ -299,7 +299,7 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
 
 
 
-static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT usMode )
+static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHORT usMode )
 {
    PHRB_BODY pHrbBody = NULL;
 
@@ -310,7 +310,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
       HB_SIZE ulPos;
       ULONG ul;
       char * buffer, ch;
-      USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
+      HB_USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
 
       PHB_SYMB pSymRead;                           /* Symbols read     */
       PHB_DYNF pDynFunc;                           /* Functions read   */
@@ -519,7 +519,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
          }
 
          pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
-                  ( USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, HB_TRUE, HB_FALSE );
+                  ( HB_USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, HB_TRUE, HB_FALSE );
 
          if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
          {
@@ -553,7 +553,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, USHORT 
    return pHrbBody;
 }
 
-static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, USHORT usMode )
+static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, HB_USHORT usMode )
 {
    char szFileName[ HB_PATH_MAX ];
    PHRB_BODY pHrbBody = NULL;
@@ -619,7 +619,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
       for( i = 0; i < iPCount; i++ )
          hb_vmPush( pParams[ i ] );
 
-      hb_vmProc( ( USHORT ) iPCount );
+      hb_vmProc( ( HB_USHORT ) iPCount );
 
       pRetVal = hb_itemNew( NULL );
       hb_itemMove( pRetVal, hb_stackReturnItem() );
@@ -677,13 +677,13 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 */
 HB_FUNC( HB_HRBRUN )
 {
-   USHORT usMode = HB_HRB_BIND_DEFAULT;
-   USHORT nParam = 1;
+   HB_USHORT usMode = HB_HRB_BIND_DEFAULT;
+   HB_USHORT nParam = 1;
    HB_SIZE ulLen;
 
    if( HB_ISNUM( 1 ) )
    {
-      usMode = ( USHORT ) hb_parni( 1 );
+      usMode = ( HB_USHORT ) hb_parni( 1 );
       nParam++;
    }
 
@@ -727,13 +727,13 @@ HB_FUNC( HB_HRBRUN )
 
 HB_FUNC( HB_HRBLOAD )
 {
-   USHORT usMode = HB_HRB_BIND_DEFAULT;
-   USHORT nParam = 1;
+   HB_USHORT usMode = HB_HRB_BIND_DEFAULT;
+   HB_USHORT nParam = 1;
    HB_SIZE ulLen;
 
    if( HB_ISNUM( 1 ) )
    {
-      usMode = ( USHORT ) hb_parni( 1 );
+      usMode = ( HB_USHORT ) hb_parni( 1 );
       nParam++;
    }
 

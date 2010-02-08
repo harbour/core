@@ -520,7 +520,7 @@ static void hb_compGenCLocalName( PFUNCTION pFunc, int iLocal, ULONG lPCodePos, 
    }
    else
    {
-      const char *szName = hb_compLocalVariableName( pFunc, ( USHORT ) iLocal );
+      const char *szName = hb_compLocalVariableName( pFunc, ( HB_USHORT ) iLocal );
 
       if( szName )
          fprintf( cargo->yyc, "\t/* %s */", szName );
@@ -529,7 +529,7 @@ static void hb_compGenCLocalName( PFUNCTION pFunc, int iLocal, ULONG lPCodePos, 
    }
 }
 
-static void hb_compGenCStaticName( USHORT uiStatic, HB_GENC_INFO_PTR cargo )
+static void hb_compGenCStaticName( HB_USHORT uiStatic, HB_GENC_INFO_PTR cargo )
 {
    const char *szName = hb_compStaticVariableName( cargo->HB_COMP_PARAM, uiStatic );
    if( szName )
@@ -1400,7 +1400,7 @@ static HB_GENC_FUNC( hb_p_pushblockshort )
 
 static HB_GENC_FUNC( hb_p_pushblock )
 {
-   USHORT wVar, w;
+   HB_USHORT wVar, w;
    ULONG ulStart = lPCodePos;
 
    fprintf( cargo->yyc, "\tHB_P_PUSHBLOCK, %i, %i,",
@@ -1455,7 +1455,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
 
 static HB_GENC_FUNC( hb_p_pushblocklarge )
 {
-   USHORT wVar, w;
+   HB_USHORT wVar, w;
    ULONG ulStart = lPCodePos;
 
    fprintf( cargo->yyc, "\tHB_P_PUSHBLOCKLARGE, %i, %i, %i,",
@@ -1703,7 +1703,7 @@ static HB_GENC_FUNC( hb_p_pushstaticref )
 
 static HB_GENC_FUNC( hb_p_pushstrshort )
 {
-   USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
+   HB_USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
 
    fprintf( cargo->yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
 
@@ -1721,7 +1721,7 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
 
 static HB_GENC_FUNC( hb_p_pushstr )
 {
-   USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    fprintf( cargo->yyc, "\tHB_P_PUSHSTR, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
@@ -1762,7 +1762,7 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
 
 static HB_GENC_FUNC( hb_p_pushstrhidden )
 {
-   USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+   HB_USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
 
    fprintf( cargo->yyc, "\tHB_P_PUSHSTRHIDDEN, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
@@ -1999,7 +1999,7 @@ static HB_GENC_FUNC( hb_p_staticname )
 
 static HB_GENC_FUNC( hb_p_threadstatics )
 {
-   USHORT w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), u;
+   HB_USHORT w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), u;
 
    fprintf( cargo->yyc, "\tHB_P_THREADSTATICS, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],

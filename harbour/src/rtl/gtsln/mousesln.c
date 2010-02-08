@@ -70,8 +70,8 @@ static int  s_iMouseCol = 0;
 static HB_BOOL s_bMousePresent = HB_FALSE;
 static int     s_iMouseButtons = -1;
 
-static USHORT  s_usMouseState = 0;
-static USHORT  s_usLastMouseState = 0;
+static HB_USHORT s_usMouseState = 0;
+static HB_USHORT s_usLastMouseState = 0;
 
 static struct timeval mLeftDblckTime;
 static struct timeval mMiddleDblckTime;
@@ -127,7 +127,7 @@ static HB_BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
 
 static void hb_sln_CheckDoubleClick()
 {
-   USHORT usNewButtons = ( s_usMouseState & ~s_usLastMouseState ) & M_BUTTON_KEYMASK;
+   HB_USHORT usNewButtons = ( s_usMouseState & ~s_usLastMouseState ) & M_BUTTON_KEYMASK;
 
    if( usNewButtons != 0 )
    {
@@ -217,7 +217,7 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, HB_BOOL fCheckNew )
       }
       else
       {
-         USHORT usKeyDiff = ( s_usMouseState ^ s_usLastMouseState );
+         HB_USHORT usKeyDiff = ( s_usMouseState ^ s_usLastMouseState );
 
          if( usKeyDiff & M_BUTTON_LEFT )
          {

@@ -214,16 +214,16 @@ typedef MEMOGCITEM * LPMEMOGCITEM;
 
 typedef struct _MEMOGCTABLE
 {
-   HB_BYTE   bType;                    /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
-   HB_BYTE   bChanged;                 /* Should we write GC data to disk */
-   ULONG  ulNextBlock;              /* Next free block in the file */
-   ULONG  ulPrevBlock;              /* Previous next free block in the file */
-   ULONG  ulRevPage;                /* FLEX Rev GC page offset */
-   ULONG  ulDirPage;                /* FLEX Dir GC page offset */
-   ULONG  ulCounter;                /* FLEX cyclic counter */
-   ULONG  ulSize;                   /* FLEX GC page size in bytes */
-   USHORT usMaxItem;                /* max number of items in pGCitems */
-   USHORT usItems;                  /* number of items in pGCitems */
+   HB_BYTE   bType;                 /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
+   HB_BYTE   bChanged;              /* Should we write GC data to disk */
+   ULONG     ulNextBlock;           /* Next free block in the file */
+   ULONG     ulPrevBlock;           /* Previous next free block in the file */
+   ULONG     ulRevPage;             /* FLEX Rev GC page offset */
+   ULONG     ulDirPage;             /* FLEX Dir GC page offset */
+   ULONG     ulCounter;             /* FLEX cyclic counter */
+   ULONG     ulSize;                /* FLEX GC page size in bytes */
+   HB_USHORT usMaxItem;             /* max number of items in pGCitems */
+   HB_USHORT usItems;               /* number of items in pGCitems */
    LPMEMOGCITEM pGCitems;           /* free block list */
    FPTHEADER fptHeader;             /* FPT file header */
 } MEMOGCTABLE;

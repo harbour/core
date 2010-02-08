@@ -66,7 +66,7 @@
 #define SUPERTABLE   (&delimSuper)
 
 static RDDFUNCS delimSuper;
-static const USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
+static const HB_USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
 
 static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
 {
@@ -104,7 +104,7 @@ static void hb_delimClearRecordBuffer( DELIMAREAP pArea )
 static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
 {
    ULONG ulSize;
-   USHORT uiField, uiLen;
+   HB_USHORT uiField, uiLen;
    LPFIELD pField;
    HB_BYTE * pBuffer, * pFieldBuf;
 
@@ -238,7 +238,7 @@ static int hb_delimNextChar( DELIMAREAP pArea )
  */
 static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
 {
-   USHORT uiField, uiLen, uiSize;
+   HB_USHORT uiField, uiLen, uiSize;
    HB_TYPE uiType;
    LPFIELD pField;
    HB_BYTE * pFieldBuf, buffer[ 256 ];
@@ -544,7 +544,7 @@ static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
 /*
  * Obtain the current value of a field.
  */
-static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
 
@@ -636,7 +636,7 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
 /*
  * Assign a value to a field.
  */
-static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    char szBuffer[ 256 ];
    HB_ERRCODE errCode;
@@ -896,7 +896,7 @@ static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
 /*
  * Retrieve information about the current table/driver.
  */
-static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimInfo(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -1027,7 +1027,7 @@ static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
  */
 static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
-   USHORT uiDelim = 0;
+   HB_USHORT uiDelim = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimAddField(%p, %p)", pArea, pFieldInfo));
 
@@ -1143,7 +1143,7 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
 /*
  * Establish the extent of the array of fields for a WorkArea.
  */
-static HB_ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, USHORT uiFieldExtent )
+static HB_ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, HB_USHORT uiFieldExtent )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimSetFieldExtent(%p,%hu)", pArea, uiFieldExtent));
 
@@ -1153,8 +1153,8 @@ static HB_ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, USHORT uiFieldExtent
    /* Alloc field offsets array */
    if( uiFieldExtent )
    {
-      pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT ) );
+      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrab( uiFieldExtent * sizeof( HB_USHORT ) );
+      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( HB_USHORT ) );
    }
 
    return HB_SUCCESS;
@@ -1187,7 +1187,7 @@ static HB_ERRCODE hb_delimNewArea( DELIMAREAP pArea )
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static HB_ERRCODE hb_delimStructSize( DELIMAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_delimStructSize( DELIMAREAP pArea, HB_USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimStrucSize(%p,%p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
@@ -1335,7 +1335,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM pError = NULL;
    PHB_FNAME pFileName;
    HB_ERRCODE errCode;
-   USHORT uiFlags;
+   HB_USHORT uiFlags;
    HB_BOOL fRetry;
    char szFileName[ HB_PATH_MAX ];
    char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
@@ -1432,7 +1432,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 /*
  * Retrieve information about the current driver.
  */
-static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRddInfo(%p,%hu,%lu,%p)", pRDD, uiIndex, ulConnect, pItem));
 
@@ -1569,9 +1569,9 @@ HB_FUNC( DELIM ) { ; }
 HB_FUNC( DELIM_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount;
+   HB_USHORT * uiCount;
 
-   uiCount = ( USHORT * ) hb_parptr( 1 );
+   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
 
    HB_TRACE(HB_TR_DEBUG, ("DELIM_GETFUNCTABLE(%p, %p)", uiCount, pTable));

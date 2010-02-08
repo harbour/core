@@ -73,7 +73,7 @@
 #include "hbregex.h"
 
 static RDDFUNCS nsxSuper;
-static USHORT s_uiRddId;
+static HB_USHORT s_uiRddId;
 
 
 #define hb_nsxKeyFree(K)      hb_xfree(K)
@@ -124,13 +124,13 @@ static USHORT s_uiRddId;
 
 #else
 
-static USHORT hb_nsxGetKeyCount( LPPAGEINFO pPage )
+static HB_USHORT hb_nsxGetKeyCount( LPPAGEINFO pPage )
 {
    HB_UCHAR * ptr = hb_nsxPageBuffer( pPage ) + 2;
    return HB_GET_LE_UINT16( ptr );
 }
 
-static void hb_nsxSetKeyCount( LPPAGEINFO pPage, USHORT uiKeys )
+static void hb_nsxSetKeyCount( LPPAGEINFO pPage, HB_USHORT uiKeys )
 {
    HB_UCHAR * ptr = hb_nsxPageBuffer( pPage ) + 2;
    HB_PUT_LE_UINT16( ptr, uiKeys );
@@ -148,31 +148,31 @@ static void hb_nsxSetLowerPage( LPPAGEINFO pPage, ULONG ulPage )
    HB_PUT_LE_UINT32( ptr, ulPage );
 }
 
-static ULONG hb_nsxGetKeyPage( LPPAGEINFO pPage, USHORT uiLen, USHORT uiKey )
+static ULONG hb_nsxGetKeyPage( LPPAGEINFO pPage, HB_USHORT uiLen, HB_USHORT uiKey )
 {
    HB_UCHAR * ptr = hb_nsxGetBranchKeyPtr( pPage, uiLen, uiKey );
    return HB_GET_LE_UINT32( ptr );
 }
 
-static void hb_nsxSetKeyPage( LPPAGEINFO pPage, USHORT uiLen, USHORT uiKey, ULONG ulPage )
+static void hb_nsxSetKeyPage( LPPAGEINFO pPage, HB_USHORT uiLen, HB_USHORT uiKey, ULONG ulPage )
 {
    HB_UCHAR * ptr = hb_nsxGetBranchKeyPtr( pPage, uiLen, uiKey );
    HB_PUT_LE_UINT32( ptr, ulPage );
 }
 
-static ULONG hb_nsxGetKeyRec( LPPAGEINFO pPage, USHORT uiLen, USHORT uiKey )
+static ULONG hb_nsxGetKeyRec( LPPAGEINFO pPage, HB_USHORT uiLen, HB_USHORT uiKey )
 {
    HB_UCHAR * ptr = hb_nsxGetBranchKeyPtr( pPage, uiLen, uiKey ) + 4;
    return HB_GET_LE_UINT32( ptr );
 }
 
-static void hb_nsxSetKeyRec( LPPAGEINFO pPage, USHORT uiLen, USHORT uiKey, ULONG ulRec )
+static void hb_nsxSetKeyRec( LPPAGEINFO pPage, HB_USHORT uiLen, HB_USHORT uiKey, ULONG ulRec )
 {
    HB_UCHAR * ptr = hb_nsxGetBranchKeyPtr( pPage, uiLen, uiKey ) + 4;
    HB_PUT_LE_UINT32( ptr, ulRec );
 }
 
-static HB_UCHAR * hb_nsxGetKeyVal( LPPAGEINFO pPage, USHORT uiLen, USHORT uiKey )
+static HB_UCHAR * hb_nsxGetKeyVal( LPPAGEINFO pPage, HB_USHORT uiLen, HB_USHORT uiKey )
 {
    return hb_nsxGetBranchKeyPtr( pPage, uiLen, uiKey ) + 8;
 }
@@ -199,13 +199,13 @@ static ULONG hb_nsxBranchKeyRec( HB_UCHAR * ptr )
    return HB_GET_LE_UINT32( ptr );
 }
 
-static USHORT hb_nsxLeafGetFreeOffset( LPPAGEINFO pPage )
+static HB_USHORT hb_nsxLeafGetFreeOffset( LPPAGEINFO pPage )
 {
    HB_UCHAR * ptr = hb_nsxPageBuffer( pPage ) + 4;
    return HB_GET_LE_UINT16( ptr );
 }
 
-static void hb_nsxLeafSetFreeOffset( LPPAGEINFO pPage, USHORT uiOffset )
+static void hb_nsxLeafSetFreeOffset( LPPAGEINFO pPage, HB_USHORT uiOffset )
 {
    HB_UCHAR * ptr = hb_nsxPageBuffer( pPage ) + 4;
    HB_PUT_LE_UINT16( ptr, uiOffset );
@@ -215,8 +215,8 @@ static void hb_nsxLeafSetFreeOffset( LPPAGEINFO pPage, USHORT uiOffset )
 
 /* #define HB_NSX_NO_CORRUPT_PROTECT */
 
-static USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffset,
-                                HB_UCHAR * bPrevValue, ULONG * pulRecNo )
+static HB_USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiOffset,
+                                   HB_UCHAR * bPrevValue, ULONG * pulRecNo )
 {
    HB_UCHAR * ptr = ( HB_UCHAR * ) hb_nsxPageBuffer( pPage );
    HB_UCHAR ucRecLen = hb_nsxGetKeyRecSizePtr( ptr ), ucSize, ucDupCount;
@@ -328,8 +328,8 @@ static USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
    return uiOffset;
 }
 
-static USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffset,
-                                HB_UCHAR * bPrevValue, HB_UCHAR *pKeyValue, ULONG ulRecNo )
+static HB_USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiOffset,
+                                   HB_UCHAR * bPrevValue, HB_UCHAR *pKeyValue, ULONG ulRecNo )
 {
    HB_UCHAR *ptr = ( HB_UCHAR * ) hb_nsxPageBuffer( pPage ) + uiOffset,
          *pDst, *pSrc, *pEnd;
@@ -471,7 +471,7 @@ static USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
 static HB_ERRCODE hb_nsxErrorRT( NSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                  const char * szFileName, HB_ERRCODE errOsCode,
-                                 USHORT uiFlags, PHB_ITEM * pErrorPtr )
+                                 HB_USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -567,7 +567,7 @@ static HB_BYTE hb_nsxItemType( PHB_ITEM pItem )
 /*
  * convert NSX (Clipper) type of key expression to internal one
  */
-static HB_UCHAR hb_nsxKeyType( USHORT uiType, HB_BYTE * pbTrail )
+static HB_UCHAR hb_nsxKeyType( HB_USHORT uiType, HB_BYTE * pbTrail )
 {
    switch( uiType )
    {
@@ -609,7 +609,7 @@ static HB_UCHAR hb_nsxKeyTypeCmp( HB_UCHAR ucType )
 /*
  * convert internal type of key expression to NSX (Clipper) one
  */
-static USHORT hb_nsxKeyTypeRaw( HB_UCHAR ucType )
+static HB_USHORT hb_nsxKeyTypeRaw( HB_UCHAR ucType )
 {
    switch( ucType )
    {
@@ -640,7 +640,7 @@ static USHORT hb_nsxKeyTypeRaw( HB_UCHAR ucType )
  *       for scope key evaluation
  */
 static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo,
-                                   LPTAGINFO pTag, HB_BOOL fTrans, USHORT *puiLen )
+                                   LPTAGINFO pTag, HB_BOOL fTrans, HB_USHORT *puiLen )
 {
    double d;
    ULONG len;
@@ -677,7 +677,7 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
          {
             memset( pKey->val + len, pTag->TrailChar, pTag->KeyLength - len );
             if( puiLen )
-               *puiLen = ( USHORT ) len;
+               *puiLen = ( HB_USHORT ) len;
          }
          break;
       case 'N':
@@ -947,7 +947,7 @@ static HB_BOOL hb_nsxKeyInScope( LPTAGINFO pTag, LPKEYINFO pKey )
 /*
  * clear top or bottom scope
  */
-static void hb_nsxTagClearScope( LPTAGINFO pTag, USHORT nScope )
+static void hb_nsxTagClearScope( LPTAGINFO pTag, HB_USHORT nScope )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
    PHB_NSXSCOPE pScope;
@@ -979,7 +979,7 @@ static void hb_nsxTagClearScope( LPTAGINFO pTag, USHORT nScope )
 /*
  * set top or bottom scope
  */
-static void hb_nsxTagSetScope( LPTAGINFO pTag, USHORT nScope, PHB_ITEM pItem )
+static void hb_nsxTagSetScope( LPTAGINFO pTag, HB_USHORT nScope, PHB_ITEM pItem )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
    PHB_ITEM pScopeVal;
@@ -1020,7 +1020,7 @@ static void hb_nsxTagSetScope( LPTAGINFO pTag, USHORT nScope, PHB_ITEM pItem )
 /*
  * get top or bottom scope item
  */
-static void hb_nsxTagGetScope( LPTAGINFO pTag, USHORT nScope, PHB_ITEM pItem )
+static void hb_nsxTagGetScope( LPTAGINFO pTag, HB_USHORT nScope, PHB_ITEM pItem )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
    PHB_NSXSCOPE pScope;
@@ -1103,7 +1103,7 @@ static void hb_nsxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
 {
    HB_UCHAR pKeyVal[ NSX_MAXKEYLEN ], pKeyPrev[ NSX_MAXKEYLEN ];
    ULONG ulRecNo = 0, ulPrevRec;
-   USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
+   HB_USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
    int i;
 
    if( hb_nsxIsLeaf( pPage ) && pPage->uiKeys )
@@ -1655,7 +1655,7 @@ static ULONG hb_nsxPageGetFree( LPTAGINFO pTag )
  */
 static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
                                const char *szKeyExpr, PHB_ITEM pKeyExpr,
-                               HB_UCHAR ucKeyType, USHORT uiKeyLen, HB_BYTE bTrail,
+                               HB_UCHAR ucKeyType, HB_USHORT uiKeyLen, HB_BYTE bTrail,
                                const char *szForExpr, PHB_ITEM pForExpr,
                                HB_BOOL fAscendKey, HB_BOOL fUnique, HB_BOOL fCustom )
 {
@@ -1776,7 +1776,7 @@ static LPTAGINFO hb_nsxTagLoad( LPNSXINDEX pIndex, ULONG ulBlock,
 {
    LPTAGINFO pTag;
    PHB_ITEM pKeyExp, pForExp = NULL;
-   USHORT uiUnique, uiDescend, uiKeySize;
+   HB_USHORT uiUnique, uiDescend, uiKeySize;
    HB_UCHAR ucType, ucTrail;
 
    uiUnique = HB_GET_LE_UINT16( lpNSX->Unique );
@@ -1907,7 +1907,7 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
 
    if( pIndex->Update )
    {
-      USHORT type = hb_nsxKeyTypeRaw( pTag->KeyType );
+      HB_USHORT type = hb_nsxKeyTypeRaw( pTag->KeyType );
       int iLen;
 
       memset( ( HB_BYTE * ) &Header + NSX_TAGHEAD_HEADSIZE, 0,
@@ -2363,10 +2363,10 @@ static HB_BOOL hb_nsxTagGetPrevKey( LPTAGINFO pTag, HB_UCHAR * pKeyVal, int iLev
 /*
  * decode key from leaf page into given buffer
  */
-static HB_BOOL hb_nsxPageGetLeafKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey,
+static HB_BOOL hb_nsxPageGetLeafKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiKey,
                                   HB_UCHAR * pKeyVal, ULONG * pulRecNo )
 {
-   USHORT uiOffset = NSX_LEAFKEYOFFSET;
+   HB_USHORT uiOffset = NSX_LEAFKEYOFFSET;
 
    hb_nsxTagGetPrevKey( pTag, pKeyVal, pTag->stackLevel - 1 );
    do
@@ -2388,7 +2388,7 @@ static HB_BOOL hb_nsxPageGetLeafKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT ui
 /*
  * retrieve key from page
  */
-static HB_BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
+static HB_BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiKey )
 {
    if( hb_nsxIsLeaf( pPage ) )
    {
@@ -2403,7 +2403,7 @@ static HB_BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKe
              uiKey < pTag->CurKeyNo || pTag->CurKeyOffset == 0 )
          {
             pTag->CurKeyOffset = NSX_LEAFKEYOFFSET;
-            pTag->CurKeyNo = ( USHORT ) -1;
+            pTag->CurKeyNo = ( HB_USHORT ) -1;
             hb_nsxTagGetPrevKey( pTag, pTag->CurKeyInfo->val, pTag->stackLevel - 1 );
          }
          pTag->CurKeyInfo->page = pPage->Page;
@@ -2441,7 +2441,7 @@ static HB_BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKe
 /*
  * set next page and key in page path
  */
-static void hb_nsxTagSetPageStack( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
+static void hb_nsxTagSetPageStack( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiKey )
 {
 
    if( pTag->stackLevel == pTag->stackSize )
@@ -2708,7 +2708,7 @@ static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
       return 0;
    else if( hb_nsxIsLeaf( pPage ) )
    {
-      USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
+      HB_USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
       HB_UCHAR pKeyVal[ NSX_MAXKEYLEN ];
 
       hb_nsxTagGetPrevKey( pTag, pKeyVal, pTag->stackLevel );
@@ -2795,7 +2795,7 @@ static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
 /*
  * set page path to given key in tag
  */
-static HB_BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
+static HB_BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, HB_USHORT uiLen )
 {
    LPPAGEINFO pPage;
    ULONG ulPage, ulRecNo = 0;
@@ -2884,7 +2884,7 @@ static HB_BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
 /*
  * add key to branch page
  */
-static void hb_nsxPageKeyAdd( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiPos,
+static void hb_nsxPageKeyAdd( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiPos,
                               LPKEYINFO pKey )
 {
    HB_UCHAR * ptr = hb_nsxGetBranchKeyPtr( pPage, pTag->KeyLength, uiPos );
@@ -2907,10 +2907,10 @@ static void hb_nsxPageKeyAdd( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiPos,
  * split single branch page into two and return key to the new one
  */
 static LPKEYINFO hb_nsxPageSplit( LPTAGINFO pTag, LPPAGEINFO pPage,
-                                  LPKEYINFO pKey, USHORT uiPos )
+                                  LPKEYINFO pKey, HB_USHORT uiPos )
 {
    LPPAGEINFO pNewPage;
-   USHORT n, uiKeys, uiHalf, uiLen;
+   HB_USHORT n, uiKeys, uiHalf, uiLen;
 
    pNewPage = hb_nsxPageNew( pTag, HB_FALSE );
    if( ! pNewPage )
@@ -2983,11 +2983,11 @@ static LPKEYINFO hb_nsxPageSplit( LPTAGINFO pTag, LPPAGEINFO pPage,
  * insert key into current stack page
  */
 static HB_BOOL hb_nsxTagInsertKey( LPTAGINFO pTag, LPPAGEINFO pPage,
-                                LPKEYINFO pKey, HB_UCHAR * pKeyPrev )
+                                   LPKEYINFO pKey, HB_UCHAR * pKeyPrev )
 {
-   USHORT uiOffset = NSX_LEAFKEYOFFSET, uiKeyOffset = 0,
-          uiKey = pTag->stack[ pTag->stackLevel - 1 ].ikey,
-          uiKeys = pPage->uiKeys, uiHalfOffset = 0, uiHalfKeys = 0, u;
+   HB_USHORT uiOffset = NSX_LEAFKEYOFFSET, uiKeyOffset = 0,
+             uiKey = pTag->stack[ pTag->stackLevel - 1 ].ikey,
+             uiKeys = pPage->uiKeys, uiHalfOffset = 0, uiHalfKeys = 0, u;
    int iLen = pTag->KeyLength;
    ULONG ulRecNo;
    HB_UCHAR pKeyVal[ NSX_MAXKEYLEN ], * pKeyBuff, * ptr, ucRecSize;
@@ -3227,11 +3227,11 @@ static HB_BOOL hb_nsxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
 /*
  * del key from the leaf page
  */
-static void hb_nsxPageLeafKeyDel( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
+static void hb_nsxPageLeafKeyDel( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT uiKey )
 {
    HB_UCHAR pKeyVal[ NSX_MAXKEYLEN ], pKeyVal2[ NSX_MAXKEYLEN ], * pPrevVal = NULL;
    ULONG ulRecNo;
-   USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
+   HB_USHORT uiOffset = NSX_LEAFKEYOFFSET, u;
    HB_BOOL fPrev;
 
    fPrev = hb_nsxTagGetPrevKey( pTag, pKeyVal, pTag->stackLevel - 1 );
@@ -3607,7 +3607,7 @@ static ULONG hb_nsxPageCountKeys( LPTAGINFO pTag, ULONG ulPage )
    ulKeys = pPage->uiKeys;
    if( !hb_nsxIsLeaf( pPage ) )
    {
-      USHORT u;
+      HB_USHORT u;
       ulKeys += hb_nsxPageCountKeys( pTag, hb_nsxGetLowerPage( pPage ) );
       for( u = 0; u < pPage->uiKeys; u++ )
       {
@@ -3721,7 +3721,7 @@ static HB_BOOL hb_nsxTagPagesFree( LPTAGINFO pTag, ULONG ulPage )
    {
       if( !hb_nsxIsLeaf( pPage ) )
       {
-         USHORT u;
+         HB_USHORT u;
          fOK = hb_nsxTagPagesFree( pTag, hb_nsxGetLowerPage( pPage ) );
          for( u = 0; fOK && u < pPage->uiKeys; u++ )
          {
@@ -3974,7 +3974,7 @@ static int hb_nsxFindTagNum( NSXAREAP pArea, LPTAGINFO pTag )
    if( pArea->fSetTagNumbers )
    {
       LPNSXINDEX pIndex = pArea->lpIndexes;
-      USHORT uiNum = 0, i;
+      HB_USHORT uiNum = 0, i;
 
       pTag->uiNumber = 0;
       while( pIndex )
@@ -5138,9 +5138,9 @@ static void hb_nsxSortAddNodeKey( LPNSXSORTINFO pSort, HB_UCHAR *pKeyVal, ULONG 
       }
       else if( iLevel == 0 )
       {
-         USHORT uiOffset = hb_nsxLeafPutKey( pSort->pTag, pPage,
-                                             pPage->uiOffset, pSort->pLastKey,
-                                             pKeyVal, ulRec );
+         HB_USHORT uiOffset = hb_nsxLeafPutKey( pSort->pTag, pPage,
+                                                pPage->uiOffset, pSort->pLastKey,
+                                                pKeyVal, ulRec );
          if( uiOffset != 0 )
          {
             pPage->uiOffset = uiOffset;
@@ -5689,7 +5689,7 @@ static void hb_nsxSortOut( LPNSXSORTINFO pSort )
             if( pLastPage )
             {
                HB_UCHAR * pBuffer;
-               USHORT uiKey, uiRecSize;
+               HB_USHORT uiKey, uiRecSize;
 
                /* remove the key before last from the last nonempty leaf page */
                pBuffer = ( HB_UCHAR * ) hb_nsxPageBuffer( pLastLeaf );
@@ -6129,7 +6129,7 @@ static HB_ERRCODE hb_nsxSeek( NSXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pItem,
       LPKEYINFO pKey;
       HB_ERRCODE retval = HB_SUCCESS;
       HB_BOOL  fEOF = HB_FALSE, fLast;
-      USHORT uiLen;
+      HB_USHORT uiLen;
       ULONG ulRec;
 
       if( pArea->dbfarea.lpdbPendingRel && pArea->dbfarea.lpdbPendingRel->isScoped )
@@ -6511,7 +6511,7 @@ static HB_ERRCODE hb_nsxClose( NSXAREAP pArea )
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static HB_ERRCODE hb_nsxStructSize( NSXAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_nsxStructSize( NSXAREAP pArea, HB_USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxStructSize(%p, %p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
@@ -6790,7 +6790,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    {
       PHB_FILE pFile;
       HB_BOOL bRetry, fShared = pArea->dbfarea.fShared && !fTemporary && !fExclusive;
-      USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
+      HB_USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
       PHB_ITEM pError = NULL;
 
       do
@@ -6897,7 +6897,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    if( errCode == HB_SUCCESS )
    {
       pTag = hb_nsxTagNew( pIndex, szTagName,
-                           szKey, pKeyExp, bType, ( USHORT ) iLen, bTrail,
+                           szKey, pKeyExp, bType, ( HB_USHORT ) iLen, bTrail,
                            szFor, pForExp,
                            fAscend, pOrderInfo->fUnique, fCustom );
       pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && !pArea->dbfarea.area.lpdbOrdCondInfo->fAll );
@@ -7049,7 +7049,7 @@ static HB_ERRCODE hb_nsxOrderDestroy( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return errCode;
 }
 
-static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
+static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pInfo )
 {
    LPTAGINFO pTag;
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
@@ -7735,7 +7735,7 @@ static HB_ERRCODE hb_nsxCountScope( NSXAREAP pArea, void * pPtr, LONG * plRecNo 
 
 static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   USHORT uiFlags;
+   HB_USHORT uiFlags;
    PHB_FILE pFile;
    char szFileName[ HB_PATH_MAX ];
    LPNSXINDEX pIndex, *pIndexPtr;
@@ -7962,7 +7962,7 @@ static HB_ERRCODE hb_nsxOrderListRebuild( NSXAREAP pArea )
    return errCode;
 }
 
-static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    LPDBFDATA pData;
 
@@ -8144,9 +8144,9 @@ HB_FUNC( DBFNSX ) {;}
 HB_FUNC( DBFNSX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
+   HB_USHORT * uiCount, uiRddId;
 
-   uiCount = ( USHORT * ) hb_parptr( 1 );
+   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = hb_parni( 4 );
 

@@ -1462,7 +1462,7 @@ again:
 
       if( nKey > 0 && nKey <= 255 && pTerm->fUTF8 && pTerm->cdpIn )
       {
-         USHORT uc = 0;
+         HB_USHORT uc = 0;
          n = i = 0;
          if( hb_cdpGetFromUTF8( pTerm->cdpIn, HB_FALSE, ( HB_UCHAR ) nKey, &n, &uc ) )
          {
@@ -3369,7 +3369,7 @@ static HB_BOOL hb_gt_trm_Resume( PHB_GT pGT )
 }
 
 static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, USHORT usChar, int iRows, int iCols )
+                              int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols ) );
 
@@ -3488,7 +3488,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    PHB_GTTRM pTerm;
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iLen = 0, iAttribute = 0, iColor2;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );

@@ -131,7 +131,7 @@ static void    hb_vmEnumStart( int nVars, int nDescend ); /* prepare FOR EACH lo
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
 static void    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
-static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, USHORT );  /* make a SWITCH statement */
+static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, HB_USHORT );  /* make a SWITCH statement */
 
 /* Operators (logical) */
 static void    hb_vmNot( void );             /* changes the latest logical value on the stack */
@@ -142,15 +142,15 @@ static void    hb_vmOr( void );              /* performs the logical OR on the l
 static void    hb_vmArrayPush( void );       /* pushes an array element to the stack, removing the array and the index from the stack */
 static void    hb_vmArrayPushRef( void );    /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 static void    hb_vmArrayPop( void );        /* pops a value from the stack */
-static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
+static void    hb_vmArrayDim( HB_USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 static void    hb_vmArrayGen( HB_SIZE ulElements ); /* generates an ulElements Array and fills it from the stack values */
 static void    hb_vmHashGen( HB_SIZE ulElements ); /* generates an ulElements Hash and fills it from the stack values */
 
 /* macros */
-static void    hb_vmMacroDo( USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroFunc( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroSend( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroArrayGen( USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
+static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
 static void    hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
@@ -159,11 +159,11 @@ static void       hb_vmSwapAlias( void );           /* swaps items on the eval s
 
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
-static void    hb_vmFrame( USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and params suplied */
-static void    hb_vmVFrame( USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
+static void    hb_vmFrame( HB_USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and params suplied */
+static void    hb_vmVFrame( HB_USHORT usLocals, unsigned char ucParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
-static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
-static void    hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode ); /* mark thread static variables */
+static void    hb_vmStatics( PHB_SYMB pSym, HB_USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
+static void    hb_vmInitThreadStatics( HB_USHORT uiCount, const HB_BYTE * pCode ); /* mark thread static variables */
 static void    hb_vmStaticsClear( void );       /* clear complex static variables */
 static void    hb_vmStaticsRelease( void );     /* release arrays with static variables */
 /* Push */
@@ -172,7 +172,7 @@ static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on 
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
 static void    hb_vmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* creates a codeblock */
-static void    hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, USHORT usParams ); /* creates a macro-compiled codeblock */
+static void    hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, HB_USHORT usParams ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
@@ -185,8 +185,8 @@ static void    hb_vmPushIntegerConst( int iNumber );  /* Pushes a int constant (
 #else
 static void    hb_vmPushLongConst( long lNumber );    /* Pushes a long constant (pcode) */
 #endif
-static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
-static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
+static void    hb_vmPushStatic( HB_USHORT uiStatic );     /* pushes the containts of a static onto the stack */
+static void    hb_vmPushStaticByRef( HB_USHORT uiStatic ); /* pushes a static by refrence onto the stack */
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
 static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object variable */
 static void    hb_vmPushVParams( void );        /* pusges variable parameters */
@@ -201,7 +201,7 @@ static void    hb_vmPopAlias( void );             /* pops the workarea number fo
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
 static void    hb_vmPopAliasedVar( PHB_SYMB );    /* pops an aliased variable from the eval stack*/
 static void    hb_vmPopLocal( int iLocal );       /* pops the stack latest value onto a local */
-static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
+static void    hb_vmPopStatic( HB_USHORT uiStatic ); /* pops the stack latest value onto a static */
 
 /* misc */
 static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS functions */
@@ -212,13 +212,13 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex ); /* create object index reference */
 
 #ifndef HB_NO_DEBUG
-static void    hb_vmLocalName( USHORT uiLocal, const char * szLocalName ); /* locals and parameters index and name information for the debugger */
-static void    hb_vmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
+static void    hb_vmLocalName( HB_USHORT uiLocal, const char * szLocalName ); /* locals and parameters index and name information for the debugger */
+static void    hb_vmStaticName( HB_BYTE bIsGlobal, HB_USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( const char * szModuleName ); /* PRG and function name information for the debugger */
 
 static void    hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame );
 static void    hb_vmDebuggerExit( HB_BOOL fRemove );      /* shuts down the debugger */
-static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
+static void    hb_vmDebuggerShowLine( HB_USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
 
 static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
@@ -881,7 +881,7 @@ void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
 
    while( pLastSymbols )
    {
-      USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+      HB_USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
 
       for( ui = 0; ui < uiSymbols; ++ui )
       {
@@ -1071,7 +1071,7 @@ void hb_vmInit( HB_BOOL bStartMainProc )
          }
       }
 
-      hb_vmProc( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
+      hb_vmProc( ( HB_USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
    }
 }
 
@@ -1712,7 +1712,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_THREADSTATICS:
          {
-            USHORT uiCount = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
+            HB_USHORT uiCount = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             hb_vmInitThreadStatics( uiCount, &pCode[ 3 ] );
             pCode += 3 + ( ( ULONG ) uiCount << 1 );
             break;
@@ -1837,7 +1837,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_ALWAYSEND:
          {
-            USHORT uiPrevAction, uiCurrAction;
+            HB_USHORT uiPrevAction, uiCurrAction;
 
 #if defined( _HB_RECOVER_DEBUG )
             if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
@@ -2136,7 +2136,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHSTR:
          {
-            USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
+            HB_USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             if( bDynCode )
                hb_vmPushString( ( const char * ) pCode + 3, uiSize - 1 );
             else
@@ -2684,7 +2684,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHSTR:
          {
-            USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
+            HB_USHORT uiSize = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
 
             hb_vmPushString( ( const char * ) ( pCode + 3 ), uiSize - 1 );
             pCode += 3 + uiSize;
@@ -2757,7 +2757,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_WITHOBJECTMESSAGE:
          {
             PHB_ITEM pWith;
-            USHORT wSymPos = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
+            HB_USHORT wSymPos = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             if( wSymPos != 0xFFFF )
             {
                /* NOTE: 0xFFFF is passed when ':&varmacro' syntax is used.
@@ -4841,7 +4841,7 @@ static PHB_ITEM hb_vmSwitchGet( void )
    return pSwitch;
 }
 
-static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, USHORT casesCnt )
+static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, HB_USHORT casesCnt )
 {
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR pSwitch = hb_vmSwitchGet();
@@ -5322,7 +5322,7 @@ static void hb_vmArrayGen( HB_SIZE ulElements ) /* generates an ulElements Array
 /* This function creates an array item using 'uiDimension' as an index
  * to retrieve the number of elements from the stack
  */
-static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
+static void hb_vmArrayNew( HB_ITEM_PTR pArray, HB_USHORT uiDimension )
 {
    HB_STACK_TLS_PRELOAD
    HB_SIZE ulElements;
@@ -5358,7 +5358,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
    }
 }
 
-static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
+static void hb_vmArrayDim( HB_USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -5464,7 +5464,7 @@ static void hb_vmMacroPushIndex( void )
  *    (-1)     2 // number of arguments
  * we should join them into one continuous list
  */
-static LONG hb_vmArgsJoin( LONG lLevel, USHORT uiArgSets )
+static LONG hb_vmArgsJoin( LONG lLevel, HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
    LONG lArgs, lRestArgs, lOffset;
@@ -5491,7 +5491,7 @@ static LONG hb_vmArgsJoin( LONG lLevel, USHORT uiArgSets )
    return lArgs;
 }
 
-static void hb_vmMacroDo( USHORT uiArgSets )
+static void hb_vmMacroDo( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
    LONG lArgs;
@@ -5500,10 +5500,10 @@ static void hb_vmMacroDo( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
-   hb_vmProc( ( USHORT ) lArgs );
+   hb_vmProc( ( HB_USHORT ) lArgs );
 }
 
-static void hb_vmMacroFunc( USHORT uiArgSets )
+static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
    LONG lArgs;
@@ -5513,11 +5513,11 @@ static void hb_vmMacroFunc( USHORT uiArgSets )
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
    hb_itemSetNil( hb_stackReturnItem() );
-   hb_vmProc( ( USHORT ) lArgs );
+   hb_vmProc( ( HB_USHORT ) lArgs );
    hb_stackPushReturn();
 }
 
-static void hb_vmMacroSend( USHORT uiArgSets )
+static void hb_vmMacroSend( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
    LONG lArgs;
@@ -5527,11 +5527,11 @@ static void hb_vmMacroSend( USHORT uiArgSets )
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
    hb_itemSetNil( hb_stackReturnItem() );
-   hb_vmSend( ( USHORT ) lArgs );
+   hb_vmSend( ( HB_USHORT ) lArgs );
    hb_stackPushReturn();
 }
 
-static void hb_vmMacroArrayGen( USHORT uiArgSets )
+static void hb_vmMacroArrayGen( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
    LONG lArgs;
@@ -5696,7 +5696,7 @@ static void hb_vmSwapAlias( void )
 /* Execution                       */
 /* ------------------------------- */
 
-void hb_vmProc( USHORT uiParams )
+void hb_vmProc( HB_USHORT uiParams )
 {
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
@@ -5754,7 +5754,7 @@ void hb_vmProc( USHORT uiParams )
    hb_stackOldFrame( &sStackState );
 }
 
-void hb_vmDo( USHORT uiParams )
+void hb_vmDo( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
    HB_STACK_STATE sStackState;
@@ -5842,7 +5842,7 @@ void hb_vmDo( USHORT uiParams )
    hb_stackOldFrame( &sStackState );
 }
 
-void hb_vmSend( USHORT uiParams )
+void hb_vmSend( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
    HB_STACK_STATE sStackState;
@@ -5991,7 +5991,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
 
    /* take care here, possible loss of data long to short ... */
    /* added an explicit casting here for VC++ JFL */
-   hb_vmSend( ( USHORT ) ulArgCount );
+   hb_vmSend( ( HB_USHORT ) ulArgCount );
 
    return hb_stackReturnItem();
 }
@@ -6044,7 +6044,7 @@ void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
 
 
 
-void hb_vmFunction( USHORT uiParams )
+void hb_vmFunction( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6159,14 +6159,14 @@ static void hb_vmDebuggerEndProc( void )
    s_pFunDbgEntry( HB_DBG_ENDPROC, 0, NULL, 0, NULL );
 }
 
-static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a specific source code line */
+static void hb_vmDebuggerShowLine( HB_USHORT uiLine ) /* makes the debugger shows a specific source code line */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerShowLine(%hu)", uiLine));
 
    s_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, NULL );
 }
 
-static void hb_vmLocalName( USHORT uiLocal, const char * szLocalName ) /* locals and parameters index and name information for the debugger */
+static void hb_vmLocalName( HB_USHORT uiLocal, const char * szLocalName ) /* locals and parameters index and name information for the debugger */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6176,7 +6176,7 @@ static void hb_vmLocalName( USHORT uiLocal, const char * szLocalName ) /* locals
       s_pFunDbgEntry( HB_DBG_LOCALNAME, 0, szLocalName, uiLocal, NULL );
 }
 
-static void hb_vmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName ) /* statics vars information for the debugger */
+static void hb_vmStaticName( HB_BYTE bIsGlobal, HB_USHORT uiStatic, const char * szStaticName ) /* statics vars information for the debugger */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6201,7 +6201,7 @@ static void hb_vmModuleName( const char * szModuleName ) /* PRG and function nam
 }
 #endif
 
-static void hb_vmFrame( USHORT usLocals, unsigned char ucParams )
+static void hb_vmFrame( HB_USHORT usLocals, unsigned char ucParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pBase;
@@ -6248,7 +6248,7 @@ static void hb_vmFrame( USHORT usLocals, unsigned char ucParams )
 #endif
 }
 
-static void hb_vmVFrame( USHORT usLocals, unsigned char ucParams )
+static void hb_vmVFrame( HB_USHORT usLocals, unsigned char ucParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pBase;
@@ -6283,7 +6283,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    hb_stackSetStaticsBase( pSym->value.pStaticsBase );
 }
 
-static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
+static void hb_vmStatics( PHB_SYMB pSym, HB_USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStatics(%p, %hu)", pSym, uiStatics));
 
@@ -6400,7 +6400,7 @@ static void hb_vmTSVReference( PHB_ITEM pStatic )
    hb_itemMove( pStatic, pRefer );
 }
 
-static void hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode )
+static void hb_vmInitThreadStatics( HB_USHORT uiCount, const HB_BYTE * pCode )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6408,14 +6408,14 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode )
 
    while( uiCount-- )
    {
-      USHORT uiStatic = HB_PCODE_MKUSHORT( pCode );
+      HB_USHORT uiStatic = HB_PCODE_MKUSHORT( pCode );
       PHB_ITEM pStatic = ( ( PHB_ITEM ) hb_stackGetStaticsBase() )->item.asArray.value->pItems + uiStatic - 1;
       hb_vmTSVReference( pStatic );
       pCode += 2;
    }
 }
 #else
-static void hb_vmInitThreadStatics( USHORT uiCount, const HB_BYTE * pCode )
+static void hb_vmInitThreadStatics( HB_USHORT uiCount, const HB_BYTE * pCode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%hu,%p)", uiCount, pCode));
 
@@ -6533,7 +6533,7 @@ static void hb_vmPushIntegerConst( int iNumber )
 
    pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.value = iNumber;
-   pItem->item.asInteger.length = ( USHORT ) hb_vmCalcIntWidth( iNumber );
+   pItem->item.asInteger.length = ( HB_USHORT ) hb_vmCalcIntWidth( iNumber );
 }
 #else
 static void hb_vmPushLongConst( long lNumber )
@@ -6545,7 +6545,7 @@ static void hb_vmPushLongConst( long lNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) lNumber;
-   pItem->item.asLong.length = ( USHORT ) hb_vmCalcIntWidth( lNumber );
+   pItem->item.asLong.length = ( HB_USHORT ) hb_vmCalcIntWidth( lNumber );
 }
 #endif
 
@@ -6582,7 +6582,7 @@ static void hb_vmPushLongLongConst( HB_LONGLONG llNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
-   pItem->item.asLong.length = ( USHORT ) hb_vmCalcIntWidth( llNumber );
+   pItem->item.asLong.length = ( HB_USHORT ) hb_vmCalcIntWidth( llNumber );
 }
 #endif
 
@@ -6605,9 +6605,9 @@ void hb_vmPushDouble( double dNumber, int iDec )
    pItem->item.asDouble.value = dNumber;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    else
-      pItem->item.asDouble.decimal = ( USHORT ) iDec;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) iDec;
 }
 
 static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
@@ -6621,14 +6621,14 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    pItem->item.asDouble.value = dNumber;
 
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    else
-      pItem->item.asDouble.decimal = ( USHORT ) iDec;
+      pItem->item.asDouble.decimal = ( HB_USHORT ) iDec;
 
    if( iWidth == HB_DEFAULT_WIDTH )
       pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
    else
-      pItem->item.asDouble.length = ( USHORT ) iWidth;
+      pItem->item.asDouble.length = ( HB_USHORT ) iWidth;
 }
 
 void hb_vmPushDate( long lDate )
@@ -6737,7 +6737,7 @@ void hb_vmPushEvalSym( void )
 static void hb_vmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
-   USHORT uiLocals;
+   HB_USHORT uiLocals;
    PHB_ITEM pItem = hb_stackAllocItem();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlock(%p,%p,%lu)", pCode, pSymbols, ulLen));
@@ -6804,7 +6804,7 @@ static void hb_vmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SI
  *
  * NOTE: pCode points to dynamically allocated memory
  */
-static void hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, USHORT usParams )
+static void hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, HB_USHORT usParams )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
@@ -6959,7 +6959,7 @@ static void hb_vmPushLocalByRef( int iLocal )
    pTop->item.asRefer.offset = hb_stackBaseOffset();
 }
 
-static void hb_vmPushStatic( USHORT uiStatic )
+static void hb_vmPushStatic( HB_USHORT uiStatic )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pStatic;
@@ -6971,7 +6971,7 @@ static void hb_vmPushStatic( USHORT uiStatic )
                 HB_IS_BYREF( pStatic ) ? hb_itemUnRef( pStatic ) : pStatic );
 }
 
-static void hb_vmPushStaticByRef( USHORT uiStatic )
+static void hb_vmPushStaticByRef( HB_USHORT uiStatic )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pTop, pBase;
@@ -6998,7 +6998,7 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
 static void hb_vmPushVariable( PHB_SYMB pVarSymb )
 {
    HB_STACK_TLS_PRELOAD
-   USHORT uiAction = E_DEFAULT;
+   HB_USHORT uiAction = E_DEFAULT;
    PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
@@ -7225,7 +7225,7 @@ static void hb_vmPopLocal( int iLocal )
    hb_stackDec();
 }
 
-static void hb_vmPopStatic( USHORT uiStatic )
+static void hb_vmPopStatic( HB_USHORT uiStatic )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pStatic, pVal;
@@ -7296,7 +7296,7 @@ const char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
 }
 
 HB_BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
-                                USHORT * puiSymbols )
+                                HB_USHORT * puiSymbols )
 {
    if( pSym )
    {
@@ -7435,7 +7435,7 @@ static PHB_ITEM hb_vmStaticsArray( void )
    return pArray;
 }
 
-static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
+static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, HB_USHORT uiSymbols,
                                         const char * szModuleName, ULONG ulID )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFindFreeModule(%p,%hu,%s,%lu)", pSymbols, uiSymbols, szModuleName, ulID));
@@ -7453,7 +7453,7 @@ static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
              strcmp( pLastSymbols->szModuleName, szModuleName ) == 0 )
          {
             PHB_SYMB pModuleSymbols = pLastSymbols->pModuleSymbols;
-            USHORT ui;
+            HB_USHORT ui;
 
             for( ui = 0; ui < uiSymbols; ++ui )
             {
@@ -7487,7 +7487,7 @@ void hb_vmFreeSymbols( PHB_SYMBOLS pSymbols )
    {
       if( pSymbols->fActive )
       {
-         USHORT ui;
+         HB_USHORT ui;
 
          for( ui = 0; ui < pSymbols->uiModuleSymbols; ++ui )
          {
@@ -7531,7 +7531,7 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
       PHB_SYMBOLS pLastSymbols = s_pSymbols;
       void * hDynLib = s_hDynLibID;
       HB_BOOL fFound = HB_FALSE;
-      USHORT ui;
+      HB_USHORT ui;
 
       s_hDynLibID = NULL;
 
@@ -7586,7 +7586,7 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
                         {
                            hb_vmPushString( argv[i], strlen( argv[i] ) );
                         }
-                        hb_vmProc( ( USHORT ) argc );
+                        hb_vmProc( ( HB_USHORT ) argc );
                      }
                   }
                }
@@ -7613,7 +7613,7 @@ void hb_vmExitSymbolGroup( void * hDynLib )
             fFound = HB_TRUE;
             if( pLastSymbols->fActive && ( pLastSymbols->hScope & HB_FS_EXIT ) != 0 )
             {
-               USHORT ui;
+               HB_USHORT ui;
                for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
                {
                   HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
@@ -7645,13 +7645,13 @@ void hb_vmExitSymbolGroup( void * hDynLib )
    }
 }
 
-PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
+PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
                                   const char * szModuleName, ULONG ulID,
                                   HB_BOOL fDynLib, HB_BOOL fClone )
 {
    PHB_SYMBOLS pNewSymbols;
    HB_BOOL fRecycled, fInitStatics = HB_FALSE;
-   USHORT ui;
+   HB_USHORT ui;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRegisterSymbols(%p,%hu,%s,%lu,%d,%d)", pModuleSymbols, uiSymbols, szModuleName, ulID, (int)fDynLib, (int)fClone));
 
@@ -7805,7 +7805,7 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
    return pNewSymbols;
 }
 
-static void hb_vmVerifyPCodeVersion( const char * szModuleName, USHORT uiPCodeVer )
+static void hb_vmVerifyPCodeVersion( const char * szModuleName, HB_USHORT uiPCodeVer )
 {
    if( uiPCodeVer != 0 )
    {
@@ -7826,9 +7826,9 @@ static void hb_vmVerifyPCodeVersion( const char * szModuleName, USHORT uiPCodeVe
 /*
  * module symbols initialization with extended information
  */
-PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
                               const char * szModuleName, ULONG ulID,
-                              USHORT uiPCodeVer )
+                              HB_USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
 
@@ -7837,9 +7837,9 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
                                 s_fCloneSym, s_fCloneSym )->pModuleSymbols;
 }
 
-PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
                                               const char * szModuleName, ULONG ulID,
-                                              USHORT uiPCodeVer )
+                                              HB_USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDynLibSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
 
@@ -7881,7 +7881,7 @@ static void hb_vmDoInitStatics( void )
    {
       if( pLastSymbols->fInitStatics )
       {
-         USHORT ui;
+         HB_USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
@@ -7911,7 +7911,7 @@ static void hb_vmDoInitFunctions( void )
       /* only if module contains some INIT functions */
       if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_INIT )
       {
-         USHORT ui;
+         HB_USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
@@ -7938,7 +7938,7 @@ static void hb_vmDoInitFunctions( void )
                   }
                }
 
-               hb_vmProc( ( USHORT ) iArgCount );
+               hb_vmProc( ( HB_USHORT ) iArgCount );
             }
          }
       }
@@ -7964,7 +7964,7 @@ static void hb_vmDoExitFunctions( void )
          /* only if module contains some EXIT functions */
          if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_EXIT )
          {
-            USHORT ui;
+            HB_USHORT ui;
 
             for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
             {
@@ -8447,7 +8447,7 @@ void hb_vmRequestCancel( void )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       char file[ HB_PATH_MAX ];
-      USHORT uiLine;
+      HB_USHORT uiLine;
       int iLevel = 0, l;
 
       hb_conOutErr( hb_conNewLine(), 0 );
@@ -8470,7 +8470,7 @@ void hb_vmRequestCancel( void )
    }
 }
 
-USHORT hb_vmRequestQuery( void )
+HB_USHORT hb_vmRequestQuery( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackGetActionRequest();
@@ -8496,11 +8496,11 @@ HB_BOOL hb_vmRequestReenter( void )
 void hb_vmRequestRestore( void )
 {
    HB_STACK_TLS_PRELOAD
-   USHORT uiAction;
+   HB_USHORT uiAction;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestRestore()"));
 
-   uiAction = ( USHORT ) hb_stackItemFromTop( -1 )->item.asInteger.value |
+   uiAction = ( HB_USHORT ) hb_stackItemFromTop( -1 )->item.asInteger.value |
               hb_stackGetActionRequest();
    if( uiAction & HB_QUIT_REQUESTED )
       hb_stackSetActionRequest( HB_QUIT_REQUESTED );
@@ -8775,7 +8775,7 @@ HB_BOOL hb_xvmAlwaysBegin( void )
 HB_BOOL hb_xvmAlwaysEnd( void )
 {
    HB_STACK_TLS_PRELOAD
-   USHORT uiPrevAction, uiCurrAction;
+   HB_USHORT uiPrevAction, uiCurrAction;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmAlwaysEnd()"));
 
@@ -8873,7 +8873,7 @@ HB_BOOL hb_xvmSwitchGet( PHB_ITEM * pSwitchPtr )
    HB_XVM_RETURN
 }
 
-void hb_xvmSetLine( USHORT uiLine )
+void hb_xvmSetLine( HB_USHORT uiLine )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8890,14 +8890,14 @@ void hb_xvmFrame( int iLocals, int iParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmFrame(%d, %d)", iLocals, iParams));
 
-   hb_vmFrame( ( USHORT ) iLocals, ( unsigned char ) iParams );
+   hb_vmFrame( ( HB_USHORT ) iLocals, ( unsigned char ) iParams );
 }
 
 void hb_xvmVFrame( int iLocals, int iParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmVFrame(%d, %d)", iLocals, iParams));
 
-   hb_vmVFrame( ( USHORT ) iLocals, ( unsigned char ) iParams );
+   hb_vmVFrame( ( HB_USHORT ) iLocals, ( unsigned char ) iParams );
 }
 
 void hb_xvmSFrame( PHB_SYMB pSymbol )
@@ -8907,7 +8907,7 @@ void hb_xvmSFrame( PHB_SYMB pSymbol )
    hb_vmSFrame( pSymbol );
 }
 
-HB_BOOL hb_xvmDo( USHORT uiParams )
+HB_BOOL hb_xvmDo( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8918,7 +8918,7 @@ HB_BOOL hb_xvmDo( USHORT uiParams )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmFunction( USHORT uiParams )
+HB_BOOL hb_xvmFunction( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8931,7 +8931,7 @@ HB_BOOL hb_xvmFunction( USHORT uiParams )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmSend( USHORT uiParams )
+HB_BOOL hb_xvmSend( HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8965,14 +8965,14 @@ void hb_xvmRetValue( void )
    hb_stackReturnItem()->type &= ~HB_IT_MEMOFLAG;
 }
 
-void hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics )
+void hb_xvmStatics( PHB_SYMB pSymbol, HB_USHORT uiStatics )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStatics(%p,%hu)", pSymbol, uiStatics));
 
    hb_vmStatics( pSymbol, uiStatics );
 }
 
-void hb_xvmThreadStatics( USHORT uiStatics, const HB_BYTE * statics )
+void hb_xvmThreadStatics( HB_USHORT uiStatics, const HB_BYTE * statics )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmThreadStatics(%hu,%p)", uiStatics, statics));
 
@@ -9040,21 +9040,21 @@ void hb_xvmCopyLocals( int iDest, int iSource )
                      HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest );
 }
 
-void hb_xvmPushStatic( USHORT uiStatic )
+void hb_xvmPushStatic( HB_USHORT uiStatic )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStatic(%hu)", uiStatic));
 
    hb_vmPushStatic( uiStatic );
 }
 
-void hb_xvmPushStaticByRef( USHORT uiStatic )
+void hb_xvmPushStaticByRef( HB_USHORT uiStatic )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStaticByRef(%hu)", uiStatic));
 
    hb_vmPushStaticByRef( uiStatic );
 }
 
-void hb_xvmPopStatic( USHORT uiStatic )
+void hb_xvmPopStatic( HB_USHORT uiStatic )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPopStatic(%hu)", uiStatic));
 
@@ -9378,7 +9378,7 @@ HB_BOOL hb_xvmLocalAdd( int iLocal )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmStaticAdd( USHORT uiStatic )
+HB_BOOL hb_xvmStaticAdd( HB_USHORT uiStatic )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pStatic;
@@ -10664,7 +10664,7 @@ HB_BOOL hb_xvmDecEqPop( void )
    HB_XVM_RETURN
 }
 
-void hb_xvmArrayDim( USHORT uiDimensions )
+void hb_xvmArrayDim( HB_USHORT uiDimensions )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayDim(%hu)", uiDimensions));
 
@@ -10945,7 +10945,7 @@ void hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE ulSize )
    hb_itemPutCLPtr( hb_stackAllocItem(), szString, ulSize );
 }
 
-void hb_xvmLocalName( USHORT uiLocal, const char * szLocalName )
+void hb_xvmLocalName( HB_USHORT uiLocal, const char * szLocalName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalName(%hu, %s)", uiLocal, szLocalName));
 
@@ -10957,7 +10957,7 @@ void hb_xvmLocalName( USHORT uiLocal, const char * szLocalName )
 #endif
 }
 
-void hb_xvmStaticName( HB_BYTE bIsGlobal, USHORT uiStatic, const char * szStaticName )
+void hb_xvmStaticName( HB_BYTE bIsGlobal, HB_USHORT uiStatic, const char * szStaticName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticName(%d, %hu, %s)", (int)bIsGlobal, uiStatic, szStaticName));
 
@@ -10981,7 +10981,7 @@ void hb_xvmModuleName( const char * szModuleName )
 #endif
 }
 
-HB_BOOL hb_xvmMacroArrayGen( USHORT uiArgSets )
+HB_BOOL hb_xvmMacroArrayGen( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -10992,7 +10992,7 @@ HB_BOOL hb_xvmMacroArrayGen( USHORT uiArgSets )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroDo( USHORT uiArgSets )
+HB_BOOL hb_xvmMacroDo( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -11003,7 +11003,7 @@ HB_BOOL hb_xvmMacroDo( USHORT uiArgSets )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroFunc( USHORT uiArgSets )
+HB_BOOL hb_xvmMacroFunc( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -11014,7 +11014,7 @@ HB_BOOL hb_xvmMacroFunc( USHORT uiArgSets )
    HB_XVM_RETURN
 }
 
-HB_BOOL hb_xvmMacroSend( USHORT uiArgSets )
+HB_BOOL hb_xvmMacroSend( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
 

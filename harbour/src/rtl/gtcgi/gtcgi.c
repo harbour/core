@@ -199,7 +199,7 @@ static const char * hb_gt_cgi_Version( PHB_GT pGT, int iType )
 }
 
 static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, USHORT usChar, int iRows, int iCols )
+                              int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
@@ -332,7 +332,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
    HB_BYTE bAttr;
-   USHORT usChar;
+   HB_USHORT usChar;
    int iLineFeed, iHeight, iWidth, iLen;
    PHB_GTCGI pGTCGI;
 

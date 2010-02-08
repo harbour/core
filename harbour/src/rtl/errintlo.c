@@ -66,7 +66,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    char file[ HB_PATH_MAX ];
    const char * szFile, * szInfo;
    HB_BOOL fStack, fLang;
-   USHORT uiLine;
+   HB_USHORT uiLine;
    int iLevel;
    FILE * hLog;
 

@@ -393,7 +393,7 @@ void hb_stackListSet( void * pStackLst )
 }
 
 #undef hb_stackIdSetActionRequest
-void hb_stackIdSetActionRequest( void * pStackId, USHORT uiAction )
+void hb_stackIdSetActionRequest( void * pStackId, HB_USHORT uiAction )
 {
    ( ( PHB_STACK ) pStackId )->uiActionRequest = uiAction;
 }
@@ -455,7 +455,7 @@ HB_BOOL hb_stackQuitState( void )
 }
 
 #undef hb_stackSetQuitState
-void hb_stackSetQuitState( USHORT uiState )
+void hb_stackSetQuitState( HB_USHORT uiState )
 {
    HB_STACK_TLS_PRELOAD
    hb_stack.uiQuitState = uiState;
@@ -671,7 +671,7 @@ void hb_stackRemove( LONG lUntilPos )
    }
 }
 
-HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams )
+HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR * pBase, pItem;
@@ -942,14 +942,14 @@ void hb_stackSetRecoverBase( LONG lBase )
 }
 
 #undef hb_stackGetActionRequest
-USHORT hb_stackGetActionRequest( void )
+HB_USHORT hb_stackGetActionRequest( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stack.uiActionRequest;
 }
 
 #undef hb_stackSetActionRequest
-void hb_stackSetActionRequest( USHORT uiAction )
+void hb_stackSetActionRequest( HB_USHORT uiAction )
 {
    HB_STACK_TLS_PRELOAD
    hb_stack.uiActionRequest = uiAction;
@@ -1071,7 +1071,7 @@ LONG hb_stackBaseProcOffset( int iLevel )
       return -1;
 }
 
-void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
+void hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine )
 {
    /*
     * This function is called by FM module and has to be ready for execution
@@ -1201,7 +1201,7 @@ void hb_stackDispCall( void )
 {
    char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
    char file[ HB_PATH_MAX ];
-   USHORT uiLine;
+   HB_USHORT uiLine;
    int iLevel;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispCall()"));

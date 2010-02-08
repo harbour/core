@@ -52,7 +52,7 @@
 
 #include "hbdbsort.h"
 
-HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
+HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, HB_USHORT uiRecordLen )
 {
    /* Create temp file */
    pQuickSort->hFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pQuickSort->szTempName );
@@ -87,9 +87,9 @@ void hb_dbQSortExit( LPDBQUICKSORT pQuickSort )
    hb_xfree( pQuickSort->pCmpBufferB );
 }
 
-HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount )
+HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount )
 {
-   USHORT uiSize;
+   HB_USHORT uiSize;
 
    /* Write chunk */
    uiSize = uiCount * pQuickSort->uiRecordLen;
@@ -98,7 +98,7 @@ HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount )
 
 static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ulRecNo2 )
 {
-   USHORT uiCount, uiField;
+   HB_USHORT uiCount, uiField;
    DBFAREAP pArea;
    LPFIELD pField;
    HB_BOOL bAscending, bIgnoreCase;

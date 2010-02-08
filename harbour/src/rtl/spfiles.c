@@ -181,7 +181,7 @@ HB_BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
    return bIsFile;
 }
 
-HB_FHANDLE hb_spOpen( const char * pFilename, USHORT uiFlags )
+HB_FHANDLE hb_spOpen( const char * pFilename, HB_USHORT uiFlags )
 {
    char path[ HB_PATH_MAX ];
 
@@ -210,7 +210,7 @@ HB_FHANDLE hb_spCreate( const char * pFilename, HB_FATTR ulAttr )
    return hb_fsCreate( path, ulAttr );
 }
 
-HB_FHANDLE hb_spCreateEx( const char * pFilename, HB_FATTR ulAttr, USHORT uiFlags )
+HB_FHANDLE hb_spCreateEx( const char * pFilename, HB_FATTR ulAttr, HB_USHORT uiFlags )
 {
    char path[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;

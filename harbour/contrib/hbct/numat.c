@@ -110,7 +110,7 @@ HB_FUNC( NUMAT )
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
-            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_NUMAT, NULL,
+            ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_NUMAT, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retni( 0 );
@@ -162,7 +162,7 @@ HB_FUNC( NUMAT )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+         pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_NUMAT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }

@@ -71,7 +71,7 @@ HB_FUNC( HB_DISKSPACE )
 {
    char szPathBuf[ 4 ];
    const char * szPath = hb_parc( 1 );
-   USHORT uiType = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
+   HB_USHORT uiType = HB_ISNUM( 2 ) ? ( HB_USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
    if( uiType > HB_DISK_TOTAL )
@@ -98,11 +98,11 @@ HB_FUNC( HB_DISKSPACE )
 
 #if defined( HB_OS_DOS )
    {
-      USHORT uiDrive = szPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
-                       ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
-                         szPath[ 0 ] - 'A' + 1 :
-                       ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
-                         szPath[ 0 ] - 'a' + 1 : 0 ) );
+      HB_USHORT uiDrive = szPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
+                          ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
+                            szPath[ 0 ] - 'A' + 1 :
+                          ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
+                            szPath[ 0 ] - 'a' + 1 : 0 ) );
       for( ;; )
       {
          union REGS regs;
@@ -113,10 +113,10 @@ HB_FUNC( HB_DISKSPACE )
 
          if( regs.HB_XREGS.ax != 0xFFFF )
          {
-            USHORT uiClusterTotal  = regs.HB_XREGS.dx;
-            USHORT uiClusterFree   = regs.HB_XREGS.bx;
-            USHORT uiSecPerCluster = regs.HB_XREGS.ax;
-            USHORT uiSectorSize    = regs.HB_XREGS.cx;
+            HB_USHORT uiClusterTotal  = regs.HB_XREGS.dx;
+            HB_USHORT uiClusterFree   = regs.HB_XREGS.bx;
+            HB_USHORT uiSecPerCluster = regs.HB_XREGS.ax;
+            HB_USHORT uiSectorSize    = regs.HB_XREGS.cx;
 
             switch( uiType )
             {
