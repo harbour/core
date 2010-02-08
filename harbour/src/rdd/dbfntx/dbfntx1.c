@@ -1012,7 +1012,7 @@ static void hb_ntxDiscardBuffers( LPNTXINDEX pIndex )
       if( pIndex->iTags )
          pIndex->lpTags[ 0 ]->stackLevel = 0;
    }
-   hb_fileFlush( pIndex->DiskFile, FALSE );
+   hb_fileFlush( pIndex->DiskFile, HB_FALSE );
 }
 
 /*
@@ -2170,7 +2170,7 @@ static HB_BOOL hb_ntxIndexUnLockWrite( LPNTXINDEX pIndex )
    }
    else
    {
-      hb_fileFlush( pIndex->DiskFile, TRUE );
+      hb_fileFlush( pIndex->DiskFile, HB_TRUE );
       pIndex->fValidHeader = HB_FALSE;
       fOK = hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
                                FL_UNLOCK, &pIndex->ulLockPos );

@@ -493,7 +493,7 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    hb_p_threadstatics          /* HB_P_THREADSTATICS         */
 };
 
-LONG hb_compPCodeSize( PFUNCTION pFunc, HB_ULONG ulOffset )
+HB_LONG hb_compPCodeSize( PFUNCTION pFunc, HB_ULONG ulOffset )
 {
    HB_LONG lSize = 0;
    HB_BYTE opcode = pFunc->pCode[ ulOffset ];

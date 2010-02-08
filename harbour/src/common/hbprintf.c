@@ -176,8 +176,8 @@ optimized.
 #  define _x_double           int
 #endif
 #ifndef __NO_LONGLONG__
-#  define _x_longlong         LONGLONG
-#  define _x_ulonglong        ULONGLONG
+#  define _x_longlong         HB_LONGLONG
+#  define _x_ulonglong        HB_ULONGLONG
 #else
 #  define _x_longlong         long
 #  define _x_ulonglong        unsigned long

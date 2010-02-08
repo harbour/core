@@ -75,7 +75,7 @@ static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
       PHB_ITEM pError;
       hb_snprintf( szMsgBuf, sizeof( szMsgBuf ), szMsgTable[ iCode - 1 ],
                 szParam1, szParam2 );
-      pError = hb_errRT_New( ES_ERROR, "PP", 1001, ( ULONG ) iCode, szMsgBuf,
+      pError = hb_errRT_New( ES_ERROR, "PP", 1001, ( HB_ULONG ) iCode, szMsgBuf,
                              NULL, 0, EF_NONE | EF_CANDEFAULT );
       hb_errLaunch( pError );
       hb_errRelease( pError );
@@ -229,7 +229,7 @@ HB_FUNC( __PP_ADDRULE )
    if( pState )
    {
       const char * szText = hb_parc( 2 );
-      ULONG ulLen = hb_parclen( 2 );
+      HB_SIZE ulLen = hb_parclen( 2 );
 
       if( szText )
       {
@@ -270,7 +270,7 @@ HB_FUNC( __PP_PROCESS )
 
    if( pState )
    {
-      ULONG ulLen = hb_parclen( 2 );
+      HB_SIZE ulLen = hb_parclen( 2 );
 
       if( ulLen )
       {

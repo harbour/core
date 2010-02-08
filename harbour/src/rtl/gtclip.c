@@ -110,7 +110,7 @@ HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE *pulLen )
 
 #if defined( HB_OS_WIN )
 
-HB_BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZE ulLen )
+HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, const char * szClipData, HB_SIZE ulLen )
 {
    HB_BOOL fResult = HB_FALSE;
 
@@ -142,20 +142,20 @@ HB_BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, HB_SIZ
          }
          ( void ) GlobalUnlock( hglbCopy );
          /* Place the handle on the clipboard. */
-         SetClipboardData( uFormat, hglbCopy );
+         SetClipboardData( ( UINT ) uFormat, hglbCopy );
       }
       CloseClipboard();
    }
    return fResult;
 }
 
-HB_BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, HB_SIZE * pulLen )
+HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, char ** pszClipData, HB_SIZE * pulLen )
 {
    *pulLen = 0;
    *pszClipData = NULL;
    if( IsClipboardFormatAvailable( uFormat ) && OpenClipboard( NULL ) )
    {
-      HGLOBAL hglb = GetClipboardData( uFormat );
+      HGLOBAL hglb = GetClipboardData( ( UINT ) uFormat );
       if( hglb )
       {
          LPTSTR lptstr = ( LPTSTR ) GlobalLock( hglb );

@@ -394,7 +394,7 @@ static void ioBufferScan( struct hb_BTree * pBTree, HB_ULONG page )
   for ( thisptr = pBTree->ioBuffer;
         thisptr && !BTREENODEISNULL( pBTree, thisptr->xPage.ulPage ) && thisptr->xPage.ulPage != page && thisptr->next;
         thisptr = thisptr->next )
-    ;
+    {};
 
   /* only shuffle the buffers if the target buffer is not the root buffer */
   if ( thisptr != pBTree->ioBuffer )
@@ -669,7 +669,7 @@ static void Prune( struct hb_BTree * pBTree, HB_ULONG ulNode )
     HB_ULONG n;
 
     for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->xPage.ulPage != ulNode; thisptr = thisptr->next )
-      ;
+      {};
 
     if ( thisptr->prev )   thisptr->prev->next = thisptr->next;
     if ( thisptr->next )   thisptr->next->prev = thisptr->prev;
@@ -1207,7 +1207,7 @@ static void Successor( struct hb_BTree * pBTree, HB_ULONG ulNode, int iPosition 
   for ( tmpnode = BranchGet( pBTree, ulNode, iPosition );
         !BTREENODEISNULL( pBTree, BranchGet( pBTree, tmpnode, 0 ) );
         tmpnode = BranchGet( pBTree, tmpnode, 0 ) )
-    ;
+    {};
   KeySet(    pBTree, ulNode, iPosition, ( buffer = KeyGet(  pBTree, tmpnode, 1, NULL ) ) );
   BufferRelease( buffer );
 }
@@ -1362,7 +1362,7 @@ HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char *target, HB_LONG lD
     }
 #if 0
     else
-      ;  /* error - key does not exist */
+      {};  /* error - key does not exist */
 #endif
   }
   else
@@ -1382,7 +1382,7 @@ void hb_BTreeGoTop( struct hb_BTree * pBTree )
   HB_ULONG ulLastNode;
 
   for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, 0 ) )
-    ;
+    {};
 
   if ( BTREENODEISNULL( pBTree, ulLastNode ) )
     CLEARKEYDATA( pBTree );
@@ -1396,14 +1396,14 @@ void hb_BTreeGoBottom( struct hb_BTree * pBTree )
   HB_ULONG ulLastNode;
 
   for ( ulLastNode = ulNode = pBTree->ulRootPage; !BTREENODEISNULL( pBTree, ulNode ); ulLastNode = ulNode, ulNode = BranchGet( pBTree, ulNode, CountGet( pBTree, ulNode ) ) )
-    ;
+    {};
   if ( BTREENODEISNULL( pBTree, ulLastNode ) )
     CLEARKEYDATA( pBTree );
   else
     KeyGet( pBTree, ulLastNode, CountGet( pBTree, ulLastNode ), pBTree->pThisKeyData );
 }
 
-LONG hb_BTreeSkip( struct hb_BTree * pBTree, HB_LONG records )
+HB_LONG hb_BTreeSkip( struct hb_BTree * pBTree, HB_LONG records )
 {
   HB_LONG results = 0;
   int iPosition;
@@ -1667,7 +1667,7 @@ const char * hb_BTreeKey( struct hb_BTree * pBTree )
   return ( const char * )pBTree->pThisKeyData->szKey;
 }
 
-LONG hb_BTreeData( struct hb_BTree * pBTree )
+HB_LONG hb_BTreeData( struct hb_BTree * pBTree )
 {
   return pBTree->pThisKeyData->xData.lData;
 }
@@ -1687,7 +1687,7 @@ static int BTree_SetTreeIndex( struct hb_BTree * pBTree )
     return -1;
 
   for ( n = 0; n < s_BTree_List_Count && s_BTree_List[ n ] != NULL; n++ )
-    ;
+    {};
 
   if ( n == s_BTree_List_Count )
   {

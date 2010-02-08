@@ -197,7 +197,7 @@ static HB_BOOL hb_fptFileUnLockEx( FPTAREAP pArea )
 {
    if( pArea->fShared )
    {
-      hb_fileFlush( pArea->pMemoFile, FALSE );
+      hb_fileFlush( pArea->pMemoFile, HB_FALSE );
       return hb_fileLock( pArea->pMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
    }
    else
@@ -211,7 +211,7 @@ static HB_BOOL hb_fptFileUnLockSh( FPTAREAP pArea )
 {
    if( pArea->fShared )
    {
-      hb_fileFlush( pArea->pMemoFile, FALSE );
+      hb_fileFlush( pArea->pMemoFile, HB_FALSE );
       return hb_fileLock( pArea->pMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
    }
    else
@@ -250,7 +250,7 @@ static HB_BOOL hb_fptRootBlockUnLock( FPTAREAP pArea )
 {
    if( pArea->fShared )
    {
-      hb_fileFlush( pArea->pMemoFile, FALSE );
+      hb_fileFlush( pArea->pMemoFile, HB_FALSE );
       return hb_fileLock( pArea->pMemoFile, FPT_ROOTBLOCK_OFFSET, 4, FL_UNLOCK );
    }
    else
