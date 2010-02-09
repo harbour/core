@@ -80,6 +80,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD execEvent( nMode, p )
+   METHOD setView( cView )
    METHOD buildDialog()
    METHOD buildViewWidget()
    METHOD buildStackedWidget()
@@ -128,15 +129,63 @@ METHOD IdeDocks:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:setView( cView )
+   LOCAL n
+
+   SWITCH cView
+
+   CASE "New..."
+      cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
+      IF cView != "New..."
+         IF ascan( ::aINI[ INI_VIEWS ], {|e| e == cView } ) > 0
+            MsgBox( "View: " + cView + ", already exists" )
+         ELSE
+            aadd( ::aINI[ INI_VIEWS ], cView )
+            ::qViewsCombo:addItem( cView )
+            ::buildViewWidget()
+            ::oStackedWidget:oWidget:setCurrentIndex( len( ::aINI[ INI_VIEWS ] ) )
+            ::oIde:cWrkView := cView
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE "Main"
+      ::oIde:nCurView   := 0
+      ::oIde:qTabWidget := ::aViews[ ::nCurView + 1 ]:oTabWidget:oWidget
+      ::oIde:oTabParent := ::aViews[ ::nCurView + 1 ]
+      ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+      ::oIde:cWrkView   := "Main"
+      EXIT
+
+   OTHERWISE
+      IF ( n := ascan( ::aINI[ INI_VIEWS ], cView ) ) > 0
+         ::oStackedWidget:oWidget:setCurrentIndex( n )   /* Note: n is always base of zero as main == 1 */
+         ::oIde:cWrkView := cView
+      ENDIF
+      EXIT
+   ENDSWITCH
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:execEvent( nMode, p )
+   LOCAL nIndex
 
    DO CASE
    CASE nMode == 1
       IF p >= 0 .AND. p <= len( ::aViews )
-         ::oIde:nCurView := p + 1
+         ::oIde:nCurView := p
 
-         ::oIde:qTabWidget := ::aViews[ ::nCurView ]:oTabWidget:oWidget
-         ::oIde:oTabParent := ::aViews[ ::nCurView ]
+         ::oIde:qTabWidget := ::aViews[ ::nCurView + 1 ]:oTabWidget:oWidget
+         ::oIde:oTabParent := ::aViews[ ::nCurView + 1 ]
+
+         nIndex := ::oIde:qTabWidget:currentIndex()
+         IF nIndex + 1 == ::oIde:qTabWidget:count()
+            ::oIde:qTabWidget:setCurrentIndex( 0 )
+            ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
+         ENDIF
+         ::setStatusText( SB_PNL_VIEW, iif( p == 0, "Main", ::aINI[ INI_VIEWS, ::nCurView ] ) )
       ENDIF
    ENDCASE
 
@@ -153,13 +202,14 @@ METHOD IdeDocks:buildStackedWidget()
    ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
    ::oDa:addChild( ::oStackedWidget )
 
-   ::connect( ::oStackedWidget:oWidget, "currentChanged(int)", {|p| ::execEvent( 1, p ) } )
+   ::oStackedWidget:connect( ::oStackedWidget:oWidget, "currentChanged(int)", {|p| ::execEvent( 1, p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDialog()
+   LOCAL s
 
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := ::resPath + "vr.png"
@@ -184,19 +234,25 @@ METHOD IdeDocks:buildDialog()
    ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
    ::oDlg:Show()
 
+   /* StatusBar */
+   ::buildStatusBar()
+
    /* Attach GRID Layout to Editor Area - Futuristic */
    ::oIde:qLayout := QGridLayout():new()
    ::oIde:qLayout:setContentsMargins( 0,0,0,0 )
    ::oIde:qLayout:setHorizontalSpacing( 0 )
    ::oIde:qLayout:setVerticalSpacing( 0 )
    //
+   ::oDa:oWidget:setLayout( ::qLayout )
 
    ::buildStackedWidget()
    ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
 
-   ::buildViewWidget()
-
-   ::oDa:oWidget:setLayout( ::qLayout )
+   /* View Panels */
+   ::buildViewWidget()      /* Main */
+   FOR EACH s IN ::aINI[ INI_VIEWS ]
+      ::buildViewWidget()
+   NEXT
 
    /* Force to populate current widget */
    ::oStackedWidget:oWidget:setCurrentIndex( 0 )
@@ -222,7 +278,6 @@ METHOD IdeDocks:buildViewWidget()
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )
 
-   /* The root view widget */
    aadd( ::oIde:aViews, oFrame )
 
    ::oStackedWidget:oWidget:addWidget( oFrame:oWidget )
@@ -454,7 +509,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
       cText := QTextBlock():configure( qCursor:block() ):text()
 
       IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-         ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
+         ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
          qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
          nLine   := iif( nLine < 1, 0, nLine - 1 )
 
@@ -490,6 +545,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "View"     ):oWidget:setMinimumWidth(  20 )
 
    FOR i := 1 TO 6
       ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )
@@ -586,7 +642,9 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
    CASE SB_PNL_MODIFIED
       oPanel:caption := iif( xValue, "Modified", "" )
       EXIT
-   CASE SB_PNL_M_2
+   CASE SB_PNL_VIEW
+      oPanel:caption := "<font color = blue>View: " + xValue + "</font>"
+      EXIT
    CASE SB_PNL_ENVIRON
       oPanel:caption := "Env: " + xValue
       EXIT

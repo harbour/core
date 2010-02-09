@@ -66,8 +66,9 @@
 #define INI_RECENTFILES                           6
 #define INI_RECENTPROJECTS                        7
 #define INI_FOLDERS                               8
+#define INI_VIEWS                                 9
 
-#define INI_SECTIONS_COUNT                        8
+#define INI_SECTIONS_COUNT                        9
 
 
 /* INI_HBIDE */
@@ -91,8 +92,9 @@
 #define CurrentFind                               18
 #define CurrentFolderFind                         19
 #define CurrentReplace                            20
+#define CurrentView                               21
 
-#define INI_HBIDE_VRBLS                           20
+#define INI_HBIDE_VRBLS                           21
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
@@ -124,10 +126,10 @@
 #define E_oPrjLau                                 7
 #define E_oPrjLEx                                 8
 #define E_oPrjInc                                 9
-#define E_oPrjSrc                                10
-#define E_oPrjMta                                11
-#define E_oPrjHbp                                12
-#define E_oPrjCmp                                13
+#define E_oPrjSrc                                 10
+#define E_oPrjMta                                 11
+#define E_oPrjHbp                                 12
+#define E_oPrjCmp                                 13
 
 #define SB_PNL_MAIN                               1
 #define SB_PNL_READY                              2
@@ -139,10 +141,11 @@
 #define SB_PNL_M_2                                8
 #define SB_PNL_ENVIRON                            8
 #define SB_PNL_STREAM                             9
-#define SB_PNL_EDIT                              10
-#define SB_PNL_SEARCH                            11
-#define SB_PNL_CODEC                             12
-#define SB_PNL_PROJECT                           13
+#define SB_PNL_EDIT                               10
+#define SB_PNL_SEARCH                             11
+#define SB_PNL_CODEC                              12
+#define SB_PNL_PROJECT                            13
+#define SB_PNL_VIEW                               14
 
 #define TAB_OTAB                                  1
 #define TAB_OEDITOR                               2

@@ -100,7 +100,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile )
    METHOD exeEvent( nMode, p )
-   METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD getTabBySource( cSource )
    METHOD getTabCurrent()
    METHOD getDocumentCurrent()
@@ -262,9 +262,9 @@ METHOD IdeEditsManager:exeEvent( nMode, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 
-   IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+   IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 
    RETURN Self
 
@@ -905,6 +905,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   cExt                                    INIT   ""
    DATA   cType                                   INIT   ""
    DATA   cTheme                                  INIT   ""
+   DATA   cView
    DATA   qDocument
    DATA   qHiliter
    DATA   sourceFile                              INIT   ""
@@ -940,8 +941,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qSlots
    DATA   qMarkLayoutOld
 
-   METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
-   METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+   METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
@@ -957,7 +958,7 @@ CLASS IdeEditor INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 
    DEFAULT oIde        TO ::oIde
    DEFAULT cSourceFile TO ::sourceFile
@@ -965,6 +966,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    DEFAULT nHPos       TO ::nHPos
    DEFAULT nVPos       TO ::nVPos
    DEFAULT cTheme      TO ::cTheme
+   DEFAULT cView       TO ::cView
 
    ::oIde       := oIde
    ::sourceFile := cSourceFile
@@ -972,13 +974,16 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nHPos      := nHPos
    ::nVPos      := nVPos
    ::cTheme     := cTheme
+   ::cView      := cView
+
    ::nID        := hbide_getNextUniqueID()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
+METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   LOCAL n
 
    ::qSlots := HBSlots():new()
 
@@ -988,6 +993,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    DEFAULT nHPos       TO ::nHPos
    DEFAULT nVPos       TO ::nVPos
    DEFAULT cTheme      TO ::cTheme
+   DEFAULT cView       TO ::cView
 
    ::oIde           := oIde
    ::SourceFile     := hbide_pathNormalized( cSourceFile, .F. )
@@ -995,6 +1001,20 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme )
    ::nHPos          := nHPos
    ::nVPos          := nVPos
    ::cTheme         := cTheme
+   ::cView          := cView
+
+   DEFAULT ::cView TO iif( ::nCurView == 0, "Main", ::aINI[ INI_VIEWS, ::nCurView ] )
+
+   IF ::cView == "Main"
+      ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+   ELSE
+      IF ( n := ascan( ::aINI[ INI_VIEWS ], {|e| e == ::cView } ) ) > 0
+         ::oStackedWidget:oWidget:setCurrentIndex( n )
+      ELSE
+         ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+      ENDIF
+   ENDIF
+
    ::pathNormalized := hbide_pathNormalized( cSourceFile, .t. )
 
    hb_fNameSplit( cSourceFile, @::cPath, @::cFile, @::cExt )

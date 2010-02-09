@@ -71,8 +71,7 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_saveINI( oIde )
-   LOCAL nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor
-   LOCAL nTabs := oIde:qTabWidget:count()
+   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs
 
    txt_:= {}
    //    Properties
@@ -98,6 +97,7 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "CurrentFind               = " + oIde:cWrkFind                                     )
    aadd( txt_, "CurrentFolderFind         = " + oIde:cWrkFolderFind                               )
    aadd( txt_, "CurrentReplace            = " + oIde:cWrkReplace                                  )
+   aadd( txt_, "CurrentView               = " + oIde:cWrkView                                     )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -107,26 +107,35 @@ FUNCTION hbide_saveINI( oIde )
    NEXT
    aadd( txt_, " " )
 
+   /*-------------------   FILES   -------------------*/
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
-   FOR n := 1 TO nTabs
-      pTab      := oIde:qTabWidget:widget( n-1 )
-      nTab      := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
-      oEdit     := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
-      IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
+   FOR j := 0 TO len( oIde:aINI[ INI_VIEWS ] )
+      oIde:oStackedWidget:oWidget:setCurrentIndex( j )
 
-         qHScr     := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
-         qVScr     := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
-         qCursor   := QTextCursor():configure( oEdit:qEdit:textCursor() )
+      nTabs := oIde:qTabWidget:count()
+      FOR n := 1 TO nTabs
+         pTab      := oIde:qTabWidget:widget( n-1 )
+         nTab      := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
+         oEdit     := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
-         aadd( txt_, oEdit:sourceFile + "," + ;
-                     hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos  ) ) +  ","  + ;
-                     hb_ntos( iif( oEdit:lLoaded, qHScr:value()     , oEdit:nHPos ) ) +  ","  + ;
-                     hb_ntos( iif( oEdit:lLoaded, qVScr:value()     , oEdit:nVPos ) ) +  ","  + ;
-                     oEdit:cTheme                                                     + ","   )
-      ENDIF
+         IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
+
+            qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
+            qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
+            qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+
+            aadd( txt_, oEdit:sourceFile + "," + ;
+                        hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos  ) ) +  ","  + ;
+                        hb_ntos( iif( oEdit:lLoaded, qHScr:value()     , oEdit:nHPos ) ) +  ","  + ;
+                        hb_ntos( iif( oEdit:lLoaded, qVScr:value()     , oEdit:nVPos ) ) +  ","  + ;
+                        oEdit:cTheme                                                     +  ","  + ;
+                        oEdit:cView                                                      +  "," )
+         ENDIF
+      NEXT
    NEXT
+
    aadd( txt_, " " )
 
    aadd( txt_, "[FIND]" )
@@ -164,6 +173,13 @@ FUNCTION hbide_saveINI( oIde )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[VIEWS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( oIde:aIni[ INI_VIEWS ] )
+      aadd( txt_, oIde:aIni[ INI_VIEWS, n ] )
+   NEXT
+   aadd( txt_, " " )
+
    hbide_saveSettings( oIde )
 
    RETURN hbide_createTarget( oIde:cProjIni, txt_ )
@@ -178,7 +194,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "finddialoggeometry" , "themesdialoggeometry", "currenttheme"       , ;
                       "currentcodec"       , "pathmk2"             , "pathenv"            , ;
                       "currentenvironment" , "findinfilesdialoggeometry", "currentfind"   , ;
-                      "currentreplace"     , "currentfolderfind"  }
+                      "currentreplace"     , "currentfolderfind"   , "currentview"          }
 
    /* Initiate the place holders */
    oIde:aIni := Array( INI_SECTIONS_COUNT )
@@ -237,6 +253,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
             CASE "[FOLDERS]"
                nPart := INI_FOLDERS
                EXIT
+            CASE "[VIEWS]"
+               nPart := INI_VIEWS
+               EXIT
             OTHERWISE
                /*
                 * If none of the previous sections are valid, do not let it
@@ -265,17 +284,19 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
 
                CASE nPart == INI_FILES
                   a_:= hb_atokens( s, "," )
-                  asize( a_, 5 )
+                  asize( a_, 6 )
                   DEFAULT a_[ 1 ] TO ""
                   DEFAULT a_[ 2 ] TO ""
                   DEFAULT a_[ 3 ] TO ""
                   DEFAULT a_[ 4 ] TO ""
                   DEFAULT a_[ 5 ] TO ""
+                  DEFAULT a_[ 6 ] TO "Main"
                   //
                   a_[ 2 ] := val( a_[ 2 ] )
                   a_[ 3 ] := val( a_[ 3 ] )
                   a_[ 4 ] := val( a_[ 4 ] )
                   a_[ 5 ] := a_[ 5 ]
+                  a_[ 6 ] := a_[ 6 ]
 
                 * Ignores invalid filenames...
                   IF !Empty( a_[ 1 ] )
@@ -299,6 +320,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                   ENDIF
 
                CASE nPart == INI_FOLDERS
+                  aadd( oIde:aIni[ nPart ], s )
+
+               CASE nPart == INI_VIEWS
                   aadd( oIde:aIni[ nPart ], s )
 
                ENDCASE

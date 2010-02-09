@@ -304,7 +304,8 @@ METHOD IdeActions:loadActions()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeActions:buildToolBar()
-   LOCAL oTBar, nSep := XBPTOOLBAR_BUTTON_SEPARATOR
+   LOCAL oTBar, s
+   LOCAL nSep := XBPTOOLBAR_BUTTON_SEPARATOR
 
    oTBar := XbpToolBar():new( ::oDlg )
    oTBar:imageWidth  := 22
@@ -359,6 +360,18 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "ZoomIn"               ), , , , , , "ZoomIn"            )
    oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
    oTBar:addItem( , , , , , nSep )
+
+   /* ComboBox to Manage Views */
+   ::oIde:qViewsCombo := QComboBox():new()
+   oTBar:oWidget:addWidget( ::qViewsCombo )
+   ::qViewsCombo:addItem( "New..." )
+   ::qViewsCombo:addItem( " " )
+   ::qViewsCombo:addItem( "Main"   )
+   FOR EACH s IN ::aINI[ INI_VIEWS ]
+      ::qViewsCombo:addItem( s )
+   NEXT
+   ::qViewsCombo:setCurrentIndex( -1 )
+   ::connect( ::qViewsCombo, "currentIndexChanged(text)", {|p| ::oDK:setView( p ) } )
 
    RETURN Self
 

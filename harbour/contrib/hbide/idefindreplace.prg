@@ -576,7 +576,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
          IF nInfo <= len( ::aInfo ) .AND. ::aInfo[ nInfo, 1 ] == -2
             cSource := ::aInfo[ nInfo, 2 ]
 
-            ::oSM:editSource( cSource, 0, 0, 0, NIL, .f. )
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
             qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
             qCursor:setPosition( 0 )
             qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 3 ] - 1 )

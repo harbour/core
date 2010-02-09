@@ -110,6 +110,7 @@ CLASS IdeObject
    ACCESS qTabWidget                              INLINE ::oIde:qTabWidget
    ACCESS oTabParent                              INLINE ::oIde:oTabParent
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
+   ACCESS qViewsCombo                             INLINE ::oIde:qViewsCombo
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
@@ -120,6 +121,7 @@ CLASS IdeObject
    ACCESS cWrkFind                                INLINE ::oIde:cWrkFind
    ACCESS cWrkFolderFind                          INLINE ::oIde:cWrkFolderFind
    ACCESS cWrkReplace                             INLINE ::oIde:cWrkReplace
+   ACCESS cWrkView                                INLINE ::oIde:cWrkView
    //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep

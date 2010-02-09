@@ -144,6 +144,7 @@ CLASS HbIde
    DATA   oTabParent
    DATA   oFrame
    DATA   qLayoutFrame
+   DATA   qViewsCombo
 
    DATA   qFindDlg
 
@@ -201,6 +202,7 @@ CLASS HbIde
    DATA   cWrkFind                                INIT   ""
    DATA   cWrkFolderFind                          INIT   ""
    DATA   cWrkReplace                             INIT   ""
+   DATA   cWrkView                                INIT   ""
 
    DATA   oEnvironment
 
@@ -293,6 +295,7 @@ METHOD HbIde:create( cProjIni )
    ::cWrkFind        := ::aINI[ INI_HBIDE, CurrentFind        ]
    ::cWrkFolderFind  := ::aINI[ INI_HBIDE, CurrentFolderFind  ]
    ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
+   ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
    /* Set Codec at the Begining */
    HbXbp_SetCodec( ::cWrkCodec )
 
@@ -307,7 +310,7 @@ METHOD HbIde:create( cProjIni )
    /* Main Menu */
    ::oAC:buildMainMenu()
    /* StatusBar */
-   ::oDK:buildStatusBar()
+//   ::oDK:buildStatusBar()
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
 
@@ -339,6 +342,12 @@ METHOD HbIde:create( cProjIni )
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
    ::oSM:loadSources()
+   #if 0
+   ::oDK:setView( ::cWrkView )
+   IF !empty( ::aIni[ INI_FILES ] )
+      ::oEM:setSourceVisibleByIndex( max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   ENDIF
+   #endif
 
    ::updateTitleBar()
    /* Set some last settings */

@@ -77,7 +77,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD loadSources()
    METHOD saveSource( nTab, lCancel, lAs )
-   METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisible )
+   METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible )
    METHOD closeSource( nTab, lCanCancel, lCanceled )
    METHOD closeAllSources()
    METHOD closeAllOthers( nTab )
@@ -110,15 +110,15 @@ METHOD IdeSourcesManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:loadSources()
-   LOCAL a_, nIndex
+   LOCAL a_
 
    IF !empty( ::aIni[ INI_FILES ] )
       FOR EACH a_ IN ::aIni[ INI_FILES ]
-         /*            File     nPos     nVPos    nHPos    cTheme  lAlert lVisible */
-         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], .t., .f. )
+         /*            File     nPos     nVPos    nHPos    cTheme  cView lAlert lVisible */
+         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], a_[ 6 ], .t., .f. )
       NEXT
-      nIndex := max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
-      ::oEM:setSourceVisibleByIndex( nIndex )
+      ::oDK:setView( ::cWrkView )
+      ::oEM:setSourceVisibleByIndex( max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) ) )
    ENDIF
 
    RETURN Self
@@ -202,7 +202,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lAlert, lVisible )
+METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible )
 
    DEFAULT lAlert   TO .T.
    DEFAULT lVisible TO .T.
@@ -231,7 +231,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, lA
    DEFAULT nHPos TO 0
    DEFAULT nVPos TO 0
 
-   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme )
+   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    IF lVisible
       ::oEM:setSourceVisible( cSourceFile )
    ENDIF
