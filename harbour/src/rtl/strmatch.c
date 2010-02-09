@@ -59,11 +59,11 @@ HB_BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strMatchRegExp(%s, %s)", szString, szPattern));
 
-   pRegEx = hb_regexCompile( szPattern, strlen( szPattern ), HBREG_EXTENDED );
+   pRegEx = hb_regexCompile( szPattern, ( HB_SIZE ) strlen( szPattern ), HBREG_EXTENDED );
    if( pRegEx )
    {
       HB_BOOL fMatch;
-      fMatch = hb_regexMatch( pRegEx, szString, strlen( szString ), HB_TRUE );
+      fMatch = hb_regexMatch( pRegEx, szString, ( HB_SIZE ) strlen( szString ), HB_TRUE );
       hb_regexFree( pRegEx );
       return fMatch;
    }

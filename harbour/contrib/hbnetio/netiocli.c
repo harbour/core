@@ -882,7 +882,7 @@ HB_FUNC( NETIO_FUNCEXEC )
  */
 static HB_BOOL s_fileAccept( const char * pFilename )
 {
-   return hb_strnicmp( pFilename, NETIO_FILE_PREFIX, NETIO_FILE_PREFIX_LEN ) == 0;
+   return hb_strnicmp( pFilename, NETIO_FILE_PREFIX, ( HB_SIZE ) NETIO_FILE_PREFIX_LEN ) == 0;
 }
 
 static HB_BOOL s_fileExists( const char * pFilename, char * pRetPath )

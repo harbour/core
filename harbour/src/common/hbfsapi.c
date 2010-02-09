@@ -251,7 +251,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       was none. */
    if( pszFileName[ 0 ] != '\0' && ( pszName || pFileName->szExtension ) )
    {
-      int iLen = strlen( pszFileName ) - 1;
+      int iLen = ( int ) strlen( pszFileName ) - 1;
 
       if( iLen < HB_PATH_MAX - 1 - 2 && pszFileName[ iLen ] != cDirSep &&
           strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen ] ) == NULL )

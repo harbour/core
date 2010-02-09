@@ -156,7 +156,7 @@ char * hb_strlow( char * pszText )
 char * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   HB_SIZE ulLen = strlen( pszText ) + 1;
+   HB_SIZE ulLen = ( HB_SIZE ) strlen( pszText ) + 1;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %ld)", pszText, ulLen));
 
@@ -207,7 +207,7 @@ char * hb_strduptrim( const char * pszText )
    while( pszText[ 0 ] == ' ' )
       ++pszText;
 
-   ulLen = strlen( pszText );
+   ulLen = ( HB_SIZE ) strlen( pszText );
    while( ulLen && pszText[ ulLen - 1 ] == ' ' )
       --ulLen;
 
@@ -338,7 +338,7 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
       va_start( va, szSrc );
       while( szSrcPtr )
       {
-         ulSize += strlen( szSrcPtr );
+         ulSize += ( HB_SIZE ) strlen( szSrcPtr );
          szSrcPtr = va_arg( va, char * );
       }
       va_end( va );
@@ -715,7 +715,7 @@ HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, do
 HB_BOOL hb_strToNum( const char* szNum, HB_MAXINT * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %p, %p)", szNum, plVal, pdVal ));
-   return hb_str2number( HB_FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
+   return hb_str2number( HB_FALSE, szNum, ( HB_SIZE ) strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
 HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal )
@@ -744,7 +744,7 @@ HB_MAXINT hb_strValInt( const char * szText, int * iOverflow )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
 
-   if( hb_str2number( HB_TRUE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
+   if( hb_str2number( HB_TRUE, szText, ( HB_SIZE ) strlen( szText ), &lVal, &dVal, NULL, NULL ) )
    {
       *iOverflow = 1;
       return 0;

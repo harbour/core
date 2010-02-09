@@ -328,7 +328,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
          break;
 
       case HB_IT_SYMBOL:
-         ulSize = 2 + strlen( hb_itemGetSymbol( pItem )->szName );
+         ulSize = 2 + ( HB_SIZE ) strlen( hb_itemGetSymbol( pItem )->szName );
          break;
 
       case HB_IT_STRING:
@@ -361,7 +361,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
             const char * szClass = hb_clsName( uiClass ),
                        * szFunc = hb_clsFuncName( uiClass );
             if( szClass && szFunc )
-               ulSize += strlen( szClass ) + strlen( szFunc ) + 3;
+               ulSize += ( HB_SIZE ) strlen( szClass ) + ( HB_SIZE ) strlen( szFunc ) + 3;
          }
          if( hb_itemSerialValueRef( pRefPtr, hb_arrayId( pItem ), ulOffset + ulSize ) )
          {
@@ -563,7 +563,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
 
       case HB_IT_SYMBOL:
          szVal = hb_itemGetSymbol( pItem )->szName;
-         ulLen = strlen( szVal );
+         ulLen = ( HB_SIZE ) strlen( szVal );
          if( ulLen > 0xFF )
             ulLen = 0xFF;
          pBuffer[ ulOffset++ ] = HB_SERIAL_SYMBOL;
@@ -665,10 +665,10 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
                if( szClass && szFunc )
                {
                   pBuffer[ ulOffset++ ] = HB_SERIAL_OBJ;
-                  ulLen = strlen( szClass ) + 1;
+                  ulLen = ( HB_SIZE ) strlen( szClass ) + 1;
                   memcpy( &pBuffer[ ulOffset ], szClass, ulLen );
                   ulOffset += ulLen;
-                  ulLen = strlen( szFunc ) + 1;
+                  ulLen = ( HB_SIZE ) strlen( szFunc ) + 1;
                   memcpy( &pBuffer[ ulOffset ], szFunc, ulLen );
                   ulOffset += ulLen;
                }
@@ -1045,10 +1045,10 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          const char * szClass, * szFunc;
          szClass = ( const char * ) &pBuffer[ ulOffset ];
-         ulLen = strlen( szClass );
+         ulLen = ( HB_SIZE ) strlen( szClass );
          szFunc = szClass + ulLen + 1;
          ulOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                              ulOffset + ulLen + strlen( szFunc ) + 2, pRef );
+                              ulOffset + ulLen + ( HB_SIZE ) strlen( szFunc ) + 2, pRef );
          hb_objSetClass( pItem, szClass, szFunc );
          break;
       }

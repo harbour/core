@@ -2015,6 +2015,6 @@ HB_FUNC( HS_VERSION )
 
    pszHBVersion = hb_verHarbour();
    pszVersion = hb_xstrcat( NULL, szVer, ": ", pszHBVersion );
-   hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
+   hb_retclen_buffer( pszVersion, ( HB_SIZE ) strlen( pszVersion ) );
    hb_xfree( pszHBVersion );
 }

@@ -364,7 +364,7 @@ static void hb_membufAddData( PHB_MEM_BUFFER pBuffer, const char * data, HB_SIZE
 
 static void hb_membufAddStr( PHB_MEM_BUFFER pBuffer, const char * szText )
 {
-   hb_membufAddData( pBuffer, szText, strlen( szText ) );
+   hb_membufAddData( pBuffer, szText, ( HB_SIZE ) strlen( szText ) );
 }
 
 static void hb_pp_tokenFree( PHB_PP_TOKEN pToken )
@@ -780,7 +780,7 @@ static HB_BOOL hb_pp_hasCommand( char * pBuffer, HB_SIZE ulLen, HB_SIZE * pulAt,
    for( i = 0; i < iCmds && ul < ulLen; ++i )
    {
       cmd = va_arg( va, char * );
-      u = strlen( cmd );
+      u = ( HB_SIZE ) strlen( cmd );
       while( ul < ulLen && HB_PP_ISBLANK( pBuffer[ ul ] ) )
          ++ul;
       if( ul + u > ulLen || hb_strnicmp( cmd, pBuffer + ul, u ) != 0 )
@@ -1024,7 +1024,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                         char szFunc[ 24 ];
                         hb_snprintf( szFunc, sizeof( szFunc ), "HB_INLINE_%03d", ++pState->iInLineCount );
                         if( pInLinePtr && * pInLinePtr )
-                           hb_pp_tokenSetValue( *pInLinePtr, szFunc, strlen( szFunc ) );
+                           hb_pp_tokenSetValue( *pInLinePtr, szFunc, ( HB_SIZE ) strlen( szFunc ) );
                         pState->pInLineFunc( pState->cargo, szFunc,
                                     hb_membufPtr( pState->pStreamBuffer ),
                                     hb_membufLen( pState->pStreamBuffer ),
@@ -1450,7 +1450,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( pOperator )
             {
                hb_pp_tokenAddNext( pState, pOperator->value,
-                                   strlen( pOperator->value ),
+                                   ( HB_SIZE ) strlen( pOperator->value ),
                                    pOperator->type );
                ul = pOperator->len;
             }
@@ -2144,7 +2144,7 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
       if( ! pState->pStreamBuffer )
          pState->pStreamBuffer = hb_membufNew();
 
-      ulSize = fread( pBuffer, sizeof( char ), MAX_STREAM_SIZE + 1, pFile->file_in );
+      ulSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), MAX_STREAM_SIZE + 1, pFile->file_in );
       hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
       if( ulSize <= MAX_STREAM_SIZE )
       {
@@ -4159,7 +4159,7 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
             const char * szFileName = pState->pFile ? pState->pFile->szFileName : NULL;
             if( !szFileName )
                szFileName = "";
-            * pResultPtr = hb_pp_tokenNew( szFileName, strlen( szFileName ), 0,
+            * pResultPtr = hb_pp_tokenNew( szFileName, ( HB_SIZE ) strlen( szFileName ), 0,
                                            HB_PP_TOKEN_STRING );
             pResultPtr = &( * pResultPtr )->pNext;
          }
@@ -4167,7 +4167,7 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
          {
             char line[ 16 ];
             hb_snprintf( line, sizeof( line ), "%d", pState->pFile ? pState->pFile->iCurrentLine : 0 );
-            * pResultPtr = hb_pp_tokenNew( line, strlen( line ), 0,
+            * pResultPtr = hb_pp_tokenNew( line, ( HB_SIZE ) strlen( line ), 0,
                                            HB_PP_TOKEN_NUMBER );
             pResultPtr = &( * pResultPtr )->pNext;
          }
@@ -4888,9 +4888,9 @@ static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, char * szFileName, int 
    hb_snprintf( szLine, sizeof( szLine ), "%d", iLine );
    hb_pp_tokenAdd( pTokenPtr, "#", 1, 0, HB_PP_TOKEN_DIRECTIVE | HB_PP_TOKEN_STATIC );
    hb_pp_tokenAdd( pTokenPtr, "line", 4, 0, HB_PP_TOKEN_KEYWORD | HB_PP_TOKEN_STATIC );
-   hb_pp_tokenAdd( pTokenPtr, szLine, strlen( szLine ), 1, HB_PP_TOKEN_NUMBER );
+   hb_pp_tokenAdd( pTokenPtr, szLine, ( HB_SIZE ) strlen( szLine ), 1, HB_PP_TOKEN_NUMBER );
    if( szFileName )
-      hb_pp_tokenAdd( pTokenPtr, szFileName, strlen( szFileName ), 1, HB_PP_TOKEN_STRING );
+      hb_pp_tokenAdd( pTokenPtr, szFileName, ( HB_SIZE ) strlen( szFileName ), 1, HB_PP_TOKEN_STRING );
    hb_pp_tokenAdd( pTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
 }
 #endif
@@ -5745,7 +5745,7 @@ void hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName,
 
    pState->fError = HB_FALSE;
 
-   pFile = hb_pp_FileBufNew( szDefName, strlen( szDefName ) );
+   pFile = hb_pp_FileBufNew( szDefName, ( HB_SIZE ) strlen( szDefName ) );
    pFile->pPrev = pState->pFile;
    pState->pFile = pFile;
    pState->iFiles++;
@@ -5759,13 +5759,13 @@ void hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName,
    {
       if( szDefValue == &s_pp_dynamicResult )
       {
-         pResult = hb_pp_tokenNew( szDefName, strlen( szDefName ), 0,
+         pResult = hb_pp_tokenNew( szDefName, ( HB_SIZE ) strlen( szDefName ), 0,
                                    HB_PP_RMARKER_DYNVAL | HB_PP_TOKEN_STATIC );
       }
       else
       {
          pFile->pLineBuf = szDefValue;
-         pFile->ulLineBufLen = strlen( szDefValue );
+         pFile->ulLineBufLen = ( HB_SIZE ) strlen( szDefValue );
          hb_pp_getLine( pState );
          pResult = pState->pFile->pTokenList;
          pState->pFile->pTokenList = NULL;
@@ -5797,7 +5797,7 @@ void hb_pp_delDefine( PHB_PP_STATE pState, const char * szDefName )
 {
    PHB_PP_TOKEN pToken;
 
-   pToken = hb_pp_tokenNew( szDefName, strlen( szDefName ),
+   pToken = hb_pp_tokenNew( szDefName, ( HB_SIZE ) strlen( szDefName ),
                             0, HB_PP_TOKEN_KEYWORD );
    hb_pp_defineDel( pState, pToken );
    hb_pp_tokenFree( pToken );
@@ -5894,7 +5894,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, HB_SIZE * pulLe
    else
       hb_membufFlush( pState->pOutputBuffer );
 
-   ulLen = pulLen ? * pulLen : strlen( pLine );
+   ulLen = pulLen ? * pulLen : ( HB_SIZE ) strlen( pLine );
 
    pFile = hb_pp_FileBufNew( pLine, ulLen );
    pFile->pPrev = pState->pFile;

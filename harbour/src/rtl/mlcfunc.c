@@ -207,7 +207,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
       pEOLs->szEOL = hb_setGetEOL();
       if( !pEOLs->szEOL || !pEOLs->szEOL[ 0 ] )
          pEOLs->szEOL = hb_conNewLine();
-      pEOLs->ulLen = strlen( pEOLs->szEOL );
+      pEOLs->ulLen = ( HB_SIZE ) strlen( pEOLs->szEOL );
       iEOLs = pEOLs->ulLen ? 1 : 0;
    }
 

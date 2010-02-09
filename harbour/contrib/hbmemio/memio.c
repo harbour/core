@@ -692,7 +692,7 @@ static PHB_FILE s_fileNew( HB_FHANDLE hFile );
 
 static HB_BOOL s_fileAccept( const char * pFilename )
 {
-   return hb_strnicmp( pFilename, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
+   return hb_strnicmp( pFilename, FILE_PREFIX, ( HB_SIZE ) FILE_PREFIX_LEN ) == 0;
 }
 
 

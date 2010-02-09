@@ -99,12 +99,12 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
          szStrEsc = hb_strescape( hb_itemGetCPtr( pValue ),
                                   hb_itemGetCLen( pValue ), cDelim );
          if( cdp )
-            hb_cdpnDupLen( szStrEsc, strlen( szStrEsc ), hb_vmCDP(), cdp );
+            hb_cdpnDupLen( szStrEsc, ( HB_SIZE ) strlen( szStrEsc ), hb_vmCDP(), cdp );
 
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
          /* FWrite( handle, szString ) */
-         hb_fsWriteLarge( handle, szString, strlen( szString ) );
+         hb_fsWriteLarge( handle, szString, ( HB_SIZE ) strlen( szString ) );
 
          /* Orphaned, get rif off it */
          hb_xfree( szStrEsc );
@@ -117,7 +117,7 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
          char * szDate = ( char * ) hb_xgrab( 9 );
 
          hb_itemGetDS( pValue, szDate );
-         hb_fsWriteLarge( handle, szDate, strlen( szDate ) );
+         hb_fsWriteLarge( handle, szDate, ( HB_SIZE ) strlen( szDate ) );
          hb_xfree( szDate );
          break;
       }
@@ -136,10 +136,10 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
          if( szResult )
          {
-            HB_SIZE ulLen = strlen( szResult );
+            HB_SIZE ulLen = ( HB_SIZE ) strlen( szResult );
             const char * szTrimmed = hb_strLTrim( szResult, &ulLen );
 
-            hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );
+            hb_fsWriteLarge( handle, szTrimmed, ( HB_SIZE ) strlen( szTrimmed ) );
             hb_xfree( szResult );
          }
          break;

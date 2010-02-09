@@ -80,14 +80,14 @@ HB_FUNC( SX_FNAMEPARSER )
       {
          if( pFileName->szName )
          {
-            ulLen = strlen( pFileName->szName );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szName );
             ulLen = hb_strRTrimLen( pFileName->szName, ulLen, HB_FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
             ( ( char * ) pFileName->szName )[ulLen] = '\0';
          }
          if( pFileName->szExtension )
          {
-            ulLen = strlen( pFileName->szExtension );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szExtension );
             ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, HB_FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
             ( ( char * ) pFileName->szExtension )[ulLen] = '\0';

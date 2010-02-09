@@ -121,7 +121,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pGTCGI->hStdout = hFilenoStdout;
 
    pGTCGI->szCrLf = hb_strdup( hb_conNewLine() );
-   pGTCGI->ulCrLf = strlen( pGTCGI->szCrLf );
+   pGTCGI->ulCrLf = ( HB_SIZE ) strlen( pGTCGI->szCrLf );
 
    hb_fsSetDevMode( pGTCGI->hStdout, FD_BINARY );
 

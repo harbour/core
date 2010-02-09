@@ -1062,7 +1062,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    if( szFileName )
       hb_strncpy( szName, szFileName, sizeof( szName ) - 1 );
 
-   ulLen = strlen( szName );
+   ulLen = ( HB_SIZE ) strlen( szName );
 
    /* Test shows that files in subfolders can be stored to zip file without
       explicitly adding folder. So, let's create a required path */

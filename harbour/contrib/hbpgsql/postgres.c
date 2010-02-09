@@ -800,19 +800,19 @@ HB_FUNC( PQCMDTUPLES )
 HB_FUNC( PQESCAPESTRING )
 {
    const char * source = hb_parcx( 1 );
-   size_t size = strlen( source );
+   HB_SIZE size = ( HB_SIZE ) strlen( source );
    char * dest = ( char * ) hb_xgrab( size * 2 + 1 );
 
-   PQescapeString( dest, source, size );
+   PQescapeString( dest, source, ( size_t ) size );
 
    hb_retc_buffer( dest );
 }
 
 HB_FUNC( PQESCAPEBYTEA ) /* deprecated */
 {
-   size_t from_length = hb_parclen( 1 );
-   size_t to_length = from_length * 5 + 1;
-   unsigned char * to = PQescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), from_length, &to_length );
+   HB_SIZE from_length = hb_parclen( 1 );
+   HB_SIZE to_length = from_length * 5 + 1;
+   unsigned char * to = PQescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), ( size_t ) from_length, ( size_t * ) &to_length );
    hb_retc( ( char * ) to ); /* TOFIX: ? hb_retc( ( char * ) to, to_length ); */
    PQfreemem( to );
 }
@@ -821,7 +821,7 @@ HB_FUNC( PQUNESCAPEBYTEA )
 {
    size_t to_length;
    unsigned char * from = PQunescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), &to_length );
-   hb_retclen( ( char * ) from, to_length );
+   hb_retclen( ( char * ) from, ( HB_SIZE ) to_length );
    PQfreemem( from );
 }
 

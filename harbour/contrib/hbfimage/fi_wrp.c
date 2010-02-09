@@ -147,8 +147,8 @@ static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
          /* launch error function at prg level */
          hb_vmPushSymbol( ( PHB_SYMB ) s_pErrorHandler );
          hb_vmPushNil();
-         hb_vmPushString( format, strlen( format ) );
-         hb_vmPushString( message, strlen( message ) );
+         hb_vmPushString( format, ( HB_SIZE ) strlen( format ) );
+         hb_vmPushString( message, ( HB_SIZE ) strlen( message ) );
          hb_vmDo( 2 );
 
          hb_vmRequestRestore();

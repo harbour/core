@@ -352,7 +352,7 @@ void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar
 void hb_conOutErr( const char * pStr, HB_SIZE ulLen )
 {
    if( ulLen == 0 )
-      ulLen = strlen( pStr );
+      ulLen = ( HB_SIZE ) strlen( pStr );
 
    fprintf( stderr, "%.*s", ( int ) ulLen, pStr );
 }
@@ -455,7 +455,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       {
          if( pFileName->szName )
          {
-            ulLen = strlen( pFileName->szName );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szName );
             while( ulLen && pFileName->szName[ulLen - 1] == ' ' )
                --ulLen;
             while( ulLen && pFileName->szName[0] == ' ' )
@@ -467,7 +467,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
          }
          if( pFileName->szExtension )
          {
-            ulLen = strlen( pFileName->szExtension );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szExtension );
             while( ulLen && pFileName->szExtension[ulLen - 1] == ' ' )
                --ulLen;
             while( ulLen && pFileName->szExtension[0] == ' ' )

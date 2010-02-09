@@ -267,7 +267,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
    for( i = 1; i < s_argc; i++ )
    {
       if( hb_cmdargIsInternal( s_argv[ i ], &iPrefixLen ) &&
-         hb_strnicmp( s_argv[ i ] + iPrefixLen, pszName, strlen( pszName ) ) == 0 )
+         hb_strnicmp( s_argv[ i ] + iPrefixLen, pszName, ( HB_SIZE ) strlen( pszName ) ) == 0 )
       {
          if( bRetValue )
          {

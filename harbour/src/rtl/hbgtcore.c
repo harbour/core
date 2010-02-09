@@ -1922,7 +1922,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             {
                if( ul > ulStart )
                   HB_GTSELF_WRITECON( pGT, szMessage + ulStart, ul - ulStart );
-               HB_GTSELF_WRITECON( pGT, szEol, strlen( szEol ) );
+               HB_GTSELF_WRITECON( pGT, szEol, ( HB_SIZE ) strlen( szEol ) );
                ulStart = ul + 1;
             }
          }

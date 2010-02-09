@@ -170,13 +170,13 @@ HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, char ** pszClipData, HB_SIZE
             switch( uFormat )
             {
                case CF_UNICODETEXT:
-                  *pulLen = wcslen( ( LPWSTR ) lptstr );
+                  *pulLen = ( HB_SIZE ) wcslen( ( LPWSTR ) lptstr );
                   if( *pulLen )
                      *pszClipData = hb_wctomb( ( LPWSTR ) lptstr );
                   break;
                case CF_OEMTEXT:
                case CF_TEXT:
-                  *pulLen = strlen( ( char * ) lptstr );
+                  *pulLen = ( HB_SIZE ) strlen( ( char * ) lptstr );
                   if( *pulLen )
                   {
                      *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
@@ -185,7 +185,7 @@ HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, char ** pszClipData, HB_SIZE
                   }
                   break;
                default:
-                  *pulLen = GlobalSize( hglb );
+                  *pulLen = ( HB_SIZE ) GlobalSize( hglb );
                   if( *pulLen )
                   {
                      *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );

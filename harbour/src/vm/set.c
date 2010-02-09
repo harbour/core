@@ -2664,7 +2664,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = strlen( szName );
+               ulSize = ( HB_SIZE ) strlen( szName );
             }
             pszBuf = *pszFree;
             if( pulSize == NULL )
@@ -2702,7 +2702,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = strlen( szName );
+               ulSize = ( HB_SIZE ) strlen( szName );
             }
             pszBuf = *pszFree;
             if( pulSize == NULL )

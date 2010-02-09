@@ -477,7 +477,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_pca_setKeyTrans( NULL, NULL );
 
    s_szCrLf = hb_conNewLine();
-   s_ulCrLf = strlen( s_szCrLf );
+   s_ulCrLf = ( HB_SIZE ) strlen( s_szCrLf );
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 

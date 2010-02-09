@@ -723,7 +723,7 @@ void hb_retstr( void * cdp, const char * szText )
    HB_TRACE(HB_TR_DEBUG, ("hb_retstr(%p,%s)", cdp, szText));
 
    hb_itemPutStrLen( hb_stackReturnItem(), cdp, szText,
-                     szText ? strlen( szText ) : 0 );
+                     szText ? ( HB_SIZE ) strlen( szText ) : 0 );
 }
 
 void hb_retstr_utf8( const char * szText )
@@ -733,7 +733,7 @@ void hb_retstr_utf8( const char * szText )
    HB_TRACE(HB_TR_DEBUG, ("hb_retstr_utf8(%s)", szText));
 
    hb_itemPutStrLenUTF8( hb_stackReturnItem(), szText,
-                         szText ? strlen( szText ) : 0 );
+                         szText ? ( HB_SIZE ) strlen( szText ) : 0 );
 }
 
 void hb_retstr_u16( int iEndian, const HB_WCHAR * szText )
@@ -784,7 +784,7 @@ int hb_storstr( void * cdp, const char * szText, int iParam )
    if( iParam == -1 )
    {
       hb_itemPutStrLen( hb_stackReturnItem(), cdp, szText,
-                        szText ? strlen( szText ) : 0 );
+                        szText ? ( HB_SIZE ) strlen( szText ) : 0 );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -794,7 +794,7 @@ int hb_storstr( void * cdp, const char * szText, int iParam )
       if( HB_IS_BYREF( pItem ) )
       {
          hb_itemPutStrLen( hb_itemUnRef( pItem ), cdp, szText,
-                           szText ? strlen( szText ) : 0 );
+                           szText ? ( HB_SIZE ) strlen( szText ) : 0 );
          return 1;
       }
    }
@@ -811,7 +811,7 @@ int hb_storstr_utf8( const char * szText, int iParam )
    if( iParam == -1 )
    {
       hb_itemPutStrLenUTF8( hb_stackReturnItem(), szText,
-                            szText ? strlen( szText ) : 0 );
+                            szText ? ( HB_SIZE ) strlen( szText ) : 0 );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -821,7 +821,7 @@ int hb_storstr_utf8( const char * szText, int iParam )
       if( HB_IS_BYREF( pItem ) )
       {
          hb_itemPutStrLenUTF8( hb_itemUnRef( pItem ), szText,
-                               szText ? strlen( szText ) : 0 );
+                               szText ? ( HB_SIZE ) strlen( szText ) : 0 );
          return 1;
       }
    }

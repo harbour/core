@@ -67,7 +67,7 @@ static HB_BOOL hb_sxSemName( char * szFileName )
    if( szName && szName[0] )
    {
       hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
-      hb_strLower( szFileName, strlen( szFileName ) );
+      hb_strLower( szFileName, ( HB_SIZE ) strlen( szFileName ) );
       fResult = HB_TRUE;
    }
    else
@@ -87,7 +87,7 @@ static HB_BOOL hb_sxSemName( char * szFileName )
          if( szName && szName[0] )
          {
             hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
-            hb_strLower( szFileName, strlen( szFileName ) );
+            hb_strLower( szFileName, ( HB_SIZE ) strlen( szFileName ) );
             fResult = HB_TRUE;
          }
          hb_itemRelease( pOrderInfo.itmResult );

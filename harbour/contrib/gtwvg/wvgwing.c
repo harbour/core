@@ -663,7 +663,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
       {
          char * szText = HB_TCHAR_CONVFROM( text );
-         hb_storclen( szText, strlen( szText ), 4 );
+         hb_storc( szText, 4 );
          HB_TCHAR_FREE( szText );
       }
 
@@ -678,7 +678,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
       {
          char * szText = HB_TCHAR_CONVFROM( Parent );
-         hb_storclen( szText, strlen( szText ), 3 );
+         hb_storc( szText, 3 );
          HB_TCHAR_FREE( szText );
       }
    }

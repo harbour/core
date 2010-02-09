@@ -563,7 +563,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
       HB_SIZE ulLen;
       int iMaxFD;
 
-      ulLen = strlen( pFilename );
+      ulLen = ( HB_SIZE ) strlen( pFilename );
       if( pMode && ( *pMode == 'r' || *pMode == 'w' ) )
          fRead = ( *pMode == 'r' );
       else
@@ -2829,7 +2829,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 #endif
 
       pszStart = pszBuffer;
-      ulLen = strlen( pszBuffer );
+      ulLen = ( HB_SIZE ) strlen( pszBuffer );
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
       if( pszStart[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
@@ -3322,14 +3322,14 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       {
          if( pFileName->szName )
          {
-            ulLen = strlen( pFileName->szName );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szName );
             ulLen = hb_strRTrimLen( pFileName->szName, ulLen, HB_FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
             ( ( char * ) pFileName->szName )[ ulLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
-            ulLen = strlen( pFileName->szExtension );
+            ulLen = ( HB_SIZE ) strlen( pFileName->szExtension );
             ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, HB_FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
             ( ( char * ) pFileName->szExtension )[ ulLen ] = '\0';
@@ -3340,25 +3340,25 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       if( iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strLower( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
+            hb_strLower( ( char * ) pFileName->szName, ( HB_SIZE ) strlen( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strLower( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
+            hb_strLower( ( char * ) pFileName->szExtension, ( HB_SIZE ) strlen( pFileName->szExtension ) );
       }
       else if( iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strUpper( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
+            hb_strUpper( ( char * ) pFileName->szName, ( HB_SIZE ) strlen( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strUpper( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
+            hb_strUpper( ( char * ) pFileName->szExtension, ( HB_SIZE ) strlen( pFileName->szExtension ) );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( iDirCase == HB_SET_CASE_LOWER )
-            hb_strLower( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
+            hb_strLower( ( char * ) pFileName->szPath, ( HB_SIZE ) strlen( pFileName->szPath ) );
          else if( iDirCase == HB_SET_CASE_UPPER )
-            hb_strUpper( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
+            hb_strUpper( ( char * ) pFileName->szPath, ( HB_SIZE ) strlen( pFileName->szPath ) );
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
