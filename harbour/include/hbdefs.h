@@ -201,17 +201,15 @@ typedef HB_BYTE             HB_U8;
 #if ! defined( HB_LEGACY_TYPES_OFF )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
-      #ifdef HB_LEGACY_LEVEL3
-         #if ! defined( HB_DONT_DEFINE_BOOL )
-            #undef BOOL                         /* boolean */
-            typedef int BOOL;
-         #endif
-
-         #undef FALSE
-         #define FALSE  0
-         #undef TRUE
-         #define TRUE   (!0)
+      #if ! defined( HB_DONT_DEFINE_BOOL )
+         #undef BOOL                         /* boolean */
+         typedef int BOOL;
       #endif
+
+      #undef FALSE
+      #define FALSE  0
+      #undef TRUE
+      #define TRUE   (!0)
 
       #undef UINT                            /* varies with platform */
       typedef unsigned int UINT;
@@ -443,13 +441,13 @@ typedef HB_BYTE             HB_U8;
 #     endif
 #  endif
 #  if !defined( UINT64_MAX )
-#    define UINT64_MAX    ULONG_MAX
+#     define UINT64_MAX    ULONG_MAX
 #  endif
 #  if !defined( INT64_MAX )
-#    define INT64_MAX     LONG_MAX
+#     define INT64_MAX     LONG_MAX
 #  endif
 #  if !defined( INT64_MIN )
-#    define INT64_MIN     LONG_MIN
+#     define INT64_MIN     LONG_MIN
 #  endif
 #elif !defined( HB_LONG_LONG_OFF )
    typedef HB_LONGLONG         HB_I64;
@@ -458,19 +456,19 @@ typedef HB_BYTE             HB_U8;
    #define HB_I64_MAX          LONGLONG_MAX
    #define HB_U64_MAX          ULONGLONG_MAX
 #  if !defined( UINT64 )
-     typedef HB_U64        UINT64;
+      typedef HB_U64        UINT64;
 #  endif
 #  if !defined( INT64 )
-     typedef HB_I64        INT64;
+      typedef HB_I64        INT64;
 #  endif
 #  if !defined( UINT64_MAX )
-#    define UINT64_MAX     ULONGLONG_MAX
+#     define UINT64_MAX     ULONGLONG_MAX
 #  endif
 #  if !defined( INT64_MAX )
-#    define INT64_MAX      LONGLONG_MAX
+#     define INT64_MAX      LONGLONG_MAX
 #  endif
 #  if !defined( INT64_MIN )
-#    define INT64_MIN      LONGLONG_MIN
+#     define INT64_MIN      LONGLONG_MIN
 #  endif
 #endif
 
@@ -628,7 +626,7 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 #if defined( HB_LONG_LONG_OFF ) || ULONG_MAX == ULONGLONG_MAX
-   typedef LONG HB_FOFFSET;
+   typedef HB_LONG HB_FOFFSET;
    /* we can add hack with double as work around what should
       effectively give 52bit file size limit */
 #else
