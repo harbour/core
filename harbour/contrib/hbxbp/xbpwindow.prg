@@ -266,6 +266,12 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
 
    METHOD   className()                           INLINE __objGetClsName( Self )
+
+   /* Harbour Extension */
+   DATA     qLayout
+   DATA     nLayout
+   METHOD   hbLayout( nTypeLayout )               SETGET
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -499,6 +505,11 @@ HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(emp
       ::qtObject:destroy()
       ::qtObject := NIL
    ENDIF
+
+   IF !empty( ::qLayout )
+      ::qLayout := NIL
+   ENDIF
+
    ::oWidget := NIL
 
 #if 0
@@ -1868,6 +1879,43 @@ METHOD XbpWindow:setFocus()
 METHOD XbpWindow:sendMessage()// nMessage, nlParam, nwParam )
 
    RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:hbLayout( nTypeLayout )
+   LOCAL lApply := .f.
+   LOCAL oldLayout, oXbp
+
+   oldLayout := ::nLayout
+
+   IF hb_isNumeric( nTypeLayout ) .AND. nTypeLayout > 0 .AND. nTypeLayout <= HBPLAYOUT_TYPE_MAX
+      ::nLayout := nTypeLayout
+      lApply := .t.
+   ELSEIF !empty( ::nLayout )
+      lApply := .t.
+   ENDIF
+
+   IF lApply
+      IF !empty( ::qLayout )
+         ::qLayout := NIL
+      ENDIF
+      DO CASE
+      CASE ::nLayout == HBPLAYOUT_TYPE_HORZBOX
+         ::qLayout := QHBoxLayout():new()
+      CASE ::nLayout == HBPLAYOUT_TYPE_VERTBOX
+         ::qLayout := QVBoxLayout():new()
+      CASE ::nLayout == HBPLAYOUT_TYPE_GRID
+         ::qLayout := QGridLayout():new()
+      CASE ::nLayout == HBPLAYOUT_TYPE_FORM
+         ::qLayout := QFormLayout():new()
+      ENDCASE
+      ::oWidget:setLayout( ::qLayout )
+      FOR EACH oXbp IN ::aChildren
+         ::qLayout:addWidget( oXbp:oWidget )
+      NEXT
+   ENDIF
+
+   RETURN oldLayout
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

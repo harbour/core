@@ -172,6 +172,9 @@ METHOD addChild( oXbp ) CLASS XbpPartHandler
    oXbp:nNameID := oXbp:nID
    aadd( ::aChildren, oXbp )
 
+   IF __objHasMsg( Self, "QLAYOUT" ) .AND. !empty( ::qLayout )
+      ::qLayout:addWidget( oXbp:oWidget )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

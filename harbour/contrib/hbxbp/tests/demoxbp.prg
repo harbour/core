@@ -157,6 +157,10 @@ DispMem( "oDlg := GuiStdDialog" )
    oDa:setFontCompoundName( "10.Tohama italics" )
    //oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
+   #ifdef __HARBOUR__
+   oDA:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   #endif
+
    /* Install menu system */
    Build_MenuBar( oDlg )
 DispMem( "Build_MenuBar" )
@@ -546,6 +550,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_1 ]:minimized  := .F.
    aTabs[ TAB_1 ]:create()
    aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
+   #ifdef __HARBOUR__
+   aTabs[ TAB_1 ]:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   #endif
 
    aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_2 ]:caption    := "MLE"
@@ -553,6 +560,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_2 ]:postOffset := 120
    aTabs[ TAB_2 ]:create()
    aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 2 )
+   #ifdef __HARBOUR__
+   aTabs[ TAB_2 ]:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   #endif
 
    aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_3 ]:caption    := "Btns"
@@ -560,6 +570,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_3 ]:postOffset := 100
    aTabs[ TAB_3 ]:create()
    aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
+   #ifdef __HARBOUR__
+   aTabs[ TAB_3 ]:hbLayout := HBPLAYOUT_TYPE_HORZBOX
+   #endif
 
    aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_4 ]:caption    := "Tree"
@@ -568,6 +581,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_4 ]:create()
    aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
    aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+   #ifdef __HARBOUR__
+   aTabs[ TAB_4 ]:hbLayout := HBPLAYOUT_TYPE_HORZBOX
+   #endif
 
    aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_5 ]:minimized  := .F.
@@ -586,6 +602,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_6 ]:postOffset := 40
    aTabs[ TAB_6 ]:create()
    aTabs[ TAB_6 ]:TabActivate := SetMaximized( aTabs, 6 )
+   #ifdef __HARBOUR__
+   // aTabs[ TAB_6 ]:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   #endif
 
    aTabs[ TAB_7 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_7 ]:caption    := "Web"
@@ -594,6 +613,9 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_7 ]:minimized  := .F.
    aTabs[ TAB_7 ]:create()
    aTabs[ TAB_7 ]:TabActivate := SetMaximized( aTabs, 7 )
+   #ifdef __HARBOUR__
+   aTabs[ TAB_7 ]:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   #endif
 
    aTabs[ TAB_8 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
    aTabs[ TAB_8 ]:caption    := "Statics"

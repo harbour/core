@@ -421,5 +421,16 @@
 #define XBPBRW_Pan_Track                          5
 
 /*----------------------------------------------------------------------*/
+/* Harbour Specific Constants */
+
+#define HBPLAYOUT_TYPE_HORZBOX                    1
+#define HBPLAYOUT_TYPE_VERTBOX                    2
+#define HBPLAYOUT_TYPE_GRID                       3
+#define HBPLAYOUT_TYPE_FORM                       4
+
+#define HBPLAYOUT_TYPE_MAX                        4
+
+
+/*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif

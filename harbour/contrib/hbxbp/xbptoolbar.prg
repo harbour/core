@@ -150,9 +150,10 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ELSE
       RETURN Self
    ENDIF
+   ::oParent := oPar
 
-   ::oWidget := QToolBar():new( oPar:oWidget )
-   oPar:oWidget:addToolBar_1( ::pWidget )
+   ::oWidget := QToolBar():new( ::oParent:oWidget )
+   ::oParent:oWidget:addToolBar_1( ::oWidget )
 
    IF ::imageWidth > 0 .and. ::imageHeight > 0
       ::oWidget:setIconSize( QSize():new( ::imageWidth, ::imageHeight ) )
@@ -184,8 +185,8 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-
    ::oParent:AddChild( SELF )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

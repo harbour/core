@@ -120,19 +120,20 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ELSE
       RETURN Self
    ENDIF
+   ::oParent := oPar
 
    ::oWidget := QStatusBar():new()
-   oPar:oWidget:setStatusBar( ::oWidget )
+   ::oParent:oWidget:setStatusBar( ::oWidget )
 
    ::oWidget:setSizeGripEnabled( ::sizeGrip )
+
+   ::addItem( , , , , , -1 )
 
    IF ::visible
       ::show()
    ENDIF
-
-   ::addItem( , , , , , -1 )
-
    ::oParent:AddChild( SELF )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
