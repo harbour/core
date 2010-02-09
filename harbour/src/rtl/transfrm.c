@@ -989,14 +989,14 @@ HB_FUNC( TRANSFORM )
          }
          else
          {
-            HB_SIZE ulLen;
+            HB_SIZE nLen;
             HB_BOOL bFreeReq;
 
-            szStr = hb_itemString( pValue, &ulLen, &bFreeReq );
+            szStr = hb_itemString( pValue, &nLen, &bFreeReq );
             if( bFreeReq )
-               hb_retclen_buffer( szStr, ulLen );
+               hb_retclen_buffer( szStr, nLen );
             else
-               hb_retclen( szStr, ulLen );
+               hb_retclen( szStr, nLen );
          }
       }
       else if( HB_IS_DATE( pValue ) )

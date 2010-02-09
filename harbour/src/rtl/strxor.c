@@ -61,31 +61,31 @@ HB_FUNC( HB_STRXOR )
    if( pItem )
    {
       PHB_ITEM     pItem2;
-      HB_SIZE      ulLen1, ulLen2, ul, ul2;
+      HB_SIZE      nLen1, nLen2, n, n2;
       const char * pStr1;
       const char * pStr2;
       char *       pRet;
 
       pStr1 = hb_itemGetCPtr( pItem );
-      ulLen1 = hb_itemGetCLen( pItem );
+      nLen1 = hb_itemGetCLen( pItem );
 
       if( ( pItem2 = hb_param( 2, HB_IT_STRING ) ) != NULL )
       {
-         ulLen2 = hb_itemGetCLen( pItem2 );
-         if( ulLen2 )
+         nLen2 = hb_itemGetCLen( pItem2 );
+         if( nLen2 )
          {
             pStr2 = hb_itemGetCPtr( pItem2 );
 
-            pRet = ( char * ) hb_xgrab( ulLen1 + 1 );
-            memcpy( pRet, pStr1, ulLen1 + 1 );
-            ul2 = 0;
-            for( ul = 0; ul < ulLen1; ul++ )
+            pRet = ( char * ) hb_xgrab( nLen1 + 1 );
+            memcpy( pRet, pStr1, nLen1 + 1 );
+            n2 = 0;
+            for( n = 0; n < nLen1; n++ )
             {
-               pRet[ ul ] ^= pStr2[ ul2 ];
-               if( ++ul2 == ulLen2 )
-                  ul2 = 0;
+               pRet[ n ] ^= pStr2[ n2 ];
+               if( ++n2 == nLen2 )
+                  n2 = 0;
             }
-            hb_retclen_buffer( pRet, ulLen1 );
+            hb_retclen_buffer( pRet, nLen1 );
          }
          else
             hb_itemReturn( pItem );
@@ -98,12 +98,12 @@ HB_FUNC( HB_STRXOR )
 
          if( bChar )
          {
-            pRet = ( char * ) hb_xgrab( ulLen1 + 1 );
-            memcpy( pRet, pStr1, ulLen1 + 1 );
-            for( ul = 0; ul < ulLen1; ul++ )
-               pRet[ ul ] ^= bChar;
+            pRet = ( char * ) hb_xgrab( nLen1 + 1 );
+            memcpy( pRet, pStr1, nLen1 + 1 );
+            for( n = 0; n < nLen1; n++ )
+               pRet[ n ] ^= bChar;
 
-            hb_retclen_buffer( pRet, ulLen1 );
+            hb_retclen_buffer( pRet, nLen1 );
          }
          else
             hb_itemReturn( pItem );

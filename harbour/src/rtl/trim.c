@@ -56,36 +56,36 @@
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-const char * hb_strLTrim( const char * szText, HB_SIZE * ulLen )
+const char * hb_strLTrim( const char * szText, HB_SIZE * nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strLTrim(%s, %p)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLTrim(%s, %p)", szText, nLen));
 
-   while( *ulLen && HB_ISSPACE( *szText ) )
+   while( *nLen && HB_ISSPACE( *szText ) )
    {
       szText++;
-      ( *ulLen )--;
+      ( *nLen )--;
    }
 
    return szText;
 }
 
 /* return length of szText ignoring trailing white space (or true spaces) */
-HB_SIZE hb_strRTrimLen( const char * szText, HB_SIZE ulLen, HB_BOOL bAnySpace )
+HB_SIZE hb_strRTrimLen( const char * szText, HB_SIZE nLen, HB_BOOL bAnySpace )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strRTrimLen(%s, %lu. %d)", szText, ulLen, (int) bAnySpace));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strRTrimLen(%s, %lu. %d)", szText, nLen, (int) bAnySpace));
 
    if( bAnySpace )
    {
-      while( ulLen && HB_ISSPACE( szText[ ulLen - 1 ] ) )
-         ulLen--;
+      while( nLen && HB_ISSPACE( szText[ nLen - 1 ] ) )
+         nLen--;
    }
    else
    {
-      while( ulLen && szText[ ulLen - 1 ] == ' ' )
-         ulLen--;
+      while( nLen && szText[ nLen - 1 ] == ' ' )
+         nLen--;
    }
 
-   return ulLen;
+   return nLen;
 }
 
 /* trims leading spaces from a string */
@@ -96,16 +96,16 @@ HB_FUNC( LTRIM )
 
    if( pText )
    {
-      HB_SIZE ulLen, ulSrc;
+      HB_SIZE nLen, nSrc;
       const char * szText;
 
-      ulLen = ulSrc = hb_itemGetCLen( pText );
-      szText = hb_strLTrim( hb_itemGetCPtr( pText ), &ulLen );
+      nLen = nSrc = hb_itemGetCLen( pText );
+      szText = hb_strLTrim( hb_itemGetCPtr( pText ), &nLen );
 
-      if( ulLen == ulSrc )
+      if( nLen == nSrc )
          hb_itemReturn( pText );
       else
-         hb_retclen( szText, ulLen );
+         hb_retclen( szText, nLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1101, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -121,16 +121,16 @@ HB_FUNC( RTRIM )
 
    if( pText )
    {
-      HB_SIZE ulLen, ulSrc;
+      HB_SIZE nLen, nSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
-      ulSrc = hb_itemGetCLen( pText );
-      ulLen = hb_strRTrimLen( szText, ulSrc, HB_FALSE );
+      nSrc = hb_itemGetCLen( pText );
+      nLen = hb_strRTrimLen( szText, nSrc, HB_FALSE );
 
-      if( ulLen == ulSrc )
+      if( nLen == nSrc )
          hb_itemReturn( pText );
       else
-         hb_retclen( szText, ulLen );
+         hb_retclen( szText, nLen );
    }
    else
       /* NOTE: "TRIM" is right here [vszakats] */
@@ -153,17 +153,17 @@ HB_FUNC( ALLTRIM )
 
    if( pText )
    {
-      HB_SIZE ulLen, ulSrc;
+      HB_SIZE nLen, nSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
-      ulSrc = hb_itemGetCLen( pText );
-      ulLen = hb_strRTrimLen( szText, ulSrc, HB_FALSE );
-      szText = hb_strLTrim( szText, &ulLen );
+      nSrc = hb_itemGetCLen( pText );
+      nLen = hb_strRTrimLen( szText, nSrc, HB_FALSE );
+      szText = hb_strLTrim( szText, &nLen );
 
-      if( ulLen == ulSrc )
+      if( nLen == nSrc )
          hb_itemReturn( pText );
       else
-         hb_retclen( szText, ulLen );
+         hb_retclen( szText, nLen );
    }
    else
 #ifdef HB_COMPAT_C53

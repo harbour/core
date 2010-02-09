@@ -83,20 +83,20 @@ HB_FUNC( STRZERO )
 
          if( szResult )
          {
-            HB_SIZE ulPos = 0;
+            HB_SIZE nPos = 0;
 
-            while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] != '-' )
-               ulPos++;
+            while( szResult[ nPos ] != '\0' && szResult[ nPos ] != '-' )
+               nPos++;
 
-            if( szResult[ ulPos ] == '-' )
+            if( szResult[ nPos ] == '-' )
             {
                /* NOTE: Negative sign found, put it to the first position */
 
-               szResult[ ulPos ] = ' ';
+               szResult[ nPos ] = ' ';
 
-               ulPos = 0;
-               while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
-                  szResult[ ulPos++ ] = '0';
+               nPos = 0;
+               while( szResult[ nPos ] != '\0' && szResult[ nPos ] == ' ' )
+                  szResult[ nPos++ ] = '0';
 
                szResult[ 0 ] = '-';
             }
@@ -104,9 +104,9 @@ HB_FUNC( STRZERO )
             {
                /* Negative sign not found */
 
-               ulPos = 0;
-               while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
-                  szResult[ ulPos++ ] = '0';
+               nPos = 0;
+               while( szResult[ nPos ] != '\0' && szResult[ nPos ] == ' ' )
+                  szResult[ nPos++ ] = '0';
             }
 
             hb_retc_buffer( szResult );

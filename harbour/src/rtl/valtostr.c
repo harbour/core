@@ -60,14 +60,14 @@ HB_FUNC( HB_VALTOSTR )
 
    if( pItem )
    {
-      HB_SIZE ulLen;
+      HB_SIZE nLen;
       HB_BOOL bFreeReq;
-      char * buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
+      char * buffer = hb_itemString( pItem, &nLen, &bFreeReq );
 
       if( bFreeReq )
-         hb_retclen_buffer( buffer, ulLen );
+         hb_retclen_buffer( buffer, nLen );
       else
-         hb_retclen( buffer, ulLen );
+         hb_retclen( buffer, nLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -62,19 +62,19 @@ HB_FUNC( SPACE )
 
    if( pItem )
    {
-      HB_ISIZ lLen = hb_itemGetNL( pItem );
+      HB_ISIZ nLen = hb_itemGetNL( pItem );
 
-      if( lLen > 0 )
+      if( nLen > 0 )
       {
-         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
          /* NOTE: String overflow could never occure since a string can
                   be as large as ULONG_MAX, and the maximum length that
                   can be specified is LONG_MAX here. [vszakats] */
          /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, HB_ERR_FUNCNAME ); */
 
-         hb_xmemset( szResult, ' ', lLen );
-         hb_retclen_buffer( szResult, lLen );
+         hb_xmemset( szResult, ' ', nLen );
+         hb_retclen_buffer( szResult, nLen );
       }
       else
          hb_retc_null();

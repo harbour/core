@@ -66,7 +66,7 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
    while( iParam <= iCount && ulSize > 1 )
    {
       char * pszString;
-      HB_SIZE ulLen;
+      HB_SIZE nLen;
       HB_BOOL fFree;
 
       if( iParam > iFirst )
@@ -74,11 +74,11 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
          *buffer++ = ' ';
          --ulSize;
       }
-      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
+      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &nLen, &fFree );
       hb_strncpy( buffer, pszString, ulSize );
-      ulLen = ( HB_SIZE ) strlen( buffer );
-      ulSize -= ulLen;
-      buffer += ulLen;
+      nLen = ( HB_SIZE ) strlen( buffer );
+      ulSize -= nLen;
+      buffer += nLen;
       if( fFree )
          hb_xfree( pszString );
       iParam++;

@@ -64,13 +64,13 @@ HB_FUNC( HB_STRDECODESCAPE )
 
    if( pText )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pText );
-      if( ulLen > 0 )
+      HB_SIZE nLen = hb_itemGetCLen( pText );
+      if( nLen > 0 )
       {
-         char * str = ( char * ) hb_xgrab( ulLen + 1 );
-         hb_xmemcpy( str, hb_itemGetCPtr( pText ), ulLen + 1 );
-         hb_strRemEscSeq( str, &ulLen );
-         hb_retclen_buffer( str, ulLen );
+         char * str = ( char * ) hb_xgrab( nLen + 1 );
+         hb_xmemcpy( str, hb_itemGetCPtr( pText ), nLen + 1 );
+         hb_strRemEscSeq( str, &nLen );
+         hb_retclen_buffer( str, nLen );
       }
       else
          hb_itemReturn( pText );
@@ -92,65 +92,65 @@ HB_FUNC( HB_STRCDECODE )
 
    if( pText )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pText );
+      HB_SIZE nLen = hb_itemGetCLen( pText );
       HB_BOOL fCont = hb_parl( 2 );
-      if( ulLen > 0 )
+      if( nLen > 0 )
       {
          const char * pszSrc = hb_itemGetCPtr( pText );
-         char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-         HB_SIZE ulDst = 0, ul;
+         char * pszDst = ( char * ) hb_xgrab( nLen + 1 );
+         HB_SIZE nDst = 0, n;
 
          for( ;; )
          {
             if( !fCont )
             {
-               while( ulLen && HB_ISSPACE( *pszSrc ) )
+               while( nLen && HB_ISSPACE( *pszSrc ) )
                {
                   ++pszSrc;
-                  --ulLen;
+                  --nLen;
                }
-               if( ulLen && *pszSrc == '"' )
+               if( nLen && *pszSrc == '"' )
                {
                   ++pszSrc;
-                  --ulLen;
+                  --nLen;
                   fCont = HB_TRUE;
                }
             }
-            if( !fCont || !ulLen )
+            if( ! fCont || ! nLen )
                break;
 
-            ul = 0;
-            while( ul < ulLen )
+            n = 0;
+            while( n < nLen )
             {
-               char c = pszSrc[ ul ];
+               char c = pszSrc[ n ];
                if( c == '"' )
                {
                   fCont = HB_FALSE;
                   break;
                }
-               pszDst[ ulDst + ul ] = c;
-               if( ++ul < ulLen && c == '\\' )
+               pszDst[ nDst + n ] = c;
+               if( ++n < nLen && c == '\\' )
                {
-                  pszDst[ ulDst + ul ] = pszSrc[ ul ];
-                  ++ul;
+                  pszDst[ nDst + n ] = pszSrc[ n ];
+                  ++n;
                }
             }
-            if( ul > 0 )
+            if( n > 0 )
             {
-               pszSrc += ul;
-               ulLen -= ul;
-               hb_strRemEscSeq( pszDst + ulDst, &ul );
-               ulDst += ul;
+               pszSrc += n;
+               nLen -= n;
+               hb_strRemEscSeq( pszDst + nDst, &n );
+               nDst += n;
             }
             if( !fCont )
             {
                ++pszSrc;
-               --ulLen;
+               --nLen;
             }
          }
-         if( ulLen == 0 && ( !fCont || HB_ISBYREF( 2 ) ) )
+         if( nLen == 0 && ( !fCont || HB_ISBYREF( 2 ) ) )
          {
-            hb_retclen_buffer( pszDst, ulDst );
+            hb_retclen_buffer( pszDst, nDst );
             hb_storl( fCont, 2 );
          }
          else

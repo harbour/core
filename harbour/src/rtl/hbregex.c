@@ -157,14 +157,13 @@ HB_FUNC( HB_REGEXCOMP )
    HB_SIZE ulLen = hb_parclen( 1 );
 
    if( ulLen == 0 )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type",
-                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int iFlags = HBREG_EXTENDED;
       PHB_REGEX pRegEx;
 
-      if( !hb_parldef( 2, 1 ) )
+      if( ! hb_parldef( 2, 1 ) )
          iFlags |= HBREG_ICASE;
       if( hb_parl( 3 ) )
          iFlags |= HBREG_NEWLINE;
@@ -192,17 +191,16 @@ HB_FUNC( HB_ATX )
    int iPCount = hb_pcount();
 
    pString = hb_param( 2, HB_IT_STRING );
-   if( !pString )
+   if( ! pString )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameters",
-                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
    pszString = hb_itemGetCPtr( pString );
    ulLen     = hb_itemGetCLen( pString );
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
                          !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
-   if( !pRegEx )
+   if( ! pRegEx )
       return;
 
    ulStart = hb_parnl( 4 );
@@ -253,8 +251,7 @@ static HB_BOOL hb_regex( int iRequest )
    pString = hb_param( 2, HB_IT_STRING );
    if( !pString )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameters",
-                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3014, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return HB_FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
