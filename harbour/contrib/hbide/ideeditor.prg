@@ -1229,7 +1229,8 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
 
 METHOD IdeEditor:buildTabPage( cSource )
 
-   ::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
+   //::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
+   ::oTab := XbpTabPage():new( ::oTabParent, , { 5,5 }, { 700,400 }, , .t. )
 
    IF Empty( cSource )
       ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )

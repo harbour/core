@@ -131,13 +131,20 @@ CLASS HbIde
 
    DATA   aTabs                                   INIT   {}
    DATA   aINI                                    INIT   {}
+   DATA   aViews                                  INIT   {}
    DATA   aProjData                               INIT   {}
    DATA   aPrpObjs                                INIT   {}
    DATA   aEditorPath                             INIT   {}
+   DATA   nCurView                                INIT   1
 
    /* HBQT Objects */
    DATA   qLayout
+
    DATA   qTabWidget
+   DATA   oTabParent
+   DATA   oFrame
+   DATA   qLayoutFrame
+
    DATA   qFindDlg
 
    DATA   qCursor
@@ -170,7 +177,6 @@ CLASS HbIde
    DATA   oCompileResult
    DATA   oLinkResult
    DATA   oNewDlg
-   DATA   oTabWidget
    DATA   oPBFind, oPBRepl, oPBClose, oFind, oRepl
    DATA   oCurProjItem
    DATA   oCurProject
@@ -244,8 +250,6 @@ CLASS HbIde
    METHOD execSourceAction( cKey )
    METHOD execEditorAction( cKey )
    METHOD execWindowsAction( cKey )
-
-   DATA   oFrame
 
    ENDCLASS
 

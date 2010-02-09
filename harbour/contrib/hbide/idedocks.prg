@@ -79,9 +79,10 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
+   METHOD execEvent( nMode, p )
    METHOD buildDialog()
-   METHOD buildTabWidget()
-   METHOD buildStackWidget()
+   METHOD buildViewWidget()
+   METHOD buildStackedWidget()
    METHOD buildDockWidgets()
    METHOD buildProjectTree()
    METHOD buildEditorTree()
@@ -127,6 +128,37 @@ METHOD IdeDocks:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:execEvent( nMode, p )
+
+   DO CASE
+   CASE nMode == 1
+      IF p >= 0 .AND. p <= len( ::aViews )
+         ::oIde:nCurView := p + 1
+
+         ::oIde:qTabWidget := ::aViews[ ::nCurView ]:oTabWidget:oWidget
+         ::oIde:oTabParent := ::aViews[ ::nCurView ]
+      ENDIF
+   ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildStackedWidget()
+
+   /* Its parent will be drawing area and pages will be XbpTabWidgets() */
+
+   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
+   ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
+   ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
+   ::oDa:addChild( ::oStackedWidget )
+
+   ::connect( ::oStackedWidget:oWidget, "currentChanged(int)", {|p| ::execEvent( 1, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildDialog()
 
    ::oIde:oDlg := XbpDialog():new()
@@ -159,76 +191,45 @@ METHOD IdeDocks:buildDialog()
    ::oIde:qLayout:setVerticalSpacing( 0 )
    //
 
-   #if 0
-   ::buildTabWidget()
-   ::qLayout:addWidget_1( ::oDa:oTabWidget:oWidget, 0, 0, 1, 1 )
-   #else
-   ::buildStackWidget()
+   ::buildStackedWidget()
    ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
-   ::buildTabWidget()
-   #endif
 
-   ::oDa:oWidget:setLayout( ::oIde:qLayout )
+   ::buildViewWidget()
 
-   RETURN Self
+   ::oDa:oWidget:setLayout( ::qLayout )
 
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildStackWidget()
-
-   /* Its parent will be drawing area and pages will be XbpTabWidgets() */
-
-   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-   ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
-   ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
-   ::oDa:addChild( ::oStackedWidget )
+   /* Force to populate current widget */
+   ::oStackedWidget:oWidget:setCurrentIndex( 0 )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildTabWidget()
-   #if 0
+METHOD IdeDocks:buildViewWidget()
+   LOCAL n := len( ::aViews ) + 1
+   LOCAL oFrame
 
-   ::oIde:oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-   ::oIde:qTabWidget := ::oDa:oTabWidget:oWidget
+   oFrame := XbpWindow():new( ::oStackedWidget )
+   oFrame:oWidget := QWidget():new( ::oStackedWidget:oWidget )
+   oFrame:oWidget:setObjectName( "viewWidget" + hb_ntos( n ) )
+   ::oStackedWidget:addChild( oFrame )
 
-   ::qTabWidget:setUsesScrollButtons( .f. )
-   ::qTabWidget:setMovable( .t. )
+   oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   oFrame:qLayout:setContentsMargins( 2, 2, 2, 2 )
 
-   ::qTabWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::connect( ::qTabWidget, "customContextMenuRequested(QPoint)", {|p| ::exeEvent( 1, p ) } )
+   oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
 
-   #else
-      #if 0
-   ::oIde:oFrame := XbpWindow():new( ::oIde:oStackedWidget )
-   ::oFrame:oWidget := QWidget():new( ::oIde:oStackedWidget:oWidget )
-   ::oStackedWidget:addChild( ::oFrame )
-   ::oFrame:oTabWidget := XbpTabWidget():new():create( ::oFrame, , {0,0}, {200,200}, , .t. )
-   ::oIde:qTabWidget := ::oIde:oFrame:oTabWidget:oWidget
-   ::qTabWidget:setUsesScrollButtons( .f. )
-   ::qTabWidget:setMovable( .t. )
-   ::oStackedWidget:oWidget:addWidget( ::oFrame:oWidget )
-   ::oStackedWidget:oWidget:setCurrentIndex( 1 )
-      #else  /* Below Works */
-      LOCAL oTabWidget
-      STATIC qTabWidget
+   oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
+   oFrame:oTabWidget:oWidget:setMovable( .t. )
 
-   oTabWidget := XbpTabWidget():new():create( ::oIde:oStackedWidget , {0,0}, {10,10}, , .t. )
-   ::oIde:oDa:oTabWidget := oTabWidget             /* Important - Look deep why it be so */
-   ::oIde:qTabWidget     := oTabWidget:oWidget
-   ::qTabWidget:setUsesScrollButtons( .f. )
-   ::qTabWidget:setMovable( .t. )
-   ::oStackedWidget:oWidget:addWidget( ::qTabWidget  )
+   /* The root view widget */
+   aadd( ::oIde:aViews, oFrame )
 
-   qTabWidget := QTabWidget():new( ::oStackedWidget:oWidget )
-   ::oStackedWidget:oWidget:addWidget( qTabWidget  )
+   ::oStackedWidget:oWidget:addWidget( oFrame:oWidget )
 
    ::oStackedWidget:oWidget:setCurrentIndex( 0 )
-      #endif
-   #endif
 
-   RETURN Self
+   RETURN oFrame
 
 /*----------------------------------------------------------------------*/
 

@@ -108,6 +108,7 @@ CLASS IdeObject
    ACCESS qCurDocument                            INLINE ::oIde:qCurDocument
    ACCESS oCurEditor                              INLINE ::oIde:oCurEditor
    ACCESS qTabWidget                              INLINE ::oIde:qTabWidget
+   ACCESS oTabParent                              INLINE ::oIde:oTabParent
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
@@ -130,7 +131,9 @@ CLASS IdeObject
    ACCESS aEditorPath                             INLINE ::oIde:aEditorPath
    ACCESS aProjData                               INLINE ::oIde:aProjData
    ACCESS aTabs                                   INLINE ::oIde:aTabs
+   ACCESS aViews                                  INLINE ::oIde:aViews
 
+   ACCESS nCurView                                INLINE ::oIde:nCurView
    ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
    ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
    ACCESS cSeparator                              INLINE ::oIde:cSeparator
