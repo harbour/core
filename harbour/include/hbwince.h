@@ -53,166 +53,117 @@
 #ifndef HB_WINCE_H_
 #define HB_WINCE_H_
 
-#if defined( HB_OS_WIN )
+/* This file requires already #included <windows.h> */
+
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_CE ) && defined( HB_OS_WIN_USED )
 
 HB_EXTERN_BEGIN
 
-#if defined( HB_OS_WIN_CE )
-#  undef  HB_OS_HAS_DRIVE_LETTER
-
-/* defined( __CEGCC__ ) || defined( __MINGW32CE__ ) */
-
-#if defined( HB_OS_WIN_USED )
-
-   #if defined( _MSC_VER )
-      #ifndef MAX_COMPUTERNAME_LENGTH
-         #define MAX_COMPUTERNAME_LENGTH           31
-         #define SEM_FAILCRITICALERRORS            0x0001
-         #define FILE_TYPE_CHAR                    0x0002
-         #define STD_INPUT_HANDLE                  ((DWORD)-10)
-         #define STD_OUTPUT_HANDLE                 ((DWORD)-11)
-         #define STD_ERROR_HANDLE                  ((DWORD)-12)
-         #define LOCKFILE_FAIL_IMMEDIATELY         0x00000001
-         #define LOCKFILE_EXCLUSIVE_LOCK           0x00000002
-         #define OEM_FIXED_FONT                    SYSTEM_FONT
-         #define WM_NCMOUSEMOVE                    0x00A0
-         #define WM_QUERYENDSESSION                0x0011
-         #define WM_ENTERIDLE                      0x0121
-         #define SM_CMOUSEBUTTONS                  43
-         #define PROOF_QUALITY                     2
-         #define LR_LOADFROMFILE                   0x0010
-         #ifndef DRIVE_UNKNOWN
-            #define DRIVE_UNKNOWN                     0
-         #endif
-      #endif
-
-      BOOL WINAPI GetProcessTimes( HANDLE hprocess,
-                                   LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
-                                   LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
-      BOOL WINAPI LockFile( HANDLE hFile,
-                            DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                            DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
-      BOOL WINAPI LockFileEx( HANDLE hFile,
-                              DWORD dwFlags, DWORD dwReserved,
-                              DWORD nNumberOfBytesToLockLow,
-                              DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
-      BOOL WINAPI UnlockFile( HANDLE hFile,
-                              DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                              DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
-      BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
-                                DWORD nNumberOfBytesToUnlockLow,
-                                DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
-      UINT WINAPI SetErrorMode( UINT mode );
-      HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
-      DWORD WINAPI GetFileType( HANDLE handle );
-      BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
-      int WINAPI SetTextCharacterExtra( HDC hdc, int i );
-      BOOL WINAPI GetKeyboardState( PBYTE p );
-      BOOL WINAPI SetKeyboardState( PBYTE p );
-
-      int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
-      BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
-      BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
-   #endif /* _MSC_VER */
-
-   #if defined( __POCC__ ) || defined( __XCC__ )
-      #ifndef GlobalAlloc
-      #define GlobalAlloc(flags, cb)      LocalAlloc(flags, cb)
-      #endif
-      #ifndef GlobalLock
-      #define GlobalLock(lp)              LocalLock(lp)
-      #endif
-      #ifndef GlobalUnlock
-      #define GlobalUnlock(lp)            LocalUnlock(lp)
-      #endif
-      #ifndef GlobalSize
-      #define GlobalSize(lp)              LocalSize(lp)
-      #endif
-      #ifndef GlobalFree
-      #define GlobalFree(h)               LocalFree(h)
-      #endif
-      #ifndef GlobalReAlloc
-      #define GlobalReAlloc(h, cb, flags) LocalReAlloc(h, cb, flags)
-      #endif
-      #ifndef GlobalHandle
-      #define GlobalHandle(lp)            LocalHandle(lp)
-      #endif
-      #ifndef GlobalFlags
-      #define GlobalFlags(lp)             LocalFlags(lp)
+#if defined( _MSC_VER )
+   #ifndef MAX_COMPUTERNAME_LENGTH
+      #define MAX_COMPUTERNAME_LENGTH           31
+      #define SEM_FAILCRITICALERRORS            0x0001
+      #define FILE_TYPE_CHAR                    0x0002
+      #define STD_INPUT_HANDLE                  ((DWORD)-10)
+      #define STD_OUTPUT_HANDLE                 ((DWORD)-11)
+      #define STD_ERROR_HANDLE                  ((DWORD)-12)
+      #define LOCKFILE_FAIL_IMMEDIATELY         0x00000001
+      #define LOCKFILE_EXCLUSIVE_LOCK           0x00000002
+      #define OEM_FIXED_FONT                    SYSTEM_FONT
+      #define WM_NCMOUSEMOVE                    0x00A0
+      #define WM_QUERYENDSESSION                0x0011
+      #define WM_ENTERIDLE                      0x0121
+      #define SM_CMOUSEBUTTONS                  43
+      #define PROOF_QUALITY                     2
+      #define LR_LOADFROMFILE                   0x0010
+      #ifndef DRIVE_UNKNOWN
+         #define DRIVE_UNKNOWN                     0
       #endif
    #endif
 
-   #if !defined( GetEnvironmentVariable )
-      DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
-      #define GetEnvironmentVariable GetEnvironmentVariableW
-   #endif
-   #if !defined( SetEnvironmentVariable )
-      BOOL WINAPI SetEnvironmentVariableW( LPCWSTR name, LPCWSTR value );
-      #define SetEnvironmentVariable SetEnvironmentVariableW
-   #endif
-   #if !defined( SetCurrentDirectory )
-      BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
-      #define SetCurrentDirectory SetCurrentDirectoryW
-   #endif
-   #if !defined( GetCurrentDirectory )
-      DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
-      #define GetCurrentDirectory GetCurrentDirectoryW
-   #endif
-   #if !defined( GetComputerName )
-      BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
-      #define GetComputerName GetComputerNameW
-   #endif
-   #if !defined( GetUserName )
-      BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
-      #define GetUserName GetUserNameW
-   #endif
+   BOOL WINAPI GetProcessTimes( HANDLE hprocess,
+                                LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
+                                LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
+   BOOL WINAPI LockFile( HANDLE hFile,
+                         DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                         DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
+   BOOL WINAPI LockFileEx( HANDLE hFile,
+                           DWORD dwFlags, DWORD dwReserved,
+                           DWORD nNumberOfBytesToLockLow,
+                           DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
+   BOOL WINAPI UnlockFile( HANDLE hFile,
+                           DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                           DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
+   BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
+                             DWORD nNumberOfBytesToUnlockLow,
+                             DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
+   UINT WINAPI SetErrorMode( UINT mode );
+   HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
+   DWORD WINAPI GetFileType( HANDLE handle );
+   BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
+   int WINAPI SetTextCharacterExtra( HDC hdc, int i );
+   BOOL WINAPI GetKeyboardState( PBYTE p );
+   BOOL WINAPI SetKeyboardState( PBYTE p );
 
-#endif /* HB_OS_WIN_USED */
+   int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
+   BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
+   BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
+#endif /* _MSC_VER */
 
-#endif /* HB_OS_WIN_CE */
-
-extern HB_EXPORT wchar_t * hb_mbtowc( const char *srcA );
-extern HB_EXPORT char * hb_wctomb( const wchar_t *srcW );
-extern HB_EXPORT wchar_t * hb_mbntowc( const char *srcA, HB_SIZE ulLen );
-extern HB_EXPORT char * hb_wcntomb( const wchar_t *srcW, HB_SIZE ulLen );
-extern HB_EXPORT void hb_mbtowccpy( wchar_t *dstW, const char *srcA, HB_SIZE ulLen );
-extern HB_EXPORT void hb_mbtowcset( wchar_t *dstW, const char *srcA, HB_SIZE ulLen );
-extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, HB_SIZE ulLen );
-
-#if defined( HB_OS_WIN_CE )
-   #define HBTEXT( x ) TEXT( x )
-#else
-   #define HBTEXT( x ) x
+#if defined( __POCC__ ) || defined( __XCC__ )
+   #ifndef GlobalAlloc
+   #define GlobalAlloc(flags, cb)      LocalAlloc(flags, cb)
+   #endif
+   #ifndef GlobalLock
+   #define GlobalLock(lp)              LocalLock(lp)
+   #endif
+   #ifndef GlobalUnlock
+   #define GlobalUnlock(lp)            LocalUnlock(lp)
+   #endif
+   #ifndef GlobalSize
+   #define GlobalSize(lp)              LocalSize(lp)
+   #endif
+   #ifndef GlobalFree
+   #define GlobalFree(h)               LocalFree(h)
+   #endif
+   #ifndef GlobalReAlloc
+   #define GlobalReAlloc(h, cb, flags) LocalReAlloc(h, cb, flags)
+   #endif
+   #ifndef GlobalHandle
+   #define GlobalHandle(lp)            LocalHandle(lp)
+   #endif
+   #ifndef GlobalFlags
+   #define GlobalFlags(lp)             LocalFlags(lp)
+   #endif
 #endif
 
-#if defined( UNICODE )
-
-   #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
-   #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
-   #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
-   #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
-   #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
-   #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
-   #define HB_TCHAR_FREE(s)             hb_xfree(s)
-
-#else
-
-   #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
-   #define HB_TCHAR_CONVTO(s)           ((char *)(s))
-   #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
-   #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
-   #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
-   #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
-   #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
-
-#endif /* UNICODE */
+#if !defined( GetEnvironmentVariable )
+   DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
+   #define GetEnvironmentVariable GetEnvironmentVariableW
+#endif
+#if !defined( SetEnvironmentVariable )
+   BOOL WINAPI SetEnvironmentVariableW( LPCWSTR name, LPCWSTR value );
+   #define SetEnvironmentVariable SetEnvironmentVariableW
+#endif
+#if !defined( SetCurrentDirectory )
+   BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
+   #define SetCurrentDirectory SetCurrentDirectoryW
+#endif
+#if !defined( GetCurrentDirectory )
+   DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
+   #define GetCurrentDirectory GetCurrentDirectoryW
+#endif
+#if !defined( GetComputerName )
+   BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
+   #define GetComputerName GetComputerNameW
+#endif
+#if !defined( GetUserName )
+   BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
+   #define GetUserName GetUserNameW
+#endif
 
 HB_EXTERN_END
 
-#endif /* HB_OS_WIN */
+#endif
 
 #endif /* HB_WINCE_H_ */

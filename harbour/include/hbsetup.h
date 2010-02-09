@@ -154,12 +154,6 @@
  */
 /* #define HB_PP_MULTILINE_STRING */
 
-#ifdef HB_LEGACY_LEVEL2
-   #ifndef _POSIX_PATH_MAX
-      #define _POSIX_PATH_MAX    255
-   #endif
-#endif
-
 /* NOTE:
    Compiler                                _MSC_VER value
    --------                                --------------
@@ -222,10 +216,6 @@
 #ifndef HB_OS_WIN
    #if defined( WINNT ) || defined( _Windows ) || defined( __NT__ ) || defined( _WIN32 ) || defined( _WINDOWS_ ) || defined( __WINDOWS_386__ ) || defined( __WIN32__ ) || defined( __CYGWIN__ )
       #define HB_OS_WIN
-      /* Compatibility. Do not use this. */
-      #ifdef HB_LEGACY_LEVEL2
-         #define HB_OS_WIN_32
-      #endif
    #endif
 #endif
 
@@ -240,10 +230,6 @@
 #ifndef HB_OS_WIN_CE
    #if defined( _WINCE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ )
       #define HB_OS_WIN_CE
-      /* Compatibility. Do not use this. */
-      #ifdef HB_LEGACY_LEVEL2
-         #define HB_WINCE
-      #endif
    #endif
 #endif
 
@@ -293,10 +279,6 @@
        defined( HB_OS_HPUX ) || \
        defined( HB_OS_BEOS )
       #define HB_OS_UNIX
-      /* Compatibility. Do not use this. */
-      #ifdef HB_LEGACY_LEVEL2
-         #define HB_OS_UNIX_COMPATIBLE
-      #endif
    #endif
 #endif
 
@@ -322,7 +304,11 @@
    #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
    #define HB_OS_ALLFILE_MASK           "*.*"
    #define HB_OS_DRIVE_DELIM_CHR        ':'
-   #define HB_OS_HAS_DRIVE_LETTER
+   #if defined( HB_OS_WIN_CE )
+      #undef  HB_OS_HAS_DRIVE_LETTER
+   #else
+      #define HB_OS_HAS_DRIVE_LETTER
+   #endif
    #define HB_OS_EOL_LEN                2  /* # of bytes in End of Line marker */
    #define HB_OS_OPT_DELIM_LIST         "/-"
    #define HB_ISOPTSEP( c )             ( ( c ) == '-' || ( c ) == '/' )

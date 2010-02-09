@@ -63,6 +63,10 @@ static char * s_argv[ HB_MAX_ARGS ];
 #  define HB_LPSTR      LPSTR
 #endif
 
+#if defined( HB_VM_STARTUP )
+extern void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+#endif
+
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
                     HB_LPSTR  lpCmdLine,      /* pointer to command line */

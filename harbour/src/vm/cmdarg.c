@@ -83,12 +83,12 @@ void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
    s_WinMainParam = HB_TRUE;
 }
 
-HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
+HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow )
 {
    if( phInstance )
-      *phInstance = s_hInstance;
+      *( ( HANDLE * ) phInstance ) = s_hInstance;
    if( phPrevInstance )
-      *phPrevInstance = s_hPrevInstance;
+      *( ( HANDLE * ) phPrevInstance ) = s_hPrevInstance;
    if( piCmdShow )
       *piCmdShow = s_iCmdShow;
 

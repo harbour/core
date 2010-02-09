@@ -386,11 +386,6 @@ extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n,
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pulSize );
 
-#ifdef HB_LEGACY_LEVEL2
-extern HB_EXPORT void         hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT void         hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, HB_SIZE );
-#endif
-
 HB_EXTERN_END
 
 #endif /* HB_APICDP_H_ */

@@ -2106,38 +2106,6 @@ const char * hb_cdpSelectID( const char * id )
    return idOld;
 }
 
-#ifdef HB_LEGACY_LEVEL2
-void hb_cdpnTranslate( char * psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE nChars )
-{
-   if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable )
-   {
-      HB_SIZE ulDst = nChars;
-      char * pDst = psz;
-
-      if( cdpOut == &s_utf8_codepage || cdpOut->nMultiUC )
-      {
-         ulDst = hb_cdpTransLen( psz, nChars, 0, cdpIn, cdpOut );
-         pDst = ( char * ) hb_xgrab( ulDst );
-      }
-      ulDst = hb_cdpTransTo( psz, nChars, pDst, ulDst, cdpIn, cdpOut );
-      if( psz != pDst )
-      {
-         if( ulDst > nChars )
-            ulDst = nChars;
-         memcpy( psz, pDst, ulDst );
-         hb_xfree( pDst );
-      }
-      if( ulDst < nChars )
-         memset( psz + ulDst, '\0', nChars - ulDst );
-   }
-}
-
-void hb_cdpTranslate( char * psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
-{
-   hb_cdpnTranslate( psz, cdpIn, cdpOut, strlen( psz ) );
-}
-#endif
-
 /* TOFIX: Move this to cdpapihb.c */
 HB_FUNC( HB_CDPLIST )
 {

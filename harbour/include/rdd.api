@@ -59,10 +59,8 @@
 #include "hbapirdd.h"
 #include "item.api"
 
-#ifndef HB_LEGACY_LEVEL2
-   #define SUCCESS     HB_SUCCESS
-   #define FAILURE     HB_FAILURE
-#endif
+#define SUCCESS     HB_SUCCESS
+#define FAILURE     HB_FAILURE
 
 #define _rddInherit          hb_rddInherit
 #if 0

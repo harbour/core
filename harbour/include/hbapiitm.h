@@ -222,12 +222,6 @@ extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_S
 
 #endif /* _HB_API_INTERNAL_ */
 
-#ifdef HB_LEGACY_LEVEL2
-   /* xHarbour compatible function */
-   #define hb_itemForwardValue( dst, src )   hb_itemMove( (dst), (src) )
-   #define hb_itemPutCStatic( itm, str )     hb_itemPutCConst( (itm), (str) )
-#endif
-
 HB_EXTERN_END
 
 #endif /* HB_APIITM_H_ */

@@ -62,13 +62,6 @@
 #include "hbsetup.h"
 #include "hbver.h"
 
-/* Compatibility. Do not use HB_OS_WIN_32_USED anymore. */
-#ifdef HB_LEGACY_LEVEL2
-   #if defined( HB_OS_WIN_32_USED ) && ! defined( HB_OS_WIN_USED )
-      #define HB_OS_WIN_USED
-   #endif
-#endif
-
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
     defined( __MINGW32__ ) || defined( __DMC__ ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
@@ -110,21 +103,26 @@
    #if !defined( HB_IO_WIN_OFF )
       #define HB_IO_WIN
    #endif
-   #if defined( HB_IO_WIN ) && !defined( HB_OS_WIN_USED )
-      /* disabled to avoid problems with windows.h */
-      /* #define HB_OS_WIN_USED */
-   #endif
 #else
    #undef HB_IO_WIN
    #undef HB_OS_WIN_USED
 #endif
 
 /* Include windows.h if applicable and requested */
-#if defined( HB_OS_WIN_USED ) && defined( HB_OS_WIN )
+#if defined( HB_OS_WIN )
 
-   #include <windows.h>
-   #if defined( __GNUC__ )
-      #define HB_DONT_DEFINE_BASIC_TYPES
+   #if defined( HB_OS_WIN_USED )
+
+      #include <windows.h>
+      #if defined( __GNUC__ )
+         #define HB_DONT_DEFINE_BASIC_TYPES
+      #endif
+   #else
+      /* Autodetect windows header. We need this information
+         in a few places in headers. */
+      #if defined( _WINDOWS_ ) || defined( _WINDOWS_H )
+         #define HB_OS_WIN_USED
+      #endif
    #endif
 
 #elif defined( HB_OS_OS2 )
@@ -1575,7 +1573,48 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 #if defined( HB_OS_WIN )
-   #include "hbwince.h"
+
+   #if defined( HB_OS_WIN_CE ) && defined( HB_OS_WIN_USED )
+      #include "hbwince.h"
+   #endif
+
+   /* Features provided for Windows builds only */
+
+   extern HB_EXPORT wchar_t * hb_mbtowc( const char * srcA );
+   extern HB_EXPORT char *    hb_wctomb( const wchar_t * srcW );
+   extern HB_EXPORT wchar_t * hb_mbntowc( const char * srcA, HB_SIZE ulLen );
+   extern HB_EXPORT char *    hb_wcntomb( const wchar_t * srcW, HB_SIZE ulLen );
+   extern HB_EXPORT void      hb_mbtowccpy( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
+   extern HB_EXPORT void      hb_mbtowcset( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
+   extern HB_EXPORT void      hb_wctombget( char * dstA, const wchar_t * srcW, HB_SIZE ulLen );
+
+   #if defined( HB_OS_WIN_CE )
+      #define HBTEXT( x ) TEXT( x )
+   #else
+      #define HBTEXT( x ) x
+   #endif
+
+   #if defined( UNICODE )
+      #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
+      #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
+      #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
+      #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
+      #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
+      #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
+      #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
+      #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
+      #define HB_TCHAR_FREE(s)             hb_xfree(s)
+   #else
+      #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
+      #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
+      #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
+      #define HB_TCHAR_CONVTO(s)           ((char *)(s))
+      #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
+      #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
+      #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
+      #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
+      #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
+   #endif
 #endif
 
 /* Function declaration macros */

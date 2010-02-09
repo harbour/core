@@ -191,7 +191,6 @@ static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
             hb_vmPushSymbol( &(pHrbBody->pSymRead[ ul ]) );
             hb_vmPushNil();
             hb_vmProc( 0 );
-
          }
       }
    }
@@ -841,34 +840,3 @@ HB_FUNC( HB_HRBGETFUNSYM )
    else
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/* NOTE: Deprecated compatibility functions. */
-
-#ifdef HB_LEGACY_LEVEL2
-
-HB_FUNC( __HRBRUN )
-{
-   HB_FUNC_EXEC( HB_HRBRUN );
-}
-
-HB_FUNC( __HRBLOAD )
-{
-   HB_FUNC_EXEC( HB_HRBLOAD );
-}
-
-HB_FUNC( __HRBUNLOAD )
-{
-   HB_FUNC_EXEC( HB_HRBUNLOAD );
-}
-
-HB_FUNC( __HRBDO )
-{
-   HB_FUNC_EXEC( HB_HRBDO );
-}
-
-HB_FUNC( __HRBGETFU )
-{
-   HB_FUNC_EXEC( HB_HRBGETFUNSYM );
-}
-
-#endif

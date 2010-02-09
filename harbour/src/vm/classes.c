@@ -5050,62 +5050,6 @@ void hb_clsAssociate( HB_USHORT usClassH )
       hb_itemReturnRelease( pSelf );
 }
 
-#ifdef HB_LEGACY_LEVEL2
-/*
- * __CLS_PARAM() and __CLS_PAR00() functions are only for backward binary
- * compatibility. They will be removed in the future so please do not use
- * them.
- */
-HB_FUNC( __CLS_PARAM )
-{
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM array;
-   HB_USHORT uiParam = ( HB_USHORT ) hb_pcount();
-   HB_USHORT n;
-
-   if( uiParam >= 1 )
-   {
-      array = hb_itemArrayNew( uiParam );
-      for( n = 1; n <= uiParam; n++ )
-         hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
-   }
-   else
-   {
-      array = hb_itemArrayNew( 1 );
-      hb_arraySetC( array, 1, "HBObject" );
-   }
-
-   hb_itemReturnRelease( array );
-}
-
-HB_FUNC( __CLS_PAR00 )
-{
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM array;
-   HB_USHORT uiParam = ( HB_USHORT ) hb_pcount();
-   HB_USHORT n;
-
-   array = hb_itemArrayNew( uiParam );
-   for( n = 1; n <= uiParam; n++ )
-      hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
-
-   hb_itemReturnRelease( array );
-}
-
-/*
- * This function is only for backward binary compatibility
- * It will be removed in the future so please do not use it.
- * Use hb_objHasMessage() instead.
- */
-#if defined( __cplusplus )
-   extern "C" HB_BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage );
-#endif
-HB_BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
-{
-   return hb_objHasMessage( pObject, pMessage->pDynSym );
-}
-#endif
-
 #if 0
 /*
  * return real function name ignoring aliasing

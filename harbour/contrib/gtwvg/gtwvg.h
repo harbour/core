@@ -51,7 +51,6 @@
  */
 
 #ifndef HB_WVT_H_
-
 #define HB_WVT_H_
 
 #define HB_GT_NAME  WVG

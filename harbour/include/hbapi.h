@@ -475,13 +475,6 @@ typedef unsigned int HB_ERRCODE;
 #define HB_SUCCESS         0
 #define HB_FAILURE         1
 
-/* Compatibility #defines. Don't use them with new code and in Harbour sources. */
-#ifdef HB_LEGACY_LEVEL2
-   #define ERRCODE            HB_ERRCODE
-   #define SUCCESS            HB_SUCCESS
-   #define FAILURE            HB_FAILURE
-#endif
-
 extern HB_SYMB  hb_symEval;
 
 extern HB_EXPORT void     hb_xinit( void );                           /* Initialize fixed memory subsystem */
@@ -592,10 +585,6 @@ extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark func
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 
-#ifdef HB_LEGACY_LEVEL2
-extern HB_EXPORT  void *   hb_gcAlloc( HB_SIZE ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
-#endif
-
 #ifdef _HB_API_INTERNAL_
 extern const HB_GC_FUNCS * hb_gcFuncs( void *pBlock );  /* return cleanup function pointer */
 extern void       hb_gcAttach( void * pBlock );
@@ -702,17 +691,6 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 #endif
 
 #define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( HB_ULONG ) (idx) <= (max) )
-
-#ifdef HB_LEGACY_LEVEL2
-   /* xHarbour compatible functions */
-   #define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
-   #define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
-   #define hb_retcStatic( szText )              hb_retc_const( (szText) )
-   #define hb_storclenAdopt                     hb_storclen_buffer
-   #define hb_itemPutCRawStatic                 hb_itemPutCLConst
-   /* compatibility with older Harbour */
-   #define hb_arraySetCPtr                      hb_arraySetCLPtr
-#endif
 
 #ifdef HB_API_MACROS
 
@@ -1025,9 +1003,8 @@ extern HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given
 extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern HB_ULONG      hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
-#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
-extern HB_EXPORT void    hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
-extern HB_EXPORT HB_BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
+#if defined( HB_OS_WIN )
+extern HB_EXPORT HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif
 
 /* Codeblock management */

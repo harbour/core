@@ -2056,16 +2056,6 @@ HB_FUNC( HB_RDDGETTEMPALIAS )
       hb_retc( szAliasTmp );
 }
 
-#ifdef HB_LEGACY_LEVEL2
-
-/* NOTE: Left here for compatibility with previous Harbour versions. */
-HB_FUNC( __RDDGETTEMPALIAS )
-{
-   HB_FUNC_EXEC( HB_RDDGETTEMPALIAS )
-}
-
-#endif
-
 HB_FUNC( HB_RDDINFO )
 {
    LPRDDNODE  pRDDNode;

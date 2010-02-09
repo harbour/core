@@ -750,62 +750,6 @@ void hb_gcCollectAll( HB_BOOL fForce )
    }
 }
 
-#ifdef HB_LEGACY_LEVEL2
-typedef struct _HB_GC_ALLOC_FUNCS
-{
-   HB_GC_FUNCS funcs;
-   struct _HB_GC_ALLOC_FUNCS * pNext;
-} HB_GC_ALLOC_FUNCS;
-
-static HB_GC_ALLOC_FUNCS * s_pAllocFuncs = NULL;
-
-static void hb_gcAllocExit( void )
-{
-   while( s_pAllocFuncs )
-   {
-      HB_GC_ALLOC_FUNCS * pFuncs = s_pAllocFuncs;
-      s_pAllocFuncs = pFuncs->pNext;
-      hb_xfree( pFuncs );
-   }
-}
-
-void * hb_gcAlloc( HB_SIZE ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
-{
-   HB_GC_ALLOC_FUNCS * pFuncs = s_pAllocFuncs, ** pFuncsPtr;
-
-   while( pFuncs )
-   {
-      if( pFuncs->funcs.clear == pCleanupFunc )
-         break;
-      pFuncs = pFuncs->pNext;
-   }
-
-   if( !pFuncs )
-   {
-      pFuncs = ( HB_GC_ALLOC_FUNCS * ) hb_xgrab( sizeof( HB_GC_ALLOC_FUNCS ) );
-      pFuncs->funcs.clear = pCleanupFunc;
-      pFuncs->funcs.mark = hb_gcDummyMark;
-      pFuncs->pNext = NULL;
-      HB_GC_LOCK
-      pFuncsPtr = &s_pAllocFuncs;
-      while( *pFuncsPtr )
-      {
-         if( ( *pFuncsPtr )->funcs.clear == pCleanupFunc )
-         {
-            hb_xfree( pFuncs );
-            pFuncs = *pFuncsPtr;
-            break;
-         }
-         pFuncsPtr = &( *pFuncsPtr )->pNext;
-      }
-      if( *pFuncsPtr == NULL )
-         *pFuncsPtr = pFuncs;
-      HB_GC_UNLOCK
-   }
-
-   return hb_gcAllocate( ulSize, &pFuncs->funcs );
-}
-#endif
 
 /* MTNOTE: It's executed at the end of HVM cleanup code just before
  *         application exit when other threads are destroyed, so it
@@ -842,10 +786,6 @@ void hb_gcReleaseAll( void )
    }
 
    s_bCollecting = HB_FALSE;
-
-#ifdef HB_LEGACY_LEVEL2
-   hb_gcAllocExit();
-#endif
 }
 
 /* service a single garbage collector step

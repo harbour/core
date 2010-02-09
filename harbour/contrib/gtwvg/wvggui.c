@@ -82,8 +82,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "wvggui.h"
 
 static int           s_GtId;
