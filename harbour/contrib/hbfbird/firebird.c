@@ -114,7 +114,7 @@ static isc_db_handle hb_FB_db_handle_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcFB_db_handleFuncs, iParam );
 
-   return ph ? ( isc_db_handle ) ( HB_PTRDIFF ) * ph : NULL;
+   return ( isc_db_handle ) ( HB_PTRDIFF ) ( ph ? * ph : 0 );
 }
 
 /* API wrappers */
