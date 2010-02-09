@@ -191,8 +191,8 @@ typedef long                HB_LONG;           /* WARNING: These types have a ne
 typedef unsigned long       HB_ULONG;          /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
 typedef int                 HB_INT;
 typedef unsigned int        HB_UINT;
-typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to 'long' */
-typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to 'long'. TEMPORARY type. */
+typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to HB_LONGLONG on win64, long on other systems */
+typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
 
 /* Guaranteed 8-bit types */
 typedef HB_SCHAR            HB_I8;
