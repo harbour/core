@@ -69,7 +69,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -78,6 +77,13 @@
 #include "hbstack.h"
 #include "hbset.h"
 #include "hb_io.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
+#endif
 
 /* NOTE: Some C compilers like Borland C optimize the call of small static buffers
  *       into an integer to read it faster. Later, programs like CodeGuard

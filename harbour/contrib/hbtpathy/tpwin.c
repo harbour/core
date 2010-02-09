@@ -52,13 +52,13 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
 #if defined( HB_OS_WIN )
+
+#include <windows.h>
 
 #include "telepath.ch"
 

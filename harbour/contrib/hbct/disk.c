@@ -65,8 +65,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
@@ -75,6 +73,9 @@
 
 #if defined( HB_OS_DOS )
 #   include <dos.h>
+#endif
+#if defined( HB_OS_WIN )
+   #include <windows.h>
 #endif
 
 

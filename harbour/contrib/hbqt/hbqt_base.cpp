@@ -52,8 +52,6 @@
  */
 /*----------------------------------------------------------------------*/
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 
 #include "hbqt.h"
@@ -110,6 +108,7 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 }
 
 #if defined( HB_OS_WIN )
+   #include <windows.h>
    #include <psapi.h>
 #endif
 

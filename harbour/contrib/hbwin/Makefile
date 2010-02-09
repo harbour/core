@@ -9,15 +9,25 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbwin
 
 C_SOURCES := \
-   mapi.c \
-   olecore.c \
-   oleinit.c \
    axcore.c \
    legacycd.c \
    legacyco.c \
    legacycp.c \
    legacycr.c \
    legacycv.c \
+   olecore.c \
+   oleinit.c \
+   mapi.c \
+   wapi_alloc.c \
+   wapi_commctrl.c \
+   wapi_err.c \
+   wapi_shellapi.c \
+   wapi_winbase.c \
+   wapi_winbase_mutex.c \
+   wapi_wingdi.c \
+   wapi_wingdi_font.c \
+   wapi_winnls.c \
+   wapi_winuser.c \
    wce_simc.c \
    wce_smsc.c \
    win_bmp.c \
@@ -31,16 +41,6 @@ C_SOURCES := \
    win_prn2.c \
    win_prn3.c \
    win_regc.c \
-   wapi_alloc.c \
-   wapi_commctrl.c \
-   wapi_err.c \
-   wapi_shellapi.c \
-   wapi_winbase.c \
-   wapi_winbase_mutex.c \
-   wapi_wingdi.c \
-   wapi_wingdi_font.c \
-   wapi_winnls.c \
-   wapi_winuser.c \
 
 PRG_SOURCES := \
    legacy.prg \

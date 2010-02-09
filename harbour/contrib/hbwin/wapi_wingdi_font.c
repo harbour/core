@@ -52,10 +52,7 @@
 
 #define _WIN32_WINNT 0x0500
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
-#include "hbwinuni.h"
+#include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
 

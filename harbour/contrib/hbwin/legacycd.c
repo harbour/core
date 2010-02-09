@@ -57,9 +57,7 @@
 /* NOTE: Add to this file functions coming from old DLL source only.
          [vszakats] */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwin.h"
 
 #if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
    #define HB_WIN_LEGACY_LEVEL_OFF

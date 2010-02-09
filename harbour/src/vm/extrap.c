@@ -65,8 +65,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapifs.h"
@@ -85,6 +83,7 @@
 #endif
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
+#  include <windows.h>
 #  include <tlhelp32.h>
    /* BCC and MinGW doesn't seem to #define this */
 #  ifndef TH32CS_SNAPMODULE32

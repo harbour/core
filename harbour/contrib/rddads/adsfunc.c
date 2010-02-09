@@ -51,8 +51,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbvm.h"
 #include "hbapi.h"
 #include "hbapiitm.h"

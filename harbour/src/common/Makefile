@@ -11,6 +11,7 @@ C_SOURCES := \
    hbfopen.c \
    hbfsapi.c \
    hbgete.c \
+   hbwin.c \
    hbwince.c \
    hbhash.c \
    hbprintf.c \

@@ -54,10 +54,14 @@
 /* NOTE: User programs should never call this layer directly! */
 
 
-#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
 #if defined( HB_OS_WIN )
+
+#include <windows.h>
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 int hb_gt_winapi_getKbdState( void )
 {

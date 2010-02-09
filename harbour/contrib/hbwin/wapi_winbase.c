@@ -50,12 +50,13 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbwinuni.h"
 #include "hbwapi.h"
+#include "hbapierr.h"
+
+/* For SetErrorMode() */
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {

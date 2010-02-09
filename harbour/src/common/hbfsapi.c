@@ -54,15 +54,13 @@
 #define INCL_DOSFILEMGR   /* File Manager values */
 #define INCL_DOSERRORS    /* DOS error values    */
 
-/* Windows */
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
 #include "hbset.h"
 
 #if defined( HB_OS_WIN )
+   #include <windows.h>
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
    #endif

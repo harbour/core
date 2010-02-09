@@ -887,18 +887,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 #if 0
       case HB_GTI_INPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
       case HB_GTI_OUTPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
       case HB_GTI_ERRORFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 #endif
       case HB_GTI_FONTSIZE:

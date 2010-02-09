@@ -60,7 +60,8 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbdate.h"
-#include "hbinit.h"
+
+#if defined( HB_OS_WIN )
 
 /* This option can resolve compilation problems in C++ mode for some
  * compilers like OpenWatcom but not for all, f.e. it will not help
@@ -121,5 +122,7 @@ HB_EXPORT HB_BOOL    hb_oleAxInit( void );
 HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END
+
+#endif
 
 #endif /* __HBWINOLE_H */

@@ -109,20 +109,11 @@
 #endif
 
 /* Include windows.h if applicable and requested */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
 
-   #if defined( HB_OS_WIN_USED )
-
-      #include <windows.h>
-      #if defined( __GNUC__ )
-         #define HB_DONT_DEFINE_BASIC_TYPES
-      #endif
-   #else
-      /* Autodetect windows header. We need this information
-         in a few places in headers. */
-      #if defined( _WINDOWS_ ) || defined( _WINDOWS_H )
-         #define HB_OS_WIN_USED
-      #endif
+   #include <windows.h>
+   #if defined( __GNUC__ )
+      #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 
 #elif defined( HB_OS_OS2 )
@@ -1574,10 +1565,6 @@ typedef HB_U32 HB_FATTR;
 
 #if defined( HB_OS_WIN )
 
-   #if defined( HB_OS_WIN_CE ) && defined( HB_OS_WIN_USED )
-      #include "hbwince.h"
-   #endif
-
    /* Features provided for Windows builds only */
 
    extern HB_EXPORT wchar_t * hb_mbtowc( const char * srcA );
@@ -1593,28 +1580,28 @@ typedef HB_U32 HB_FATTR;
    #else
       #define HBTEXT( x ) x
    #endif
+#endif
 
-   #if defined( UNICODE )
-      #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
-      #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
-      #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
-      #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
-      #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
-      #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
-      #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
-      #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
-      #define HB_TCHAR_FREE(s)             hb_xfree(s)
-   #else
-      #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
-      #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
-      #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
-      #define HB_TCHAR_CONVTO(s)           ((char *)(s))
-      #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
-      #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
-      #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
-      #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
-      #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
-   #endif
+#if defined( HB_OS_WIN ) && defined( UNICODE )
+   #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
+   #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
+   #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
+   #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
+   #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
+   #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
+   #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
+   #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
+   #define HB_TCHAR_FREE(s)             hb_xfree(s)
+#else
+   #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
+   #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
+   #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
+   #define HB_TCHAR_CONVTO(s)           ((char *)(s))
+   #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
+   #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
+   #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
+   #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
+   #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
 #endif
 
 /* Function declaration macros */

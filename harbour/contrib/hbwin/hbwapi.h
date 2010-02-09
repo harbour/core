@@ -53,6 +53,13 @@
 #ifndef __HBWAPI_H
 #define __HBWAPI_H
 
+#include "hbapi.h"
+#include "hbwinuni.h"
+
+#if defined( HB_OS_WIN )
+
+#include <windows.h>
+
 #define wapi_par_WNDPROC( n )         ( ( WNDPROC          ) hb_parptr( n ) )
 #define wapi_par_WPARAM( n )          ( ( WPARAM           ) hb_parptr( n ) )
 #define wapi_par_LPARAM( n )          ( ( LPARAM           ) hb_parptr( n ) )
@@ -122,5 +129,7 @@ extern HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
 extern HB_EXPORT void      hbwapi_ret_PDEVMODE( PDEVMODE p );
 
 HB_EXTERN_END
+
+#endif
 
 #endif /* __HBWAPI_H */

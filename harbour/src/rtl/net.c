@@ -61,8 +61,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 
 #if defined( HB_OS_OS2 ) && defined( __GNUC__ )
@@ -94,6 +92,10 @@
       #include <sys/types.h>
    #endif
    #include <unistd.h>
+
+#elif defined( HB_OS_WIN )
+
+   #include <windows.h>
 
 #endif
 

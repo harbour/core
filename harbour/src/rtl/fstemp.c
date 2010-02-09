@@ -59,9 +59,6 @@
 #  define _GNU_SOURCE
 #endif
 
-/* Windows */
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbvm.h"
@@ -69,8 +66,12 @@
 #include "hbset.h"
 
 #if defined( HB_OS_UNIX )
-#include <stdlib.h>
-#include <unistd.h>  /* We need for mkstemp() on BSD */
+   #include <stdlib.h>
+   #include <unistd.h>  /* We need for mkstemp() on BSD */
+#endif
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
 #endif
 
 #if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \

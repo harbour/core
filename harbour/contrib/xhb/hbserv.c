@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -62,6 +60,13 @@
 #include "hbthread.h"
 
 #include <stdio.h>
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
+#endif
 
 /* These targets can't compile this module */
 #if !defined( HB_OS_DOS ) && \

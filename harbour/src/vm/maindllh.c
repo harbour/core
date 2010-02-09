@@ -55,10 +55,12 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbvm.h"
 #include "hbapiitm.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 #if defined( HB_OS_WIN )
 

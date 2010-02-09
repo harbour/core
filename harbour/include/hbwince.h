@@ -53,9 +53,10 @@
 #ifndef HB_WINCE_H_
 #define HB_WINCE_H_
 
-/* This file requires already #included <windows.h> */
+/* Some protection */
+#if defined( HB_OS_WIN_CE )
 
-#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_CE ) && defined( HB_OS_WIN_USED )
+#include <windows.h>
 
 HB_EXTERN_BEGIN
 

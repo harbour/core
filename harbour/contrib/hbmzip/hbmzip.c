@@ -53,8 +53,6 @@
 
 #define INCL_DOSFILEMGR
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -78,6 +76,8 @@
          #include <utime.h>
       #endif
    #endif
+#elif defined( HB_OS_WIN )
+   #include <windows.h>
 #endif
 
 #define HB_Z_IOBUF_SIZE       ( 1024 * 16 )

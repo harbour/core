@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #define SUPERTABLE ( &adsSuper )
 #define MAX_STR_LEN 255
 

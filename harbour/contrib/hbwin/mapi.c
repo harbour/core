@@ -51,10 +51,7 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
-#include "hbwinuni.h"
+#include "hbwin.h"
 
 #include <mapi.h>
 

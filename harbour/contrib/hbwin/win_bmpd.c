@@ -50,11 +50,8 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbwin.h"
+#include "hbapiitm.h"
 
 #if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
    #include "png.h"

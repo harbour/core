@@ -77,8 +77,6 @@
       delivered.
 */
 
-#define HB_OS_WIN_USED
-
 #define INCL_DOSSEMAPHORES
 #define INCL_DOSPROCESS
 
@@ -96,6 +94,10 @@
 #include "hbdate.h"
 #include "hbmemvar.ch"
 #include "hbthread.ch"
+
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
 
 #if defined( HB_PTHREAD_API )
 #  include <time.h>

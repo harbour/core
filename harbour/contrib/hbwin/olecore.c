@@ -52,6 +52,7 @@
  */
 
 #include "hbwinole.h"
+#include "hbinit.h"
 
 /* enable workaround for wrong OLE variant structure definition */
 #if ( defined( __POCC__ ) && defined( HB_OS_WIN_CE ) ) || \

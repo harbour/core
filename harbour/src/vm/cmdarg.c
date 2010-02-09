@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -67,6 +65,9 @@ static char ** s_argv = NULL;
 #if !defined( HB_OS_WIN )
 static char    s_szAppName[ HB_PATH_MAX ];
 #else
+
+#include <windows.h>
+
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
 

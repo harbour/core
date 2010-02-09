@@ -51,8 +51,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,6 +60,10 @@
 #include "hbapifs.h"
 #include "hb_io.h"
 #include "hbtrace.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 static int s_enabled = 1;
 static int s_level   = -1;

@@ -77,8 +77,6 @@
 /* TODO: include any standard headers here */
 /* *********************************************************************** */
 
-#define HB_OS_WIN_USED
-
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -86,6 +84,11 @@
 #include "hbwinuni.h"
 
 #include "hbapicdp.h"
+
+#include <windows.h>
+#if defined( HB_OS_WIN_CE )
+#  include "hbwince.h"
+#endif
 
 #if !defined( __LCC__ )
 #  include <wincon.h>

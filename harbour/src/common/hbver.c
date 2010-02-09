@@ -74,12 +74,12 @@
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_DOSMISC
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbmemory.ch"
 
 #if defined( HB_OS_WIN )
+
+   #include <windows.h>
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
       #define VER_PLATFORM_WIN32_WINDOWS 1

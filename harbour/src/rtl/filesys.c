@@ -104,9 +104,6 @@
 #define INCL_DOSERRORS    /* DOS error values    */
 #define INCL_DOSDATETIME  /* DATETIME functions  */
 
-/* Windows */
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -115,6 +112,13 @@
 #include "hbdate.h"
 #include "hb_io.h"
 #include "hbset.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
+#endif
 
 #if defined( HB_OS_UNIX )
    #include <unistd.h>

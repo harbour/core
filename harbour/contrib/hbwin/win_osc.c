@@ -50,10 +50,8 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
+#include "hbwin.h"
 #include "hbapiitm.h"
-#include "hbwinuni.h"
 
 static void getwinver( OSVERSIONINFO * pOSvi )
 {

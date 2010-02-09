@@ -75,19 +75,17 @@
  * See COPYING for licensing terms.
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
+
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
 
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
 
 #if !defined( HB_OS_WIN )
-#  define HB_TCHAR_CONVTO( s )       ( ( char * ) ( s ) )
-#  define HB_TCHAR_CONVFROM( s )     ( ( char * ) ( s ) )
-#  define HB_TCHAR_CONVNFROM( s, l ) ( ( char * ) ( s ) )
-#  define HB_TCHAR_FREE( s )         HB_SYMBOL_UNUSED( s )
 #  if !defined( SQLLEN ) && !defined( SQLTCHAR )
       typedef unsigned char   SQLTCHAR;
 #  endif

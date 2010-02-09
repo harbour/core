@@ -50,14 +50,16 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbvmpub.h"
 #include "hbstack.h"
 #include "hbthread.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 #if 0
 

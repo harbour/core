@@ -56,13 +56,10 @@
 /* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
          was derived from the context in which the functions are used. [pt] */
 
-#define HB_OS_WIN_USED
-
-#include "hbvm.h"
-#include "hbapi.h"
+#include "hbwin.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbwinuni.h"
+#include "hbvm.h"
 
 #if !defined( __CYGWIN__ ) && !defined( HB_NO_ASM )
 

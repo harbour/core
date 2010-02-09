@@ -50,14 +50,14 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbvm.h"
 
 #if !( defined( HB_DYNLIB ) && defined( __WATCOMC__ ) )
 
 #if defined( HB_OS_WIN )
+
+#include <windows.h>
 
 #define HB_VM_STARTUP
 #include "hbwmain.c"

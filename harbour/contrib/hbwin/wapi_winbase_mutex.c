@@ -50,11 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
 #include "hbwapi.h"
-#include "hbwinuni.h"
 
 static HB_GARBAGE_FUNC( wapi_mutex_release )
 {

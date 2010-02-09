@@ -50,11 +50,8 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwin.h"
 #include "hbapiitm.h"
-#include "hbwinuni.h"
 
 static HKEY hb_regkeyconv( HB_PTRUINT nKey )
 {

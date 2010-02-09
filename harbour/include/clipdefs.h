@@ -60,12 +60,6 @@
 
 #include "hbapi.h"
 
-/* Old types */
-
-typedef BYTE    byte;
-typedef USHORT  quant;
-typedef BOOL    Boolean;
-
 /* New types */
 
 #if defined( HB_LEGACY_TYPES_OFF )
@@ -165,5 +159,11 @@ typedef FUNCP * FUNCPP;
 #ifndef NULL
    #define NULL    0
 #endif
+
+/* Old types */
+
+typedef BYTE    byte;
+typedef USHORT  quant;
+typedef BOOL    Boolean;
 
 #endif /* _CLIPDEFS_H */

@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #define INCL_DOS
 #define INCL_DOSPROFILE
 
@@ -67,6 +65,12 @@
    #include <unistd.h>
    #if defined( __WATCOMC__ )
       #include <process.h>
+   #endif
+#endif
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
    #endif
 #endif
 

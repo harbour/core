@@ -56,9 +56,11 @@
 /* For OS/2 */
 #define INCL_DOSMISC
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 /* NOTE: Warning, this function _may_ return NULL as a result if
          the environment variable reading fails form some reason.

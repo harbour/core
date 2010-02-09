@@ -51,16 +51,19 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbdate.h"
+
 #if defined( HB_OS_LINUX )
    /* stime exists only in SVr4, SVID, X/OPEN and Linux */
 #   ifndef _SVID_SOURCE
 #      define _SVID_SOURCE
 #   endif
 #endif
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
+
 #include <time.h>
 
 

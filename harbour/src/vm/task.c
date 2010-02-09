@@ -54,11 +54,13 @@
 
 #define HB_TASK_DEBUG
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbtask.h"
 #include "hbapierr.h"
+
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
 
 #include <time.h>
 #if defined( HB_OS_UNIX )

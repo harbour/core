@@ -50,17 +50,23 @@
  *
  */
 
-
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
-#if defined( __CYGWIN__ )
-   #include <wchar.h>
-#elif defined( __POCC__ ) && defined( HB_OS_WIN_CE )
-   #ifndef GMEM_MOVEABLE
-      #define GMEM_MOVEABLE       2
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   /* For Global*() */
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
+
+   #if defined( __CYGWIN__ )
+      #include <wchar.h>
+   #elif defined( __POCC__ ) && defined( HB_OS_WIN_CE )
+      #ifndef GMEM_MOVEABLE
+         #define GMEM_MOVEABLE       2
+      #endif
    #endif
 #endif
 

@@ -55,7 +55,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
 #define INCL_DOSMODULEMGR
 
 #include "hbvmint.h"
@@ -64,6 +63,10 @@
 #include "hbstack.h"
 #include "hbvm.h"
 #include "hbwinuni.h"
+
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
 
 #if !defined( HB_HAS_DLFCN ) && \
     ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \

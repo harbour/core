@@ -50,12 +50,9 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwin.h"
 #include "hbapierr.h"
 #include "hbinit.h"
-#include "hbwin.h"
 
 static struct
 {

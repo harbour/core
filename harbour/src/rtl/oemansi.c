@@ -53,10 +53,12 @@
 /* NOTE: These are Windows specific, for other platforms it will return the
          passed parameter unchanged. */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 HB_FUNC( HB_ANSITOOEM )
 {

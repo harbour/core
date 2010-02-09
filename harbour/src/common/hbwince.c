@@ -58,77 +58,11 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
-#include "hbdate.h"
-
-#if defined( HB_OS_WIN )
-
-void hb_mbtowccpy( wchar_t *dstW, const char *srcA, HB_SIZE ulLen )
-{
-   MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ulLen / sizeof( wchar_t ) );
-}
-
-void hb_mbtowcset( wchar_t *dstW, const char *srcA, HB_SIZE ulLen )
-{
-   MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, dstW, ulLen );
-}
-
-wchar_t *hb_mbtowc( const char *srcA )
-{
-   DWORD length;
-   wchar_t *dstW;
-
-   length = MultiByteToWideChar( CP_ACP, 0, srcA, -1, NULL, 0 );
-   dstW = ( wchar_t * ) hb_xgrab( ( length + 1 ) * sizeof( wchar_t ) );
-   MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, length + 1 );
-
-   return dstW;
-}
-
-char *hb_wctomb( const wchar_t *srcW )
-{
-   DWORD length;
-   char *dstA;
-
-   length = WideCharToMultiByte( CP_ACP, 0, srcW, -1, NULL, 0, NULL, NULL );
-   dstA = ( char * ) hb_xgrab( length + 1 );
-   WideCharToMultiByte( CP_ACP, 0, srcW, -1, dstA, length + 1, NULL, NULL );
-
-   return dstA;
-}
-
-wchar_t *hb_mbntowc( const char *srcA, HB_SIZE ulLen )
-{
-   DWORD length;
-   wchar_t *dstW;
-
-   length = MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, NULL, 0 );
-   dstW = ( wchar_t * ) hb_xgrab( ( length + 1 ) * sizeof( wchar_t ) );
-   MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, dstW, length + 1 );
-
-   return dstW;
-}
-
-char *hb_wcntomb( const wchar_t *srcW, HB_SIZE ulLen )
-{
-   DWORD length;
-   char *dstA;
-
-   length = WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, NULL, 0, NULL, NULL );
-   dstA = ( char * ) hb_xgrab( length + 1 );
-   WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, length + 1, NULL, NULL );
-
-   return dstA;
-}
-
-void hb_wctombget( char *dstA, const wchar_t *srcW, HB_SIZE ulLen )
-{
-   WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
-}
 
 #if defined( HB_OS_WIN_CE )
+
+#include "hbwince.h"
 
 DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size )
 {
@@ -370,5 +304,3 @@ BOOL WINAPI FloodFill( HDC h, int x, int y, COLORREF c )
 }
 
 #endif /* HB_OS_WIN_CE */
-
-#endif /* HB_OS_WIN */

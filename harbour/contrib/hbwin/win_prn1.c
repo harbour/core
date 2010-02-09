@@ -66,13 +66,15 @@
    Peter Rees 21 January 2004 <peter@rees.co.nz>
 */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
-#include "hbwapi.h"
-#include "hbwinuni.h"
+
+/* For Arc() */
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 #if ! defined( HB_OS_WIN_CE )
 

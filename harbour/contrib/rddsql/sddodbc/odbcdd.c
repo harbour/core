@@ -49,12 +49,14 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
 #include "hbvm.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 #if defined( __XCC__ ) || defined( __LCC__ )
 #  include "hbrddsql.h"
@@ -66,9 +68,6 @@
 #include <sqlext.h>
 
 #if !defined( HB_OS_WIN )
-#  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
-#  define HB_TCHAR_CONVFROM( s )    ( ( char * ) ( s ) )
-#  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
 #  if !defined( SQLLEN ) && !defined( SQLTCHAR )
       typedef unsigned char   SQLTCHAR;
 #  endif

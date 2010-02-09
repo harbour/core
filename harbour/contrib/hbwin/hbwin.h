@@ -53,6 +53,13 @@
 #ifndef __HBWIN_H
 #define __HBWIN_H
 
+#include "hbapi.h"
+#include "hbwinuni.h"
+
+#if defined( HB_OS_WIN )
+
+#include <windows.h>
+
 #define HB_WIN_COM_FUN_CREATEFILE            1
 #define HB_WIN_COM_FUN_GETCOMMSTATE          2
 #define HB_WIN_COM_FUN_SETCOMMSTATE          3
@@ -88,5 +95,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT int       hbwin_bitmapType( const void * pImgBuf, HB_SIZE size );
 
 HB_EXTERN_END
+
+#endif
 
 #endif /* __HBWIN_H */

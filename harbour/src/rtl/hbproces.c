@@ -53,8 +53,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 /* #define HB_IO_WIN_OFF */
 
 #include "hbapi.h"
@@ -84,6 +82,11 @@
 #     include <unistd.h>
 #  else
 #     include <io.h>
+#  endif
+#elif defined( HB_OS_WIN )
+#  include <windows.h>
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
 #  endif
 #endif
 

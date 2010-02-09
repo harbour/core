@@ -50,9 +50,11 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 HB_FUNC( HB_USERLANG )
 {

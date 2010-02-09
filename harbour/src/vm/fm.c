@@ -69,9 +69,6 @@
 #  define HB_FM_STATISTICS_OFF
 #endif
 
-/* For MS-Win builds */
-#define HB_OS_WIN_USED
-
 /* For Linux and mremap() function */
 #ifndef _GNU_SOURCE
 #  define _GNU_SOURCE
@@ -108,6 +105,11 @@
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbvm.h"
+
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
+
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
 #  include "hbatomic.h"

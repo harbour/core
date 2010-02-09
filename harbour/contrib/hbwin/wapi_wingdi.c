@@ -54,13 +54,14 @@
       http://msdn.microsoft.com/en-us/library/aa923590.aspx
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbwinuni.h"
-#include "hbwapi.h"
+
+/* For Arc() */
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
 {

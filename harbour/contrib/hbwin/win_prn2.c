@@ -51,12 +51,10 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
+#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
-#include "hbwinuni.h"
 
 #if ! defined( HB_OS_WIN_CE )
 

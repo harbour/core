@@ -70,8 +70,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbdate.h"
 #if defined( HB_LONG_LONG_OFF )
@@ -81,7 +79,9 @@
 #include <time.h>
 #if defined( HB_OS_UNIX )
 #  include <sys/time.h>
-#elif !defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN )
+#  include <windows.h>
+#else
 #  include <sys/timeb.h>
 #  if defined( _MSC_VER )
 #     define timeb _timeb

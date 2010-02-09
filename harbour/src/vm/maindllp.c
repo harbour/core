@@ -55,9 +55,11 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbtypes.h"
+
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 #define HB_DLL_PREF     TEXT( "harbour" )
 #define HB_DLL_PREF_MT  TEXT( "harbourmt" )

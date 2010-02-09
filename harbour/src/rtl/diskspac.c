@@ -58,8 +58,6 @@
 #define INCL_BASE
 #define INCL_DOSERRORS
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
@@ -75,6 +73,12 @@
 #  else
 #     include <sys/statvfs.h>
 #  endif
+#endif
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 #endif
 
 HB_FUNC( DISKSPACE )

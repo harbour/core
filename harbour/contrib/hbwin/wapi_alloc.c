@@ -50,9 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
 #include "hbwapi.h"
 
 static HB_GARBAGE_FUNC( s_gc_HDC_release )

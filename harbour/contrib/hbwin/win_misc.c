@@ -61,10 +61,7 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
-#include "hbapi.h"
-#include "hbwinuni.h"
+#include "hbwin.h"
 
 #ifndef QS_ALLPOSTMESSAGE
 #define QS_ALLPOSTMESSAGE   0x0100

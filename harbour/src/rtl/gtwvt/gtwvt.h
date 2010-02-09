@@ -55,8 +55,6 @@
 
 #define HB_GT_NAME  WVT
 
-#include <windows.h>
-
 #include "hbset.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -69,6 +67,10 @@
 #include "hbthread.h"
 #include "hbgfxdef.ch"
 
+#include <windows.h>
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 #define WVT_CHAR_QUEUE_SIZE   128
 #define WVT_MAX_TITLE_SIZE    128

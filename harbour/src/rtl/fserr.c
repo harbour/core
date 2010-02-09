@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbstack.h"
@@ -60,6 +58,9 @@
 #  include <errno.h>
 #endif
 
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#endif
 
 /* Try to translate C errno into DOS error code */
 #if !defined( HB_IO_WIN )
