@@ -2386,8 +2386,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lMAP ]
             IF hbmk[ _HBMK_cPLAT ] == "darwin"
                AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-map,{OM}" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-map,{OM}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTATICFULL ]
@@ -2577,8 +2579,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--out-implib,{OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
          ENDIF
          IF l_lLIBGROUPING .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
@@ -2691,8 +2695,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--out-implib,{OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
          ENDIF
          AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
@@ -2948,6 +2954,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "OP map" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2"
+            AAdd( hbmk[ _HBMK_aOPTL ], "OP implib={OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "OP implib={OI}" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
@@ -3045,6 +3052,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-ap" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Gi" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" )
          ENDIF
          IF ! Empty( cWorkDir )
@@ -3172,6 +3180,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-implib:{OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
@@ -3307,8 +3316,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-implib:{OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
          IF hbmk[ _HBMK_lDEBUG ]
@@ -3379,6 +3390,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-M{OM}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-M{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lSTATICFULL ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-B -static" )
@@ -4530,6 +4542,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, cLibLibExt ) ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_BIN_INSTALL )
 
