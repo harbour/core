@@ -52,11 +52,6 @@
  *
  */
 
-/* NOTE: Trick to exclude content of this non-lib object from dynamic lib
-         generation. It's difficult to prevent it not being picked, so
-         we disable any content for the object created for dynamic lib. */
-#if ! defined( HB_DYNLIB )
-
 #include "hbapi.h"
 
 int hb_verSvnID( void ) { return 0; }
@@ -831,6 +826,4 @@ int main( int argc, char * argv[] )
 
 #if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )
 #  include "hbwmain.c"
-#endif
-
 #endif

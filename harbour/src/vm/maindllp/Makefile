@@ -6,14 +6,10 @@ ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-vpath %.c ../
-
 C_SOURCES := \
-   maindllp.c \
+   dllpcode.c \
+   dllext.c   \
 
 LIBNAME := hbmaindllp
-
-# always export symbols
-HB_CFLAGS += -DHB_DYNLIB
 
 include $(TOP)$(ROOT)config/lib.mk

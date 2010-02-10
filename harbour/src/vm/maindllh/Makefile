@@ -13,7 +13,4 @@ C_SOURCES := \
 
 LIBNAME := hbmaindllh
 
-# always export symbols
-HB_CFLAGS += -DHB_DYNLIB
-
 include $(TOP)$(ROOT)config/lib.mk

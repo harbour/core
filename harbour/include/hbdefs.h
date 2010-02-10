@@ -1498,37 +1498,39 @@ typedef HB_U32 HB_FATTR;
    #define HB_DLL_ENTRY_POINT    DllEntryPoint
 #endif
 
+#if defined( __RSXNT__ )
+   /* RSXNT does not support any type of export keyword.
+      Exported (i.e., public) names can be obtained via
+      the emxexp utility and the output can be used for
+      input to a module definition file. See emxdev.doc
+      in the RSXNT doc/ directory for more information. */
+   #define HB_EXPORT_ATTR
+
+#elif defined( __GNUC__ ) && defined( HB_OS_WIN )
+   #define HB_EXPORT_ATTR     __attribute__ (( dllexport ))
+
+#elif defined( __GNUC__ ) && defined( HB_OS_LINUX ) && __GNUC__ >= 3
+   #define HB_EXPORT_ATTR     __attribute__ ((visibility ("default")))
+
+#elif defined( __BORLANDC__ )
+   #define HB_EXPORT_ATTR     __declspec( dllexport )
+
+#elif defined( __WATCOMC__ )
+   #define HB_EXPORT_ATTR     __declspec( dllexport )
+
+#elif defined( ASANLM ) || defined( ASANT )
+   #define HB_EXPORT_ATTR
+
+#elif defined( HB_OS_WIN )
+   #define HB_EXPORT_ATTR     _declspec( dllexport )
+
+#else
+   #define HB_EXPORT_ATTR
+
+#endif
+
 #if defined( HB_DYNLIB )
-   #if defined( __RSXNT__ )
-      /* RSXNT does not support any type of export keyword.
-         Exported (i.e., public) names can be obtained via
-         the emxexp utility and the output can be used for
-         input to a module definition file. See emxdev.doc
-         in the RSXNT doc/ directory for more information. */
-      #define HB_EXPORT
-
-   #elif defined( __GNUC__ ) && defined( HB_OS_WIN )
-      #define HB_EXPORT __attribute__ (( dllexport ))
-
-   #elif defined( __GNUC__ ) && defined( HB_OS_LINUX ) && __GNUC__ >= 3
-      #define HB_EXPORT __attribute__ ((visibility ("default")))
-
-   #elif defined( __BORLANDC__ )
-      #define HB_EXPORT __declspec( dllexport )
-
-   #elif defined( __WATCOMC__ )
-      #define HB_EXPORT __declspec( dllexport )
-
-   #elif defined( ASANLM ) || defined( ASANT )
-      #define HB_EXPORT
-
-   #elif defined( HB_OS_WIN )
-      #define HB_EXPORT _declspec( dllexport )
-
-   #else
-      #define HB_EXPORT
-
-   #endif
+   #define HB_EXPORT    HB_EXPORT_ATTR
 #else
    #define HB_EXPORT
 #endif
@@ -1539,27 +1541,29 @@ typedef HB_U32 HB_FATTR;
       the emxexp utility and the output can be used for
       input to a module definition file. See emxdev.doc
       in the RSXNT doc/ directory for more information. */
-   #define HB_IMPORT
+   #define HB_IMPORT_ATTR
 
 #elif defined( __GNUC__ ) && defined( HB_OS_WIN )
-   #define HB_IMPORT __attribute__ (( dllimport ))
+   #define HB_IMPORT_ATTR     __attribute__ (( dllimport ))
 
 #elif defined( __BORLANDC__ )
-   #define HB_IMPORT __declspec( dllimport )
+   #define HB_IMPORT_ATTR     __declspec( dllimport )
 
 #elif defined( __WATCOMC__ )
-   #define HB_IMPORT __declspec( dllimport )
+   #define HB_IMPORT_ATTR     __declspec( dllimport )
 
 #elif defined( ASANLM ) || defined( ASANT )
-   #define HB_IMPORT
+   #define HB_IMPORT_ATTR
 
 #elif defined( HB_OS_WIN )
-   #define HB_IMPORT _declspec( dllimport )
+   #define HB_IMPORT_ATTR     _declspec( dllimport )
 
 #else
-   #define HB_IMPORT
+   #define HB_IMPORT_ATTR
 
 #endif
+
+#define HB_IMPORT    HB_IMPORT_ATTR
 
 #if defined( HB_OS_WIN )
 

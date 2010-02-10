@@ -1104,6 +1104,9 @@ extern void *   hb_i18n_alloc( void * cargo );
 extern HB_EXPORT void         hb_vmSetLinkedMain( const char * szMain );
 extern HB_EXPORT void         hb_vmSetDefaultGT( const char * szGtName );
 
+extern HB_EXPORT PHB_FUNC     hb_vmProcAddress( const char * szFuncName );
+
+
 /* misc */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
