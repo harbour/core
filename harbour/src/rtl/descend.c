@@ -53,15 +53,15 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-void hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE ulLen )
+void hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strDescend(%p, %s, %lu)", szStringTo, szStringFrom, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strDescend(%p, %s, %lu)", szStringTo, szStringFrom, nLen));
 
-   if( ulLen == 1 && szStringFrom[ 0 ] == '\0' )
+   if( nLen == 1 && szStringFrom[ 0 ] == '\0' )
       szStringTo[ 0 ] = '\0';
    else
    {
-      for(; ulLen--; szStringTo++, szStringFrom++ )
+      for(; nLen--; szStringTo++, szStringFrom++ )
          *szStringTo = ( char ) ( 256 - *szStringFrom );
    }
 }
@@ -74,13 +74,13 @@ HB_FUNC( DESCEND )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         HB_SIZE ulLen = hb_itemGetCLen( pItem );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
-         if( ulLen > 0 )
+         if( nLen > 0 )
          {
-            char * szBuffer = ( char * ) hb_xgrab( ulLen + 1 );
-            hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
-            hb_retclen_buffer( szBuffer, ulLen );
+            char * szBuffer = ( char * ) hb_xgrab( nLen + 1 );
+            hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), nLen );
+            hb_retclen_buffer( szBuffer, nLen );
          }
          else
             hb_retc_null();

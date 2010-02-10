@@ -63,25 +63,25 @@ HB_FUNC( HB_AT )
 
    if( pText && pSub )
    {
-      HB_SIZE ulTextLength = hb_itemGetCLen( pText );
-      HB_SIZE ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
-      HB_SIZE ulEnd = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulTextLength;
-      HB_SIZE ulPos;
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+      HB_SIZE nEnd = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : nTextLength;
+      HB_SIZE nPos;
 
-      if( ulStart > ulTextLength || ulEnd < ulStart )
+      if( nStart > nTextLength || nEnd < nStart )
          hb_retnl( 0 );
       else
       {
-         if( ulEnd > ulTextLength )
-            ulEnd = ulTextLength;
+         if( nEnd > nTextLength )
+            nEnd = nTextLength;
 
-         ulPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
+         nPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                          hb_itemGetCPtr( pText ) + nStart - 1, nEnd - nStart + 1 );
 
-         if( ulPos > 0 )
-            ulPos += ( ulStart - 1 );
+         if( nPos > 0 )
+            nPos += ( nStart - 1 );
 
-         hb_retnl( ulPos );
+         hb_retnl( nPos );
       }
    }
    else

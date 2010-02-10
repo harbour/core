@@ -65,11 +65,11 @@ HB_FUNC( BIN2U )
 
    if( pItem )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
-      if( ulLen )
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
+      if( nLen )
       {
          const char * pszString = hb_itemGetCPtr( pItem );
-         if( ulLen >= 3 )
+         if( nLen >= 3 )
             uiResult = HB_GET_LE_UINT32( pszString );
          else
             uiResult = HB_GET_LE_UINT16( pszString );

@@ -55,7 +55,7 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-   #include <windows.h>
+#  include <windows.h>
 #endif
 
 #if defined( __XCC__ ) || defined( __LCC__ )

@@ -142,7 +142,7 @@ static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 
 static void hb_cdxClearLogPosInfo( CDXAREAP pArea );
 
-static HB_BOOL  bTurbo = HB_FALSE;
+static HB_BOOL  s_bTurbo = HB_FALSE;
 static RDDFUNCS cdxSuper;
 static const RDDFUNCS cdxTable =
 {
@@ -1364,7 +1364,7 @@ static HB_BOOL hb_cdxIndexLockRead( LPCDXINDEX pIndex )
    pIndex->RdLck = HB_TRUE;
 #endif
 
-  if( bTurbo )
+  if( s_bTurbo )
   {
    pIndex->lockRead++;
    hb_cdxIndexCheckVersion( pIndex );
@@ -1450,7 +1450,7 @@ static HB_BOOL hb_cdxIndexUnLockRead( LPCDXINDEX pIndex )
 
    hb_cdxIndexPoolFree( pIndex, CDX_PAGECACHESIZE );
 
- if( bTurbo )
+ if( s_bTurbo )
  {
 #ifdef HB_CDX_DBGCODE
    if( pIndex->pArea->dbfarea.fShared && pIndex->fShared &&
@@ -6947,8 +6947,8 @@ static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pK
 
 HB_FUNC( BM_TURBO )
 {
-    bTurbo = HB_ISLOG( 1 ) ? hb_parl( 1 ) : HB_FALSE;
-    hb_retl( bTurbo );
+    s_bTurbo = HB_ISLOG( 1 ) ? hb_parl( 1 ) : HB_FALSE;
+    hb_retl( s_bTurbo );
 }
 
 HB_FUNC( BM_DBGETFILTERARRAY )

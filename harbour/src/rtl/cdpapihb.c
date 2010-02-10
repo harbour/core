@@ -66,23 +66,23 @@
 #define HB_MAX_UTF8        3
 
 
-static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE ulLen, HB_SIZE ulUTF8Pos )
+static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE nLen, HB_SIZE nUTF8Pos )
 {
-   if( ulUTF8Pos )
+   if( nUTF8Pos )
    {
-      HB_SIZE ul, ul2;
+      HB_SIZE n1, n2;
       HB_WCHAR uc;
       int n = 0;
 
-      for( ul = ul2 = 0; ul < ulLen; ++ul )
+      for( n1 = n2 = 0; n1 < nLen; ++n1 )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szUTF8[ ul ], &n, &uc ) )
+         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szUTF8[ n1 ], &n, &uc ) )
          {
             if( n == 0 )
             {
-               if( --ulUTF8Pos == 0 )
-                  return ul2 + 1;
-               ul2 = ul + 1;
+               if( --nUTF8Pos == 0 )
+                  return n2 + 1;
+               n2 = n1 + 1;
             }
          }
       }
@@ -129,19 +129,19 @@ HB_FUNC( __NATSORTVER )
  */
 HB_FUNC( HB_TRANSLATE )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
    const char * szIdIn = hb_parc( 2 );
    const char * szIdOut = hb_parc( 3 );
 
-   if( ulLen && ( szIdIn || szIdOut ) )
+   if( nLen && ( szIdIn || szIdOut ) )
    {
       PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFindExt( szIdIn ) : hb_vmCDP();
       PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFindExt( szIdOut ) : hb_vmCDP();
 
       if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable )
       {
-         char * szResult = hb_cdpnDup( hb_parc( 1 ), &ulLen, cdpIn, cdpOut );
-         hb_retclen_buffer( szResult, ulLen );
+         char * szResult = hb_cdpnDup( hb_parc( 1 ), &nLen, cdpIn, cdpOut );
+         hb_retclen_buffer( szResult, nLen );
       }
       else
          hb_itemReturn( hb_param( 1, HB_IT_STRING ) );
@@ -170,11 +170,11 @@ HB_FUNC( HB_UTF8ASC )
 
    if( pszString )
    {
-      HB_SIZE ulLen = hb_parclen( 1 );
+      HB_SIZE nLen = hb_parclen( 1 );
       HB_WCHAR wc = 0;
       int n = 0;
 
-      while( ulLen-- )
+      while( nLen-- )
       {
          if( hb_cdpUTF8ToU16NextChar( ( unsigned char ) *pszString++, &n, &wc ) )
          {
@@ -190,24 +190,24 @@ HB_FUNC( HB_UTF8ASC )
 
 HB_FUNC( HB_STRTOUTF8 )
 {
-   HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
+   HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
    const char * szString;
    char * szDest = NULL;
 
-   if( ulLen )
+   if( nLen )
    {
       PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
       if( cdp )
       {
          szString = hb_parc( 1 );
-         ulDest = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, szString, ulLen, 0 );
-         szDest = ( char * ) hb_xgrab( ulDest + 1 );
-         hb_cdpStrToUTF8( cdp, HB_FALSE, szString, ulLen, szDest, ulDest + 1 );
+         nDest = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, szString, nLen, 0 );
+         szDest = ( char * ) hb_xgrab( nDest + 1 );
+         hb_cdpStrToUTF8( cdp, HB_FALSE, szString, nLen, szDest, nDest + 1 );
       }
    }
    if( szDest )
-      hb_retclen_buffer( szDest, ulDest );
+      hb_retclen_buffer( szDest, nDest );
    else
       hb_retc_null();
 }
@@ -218,24 +218,24 @@ HB_FUNC( HB_UTF8TOSTR )
 
    if( szString )
    {
-      HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
+      HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
       char * szDest = NULL;
 
-      if( ulLen )
+      if( nLen )
       {
          PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
          if( cdp )
          {
             szString = hb_parc( 1 );
-            ulDest = hb_cdpUTF8AsStrLen( cdp, HB_FALSE, szString, ulLen, 0 );
-            szDest = ( char * ) hb_xgrab( ulDest + 1 );
-            hb_cdpUTF8ToStr( cdp, HB_FALSE, szString, ulLen, szDest, ulDest + 1 );
+            nDest = hb_cdpUTF8AsStrLen( cdp, HB_FALSE, szString, nLen, 0 );
+            szDest = ( char * ) hb_xgrab( nDest + 1 );
+            hb_cdpUTF8ToStr( cdp, HB_FALSE, szString, nLen, szDest, nDest + 1 );
          }
       }
 
       if( szDest )
-         hb_retclen_buffer( szDest, ulDest );
+         hb_retclen_buffer( szDest, nDest );
       else
          hb_retc_null();
    }
@@ -251,24 +251,24 @@ HB_FUNC( HB_UTF8SUBSTR )
    if( szString && ( iPCount < 2 || ( HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) ) ) )
    {
       char * szDest = NULL;
-      HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
+      HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
       HB_ISIZ lFrom = hb_parnl( 2 );
-      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) ulLen : hb_parnl( 3 );
+      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) nLen : hb_parnl( 3 );
 
       if( lFrom < 0 )
       {
-         lFrom += hb_cdpUTF8StringLength( szString, ulLen );
+         lFrom += hb_cdpUTF8StringLength( szString, nLen );
          if( lFrom < 0 )
             lFrom = 0;
       }
       else if( lFrom )
          --lFrom;
 
-      if( ulLen && lCount > 0 )
-         szDest = hb_cdpUTF8StringSubstr( szString, ulLen,
-                                          lFrom, lCount, &ulDest );
+      if( nLen && lCount > 0 )
+         szDest = hb_cdpUTF8StringSubstr( szString, nLen,
+                                          lFrom, lCount, &nDest );
       if( szDest )
-         hb_retclen_buffer( szDest, ulDest );
+         hb_retclen_buffer( szDest, nDest );
       else
          hb_retc_null();
    }
@@ -282,16 +282,16 @@ HB_FUNC( HB_UTF8LEFT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLen = hb_parnl( 2 );
-      HB_SIZE ulDest = 0;
+      HB_ISIZ lLenReq = hb_parnl( 2 );
+      HB_SIZE nDest = 0;
       char * szDest = NULL;
 
-      if( lLen > 0 )
+      if( lLenReq > 0 )
          szDest = hb_cdpUTF8StringSubstr( szString, hb_parclen( 1 ),
-                                          0, lLen, &ulDest );
+                                          0, lLenReq, &nDest );
 
       if( szDest )
-         hb_retclen_buffer( szDest, ulDest );
+         hb_retclen_buffer( szDest, nDest );
       else
          hb_retc_null();
    }
@@ -305,21 +305,21 @@ HB_FUNC( HB_UTF8RIGHT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLen = hb_parnl( 2 ), lFrom;
-      HB_SIZE ulLen = hb_parclen( 1 ), ulDest = 0;
+      HB_ISIZ lLenReq = hb_parnl( 2 ), lFrom;
+      HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
       char * szDest = NULL;
 
-      if( ulLen && lLen > 0 )
+      if( nLen && lLenReq > 0 )
       {
-         lFrom = hb_cdpUTF8StringLength( szString, ulLen ) - lLen;
+         lFrom = hb_cdpUTF8StringLength( szString, nLen ) - lLenReq;
          if( lFrom < 0 )
             lFrom = 0;
-         szDest = hb_cdpUTF8StringSubstr( szString, ulLen,
-                                          lFrom, lLen, &ulDest );
+         szDest = hb_cdpUTF8StringSubstr( szString, nLen,
+                                          lFrom, lLenReq, &nDest );
       }
 
       if( szDest )
-         hb_retclen_buffer( szDest, ulDest );
+         hb_retclen_buffer( szDest, nDest );
       else
          hb_retc_null();
    }
@@ -333,11 +333,11 @@ HB_FUNC( HB_UTF8PEEK )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulPos = hb_parnl( 2 );
-      HB_SIZE ulLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parnl( 2 );
+      HB_SIZE nLen = hb_parclen( 1 );
 
-      if( ulPos > 0 && ulPos <= ulLen )
-         hb_retnint( hb_cdpUTF8StringPeek( szString, ulLen, ulPos - 1 ) );
+      if( nPos > 0 && nPos <= nLen )
+         hb_retnint( hb_cdpUTF8StringPeek( szString, nLen, nPos - 1 ) );
       else
          hb_retni( 0 );
    }
@@ -352,40 +352,40 @@ HB_FUNC( HB_UTF8POKE )
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       const char * szString = hb_itemGetCPtr( pText );
-      HB_SIZE ulLen = hb_parclen( 1 ), ulPos;
+      HB_SIZE nLen = hb_parclen( 1 ), nPos;
 
-      ulPos = utf8pos( szString, ulLen, hb_parnl( 2 ) );
-      if( ulPos )
+      nPos = utf8pos( szString, nLen, hb_parnl( 2 ) );
+      if( nPos )
       {
          HB_WCHAR uc, uc2;
          int n, n2;
 
-         --ulPos;
+         --nPos;
          uc = ( HB_WCHAR ) hb_parni( 3 );
          n = hb_cdpUTF8CharSize( uc );
          n2 = 0;
-         hb_cdpUTF8ToU16NextChar( szString[ulPos], &n2, &uc2 );
+         hb_cdpUTF8ToU16NextChar( szString[nPos], &n2, &uc2 );
          ++n2;
          if( n == n2 )
          {
             char * szText;
-            if( hb_itemGetWriteCL( pText, &szText, &ulLen ) &&
-                ulPos + n <= ulLen )
+            if( hb_itemGetWriteCL( pText, &szText, &nLen ) &&
+                nPos + n <= nLen )
             {
-               hb_cdpU16CharToUTF8( &szText[ulPos], uc );
+               hb_cdpU16CharToUTF8( &szText[nPos], uc );
             }
             hb_itemReturn( pText );
          }
          else
          {
-            char * szResult = ( char * ) hb_xgrab( ulLen - n2 + n + 1 );
+            char * szResult = ( char * ) hb_xgrab( nLen - n2 + n + 1 );
 
-            memcpy( szResult, szString, ulPos );
-            hb_cdpU16CharToUTF8( &szResult[ulPos], uc );
-            memcpy( szResult + ulPos + n, szString + ulPos + n2, ulLen - ulPos - n2 );
+            memcpy( szResult, szString, nPos );
+            hb_cdpU16CharToUTF8( &szResult[nPos], uc );
+            memcpy( szResult + nPos + n, szString + nPos + n2, nLen - nPos - n2 );
             if( HB_ISBYREF( 1 ) )
-               hb_storclen( szResult, ulLen - n2 + n, 1 );
-            hb_retclen_buffer( szResult, ulLen - n2 + n );
+               hb_storclen( szResult, nLen - n2 + n, 1 );
+            hb_retclen_buffer( szResult, nLen - n2 + n );
          }
       }
       else
@@ -401,43 +401,43 @@ HB_FUNC( HB_UTF8STUFF )
 
    if( szString && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
-      HB_SIZE ulLen = hb_parclen( 1 );
-      HB_SIZE ulPos = hb_parnl( 2 );
-      HB_SIZE ulDel = hb_parnl( 3 );
-      HB_SIZE ulIns = hb_parclen( 4 );
-      HB_SIZE ulTot;
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parnl( 2 );
+      HB_SIZE nDel = hb_parnl( 3 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
 
-      if( ulPos )
+      if( nPos )
       {
-         ulPos = utf8pos( szString, ulLen, ulPos );
-         if( ulPos == 0 )
-            ulPos = ulLen;
+         nPos = utf8pos( szString, nLen, nPos );
+         if( nPos == 0 )
+            nPos = nLen;
          else
-            ulPos--;
+            nPos--;
       }
-      if( ulDel )
+      if( nDel )
       {
-         if( ulPos < ulLen )
+         if( nPos < nLen )
          {
-            ulDel = utf8pos( szString + ulPos, ulLen - ulPos, ulDel + 1 );
-            if( ulDel == 0 )
-               ulDel = ulLen - ulPos;
+            nDel = utf8pos( szString + nPos, nLen - nPos, nDel + 1 );
+            if( nDel == 0 )
+               nDel = nLen - nPos;
             else
-               ulDel--;
+               nDel--;
          }
          else
-            ulDel = 0;
+            nDel = 0;
       }
 
-      if( ( ulTot = ulLen + ulIns - ulDel ) > 0 )
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
       {
-         char * szResult = ( char * ) hb_xgrab( ulTot + 1 );
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
 
-         hb_xmemcpy( szResult, szString, ulPos );
-         hb_xmemcpy( szResult + ulPos, hb_parc( 4 ), ulIns );
-         hb_xmemcpy( szResult + ulPos + ulIns, szString + ulPos + ulDel,
-                     ulLen - ( ulPos + ulDel ) );
-         hb_retclen_buffer( szResult, ulTot );
+         hb_xmemcpy( szResult, szString, nPos );
+         hb_xmemcpy( szResult + nPos, hb_parc( 4 ), nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szString + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
       }
       else
          hb_retc_null();

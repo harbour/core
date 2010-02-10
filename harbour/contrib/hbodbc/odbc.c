@@ -98,7 +98,7 @@
 #endif
 
 #ifndef SQL_NO_DATA
-   #define SQL_NO_DATA     SQL_NO_DATA_FOUND
+#  define SQL_NO_DATA     SQL_NO_DATA_FOUND
 #endif
 
 HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */

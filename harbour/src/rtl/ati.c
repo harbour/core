@@ -55,34 +55,34 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
+static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, nSubLen, szText, nLen));
 
-   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE ulPos = 0;
-      HB_SIZE ulSubPos = 0;
+      HB_SIZE nPos = 0;
+      HB_SIZE nSubPos = 0;
 
-      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      while( nPos < nLen && nSubPos < nSubLen )
       {
-         if( hb_charLower( szText[ ulPos ] ) == hb_charLower( szSub[ ulSubPos ] ) )
+         if( hb_charLower( szText[ nPos ] ) == hb_charLower( szSub[ nSubPos ] ) )
          {
-            ulSubPos++;
-            ulPos++;
+            ++nSubPos;
+            ++nPos;
          }
-         else if( ulSubPos )
+         else if( nSubPos )
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            ulPos -= ( ulSubPos - 1 );
-            ulSubPos = 0;
+            nPos -= ( nSubPos - 1 );
+            nSubPos = 0;
          }
          else
-            ulPos++;
+            ++nPos;
       }
 
-      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
    }
    else
       return 0;
@@ -98,7 +98,7 @@ HB_FUNC( HB_ATI )
       HB_SIZE ulTextLength = hb_itemGetCLen( pText );
       HB_SIZE ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
       HB_SIZE ulEnd = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulTextLength;
-      HB_SIZE ulPos;
+      HB_SIZE nPos;
 
       if( ulStart > ulTextLength || ulEnd < ulStart )
          hb_retnl( 0 );
@@ -107,13 +107,13 @@ HB_FUNC( HB_ATI )
          if( ulEnd > ulTextLength )
             ulEnd = ulTextLength;
 
-         ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                            hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
+         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                           hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
 
-         if( ulPos > 0 )
-            ulPos += ( ulStart - 1 );
+         if( nPos > 0 )
+            nPos += ( ulStart - 1 );
 
-         hb_retnl( ulPos );
+         hb_retnl( nPos );
       }
    }
    else

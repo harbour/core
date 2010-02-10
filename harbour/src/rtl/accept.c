@@ -90,7 +90,7 @@ HB_FUNC( __ACCEPTSTR )
 HB_FUNC( __ACCEPT )
 {
    char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-   HB_SIZE ulLen = 0;
+   HB_SIZE nLen = 0;
    int input = 0;
 
    /* cPrompt(s) passed ? */
@@ -107,24 +107,24 @@ HB_FUNC( __ACCEPT )
       {
          case K_BS:
          case K_LEFT:
-            if( ulLen > 0 )
+            if( nLen > 0 )
             {
                hb_conOutAlt( "\x8", sizeof( char ) ); /* Erase it from the screen. */
-               ulLen--; /* Adjust input count to get rid of last character */
+               --nLen; /* Adjust input count to get rid of last character */
             }
             break;
 
          default:
-            if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 && input <= 255 )
+            if( nLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 && input <= 255 )
             {
-               szAcceptResult[ ulLen ] = ( char ) input; /* Accept the input */
-               hb_conOutAlt( &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
-               ulLen++; /* Then adjust the input count */
+               szAcceptResult[ nLen ] = ( char ) input; /* Accept the input */
+               hb_conOutAlt( &szAcceptResult[ nLen ], sizeof( char ) ); /* Then display it */
+               ++nLen; /* Then adjust the input count */
             }
       }
    }
 
-   szAcceptResult[ ulLen ] = '\0';
+   szAcceptResult[ nLen ] = '\0';
 
 #ifdef HB_CLP_UNDOC
    hb_strncpy( hb_acceptBuffer(), szAcceptResult, ACCEPT_BUFFER_LEN - 1 );

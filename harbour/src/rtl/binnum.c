@@ -61,8 +61,8 @@ HB_FUNC( BIN2W )
 
    if( pItem )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
-      if( ulLen )
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
+      if( nLen )
       {
          const char * pszString = hb_itemGetCPtr( pItem );
          uiResult = HB_GET_LE_INT16( pszString );
@@ -78,8 +78,8 @@ HB_FUNC( BIN2I )
 
    if( pItem )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
-      if( ulLen )
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
+      if( nLen )
       {
          const char * pszString = hb_itemGetCPtr( pItem );
          iResult = HB_GET_LE_UINT16( pszString );
@@ -95,11 +95,11 @@ HB_FUNC( BIN2L )
 
    if( pItem )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
-      if( ulLen )
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
+      if( nLen )
       {
          const char * pszString = hb_itemGetCPtr( pItem );
-         if( ulLen >= 3 )
+         if( nLen >= 3 )
             iResult = HB_GET_LE_INT32( pszString );
          else
             iResult = HB_GET_LE_UINT16( pszString );

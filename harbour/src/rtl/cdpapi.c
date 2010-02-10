@@ -221,38 +221,38 @@ int hb_charUpper( int iChar )
       return HB_TOUPPER( iChar );
 }
 
-char * hb_strLower( char * szText, HB_SIZE ulLen )
+char * hb_strLower( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, nLen));
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       HB_SIZE u;
 
       if( cdp )
-         for( u = 0; u < ulLen; u++ )
+         for( u = 0; u < nLen; u++ )
             szText[ u ] = ( char ) cdp->lower[ ( HB_UCHAR ) szText[ u ] ];
       else
-         for( u = 0; u < ulLen; u++ )
+         for( u = 0; u < nLen; u++ )
             szText[ u ] = HB_TOLOWER( szText[ u ] );
    }
 
    return szText;
 }
 
-char * hb_strUpper( char * szText, HB_SIZE ulLen )
+char * hb_strUpper( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, nLen));
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       HB_SIZE u;
 
       if( cdp )
-         for( u = 0; u < ulLen; u++ )
+         for( u = 0; u < nLen; u++ )
             szText[ u ] = ( char ) cdp->upper[ ( HB_UCHAR ) szText[ u ] ];
       else
-         for( u = 0; u < ulLen; u++ )
+         for( u = 0; u < nLen; u++ )
             szText[ u ] = HB_TOUPPER( szText[ u ] );
    }
 
@@ -311,28 +311,28 @@ static int hb_cdpMultiWeight( PHB_CODEPAGE cdp, const char * szChar )
    return 0;
 }
 
-int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
-               const char * szSecond, HB_SIZE ulLenSecond,
+int hb_cdpcmp( const char * szFirst, HB_SIZE nLenFirst,
+               const char * szSecond, HB_SIZE nLenSecond,
                PHB_CODEPAGE cdp, HB_BOOL fExact )
 {
    int iRet = 0, iAcc = 0, n, n1, n2;
-   HB_SIZE ul, ulLen;
+   HB_SIZE ul, nLen;
 
-   ulLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
+   nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    if( cdp->sort == NULL )
    {
-      iRet = memcmp( szFirst, szSecond, ulLen );
+      iRet = memcmp( szFirst, szSecond, nLen );
    }
    else if( cdp->nMulti )
    {
-      for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
+      for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
       {
          HB_UCHAR u1 = ( HB_UCHAR ) * szFirst;
          HB_UCHAR u2 = ( HB_UCHAR ) * szSecond;
 
          n1 = cdp->sort[ u1 ];
          if( ( cdp->flags[ u1 ] & HB_CDP_MULTI1 ) != 0 &&
-             ( ul < ulLenFirst - 1 ) &&
+             ( ul < nLenFirst - 1 ) &&
              ( cdp->flags[ ( HB_UCHAR ) szFirst[ 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             n = hb_cdpMultiWeight( cdp, szFirst );
@@ -340,13 +340,13 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
             {
                n1 = n;
                ++szFirst;
-               if( --ulLenFirst < ulLen )
-                  ulLen = ulLenFirst;
+               if( --nLenFirst < nLen )
+                  nLen = nLenFirst;
             }
          }
          n2 = cdp->sort[ u2 ];
          if( ( cdp->flags[ u2 ] & HB_CDP_MULTI1 ) != 0 &&
-             ( ul < ulLenSecond - 1 ) &&
+             ( ul < nLenSecond - 1 ) &&
              ( cdp->flags[ ( HB_UCHAR ) szSecond[ 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             n = hb_cdpMultiWeight( cdp, szSecond );
@@ -354,8 +354,8 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
             {
                n2 = n;
                ++szSecond;
-               if( --ulLenSecond < ulLen )
-                  ulLen = ulLenSecond;
+               if( --nLenSecond < nLen )
+                  nLen = nLenSecond;
             }
          }
          if( n1 != n2 )
@@ -374,7 +374,7 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
                iRet = ( u1 < u2 ) ? -1 : 1;
                break;
             }
-            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond && cdp->acc ) ) )
+            if( iAcc == 0 && ( fExact || ( nLenFirst == nLenSecond && cdp->acc ) ) )
             {
                if( cdp->acc )
                   iAcc = ( cdp->acc[ u1 ] < cdp->acc[ u2 ] ) ? -1 : 1;
@@ -386,7 +386,7 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
    }
    else
    {
-      for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
+      for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
       {
          if( *szFirst != *szSecond )
          {
@@ -397,7 +397,7 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
                iRet = ( n1 < n2 ) ? -1 : 1;
                break;
             }
-            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond && cdp->acc ) ) )
+            if( iAcc == 0 && ( fExact || ( nLenFirst == nLenSecond && cdp->acc ) ) )
             {
                if( cdp->acc )
                   iAcc = ( cdp->acc[ ( HB_UCHAR ) * szFirst ] <
@@ -413,9 +413,9 @@ int hb_cdpcmp( const char * szFirst, HB_SIZE ulLenFirst,
    {
       if( iAcc )
          iRet = iAcc;
-      else if( ulLenSecond > ulLenFirst )
+      else if( nLenSecond > nLenFirst )
          iRet = -1;
-      else if( fExact && ulLenSecond < ulLenFirst )
+      else if( fExact && nLenSecond < nLenFirst )
          iRet = 1;
    }
 
@@ -441,17 +441,17 @@ static int hb_cdpMultiWeightI( PHB_CODEPAGE cdp, const char * szChar )
    return 0;
 }
 
-int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
-                const char * szSecond, HB_SIZE ulLenSecond,
+int hb_cdpicmp( const char * szFirst, HB_SIZE nLenFirst,
+                const char * szSecond, HB_SIZE nLenSecond,
                 PHB_CODEPAGE cdp, HB_BOOL fExact )
 {
    int iRet = 0, iAcc = 0, n, n1, n2, u1, u2;
-   HB_SIZE ul, ulLen;
+   HB_SIZE ul, nLen;
 
-   ulLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
+   nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    if( cdp->sort == NULL )
    {
-      for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
+      for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
       {
          u1 = cdp->upper[ ( HB_UCHAR ) * szFirst ];
          u2 = cdp->upper[ ( HB_UCHAR ) * szSecond ];
@@ -464,13 +464,13 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
    }
    else if( cdp->nMulti )
    {
-      for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
+      for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
       {
          u1 = cdp->upper[ ( HB_UCHAR ) * szFirst ];
          u2 = cdp->upper[ ( HB_UCHAR ) * szSecond ];
 
          if( ( cdp->flags[ u1 ] & HB_CDP_MULTI1 ) != 0 &&
-             ( ul < ulLenFirst - 1 ) &&
+             ( ul < nLenFirst - 1 ) &&
              ( cdp->flags[ ( HB_UCHAR ) szFirst[ 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             n = hb_cdpMultiWeightI( cdp, szFirst );
@@ -478,8 +478,8 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
             {
                n1 = n;
                ++szFirst;
-               if( --ulLenFirst < ulLen )
-                  ulLen = ulLenFirst;
+               if( --nLenFirst < nLen )
+                  nLen = nLenFirst;
             }
             else
                n1 = cdp->sort[ u1 ];
@@ -488,7 +488,7 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
             n1 = cdp->sort[ u1 ];
 
          if( ( cdp->flags[ u2 ] & HB_CDP_MULTI1 ) != 0 &&
-             ( ul < ulLenSecond - 1 ) &&
+             ( ul < nLenSecond - 1 ) &&
              ( cdp->flags[ ( HB_UCHAR ) szSecond[ 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             n = hb_cdpMultiWeightI( cdp, szSecond );
@@ -496,8 +496,8 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
             {
                n2 = n;
                ++szSecond;
-               if( --ulLenSecond < ulLen )
-                  ulLen = ulLenSecond;
+               if( --nLenSecond < nLen )
+                  nLen = nLenSecond;
             }
             else
                n2 = cdp->sort[ u2 ];
@@ -521,7 +521,7 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
                iRet = ( u1 < u2 ) ? -1 : 1;
                break;
             }
-            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond && cdp->acc ) ) )
+            if( iAcc == 0 && ( fExact || ( nLenFirst == nLenSecond && cdp->acc ) ) )
             {
                if( cdp->acc )
                   iAcc = ( cdp->acc[ u1 ] < cdp->acc[ u2 ] ) ? -1 : 1;
@@ -533,7 +533,7 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
    }
    else
    {
-      for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
+      for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
       {
          u1 = cdp->upper[ ( HB_UCHAR ) * szFirst ];
          u2 = cdp->upper[ ( HB_UCHAR ) * szSecond ];
@@ -547,7 +547,7 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
                iRet = ( n1 < n2 ) ? -1 : 1;
                break;
             }
-            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond && cdp->acc ) ) )
+            if( iAcc == 0 && ( fExact || ( nLenFirst == nLenSecond && cdp->acc ) ) )
             {
                if( cdp->acc )
                   iAcc = ( cdp->acc[ u1 ] < cdp->acc[ u2 ] ) ? -1 : 1;
@@ -562,9 +562,9 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE ulLenFirst,
    {
       if( iAcc )
          iRet = iAcc;
-      else if( ulLenSecond > ulLenFirst )
+      else if( nLenSecond > nLenFirst )
          iRet = -1;
-      else if( fExact && ulLenSecond < ulLenFirst )
+      else if( fExact && nLenSecond < nLenFirst )
          iRet = 1;
    }
 
@@ -690,42 +690,42 @@ HB_BOOL hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc )
    return HB_TRUE;
 }
 
-HB_SIZE hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE ulLen )
+HB_SIZE hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE nLen )
 {
-   HB_SIZE ul, ulDst;
+   HB_SIZE ul, nDst;
    HB_WCHAR uc;
    int n = 0;
 
-   for( ul = ulDst = 0; ul < ulLen; ++ul )
+   for( ul = nDst = 0; ul < nLen; ++ul )
    {
       if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ul ], &n, &uc ) )
       {
          if( n == 0 )
-            ++ulDst;
+            ++nDst;
       }
    }
 
-   return ulDst;
+   return nDst;
 }
 
-HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos )
+HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 {
-   if( ulLen )
+   if( nLen )
    {
       HB_SIZE ul;
       HB_WCHAR uc = 0;
       int n = 0;
 
-      for( ul = 0; ul < ulLen && ulPos; ++ul )
+      for( ul = 0; ul < nLen && nPos; ++ul )
       {
          if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ul ], &n, &uc ) )
          {
             if( n == 0 )
-               --ulPos;
+               --nPos;
          }
       }
 
-      if( ul < ulLen )
+      if( ul < nLen )
       {
          n = 0;
          do
@@ -736,7 +736,7 @@ HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos )
                   return uc;
             }
          }
-         while( ++ul < ulLen );
+         while( ++ul < nLen );
       }
    }
 
@@ -744,50 +744,50 @@ HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE ulLen, HB_SIZE ulPos )
 }
 
 /* caller must free the returned buffer if not NULL */
-char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE ulLen,
-                               HB_SIZE ulFrom, HB_SIZE ulCount, HB_SIZE * pulDest )
+char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
+                               HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pulDest )
 {
-   HB_SIZE ul, ulCnt, ulDst = 0;
+   HB_SIZE ul, nCnt, nDst = 0;
    HB_WCHAR uc;
    int n;
    char * pDst = NULL;
 
-   if( ulCount && ulLen )
+   if( nCount && nLen )
    {
       n = 0;
-      for( ul = 0; ul < ulLen && ulFrom; ++ul )
+      for( ul = 0; ul < nLen && nFrom; ++ul )
       {
          if( hb_cdpUTF8ToU16NextChar( pSrc[ ul ], &n, &uc ) )
          {
             if( n == 0 )
-               --ulFrom;
+               --nFrom;
          }
       }
 
-      if( ul < ulLen )
+      if( ul < nLen )
       {
-         ulFrom = ul;
-         ulCnt = ulCount;
+         nFrom = ul;
+         nCnt = nCount;
          n = 0;
          do
          {
             if( hb_cdpUTF8ToU16NextChar( pSrc[ ul ], &n, &uc ) )
             {
                if( n == 0 )
-                  --ulCnt;
+                  --nCnt;
             }
          }
-         while( ++ul < ulLen && ulCnt );
+         while( ++ul < nLen && nCnt );
 
-         ulDst = ul - ulFrom;
-         pDst = ( char * ) hb_xgrab( ulDst + 1 );
-         memcpy( pDst, &pSrc[ ulFrom ], ulDst );
-         pDst[ ulDst ] = '\0';
+         nDst = ul - nFrom;
+         pDst = ( char * ) hb_xgrab( nDst + 1 );
+         memcpy( pDst, &pSrc[ nFrom ], nDst );
+         pDst[ nDst ] = '\0';
       }
    }
 
    if( pulDest )
-      *pulDest = ulDst;
+      *pulDest = nDst;
 
    return pDst;
 }
@@ -815,15 +815,15 @@ HB_BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_UCHAR ch,
 }
 
 HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                            const char * pSrc, HB_SIZE ulSrc,
-                            HB_SIZE ulMax )
+                            const char * pSrc, HB_SIZE nSrc,
+                            HB_SIZE nMax )
 {
    const HB_WCHAR * uniCodes;
    HB_SIZE ulS, ulD, u;
    int i;
 
    uniCodes = cdp->uniTable->uniCodes;
-   for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc; ++ulS )
    {
       HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ulS ];
       HB_WCHAR wc;
@@ -835,7 +835,7 @@ HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          wc = uniCodes[ uc ];
          if( cdp->nMultiUC &&
              ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-             ulS + 1 < ulSrc &&
+             ulS + 1 < nSrc &&
              ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             for( i = 0; i < cdp->nMulti; ++i )
@@ -860,7 +860,7 @@ HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          }
       }
       u = hb_cdpUTF8CharSize( wc );
-      if( ulMax && ulD + u > ulMax )
+      if( nMax && ulD + u > nMax )
          break;
       ulD += u;
    }
@@ -869,15 +869,15 @@ HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
 }
 
 HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                         const char * pSrc, HB_SIZE ulSrc,
-                         char * pDst, HB_SIZE ulDst )
+                         const char * pSrc, HB_SIZE nSrc,
+                         char * pDst, HB_SIZE nDst )
 {
    const HB_WCHAR * uniCodes;
    HB_SIZE ulS, ulD, u;
    int i;
 
    uniCodes = cdp->uniTable->uniCodes;
-   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc && ulD < nDst; ++ulS )
    {
       HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ulS ];
       HB_WCHAR wc;
@@ -889,7 +889,7 @@ HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          wc = uniCodes[ uc ];
          if( cdp->nMultiUC &&
              ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-             ulS + 1 < ulSrc &&
+             ulS + 1 < nSrc &&
              ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             for( i = 0; i < cdp->nMulti; ++i )
@@ -914,7 +914,7 @@ HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          }
       }
       u = hb_cdpUTF8CharSize( wc );
-      if( ulD + u <= ulDst )
+      if( ulD + u <= nDst )
       {
          hb_cdpU16CharToUTF8( &pDst[ ulD ], wc );
          ulD += u;
@@ -922,15 +922,15 @@ HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
       else
          break;
    }
-   if( ulD < ulDst )
+   if( ulD < nDst )
       pDst[ ulD ] = '\0';
 
    return ulD;
 }
 
 HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                            const char * pSrc, HB_SIZE ulSrc,
-                            HB_SIZE ulMax )
+                            const char * pSrc, HB_SIZE nSrc,
+                            HB_SIZE nMax )
 {
    HB_UCHAR * uniTrans;
    HB_WCHAR wcMax, wc = 0;
@@ -942,14 +942,14 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
    uniTrans = cdp->uniTable->uniTrans;
    wcMax = cdp->uniTable->wcMax;
 
-   for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc; ++ulS )
    {
       if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ulS ], &n, &wc ) )
       {
          if( n == 0 )
          {
             ++ulD;
-            if( ulMax && ulD >= ulMax )
+            if( nMax && ulD >= nMax )
                break;
             if( wc && cdp->nMultiUC && ( fCtrl || wc >= 32 ) &&
                 ( wc > wcMax || uniTrans[ wc ] == 0 ) )
@@ -963,7 +963,7 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
                      break;
                   }
                }
-               if( ulMax && ulD >= ulMax )
+               if( nMax && ulD >= nMax )
                   break;
             }
          }
@@ -974,8 +974,8 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
 }
 
 HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                         const char * pSrc, HB_SIZE ulSrc,
-                         char * pDst, HB_SIZE ulDst )
+                         const char * pSrc, HB_SIZE nSrc,
+                         char * pDst, HB_SIZE nDst )
 {
    HB_UCHAR * uniTrans;
    HB_WCHAR wcMax, wc = 0;
@@ -987,7 +987,7 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
    uniTrans = cdp->uniTable->uniTrans;
    wcMax = cdp->uniTable->wcMax;
 
-   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc && ulD < nDst; ++ulS )
    {
       if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ ulS ], &n, &wc ) )
       {
@@ -1006,14 +1006,14 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
                      if( wc == cdp->multi[ i ].wcUp )
                      {
                         pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 0 ];
-                        if( ulD < ulDst )
+                        if( ulD < nDst )
                            pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 0 ];
                         break;
                      }
                      if( wc == cdp->multi[ i ].wcLo )
                      {
                         pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 1 ];
-                        if( ulD < ulDst )
+                        if( ulD < nDst )
                            pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 1 ];
                         break;
                      }
@@ -1027,7 +1027,7 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
       }
    }
 
-   if( ulD < ulDst )
+   if( ulD < nDst )
       pDst[ ulD ] = '\0';
 
    return ulD;
@@ -1062,22 +1062,22 @@ HB_UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_WCHAR wc )
 }
 
 HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                           const char * pSrc, HB_SIZE ulSrc,
-                           HB_SIZE ulMax )
+                           const char * pSrc, HB_SIZE nSrc,
+                           HB_SIZE nMax )
 {
    if( cdp->nMultiUC )
    {
       HB_SIZE ulS, ulD;
       int i;
 
-      for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+      for( ulS = ulD = 0; ulS < nSrc; ++ulS )
       {
          HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ulS ];
 
          if( fCtrl || uc >= 32 )
          {
             if( ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-                ulS + 1 < ulSrc &&
+                ulS + 1 < nSrc &&
                 ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
             {
                for( i = 0; i < cdp->nMulti; ++i )
@@ -1100,25 +1100,25 @@ HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
             }
          }
          ++ulD;
-         if( ulMax && ulD >= ulMax )
+         if( nMax && ulD >= nMax )
             break;
       }
       return ulD;
    }
 
-   return ulSrc;
+   return nSrc;
 }
 
 HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
-                        const char * pSrc, HB_SIZE ulSrc,
-                        HB_WCHAR * pDst, HB_SIZE ulDst )
+                        const char * pSrc, HB_SIZE nSrc,
+                        HB_WCHAR * pDst, HB_SIZE nDst )
 {
    const HB_WCHAR * uniCodes;
    HB_SIZE ulS, ulD;
    int i;
 
    uniCodes = cdp->uniTable->uniCodes;
-   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc && ulD < nDst; ++ulS )
    {
       HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ulS ];
       HB_WCHAR wc;
@@ -1130,7 +1130,7 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
          wc = uniCodes[ uc ];
          if( cdp->nMultiUC &&
              ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-             ulS + 1 < ulSrc &&
+             ulS + 1 < nSrc &&
              ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
          {
             for( i = 0; i < cdp->nMulti; ++i )
@@ -1172,15 +1172,15 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
       pDst[ ulD++ ] = wc;
 #endif
    }
-   if( ulD < ulDst )
+   if( ulD < nDst )
       pDst[ ulD ] = '\0';
 
    return ulD;
 }
 
 HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
-                           const HB_WCHAR * pSrc, HB_SIZE ulSrc,
-                           HB_SIZE ulMax )
+                           const HB_WCHAR * pSrc, HB_SIZE nSrc,
+                           HB_SIZE nMax )
 {
    HB_UCHAR * uniTrans;
    HB_WCHAR wcMax, wc;
@@ -1192,11 +1192,11 @@ HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
    uniTrans = cdp->uniTable->uniTrans;
    wcMax = cdp->uniTable->wcMax;
 
-   for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc; ++ulS )
    {
       wc = pSrc[ ulS ];
       ++ulD;
-      if( ulMax && ulD >= ulMax )
+      if( nMax && ulD >= nMax )
          break;
       if( wc && cdp->nMultiUC && ( fCtrl || wc >= 32 ) &&
           ( wc > wcMax || uniTrans[ wc ] == 0 ) )
@@ -1210,7 +1210,7 @@ HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
                break;
             }
          }
-         if( ulMax && ulD >= ulMax )
+         if( nMax && ulD >= nMax )
             break;
       }
    }
@@ -1219,8 +1219,8 @@ HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
 }
 
 HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
-                        const HB_WCHAR * pSrc, HB_SIZE ulSrc,
-                        char * pDst, HB_SIZE ulDst )
+                        const HB_WCHAR * pSrc, HB_SIZE nSrc,
+                        char * pDst, HB_SIZE nDst )
 {
    HB_UCHAR * uniTrans;
    HB_WCHAR wcMax, wc;
@@ -1232,7 +1232,7 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
    uniTrans = cdp->uniTable->uniTrans;
    wcMax = cdp->uniTable->wcMax;
 
-   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   for( ulS = ulD = 0; ulS < nSrc && ulD < nDst; ++ulS )
    {
 #if !defined( HB_BIG_ENDIAN ) && !defined( HB_LITTLE_ENDIAN )
       if( iEndian == HB_CDP_ENDIAN_LITTLE )
@@ -1263,14 +1263,14 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
                if( wc == cdp->multi[ i ].wcUp )
                {
                   pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 0 ];
-                  if( ulD < ulDst )
+                  if( ulD < nDst )
                      pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 0 ];
                   break;
                }
                if( wc == cdp->multi[ i ].wcLo )
                {
                   pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 1 ];
-                  if( ulD < ulDst )
+                  if( ulD < nDst )
                      pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 1 ];
                   break;
                }
@@ -1282,7 +1282,7 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
       }
    }
 
-   if( ulD < ulDst )
+   if( ulD < nDst )
       pDst[ ulD ] = '\0';
 
    return ulD;
@@ -1292,17 +1292,17 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
 /*
  * CP translations
  */
-HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax,
+HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
                         PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable )
    {
       if( cdpIn == &s_utf8_codepage )
-         return hb_cdpUTF8AsStrLen( cdpOut, HB_FALSE, pSrc, ulSrc, ulMax );
+         return hb_cdpUTF8AsStrLen( cdpOut, HB_FALSE, pSrc, nSrc, nMax );
       else if( cdpOut == &s_utf8_codepage )
-         return hb_cdpStrAsUTF8Len( cdpIn, HB_FALSE, pSrc, ulSrc, ulMax );
+         return hb_cdpStrAsUTF8Len( cdpIn, HB_FALSE, pSrc, nSrc, nMax );
       else
       {
          HB_UCHAR * uniTrans;
@@ -1318,14 +1318,14 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax,
             HB_SIZE ul;
             int i;
 
-            for( ul = ulSize = 0; ul < ulSrc && ( ulMax == 0 || ulSize < ulMax ); ++ul, ++ulSize )
+            for( ul = nSize = 0; ul < nSrc && ( nMax == 0 || nSize < nMax ); ++ul, ++nSize )
             {
                HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ul ];
                HB_WCHAR wc = cdpIn->uniTable->uniCodes[ uc ];
 
                if( cdpIn->nMultiUC &&
                    ( cdpIn->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-                   ul + 1 < ulSrc &&
+                   ul + 1 < nSrc &&
                    ( cdpIn->flags[ ( HB_UCHAR ) pSrc[ ul + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
                {
                   for( i = 0; i < cdpIn->nMulti; ++i )
@@ -1350,14 +1350,14 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax,
                }
 
                if( wc && ( wc > wcMax || uniTrans[ wc ] ) && cdpOut->nMultiUC &&
-                   ( ulMax == 0 || ulSize + 1 < ulMax ) )
+                   ( nMax == 0 || nSize + 1 < nMax ) )
                {
                   for( i = 0; i < cdpOut->nMulti; ++i )
                   {
                      if( wc == cdpOut->multi[ i ].wcUp ||
                          wc == cdpOut->multi[ i ].wcLo )
                      {
-                           ++ulSize;
+                           ++nSize;
                            break;
                      }
                   }
@@ -1365,27 +1365,27 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax,
             }
          }
          else
-            ulSize = ( ulMax && ulSrc > ulMax ) ? ulMax : ulSrc;
+            nSize = ( nMax && nSrc > nMax ) ? nMax : nSrc;
       }
    }
    else
-      ulSize = ( ulMax && ulSrc > ulMax ) ? ulMax : ulSrc;
+      nSize = ( nMax && nSrc > nMax ) ? nMax : nSrc;
 
-   return ulSize;
+   return nSize;
 }
 
-HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc,
-                       char * pDst, HB_SIZE ulDst,
+HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE nSrc,
+                       char * pDst, HB_SIZE nDst,
                        PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable )
    {
       if( cdpIn == &s_utf8_codepage )
-         return hb_cdpUTF8ToStr( cdpOut, HB_FALSE, pSrc, ulSrc, pDst, ulDst );
+         return hb_cdpUTF8ToStr( cdpOut, HB_FALSE, pSrc, nSrc, pDst, nDst );
       else if( cdpOut == &s_utf8_codepage )
-         return hb_cdpStrToUTF8( cdpIn, HB_FALSE, pSrc, ulSrc, pDst, ulDst );
+         return hb_cdpStrToUTF8( cdpIn, HB_FALSE, pSrc, nSrc, pDst, nDst );
       else
       {
          HB_UCHAR * uniTrans;
@@ -1401,14 +1401,14 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc,
             HB_SIZE ul;
             int i;
 
-            for( ul = ulSize = 0; ul < ulSrc && ulSize < ulDst; ++ul, ++ulSize )
+            for( ul = nSize = 0; ul < nSrc && nSize < nDst; ++ul, ++nSize )
             {
                HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ul ];
                HB_WCHAR wc = cdpIn->uniTable->uniCodes[ uc ];
 
                if( cdpIn->nMultiUC &&
                    ( cdpIn->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-                   ul + 1 < ulSrc &&
+                   ul + 1 < nSrc &&
                    ( cdpIn->flags[ ( HB_UCHAR ) pSrc[ ul + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
                {
                   for( i = 0; i < cdpIn->nMulti; ++i )
@@ -1442,9 +1442,9 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc,
                      {
                         if( wc == cdpOut->multi[ i ].wcUp )
                         {
-                           if( ulSize + 1 < ulDst )
+                           if( nSize + 1 < nDst )
                            {
-                              pDst[ ulSize++ ] = cdpOut->multi[ i ].cFirst[ 0 ];
+                              pDst[ nSize++ ] = cdpOut->multi[ i ].cFirst[ 0 ];
                               uc = cdpOut->multi[ i ].cLast[ 0 ];
                            }
                            else
@@ -1453,9 +1453,9 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc,
                         }
                         if( wc == cdpOut->multi[ i ].wcLo )
                         {
-                           if( ulSize + 1 < ulDst )
+                           if( nSize + 1 < nDst )
                            {
-                              pDst[ ulSize++ ] = cdpOut->multi[ i ].cFirst[ 1 ];
+                              pDst[ nSize++ ] = cdpOut->multi[ i ].cFirst[ 1 ];
                               uc = cdpOut->multi[ i ].cLast[ 1 ];
                            }
                            else
@@ -1466,34 +1466,34 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE ulSrc,
                   }
                }
 
-               pDst[ ulSize ] = uc;
+               pDst[ nSize ] = uc;
             }
          }
          else
          {
-            if( ulSrc > ulDst )
-               ulSrc = ulDst;
-            for( ulSize = 0; ulSize < ulSrc; ++ulSize )
+            if( nSrc > nDst )
+               nSrc = nDst;
+            for( nSize = 0; nSize < nSrc; ++nSize )
             {
-               HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ulSize ];
+               HB_UCHAR uc = ( HB_UCHAR ) pSrc[ nSize ];
                HB_WCHAR wc = cdpIn->uniTable->uniCodes[ uc ];
                if( wc && wc <= wcMax && uniTrans[ wc ] )
                   uc = uniTrans[ wc ];
-               pDst[ ulSize ] = uc;
+               pDst[ nSize ] = uc;
             }
          }
       }
    }
    else
    {
-      ulSize = ( ulSrc > ulDst ) ? ulDst : ulSrc;
-      memcpy( pDst, pSrc, ulSize );
+      nSize = ( nSrc > nDst ) ? nDst : nSrc;
+      memcpy( pDst, pSrc, nSize );
    }
 
-   if( ulSize < ulDst )
-      pDst[ ulSize ] = '\0';
+   if( nSize < nDst )
+      pDst[ nSize ] = '\0';
 
-   return ulSize;
+   return nSize;
 }
 
 int hb_cdpTranslateChar( int iChar, HB_BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
@@ -1515,84 +1515,84 @@ int hb_cdpTranslateChar( int iChar, HB_BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEP
    return iChar;
 }
 
-HB_SIZE hb_cdpnDupLen( const char * pSrc, HB_SIZE ulSrc,
+HB_SIZE hb_cdpnDupLen( const char * pSrc, HB_SIZE nSrc,
                        PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   return hb_cdpTransLen( pSrc, ulSrc, 0, cdpIn, cdpOut );
+   return hb_cdpTransLen( pSrc, nSrc, 0, cdpIn, cdpOut );
 }
 
-HB_SIZE hb_cdpnDup2Len( const char * pSrc, HB_SIZE ulSrc, HB_SIZE ulMax,
+HB_SIZE hb_cdpnDup2Len( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
                         PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   return hb_cdpTransLen( pSrc, ulSrc, ulMax, cdpIn, cdpOut );
+   return hb_cdpTransLen( pSrc, nSrc, nMax, cdpIn, cdpOut );
 }
 
-char * hb_cdpnDup( const char * pSrc, HB_SIZE * pulLen,
+char * hb_cdpnDup( const char * pSrc, HB_SIZE * pnLen,
                    PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    char * pDst;
-   HB_SIZE ulDst;
+   HB_SIZE nDst;
 
-   ulDst = hb_cdpTransLen( pSrc, *pulLen, 0, cdpIn, cdpOut );
-   pDst = ( char * ) hb_xgrab( ulDst + 1 );
-   hb_cdpTransTo( pSrc, *pulLen, pDst, ulDst + 1, cdpIn, cdpOut );
-   *pulLen = ulDst;
+   nDst = hb_cdpTransLen( pSrc, *pnLen, 0, cdpIn, cdpOut );
+   pDst = ( char * ) hb_xgrab( nDst + 1 );
+   hb_cdpTransTo( pSrc, *pnLen, pDst, nDst + 1, cdpIn, cdpOut );
+   *pnLen = nDst;
 
    return pDst;
 }
 
-const char * hb_cdpnDup2( const char * pSrc, HB_SIZE ulSrc,
-                          char * pDst, HB_SIZE * pulDst,
+const char * hb_cdpnDup2( const char * pSrc, HB_SIZE nSrc,
+                          char * pDst, HB_SIZE * pnDst,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   * pulDst = hb_cdpTransTo( pSrc, ulSrc, pDst, *pulDst, cdpIn, cdpOut );
+   * pnDst = hb_cdpTransTo( pSrc, nSrc, pDst, *pnDst, cdpIn, cdpOut );
    return pDst;
 }
 
-const char * hb_cdpnDup3( const char * pSrc, HB_SIZE ulSrc,
-                          char * pDst, HB_SIZE * pulDst,
-                          char ** pFree, HB_SIZE * pulSize,
+const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
+                          char * pDst, HB_SIZE * pnDst,
+                          char ** pFree, HB_SIZE * pnSize,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable && ulSrc )
+   if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable && nSrc )
    {
       char * pPrev = NULL;
-      HB_SIZE ulDst = hb_cdpTransLen( pSrc, ulSrc, 0, cdpIn, cdpOut );
+      HB_SIZE nDst = hb_cdpTransLen( pSrc, nSrc, 0, cdpIn, cdpOut );
 
       if( pDst == NULL )
       {
          pDst = *pFree;
-         if( pDst == NULL && *pulSize > 0 )
+         if( pDst == NULL && *pnSize > 0 )
             pDst = ( char * ) pSrc;
       }
 
-      if( ulDst >= *pulSize || ( pDst == pSrc &&
+      if( nDst >= *pnSize || ( pDst == pSrc &&
           ( cdpOut == &s_utf8_codepage || cdpOut->nMultiUC ) ) )
       {
          pPrev = *pFree;
-         pDst = *pFree = ( char * ) hb_xgrab( ulDst + 1 );
-         *pulSize = ulDst + 1;
+         pDst = *pFree = ( char * ) hb_xgrab( nDst + 1 );
+         *pnSize = nDst + 1;
       }
 
-      ulDst = hb_cdpTransTo( pSrc, ulSrc, pDst, *pulSize, cdpIn, cdpOut );
+      nDst = hb_cdpTransTo( pSrc, nSrc, pDst, *pnSize, cdpIn, cdpOut );
 
       if( pPrev )
          hb_xfree( pPrev );
-      if( pulDst )
-         *pulDst = ulDst;
+      if( pnDst )
+         *pnDst = nDst;
       return pDst;
    }
 
-   if( pulDst )
-      *pulDst = ulSrc;
+   if( pnDst )
+      *pnDst = nSrc;
 
    return pSrc;
 }
 
 char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE ulLen = ( HB_SIZE ) strlen( pszSrc );
-   return hb_cdpnDup( pszSrc, &ulLen, cdpIn, cdpOut );
+   HB_SIZE nLen = ( HB_SIZE ) strlen( pszSrc );
+   return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
 }
 
 
@@ -1609,7 +1609,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
    int iMulti, iAcc, iAccUp, iAccLo, iSortUp, iSortLo, i;
    const char * pup, * plo;
    HB_UCHAR ucUp, ucLo, ucUp2, ucLo2;
-   HB_SIZE ulSize, ul;
+   HB_SIZE nSize, ul;
    HB_UCHAR * buffer, * flags, * upper, * lower, * sort, * acc;
    HB_UCHAR used[ 256 ];
    PHB_CODEPAGE cdp;
@@ -1725,20 +1725,20 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
    else if( nACSort != HB_CDP_ACSORT_NONE )
       lSort = HB_TRUE;
 
-   ulSize = 0x300;
+   nSize = 0x300;
    if( lSort )
    {
-      ulSize += 0x100;
+      nSize += 0x100;
       if( nACSort == HB_CDP_ACSORT_INTERLEAVED )
-         ulSize += 0x100;
+         nSize += 0x100;
    }
-   ul = ulSize;
-   ulSize += sizeof( HB_CODEPAGE );
+   ul = nSize;
+   nSize += sizeof( HB_CODEPAGE );
    if( iMulti )
-      ulSize += iMulti * sizeof( HB_MULTICHAR );
+      nSize += iMulti * sizeof( HB_MULTICHAR );
 
-   buffer = ( HB_UCHAR * ) hb_xgrab( ulSize );
-   memset( buffer, '\0', ulSize );
+   buffer = ( HB_UCHAR * ) hb_xgrab( nSize );
+   memset( buffer, '\0', nSize );
    cdp = ( PHB_CODEPAGE ) &buffer[ ul ];
    cdp->buffer = buffer;
 
