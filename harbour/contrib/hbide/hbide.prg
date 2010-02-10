@@ -362,6 +362,7 @@ METHOD HbIde:create( cProjIni )
    hbide_restSettings( Self )
    /* Again to be displayed in Statusbar */
    HbXbp_SetCodec( ::cWrkCodec )
+   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
 
    /* Display cWrkEnvironment in StatusBar */
    ::oDK:dispEnvironment( ::cWrkEnvironment )
@@ -1177,7 +1178,8 @@ METHOD HbIde:setCodec( cCodec )
 
    HbXbp_SetCodec( ::cWrkCodec )
 
-   ::oSBar:getItem( SB_PNL_CODEC ):caption := ::cWrkCodec
+   //::oSBar:getItem( SB_PNL_CODEC ):caption := ::cWrkCodec
+   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
 
    RETURN Self
 

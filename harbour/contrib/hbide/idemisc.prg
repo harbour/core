@@ -97,7 +97,7 @@ PROCEDURE hbide_justACall()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_execPopup( aPops, aPos, qParent )
+FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
 
    qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
@@ -121,7 +121,11 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
       ENDIF
    NEXT
 
-   qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
+   IF hb_isArray( aqPos )
+      qPoint := QPoint():new( aqPos[ 1 ], aqPos[ 2 ] )
+   ELSE
+      qPoint := QPoint():configure( qParent:mapToGlobal( aqPos ) )
+   ENDIF
    pAct   := qPop:exec_1( qPoint )
    IF !hbqt_isEmptyQtPointer( pAct )
       qAct := QAction():configure( pAct )
@@ -148,7 +152,7 @@ FUNCTION hbide_execPopup( aPops, aPos, qParent )
       NEXT
    ENDIF
 
-   qPop:pPtr := NIL
+   qPop := NIL
 
    RETURN xRet
 

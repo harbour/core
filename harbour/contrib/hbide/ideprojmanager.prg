@@ -1203,7 +1203,7 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
 
    IF lValid
       IF !Empty( ::oSBar )
-         ::oSBar:getItem( SB_PNL_PROJECT ):caption := ::cWrkProject
+         ::oDK:setStatusText( SB_PNL_PROJECT, ::cWrkProject )
       ENDIF
 
       ::oIDE:updateTitleBar()

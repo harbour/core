@@ -211,7 +211,7 @@ METHOD IdeFindReplace:replace()
                nFound++
                ::replaceSelection( cReplWith )
             ENDDO
-            ::oSBar:getItem( SB_PNL_MAIN ):caption := '<font color="2343212"><b>Replaced [' + hb_ntos( nFound ) + "] : "+ cReplWith + "</b></font>"
+            ::oDK:setStatusText( SB_PNL_MAIN, "Replaced [" + hb_ntos( nFound ) + "] : " + cReplWith )
             ::oUI:q_buttonReplace:setEnabled( .f. )
             ::oUI:q_checkGlobal:setChecked( .f. )
             ::oUI:q_checkNoPrompting:setChecked( .f. )
@@ -295,7 +295,7 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
          ENDIF
       ENDIF
       //
-      ::oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + cData
+      ::oDK:setStatusText( SB_PNL_SEARCH, cData )
    ELSE
       cData := QLineEdit():configure( ::oUI:q_comboReplaceWith:lineEdit() ):text()
       IF !empty( cData )
@@ -692,6 +692,7 @@ METHOD IdeFindInFiles:find()
    LOCAL aFolderSrc := {}
    LOCAL aProjSrc   := {}
    LOCAL aProjs     := {}
+   LOCAL aPaths     := {}
 
    IF empty( ::cOrigExpr := ::oUI:q_comboExpr:currentText() )
       RETURN Self
@@ -737,14 +738,15 @@ METHOD IdeFindInFiles:find()
 
    /* Process Folder */
    IF ::oUI:q_checkFolders:isChecked() .AND. ! empty( cFolder )
-      IF right( cFolder, 1 ) != hb_osPathSeparator()
-         cFolder += hb_osPathSeparator()
-      ENDIF
-      FOR EACH cExt IN aFilter
-         cMask := hbide_pathToOsPath( cFolder + cExt )
-         aDir  := directory( cMask, "D" )
-         FOR EACH a_ IN aDir
-            aadd( aFolderSrc, cFolder + a_[ 1 ] )
+      hbide_fetchSubPaths( @aPaths, cFolder, ::oUI:q_checkSubFolders:isChecked() )
+
+      FOR EACH cFolder IN aPaths
+         FOR EACH cExt IN aFilter
+            cMask := hbide_pathToOsPath( cFolder + cExt )
+            aDir  := directory( cMask )
+            FOR EACH a_ IN aDir
+               aadd( aFolderSrc, cFolder + a_[ 1 ] )
+            NEXT
          NEXT
       NEXT
    ENDIF
@@ -851,6 +853,31 @@ METHOD IdeFindInFiles:find()
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
+   LOCAL aDir, a_
+
+   DEFAULT lSubs TO .t.
+
+   IF right( cRootPath, 1 ) != hb_osPathSeparator()
+      cRootPath += hb_osPathSeparator()
+   ENDIF
+   cRootPath := hbide_pathToOSPath( cRootPath )
+
+   aadd( aPaths, cRootPath )
+
+   IF lSubs
+      aDir := directory( cRootPath + "*.", "D" )
+      FOR EACH a_ IN aDir
+         IF a_[ 5 ] == "D" .AND. left( a_[ 1 ], 1 ) != "."
+            hbide_fetchSubPaths( @aPaths, cRootPath + a_[ 1 ] )
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeFindInFiles:findInABunch( aFiles )
    LOCAL s, cExpr, nLine, aLines, aBuffer, cLine, nNoMatch, aMatch, regEx
 
@@ -888,6 +915,7 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
                NEXT
             ELSE
                cExpr := lower( ::cOrigExpr )
+hbide_dbg( cExpr, "llllllllllllllllllll" )
                FOR EACH cLine IN aBuffer
                   nLine++
                   IF cExpr $ lower( cLine )
@@ -981,7 +1009,8 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
          FOR EACH a_ IN aLines
             nL    := a_[ 1 ]
             cL    := a_[ 2 ]
-            nB    := at( cExp, cL )
+            //nB    := at( cExp, cL )
+            nB    := at( cExp, iif( ::lMatchCase, cL, lower( cL ) ) )
             cPre  := substr( cL, 1, nB - 1 )
             cPost := substr( cL, nB + len( cExp ) )
             cT    := substr( cL, nB, len( cExp ) )

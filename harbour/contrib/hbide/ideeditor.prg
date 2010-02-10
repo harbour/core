@@ -1163,17 +1163,17 @@ hbide_dbg( "IdeEditor:destroy()", 0 )
    ::oEdit:destroy()
 
    IF !Empty( ::qDocument )
-      ::qDocument      := NIL
+      ::qDocument := NIL
    ENDIF
 
    IF !Empty( ::qHiliter )
-      ::qHiliter       := NIL
+      ::qHiliter  := NIL
    ENDIF
 
    ::oEdit := NIL
 
    IF !Empty( ::qLayout )
-      ::qLayout        := NIL
+      ::qLayout   := NIL
    ENDIF
 
    IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
@@ -1313,7 +1313,7 @@ METHOD IdeEditor:setTabImage( qEdit )
    ENDIF
 
    ::qTabWidget:setTabIcon( nIndex, ::resPath + cIcon )
-   ::oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) )
+   ::oDK:setStatusText( SB_PNL_MODIFIED, iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) ) )
 
    RETURN Self
 

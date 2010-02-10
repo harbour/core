@@ -171,10 +171,10 @@ METHOD IdeDocks:setView( cView )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:execEvent( nMode, p )
-   LOCAL nIndex
+   LOCAL nIndex, aMenu
 
    DO CASE
-   CASE nMode == 1
+   CASE nMode == 1    /* StackedWidget:currentChanged(int) */
       IF p >= 0 .AND. p <= len( ::aViews )
          ::oIde:nCurView := p
 
@@ -188,6 +188,20 @@ METHOD IdeDocks:execEvent( nMode, p )
          ENDIF
          ::setStatusText( SB_PNL_VIEW, iif( p == 0, "Main", ::aINI[ INI_VIEWS, ::nCurView ] ) )
       ENDIF
+
+   CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
+      aMenu := {}
+
+      aadd( aMenu, { "Back"      , {|| ::qHelpBrw:backward()  } } )
+      aadd( aMenu, { "Forward"   , {|| ::qHelpBrw:forward()   } } )
+      aadd( aMenu, { "Home"      , {|| ::qHelpBrw:home()      } } )
+      aadd( aMenu, { "" } )
+      aadd( aMenu, { "Reload"    , {|| ::qHelpBrw:reload()    } } )
+      aadd( aMenu, { "" } )
+      aadd( aMenu, { "Select All", {|| ::qHelpBrw:selectAll() } } )
+      aadd( aMenu, { "Copy"      , {|| ::qHelpBrw:copy()      } } )
+
+      hbide_execPopup( aMenu, p, ::qHelpBrw )
    ENDCASE
 
    RETURN Self
@@ -435,11 +449,12 @@ METHOD IdeDocks:buildFuncList()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildHelpWidget()
-   STATIC qUrl
+   LOCAL qUrl, qStr
 
-   IF empty( qUrl )
-      qUrl := QUrl():new( "docs/idemainpage.html" )
-   ENDIF
+   qUrl := QUrl():new( "idemainpage.html" )
+   qStr := QStringList():new()
+   //qStr:append( "./" )
+   qStr:append( hb_dirBase() + "docs" )
 
    ::oIde:oHelp := XbpWindow():new()
    ::oHelp:oWidget := QDockWidget():new( ::oDlg:oWidget )
@@ -451,11 +466,16 @@ METHOD IdeDocks:buildHelpWidget()
    ::oHelp:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oIde:qHelpBrw := QTextBrowser():new( ::oHelp:oWidget )
-   ::oIde:qHelpBrw:show()
-   ::oIde:qHelpBrw:setOpenExternalLinks( .t. )
+   ::qHelpBrw:show()
+   ::qHelpBrw:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::qHelpBrw:setOpenExternalLinks( .t. )
+
+   ::qHelpBrw:setSearchPaths( qStr )
    ::qHelpBrw:setSource( qUrl )
 
    ::oHelp:oWidget:setWidget( ::oIde:qHelpBrw )
+
+   ::oHelp:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( 2, p ) } )
 
    // ::oHelp:connect( ::qHelpBrw )
 
@@ -570,20 +590,73 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Ready"    ):oWidget:setMinimumWidth(  80 )
    ::oSBar:addItem( "", , , , "Line"     ):oWidget:setMinimumWidth( 110 )
    ::oSBar:addItem( "", , , , "Column"   ):oWidget:setMinimumWidth(  40 )
-   ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  30 )
-   ::oSBar:addItem( "", , , , "M_1"      ):oWidget:setMinimumWidth(  30 )
-   ::oSBar:addItem( "", , , , "Modified" ):oWidget:setMinimumWidth(  50 )
-   ::oSBar:addItem( "", , , , "Environ"  ):oWidget:setMinimumWidth(  30 )
+   ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "SelChar"  ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Modified" ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Stream"   ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Edit"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Environ"  ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "View"     ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
 
    FOR i := 1 TO 6
       ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )
    NEXT
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:setStatusText( nPart, xValue )
+   LOCAL oPanel := ::oSBar:getItem( nPart )
+
+   SWITCH nPart
+
+   CASE SB_PNL_MAIN
+      oPanel:caption := '<font color="2343212"><b>' + xValue + "</b></font>"
+      EXIT
+   CASE SB_PNL_READY
+      EXIT
+   CASE SB_PNL_LINE
+      EXIT
+   CASE SB_PNL_COLUMN
+      EXIT
+   CASE SB_PNL_INS
+      EXIT
+   CASE SB_PNL_SELECTEDCHARS
+      oPanel:caption := iif( xValue == 0, "", "Sel: " + hb_ntos( xValue ) )
+      EXIT
+   CASE SB_PNL_MODIFIED
+      oPanel:caption := xValue
+      EXIT
+   CASE SB_PNL_STREAM
+      EXIT
+   CASE SB_PNL_EDIT
+      EXIT
+   CASE SB_PNL_SEARCH
+      oPanel:caption := "Find: " + xValue
+      EXIT
+   CASE SB_PNL_CODEC
+      oPanel:caption := "<font color = green >Codec: "  + xValue + "</font>"
+      EXIT
+   CASE SB_PNL_ENVIRON
+      oPanel:caption := "<font color = blue  >Env: "    + xValue  + "</font>"
+      EXIT
+   CASE SB_PNL_VIEW
+      oPanel:caption := "<font color = brown >View: "   + xValue + "</font>"
+      EXIT
+   CASE SB_PNL_PROJECT
+      oPanel:caption := "<font color = darkred >Proj: " + xValue + "</font>"
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:dispEnvironment( cEnviron )
+   ::setStatusText( SB_PNL_ENVIRON, cEnviron )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -645,54 +718,6 @@ METHOD IdeDocks:toggleBottomDocks()
       ::oDockB2:show()
    ENDIF
    ::oIde:lDockBVisible := !( ::oIde:lDockBVisible )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:dispEnvironment( cEnviron )
-   ::setStatusText( SB_PNL_ENVIRON, cEnviron )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:setStatusText( nPart, xValue )
-   LOCAL oPanel := ::oSBar:getItem( nPart )
-
-   SWITCH nPart
-   CASE SB_PNL_MAIN
-      EXIT
-   CASE SB_PNL_READY
-      EXIT
-   CASE SB_PNL_LINE
-      EXIT
-   CASE SB_PNL_COLUMN
-      EXIT
-   CASE SB_PNL_INS
-      EXIT
-   CASE SB_PNL_SELECTEDCHARS
-      oPanel:caption := iif( xValue == 0, "", "Sel: " + hb_ntos( xValue ) )
-      EXIT
-   CASE SB_PNL_MODIFIED
-      oPanel:caption := iif( xValue, "Modified", "" )
-      EXIT
-   CASE SB_PNL_VIEW
-      oPanel:caption := "<font color = blue>View: " + xValue + "</font>"
-      EXIT
-   CASE SB_PNL_ENVIRON
-      oPanel:caption := "Env: " + xValue
-      EXIT
-   CASE SB_PNL_STREAM
-      EXIT
-   CASE SB_PNL_EDIT
-      EXIT
-   CASE SB_PNL_SEARCH
-      EXIT
-   CASE SB_PNL_CODEC
-      EXIT
-   CASE SB_PNL_PROJECT
-      EXIT
-   ENDSWITCH
 
    RETURN Self
 

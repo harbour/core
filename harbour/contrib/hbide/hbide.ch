@@ -138,14 +138,13 @@
 #define SB_PNL_INS                                5
 #define SB_PNL_SELECTEDCHARS                      6
 #define SB_PNL_MODIFIED                           7
-#define SB_PNL_M_2                                8
-#define SB_PNL_ENVIRON                            8
-#define SB_PNL_STREAM                             9
-#define SB_PNL_EDIT                               10
-#define SB_PNL_SEARCH                             11
-#define SB_PNL_CODEC                              12
-#define SB_PNL_PROJECT                            13
-#define SB_PNL_VIEW                               14
+#define SB_PNL_STREAM                             8
+#define SB_PNL_EDIT                               9
+#define SB_PNL_SEARCH                             10
+#define SB_PNL_CODEC                              11
+#define SB_PNL_ENVIRON                            12
+#define SB_PNL_VIEW                               13
+#define SB_PNL_PROJECT                            14
 
 #define TAB_OTAB                                  1
 #define TAB_OEDITOR                               2

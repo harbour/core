@@ -195,7 +195,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       ::createTags()
       ::updateFuncList()
       ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
-      ::oSBar:getItem( SB_PNL_MODIFIED ):caption := " "
+      ::oDK:setStatusText( SB_PNL_MODIFIED, " " )
    ENDIF
 
    RETURN .T.
@@ -248,7 +248,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
-
+hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
@@ -275,8 +275,9 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
             RETURN .F.
          ENDIF
       ENDIF
-
+hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1 )
       oEditor:destroy()
+hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 21 )
       ::oIde:updateTitleBar()
    ENDIF
 
