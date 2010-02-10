@@ -111,7 +111,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, nItems )
 
 
-   lFinished := Empty( acItems )
+   lFinished := nMode == AC_NOITEM
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
@@ -619,7 +619,7 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
          nItems++
          IF Ach_Select( alSelect, nCntr )
             IF nFrstItem == 0
-               nFrstItem := nLastItem := 1
+               nFrstItem := nLastItem := nCntr
             ELSE
                nLastItem := nItems
             ENDIF
@@ -632,6 +632,8 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
    IF nFrstItem == 0
       nMode     := AC_NOITEM
       nLastItem := nItems
+   ELSE
+      nMode     := AC_IDLE
    ENDIF
 
    RETURN nMode
