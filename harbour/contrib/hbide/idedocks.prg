@@ -81,6 +81,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD destroy()
    METHOD execEvent( nMode, p )
    METHOD setView( cView )
+   METHOD buildHelpWidget()
    METHOD buildDialog()
    METHOD buildViewWidget()
    METHOD buildStackedWidget()
@@ -296,7 +297,8 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildCompileResults()
    ::buildLinkResults()
    ::buildOutputResults()
-   //::buildFindInFiles()
+ * ::buildFindInFiles()
+   ::buildHelpWidget()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
@@ -427,6 +429,38 @@ METHOD IdeDocks:buildFuncList()
       ::oIde:lDockRVisible := .f.
       ::oDockR:hide()
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildHelpWidget()
+   STATIC qUrl
+
+   IF empty( qUrl )
+      qUrl := QUrl():new( "docs/idemainpage.html" )
+   ENDIF
+
+   ::oIde:oHelp := XbpWindow():new()
+   ::oHelp:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oHelp:oWidget:setObjectName( "dockHelp" )
+   ::oDlg:addChild( ::oHelp )
+   ::oHelp:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oHelp:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oHelp:oWidget:setWindowTitle( "hbIDE Help" )
+   ::oHelp:oWidget:setFocusPolicy( Qt_NoFocus )
+
+   ::oIde:qHelpBrw := QTextBrowser():new( ::oHelp:oWidget )
+   ::oIde:qHelpBrw:show()
+   ::oIde:qHelpBrw:setOpenExternalLinks( .t. )
+   ::qHelpBrw:setSource( qUrl )
+
+   ::oHelp:oWidget:setWidget( ::oIde:qHelpBrw )
+
+   // ::oHelp:connect( ::qHelpBrw )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oHelp:oWidget, Qt_Horizontal )
+   ::oHelp:hide()
 
    RETURN Self
 

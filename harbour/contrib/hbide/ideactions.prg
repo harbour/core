@@ -206,6 +206,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "TB_ZoomIn"            , "ZoomIn"                       , "zoomin"         , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ZoomOut"           , "ZoomOut"                      , "zoomout"        , ""     , "No", "Yes" } )
    //
+   aadd( aAct, { "Help"                 , "~Help"                        , "help"           , "F1"   , "No", "Yes" } )
    aadd( aAct, { "Exit"                 , "E~xit"                        , "exit"           , "Sh+^W", "No", "Yes" } )
    aadd( aAct, { "New"                  , "~Source"                      , "new"            , "^N"   , "No", "Yes" } )
    aadd( aAct, { "Open"                 , "~Open"                        , "open"           , "^O"   , "No", "Yes" } )
@@ -318,6 +319,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
    oTBar:addItem( ::getAction( "TB_Exit"              ), , , , , , "Exit"              )
+   oTBar:addItem( ::getAction( "Help"                 ), , , , , , "Help"              )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_New"               ), , , , , , "New"               )
    oTBar:addItem( ::getAction( "TB_Open"              ), , , , , , "Open"              )

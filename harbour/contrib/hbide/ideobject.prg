@@ -111,6 +111,7 @@ CLASS IdeObject
    ACCESS oTabParent                              INLINE ::oIde:oTabParent
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
    ACCESS qViewsCombo                             INLINE ::oIde:qViewsCombo
+   ACCESS qHelpBrw                                INLINE ::oIde:qHelpBrw
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
@@ -156,6 +157,7 @@ CLASS IdeObject
    ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
    ACCESS oStackedWidget                          INLINE ::oIde:oStackedWidget
    ACCESS oFrame                                  INLINE ::oIde:oFrame
+   ACCESS oHelp                                   INLINE ::oIde:oHelp
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

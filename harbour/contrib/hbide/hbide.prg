@@ -121,6 +121,7 @@ CLASS HbIde
    DATA   oThemes
    DATA   oFindInFiles
    DATA   oDockFind
+   DATA   oHelp
 
    DATA   oUI
 
@@ -152,6 +153,7 @@ CLASS HbIde
    DATA   qFontWrkProject
    DATA   qBrushWrkProject
    DATA   qProcess
+   DATA   qHelpBrw
 
    ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
    ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
@@ -309,8 +311,7 @@ METHOD HbIde:create( cProjIni )
    ::oAC:buildToolBar()
    /* Main Menu */
    ::oAC:buildMainMenu()
-   /* StatusBar */
-//   ::oDK:buildStatusBar()
+
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
 
@@ -518,7 +519,9 @@ METHOD HbIde:execAction( cKey )
    CASE "ToggleFuncList"
       ::execWindowsAction( cKey )
       EXIT
-
+   CASE "Help"
+      ::oHelp:show()
+      EXIT
    ENDSWITCH
 
    ::manageFocusInEditor()
@@ -610,8 +613,6 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "MatchPairs"
       //
-      //::oDockFind:show()
-      ::oStackedWidget:oWidget:setCurrentIndex( iif( ::oStackedWidget:oWidget:currentIndex() == 1, 0, 1 ) )
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()
