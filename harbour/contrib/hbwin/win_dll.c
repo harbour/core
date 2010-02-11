@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Windows DLL handling function (Xbase++ compatible + proprietary)
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (win64 support)
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (win64 and UNICODE support, cleanups)
  * Copyright 2006 Paul Tucker <ptucker@sympatico.ca> (Borland mods)
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
  * Copyright 2002 Phil Krylov <phil a t newstar.rinet.ru> (MinGW support)
@@ -150,6 +150,7 @@ typedef struct
       double   dArg;             /* double argument */
    } numargs;
    void *      pArg;             /* Pointer to argument */
+   void *      hString;
 } HB_DYNPARAM;
 
 #pragma pack()
@@ -422,6 +423,7 @@ static HB_U64 hb_u64par( PHB_WINCALL wcall, int iParam )
 
          case HB_IT_DOUBLE:
             HB_PUT_LE_DOUBLE( ( BYTE * ) &wcall->pArg[ iParam - 1 ].nValue, hb_itemGetND( pParam ) );
+            r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
             break;
 
          case HB_IT_STRING:
@@ -626,6 +628,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
    {
       HB_DYNPARAM Parm[ _DLLEXEC_MAXPARAM ];
       HB_DYNRETVAL rc;
+      HB_BOOL bUnicode = ( ( iCallFlags & DC_UNICODE ) != 0 );
       int iCnt, iArgCnt;
 
       iArgCnt = iParams - iFirst + 1;
@@ -693,18 +696,10 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
                case HB_IT_MEMO:
                   Parm[ iCnt ].iWidth = sizeof( void * );
 
-                  if( hb_parinfo( tmp ) & HB_IT_BYREF )
-                  {
-                     Parm[ iCnt ].pArg = hb_xgrab( hb_itemGetCLen( pParam ) + 1 );
-                     memcpy( Parm[ iCnt ].pArg, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) + 1 );
-                  }
+                  if( bUnicode )
+                     Parm[ iCnt ].pArg = ( void * ) ( HB_PTRUINT ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &Parm[ iCnt ].hString, NULL );
                   else
-                  {
-                     if( iCallFlags & DLL_CALLMODE_COPY )
-                        pParam = hb_itemUnShareString( pParam );
-
-                     Parm[ iCnt ].pArg = ( void * ) hb_itemGetCPtr( pParam );
-                  }
+                     Parm[ iCnt ].pArg = ( void * ) ( HB_PTRUINT ) hb_itemGetStr( pParam, hb_setGetOSCP(), &Parm[ iCnt ].hString, NULL );
 
                   Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
                   break;
@@ -752,8 +747,10 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
                   case HB_IT_STRING:
                   case HB_IT_MEMO:
-                     if( ! hb_storclen_buffer( ( char * ) Parm[ iCnt ].pArg, hb_parclen( tmp ), tmp ) )
-                        hb_xfree( Parm[ iCnt ].pArg );
+                     if( bUnicode )
+                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) Parm[ iCnt ].pArg, hb_parclen( tmp ), tmp );
+                     else
+                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) Parm[ iCnt ].pArg, hb_parclen( tmp ), tmp );
                      break;
                   default:
                      hb_errRT_BASE( EG_ARG, 2010, "Unknown reference parameter type to DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -761,6 +758,9 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
                }
             }
          }
+
+         for( tmp = 0; tmp < iParams; ++tmp )
+            hb_strfree( Parm[ tmp ].hString );
       }
 
       /* return the correct value */
@@ -794,7 +794,10 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
          case CTYPE_CHAR_PTR:
          case CTYPE_UNSIGNED_CHAR_PTR:
-            hb_retc( ( char * ) rc.ret_long );
+            if( bUnicode )
+               hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) rc.ret_long );
+            else
+               hb_retstr( hb_setGetOSCP(), ( const char * ) rc.ret_long );
             break;
 
          case CTYPE_UNSIGNED_INT:
@@ -870,7 +873,7 @@ static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE 
    hb_strfree( hStr );
 
    if( pbUNICODE )
-      *pbUNICODE = HB_FALSE; /* TOFIX: Should be set to HB_TRUE when UNICODE support gets implemented. */
+      *pbUNICODE = HB_TRUE;
 #else
    const char * szProc = hb_parc( iParam );
    FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
@@ -879,7 +882,6 @@ static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE 
    if( pbUNICODE )
       *pbUNICODE = HB_FALSE;
 
-#if defined( HB_OS_WIN_64 ) /* TOFIX: Remove this when UNICODE support gets implemented for non-Win64. */
 #if defined( UNICODE )
    if( ! lpFunction && szProc ) /* try with WIDE suffix? */
    {
@@ -889,7 +891,6 @@ static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE 
       if( pbUNICODE )
          *pbUNICODE = HB_TRUE;
    }
-#endif
 #endif
 
    if( ! lpFunction && szProc ) /* try with ANSI suffix? */
