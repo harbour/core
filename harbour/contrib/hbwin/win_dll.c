@@ -517,23 +517,6 @@ typedef HB_U64( * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, H
 typedef HB_U64( * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 typedef HB_U64( * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 
-static HB_U64 win64_00( FARPROC p )                                                                                                                                                                                     { return ( ( WIN64_00 ) *p )(); }
-static HB_U64 win64_01( FARPROC p, HB_U64 p01 )                                                                                                                                                                         { return ( ( WIN64_01 ) *p )( p01 ); }
-static HB_U64 win64_02( FARPROC p, HB_U64 p01, HB_U64 p02 )                                                                                                                                                             { return ( ( WIN64_02 ) *p )( p01, p02 ); }
-static HB_U64 win64_03( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03 )                                                                                                                                                 { return ( ( WIN64_03 ) *p )( p01, p02, p03 ); }
-static HB_U64 win64_04( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04 )                                                                                                                                     { return ( ( WIN64_04 ) *p )( p01, p02, p03, p04 ); }
-static HB_U64 win64_05( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05 )                                                                                                                         { return ( ( WIN64_05 ) *p )( p01, p02, p03, p04, p05 ); }
-static HB_U64 win64_06( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06 )                                                                                                             { return ( ( WIN64_06 ) *p )( p01, p02, p03, p04, p05, p06 ); }
-static HB_U64 win64_07( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07 )                                                                                                 { return ( ( WIN64_07 ) *p )( p01, p02, p03, p04, p05, p06, p07 ); }
-static HB_U64 win64_08( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08 )                                                                                     { return ( ( WIN64_08 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08 ); }
-static HB_U64 win64_09( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09 )                                                                         { return ( ( WIN64_09 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09 ); }
-static HB_U64 win64_10( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10 )                                                             { return ( ( WIN64_10 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10 ); }
-static HB_U64 win64_11( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11 )                                                 { return ( ( WIN64_11 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11 ); }
-static HB_U64 win64_12( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12 )                                     { return ( ( WIN64_12 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12 ); }
-static HB_U64 win64_13( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13 )                         { return ( ( WIN64_13 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13 ); }
-static HB_U64 win64_14( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13, HB_U64 p14 )             { return ( ( WIN64_14 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14 ); }
-static HB_U64 win64_15( FARPROC p, HB_U64 p01, HB_U64 p02, HB_U64 p03, HB_U64 p04, HB_U64 p05, HB_U64 p06, HB_U64 p07, HB_U64 p08, HB_U64 p09, HB_U64 p10, HB_U64 p11, HB_U64 p12, HB_U64 p13, HB_U64 p14, HB_U64 p15 ) { return ( ( WIN64_15 ) *p )( p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14, p15 ); }
-
 #endif
 
 static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
@@ -577,22 +560,22 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
          switch( iParams )
          {
-            case  0: hb_u64ret( &wcall, win64_00( lpFunction ) ); break;
-            case  1: hb_u64ret( &wcall, win64_01( lpFunction, hb_u64par( &wcall, 1 ) ) ); break;
-            case  2: hb_u64ret( &wcall, win64_02( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ) ) ); break;
-            case  3: hb_u64ret( &wcall, win64_03( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ) ) ); break;
-            case  4: hb_u64ret( &wcall, win64_04( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ) ) ); break;
-            case  5: hb_u64ret( &wcall, win64_05( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ) ) ); break;
-            case  6: hb_u64ret( &wcall, win64_06( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ) ) ); break;
-            case  7: hb_u64ret( &wcall, win64_07( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ) ) ); break;
-            case  8: hb_u64ret( &wcall, win64_08( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ) ) ); break;
-            case  9: hb_u64ret( &wcall, win64_09( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ) ) ); break;
-            case 10: hb_u64ret( &wcall, win64_10( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ) ) ); break;
-            case 11: hb_u64ret( &wcall, win64_11( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ) ) ); break;
-            case 12: hb_u64ret( &wcall, win64_12( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ) ) ); break;
-            case 13: hb_u64ret( &wcall, win64_13( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ) ) ); break;
-            case 14: hb_u64ret( &wcall, win64_14( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ) ) ); break;
-            case 15: hb_u64ret( &wcall, win64_15( lpFunction, hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ), hb_u64par( &wcall, 15 ) ) ); break;
+            case  0: hb_u64ret( &wcall, ( ( WIN64_00 ) *lpFunction )() ); break;
+            case  1: hb_u64ret( &wcall, ( ( WIN64_01 ) *lpFunction )( hb_u64par( &wcall, 1 ) ) ); break;
+            case  2: hb_u64ret( &wcall, ( ( WIN64_02 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ) ) ); break;
+            case  3: hb_u64ret( &wcall, ( ( WIN64_03 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ) ) ); break;
+            case  4: hb_u64ret( &wcall, ( ( WIN64_04 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ) ) ); break;
+            case  5: hb_u64ret( &wcall, ( ( WIN64_05 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ) ) ); break;
+            case  6: hb_u64ret( &wcall, ( ( WIN64_06 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ) ) ); break;
+            case  7: hb_u64ret( &wcall, ( ( WIN64_07 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ) ) ); break;
+            case  8: hb_u64ret( &wcall, ( ( WIN64_08 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ) ) ); break;
+            case  9: hb_u64ret( &wcall, ( ( WIN64_09 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ) ) ); break;
+            case 10: hb_u64ret( &wcall, ( ( WIN64_10 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ) ) ); break;
+            case 11: hb_u64ret( &wcall, ( ( WIN64_11 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ) ) ); break;
+            case 12: hb_u64ret( &wcall, ( ( WIN64_12 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ) ) ); break;
+            case 13: hb_u64ret( &wcall, ( ( WIN64_13 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ) ) ); break;
+            case 14: hb_u64ret( &wcall, ( ( WIN64_14 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ) ) ); break;
+            case 15: hb_u64ret( &wcall, ( ( WIN64_15 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ), hb_u64par( &wcall, 15 ) ) ); break;
          }
 
          for( tmp = 0; tmp < iParams; ++tmp )
@@ -602,31 +585,31 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
                switch( HB_ITEM_TYPE( hb_param( iFirst + tmp, HB_IT_ANY ) ) )
                {
                   case HB_IT_LOGICAL:
-                     hb_storl( wcall.pArg[ tmp ].nValue != 0, tmp );
+                     hb_storl( wcall.pArg[ tmp ].nValue != 0, iFirst + tmp );
                      break;
 
                   case HB_IT_NIL:
                   case HB_IT_INTEGER:
                   case HB_IT_LONG:
                   case HB_IT_DATE:
-                     hb_stornint( wcall.pArg[ tmp ].nValue, tmp );
+                     hb_stornint( wcall.pArg[ tmp ].nValue, iFirst + tmp );
                      break;
 
                   case HB_IT_DOUBLE:
                      /* TOFIX */
-                     hb_stornd( 0, tmp );
+                     hb_stornd( 0, iFirst + tmp );
                      break;
 
                   case HB_IT_STRING:
                   case HB_IT_MEMO:
                      if( wcall.bUNICODE )
-                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].nValue, hb_parclen( tmp ), tmp );
+                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      else
-                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].nValue, hb_parclen( tmp ), tmp );
+                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
 
                   case HB_IT_POINTER:
-                     hb_storptr( ( void * ) wcall.pArg[ tmp ].nValue, tmp );
+                     hb_storptr( ( void * ) wcall.pArg[ tmp ].nValue, iFirst + tmp );
                      break;
                }
             }
