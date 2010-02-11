@@ -500,22 +500,22 @@ static void hb_u64ret( PHB_WINCALL wcall, HB_U64 nValue )
    }
 }
 
-typedef HB_U64( WINAPI * WIN64_00 ) ( void );
-typedef HB_U64( WINAPI * WIN64_01 ) ( HB_U64 );
-typedef HB_U64( WINAPI * WIN64_02 ) ( HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_03 ) ( HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_04 ) ( HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_05 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_06 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_07 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_08 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_09 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_10 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_11 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_12 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
-typedef HB_U64( WINAPI * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_00 ) ( void );
+typedef HB_U64( * WIN64_01 ) ( HB_U64 );
+typedef HB_U64( * WIN64_02 ) ( HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_03 ) ( HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_04 ) ( HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_05 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_06 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_07 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_08 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_09 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_10 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_11 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_12 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
+typedef HB_U64( * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 
 static HB_U64 win64_00( FARPROC p )                                                                                                                                                                                     { return ( ( WIN64_00 ) *p )(); }
 static HB_U64 win64_01( FARPROC p, HB_U64 p01 )                                                                                                                                                                         { return ( ( WIN64_01 ) *p )( p01 ); }
