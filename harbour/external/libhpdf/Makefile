@@ -110,6 +110,8 @@ ifeq ($(HB_SUPPORTED),yes)
 
             HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
             HB_CFLAGS += $(foreach d,$(HB_HAS_PNG),-I$(d))
+            # Suppress deprecated warnings until libharu gets updated for latest libpng
+            HB_CFLAGS += -DPNG_NO_PEDANTIC_WARNINGS
 
             ifeq ($(HB_COMPILER),mingwarm)
                HB_CFLAGS += -U__COREDLL__
