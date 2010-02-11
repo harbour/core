@@ -421,7 +421,7 @@ static HB_U64 hb_u64par( PHB_WINCALL wcall, int iParam )
             break;
 
          case HB_IT_DOUBLE:
-            /* TODO */
+            HB_PUT_LE_DOUBLE( ( BYTE * ) &wcall->pArg[ iParam - 1 ].nValue, hb_itemGetND( pParam ) );
             break;
 
          case HB_IT_STRING:
@@ -494,8 +494,7 @@ static void hb_u64ret( PHB_WINCALL wcall, HB_U64 nValue )
 
       case CTYPE_FLOAT:
       case CTYPE_DOUBLE:
-         /* TOFIX */
-         hb_retnd( 0 );
+         hb_retnd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &nValue ) );
          break;
    }
 }
@@ -596,8 +595,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
                      break;
 
                   case HB_IT_DOUBLE:
-                     /* TOFIX */
-                     hb_stornd( 0, iFirst + tmp );
+                     hb_stornd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &wcall.pArg[ tmp ].nValue ), iFirst + tmp );
                      break;
 
                   case HB_IT_STRING:
