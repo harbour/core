@@ -1919,6 +1919,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( l_aOPTRUN, cParam )
          ENDIF
 
+      CASE Left( cParamL, Len( "-3rd=" ) ) == "-3rd="
+
+         /* Silently ignore these. These options can be used to store options
+            processed by other tools allowing them to keep additional information
+            in hbmk2 script files. */
+
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
          cWorkDir := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-workdir=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
@@ -8333,6 +8339,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-aflag=<f>"        , I_( "pass flag to linker (static library)" ) },;
       { "-dflag=<f>"        , I_( "pass flag to linker (dynamic library)" ) },;
       { "-runflag=<f>"      , I_( "pass flag to output executable when -run option is used" ) },;
+      { "-3rd=<f>"          , I_( "options/flags reserved for 3rd party tools, always ignore by hbmk2 itself" ) },;
       { "-jobs=<n>"         , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"              , I_( "enable incremental build mode" ) },;
       { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off" ) },;

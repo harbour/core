@@ -108,6 +108,6 @@ PROCEDURE Main()
    ? "DLLCALL"
    cData := Space( MAX_PATH )
    ? DllCall( "shell32.dll", NIL, "SHGetFolderPath", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
-   ? cData
+   ? "REF:", cData
 
    RETURN

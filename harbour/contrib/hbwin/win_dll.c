@@ -132,12 +132,10 @@
 
 typedef union
 {                                /* Various result types */
-   int     Int;                  /* Generic four-byte type */
-   long    Long;                 /* Four-byte long */
-   void *  Pointer;              /* 32-bit pointer */
-   float   Float;                /* Four byte real */
-   double  Double;               /* 8-byte real */
-   __int64 int64;                /* big int (64-bit) */
+   int     ret_int;              /* Generic four-byte type */
+   long    ret_long;             /* Four-byte long */
+   float   ret_float;            /* Four byte real */
+   double  ret_double;           /* 8-byte real */
 } HB_DYNRETVAL;
 
 typedef struct
@@ -266,8 +264,8 @@ static HB_DYNRETVAL hb_DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_D
       }
       else if( pRet == NULL )
       {
-         Res.Int = dwEAX;
-         ( &Res.Int )[ 1 ] = dwEDX;
+         Res.ret_int = dwEAX;
+         ( &Res.ret_int )[ 1 ] = dwEDX;
       }
       else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
@@ -575,7 +573,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
             wcall.pArg = NULL;
 
          for( tmp = 0; tmp < iParams; ++tmp )
-            wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + 1 + tmp );
+            wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
 
          switch( iParams )
          {
@@ -601,7 +599,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
          {
             if( wcall.pArg[ tmp ].bByRef )
             {
-               switch( HB_ITEM_TYPE( hb_param( iFirst + 1 + tmp, HB_IT_ANY ) ) )
+               switch( HB_ITEM_TYPE( hb_param( iFirst + tmp, HB_IT_ANY ) ) )
                {
                   case HB_IT_LOGICAL:
                      hb_storl( wcall.pArg[ tmp ].nValue != 0, tmp );
@@ -788,7 +786,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
       switch( iRtype )
       {
          case CTYPE_BOOL:
-            hb_retl( rc.Long != 0 );
+            hb_retl( rc.ret_long != 0 );
             break;
 
          case CTYPE_VOID:
@@ -797,30 +795,30 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
          case CTYPE_CHAR:
          case CTYPE_UNSIGNED_CHAR:
-            hb_retni( ( char ) rc.Int );
+            hb_retni( ( char ) rc.ret_int );
             break;
 
          case CTYPE_SHORT:
          case CTYPE_UNSIGNED_SHORT:
-            hb_retni( ( int ) rc.Int );
+            hb_retni( ( int ) rc.ret_int );
             break;
 
          case CTYPE_INT:
-            hb_retni( ( int ) rc.Long );
+            hb_retni( ( int ) rc.ret_long );
             break;
 
          case CTYPE_LONG:
-            hb_retnl( ( long ) rc.Long );
+            hb_retnl( ( long ) rc.ret_long );
             break;
 
          case CTYPE_CHAR_PTR:
          case CTYPE_UNSIGNED_CHAR_PTR:
-            hb_retc( ( char * ) rc.Long );
+            hb_retc( ( char * ) rc.ret_long );
             break;
 
          case CTYPE_UNSIGNED_INT:
          case CTYPE_UNSIGNED_LONG:
-            hb_retnint( ( unsigned long ) rc.Long );
+            hb_retnint( ( unsigned long ) rc.ret_long );
             break;
 
          case CTYPE_INT_PTR:
@@ -832,15 +830,15 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
          case CTYPE_VOID_PTR:
          case CTYPE_FLOAT_PTR:
          case CTYPE_DOUBLE_PTR:
-            hb_retptr( ( void * ) rc.Long );
+            hb_retptr( ( void * ) rc.ret_long );
             break;
 
          case CTYPE_FLOAT:
-            hb_retnd( rc.Float );
+            hb_retnd( rc.ret_float );
             break;
 
          case CTYPE_DOUBLE:
-            hb_retnd( rc.Double );
+            hb_retnd( rc.ret_double );
             break;
 
          default:
