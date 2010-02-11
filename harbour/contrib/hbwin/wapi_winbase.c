@@ -295,3 +295,36 @@ HB_FUNC( WAPI_MULDIV )
 {
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
+
+HB_FUNC( WAPI_GETSHORTPATHNAME )
+{
+   void * hLongPath;
+   DWORD length = 0;
+   LPCTSTR lpszLongPath = HB_PARSTR( 1, &hLongPath, NULL );
+
+   if( lpszLongPath )
+   {
+      length = GetShortPathName( lpszLongPath, NULL, 0 );
+
+      if( length && HB_ISBYREF( 2 ) )
+      {
+         LPTSTR lpszShortPath;
+         DWORD cchBuffer = ( DWORD ) hb_parnl( 3 );
+
+         if( cchBuffer )
+            cchBuffer = HB_MIN( length, cchBuffer + sizeof( TCHAR ) );
+         else
+            cchBuffer = length;
+
+         lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
+         length = GetShortPathName( lpszLongPath, lpszShortPath, cchBuffer );
+         hbwapi_SetLastError( GetLastError() );
+         HB_STORSTR( length > cchBuffer ? NULL : lpszShortPath, 2 );
+         hb_xfree( lpszShortPath );
+      }
+      else if( length == 0 )
+         hbwapi_SetLastError( GetLastError() );
+   }
+   hb_retnl( length );
+   hb_strfree( hLongPath );
+}
