@@ -78,6 +78,37 @@ HB_FUNC( SETLASTERROR )
    SetLastError( hb_parnl( 1 ) );
 }
 
+HB_FUNC( LOADLIBRARY )
+{
+   void * hFileName;
+
+   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
+
+   hb_strfree( hFileName );
+}
+
+HB_FUNC( FREELIBRARY )
+{
+   if( HB_ISPOINTER( 1 ) )
+      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) ? HB_TRUE : HB_FALSE );
+   else if( HB_ISNUM( 1 ) )
+      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ? HB_TRUE : HB_FALSE );
+   else
+      hb_retl( HB_FALSE );
+}
+
+HB_FUNC( GETPROCADDRESS )
+{
+   HMODULE hDLL;
+
+   if( HB_ISNUM( 1 ) )
+      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   else
+      hDLL = ( HMODULE ) hb_parptr( 1 );
+
+   hb_retptr( hDLL ? ( void * ) hbwin_getprocaddress( hDLL, 2, NULL ) : NULL );
+}
+
 #ifndef HB_WIN_NO_LEGACY
 #define HB_WIN_NO_LEGACY
 #endif
