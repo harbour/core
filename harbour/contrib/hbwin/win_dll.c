@@ -6,10 +6,9 @@
  * Harbour Project source code:
  * Windows DLL handling function (Xbase++ compatible + proprietary)
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (win64 and UNICODE support, cleanups)
- * Copyright 2006 Paul Tucker <ptucker@sympatico.ca> (Borland mods)
+ * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Based on some original code by:
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
- * Copyright 2002 Phil Krylov <phil a t newstar.rinet.ru> (MinGW support)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,337 +52,61 @@
  *
  */
 
-/* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
-         was derived from the context in which the functions are used. [pt] */
-
 #include "hbwin.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-#if !defined( __CYGWIN__ ) && !defined( HB_NO_ASM )
+/* C calling conventions */
+#define _CALLCONV_CDECL             1
+#define _CALLCONV_STDCALL           2
 
-/* ==================================================================
- * DynaCall support comments below
- * ------------------------------------------------------------------
- *
- *   This part used modified code of Vic McClung.
- *   The modifications were to separate the library loading and
- *   getting the procedure address from the actual function call.
- *   The parameters have been slightly re-arranged to allow for
- *   C-like syntax, on function declaration. The changes allow to
- *   load the library and to get the procedure addresses in advance,
- *   which makes it work similarly to C import libraries. From
- *   experience, when using dynamic libraries, loading the library
- *   and getting the address of the procedure part of using the DLL.
- *   Additionally the changes will allow to use standard [x]Harbour
- *   C type defines, as used with structure types, and defined in
- *   cstruct.ch.
- *
- *   Andrew Wos.
- *   20/07/2002.
- */
+/* C raw return types */
+#define _RETTYPERAW_INT32           1
+#define _RETTYPERAW_INT64           2
+#define _RETTYPERAW_DOUBLE          3
+#define _RETTYPERAW_FLOAT           4
 
-/* Call flags */
-#define DLL_CALLMODE_NORMAL      0x0000
-#define DLL_CALLMODE_COPY        0x2000
-#define DC_MICROSOFT             0x0000      /* Default */
-#define DC_BORLAND               0x0001      /* Borland compatible */
-#define DC_CALL_CDECL            0x0010      /* __cdecl */
-#define DC_CALL_STDCALL          0x0020      /* __stdcall */
-#define DC_RETVAL_MATH4          0x0100      /* Return value in ST */
-#define DC_RETVAL_MATH8          0x0200      /* Return value in ST */
-#define DC_UNICODE               0x0400
-#define DC_CALL_STDCALL_BO       ( DC_CALL_STDCALL | DC_BORLAND )
-#define DC_CALL_STDCALL_MS       ( DC_CALL_STDCALL | DC_MICROSOFT )
-#define DC_CALL_STDCALL_M8       ( DC_CALL_STDCALL | DC_RETVAL_MATH8 )
-
-/* Parameter flags */
-#define DC_PARFLAG_ARGPTR        0x0002
-
-/* C Types */
-#define CTYPE_VOID               9
-#define CTYPE_CHAR               1
-#define CTYPE_UNSIGNED_CHAR      -1
-#define CTYPE_CHAR_PTR           10
-#define CTYPE_UNSIGNED_CHAR_PTR  -10
-#define CTYPE_SHORT              2
-#define CTYPE_UNSIGNED_SHORT     -2
-#define CTYPE_SHORT_PTR          20
-#define CTYPE_UNSIGNED_SHORT_PTR -20
-#define CTYPE_INT                3
-#define CTYPE_UNSIGNED_INT       -3
-#define CTYPE_INT_PTR            30
-#define CTYPE_UNSIGNED_INT_PTR   -30
-#define CTYPE_LONG               4
-#define CTYPE_UNSIGNED_LONG      -4
-#define CTYPE_LONG_PTR           40
-#define CTYPE_UNSIGNED_LONG_PTR  -40
-#define CTYPE_FLOAT              5
-#define CTYPE_FLOAT_PTR          50
-#define CTYPE_DOUBLE             6
-#define CTYPE_DOUBLE_PTR         60
-#define CTYPE_VOID_PTR           7
-#define CTYPE_BOOL               8
-#define CTYPE_STRUCTURE          1000
-#define CTYPE_STRUCTURE_PTR      10000
-
-#pragma pack(1)
-
-typedef union
-{                                /* Various result types */
-   int     ret_int;              /* Generic four-byte type */
-   long    ret_long;             /* Four-byte long */
-   float   ret_float;            /* Four byte real */
-   double  ret_double;           /* 8-byte real */
-} HB_DYNRETVAL;
-
-typedef struct
-{
-   int         iParFlags;        /* Parameter flags */
-   int         iWidth;           /* Byte width */
-   union
-   {
-      BYTE     bArg;             /* 1-byte argument */
-      WORD     usArg;            /* 2-byte argument */
-      DWORD    dwArg;            /* 4-byte argument */
-      double   dArg;             /* double argument */
-   } numargs;
-   void *      pArg;             /* Pointer to argument */
-   void *      hString;
-} HB_DYNPARAM;
-
-#pragma pack()
-
-#if ! defined( HB_OS_WIN_64 )
-
-static HB_DYNRETVAL hb_DynaCall( int iFlags, FARPROC lpFunction, int nArgs, HB_DYNPARAM Parm[], void * pRet, int nRetSiz )
-{
-   /* Call the specified function with the given parameters. Build a
-      proper stack and take care of correct return value processing. */
-   HB_DYNRETVAL Res = { 0 };
-#if defined( HB_OS_WIN_CE )
-   HB_SYMBOL_UNUSED( iFlags );
-   HB_SYMBOL_UNUSED( lpFunction );
-   HB_SYMBOL_UNUSED( nArgs );
-   HB_SYMBOL_UNUSED( Parm );
-   HB_SYMBOL_UNUSED( pRet );
-   HB_SYMBOL_UNUSED( nRetSiz );
-#else
-   int     i, nInd, nSize, nLoops;
-   DWORD   dwEAX, dwEDX, dwVal, * pStack, dwStSize = 0;
-   BYTE *  pArg;
-#if ! defined( __MINGW32__ ) && ! defined( __BORLANDC__ ) && ! defined( __DMC__ )
-   LPVOID  lpFunctionVoid = ( LPVOID ) lpFunction;
-#endif
-
-   #if defined( __MINGW32__ )
-   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
-   #else
-      DWORD * pESP;
-   #endif
-
-   /* Reserve 256 bytes of stack space for our arguments */
-   #if defined( __MINGW32__ )
-      asm volatile( "\tmovl %%esp, %0\n"
-                    "\tsubl $0x100, %%esp\n"
-                    : "=r" (pStack) );
-   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
-      pStack = ( DWORD * ) _ESP;
-      _ESP -= 0x100;
-   #else
-      _asm mov pStack, esp
-      _asm mov pESP, esp
-      _asm sub esp, 0x100
-   #endif
-
-   /* Push args onto the stack. Every argument is aligned on a
-      4-byte boundary. We start at the rightmost argument. */
-   for( i = 0; i < nArgs; i++ )
-   {
-      nInd  = ( nArgs - 1 ) - i;
-      /* Start at the back of the arg ptr, aligned on a DWORD */
-      nSize = ( Parm[ nInd ].iWidth + 3 ) / 4 * 4;
-      pArg  = ( BYTE * ) Parm[ nInd ].pArg + nSize - 4;
-      dwStSize += ( DWORD ) nSize; /* Count no of bytes on stack */
-
-      nLoops = ( nSize / 4 ) - 1;
-
-      while( nSize > 0 )
-      {
-         /* Copy argument to the stack */
-         if( Parm[ nInd ].iParFlags & DC_PARFLAG_ARGPTR )
-         {
-            /* Arg has a ptr to a variable that has the arg */
-            dwVal = ( DWORD ) pArg; /* Get first four bytes */
-            pArg -= 4;              /* Next part of argument */
-         }
-         else
-         {
-            /* Arg has the real arg */
-            dwVal = *( ( DWORD * )( ( BYTE * ) ( &( Parm[ nInd ].numargs.dwArg ) ) + ( nLoops * 4 ) ) );
-         }
-
-         /* Do push dwVal */
-         pStack--;          /* ESP = ESP - 4 */
-         *pStack = dwVal;   /* SS:[ESP] = dwVal */
-         nSize -= 4;
-         nLoops--;
-      }
-   }
-
-   if( ( pRet != NULL ) && ( ( iFlags & DC_BORLAND ) || ( nRetSiz > 8 ) ) )
-   {
-      /* Return value isn't passed through registers, memory copy
-         is performed instead. Pass the pointer as hidden arg. */
-      dwStSize += 4;             /* Add stack size */
-      pStack--;                  /* ESP = ESP - 4 */
-      *pStack = ( DWORD ) pRet;  /* SS:[ESP] = pMem */
-   }
-   #if defined( __MINGW32__ )
-      asm volatile( "\taddl $0x100, %%esp\n" /* Restore to original position */
-                    "\tsubl %2, %%esp\n"     /* Adjust for our new parameters */
-
-                    /* Stack is now properly built, we can call the function */
-                    "\tcall *%3\n"
-                    : "=a" (dwEAX), "=d" (dwEDX) /* Save eax/edx registers */
-                    : "r" (dwStSize), "r" (lpFunction) );
-
-      /* Possibly adjust stack and read return values. */
-      if( iFlags & DC_CALL_CDECL )
-      {
-         asm volatile( "\taddl %0, %%esp\n" : : "r" (dwStSize) );
-      }
-
-      if( iFlags & DC_RETVAL_MATH4 )
-      {
-         asm volatile( "\tfstps (%0)\n" : "=r" (Res) );
-      }
-      else if( iFlags & DC_RETVAL_MATH8 )
-      {
-         asm volatile( "\tfstpl (%0)\n" : "=r" (Res) );
-      }
-      else if( pRet == NULL )
-      {
-         Res.ret_int = dwEAX;
-         ( &Res.ret_int )[ 1 ] = dwEDX;
-      }
-      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
-      {
-         /* Microsoft optimized less than 8-bytes structure passing */
-         ( ( int * ) pRet )[ 0 ] = dwEAX;
-         ( ( int * ) pRet )[ 1 ] = dwEDX;
-      }
-   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
-      _ESP += ( 0x100 - dwStSize );
-      _EDX =  ( DWORD ) &lpFunction;
-      __emit__( 0xFF, 0x12 ); /* call [edx]; */
-      dwEAX = _EAX;
-      dwEDX = _EDX;
-
-      /* Possibly adjust stack and read return values. */
-      if( iFlags & DC_CALL_CDECL )
-      {
-         _ESP += dwStSize;
-      }
-
-      if( iFlags & DC_RETVAL_MATH4 )
-      {
-         _EBX = ( DWORD ) &Res;
-         _EAX = dwEAX;
-         _EDX = dwEDX;
-         __emit__( 0xD9, 0x1B );   /*     _asm fnstp float ptr [ebx] */
-      }
-      else if( iFlags & DC_RETVAL_MATH8 )
-      {
-         _EBX = ( DWORD ) &Res;
-         _EAX = dwEAX;
-         _EDX = dwEDX;
-         __emit__( 0xDD, 0x1B );   /*     _asm fnstp qword ptr [ebx] */
-      }
-      else if( pRet == NULL )
-      {
-         _EBX = ( DWORD ) &Res;
-         _EAX = dwEAX;
-         _EDX = dwEDX;
-/*       _asm mov DWORD PTR [ebx], eax */
-/*       _asm mov DWORD PTR [ebx + 4], edx */
-         __emit__( 0x89, 0x03, 0x89, 0x53, 0x04 );
-      }
-      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
-      {
-         _EBX = ( DWORD ) pRet;
-         _EAX = dwEAX;
-         _EDX = dwEDX;
-/*       _asm mov DWORD PTR [ebx], eax */
-/*       _asm mov DWORD PTR [ebx + 4], edx */
-         __emit__( 0x89, 0x03, 0x89, 0x53, 0x04 );
-      }
-   #else
-      _asm add esp, 0x100       /* Restore to original position */
-      _asm sub esp, dwStSize    /* Adjust for our new parameters */
-
-      /* Stack is now properly built, we can call the function */
-      _asm call [lpFunctionVoid]
-
-      _asm mov dwEAX, eax       /* Save eax/edx registers */
-      _asm mov dwEDX, edx       /* */
-
-      /* Possibly adjust stack and read return values. */
-      if( iFlags & DC_CALL_CDECL )
-      {
-         _asm add esp, dwStSize
-      }
-
-      if( iFlags & DC_RETVAL_MATH4 )
-      {
-         _asm fstp dword ptr [Res]
-      }
-      else if( iFlags & DC_RETVAL_MATH8 )
-      {
-         _asm fstp qword ptr [Res]
-      }
-      else if( pRet == NULL )
-      {
-         _asm mov eax, [dwEAX]
-         _asm mov DWORD PTR [Res], eax
-         _asm mov edx, [dwEDX]
-         _asm mov DWORD PTR [Res + 4], edx
-      }
-      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
-      {
-         /* Microsoft optimized less than 8-bytes structure passing */
-         _asm mov ecx, DWORD PTR [pRet]
-         _asm mov eax, [dwEAX]
-         _asm mov DWORD PTR [ecx], eax
-         _asm mov edx, [dwEDX]
-         _asm mov DWORD PTR [ecx + 4], edx
-      }
-
-      _asm mov esp, pESP
-   #endif
-#endif
-
-   return Res;
-}
-
-#endif
-
-/*
- * ==================================================================
- */
+/* C parameter types */
+#define _RETTYPE_VOID               9
+#define _RETTYPE_CHAR               1
+#define _RETTYPE_UNSIGNED_CHAR      -1
+#define _RETTYPE_CHAR_PTR           10
+#define _RETTYPE_UNSIGNED_CHAR_PTR  -10
+#define _RETTYPE_SHORT              2
+#define _RETTYPE_UNSIGNED_SHORT     -2
+#define _RETTYPE_SHORT_PTR          20
+#define _RETTYPE_UNSIGNED_SHORT_PTR -20
+#define _RETTYPE_INT                3
+#define _RETTYPE_UNSIGNED_INT       -3
+#define _RETTYPE_INT_PTR            30
+#define _RETTYPE_UNSIGNED_INT_PTR   -30
+#define _RETTYPE_LONG               4
+#define _RETTYPE_UNSIGNED_LONG      -4
+#define _RETTYPE_LONG_PTR           40
+#define _RETTYPE_UNSIGNED_LONG_PTR  -40
+#define _RETTYPE_FLOAT              5
+#define _RETTYPE_FLOAT_PTR          50
+#define _RETTYPE_DOUBLE             6
+#define _RETTYPE_DOUBLE_PTR         60
+#define _RETTYPE_VOID_PTR           7
+#define _RETTYPE_BOOL               8
+#define _RETTYPE_STRUCTURE          1000
+#define _RETTYPE_STRUCTURE_PTR      10000
 
 typedef struct
 {
    HMODULE  hDLL;       /* Handle */
    HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
-   int      iCallFlags; /* Calling Flags */
+   int      iCallConv;
+   int      iRetType;
+   HB_BOOL  bUNICODE;
    FARPROC  lpFunction; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
 
 #define _DLLEXEC_MAXPARAM   15
 
-#if defined( HB_OS_WIN_64 )
+#if defined( HB_ARCH_64BIT )
 
 typedef struct
 {
@@ -395,7 +118,6 @@ typedef struct
 typedef struct
 {
    HB_BOOL     bUNICODE;
-   int         iRetType;
    int         iFirst;
    HB_WINARG * pArg;
 } HB_WINCALL, * PHB_WINCALL;
@@ -445,62 +167,6 @@ static HB_U64 hb_u64par( PHB_WINCALL wcall, int iParam )
    return r;
 }
 
-static void hb_u64ret( PHB_WINCALL wcall, HB_U64 nValue )
-{
-   switch( wcall->iRetType )
-   {
-      case CTYPE_VOID:
-         hb_ret();
-         break;
-
-      case CTYPE_BOOL:
-         hb_retl( nValue != 0 );
-         break;
-
-      case CTYPE_CHAR:
-      case CTYPE_UNSIGNED_CHAR:
-      case CTYPE_SHORT:
-      case CTYPE_UNSIGNED_SHORT:
-      case CTYPE_INT:
-         hb_retni( ( int ) nValue );
-         break;
-
-      case CTYPE_LONG:
-         hb_retnl( ( long ) nValue );
-         break;
-
-      case CTYPE_UNSIGNED_INT:
-      case CTYPE_UNSIGNED_LONG:
-         hb_retnint( nValue );
-         break;
-
-      case CTYPE_CHAR_PTR:
-      case CTYPE_UNSIGNED_CHAR_PTR:
-         if( wcall->bUNICODE )
-            hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nValue );
-         else
-            hb_retstr( hb_setGetOSCP(), ( const char * ) nValue );
-         break;
-
-      case CTYPE_INT_PTR:
-      case CTYPE_UNSIGNED_SHORT_PTR:
-      case CTYPE_UNSIGNED_INT_PTR:
-      case CTYPE_STRUCTURE_PTR:
-      case CTYPE_LONG_PTR:
-      case CTYPE_UNSIGNED_LONG_PTR:
-      case CTYPE_VOID_PTR:
-      case CTYPE_FLOAT_PTR:
-      case CTYPE_DOUBLE_PTR:
-         hb_retptr( ( void * ) nValue );
-         break;
-
-      case CTYPE_FLOAT:
-      case CTYPE_DOUBLE:
-         hb_retnd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &nValue ) );
-         break;
-   }
-}
-
 typedef HB_U64( * WIN64_00 ) ( void );
 typedef HB_U64( * WIN64_01 ) ( HB_U64 );
 typedef HB_U64( * WIN64_02 ) ( HB_U64, HB_U64 );
@@ -518,36 +184,365 @@ typedef HB_U64( * WIN64_13 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, H
 typedef HB_U64( * WIN64_14 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 typedef HB_U64( * WIN64_15 ) ( HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64, HB_U64 );
 
+#elif defined( HB_ARCH_32BIT )
+
+typedef struct
+{
+   union
+   {
+      HB_U32 n32;
+      HB_U64 n64;
+      double nDB;
+      float  nFL;
+   } t;
+} HB_WINVAL;
+
+typedef struct
+{
+   void *    hString;
+   HB_BOOL   bByRef;
+   HB_WINVAL value;
+} HB_WINARG;
+
+typedef struct
+{
+   HB_BOOL     bUNICODE;
+   int         iFirst;
+   HB_WINARG * pArg;
+} HB_WINCALL, * PHB_WINCALL;
+
+static void hb_u32par( PHB_WINCALL wcall, int iParam, HB_U32 * r1, HB_U32 * r2, HB_BOOL * b64 )
+{
+   PHB_ITEM pParam = hb_param( wcall->iFirst + iParam, HB_IT_ANY );
+
+   *b64 = HB_FALSE;
+
+   if( pParam )
+   {
+      switch( HB_ITEM_TYPE( pParam ) )
+      {
+         /* TODO: Add 64-bit integer support */
+
+         case HB_IT_LOGICAL:
+            wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetL( pParam );
+            *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+            break;
+
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DATE:
+            wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetNL( pParam );
+            *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+            break;
+
+         case HB_IT_DOUBLE:
+            wcall->pArg[ iParam - 1 ].value.t.nDB = hb_itemGetND( pParam );
+            if( wcall->pArg[ iParam - 1 ].bByRef )
+               *r1 = ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.nDB;
+            else
+            {
+               *r1 = wcall->pArg[ iParam - 1 ].value.t.n64 & 0xFFFFFFFF;
+               *r2 = ( wcall->pArg[ iParam - 1 ].value.t.n64 >> 32 );
+               *b64 = HB_TRUE;
+            }
+            break;
+
+         case HB_IT_STRING:
+         case HB_IT_MEMO:
+            if( wcall->bUNICODE )
+               *r1 = ( HB_U32 ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, NULL );
+            else
+               *r1 = ( HB_U32 ) hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, NULL );
+            wcall->pArg[ iParam - 1 ].value.t.n32 = *r1;
+            break;
+
+         case HB_IT_POINTER:
+            wcall->pArg[ iParam - 1 ].value.t.n32 = ( HB_U32 ) hb_itemGetPtr( pParam );
+            *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+            break;
+      }
+   }
+}
+
+typedef HB_U32 ( _stdcall * WIN32_S32P00 )( void );
+typedef HB_U32 ( _stdcall * WIN32_S32P01 )( HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P02 )( HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P03 )( HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _stdcall * WIN32_S32P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P00 )( void );
+typedef HB_U64 ( _stdcall * WIN32_S64P01 )( HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P02 )( HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P03 )( HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _stdcall * WIN32_S64P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP00 )( void );
+typedef double ( _stdcall * WIN32_SDBP01 )( HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP02 )( HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP03 )( HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _stdcall * WIN32_SDBP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP00 )( void );
+typedef float  ( _stdcall * WIN32_SFLP01 )( HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP02 )( HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP03 )( HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _stdcall * WIN32_SFLP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P00 )( void );
+typedef HB_U32 ( _cdecl   * WIN32_C32P01 )( HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P02 )( HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P03 )( HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U32 ( _cdecl   * WIN32_C32P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P00 )( void );
+typedef HB_U64 ( _cdecl   * WIN32_C64P01 )( HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P02 )( HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P03 )( HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef HB_U64 ( _cdecl   * WIN32_C64P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP00 )( void );
+typedef double ( _cdecl   * WIN32_CDBP01 )( HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP02 )( HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP03 )( HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef double ( _cdecl   * WIN32_CDBP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP00 )( void );
+typedef float  ( _cdecl   * WIN32_CFLP01 )( HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP02 )( HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP03 )( HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP04 )( HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP05 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP06 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP07 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP08 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP09 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP10 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP11 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP12 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP13 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP14 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP15 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP16 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP17 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP18 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP19 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP20 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP21 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP22 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP23 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP24 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP25 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP26 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+typedef float  ( _cdecl   * WIN32_CFLP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 #endif
 
-static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
+static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
 {
    int tmp;
 
    if( xec )
    {
-      iCallFlags = xec->iCallFlags;
+      iCallConv  = xec->iCallConv;
+      iRetType   = xec->iRetType;
+      bUNICODE   = xec->bUNICODE;
       lpFunction = xec->lpFunction;
    }
 
    if( ! lpFunction )
       return;
 
-   if( iRtype == 0 )
-      iRtype = CTYPE_UNSIGNED_LONG;
-
-#if defined( HB_OS_WIN_64 )
+#if defined( HB_ARCH_64BIT )
    {
       HB_WINCALL wcall;
 
-      wcall.bUNICODE = ( iCallFlags & DC_UNICODE );
-      wcall.iRetType = iRtype;
+      wcall.bUNICODE = bUNICODE;
       wcall.iFirst   = iFirst - 1;
 
       iParams -= wcall.iFirst;
 
       if( iParams <= _DLLEXEC_MAXPARAM )
       {
+         HB_U64 nRetVal;
+
          if( iParams )
          {
             wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
@@ -561,22 +556,78 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
          switch( iParams )
          {
-            case  0: hb_u64ret( &wcall, ( ( WIN64_00 ) *lpFunction )() ); break;
-            case  1: hb_u64ret( &wcall, ( ( WIN64_01 ) *lpFunction )( hb_u64par( &wcall, 1 ) ) ); break;
-            case  2: hb_u64ret( &wcall, ( ( WIN64_02 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ) ) ); break;
-            case  3: hb_u64ret( &wcall, ( ( WIN64_03 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ) ) ); break;
-            case  4: hb_u64ret( &wcall, ( ( WIN64_04 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ) ) ); break;
-            case  5: hb_u64ret( &wcall, ( ( WIN64_05 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ) ) ); break;
-            case  6: hb_u64ret( &wcall, ( ( WIN64_06 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ) ) ); break;
-            case  7: hb_u64ret( &wcall, ( ( WIN64_07 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ) ) ); break;
-            case  8: hb_u64ret( &wcall, ( ( WIN64_08 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ) ) ); break;
-            case  9: hb_u64ret( &wcall, ( ( WIN64_09 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ) ) ); break;
-            case 10: hb_u64ret( &wcall, ( ( WIN64_10 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ) ) ); break;
-            case 11: hb_u64ret( &wcall, ( ( WIN64_11 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ) ) ); break;
-            case 12: hb_u64ret( &wcall, ( ( WIN64_12 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ) ) ); break;
-            case 13: hb_u64ret( &wcall, ( ( WIN64_13 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ) ) ); break;
-            case 14: hb_u64ret( &wcall, ( ( WIN64_14 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ) ) ); break;
-            case 15: hb_u64ret( &wcall, ( ( WIN64_15 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ), hb_u64par( &wcall, 15 ) ) ); break;
+            case  0: nRetVal = ( ( WIN64_00 ) *lpFunction )(); break;
+            case  1: nRetVal = ( ( WIN64_01 ) *lpFunction )( hb_u64par( &wcall, 1 ) ); break;
+            case  2: nRetVal = ( ( WIN64_02 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ) ); break;
+            case  3: nRetVal = ( ( WIN64_03 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ) ); break;
+            case  4: nRetVal = ( ( WIN64_04 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ) ); break;
+            case  5: nRetVal = ( ( WIN64_05 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ) ); break;
+            case  6: nRetVal = ( ( WIN64_06 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ) ); break;
+            case  7: nRetVal = ( ( WIN64_07 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ) ); break;
+            case  8: nRetVal = ( ( WIN64_08 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ) ); break;
+            case  9: nRetVal = ( ( WIN64_09 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ) ); break;
+            case 10: nRetVal = ( ( WIN64_10 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ) ); break;
+            case 11: nRetVal = ( ( WIN64_11 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ) ); break;
+            case 12: nRetVal = ( ( WIN64_12 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ) ); break;
+            case 13: nRetVal = ( ( WIN64_13 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ) ); break;
+            case 14: nRetVal = ( ( WIN64_14 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ) ); break;
+            case 15: nRetVal = ( ( WIN64_15 ) *lpFunction )( hb_u64par( &wcall, 1 ), hb_u64par( &wcall, 2 ), hb_u64par( &wcall, 3 ), hb_u64par( &wcall, 4 ), hb_u64par( &wcall, 5 ), hb_u64par( &wcall, 6 ), hb_u64par( &wcall, 7 ), hb_u64par( &wcall, 8 ), hb_u64par( &wcall, 9 ), hb_u64par( &wcall, 10 ), hb_u64par( &wcall, 11 ), hb_u64par( &wcall, 12 ), hb_u64par( &wcall, 13 ), hb_u64par( &wcall, 14 ), hb_u64par( &wcall, 15 ) ); break;
+         }
+
+         switch( iRetType )
+         {
+            case _RETTYPE_VOID:
+               hb_ret();
+               break;
+
+            case _RETTYPE_BOOL:
+               hb_retl( nRetVal != 0 );
+               break;
+
+            case _RETTYPE_CHAR:
+            case _RETTYPE_UNSIGNED_CHAR:
+            case _RETTYPE_SHORT:
+            case _RETTYPE_UNSIGNED_SHORT:
+            case _RETTYPE_INT:
+               hb_retni( ( int ) nRetVal );
+               break;
+
+            case _RETTYPE_LONG:
+               hb_retnl( ( long ) nRetVal );
+               break;
+
+            case _RETTYPE_UNSIGNED_INT:
+            case _RETTYPE_UNSIGNED_LONG:
+               hb_retnint( nRetVal );
+               break;
+
+            case _RETTYPE_CHAR_PTR:
+            case _RETTYPE_UNSIGNED_CHAR_PTR:
+               if( bUNICODE )
+                  hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal );
+               else
+                  hb_retstr( hb_setGetOSCP(), ( const char * ) nRetVal );
+               break;
+
+            case _RETTYPE_INT_PTR:
+            case _RETTYPE_UNSIGNED_SHORT_PTR:
+            case _RETTYPE_UNSIGNED_INT_PTR:
+            case _RETTYPE_STRUCTURE_PTR:
+            case _RETTYPE_LONG_PTR:
+            case _RETTYPE_UNSIGNED_LONG_PTR:
+            case _RETTYPE_VOID_PTR:
+            case _RETTYPE_FLOAT_PTR:
+            case _RETTYPE_DOUBLE_PTR:
+               hb_retptr( ( void * ) nRetVal );
+               break;
+
+            case _RETTYPE_FLOAT:
+            case _RETTYPE_DOUBLE:
+               hb_retnd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &nRetVal ) );
+               break;
+
+            default:
+               hb_retnl( ( long ) nRetVal );
          }
 
          for( tmp = 0; tmp < iParams; ++tmp )
@@ -602,7 +653,7 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
 
                   case HB_IT_STRING:
                   case HB_IT_MEMO:
-                     if( wcall.bUNICODE )
+                     if( bUNICODE )
                         hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      else
                         hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
@@ -624,210 +675,467 @@ static void hb_DllExec( int iCallFlags, int iRtype, FARPROC lpFunction, PHB_DLLE
       else
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
-#else
+#elif defined( HB_ARCH_32BIT )
    {
-      HB_DYNPARAM Parm[ _DLLEXEC_MAXPARAM ];
-      HB_DYNRETVAL rc;
-      HB_BOOL bUnicode = ( ( iCallFlags & DC_UNICODE ) != 0 );
-      int iCnt, iArgCnt;
+      HB_WINCALL wcall;
 
-      iArgCnt = iParams - iFirst + 1;
+      wcall.bUNICODE = bUNICODE;
+      wcall.iFirst   = iFirst - 1;
 
-      iCallFlags &= 0x00FF;  /* Calling Convention */
+      iParams -= wcall.iFirst;
 
-      memset( Parm, 0, sizeof( Parm ) );
-
-      if( iArgCnt > 0 )
+      if( iParams <= _DLLEXEC_MAXPARAM )
       {
-         for( tmp = iFirst, iCnt = 0; tmp <= iParams && iCnt < _DLLEXEC_MAXPARAM; ++tmp, ++iCnt )
+         int iRetTypeRaw;
+         HB_WINVAL ret;
+
+         int iParamsRaw = 0;
+         HB_U32 rawpar[ _DLLEXEC_MAXPARAM * 2 ];
+
+         ret.t.n64 = 0;
+
+         if( iRetType == _RETTYPE_DOUBLE )
+            iRetTypeRaw = _RETTYPERAW_DOUBLE;
+         if( iRetType == _RETTYPE_FLOAT )
+            iRetTypeRaw = _RETTYPERAW_FLOAT;
+         else
+            iRetTypeRaw = _RETTYPERAW_INT32;
+
+         if( iParams )
          {
-            PHB_ITEM pParam = hb_param( tmp, HB_IT_ANY );
+            wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
+            memset( wcall.pArg, 0, iParams * sizeof( HB_WINARG ) );
+         }
+         else
+            wcall.pArg = NULL;
 
-            switch( HB_ITEM_TYPE( pParam ) )
+         for( tmp = 0; tmp < iParams; ++tmp )
+         {
+            HB_U32 r1;
+            HB_U32 r2;
+            HB_BOOL b64;
+
+            wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
+
+            hb_u32par( &wcall, tmp + 1, &r1, &r2, &b64 );
+
+            /* TOFIX: Check proper order. */
+            rawpar[ iParamsRaw++ ] = r1;
+            if( b64 )
+               rawpar[ iParamsRaw++ ] = r2;
+         }
+
+         if( iCallConv == _CALLCONV_CDECL )
+         {
+            switch( iRetTypeRaw )
             {
-               case HB_IT_NIL:
-                  Parm[ iCnt ].iWidth = sizeof( void * );
-                  /* TOFIX: Store NULL pointer in pointer variable. */
-                  Parm[ iCnt ].numargs.dwArg = 0;
-                  break;
-
-               case HB_IT_POINTER:
-                  Parm[ iCnt ].iWidth = sizeof( void * );
-                  /* TOFIX: Store pointer in pointer variable. */
-                  Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetPtr( pParam );
-
-                  if( hb_parinfo( tmp ) & HB_IT_BYREF )
-                  {
-                     Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
-                     Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
-                  }
-                  break;
-
-               case HB_IT_INTEGER:
-               case HB_IT_LONG:
-               case HB_IT_DATE:
-               case HB_IT_LOGICAL:
-                  /* TOFIX: HB_IT_LONG is 64 bit integer */
-                  Parm[ iCnt ].iWidth = sizeof( DWORD );
-                  Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetNL( pParam );
-
-                  if( hb_parinfo( tmp ) & HB_IT_BYREF )
-                  {
-                     Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
-                     Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
-                  }
-                  break;
-
-               case HB_IT_DOUBLE:
-                  Parm[ iCnt ].iWidth = sizeof( double );
-                  Parm[ iCnt ].numargs.dArg = hb_itemGetND( pParam );
-
-                  if( hb_parinfo( tmp ) & HB_IT_BYREF )
-                  {
-                     Parm[ iCnt ].iWidth = sizeof( void * );
-                     Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dArg );
-                     Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
-                  }
-
-                  iCallFlags |= DC_RETVAL_MATH8;
-                  break;
-
-               case HB_IT_STRING:
-               case HB_IT_MEMO:
-                  Parm[ iCnt ].iWidth = sizeof( void * );
-
-                  if( bUnicode )
-                     Parm[ iCnt ].pArg = ( void * ) ( HB_PTRUINT ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &Parm[ iCnt ].hString, NULL );
-                  else
-                     Parm[ iCnt ].pArg = ( void * ) ( HB_PTRUINT ) hb_itemGetStr( pParam, hb_setGetOSCP(), &Parm[ iCnt ].hString, NULL );
-
-                  Parm[ iCnt ].iParFlags = DC_PARFLAG_ARGPTR;  /* use the pointer */
-                  break;
-
-               case HB_IT_ARRAY:
-               case HB_IT_HASH:
-               case HB_IT_SYMBOL:
-               case HB_IT_BLOCK:
-
-               default:
-                  hb_errRT_BASE( EG_ARG, 2010, "Unknown parameter type to DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-                  return;
+            case _RETTYPERAW_INT32:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.n32 = ( ( WIN32_C32P00 ) *lpFunction )(); break;
+                  case  1: ret.t.n32 = ( ( WIN32_C32P01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.n32 = ( ( WIN32_C32P02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.n32 = ( ( WIN32_C32P03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.n32 = ( ( WIN32_C32P04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.n32 = ( ( WIN32_C32P05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.n32 = ( ( WIN32_C32P06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.n32 = ( ( WIN32_C32P07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.n32 = ( ( WIN32_C32P08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.n32 = ( ( WIN32_C32P09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.n32 = ( ( WIN32_C32P10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.n32 = ( ( WIN32_C32P11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.n32 = ( ( WIN32_C32P12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.n32 = ( ( WIN32_C32P13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.n32 = ( ( WIN32_C32P14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.n32 = ( ( WIN32_C32P15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.n32 = ( ( WIN32_C32P16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.n32 = ( ( WIN32_C32P17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.n32 = ( ( WIN32_C32P18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.n32 = ( ( WIN32_C32P19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.n32 = ( ( WIN32_C32P20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.n32 = ( ( WIN32_C32P21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.n32 = ( ( WIN32_C32P22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.n32 = ( ( WIN32_C32P23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.n32 = ( ( WIN32_C32P24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.n32 = ( ( WIN32_C32P25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.n32 = ( ( WIN32_C32P26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.n32 = ( ( WIN32_C32P27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.n32 = ( ( WIN32_C32P28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.n32 = ( ( WIN32_C32P29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.n32 = ( ( WIN32_C32P30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_INT64:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.n64 = ( ( WIN32_C64P00 ) *lpFunction )(); break;
+                  case  1: ret.t.n64 = ( ( WIN32_C64P01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.n64 = ( ( WIN32_C64P02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.n64 = ( ( WIN32_C64P03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.n64 = ( ( WIN32_C64P04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.n64 = ( ( WIN32_C64P05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.n64 = ( ( WIN32_C64P06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.n64 = ( ( WIN32_C64P07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.n64 = ( ( WIN32_C64P08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.n64 = ( ( WIN32_C64P09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.n64 = ( ( WIN32_C64P10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.n64 = ( ( WIN32_C64P11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.n64 = ( ( WIN32_C64P12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.n64 = ( ( WIN32_C64P13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.n64 = ( ( WIN32_C64P14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.n64 = ( ( WIN32_C64P15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.n64 = ( ( WIN32_C64P16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.n64 = ( ( WIN32_C64P17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.n64 = ( ( WIN32_C64P18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.n64 = ( ( WIN32_C64P19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.n64 = ( ( WIN32_C64P20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.n64 = ( ( WIN32_C64P21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.n64 = ( ( WIN32_C64P22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.n64 = ( ( WIN32_C64P23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.n64 = ( ( WIN32_C64P24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.n64 = ( ( WIN32_C64P25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.n64 = ( ( WIN32_C64P26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.n64 = ( ( WIN32_C64P27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.n64 = ( ( WIN32_C64P28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.n64 = ( ( WIN32_C64P29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.n64 = ( ( WIN32_C64P30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_DOUBLE:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.nDB = ( ( WIN32_CDBP00 ) *lpFunction )(); break;
+                  case  1: ret.t.nDB = ( ( WIN32_CDBP01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.nDB = ( ( WIN32_CDBP02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.nDB = ( ( WIN32_CDBP03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.nDB = ( ( WIN32_CDBP04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.nDB = ( ( WIN32_CDBP05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.nDB = ( ( WIN32_CDBP06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.nDB = ( ( WIN32_CDBP07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.nDB = ( ( WIN32_CDBP08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.nDB = ( ( WIN32_CDBP09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.nDB = ( ( WIN32_CDBP10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.nDB = ( ( WIN32_CDBP11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.nDB = ( ( WIN32_CDBP12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.nDB = ( ( WIN32_CDBP13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.nDB = ( ( WIN32_CDBP14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.nDB = ( ( WIN32_CDBP15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.nDB = ( ( WIN32_CDBP16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.nDB = ( ( WIN32_CDBP17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.nDB = ( ( WIN32_CDBP18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.nDB = ( ( WIN32_CDBP19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.nDB = ( ( WIN32_CDBP20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.nDB = ( ( WIN32_CDBP21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.nDB = ( ( WIN32_CDBP22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.nDB = ( ( WIN32_CDBP23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.nDB = ( ( WIN32_CDBP24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.nDB = ( ( WIN32_CDBP25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.nDB = ( ( WIN32_CDBP26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.nDB = ( ( WIN32_CDBP27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.nDB = ( ( WIN32_CDBP28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.nDB = ( ( WIN32_CDBP29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.nDB = ( ( WIN32_CDBP30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_FLOAT:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.nFL = ( ( WIN32_CFLP00 ) *lpFunction )(); break;
+                  case  1: ret.t.nFL = ( ( WIN32_CFLP01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.nFL = ( ( WIN32_CFLP02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.nFL = ( ( WIN32_CFLP03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.nFL = ( ( WIN32_CFLP04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.nFL = ( ( WIN32_CFLP05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.nFL = ( ( WIN32_CFLP06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.nFL = ( ( WIN32_CFLP07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.nFL = ( ( WIN32_CFLP08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.nFL = ( ( WIN32_CFLP09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.nFL = ( ( WIN32_CFLP10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.nFL = ( ( WIN32_CFLP11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.nFL = ( ( WIN32_CFLP12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.nFL = ( ( WIN32_CFLP13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.nFL = ( ( WIN32_CFLP14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.nFL = ( ( WIN32_CFLP15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.nFL = ( ( WIN32_CFLP16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.nFL = ( ( WIN32_CFLP17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.nFL = ( ( WIN32_CFLP18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.nFL = ( ( WIN32_CFLP19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.nFL = ( ( WIN32_CFLP20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.nFL = ( ( WIN32_CFLP21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.nFL = ( ( WIN32_CFLP22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.nFL = ( ( WIN32_CFLP23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.nFL = ( ( WIN32_CFLP24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.nFL = ( ( WIN32_CFLP25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.nFL = ( ( WIN32_CFLP26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.nFL = ( ( WIN32_CFLP27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.nFL = ( ( WIN32_CFLP28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.nFL = ( ( WIN32_CFLP29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.nFL = ( ( WIN32_CFLP30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
             }
          }
-      }
-
-      rc = hb_DynaCall( iCallFlags, lpFunction, iArgCnt, Parm, NULL, 0 );
-
-      if( iArgCnt > 0 )
-      {
-         for( tmp = iFirst, iCnt = 0; tmp <= iParams && iCnt < _DLLEXEC_MAXPARAM; ++tmp, ++iCnt )
+         else /* stdcall */
          {
-            if( HB_ISBYREF( tmp ) )
+            switch( iRetTypeRaw )
             {
-               switch( HB_ITEM_TYPE( hb_param( tmp, HB_IT_ANY ) ) )
+            case _RETTYPERAW_INT32:
+               switch( iParamsRaw )
                {
+                  case  0: ret.t.n32 = ( ( WIN32_S32P00 ) *lpFunction )(); break;
+                  case  1: ret.t.n32 = ( ( WIN32_S32P01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.n32 = ( ( WIN32_S32P02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.n32 = ( ( WIN32_S32P03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.n32 = ( ( WIN32_S32P04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.n32 = ( ( WIN32_S32P05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.n32 = ( ( WIN32_S32P06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.n32 = ( ( WIN32_S32P07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.n32 = ( ( WIN32_S32P08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.n32 = ( ( WIN32_S32P09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.n32 = ( ( WIN32_S32P10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.n32 = ( ( WIN32_S32P11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.n32 = ( ( WIN32_S32P12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.n32 = ( ( WIN32_S32P13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.n32 = ( ( WIN32_S32P14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.n32 = ( ( WIN32_S32P15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.n32 = ( ( WIN32_S32P16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.n32 = ( ( WIN32_S32P17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.n32 = ( ( WIN32_S32P18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.n32 = ( ( WIN32_S32P19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.n32 = ( ( WIN32_S32P20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.n32 = ( ( WIN32_S32P21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.n32 = ( ( WIN32_S32P22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.n32 = ( ( WIN32_S32P23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.n32 = ( ( WIN32_S32P24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.n32 = ( ( WIN32_S32P25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.n32 = ( ( WIN32_S32P26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.n32 = ( ( WIN32_S32P27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.n32 = ( ( WIN32_S32P28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.n32 = ( ( WIN32_S32P29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.n32 = ( ( WIN32_S32P30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_INT64:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.n64 = ( ( WIN32_S64P00 ) *lpFunction )(); break;
+                  case  1: ret.t.n64 = ( ( WIN32_S64P01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.n64 = ( ( WIN32_S64P02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.n64 = ( ( WIN32_S64P03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.n64 = ( ( WIN32_S64P04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.n64 = ( ( WIN32_S64P05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.n64 = ( ( WIN32_S64P06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.n64 = ( ( WIN32_S64P07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.n64 = ( ( WIN32_S64P08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.n64 = ( ( WIN32_S64P09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.n64 = ( ( WIN32_S64P10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.n64 = ( ( WIN32_S64P11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.n64 = ( ( WIN32_S64P12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.n64 = ( ( WIN32_S64P13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.n64 = ( ( WIN32_S64P14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.n64 = ( ( WIN32_S64P15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.n64 = ( ( WIN32_S64P16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.n64 = ( ( WIN32_S64P17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.n64 = ( ( WIN32_S64P18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.n64 = ( ( WIN32_S64P19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.n64 = ( ( WIN32_S64P20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.n64 = ( ( WIN32_S64P21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.n64 = ( ( WIN32_S64P22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.n64 = ( ( WIN32_S64P23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.n64 = ( ( WIN32_S64P24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.n64 = ( ( WIN32_S64P25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.n64 = ( ( WIN32_S64P26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.n64 = ( ( WIN32_S64P27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.n64 = ( ( WIN32_S64P28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.n64 = ( ( WIN32_S64P29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.n64 = ( ( WIN32_S64P30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_DOUBLE:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.nDB = ( ( WIN32_SDBP00 ) *lpFunction )(); break;
+                  case  1: ret.t.nDB = ( ( WIN32_SDBP01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.nDB = ( ( WIN32_SDBP02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.nDB = ( ( WIN32_SDBP03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.nDB = ( ( WIN32_SDBP04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.nDB = ( ( WIN32_SDBP05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.nDB = ( ( WIN32_SDBP06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.nDB = ( ( WIN32_SDBP07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.nDB = ( ( WIN32_SDBP08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.nDB = ( ( WIN32_SDBP09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.nDB = ( ( WIN32_SDBP10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.nDB = ( ( WIN32_SDBP11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.nDB = ( ( WIN32_SDBP12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.nDB = ( ( WIN32_SDBP13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.nDB = ( ( WIN32_SDBP14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.nDB = ( ( WIN32_SDBP15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.nDB = ( ( WIN32_SDBP16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.nDB = ( ( WIN32_SDBP17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.nDB = ( ( WIN32_SDBP18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.nDB = ( ( WIN32_SDBP19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.nDB = ( ( WIN32_SDBP20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.nDB = ( ( WIN32_SDBP21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.nDB = ( ( WIN32_SDBP22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.nDB = ( ( WIN32_SDBP23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.nDB = ( ( WIN32_SDBP24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.nDB = ( ( WIN32_SDBP25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.nDB = ( ( WIN32_SDBP26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.nDB = ( ( WIN32_SDBP27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.nDB = ( ( WIN32_SDBP28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.nDB = ( ( WIN32_SDBP29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.nDB = ( ( WIN32_SDBP30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            case _RETTYPERAW_FLOAT:
+               switch( iParamsRaw )
+               {
+                  case  0: ret.t.nFL = ( ( WIN32_SFLP00 ) *lpFunction )(); break;
+                  case  1: ret.t.nFL = ( ( WIN32_SFLP01 ) *lpFunction )( rawpar[ 0 ] ); break;
+                  case  2: ret.t.nFL = ( ( WIN32_SFLP02 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ] ); break;
+                  case  3: ret.t.nFL = ( ( WIN32_SFLP03 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ] ); break;
+                  case  4: ret.t.nFL = ( ( WIN32_SFLP04 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ] ); break;
+                  case  5: ret.t.nFL = ( ( WIN32_SFLP05 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ] ); break;
+                  case  6: ret.t.nFL = ( ( WIN32_SFLP06 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ] ); break;
+                  case  7: ret.t.nFL = ( ( WIN32_SFLP07 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ] ); break;
+                  case  8: ret.t.nFL = ( ( WIN32_SFLP08 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ] ); break;
+                  case  9: ret.t.nFL = ( ( WIN32_SFLP09 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ] ); break;
+                  case 10: ret.t.nFL = ( ( WIN32_SFLP10 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ] ); break;
+                  case 11: ret.t.nFL = ( ( WIN32_SFLP11 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ] ); break;
+                  case 12: ret.t.nFL = ( ( WIN32_SFLP12 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ] ); break;
+                  case 13: ret.t.nFL = ( ( WIN32_SFLP13 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ] ); break;
+                  case 14: ret.t.nFL = ( ( WIN32_SFLP14 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ] ); break;
+                  case 15: ret.t.nFL = ( ( WIN32_SFLP15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
+                  case 16: ret.t.nFL = ( ( WIN32_SFLP16 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ] ); break;
+                  case 17: ret.t.nFL = ( ( WIN32_SFLP17 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ] ); break;
+                  case 18: ret.t.nFL = ( ( WIN32_SFLP18 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ] ); break;
+                  case 19: ret.t.nFL = ( ( WIN32_SFLP19 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ] ); break;
+                  case 20: ret.t.nFL = ( ( WIN32_SFLP20 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ] ); break;
+                  case 21: ret.t.nFL = ( ( WIN32_SFLP21 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ] ); break;
+                  case 22: ret.t.nFL = ( ( WIN32_SFLP22 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ] ); break;
+                  case 23: ret.t.nFL = ( ( WIN32_SFLP23 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ] ); break;
+                  case 24: ret.t.nFL = ( ( WIN32_SFLP24 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ] ); break;
+                  case 25: ret.t.nFL = ( ( WIN32_SFLP25 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ] ); break;
+                  case 26: ret.t.nFL = ( ( WIN32_SFLP26 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ] ); break;
+                  case 27: ret.t.nFL = ( ( WIN32_SFLP27 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ] ); break;
+                  case 28: ret.t.nFL = ( ( WIN32_SFLP28 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ] ); break;
+                  case 29: ret.t.nFL = ( ( WIN32_SFLP29 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ] ); break;
+                  case 30: ret.t.nFL = ( ( WIN32_SFLP30 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ], rawpar[ 15 ], rawpar[ 16 ], rawpar[ 17 ], rawpar[ 18 ], rawpar[ 19 ], rawpar[ 20 ], rawpar[ 21 ], rawpar[ 22 ], rawpar[ 23 ], rawpar[ 24 ], rawpar[ 25 ], rawpar[ 26 ], rawpar[ 27 ], rawpar[ 28 ], rawpar[ 29 ] ); break;
+               }
+               break;
+            }
+         }
+
+         switch( iRetType )
+         {
+            /* TODO: Add 64-bit integer support */
+
+            case _RETTYPE_VOID:
+               hb_ret();
+               break;
+
+            case _RETTYPE_BOOL:
+               hb_retl( ret.t.n32 != 0 );
+               break;
+
+            case _RETTYPE_CHAR:
+            case _RETTYPE_UNSIGNED_CHAR:
+               hb_retni( ( int ) ( ret.t.n32 & 0xFF ) );
+               break;
+
+            case _RETTYPE_SHORT:
+            case _RETTYPE_UNSIGNED_SHORT:
+            case _RETTYPE_INT:
+               hb_retni( ( int ) ret.t.n32 );
+               break;
+
+            case _RETTYPE_LONG:
+               hb_retnl( ( long ) ret.t.n32 );
+               break;
+
+            case _RETTYPE_UNSIGNED_INT:
+            case _RETTYPE_UNSIGNED_LONG:
+               hb_retnint( ret.t.n32 );
+               break;
+
+            case _RETTYPE_CHAR_PTR:
+            case _RETTYPE_UNSIGNED_CHAR_PTR:
+               if( wcall.bUNICODE )
+                  hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) ret.t.n32 );
+               else
+                  hb_retstr( hb_setGetOSCP(), ( const char * ) ret.t.n32 );
+               break;
+
+            case _RETTYPE_INT_PTR:
+            case _RETTYPE_UNSIGNED_SHORT_PTR:
+            case _RETTYPE_UNSIGNED_INT_PTR:
+            case _RETTYPE_STRUCTURE_PTR:
+            case _RETTYPE_LONG_PTR:
+            case _RETTYPE_UNSIGNED_LONG_PTR:
+            case _RETTYPE_VOID_PTR:
+            case _RETTYPE_FLOAT_PTR:
+            case _RETTYPE_DOUBLE_PTR:
+               hb_retptr( ( void * ) ret.t.n32 );
+               break;
+
+            case _RETTYPE_FLOAT:
+               hb_retnd( ret.t.nFL );
+               break;
+
+            case _RETTYPE_DOUBLE:
+               hb_retnd( ret.t.nDB );
+               break;
+
+            default:
+               hb_retnl( ( long ) ret.t.n32 );
+         }
+
+         for( tmp = 0; tmp < iParams; ++tmp )
+         {
+            if( wcall.pArg[ tmp ].bByRef )
+            {
+               switch( HB_ITEM_TYPE( hb_param( iFirst + tmp, HB_IT_ANY ) ) )
+               {
+                  /* TODO: Add 64-bit integer support */
+
+                  case HB_IT_LOGICAL:
+                     hb_storl( wcall.pArg[ tmp ].value.t.n32 != 0, iFirst + tmp );
+                     break;
+
                   case HB_IT_NIL:
-                     hb_stornl( Parm[ iCnt ].numargs.dwArg, tmp );
-                     break;
-
-                  case HB_IT_POINTER:
-                     hb_storptr( ( void * ) Parm[ iCnt ].numargs.dwArg, tmp );
-                     break;
-
                   case HB_IT_INTEGER:
                   case HB_IT_LONG:
                   case HB_IT_DATE:
-                  case HB_IT_LOGICAL:
-                     hb_stornl( Parm[ iCnt ].numargs.dwArg, tmp );
+                     hb_stornint( wcall.pArg[ tmp ].value.t.n32, iFirst + tmp );
                      break;
 
                   case HB_IT_DOUBLE:
-                     hb_stornd( Parm[ iCnt ].numargs.dArg, tmp );
+                     hb_stornd( wcall.pArg[ tmp ].value.t.nDB, iFirst + tmp );
                      break;
 
                   case HB_IT_STRING:
                   case HB_IT_MEMO:
-                     if( bUnicode )
-                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) Parm[ iCnt ].pArg, hb_parclen( tmp ), tmp );
+                     if( wcall.bUNICODE )
+                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      else
-                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) Parm[ iCnt ].pArg, hb_parclen( tmp ), tmp );
+                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
-                  default:
-                     hb_errRT_BASE( EG_ARG, 2010, "Unknown reference parameter type to DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-                     return;
+
+                  case HB_IT_POINTER:
+                     hb_storptr( ( void * ) wcall.pArg[ tmp ].value.t.n32, iFirst + tmp );
+                     break;
                }
             }
          }
 
          for( tmp = 0; tmp < iParams; ++tmp )
-            hb_strfree( Parm[ tmp ].hString );
+            hb_strfree( wcall.pArg[ tmp ].hString );
+
+         if( wcall.pArg )
+            hb_xfree( wcall.pArg );
       }
-
-      /* return the correct value */
-      switch( iRtype )
-      {
-         case CTYPE_BOOL:
-            hb_retl( rc.ret_long != 0 );
-            break;
-
-         case CTYPE_VOID:
-            hb_ret();
-            break;
-
-         case CTYPE_CHAR:
-         case CTYPE_UNSIGNED_CHAR:
-            hb_retni( ( char ) rc.ret_int );
-            break;
-
-         case CTYPE_SHORT:
-         case CTYPE_UNSIGNED_SHORT:
-            hb_retni( ( int ) rc.ret_int );
-            break;
-
-         case CTYPE_INT:
-            hb_retni( ( int ) rc.ret_long );
-            break;
-
-         case CTYPE_LONG:
-            hb_retnl( ( long ) rc.ret_long );
-            break;
-
-         case CTYPE_CHAR_PTR:
-         case CTYPE_UNSIGNED_CHAR_PTR:
-            if( bUnicode )
-               hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) rc.ret_long );
-            else
-               hb_retstr( hb_setGetOSCP(), ( const char * ) rc.ret_long );
-            break;
-
-         case CTYPE_UNSIGNED_INT:
-         case CTYPE_UNSIGNED_LONG:
-            hb_retnint( ( unsigned long ) rc.ret_long );
-            break;
-
-         case CTYPE_INT_PTR:
-         case CTYPE_UNSIGNED_SHORT_PTR:
-         case CTYPE_UNSIGNED_INT_PTR:
-         case CTYPE_STRUCTURE_PTR:
-         case CTYPE_LONG_PTR:
-         case CTYPE_UNSIGNED_LONG_PTR:
-         case CTYPE_VOID_PTR:
-         case CTYPE_FLOAT_PTR:
-         case CTYPE_DOUBLE_PTR:
-            hb_retptr( ( void * ) rc.ret_long );
-            break;
-
-         case CTYPE_FLOAT:
-            hb_retnd( rc.ret_float );
-            break;
-
-         case CTYPE_DOUBLE:
-            hb_retnd( rc.ret_double );
-            break;
-
-         default:
-            hb_errRT_BASE( EG_ARG, 2010, "Unknown return type from DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      }
+      else
+         hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 
 #endif
@@ -938,6 +1246,9 @@ HB_FUNC( GETPROCADDRESS )
 
 #ifdef HB_COMPAT_XPP
 
+/* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
+         was derived from the context in which the functions are used. [pt] */
+
 HB_FUNC( DLLLOAD )
 {
    HB_FUNC_EXEC( LOADLIBRARY );
@@ -968,13 +1279,12 @@ HB_FUNC( DLLCALL )
    if( xec.hDLL && ( HB_PTRDIFF ) xec.hDLL >= 32 )
    {
       HB_BOOL bUNICODE;
+
       xec.lpFunction = hb_getprocaddress( ( HMODULE ) xec.hDLL, 3, &bUNICODE );
+      xec.iCallConv  = HB_ISNUM( 2 ) ? hb_parni( 2 ) : _CALLCONV_STDCALL;
+      xec.bUNICODE   = bUNICODE;
 
-      xec.iCallFlags = HB_ISNUM( 2 ) ? hb_parni( 2 ) : DC_CALL_STDCALL;
-      if( bUNICODE )
-         xec.iCallFlags |= DC_UNICODE;
-
-      hb_DllExec( 0, 0, NULL, &xec, hb_pcount(), 4 );
+      hb_DllExec( 0, 0, HB_FALSE, NULL, &xec, hb_pcount(), 4 );
 
       if( HB_ISCHAR( 1 ) )
          FreeLibrary( xec.hDLL );
@@ -1009,9 +1319,9 @@ HB_FUNC( DLLPREPARECALL )
       xec->lpFunction = hb_getprocaddress( xec->hDLL, 3, &bUNICODE );
       if( xec->lpFunction )
       {
-         xec->iCallFlags = HB_ISNUM( 2 ) ? hb_parni( 2 ) : DC_CALL_STDCALL;
-         if( bUNICODE )
-            xec->iCallFlags |= DC_UNICODE;
+         xec->iCallConv = HB_ISNUM( 2 ) ? hb_parni( 2 ) : _CALLCONV_STDCALL;
+         xec->bUNICODE = bUNICODE;
+
          hb_retptrGC( xec );
          return;
       }
@@ -1030,7 +1340,7 @@ HB_FUNC( DLLEXECUTECALL )
    PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
 
    if( xec && xec->hDLL && xec->lpFunction )
-      hb_DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
+      hb_DllExec( 0, 0, HB_FALSE, NULL, xec, hb_pcount(), 2 );
 }
 
 #endif /* HB_COMPAT_XPP */
@@ -1041,17 +1351,15 @@ HB_FUNC( DLLEXECUTECALL )
    GetProcAddress() above. Note that it is hardcoded to use PASCAL calling convention. */
 HB_FUNC( CALLDLL )
 {
-   hb_DllExec( DC_CALL_STDCALL, 0, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   hb_DllExec( _CALLCONV_STDCALL, 0            , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   hb_DllExec( DC_CALL_STDCALL, CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
+   hb_DllExec( _CALLCONV_STDCALL, _RETTYPE_BOOL, HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   hb_DllExec( DC_CALL_STDCALL, hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
+   hb_DllExec( _CALLCONV_STDCALL, hb_parni( 2 ), HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
 }
-
-#endif /* HB_OS_WIN && && !__CYGWIN__ !HB_NO_ASM */
