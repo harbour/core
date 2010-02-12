@@ -183,8 +183,7 @@
 
 typedef int                 HB_BOOL;
 typedef signed char         HB_SCHAR;
-typedef unsigned char       HB_UCHAR;          /* QUESTION: HB_BYTE or HB_UCHAR? */
-typedef unsigned char       HB_BYTE;           /* QUESTION: HB_BYTE or HB_UCHAR? */
+typedef unsigned char       HB_UCHAR;
 typedef short               HB_SHORT;
 typedef unsigned short      HB_USHORT;
 typedef long                HB_LONG;           /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
@@ -196,7 +195,10 @@ typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after
 
 /* Guaranteed 8-bit types */
 typedef HB_SCHAR            HB_I8;
-typedef HB_BYTE             HB_U8;
+typedef HB_UCHAR            HB_U8;
+
+/* Convenience */
+typedef HB_UCHAR            HB_BYTE;
 
 #if ! defined( HB_LEGACY_TYPES_OFF )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
@@ -455,11 +457,13 @@ typedef HB_BYTE             HB_U8;
    #define HB_I64_MIN          LONGLONG_MIN
    #define HB_I64_MAX          LONGLONG_MAX
    #define HB_U64_MAX          ULONGLONG_MAX
-#  if !defined( UINT64 )
-      typedef HB_U64        UINT64;
-#  endif
-#  if !defined( INT64 )
-      typedef HB_I64        INT64;
+#  if ! defined( HB_LEGACY_TYPES_OFF )
+#     if !defined( UINT64 )
+         typedef HB_U64        UINT64;
+#     endif
+#     if !defined( INT64 )
+         typedef HB_I64        INT64;
+#     endif
 #  endif
 #  if !defined( UINT64_MAX )
 #     define UINT64_MAX     ULONGLONG_MAX

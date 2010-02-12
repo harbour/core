@@ -8,6 +8,6 @@ C_SOURCES := \
    bmdbfcdx.c \
    bmsixcdx.c
 
-LIBNAME := hbbmcdx
+LIBNAME := rddbmcdx
 
 include $(TOP)$(ROOT)config/lib.mk

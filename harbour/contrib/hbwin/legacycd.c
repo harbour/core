@@ -97,18 +97,6 @@ HB_FUNC( FREELIBRARY )
       hb_retl( HB_FALSE );
 }
 
-HB_FUNC( GETPROCADDRESS )
-{
-   HMODULE hDLL;
-
-   if( HB_ISNUM( 1 ) )
-      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   else
-      hDLL = ( HMODULE ) hb_parptr( 1 );
-
-   hb_retptr( hDLL ? ( void * ) hbwin_getprocaddress( hDLL, 2, NULL ) : NULL );
-}
-
 #ifndef HB_WIN_NO_LEGACY
 #define HB_WIN_NO_LEGACY
 #endif

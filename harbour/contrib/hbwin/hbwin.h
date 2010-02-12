@@ -93,7 +93,7 @@
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT int       hbwin_bitmapType( const void * pImgBuf, HB_SIZE size );
-extern HB_EXPORT void      hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFunction, int iParams, int iFirst, int * iParTypes );
+extern HB_EXPORT void      hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFunction, int iParams, int iFirst, int * piArgType );
 
 extern           FARPROC   hbwin_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE );
 

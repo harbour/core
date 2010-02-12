@@ -75,8 +75,8 @@ PROCEDURE Main()
 
    IF hb_FileExists( "libcurl.dll" )
       hDLL := wapi_LoadLibrary( "libcurl.dll" )
-      ? wapi_GetProcAddress( hDLL, "curl_version" )
-      ? win_dllCall( { NIL, HB_WIN_DLL_CTYPE_CHAR_PTR }, wapi_GetProcAddress( hDLL, "curl_version" ) )
+      ? GetProcAddress( hDLL, "curl_version" )
+      ? win_dllCall( { NIL, HB_WIN_DLL_CTYPE_CHAR_PTR }, GetProcAddress( hDLL, "curl_version" ) )
       wapi_FreeLibrary( hDLL )
    ENDIF
 
@@ -97,12 +97,15 @@ PROCEDURE Main()
    hDLL := wapi_LoadLibrary( "shell32.dll" )
    ? "ValType( hDLL ): ", ValType( hDLL )
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL (BOOL retval): ", win_dllCall( { NIL, HB_WIN_DLL_CTYPE_BOOL }, wapi_GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
+   ? "WIN_DLLCALL (BOOL retval): ", win_dllCall( { NIL, HB_WIN_DLL_CTYPE_BOOL }, GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
-   ? "WIN_DLLCALL: ", win_dllCall( wapi_GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
+   ? "WIN_DLLCALL: ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
    ? "cData:", cData
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL: ", win_dllCall( wapi_GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "WIN_DLLCALL (PARAMS): ", win_dllCall( { NIL, NIL, NIL, HB_WIN_DLL_CTYPE_BOOL }, GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
+   ? "@cData: ", cData
+   cData := Space( MAX_PATH )
+   ? "WIN_DLLCALL: ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "@cData: ", cData
    wapi_FreeLibrary( hDLL )
 

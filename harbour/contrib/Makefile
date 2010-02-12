@@ -7,7 +7,6 @@ ROOT := ../
 # contribs _without_ external dependencies
 DIRS := \
    gtwvg \
-   hbbmcdx \
    hbbtree \
    hbclipsm \
    hbct \
@@ -24,6 +23,7 @@ DIRS := \
    hbtpathy \
    hbwin \
    hbziparc \
+   rddbmcdx \
    xhb \
    xpp \
 
