@@ -57,54 +57,19 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-/* C calling conventions */
-#define _CALLCONV_CDECL             1
-#define _CALLCONV_STDCALL           2
+#ifndef HB_WIN_NO_LEGACY
+#define HB_WIN_NO_LEGACY
+#endif
+#undef HB_LEGACY_LEVEL3
+#include "hbwin.ch"
 
 /* C raw return types */
-#define _RETTYPERAW_INT32           1
-#define _RETTYPERAW_INT64           2
-#define _RETTYPERAW_DOUBLE          3
-#define _RETTYPERAW_FLOAT           4
+#define _RETTYPERAW_INT32       1
+#define _RETTYPERAW_INT64       2
+#define _RETTYPERAW_DOUBLE      3
+#define _RETTYPERAW_FLOAT       4
 
-/* C parameter types */
-#define _RETTYPE_VOID               9
-#define _RETTYPE_CHAR               1
-#define _RETTYPE_UNSIGNED_CHAR      -1
-#define _RETTYPE_CHAR_PTR           10
-#define _RETTYPE_UNSIGNED_CHAR_PTR  -10
-#define _RETTYPE_SHORT              2
-#define _RETTYPE_UNSIGNED_SHORT     -2
-#define _RETTYPE_SHORT_PTR          20
-#define _RETTYPE_UNSIGNED_SHORT_PTR -20
-#define _RETTYPE_INT                3
-#define _RETTYPE_UNSIGNED_INT       -3
-#define _RETTYPE_INT_PTR            30
-#define _RETTYPE_UNSIGNED_INT_PTR   -30
-#define _RETTYPE_LONG               4
-#define _RETTYPE_UNSIGNED_LONG      -4
-#define _RETTYPE_LONG_PTR           40
-#define _RETTYPE_UNSIGNED_LONG_PTR  -40
-#define _RETTYPE_FLOAT              5
-#define _RETTYPE_FLOAT_PTR          50
-#define _RETTYPE_DOUBLE             6
-#define _RETTYPE_DOUBLE_PTR         60
-#define _RETTYPE_VOID_PTR           7
-#define _RETTYPE_BOOL               8
-#define _RETTYPE_STRUCTURE          1000
-#define _RETTYPE_STRUCTURE_PTR      10000
-
-typedef struct
-{
-   HMODULE  hDLL;       /* Handle */
-   HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
-   int      iCallConv;
-   int      iRetType;
-   HB_BOOL  bUNICODE;
-   FARPROC  lpFunction; /* Function Address */
-} HB_DLLEXEC, * PHB_DLLEXEC;
-
-#define _DLLEXEC_MAXPARAM   15
+#define _DLLEXEC_MAXPARAM       15
 
 #if defined( HB_ARCH_64BIT )
 
@@ -515,17 +480,11 @@ typedef float  ( _cdecl   * WIN32_CFLP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U
 
 #endif
 
-static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFunction, PHB_DLLEXEC xec, int iParams, int iFirst )
+void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFunction, int iParams, int iFirst, int * iParTypes )
 {
    int tmp;
 
-   if( xec )
-   {
-      iCallConv  = xec->iCallConv;
-      iRetType   = xec->iRetType;
-      bUNICODE   = xec->bUNICODE;
-      lpFunction = xec->lpFunction;
-   }
+   HB_SYMBOL_UNUSED( iParTypes );
 
    if( ! lpFunction )
       return;
@@ -534,6 +493,8 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
    {
       HB_WINCALL wcall;
 
+      HB_SYMBOL_UNUSED( iCallConv );
+
       wcall.bUNICODE = bUNICODE;
       wcall.iFirst   = iFirst - 1;
 
@@ -541,7 +502,7 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
 
       if( iParams <= _DLLEXEC_MAXPARAM )
       {
-         HB_U64 nRetVal;
+         HB_U64 nRetVal = 0;
 
          if( iParams )
          {
@@ -576,53 +537,53 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
 
          switch( iRetType )
          {
-            case _RETTYPE_VOID:
+            case HB_WIN_DLL_CTYPE_VOID:
                hb_ret();
                break;
 
-            case _RETTYPE_BOOL:
+            case HB_WIN_DLL_CTYPE_BOOL:
                hb_retl( nRetVal != 0 );
                break;
 
-            case _RETTYPE_CHAR:
-            case _RETTYPE_UNSIGNED_CHAR:
-            case _RETTYPE_SHORT:
-            case _RETTYPE_UNSIGNED_SHORT:
-            case _RETTYPE_INT:
+            case HB_WIN_DLL_CTYPE_CHAR:
+            case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
+            case HB_WIN_DLL_CTYPE_SHORT:
+            case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
+            case HB_WIN_DLL_CTYPE_INT:
                hb_retni( ( int ) nRetVal );
                break;
 
-            case _RETTYPE_LONG:
+            case HB_WIN_DLL_CTYPE_LONG:
                hb_retnl( ( long ) nRetVal );
                break;
 
-            case _RETTYPE_UNSIGNED_INT:
-            case _RETTYPE_UNSIGNED_LONG:
+            case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
+            case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
                hb_retnint( nRetVal );
                break;
 
-            case _RETTYPE_CHAR_PTR:
-            case _RETTYPE_UNSIGNED_CHAR_PTR:
+            case HB_WIN_DLL_CTYPE_CHAR_PTR:
+            case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
                if( bUNICODE )
                   hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal );
                else
                   hb_retstr( hb_setGetOSCP(), ( const char * ) nRetVal );
                break;
 
-            case _RETTYPE_INT_PTR:
-            case _RETTYPE_UNSIGNED_SHORT_PTR:
-            case _RETTYPE_UNSIGNED_INT_PTR:
-            case _RETTYPE_STRUCTURE_PTR:
-            case _RETTYPE_LONG_PTR:
-            case _RETTYPE_UNSIGNED_LONG_PTR:
-            case _RETTYPE_VOID_PTR:
-            case _RETTYPE_FLOAT_PTR:
-            case _RETTYPE_DOUBLE_PTR:
+            case HB_WIN_DLL_CTYPE_INT_PTR:
+            case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
+            case HB_WIN_DLL_CTYPE_LONG_PTR:
+            case HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_VOID_PTR:
+            case HB_WIN_DLL_CTYPE_FLOAT_PTR:
+            case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
                hb_retptr( ( void * ) nRetVal );
                break;
 
-            case _RETTYPE_FLOAT:
-            case _RETTYPE_DOUBLE:
+            case HB_WIN_DLL_CTYPE_FLOAT:
+            case HB_WIN_DLL_CTYPE_DOUBLE:
                hb_retnd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &nRetVal ) );
                break;
 
@@ -694,9 +655,9 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
 
          ret.t.n64 = 0;
 
-         if( iRetType == _RETTYPE_DOUBLE )
+         if( iRetType == HB_WIN_DLL_CTYPE_DOUBLE )
             iRetTypeRaw = _RETTYPERAW_DOUBLE;
-         if( iRetType == _RETTYPE_FLOAT )
+         if( iRetType == HB_WIN_DLL_CTYPE_FLOAT )
             iRetTypeRaw = _RETTYPERAW_FLOAT;
          else
             iRetTypeRaw = _RETTYPERAW_INT32;
@@ -725,7 +686,7 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
                rawpar[ iParamsRaw++ ] = r2;
          }
 
-         if( iCallConv == _CALLCONV_CDECL )
+         if( iCallConv == HB_WIN_DLL_CALLCONV_CDECL )
          {
             switch( iRetTypeRaw )
             {
@@ -1030,59 +991,59 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
          {
             /* TODO: Add 64-bit integer support */
 
-            case _RETTYPE_VOID:
+            case HB_WIN_DLL_CTYPE_VOID:
                hb_ret();
                break;
 
-            case _RETTYPE_BOOL:
+            case HB_WIN_DLL_CTYPE_BOOL:
                hb_retl( ret.t.n32 != 0 );
                break;
 
-            case _RETTYPE_CHAR:
-            case _RETTYPE_UNSIGNED_CHAR:
+            case HB_WIN_DLL_CTYPE_CHAR:
+            case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
                hb_retni( ( int ) ( ret.t.n32 & 0xFF ) );
                break;
 
-            case _RETTYPE_SHORT:
-            case _RETTYPE_UNSIGNED_SHORT:
-            case _RETTYPE_INT:
+            case HB_WIN_DLL_CTYPE_SHORT:
+            case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
+            case HB_WIN_DLL_CTYPE_INT:
                hb_retni( ( int ) ret.t.n32 );
                break;
 
-            case _RETTYPE_LONG:
+            case HB_WIN_DLL_CTYPE_LONG:
                hb_retnl( ( long ) ret.t.n32 );
                break;
 
-            case _RETTYPE_UNSIGNED_INT:
-            case _RETTYPE_UNSIGNED_LONG:
+            case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
+            case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
                hb_retnint( ret.t.n32 );
                break;
 
-            case _RETTYPE_CHAR_PTR:
-            case _RETTYPE_UNSIGNED_CHAR_PTR:
+            case HB_WIN_DLL_CTYPE_CHAR_PTR:
+            case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
                if( wcall.bUNICODE )
                   hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) ret.t.n32 );
                else
                   hb_retstr( hb_setGetOSCP(), ( const char * ) ret.t.n32 );
                break;
 
-            case _RETTYPE_INT_PTR:
-            case _RETTYPE_UNSIGNED_SHORT_PTR:
-            case _RETTYPE_UNSIGNED_INT_PTR:
-            case _RETTYPE_STRUCTURE_PTR:
-            case _RETTYPE_LONG_PTR:
-            case _RETTYPE_UNSIGNED_LONG_PTR:
-            case _RETTYPE_VOID_PTR:
-            case _RETTYPE_FLOAT_PTR:
-            case _RETTYPE_DOUBLE_PTR:
+            case HB_WIN_DLL_CTYPE_INT_PTR:
+            case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
+            case HB_WIN_DLL_CTYPE_LONG_PTR:
+            case HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR:
+            case HB_WIN_DLL_CTYPE_VOID_PTR:
+            case HB_WIN_DLL_CTYPE_FLOAT_PTR:
+            case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
                hb_retptr( ( void * ) ret.t.n32 );
                break;
 
-            case _RETTYPE_FLOAT:
+            case HB_WIN_DLL_CTYPE_FLOAT:
                hb_retnd( ret.t.nFL );
                break;
 
-            case _RETTYPE_DOUBLE:
+            case HB_WIN_DLL_CTYPE_DOUBLE:
                hb_retnd( ret.t.nDB );
                break;
 
@@ -1143,24 +1104,7 @@ static void hb_DllExec( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC l
 
 /* ------------------------------------------------------------------ */
 
-static HB_GARBAGE_FUNC( _DLLUnload )
-{
-   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) Cargo;
-
-   if( xec->hDLL && xec->bFreeDLL )
-   {
-      FreeLibrary( xec->hDLL );
-      xec->hDLL = NULL;
-   }
-}
-
-static const HB_GC_FUNCS s_gcDllFuncs =
-{
-   _DLLUnload,
-   hb_gcDummyMark
-};
-
-static FARPROC hb_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE )
+FARPROC hbwin_getprocaddress( HMODULE hDLL, int iParam, HB_BOOL * pbUNICODE )
 {
 #if defined( HB_OS_WIN_CE )
    void * hStr;
@@ -1241,13 +1185,40 @@ HB_FUNC( GETPROCADDRESS )
    else
       hDLL = ( HMODULE ) hb_parptr( 1 );
 
-   hb_retptr( hDLL ? ( void * ) hb_getprocaddress( hDLL, 2, NULL ) : NULL );
+   hb_retptr( hDLL ? ( void * ) hbwin_getprocaddress( hDLL, 2, NULL ) : NULL );
 }
 
 #ifdef HB_COMPAT_XPP
 
 /* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
          was derived from the context in which the functions are used. [pt] */
+
+typedef struct
+{
+   HMODULE  hDLL;       /* Handle */
+   HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
+   int      iCallConv;
+   int      iRetType;
+   HB_BOOL  bUNICODE;
+   FARPROC  lpFunction; /* Function Address */
+} HB_DLLEXEC, * PHB_DLLEXEC;
+
+static HB_GARBAGE_FUNC( _DLLUnload )
+{
+   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) Cargo;
+
+   if( xec->hDLL && xec->bFreeDLL )
+   {
+      FreeLibrary( xec->hDLL );
+      xec->hDLL = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gcDllFuncs =
+{
+   _DLLUnload,
+   hb_gcDummyMark
+};
 
 HB_FUNC( DLLLOAD )
 {
@@ -1261,33 +1232,36 @@ HB_FUNC( DLLUNLOAD )
 
 HB_FUNC( DLLCALL )
 {
-   HB_DLLEXEC xec;
-
-   memset( &xec, 0, sizeof( xec ) );
+   HMODULE hDLL;
 
    if( HB_ISPOINTER( 1 ) )
-      xec.hDLL = ( HMODULE ) hb_parptr( 1 );
+      hDLL = ( HMODULE ) hb_parptr( 1 );
    else if( HB_ISNUM( 1 ) )
-      xec.hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
+      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
       void * hFileName;
-      xec.hDLL = LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
+      hDLL = LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
       hb_strfree( hFileName );
    }
+   else
+      hDLL = NULL;
 
-   if( xec.hDLL && ( HB_PTRDIFF ) xec.hDLL >= 32 )
+   if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
       HB_BOOL bUNICODE;
+      FARPROC lpFunction = hbwin_getprocaddress( hDLL, 3, &bUNICODE );
 
-      xec.lpFunction = hb_getprocaddress( ( HMODULE ) xec.hDLL, 3, &bUNICODE );
-      xec.iCallConv  = HB_ISNUM( 2 ) ? hb_parni( 2 ) : _CALLCONV_STDCALL;
-      xec.bUNICODE   = bUNICODE;
-
-      hb_DllExec( 0, 0, HB_FALSE, NULL, &xec, hb_pcount(), 4 );
+      hbwin_dllCall( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL,
+                     HB_WIN_DLL_CTYPE_DEFAULT,
+                     bUNICODE,
+                     lpFunction,
+                     hb_pcount(),
+                     4,
+                     NULL );
 
       if( HB_ISCHAR( 1 ) )
-         FreeLibrary( xec.hDLL );
+         FreeLibrary( hDLL );
    }
 }
 
@@ -1316,10 +1290,10 @@ HB_FUNC( DLLPREPARECALL )
    if( xec->hDLL )
    {
       HB_BOOL bUNICODE;
-      xec->lpFunction = hb_getprocaddress( xec->hDLL, 3, &bUNICODE );
+      xec->lpFunction = hbwin_getprocaddress( xec->hDLL, 3, &bUNICODE );
       if( xec->lpFunction )
       {
-         xec->iCallConv = HB_ISNUM( 2 ) ? hb_parni( 2 ) : _CALLCONV_STDCALL;
+         xec->iCallConv = HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL;
          xec->bUNICODE = bUNICODE;
 
          hb_retptrGC( xec );
@@ -1340,26 +1314,45 @@ HB_FUNC( DLLEXECUTECALL )
    PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
 
    if( xec && xec->hDLL && xec->lpFunction )
-      hb_DllExec( 0, 0, HB_FALSE, NULL, xec, hb_pcount(), 2 );
+   {
+      hbwin_dllCall( xec->iCallConv,
+                     xec->iRetType,
+                     xec->bUNICODE,
+                     xec->lpFunction,
+                     hb_pcount(),
+                     2,
+                     NULL );
+   }
 }
 
 #endif /* HB_COMPAT_XPP */
 
 /* ------------------------------------------------------------------ */
 
-/* Call a DLL function from Harbour, the first parameter is a pointer returned from
-   GetProcAddress() above. Note that it is hardcoded to use PASCAL calling convention. */
-HB_FUNC( CALLDLL )
+HB_FUNC( WIN_DLLCALL )
 {
-   hb_DllExec( _CALLCONV_STDCALL, 0            , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
-}
+   PHB_ITEM pParam = hb_param( 1, HB_IT_ARRAY );
+   int iFirst = 1;
 
-HB_FUNC( CALLDLLBOOL )
-{
-   hb_DllExec( _CALLCONV_STDCALL, _RETTYPE_BOOL, HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 2 );
-}
+   int iCallConv = HB_WIN_DLL_CALLCONV_STDCALL;
+   int iRetType = HB_WIN_DLL_CTYPE_DEFAULT;
+   HB_BOOL bUNICODE = HB_FALSE;
 
-HB_FUNC( CALLDLLTYPED )
-{
-   hb_DllExec( _CALLCONV_STDCALL, hb_parni( 2 ), HB_FALSE, ( FARPROC ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
+   if( pParam )
+   {
+      HB_SIZE nLen = hb_arrayLen( pParam );
+
+      ++iFirst;
+
+      if( nLen >= 1 && HB_IS_NUMERIC( hb_arrayGetItemPtr( pParam, 1 ) ) )
+         iCallConv = hb_arrayGetNI( pParam, 1 );
+      if( nLen >= 2 && HB_IS_NUMERIC( hb_arrayGetItemPtr( pParam, 2 ) ) )
+         iRetType = hb_arrayGetNI( pParam, 2 );
+      if( nLen >= 3 && HB_IS_LOGICAL( hb_arrayGetItemPtr( pParam, 3 ) ) )
+         bUNICODE = hb_arrayGetL( pParam, 3 );
+
+      /* TODO: Allow to specify parameter types, too */
+   }
+
+   hbwin_dllCall( iCallConv, iRetType, bUNICODE, ( FARPROC ) hb_parptr( iFirst ), hb_pcount(), iFirst + 1, NULL );
 }

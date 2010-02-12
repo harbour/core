@@ -78,4 +78,26 @@ HB_FUNC( SETLASTERROR )
    SetLastError( hb_parnl( 1 ) );
 }
 
+#ifndef HB_WIN_NO_LEGACY
+#define HB_WIN_NO_LEGACY
+#endif
+#undef HB_LEGACY_LEVEL3
+
+#include "hbwin.ch"
+
+HB_FUNC( CALLDLL )
+{
+   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, HB_WIN_DLL_CTYPE_DEFAULT, HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+}
+
+HB_FUNC( CALLDLLBOOL )
+{
+   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, HB_WIN_DLL_CTYPE_BOOL   , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+}
+
+HB_FUNC( CALLDLLTYPED )
+{
+   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, hb_parni( 2 )           , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 3, NULL );
+}
+
 #endif

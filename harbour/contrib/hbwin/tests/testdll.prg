@@ -13,6 +13,8 @@
  *
  */
 
+#include "hbwin.ch"
+
 #define MB_OK                       0x00000000
 #define MB_OKCANCEL                 0x00000001
 #define MB_ABORTRETRYIGNORE         0x00000002
@@ -96,12 +98,12 @@ PROCEDURE Main()
    hDLL := DllLoad( "shell32.dll" )
    ? "ValType( hDLL ): ", ValType( hDLL )
    cData := Space( MAX_PATH )
-   ? "CALLDLLBOOL: ", CallDllBool( GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
+   ? "WIN_DLLCALL (BOOL retval): ", win_dllCall( { NIL, HB_WIN_DLL_CTYPE_BOOL }, GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
-   ? "CALLDLL: ", CallDll( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
+   ? "WIN_DLLCALL: ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
    ? "cData:", cData
    cData := Space( MAX_PATH )
-   ? "CALDLL: ", CallDll( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "WIN_DLLCALL: ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "@cData: ", cData
    DllUnload( hDLL )
 

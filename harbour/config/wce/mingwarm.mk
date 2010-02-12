@@ -26,10 +26,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # Use -O2 instead of -O3 here.
    CFLAGS += -O2
    ifneq ($(HB_BUILD_DEBUG),yes)
-      # NOTE: Hack to always include frame pointer to make win_dll.c / hb_DynaCall() work.
-      ifneq ($(LIBNAME),hbwin)
-         CFLAGS += -fomit-frame-pointer
-      endif
+      CFLAGS += -fomit-frame-pointer
    endif
 endif
 

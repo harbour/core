@@ -34,10 +34,7 @@ endif
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
    ifneq ($(HB_BUILD_DEBUG),yes)
-      # NOTE: Hack to always include frame pointer to make win_dll.c / hb_DynaCall() work.
-      ifneq ($(LIBNAME),hbwin)
-         CFLAGS += -fomit-frame-pointer
-      endif
+      CFLAGS += -fomit-frame-pointer
    endif
    ifeq ($(HB_COMPILER),mingw)
       CFLAGS += -march=i586 -mtune=pentiumpro
