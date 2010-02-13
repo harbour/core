@@ -166,9 +166,17 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam )
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
          if( wcall->bUNICODE )
-            r = ( HB_PTRUINT ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, NULL );
+         {
+            HB_SIZE nLen;
+            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, &nLen );
+            r = ( HB_PTRUINT ) hb_wstrunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+         }
          else
-            r = ( HB_PTRUINT ) hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, NULL );
+         {
+            HB_SIZE nLen;
+            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, &nLen );
+            r = ( HB_PTRUINT ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+         }
          wcall->pArg[ iParam - 1 ].nValue = r;
          break;
 
@@ -383,9 +391,17 @@ static void hb_u32par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam, HB_U32 * 
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
          if( wcall->bUNICODE )
-            *r1 = ( HB_U32 ) hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, NULL );
+         {
+            HB_SIZE nLen;
+            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, &nLen );
+            *r1 = ( HB_U32 ) hb_wstrunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+         }
          else
-            *r1 = ( HB_U32 ) hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, NULL );
+         {
+            HB_SIZE nLen;
+            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, &nLen );
+            *r1 = ( HB_U32 ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+         }
          wcall->pArg[ iParam - 1 ].value.t.n32 = *r1;
          break;
 
