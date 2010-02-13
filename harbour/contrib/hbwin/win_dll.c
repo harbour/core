@@ -103,6 +103,7 @@ static int hb_hbtoctype( int iHarbourType )
 typedef struct
 {
    void *    hString;
+   int       iType;
    HB_BOOL   bByRef;
    HB_U64    nValue;
 } HB_WINARG;
@@ -111,8 +112,6 @@ typedef struct
 {
    HB_BOOL     bUNICODE;
    int         iFirst;
-   int *       piArgTypeReq;
-   int *       piArgType;
    HB_WINARG * pArg;
 } HB_WINCALL, * PHB_WINCALL;
 
@@ -120,7 +119,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam )
 {
    HB_U64 r;
 
-   switch( wcall->piArgType[ iParam - 1 ] )
+   switch( wcall->pArg[ iParam - 1 ].iType )
    {
       case HB_WIN_DLL_CTYPE_BOOL:
          wcall->pArg[ iParam - 1 ].nValue = hb_itemGetL( pParam );
@@ -310,6 +309,7 @@ typedef struct
 typedef struct
 {
    void *    hString;
+   int       iType;
    HB_BOOL   bByRef;
    HB_WINVAL value;
 } HB_WINARG;
@@ -318,8 +318,6 @@ typedef struct
 {
    HB_BOOL     bUNICODE;
    int         iFirst;
-   int *       piArgTypeReq;
-   int *       piArgType;
    HB_WINARG * pArg;
 } HB_WINCALL, * PHB_WINCALL;
 
@@ -327,7 +325,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam, HB_U32 * 
 {
    *b64 = HB_FALSE;
 
-   switch( wcall->piArgType[ iParam - 1 ] )
+   switch( wcall->pArg[ iParam - 1 ].iType )
    {
       case HB_WIN_DLL_CTYPE_BOOL:
          wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetL( pParam );
@@ -775,7 +773,6 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
       wcall.bUNICODE = bUNICODE;
       wcall.iFirst = iFirst - 1;
-      wcall.piArgTypeReq = piArgTypeReq;
 
       iParams -= wcall.iFirst;
 
@@ -787,23 +784,19 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
          if( iParams )
          {
             wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
-            wcall.piArgType = ( int * ) hb_xgrab( iParams * sizeof( int ) );
             memset( wcall.pArg, 0, iParams * sizeof( HB_WINARG ) );
          }
          else
-         {
             wcall.pArg = NULL;
-            wcall.piArgType = NULL;
-         }
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
             PHB_ITEM pParam = hb_param( iFirst + tmp, HB_IT_ANY );
 
-            wcall.piArgType[ tmp ] = wcall.piArgTypeReq ? wcall.piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
+            wcall.pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
 
-            if( wcall.piArgType[ tmp ] == HB_WIN_DLL_CTYPE_DEFAULT )
-               wcall.piArgType[ tmp ] = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
+            if( wcall.pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
+               wcall.pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
 
             wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
 
@@ -836,7 +829,7 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
          {
             if( wcall.pArg[ tmp ].bByRef )
             {
-               switch( wcall.piArgType[ tmp ] )
+               switch( wcall.pArg[ tmp ].iType )
                {
                   case HB_WIN_DLL_CTYPE_VOID:
                      hb_stor( iFirst + tmp );
@@ -905,9 +898,6 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
          if( wcall.pArg )
             hb_xfree( wcall.pArg );
-
-         if( wcall.piArgType )
-            hb_xfree( wcall.piArgType );
       }
       else
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -918,7 +908,6 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
       wcall.bUNICODE = bUNICODE;
       wcall.iFirst = iFirst - 1;
-      wcall.piArgTypeReq = piArgTypeReq;
 
       iParams -= wcall.iFirst;
 
@@ -942,14 +931,10 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
          if( iParams )
          {
             wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
-            wcall.piArgType = ( int * ) hb_xgrab( iParams * sizeof( int ) );
             memset( wcall.pArg, 0, iParams * sizeof( HB_WINARG ) );
          }
          else
-         {
             wcall.pArg = NULL;
-            wcall.piArgType = NULL;
-         }
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
@@ -959,10 +944,10 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
             HB_U32 r2;
             HB_BOOL b64;
 
-            wcall.piArgType[ tmp ] = wcall.piArgTypeReq ? wcall.piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
+            wcall.pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
 
-            if( wcall.piArgType[ tmp ] == HB_WIN_DLL_CTYPE_DEFAULT )
-               wcall.piArgType[ tmp ] = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
+            if( wcall.pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
+               wcall.pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
 
             wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
 
@@ -1281,7 +1266,7 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
          {
             if( wcall.pArg[ tmp ].bByRef )
             {
-               switch( wcall.piArgType[ tmp ] )
+               switch( wcall.pArg[ tmp ].iType )
                {
                   case HB_WIN_DLL_CTYPE_VOID:
                      hb_stor( iFirst + tmp );
@@ -1359,9 +1344,6 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
          if( wcall.pArg )
             hb_xfree( wcall.pArg );
-
-         if( wcall.piArgType )
-            hb_xfree( wcall.piArgType );
       }
       else
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
