@@ -157,6 +157,7 @@ QPalette.qth
 QPen.qth
 QPicture.qth
 QPixmap.qth
+QPlainTextDocumentLayout.qth
 QPlainTextEdit.qth
 QPoint.qth
 QPointF.qth

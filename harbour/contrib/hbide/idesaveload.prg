@@ -112,6 +112,7 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, " " )
 
    FOR j := 0 TO len( oIde:aINI[ INI_VIEWS ] )
+      oIde:lClosing := .t.
       oIde:oStackedWidget:oWidget:setCurrentIndex( j )
 
       nTabs := oIde:qTabWidget:count()
@@ -121,17 +122,25 @@ FUNCTION hbide_saveINI( oIde )
          oEdit     := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
+            IF oEdit:lLoaded
+               qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
+               qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
+               qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
-            qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
-            qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
-            qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
-
-            aadd( txt_, oEdit:sourceFile + "," + ;
-                        hb_ntos( iif( oEdit:lLoaded, qCursor:position(), oEdit:nPos  ) ) +  ","  + ;
-                        hb_ntos( iif( oEdit:lLoaded, qHScr:value()     , oEdit:nHPos ) ) +  ","  + ;
-                        hb_ntos( iif( oEdit:lLoaded, qVScr:value()     , oEdit:nVPos ) ) +  ","  + ;
-                        oEdit:cTheme                                                     +  ","  + ;
-                        oEdit:cView                                                      +  "," )
+               aadd( txt_, oEdit:sourceFile + "," + ;
+                           hb_ntos( qCursor:position() ) +  ","  + ;
+                           hb_ntos( qHScr:value()      ) +  ","  + ;
+                           hb_ntos( qVScr:value()      ) +  ","  + ;
+                           oEdit:cTheme                  +  ","  + ;
+                           oEdit:cView                   +  "," )
+            ELSE
+               aadd( txt_, oEdit:sourceFile + "," + ;
+                           hb_ntos( oEdit:nPos  ) +  ","  + ;
+                           hb_ntos( oEdit:nHPos ) +  ","  + ;
+                           hb_ntos( oEdit:nVPos ) +  ","  + ;
+                           oEdit:cTheme           +  ","  + ;
+                           oEdit:cView            +  "," )
+            ENDIF
          ENDIF
       NEXT
    NEXT

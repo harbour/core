@@ -234,6 +234,7 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QPen( n )                          ( ( QPen                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPicture( n )                      ( ( QPicture                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPixmap( n )                       ( ( QPixmap                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QPlainTextDocumentLayout( n )      ( ( QPlainTextDocumentLayout    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPlainTextEdit( n )                ( ( QPlainTextEdit              * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPoint( n )                        ( ( QPoint                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPointF( n )                       ( ( QPointF                     * ) hbqt_gcpointer( n ) )

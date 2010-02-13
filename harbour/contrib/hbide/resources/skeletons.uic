@@ -1,0 +1,128 @@
+/********************************************************************************
+** Form generated from reading ui file 'skeletons.ui'
+**
+** Created: Fri Feb 12 18:01:10 2010
+**      by: Qt User Interface Compiler version 4.5.3
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef SKELETONS_H
+#define SKELETONS_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QListWidget>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QGridLayout *gridLayout;
+    QLabel *labelIdentity;
+    QListWidget *listNames;
+    QPushButton *buttonDelete;
+    QPushButton *buttonRename;
+    QPlainTextEdit *editCode;
+    QPushButton *buttonClear;
+    QLabel *labelSnippets;
+    QPushButton *buttonGetSel;
+    QPushButton *buttonNew;
+    QPushButton *buttonUpdate;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(290, 508);
+        gridLayout = new QGridLayout(Form);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        labelIdentity = new QLabel(Form);
+        labelIdentity->setObjectName(QString::fromUtf8("labelIdentity"));
+
+        gridLayout->addWidget(labelIdentity, 0, 0, 1, 2);
+
+        listNames = new QListWidget(Form);
+        listNames->setObjectName(QString::fromUtf8("listNames"));
+
+        gridLayout->addWidget(listNames, 1, 0, 3, 2);
+
+        buttonDelete = new QPushButton(Form);
+        buttonDelete->setObjectName(QString::fromUtf8("buttonDelete"));
+
+        gridLayout->addWidget(buttonDelete, 3, 2, 1, 1);
+
+        buttonRename = new QPushButton(Form);
+        buttonRename->setObjectName(QString::fromUtf8("buttonRename"));
+
+        gridLayout->addWidget(buttonRename, 2, 2, 1, 1);
+
+        editCode = new QPlainTextEdit(Form);
+        editCode->setObjectName(QString::fromUtf8("editCode"));
+        editCode->setLineWrapMode(QPlainTextEdit::NoWrap);
+
+        gridLayout->addWidget(editCode, 5, 0, 1, 3);
+
+        buttonClear = new QPushButton(Form);
+        buttonClear->setObjectName(QString::fromUtf8("buttonClear"));
+
+        gridLayout->addWidget(buttonClear, 6, 0, 1, 1);
+
+        labelSnippets = new QLabel(Form);
+        labelSnippets->setObjectName(QString::fromUtf8("labelSnippets"));
+
+        gridLayout->addWidget(labelSnippets, 4, 0, 1, 2);
+
+        buttonGetSel = new QPushButton(Form);
+        buttonGetSel->setObjectName(QString::fromUtf8("buttonGetSel"));
+
+        gridLayout->addWidget(buttonGetSel, 6, 1, 1, 1);
+
+        buttonNew = new QPushButton(Form);
+        buttonNew->setObjectName(QString::fromUtf8("buttonNew"));
+
+        gridLayout->addWidget(buttonNew, 1, 2, 1, 1);
+
+        buttonUpdate = new QPushButton(Form);
+        buttonUpdate->setObjectName(QString::fromUtf8("buttonUpdate"));
+
+        gridLayout->addWidget(buttonUpdate, 6, 2, 1, 1);
+
+
+        retranslateUi(Form);
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        labelIdentity->setText(QApplication::translate("Form", "Identity", 0, QApplication::UnicodeUTF8));
+        buttonDelete->setText(QApplication::translate("Form", "Delete", 0, QApplication::UnicodeUTF8));
+        buttonRename->setText(QApplication::translate("Form", "Rename", 0, QApplication::UnicodeUTF8));
+        buttonClear->setText(QApplication::translate("Form", "Clear", 0, QApplication::UnicodeUTF8));
+        labelSnippets->setText(QApplication::translate("Form", "Code Snippet", 0, QApplication::UnicodeUTF8));
+        buttonGetSel->setText(QApplication::translate("Form", "Get Selection", 0, QApplication::UnicodeUTF8));
+        buttonNew->setText(QApplication::translate("Form", "Add New", 0, QApplication::UnicodeUTF8));
+        buttonUpdate->setText(QApplication::translate("Form", "Update", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // SKELETONS_H

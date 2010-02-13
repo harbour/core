@@ -116,6 +116,7 @@ CPP_SOURCES := \
    QPen.cpp \
    QPicture.cpp \
    QPixmap.cpp \
+   QPlainTextDocumentLayout.cpp \
    QPlainTextEdit.cpp \
    QPolygon.cpp \
    QPolygonF.cpp \
@@ -336,6 +337,7 @@ PRG_SOURCES := \
    TQPen.prg \
    TQPicture.prg \
    TQPixmap.prg \
+   TQPlainTextDocumentLayout.prg \
    TQPlainTextEdit.prg \
    TQPolygon.prg \
    TQPolygonF.prg \

@@ -122,6 +122,8 @@ CLASS HbIde
    DATA   oFindInFiles
    DATA   oDockFind
    DATA   oHelp
+   DATA   oSkeltn
+   DATA   oSkeltnUI
 
    DATA   oUI
 
@@ -229,6 +231,7 @@ CLASS HbIde
    DATA   aProjects                               INIT   {}
 
    DATA   aMarkTBtns                              INIT   array( 6 )
+   DATA   lClosing                                INIT   .f.
 
    METHOD new( cProjIni )
    METHOD create( cProjIni )
@@ -384,7 +387,9 @@ METHOD HbIde:create( cProjIni )
       IF ::nEvent == xbeP_Close
          hbide_dbg( "================ xbeP_Close" )
          hbide_saveINI( Self )
+         hbide_dbg( "================ xbeP_Close", "after: hbide_saveINI( Self )"   )
          ::oSM:closeAllSources()
+         hbide_dbg( "================ xbeP_Close", "after: ::oSM:closeAllSources()" )
          EXIT
 
       ELSEIF ::nEvent == xbeP_Keyboard
@@ -494,6 +499,8 @@ METHOD HbIde:execAction( cKey )
    CASE "StreamComment"
    CASE "BlockIndentR"
    CASE "BlockIndentL"
+   CASE "BlockSgl2Dbl"
+   CASE "BlockDbl2Sgl"
    CASE "switchReadOnly"
    CASE "Search"
    CASE "Find"
@@ -583,6 +590,12 @@ METHOD HbIde:execEditorAction( cKey )
    CASE "BlockIndentL"
       ::oEM:indent( -1 )
       EXIT
+   CASE "BlockSgl2Dbl"
+      ::oEM:convertDQuotes()
+      EXIT
+   CASE "BlockDbl2Sgl"
+      ::oEM:convertQuotes()
+      EXIT
    CASE "switchReadOnly"
       ::oEM:switchToReadOnly()
       EXIT
@@ -614,6 +627,7 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "MatchPairs"
       //
+      ::oSkeltn:show()
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()
@@ -1144,7 +1158,7 @@ METHOD HbIde:updateProjectMenu()
  * 02/01/2010 - 16:30:06 - vailtom
  */
 METHOD HbIde:updateTitleBar()
-   LOCAL cTitle := "Harbour-Qt IDE"
+   LOCAL cTitle := "Harbour IDE " + substr( HB_VERSION(), at( "(Rev.", HB_VERSION() ) )
    LOCAL oEdit
 
    IF Empty( ::oDlg )
@@ -1178,7 +1192,6 @@ METHOD HbIde:setCodec( cCodec )
 
    HbXbp_SetCodec( ::cWrkCodec )
 
-   //::oSBar:getItem( SB_PNL_CODEC ):caption := ::cWrkCodec
    ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
 
    RETURN Self

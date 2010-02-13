@@ -370,7 +370,6 @@ METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
 METHOD IdeThemes:setSyntaxFormat( qHiliter, cName, aAttr )
 
    qHiliter:hbSetFormat( cName, ::buildSyntaxFormat( aAttr ) )
-//   qHiliter:rehighlight()
 
    RETURN Self
 
@@ -391,7 +390,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    ::setForeBackGround( qEdit, cTheme )
 
-   qHiliter := HBQSyntaxHighlighter():new( qEdit:document() )
+   qHiliter := HBQSyntaxHighlighter():new()// qEdit:document() )
 
    FOR EACH a_ IN ::aPatterns
       IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
@@ -401,6 +400,8 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    ::setMultiLineCommentRule( qHiliter, cTheme )
    ::setSingleLineCommentRule( qHiliter, cTheme )
    ::setQuotesRule( qHiliter, cTheme )
+
+   qHiliter:setDocument( qEdit:document() )
 
    RETURN qHiliter
 

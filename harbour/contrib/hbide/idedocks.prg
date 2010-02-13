@@ -82,6 +82,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD execEvent( nMode, p )
    METHOD setView( cView )
    METHOD buildHelpWidget()
+   METHOD buildSkeletonWidget()
    METHOD buildDialog()
    METHOD buildViewWidget()
    METHOD buildStackedWidget()
@@ -101,6 +102,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD setStatusText( nPart, xValue )
    METHOD getMarkWidget( nIndex )
    METHOD dispEnvironment( cEnviron )
+   METHOD execSkeleton( nMode, p )
 
    ENDCLASS
 
@@ -183,8 +185,10 @@ METHOD IdeDocks:execEvent( nMode, p )
 
          nIndex := ::oIde:qTabWidget:currentIndex()
          IF nIndex + 1 == ::oIde:qTabWidget:count()
-            ::oIde:qTabWidget:setCurrentIndex( 0 )
-            ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
+            IF !( ::oIde:lClosing )
+               ::oIde:qTabWidget:setCurrentIndex( 0 )
+               ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
+            ENDIF
          ENDIF
          ::setStatusText( SB_PNL_VIEW, iif( p == 0, "Main", ::aINI[ INI_VIEWS, ::nCurView ] ) )
       ENDIF
@@ -228,7 +232,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := ::resPath + "vr.png"
-   ::oDlg:title := "Harbour-Qt IDE"
+   ::oDlg:title := "Harbour IDE"
    #ifdef HBIDE_USE_UIC
       ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    #else
@@ -313,6 +317,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildOutputResults()
  * ::buildFindInFiles()
    ::buildHelpWidget()
+   ::buildSkeletonWidget()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
@@ -726,7 +731,7 @@ METHOD IdeDocks:toggleBottomDocks()
 METHOD IdeDocks:buildFindInFiles()
    LOCAL oXbp
 
-   ::oIde:oDockFind := XbpWindow():new( ::oDa )
+   ::oIde:oDockFind := XbpWindow():new()
    ::oDockFind:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oDockFind:oWidget:setObjectName( "dockFindInFiles" )
    ::oDlg:addChild( ::oDockFind )
@@ -758,3 +763,85 @@ METHOD IdeDocks:buildFindInFiles()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:buildSkeletonWidget()
+   LOCAL oUI
+
+   ::oIde:oSkeltn := XbpWindow():new()
+   ::oSkeltn:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oSkeltn:oWidget:setObjectName( "dockSkeleton" )
+   ::oDlg:addChild( ::oSkeltn )
+   ::oSkeltn:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable )
+   ::oSkeltn:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oSkeltn:oWidget:setWindowTitle( "Code Skeletons" )
+   ::oSkeltn:oWidget:setFocusPolicy( Qt_NoFocus )
+
+   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltn:oWidget ):build()
+
+   ::oSkeltn:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltn:oWidget, Qt_Horizontal )
+   ::oSkeltn:hide()
+
+   oUI := ::oIde:oSkeltnUI
+
+   ::connect( oUI:q_buttonNew   , "clicked()", {|| ::execSkeleton( 1 ) } )
+   ::connect( oUI:q_buttonRename, "clicked()", {|| ::execSkeleton( 2 ) } )
+   ::connect( oUI:q_buttonDelete, "clicked()", {|| ::execSkeleton( 3 ) } )
+   ::connect( oUI:q_buttonClear , "clicked()", {|| ::execSkeleton( 4 ) } )
+   ::connect( oUI:q_buttonGetSel, "clicked()", {|| ::execSkeleton( 5 ) } )
+   ::connect( oUI:q_buttonUpdate, "clicked()", {|| ::execSkeleton( 6 ) } )
+   ::connect( oUI:q_listNames   , "itemSelectionChanged()", {|| ::execSkeleton( 7 ) } )
+
+   //::oSkeltnUI:q_editCode:setFontFamily( "Courier New" )
+   //::oSkeltnUI:q_editCode:setFontPointSize( 10 )
+
+   //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:execSkeleton( nMode, p )
+   LOCAL cName, qItem, cCode
+
+   HB_SYMBOL_UNUSED( p )
+
+   SWITCH nMode
+
+   CASE 1
+      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, "", "Name", "New Skeleton" ) )
+         ::oSkeltnUI:q_listNames:addItem( cName )
+      ENDIF
+      EXIT
+   CASE 2
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "New Skeleton" ) )
+         qItem:setText( cName )
+      ENDIF
+      EXIT
+   CASE 3
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      ::oSkeltnUI:q_listNames:removeItemWidget( qItem )
+      EXIT
+   CASE 4
+      ::oSkeltnUI:q_editCode:clear()
+      EXIT
+   CASE 5
+      IF !empty( cCode := ::oEM:getSelectedText() )
+         // TODO: Format cCode
+         ::oSkeltnUI:q_editCode:setPlainText( cCode )
+      ENDIF
+      EXIT
+   CASE 6
+      // Update the skeleton code and save the skeleton's buffer | file
+
+      EXIT
+   CASE 7
+
+      EXIT
+   ENDSWITCH
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

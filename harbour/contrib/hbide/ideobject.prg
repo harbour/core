@@ -158,6 +158,8 @@ CLASS IdeObject
    ACCESS oStackedWidget                          INLINE ::oIde:oStackedWidget
    ACCESS oFrame                                  INLINE ::oIde:oFrame
    ACCESS oHelp                                   INLINE ::oIde:oHelp
+   ACCESS oSkeltn                                 INLINE ::oIde:oSkeltn
+   ACCESS oSkeltnUI                               INLINE ::oIde:oSkeltnUI
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

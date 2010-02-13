@@ -141,6 +141,8 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD streamComment()
    METHOD blockComment()
    METHOD indent( nStep )
+   METHOD convertQuotes()
+   METHOD convertDQuotes()
    METHOD toggleSelectionMode()
 
    ENDCLASS
@@ -560,6 +562,24 @@ METHOD IdeEditsManager:indent( nStep )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:convertQuotes()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:convertQuotes()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:convertDQuotes()
+   LOCAL qEdit
+   IF !empty( qEdit := ::getEditCurrent() )
+      qEdit:convertDQuotes()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:switchToReadOnly()
    IF !empty( ::qCurEdit )
       ::qCurEdit:setReadOnly( !( ::qCurEdit:isReadOnly() ) )
@@ -907,6 +927,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   cTheme                                  INIT   ""
    DATA   cView
    DATA   qDocument
+   DATA   qDocLayout
    DATA   qHiliter
    DATA   sourceFile                              INIT   ""
    DATA   pathNormalized
@@ -921,8 +942,6 @@ CLASS IdeEditor INHERIT IdeObject
 
    DATA   nBlock                                  INIT   -1
    DATA   nColumn                                 INIT   -1
-   DATA   nPrevBlocks                             INIT   0
-   DATA   nBlocks                                 INIT   0
 
    DATA   nPos                                    INIT   0
    DATA   nHPos                                   INIT   0
@@ -946,7 +965,6 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
-   METHOD exeEvent( nMode, p, p1, p2 )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -1037,13 +1055,9 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    ::qCoEdit := ::oEdit
 
    ::qDocument := QTextDocument():configure( ::qEdit:document() )
-   #if 1
-   ::connect( ::qDocument, "blockCountChanged(int)"     , {|p      | ::exeEvent( blockCountChanged, p      ) } )
-   ::connect( ::qDocument, "contentsChange(int,int,int)", {|p,p1,p2| ::exeEvent( contentsChange, p, p1, p2 ) } )
-   #else
-hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     , {|o,p      | ::exeEvent( 21, o, p )         } ) )
-   ::qSlots:hbConnect( ::qDocument, "contentsChange(int,int,int)", {|o,p,p1,p2| ::exeEvent( 22, o, p, p1, p2 ) } )
-   #endif
+   ::qDocLayout := QPlainTextDocumentLayout():new( ::qDocument )
+   ::qDocument:setDocumentLayout( ::qDocLayout )
+
    IF ::cType != "U"
       ::qHiliter := ::oThemes:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
@@ -1064,33 +1078,90 @@ hbide_dbg(  2001, ::qSlots:hbConnect( ::qDocument, "blockCountChanged(int)"     
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:exeEvent( nMode, p, p1, p2 )
-   LOCAL qChar
+METHOD IdeEditor:destroy()
+   LOCAL n, oEdit
 
-   HB_SYMBOL_UNUSED( p1 )
+hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
 
-   SWITCH nMode
-   CASE blockCountChanged
-      //hbide_dbg( "blockCountChanged(int)", p )
-      ::nPrevBlocks := ::nBlocks
-      ::nBlocks     := p
-      EXIT
+   ::qHiliter := NIL
 
-   CASE contentsChange
-      //hbide_dbg( "contentsChange()", p, p1, p2 )
-      IF p2 == 1                     /* Characters Added */
-         qChar := QChar():configure( ::qDocument:characterAt( p ) )
-         SWITCH qChar:toAscii()
-         CASE 32                     /* Space Key        */
-            ::qCoEdit:lUpdatePrevWord := .t.
-            EXIT
-         ENDSWITCH
+   ::qCqEdit := NIL
+   ::qCoEdit := NIL
+   ::qEdit   := NIL
+   DO WHILE len( ::aEdits ) > 0
+      oEdit := ::aEdits[ 1 ]
+      hb_adel( ::aEdits, 1, .t. )
+      oEdit:destroy()
+   ENDDO
+   ::oEdit:destroy()
+
+   IF !Empty( ::qDocument )
+      ::qDocument := NIL
+   ENDIF
+
+   IF !Empty( ::qHiliter )
+      ::qHiliter  := NIL
+   ENDIF
+
+   ::oEdit := NIL
+
+   IF !Empty( ::qLayout )
+      ::qLayout   := NIL
+   ENDIF
+
+   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
+      hb_adel( ::oIde:aTabs, n, .T. )
+   ENDIF
+
+   ::oEM:removeSourceInTree( ::sourceFile )
+
+   ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::oTab:oWidget ) )
+   ::oTab := NIL
+
+   IF ::qTabWidget:count() == 0
+      IF ::lDockRVisible
+         ::oDockR:hide()
+         ::oIde:lDockRVisible := .f.
       ENDIF
-      EXIT
+   ENDIF
+hbide_dbg( "IdeEditor:destroy()", 1, "-------------------------------------" )
+   RETURN Self
 
-   ENDSWITCH
+/*----------------------------------------------------------------------*/
 
-   RETURN Nil
+METHOD IdeEditor:setDocumentProperties()
+   LOCAL qCursor
+
+   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   IF !( ::lLoaded )       /* First Time */
+//      ::qEdit:clear()
+      ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+      qCursor:setPosition( ::nPos )
+      ::qEdit:setTextCursor( qCursor )
+
+      QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
+      QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
+
+      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+
+      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
+      ::lLoaded := .T.
+   ENDIF
+
+   ::nBlock  := qCursor:blockNumber()
+   ::nColumn := qCursor:columnNumber()
+
+   ::oIde:aSources := { ::sourceFile }
+   ::oIde:createTags()
+   ::oIde:updateFuncList()
+   ::oIde:updateTitleBar()
+
+   ::dispEditInfo( ::qEdit )
+
+   ::oIde:manageFocusInEditor()
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1145,93 +1216,6 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:destroy()
-   LOCAL n, oEdit
-
-hbide_dbg( "IdeEditor:destroy()", 0 )
-   ::disconnect( ::qDocument, "blockCountChanged(int)"      )
-   ::disconnect( ::qDocument, "contentsChange(int,int,int)" )
-
-   ::qCqEdit := NIL
-   ::qCoEdit := NIL
-   ::qEdit   := NIL
-   DO WHILE len( ::aEdits ) > 0
-      oEdit := ::aEdits[ 1 ]
-      hb_adel( ::aEdits, 1, .t. )
-      oEdit:destroy()
-   ENDDO
-   ::oEdit:destroy()
-
-   IF !Empty( ::qDocument )
-      ::qDocument := NIL
-   ENDIF
-
-   IF !Empty( ::qHiliter )
-      ::qHiliter  := NIL
-   ENDIF
-
-   ::oEdit := NIL
-
-   IF !Empty( ::qLayout )
-      ::qLayout   := NIL
-   ENDIF
-
-   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
-      hb_adel( ::oIde:aTabs, n, .T. )
-   ENDIF
-
-   ::oEM:removeSourceInTree( ::sourceFile )
-
-   ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::oTab:oWidget ) )
-   ::oTab := NIL
-
-   IF ::qTabWidget:count() == 0
-      IF ::lDockRVisible
-         ::oDockR:hide()
-         ::oIde:lDockRVisible := .f.
-      ENDIF
-   ENDIF
-hbide_dbg( "IdeEditor:destroy()", 1 )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:setDocumentProperties()
-   LOCAL qCursor
-
-   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-
-   IF !( ::lLoaded )       /* First Time */
-      ::qEdit:clear()
-      ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
-      qCursor:setPosition( ::nPos )
-      ::qEdit:setTextCursor( qCursor )
-
-      QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
-      QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
-
-      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
-
-      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
-      ::lLoaded := .T.
-   ENDIF
-
-   ::nBlock  := qCursor:blockNumber()
-   ::nColumn := qCursor:columnNumber()
-
-   ::oIde:aSources := { ::sourceFile }
-   ::oIde:createTags()
-   ::oIde:updateFuncList()
-   ::oIde:updateTitleBar()
-
-   ::dispEditInfo( ::qEdit )
-
-   ::oIde:manageFocusInEditor()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
    LOCAL oEdit
 
@@ -1249,7 +1233,6 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
 
 METHOD IdeEditor:buildTabPage( cSource )
 
-   //::oTab := XbpTabPage():new( ::oIde:oDA, , { 5,5 }, { 700,400 }, , .t. )
    ::oTab := XbpTabPage():new( ::oTabParent, , { 5,5 }, { 700,400 }, , .t. )
 
    IF Empty( cSource )
@@ -1426,16 +1409,261 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:highlightCurrentLine( .t. )              /* Via user-setup */
 
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
-
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
 
    ::qHLayout:addWidget( ::qEdit )
+
    ::connectEditSignals( Self )
 
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress, {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel   , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
+
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:destroy()
+
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_KeyPress )
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_Wheel    )
+
+   ::disconnectEditSignals( Self )
+
+   ::oEditor:qLayout:removeItem( ::qHLayout )
+   //
+   ::qHLayout:removeWidget( ::qEdit )
+   ::qEdit    := NIL
+   ::qHLayout := NIL
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:disconnectEditSignals( oEdit )
+   HB_SYMBOL_UNUSED( oEdit )
+
+   ::disConnect( oEdit:qEdit, "customContextMenuRequested(QPoint)" )
+   ::disConnect( oEdit:qEdit, "textChanged()"                      )
+   ::disConnect( oEdit:qEdit, "selectionChanged()"                 )
+   ::disConnect( oEdit:qEdit, "cursorPositionChanged()"            )
+
+   #if 0
+   ::disConnect( oEdit:qEdit, "copyAvailable(bool)"                )
+   ::disConnect( oEdit:qEdit, "modificationChanged(bool)"          )
+   ::disConnect( oEdit:qEdit, "updateRequest(QRect,int)"           )
+   ::disConnect( oEdit:qEdit, "redoAvailable(bool)"                )
+   ::disConnect( oEdit:qEdit, "undoAvailable(bool)"                )
+   #endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:connectEditSignals( oEdit )
+   HB_SYMBOL_UNUSED( oEdit )
+
+   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
+   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
+
+   #if 0
+   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
+   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
+   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
+   #endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
+   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nSpaces
+
+   HB_SYMBOL_UNUSED( p1 )
+
+   qEdit   := oEdit:qEdit
+   qCursor := QTextCursor():configure( qEdit:textCursor() )
+   oEdit:nCurLineNo := qCursor:blockNumber()
+
+   SWITCH nMode
+
+   CASE customContextMenuRequested
+      pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
+      IF !hbqt_isEmptyQtPointer( pAct )
+         qAct := QAction():configure( pAct )
+         DO CASE
+         CASE qAct:text() == "Split Horizontally"
+            ::oEditor:split( 1, oEdit )
+         CASE qAct:text() == "Split Vertically"
+            ::oEditor:split( 2, oEdit )
+         CASE qAct:text() == "Close Split Window"
+            IF ( n := ascan( ::oEditor:aEdits, {|o| o == oEdit } ) ) > 0  /* 1 == Main Edit */
+               oo := ::oEditor:aEdits[ n ]
+               hb_adel( ::oEditor:aEdits, n, .t. )
+               oo:destroy()
+               ::oEditor:relay()
+               ::oEditor:qCqEdit := ::oEditor:qEdit
+               ::oEditor:qCoEdit := ::oEditor:oEdit
+               ::oIde:manageFocusInEditor()
+            ENDIF
+         CASE qAct:text() == "Apply Theme"
+            ::oEditor:applyTheme()
+         ENDCASE
+      ENDIF
+      EXIT
+   CASE textChanged
+      hbide_dbg( "textChanged()" )
+      ::oEditor:setTabImage( qEdit )
+      EXIT
+   CASE selectionChanged
+      hbide_dbg( "selectionChanged()" )
+      ::oEditor:qCqEdit := qEdit
+      ::oEditor:qCoEdit := oEdit
+
+      qCursor := QTextCursor():configure( qEdit:TextCursor() )
+
+      /* Book Marks reach-out buttons */
+      ::relayMarkButtons()
+
+      /* An experimental move but seems a lot is required to achieve column selection */
+*     qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
+
+      ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
+
+      EXIT
+   CASE cursorPositionChanged
+      hbide_dbg( "cursorPositionChanged()" )
+      ::oEditor:dispEditInfo( qEdit )
+      IF ::lUpdatePrevWord
+         ::lUpdatePrevWord := .f.
+         hbide_handlePreviousWord( ::qEdit )
+      ENDIF
+
+      IF ::lIndentIt
+         ::lIndentIt := .f.
+         IF ( nSpaces := ::findLastIndent() ) > 0
+            qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+            qCursor:insertText( space( nSpaces ) )
+         ENDIF
+      ENDIF
+
+      EXIT
+   #if 0
+   CASE copyAvailable
+      //hbide_dbg( "copyAvailable(bool)", p )
+      EXIT
+   CASE modificationChanged
+      //hbide_dbg( "modificationChanged(bool)", p )
+      EXIT
+   CASE redoAvailable
+      //hbide_dbg( "redoAvailable(bool)", p )
+      EXIT
+   CASE undoAvailable
+      //hbide_dbg( "undoAvailable(bool)", p )
+      EXIT
+   CASE updateRequest
+      EXIT
+   #endif
+   ENDSWITCH
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
+   LOCAL key, kbm, txt, qEvent
+   LOCAL lAlt   := .f.
+   LOCAL lCtrl  := .f.
+   LOCAL lShift := .f.
+
+   SWITCH nEvent
+   CASE QEvent_KeyPress
+
+      qEvent := QKeyEvent():configure( p )
+
+      key := qEvent:key()
+      kbm := qEvent:modifiers()
+      txt := qEvent:text()
+
+      IF hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
+         lAlt := .t.
+      ENDIF
+      IF hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
+         lCtrl := .t.
+      ENDIF
+      IF hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
+         lShift := .t.
+      ENDIF
+
+      SWITCH ( key )
+      CASE Qt_Key_Space
+         IF !lAlt .AND. !lShift .AND. !lCtrl
+            ::lUpdatePrevWord := .t.
+         ENDIF
+         EXIT
+      CASE Qt_Key_Return
+      CASE Qt_Key_Enter
+         ::lIndentIt := .t.
+         EXIT
+      CASE Qt_Key_Tab
+         IF lCtrl
+            ::blockIndent( 1 )
+            RETURN .T.
+         ENDIF
+         EXIT
+      CASE Qt_Key_Backtab
+         IF lCtrl
+            ::blockIndent( -1 )
+            RETURN .t.
+         ENDIF
+         EXIT
+      CASE Qt_Key_Q                   /* All these actions will be pulled from user-setup */
+         IF lCtrl .AND. lShift
+            ::streamComment()
+         ENDIF
+         EXIT
+      CASE Qt_Key_Slash
+         IF lCtrl
+            ::blockComment()
+         ENDIF
+         EXIT
+      CASE Qt_Key_D
+         IF lCtrl
+            ::duplicateLine()
+         ENDIF
+         EXIT
+      CASE Qt_Key_Backspace
+         hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
+         EXIT
+      CASE Qt_Key_Delete
+         IF lCtrl
+            ::deleteLine()
+            RETURN .t.
+         ENDIF
+         EXIT
+      CASE Qt_Key_Up
+         IF lCtrl .AND. lShift
+            ::moveLine( -1 )
+            RETURN .t.
+         ENDIF
+      CASE Qt_Key_Down
+         IF lCtrl .AND. lShift
+            ::moveLine( 1 )
+            RETURN .t.
+         ENDIF
+      ENDSWITCH
+
+      EXIT
+   CASE QEvent_Wheel
+      EXIT
+
+   ENDSWITCH
+
+   RETURN .F.  /* Important */
 
 /*----------------------------------------------------------------------*/
 
@@ -1479,52 +1707,6 @@ METHOD IdeEdit:setNewMark()
 
       ::qEdit:bookMarks( nBlock )
    ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:destroy()
-
-   ::disconnectEditSignals( Self )
-
-   ::oEditor:qLayout:removeItem( ::qHLayout )
-   //
-   ::qHLayout:removeWidget( ::qEdit )
-   ::qEdit      := NIL
-   ::qHLayout   := NIL
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:disconnectEditSignals( oEdit )
-
-   ::disConnect( oEdit:qEdit, "customContextMenuRequested(QPoint)" )
-   ::disConnect( oEdit:qEdit, "textChanged()"                      )
-   ::disConnect( oEdit:qEdit, "copyAvailable(bool)"                )
-   ::disConnect( oEdit:qEdit, "modificationChanged(bool)"          )
-   ::disConnect( oEdit:qEdit, "redoAvailable(bool)"                )
-   ::disConnect( oEdit:qEdit, "selectionChanged()"                 )
-   ::disConnect( oEdit:qEdit, "undoAvailable(bool)"                )
-   ::disConnect( oEdit:qEdit, "updateRequest(QRect,int)"           )
-   ::disConnect( oEdit:qEdit, "cursorPositionChanged()"            )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:connectEditSignals( oEdit )
-
-   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
-   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
-   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1599,188 +1781,6 @@ hbide_dbg( s )
    ENDIF
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nSpaces
-
-   HB_SYMBOL_UNUSED( p1 )
-
-   qEdit   := oEdit:qEdit
-   qCursor := QTextCursor():configure( qEdit:textCursor() )
-   oEdit:nCurLineNo := qCursor:blockNumber()
-
-   SWITCH nMode
-
-   CASE customContextMenuRequested
-      pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
-      IF !hbqt_isEmptyQtPointer( pAct )
-         qAct := QAction():configure( pAct )
-         DO CASE
-         CASE qAct:text() == "Split Horizontally"
-            ::oEditor:split( 1, oEdit )
-         CASE qAct:text() == "Split Vertically"
-            ::oEditor:split( 2, oEdit )
-         CASE qAct:text() == "Close Split Window"
-            IF ( n := ascan( ::oEditor:aEdits, {|o| o == oEdit } ) ) > 0  /* 1 == Main Edit */
-               oo := ::oEditor:aEdits[ n ]
-               hb_adel( ::oEditor:aEdits, n, .t. )
-               oo:destroy()
-               ::oEditor:relay()
-               ::oEditor:qCqEdit := ::oEditor:qEdit
-               ::oEditor:qCoEdit := ::oEditor:oEdit
-               ::oIde:manageFocusInEditor()
-            ENDIF
-         CASE qAct:text() == "Apply Theme"
-            ::oEditor:applyTheme()
-         ENDCASE
-      ENDIF
-      EXIT
-   CASE textChanged
-      //hbide_dbg( "textChanged()" )
-      ::oEditor:setTabImage( qEdit )
-      EXIT
-   CASE copyAvailable
-      //hbide_dbg( "copyAvailable(bool)", p )
-      EXIT
-   CASE modificationChanged
-      //hbide_dbg( "modificationChanged(bool)", p )
-      EXIT
-   CASE redoAvailable
-      //hbide_dbg( "redoAvailable(bool)", p )
-      EXIT
-   CASE selectionChanged
-      hbide_dbg( "selectionChanged()" )
-      ::oEditor:qCqEdit := qEdit
-      ::oEditor:qCoEdit := oEdit
-
-      qCursor := QTextCursor():configure( qEdit:TextCursor() )
-
-      /* Book Marks reach-out buttons */
-      ::relayMarkButtons()
-
-      /* An experimental move but seems a lot is required to achieve column selection */
-*     qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
-
-      ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
-
-      EXIT
-   CASE undoAvailable
-      //hbide_dbg( "undoAvailable(bool)", p )
-      EXIT
-   CASE updateRequest
-      EXIT
-   CASE cursorPositionChanged
-      //hbide_dbg( "cursorPositionChanged()" )
-      ::oEditor:dispEditInfo( qEdit )
-      IF ::lUpdatePrevWord
-         ::lUpdatePrevWord := .f.
-         hbide_handlePreviousWord( ::qEdit )
-      ENDIF
-
-      IF ::lIndentIt
-         ::lIndentIt := .f.
-         IF ( nSpaces := ::findLastIndent() ) > 0
-            qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-            qCursor:insertText( space( nSpaces ) )
-         ENDIF
-      ENDIF
-      //hbide_dbg( "cursorPositionChanged()   1" )
-      EXIT
-
-   ENDSWITCH
-
-   RETURN Nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
-   LOCAL key, kbm, txt, qEvent
-   LOCAL lAlt   := .f.
-   LOCAL lCtrl  := .f.
-   LOCAL lShift := .f.
-
-   SWITCH nEvent
-   CASE QEvent_KeyPress
-
-      qEvent := QKeyEvent():configure( p )
-
-      key := qEvent:key()
-      kbm := qEvent:modifiers()
-      txt := qEvent:text()
-
-      IF hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
-         lAlt := .t.
-      ENDIF
-      IF hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
-         lCtrl := .t.
-      ENDIF
-      IF hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
-         lShift := .t.
-      ENDIF
-
-      SWITCH ( key )
-
-      CASE Qt_Key_Q                   /* All these actions will be pulled from user-setup */
-         IF lCtrl .AND. lShift
-            ::streamComment()
-         ENDIF
-         EXIT
-      CASE Qt_Key_Slash
-         IF lCtrl
-            ::blockComment()
-         ENDIF
-         EXIT
-      CASE Qt_Key_D
-         IF lCtrl
-            ::duplicateLine()
-         ENDIF
-         EXIT
-      CASE Qt_Key_Return
-      CASE Qt_Key_Enter
-         ::lIndentIt := .t.
-         EXIT
-      CASE Qt_Key_Tab
-         IF lCtrl
-            ::blockIndent( 1 )
-            RETURN .T.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Backtab
-         IF lCtrl
-            ::blockIndent( -1 )
-            RETURN .t.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Backspace
-         hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
-         EXIT
-      CASE Qt_Key_Delete
-         IF lCtrl
-            ::deleteLine()
-            RETURN .t.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Up
-         IF lCtrl .AND. lShift
-            ::moveLine( -1 )
-            RETURN .t.
-         ENDIF
-      CASE Qt_Key_Down
-         IF lCtrl .AND. lShift
-            ::moveLine( 1 )
-            RETURN .t.
-         ENDIF
-      ENDSWITCH
-
-      EXIT
-   CASE QEvent_Wheel
-      EXIT
-
-   ENDSWITCH
-
-   RETURN .F.  /* Important */
 
 /*----------------------------------------------------------------------*/
 

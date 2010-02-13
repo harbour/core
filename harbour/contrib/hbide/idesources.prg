@@ -275,9 +275,9 @@ hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
             RETURN .F.
          ENDIF
       ENDIF
-hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1 )
+hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
       oEditor:destroy()
-hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 21 )
+hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
       ::oIde:updateTitleBar()
    ENDIF
 
