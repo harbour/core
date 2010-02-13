@@ -107,6 +107,20 @@ PROCEDURE Main()
    cData := Space( MAX_PATH )
    ? "WIN_DLLCALL: ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "@cData: ", cData
+   cData := Space( MAX_PATH )
+   ? "cData BEFORE: ", cData
+   ? "WIN_DLLCALL (MISSING @1): ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "cData AFTER: ", cData
+/*
+   cData := "aaaaaaaaaaaaaaaaaaaaaa"
+   ? "cData BEFORE: ", cData
+   ? "WIN_DLLCALL (MISSING @2): ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "cData AFTER: ", cData
+   cData := "                                                                                                                                       "
+   ? "cData BEFORE: ", cData
+   ? "WIN_DLLCALL (MISSING @3): ", win_dllCall( GetProcAddress( hDLL, "SHGetFolderPath" ), 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "cData AFTER: ", cData
+*/
    wapi_FreeLibrary( hDLL )
 
    ? "DLLCALL"
