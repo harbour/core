@@ -104,79 +104,73 @@ typedef struct
 {
    void *    hString;
    int       iType;
+   HB_BOOL   bUNICODE;
    HB_BOOL   bByRef;
    HB_U64    nValue;
-} HB_WINARG;
+} HB_WINARG, * PHB_WINARG;
 
-typedef struct
-{
-   HB_BOOL     bUNICODE;
-   int         iFirst;
-   HB_WINARG * pArg;
-} HB_WINCALL, * PHB_WINCALL;
-
-static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam )
+static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_WINARG pArg )
 {
    HB_U64 r;
 
-   switch( wcall->pArg[ iParam - 1 ].iType )
+   switch( pArg->iType )
    {
       case HB_WIN_DLL_CTYPE_BOOL:
-         wcall->pArg[ iParam - 1 ].nValue = hb_itemGetL( pParam );
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = hb_itemGetL( pParam );
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR:
       case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].nValue = hb_itemGetNI( pParam ) & 0xFF;
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = hb_itemGetNI( pParam ) & 0xFF;
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_SHORT:
       case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].nValue = hb_itemGetNI( pParam ) & 0xFFFF;
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = hb_itemGetNI( pParam ) & 0xFFFF;
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_INT:
       case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
       case HB_WIN_DLL_CTYPE_LONG:
       case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].nValue = hb_itemGetNL( pParam );
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = hb_itemGetNL( pParam );
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_LLONG:
       case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].nValue = hb_itemGetNInt( pParam );
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = hb_itemGetNInt( pParam );
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_FLOAT:
       case HB_WIN_DLL_CTYPE_DOUBLE:
-         HB_PUT_LE_DOUBLE( ( BYTE * ) &wcall->pArg[ iParam - 1 ].nValue, hb_itemGetND( pParam ) );
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         HB_PUT_LE_DOUBLE( ( BYTE * ) &pArg->nValue, hb_itemGetND( pParam ) );
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-         r = ( HB_PTRUINT ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
-         wcall->pArg[ iParam - 1 ].nValue = r;
+         r = ( HB_PTRUINT ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         pArg->nValue = r;
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
-         if( wcall->bUNICODE )
+         if( pArg->bUNICODE )
          {
             HB_SIZE nLen;
-            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, &nLen );
-            r = ( HB_PTRUINT ) hb_wstrunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &pArg->hString, &nLen );
+            r = ( HB_PTRUINT ) hb_wstrunshare( &pArg->hString, s, nLen );
          }
          else
          {
             HB_SIZE nLen;
-            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, &nLen );
-            r = ( HB_PTRUINT ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &pArg->hString, &nLen );
+            r = ( HB_PTRUINT ) hb_strunshare( &pArg->hString, s, nLen );
          }
-         wcall->pArg[ iParam - 1 ].nValue = r;
+         pArg->nValue = r;
          break;
 
       case HB_WIN_DLL_CTYPE_SHORT_PTR:
@@ -192,24 +186,24 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam )
       case HB_WIN_DLL_CTYPE_BOOL_PTR:
       case HB_WIN_DLL_CTYPE_VOID_PTR:
       case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
-         wcall->pArg[ iParam - 1 ].nValue = ( HB_PTRUINT ) hb_itemGetPtr( pParam );
-         r = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_PTRUINT ) &wcall->pArg[ iParam - 1 ].nValue : wcall->pArg[ iParam - 1 ].nValue;
+         pArg->nValue = ( HB_PTRUINT ) hb_itemGetPtr( pParam );
+         r = pArg->bByRef ? ( HB_PTRUINT ) &pArg->nValue : pArg->nValue;
          break;
 
       case HB_WIN_DLL_CTYPE_STRUCTURE:
          /* TODO */
-         r = wcall->pArg[ iParam - 1 ].nValue = 0;
+         r = pArg->nValue = 0;
          break;
 
       case HB_WIN_DLL_CTYPE_VOID:
       default:
-         r = wcall->pArg[ iParam - 1 ].nValue = 0;
+         r = pArg->nValue = 0;
    }
 
    return r;
 }
 
-static PHB_ITEM hb_u64ret( PHB_WINCALL wcall, PHB_ITEM pItem, int iRetType, HB_U64 nRetVal )
+static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, HB_BOOL bUNICODE, HB_U64 nRetVal )
 {
    switch( iRetType )
    {
@@ -245,7 +239,7 @@ static PHB_ITEM hb_u64ret( PHB_WINCALL wcall, PHB_ITEM pItem, int iRetType, HB_U
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
-         if( wcall->bUNICODE )
+         if( bUNICODE )
             hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal );
          else
             hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) nRetVal );
@@ -310,97 +304,91 @@ typedef struct
 {
    void *    hString;
    int       iType;
+   HB_BOOL   bUNICODE;
    HB_BOOL   bByRef;
    HB_WINVAL value;
-} HB_WINARG;
+} HB_WINARG, * PHB_WINARG;
 
-typedef struct
-{
-   HB_BOOL     bUNICODE;
-   int         iFirst;
-   HB_WINARG * pArg;
-} HB_WINCALL, * PHB_WINCALL;
-
-static void hb_u32par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam, HB_U32 * r1, HB_U32 * r2, HB_BOOL * b64 )
+static void hb_u32par( PHB_ITEM pParam, PHB_WINARG pArg, HB_U32 * r1, HB_U32 * r2, HB_BOOL * b64 )
 {
    *b64 = HB_FALSE;
 
-   switch( wcall->pArg[ iParam - 1 ].iType )
+   switch( pArg->iType )
    {
       case HB_WIN_DLL_CTYPE_BOOL:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetL( pParam );
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.n32 = hb_itemGetL( pParam );
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.n32 : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR:
       case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetNI( pParam ) & 0xFF;
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.n32 = hb_itemGetNI( pParam ) & 0xFF;
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.n32 : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_SHORT:
       case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetNI( pParam ) & 0xFFFF;
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.n32 = hb_itemGetNI( pParam ) & 0xFFFF;
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.n32 : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_INT:
       case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
       case HB_WIN_DLL_CTYPE_LONG:
       case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetNL( pParam );
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.n32 = hb_itemGetNL( pParam );
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.n32 : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_LLONG:
       case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = hb_itemGetNL( pParam );
-         if( wcall->pArg[ iParam - 1 ].bByRef )
-            *r1 = ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n64;
+         pArg->value.t.n32 = hb_itemGetNL( pParam );
+         if( pArg->bByRef )
+            *r1 = ( HB_U32 ) &pArg->value.t.n64;
          else
          {
-            *r1 = wcall->pArg[ iParam - 1 ].value.t.n64 & 0xFFFFFFFF;
-            *r2 = ( wcall->pArg[ iParam - 1 ].value.t.n64 >> 32 );
+            *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
+            *r2 = ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
          break;
 
       case HB_WIN_DLL_CTYPE_FLOAT:
-         wcall->pArg[ iParam - 1 ].value.t.nFL = ( float ) hb_itemGetND( pParam );
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.nFL : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.nFL = ( float ) hb_itemGetND( pParam );
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.nFL : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_DOUBLE:
-         wcall->pArg[ iParam - 1 ].value.t.nDB = hb_itemGetND( pParam );
-         if( wcall->pArg[ iParam - 1 ].bByRef )
-            *r1 = ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.nDB;
+         pArg->value.t.nDB = hb_itemGetND( pParam );
+         if( pArg->bByRef )
+            *r1 = ( HB_U32 ) &pArg->value.t.nDB;
          else
          {
-            *r1 = wcall->pArg[ iParam - 1 ].value.t.n64 & 0xFFFFFFFF;
-            *r2 = ( wcall->pArg[ iParam - 1 ].value.t.n64 >> 32 );
+            *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
+            *r2 = ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-         *r1 = ( HB_U32 ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
-         wcall->pArg[ iParam - 1 ].value.t.n32 = *r1;
+         *r1 = ( HB_U32 ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         pArg->value.t.n32 = *r1;
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
-         if( wcall->bUNICODE )
+         if( pArg->bUNICODE )
          {
             HB_SIZE nLen;
-            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &wcall->pArg[ iParam - 1 ].hString, &nLen );
-            *r1 = ( HB_U32 ) hb_wstrunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+            const HB_WCHAR * s = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &pArg->hString, &nLen );
+            *r1 = ( HB_U32 ) hb_wstrunshare( &pArg->hString, s, nLen );
          }
          else
          {
             HB_SIZE nLen;
-            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &wcall->pArg[ iParam - 1 ].hString, &nLen );
-            *r1 = ( HB_U32 ) hb_strunshare( &wcall->pArg[ iParam - 1 ].hString, s, nLen );
+            const char * s = hb_itemGetStr( pParam, hb_setGetOSCP(), &pArg->hString, &nLen );
+            *r1 = ( HB_U32 ) hb_strunshare( &pArg->hString, s, nLen );
          }
-         wcall->pArg[ iParam - 1 ].value.t.n32 = *r1;
+         pArg->value.t.n32 = *r1;
          break;
 
       case HB_WIN_DLL_CTYPE_SHORT_PTR:
@@ -416,22 +404,22 @@ static void hb_u32par( PHB_ITEM pParam, PHB_WINCALL wcall, int iParam, HB_U32 * 
       case HB_WIN_DLL_CTYPE_BOOL_PTR:
       case HB_WIN_DLL_CTYPE_VOID_PTR:
       case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
-         wcall->pArg[ iParam - 1 ].value.t.n32 = ( HB_U32 ) hb_itemGetPtr( pParam );
-         *r1 = wcall->pArg[ iParam - 1 ].bByRef ? ( HB_U32 ) &wcall->pArg[ iParam - 1 ].value.t.n32 : wcall->pArg[ iParam - 1 ].value.t.n32;
+         pArg->value.t.n32 = ( HB_U32 ) hb_itemGetPtr( pParam );
+         *r1 = pArg->bByRef ? ( HB_U32 ) &pArg->value.t.n32 : pArg->value.t.n32;
          break;
 
       case HB_WIN_DLL_CTYPE_STRUCTURE:
          /* TODO */
-         *r1 = wcall->pArg[ iParam - 1 ].value.t.n32 = 0;
+         *r1 = pArg->value.t.n32 = 0;
          break;
 
       case HB_WIN_DLL_CTYPE_VOID:
       default:
-         *r1 = wcall->pArg[ iParam - 1 ].value.t.n32 = 0;
+         *r1 = pArg->value.t.n32 = 0;
    }
 }
 
-static PHB_ITEM hb_u32ret( PHB_WINCALL wcall, PHB_ITEM pItem, int iRetType, HB_WINVAL value )
+static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, HB_BOOL bUNICODE, HB_WINVAL value )
 {
    switch( iRetType )
    {
@@ -473,7 +461,7 @@ static PHB_ITEM hb_u32ret( PHB_WINCALL wcall, PHB_ITEM pItem, int iRetType, HB_W
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
-         if( wcall->bUNICODE )
+         if( bUNICODE )
             hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) value.t.n32 );
          else
             hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) value.t.n32 );
@@ -767,40 +755,37 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
 #if defined( HB_ARCH_64BIT )
    {
-      HB_WINCALL wcall;
-
       HB_SYMBOL_UNUSED( iCallConv );
 
-      wcall.bUNICODE = bUNICODE;
-      wcall.iFirst = iFirst - 1;
-
-      iParams -= wcall.iFirst;
+      iParams -= iFirst - 1;
 
       if( iParams <= _DLLEXEC_MAXPARAM )
       {
          HB_U64 nRetVal = 0;
          HB_U64 rawpar[ _DLLEXEC_MAXPARAM ];
+         HB_WINARG * pArg;
 
          if( iParams )
          {
-            wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
-            memset( wcall.pArg, 0, iParams * sizeof( HB_WINARG ) );
+            pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
+            memset( pArg, 0, iParams * sizeof( HB_WINARG ) );
          }
          else
-            wcall.pArg = NULL;
+            pArg = NULL;
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
             PHB_ITEM pParam = hb_param( iFirst + tmp, HB_IT_ANY );
 
-            wcall.pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
+            pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
 
-            if( wcall.pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
-               wcall.pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
+            if( pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
+               pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
 
-            wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
+            pArg[ tmp ].bUNICODE = bUNICODE;
+            pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
 
-            rawpar[ tmp ] = hb_u64par( pParam, &wcall, tmp + 1 );
+            rawpar[ tmp ] = hb_u64par( pParam, &pArg[ tmp ] );
          }
 
          switch( iParams )
@@ -823,20 +808,20 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
             case 15: nRetVal = ( ( WIN64_15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
          }
 
-         hb_u64ret( &wcall, hb_stackReturnItem(), iRetType, nRetVal );
+         hb_u64ret( hb_stackReturnItem(), iRetType, bUNICODE, nRetVal );
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
-            if( wcall.pArg[ tmp ].bByRef )
+            if( pArg[ tmp ].bByRef )
             {
-               switch( wcall.pArg[ tmp ].iType )
+               switch( pArg[ tmp ].iType )
                {
                   case HB_WIN_DLL_CTYPE_VOID:
                      hb_stor( iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_BOOL:
-                     hb_storl( wcall.pArg[ tmp ].nValue != 0, iFirst + tmp );
+                     hb_storl( pArg[ tmp ].nValue != 0, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR:
@@ -844,29 +829,29 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
                   case HB_WIN_DLL_CTYPE_SHORT:
                   case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
                   case HB_WIN_DLL_CTYPE_INT:
-                     hb_storni( ( int ) wcall.pArg[ tmp ].nValue, iFirst + tmp );
+                     hb_storni( ( int ) pArg[ tmp ].nValue, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_LONG:
-                     hb_stornl( ( long ) wcall.pArg[ tmp ].nValue, iFirst + tmp );
+                     hb_stornl( ( long ) pArg[ tmp ].nValue, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
                   case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
                   case HB_WIN_DLL_CTYPE_LLONG:
                   case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-                     hb_stornint( wcall.pArg[ tmp ].nValue, iFirst + tmp );
+                     hb_stornint( pArg[ tmp ].nValue, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-                     hb_storclen( ( const char * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                     hb_storclen( ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR_PTR:
-                     if( bUNICODE )
-                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                     if( pArg[ tmp ].bUNICODE )
+                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      else
-                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_INT_PTR:
@@ -879,42 +864,38 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
                   case HB_WIN_DLL_CTYPE_BOOL_PTR:
                   case HB_WIN_DLL_CTYPE_FLOAT_PTR:
                   case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
-                     hb_storptr( ( void * ) wcall.pArg[ tmp ].nValue, iFirst + tmp );
+                     hb_storptr( ( void * ) pArg[ tmp ].nValue, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_FLOAT:
                   case HB_WIN_DLL_CTYPE_DOUBLE:
-                     hb_stornd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &wcall.pArg[ tmp ].nValue ), iFirst + tmp );
+                     hb_stornd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &pArg[ tmp ].nValue ), iFirst + tmp );
                      break;
 
                   default:
-                     hb_stornint( wcall.pArg[ tmp ].nValue, iFirst + tmp );
+                     hb_stornint( pArg[ tmp ].nValue, iFirst + tmp );
                }
             }
          }
 
          for( tmp = 0; tmp < iParams; ++tmp )
-            hb_strfree( wcall.pArg[ tmp ].hString );
+            hb_strfree( pArg[ tmp ].hString );
 
-         if( wcall.pArg )
-            hb_xfree( wcall.pArg );
+         if( pArg )
+            hb_xfree( pArg );
       }
       else
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 #elif defined( HB_ARCH_32BIT )
    {
-      HB_WINCALL wcall;
-
-      wcall.bUNICODE = bUNICODE;
-      wcall.iFirst = iFirst - 1;
-
-      iParams -= wcall.iFirst;
+      iParams -= iFirst - 1;
 
       if( iParams <= _DLLEXEC_MAXPARAM )
       {
          int iRetTypeRaw;
          HB_WINVAL ret;
+         HB_WINARG * pArg;
 
          int iParamsRaw = 0;
          HB_U32 rawpar[ _DLLEXEC_MAXPARAM * 2 ];
@@ -930,11 +911,11 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
 
          if( iParams )
          {
-            wcall.pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
-            memset( wcall.pArg, 0, iParams * sizeof( HB_WINARG ) );
+            pArg = ( HB_WINARG * ) hb_xgrab( iParams * sizeof( HB_WINARG ) );
+            memset( pArg, 0, iParams * sizeof( HB_WINARG ) );
          }
          else
-            wcall.pArg = NULL;
+            pArg = NULL;
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
@@ -944,14 +925,15 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
             HB_U32 r2;
             HB_BOOL b64;
 
-            wcall.pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
+            pArg[ tmp ].iType = piArgTypeReq ? piArgTypeReq[ tmp ] : HB_WIN_DLL_CTYPE_DEFAULT;
 
-            if( wcall.pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
-               wcall.pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
+            if( pArg[ tmp ].iType == HB_WIN_DLL_CTYPE_DEFAULT )
+               pArg[ tmp ].iType = hb_hbtoctype( HB_ITEM_TYPE( pParam ) );
 
-            wcall.pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
+            pArg[ tmp ].bUNICODE = bUNICODE;
+            pArg[ tmp ].bByRef = HB_ISBYREF( iFirst + tmp );
 
-            hb_u32par( pParam, &wcall, tmp + 1, &r1, &r2, &b64 );
+            hb_u32par( pParam, &pArg[ tmp ], &r1, &r2, &b64 );
 
             /* TOFIX: Verify proper order. */
             rawpar[ iParamsRaw++ ] = r1;
@@ -1260,56 +1242,56 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
             }
          }
 
-         hb_u32ret( &wcall, hb_stackReturnItem(), iRetType, ret );
+         hb_u32ret( hb_stackReturnItem(), iRetType, bUNICODE, ret );
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
-            if( wcall.pArg[ tmp ].bByRef )
+            if( pArg[ tmp ].bByRef )
             {
-               switch( wcall.pArg[ tmp ].iType )
+               switch( pArg[ tmp ].iType )
                {
                   case HB_WIN_DLL_CTYPE_VOID:
                      hb_stor( iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_BOOL:
-                     hb_storl( wcall.pArg[ tmp ].value.t.n32 != 0, iFirst + tmp );
+                     hb_storl( pArg[ tmp ].value.t.n32 != 0, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR:
                   case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
-                     hb_storni( wcall.pArg[ tmp ].value.t.n32 & 0xFF, iFirst + tmp );
+                     hb_storni( pArg[ tmp ].value.t.n32 & 0xFF, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_SHORT:
                   case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
                   case HB_WIN_DLL_CTYPE_INT:
-                     hb_storni( wcall.pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
+                     hb_storni( pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_LONG:
-                     hb_stornl( wcall.pArg[ tmp ].value.t.n32, iFirst + tmp );
+                     hb_stornl( pArg[ tmp ].value.t.n32, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
                   case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
-                     hb_stornint( wcall.pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
+                     hb_stornint( pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_LLONG:
                   case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-                     hb_stornint( wcall.pArg[ tmp ].value.t.n64, iFirst + tmp );
+                     hb_stornint( pArg[ tmp ].value.t.n64, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-                     hb_storclen( ( const char * ) wcall.pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                     hb_storclen( ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_CHAR_PTR:
-                     if( bUNICODE )
-                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) wcall.pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                     if( pArg[ tmp ].bUNICODE )
+                        hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      else
-                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) wcall.pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
+                        hb_storstrlen( hb_setGetOSCP(), ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_INT_PTR:
@@ -1322,28 +1304,28 @@ void hbwin_dllCall( int iCallConv, int iRetType, HB_BOOL bUNICODE, FARPROC lpFun
                   case HB_WIN_DLL_CTYPE_BOOL_PTR:
                   case HB_WIN_DLL_CTYPE_FLOAT_PTR:
                   case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
-                     hb_storptr( ( void * ) wcall.pArg[ tmp ].value.t.n32, iFirst + tmp );
+                     hb_storptr( ( void * ) pArg[ tmp ].value.t.n32, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_FLOAT:
-                     hb_stornd( wcall.pArg[ tmp ].value.t.nFL, iFirst + tmp );
+                     hb_stornd( pArg[ tmp ].value.t.nFL, iFirst + tmp );
                      break;
 
                   case HB_WIN_DLL_CTYPE_DOUBLE:
-                     hb_stornd( wcall.pArg[ tmp ].value.t.nDB, iFirst + tmp );
+                     hb_stornd( pArg[ tmp ].value.t.nDB, iFirst + tmp );
                      break;
 
                   default:
-                     hb_stornl( wcall.pArg[ tmp ].value.t.n32, iFirst + tmp );
+                     hb_stornl( pArg[ tmp ].value.t.n32, iFirst + tmp );
                }
             }
          }
 
          for( tmp = 0; tmp < iParams; ++tmp )
-            hb_strfree( wcall.pArg[ tmp ].hString );
+            hb_strfree( pArg[ tmp ].hString );
 
-         if( wcall.pArg )
-            hb_xfree( wcall.pArg );
+         if( pArg )
+            hb_xfree( pArg );
       }
       else
          hb_errRT_BASE( EG_ARG, 2010, "A maximum of 15 parameters is supported", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
