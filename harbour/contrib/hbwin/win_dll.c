@@ -222,7 +222,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
    return r;
 }
 
-static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_U64 nRetVal )
+static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_U64 nRetVal, HB_ISIZ nLen )
 {
    switch( iRetType )
    {
@@ -261,16 +261,28 @@ static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_U64 n
          switch( iEncoding )
          {
             case HB_WIN_DLL_ENC_ASCII:
-               hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) nRetVal );
+               if( nLen == -1 )
+                  hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) nRetVal );
+               else
+                  hb_itemPutStrLen( pItem, hb_setGetOSCP(), ( const char * ) nRetVal, nLen );
                break;
             case HB_WIN_DLL_ENC_UTF8:
-               hb_itemPutStrUTF8( pItem, ( const char * ) nRetVal );
+               if( nLen == -1 )
+                  hb_itemPutStrUTF8( pItem, ( const char * ) nRetVal );
+               else
+                  hb_itemPutStrLenUTF8( pItem, ( const char * ) nRetVal, nLen );
                break;
             case HB_WIN_DLL_ENC_UTF16:
-               hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal );
+               if( nLen == -1 )
+                  hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal );
+               else
+                  hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) nRetVal, nLen );
                break;
             default:
-               hb_itemPutC( pItem, ( const char * ) nRetVal );
+               if( nLen == -1 )
+                  hb_itemPutC( pItem, ( const char * ) nRetVal );
+               else
+                  hb_itemPutCL( pItem, ( const char * ) nRetVal, nLen );
          }
          break;
 
@@ -463,7 +475,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
    }
 }
 
-static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVAL value )
+static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVAL value, HB_ISIZ nLen )
 {
    switch( iRetType )
    {
@@ -505,19 +517,32 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_WIN_DLL_CTYPE_CHAR_PTR:
+
          switch( iEncoding )
          {
             case HB_WIN_DLL_ENC_ASCII:
-               hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) value.t.n32 );
+               if( nLen == -1 )
+                  hb_itemPutStr( pItem, hb_setGetOSCP(), ( const char * ) value.t.n32 );
+               else
+                  hb_itemPutStrLen( pItem, hb_setGetOSCP(), ( const char * ) value.t.n32, nLen );
                break;
             case HB_WIN_DLL_ENC_UTF8:
-               hb_itemPutStrUTF8( pItem, ( const char * ) value.t.n32 );
+               if( nLen == -1 )
+                  hb_itemPutStrUTF8( pItem, ( const char * ) value.t.n32 );
+               else
+                  hb_itemPutStrLenUTF8( pItem, ( const char * ) value.t.n32, nLen );
                break;
             case HB_WIN_DLL_ENC_UTF16:
-               hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) value.t.n32 );
+               if( nLen == -1 )
+                  hb_itemPutStrU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) value.t.n32 );
+               else
+                  hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) value.t.n32, nLen );
                break;
             default:
-               hb_itemPutC( pItem, ( const char * ) value.t.n32 );
+               if( nLen == -1 )
+                  hb_itemPutC( pItem, ( const char * ) value.t.n32 );
+               else
+                  hb_itemPutCL( pItem, ( const char * ) value.t.n32, nLen );
          }
          break;
 
@@ -870,88 +895,22 @@ void hbwin_dllCall( int iFuncFlags, FARPROC lpFunction, int iParams, int iFirst,
             case 15: nRetVal = ( ( FX64_15 ) *lpFunction )( rawpar[ 0 ], rawpar[ 1 ], rawpar[ 2 ], rawpar[ 3 ], rawpar[ 4 ], rawpar[ 5 ], rawpar[ 6 ], rawpar[ 7 ], rawpar[ 8 ], rawpar[ 9 ], rawpar[ 10 ], rawpar[ 11 ], rawpar[ 12 ], rawpar[ 13 ], rawpar[ 14 ] ); break;
          }
 
-         hb_u64ret( hb_stackReturnItem(), iRetType, iEncoding, nRetVal );
+         hb_u64ret( hb_stackReturnItem(), iRetType, iEncoding, nRetVal, -1 );
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
             if( pArg[ tmp ].bByRef )
             {
-               switch( pArg[ tmp ].iType )
-               {
-                  case HB_WIN_DLL_CTYPE_VOID:
-                     hb_stor( iFirst + tmp );
-                     break;
+               PHB_ITEM pItem = hb_itemNew( NULL );
 
-                  case HB_WIN_DLL_CTYPE_BOOL:
-                     hb_storl( pArg[ tmp ].nValue != 0, iFirst + tmp );
-                     break;
+               hb_itemParamStoreForward( ( HB_USHORT ) ( iFirst + tmp ),
+                  hb_u64ret( pItem, pArg[ tmp ].iType, pArg[ tmp ].iEncoding, pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ) ) );
 
-                  case HB_WIN_DLL_CTYPE_CHAR:
-                  case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_SHORT:
-                  case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_INT:
-                     hb_storni( ( int ) pArg[ tmp ].nValue, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_LONG:
-                     hb_stornl( ( long ) pArg[ tmp ].nValue, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_LLONG:
-                  case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-                     hb_stornint( pArg[ tmp ].nValue, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-                     hb_storclen( ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_CHAR_PTR:
-                     switch( pArg[ tmp ].iEncoding )
-                     {
-                        case HB_WIN_DLL_ENC_ASCII:
-                           hb_storstrlen( hb_setGetOSCP(), ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        case HB_WIN_DLL_ENC_UTF8:
-                           hb_storstrlen_utf8( ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        case HB_WIN_DLL_ENC_UTF16:
-                           hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        default:
-                           hb_storclen( ( const char * ) pArg[ tmp ].nValue, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                     }
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_INT_PTR:
-                  case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
-                  case HB_WIN_DLL_CTYPE_LONG_PTR:
-                  case HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_VOID_PTR:
-                  case HB_WIN_DLL_CTYPE_BOOL_PTR:
-                  case HB_WIN_DLL_CTYPE_FLOAT_PTR:
-                  case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
-                     hb_storptr( ( void * ) pArg[ tmp ].nValue, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_FLOAT:
-                  case HB_WIN_DLL_CTYPE_DOUBLE:
-                     hb_stornd( HB_GET_LE_DOUBLE( ( HB_BYTE * ) &pArg[ tmp ].nValue ), iFirst + tmp );
-                     break;
-
-                  default:
-                     hb_stornint( pArg[ tmp ].nValue, iFirst + tmp );
-               }
+               hb_itemRelease( pItem );
             }
-         }
 
-         for( tmp = 0; tmp < iParams; ++tmp )
             hb_strfree( pArg[ tmp ].hString );
+         }
 
          if( pArg )
             hb_xfree( pArg );
@@ -1327,97 +1286,22 @@ void hbwin_dllCall( int iFuncFlags, FARPROC lpFunction, int iParams, int iFirst,
             }
          }
 
-         hb_u32ret( hb_stackReturnItem(), iRetType, iEncoding, ret );
+         hb_u32ret( hb_stackReturnItem(), iRetType, iEncoding, ret, -1 );
 
          for( tmp = 0; tmp < iParams; ++tmp )
          {
             if( pArg[ tmp ].bByRef )
             {
-               switch( pArg[ tmp ].iType )
-               {
-                  case HB_WIN_DLL_CTYPE_VOID:
-                     hb_stor( iFirst + tmp );
-                     break;
+               PHB_ITEM pItem = hb_itemNew( NULL );
 
-                  case HB_WIN_DLL_CTYPE_BOOL:
-                     hb_storl( pArg[ tmp ].value.t.n32 != 0, iFirst + tmp );
-                     break;
+               hb_itemParamStoreForward( ( HB_USHORT ) ( iFirst + tmp ),
+                  hb_u32ret( pItem, pArg[ tmp ].iType, pArg[ tmp ].iEncoding, pArg[ tmp ].value, hb_parclen( iFirst + tmp ) ) );
 
-                  case HB_WIN_DLL_CTYPE_CHAR:
-                  case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED:
-                     hb_storni( pArg[ tmp ].value.t.n32 & 0xFF, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_SHORT:
-                  case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_INT:
-                     hb_storni( pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_LONG:
-                     hb_stornl( pArg[ tmp ].value.t.n32, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_INT_UNSIGNED:
-                  case HB_WIN_DLL_CTYPE_LONG_UNSIGNED:
-                     hb_stornint( pArg[ tmp ].value.t.n32 & 0xFFFF, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_LLONG:
-                  case HB_WIN_DLL_CTYPE_LLONG_UNSIGNED:
-                     hb_stornint( pArg[ tmp ].value.t.n64, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR:
-                     hb_storclen( ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_CHAR_PTR:
-                     switch( pArg[ tmp ].iEncoding )
-                     {
-                        case HB_WIN_DLL_ENC_ASCII:
-                           hb_storstrlen( hb_setGetOSCP(), ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        case HB_WIN_DLL_ENC_UTF8:
-                           hb_storstrlen_utf8( ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        case HB_WIN_DLL_ENC_UTF16:
-                           hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                           break;
-                        default:
-                           hb_storclen( ( const char * ) pArg[ tmp ].value.t.n32, hb_parclen( iFirst + tmp ), iFirst + tmp );
-                     }
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_INT_PTR:
-                  case HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_STRUCTURE_PTR:
-                  case HB_WIN_DLL_CTYPE_LONG_PTR:
-                  case HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR:
-                  case HB_WIN_DLL_CTYPE_VOID_PTR:
-                  case HB_WIN_DLL_CTYPE_BOOL_PTR:
-                  case HB_WIN_DLL_CTYPE_FLOAT_PTR:
-                  case HB_WIN_DLL_CTYPE_DOUBLE_PTR:
-                     hb_storptr( ( void * ) pArg[ tmp ].value.t.n32, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_FLOAT:
-                     hb_stornd( pArg[ tmp ].value.t.nFL, iFirst + tmp );
-                     break;
-
-                  case HB_WIN_DLL_CTYPE_DOUBLE:
-                     hb_stornd( pArg[ tmp ].value.t.nDB, iFirst + tmp );
-                     break;
-
-                  default:
-                     hb_stornl( pArg[ tmp ].value.t.n32, iFirst + tmp );
-               }
+               hb_itemRelease( pItem );
             }
-         }
 
-         for( tmp = 0; tmp < iParams; ++tmp )
             hb_strfree( pArg[ tmp ].hString );
+         }
 
          if( pArg )
             hb_xfree( pArg );
