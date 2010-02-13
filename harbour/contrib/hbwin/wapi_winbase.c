@@ -217,10 +217,16 @@ HB_FUNC( WAPI_GETPROCADDRESS )
    FARPROC pProc;
    DWORD dwLastError;
 #if defined( HB_OS_WIN_CE )
-   pProc = NULL;
-   dwLastError = ERROR_INVALID_FUNCTION;
+   void * hProcName;
+
+   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
+                  hb_parstr_u16( 2, HB_CDP_ENDIAN_NATIVE, &hProcName, NULL ) :
+                  ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+   dwLastError = GetLastError();
+   hb_strfree( hProcName );
 #else
-   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
+                  hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
 #endif
    hbwapi_SetLastError( dwLastError );
@@ -296,7 +302,9 @@ HB_FUNC( WAPI_MULDIV )
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
-HB_FUNC( WAPI_GETSHORTPATHNAME )
+typedef DWORD ( WINAPI * _HB_GETPATHNAME ) ( LPCTSTR, LPTSTR, DWORD );
+
+static void s_getPathName( _HB_GETPATHNAME getPathName )
 {
    void * hLongPath;
    DWORD length = 0;
@@ -320,21 +328,21 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
                lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
          }
 
-         length = GetShortPathName( lpszLongPath, lpszShortPath, cchBuffer );
+         length = getPathName( lpszLongPath, lpszShortPath, cchBuffer );
          if( !fSize && length > cchBuffer )  /* default buffer size was too small */
          {
             cchBuffer = length;
             lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
-            length = GetShortPathName( lpszLongPath, lpszShortPath, cchBuffer );
+            length = getPathName( lpszLongPath, lpszShortPath, cchBuffer );
          }
          hbwapi_SetLastError( GetLastError() );
          HB_STORSTRLEN( lpszShortPath, length > cchBuffer ? 0 : length, 2 );
          if( lpszShortPath && lpszShortPath != buffer )
             hb_xfree( lpszShortPath );
       }
-      else
+      else if( getPathName )
       {
-         length = GetShortPathName( lpszLongPath, NULL, 0 );
+         length = getPathName( lpszLongPath, NULL, 0 );
          hbwapi_SetLastError( GetLastError() );
       }
    }
@@ -342,48 +350,24 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
    hb_strfree( hLongPath );
 }
 
+HB_FUNC( WAPI_GETSHORTPATHNAME )
+{
+   s_getPathName( GetShortPathName );
+}
+
 HB_FUNC( WAPI_GETLONGPATHNAME )
 {
-   void * hLongPath;
-   DWORD length = 0;
-   LPCTSTR lpszLongPath = HB_PARSTR( 1, &hLongPath, NULL );
+   _HB_GETPATHNAME getPathName = NULL;
+   HMODULE hLib = LoadLibrary( TEXT( "kernel32.dll" ) );
 
-   if( lpszLongPath )
+   if( hLib )
    {
-      if( HB_ISBYREF( 2 ) )
-      {
-         TCHAR buffer[ HB_PATH_MAX ];
-         DWORD cchBuffer = ( DWORD ) HB_SIZEOFARRAY( buffer );
-         LPTSTR lpszShortPath = buffer;
-         HB_BOOL fSize = HB_ISNUM( 3 );
-
-         if( fSize )    /* the size of buffer is limited by user */
-         {
-            cchBuffer = ( DWORD ) hb_parnl( 3 );
-            if( cchBuffer == 0 )
-               lpszShortPath = NULL;
-            else if( cchBuffer > ( DWORD ) HB_SIZEOFARRAY( buffer ) )
-               lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
-         }
-
-         length = GetLongPathName( lpszLongPath, lpszShortPath, cchBuffer );
-         if( !fSize && length > cchBuffer )  /* default buffer size was too small */
-         {
-            cchBuffer = length;
-            lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
-            length = GetLongPathName( lpszLongPath, lpszShortPath, cchBuffer );
-         }
-         hbwapi_SetLastError( GetLastError() );
-         HB_STORSTRLEN( lpszShortPath, length > cchBuffer ? 0 : length, 2 );
-         if( lpszShortPath && lpszShortPath != buffer )
-            hb_xfree( lpszShortPath );
-      }
-      else
-      {
-         length = GetLongPathName( lpszLongPath, NULL, 0 );
-         hbwapi_SetLastError( GetLastError() );
-      }
+      getPathName = ( _HB_GETPATHNAME )
+                    GetProcAddress( hLib, HBTEXT( "GetLongPathName" ) );
+      FreeLibrary( hLib );
    }
-   hb_retnl( length );
-   hb_strfree( hLongPath );
+   if( !getPathName )
+      getPathName = GetShortPathName;
+
+   s_getPathName( getPathName );
 }
