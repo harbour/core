@@ -91,6 +91,10 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
    DWORD dwLastError;
 
 #if defined( HB_OS_WIN_CE )
+   /* WinCE (WinMobile6) does not support
+    * WaitFor{Single,Multiple}Object[Ex]() though it supports:
+    * MsgWaitFor{Single,Multiple}Object[Ex]()
+    */
    dwResult = 0;
    dwLastError = ERROR_INVALID_FUNCTION;
 #else
@@ -152,6 +156,10 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
    else
       hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
+   /* WinCE (WinMobile6) does not support
+    * WaitFor{Single,Multiple}Object[Ex]() though it supports:
+    * MsgWaitFor{Single,Multiple}Object[Ex]()
+    */
    hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    hb_retnl( 0 );
 #endif
@@ -163,6 +171,7 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
    DWORD dwLastError;
 
 #if defined( HB_OS_WIN_CE )
+   /* WinCE (till WinMobile6) does not support Working Set functions */
    bResult = FALSE;
    dwLastError = ERROR_INVALID_FUNCTION;
 #else
@@ -302,6 +311,10 @@ HB_FUNC( WAPI_MULDIV )
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
+#if !defined( HB_OS_WIN_CE )
+
+/* WinCE does not support GetShortPathName()/GetLongPathName() functions */
+
 typedef DWORD ( WINAPI * _HB_GETPATHNAME ) ( LPCTSTR, LPTSTR, DWORD );
 
 static void s_getPathName( _HB_GETPATHNAME getPathName )
@@ -361,13 +374,16 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    HMODULE hLib = LoadLibrary( TEXT( "kernel32.dll" ) );
 
    if( hLib )
-   {
       getPathName = ( _HB_GETPATHNAME )
                     GetProcAddress( hLib, HBTEXT( "GetLongPathName" ) );
-      FreeLibrary( hLib );
-   }
+
    if( !getPathName )
       getPathName = GetShortPathName;
 
    s_getPathName( getPathName );
+
+   if( hLib )
+      FreeLibrary( hLib );
 }
+
+#endif

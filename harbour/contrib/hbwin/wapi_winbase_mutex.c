@@ -113,6 +113,7 @@ HB_FUNC( WAPI_OPENMUTEX )
 
    hb_strfree( hName );
 #else
+   /* WinCE (WinMobile6) does not support OpenMutex() */
    hb_retptr( NULL );
 #endif
 }
