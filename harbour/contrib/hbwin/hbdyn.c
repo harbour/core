@@ -254,7 +254,10 @@ static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_U64 n
          break;
 
       case HB_DYN_CTYPE_CHAR_UNSIGNED_PTR:
-         hb_itemPutC( pItem, ( const char * ) nRetVal );
+         if( nLen == -1 )
+            hb_itemPutC( pItem, ( const char * ) nRetVal );
+         else
+            hb_itemPutCL( pItem, ( const char * ) nRetVal, nLen );
          break;
 
       case HB_DYN_CTYPE_CHAR_PTR:
@@ -513,7 +516,10 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_CHAR_UNSIGNED_PTR:
-         hb_itemPutC( pItem, ( const char * ) value.t.n32 );
+         if( nLen == -1 )
+            hb_itemPutC( pItem, ( const char * ) value.t.n32 );
+         else
+            hb_itemPutCL( pItem, ( const char * ) value.t.n32, nLen );
          break;
 
       case HB_DYN_CTYPE_CHAR_PTR:
