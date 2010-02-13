@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header for .dll support
+ * Dynamic call (high-level header)
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -55,17 +55,17 @@
 #ifndef HBDYN_CH_
 #define HBDYN_CH_
 
-/* WIN_DLLCALL() C calling convention */
+/* C calling conventions */
 #define HB_DYN_CALLCONV_STDCALL             0x000000
 #define HB_DYN_CALLCONV_CDECL               0x100000
 
-/* WIN_DLLCALL() string encoding */
+/* String encodings */
 #define HB_DYN_ENC_ASCII                    0x000000
 #define HB_DYN_ENC_UTF8                     0x010000
 #define HB_DYN_ENC_UTF16                    0x040000
 #define HB_DYN_ENC_RAW                      0x080000
 
-/* WIN_DLLCALL() C types */
+/* C types */
 #define HB_DYN_CTYPE_DEFAULT                0x000000
 #define HB_DYN_CTYPE_CHAR                   0x000001
 #define HB_DYN_CTYPE_CHAR_UNSIGNED          0x000011
