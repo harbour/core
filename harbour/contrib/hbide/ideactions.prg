@@ -574,7 +574,27 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
    oSubMenu2:title := "~Codecs"
    oSubMenu:addItem( { oSubMenu2, NIL } )
+   hbide_menuAddSep( oSubMenu )
    oMenuBar:addItem( { oSubMenu, NIL } )
+   oSubMenu:oWidget:addAction_4( ::oSkeltn:oWidget:toggleViewAction() )
+
+   /*----------------------------------------------------------------------------*/
+   /*                                   Docks                                    */
+   /*----------------------------------------------------------------------------*/
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Docks"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction() )
+
+   oSubMenu:oWidget:addAction_4( ::oDockR:oWidget:toggleViewAction()  )
+   oSubMenu:oWidget:addAction_4( ::oHelp:oWidget:toggleViewAction()   )
+   oSubMenu:oWidget:addAction_4( ::oSkeltn:oWidget:toggleViewAction() )
+
+   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()  )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */

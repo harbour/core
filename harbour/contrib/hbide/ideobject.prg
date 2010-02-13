@@ -135,11 +135,13 @@ CLASS IdeObject
    ACCESS aProjData                               INLINE ::oIde:aProjData
    ACCESS aTabs                                   INLINE ::oIde:aTabs
    ACCESS aViews                                  INLINE ::oIde:aViews
+   ACCESS aSkltns                                 INLINE ::oIde:aSkltns
 
    ACCESS nCurView                                INLINE ::oIde:nCurView
    ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
    ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
    ACCESS cSeparator                              INLINE ::oIde:cSeparator
+   ACCESS cPathSkltns                             INLINE ::oIde:cPathSkltns
 
    ACCESS oDockPT                                 INLINE ::oIde:oDockPT
    ACCESS oProjTree                               INLINE ::oIde:oProjTree

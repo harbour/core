@@ -429,44 +429,6 @@ void HBQPlainTextEdit::showHighlighter( const QString &style, bool b )
    styleHightlighter = style;
 }
 
-void HBQPlainTextEdit::caseUpper()
-{
-   QTextCursor cursor( textCursor() );
-   QString selTxt( cursor.selectedText() );
-   if( selTxt.isEmpty() )
-   {
-      return;
-   }
-   QString txt = selTxt.toUpper();
-   insertPlainText( txt );
-}
-
-void HBQPlainTextEdit::caseLower()
-{
-   QTextCursor cursor( textCursor() );
-   QString selTxt( cursor.selectedText() );
-   if( selTxt.isEmpty() )
-   {
-      return;
-   }
-   QString txt = selTxt.toLower();
-   insertPlainText( txt );
-}
-
-void HBQPlainTextEdit::replaceSelection( const QString & txt )
-{
-   HB_SYMBOL_UNUSED( txt );
-
-   QTextCursor cursor( textCursor() );
-   QString selTxt( cursor.selectedText() );
-   if( selTxt.isEmpty() )
-   {
-      return;
-   }
-   QString text = selTxt.toCaseFolded();
-   insertPlainText( text );
-}
-
 void HBQPlainTextEdit::escapeQuotes()
 {
    QTextCursor cursor( textCursor() );
@@ -515,30 +477,136 @@ void HBQPlainTextEdit::unescapeDQuotes()
    insertPlainText( txt );
 }
 
-void HBQPlainTextEdit::convertQuotes()
+void HBQPlainTextEdit::caseUpper()
 {
-   QTextCursor cursor( textCursor() );
+   QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
    {
       return;
    }
-   QString txt = selTxt.replace( QString( "\"" ), QString( "\'" ) );
-   insertPlainText( txt );
+   int b = cursor.selectionStart();
+   int e = cursor.selectionEnd();
+   cursor.beginEditBlock();
+
+   insertPlainText( selTxt.toUpper() );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, e-b );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
+}
+
+void HBQPlainTextEdit::caseLower()
+{
+   QTextCursor cursor = textCursor();
+   QString selTxt( cursor.selectedText() );
+   if( selTxt.isEmpty() )
+   {
+      return;
+   }
+   int b = cursor.selectionStart();
+   int e = cursor.selectionEnd();
+   cursor.beginEditBlock();
+
+   insertPlainText( selTxt.toLower() );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, e-b );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
+}
+
+void HBQPlainTextEdit::convertQuotes()
+{
+   QTextCursor cursor = textCursor();
+   QString selTxt( cursor.selectedText() );
+   if( selTxt.isEmpty() )
+   {
+      return;
+   }
+   int b = cursor.selectionStart();
+   int e = cursor.selectionEnd();
+   cursor.beginEditBlock();
+
+   insertPlainText( selTxt.replace( QString( "\"" ), QString( "\'" ) ) );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, e-b );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
 }
 
 void HBQPlainTextEdit::convertDQuotes()
 {
-   QTextCursor cursor( textCursor() );
+   QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
    {
       return;
    }
-   QString txt = selTxt.replace( QString( "\'" ), QString( "\"" ) );
-   insertPlainText( txt );
+   int b = cursor.selectionStart();
+   int e = cursor.selectionEnd();
+   cursor.beginEditBlock();
+
+   insertPlainText( selTxt.replace( QString( "\'" ), QString( "\"" ) ) );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, e-b );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
 }
 
+void HBQPlainTextEdit::replaceSelection( const QString & txt )
+{
+   QTextCursor cursor = textCursor();
+   QString selTxt( cursor.selectedText() );
+   if( selTxt.isEmpty() )
+   {
+      return;
+   }
+   int b = cursor.selectionStart();
+   cursor.beginEditBlock();
+
+   insertPlainText( txt );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, txt.length() );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
+}
+
+void HBQPlainTextEdit::streamComment()
+{
+   QTextCursor cursor = textCursor();
+   QString selTxt( cursor.selectedText() );
+   if( selTxt.isEmpty() )
+   {
+      return;
+   }
+   int b = cursor.selectionStart();
+   int e = cursor.selectionEnd();
+   cursor.beginEditBlock();
+
+   insertPlainText( "/*" + selTxt + "*/"  );
+
+   cursor.setPosition( b );
+   cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, e-b+4 );
+   cursor.endEditBlock();
+   setTextCursor( cursor );
+}
+
+QString HBQPlainTextEdit::getSelectedText()
+{
+   QTextCursor cursor( textCursor() );
+   QString selTxt( cursor.selectedText() );
+   if( selTxt.isEmpty() )
+   {
+      return "";
+   }
+   QString txt = selTxt.replace( 0x2029, QString( "\n" ) );
+   return txt;
+}
 
 void HBQPlainTextEdit::paintColumnSelection( QPaintEvent *event )
 {
@@ -767,15 +835,6 @@ void HBQPlainTextEdit::blockComment()
    }
    cursor.endEditBlock();
    setTextCursor( c );
-}
-
-void HBQPlainTextEdit::streamComment()
-{
-   QTextCursor cursor = textCursor();
-   QString textUnderCursor = cursor.selectedText();
-   if( textUnderCursor.isEmpty() )
-      return;
-   insertPlainText( "/*" + textUnderCursor + "*/" );
 }
 
 void HBQPlainTextEdit::duplicateLine()

@@ -127,6 +127,19 @@ METHOD IdeDocks:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:destroy()
+   LOCAL oUI := ::oIde:oSkeltnUI
+
+   ::disconnect( oUI:q_buttonNew   , "clicked()" )
+   ::disconnect( oUI:q_buttonRename, "clicked()" )
+   ::disconnect( oUI:q_buttonDelete, "clicked()" )
+   ::disconnect( oUI:q_buttonClear , "clicked()" )
+   ::disconnect( oUI:q_buttonGetSel, "clicked()" )
+   ::disconnect( oUI:q_buttonUpdate, "clicked()" )
+   ::disconnect( oUI:q_listNames   , "itemSelectionChanged()" )
+
+   oUI:destroy()
+
+   /* Initiate more destructors */
 
    RETURN Self
 
@@ -796,13 +809,14 @@ METHOD IdeDocks:buildSkeletonWidget()
    //::oSkeltnUI:q_editCode:setFontPointSize( 10 )
 
    //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
+   aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:execSkeleton( nMode, p )
-   LOCAL cName, qItem, cCode
+   LOCAL cName, cNewName, qItem, cCode, n
 
    HB_SYMBOL_UNUSED( p )
 
@@ -811,13 +825,17 @@ METHOD IdeDocks:execSkeleton( nMode, p )
    CASE 1
       IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, "", "Name", "New Skeleton" ) )
          ::oSkeltnUI:q_listNames:addItem( cName )
+         aadd( ::oIde:aSkltns, { cName, "" } )
+         ::oSkeltnUI:q_listNames:setCurrentRow( len( ::aSkltns ) - 1 )
       ENDIF
       EXIT
    CASE 2
       qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
       cName := qItem:text()
-      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "New Skeleton" ) )
-         qItem:setText( cName )
+      IF !empty( cNewName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "Change Skeleton's Name" ) )
+         qItem:setText( cNewName )
+         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+         ::aSkltns[ n, 1 ] := cNewName
       ENDIF
       EXIT
    CASE 3
@@ -830,15 +848,26 @@ METHOD IdeDocks:execSkeleton( nMode, p )
    CASE 5
       IF !empty( cCode := ::oEM:getSelectedText() )
          // TODO: Format cCode
+         cCode := strtran( cCode, chr( 0x2029 ), chr( 10 ) )
          ::oSkeltnUI:q_editCode:setPlainText( cCode )
       ENDIF
       EXIT
    CASE 6
       // Update the skeleton code and save the skeleton's buffer | file
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      IF !empty( cName )
+         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+         ::aSkltns[ n,2 ] := ::oSkeltnUI:q_editCode:toPlainText()
 
+         hbide_saveSkltns( ::oIde )
+      ENDIF
       EXIT
    CASE 7
-
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+      ::oSkeltnUI:q_editCode:setPlainText( ::aSkltns[ n,2 ] )
       EXIT
    ENDSWITCH
 

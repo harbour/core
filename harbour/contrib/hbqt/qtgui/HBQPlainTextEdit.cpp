@@ -395,6 +395,14 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HIGHLIGHTSELECTEDCOLUMNS )
    hbqt_par_HBQPlainTextEdit( 1 )->highlightSelectedColumns( hb_parl( 2 ) );
 }
 
+/*
+ * QString        getSelectedText()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_GETSELECTEDTEXT )
+{
+   hb_retc( hbqt_par_HBQPlainTextEdit( 1 )->getSelectedText().toAscii().data() );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

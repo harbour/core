@@ -214,7 +214,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
    NEXT
 
    IF empty( cHbideIni )
-      IF file( "hbide.ini" )
+      IF hb_fileExists( "hbide.ini" )
          cHbideIni := "hbide.ini"
       ELSE
          cHbideIni := hb_dirBase() + "hbide.ini"
@@ -360,3 +360,74 @@ FUNCTION hbide_restSettings( oIde )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_loadSkltns( oIde, cPathSkltns )
+   LOCAL cPath, s, n, cSkltn, cCode
+
+   IF empty( cPathSkltns )
+      hb_fNameSplit( oIde:cProjIni, @cPath )
+      cPath += "hbide.skl"
+
+      IF hb_fileExists( cPath )
+         cPathSkltns := cPath
+      ELSE
+         cPathSkltns := hb_dirBase() + "hbide.skl"
+      ENDIF
+   ENDIF
+   oIde:cPathSkltns := cPathSkltns
+
+   IF hb_fileExists( cPathSkltns )
+      s := hb_memoread( cPathSkltns )
+
+      DO WHILE .t.
+         IF ( n := at( "<", s ) ) == 0
+            EXIT
+         ENDIF
+         s := substr( s, n + 1 )
+         IF ( n := at( ">", s ) ) == 0
+            EXIT
+         ENDIF
+         cSkltn := substr( s, 1, n - 1 )
+         s := substr( s, n + 1 )
+         IF ( n := at( "</" + cSkltn + ">", s ) ) > 0
+            cCode := substr( s, 1, n - 1 )
+            cCode := alltrim( cCode )
+            IF left( cCode, 1 ) $ chr( 13 ) + chr( 10 )
+               cCode := substr( cCode, 2 )
+            ENDIF
+            IF left( cCode, 1 ) $ chr( 13 ) + chr( 10 )
+               cCode := substr( cCode, 2 )
+            ENDIF
+            IF right( cCode, 1 ) $ chr( 13 ) + chr( 10 )
+               cCode := substr( cCode, 1, len( cCode ) - 1 )
+            ENDIF
+            IF right( cCode, 1 ) $ chr( 13 ) + chr( 10 )
+               cCode := substr( cCode, 1, len( cCode ) - 1 )
+            ENDIF
+
+            aadd( oIde:aSkltns, { cSkltn, cCode } )
+            s := substr( s, n + len( "</" + cSkltn + ">" ) )
+         ELSE
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_saveSkltns( oIde )
+   LOCAL a_, txt_:= {}
+
+   FOR EACH a_ IN oIde:aSkltns
+      aadd( txt_, "<" + a_[ 1 ] + ">" )
+      aeval( hbide_memoToArray( a_[ 2 ] ), {|e| aadd( txt_, e ) } )
+      aadd( txt_, "</" + a_[ 1 ] + ">" )
+      aadd( txt_, "" )
+   NEXT
+
+   RETURN hbide_createTarget( oIde:cPathSkltns, txt_ )
+
+/*----------------------------------------------------------------------*/
+

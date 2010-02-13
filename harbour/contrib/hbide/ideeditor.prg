@@ -835,7 +835,7 @@ METHOD IdeEditsManager:getSelectedText()
    LOCAL qEdit
 
    IF !empty( qEdit := ::oEM:getEditCurrent() )
-      RETURN QTextCursor():configure( qEdit:textCursor() ):selectedText()
+      RETURN qEdit:getSelectedText()
    ENDIF
 
    RETURN ""
@@ -1135,7 +1135,6 @@ METHOD IdeEditor:setDocumentProperties()
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
-//      ::qEdit:clear()
       ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
@@ -1376,6 +1375,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD caseInvert()
    METHOD findLastIndent()
    METHOD reLayMarkButtons()
+   METHOD presentSkeletons()
 
    ENDCLASS
 
@@ -1530,7 +1530,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::relayMarkButtons()
 
       /* An experimental move but seems a lot is required to achieve column selection */
-*     qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
+      qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
 
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
 
@@ -1636,6 +1636,11 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
             ::duplicateLine()
          ENDIF
          EXIT
+      CASE Qt_Key_K
+         IF lCtrl
+            ::presentSkeletons()
+         ENDIF
+         EXIT
       CASE Qt_Key_Backspace
          hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
          EXIT
@@ -1664,6 +1669,43 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:presentSkeletons()
+   LOCAL qCrs, qMenu, pAct, cAct, n, a_, qAct, nPos, nCol, s
+
+   IF !empty( ::aSkltns )
+      qCrs := QTextCursor():configure( ::qEdit:textCursor() )
+
+      //qRc := QRect():configure( ::qEdit:cursorRect() )
+
+      qMenu := QMenu():new( ::qEdit )
+      FOR EACH a_ IN ::aSkltns
+         qMenu:addAction( a_[ 1 ] )
+      NEXT
+
+      pAct := qMenu:exec_1( ::qEdit:mapToGlobal( QPoint():new( 100,100 ) ) )
+      IF !hbqt_isEmptyQtPointer( pAct )
+         qAct := QAction():configure( pAct )
+         cAct := qAct:text()
+         IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cAct } ) ) > 0
+            nPos := qCrs:position()
+            nCol := qCrs:columnNumber()
+            a_:= hbide_memoToArray( ::aSkltns[ n,2 ] )
+            FOR EACH s IN a_
+               IF s:__enumIndex() > 1
+                  s := space( nCol ) + s
+               ENDIF
+            NEXT
+            qCrs:insertText( hbide_arrayToMemo( a_ ) )
+            qCrs:setPosition( nPos )
+            ::qEdit:setTextCursor( qCrs )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1760,23 +1802,21 @@ METHOD IdeEdit:caseLower()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:caseInvert()
-   LOCAL qCursor, i, c, s, cBuffer, nLen // qDoc, nBlock
+   LOCAL i, c, s, cBuffer, nLen
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-   IF qCursor:hasSelection() .AND. ! empty( cBuffer := qCursor:selectedText() )
-      //qDoc := QTextDocument()configure( ::qEdit:document() )
+   IF !empty( cBuffer := ::oEM:getSelectedText() )
       s    := ""
       nLen := len( cBuffer )
-      //nStart := qCursor:startSelection()
+
       FOR i := 1 TO nLen
          c := substr( cBuffer, i, 1 )
-         IF isAlpha( c ) //!( c $ CRLF ) .AND.
+         IF isAlpha( c )
             s += iif( isUpper( c ), lower( c ), upper( c ) )
          ELSE
             s += c
          ENDIF
       NEXT
-hbide_dbg( s )
+
       ::qEdit:replaceSelection( s )
    ENDIF
 

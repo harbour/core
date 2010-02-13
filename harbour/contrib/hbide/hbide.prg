@@ -91,6 +91,14 @@ STATIC s_pathSep
 PROCEDURE Main( cProjIni )
    LOCAL oIde
 
+   /* Testing paths */
+   #ifdef __TESTING_PATHS__
+hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .f. ) )
+hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .t. ) )
+hbide_dbg( hbmk2_PathMakeRelative( "C:/dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
+hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
+   #endif
+
    SET CENTURY ON
    SET EPOCH TO 1970
 
@@ -210,6 +218,7 @@ CLASS HbIde
 
    DATA   oEnvironment
 
+   DATA   cPathSkltns                             INIT   ""
    DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
    DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
@@ -224,6 +233,7 @@ CLASS HbIde
 
    DATA   aTags                                   INIT   {}
    DATA   aText                                   INIT   {}
+   DATA   aSkltns                                 INIT   {}
    DATA   aSources                                INIT   {}
    DATA   aFuncList                               INIT   {}
    DATA   aLines                                  INIT   {}
@@ -301,6 +311,10 @@ METHOD HbIde:create( cProjIni )
    ::cWrkFolderFind  := ::aINI[ INI_HBIDE, CurrentFolderFind  ]
    ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
    ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
+
+   /* Load Code Skeletons */
+   hbide_loadSkltns( Self )
+
    /* Set Codec at the Begining */
    HbXbp_SetCodec( ::cWrkCodec )
 
@@ -310,13 +324,12 @@ METHOD HbIde:create( cProjIni )
    ::oDK:buildDialog()
    /* Actions */
    ::oAC := IdeActions():new( Self ):create()
+   /* Docking Widgets */
+   ::oDK:buildDockWidgets()
    /* Toolbar */
    ::oAC:buildToolBar()
    /* Main Menu */
    ::oAC:buildMainMenu()
-
-   /* Docking Widgets */
-   ::oDK:buildDockWidgets()
 
    /* Once create Find/Replace dialog */
    ::oFR := IdeFindReplace():new( Self ):create()
@@ -434,6 +447,8 @@ METHOD HbIde:create( cProjIni )
 
    ::oFR:destroy()
    ::oEM:destroy()
+   ::oDK:destroy()
+*  ::oAC:destroy()   /* GPF */
    ::oDlg:destroy()
    ::oAC:destroy()
 

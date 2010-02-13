@@ -149,6 +149,7 @@ public slots:
    void           replaceSelection( const QString & txt );
    void           insertTab( int mode );
    void           highlightSelectedColumns( bool yes );
+   QString        getSelectedText();
 
 private slots:
    void           slotCursorPositionChanged();
