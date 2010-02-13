@@ -57,41 +57,47 @@
 #define HBWIN_CH_
 
 /* WIN_DLLCALL() C calling convention */
-#define HB_WIN_DLL_CALLCONV_CDECL              1
-#define HB_WIN_DLL_CALLCONV_STDCALL            2
+#define HB_WIN_DLL_CALLCONV_STDCALL            0x000000
+#define HB_WIN_DLL_CALLCONV_CDECL              0x100000
+
+/* WIN_DLLCALL() string encoding */
+#define HB_WIN_DLL_ENC_ASCII                   0x000000
+#define HB_WIN_DLL_ENC_UTF8                    0x010000
+#define HB_WIN_DLL_ENC_UTF16                   0x040000
+#define HB_WIN_DLL_ENC_RAW                     0x080000
 
 /* WIN_DLLCALL() C types */
-#define HB_WIN_DLL_CTYPE_DEFAULT               0x0000
-#define HB_WIN_DLL_CTYPE_CHAR                  0x0001
-#define HB_WIN_DLL_CTYPE_CHAR_UNSIGNED         0x0011
-#define HB_WIN_DLL_CTYPE_CHAR_PTR              0x0101
-#define HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR     0x0111
-#define HB_WIN_DLL_CTYPE_SHORT                 0x0002
-#define HB_WIN_DLL_CTYPE_SHORT_UNSIGNED        0x0012
-#define HB_WIN_DLL_CTYPE_SHORT_PTR             0x0102
-#define HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR    0x0112
-#define HB_WIN_DLL_CTYPE_INT                   0x0003
-#define HB_WIN_DLL_CTYPE_INT_UNSIGNED          0x0013
-#define HB_WIN_DLL_CTYPE_INT_PTR               0x0103
-#define HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR      0x0113
-#define HB_WIN_DLL_CTYPE_LONG                  0x0004
-#define HB_WIN_DLL_CTYPE_LONG_UNSIGNED         0x0014
-#define HB_WIN_DLL_CTYPE_LONG_PTR              0x0104
-#define HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR     0x0114
-#define HB_WIN_DLL_CTYPE_LLONG                 0x0005
-#define HB_WIN_DLL_CTYPE_LLONG_UNSIGNED        0x0015
-#define HB_WIN_DLL_CTYPE_LLONG_PTR             0x0105
-#define HB_WIN_DLL_CTYPE_LLONG_UNSIGNED_PTR    0x0115
-#define HB_WIN_DLL_CTYPE_FLOAT                 0x0006
-#define HB_WIN_DLL_CTYPE_FLOAT_PTR             0x0106
-#define HB_WIN_DLL_CTYPE_DOUBLE                0x0007
-#define HB_WIN_DLL_CTYPE_DOUBLE_PTR            0x0107
-#define HB_WIN_DLL_CTYPE_BOOL                  0x0008
-#define HB_WIN_DLL_CTYPE_BOOL_PTR              0x0108
-#define HB_WIN_DLL_CTYPE_VOID                  0x0009
-#define HB_WIN_DLL_CTYPE_VOID_PTR              0x0109
-#define HB_WIN_DLL_CTYPE_STRUCTURE             0x000A
-#define HB_WIN_DLL_CTYPE_STRUCTURE_PTR         0x010A
+#define HB_WIN_DLL_CTYPE_DEFAULT               0x000000
+#define HB_WIN_DLL_CTYPE_CHAR                  0x000001
+#define HB_WIN_DLL_CTYPE_CHAR_UNSIGNED         0x000011
+#define HB_WIN_DLL_CTYPE_CHAR_PTR              0x000101
+#define HB_WIN_DLL_CTYPE_CHAR_UNSIGNED_PTR     0x000111
+#define HB_WIN_DLL_CTYPE_SHORT                 0x000002
+#define HB_WIN_DLL_CTYPE_SHORT_UNSIGNED        0x000012
+#define HB_WIN_DLL_CTYPE_SHORT_PTR             0x000102
+#define HB_WIN_DLL_CTYPE_SHORT_UNSIGNED_PTR    0x000112
+#define HB_WIN_DLL_CTYPE_INT                   0x000003
+#define HB_WIN_DLL_CTYPE_INT_UNSIGNED          0x000013
+#define HB_WIN_DLL_CTYPE_INT_PTR               0x000103
+#define HB_WIN_DLL_CTYPE_INT_UNSIGNED_PTR      0x000113
+#define HB_WIN_DLL_CTYPE_LONG                  0x000004
+#define HB_WIN_DLL_CTYPE_LONG_UNSIGNED         0x000014
+#define HB_WIN_DLL_CTYPE_LONG_PTR              0x000104
+#define HB_WIN_DLL_CTYPE_LONG_UNSIGNED_PTR     0x000114
+#define HB_WIN_DLL_CTYPE_LLONG                 0x000005
+#define HB_WIN_DLL_CTYPE_LLONG_UNSIGNED        0x000015
+#define HB_WIN_DLL_CTYPE_LLONG_PTR             0x000105
+#define HB_WIN_DLL_CTYPE_LLONG_UNSIGNED_PTR    0x000115
+#define HB_WIN_DLL_CTYPE_FLOAT                 0x000006
+#define HB_WIN_DLL_CTYPE_FLOAT_PTR             0x000106
+#define HB_WIN_DLL_CTYPE_DOUBLE                0x000007
+#define HB_WIN_DLL_CTYPE_DOUBLE_PTR            0x000107
+#define HB_WIN_DLL_CTYPE_BOOL                  0x000008
+#define HB_WIN_DLL_CTYPE_BOOL_PTR              0x000108
+#define HB_WIN_DLL_CTYPE_VOID                  0x000009
+#define HB_WIN_DLL_CTYPE_VOID_PTR              0x000109
+#define HB_WIN_DLL_CTYPE_STRUCTURE             0x00000A
+#define HB_WIN_DLL_CTYPE_STRUCTURE_PTR         0x00010A
 
 /* WIN_MAPISENDMAIL() address types */
 #define WIN_MAPI_TO                 1

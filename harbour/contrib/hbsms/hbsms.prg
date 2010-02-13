@@ -55,7 +55,7 @@
 
 /* NOTE: Source of information:
          http://www.smssolutions.net/tutorials/gsm/receivesmsat/
-         http://www.developershome.com/sms/readSmsByAtCommands.asp 
+         http://www.developershome.com/sms/readSmsByAtCommands.asp
          [vszakats] */
 
 /* NOTE: As it happens ATM, Harbour doesn't have a unified
@@ -83,17 +83,17 @@ STATIC FUNCTION port_rece( h, n, t )
 
 FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
    LOCAL smsctx
-   LOCAL lRetVal
+   LOCAL nRetVal
 
    IF ! Empty( smsctx := smsctx_New( cPort ) )
       smsctx_PIN( smsctx, cPIN )
-      lRetVal := smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
+      nRetVal := smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
       smsctx_Close( smsctx )
    ELSE
-      lRetVal := .F.
+      nRetVal := -99
    ENDIF
 
-   RETURN lRetVal
+   RETURN nRetVal
 
 FUNCTION sms_ReceiveAll( cPort, cPIN )
    LOCAL smsctx

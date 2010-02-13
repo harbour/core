@@ -106,17 +106,29 @@ HB_FUNC( FREELIBRARY )
 
 HB_FUNC( CALLDLL )
 {
-   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, HB_WIN_DLL_CTYPE_DEFAULT, HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hbwin_dllCall( 0, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, HB_WIN_DLL_CTYPE_BOOL   , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hbwin_dllCall( HB_WIN_DLL_CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   hbwin_dllCall( HB_WIN_DLL_CALLCONV_STDCALL, hb_parni( 2 )           , HB_FALSE, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 3, NULL );
+   hbwin_dllCall( hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 3, NULL );
+}
+
+HB_FUNC( GETPROCADDRESS )
+{
+   HMODULE hDLL;
+
+   if( HB_ISNUM( 1 ) )
+      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   else
+      hDLL = ( HMODULE ) hb_parptr( 1 );
+
+   hb_retptr( hDLL ? ( void * ) hbwin_getprocaddress( hDLL, hb_param( 2, HB_IT_ANY ), NULL ) : NULL );
 }
 
 #endif

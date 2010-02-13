@@ -72,9 +72,7 @@ typedef struct
 {
    HMODULE  hDLL;       /* Handle */
    HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
-   int      iCallConv;
-   int      iRetType;
-   HB_BOOL  bUNICODE;
+   int      iFuncFlags;
    FARPROC  lpFunction; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
 
@@ -134,11 +132,9 @@ HB_FUNC( DLLCALL )
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
       HB_BOOL bUNICODE;
-      FARPROC lpFunction = hbwin_getprocaddress( hDLL, 3, &bUNICODE );
+      FARPROC lpFunction = hbwin_getprocaddress( hDLL, hb_param( 3, HB_IT_ANY ), &bUNICODE );
 
-      hbwin_dllCall( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL,
-                     HB_WIN_DLL_CTYPE_DEFAULT,
-                     bUNICODE,
+      hbwin_dllCall( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL ) | ( bUNICODE ? HB_WIN_DLL_ENC_UTF16 : 0 ),
                      lpFunction,
                      hb_pcount(),
                      4,
@@ -174,11 +170,10 @@ HB_FUNC( DLLPREPARECALL )
    if( xec->hDLL )
    {
       HB_BOOL bUNICODE;
-      xec->lpFunction = hbwin_getprocaddress( xec->hDLL, 3, &bUNICODE );
+      xec->lpFunction = hbwin_getprocaddress( xec->hDLL, hb_param( 3, HB_IT_ANY ), &bUNICODE );
       if( xec->lpFunction )
       {
-         xec->iCallConv = HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL;
-         xec->bUNICODE = bUNICODE;
+         xec->iFuncFlags = ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL ) | ( bUNICODE ? HB_WIN_DLL_ENC_UTF16 : 0 );
 
          hb_retptrGC( xec );
          return;
@@ -199,9 +194,7 @@ HB_FUNC( DLLEXECUTECALL )
 
    if( xec && xec->hDLL && xec->lpFunction )
    {
-      hbwin_dllCall( xec->iCallConv,
-                     xec->iRetType,
-                     xec->bUNICODE,
+      hbwin_dllCall( xec->iFuncFlags,
                      xec->lpFunction,
                      hb_pcount(),
                      2,
