@@ -7,6 +7,11 @@
  * Windows dialogs
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ *    WIN_PRINTDLGDC()
+ *
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    WIN_GETOPENFILENAME(), WIN_GETSAVEFILENAME()
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -55,6 +60,9 @@
 
 #if ! defined( HB_OS_WIN_CE )
 
+/* WIN_PRINTDLGDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
+ *                -> <hDC>
+ */
 HB_FUNC( WIN_PRINTDLGDC )
 {
    PRINTDLG pd;
@@ -88,3 +96,203 @@ HB_FUNC( WIN_PRINTDLGDC )
 }
 
 #endif
+
+static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
+{
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   LPTSTR lpStr = NULL;
+   DWORD dwMaxIndex = 0;
+
+   if( pItem )
+   {
+      HB_SIZE nLen, nSize, nTotal, n, n1, n2;
+
+      if( HB_IS_ARRAY( pItem ) )
+      {
+         nSize = hb_arrayLen( pItem );
+         for( n = nLen = 0; n < nSize; ++n )
+         {
+            pArrItem = hb_arrayGetItemPtr( pItem, n + 1 );
+            if( HB_IS_STRING( pArrItem ) )
+            {
+               n1 = HB_ITEMCOPYSTR( pArrItem, NULL, 0 );
+               if( n1 )
+                  nLen += n1 * 2 + 2;
+            }
+            else if( hb_arrayLen( pArrItem ) >= 2 )
+            {
+               n1 = HB_ITEMCOPYSTR( hb_arrayGetItemPtr( pArrItem, 1 ), NULL, 0 );
+               n2 = HB_ITEMCOPYSTR( hb_arrayGetItemPtr( pArrItem, 2 ), NULL, 0 );
+               if( n1 && n2 )
+                  nLen += n1 + n2 + 2;
+            }
+         }
+         if( nLen )
+         {
+            nTotal = nLen + 1;
+            lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
+            for( n = nLen = 0; n < nSize; ++n )
+            {
+               pArrItem = hb_arrayGetItemPtr( pItem, n + 1 );
+               if( HB_IS_STRING( pArrItem ) )
+               {
+                  n1 = HB_ITEMCOPYSTR( pArrItem,
+                                       lpStr + nLen, nTotal - nLen );
+                  if( n1 )
+                  {
+                     nLen += n1 + 1;
+                     n1 = HB_ITEMCOPYSTR( pArrItem,
+                                          lpStr + nLen, nTotal - nLen );
+                     nLen += n1 + 1;
+                     dwMaxIndex++;
+                  }
+               }
+               else if( hb_arrayLen( pArrItem ) >= 2 )
+               {
+                  n1 = HB_ITEMCOPYSTR( hb_arrayGetItemPtr( pArrItem, 1 ),
+                                       lpStr + nLen, nTotal - nLen );
+                  if( n1 )
+                  {
+                     n2 = HB_ITEMCOPYSTR( hb_arrayGetItemPtr( pArrItem, 2 ),
+                                          lpStr + nLen + n1 + 1,
+                                          nTotal - nLen - n1 - 1 );
+                     if( n2 )
+                     {
+                        nLen += n1 + n2 + 2;
+                        dwMaxIndex++;
+                     }
+                  }
+               }
+            }
+            lpStr[ nLen ] = 0;
+         }
+      }
+      else
+      {
+         nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
+         if( nLen )
+         {
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen * 2 + 3 ) * sizeof( TCHAR ) );
+            HB_ITEMCOPYSTR( pItem, lpStr, nLen + 1 );
+            for( n = n1 = 0; n < nLen; ++n )
+            {
+               if( lpStr[ n ] == 0 )
+               {
+                  ++n1;
+                  if( lpStr[ n + 1 ] == 0 )
+                     break;
+               }
+            }
+            if( n1 == 0 )
+            {
+               HB_ITEMCOPYSTR( pItem, lpStr + nLen + 1, nLen + 1 );
+               lpStr[ nLen * 2 + 2 ] = 0;
+               dwMaxIndex = 1;
+            }
+            else
+            {
+               if( n == nLen && lpStr[ n - 1 ] != 0 )
+               {
+                  lpStr[ n + 1 ] = 0;
+                  ++n1;
+               }
+               if( ( n1 & 1 ) == 0 )
+                  dwMaxIndex = ( DWORD ) n1;
+               else
+               {
+                  hb_xfree( lpStr );
+                  lpStr = NULL;
+               }
+            }
+         }
+      }
+   }
+
+   if( pdwIndex )
+   {
+      if( dwMaxIndex < *pdwIndex )
+         *pdwIndex = dwMaxIndex;
+      else if( dwMaxIndex && *pdwIndex == 0 )
+         *pdwIndex = 1;
+   }
+
+   return lpStr;
+}
+
+static void s_GetFileName( HB_BOOL fSave )
+{
+   void * hInitDir, * hTitle, * hDefExt;
+   LPTSTR lpstrFilter;
+   OPENFILENAME ofn;
+
+   memset( &ofn, 0, sizeof( OPENFILENAME ) );
+#if defined( OPENFILENAME_SIZE_VERSION_400 )
+   ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
+#else
+   ofn.lStructSize = sizeof( ofn );
+#endif
+   ofn.hwndOwner = GetActiveWindow();
+   ofn.hInstance = GetModuleHandle( NULL );
+
+   ofn.nFilterIndex     = wapi_par_DWORD( 6 );
+   ofn.lpstrFilter      = lpstrFilter = s_dialogPairs( 5, &ofn.nFilterIndex );
+
+   ofn.nMaxFile         = wapi_par_DWORD( 7 );
+   if( ofn.nMaxFile < 0x100 )
+      ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x100;
+   ofn.lpstrFile        = ( LPTSTR )
+                          memset( hb_xgrab( ofn.nMaxFile * sizeof( TCHAR ) ),
+                                  0, ofn.nMaxFile * sizeof( TCHAR ) );
+
+   ofn.lpstrInitialDir  = HB_PARSTR( 3, &hInitDir, NULL );
+   ofn.lpstrTitle       = HB_PARSTR( 2, &hTitle, NULL );
+   ofn.Flags            = HB_ISNUM( 1 ) ? wapi_par_DWORD( 1 ) :
+                          OFN_EXPLORER | OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY;
+   ofn.lpstrDefExt      = HB_PARSTR( 4, &hDefExt, NULL );
+   if( ofn.lpstrDefExt && ofn.lpstrDefExt[ 0 ] == '.' )
+      ++ofn.lpstrDefExt;
+
+   if( fSave ? GetSaveFileName( &ofn ) : GetOpenFileName( &ofn ) )
+   {
+      HB_SIZE nLen;
+      for( nLen = 0; nLen < ofn.nMaxFile; ++nLen )
+      {
+         if( ofn.lpstrFile[ nLen ] == 0 &&
+             ( nLen + 1 == ofn.nMaxFile || ofn.lpstrFile[ nLen + 1 ] == 0 ) )
+            break;
+      }
+      hb_stornint( ofn.Flags, 1 );
+      hb_stornint( ofn.nFilterIndex, 6 );
+      HB_RETSTRLEN( ofn.lpstrFile, nLen );
+   }
+   else
+      hb_retc_null();
+
+   hb_xfree( ofn.lpstrFile );
+   if( lpstrFilter )
+      hb_xfree( lpstrFilter );
+
+   hb_strfree( hInitDir );
+   hb_strfree( hTitle );
+   hb_strfree( hDefExt );
+}
+
+/* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>] )
+ *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *
+ */
+HB_FUNC( WIN_GETOPENFILENAME )
+{
+   s_GetFileName( HB_FALSE );
+}
+
+/* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>] )
+ *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *
+ */
+HB_FUNC( WIN_GETSAVEFILENAME )
+{
+   s_GetFileName( HB_TRUE );
+}

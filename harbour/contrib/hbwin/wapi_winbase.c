@@ -304,26 +304,39 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
 
    if( lpszLongPath )
    {
-      length = GetShortPathName( lpszLongPath, NULL, 0 );
-
-      if( length && HB_ISBYREF( 2 ) )
+      if( HB_ISBYREF( 2 ) )
       {
-         LPTSTR lpszShortPath;
-         DWORD cchBuffer = ( DWORD ) hb_parnl( 3 );
+         TCHAR buffer[ HB_PATH_MAX ];
+         DWORD cchBuffer = ( DWORD ) HB_SIZEOFARRAY( buffer );
+         LPTSTR lpszShortPath = buffer;
+         HB_BOOL fSize = HB_ISNUM( 3 );
 
-         if( cchBuffer )
-            cchBuffer = HB_MIN( length, cchBuffer + sizeof( TCHAR ) );
-         else
-            cchBuffer = length;
+         if( fSize )    /* the size of buffer is limited by user */
+         {
+            cchBuffer = ( DWORD ) hb_parnl( 3 );
+            if( cchBuffer == 0 )
+               lpszShortPath = NULL;
+            else if( cchBuffer > ( DWORD ) HB_SIZEOFARRAY( buffer ) )
+               lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
+         }
 
-         lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
          length = GetShortPathName( lpszLongPath, lpszShortPath, cchBuffer );
+         if( !fSize && length > cchBuffer )  /* default buffer size was too small */
+         {
+            cchBuffer = length;
+            lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
+            length = GetShortPathName( lpszLongPath, lpszShortPath, cchBuffer );
+         }
          hbwapi_SetLastError( GetLastError() );
-         HB_STORSTR( length > cchBuffer ? NULL : lpszShortPath, 2 );
-         hb_xfree( lpszShortPath );
+         HB_STORSTRLEN( lpszShortPath, length > cchBuffer ? 0 : length, 2 );
+         if( lpszShortPath && lpszShortPath != buffer )
+            hb_xfree( lpszShortPath );
       }
-      else if( length == 0 )
+      else
+      {
+         length = GetShortPathName( lpszLongPath, NULL, 0 );
          hbwapi_SetLastError( GetLastError() );
+      }
    }
    hb_retnl( length );
    hb_strfree( hLongPath );

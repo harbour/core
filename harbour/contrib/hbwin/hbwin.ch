@@ -484,13 +484,45 @@
 #define WIN_TA_BASELINE             24
 
 /* WIN_SETPEN() pen styles */
-#define WIN_PS_SOLID	            0
-#define WIN_PS_DASH	                1
-#define WIN_PS_DOT	                2
-#define WIN_PS_DASHDOT	            3
-#define WIN_PS_DASHDOTDOT	        4
-#define WIN_PS_NULL	                5
-#define WIN_PS_INSIDEFRAME	        6
+#define WIN_PS_SOLID                0
+#define WIN_PS_DASH                 1
+#define WIN_PS_DOT                  2
+#define WIN_PS_DASHDOT              3
+#define WIN_PS_DASHDOTDOT           4
+#define WIN_PS_NULL                 5
+#define WIN_PS_INSIDEFRAME          6
+
+/* WIN_GETOPENFILENAME()/WIN_GETSAVEFILENAME() */
+#define WIN_OFN_READONLY                  0x00000001
+#define WIN_OFN_OVERWRITEPROMPT           0x00000002
+#define WIN_OFN_HIDEREADONLY              0x00000004
+#define WIN_OFN_NOCHANGEDIR               0x00000008
+#define WIN_OFN_SHOWHELP                  0x00000010
+#define WIN_OFN_ENABLEHOOK                0x00000020
+#define WIN_OFN_ENABLETEMPLATE            0x00000040
+#define WIN_OFN_ENABLETEMPLATEHANDLE      0x00000080
+#define WIN_OFN_NOVALIDATE                0x00000100
+#define WIN_OFN_ALLOWMULTISELECT          0x00000200
+#define WIN_OFN_EXTENSIONDIFFERENT        0x00000400
+#define WIN_OFN_PATHMUSTEXIST             0x00000800
+#define WIN_OFN_FILEMUSTEXIST             0x00001000
+#define WIN_OFN_CREATEPROMPT              0x00002000
+#define WIN_OFN_SHAREAWARE                0x00004000
+#define WIN_OFN_NOREADONLYRETURN          0x00008000
+#define WIN_OFN_NOTESTFILECREATE          0x00010000
+#define WIN_OFN_NONETWORKBUTTON           0x00020000
+#define WIN_OFN_NOLONGNAMES               0x00040000
+#define WIN_OFN_EXPLORER                  0x00080000
+#define WIN_OFN_NODEREFERENCELINKS        0x00100000
+#define WIN_OFN_LONGNAMES                 0x00200000
+#define WIN_OFN_ENABLEINCLUDENOTIFY       0x00400000
+#define WIN_OFN_ENABLESIZING              0x00800000
+#define WIN_OFN_DONTADDTORECENT           0x02000000
+#define WIN_OFN_FORCESHOWHIDDEN           0x10000000
+
+#define WIN_OFN_SHAREFALLTHROUGH          0x00000002
+#define WIN_OFN_SHARENOWARN               0x00000001
+#define WIN_OFN_SHAREWARN                 0x00000000
 
 /* ------------------------------- */
 /* Deprecated constants and macros */
