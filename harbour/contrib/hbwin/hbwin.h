@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Windows communications library
  *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2005-2009 Alex Strickland <sscc@mweb.co.za>
  * www - http://www.harbour-project.org
  *
@@ -93,9 +94,9 @@
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT int       hbwin_bitmapType( const void * pImgBuf, HB_SIZE size );
-extern HB_EXPORT void      hbwin_dllCall( int iFuncFlags, FARPROC lpFunction, int iParams, int iFirst, int * piArgFlags );
+extern           FARPROC   hbwin_getprocaddress( HMODULE hDLL, PHB_ITEM pParam, HB_BOOL * pbWIDE );
 
-extern           FARPROC   hbwin_getprocaddress( HMODULE hDLL, PHB_ITEM pParam, HB_BOOL * pbUNICODE );
+extern HB_EXPORT void      hb_dynCall( int iFuncFlags, void * pFunction, int iParams, int iFirst, int * piArgFlags );
 
 HB_EXTERN_END
 

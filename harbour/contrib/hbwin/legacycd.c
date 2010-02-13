@@ -58,6 +58,7 @@
          [vszakats] */
 
 #include "hbwin.h"
+#include "hbdyn.h"
 
 #if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
    #define HB_WIN_LEGACY_LEVEL_OFF
@@ -97,26 +98,19 @@ HB_FUNC( FREELIBRARY )
       hb_retl( HB_FALSE );
 }
 
-#ifndef HB_WIN_NO_LEGACY
-#define HB_WIN_NO_LEGACY
-#endif
-#undef HB_LEGACY_LEVEL3
-
-#include "hbwin.ch"
-
 HB_FUNC( CALLDLL )
 {
-   hbwin_dllCall( 0, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hb_dynCall( 0, hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   hbwin_dllCall( HB_WIN_DLL_CTYPE_BOOL, ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hb_dynCall( HB_DYN_CTYPE_BOOL, hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   hbwin_dllCall( hb_parni( 2 ), ( FARPROC ) hb_parptr( 1 ), hb_pcount(), 3, NULL );
+   hb_dynCall( hb_parni( 2 ), hb_parptr( 1 ), hb_pcount(), 3, NULL );
 }
 
 HB_FUNC( GETPROCADDRESS )

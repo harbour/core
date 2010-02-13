@@ -55,13 +55,7 @@
 #include "hbwin.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbvm.h"
-
-#ifndef HB_WIN_NO_LEGACY
-#define HB_WIN_NO_LEGACY
-#endif
-#undef HB_LEGACY_LEVEL3
-#include "hbwin.ch"
+#include "hbdyn.h"
 
 #ifdef HB_COMPAT_XPP
 
@@ -73,7 +67,7 @@ typedef struct
    HMODULE  hDLL;       /* Handle */
    HB_BOOL  bFreeDLL;   /* Free library handle on destroy? */
    int      iFuncFlags;
-   FARPROC  lpFunction; /* Function Address */
+   void *   pFunction; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
 
 static HB_GARBAGE_FUNC( _DLLUnload )
@@ -131,14 +125,14 @@ HB_FUNC( DLLCALL )
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
-      HB_BOOL bUNICODE;
-      FARPROC lpFunction = hbwin_getprocaddress( hDLL, hb_param( 3, HB_IT_ANY ), &bUNICODE );
+      HB_BOOL bWIDE;
+      void * pFunction = ( void * ) hbwin_getprocaddress( hDLL, hb_param( 3, HB_IT_ANY ), &bWIDE );
 
-      hbwin_dllCall( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL ) | ( bUNICODE ? HB_WIN_DLL_ENC_UTF16 : 0 ),
-                     lpFunction,
-                     hb_pcount(),
-                     4,
-                     NULL );
+      hb_dynCall( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_DYN_CALLCONV_STDCALL ) | ( bWIDE ? HB_DYN_ENC_UTF16 : 0 ),
+                  pFunction,
+                  hb_pcount(),
+                  4,
+                  NULL );
 
       if( HB_ISCHAR( 1 ) )
          FreeLibrary( hDLL );
@@ -169,11 +163,11 @@ HB_FUNC( DLLPREPARECALL )
 
    if( xec->hDLL )
    {
-      HB_BOOL bUNICODE;
-      xec->lpFunction = hbwin_getprocaddress( xec->hDLL, hb_param( 3, HB_IT_ANY ), &bUNICODE );
-      if( xec->lpFunction )
+      HB_BOOL bWIDE;
+      xec->pFunction = ( void * ) hbwin_getprocaddress( xec->hDLL, hb_param( 3, HB_IT_ANY ), &bWIDE );
+      if( xec->pFunction )
       {
-         xec->iFuncFlags = ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_DLL_CALLCONV_STDCALL ) | ( bUNICODE ? HB_WIN_DLL_ENC_UTF16 : 0 );
+         xec->iFuncFlags = ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_DYN_CALLCONV_STDCALL ) | ( bWIDE ? HB_DYN_ENC_UTF16 : 0 );
 
          hb_retptrGC( xec );
          return;
@@ -192,13 +186,13 @@ HB_FUNC( DLLEXECUTECALL )
 {
    PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_parptrGC( &s_gcDllFuncs, 1 );
 
-   if( xec && xec->hDLL && xec->lpFunction )
+   if( xec && xec->hDLL && xec->pFunction )
    {
-      hbwin_dllCall( xec->iFuncFlags,
-                     xec->lpFunction,
-                     hb_pcount(),
-                     2,
-                     NULL );
+      hb_dynCall( xec->iFuncFlags,
+                  xec->pFunction,
+                  hb_pcount(),
+                  2,
+                  NULL );
    }
 }
 

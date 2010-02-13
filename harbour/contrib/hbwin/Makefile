@@ -10,14 +10,15 @@ LIBNAME := hbwin
 
 C_SOURCES := \
    axcore.c \
+   hbdyn.c \
    legacycd.c \
    legacyco.c \
    legacycp.c \
    legacycr.c \
    legacycv.c \
+   mapi.c \
    olecore.c \
    oleinit.c \
-   mapi.c \
    wapi_alloc.c \
    wapi_commctrl.c \
    wapi_err.c \
@@ -60,6 +61,7 @@ C_HEADERS := \
    hbwinole.h \
 
 PRG_HEADERS := \
+   hbdyn.ch \
    hbwin.ch \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)
