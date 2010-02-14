@@ -59,25 +59,30 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
 */
 
 FUNCTION win_dllCallFoxPro( cCommand, ... )
+   LOCAL aParam
+
    LOCAL cFunction
    LOCAL cLibrary
    LOCAL nFuncFlags := hb_bitOr( HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW )
 
    LOCAL aCommand := hb_ATokens( cCommand )
    LOCAL nPos := 1
-   LOCAL tmp
 
-   LOCAL aTypeS := { "SHORT", "INTEGER", "SINGLE", "DOUBLE", "LONG", "STRING", "OBJECT" }
-   LOCAL aTypeN := { HB_DYN_CTYPE_SHORT, HB_DYN_CTYPE_INT, HB_DYN_CTYPE_FLOAT, HB_DYN_CTYPE_DOUBLE, HB_DYN_CTYPE_LONG, HB_DYN_CTYPE_CHAR_PTR, HB_DYN_CTYPE_VOID_PTR }
-
-   LOCAL aParam
+   LOCAL aType := {;
+      "SHORT"   => HB_DYN_CTYPE_SHORT ,;
+      "INTEGER" => HB_DYN_CTYPE_INT ,;
+      "SINGLE"  => HB_DYN_CTYPE_FLOAT ,;
+      "DOUBLE"  => HB_DYN_CTYPE_DOUBLE ,;
+      "LONG"    => HB_DYN_CTYPE_LONG ,;
+      "STRING"  => HB_DYN_CTYPE_CHAR_PTR ,;
+      "OBJECT"  => HB_DYN_CTYPE_VOID_PTR }
 
    IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "DECLARE"
       ++nPos
    ENDIF
 
-   IF nPos <= Len( aCommand ) .AND. ( tmp := AScan( aTypeS, {| tmp | tmp == Upper( aCommand[ nPos ] ) } ) ) > 0
-      nFuncFlags := hb_bitOr( nFuncFlags, aTypeN[ tmp ] )
+   IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) $ aType
+      nFuncFlags := hb_bitOr( nFuncFlags, aType[ Upper( aCommand[ nPos ] ) ] )
       ++nPos
    ELSE
       RETURN NIL
@@ -110,8 +115,8 @@ FUNCTION win_dllCallFoxPro( cCommand, ... )
    aParam := { cFunction, cLibrary, nFuncFlags }
 
    DO WHILE nPos <= Len( aCommand )
-      IF ( tmp := AScan( aTypeS, {| tmp | tmp == Upper( aCommand[ nPos ] ) } ) ) > 0
-         AAdd( aParam, hb_bitOr( HB_DYN_ENC_RAW, aTypeN[ tmp ] ) )
+      IF Upper( Upper( aCommand[ nPos ] ) ) $ aType
+         AAdd( aParam, hb_bitOr( HB_DYN_ENC_RAW, aType[ Upper( aCommand[ nPos ] ) ] ) )
          ++nPos
       ENDIF
       IF nPos <= Len( aCommand ) .AND. aCommand[ nPos ] == "@"
