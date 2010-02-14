@@ -56,8 +56,8 @@
 #define HBDYN_CH_
 
 /* C calling conventions */
-#define HB_DYN_CALLCONV_STDCALL             0x000000
-#define HB_DYN_CALLCONV_CDECL               0x100000
+#define HB_DYN_CALLCONV_STDCALL             0x000000 /* Windows API default */
+#define HB_DYN_CALLCONV_CDECL               0x100000 /* C default */
 
 /* String encodings */
 #define HB_DYN_ENC_ASCII                    0x000000

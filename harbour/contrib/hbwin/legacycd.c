@@ -100,17 +100,17 @@ HB_FUNC( FREELIBRARY )
 
 HB_FUNC( CALLDLL )
 {
-   hb_dynCall( 0, hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hb_dynCall( HB_DYN_CALLCONV_STDCALL, hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLBOOL )
 {
-   hb_dynCall( HB_DYN_CTYPE_BOOL, hb_parptr( 1 ), hb_pcount(), 2, NULL );
+   hb_dynCall( HB_DYN_CALLCONV_STDCALL | HB_DYN_CTYPE_BOOL, hb_parptr( 1 ), hb_pcount(), 2, NULL );
 }
 
 HB_FUNC( CALLDLLTYPED )
 {
-   hb_dynCall( hb_parni( 2 ), hb_parptr( 1 ), hb_pcount(), 3, NULL );
+   hb_dynCall( HB_DYN_CALLCONV_STDCALL | hb_parni( 2 ), hb_parptr( 1 ), hb_pcount(), 3, NULL );
 }
 
 HB_FUNC( GETPROCADDRESS )

@@ -56,6 +56,7 @@ PRG_SOURCES := \
    win_tprn.prg \
 
 C_HEADERS := \
+   hbdyn.h \
    hbwapi.h \
    hbwin.h \
    hbwinole.h \

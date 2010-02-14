@@ -58,7 +58,7 @@ HB_FUNC( WIN_DLLCALL )
 {
    PHB_ITEM pParam = hb_param( 1, HB_IT_POINTER | HB_IT_ARRAY );
    int * piArgFlags = NULL;
-   int iFuncFlags = 0;
+   int iFuncFlags = HB_DYN_CALLCONV_STDCALL;
    HB_BOOL bFreeDLL = HB_FALSE;
 
    HMODULE hDLL = NULL;
@@ -96,9 +96,9 @@ HB_FUNC( WIN_DLLCALL )
 
                if( hDLL )
                {
-                  HB_BOOL bUNICODE;
-                  pFunctionPtr = ( void * ) hbwin_getprocaddress( hDLL, pFunction, &bUNICODE );
-                  if( bUNICODE )
+                  HB_BOOL bWIDE;
+                  pFunctionPtr = ( void * ) hbwin_getprocaddress( hDLL, pFunction, &bWIDE );
+                  if( bWIDE )
                      iFuncFlags |= HB_DYN_ENC_UTF16;
                }
 
@@ -106,13 +106,13 @@ HB_FUNC( WIN_DLLCALL )
             }
 
             /* Function flags */
-            if( nLen >= nBasePos )
+            if( nBasePos <= nLen )
                iFuncFlags = hb_arrayGetNI( pParam, nBasePos );
 
             ++nBasePos;
 
             /* Argument flags */
-            if( nLen >= nBasePos )
+            if( nBasePos <= nLen )
             {
                HB_SIZE nPos;
                HB_SIZE nArgCount = hb_pcount() - 1;

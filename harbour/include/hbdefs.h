@@ -1268,7 +1268,7 @@ typedef HB_U32 HB_FATTR;
 #endif /* ! __GNUC__ */
 
 /*
- * HB_FORCE_IEEE754_DOUBLE will can be used on platforms which use differ
+ * HB_FORCE_IEEE754_DOUBLE will can be used on platforms which use different
  * double format and we want to force storing double number as IEEE754
  * double value for sharing binary data (f.e. PCODE in .hrb files or CDX
  * indexes or DBFs with "B" fields.
