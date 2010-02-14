@@ -108,11 +108,10 @@ typedef struct
 {
    union
    {
-      HB_BYTE buf[ 8 ];
-      HB_U32  n32;
-      HB_U64  n64;
-      double  nDB;
-      float   nFL;
+      HB_U32 n32;
+      HB_U64 n64;
+      double nDB;
+      float  nFL;
    } t;
 } HB_DYNVAL;
 
@@ -445,11 +444,10 @@ typedef struct
 {
    union
    {
-      HB_BYTE buf[ 8 ];
-      HB_U32  n32;
-      HB_U64  n64;
-      double  nDB;
-      float   nFL;
+      HB_U32 n32;
+      HB_U64 n64;
+      double nDB;
+      float  nFL;
    } t;
 } HB_DYNVAL;
 

@@ -60,11 +60,11 @@
 #include <windows.h>
 
 #if !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
-   #define _WINDOWS_
+#  define _WINDOWS_
 #endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#  include "config.h"
 #endif
 
 #include "FreeImage.h"

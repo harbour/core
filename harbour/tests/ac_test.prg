@@ -158,6 +158,8 @@ clear screen
 
 setcolor( 'GB+/B,GR+/R,,,W/N' )
 
+SET CURSOR ON
+
 asize( aPermits, Len( aPrompts ) )
 
 for x := 1 to Len( aPrompts )
@@ -198,6 +200,12 @@ function cUserFunction( nMode, nCurElement, nRowPos )
 
 local nRetVal := AC_CONT                // Default, Continue
 local nKey    := lastkey()
+
+local nRow := Row()
+local nCol := Col()
+
+@ 0, 20 SAY Str( nRow, 3 ) + " " + Str( nCol, 3 )
+
 do case
    // After all pending keys are processed, display message
 case nMode == AC_IDLE

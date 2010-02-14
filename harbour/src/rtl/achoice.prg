@@ -511,7 +511,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
             IF nPos > 0 .AND. nMode != AC_GOTO
 
-               // TOVERIFY: Disabled nRowsClr DispPage(). 
+               // TOVERIFY: Disabled nRowsClr DispPage().
                // Please verify it, I do not know why it was added but
                // it breaks code which adds dynamically new acItems positions
                // nRowsClr := Min( nNumRows, nItems )
@@ -602,6 +602,7 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
    hb_dispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
+   SetPos( nRow, nCol )
 
    ColorSelect( CLR_STANDARD )
 
