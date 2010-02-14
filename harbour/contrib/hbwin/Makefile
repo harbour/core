@@ -35,7 +35,7 @@ C_SOURCES := \
    win_bmpd.c \
    win_com.c \
    win_dlg.c \
-   win_dll.c \
+   win_dllc.c \
    win_dllx.c \
    win_misc.c \
    win_osc.c \
@@ -49,6 +49,7 @@ PRG_SOURCES := \
    oleauto.prg \
    axfunc.prg \
    wce_sim.prg \
+   win_dllf.prg \
    win_os.prg \
    win_reg.prg \
    win_tbmp.prg \

@@ -120,6 +120,7 @@ typedef struct
    void *    hString;
    int       iType;
    int       iEncoding;
+   HB_BOOL   bRawBuffer;
    HB_BOOL   bByRef;
    HB_DYNVAL value;
 } HB_DYNARG, * PHB_DYNARG;
@@ -200,10 +201,16 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
 
       case HB_DYN_CTYPE_CHAR_UNSIGNED_PTR:
       case HB_DYN_CTYPE_STRUCTURE:
-         r = ( HB_PTRUINT ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+      {
+         HB_SIZE nLen = hb_itemGetCLen( pParam );
+         pArg->hString = hb_xgrab( nLen + sizeof( char ) );
+         pArg->bRawBuffer = HB_TRUE;
+         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         ( ( char * ) pArg->hString )[ nLen ] = '\0';
+         r = ( HB_PTRUINT ) pArg->hString;
          pArg->value.t.n64 = r;
          break;
-
+      }
       case HB_DYN_CTYPE_CHAR_PTR:
 
          switch( pArg->iEncoding )
@@ -230,7 +237,15 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
                break;
             }
             default:
-               r = ( HB_PTRUINT ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+            {
+               HB_SIZE nLen = hb_itemGetCLen( pParam );
+               pArg->hString = hb_xgrab( nLen + sizeof( char ) );
+               pArg->bRawBuffer = HB_TRUE;
+               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+               ( ( char * ) pArg->hString )[ nLen ] = '\0';
+               r = ( HB_PTRUINT ) pArg->hString;
+               break;
+            }
          }
          pArg->value.t.n64 = r;
          break;
@@ -456,6 +471,7 @@ typedef struct
    void *    hString;
    int       iType;
    int       iEncoding;
+   HB_BOOL   bRawBuffer;
    HB_BOOL   bByRef;
    HB_DYNVAL value;
 } HB_DYNARG, * PHB_DYNARG;
@@ -559,10 +575,16 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
 
       case HB_DYN_CTYPE_CHAR_UNSIGNED_PTR:
       case HB_DYN_CTYPE_STRUCTURE:
-         *r1 = ( HB_U32 ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+      {
+         HB_SIZE nLen = hb_itemGetCLen( pParam );
+         pArg->hString = hb_xgrab( nLen + sizeof( char ) );
+         pArg->bRawBuffer = HB_TRUE;
+         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         ( ( char * ) pArg->hString )[ nLen ] = '\0';
+         *r1 = ( HB_PTRUINT ) pArg->hString;
          pArg->value.t.n32 = *r1;
          break;
-
+      }
       case HB_DYN_CTYPE_CHAR_PTR:
 
          switch( pArg->iEncoding )
@@ -589,7 +611,15 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
                break;
             }
             default:
-               *r1 = ( HB_U32 ) hb_strunshare( &pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+            {
+               HB_SIZE nLen = hb_itemGetCLen( pParam );
+               pArg->hString = hb_xgrab( nLen + sizeof( char ) );
+               pArg->bRawBuffer = HB_TRUE;
+               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+               ( ( char * ) pArg->hString )[ nLen ] = '\0';
+               *r1 = ( HB_PTRUINT ) pArg->hString;
+               break;
+            }
          }
          pArg->value.t.n32 = *r1;
          break;
@@ -1140,7 +1170,10 @@ void hb_dynCall( int iFuncFlags, void * pFunctionRaw, int iParams, int iFirst, i
                hb_itemRelease( pItem );
             }
 
-            hb_strfree( pArg[ tmp ].hString );
+            if( pArg[ tmp ].bRawBuffer )
+               hb_xfree( pArg[ tmp ].hString );
+            else
+               hb_strfree( pArg[ tmp ].hString );
          }
 
          if( pArg )
@@ -1533,7 +1566,10 @@ void hb_dynCall( int iFuncFlags, void * pFunctionRaw, int iParams, int iFirst, i
                hb_itemRelease( pItem );
             }
 
-            hb_strfree( pArg[ tmp ].hString );
+            if( pArg[ tmp ].bRawBuffer )
+               hb_xfree( pArg[ tmp ].hString );
+            else
+               hb_strfree( pArg[ tmp ].hString );
          }
 
          if( pArg )
