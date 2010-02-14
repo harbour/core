@@ -205,7 +205,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
          HB_SIZE nLen = hb_itemGetCLen( pParam );
          pArg->hString = hb_xgrab( nLen + sizeof( char ) );
          pArg->bRawBuffer = HB_TRUE;
-         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), nLen );
          ( ( char * ) pArg->hString )[ nLen ] = '\0';
          r = ( HB_PTRUINT ) pArg->hString;
          pArg->value.t.n64 = r;
@@ -241,7 +241,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
                HB_SIZE nLen = hb_itemGetCLen( pParam );
                pArg->hString = hb_xgrab( nLen + sizeof( char ) );
                pArg->bRawBuffer = HB_TRUE;
-               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), nLen );
                ( ( char * ) pArg->hString )[ nLen ] = '\0';
                r = ( HB_PTRUINT ) pArg->hString;
                break;
@@ -579,7 +579,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
          HB_SIZE nLen = hb_itemGetCLen( pParam );
          pArg->hString = hb_xgrab( nLen + sizeof( char ) );
          pArg->bRawBuffer = HB_TRUE;
-         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), nLen );
          ( ( char * ) pArg->hString )[ nLen ] = '\0';
          *r1 = ( HB_PTRUINT ) pArg->hString;
          pArg->value.t.n32 = *r1;
@@ -615,7 +615,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
                HB_SIZE nLen = hb_itemGetCLen( pParam );
                pArg->hString = hb_xgrab( nLen + sizeof( char ) );
                pArg->bRawBuffer = HB_TRUE;
-               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+               memcpy( ( char * ) pArg->hString, hb_itemGetCPtr( pParam ), nLen );
                ( ( char * ) pArg->hString )[ nLen ] = '\0';
                *r1 = ( HB_PTRUINT ) pArg->hString;
                break;
@@ -806,6 +806,7 @@ typedef HB_U32 ( _stdcall * FX86_S32P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef HB_U32 ( _stdcall * FX86_S32P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U32 ( _stdcall * FX86_S32P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U32 ( _stdcall * FX86_S32P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef HB_U64 ( _stdcall * FX86_S64P00 )( void );
 typedef HB_U64 ( _stdcall * FX86_S64P01 )( HB_U32 );
 typedef HB_U64 ( _stdcall * FX86_S64P02 )( HB_U32, HB_U32 );
@@ -837,6 +838,7 @@ typedef HB_U64 ( _stdcall * FX86_S64P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef HB_U64 ( _stdcall * FX86_S64P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U64 ( _stdcall * FX86_S64P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U64 ( _stdcall * FX86_S64P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef double ( _stdcall * FX86_SDBP00 )( void );
 typedef double ( _stdcall * FX86_SDBP01 )( HB_U32 );
 typedef double ( _stdcall * FX86_SDBP02 )( HB_U32, HB_U32 );
@@ -868,6 +870,7 @@ typedef double ( _stdcall * FX86_SDBP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef double ( _stdcall * FX86_SDBP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef double ( _stdcall * FX86_SDBP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef double ( _stdcall * FX86_SDBP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef float  ( _stdcall * FX86_SFLP00 )( void );
 typedef float  ( _stdcall * FX86_SFLP01 )( HB_U32 );
 typedef float  ( _stdcall * FX86_SFLP02 )( HB_U32, HB_U32 );
@@ -899,6 +902,7 @@ typedef float  ( _stdcall * FX86_SFLP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef float  ( _stdcall * FX86_SFLP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef float  ( _stdcall * FX86_SFLP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef float  ( _stdcall * FX86_SFLP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef HB_U32 ( _cdecl   * FX86_C32P00 )( void );
 typedef HB_U32 ( _cdecl   * FX86_C32P01 )( HB_U32 );
 typedef HB_U32 ( _cdecl   * FX86_C32P02 )( HB_U32, HB_U32 );
@@ -930,6 +934,7 @@ typedef HB_U32 ( _cdecl   * FX86_C32P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef HB_U32 ( _cdecl   * FX86_C32P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U32 ( _cdecl   * FX86_C32P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U32 ( _cdecl   * FX86_C32P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef HB_U64 ( _cdecl   * FX86_C64P00 )( void );
 typedef HB_U64 ( _cdecl   * FX86_C64P01 )( HB_U32 );
 typedef HB_U64 ( _cdecl   * FX86_C64P02 )( HB_U32, HB_U32 );
@@ -961,6 +966,7 @@ typedef HB_U64 ( _cdecl   * FX86_C64P27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef HB_U64 ( _cdecl   * FX86_C64P28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U64 ( _cdecl   * FX86_C64P29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef HB_U64 ( _cdecl   * FX86_C64P30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef double ( _cdecl   * FX86_CDBP00 )( void );
 typedef double ( _cdecl   * FX86_CDBP01 )( HB_U32 );
 typedef double ( _cdecl   * FX86_CDBP02 )( HB_U32, HB_U32 );
@@ -992,6 +998,7 @@ typedef double ( _cdecl   * FX86_CDBP27 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U3
 typedef double ( _cdecl   * FX86_CDBP28 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef double ( _cdecl   * FX86_CDBP29 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
 typedef double ( _cdecl   * FX86_CDBP30 )( HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32, HB_U32 );
+
 typedef float  ( _cdecl   * FX86_CFLP00 )( void );
 typedef float  ( _cdecl   * FX86_CFLP01 )( HB_U32 );
 typedef float  ( _cdecl   * FX86_CFLP02 )( HB_U32, HB_U32 );

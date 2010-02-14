@@ -72,11 +72,11 @@ FUNCTION win_dllCallFoxPro( cCommand, ... )
 
    LOCAL aParam
 
-   IF nPos <= Len( aCommand ) .AND. aCommand[ nPos ] == "DECLARE"
+   IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "DECLARE"
       ++nPos
    ENDIF
 
-   IF nPos <= Len( aCommand ) .AND. ( tmp := AScan( aTypeS, {| tmp | tmp == aCommand[ nPos ] } ) ) > 0
+   IF nPos <= Len( aCommand ) .AND. ( tmp := AScan( aTypeS, {| tmp | tmp == Upper( aCommand[ nPos ] ) } ) ) > 0
       nFuncFlags := hb_bitOr( nFuncFlags, aTypeN[ tmp ] )
       ++nPos
    ELSE
@@ -90,7 +90,7 @@ FUNCTION win_dllCallFoxPro( cCommand, ... )
       RETURN NIL
    ENDIF
 
-   IF nPos <= Len( aCommand ) .AND. aCommand[ nPos ] == "IN"
+   IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "IN"
       ++nPos
    ELSE
       RETURN NIL
@@ -103,14 +103,14 @@ FUNCTION win_dllCallFoxPro( cCommand, ... )
       RETURN NIL
    ENDIF
 
-   IF nPos <= Len( aCommand ) .AND. aCommand[ nPos ] == "AS"
+   IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "AS"
       nPos += 2
    ENDIF
 
    aParam := { cFunction, cLibrary, nFuncFlags }
 
    DO WHILE nPos <= Len( aCommand )
-      IF ( tmp := AScan( aTypeS, {| tmp | tmp == aCommand[ nPos ] } ) ) > 0
+      IF ( tmp := AScan( aTypeS, {| tmp | tmp == Upper( aCommand[ nPos ] ) } ) ) > 0
          AAdd( aParam, hb_bitOr( HB_DYN_ENC_RAW, aTypeN[ tmp ] ) )
          ++nPos
       ENDIF
