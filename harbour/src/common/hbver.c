@@ -80,6 +80,9 @@
 #if defined( HB_OS_WIN )
 
    #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
       #define VER_PLATFORM_WIN32_WINDOWS 1
@@ -269,7 +272,7 @@ char * hb_verPlatform( void )
          const char * pszWine = "";
          const char * pszName = "";
 
-         if( hntdll && GetProcAddress( hntdll, HBTEXT( "wine_get_version" ) ) )
+         if( hntdll && GetProcAddress( hntdll, "wine_get_version" ) )
             pszWine = " (Wine)";
 
          switch( osVer.dwPlatformId )

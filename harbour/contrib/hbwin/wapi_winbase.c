@@ -225,19 +225,9 @@ HB_FUNC( WAPI_GETPROCADDRESS )
 {
    FARPROC pProc;
    DWORD dwLastError;
-#if defined( HB_OS_WIN_CE )
-   void * hProcName;
-
-   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
-                  hb_parstr_u16( 2, HB_CDP_ENDIAN_NATIVE, &hProcName, NULL ) :
-                  ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
-   dwLastError = GetLastError();
-   hb_strfree( hProcName );
-#else
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
                   hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
-#endif
    hbwapi_SetLastError( dwLastError );
    hb_retptr( ( void * ) pProc );
 }
@@ -370,20 +360,17 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
 
 HB_FUNC( WAPI_GETLONGPATHNAME )
 {
-   _HB_GETPATHNAME getPathName = NULL;
-   HMODULE hLib = LoadLibrary( TEXT( "kernel32.dll" ) );
+   static _HB_GETPATHNAME s_getPathNameAddr = NULL;
 
-   if( hLib )
-      getPathName = ( _HB_GETPATHNAME )
-                    GetProcAddress( hLib, HBTEXT( "GetLongPathName" ) );
-
-   if( !getPathName )
-      getPathName = GetShortPathName;
-
-   s_getPathName( getPathName );
-
-   if( hLib )
-      FreeLibrary( hLib );
+   if( !s_getPathNameAddr )
+   {
+      s_getPathNameAddr = ( _HB_GETPATHNAME )
+                    GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                                    "GetLongPathName" );
+      if( !s_getPathNameAddr )
+         s_getPathNameAddr = GetShortPathName;
+   }
+   s_getPathName( s_getPathNameAddr );
 }
 
 #endif

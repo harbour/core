@@ -2556,15 +2556,9 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
 
-#if defined( UNICODE ) && defined( GetProcAddress )
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  HBTEXT( "SetLayeredWindowAttributes" ) );
-#else
-         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
-                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  HBTEXT( "SetLayeredWindowAttributes" ) );
-#endif
+                                  "SetLayeredWindowAttributes" );
 
          if( pSetLayeredWindowAttributes )
          {
@@ -4188,11 +4182,7 @@ static void hb_wvt_gtLoadGuiData( void )
    if( h )
    {
       /* workaround for wrong declarations in some old C compilers */
-#if defined( UNICODE ) && defined( GetProcAddress )
-      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddressW( h, HBTEXT( "GradientFill" ) );
-#else
-      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, HBTEXT( "GradientFill" ) );
-#endif
+      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
       if( s_guiData->pfnGF )
       {
          s_guiData->hMSImg32 = h;
@@ -4202,12 +4192,7 @@ static void hb_wvt_gtLoadGuiData( void )
    h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
    if( h )
    {
-      /* workaround for wrong declarations in some old C compilers */
-#if defined( UNICODE ) && defined( GetProcAddress )
-      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, HBTEXT( "SetLayeredWindowAttributes" ) );
-#else
-      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, HBTEXT( "SetLayeredWindowAttributes" ) );
-#endif
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
       if( s_guiData->pfnLayered )
       {
          s_guiData->hUser32 = h;

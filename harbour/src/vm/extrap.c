@@ -234,9 +234,9 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
          typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
 
-         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, HBTEXT( "CreateToolhelp32Snapshot" ) );
-         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, HBTEXT( "Module32First" ) );
-         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, HBTEXT( "Module32Next" ) );
+         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, "CreateToolhelp32Snapshot" );
+         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, "Module32First" );
+         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, "Module32Next" );
 
          if( pCreateToolhelp32Snapshot &&
              pModule32First &&

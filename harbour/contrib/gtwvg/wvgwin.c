@@ -1158,11 +1158,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
    h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
    if( h )
    {
-#if defined( UNICODE ) && defined( GetProcAddress )
-      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, HBTEXT( "SetLayeredWindowAttributes" ) );
-#else
-      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, HBTEXT( "SetLayeredWindowAttributes" ) );
-#endif
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
       if( pfnLayered )
       {
          HWND hWnd = wapi_par_HWND( 1 );

@@ -154,20 +154,28 @@ HB_FUNC( DISKSPACE )
          {
             typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                                PULARGE_INTEGER, PULARGE_INTEGER );
-            P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                                 GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#if defined( UNICODE )
-                                                 HBTEXT( "GetDiskFreeSpaceExW" ) );
-#else
-                                                 HBTEXT( "GetDiskFreeSpaceExA" ) );
-#endif
 
-            if( pGetDiskFreeSpaceEx )
+            static P_GDFSE s_pGetDiskFreeSpaceEx = NULL;
+            static HB_BOOL s_fInit = HB_FALSE;
+
+            if( !s_fInit )
             {
-               bError = pGetDiskFreeSpaceEx( lpPath,
-                                             ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                             ( PULARGE_INTEGER ) &i64TotalBytes,
-                                             ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_FALSE : HB_TRUE;
+               s_fInit = HB_TRUE;
+               s_pGetDiskFreeSpaceEx = ( P_GDFSE )
+                     GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+#if defined( UNICODE )
+                                     "GetDiskFreeSpaceExW" );
+#else
+                                     "GetDiskFreeSpaceExA" );
+#endif
+            }
+
+            if( s_pGetDiskFreeSpaceEx )
+            {
+               bError = s_pGetDiskFreeSpaceEx( lpPath,
+                                               ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                               ( PULARGE_INTEGER ) &i64TotalBytes,
+                                               ( PULARGE_INTEGER ) &i64FreeBytes ) ? HB_FALSE : HB_TRUE;
                if( ! bError )
                   dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
             }

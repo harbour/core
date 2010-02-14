@@ -100,6 +100,10 @@
 
 #include "hbgtwvg.ch"
 
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
+
 HB_EXTERN_BEGIN
 
 /*----------------------------------------------------------------------*/

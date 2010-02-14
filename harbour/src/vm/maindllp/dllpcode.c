@@ -58,6 +58,9 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 #endif
 
 #define HB_DLL_PREF     TEXT( "harbour" )
@@ -146,12 +149,7 @@ PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
 
       if( s_hModule != NULL )
       {
-#if defined( HB_OS_WIN_CE )
-#  define HBTEXTSTR  LPCTSTR
-#else
-#  define HBTEXTSTR  LPCSTR
-#endif
-         static HBTEXTSTR s_szGetProcAddr = HBTEXT( "_dll_hb_vmProcAddress" );
+         static const char * s_szGetProcAddr = "_dll_hb_vmProcAddress";
          int i = 6;
 
          do

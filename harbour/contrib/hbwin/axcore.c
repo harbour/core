@@ -51,6 +51,9 @@
  */
 
 #include "hbwinole.h"
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );
 typedef HRESULT   ( CALLBACK * PHB_AX_GETCTRL )( HWND, IUnknown** );
@@ -103,8 +106,8 @@ HB_BOOL hb_oleAxInit( void )
          s_hLib = NULL;
          return HB_FALSE;
       }
-      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
-      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
+      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, "AtlAxWinInit" );
+      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, "AtlAxGetControl" );
 
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();

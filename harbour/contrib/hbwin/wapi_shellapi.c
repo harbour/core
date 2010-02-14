@@ -51,6 +51,9 @@
  */
 
 #include "hbwapi.h"
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
@@ -85,7 +88,8 @@ HB_FUNC( WAPI_ISUSERANADMIN )
    if( hLib )
    {
       typedef int ( WINAPI * ISUSERANADMIN )( void );
-      ISUSERANADMIN pIsUserAnAdmin = ( ISUSERANADMIN ) GetProcAddress( hLib, HBTEXT( "IsUserAnAdmin" ) );
+      ISUSERANADMIN pIsUserAnAdmin = ( ISUSERANADMIN )
+                                     GetProcAddress( hLib, "IsUserAnAdmin" );
       if( pIsUserAnAdmin )
          bResult = ( pIsUserAnAdmin )();
 

@@ -1860,7 +1860,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  HBTEXT( "SetLayeredWindowAttributes" ) );
+                                  "SetLayeredWindowAttributes" );
 
          if( pSetLayeredWindowAttributes )
          {

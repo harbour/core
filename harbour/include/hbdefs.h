@@ -1583,11 +1583,6 @@ typedef HB_U32 HB_FATTR;
       extern HB_EXPORT void      hb_wctombget( char * dstA, const wchar_t * srcW, HB_SIZE ulLen );
    HB_EXTERN_END
 
-   #if defined( HB_OS_WIN_CE )
-      #define HBTEXT( x ) TEXT( x )
-   #else
-      #define HBTEXT( x ) x
-   #endif
 #endif
 
 #if defined( HB_OS_WIN ) && defined( UNICODE )
