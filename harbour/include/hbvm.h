@@ -101,6 +101,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
    extern void          hb_vmBeginSymbolGroup( void * hDynLib, HB_BOOL fClone );
    extern void          hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] );
    extern void          hb_vmExitSymbolGroup( void * hDynLib );
+   extern PHB_SYMB      hb_vmFindFuncSym( const char * szFuncName, void * hDynLib );
    extern const char *  hb_vmFindModuleSymbolName( PHB_SYMB pSym );
    extern HB_BOOL       hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, HB_USHORT * puiSymbols );
    extern PHB_SYMB      hb_vmGetRealFuncSym( PHB_SYMB pSym );

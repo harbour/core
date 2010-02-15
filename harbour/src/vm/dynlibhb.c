@@ -93,20 +93,20 @@ static const HB_GC_FUNCS s_gcDynlibFuncs =
    hb_gcDummyMark
 };
 
-HB_FUNC( HB_LIBLOAD )
+PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
 {
    void * hDynLib = NULL;
 
-   if( hb_parclen( 1 ) > 0 )
+   if( hb_itemGetCLen( pLibName ) > 0 )
    {
-      int argc = hb_pcount() - 1, i;
+      int argc = pArgs ? ( int ) hb_arrayLen( pArgs ) : 0, i;
       const char ** argv = NULL;
 
       if( argc > 0 )
       {
          argv = ( const char** ) hb_xgrab( sizeof( char* ) * argc );
          for( i = 0; i < argc; ++i )
-            argv[i] = hb_parcx( i + 2 );
+            argv[ i ] = hb_arrayGetCPtr( pArgs, i + 1 );
       }
 
       if( hb_vmLockModuleSymbols() )
@@ -117,7 +117,7 @@ HB_FUNC( HB_LIBLOAD )
          {
             void * hFileName;
 
-            hDynLib = ( void * ) LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
+            hDynLib = ( void * ) LoadLibrary( HB_ITEMGETSTR( pLibName, &hFileName, NULL ) );
 
             hb_strfree( hFileName );
          }
@@ -126,11 +126,11 @@ HB_FUNC( HB_LIBLOAD )
             HB_UCHAR LoadError[ 256 ] = "";  /* Area for load failure information */
             HMODULE hDynModule;
             if( DosLoadModule( ( PSZ ) LoadError, sizeof( LoadError ),
-                               ( PCSZ ) hb_parc( 1 ), &hDynModule ) == NO_ERROR )
+                               ( PCSZ ) hb_itemGetCPtr( pLibName ), &hDynModule ) == NO_ERROR )
                hDynLib = ( void * ) hDynModule;
          }
 #elif defined( HB_HAS_DLFCN )
-         hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
+         hDynLib = ( void * ) dlopen( hb_itemGetCPtr( pLibName ), RTLD_LAZY | RTLD_GLOBAL );
 #else
          {
             int iTODO;
@@ -150,16 +150,16 @@ HB_FUNC( HB_LIBLOAD )
    {
       void ** pLibPtr = ( void ** ) hb_gcAllocate( sizeof( void * ), &s_gcDynlibFuncs );
       * pLibPtr = hDynLib;
-      hb_retptrGC( pLibPtr );
+      return hb_itemPutPtrGC( NULL, pLibPtr );
    }
-   else
-      hb_ret();
+
+   return NULL;
 }
 
-HB_FUNC( HB_LIBFREE )
+HB_BOOL hb_libFree( PHB_ITEM pDynLib )
 {
    HB_BOOL fResult = HB_FALSE;
-   void ** pDynLibPtr = ( void ** ) hb_parptrGC( &s_gcDynlibFuncs, 1 );
+   void ** pDynLibPtr = ( void ** ) hb_itemGetPtrGC( pDynLib, &s_gcDynlibFuncs );
 
    if( pDynLibPtr && *pDynLibPtr &&
        hb_vmLockModuleSymbols() )
@@ -179,7 +179,57 @@ HB_FUNC( HB_LIBFREE )
       }
       hb_vmUnlockModuleSymbols();
    }
-   hb_retl( fResult );
+
+   return fResult;
+}
+
+void * hb_libHandle( PHB_ITEM pDynLib )
+{
+   void ** pDynLibPtr = ( void ** ) hb_itemGetPtrGC( pDynLib, &s_gcDynlibFuncs );
+
+   return pDynLibPtr ? *pDynLibPtr : NULL;
+}
+
+void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
+{
+   void * hDynLib = hb_libHandle( pDynLib );
+
+   if( hDynLib )
+   {
+#if defined( HB_OS_WIN )
+      return ( void * ) GetProcAddress( ( HMODULE ) hDynLib, pszSymbol );
+#elif defined( HB_OS_OS2 )
+      PFN pProcAddr = NULL;
+      if( DosQueryProcAddr( ( HMODULE ) hDynLib, 0, pszSymbol, &pProcAddr ) == NO_ERROR )
+         return ( void * ) pProcAddr;
+#elif defined( HB_HAS_DLFCN )
+      return dlsym( hDynLib, pszSymbol );
+#endif
+   }
+   return NULL;
+}
+
+HB_FUNC( HB_LIBLOAD )
+{
+   int iPCount = hb_pcount(), i;
+   PHB_ITEM pArgs = NULL;
+
+   if( iPCount > 1 )
+   {
+      pArgs = hb_itemArrayNew( iPCount - 1 );
+      for( i = 2; i <= iPCount; ++i )
+         hb_arraySet( pArgs, i, hb_param( i, HB_IT_ANY ) );
+   }
+
+   hb_itemReturnRelease( hb_libLoad( hb_param( 1, HB_IT_ANY ), pArgs ) );
+
+   if( pArgs )
+      hb_itemRelease( pArgs );
+}
+
+HB_FUNC( HB_LIBFREE )
+{
+   hb_retl( hb_libFree( hb_param( 1, HB_IT_ANY ) ) );
 }
 
 HB_FUNC( HB_LIBERROR )
@@ -191,29 +241,23 @@ HB_FUNC( HB_LIBERROR )
 #endif
 }
 
-/* Executes a Harbour pcode dynamically loaded DLL function or procedure
- * Syntax: HB_libDo( <cFuncName> [,<params...>] ) --> [<uResult>]
+/* Get FUNCTION or PROCEDURE symbol from given library.
+ *    hb_libGetFunSym( <pLibHandle>, <cFuncName> ) -> <sFuncSym> | NIL
  */
-
-HB_FUNC( HB_LIBDO )
+HB_FUNC( HB_LIBGETFUNSYM )
 {
-   if( hb_parclen( 1 ) > 0 )
+   const char * szFuncName = hb_parc( 2 );
+
+   if( szFuncName )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
+      void * hDynLib = hb_libHandle( hb_param( 1, HB_IT_ANY ) );
 
-      if( pDynSym )
+      if( hDynLib )
       {
-         int iPCount = hb_pcount();
-         int iParam;
+         PHB_SYMB pSym = hb_vmFindFuncSym( szFuncName, hDynLib );
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-
-         /* same logic here as from HB_FUNC( EVAL ) */
-         for( iParam = 2; iParam <= iPCount; iParam++ )
-            hb_vmPush( hb_stackItemFromBase( iParam ) );
-
-         hb_vmProc( ( HB_USHORT ) ( iPCount - 1 ) );
+         if( pSym )
+            hb_itemPutSymbol( hb_stackReturnItem(), pSym );
       }
    }
 }

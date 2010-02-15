@@ -1106,6 +1106,10 @@ extern HB_EXPORT void         hb_vmSetDefaultGT( const char * szGtName );
 
 extern HB_EXPORT PHB_FUNC     hb_vmProcAddress( const char * szFuncName );
 
+extern HB_EXPORT PHB_ITEM     hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs );
+extern HB_EXPORT HB_BOOL      hb_libFree( PHB_ITEM pDynLib );
+extern HB_EXPORT void *       hb_libHandle( PHB_ITEM pDynLib );
+extern HB_EXPORT void *       hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol );
 
 /* misc */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */

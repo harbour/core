@@ -7326,6 +7326,41 @@ HB_BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
    return HB_FALSE;
 }
 
+PHB_SYMB hb_vmFindFuncSym( const char * szFuncName, void * hDynLib )
+{
+   static PHB_SYMB pFuncSym = NULL;
+
+   if( szFuncName )
+   {
+      PHB_SYMBOLS pSymbols = s_pSymbols;
+
+      while( pSymbols )
+      {
+         if( pSymbols->hDynLib == hDynLib )
+         {
+            HB_USHORT ui;
+
+            for( ui = 0; ui < pSymbols->uiModuleSymbols; ++ui )
+            {
+               PHB_SYMB pSymbol = &pSymbols->pModuleSymbols[ ui ];
+
+               if( ( pSymbol->scope.value & HB_FS_LOCAL ) != 0 &&
+                   hb_stricmp( pSymbol->szName, szFuncName ) == 0 )
+               {
+                  if( ( pSymbol->scope.value & HB_FS_STATIC ) == 0 )
+                     return pSymbol;
+                  else if( ! pFuncSym )
+                     pFuncSym = pSymbol;
+               }
+            }
+         }
+         pSymbols = pSymbols->pNext;
+      }
+   }
+
+   return pFuncSym;
+}
+
 #define HB_SYM_STATICSBASE( p )  \
             ( ( PHB_ITEM ) ( ( (p)->scope.value & HB_FS_FRAME ) ? \
                              (p)->value.pStaticsBase : NULL ) )
