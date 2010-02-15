@@ -53,9 +53,9 @@ PRG_HEADERS := \
    wvgparts.ch \
 
 ifeq ($(HB_PLATFORM),win)
-   
+
    HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
-   
+
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 else

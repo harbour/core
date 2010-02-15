@@ -49,29 +49,7 @@ PROCEDURE Main()
    LOCAL hDLL
    LOCAL cData
 
-   IF hb_FileExists( "pscript.dll" )
-      hDLL := DllLoad( "pscript.dll" )
-      cData := Space( 24 )
-      DllCall( hDll, NIL, "PSGetVersion", @cData )
-      ? ">" + cData + "<"
-      DllUnload( hDLL )
-
-      // ; Testing failure 1
-      hDLL := DllLoad( "pscript.dll" )
-      cData := Space( 24 )
-      DllCall( hDll, NIL, "PSGet__Version", @cData )
-      ? ">" + cData + "<"
-      DllUnload( hDLL )
-   ENDIF
-
-   // ; Testing failure 2
-   hDLL := DllLoad( "nothere.dll" )
-   cData := Space( 24 )
-   DllCall( hDll, NIL, "PSGetVersion", @cData )
-   ? cData
-   DllUnload( hDLL )
-
-   ? "MsgBox:", DllCall( "user32.dll", NIL, "MessageBoxA", 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
+   ? "MsgBox:", win_DllCall( { "MessageBoxA", "user32.dll" }, 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
    IF hb_FileExists( "libcurl.dll" )
       hDLL := wapi_LoadLibrary( "libcurl.dll" )
@@ -86,11 +64,11 @@ PROCEDURE Main()
    #define SPI_SETDRAGFULLWINDOWS 37
 
    ? "Full content drag: OFF"
-   ? DllCall( "user32.dll", NIL, "SystemParametersInfo", SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
+   ? win_DllCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
    Inkey( 0 )
 
    ? "Full content drag: ON"
-   ? DllCall( "user32.dll", NIL, "SystemParametersInfo", SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
+   ? win_DllCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
    Inkey( 0 )
 
    /* Get some standard Windows folders */
@@ -123,10 +101,5 @@ PROCEDURE Main()
    ? "cData AFTER: ", cData
    ? "------"
    wapi_FreeLibrary( hDLL )
-
-   ? "DLLCALL"
-   cData := Space( MAX_PATH )
-   ? DllCall( "shell32.dll", NIL, "SHGetFolderPath", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
-   ? "REF:", cData
 
    RETURN

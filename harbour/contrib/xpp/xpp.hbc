@@ -5,3 +5,4 @@
 incpaths=.
 
 libs=xpp
+{win}libs=hbwin

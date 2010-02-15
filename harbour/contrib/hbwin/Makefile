@@ -36,7 +36,6 @@ C_SOURCES := \
    win_com.c \
    win_dlg.c \
    win_dllc.c \
-   win_dllx.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \

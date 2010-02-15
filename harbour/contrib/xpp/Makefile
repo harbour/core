@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.mk
+
 LIBNAME := xpp
 
 C_SOURCES := \
@@ -14,6 +16,7 @@ C_SOURCES := \
    mousex.c \
    oemansix.c \
    philesx.c \
+   win_dllx.c \
 
 PRG_SOURCES := \
    browdbx.prg \
@@ -33,6 +36,10 @@ PRG_SOURCES := \
 
 PRG_HEADERS := \
    xpp.ch \
+
+ifneq ($(filter $(HB_PLATFORM),win wce),)
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
+endif
 
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk

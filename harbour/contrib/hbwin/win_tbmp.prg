@@ -111,12 +111,3 @@ METHOD Draw( oPrn, aRectangle, /* @ */ nError ) CLASS WIN_BMP // Pass a WIN_PRN 
       ::Rect := aRectangle
    ENDIF
    RETURN iif( ::IsSupported( oPrn, @nError ), oPrn:DrawBitMap( Self ), .F. )
-
-#ifdef HB_COMPAT_XPP
-
-/* Compatibility Class for Alaska Xbase++ */
-
-CREATE CLASS XBPBITMAP FROM WIN_BMP
-ENDCLASS
-
-#endif

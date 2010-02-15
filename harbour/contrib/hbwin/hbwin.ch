@@ -149,13 +149,13 @@
 
 /* Color constants for convenience */
 #define HB_WIN_RGB_BLACK            WIN_RGB( 0x00, 0x00, 0x00 )
-#define HB_WIN_RGB_BLUE             WIN_RGB( 0x00, 0x00, 0x85 )
-#define HB_WIN_RGB_GREEN            WIN_RGB( 0x00, 0x85, 0x00 )
-#define HB_WIN_RGB_CYAN             WIN_RGB( 0x00, 0x85, 0x85 )
-#define HB_WIN_RGB_RED              WIN_RGB( 0x85, 0x00, 0x00 )
-#define HB_WIN_RGB_MAGENTA          WIN_RGB( 0x85, 0x00, 0x85 )
-#define HB_WIN_RGB_BROWN            WIN_RGB( 0x85, 0x85, 0x00 )
-#define HB_WIN_RGB_WHITE            WIN_RGB( 0xC6, 0xC6, 0xC6 )
+#define HB_WIN_RGB_BLUE             WIN_RGB( 0x00, 0x00, 0xFF )
+#define HB_WIN_RGB_GREEN            WIN_RGB( 0x00, 0xFF, 0x00 )
+#define HB_WIN_RGB_CYAN             WIN_RGB( 0x00, 0xFF, 0xFF )
+#define HB_WIN_RGB_RED              WIN_RGB( 0xFF, 0x00, 0x00 )
+#define HB_WIN_RGB_MAGENTA          WIN_RGB( 0xFF, 0x00, 0xFF )
+#define HB_WIN_RGB_BROWN            WIN_RGB( 0xFF, 0xFF, 0x00 )
+#define HB_WIN_RGB_WHITE            WIN_RGB( 0xFF, 0xFF, 0xFF )
 
 /* WIN_SETDOCUMENTPROPERTIES() paper types */
 #define WIN_DMPAPER_LETTER          1
