@@ -61,6 +61,7 @@ CLASS HbQtObjectHandler
    VAR    pPtr
 
    METHOD configure( xObject )
+   METHOD from( xObject )                         INLINE ::configure( xObject )
 
    ERROR HANDLER onError()
 

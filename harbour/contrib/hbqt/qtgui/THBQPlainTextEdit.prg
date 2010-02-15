@@ -80,6 +80,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  numberBlockVisible_1()
    METHOD  highlightCurrentLine( lB )
    METHOD  highlightCurrentLine_1()
+   METHOD  hbSetEventBlock( xBlock )
    METHOD  updateLineNumberAreaWidth( nNewBlockCount )
    METHOD  caseUpper()
    METHOD  caseLower()
@@ -161,6 +162,10 @@ METHOD HBQPlainTextEdit:highlightCurrentLine( lB )
 
 METHOD HBQPlainTextEdit:highlightCurrentLine_1()
    RETURN Qt_HBQPlainTextEdit_highlightCurrentLine_1( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbSetEventBlock( xBlock )
+   RETURN Qt_HBQPlainTextEdit_hbSetEventBlock( ::pPtr, xBlock )
 
 
 METHOD HBQPlainTextEdit:updateLineNumberAreaWidth( nNewBlockCount )

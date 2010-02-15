@@ -260,6 +260,14 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HIGHLIGHTCURRENTLINE_1 )
 }
 
 /*
+ * void           hbSetEventBlock( PHB_ITEM block )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETEVENTBLOCK )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbSetEventBlock( hb_param( 2, HB_IT_ANY ) );
+}
+
+/*
  * void           updateLineNumberAreaWidth( int newBlockCount )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_UPDATELINENUMBERAREAWIDTH )

@@ -102,11 +102,60 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
 HBQPlainTextEdit::~HBQPlainTextEdit()
 {
+   if( block )
+      hb_itemRelease( block );
+
    disconnect( this, SIGNAL( blockCountChanged( int ) )            );
    disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
    disconnect( this, SIGNAL( cursorPositionChanged() )             );
 
    delete lineNumberArea;
+}
+
+void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
+{
+   if( pBlock )
+   {
+      block = hb_itemNew( pBlock );
+   }
+}
+
+bool HBQPlainTextEdit::event( QEvent *event )
+{
+   if( event->type() == QEvent::KeyPress )
+   {
+      QKeyEvent *keyEvent =( QKeyEvent * )event;
+      if( ( keyEvent->key() == Qt::Key_Tab ) && ( keyEvent->modifiers() & Qt::ControlModifier ) )
+      {
+         return false;
+      }
+      else
+      {
+         if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) )
+         {
+            this->insertTab( 0 );
+            return true;
+         }
+         else if( ( keyEvent->key() == Qt::Key_Backtab ) && ( keyEvent->modifiers() & Qt::ShiftModifier ) )
+         {
+            this->insertTab( 1 );
+            return true;
+         }
+      }
+   }
+   return QPlainTextEdit::event( event );
+}
+
+void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
+{
+   HB_TRACE( HB_TR_ALWAYS, ( "void HBQPlainTextEdit::mouseDblClickEvent( QMouseEvent * %p )", event ) );
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
+      hb_vmEvalBlockV( block, 1, p1 );
+      hb_itemRelease( p1 );
+   }
+   QPlainTextEdit::mouseDoubleClickEvent( event );
 }
 
 void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
@@ -184,6 +233,7 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
       ++blockNumber;
    }
 }
+
 #if 0
 void HBQPlainTextEdit::contextMenuEvent( QContextMenuEvent *event )
 {
@@ -341,32 +391,6 @@ void HBQPlainTextEdit::setSpaces( int newSpaces )
          spacesTab = "\t";
       }
    }
-}
-
-bool HBQPlainTextEdit::event( QEvent *event )
-{
-   if( event->type() == QEvent::KeyPress )
-   {
-      QKeyEvent *keyEvent =( QKeyEvent * )event;
-      if( ( keyEvent->key() == Qt::Key_Tab ) && ( keyEvent->modifiers() & Qt::ControlModifier ) )
-      {
-         return false;
-      }
-      else
-      {
-         if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) )
-         {
-            this->insertTab( 0 );
-            return true;
-         }
-         else if( ( keyEvent->key() == Qt::Key_Backtab ) && ( keyEvent->modifiers() & Qt::ShiftModifier ) )
-         {
-            this->insertTab( 1 );
-            return true;
-         }
-      }
-   }
-   return QPlainTextEdit::event( event );
 }
 
 int HBQPlainTextEdit::getIndex( const QTextCursor &crQTextCursor )

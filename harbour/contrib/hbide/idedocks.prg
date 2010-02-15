@@ -258,6 +258,8 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:close := {|| hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) }
    ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
    ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
+   ::oDlg:oWidget:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
+   ::oDlg:oWidget:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
@@ -783,7 +785,8 @@ METHOD IdeDocks:buildSkeletonWidget()
    ::oSkeltn:oWidget := QDockWidget():new( ::oDlg:oWidget )
    ::oSkeltn:oWidget:setObjectName( "dockSkeleton" )
    ::oDlg:addChild( ::oSkeltn )
-   ::oSkeltn:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable )
+   ::oSkeltn:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable + ;
+                                                              QDockWidget_DockWidgetVerticalTitleBar )
    ::oSkeltn:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
    ::oSkeltn:oWidget:setWindowTitle( "Code Skeletons" )
    ::oSkeltn:oWidget:setFocusPolicy( Qt_NoFocus )
@@ -793,7 +796,6 @@ METHOD IdeDocks:buildSkeletonWidget()
    ::oSkeltn:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltn:oWidget, Qt_Horizontal )
-   ::oSkeltn:hide()
 
    oUI := ::oIde:oSkeltnUI
 
@@ -810,6 +812,8 @@ METHOD IdeDocks:buildSkeletonWidget()
 
    //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
    aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
+
+   ::oSkeltn:hide()
 
    RETURN Self
 

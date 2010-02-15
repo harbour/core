@@ -622,9 +622,9 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
       ::oUI:q_editMetaData :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
 
+      ::oUI:q_editLaunchParams:setText( ::oProject:launchParams )
+      ::oUI:q_editLaunchExe:setText( ::oProject:launchProgram )
       #if 0
-      ::oUI:q_editLaunchParams:setText()
-      ::oUI:q_editLaunchExe:setText()
       ::oUI:q_editHbp:setPlainText()
       #endif
    ENDIF
@@ -1223,7 +1223,7 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, ::cWrkProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
             //oItem:oWidget:setBackground( 0, ::qBrushWrkProject )
-            hbide_expandChildren( ::oIDE, oItem )
+            //hbide_expandChildren( ::oIDE, oItem )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
       ENDIF
@@ -1402,7 +1402,11 @@ METHOD IdeProjManager:closeProject( cProjectTitle )
 METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
    LOCAL cTemp, cPath, cFile
 
-   cTemp := ::oProject:expandMeta( ::oUI:qObj[ cObjPathName ]:Text() )
+   IF hb_isObject( ::oProject )
+      cTemp := ::oProject:expandMeta( ::oUI:qObj[ cObjPathName ]:Text() )
+   ELSE
+      cTemp := ""
+   ENDIF
 
    IF !hb_isChar( cObjFileName )
       cPath := hbide_fetchADir( ::oDlg, cTitle, cTemp )
@@ -1421,9 +1425,9 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
       IF Right( cPath, 1 ) $ '/\'
          cPath := Left( cPath, Len( cPath ) - 1 )
       ENDIF
-
-      cPath := ::oProject:applyMeta( cPath )
-
+      IF hb_isObject( ::oProject )
+         cPath := ::oProject:applyMeta( cPath )
+      ENDIF
       ::oUI:qObj[ cObjPathName ]:setText( cPath )
 
       IF hb_isChar( cObjPath2 ) .AND. Empty( ::oUI:qObj[ cObjPath2 ]:Text() )
@@ -1623,7 +1627,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject )
-   LOCAL cTargetFN, cTmp, oProject, qProcess
+   LOCAL cTargetFN, cTmp, oProject, qProcess, qStr
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
@@ -1650,10 +1654,17 @@ METHOD IdeProjManager:launchProject( cProject )
       #if 1
       qProcess := QProcess():new()
       qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
-      qProcess:startDetached_2( cTargetFN )
+      IF !empty( oProject:launchParams )
+         qStr := QStringList():new()
+         qStr:append( oProject:launchParams )
+         qProcess:startDetached_1( cTargetFN, qStr )
+      ELSE
+         qProcess:startDetached_2( cTargetFN )
+      ENDIF
       qProcess:waitForStarted()
       qProcess:pPtr := NIL
       qProcess := NIL
+
       #else
       ::oProcess := HbpProcess():new()
       ::oProcess:output := {|s| hbide_dbg( s ) }

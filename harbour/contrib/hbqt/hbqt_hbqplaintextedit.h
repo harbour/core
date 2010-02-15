@@ -76,6 +76,7 @@ public:
    HBQPlainTextEdit( QWidget * parent = 0 );
    ~HBQPlainTextEdit();
 
+   PHB_ITEM       block;
    QColor         m_currentLineColor;
    long           m_matchingBegin;
    long           m_matchingEnd;
@@ -103,6 +104,7 @@ public:
    bool           numberBlockVisible()           { return numberBlock; }
    void           highlightCurrentLine( bool b ) { highlightCurLine = b; }
    bool           highlightCurrentLine()         { return highlightCurLine; }
+   void           hbSetEventBlock( PHB_ITEM pBlock );
 
 private:
    QVector<int>   bookMark;
@@ -125,6 +127,7 @@ private:
 protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
+   void           mouseDoubleClickEvent( QMouseEvent * event );
    #if 0
    void           contextMenuEvent( QContextMenuEvent * event );
    void           keyPressEvent( QKeyEvent * event );

@@ -367,6 +367,8 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
    oTBar:addItem( , , , , , nSep )
 
+   oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
+
    /* ComboBox to Manage Views */
    ::oIde:qViewsCombo := QComboBox():new()
    oTBar:oWidget:addWidget( ::qViewsCombo )

@@ -490,6 +490,17 @@ FUNCTION hbide_arrayToMemo( a_ )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_arrayToMemoEx( a_ )
+   LOCAL s := ""
+
+   aeval( a_, {|e| s += e + CRLF } )
+
+   s := substr( s, 1, len( s ) - 2 )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_memoToArray( s )
    LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), CRLF, _EOL ), _EOL )
    LOCAL nNewSize := 0

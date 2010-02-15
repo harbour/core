@@ -108,6 +108,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    bool           numberBlockVisible()
    void           highlightCurrentLine(bool b) 
    bool           highlightCurrentLine()
+   void           hbSetEventBlock( PHB_ITEM block )
 </PROTOS>
 
 <SLOTS>

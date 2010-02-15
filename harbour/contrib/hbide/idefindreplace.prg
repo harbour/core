@@ -128,6 +128,8 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "buttonClose"  , "clicked()", ;
          {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
 
+   ::oUI:signal( "comboFindWhat", "editTextChanged(text)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
+
    ::oUI:signal( "comboFindWhat", "currentIndexChanged(text)", ;
                                {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
 
