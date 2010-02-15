@@ -3,6 +3,7 @@
 #
 
 libs=sddpg
-libs=libpq
+{unix}libs=pq
+{!unix}libs=libpq
 
 libs=../rddsql.hbc

@@ -3,6 +3,7 @@
 #
 
 libs=sddmy
-libs=libmysql
+{unix}libs=mysql
+{!unix}libs=libmysql
 
 libs=../rddsql.hbc

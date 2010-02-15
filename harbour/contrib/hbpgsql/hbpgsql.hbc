@@ -5,4 +5,5 @@
 incpaths=.
 
 libs=hbpgsql
-libs=libpq
+{unix}libs=pq
+{!unix}libs=libpq
