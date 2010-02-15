@@ -7336,7 +7336,7 @@ PHB_SYMB hb_vmFindFuncSym( const char * szFuncName, void * hDynLib )
 
       while( pSymbols )
       {
-         if( pSymbols->hDynLib == hDynLib )
+         if( pSymbols->fActive && pSymbols->hDynLib == hDynLib )
          {
             HB_USHORT ui;
 
