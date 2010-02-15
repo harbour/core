@@ -75,7 +75,7 @@
 
 static HB_GARBAGE_FUNC( FB_db_handle_release )
 {
-   void ** ph = ( void ** ) Cargo;
+   isc_db_handle * ph = ( isc_db_handle * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && * ph )
@@ -83,10 +83,10 @@ static HB_GARBAGE_FUNC( FB_db_handle_release )
       ISC_STATUS_ARRAY status;
 
       /* Destroy the object */
-      isc_detach_database( status, ( isc_db_handle * ) ph );
+      isc_detach_database( status, ph );
 
       /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
+      * ph = 0;
    }
 }
 
@@ -100,9 +100,10 @@ static void hb_FB_db_handle_ret( isc_db_handle p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( isc_db_handle ), &s_gcFB_db_handleFuncs );
+      isc_db_handle * ph = ( isc_db_handle * )
+            hb_gcAllocate( sizeof( isc_db_handle ), &s_gcFB_db_handleFuncs );
 
-      * ph = ( void * ) p;
+      * ph = p;
 
       hb_retptrGC( ph );
    }
@@ -112,9 +113,9 @@ static void hb_FB_db_handle_ret( isc_db_handle p )
 
 static isc_db_handle hb_FB_db_handle_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcFB_db_handleFuncs, iParam );
+   isc_db_handle * ph = ( isc_db_handle * ) hb_parptrGC( &s_gcFB_db_handleFuncs, iParam );
 
-   return ( isc_db_handle ) ( HB_PTRDIFF ) ( ph ? * ph : 0 );
+   return ph ? * ph : 0;
 }
 
 /* API wrappers */

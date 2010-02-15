@@ -1839,7 +1839,7 @@ static int _ins_buff( int iLen )
       while( WriteLen > 0 )
       {
          /* position to beginning of write area */
-         if( hb_fsSeekLarge( handles[area], fpWrite, FS_SET ) != (unsigned long) fpWrite )
+         if( hb_fsSeekLarge( handles[area], fpWrite, FS_SET ) != fpWrite )
          {
             error[area] = hb_fsError();
             break;
