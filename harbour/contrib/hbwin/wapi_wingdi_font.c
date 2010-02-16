@@ -50,28 +50,54 @@
  *
  */
 
-#define _WIN32_WINNT 0x0500
-
 #include "hbwapi.h"
-
-#if ! defined( HB_OS_WIN_CE )
 
 HB_FUNC( WAPI_ADDFONTRESOURCEEX )
 {
-   void * hFileName;
+   int iResult = 0;
 
-   hb_retni( AddFontResourceEx( HB_PARSTRDEF( 1, &hFileName, NULL ), ( DWORD ) hb_parnl( 2 ), NULL ) );
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef int ( WINAPI * _HB_ADDFONTRESOURCEEX )( LPCTSTR, DWORD, PVOID );
 
-   hb_strfree( hFileName );
+      static _HB_ADDFONTRESOURCEEX s_pAddFontResourceEx = NULL;
+
+      if( ! s_pAddFontResourceEx )
+         s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ), "AddFontResourceEx" );
+
+      if( s_pAddFontResourceEx )
+      {
+         void * hFileName;
+         iResult = s_pAddFontResourceEx( HB_PARSTRDEF( 1, &hFileName, NULL ), ( DWORD ) hb_parnl( 2 ), NULL );
+         hb_strfree( hFileName );
+      }
+   }
+#endif
+
+   hb_retni( iResult );
 }
 
 HB_FUNC( WAPI_REMOVEFONTRESOURCEEX )
 {
-   void * hFileName;
+   int iResult = 0;
 
-   hb_retni( RemoveFontResourceEx( HB_PARSTRDEF( 1, &hFileName, NULL ), ( DWORD ) hb_parnl( 2 ), NULL ) );
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef int ( WINAPI * _HB_REMOVEFONTRESOURCEEX )( LPCTSTR, DWORD, PVOID );
 
-   hb_strfree( hFileName );
-}
+      static _HB_REMOVEFONTRESOURCEEX s_pRemoveFontResourceEx = NULL;
 
+      if( ! s_pRemoveFontResourceEx )
+         s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ), "RemoveFontResourceEx" );
+
+      if( s_pRemoveFontResourceEx )
+      {
+         void * hFileName;
+         iResult = s_pRemoveFontResourceEx( HB_PARSTRDEF( 1, &hFileName, NULL ), ( DWORD ) hb_parnl( 2 ), NULL );
+         hb_strfree( hFileName );
+      }
+   }
 #endif
+
+   hb_retni( iResult );
+}

@@ -82,13 +82,14 @@
  *
  */
 
-#undef _WIN32_WINNT
-#define _WIN32_WINNT   0x0500 /* Set to Windows 2000 for WS_EX_LAYERED */
-
 #include "gtwvt.h"
 
-#if !defined( SM_REMOTESESSION )
-   #define SM_REMOTESESSION        0x1000
+#ifndef WS_EX_LAYERED
+#define WS_EX_LAYERED           0x00080000
+#endif
+
+#ifndef SM_REMOTESESSION
+#define SM_REMOTESESSION        0x1000
 #endif
 
 static int           s_GtId;
