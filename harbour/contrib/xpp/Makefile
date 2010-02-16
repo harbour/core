@@ -35,6 +35,7 @@ PRG_SOURCES := \
    typefilx.prg \
 
 PRG_HEADERS := \
+   dll.ch \
    xpp.ch \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)

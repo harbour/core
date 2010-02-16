@@ -88,6 +88,10 @@
 #define WS_EX_LAYERED           0x00080000
 #endif
 
+#ifndef LWA_ALPHA
+#define LWA_ALPHA               0x00000002
+#endif
+
 #ifndef SM_REMOTESESSION
 #define SM_REMOTESESSION        0x1000
 #endif

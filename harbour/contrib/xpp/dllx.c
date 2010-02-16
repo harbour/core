@@ -61,6 +61,8 @@
 #include "hbwin.h"
 #include "hbdyn.h"
 
+#include "dll.ch"
+
 /* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
          was derived from the context in which the functions are used. [pt] */
 
@@ -97,24 +99,24 @@ static const HB_GC_FUNCS s_gcDllFuncs =
    _DLLMark
 };
 
+/* NOTE: In Harbour this function will return an in-memory object, not a string. */
+/* NOTE: 2nd and 3rd parameters are not supported in Harbour. */
+
+HB_FUNC_EXTERN( HB_LIBLOAD );
+
 HB_FUNC( DLLLOAD )
 {
-   void * hFileName;
-
-   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
-
-   hb_strfree( hFileName );
+   HB_FUNC_EXEC( HB_LIBLOAD );
 }
+
+HB_FUNC_EXTERN( HB_LIBFREE );
 
 HB_FUNC( DLLUNLOAD )
 {
-   if( HB_ISPOINTER( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) ? HB_TRUE : HB_FALSE );
-   else if( HB_ISNUM( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ? HB_TRUE : HB_FALSE );
-   else
-      hb_retl( HB_FALSE );
+   HB_FUNC_EXEC( HB_LIBFREE );
 }
+
+/* NOTE: Function ordinals are not supported in 3rd parameter. */
 
 HB_FUNC( DLLCALL )
 {
@@ -133,9 +135,18 @@ HB_FUNC( DLLCALL )
 
    if( pLibraryHandle )
    {
+      int iXPPFlags = hb_parni( 2 );
+      int iFuncFlags = 0;
       void * pFunctionPtr = hb_libSymAddr( pLibraryHandle, hb_parcx( 3 ) );
 
-      hb_dynCall( HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_DYN_CALLCONV_STDCALL,
+      if( ( iXPPFlags & DLL_CDECL ) != 0 )
+         iFuncFlags |= HB_DYN_CALLCONV_CDECL;
+      if( ( iXPPFlags & DLL_STDCALL ) != 0 )
+         iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
+      if( ( iXPPFlags & DLL_SYSTEM ) != 0 )
+         iFuncFlags |= HB_DYN_CALLCONV_PASCAL;
+
+      hb_dynCall( iFuncFlags,
                   pFunctionPtr,
                   hb_pcount(),
                   4,
@@ -145,6 +156,9 @@ HB_FUNC( DLLCALL )
          hb_libFree( pLibraryHandle );
    }
 }
+
+/* NOTE: Function ordinals are not supported in 3rd parameter. */
+/* NOTE: In Harbour this function will return an in-memory object, not a string. */
 
 HB_FUNC( DLLPREPARECALL )
 {
@@ -174,7 +188,14 @@ HB_FUNC( DLLPREPARECALL )
       xec->pFunctionPtr = hb_libSymAddr( xec->pLibraryHandle, hb_parcx( 3 ) );
       if( xec->pFunctionPtr )
       {
-         xec->iFuncFlags = HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_DYN_CALLCONV_STDCALL;
+         int iXPPFlags = hb_parni( 2 );
+
+         if( ( iXPPFlags & DLL_CDECL ) != 0 )
+            xec->iFuncFlags |= HB_DYN_CALLCONV_CDECL;
+         if( ( iXPPFlags & DLL_STDCALL ) != 0 )
+            xec->iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
+         if( ( iXPPFlags & DLL_SYSTEM ) != 0 )
+            xec->iFuncFlags |= HB_DYN_CALLCONV_PASCAL;
 
          hb_retptrGC( xec );
          return;

@@ -58,6 +58,7 @@
 /* C calling conventions */
 #define HB_DYN_CALLCONV_STDCALL             0x000000 /* Windows API default */
 #define HB_DYN_CALLCONV_CDECL               0x100000 /* C default */
+#define HB_DYN_CALLCONV_PASCAL              0x200000 /* OS/2 default. Not yet supported. */
 
 /* String encodings */
 #define HB_DYN_ENC_ASCII                    0x000000
