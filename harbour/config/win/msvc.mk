@@ -47,7 +47,7 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
-      CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+      CFLAGS += -Ogt2yb1p -GX- -G6
    else
       CFLAGS += -Ot2b1 -EHs-c-
    endif

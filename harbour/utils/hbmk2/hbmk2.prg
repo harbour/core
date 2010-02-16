@@ -597,6 +597,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL l_aOPTRUN
    LOCAL l_cPROGDIR
    LOCAL l_cPROGNAME
+   LOCAL l_cIMPLIBNAME
    LOCAL l_aOBJ
    LOCAL l_aOBJA
    LOCAL l_aCLEAN
@@ -1484,6 +1485,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    l_aOBJA := {}
    l_cPROGDIR := NIL
    l_cPROGNAME := NIL
+   l_cIMPLIBNAME := NIL
    hbmk[ _HBMK_cFIRST ] := NIL
    hbmk[ _HBMK_aPO ] := {}
    hbmk[ _HBMK_cHBL ] := NIL
@@ -3174,6 +3176,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ELSE
             IF hbmk[ _HBMK_nWARN ] == _WARN_YES
                IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
+                  /* Lowered warning level to avoid large amount of warnings in system headers.
+                     Maybe this is related to the msvc2003 kit I was using. [vszakats] */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W2" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
@@ -3521,10 +3525,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF Empty( cExt ) .AND. ! Empty( cBinExt )
             l_cPROGNAME := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, cLibLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             l_cPROGNAME := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, cLibLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          l_cPROGNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
@@ -4552,7 +4558,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, cLibLibExt ) ), nOpt_Esc ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, l_cIMPLIBNAME ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_BIN_INSTALL )
 
@@ -4641,7 +4647,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, cLibLibExt ) ), nOpt_Esc ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, l_cIMPLIBNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , l_cHB_BIN_INSTALL )
 
