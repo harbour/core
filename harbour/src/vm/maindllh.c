@@ -65,9 +65,9 @@
 #if defined( HB_OS_WIN )
 
 #if defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) || defined( __POCC__ ) )
-HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD fdwReason, PVOID pvReserved )
+BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD fdwReason, PVOID pvReserved )
 #else
-HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 #endif
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %lu, %p)", hInstance, fdwReason,

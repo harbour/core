@@ -3092,7 +3092,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. FindInPath( "clarm" )
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( FindInPath( "clarm" ) )
                nCCompVer := 710 /* Visual Studio .NET 2003 */
             ELSE
                nCCompVer := 800 /* Visual Studio 2005 */
@@ -3173,7 +3173,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ELSE
             IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-               AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
+               IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-W2" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
+               ENDIF
             ENDIF
          ENDIF
          cOpt_CompC += " {FC} {LC}"

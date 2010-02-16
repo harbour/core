@@ -118,7 +118,7 @@ typedef PHB_SYMB ( * HB_VM_PROCESS_SYMBOLS )
                         ( PHB_SYMB pModuleSymbols, HB_USHORT uiModuleSymbols,
                           const char * szModuleName, HB_ULONG ulID,
                           HB_USHORT uiPcodeVer );
-static PHB_SYMB s_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, 
+static PHB_SYMB s_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols,
                                     const char * szModuleName, HB_ULONG ulID,
                                     HB_USHORT uiPcodeVer );
 static HB_VM_PROCESS_SYMBOLS s_pProcessSymbols = s_vmProcessSymbols;
@@ -168,9 +168,9 @@ PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
 
 
 #if defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) || defined( __POCC__ ) )
-HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD dwReason, PVOID pvReserved )
+BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD dwReason, PVOID pvReserved )
 #else
-HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
+BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
 #endif
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %lu, %p)", hInstance, dwReason, pvReserved ) );

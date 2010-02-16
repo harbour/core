@@ -97,6 +97,8 @@ HB_FUNC( WIN_PRINTDLGDC )
 
 #endif
 
+#if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+
 static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
 {
    PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
@@ -296,3 +298,5 @@ HB_FUNC( WIN_GETSAVEFILENAME )
 {
    s_GetFileName( HB_TRUE );
 }
+
+#endif

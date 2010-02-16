@@ -259,7 +259,7 @@ BOOL WINAPI SetKeyboardState( PBYTE p )
    return FALSE;
 }
 
-#if defined( __MINGW32CE__ )
+#if defined( __MINGW32CE__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
 int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
 {
    if( nDenominator )

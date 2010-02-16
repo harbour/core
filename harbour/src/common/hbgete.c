@@ -60,6 +60,9 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 #endif
 
 /* NOTE: Warning, this function _may_ return NULL as a result if

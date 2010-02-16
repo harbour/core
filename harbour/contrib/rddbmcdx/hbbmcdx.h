@@ -507,6 +507,8 @@ typedef BM_FILTER * LPBM_FILTER;
 #undef  SUPERTABLE
 #define SUPERTABLE                         ( &cdxSuper )
 
+HB_EXTERN_END
+
 #define hb_cdxBof                                  NULL
 #define hb_cdxEof                                  NULL
 #define hb_cdxFound                                NULL
@@ -607,7 +609,5 @@ static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxRename                               NULL
 static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
-
-HB_EXTERN_END
 
 #endif /* HB_RDDCDX_H_ */

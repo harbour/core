@@ -54,6 +54,11 @@
 #include "hbwapi.h"
 #include "hbapierr.h"
 
+#ifndef WS_OVERLAPPEDWINDOW
+   /* For: ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) */
+#  define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
+#endif
+
 HB_FUNC( WAPI_GETSYSTEMMETRICS )
 {
    int iResult = GetSystemMetrics( hb_parni( 1 ) );

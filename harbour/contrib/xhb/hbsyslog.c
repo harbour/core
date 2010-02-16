@@ -25,7 +25,8 @@ static HANDLE s_RegHandle;
 HB_FUNC( HB_SYSLOGOPEN )
 {
    #if defined( HB_OS_WIN )
-      #if ( WINVER >= 0x0400 )
+      #if ( WINVER >= 0x0400 ) && \
+          ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
       /* Ok, we compiled under NT, but we must not use this function
          when RUNNING on a win98. */
       if( hb_iswinnt() )
@@ -52,7 +53,8 @@ HB_FUNC( HB_SYSLOGOPEN )
 HB_FUNC( HB_SYSLOGCLOSE )
 {
    #if defined( HB_OS_WIN )
-      #if ( WINVER >= 0x0400 )
+      #if ( WINVER >= 0x0400 ) && \
+          ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
       if( hb_iswinnt() )
       {
          DeregisterEventSource( s_RegHandle );
@@ -72,7 +74,8 @@ HB_FUNC( HB_SYSLOGCLOSE )
 HB_FUNC( HB_SYSLOGMESSAGE )
 {
    #if defined( HB_OS_WIN )
-      #if ( WINVER >= 0x0400 )
+      #if ( WINVER >= 0x0400 ) && \
+          ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
       if( hb_iswinnt() )
       {
          WORD logval;

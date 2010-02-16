@@ -19,6 +19,12 @@ HB_SUPPORTED := yes
 ifeq ($(HB_COMPILER),poccarm)
    HB_SUPPORTED := no
 endif
+# NOTE: old msvcarm can't cope with some PP directives. [vszakats]
+ifeq ($(HB_COMPILER),msvcarm)
+   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
+      HB_SUPPORTED := no
+   endif
+endif
 # NOTE: dos based watcom runs out of memory. [vszakats]
 ifeq ($(HB_HOST_PLAT)-$(HB_COMPILER),dos-watcom)
    HB_SUPPORTED := no

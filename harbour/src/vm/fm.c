@@ -142,7 +142,9 @@
 #if defined( HB_FM_DL_ALLOC )
 #  if !defined( HB_FM_DLMT_ALLOC ) && !defined( HB_FM_DLMT_ALLOC_OFF ) && \
       defined( HB_MT_VM )
-#     define HB_FM_DLMT_ALLOC
+#     if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#        define HB_FM_DLMT_ALLOC
+#     endif
 #  endif
 /* #  define NO_MALLINFO 1 */
 /* #  define INSECURE */
@@ -164,7 +166,7 @@
 #     pragma warn -ngu
 #     pragma warn -prc
 #     pragma warn -rch
-#  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
+#  elif defined( HB_OS_WIN_CE ) && ( defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
