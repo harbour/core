@@ -269,6 +269,7 @@ CLASS IdeProject
    DATA   cPathEnv                                INIT hb_DirBase() + "resources"
    DATA   hSources                                INIT {=>}
    DATA   hPaths                                  INIT {=>}
+   DATA   lPathAbs                                INIT .F.  // Lets try relative paths first . xhp and hbp will be relative anyway
 
    METHOD new( oIDE, aProps )
    METHOD applyMeta( s )
@@ -409,6 +410,8 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD manageEnvironments()
    METHOD loadXhpProject()
    METHOD loadHbpProject()
+   METHOD isValidProjectLocation( lTell )
+   METHOD setProjectLocation( cPath )
 
    ENDCLASS
 
@@ -576,7 +579,7 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
    ::oUI:q_buttonBackup      :setIcon( cLukupPng )
    ::oUI:q_buttonXmate       :setIcon( ::resPath + "xmate.png" )
-   ::oUI:q_buttonHbp         :setIcon( ::resPath + "open.png" )
+   ::oUI:q_buttonHbp         :setIcon( ::resPath + "open.png"  )
 
    ::oUI:q_buttonSelect :setIcon( ::resPath + "open.png"       )
    ::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
@@ -601,6 +604,8 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
    ::oUI:signal( "buttonXmate"       , "clicked()", {|| ::loadXhpProject() } )
    ::oUI:signal( "buttonHbp"         , "clicked()", {|| ::loadHbpProject() } )
+
+   ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
    IF empty( ::aPrjProps )
       /*
@@ -1156,27 +1161,64 @@ METHOD IdeProjManager:updateMetaData()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:setProjectLocation( cPath )
+
+   IF ! hb_dirExists( cPath )
+      ::oUI:q_editPrjLoctn:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+      ::oUI:q_editSources:setEnabled( .f. )
+      ::oUI:q_buttonSelect:setEnabled( .f. )
+   ELSE
+      ::oProject:location := cPath
+      ::oUI:q_editPrjLoctn:setStyleSheet( "" )
+      ::oUI:q_editSources:setEnabled( .T. )
+      ::oUI:q_buttonSelect:setEnabled( .T. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:isValidProjectLocation( lTell )
+   LOCAL lOk := .f.
+
+   IF empty( ::oUI:q_editPrjLoctn:text() )
+      IF lTell
+         MsgBox( "Please supply 'Project Location' first" )
+      ENDIF
+   ELSEIF ! hb_dirExists( ::oUI:q_editPrjLoctn:text() )
+      IF lTell
+         MsgBox( "Please ensure 'Project Location' is correct" )
+      ENDIF
+   ELSE
+      lOk := .t.
+   ENDIF
+
+   RETURN lOk
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:addSources()
    LOCAL aFiles, a_, b_, a4_1, s
 
-   IF !empty( aFiles := ::oSM:selectSource( "openmany" ) )
-      a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() )
-      a4_1 := hbide_setupMetaKeys( a_ )
+   IF ::isValidProjectLocation( .t. )
+      IF !empty( aFiles := ::oSM:selectSource( "openmany" ) )
+         a_:= hbide_memoToArray( ::oUI:q_editMetaData:toPlainText() )
+         a4_1 := hbide_setupMetaKeys( a_ )
 
-      a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
+         a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
 
-      b_:={}
-      aeval( aFiles, {|e| aadd( b_, hbide_applyMetaData( e, a4_1 ) ) } )
+         b_:={}
+         aeval( aFiles, {|e| aadd( b_, hbide_applyMetaData( e, a4_1 ) ) } )
 
-      FOR EACH s IN b_
-         IF ascan( a_, s ) == 0
-            aadd( a_, s )
-         ENDIF
-      NEXT
+         FOR EACH s IN b_
+            IF ascan( a_, s ) == 0
+               aadd( a_, s )
+            ENDIF
+         NEXT
 
-      ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( a_ ) )
+         ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( a_ ) )
+      ENDIF
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
