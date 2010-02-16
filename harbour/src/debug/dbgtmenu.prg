@@ -68,7 +68,7 @@
 
 CREATE CLASS HBDbMenu
 
-   CLASSDATA aMenus
+   METHOD aMenus SETGET
 
    VAR nTop
    VAR nLeft
@@ -107,6 +107,16 @@ CREATE CLASS HBDbMenu
    METHOD ShowPopup( nPopup )
 
 ENDCLASS
+
+METHOD aMenus( xNewVal ) CLASS HBDbMenu
+
+   THREAD STATIC ts_aMenus
+
+   IF PCount() > 0
+      ts_aMenus := xNewVal
+   ENDIF
+
+   RETURN ts_aMenus
 
 METHOD New() CLASS HBDbMenu
 

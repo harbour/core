@@ -2048,9 +2048,12 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
    }
 
 #if defined( __WATCOMC__ ) && defined( HB_OS_LINUX )
+{
+   int iTODO;
    /* it's still not supported by Linux OpenWatcom port :-( */
    ret = -1;
    hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+}
 #else
    hb_vmUnlock();
    ret = shutdown( sd, iMode );
