@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL handling function
+ * Calling function from dynamic library (HB_DYNCALL())
  *
  * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -50,18 +50,18 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbdyn.h"
 
-HB_FUNC( WIN_DLLCALL )
+HB_FUNC( HB_DYNCALL )
 {
    PHB_ITEM pParam = hb_param( 1, HB_IT_POINTER | HB_IT_ARRAY );
    int * piArgFlags = NULL;
    int iFuncFlags = HB_DYN_CALLCONV_STDCALL;
-   HB_BOOL bFreeDLL = HB_FALSE;
 
-   HMODULE hDLL = NULL;
+   PHB_ITEM pLibraryHandle = NULL;
+   HB_BOOL bFreeLibrary = HB_FALSE;
    void * pFunctionPtr = NULL;
 
    if( pParam )
@@ -75,32 +75,26 @@ HB_FUNC( WIN_DLLCALL )
             PHB_ITEM pFunction = hb_arrayGetItemPtr( pParam, 1 );
             HB_SIZE nBasePos = 2;
 
+#if 0
             if( HB_IS_POINTER( pFunction ) )
                pFunctionPtr = hb_itemGetPtr( pFunction );
-            else if( ( HB_IS_NUMERIC( pFunction ) || HB_IS_STRING( pFunction ) ) && nLen >= nBasePos )
+            else ...
+#endif
+            if( HB_IS_STRING( pFunction ) && nLen >= nBasePos )
             {
                PHB_ITEM pLibrary = hb_arrayGetItemPtr( pParam, nBasePos );
 
                if( HB_IS_STRING( pLibrary ) )
                {
-                  void * hFileName;
-                  hDLL = LoadLibrary( HB_ITEMGETSTR( pLibrary, &hFileName, NULL ) );
-                  hb_strfree( hFileName );
-                  if( ( HB_PTRDIFF ) hDLL < 32 )
-                     hDLL = NULL;
-                  else
-                     bFreeDLL = HB_TRUE;
+                  pLibraryHandle = hb_libLoad( pLibrary, NULL );
+                  if( pLibraryHandle )
+                     bFreeLibrary = HB_TRUE;
                }
-               else if( HB_IS_POINTER( pLibrary ) )
-                  hDLL = ( HMODULE ) hb_itemGetPtr( pLibrary );
+               else if( hb_libHandle( pLibrary ) )
+                  pLibraryHandle = pLibrary;
 
-               if( hDLL )
-               {
-                  HB_BOOL bWIDE;
-                  pFunctionPtr = ( void * ) hbwin_getprocaddress( hDLL, pFunction, &bWIDE );
-                  if( bWIDE )
-                     iFuncFlags |= HB_DYN_ENC_UTF16;
-               }
+               if( pLibraryHandle )
+                  pFunctionPtr = hb_libSymAddr( pLibraryHandle, hb_itemGetCPtr( pFunction ) );
 
                ++nBasePos;
             }
@@ -133,6 +127,6 @@ HB_FUNC( WIN_DLLCALL )
    if( piArgFlags )
       hb_xfree( piArgFlags );
 
-   if( bFreeDLL )
-      FreeLibrary( hDLL );
+   if( bFreeLibrary )
+      hb_libFree( pLibraryHandle );
 }

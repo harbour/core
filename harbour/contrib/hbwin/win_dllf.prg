@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows .dll support (high-level)
+ * Calling function from dynamic library (HB_DYNCALLFOXPRO())
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -58,7 +58,7 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
    [cParamType1 [@] ParamName1, cParamType2 [@] ParamName2, ...]
 */
 
-FUNCTION win_dllCallFoxPro( cCommand, ... )
+FUNCTION hb_dynCallFoxPro( cCommand, ... )
    LOCAL aParam
 
    LOCAL cFunction
@@ -131,4 +131,4 @@ FUNCTION win_dllCallFoxPro( cCommand, ... )
       ENDIF
    ENDDO
 
-   RETURN win_dllCall( aParam, ... )
+   RETURN hb_dynCall( aParam, ... )

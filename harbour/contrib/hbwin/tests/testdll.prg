@@ -54,9 +54,9 @@ PROCEDURE Main()
    IF hb_FileExists( "libcurl.dll" )
       hDLL := wapi_LoadLibrary( "libcurl.dll" )
       ? GetProcAddress( hDLL, "curl_version" )
-      ? win_dllCall( { "curl_version", hDLL, HB_DYN_CTYPE_CHAR_PTR } )
+      ? hb_dynCall( { "curl_version", hDLL, HB_DYN_CTYPE_CHAR_PTR } )
       wapi_FreeLibrary( hDLL )
-      ? win_dllCall( { "curl_version", "libcurl.dll", HB_DYN_CTYPE_CHAR_PTR } )
+      ? hb_dynCall( { "curl_version", "libcurl.dll", HB_DYN_CTYPE_CHAR_PTR } )
    ENDIF
 
    /* Force Windows not to show dragged windows contents */
@@ -77,27 +77,27 @@ PROCEDURE Main()
    ? "ValType( hDLL ): ", ValType( hDLL )
    ? "------"
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL (BOOL retval): ", win_dllCall( { "SHGetSpecialFolderPath", hDLL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { "SHGetSpecialFolderPath", hDLL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL (BOOL retval): ", win_dllCall( { GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
-   ? "WIN_DLLCALL: ", win_dllCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
+   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
    ? "cData:", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL (PARAMS): ", win_dllCall( { "SHGetSpecialFolderPath", hDLL, NIL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPath", hDLL, NIL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "WIN_DLLCALL: ", win_dllCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
    ? "cData BEFORE: ", cData
-   ? "WIN_DLLCALL (MISSING @1): ", win_dllCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "HB_DYNCALL (MISSING @1): ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
    ? "cData AFTER: ", cData
    ? "------"
    wapi_FreeLibrary( hDLL )
