@@ -12,11 +12,11 @@ C_SOURCES := \
    binnumx.c \
    dbcmdx.c \
    dbdetacx.c \
+   dllx.c \
    idlex.c \
    mousex.c \
    oemansix.c \
    philesx.c \
-   win_dllx.c \
 
 PRG_SOURCES := \
    browdbx.prg \

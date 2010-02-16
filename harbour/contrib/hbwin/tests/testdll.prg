@@ -46,16 +46,15 @@
 #define MAX_PATH 260
 
 PROCEDURE Main()
-   LOCAL hDLL
+   LOCAL hLib
    LOCAL cData
 
-   ? "MsgBox:", win_DllCall( { "MessageBoxA", "user32.dll" }, 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
+   ? "MsgBox:", hb_dynCall( { "MessageBoxA", "user32.dll" }, 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
    IF hb_FileExists( "libcurl.dll" )
-      hDLL := wapi_LoadLibrary( "libcurl.dll" )
-      ? GetProcAddress( hDLL, "curl_version" )
-      ? hb_dynCall( { "curl_version", hDLL, HB_DYN_CTYPE_CHAR_PTR } )
-      wapi_FreeLibrary( hDLL )
+      hLib := hb_LibLoad( "libcurl.dll" )
+      ? hb_dynCall( { "curl_version", hLib, HB_DYN_CTYPE_CHAR_PTR } )
+      hb_LibFree( hLib )
       ? hb_dynCall( { "curl_version", "libcurl.dll", HB_DYN_CTYPE_CHAR_PTR } )
    ENDIF
 
@@ -64,42 +63,46 @@ PROCEDURE Main()
    #define SPI_SETDRAGFULLWINDOWS 37
 
    ? "Full content drag: OFF"
-   ? win_DllCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
+   ? hb_dynCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
    Inkey( 0 )
 
    ? "Full content drag: ON"
-   ? win_DllCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
+   ? hb_dynCall( { "SystemParametersInfo", "user32.dll" }, SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
    Inkey( 0 )
 
    /* Get some standard Windows folders */
 
-   hDLL := wapi_LoadLibrary( "shell32.dll" )
-   ? "ValType( hDLL ): ", ValType( hDLL )
+   hLib := hb_LibLoad( "shell32.dll" )
+   ? "ValType( hLib ): ", ValType( hLib )
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { "SHGetSpecialFolderPath", hDLL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { GetProcAddress( hLib, "SHGetSpecialFolderPathA" ), HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
-   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
+   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathA", hLib }, 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
    ? "cData:", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPath", hDLL, NIL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, NIL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathA", hLib }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "@cData: ", cData
+   ? "------"
+   cData := Space( MAX_PATH )
+   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathW", hLib }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "@cData: ", cData
    ? "------"
    cData := Space( MAX_PATH )
    ? "cData BEFORE: ", cData
-   ? "HB_DYNCALL (MISSING @1): ", hb_dynCall( { "SHGetFolderPath", hDLL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "HB_DYNCALL (MISSING @1): ", hb_dynCall( { "SHGetFolderPathA", hLib }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
    ? "cData AFTER: ", cData
    ? "------"
-   wapi_FreeLibrary( hDLL )
+   hb_LibFree( hLib )
 
    RETURN

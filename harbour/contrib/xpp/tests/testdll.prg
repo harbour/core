@@ -76,16 +76,21 @@ PROCEDURE Main()
    #define SPI_SETDRAGFULLWINDOWS 37
 
    ? "Full content drag: OFF"
-   ? DllCall( "user32.dll", NIL, "SystemParametersInfo", SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
+   ? DllCall( "user32.dll", NIL, "SystemParametersInfoA", SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )
    Inkey( 0 )
 
    ? "Full content drag: ON"
-   ? DllCall( "user32.dll", NIL, "SystemParametersInfo", SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
+   ? DllCall( "user32.dll", NIL, "SystemParametersInfoA", SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
    Inkey( 0 )
 
    ? "DLLCALL"
    cData := Space( MAX_PATH )
-   ? DllCall( "shell32.dll", NIL, "SHGetFolderPath", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? DllCall( "shell32.dll", NIL, "SHGetFolderPathA", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "REF:", cData
+
+   ? "DLLCALL"
+   cData := Space( MAX_PATH )
+   ? DllCall( "shell32.dll", NIL, "SHGetFolderPathW", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
    ? "REF:", cData
 
    RETURN
