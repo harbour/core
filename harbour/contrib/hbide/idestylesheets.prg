@@ -304,6 +304,17 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '                                stop:0 white, stop:1 lightblue);             ' )
       aadd( txt_, ' }                                                                           ' )
 
+   CASE cWidget == "QDockWidget"
+
+      aadd( txt_, 'QDockWidget {                                                                ' )
+      aadd( txt_, '     border: 1px solid lightgray;                                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      //aadd( txt_, 'QDockWidget::title {                                                         ' )
+      //aadd( txt_, '     text-align: left; /* align the text to the left */                      ' )
+      //aadd( txt_, '     background: darkgray;                                                  ' )
+      //aadd( txt_, '     padding-left: 5px;                                                      ' )
+      //aadd( txt_, ' }                                                                           ' )
+
    ENDCASE
 
    aeval( txt_, {|e| s += trim( e ) + chr( 13 ) + chr( 10 ) } )

@@ -113,6 +113,10 @@ CLASS IdeObject
    ACCESS qViewsCombo                             INLINE ::oIde:qViewsCombo
    ACCESS qHelpBrw                                INLINE ::oIde:qHelpBrw
 
+   ACCESS qTBarSlctns                             INLINE ::oIde:qTBarSlctns
+   ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
+   ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
+
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
    ACCESS cWrkCodec                               INLINE ::oIde:cWrkCodec

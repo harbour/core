@@ -164,6 +164,9 @@ CLASS HbIde
    DATA   qBrushWrkProject
    DATA   qProcess
    DATA   qHelpBrw
+   DATA   qTBarSlctns
+   DATA   qTBarLines
+   DATA   qTBarPanels
 
    ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
    ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
@@ -424,10 +427,12 @@ METHOD HbIde:create( cProjIni )
             IF !empty( ::qCurEdit )
                ::oFR:show()
             ENDIF
+
          CASE ::mp1 == xbeK_CTRL_N
             IF !empty( ::qCurEdit )
                ::oFR:find()
             ENDIF
+
          CASE ::mp1 == xbeK_CTRL_R
             IF !empty( ::qCurEdit )
                ::oFR:replace()
@@ -456,8 +461,8 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "======================================================" )
 
-   ::qCursor:pPtr := NIL
-   ::oFont        := NIL
+   ::qCursor := NIL
+   ::oFont := NIL
 
    hbide_dbg( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 

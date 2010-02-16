@@ -139,7 +139,7 @@ METHOD HbQtUI:create( cFile, qParent )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtUI:destroy()
-   LOCAL a_, qObj
+   LOCAL a_
 
    ::oWidget:hide()
 
@@ -150,15 +150,35 @@ METHOD HbQtUI:destroy()
       Qt_Events_disConnect( ::pEvents, a_[ 1 ], a_[ 2 ] )
    NEXT
 
+   #if 0
    FOR EACH qObj IN ::qObj DESCEND
-      qObj := NIL
+      IF qObj:__enumIndex() > 1
+hbide_dbg( "HbQtUI:destroy()", 1, a_[ 1 ], a_[ 2 ] )
+         qObj := NIL
+      ENDIF
+   NEXT
+   #endif
+
+   FOR EACH a_ IN ::widgets DESCEND
+      IF a_:__enumIndex() > 1
+         IF type( a_[ 3 ] ) == "UI"
+#if 0
+                                    .AND. ;
+                      !( "Layout" $ a_[ 1 ] ) .AND. ;
+                      ! a_[ 2 ] == "tabGeneral" .AND. ;
+                      ! a_[ 1 ] $ "QSizePolicy,QTabWidget"
+#endif
+hbide_dbg( "HbQtUI:destroy()", 1, a_[ 1 ], a_[ 2 ] )
+            ::qObj[ a_[ 2 ] ] := NIL
+         ENDIF
+      ENDIF
    NEXT
 
    ::oWidget:close()
 
-   ::oWidget      := NIL
-   ::aEvents      := NIL
-   ::aSignals     := NIL
+   ::oWidget  := NIL
+   ::aEvents  := NIL
+   ::aSignals := NIL
 
    RETURN NIL
 
@@ -273,6 +293,8 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
       qFile := NIL
       qUiLoader := NIL
    ENDIF
+
+   ::oWidget := oWidget
 
    RETURN oWidget
 

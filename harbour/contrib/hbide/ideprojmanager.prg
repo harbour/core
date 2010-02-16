@@ -586,7 +586,7 @@ METHOD IdeProjManager:fetchProperties()
    ::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
    ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
 
-   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oUI:oWidget:close()  } )
+   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oUI:done( 0 ) } ) //oWidget:close()  } )
    ::oUI:signal( "buttonSave"        , "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
    ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
    //
@@ -644,10 +644,10 @@ METHOD IdeProjManager:fetchProperties()
    //
    ::oUI:exec()
    //
-   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
+//   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
+   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI )
 
    ::oUI:destroy()
-   ::oUI := NIL
 
    ::manageFocusInEditor()
 
@@ -742,7 +742,7 @@ METHOD IdeProjManager:save( lCanClose )
    ENDIF
 
    IF lCanClose .AND. lOk
-      ::oUI:oWidget:close()
+      ::oUI:done( 1 )
    ENDIF
 
    RETURN lOk

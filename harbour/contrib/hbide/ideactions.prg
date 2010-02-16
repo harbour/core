@@ -368,6 +368,8 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( , , , , , nSep )
 
    oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
+   oTBar:oWidget:setMovable( .f. )
+   oTBar:oWidget:setFloatable( .f. )
 
    /* ComboBox to Manage Views */
    ::oIde:qViewsCombo := QComboBox():new()

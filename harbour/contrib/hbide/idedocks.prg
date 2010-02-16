@@ -81,6 +81,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD destroy()
    METHOD execEvent( nMode, p )
    METHOD setView( cView )
+   METHOD buildToolBarPanels()
    METHOD buildHelpWidget()
    METHOD buildSkeletonWidget()
    METHOD buildDialog()
@@ -324,18 +325,74 @@ METHOD IdeDocks:buildViewWidget()
 
 METHOD IdeDocks:buildDockWidgets()
 
+   ::buildToolBarPanels()
+
    ::buildProjectTree()
    ::buildEditorTree()
    ::buildFuncList()
    ::buildCompileResults()
    ::buildLinkResults()
    ::buildOutputResults()
- * ::buildFindInFiles()
    ::buildHelpWidget()
    ::buildSkeletonWidget()
 
+*  ::buildFindInFiles()
+
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildToolBarPanels()
+   LOCAL qAct, i, s, qSize, qA
+   #if 0
+   LOCAL aColors  := { "rgb( 0,0,212 )"  , "rgb( 0,0,255 )"    , "rgb( 40,40,255 )", ;
+                       "rgb( 80,80,255 )", "rgb( 120,120,255 )", "rgb( 160,160,255 )"  }
+   #else
+   //LOCAL aColors := { "rgb(128,64,64)","rgb(128,0,0)","rgb(255,128,64)","rgb(128,128,64)","rgb(255,128,128)","rgb(225,128,0)" }
+   LOCAL aColors := { "rgb(255,128,64)","rgb(225,225,0)" ,"rgb(0,128,128)",;
+                      "rgb(190,115,65)","rgb(80,175,120)","rgb(17,122,238)" }
+   #endif
+
+   STATIC aPanels := {}
+
+   qSize := QSize():new( 16,16 )
+
+   ::oIde:qTBarPanels := QToolBar():new()
+   ::qTBarPanels:setObjectName( "ToolBar_Panels" )
+   ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea )
+   ::qTBarPanels:setOrientation( Qt_Vertical )
+   ::qTBarPanels:setIconSize( qSize )
+   ::qTBarPanels:setMovable( .f. )
+   ::qTBarPanels:setFloatable( .f. )
+
+   ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
+
+   qAct := QToolButton():new( ::qTBarPanels )
+   qAct:setMaximumHeight( 12 )
+   qAct:setMaximumWidth( 20 )
+   qAct:setTooltip( "Panel: Main" )
+   //qAct:setStyleSheet( "background-color: rgb( 0,0,175 );" )
+   qAct:setStyleSheet( "background-color: rgb( 132,66,0 );" )
+   aadd( aPanels, qAct )
+   qA := QAction():from( ::qTBarPanels:addWidget( qAct ) )
+   qA:setCheckable( .t. )
+   i := 0
+   FOR EACH s IN ::aINI[ INI_VIEWS ]
+*     ::qTBarPanels:addSeparator()
+      qAct := QToolButton():new( ::qTBarPanels )
+      qAct:setMaximumHeight( 12 )
+      qAct:setMaximumWidth( 20 )
+      qAct:setTooltip( "Panel: " + s )
+      qAct:setStyleSheet( "background-color: " + aColors[ ++i ] + ";" )
+      IF i >= len( aColors )
+         i := 0
+      ENDIF
+      aadd( aPanels, qAct )
+      ::qTBarPanels:addWidget( qAct )
+   NEXT
 
    RETURN Self
 
@@ -360,7 +417,7 @@ METHOD IdeDocks:buildProjectTree()
 
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
 
-   //::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
+ * ::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oProjTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
    ::oProjTree:itemSelected  := {|oItem| ::oIde:manageItemSelected( oItem ) }
    ::oProjTree:hbContextMenu := {|mp1, mp2, oXbp| ::oIde:manageProjectContext( mp1, mp2, oXbp ) }
@@ -484,6 +541,7 @@ METHOD IdeDocks:buildHelpWidget()
    ::oHelp:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
    ::oHelp:oWidget:setWindowTitle( "hbIDE Help" )
    ::oHelp:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oHelp:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
 
    ::oIde:qHelpBrw := QTextBrowser():new( ::oHelp:oWidget )
    ::qHelpBrw:show()
@@ -790,6 +848,7 @@ METHOD IdeDocks:buildSkeletonWidget()
    ::oSkeltn:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
    ::oSkeltn:oWidget:setWindowTitle( "Code Skeletons" )
    ::oSkeltn:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oSkeltn:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
 
    ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltn:oWidget ):build()
 
