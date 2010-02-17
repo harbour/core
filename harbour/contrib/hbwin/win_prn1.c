@@ -164,7 +164,6 @@ HB_FUNC( WIN_ENDPAGE )
 HB_FUNC( WIN_TEXTOUT )
 {
    long lResult = 0;
-
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC && HB_ISCHAR( 4 ) )

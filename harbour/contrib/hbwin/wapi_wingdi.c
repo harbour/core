@@ -531,7 +531,6 @@ HB_FUNC( WAPI_GETTEXTALIGN )
 
 HB_FUNC( WAPI_TEXTOUT )
 {
-#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
@@ -540,18 +539,28 @@ HB_FUNC( WAPI_TEXTOUT )
       HB_SIZE nDataLen;
       LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
+#if ! defined( HB_OS_WIN_CE )
       hb_retl( TextOut( hDC, hb_parni( 2 ) /* iRow */,
                              hb_parni( 3 ) /* iCol */,
                              lpData,
                              nDataLen ) );
+#else
+      /* Emulating TextOut() using ExtTextOut(). [vszakats] */
+      hb_retl( ExtTextOut( hDC, hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                0,
+                                NULL,
+                                lpData,
+                                ( UINT ) nDataLen,
+                                NULL ) );
+#endif
 
       hb_strfree( hData );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-#else
+
    hb_retnl( HB_FALSE );
-#endif
 }
 
 HB_FUNC( WAPI_EXTTEXTOUT )
