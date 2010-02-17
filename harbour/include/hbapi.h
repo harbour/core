@@ -1111,6 +1111,8 @@ extern HB_EXPORT HB_BOOL      hb_libFree( PHB_ITEM pDynLib );
 extern HB_EXPORT void *       hb_libHandle( PHB_ITEM pDynLib );
 extern HB_EXPORT void *       hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol );
 
+extern HB_EXPORT void         hb_dynCall( int iFuncFlags, void * pFunction, int iParams, int iFirst, int * piArgFlags );
+
 /* misc */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */

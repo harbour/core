@@ -74,6 +74,8 @@ C_SOURCES := \
    hbbit.c \
    hbbyte.c \
    hbcrc.c \
+   hbdyn.c \
+   hbdynhb.c \
    hbhex.c \
    hbfeof.c \
    hbmd5.c \

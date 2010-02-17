@@ -89,6 +89,7 @@ PRG_HEADERS := \
    getexit.ch \
    hbclass.ch \
    hbdebug.ch \
+   hbdyn.ch \
    hbextcdp.ch \
    hbextlng.ch \
    hbextern.ch \

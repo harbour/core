@@ -49,6 +49,7 @@ PRG_SOURCES := \
    dbgfx.prg \
    decode.prg \
    dirrec.prg \
+   diskhb.prg \
    dumpvar.prg \
    hblog.prg \
    hblognet.prg \

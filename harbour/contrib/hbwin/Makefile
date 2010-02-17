@@ -10,7 +10,6 @@ LIBNAME := hbwin
 
 C_SOURCES := \
    axcore.c \
-   hbdyn.c \
    legacycd.c \
    legacyco.c \
    legacycp.c \
@@ -35,7 +34,6 @@ C_SOURCES := \
    win_bmpd.c \
    win_com.c \
    win_dlg.c \
-   win_dllc.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \
@@ -56,13 +54,11 @@ PRG_SOURCES := \
    win_tprn.prg \
 
 C_HEADERS := \
-   hbdyn.h \
    hbwapi.h \
    hbwin.h \
    hbwinole.h \
 
 PRG_HEADERS := \
-   hbdyn.ch \
    hbwin.ch \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)

@@ -100,7 +100,6 @@ PRG_SOURCES := \
    ctmisc.prg \
    ctrand.prg \
    cttime.prg \
-   diskhb.prg \
    fcopy.prg \
    getinfo.prg \
    getinput.prg \

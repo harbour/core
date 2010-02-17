@@ -13,7 +13,6 @@
  * DirName()     - Ready.
  * DriveType()   - Ready.  corrected <ptucker@sympatico.ca>
  * Volume()      - Ready.
- * GetVolInfo()  - Ready.  This function is new.
  * VolSerial()   - Ready.
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>

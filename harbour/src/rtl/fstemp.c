@@ -145,38 +145,9 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
       pszName[ 0 ] = '\0';
 
       if( pszDir && pszDir[ 0 ] != '\0' )
-      {
          hb_strncpy( pszName, pszDir, HB_PATH_MAX - 1 );
-      }
       else
-      {
-#if defined( HB_OS_WIN )
-         TCHAR lpName[ HB_PATH_MAX ];
-
-         if( GetTempPath( HB_PATH_MAX, lpName ) )
-            HB_TCHAR_GETFROM( pszName, lpName, HB_PATH_MAX );
-         else
-         {
-            pszName[ 0 ] = '.';
-            pszName[ 1 ] = '\0';
-         }
-#else
-         char * pszTmpDir = hb_getenv( "TMPDIR" );
-
-         if( !fsGetTempDirByCase( pszName, pszTmpDir ) )
-         {
-#ifdef P_tmpdir
-            if( !fsGetTempDirByCase( pszName, P_tmpdir ) )
-#endif
-            {
-               pszName[ 0 ] = '.';
-               pszName[ 1 ] = '\0';
-            }
-         }
-         if( pszTmpDir )
-            hb_xfree( pszTmpDir );
-#endif
-      }
+         hb_fsTempDir( pszName );
 
       if( pszName[ 0 ] != '\0' )
       {

@@ -38,9 +38,5 @@ PRG_HEADERS := \
    dll.ch \
    xpp.ch \
 
-ifneq ($(filter $(HB_PLATFORM),win wce),)
-   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
-endif
-
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk

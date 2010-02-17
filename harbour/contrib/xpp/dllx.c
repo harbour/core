@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL handling function (Xbase++ compatible)
+ * Dynamic library handling functions (Xbase++ compatible)
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2006 Paul Tucker <ptucker@sympatico.ca>
@@ -56,10 +56,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-#if defined( HB_OS_WIN )
-
-#include "hbwin.h"
-#include "hbdyn.h"
+#include "hbdyn.ch"
 
 #include "dll.ch"
 
@@ -221,13 +218,3 @@ HB_FUNC( DLLEXECUTECALL )
                   2,
                   NULL );
 }
-
-#else
-
-HB_FUNC( DLLLOAD ) { hb_retnint( 0 ); }
-HB_FUNC( DLLUNLOAD ) { hb_retl( HB_FALSE ); }
-HB_FUNC( DLLCALL ) {}
-HB_FUNC( DLLPREPARECALL ) {}
-HB_FUNC( DLLEXECUTECALL ) {}
-
-#endif
