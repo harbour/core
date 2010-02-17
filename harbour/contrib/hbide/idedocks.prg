@@ -468,10 +468,16 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
+   #if 0
    aadd( aBtns, { "up16"      , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
    aadd( aBtns, { "down16"    , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
    aadd( aBtns, { "cutb16"    , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
    aadd( aBtns, { "copy"      , "Duplicate Current Line", {|| ::oEM:duplicateLine() } } )
+   #endif
+   aadd( aBtns, { "movelineup"   , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
+   aadd( aBtns, { "movelinedown" , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
+   aadd( aBtns, { "deleteline"   , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
+   aadd( aBtns, { "duplicateline", "Duplicate Current Line", {|| ::oEM:duplicateLine() } } )
    FOR EACH a_ IN aBtns
       qTBtn := QToolButton():new()
       qTBtn:setTooltip( a_[ 2 ] )
@@ -485,9 +491,16 @@ METHOD IdeDocks:buildToolBarPanels()
 
 
    aBtns := {}
+   #if 0
    aadd( aBtns, { "commentout"    , "Block Comment"          , {|| ::oEM:blockComment()   } } )
    aadd( aBtns, { "increaseindent", "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
    aadd( aBtns, { "decreaseindent", "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
+   aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
+   aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
+   #endif
+   aadd( aBtns, { "commentout"    , "Block Comment"          , {|| ::oEM:blockComment()   } } )
+   aadd( aBtns, { "blockindentr"  , "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
+   aadd( aBtns, { "blockindentl"  , "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
    aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
    aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
    FOR EACH a_ IN aBtns

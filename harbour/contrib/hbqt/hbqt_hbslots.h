@@ -207,7 +207,7 @@ public slots:
    void cellDoubleClicked( int row, int column );
    void cellEntered( int row, int column );
    void cellPressed( int row, int column );
-   void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );
+   void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );;
    void tabCloseRequested( int index );
    void paintRequested( QPrinter * printer );
    /* QIODevice */
@@ -237,6 +237,11 @@ public slots:
    void undoCommandAdded();
    /* QPlainTextEdit */
    void updateRequest( const QRect & rect, int dy );
+   /* QItemSelectionModel */
+   void currentChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
+   void currentColumnChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
+   void currentRowChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
+   void selectionChanged( const QItemSelection & selected, const QItemSelection & deselected );
    /*  */
 };
 
