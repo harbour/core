@@ -75,6 +75,8 @@
 CLASS IdeDocks INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
+   DATA   aPanels                                 INIT   {}
+   DATA   aBtnLines                               INIT   {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -104,6 +106,8 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD getMarkWidget( nIndex )
    METHOD dispEnvironment( cEnviron )
    METHOD execSkeleton( nMode, p )
+   METHOD addPanelButton( cPanel )
+   METHOD disblePanelButton( qTBtn )
 
    ENDCLASS
 
@@ -129,6 +133,7 @@ METHOD IdeDocks:create( oIde )
 
 METHOD IdeDocks:destroy()
    LOCAL oUI := ::oIde:oSkeltnUI
+   LOCAL qTBtn
 
    ::disconnect( oUI:q_buttonNew   , "clicked()" )
    ::disconnect( oUI:q_buttonRename, "clicked()" )
@@ -142,47 +147,35 @@ METHOD IdeDocks:destroy()
 
    /* Initiate more destructors */
 
+   FOR EACH qTBtn IN ::aPanels
+      ::disconnect( qTBtn, "clicked()" )
+      qTBtn := NIL
+   NEXT
+
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:setView( cView )
-   LOCAL n
+METHOD IdeDocks:buildDockWidgets()
 
-   SWITCH cView
+   ::buildToolBarPanels()
 
-   CASE "New..."
-      cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
-      IF cView != "New..."
-         IF ascan( ::aINI[ INI_VIEWS ], {|e| e == cView } ) > 0
-            MsgBox( "View: " + cView + ", already exists" )
-         ELSE
-            aadd( ::aINI[ INI_VIEWS ], cView )
-            ::qViewsCombo:addItem( cView )
-            ::buildViewWidget()
-            ::oStackedWidget:oWidget:setCurrentIndex( len( ::aINI[ INI_VIEWS ] ) )
-            ::oIde:cWrkView := cView
-         ENDIF
-      ENDIF
-      EXIT
+   ::buildProjectTree()
+   ::buildEditorTree()
+   ::buildFuncList()
+   ::buildCompileResults()
+   ::buildLinkResults()
+   ::buildOutputResults()
+   ::buildHelpWidget()
+   ::buildSkeletonWidget()
 
-   CASE "Main"
-      ::oIde:nCurView   := 0
-      ::oIde:qTabWidget := ::aViews[ ::nCurView + 1 ]:oTabWidget:oWidget
-      ::oIde:oTabParent := ::aViews[ ::nCurView + 1 ]
-      ::oStackedWidget:oWidget:setCurrentIndex( 0 )
-      ::oIde:cWrkView   := "Main"
-      EXIT
+*  ::buildFindInFiles()
 
-   OTHERWISE
-      IF ( n := ascan( ::aINI[ INI_VIEWS ], cView ) ) > 0
-         ::oStackedWidget:oWidget:setCurrentIndex( n )   /* Note: n is always base of zero as main == 1 */
-         ::oIde:cWrkView := cView
-      ENDIF
-      EXIT
-   ENDSWITCH
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
 
-   RETURN NIL
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -323,42 +316,127 @@ METHOD IdeDocks:buildViewWidget()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildDockWidgets()
+METHOD IdeDocks:setView( cView )
+   LOCAL n
 
-   ::buildToolBarPanels()
+   SWITCH cView
 
-   ::buildProjectTree()
-   ::buildEditorTree()
-   ::buildFuncList()
-   ::buildCompileResults()
-   ::buildLinkResults()
-   ::buildOutputResults()
-   ::buildHelpWidget()
-   ::buildSkeletonWidget()
+   CASE "New..."
+      cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
+      IF cView != "New..."
+         IF ascan( ::aINI[ INI_VIEWS ], {|e| e == cView } ) > 0
+            MsgBox( "View: " + cView + ", already exists" )
+         ELSE
+            aadd( ::aINI[ INI_VIEWS ], cView )
+            ::qViewsCombo:addItem( cView )
+            ::buildViewWidget()
+            ::oStackedWidget:oWidget:setCurrentIndex( len( ::aINI[ INI_VIEWS ] ) )
+            ::oIde:cWrkView := cView
+         ENDIF
+      ENDIF
+      EXIT
 
-*  ::buildFindInFiles()
+   CASE "Main"
+      ::oIde:nCurView   := 0
+      ::oIde:qTabWidget := ::aViews[ ::nCurView + 1 ]:oTabWidget:oWidget
+      ::oIde:oTabParent := ::aViews[ ::nCurView + 1 ]
+      ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+      ::oIde:cWrkView   := "Main"
+      EXIT
 
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
+   OTHERWISE
+      IF ( n := ascan( ::aINI[ INI_VIEWS ], cView ) ) > 0
+         ::oStackedWidget:oWidget:setCurrentIndex( n )   /* Note: n is always base of zero as main == 1 */
+         ::oIde:cWrkView := cView
+      ENDIF
+      EXIT
+   ENDSWITCH
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:disblePanelButton( qTBtn )
+   LOCAL q
+
+   FOR EACH q IN ::aPanels
+      q:setEnabled( !( q == qTBtn ) )
+   NEXT
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:addPanelButton( cPanel )
+   LOCAL qTBtn, aColors, nIndex
+   #if 0 /* Royal Blue */
+   aColors := { ;
+      "#000073" , ;
+      "#000080" , ;
+      "#19198D" , ;
+      "#333399" , ;
+      "#4D4DA6" , ;
+      "#6666B3" , ;
+      "#8080C0" , ;
+      "#9999CC" , ;
+      "#B2B2D9" , ;
+      "#CCCCE6" , ;
+      "#E6E6F2"   ;
+      }
+   #endif
+   #if 0 /* Turquish */
+   aColors := { ;
+      "#009999" , ;
+      "#19A3A3" , ;
+      "#33ADAD" , ;
+      "#4DB8B8" , ;
+      "#66C2C2" , ;
+      "#80CCCC" , ;
+      "#99D6D6" , ;
+      "#B2E0E0" , ;
+      "#CCEBEB" , ;
+      "#E6F5F5"   ;
+      }
+   #endif
+
+   aColors := { ;
+      "#996633" , ;
+      "#A37547" , ;
+      "#AD855C" , ;
+      "#B89470" , ;
+      "#C2A385" , ;
+      "#CCB299" , ;
+      "#D6C2AD" , ;
+      "#E0D1C2" , ;
+      "#EBE0D6" , ;
+      "#F5F0EB"   ;
+      }
+
+
+   IF cPanel == "Main"
+      nIndex := 0
+   ELSE
+      nIndex := len( ::aPanels ) - 1
+   ENDIF
+
+   qTBtn := QToolButton():new()
+   qTBtn:setMaximumHeight( 12 )
+   qTBtn:setMaximumWidth( 18 )
+   qTBtn:setTooltip( "Panel: " + cPanel )
+   qTBtn:setStyleSheet( "background-color: " + aColors[ nIndex + 1 ] + " ;" )
+
+   ::connect( qTBtn, "clicked()", {|| ::disblePanelButton( qTBtn ), ::setView( cPanel ) } )
+   ::qTBarPanels:addWidget( qTBtn )
+
+   aadd( ::aPanels, qTBtn )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildToolBarPanels()
-   LOCAL qAct, i, s, qSize, qA
-   #if 0
-   LOCAL aColors  := { "rgb( 0,0,212 )"  , "rgb( 0,0,255 )"    , "rgb( 40,40,255 )", ;
-                       "rgb( 80,80,255 )", "rgb( 120,120,255 )", "rgb( 160,160,255 )"  }
-   #else
-   //LOCAL aColors := { "rgb(128,64,64)","rgb(128,0,0)","rgb(255,128,64)","rgb(128,128,64)","rgb(255,128,128)","rgb(225,128,0)" }
-   LOCAL aColors := { "rgb(255,128,64)","rgb(225,225,0)" ,"rgb(0,128,128)",;
-                      "rgb(190,115,65)","rgb(80,175,120)","rgb(17,122,238)" }
-   #endif
+   LOCAL s, qSize, qTBtn, a_, aBtns
 
-   STATIC aPanels := {}
-
-   qSize := QSize():new( 16,16 )
+   qSize := QSize():new( 20,20 )
 
    ::oIde:qTBarPanels := QToolBar():new()
    ::qTBarPanels:setObjectName( "ToolBar_Panels" )
@@ -367,31 +445,60 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarPanels:setIconSize( qSize )
    ::qTBarPanels:setMovable( .f. )
    ::qTBarPanels:setFloatable( .f. )
+   ::qTBarPanels:setStyleSheet( "QToolBar { spacing: 1px; color: white; margin-top: 2px; }" )
 
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
 
-   qAct := QToolButton():new( ::qTBarPanels )
-   qAct:setMaximumHeight( 12 )
-   qAct:setMaximumWidth( 20 )
-   qAct:setTooltip( "Panel: Main" )
-   //qAct:setStyleSheet( "background-color: rgb( 0,0,175 );" )
-   qAct:setStyleSheet( "background-color: rgb( 132,66,0 );" )
-   aadd( aPanels, qAct )
-   qA := QAction():from( ::qTBarPanels:addWidget( qAct ) )
-   qA:setCheckable( .t. )
-   i := 0
+   ::addPanelButton( "Main" )
    FOR EACH s IN ::aINI[ INI_VIEWS ]
-*     ::qTBarPanels:addSeparator()
-      qAct := QToolButton():new( ::qTBarPanels )
-      qAct:setMaximumHeight( 12 )
-      qAct:setMaximumWidth( 20 )
-      qAct:setTooltip( "Panel: " + s )
-      qAct:setStyleSheet( "background-color: " + aColors[ ++i ] + ";" )
-      IF i >= len( aColors )
-         i := 0
-      ENDIF
-      aadd( aPanels, qAct )
-      ::qTBarPanels:addWidget( qAct )
+      ::addPanelButton( s )
+   NEXT
+
+   /* Toolbar Line Actions */
+   ::oDlg:oWidget:addToolBarBreak( Qt_LeftToolBarArea )
+
+   ::oIde:qTBarLines := QToolBar():new()
+   ::qTBarLines:setObjectName( "ToolBar_Lines" )
+   ::qTBarLines:setAllowedAreas( Qt_LeftToolBarArea )
+   ::qTBarLines:setOrientation( Qt_Vertical )
+   ::qTBarLines:setIconSize( qSize )
+   ::qTBarLines:setMovable( .f. )
+   ::qTBarLines:setFloatable( .f. )
+
+   ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
+
+   aBtns := {}
+   aadd( aBtns, { "up16"      , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
+   aadd( aBtns, { "down16"    , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
+   aadd( aBtns, { "cutb16"    , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
+   aadd( aBtns, { "copy"      , "Duplicate Current Line", {|| ::oEM:duplicateLine() } } )
+   FOR EACH a_ IN aBtns
+      qTBtn := QToolButton():new()
+      qTBtn:setTooltip( a_[ 2 ] )
+      qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+      qTBtn:setMaximumWidth( 20 )
+      qTBtn:setMaximumHeight( 20 )
+      ::connect( qTBtn, "clicked()", a_[ 3 ] )
+      ::qTBarLines:addWidget( qTBtn )
+      aadd( ::aBtnLines, qTBtn )
+   NEXT
+
+
+   aBtns := {}
+   aadd( aBtns, { "commentout"    , "Block Comment"          , {|| ::oEM:blockComment()   } } )
+   aadd( aBtns, { "increaseindent", "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
+   aadd( aBtns, { "decreaseindent", "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
+   aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
+   aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
+   FOR EACH a_ IN aBtns
+      qTBtn := QToolButton():new()
+      qTBtn:setTooltip( a_[ 2 ] )
+      qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+      qTBtn:setMaximumWidth( 20 )
+      qTBtn:setMaximumHeight( 20 )
+      ::connect( qTBtn, "clicked()", a_[ 3 ] )
+      ::qTBarLines:addWidget( qTBtn )
+      aadd( ::aBtnLines, qTBtn )
    NEXT
 
    RETURN Self
