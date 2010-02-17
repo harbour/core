@@ -15,7 +15,11 @@ int main()
    printf("\t    sizeof(short int)=%d\n", (int) sizeof(short int) );
    printf("\t          sizeof(int)=%d\n", (int) sizeof(int) );
    printf("\t     sizeof(long int)=%d\n", (int) sizeof(long int) );
+#if defined( __BORLANDC__ )
+   printf("\tsizeof(long long int)=%d\n", (int) sizeof(__int64) );
+#else
    printf("\tsizeof(long long int)=%d\n", (int) sizeof(long long int) );
+#endif
    printf("\t        sizeof(float)=%d\n", (int) sizeof(float));
    printf("\t       sizeof(double)=%d\n", (int) sizeof(double));
    printf("\t  sizeof(long double)=%d\n", (int) sizeof(long double));

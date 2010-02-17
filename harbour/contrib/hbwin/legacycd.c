@@ -152,7 +152,7 @@ HB_FUNC( GETPROCADDRESS )
          hb_xfree( pszFuncName );
       }
 
-      hb_retptr( hDLL );
+      hb_retptr( lpFunction );
    }
    else
       hb_retptr( NULL );
