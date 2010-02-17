@@ -178,7 +178,7 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
-      p->lfHeight         = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "left"             ) );
+      p->lfHeight         = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfHeight"         ) );
       p->lfWidth          = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfWidth"          ) );
       p->lfEscapement     = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfEscapement"     ) );
       p->lfOrientation    = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfOrientation"    ) );
