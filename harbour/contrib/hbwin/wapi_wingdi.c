@@ -166,6 +166,78 @@ void hbwapi_stor_RECT( RECT * p, int iParam )
    }
 }
 
+LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   void * hfFaceName;
+   LPCTSTR pfFaceName;
+   HB_SIZE nLen;
+
+   memset( p, 0, sizeof( LOGFONT ) );
+
+   if( pStru && HB_IS_HASH( pStru ) )
+   {
+      p->lfHeight         = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "left"             ) );
+      p->lfWidth          = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfWidth"          ) );
+      p->lfEscapement     = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfEscapement"     ) );
+      p->lfOrientation    = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfOrientation"    ) );
+      p->lfWeight         = ( LONG ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lfWeight"         ) );
+      p->lfItalic         = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfItalic"         ) );
+      p->lfUnderline      = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfUnderline"      ) );
+      p->lfStrikeOut      = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfStrikeOut"      ) );
+      p->lfCharSet        = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfCharSet"        ) );
+      p->lfOutPrecision   = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfOutPrecision"   ) );
+      p->lfClipPrecision  = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfClipPrecision"  ) );
+      p->lfQuality        = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfQuality"        ) );
+      p->lfPitchAndFamily = ( BYTE ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lfPitchAndFamily" ) );
+
+      pfFaceName = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lfFaceName" ), &hfFaceName, &nLen );
+
+      if( nLen > ( LF_FACESIZE - 1 ) )
+         nLen = LF_FACESIZE - 1;
+
+      memcpy( p->lfFaceName, pfFaceName, nLen * sizeof( TCHAR ) );
+      p->lfFaceName[ nLen ] = TEXT( '\0' );
+
+      hb_strfree( hfFaceName );
+
+      return p;
+   }
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   {
+      p->lfHeight         = ( LONG ) hb_arrayGetNL( pStru,  1 );
+      p->lfWidth          = ( LONG ) hb_arrayGetNL( pStru,  2 );
+      p->lfEscapement     = ( LONG ) hb_arrayGetNL( pStru,  3 );
+      p->lfOrientation    = ( LONG ) hb_arrayGetNL( pStru,  4 );
+      p->lfWeight         = ( LONG ) hb_arrayGetNL( pStru,  5 );
+      p->lfItalic         = ( BYTE ) hb_arrayGetNI( pStru,  6 );
+      p->lfUnderline      = ( BYTE ) hb_arrayGetNI( pStru,  7 );
+      p->lfStrikeOut      = ( BYTE ) hb_arrayGetNI( pStru,  8 );
+      p->lfCharSet        = ( BYTE ) hb_arrayGetNI( pStru,  9 );
+      p->lfOutPrecision   = ( BYTE ) hb_arrayGetNI( pStru, 10 );
+      p->lfClipPrecision  = ( BYTE ) hb_arrayGetNI( pStru, 11 );
+      p->lfQuality        = ( BYTE ) hb_arrayGetNI( pStru, 12 );
+      p->lfPitchAndFamily = ( BYTE ) hb_arrayGetNI( pStru, 13 );
+
+      pfFaceName = HB_ARRAYGETSTR( pStru, 14, &hfFaceName, &nLen );
+
+      if( nLen > ( LF_FACESIZE - 1 ) )
+         nLen = LF_FACESIZE - 1;
+
+      memcpy( p->lfFaceName, pfFaceName, nLen * sizeof( TCHAR ) );
+      p->lfFaceName[ nLen ] = TEXT( '\0' );
+
+      hb_strfree( hfFaceName );
+
+      return p;
+   }
+   else if( bMandatory )
+      return p;
+
+   return NULL;
+}
+
 DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
@@ -205,10 +277,9 @@ void hbwapi_strfree_DOCINFO( void ** h )
    }
 }
 
-#if ! defined( HB_OS_WIN_CE )
-
 HB_FUNC( __WAPI_DEVMODE_NEW )
 {
+#if ! defined( HB_OS_WIN_CE )
    HANDLE hPrinter;
    void * hDeviceName;
    LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
@@ -233,10 +304,14 @@ HB_FUNC( __WAPI_DEVMODE_NEW )
    }
 
    hb_strfree( hDeviceName );
+#else
+   hb_retptr( NULL );
+#endif
 }
 
 HB_FUNC( __WAPI_DEVMODE_SET )
 {
+#if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
    PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
 
@@ -265,10 +340,12 @@ HB_FUNC( __WAPI_DEVMODE_SET )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( __WAPI_DEVMODE_GET )
 {
+#if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
    PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
 
@@ -286,6 +363,7 @@ HB_FUNC( __WAPI_DEVMODE_GET )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( WAPI_CREATEDC )
@@ -306,6 +384,7 @@ HB_FUNC( WAPI_CREATEDC )
 
 HB_FUNC( WAPI_RESETDC )
 {
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
    PDEVMODE pDEVMODE = hbwapi_par_PDEVMODE( 2 );
 
@@ -313,6 +392,9 @@ HB_FUNC( WAPI_RESETDC )
       hb_retl( ResetDC( hDC, pDEVMODE ) == hDC );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( WAPI_STARTDOC )
@@ -401,22 +483,30 @@ HB_FUNC( WAPI_GETDEVICECAPS )
 
 HB_FUNC( WAPI_SETMAPMODE )
 {
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
       hb_retni( SetMapMode( hDC, hb_parni( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( WAPI_GETMAPMODE )
 {
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
       hb_retni( GetMapMode( hDC ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( WAPI_SETTEXTALIGN )
@@ -441,6 +531,7 @@ HB_FUNC( WAPI_GETTEXTALIGN )
 
 HB_FUNC( WAPI_TEXTOUT )
 {
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
@@ -458,6 +549,9 @@ HB_FUNC( WAPI_TEXTOUT )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retnl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( WAPI_EXTTEXTOUT )
@@ -585,12 +679,17 @@ HB_FUNC( WAPI_CREATESOLIDBRUSH )
 
 HB_FUNC( WAPI_CREATEHATCHBRUSH )
 {
+#if ! defined( HB_OS_WIN_CE )
    hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
                                         ( COLORREF ) hb_parnl( 2 ) /* crColor */ ) );
+#else
+   hb_retptr( NULL );
+#endif
 }
 
 HB_FUNC( WAPI_CREATEFONT )
 {
+#if ! defined( HB_OS_WIN_CE )
    void * hFontFace;
 
    hbwapi_ret_HFONT( CreateFont( hb_parni( 1 ) /* nHeight */,
@@ -609,6 +708,19 @@ HB_FUNC( WAPI_CREATEFONT )
                                  HB_PARSTR( 14, &hFontFace, NULL ) /* lpszFace */ ) );
 
    hb_strfree( hFontFace );
+#else
+   hb_retptr( NULL );
+#endif
+}
+
+HB_FUNC( WAPI_CREATEFONTINDIRECT )
+{
+   LOGFONT p;
+
+   if( hbwapi_par_LOGFONT( &p, 1, HB_TRUE ) )
+      hbwapi_ret_HFONT( CreateFontIndirect( &p ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( WAPI_SELECTOBJECT )
@@ -740,5 +852,3 @@ HB_FUNC( WAPI_ELLIPSE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif

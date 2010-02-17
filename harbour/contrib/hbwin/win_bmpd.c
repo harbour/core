@@ -57,8 +57,6 @@
    #include "png.h"
 #endif
 
-#if ! defined( HB_OS_WIN_CE )
-
 /* .jpeg size detection code. [vszakats] */
 
 #define _JPEG_RET_OK                0
@@ -322,5 +320,3 @@ HB_FUNC( WIN_BITMAPDIMENSIONS )
 
    hb_retl( bRetVal );
 }
-
-#endif

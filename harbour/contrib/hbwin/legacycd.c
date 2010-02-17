@@ -62,6 +62,10 @@
 
 #include "hbdyn.ch"
 
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
+
 #if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
    #define HB_WIN_LEGACY_LEVEL_OFF
 #endif

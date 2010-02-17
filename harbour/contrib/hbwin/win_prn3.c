@@ -52,8 +52,6 @@
 
 #include "hbwin.h"
 
-#if ! defined( HB_OS_WIN_CE )
-
 /* NOTE: Based on hb_strncat() */
 static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 {
@@ -89,6 +87,7 @@ static HB_SIZE hb_tstrlen( const TCHAR * pText )
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 {
+#if ! defined( HB_OS_WIN_CE )
    BOOL bFlag;
    OSVERSIONINFO osv;
    DWORD dwNeeded = 0;
@@ -259,6 +258,9 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
       hb_xfree( pBuffer );
 
    return HB_TRUE;
+#else
+   return HB_FALSE;
+#endif
 }
 
 HB_FUNC( WIN_PRINTERSETDEFAULT )
@@ -270,5 +272,3 @@ HB_FUNC( WIN_PRINTERSETDEFAULT )
    hb_retl( nLen > 0 ? hb_SetDefaultPrinter( pszPrinterName ) : HB_FALSE );
    hb_strfree( hPrinterName );
 }
-
-#endif

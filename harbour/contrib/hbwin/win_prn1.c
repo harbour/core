@@ -76,8 +76,6 @@
    #include "hbwince.h"
 #endif
 
-#if ! defined( HB_OS_WIN_CE )
-
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
@@ -166,6 +164,7 @@ HB_FUNC( WIN_ENDPAGE )
 HB_FUNC( WIN_TEXTOUT )
 {
    long lResult = 0;
+
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC && HB_ISCHAR( 4 ) )
@@ -202,7 +201,7 @@ HB_FUNC( WIN_TEXTOUT )
             if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, aFixed ) )
                lResult = ( long ) ( nLen * iWidth );
          }
-         else if( TextOut( hDC, iRow, iCol, lpData, nLen ) )
+         else if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, NULL ) )
          {
             GetTextExtentPoint32( hDC, lpData, nLen, &sSize ); /* Get the length of the text in device size */
             lResult = ( long ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
@@ -277,9 +276,13 @@ HB_FUNC( WIN_GETDEVICECAPS )
 
 HB_FUNC( WIN_SETMAPMODE )
 {
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retni( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parni( 2 ) ) : 0 );
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( WIN_CREATEFONT )
@@ -288,11 +291,15 @@ HB_FUNC( WIN_CREATEFONT )
 
    if( hDC )
    {
+      LOGFONT lf;
       HFONT hFont;
-      void * hFontFace;
       int iHeight;
       int iWidth;
       int iWeight = hb_parni( 6 );
+
+      void * hfFaceName;
+      LPCTSTR pfFaceName;
+      HB_SIZE nLen;
 
       iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
 
@@ -314,24 +321,37 @@ HB_FUNC( WIN_CREATEFONT )
             iWidth = 0;  /* Use the default font width */
       }
 
-      hFont = CreateFont( iHeight,
-                          iWidth,
-                          0,
-                          0,
-                          iWeight,
-                          ( DWORD ) hb_parl( 8 ) /* dwItalic */,
-                          ( DWORD ) hb_parl( 7 ) /* dwUnderLine */,
-                          0,
-                          ( DWORD ) hb_parnl( 9 ) /* dwCharSet */,
-                          OUT_DEVICE_PRECIS,
-                          CLIP_DEFAULT_PRECIS,
-                          DRAFT_QUALITY,
-                          DEFAULT_PITCH | FF_DONTCARE,
-                          HB_PARSTR( 2, &hFontFace, NULL ) );
+      lf.lfHeight         = ( LONG ) iHeight;
+      lf.lfWidth          = ( LONG ) iWidth;
+      lf.lfEscapement     = 0;
+      lf.lfOrientation    = 0;
+      lf.lfWeight         = ( LONG ) iWeight;
+      lf.lfItalic         = ( BYTE ) hb_parl( 8 );
+      lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
+      lf.lfStrikeOut      = ( BYTE ) 0;
+      lf.lfCharSet        = ( BYTE ) hb_parnl( 9 );
+#if defined( HB_OS_WIN_CE )
+      lf.lfOutPrecision   = ( BYTE ) OUT_DEFAULT_PRECIS;
+#else
+      lf.lfOutPrecision   = ( BYTE ) OUT_DEVICE_PRECIS;
+#endif
+      lf.lfClipPrecision  = ( BYTE ) CLIP_DEFAULT_PRECIS;
+      lf.lfQuality        = ( BYTE ) DRAFT_QUALITY;
+      lf.lfPitchAndFamily = ( BYTE ) DEFAULT_PITCH | FF_DONTCARE;
+
+      pfFaceName = HB_PARSTR( 2, &hfFaceName, &nLen );
+
+      if( nLen > ( LF_FACESIZE - 1 ) )
+         nLen = LF_FACESIZE - 1;
+
+      memcpy( lf.lfFaceName, pfFaceName, nLen * sizeof( TCHAR ) );
+      lf.lfFaceName[ nLen ] = TEXT( '\0' );
+
+      hb_strfree( hfFaceName );
+
+      hFont = CreateFontIndirect( &lf );
 
       hbwapi_ret_HFONT( hFont );
-
-      hb_strfree( hFontFace );
 
       if( hFont )
          SelectObject( hDC, hFont );
@@ -366,6 +386,8 @@ HB_FUNC( WIN_BITMAPSOK )
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
    HB_BOOL bResult = HB_FALSE;
+
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
@@ -467,6 +489,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
       hb_strfree( hDeviceName );
    }
+#endif
 
    hb_retl( bResult );
 }
@@ -474,6 +497,8 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 {
    HB_BOOL bResult = HB_FALSE;
+
+#if ! defined( HB_OS_WIN_CE )
    HANDLE hPrinter;
    void * hDeviceName;
    LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
@@ -506,6 +531,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
    }
 
    hb_strfree( hDeviceName );
+#endif
 
    hb_retl( bResult );
 }
@@ -678,5 +704,3 @@ HB_FUNC( WIN_SETBKMODE )
    }
    hb_retni( iMode );
 }
-
-#endif

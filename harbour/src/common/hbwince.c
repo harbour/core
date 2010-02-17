@@ -272,6 +272,13 @@ int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
 }
 #endif /* __MINGW32CE__ */
 
+#if defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
+void abort( void )
+{
+   TerminateProcess( GetCurrentProcess(), 0 );
+}
+#endif
+
 BOOL WINAPI Arc( HDC h, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8 )
 {
    HB_SYMBOL_UNUSED( h );

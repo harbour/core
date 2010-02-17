@@ -57,7 +57,15 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
-#if ! defined( HB_OS_WIN_CE )
+#ifndef QUERYESCSUPPORT
+#define QUERYESCSUPPORT 8
+#endif
+#ifndef BI_JPEG
+#define BI_JPEG         4
+#endif
+#ifndef BI_PNG
+#define BI_PNG          5
+#endif
 
 /* Functions for loading & printing bitmaps */
 
@@ -215,7 +223,9 @@ HB_FUNC( WIN_DRAWBITMAP )
 
       if( pbmi && pBits )
       {
+#if ! defined( HB_OS_WIN_CE )
          SetStretchBltMode( hDC, COLORONCOLOR );
+#endif
          hb_retl( StretchDIBits( hDC, hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ),
                                  0, 0, iWidth, iHeight, pBits, pbmi,
                                  DIB_RGB_COLORS, SRCCOPY ) != ( int ) GDI_ERROR );
@@ -226,5 +236,3 @@ HB_FUNC( WIN_DRAWBITMAP )
    else
       hb_retl( HB_FALSE );
 }
-
-#endif
