@@ -727,7 +727,7 @@ HB_EXPR_PTR hb_compExprNewMacroSend( HB_EXPR_PTR pMessage, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprNewMethodObject( HB_EXPR_PTR pExpr, HB_EXPR_PTR pObject )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMethodObject(%p,%p,%p)", pExpr, pObject, HB_COMP_PARAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMethodObject(%p,%p)", pExpr, pObject));
 
    pExpr->value.asMessage.pObject = pObject;
 
