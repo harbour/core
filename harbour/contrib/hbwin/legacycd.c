@@ -115,59 +115,6 @@ HB_FUNC( CALLDLLTYPED )
    hb_dynCall( HB_DYN_CALLCONV_STDCALL | hb_parni( 2 ), hb_parptr( 1 ), hb_pcount(), 3, NULL );
 }
 
-static FARPROC hbwin_getprocaddress( HMODULE hDLL, PHB_ITEM pParam, HB_BOOL * pbWIDE )
-{
-#if defined( HB_OS_WIN_CE )
-   void * hStr;
-   HB_SIZE nLen;
-   LPCWSTR szProc = hb_itemGetStrU16( pParam, HB_CDP_ENDIAN_NATIVE, &hStr, &nLen );
-   FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
-                  ( LPCWSTR ) ( HB_PTRDIFF ) ( hb_itemGetNI( pParam ) & 0x0FFFF ) );
-
-   if( ! lpFunction && szProc ) /* try with WIDE suffix? */
-   {
-      LPWSTR pszProcW = ( LPWSTR ) hb_xgrab( ( nLen + 2 ) * sizeof( WCHAR ) );
-      memcpy( pszProcW, szProc, nLen * sizeof( WCHAR ) );
-      pszProcW[ nLen++ ] = L'W';
-      pszProcW[ nLen++ ] = 0;
-      lpFunction = GetProcAddress( hDLL, pszProcW );
-      hb_xfree( pszProcW );
-   }
-   hb_strfree( hStr );
-
-   if( pbWIDE )
-      *pbWIDE = HB_TRUE;
-#else
-   const char * szProc = hb_itemGetCPtr( pParam );
-   FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
-                  ( LPCSTR ) ( HB_PTRDIFF ) ( hb_itemGetNI( pParam ) & 0x0FFFF ) );
-
-   if( pbWIDE )
-      *pbWIDE = HB_FALSE;
-
-#if defined( UNICODE )
-   if( ! lpFunction && szProc ) /* try with WIDE suffix? */
-   {
-      char * pszFuncName = hb_xstrcpy( NULL, szProc, "W", NULL );
-      lpFunction = GetProcAddress( hDLL, pszFuncName );
-      hb_xfree( pszFuncName );
-      if( pbWIDE )
-         *pbWIDE = HB_TRUE;
-   }
-#endif
-
-   if( ! lpFunction && szProc ) /* try with ANSI suffix? */
-   {
-      char * pszFuncName = hb_xstrcpy( NULL, szProc, "A", NULL );
-      lpFunction = GetProcAddress( hDLL, pszFuncName );
-      hb_xfree( pszFuncName );
-      if( pbWIDE )
-         *pbWIDE = HB_FALSE;
-   }
-#endif
-   return lpFunction;
-}
-
 HB_FUNC( GETPROCADDRESS )
 {
    HMODULE hDLL;
@@ -177,7 +124,34 @@ HB_FUNC( GETPROCADDRESS )
    else
       hDLL = ( HMODULE ) hb_parptr( 1 );
 
-   hb_retptr( hDLL ? ( void * ) hbwin_getprocaddress( hDLL, hb_param( 2, HB_IT_ANY ), NULL ) : NULL );
+   if( hDLL )
+   {
+      PHB_ITEM pParam = hb_param( 2, HB_IT_ANY );
+
+      const char * szProc = hb_itemGetCPtr( pParam );
+      FARPROC lpFunction = GetProcAddress( hDLL, szProc ? szProc :
+                     ( LPCSTR ) ( HB_PTRDIFF ) ( hb_itemGetNI( pParam ) & 0x0FFFF ) );
+
+#if defined( UNICODE )
+      if( ! lpFunction && szProc ) /* try with WIDE suffix? */
+      {
+         char * pszFuncName = hb_xstrcpy( NULL, szProc, "W", NULL );
+         lpFunction = GetProcAddress( hDLL, pszFuncName );
+         hb_xfree( pszFuncName );
+      }
+#endif
+
+      if( ! lpFunction && szProc ) /* try with ANSI suffix? */
+      {
+         char * pszFuncName = hb_xstrcpy( NULL, szProc, "A", NULL );
+         lpFunction = GetProcAddress( hDLL, pszFuncName );
+         hb_xfree( pszFuncName );
+      }
+
+      hb_retptr( hDLL );
+   }
+   else
+      hb_retptr( NULL );
 }
 
 #endif
