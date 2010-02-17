@@ -144,7 +144,7 @@ HB_FUNC( DLLCALL )
       if( ( iXPPFlags & DLL_STDCALL ) != 0 )
          iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
       if( ( iXPPFlags & DLL_SYSTEM ) != 0 )
-         iFuncFlags |= HB_DYN_CALLCONV_PASCAL;
+         iFuncFlags |= HB_DYN_CALLCONV_SYSCALL;
 
       hb_dynCall( iFuncFlags,
                   pFunctionPtr,
@@ -195,7 +195,7 @@ HB_FUNC( DLLPREPARECALL )
          if( ( iXPPFlags & DLL_STDCALL ) != 0 )
             xec->iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
          if( ( iXPPFlags & DLL_SYSTEM ) != 0 )
-            xec->iFuncFlags |= HB_DYN_CALLCONV_PASCAL;
+            xec->iFuncFlags |= HB_DYN_CALLCONV_SYSCALL;
 
          hb_retptrGC( xec );
          return;

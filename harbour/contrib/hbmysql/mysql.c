@@ -233,7 +233,7 @@ HB_FUNC( MYSQL_GET_SERVER_VERSION ) /* long mysql_get_server_version( MYSQL * ) 
       {
          if( *szVer >= '0' && *szVer <= '9' )
             lVer = lVer * 10 + *szVer;
-         szVer++;
+         ++szVer;
       }
       hb_retnl( lVer );
 #endif
@@ -348,7 +348,7 @@ HB_FUNC( MYSQL_FETCH_ROW ) /* MYSQL_ROW * mysql_fetch_row( MYSQL_RES * ) */
       {
          unsigned long * lengths = mysql_fetch_lengths( mresult );
          int i;
-         for( i = 0; i < num_fields; i++ )
+         for( i = 0; i < num_fields; ++i )
             hb_arraySetCL( aRow, i + 1, mrow[ i ], lengths[ i ] );
       }
 
@@ -467,11 +467,11 @@ HB_FUNC( MYSQL_LIST_DBS ) /* MYSQL_RES * mysql_list_dbs( MYSQL *, char * wild );
    if( mysql )
    {
       MYSQL_RES * mresult = mysql_list_dbs( mysql, NULL );
-      long nr = ( long ) mysql_num_rows( mresult );
+      HB_SIZE nr = ( HB_SIZE ) mysql_num_rows( mresult );
       PHB_ITEM aDBs = hb_itemArrayNew( nr );
-      long i;
+      HB_SIZE i;
 
-      for( i = 0; i < nr; i++ )
+      for( i = 0; i < nr; ++i )
       {
          MYSQL_ROW mrow = mysql_fetch_row( mresult );
          hb_arraySetC( aDBs, i + 1, mrow[ 0 ] );
@@ -496,7 +496,7 @@ HB_FUNC( MYSQL_LIST_TABLES ) /* MYSQL_RES * mysql_list_tables( MYSQL *, char * w
       PHB_ITEM aTables = hb_itemArrayNew( nr );
       long i;
 
-      for( i = 0; i < nr; i++ )
+      for( i = 0; i < nr; ++i )
       {
          MYSQL_ROW mrow = mysql_fetch_row( mresult );
          hb_arraySetC( aTables, i + 1, mrow[ 0 ] );
@@ -535,6 +535,16 @@ HB_FUNC( MYSQL_GET_SERVER_INFO )
 
    if( mysql )
       hb_retc( mysql_get_server_info( mysql ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_INSERT_ID )
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retnint( mysql_insert_id( mysql );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
