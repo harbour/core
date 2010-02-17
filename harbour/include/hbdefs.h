@@ -259,28 +259,28 @@ typedef HB_UCHAR            HB_BYTE;
 
 #ifndef HB_LONG_LONG_OFF
 
-   #if defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
-      typedef signed long long   HB_LONGLONG;
-      typedef unsigned long long HB_ULONGLONG;
-   #else
+   #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
       typedef __int64            HB_LONGLONG;
       typedef unsigned __int64   HB_ULONGLONG;
+   #else
+      typedef signed long long   HB_LONGLONG;
+      typedef unsigned long long HB_ULONGLONG;
    #endif
 
    #if ! defined( HB_LEGACY_TYPES_OFF )
       #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
          #if !defined( LONGLONG )
-            #if defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
-               typedef signed long long LONGLONG;
-            #else
+            #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
                typedef __int64 LONGLONG;
+            #else
+               typedef signed long long LONGLONG;
             #endif
          #endif
          #if !defined( ULONGLONG )
-            #if defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
-               typedef unsigned long long ULONGLONG;
-            #else
+            #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
                typedef unsigned __int64 ULONGLONG;
+            #else
+               typedef unsigned long long ULONGLONG;
             #endif
          #endif
       #endif
