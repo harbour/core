@@ -197,7 +197,7 @@ HB_FUNC( DLLPREPARECALL )
          hb_retptrGC( xec );
          return;
       }
-      pszErrorText = HB_ISCHAR( 3 ) ? "Invalid function name" : "Invalid function ordinal";
+      pszErrorText = "Invalid function name";
    }
    else
       pszErrorText = HB_ISCHAR( 1 ) ? "Invalid library name" : "Invalid library handle";

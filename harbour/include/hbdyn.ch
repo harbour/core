@@ -56,47 +56,51 @@
 #define HBDYN_CH_
 
 /* C calling conventions */
-#define HB_DYN_CALLCONV_CDECL               0x000000 /* C default */
-#define HB_DYN_CALLCONV_STDCALL             0x100000 /* Windows API default */
-#define HB_DYN_CALLCONV_SYSCALL             0x200000 /* OS/2 32-bit default. */
+#define HB_DYN_CALLCONV_CDECL               0x0000000 /* C default */
+#define HB_DYN_CALLCONV_STDCALL             0x0100000 /* Windows API default */
+#define HB_DYN_CALLCONV_SYSCALL             0x0200000 /* OS/2 32-bit default */
 
 /* String encodings */
-#define HB_DYN_ENC_ASCII                    0x000000
-#define HB_DYN_ENC_UTF8                     0x010000
-#define HB_DYN_ENC_UTF16                    0x040000
-#define HB_DYN_ENC_RAW                      0x080000
+#define HB_DYN_ENC_ASCII                    0x0000000
+#define HB_DYN_ENC_UTF8                     0x0010000
+#define HB_DYN_ENC_UTF16                    0x0020000
+#define HB_DYN_ENC_RAW                      0x0040000
+
+/* Misc options */
+#define HB_DYC_OPT_NONE                     0x0000000
+#define HB_DYC_OPT_NULLTERM                 0x1000000
 
 /* C types */
-#define HB_DYN_CTYPE_DEFAULT                0x000000
-#define HB_DYN_CTYPE_CHAR                   0x000001
-#define HB_DYN_CTYPE_CHAR_UNSIGNED          0x000011
-#define HB_DYN_CTYPE_CHAR_PTR               0x000101
-#define HB_DYN_CTYPE_CHAR_UNSIGNED_PTR      0x000111
-#define HB_DYN_CTYPE_SHORT                  0x000002
-#define HB_DYN_CTYPE_SHORT_UNSIGNED         0x000012
-#define HB_DYN_CTYPE_SHORT_PTR              0x000102
-#define HB_DYN_CTYPE_SHORT_UNSIGNED_PTR     0x000112
-#define HB_DYN_CTYPE_INT                    0x000003
-#define HB_DYN_CTYPE_INT_UNSIGNED           0x000013
-#define HB_DYN_CTYPE_INT_PTR                0x000103
-#define HB_DYN_CTYPE_INT_UNSIGNED_PTR       0x000113
-#define HB_DYN_CTYPE_LONG                   0x000004
-#define HB_DYN_CTYPE_LONG_UNSIGNED          0x000014
-#define HB_DYN_CTYPE_LONG_PTR               0x000104
-#define HB_DYN_CTYPE_LONG_UNSIGNED_PTR      0x000114
-#define HB_DYN_CTYPE_LLONG                  0x000005
-#define HB_DYN_CTYPE_LLONG_UNSIGNED         0x000015
-#define HB_DYN_CTYPE_LLONG_PTR              0x000105
-#define HB_DYN_CTYPE_LLONG_UNSIGNED_PTR     0x000115
-#define HB_DYN_CTYPE_FLOAT                  0x000006
-#define HB_DYN_CTYPE_FLOAT_PTR              0x000106
-#define HB_DYN_CTYPE_DOUBLE                 0x000007
-#define HB_DYN_CTYPE_DOUBLE_PTR             0x000107
-#define HB_DYN_CTYPE_BOOL                   0x000008
-#define HB_DYN_CTYPE_BOOL_PTR               0x000108
-#define HB_DYN_CTYPE_VOID                   0x000009
-#define HB_DYN_CTYPE_VOID_PTR               0x000109
-#define HB_DYN_CTYPE_STRUCTURE              0x00000A
-#define HB_DYN_CTYPE_STRUCTURE_PTR          0x00010A
+#define HB_DYN_CTYPE_DEFAULT                0x0000000
+#define HB_DYN_CTYPE_CHAR                   0x0000001
+#define HB_DYN_CTYPE_CHAR_UNSIGNED          0x0000011
+#define HB_DYN_CTYPE_CHAR_PTR               0x0000101
+#define HB_DYN_CTYPE_CHAR_UNSIGNED_PTR      0x0000111
+#define HB_DYN_CTYPE_SHORT                  0x0000002
+#define HB_DYN_CTYPE_SHORT_UNSIGNED         0x0000012
+#define HB_DYN_CTYPE_SHORT_PTR              0x0000102
+#define HB_DYN_CTYPE_SHORT_UNSIGNED_PTR     0x0000112
+#define HB_DYN_CTYPE_INT                    0x0000003
+#define HB_DYN_CTYPE_INT_UNSIGNED           0x0000013
+#define HB_DYN_CTYPE_INT_PTR                0x0000103
+#define HB_DYN_CTYPE_INT_UNSIGNED_PTR       0x0000113
+#define HB_DYN_CTYPE_LONG                   0x0000004
+#define HB_DYN_CTYPE_LONG_UNSIGNED          0x0000014
+#define HB_DYN_CTYPE_LONG_PTR               0x0000104
+#define HB_DYN_CTYPE_LONG_UNSIGNED_PTR      0x0000114
+#define HB_DYN_CTYPE_LLONG                  0x0000005
+#define HB_DYN_CTYPE_LLONG_UNSIGNED         0x0000015
+#define HB_DYN_CTYPE_LLONG_PTR              0x0000105
+#define HB_DYN_CTYPE_LLONG_UNSIGNED_PTR     0x0000115
+#define HB_DYN_CTYPE_FLOAT                  0x0000006
+#define HB_DYN_CTYPE_FLOAT_PTR              0x0000106
+#define HB_DYN_CTYPE_DOUBLE                 0x0000007
+#define HB_DYN_CTYPE_DOUBLE_PTR             0x0000107
+#define HB_DYN_CTYPE_BOOL                   0x0000008
+#define HB_DYN_CTYPE_BOOL_PTR               0x0000108
+#define HB_DYN_CTYPE_VOID                   0x0000009
+#define HB_DYN_CTYPE_VOID_PTR               0x0000109
+#define HB_DYN_CTYPE_STRUCTURE              0x000000A
+#define HB_DYN_CTYPE_STRUCTURE_PTR          0x000010A
 
 #endif /* HBDYN_CH_ */

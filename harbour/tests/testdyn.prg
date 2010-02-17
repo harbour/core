@@ -79,27 +79,31 @@ PROCEDURE Main()
    ? "------"
    cData := Space( MAX_PATH )
    ? "HB_DYNCALL (BOOL retval): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, hb_bitOr( HB_DYN_CALLCONV_STDCALL, HB_DYN_CTYPE_BOOL ) }, 0, @cData, CSIDL_APPDATA, 0 )
-   ? "@cData: ", cData
+   ? "@cData: ", cData, "<"
    ? "------"
    ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData ) // WRONG
-   ? "cData:", cData
+   ? "cData:", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
    ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
-   ? "@cData: ", cData
+   ? "@cData: ", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
-   ? "@cData: ", cData
+   ? "HB_DYNCALL @ASCII: ", hb_dynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "@cData: ", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL: ", hb_dynCall( { "SHGetFolderPathW", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
-   ? "@cData: ", cData
+   ? "HB_DYNCALL @UTF16: ", hb_dynCall( { "SHGetFolderPathW", hLib, HB_DYN_CALLCONV_STDCALL + HB_DYN_ENC_UTF16 }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "@cData: ", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
-   ? "cData BEFORE: ", cData
+   ? "HB_DYNCALL @UTF16 + psz: ", hb_dynCall( { "SHGetFolderPathW", hLib, HB_DYN_CALLCONV_STDCALL + HB_DYN_ENC_UTF16 + HB_DYC_OPT_NULLTERM }, 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+   ? "@cData: ", cData, "<"
+   ? "------"
+   cData := Space( MAX_PATH )
+   ? "cData BEFORE: ", cData, "<"
    ? "HB_DYNCALL (MISSING @1): ", hb_dynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
-   ? "cData AFTER: ", cData
+   ? "cData AFTER: ", cData, "<"
    ? "------"
    hb_LibFree( hLib )
 
