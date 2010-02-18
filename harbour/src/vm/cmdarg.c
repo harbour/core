@@ -156,16 +156,18 @@ void hb_cmdargUpdate( void )
       }
 
 #elif defined( HB_OS_OS2 )
-      PPIB     ppib = NULL;
-      APIRET   ulrc;
+      {
+         PPIB ppib = NULL;
+         APIRET ulrc;
 
-      ulrc = DosGetInfoBlocks( NULL, &ppib );
-      if ( ulrc == NO_ERROR ) {
-         ulrc = DosQueryModuleName( ppib->pib_hmte,
-                                    HB_SIZEOFARRAY( s_szAppName ),
-                                    s_szAppName );
-         if ( ulrc == NO_ERROR ) {
-            s_argv[ 0 ] = s_szAppName;
+         ulrc = DosGetInfoBlocks( NULL, &ppib );
+         if( ulrc == NO_ERROR )
+         {
+            ulrc = DosQueryModuleName( ppib->pib_hmte,
+                                       HB_SIZEOFARRAY( s_szAppName ),
+                                       s_szAppName );
+            if( ulrc == NO_ERROR )
+               s_argv[ 0 ] = s_szAppName;
          }
       }
 #else
@@ -174,7 +176,7 @@ void hb_cmdargUpdate( void )
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
          HB_BOOL fInPath = HB_FALSE;
 
-         if( !pFName->szPath )
+         if( ! pFName->szPath )
          {
             char * pszPATH = hb_getenv( "PATH" );
 
@@ -183,11 +185,6 @@ void hb_cmdargUpdate( void )
                HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
                hb_fsAddSearchPath( pszPATH, &pSearchPath );
                pNextPath = pSearchPath;
-
-#  ifdef HB_OS_OS2
-               if( !pFName->szExtension )
-                  pFName->szExtension = ".exe";
-#  endif
 
                while( pNextPath )
                {

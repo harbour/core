@@ -68,8 +68,12 @@
 
 #define TTS_BALLOON             0x40 // added by MAG
 
-#define WINVER 0x0500
-#define _WIN32_WINNT 0x0500
+#ifndef GRADIENT_FILL_RECT_H
+#define GRADIENT_FILL_RECT_H    0x00000000
+#endif
+#ifndef TPM_RECURSE
+#define TPM_RECURSE             0x0001L
+#endif
 
 #ifndef _WIN32_IE
     #define _WIN32_IE 0x0400
