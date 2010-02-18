@@ -1,0 +1,187 @@
+/********************************************************************************
+** Form generated from reading ui file 'environments.ui'
+**
+** Created: Wed Feb 17 15:07:44 2010
+**      by: Qt User Interface Compiler version 4.5.3
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef ENVIRONMENTS_H
+#define ENVIRONMENTS_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QTabWidget>
+#include <QtGui/QToolButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QVBoxLayout *verticalLayout;
+    QTabWidget *tabWidget;
+    QWidget *tabCompilers;
+    QGridLayout *gridLayout_5;
+    QPlainTextEdit *editCompilers;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_10;
+    QLineEdit *editPathMk2;
+    QToolButton *buttonPathMk2;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_12;
+    QLineEdit *editPathEnv;
+    QToolButton *buttonPathEnv;
+    QHBoxLayout *horizontalLayout_4;
+    QPushButton *buttonSaveExit;
+    QPushButton *buttonSave;
+    QPushButton *buttonCn;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(367, 519);
+        verticalLayout = new QVBoxLayout(Form);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        tabWidget = new QTabWidget(Form);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabCompilers = new QWidget();
+        tabCompilers->setObjectName(QString::fromUtf8("tabCompilers"));
+        gridLayout_5 = new QGridLayout(tabCompilers);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        editCompilers = new QPlainTextEdit(tabCompilers);
+        editCompilers->setObjectName(QString::fromUtf8("editCompilers"));
+        editCompilers->setLineWrapMode(QPlainTextEdit::NoWrap);
+
+        gridLayout_5->addWidget(editCompilers, 2, 1, 1, 1);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_10 = new QLabel(tabCompilers);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+        label_10->setMinimumSize(QSize(100, 0));
+        label_10->setMaximumSize(QSize(100, 16777215));
+
+        horizontalLayout_2->addWidget(label_10);
+
+        editPathMk2 = new QLineEdit(tabCompilers);
+        editPathMk2->setObjectName(QString::fromUtf8("editPathMk2"));
+
+        horizontalLayout_2->addWidget(editPathMk2);
+
+        buttonPathMk2 = new QToolButton(tabCompilers);
+        buttonPathMk2->setObjectName(QString::fromUtf8("buttonPathMk2"));
+        buttonPathMk2->setMinimumSize(QSize(0, 0));
+
+        horizontalLayout_2->addWidget(buttonPathMk2);
+
+
+        gridLayout_5->addLayout(horizontalLayout_2, 0, 1, 1, 1);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        label_12 = new QLabel(tabCompilers);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+        label_12->setMinimumSize(QSize(100, 0));
+        label_12->setMaximumSize(QSize(100, 16777215));
+
+        horizontalLayout_3->addWidget(label_12);
+
+        editPathEnv = new QLineEdit(tabCompilers);
+        editPathEnv->setObjectName(QString::fromUtf8("editPathEnv"));
+
+        horizontalLayout_3->addWidget(editPathEnv);
+
+        buttonPathEnv = new QToolButton(tabCompilers);
+        buttonPathEnv->setObjectName(QString::fromUtf8("buttonPathEnv"));
+
+        horizontalLayout_3->addWidget(buttonPathEnv);
+
+
+        gridLayout_5->addLayout(horizontalLayout_3, 1, 1, 1, 1);
+
+        tabWidget->addTab(tabCompilers, QString());
+
+        verticalLayout->addWidget(tabWidget);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        buttonSaveExit = new QPushButton(Form);
+        buttonSaveExit->setObjectName(QString::fromUtf8("buttonSaveExit"));
+
+        horizontalLayout_4->addWidget(buttonSaveExit);
+
+        buttonSave = new QPushButton(Form);
+        buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
+        buttonSave->setAutoDefault(false);
+        buttonSave->setDefault(true);
+
+        horizontalLayout_4->addWidget(buttonSave);
+
+        buttonCn = new QPushButton(Form);
+        buttonCn->setObjectName(QString::fromUtf8("buttonCn"));
+        buttonCn->setAutoDefault(false);
+
+        horizontalLayout_4->addWidget(buttonCn);
+
+
+        verticalLayout->addLayout(horizontalLayout_4);
+
+
+        retranslateUi(Form);
+
+        tabWidget->setCurrentIndex(0);
+
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editCompilers->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">HBIDE employes the concept of keeping everything tied together. It means all complier specific environments are kept together in a convinient way and applied as per need.</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+                        "<span style=\" font-size:8pt;\">So here you view/edit all the environments you employ in your applications. At the time you will build the project, a list of stated environments will be presented to choose from.</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This opens up the possibility to experiment with different compilers without re-opening the IDE or setting up the envvars manually.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editCompilers->setStyleSheet(QString());
+        label_10->setText(QApplication::translate("Form", "Path to hbmk2", 0, QApplication::UnicodeUTF8));
+        buttonPathMk2->setText(QString());
+        label_12->setText(QApplication::translate("Form", "Path to hbIDE.env", 0, QApplication::UnicodeUTF8));
+        buttonPathEnv->setText(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tabCompilers), QApplication::translate("Form", "Environments", 0, QApplication::UnicodeUTF8));
+        buttonSaveExit->setText(QApplication::translate("Form", "Save and Exit", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("Form", "Save", 0, QApplication::UnicodeUTF8));
+        buttonCn->setText(QApplication::translate("Form", "Cancel", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // ENVIRONMENTS_H

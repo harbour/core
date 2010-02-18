@@ -1,0 +1,354 @@
+/********************************************************************************
+** Form generated from reading ui file 'findinfilesex.ui'
+**
+** Created: Wed Feb 17 17:38:32 2010
+**      by: Qt User Interface Compiler version 4.5.3
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef FINDINFILESEX_H
+#define FINDINFILESEX_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QListWidget>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QTextEdit>
+#include <QtGui/QToolButton>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout_5;
+    QComboBox *comboFolder;
+    QToolButton *buttonFolder;
+    QHBoxLayout *horizontalLayout_6;
+    QLabel *labelFileTypes;
+    QCheckBox *checkAll;
+    QCheckBox *checkPrg;
+    QCheckBox *checkC;
+    QCheckBox *checkCpp;
+    QCheckBox *checkCh;
+    QCheckBox *checkH;
+    QCheckBox *checkRc;
+    QFrame *line_5;
+    QLabel *labelProjects;
+    QListWidget *listProjects;
+    QFrame *line_3;
+    QLabel *labelExpr;
+    QComboBox *comboExpr;
+    QCheckBox *checkRegEx;
+    QCheckBox *checkMatchCase;
+    QCheckBox *checkListOnly;
+    QLabel *labelRepl;
+    QComboBox *comboRepl;
+    QFrame *line_4;
+    QTextEdit *editResults;
+    QLabel *labelStatus;
+    QHBoxLayout *horizontalLayout_7;
+    QPushButton *buttonFind;
+    QPushButton *buttonRepl;
+    QPushButton *buttonStop;
+    QPushButton *buttonClose;
+    QLabel *labelFolder;
+    QHBoxLayout *horizontalLayout_4;
+    QCheckBox *checkOpenTabs;
+    QSpacerItem *horizontalSpacer;
+    QCheckBox *checkSubProjects;
+    QHBoxLayout *horizontalLayout_8;
+    QCheckBox *checkFolders;
+    QSpacerItem *horizontalSpacer_2;
+    QCheckBox *checkSubFolders;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(404, 443);
+        gridLayout = new QGridLayout(Form);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        comboFolder = new QComboBox(Form);
+        comboFolder->setObjectName(QString::fromUtf8("comboFolder"));
+        comboFolder->setEditable(true);
+
+        horizontalLayout_5->addWidget(comboFolder);
+
+        buttonFolder = new QToolButton(Form);
+        buttonFolder->setObjectName(QString::fromUtf8("buttonFolder"));
+
+        horizontalLayout_5->addWidget(buttonFolder);
+
+
+        gridLayout->addLayout(horizontalLayout_5, 4, 1, 1, 3);
+
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
+        labelFileTypes = new QLabel(Form);
+        labelFileTypes->setObjectName(QString::fromUtf8("labelFileTypes"));
+        labelFileTypes->setMinimumSize(QSize(52, 0));
+        labelFileTypes->setMaximumSize(QSize(52, 16777215));
+
+        horizontalLayout_6->addWidget(labelFileTypes);
+
+        checkAll = new QCheckBox(Form);
+        checkAll->setObjectName(QString::fromUtf8("checkAll"));
+
+        horizontalLayout_6->addWidget(checkAll);
+
+        checkPrg = new QCheckBox(Form);
+        checkPrg->setObjectName(QString::fromUtf8("checkPrg"));
+
+        horizontalLayout_6->addWidget(checkPrg);
+
+        checkC = new QCheckBox(Form);
+        checkC->setObjectName(QString::fromUtf8("checkC"));
+
+        horizontalLayout_6->addWidget(checkC);
+
+        checkCpp = new QCheckBox(Form);
+        checkCpp->setObjectName(QString::fromUtf8("checkCpp"));
+
+        horizontalLayout_6->addWidget(checkCpp);
+
+        checkCh = new QCheckBox(Form);
+        checkCh->setObjectName(QString::fromUtf8("checkCh"));
+
+        horizontalLayout_6->addWidget(checkCh);
+
+        checkH = new QCheckBox(Form);
+        checkH->setObjectName(QString::fromUtf8("checkH"));
+
+        horizontalLayout_6->addWidget(checkH);
+
+        checkRc = new QCheckBox(Form);
+        checkRc->setObjectName(QString::fromUtf8("checkRc"));
+        checkRc->setMaximumSize(QSize(33, 16777215));
+
+        horizontalLayout_6->addWidget(checkRc);
+
+
+        gridLayout->addLayout(horizontalLayout_6, 0, 0, 1, 4);
+
+        line_5 = new QFrame(Form);
+        line_5->setObjectName(QString::fromUtf8("line_5"));
+        line_5->setFrameShape(QFrame::HLine);
+        line_5->setFrameShadow(QFrame::Sunken);
+
+        gridLayout->addWidget(line_5, 1, 0, 1, 4);
+
+        labelProjects = new QLabel(Form);
+        labelProjects->setObjectName(QString::fromUtf8("labelProjects"));
+        labelProjects->setMaximumSize(QSize(52, 16777215));
+        labelProjects->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+
+        gridLayout->addWidget(labelProjects, 2, 0, 1, 1);
+
+        listProjects = new QListWidget(Form);
+        listProjects->setObjectName(QString::fromUtf8("listProjects"));
+        listProjects->setMinimumSize(QSize(0, 60));
+        listProjects->setMaximumSize(QSize(16777215, 60));
+        listProjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        listProjects->setSelectionMode(QAbstractItemView::MultiSelection);
+        listProjects->setSortingEnabled(false);
+
+        gridLayout->addWidget(listProjects, 2, 1, 1, 3);
+
+        line_3 = new QFrame(Form);
+        line_3->setObjectName(QString::fromUtf8("line_3"));
+        line_3->setFrameShape(QFrame::HLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+
+        gridLayout->addWidget(line_3, 9, 0, 1, 4);
+
+        labelExpr = new QLabel(Form);
+        labelExpr->setObjectName(QString::fromUtf8("labelExpr"));
+        labelExpr->setMaximumSize(QSize(52, 16777215));
+
+        gridLayout->addWidget(labelExpr, 11, 0, 1, 1);
+
+        comboExpr = new QComboBox(Form);
+        comboExpr->setObjectName(QString::fromUtf8("comboExpr"));
+        comboExpr->setEditable(true);
+
+        gridLayout->addWidget(comboExpr, 11, 1, 1, 3);
+
+        checkRegEx = new QCheckBox(Form);
+        checkRegEx->setObjectName(QString::fromUtf8("checkRegEx"));
+
+        gridLayout->addWidget(checkRegEx, 12, 1, 1, 1);
+
+        checkMatchCase = new QCheckBox(Form);
+        checkMatchCase->setObjectName(QString::fromUtf8("checkMatchCase"));
+
+        gridLayout->addWidget(checkMatchCase, 12, 2, 1, 1);
+
+        checkListOnly = new QCheckBox(Form);
+        checkListOnly->setObjectName(QString::fromUtf8("checkListOnly"));
+
+        gridLayout->addWidget(checkListOnly, 12, 3, 1, 1);
+
+        labelRepl = new QLabel(Form);
+        labelRepl->setObjectName(QString::fromUtf8("labelRepl"));
+        labelRepl->setMaximumSize(QSize(52, 16777215));
+
+        gridLayout->addWidget(labelRepl, 13, 0, 1, 1);
+
+        comboRepl = new QComboBox(Form);
+        comboRepl->setObjectName(QString::fromUtf8("comboRepl"));
+        comboRepl->setEditable(true);
+
+        gridLayout->addWidget(comboRepl, 13, 1, 1, 3);
+
+        line_4 = new QFrame(Form);
+        line_4->setObjectName(QString::fromUtf8("line_4"));
+        line_4->setFrameShape(QFrame::HLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+
+        gridLayout->addWidget(line_4, 14, 0, 1, 4);
+
+        editResults = new QTextEdit(Form);
+        editResults->setObjectName(QString::fromUtf8("editResults"));
+        editResults->setLineWrapMode(QTextEdit::NoWrap);
+
+        gridLayout->addWidget(editResults, 16, 0, 1, 4);
+
+        labelStatus = new QLabel(Form);
+        labelStatus->setObjectName(QString::fromUtf8("labelStatus"));
+        labelStatus->setFrameShape(QFrame::Panel);
+        labelStatus->setFrameShadow(QFrame::Sunken);
+        labelStatus->setWordWrap(false);
+
+        gridLayout->addWidget(labelStatus, 17, 0, 1, 4);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
+        buttonFind = new QPushButton(Form);
+        buttonFind->setObjectName(QString::fromUtf8("buttonFind"));
+
+        horizontalLayout_7->addWidget(buttonFind);
+
+        buttonRepl = new QPushButton(Form);
+        buttonRepl->setObjectName(QString::fromUtf8("buttonRepl"));
+
+        horizontalLayout_7->addWidget(buttonRepl);
+
+        buttonStop = new QPushButton(Form);
+        buttonStop->setObjectName(QString::fromUtf8("buttonStop"));
+
+        horizontalLayout_7->addWidget(buttonStop);
+
+        buttonClose = new QPushButton(Form);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+
+        horizontalLayout_7->addWidget(buttonClose);
+
+
+        gridLayout->addLayout(horizontalLayout_7, 15, 1, 1, 3);
+
+        labelFolder = new QLabel(Form);
+        labelFolder->setObjectName(QString::fromUtf8("labelFolder"));
+        labelFolder->setMaximumSize(QSize(52, 16777215));
+
+        gridLayout->addWidget(labelFolder, 4, 0, 1, 1);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        checkOpenTabs = new QCheckBox(Form);
+        checkOpenTabs->setObjectName(QString::fromUtf8("checkOpenTabs"));
+
+        horizontalLayout_4->addWidget(checkOpenTabs);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
+
+        checkSubProjects = new QCheckBox(Form);
+        checkSubProjects->setObjectName(QString::fromUtf8("checkSubProjects"));
+
+        horizontalLayout_4->addWidget(checkSubProjects);
+
+
+        gridLayout->addLayout(horizontalLayout_4, 3, 1, 1, 3);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        checkFolders = new QCheckBox(Form);
+        checkFolders->setObjectName(QString::fromUtf8("checkFolders"));
+
+        horizontalLayout_8->addWidget(checkFolders);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_8->addItem(horizontalSpacer_2);
+
+        checkSubFolders = new QCheckBox(Form);
+        checkSubFolders->setObjectName(QString::fromUtf8("checkSubFolders"));
+
+        horizontalLayout_8->addWidget(checkSubFolders);
+
+
+        gridLayout->addLayout(horizontalLayout_8, 5, 1, 1, 3);
+
+
+        retranslateUi(Form);
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        buttonFolder->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        labelFileTypes->setText(QApplication::translate("Form", "File types:", 0, QApplication::UnicodeUTF8));
+        checkAll->setText(QApplication::translate("Form", "all", 0, QApplication::UnicodeUTF8));
+        checkPrg->setText(QApplication::translate("Form", ".prg", 0, QApplication::UnicodeUTF8));
+        checkC->setText(QApplication::translate("Form", ".c", 0, QApplication::UnicodeUTF8));
+        checkCpp->setText(QApplication::translate("Form", ".c++", 0, QApplication::UnicodeUTF8));
+        checkCh->setText(QApplication::translate("Form", ".ch", 0, QApplication::UnicodeUTF8));
+        checkH->setText(QApplication::translate("Form", ".h", 0, QApplication::UnicodeUTF8));
+        checkRc->setText(QApplication::translate("Form", ".rc", 0, QApplication::UnicodeUTF8));
+        labelProjects->setText(QApplication::translate("Form", "Projects:", 0, QApplication::UnicodeUTF8));
+        labelExpr->setText(QApplication::translate("Form", "Expression", 0, QApplication::UnicodeUTF8));
+        checkRegEx->setText(QApplication::translate("Form", "RegEx", 0, QApplication::UnicodeUTF8));
+        checkMatchCase->setText(QApplication::translate("Form", "Match case", 0, QApplication::UnicodeUTF8));
+        checkListOnly->setText(QApplication::translate("Form", "List only", 0, QApplication::UnicodeUTF8));
+        labelRepl->setText(QApplication::translate("Form", "Replace:", 0, QApplication::UnicodeUTF8));
+        labelStatus->setText(QString());
+        buttonFind->setText(QApplication::translate("Form", "Find", 0, QApplication::UnicodeUTF8));
+        buttonRepl->setText(QApplication::translate("Form", "Replace", 0, QApplication::UnicodeUTF8));
+        buttonStop->setText(QApplication::translate("Form", "Stop", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("Form", "Close", 0, QApplication::UnicodeUTF8));
+        labelFolder->setText(QApplication::translate("Form", "Folder:", 0, QApplication::UnicodeUTF8));
+        checkOpenTabs->setText(QApplication::translate("Form", "Include open tabs ", 0, QApplication::UnicodeUTF8));
+        checkSubProjects->setText(QApplication::translate("Form", "Include sub-projects", 0, QApplication::UnicodeUTF8));
+        checkFolders->setText(QApplication::translate("Form", "Include folders", 0, QApplication::UnicodeUTF8));
+        checkSubFolders->setText(QApplication::translate("Form", "Include sub-folders", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // FINDINFILESEX_H

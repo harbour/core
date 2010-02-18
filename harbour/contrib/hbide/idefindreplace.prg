@@ -367,8 +367,8 @@ CLASS IdeFindInFiles INHERIT IdeObject
 
    METHOD new( oIde, lShowOnCreate )
    METHOD create( oIde, lShowOnCreate )
-   METHOD show()
    METHOD destroy()
+   METHOD show()
    METHOD print()
    METHOD paintRequested( pPrinter )
    METHOD find()
@@ -377,6 +377,7 @@ CLASS IdeFindInFiles INHERIT IdeObject
 
    METHOD execEvent( cEvent, p )
    METHOD execContextMenu( p )
+   METHOD buildUI()
 
    ENDCLASS
 
@@ -392,7 +393,6 @@ METHOD IdeFindInFiles:new( oIde, lShowOnCreate )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
-   LOCAL cText, qLineEdit, aProjList, cProj, qItem, n
 
    DEFAULT oIde          TO ::oIde
    DEFAULT lShowOnCreate TO ::lShowOnCreate
@@ -400,13 +400,18 @@ METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
    ::oIde          := oIde
    ::lShowOnCreate := lShowOnCreate
 
-   #ifdef HBIDE_USE_UIC
-   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfiles.uic", ::oIde:oDlg:oWidget ):build()
-   #else
-   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfiles.ui", ::oIde:oDlg:oWidget ):create()
-   #endif
-   ::oUI:setWindowFlags( Qt_Sheet )
+   RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:buildUI()
+   LOCAL cText, qLineEdit, aProjList, cProj, qItem, n
+
+   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfilesex.uic", ::oFindDock:oWidget ):build()
+   ::oUI:hide()
+hbide_dbg( "-------------------------", 0 )
+   ::oFindDock:qtObject := ::oUI
+   ::oFindDock:oWidget:setWidget( ::oUI )
 
    ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
 
@@ -483,22 +488,7 @@ METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
    ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
-   ::oUI:show()
-   #if 0
-   IF ::lShowOnCreate
-      ::show()
-   ENDIF
-   #endif
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeFindInFiles:show()
-
-   IF ! ::lInDockWindow
-      ::oUI:show()
-   ENDIF
-
+hbide_dbg( "-------------------------", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -509,12 +499,15 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
    SWITCH cEvent
 
    CASE "buttonClose"
+      ::oFindDock:hide()
+      #if 0
       IF ::lInDockWindow
-         ::oDockFind:hide()
+         ::oFindDock:hide()
       ELSE
          ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
          ::destroy()
       ENDIF
+      #endif
       EXIT
 
    CASE "comboFind"
@@ -680,7 +673,18 @@ METHOD IdeFindInFiles:destroy()
       qItem := NIL
    NEXT
 
-   ::oUI:destroy()
+   //::oUI:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:show()
+
+   IF empty( ::oUI )
+      ::buildUI()
+   ENDIF
+   ::oFindDock:show()
 
    RETURN Self
 

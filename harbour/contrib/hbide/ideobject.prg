@@ -91,7 +91,7 @@ CLASS IdeObject
    ACCESS oSM                                     INLINE ::oIde:oSM
    ACCESS oEV                                     INLINE ::oIde:oEV
 
-   ACCESS oDockFind                               INLINE ::oIde:oDockFind
+   ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
@@ -166,6 +166,10 @@ CLASS IdeObject
    ACCESS oHelp                                   INLINE ::oIde:oHelp
    ACCESS oSkeltn                                 INLINE ::oIde:oSkeltn
    ACCESS oSkeltnUI                               INLINE ::oIde:oSkeltnUI
+   ACCESS oGeneral                                INLINE ::oIde:oGeneral
+   ACCESS oThemesDock                             INLINE ::oIde:oThemesDock
+   ACCESS oPropertiesDock                         INLINE ::oIde:oPropertiesDock
+   ACCESS oEnvironDock                            INLINE ::oIde:oEnvironDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

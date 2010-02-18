@@ -307,7 +307,7 @@ FUNCTION GetStyleSheet( cWidget )
    CASE cWidget == "QDockWidget"
 
       aadd( txt_, 'QDockWidget {                                                                ' )
-      aadd( txt_, '     border: 1px solid lightgray;                                            ' )
+      aadd( txt_, '     border: 1px solid darkgray;                                             ' )
       aadd( txt_, ' }                                                                           ' )
       //aadd( txt_, 'QDockWidget::title {                                                         ' )
       //aadd( txt_, '     text-align: left; /* align the text to the left */                      ' )

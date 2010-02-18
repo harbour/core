@@ -128,10 +128,10 @@ CLASS HbIde
    DATA   oEV                                              /* Available Environments         */
    DATA   oThemes
    DATA   oFindInFiles
-   DATA   oDockFind
    DATA   oHelp
    DATA   oSkeltn
    DATA   oSkeltnUI
+   DATA   oFindDock
 
    DATA   oUI
 
@@ -201,6 +201,10 @@ CLASS HbIde
    DATA   oLibs
    DATA   oDlls
    DATA   oProps
+   DATA   oGeneral
+   DATA   oThemesDock
+   DATA   oPropertiesDock
+   DATA   oEnvironDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -336,6 +340,7 @@ METHOD HbIde:create( cProjIni )
 
    /* Once create Find/Replace dialog */
    ::oFR := IdeFindReplace():new( Self ):create()
+   ::oFindInFiles := IdeFindInFiles():new( Self ):create()
 
    /* Sources Manager */
    ::oSM := IdeSourcesManager():new( Self ):create()
@@ -385,6 +390,17 @@ METHOD HbIde:create( cProjIni )
 
    /* Display cWrkEnvironment in StatusBar */
    ::oDK:dispEnvironment( ::cWrkEnvironment )
+
+   /* These docks must not be visible even IDE exits them open */
+   ::oPropertiesDock:hide()
+   ::oEnvironDock:hide()
+   ::oThemesDock:hide()
+   ::oSkeltn:hide()
+   ::oHelp:hide()
+   ::oFindDock:hide()
+   ::oDockB1:hide()
+   ::oDockB2:hide()
+   ::oDockB:hide()
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
@@ -450,20 +466,20 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oFindInFiles:destroy()
    ::oFR:destroy()
+   ::oPM:destroy()
    ::oEM:destroy()
    ::oDK:destroy()
-*  ::oAC:destroy()   /* GPF */
    ::oDlg:destroy()
    ::oAC:destroy()
-
-   hbide_dbg( "                                                      " )
-   hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   hbide_dbg( "======================================================" )
 
    ::qCursor := NIL
    ::oFont := NIL
 
+   hbide_dbg( "                                                      " )
+   hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   hbide_dbg( "======================================================" )
    hbide_dbg( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN self
@@ -625,7 +641,7 @@ METHOD HbIde:execEditorAction( cKey )
       ENDIF
       EXIT
    CASE "Search"
-      IdeFindInFiles():new( Self ):create()
+      ::oFindInFiles:show()
       EXIT
    CASE "SetMark"
       ::oEM:setMark()

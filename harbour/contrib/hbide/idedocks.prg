@@ -97,6 +97,10 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildLinkResults()
    METHOD buildOutputResults()
    METHOD buildFindInFiles()
+   METHOD buildGenericDock()
+   METHOD buildThemesDock()
+   METHOD buildPropertiesDock()
+   METHOD buildEnvironDock()
    METHOD outputDoubleClicked( lSelected )
    METHOD buildStatusBar()
    METHOD toggleLeftDocks()
@@ -169,8 +173,11 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildOutputResults()
    ::buildHelpWidget()
    ::buildSkeletonWidget()
-
-*  ::buildFindInFiles()
+   ::buildFindInFiles()
+   ::buildGenericDock()
+   ::buildThemesDock()
+   ::buildPropertiesDock()
+   ::buildEnvironDock()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
@@ -468,12 +475,6 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
-   #if 0
-   aadd( aBtns, { "up16"      , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
-   aadd( aBtns, { "down16"    , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
-   aadd( aBtns, { "cutb16"    , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
-   aadd( aBtns, { "copy"      , "Duplicate Current Line", {|| ::oEM:duplicateLine() } } )
-   #endif
    aadd( aBtns, { "movelineup"   , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
    aadd( aBtns, { "movelinedown" , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
    aadd( aBtns, { "deleteline"   , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
@@ -489,16 +490,11 @@ METHOD IdeDocks:buildToolBarPanels()
       aadd( ::aBtnLines, qTBtn )
    NEXT
 
+   ::qTBarLines:addSeparator()
 
    aBtns := {}
-   #if 0
-   aadd( aBtns, { "commentout"    , "Block Comment"          , {|| ::oEM:blockComment()   } } )
-   aadd( aBtns, { "increaseindent", "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
-   aadd( aBtns, { "decreaseindent", "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
-   aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
-   aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
-   #endif
-   aadd( aBtns, { "commentout"    , "Block Comment"          , {|| ::oEM:blockComment()   } } )
+   aadd( aBtns, { "blockcomment"  , "Block Comment"          , {|| ::oEM:blockComment()   } } )
+   aadd( aBtns, { "streamcomment" , "Stream Comment"         , {|| ::oEM:streamComment()  } } )
    aadd( aBtns, { "blockindentr"  , "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
    aadd( aBtns, { "blockindentl"  , "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
    aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
@@ -921,41 +917,6 @@ METHOD IdeDocks:toggleBottomDocks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildFindInFiles()
-   LOCAL oXbp
-
-   ::oIde:oDockFind := XbpWindow():new()
-   ::oDockFind:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockFind:oWidget:setObjectName( "dockFindInFiles" )
-   ::oDlg:addChild( ::oDockFind )
-   ::oDockFind:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oDockFind:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oDockFind:oWidget:setWindowTitle( "Find in Files" )
-   ::oDockFind:oWidget:setFocusPolicy( Qt_NoFocus )
-
-   ::oIde:oFindInFiles  := IdeFindInFiles():new( ::oIde, .t. )
-   ::oIde:oFindInFiles:lInDockWindow := .t.
-   ::oIde:oFindInFiles:create()
-
-   oXbp := XbpWindow():new( ::oDockFind )
-   oXbp:qtObject := IdeFindInFiles():new( ::oIde, .t. ):create() //::oIde:oFindInFiles
-   oXbp:oWidget  := oXbp:qtObject:oUI
-   //::oIde:oFindInFiles  := XbpWindow():new( ::oDockFind )
-   //::oDockFind:qtObject := ::oIde:oFindInFiles:oUI
-   //::oDockFind:qtObject := HbQtUI():new( ::resPath + "findform.uic", ::oDockFind:oWidget ):build()
-   //::oIde:oFindInFiles:oWidget := ::oDockFind:qtObject
-
-   //::oDockFind:oWidget:setWidget( ::oFindInFiles:oWidget )
-   //::oDockFind:oWidget:setWidget( ::oIde:oFindInFiles:oUI )
-   ::oDockFind:oWidget:setWidget( oXbp:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockFind:oWidget, Qt_Horizontal )
-   ::oDockFind:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeDocks:buildSkeletonWidget()
    LOCAL oUI
 
@@ -1057,3 +1018,117 @@ METHOD IdeDocks:execSkeleton( nMode, p )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildGenericDock()
+
+   ::oIde:oGeneral := XbpWindow():new()
+   ::oGeneral:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oGeneral:oWidget:setObjectName( "General Purpose Dock" )
+   ::oDlg:addChild( ::oGeneral )
+   //::oGeneral:oWidget:setFeatures( QDockWidget_DockWidgetVerticalTitleBar )
+   ::oGeneral:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oGeneral:oWidget:setWindowTitle( "Generic" )
+   ::oGeneral:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oGeneral:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+
+   ::oGeneral:hbLayout := HBPLAYOUT_TYPE_HORZBOX
+   ::oGeneral:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oGeneral:oWidget, Qt_Horizontal )
+
+   ::oGeneral:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildThemesDock()
+
+   ::oIde:oThemesDock := XbpWindow():new()
+   ::oThemesDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oThemesDock:oWidget:setObjectName( "Editor Themes" )
+   ::oDlg:addChild( ::oThemesDock )
+   ::oThemesDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oThemesDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oThemesDock:oWidget:setWindowTitle( "Editor Themes" )
+   ::oThemesDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oThemesDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+
+   ::oThemesDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   ::oThemesDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
+
+   ::oThemesDock:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildPropertiesDock()
+
+   ::oIde:oPropertiesDock := XbpWindow():new()
+   ::oPropertiesDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oPropertiesDock:oWidget:setObjectName( "Project Properties" )
+   ::oDlg:addChild( ::oPropertiesDock )
+   ::oPropertiesDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oPropertiesDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oPropertiesDock:oWidget:setWindowTitle( "Project Properties" )
+   ::oPropertiesDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oPropertiesDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+
+   ::oPropertiesDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   ::oPropertiesDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
+
+   ::oPropertiesDock:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildEnvironDock()
+
+   ::oIde:oEnvironDock := XbpWindow():new()
+   ::oEnvironDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oEnvironDock:oWidget:setObjectName( "Compiler Environments" )
+   ::oDlg:addChild( ::oEnvironDock )
+   ::oEnvironDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oEnvironDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oEnvironDock:oWidget:setWindowTitle( "Compiler Environments" )
+   ::oEnvironDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oEnvironDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+
+   ::oEnvironDock:hbLayout := HBPLAYOUT_TYPE_HORZBOX
+   ::oEnvironDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
+   ::oEnvironDock:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildFindInFiles()
+
+   ::oIde:oFindDock := XbpWindow():new()
+   ::oFindDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oFindDock:oWidget:setObjectName( "Find In Files" )
+   ::oDlg:addChild( ::oFindDock )
+   ::oFindDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oFindDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oFindDock:oWidget:setWindowTitle( "Find In Files" )
+   ::oFindDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oFindDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+
+   ::oFindDock:hbLayout := HBPLAYOUT_TYPE_HORZBOX
+   ::oFindDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
+   ::oFindDock:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

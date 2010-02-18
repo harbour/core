@@ -363,6 +363,8 @@ METHOD IdeProject:expandMeta( s )
 
 CLASS IdeProjManager INHERIT IdeObject
 
+   DATA   oUIEnv
+
    DATA   cSaveTo
    DATA   aPrjProps                               INIT {}
 
@@ -436,6 +438,8 @@ METHOD IdeProjManager:create( oIDE )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:destroy()
+
+   //::oUIEnv:destroy()
 
    RETURN Self
 
@@ -549,73 +553,84 @@ METHOD IdeProjManager:fetchProperties()
    LOCAL cLukupPng
    LOCAL cPrjLoc := hb_dirBase() + "projects"
 
-   #ifdef HBIDE_USE_UIC
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.uic", ::oDlg:oWidget ):build()
-   #else
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget ):create()
-   #endif
+   IF empty( ::oUI )
+      ::oUI := HbQtUI():new( ::resPath + "projectpropertiesex.uic", ::oDlg:oWidget ):build()
 
-   ::oUI:q_tabWidget:removeTab( 4 )
+      ::oPropertiesDock:oWidget:setWidget( ::oUI )
+      ::oPropertiesDock:qtObject := ::oUI
 
-   ::oUI:q_comboPrjType:addItem( "Executable" )
-   ::oUI:q_comboPrjType:addItem( "Library"    )
-   ::oUI:q_comboPrjType:addItem( "Dll"        )
+      ::oUI:q_comboPrjType:addItem( "Executable" )
+      ::oUI:q_comboPrjType:addItem( "Library"    )
+      ::oUI:q_comboPrjType:addItem( "Dll"        )
 
-   DO CASE
-   CASE empty( ::aPrjProps )
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
-   CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-      ::oUI:q_comboPrjType:setCurrentIndex( 1 )
-   CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-      ::oUI:q_comboPrjType:setCurrentIndex( 2 )
-   OTHERWISE
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
-   ENDCASE
+      cLukupPng := ::resPath + "folder.png"
+      //
+      ::oUI:q_buttonChoosePrjLoc:setIcon( cLukupPng )
+      ::oUI:q_buttonChooseWd    :setIcon( cLukupPng )
+      ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
+      ::oUI:q_buttonBackup      :setIcon( cLukupPng )
+      ::oUI:q_buttonXmate       :setIcon( ::resPath + "xmate.png" )
+      ::oUI:q_buttonHbp         :setIcon( ::resPath + "open.png"  )
 
-   cLukupPng := ::resPath + "folder.png"
-   //
-   ::oUI:q_buttonChoosePrjLoc:setIcon( cLukupPng )
-   ::oUI:q_buttonChooseWd    :setIcon( cLukupPng )
-   ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
-   ::oUI:q_buttonBackup      :setIcon( cLukupPng )
-   ::oUI:q_buttonXmate       :setIcon( ::resPath + "xmate.png" )
-   ::oUI:q_buttonHbp         :setIcon( ::resPath + "open.png"  )
+      ::oUI:q_buttonSelect :setIcon( ::resPath + "open.png"       )
+      ::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
+      ::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
+      ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
 
-   ::oUI:q_buttonSelect :setIcon( ::resPath + "open.png"       )
-   ::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
-   ::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
-   ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
+      ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } ) //oWidget:close()  } )
+      ::oUI:signal( "buttonSave"        , "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
+      ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
+      //
+      ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()         } )
+      ::oUI:signal( "buttonSort"        , "clicked()", {|| ::sortSources( "az"  ) } )
+      ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
+      ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
+      //
+      ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|p| ::updateHbp( p ) } )
+      ::oUI:signal( "editMetaData"      , "textChanged()"      , {|| ::updateMetaData() } )
 
-   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oUI:done( 0 ) } ) //oWidget:close()  } )
-   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
-   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
-   //
-   ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()         } )
-   ::oUI:signal( "buttonSort"        , "clicked()", {|| ::sortSources( "az"  ) } )
-   ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
-   ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
-   //
-   ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|p| ::updateHbp( p ) } )
-   ::oUI:signal( "editMetaData"      , "textChanged()"      , {|| ::updateMetaData() } )
+      ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
+      ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
+      ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
+      ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
+      ::oUI:signal( "buttonXmate"       , "clicked()", {|| ::loadXhpProject() } )
+      ::oUI:signal( "buttonHbp"         , "clicked()", {|| ::loadHbpProject() } )
 
-   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
-   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
-   ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
-   ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
-   ::oUI:signal( "buttonXmate"       , "clicked()", {|| ::loadXhpProject() } )
-   ::oUI:signal( "buttonHbp"         , "clicked()", {|| ::loadHbpProject() } )
-
-   ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
+      ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
+   ENDIF
 
    IF empty( ::aPrjProps )
-      /*
-       * When they click on the button to confirm the name of the project, we
-       * will adjust the other parameters. (vailtoms)
-       * 25/12/2009 - 20:40:22
-       */
-      ::oUI:q_editPrjLoctn:setText( hbide_pathNormalized( cPrjLoc, .F. ) )
+      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+
+      ::oUI:q_editPrjTitle :setText( "" )
+      ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( cPrjLoc, .F. ) )
+      ::oUI:q_editWrkFolder:setText( "" )
+      ::oUI:q_editDstFolder:setText( "" )
+      ::oUI:q_editBackup   :setText( "" )
+      ::oUI:q_editOutName  :setText( "" )
+
+      ::oUI:q_editFlags    :setPlainText( "" )
+      ::oUI:q_editSources  :setPlainText( "" )
+      ::oUI:q_editMetaData :setPlainText( "" )
+
+      ::oUI:q_editLaunchParams:setText( "" )
+      ::oUI:q_editLaunchExe:setText( "" )
+      ::oUI:q_editHbp:setPlainText( "" )
+
+      ::oUI:oWidget:setWindowTitle( 'New Project...' )
 
    ELSE
+      DO CASE
+      CASE empty( ::aPrjProps )
+         ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+      CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
+         ::oUI:q_comboPrjType:setCurrentIndex( 1 )
+      CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
+         ::oUI:q_comboPrjType:setCurrentIndex( 2 )
+      OTHERWISE
+         ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+      ENDCASE
+
       ::oUI:q_editPrjTitle :setText( ::oProject:applyMeta( ::oProject:title        ) )
       ::oUI:q_editPrjLoctn :setText( ::oProject:applyMeta( ::oProject:location     ) )
       ::oUI:q_editWrkFolder:setText( ::oProject:applyMeta( ::oProject:wrkDirectory ) )
@@ -629,27 +644,13 @@ METHOD IdeProjManager:fetchProperties()
 
       ::oUI:q_editLaunchParams:setText( ::oProject:launchParams )
       ::oUI:q_editLaunchExe:setText( ::oProject:launchProgram )
-      #if 0
-      ::oUI:q_editHbp:setPlainText()
-      #endif
-   ENDIF
 
-   IF empty( ::aPrjProps )
-      ::oUI:oWidget:setWindowTitle( 'New Project...' )
-   ELSE
+      ::oUI:q_editHbp:setPlainText( "" )
+
       ::oUI:oWidget:setWindowTitle( 'Properties for "' + ::oUI:q_editPrjTitle:Text() + '"' )
    ENDIF
 
-   ::setPosAndSizeByIni( ::oUI:oWidget, PropsDialogGeometry )
-   //
-   ::oUI:exec()
-   //
-//   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
-   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI )
-
-   ::oUI:destroy()
-
-   ::manageFocusInEditor()
+   ::oPropertiesDock:show()
 
    RETURN Self
 
@@ -742,7 +743,7 @@ METHOD IdeProjManager:save( lCanClose )
    ENDIF
 
    IF lCanClose .AND. lOk
-      ::oUI:done( 1 )
+      ::oPropertiesDock:hide()
    ENDIF
 
    RETURN lOk
@@ -962,53 +963,28 @@ METHOD IdeProjManager:loadXhpProject()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:manageEnvironments()
-   LOCAL cLukupPng
 
-   #ifdef HBIDE_USE_UIC
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.uic", ::oDlg:oWidget ):build()
-   #else
-   ::oUI := HbQtUI():new( ::resPath + "projectproperties.ui", ::oDlg:oWidget ):create()
-   #endif
+   IF empty( ::oUIEnv )
+      ::oUIEnv := HbQtUI():new( ::resPath + "environments.uic", ::oEnvironDock:oWidget ):build()
+      ::oEnvironDock:qtObject := ::oUIEnv
+      ::oEnvironDock:oWidget:setWidget( ::oUIEnv )
 
-   cLukupPng := ::resPath + "folder.png"
-   //
-   ::oUI:q_buttonPathMk2:setIcon( cLukupPng )
-   ::oUI:q_buttonPathEnv:setIcon( cLukupPng )
-   ::oUI:q_buttonSaveEnv:setIcon( ::resPath + "save.png" )
+      ::oUIEnv:q_buttonPathMk2:setIcon( ::resPath + "folder.png" )
+      ::oUIEnv:q_buttonPathEnv:setIcon( ::resPath + "folder.png" )
 
-   ::oUI:q_buttonSaveEnv:hide()
-   ::oUI:q_tabWidget:removeTab( 0 )
-   ::oUI:q_tabWidget:removeTab( 0 )
-   ::oUI:q_tabWidget:removeTab( 0 )
-   ::oUI:q_tabWidget:removeTab( 0 )
-   //::oUI:q_tabFiles:oWidget:hide()
-   //::oUI:q_tabMeta:oWidget:hide()
-   //::oUI:q_tabHbp:oWidget:hide()
+      ::oUIEnv:signal( "buttonCn"      , "clicked()", {|| ::oEnvironDock:hide() } )
+      ::oUIEnv:signal( "buttonSave"    , "clicked()", {|| ::saveEnvironments()     } )
+      ::oUIEnv:signal( "buttonSaveExit", "clicked()", {|| ::saveEnvironments(), ::oEnvironDock:hide() } )
+      ::oUIEnv:signal( "buttonPathMk2" , "clicked()", {|| ::PromptForPath( 'editPathMk2', 'Choose hbmk2 Executable Folder...'   ) } )
+      ::oUIEnv:signal( "buttonPathEnv" , "clicked()", {|| ::PromptForPath( 'editPathEnv', 'Choose hbIDE.env Folder...'   ), ;
+            ::oUIEnv:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oUIEnv:q_editPathEnv:text(), "hbide.env" ) ) ) } )
+   ENDIF
 
-   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::oUI:oWidget:close()  } )
-   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::saveEnvironments()   } )
-   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::saveEnvironments(), ::oUI:oWidget:close() } )
- * ::oUI:signal( "buttonSaveEnv"     , "clicked()", {|| ::saveEnvironments() } )
-   ::oUI:signal( "buttonPathMk2"     , "clicked()", {|| ::PromptForPath( 'editPathMk2'  , 'Choose hbmk2 Executable Folder...'   ) } )
-   ::oUI:signal( "buttonPathEnv"     , "clicked()", {|| ::PromptForPath( 'editPathEnv'  , 'Choose hbIDE.env Folder...'   ), ;
-      ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oUI:q_editPathEnv:text(), "hbide.env" ) ) ) } )
+   ::oUIEnv:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
+   ::oUIEnv:q_editPathEnv  :setText( ::aINI[ INI_HBIDE, PathEnv ] )
+   ::oUIEnv:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) ) )
 
-   ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
-   ::oUI:q_editPathEnv  :setText( ::aINI[ INI_HBIDE, PathEnv ] )
-   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) ) )
-
-   ::oUI:oWidget:setWindowTitle( 'Setup Build Environments' )
-
-   ::setPosAndSizeByIni( ::oUI:oWidget, PropsDialogGeometry )
-   //
-   ::oUI:exec()
-   //
-   ::aIni[ INI_HBIDE, PropsDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
-
-   ::oUI:destroy()
-   ::oUI := NIL
-
-   ::manageFocusInEditor()
+   ::oEnvironDock:show()
 
    RETURN Self
 
@@ -1017,8 +993,8 @@ METHOD IdeProjManager:manageEnvironments()
 METHOD IdeProjManager:saveEnvironments()
    LOCAL cText, cPathMk2, cPathEnv
 
-   cPathMk2 := ::oUI:q_editPathMk2:text()
-   cPathEnv := ::oUI:q_editPathEnv:text()
+   cPathMk2 := ::oUIEnv:q_editPathMk2:text()
+   cPathEnv := ::oUIEnv:q_editPathEnv:text()
 
    ::oIDE:aINI[ INI_HBIDE, PathMk2 ] := cPathMk2
    ::oIDE:aINI[ INI_HBIDE, PathEnv ] := cPathEnv
@@ -1026,7 +1002,7 @@ METHOD IdeProjManager:saveEnvironments()
    ::oIDE:cWrkPathMk2 := cPathMk2
    ::oIDE:cWrkPathEnv := cPathEnv
 
-   IF !empty( cText := ::oUI:q_editCompilers:toPlainText() )
+   IF !empty( cText := ::oUIEnv:q_editCompilers:toPlainText() )
       hb_MemoWrit( hbide_pathFile( cPathEnv, "hbide.env" ), cText )
    ENDIF
 

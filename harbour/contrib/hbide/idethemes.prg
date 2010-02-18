@@ -412,13 +412,10 @@ METHOD IdeThemes:fetch()
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      #ifdef HBIDE_USE_UIC
-      ::oUI := HbQtUI():new( ::oIde:resPath + "themes.uic", ::oIde:oDlg:oWidget ):build()
-      #else
-      ::oUI := HbQtUI():new( ::oIde:resPath + "themes.ui", ::oIde:oDlg:oWidget ):create()
-      #endif
+      ::oUI := HbQtUI():new( ::oIde:resPath + "themesex.uic", ::oThemesDock:oWidget ):build()
 
-      ::oUI:setWindowFlags( Qt_Sheet )
+      ::oThemesDock:oWidget:setWidget( ::oUI )
+      ::oThemesDock:qtObject := ::oUI
 
       ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|i| ::nCurTheme := i+1, ::setTheme( i ) } )
       ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|i| ::nCurItem  := i+1, ::setAttributes( i ) } )
@@ -433,7 +430,7 @@ METHOD IdeThemes:fetch()
       ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
 
       ::oUI:signal( "buttonClose"   , "clicked()", ;
-            {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
+         {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oThemesDock:hide() } )
 
       ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
 
@@ -469,9 +466,10 @@ METHOD IdeThemes:fetch()
 
       ::setTheme()
       ::setAttributes()
+
    ENDIF
 
-   ::oUI:show()
+   ::oThemesDock:show()
 
    RETURN Self
 

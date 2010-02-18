@@ -1,0 +1,539 @@
+/********************************************************************************
+** Form generated from reading ui file 'projectpropertiesex.ui'
+**
+** Created: Wed Feb 17 15:22:01 2010
+**      by: Qt User Interface Compiler version 4.5.3
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef PROJECTPROPERTIESEX_H
+#define PROJECTPROPERTIESEX_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QTabWidget>
+#include <QtGui/QToolButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QVBoxLayout *verticalLayout;
+    QTabWidget *tabWidget;
+    QWidget *tabGeneral;
+    QGridLayout *gridLayout;
+    QLabel *label;
+    QComboBox *comboPrjType;
+    QLabel *label_2;
+    QLineEdit *editPrjTitle;
+    QLabel *label_3;
+    QLineEdit *editPrjLoctn;
+    QLabel *label_4;
+    QLineEdit *editWrkFolder;
+    QLabel *label_5;
+    QLineEdit *editDstFolder;
+    QLabel *label_9;
+    QPlainTextEdit *editFlags;
+    QLabel *label_7;
+    QLineEdit *editLaunchParams;
+    QLabel *label_8;
+    QLineEdit *editLaunchExe;
+    QLabel *label_13;
+    QLineEdit *editBackup;
+    QLineEdit *editOutName;
+    QLabel *label_6;
+    QToolButton *buttonChoosePrjLoc;
+    QToolButton *buttonBackup;
+    QToolButton *buttonChooseDest;
+    QToolButton *buttonChooseWd;
+    QHBoxLayout *horizontalLayout_7;
+    QToolButton *buttonHbp;
+    QToolButton *buttonXmate;
+    QSpacerItem *horizontalSpacer;
+    QWidget *tabFiles;
+    QGridLayout *gridLayout_2;
+    QPlainTextEdit *editSources;
+    QToolButton *buttonSelect;
+    QToolButton *buttonSort;
+    QToolButton *buttonSortZA;
+    QToolButton *buttonSortOrg;
+    QWidget *tabMeta;
+    QGridLayout *gridLayout_3;
+    QPlainTextEdit *editMetaHelp;
+    QPlainTextEdit *editMetaData;
+    QWidget *tabHbp;
+    QGridLayout *gridLayout_4;
+    QPlainTextEdit *editHbp;
+    QHBoxLayout *horizontalLayout_4;
+    QPushButton *buttonSaveExit;
+    QPushButton *buttonSave;
+    QPushButton *buttonCn;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(324, 434);
+        verticalLayout = new QVBoxLayout(Form);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        tabWidget = new QTabWidget(Form);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabGeneral = new QWidget();
+        tabGeneral->setObjectName(QString::fromUtf8("tabGeneral"));
+        gridLayout = new QGridLayout(tabGeneral);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        label = new QLabel(tabGeneral);
+        label->setObjectName(QString::fromUtf8("label"));
+        QFont font;
+        font.setBold(true);
+        font.setWeight(75);
+        label->setFont(font);
+        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label, 1, 0, 1, 1);
+
+        comboPrjType = new QComboBox(tabGeneral);
+        comboPrjType->setObjectName(QString::fromUtf8("comboPrjType"));
+        comboPrjType->setEditable(false);
+
+        gridLayout->addWidget(comboPrjType, 1, 1, 1, 1);
+
+        label_2 = new QLabel(tabGeneral);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+
+        editPrjTitle = new QLineEdit(tabGeneral);
+        editPrjTitle->setObjectName(QString::fromUtf8("editPrjTitle"));
+
+        gridLayout->addWidget(editPrjTitle, 2, 1, 1, 1);
+
+        label_3 = new QLabel(tabGeneral);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_3, 3, 0, 1, 1);
+
+        editPrjLoctn = new QLineEdit(tabGeneral);
+        editPrjLoctn->setObjectName(QString::fromUtf8("editPrjLoctn"));
+
+        gridLayout->addWidget(editPrjLoctn, 3, 1, 1, 1);
+
+        label_4 = new QLabel(tabGeneral);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_4, 5, 0, 1, 1);
+
+        editWrkFolder = new QLineEdit(tabGeneral);
+        editWrkFolder->setObjectName(QString::fromUtf8("editWrkFolder"));
+
+        gridLayout->addWidget(editWrkFolder, 5, 1, 1, 1);
+
+        label_5 = new QLabel(tabGeneral);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_5, 6, 0, 1, 1);
+
+        editDstFolder = new QLineEdit(tabGeneral);
+        editDstFolder->setObjectName(QString::fromUtf8("editDstFolder"));
+
+        gridLayout->addWidget(editDstFolder, 6, 1, 1, 1);
+
+        label_9 = new QLabel(tabGeneral);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+        label_9->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_9, 9, 0, 1, 1);
+
+        editFlags = new QPlainTextEdit(tabGeneral);
+        editFlags->setObjectName(QString::fromUtf8("editFlags"));
+        editFlags->setLineWrapMode(QPlainTextEdit::NoWrap);
+
+        gridLayout->addWidget(editFlags, 9, 1, 1, 2);
+
+        label_7 = new QLabel(tabGeneral);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_7, 10, 0, 1, 1);
+
+        editLaunchParams = new QLineEdit(tabGeneral);
+        editLaunchParams->setObjectName(QString::fromUtf8("editLaunchParams"));
+
+        gridLayout->addWidget(editLaunchParams, 10, 1, 1, 2);
+
+        label_8 = new QLabel(tabGeneral);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+        label_8->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_8, 11, 0, 1, 1);
+
+        editLaunchExe = new QLineEdit(tabGeneral);
+        editLaunchExe->setObjectName(QString::fromUtf8("editLaunchExe"));
+
+        gridLayout->addWidget(editLaunchExe, 11, 1, 1, 2);
+
+        label_13 = new QLabel(tabGeneral);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+        label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_13, 8, 0, 1, 1);
+
+        editBackup = new QLineEdit(tabGeneral);
+        editBackup->setObjectName(QString::fromUtf8("editBackup"));
+
+        gridLayout->addWidget(editBackup, 8, 1, 1, 1);
+
+        editOutName = new QLineEdit(tabGeneral);
+        editOutName->setObjectName(QString::fromUtf8("editOutName"));
+
+        gridLayout->addWidget(editOutName, 4, 1, 1, 1);
+
+        label_6 = new QLabel(tabGeneral);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label_6, 4, 0, 1, 1);
+
+        buttonChoosePrjLoc = new QToolButton(tabGeneral);
+        buttonChoosePrjLoc->setObjectName(QString::fromUtf8("buttonChoosePrjLoc"));
+
+        gridLayout->addWidget(buttonChoosePrjLoc, 3, 2, 1, 1);
+
+        buttonBackup = new QToolButton(tabGeneral);
+        buttonBackup->setObjectName(QString::fromUtf8("buttonBackup"));
+
+        gridLayout->addWidget(buttonBackup, 8, 2, 1, 1);
+
+        buttonChooseDest = new QToolButton(tabGeneral);
+        buttonChooseDest->setObjectName(QString::fromUtf8("buttonChooseDest"));
+
+        gridLayout->addWidget(buttonChooseDest, 6, 2, 1, 1);
+
+        buttonChooseWd = new QToolButton(tabGeneral);
+        buttonChooseWd->setObjectName(QString::fromUtf8("buttonChooseWd"));
+
+        gridLayout->addWidget(buttonChooseWd, 5, 2, 1, 1);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
+        buttonHbp = new QToolButton(tabGeneral);
+        buttonHbp->setObjectName(QString::fromUtf8("buttonHbp"));
+
+        horizontalLayout_7->addWidget(buttonHbp);
+
+        buttonXmate = new QToolButton(tabGeneral);
+        buttonXmate->setObjectName(QString::fromUtf8("buttonXmate"));
+
+        horizontalLayout_7->addWidget(buttonXmate);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer);
+
+
+        gridLayout->addLayout(horizontalLayout_7, 0, 1, 1, 1);
+
+        tabWidget->addTab(tabGeneral, QString());
+        tabFiles = new QWidget();
+        tabFiles->setObjectName(QString::fromUtf8("tabFiles"));
+        gridLayout_2 = new QGridLayout(tabFiles);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        editSources = new QPlainTextEdit(tabFiles);
+        editSources->setObjectName(QString::fromUtf8("editSources"));
+        editSources->setLineWrapMode(QPlainTextEdit::NoWrap);
+
+        gridLayout_2->addWidget(editSources, 1, 1, 1, 11);
+
+        buttonSelect = new QToolButton(tabFiles);
+        buttonSelect->setObjectName(QString::fromUtf8("buttonSelect"));
+
+        gridLayout_2->addWidget(buttonSelect, 0, 1, 1, 1);
+
+        buttonSort = new QToolButton(tabFiles);
+        buttonSort->setObjectName(QString::fromUtf8("buttonSort"));
+
+        gridLayout_2->addWidget(buttonSort, 0, 2, 1, 1);
+
+        buttonSortZA = new QToolButton(tabFiles);
+        buttonSortZA->setObjectName(QString::fromUtf8("buttonSortZA"));
+
+        gridLayout_2->addWidget(buttonSortZA, 0, 3, 1, 1);
+
+        buttonSortOrg = new QToolButton(tabFiles);
+        buttonSortOrg->setObjectName(QString::fromUtf8("buttonSortOrg"));
+
+        gridLayout_2->addWidget(buttonSortOrg, 0, 4, 1, 1);
+
+        tabWidget->addTab(tabFiles, QString());
+        tabMeta = new QWidget();
+        tabMeta->setObjectName(QString::fromUtf8("tabMeta"));
+        gridLayout_3 = new QGridLayout(tabMeta);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        editMetaHelp = new QPlainTextEdit(tabMeta);
+        editMetaHelp->setObjectName(QString::fromUtf8("editMetaHelp"));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(editMetaHelp->sizePolicy().hasHeightForWidth());
+        editMetaHelp->setSizePolicy(sizePolicy);
+        editMetaHelp->setTabChangesFocus(true);
+        editMetaHelp->setReadOnly(true);
+
+        gridLayout_3->addWidget(editMetaHelp, 0, 0, 1, 1);
+
+        editMetaData = new QPlainTextEdit(tabMeta);
+        editMetaData->setObjectName(QString::fromUtf8("editMetaData"));
+        editMetaData->setLineWrapMode(QPlainTextEdit::NoWrap);
+
+        gridLayout_3->addWidget(editMetaData, 1, 0, 1, 1);
+
+        tabWidget->addTab(tabMeta, QString());
+        tabHbp = new QWidget();
+        tabHbp->setObjectName(QString::fromUtf8("tabHbp"));
+        gridLayout_4 = new QGridLayout(tabHbp);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        editHbp = new QPlainTextEdit(tabHbp);
+        editHbp->setObjectName(QString::fromUtf8("editHbp"));
+        editHbp->setLineWrapMode(QPlainTextEdit::NoWrap);
+        editHbp->setReadOnly(true);
+
+        gridLayout_4->addWidget(editHbp, 0, 0, 1, 1);
+
+        tabWidget->addTab(tabHbp, QString());
+
+        verticalLayout->addWidget(tabWidget);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        buttonSaveExit = new QPushButton(Form);
+        buttonSaveExit->setObjectName(QString::fromUtf8("buttonSaveExit"));
+
+        horizontalLayout_4->addWidget(buttonSaveExit);
+
+        buttonSave = new QPushButton(Form);
+        buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
+        buttonSave->setAutoDefault(false);
+        buttonSave->setDefault(true);
+
+        horizontalLayout_4->addWidget(buttonSave);
+
+        buttonCn = new QPushButton(Form);
+        buttonCn->setObjectName(QString::fromUtf8("buttonCn"));
+        buttonCn->setAutoDefault(false);
+
+        horizontalLayout_4->addWidget(buttonCn);
+
+
+        verticalLayout->addLayout(horizontalLayout_4);
+
+
+        retranslateUi(Form);
+
+        tabWidget->setCurrentIndex(0);
+
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("Form", "Project Type:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        comboPrjType->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">A project may be of type Executable|Library|Dll.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_2->setText(QApplication::translate("Form", "Project Title:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editPrjTitle->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Title will be shown as a node in  project tree.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_3->setText(QApplication::translate("Form", "Project Location:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editPrjLoctn->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Project location is the folder where project definition file .hbi will be stored. &lt;Project Location&gt; plus &lt;Output Name&gt; will comprise the full file name with .hbp extension.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_4->setText(QApplication::translate("Form", "Working Folder:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editWrkFolder->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Working folder will be used to host HBMK2 compliant </span><span style=\" font-size:8pt; font-weight:600;\">&lt;Output Name&gt;</span><span style=\" font-size:8pt;\"> plus </span><span style=\" font-size:8pt; font-weight:600;\">&lt;hbp&gt;</span><span style=\" font-size:8pt;\"> and will be designated as current folder when </span><span style=\" font-size:8pt; font-weight:600;\">HBMK2</span><span style=\" font-size:8pt;\"> will be invoked.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_5->setText(QApplication::translate("Form", "Destination Folder:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editDstFolder->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Destination folder is a compatibility slot and is reserved to place the &lt;Output&gt; .exe .a .lib. </p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">But currently this functionality will be achieved through the -o compiler flag.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_9->setText(QApplication::translate("Form", "Compile/Link Flags:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editFlags->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Compiler/Linker flags may include all commands except the source files list. Additional libraries can be included here.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editFlags->setStyleSheet(QString());
+        label_7->setText(QApplication::translate("Form", "Launch Parameters:", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("Form", "Launch Program:", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("Form", "Backup Location:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editOutName->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Output name is used as final name for .hbi .hbp .exe .lib .a and will be added to the paths retrieved via &lt;Project Location&gt;, &lt;Working Folder&gt;, &lt;Destination Folder&gt;, etc. So this is a very important component.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_6->setText(QApplication::translate("Form", "Output Name:", 0, QApplication::UnicodeUTF8));
+        buttonChoosePrjLoc->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonBackup->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonChooseDest->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonChooseWd->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        buttonHbp->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Loading a .hbp project file is essentially a </p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">task of redefining its flow and contents order.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">hbIDE rewrites the existing .hbp file if the </p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+                        "block-indent:0; text-indent:0px;\">\"Project Location\" points to same folder </p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">where your such loaded .hbp resides.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">So</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">take care to change the \"Project Location\"</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">to different folder than home folder of .hbp.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This is done at the time of \"Build\" proces"
+                        "s.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonHbp->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        buttonXmate->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Load an xMate project file.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This feature is available only for new projects.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">hbIDE attempts to recognize various components</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+                        "text-indent:0px;\">but it is possible that it may not load everything.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">So you may need manual editing.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonXmate->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabGeneral), QApplication::translate("Form", "General", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editSources->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can include hereunder any type of file which can be edited via plain text editor. One file per line. You can use meta-keys to define your source paths to make your projects location independant. </p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">NOTE:</p>\n"
+"<p align=\""
+                        "center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Only .prg .c .cpp .rc .res files will be supplied to the HBMK2. All other files will be made visible for editing in &lt;Project Tree&gt;.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editSources->setStyleSheet(QString());
+#ifndef QT_NO_TOOLTIP
+        buttonSelect->setToolTip(QApplication::translate("Form", "Select Sources", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonSelect->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        buttonSort->setToolTip(QApplication::translate("Form", "Sort by Ascending Order", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonSort->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        buttonSortZA->setToolTip(QApplication::translate("Form", "Sort by Descending Order", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonSortZA->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        buttonSortOrg->setToolTip(QApplication::translate("Form", "Organize by Type and Sort Ascending", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonSortOrg->setText(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tabFiles), QApplication::translate("Form", "Sources", 0, QApplication::UnicodeUTF8));
+        editMetaHelp->setStyleSheet(QApplication::translate("Form", "background-color: rgb(171, 171, 171);", 0, QApplication::UnicodeUTF8));
+        editMetaHelp->setPlainText(QApplication::translate("Form", "HBIDE will employ the concept of meta-data which will be used to parse the paths or other info supplied to the interface.\n"
+"\n"
+"Usually meta-key is enclosed in curly braces, but due to the fact that HBMK2 already exploits it, HBIDE will recognize meta-key in angled brackets.\n"
+"\n"
+"Please enter meta-keys and their values like :\n"
+"      MySourcePath = c:/dev_sources/vouch\n"
+"in the QTextEdit below. Then whereever you will supply any key anywhere in the input fields of HBIDE interface, just enclose it in angled brackets like :\n"
+"       <MySourcePath>/vouch.prg.\n"
+"Note that keys are case sensitive. So MySourcePath <> MYSOURCEPath.\n"
+"\n"
+"HBIDE internally employs few keys which are shown below and are always include in the project. These accompany the value as its relevance and not as literal.\n"
+"\n"
+"Enjoy\n"
+"Pritpal Bedi", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editMetaData->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Meta-keys are a special way of keeping generic information which is of repeated and/or of dynamic nature. HBIDE implements meta key/value pair more comprehensively. It allows you to write an expression for the value part which get evaluated at the time project is loaded. The only point to take into consideration is that value returned by such expression must be of type character.</p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-ind"
+                        "ent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The expression is evaluated only once and keeps its value until the HBIDE interface is closed. In case of any error, the expression string itself is returned.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editMetaData->setStyleSheet(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tabMeta), QApplication::translate("Form", "Meta Data", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editHbp->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Here you can view in real-time the resultant &lt;hbp&gt; output which will be supplied to HBMK2. This view may give you insight about your source layout and many other facts.</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px"
+                        ";\"><span style=\" font-size:14pt; font-weight:600; text-decoration: underline;\">Enjoy</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editHbp->setStyleSheet(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tabHbp), QApplication::translate("Form", "hbp", 0, QApplication::UnicodeUTF8));
+        buttonSaveExit->setText(QApplication::translate("Form", "Save and Exit", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("Form", "Save", 0, QApplication::UnicodeUTF8));
+        buttonCn->setText(QApplication::translate("Form", "Cancel", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // PROJECTPROPERTIESEX_H
