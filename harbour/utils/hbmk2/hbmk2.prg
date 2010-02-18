@@ -2632,11 +2632,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
                                                       "harbour" + cDL_Version_Alter + "-x64" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DARM" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
                                                       "harbour" + cDL_Version_Alter + "-wce-arm" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_X86_" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86",;
                                                       "harbour" + cDL_Version_Alter + "-wce-x86" ) }
          OTHERWISE
@@ -3307,6 +3305,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
          ENDIF

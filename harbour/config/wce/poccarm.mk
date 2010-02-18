@@ -15,6 +15,8 @@ CC_IN := -c
 CC_OUT := -Fo
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
+# Required by pocc Windows headers
+CFLAGS += -D_WINCE
 
 CFLAGS += -Ze -Go
 
