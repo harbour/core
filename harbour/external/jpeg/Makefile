@@ -90,6 +90,10 @@ ifeq ($(filter $(HB_COMPILER),<>),)
 
    ifneq ($(HB_HAS_JPEG_LOCAL),)
       HB_CFLAGS += -DHAVE_STDLIB_H
+      ifeq ($(HB_COMPILER),poccarm)
+         HB_CFLAGS += -DNO_GETENV
+      endif
+
       include $(TOP)$(ROOT)config/lib.mk
    else
       HB_SKIP_REASON := unused
