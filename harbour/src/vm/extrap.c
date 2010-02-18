@@ -62,6 +62,7 @@
  *    hb_winExceptionHandler() x64 support.
  *    hb_winExceptionHandler() WinCE/ARM support.
  *    hb_winExceptionHandler() OS/2 CPU dump.
+ *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
  *
  * See COPYING for licensing terms.
  *
@@ -114,25 +115,25 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
       hb_snprintf( errmsg, errmsglen,
-                "\n\n"
-                "    Exception Code:%08X\n"
-                "    Exception Address:0x%016" PFLL "X\n"
-                "    RAX:0x%016" PFLL "X  RBX:0x%016" PFLL "X  RCX:0x%016" PFLL "X  RDX:0x%016" PFLL "X\n"
-                "    RSI:0x%016" PFLL "X  RDI:0x%016" PFLL "X  RBP:0x%016" PFLL "X\n"
-                "    R8 :0x%016" PFLL "X  R9 :0x%016" PFLL "X  R10:0x%016" PFLL "X  R11:0x%016" PFLL "X\n"
-                "    R12:0x%016" PFLL "X  R13:0x%016" PFLL "X  R14:0x%016" PFLL "X  R15:0x%016" PFLL "X\n"
-                "    CS:RIP:%04X:0x%016" PFLL "X  SS:RSP:%04X:0x%016" PFLL "X\n"
-                "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
-                "    Flags:%08X\n",
-                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-                ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
-                pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
-                pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
-                pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
-                pCtx->R12, pCtx->R13, pCtx->R14, pCtx->R15,
-                ( HB_U32 ) pCtx->SegCs, pCtx->Rip, ( HB_U32 ) pCtx->SegSs, pCtx->Rsp,
-                ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
-                ( HB_U32 ) pCtx->EFlags );
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%016" PFLL "X\n"
+         "    RAX:0x%016" PFLL "X  RBX:0x%016" PFLL "X  RCX:0x%016" PFLL "X  RDX:0x%016" PFLL "X\n"
+         "    RSI:0x%016" PFLL "X  RDI:0x%016" PFLL "X  RBP:0x%016" PFLL "X\n"
+         "    R8 :0x%016" PFLL "X  R9 :0x%016" PFLL "X  R10:0x%016" PFLL "X  R11:0x%016" PFLL "X\n"
+         "    R12:0x%016" PFLL "X  R13:0x%016" PFLL "X  R14:0x%016" PFLL "X  R15:0x%016" PFLL "X\n"
+         "    CS:RIP:%04X:0x%016" PFLL "X  SS:RSP:%04X:0x%016" PFLL "X\n"
+         "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
+         "    Flags:%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
+         pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
+         pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
+         pCtx->R12, pCtx->R13, pCtx->R14, pCtx->R15,
+         ( HB_U32 ) pCtx->SegCs, pCtx->Rip, ( HB_U32 ) pCtx->SegSs, pCtx->Rsp,
+         ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
+         ( HB_U32 ) pCtx->EFlags );
 
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
@@ -140,44 +141,138 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
-      int iTODO;
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
-      HB_SYMBOL_UNUSED( pExceptionInfo );
+      hb_snprintf( errmsg, errmsglen,
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%016" PFLL "X\n"
+         "    IS0 :0x%016" PFLL "X  IS1 :0x%016" PFLL "X  IS2 :0x%016" PFLL "X  IS3 :0x%016" PFLL "X\n"
+         "    IT0 :0x%016" PFLL "X  IT1 :0x%016" PFLL "X  IT2 :0x%016" PFLL "X  IT3 :0x%016" PFLL "X\n"
+         "    IT4 :0x%016" PFLL "X  IT5 :0x%016" PFLL "X  IT6 :0x%016" PFLL "X  IT7 :0x%016" PFLL "X\n"
+         "    IT8 :0x%016" PFLL "X  IT9 :0x%016" PFLL "X  IT10:0x%016" PFLL "X  IT11:0x%016" PFLL "X\n"
+         "    IT12:0x%016" PFLL "X  IT13:0x%016" PFLL "X  IT14:0x%016" PFLL "X  IT15:0x%016" PFLL "X\n"
+         "    IT16:0x%016" PFLL "X  IT17:0x%016" PFLL "X  IT18:0x%016" PFLL "X  IT19:0x%016" PFLL "X\n"
+         "    IT20:0x%016" PFLL "X  IT21:0x%016" PFLL "X  IT22:0x%016" PFLL "X\n"
+         "    IGp :0x%016" PFLL "X  IV0 :0x%016" PFLL "X  ISp :0x%016" PFLL "X  ITeb:0x%016" PFLL "X\n"
+         "    INat:0x%016" PFLL "X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         pCtx->IntS0 , pCtx->IntS1 , pCtx->IntS2 , pCtx->IntS3 ,
+         pCtx->IntT0 , pCtx->IntT1 , pCtx->IntT2 , pCtx->IntT3 ,
+         pCtx->IntT4 , pCtx->IntT5 , pCtx->IntT6 , pCtx->IntT7 ,
+         pCtx->IntT8 , pCtx->IntT9 , pCtx->IntT10, pCtx->IntT11,
+         pCtx->IntT12, pCtx->IntT13, pCtx->IntT14, pCtx->IntT15,
+         pCtx->IntT16, pCtx->IntT17, pCtx->IntT18, pCtx->IntT19,
+         pCtx->IntT20, pCtx->IntT21, pCtx->IntT22
+         pCtx->IntGp , pCtx->IntV0 , pCtx->IntSp , pCtx->IntTeb,
+         pCtx->IntNats );
    }
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
       hb_snprintf( errmsg, errmsglen,
-                "\n\n"
-                "    Exception Code:%08X\n"
-                "    Exception Address:0x%08X\n"
-                "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
-                "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
-                "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
-                "    R12:0x%08X\n"
-                "    SP :0x%08X  LR :0x%08X  PC :0x%08X\n"
-                "    Flags:%08X\n",
-                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
-                ( HB_U32 ) pCtx->R0 , ( HB_U32 ) pCtx->R1 , ( HB_U32 ) pCtx->R2 , ( HB_U32 ) pCtx->R3 ,
-                ( HB_U32 ) pCtx->R4 , ( HB_U32 ) pCtx->R5 , ( HB_U32 ) pCtx->R6 , ( HB_U32 ) pCtx->R7 ,
-                ( HB_U32 ) pCtx->R8 , ( HB_U32 ) pCtx->R9 , ( HB_U32 ) pCtx->R10, ( HB_U32 ) pCtx->R11,
-                ( HB_U32 ) pCtx->R12,
-                ( HB_U32 ) pCtx->Sp , ( HB_U32 ) pCtx->Lr , ( HB_U32 ) pCtx->Pc,
-                ( HB_U32 ) pCtx->Psr );
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%08X\n"
+         "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
+         "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
+         "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
+         "    R12:0x%08X\n"
+         "    SP :0x%08X  LR :0x%08X  PC :0x%08X\n"
+         "    Flags:%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_U32 ) pCtx->R0 , ( HB_U32 ) pCtx->R1 , ( HB_U32 ) pCtx->R2 , ( HB_U32 ) pCtx->R3 ,
+         ( HB_U32 ) pCtx->R4 , ( HB_U32 ) pCtx->R5 , ( HB_U32 ) pCtx->R6 , ( HB_U32 ) pCtx->R7 ,
+         ( HB_U32 ) pCtx->R8 , ( HB_U32 ) pCtx->R9 , ( HB_U32 ) pCtx->R10, ( HB_U32 ) pCtx->R11,
+         ( HB_U32 ) pCtx->R12,
+         ( HB_U32 ) pCtx->Sp , ( HB_U32 ) pCtx->Lr , ( HB_U32 ) pCtx->Pc,
+         ( HB_U32 ) pCtx->Psr );
    }
-#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS )
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS ) && defined( HB_ARCH_32BIT )
    {
-      int iTODO;
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
-      HB_SYMBOL_UNUSED( pExceptionInfo );
+      hb_snprintf( errmsg, errmsglen,
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%08X\n"
+         "    IZe:0x%08X  IAt:0x%08X  ILo:0x%08X  IHi:0x%08X\n"
+         "    IA0:0x%08X  IA1:0x%08X  IA2:0x%08X  IA3:0x%08X\n"
+         "    IT0:0x%08X  IT1:0x%08X  IT2:0x%08X  IT3:0x%08X\n"
+         "    IT4:0x%08X  IT5:0x%08X  IT6:0x%08X  IT7:0x%08X\n"
+         "    IT8:0x%08X  IT9:0x%08X  IV0:0x%08X  IV1:0x%08X\n"
+         "    IS0:0x%08X  IS1:0x%08X  IS2:0x%08X  IS3:0x%08X\n"
+         "    IS4:0x%08X  IS5:0x%08X  IS6:0x%08X  IS7:0x%08X\n"
+         "    IS8:0x%08X  IK0:0x%08X  IK1:0x%08X\n"
+         "    IGp:0x%08X  ISp:0x%08X  IRa:0x%08X\n"
+         "    Fsr:0x%08X  Fir:0x%08X  Psr:0x%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_U32 ) pCtx->IntZero, ( HB_U32 ) pCtx->IntAt, ( HB_U32 ) pCtx->IntLo, ( HB_U32 ) pCtx->IntHi,
+         ( HB_U32 ) pCtx->IntA0, ( HB_U32 ) pCtx->IntA1, ( HB_U32 ) pCtx->IntA2, ( HB_U32 ) pCtx->IntA3,
+         ( HB_U32 ) pCtx->IntT0, ( HB_U32 ) pCtx->IntT1, ( HB_U32 ) pCtx->IntT2, ( HB_U32 ) pCtx->IntT3,
+         ( HB_U32 ) pCtx->IntT4, ( HB_U32 ) pCtx->IntT5, ( HB_U32 ) pCtx->IntT6, ( HB_U32 ) pCtx->IntT7,
+         ( HB_U32 ) pCtx->IntT8, ( HB_U32 ) pCtx->IntT9, ( HB_U32 ) pCtx->IntV0, ( HB_U32 ) pCtx->IntV1,
+         ( HB_U32 ) pCtx->IntS0, ( HB_U32 ) pCtx->IntS1, ( HB_U32 ) pCtx->IntS2, ( HB_U32 ) pCtx->IntS3,
+         ( HB_U32 ) pCtx->IntS4, ( HB_U32 ) pCtx->IntS5, ( HB_U32 ) pCtx->IntS6, ( HB_U32 ) pCtx->IntS7,
+         ( HB_U32 ) pCtx->IntS8, ( HB_U32 ) pCtx->IntK0, ( HB_U32 ) pCtx->IntK1,
+         ( HB_U32 ) pCtx->IntGp, ( HB_U32 ) pCtx->IntSp, ( HB_U32 ) pCtx->IntRa,
+         ( HB_U32 ) pCtx->Fsr  , ( HB_U32 ) pCtx->Fir  , ( HB_U32 ) pCtx->Psr );
+   }
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS ) && defined( HB_ARCH_64BIT ) /* Such platform doesn't currently exist [2010]. */
+   {
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
+
+      hb_snprintf( errmsg, errmsglen,
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%016" PFLL "X\n"
+         "    IZe:0x%016" PFLL "X  IAt:0x%016" PFLL "X  ILo:0x%016" PFLL "X  IHi:0x%016" PFLL "X\n"
+         "    IA0:0x%016" PFLL "X  IA1:0x%016" PFLL "X  IA2:0x%016" PFLL "X  IA3:0x%016" PFLL "X\n"
+         "    IT0:0x%016" PFLL "X  IT1:0x%016" PFLL "X  IT2:0x%016" PFLL "X  IT3:0x%016" PFLL "X\n"
+         "    IT4:0x%016" PFLL "X  IT5:0x%016" PFLL "X  IT6:0x%016" PFLL "X  IT7:0x%016" PFLL "X\n"
+         "    IT8:0x%016" PFLL "X  IT9:0x%016" PFLL "X  IV0:0x%016" PFLL "X  IV1:0x%016" PFLL "X\n"
+         "    IS0:0x%016" PFLL "X  IS1:0x%016" PFLL "X  IS2:0x%016" PFLL "X  IS3:0x%016" PFLL "X\n"
+         "    IS4:0x%016" PFLL "X  IS5:0x%016" PFLL "X  IS6:0x%016" PFLL "X  IS7:0x%016" PFLL "X\n"
+         "    IS8:0x%016" PFLL "X  IK0:0x%016" PFLL "X  IK1:0x%016" PFLL "X\n"
+         "    IGp:0x%016" PFLL "X  ISp:0x%016" PFLL "X  IRa:0x%016" PFLL "X\n"
+         "    Fsr:0x%016" PFLL "X  Fir:0x%016" PFLL "X  Psr:0x%016" PFLL "X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         pCtx->IntZero, pCtx->IntAt, pCtx->IntLo, pCtx->IntHi,
+         pCtx->IntA0, pCtx->IntA1, pCtx->IntA2, pCtx->IntA3,
+         pCtx->IntT0, pCtx->IntT1, pCtx->IntT2, pCtx->IntT3,
+         pCtx->IntT4, pCtx->IntT5, pCtx->IntT6, pCtx->IntT7,
+         pCtx->IntT8, pCtx->IntT9, pCtx->IntV0, pCtx->IntV1,
+         pCtx->IntS0, pCtx->IntS1, pCtx->IntS2, pCtx->IntS3,
+         pCtx->IntS4, pCtx->IntS5, pCtx->IntS6, pCtx->IntS7,
+         pCtx->IntS8, pCtx->IntK0, pCtx->IntK1,
+         pCtx->IntGp, pCtx->IntSp, pCtx->IntRa,
+         pCtx->Fsr  , pCtx->Fir  , pCtx->Psr );
    }
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
    {
-      int iTODO;
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
-      HB_SYMBOL_UNUSED( pExceptionInfo );
+      hb_snprintf( errmsg, errmsglen,
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:0x%08X\n"
+         "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
+         "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
+         "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
+         "    R12:0x%08X  R13:0x%08X  R14:0x%08X  R15:0x%08X\n"
+         "    PR :0x%08X MACH:0x%08X MACL:0x%08X  GBR:0x%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_U32 ) pCtx->R0 , ( HB_U32 ) pCtx->R1 , ( HB_U32 ) pCtx->R2 , ( HB_U32 ) pCtx->R3 ,
+         ( HB_U32 ) pCtx->R4 , ( HB_U32 ) pCtx->R5 , ( HB_U32 ) pCtx->R6 , ( HB_U32 ) pCtx->R7 ,
+         ( HB_U32 ) pCtx->R8 , ( HB_U32 ) pCtx->R9 , ( HB_U32 ) pCtx->R10, ( HB_U32 ) pCtx->R11,
+         ( HB_U32 ) pCtx->R12, ( HB_U32 ) pCtx->R13, ( HB_U32 ) pCtx->R14, ( HB_U32 ) pCtx->R15,
+         ( HB_U32 ) pCtx->PR, ( HB_U32 ) pCtx->MACH, ( HB_U32 ) pCtx->MACL, ( HB_U32 ) pCtx->GBR );
    }
 #elif defined( HB_CPU_X86 )
    {
@@ -191,21 +286,21 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       int               i;
 
       hb_snprintf( errmsg, errmsglen,
-                "\n\n"
-                "    Exception Code:%08X\n"
-                "    Exception Address:%08X\n"
-                "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"
-                "    ESI:%08X  EDI:%08X  EBP:%08X\n"
-                "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
-                "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
-                "    Flags:%08X\n",
-                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
-                ( HB_U32 ) pCtx->Eax, ( HB_U32 ) pCtx->Ebx, ( HB_U32 ) pCtx->Ecx, ( HB_U32 ) pCtx->Edx,
-                ( HB_U32 ) pCtx->Esi, ( HB_U32 ) pCtx->Edi, ( HB_U32 ) pCtx->Ebp,
-                ( HB_U32 ) pCtx->SegCs, ( HB_U32 ) pCtx->Eip, ( HB_U32 ) pCtx->SegSs, ( HB_U32 ) pCtx->Esp,
-                ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
-                ( HB_U32 ) pCtx->EFlags );
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:%08X\n"
+         "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"
+         "    ESI:%08X  EDI:%08X  EBP:%08X\n"
+         "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
+         "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
+         "    Flags:%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_U32 ) pCtx->Eax, ( HB_U32 ) pCtx->Ebx, ( HB_U32 ) pCtx->Ecx, ( HB_U32 ) pCtx->Edx,
+         ( HB_U32 ) pCtx->Esi, ( HB_U32 ) pCtx->Edi, ( HB_U32 ) pCtx->Ebp,
+         ( HB_U32 ) pCtx->SegCs, ( HB_U32 ) pCtx->Eip, ( HB_U32 ) pCtx->SegSs, ( HB_U32 ) pCtx->Esp,
+         ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
+         ( HB_U32 ) pCtx->EFlags );
 
       hb_strncat( errmsg, "    CS:EIP:", errmsglen );
       pc = ( unsigned char * ) pCtx->Eip;
