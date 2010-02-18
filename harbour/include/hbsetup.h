@@ -228,7 +228,7 @@
 
 /* Sub-option inside HB_OS_WIN */
 #ifndef HB_OS_WIN_CE
-   #if defined( _WINCE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ )
+   #if defined( UNDER_CE ) || defined( _WIN32_WCE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ )
       #define HB_OS_WIN_CE
    #endif
 #endif

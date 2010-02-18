@@ -30,7 +30,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 endif
 
 # For Pocket PC and ARM processors (including XScale)
-CFLAGS += -Tarm-coff -D_M_ARM -D_WINCE
+CFLAGS += -Tarm-coff -D_M_ARM -DARM
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi

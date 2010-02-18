@@ -2618,6 +2618,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
+         IF hbmk[ _HBMK_cPLAT ] == "wce"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+         ENDIF
          DO CASE
          CASE hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
             /* NOTE: Newer xhb version use "-x.y.z" version numbers. */
@@ -2627,11 +2632,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
                                                       "harbour" + cDL_Version_Alter + "-x64" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DARM" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
                                                       "harbour" + cDL_Version_Alter + "-wce-arm" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_X86_" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86",;
                                                       "harbour" + cDL_Version_Alter + "-wce-x86" ) }
          OTHERWISE
@@ -3198,10 +3203,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
-               AAdd( hbmk[ _HBMK_aOPTC ], "-DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM" )
             CASE hbmk[ _HBMK_cCOMP ] == "msvc"
                /* TODO */
             ENDCASE
@@ -3298,6 +3305,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         IF hbmk[ _HBMK_cPLAT ] == "wce"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+         ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"
             IF hbmk[ _HBMK_lOPTIM ]
@@ -3308,9 +3320,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Tamd64-coff" )
          CASE hbmk[ _HBMK_cCOMP ] == "poccarm"
             AAdd( hbmk[ _HBMK_aOPTC ], "-Tarm-coff" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM" )
          ENDCASE
          DO CASE
          CASE hbmk[ _HBMK_nWARN ] == _WARN_YES

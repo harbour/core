@@ -19,16 +19,16 @@ CC_OUT := -Fo
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
-CFLAGS += -nologo -D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE
+CFLAGS += -nologo
 
 ifeq ($(HB_COMPILER),msvcarm)
-   CFLAGS += -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__
+   CFLAGS += -D_M_ARM -DARM
 else ifeq ($(HB_COMPILER),msvcsh)
-   CFLAGS += -D_M_SH -DSHx -D_SHX_
+   CFLAGS += -D_M_SH -DSHx
 else ifeq ($(HB_COMPILER),msvcmips)
-   CFLAGS += -D_M_MRX000=4000 -DMIPS -D_MIPS_ -DMIPS_HAS_FPU
+   CFLAGS += -D_M_MRX000=4000 -DMIPS
 else ifeq ($(HB_COMPILER),msvc)
-   CFLAGS += -D_X86_ -D_M_IX86
+   CFLAGS += -D_M_IX86 -D_X86_
 endif
 
 # MSVS 2005 SP1 also supports it, but we only enable it for 2008 and upper.

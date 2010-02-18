@@ -6,11 +6,13 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-ifeq ($(HB_CPU),x86)
-   # Always compile in -UNICODE mode for MSVC 9.0 and upper
-   # These versions don't support Win9x anymore, so it's safe. [vszakats]
-   ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
-      HB_CFLAGS += -DUNICODE
+ifeq ($(HB_BUILD_UNICODE),)
+   ifeq ($(HB_CPU),x86)
+      # Always compile in UNICODE mode for MSVC 9.0 and upper
+      # These versions don't support Win9x anymore, so it's safe. [vszakats]
+      ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
+         HB_BUILD_UNICODE := yes
+      endif
    endif
 endif
 
