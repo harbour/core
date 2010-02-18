@@ -150,7 +150,11 @@
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
 #  else
-   /* test shows that GCC 3.3.6 does not support inet_pton() and inet_ntop() */
+#     if ! defined( TCPV40HDRS )
+#        define HB_HAS_INET_ATON
+#        define HB_HAS_INET_PTON
+#        define HB_HAS_INET_NTOP
+#     endif
 #  endif
 #elif defined( HB_OS_DOS )
 #  define HB_HAS_INET_ATON
@@ -179,8 +183,10 @@
 #        include <types.h>
 #        include <nerrno.h>
 #     endif
+#     include <sys/socket.h>
 #     include <sys/select.h>
 #     include <sys/ioctl.h>
+#     include <arpa/inet.h>
 #  endif
 #  if !( defined( HB_OS_DOS ) && defined( __WATCOMC__ ) )
 #     include <sys/time.h>

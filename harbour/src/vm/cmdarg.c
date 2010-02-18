@@ -50,6 +50,10 @@
  *
  */
 
+#define INCL_DOSPROCESS
+#define INCL_DOSERRORS
+#define INCL_DOSMODULEMGR
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -57,6 +61,10 @@
 #include "hbmemory.ch"
 #include "hbstack.h"
 #include "hbverbld.h"
+
+#if defined( HB_OS_OS2 )
+   #include <os2.h>
+#endif
 
 /* Command line argument management */
 static int     s_argc = 0;
@@ -145,6 +153,20 @@ void hb_cmdargUpdate( void )
       {
          HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) );
          s_argv[ 0 ] = s_szAppName;
+      }
+
+#elif defined( HB_OS_OS2 )
+      PPIB     ppib = NULL;
+      APIRET   ulrc;
+
+      ulrc = DosGetInfoBlocks( NULL, &ppib );
+      if ( ulrc == NO_ERROR ) {
+         ulrc = DosQueryModuleName( ppib->pib_hmte,
+                                    HB_SIZEOFARRAY( s_szAppName ),
+                                    s_szAppName );
+         if ( ulrc == NO_ERROR ) {
+            s_argv[ 0 ] = s_szAppName;
+         }
       }
 #else
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
