@@ -204,7 +204,7 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
 
       return p;
    }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 14 )
    {
       p->lfHeight         = ( LONG ) hb_arrayGetNL( pStru,  1 );
       p->lfWidth          = ( LONG ) hb_arrayGetNL( pStru,  2 );

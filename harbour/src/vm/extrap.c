@@ -57,9 +57,10 @@
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
  *    hb_winExceptionHandler() Windows exception info dump code.
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008-2010 Viktor Szakats (harbour.01 syenar.hu)
  *    hb_winExceptionHandler() Module listing code.
  *    hb_winExceptionHandler() x64 support.
+ *    hb_winExceptionHandler() WinCE/ARM support.
  *
  * See COPYING for licensing terms.
  *
@@ -82,9 +83,12 @@
 #  endif
 #endif
 
-#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN )
 #  include <windows.h>
 #  include <tlhelp32.h>
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
    /* BCC and MinGW doesn't seem to #define this */
 #  ifndef TH32CS_SNAPMODULE32
 #     define TH32CS_SNAPMODULE32  0
@@ -95,7 +99,7 @@
    static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN )
 
 static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
@@ -135,10 +139,46 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
-      /* TODO: Itanium
-               See: winnt.h for PCONTEXT structure. */
+      int iTODO;
+
+      HB_SYMBOL_UNUSED( pExceptionInfo );
    }
-#else
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
+   {
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
+
+      hb_snprintf( errmsg, errmsglen,
+                "\n\n"
+                "    Exception Code:%08X\n"
+                "    Exception Address:0x%08X\n"
+                "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
+                "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
+                "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
+                "    R12:0x%08X\n"
+                "    SP :0x%08X  LR :0x%08X  PC :0x%08X\n"
+                "    Flags:%08X\n",
+                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+                ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+                ( HB_U32 ) pCtx->R0 , ( HB_U32 ) pCtx->R1 , ( HB_U32 ) pCtx->R2 , ( HB_U32 ) pCtx->R3 ,
+                ( HB_U32 ) pCtx->R4 , ( HB_U32 ) pCtx->R5 , ( HB_U32 ) pCtx->R6 , ( HB_U32 ) pCtx->R7 ,
+                ( HB_U32 ) pCtx->R8 , ( HB_U32 ) pCtx->R9 , ( HB_U32 ) pCtx->R10, ( HB_U32 ) pCtx->R11,
+                ( HB_U32 ) pCtx->R12,
+                ( HB_U32 ) pCtx->Sp , ( HB_U32 ) pCtx->Lr , ( HB_U32 ) pCtx->Pc,
+                ( HB_U32 ) pCtx->Psr );
+   }
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS )
+   {
+      int iTODO;
+
+      HB_SYMBOL_UNUSED( pExceptionInfo );
+   }
+#elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
+   {
+      int iTODO;
+
+      HB_SYMBOL_UNUSED( pExceptionInfo );
+   }
+#elif defined( HB_CPU_X86 )
    {
       char              buf[ 64 + MAX_PATH ];
       PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
@@ -216,13 +256,17 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 #endif
 
    {
+#if defined( HB_OS_WIN_CE )
+      HMODULE hToolhelp = GetModuleHandle( TEXT( "toolhelp.dll" ) );
+#else
       /* NOTE: Several non-MS sources say that Win9x has these functions
                in tlhelp32.dll. Testing shows though, that in Win95, Win95b
                and Win98 they are in kernel32.dll, and tlhelp32.dll doesn't
                exist. [vszakats] */
-      HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      HMODULE hToolhelp = GetModuleHandle( TEXT( "kernel32.dll" ) );
+#endif
 
-      if( hKernel32 )
+      if( hToolhelp )
       {
          /* NOTE: Hack to force the ASCII versions of these types. [vszakats] */
          #if defined( UNICODE )
@@ -234,9 +278,9 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
          typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
 
-         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, "CreateToolhelp32Snapshot" );
-         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, "Module32First" );
-         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, "Module32Next" );
+         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hToolhelp, "CreateToolhelp32Snapshot" );
+         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hToolhelp, "Module32First" );
+         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hToolhelp, "Module32Next" );
 
          if( pCreateToolhelp32Snapshot &&
              pModule32First &&

@@ -52,7 +52,7 @@ ifneq ($(HB_BUILD_WARN),no)
    ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
       # Lowered warning level to avoid large amount of warnings in system headers.
       # Maybe this is related to the msvc2003 kit I was using. [vszakats]
-      CFLAGS += -W2
+      CFLAGS += -W3
    else
       CFLAGS += -W4 -wd4127
    endif

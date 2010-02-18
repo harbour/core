@@ -3178,7 +3178,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
                   /* Lowered warning level to avoid large amount of warnings in system headers.
                      Maybe this is related to the msvc2003 kit I was using. [vszakats] */
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-W2" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
                ENDIF
