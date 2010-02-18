@@ -61,6 +61,7 @@
  *    hb_winExceptionHandler() Module listing code.
  *    hb_winExceptionHandler() x64 support.
  *    hb_winExceptionHandler() WinCE/ARM support.
+ *    hb_winExceptionHandler() OS/2 CPU dump.
  *
  * See COPYING for licensing terms.
  *
@@ -331,26 +332,41 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 
 static EXCEPTIONREGISTRATIONRECORD s_regRec; /* Exception Registration Record */
 
-static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
+static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       pExceptionInfo,
                                              PEXCEPTIONREGISTRATIONRECORD p2,
-                                             PCONTEXTRECORD               p3,
+                                             PCONTEXTRECORD               pCtx,
                                              PVOID                        pv )
 {
-   HB_SYMBOL_UNUSED( p1 );
    HB_SYMBOL_UNUSED( p2 );
-   HB_SYMBOL_UNUSED( p3 );
    HB_SYMBOL_UNUSED( pv );
 
    /* Don't print stack trace if inside unwind, normal process termination or process killed or
       during debugging */
-   if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
+   if( pExceptionInfo->ExceptionNum != XCPT_UNWIND && pExceptionInfo->ExceptionNum < XCPT_BREAKPOINT )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
       char file[ HB_PATH_MAX ];
       HB_USHORT uiLine;
       int iLevel = 0;
 
-      fprintf( stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress );
+      fprintf( stderr, HB_I_("\nException %lx at address %p \n"), pExceptionInfo->ExceptionNum, pExceptionInfo->ExceptionAddress );
+
+      fprintf( stderr,
+         "\n\n"
+         "    Exception Code:%08X\n"
+         "    Exception Address:%08X\n"
+         "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"
+         "    ESI:%08X  EDI:%08X  EBP:%08X\n"
+         "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
+         "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
+         "    Flags:%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionNum,
+         ( HB_U32 ) pExceptionInfo->ExceptionAddress,
+         ( HB_U32 ) pCtx->ctx_RegEax, ( HB_U32 ) pCtx->ctx_RegEbx, ( HB_U32 ) pCtx->ctx_RegEcx, ( HB_U32 ) pCtx->ctx_RegEdx,
+         ( HB_U32 ) pCtx->ctx_RegEsi, ( HB_U32 ) pCtx->ctx_RegEdi, ( HB_U32 ) pCtx->ctx_RegEbp,
+         ( HB_U32 ) pCtx->ctx_SegCs, ( HB_U32 ) pCtx->ctx_RegEip, ( HB_U32 ) pCtx->ctx_SegSs, ( HB_U32 ) pCtx->ctx_RegEsp,
+         ( HB_U32 ) pCtx->ctx_SegDs, ( HB_U32 ) pCtx->ctx_SegEs, ( HB_U32 ) pCtx->ctx_SegFs, ( HB_U32 ) pCtx->ctx_SegGs,
+         ( HB_U32 ) pCtx->ctx_EFlags );
 
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
          fprintf( stderr, HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
