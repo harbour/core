@@ -580,7 +580,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { oSubMenu2, NIL } )
    hbide_menuAddSep( oSubMenu )
    oMenuBar:addItem( { oSubMenu, NIL } )
-   oSubMenu:oWidget:addAction_4( ::oSkeltn:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction() )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Docks                                    */
@@ -592,9 +592,9 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction() )
 
-   oSubMenu:oWidget:addAction_4( ::oDockR:oWidget:toggleViewAction()  )
-   oSubMenu:oWidget:addAction_4( ::oHelp:oWidget:toggleViewAction()   )
-   oSubMenu:oWidget:addAction_4( ::oSkeltn:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()  )
+   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()   )
+   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction() )

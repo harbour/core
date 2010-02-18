@@ -89,6 +89,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildDialog()
    METHOD buildViewWidget()
    METHOD buildStackedWidget()
+   METHOD buildSearchReplaceWidget()
    METHOD buildDockWidgets()
    METHOD buildProjectTree()
    METHOD buildEditorTree()
@@ -97,7 +98,6 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildLinkResults()
    METHOD buildOutputResults()
    METHOD buildFindInFiles()
-   METHOD buildGenericDock()
    METHOD buildThemesDock()
    METHOD buildPropertiesDock()
    METHOD buildEnvironDock()
@@ -112,6 +112,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD execSkeleton( nMode, p )
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
+   METHOD getADockWidget( nArea, cObjectName, cWindowTitle )
 
    ENDCLASS
 
@@ -156,31 +157,60 @@ METHOD IdeDocks:destroy()
       qTBtn := NIL
    NEXT
 
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildDockWidgets()
+METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle )
+   LOCAL oDock
+
+   oDock := XbpWindow():new()
+   oDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   oDock:oWidget:setObjectName( cObjectName )
+   ::oDlg:addChild( oDock )
+   oDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   oDock:oWidget:setAllowedAreas( nArea )
+   oDock:oWidget:setWindowTitle( cWindowTitle )
+   oDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+   oDock:hide()
+
+   oDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   oDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
+
+   RETURN oDock
+
+/*----------------------------------------------------------------------*/
+
+   METHOD IdeDocks:buildDockWidgets()
 
    ::buildToolBarPanels()
 
    ::buildProjectTree()
    ::buildEditorTree()
+
    ::buildFuncList()
-   ::buildCompileResults()
-   ::buildLinkResults()
-   ::buildOutputResults()
+
    ::buildHelpWidget()
    ::buildSkeletonWidget()
    ::buildFindInFiles()
-   ::buildGenericDock()
    ::buildThemesDock()
    ::buildPropertiesDock()
    ::buildEnvironDock()
 
+   ::buildCompileResults()
+   ::buildLinkResults()
+   ::buildOutputResults()
+
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
+
+   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget      , ::oSkeltnDock:oWidget     )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oFindDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oThemesDock:oWidget     )
+   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oPropertiesDock:oWidget )
+   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget, ::oEnvironDock:oWidget    )
+   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget   , ::oFuncDock:oWidget       )
 
    RETURN Self
 
@@ -221,21 +251,6 @@ METHOD IdeDocks:execEvent( nMode, p )
 
       hbide_execPopup( aMenu, p, ::qHelpBrw )
    ENDCASE
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildStackedWidget()
-
-   /* Its parent will be drawing area and pages will be XbpTabWidgets() */
-
-   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-   ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
-   ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
-   ::oDa:addChild( ::oStackedWidget )
-
-   ::oStackedWidget:connect( ::oStackedWidget:oWidget, "currentChanged(int)", {|p| ::execEvent( 1, p ) } )
 
    RETURN Self
 
@@ -282,6 +297,8 @@ METHOD IdeDocks:buildDialog()
 
    ::buildStackedWidget()
    ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
+   ::buildSearchReplaceWidget()
+   ::qLayout:addWidget_1( ::oSearchReplace:oUI, 1, 0, 1, 1 )
 
    /* View Panels */
    ::buildViewWidget()      /* Main */
@@ -291,6 +308,30 @@ METHOD IdeDocks:buildDialog()
 
    /* Force to populate current widget */
    ::oStackedWidget:oWidget:setCurrentIndex( 0 )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildStackedWidget()
+
+   /* Its parent will be drawing area and pages will be XbpTabWidgets() */
+
+   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
+   ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
+   ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
+   ::oDa:addChild( ::oStackedWidget )
+
+   ::oStackedWidget:connect( ::oStackedWidget:oWidget, "currentChanged(int)", {|p| ::execEvent( 1, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSearchReplaceWidget()
+
+   ::oIde:oSearchReplace := IdeSearchReplace():new( ::oIde ):create()
+   ::oSearchReplace:oUI:hide()
 
    RETURN Self
 
@@ -607,35 +648,18 @@ METHOD IdeDocks:buildEditorTree()
 
 METHOD IdeDocks:buildFuncList()
 
-   ::oIde:oDockR := XbpWindow():new()
-   ::oDockR:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oDockR:oWidget:setObjectName( "dockFuncList" )
-   ::oDlg:addChild( ::oDockR )
-   ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
-   ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oDockR:oWidget:setWindowTitle( "Functions List" )
-   ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oIde:oFuncDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFuncList", "Functions List" )
 
-   ::oIde:oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
+   ::oIde:oFuncList := XbpListBox():new( ::oFuncDock ):create( , , { 0,0 }, { 100,400 }, , .t. )
+   ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
 
    //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
    ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::oIde:gotoFunction( mp1, mp2, oXbp ) }
    /* Harbour Extension : prefixed with "hb" */
    ::oFuncList:hbContextMenu := {|mp1, mp2, oXbp| ::oIde:manageFuncContext( mp1, mp2, oXbp ) }
 
-   ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
-
-   ::oDockR:oWidget:setWidget( ::oFuncList:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockR:oWidget, Qt_Vertical )
-
-   IF ::oIde:aIni[ INI_HBIDE, FunctionListVisible ] == "YES"
-      ::oIde:lDockRVisible := .t.
-      //::setSizeAndPosByIni( ::oDockR:oWidget, FunctionListGeometry )
-   ELSE
-      ::oIde:lDockRVisible := .f.
-      ::oDockR:hide()
-   ENDIF
+   ::oFuncDock:oWidget:setWidget( ::oFuncList:oWidget )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFuncDock:oWidget, Qt_Vertical )
 
    RETURN Self
 
@@ -646,20 +670,11 @@ METHOD IdeDocks:buildHelpWidget()
 
    qUrl := QUrl():new( "idemainpage.html" )
    qStr := QStringList():new()
-   //qStr:append( "./" )
    qStr:append( hb_dirBase() + "docs" )
 
-   ::oIde:oHelp := XbpWindow():new()
-   ::oHelp:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oHelp:oWidget:setObjectName( "dockHelp" )
-   ::oDlg:addChild( ::oHelp )
-   ::oHelp:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oHelp:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oHelp:oWidget:setWindowTitle( "hbIDE Help" )
-   ::oHelp:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oHelp:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+   ::oIde:oHelpDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockHelp", "hbIDE Help" )
 
-   ::oIde:qHelpBrw := QTextBrowser():new( ::oHelp:oWidget )
+   ::oIde:qHelpBrw := QTextBrowser():new( ::oHelpDock:oWidget )
    ::qHelpBrw:show()
    ::qHelpBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qHelpBrw:setOpenExternalLinks( .t. )
@@ -667,14 +682,10 @@ METHOD IdeDocks:buildHelpWidget()
    ::qHelpBrw:setSearchPaths( qStr )
    ::qHelpBrw:setSource( qUrl )
 
-   ::oHelp:oWidget:setWidget( ::oIde:qHelpBrw )
+   ::oHelpDock:oWidget:setWidget( ::oIde:qHelpBrw )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oHelpDock:oWidget, Qt_Horizontal )
 
-   ::oHelp:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( 2, p ) } )
-
-   // ::oHelp:connect( ::qHelpBrw )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oHelp:oWidget, Qt_Horizontal )
-   ::oHelp:hide()
+   ::oHelpDock:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( 2, p ) } )
 
    RETURN Self
 
@@ -732,6 +743,7 @@ METHOD IdeDocks:buildOutputResults()
    ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
    ::oDockB2:oWidget:setWindowTitle( "Output Console" )
    ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oDockB2:hide()
 
    ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )
    ::oOutputResult:oWidget:setAcceptRichText( .T. )
@@ -740,7 +752,6 @@ METHOD IdeDocks:buildOutputResults()
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
-   ::oDockB2:hide()
 
    ::connect( ::oIde:oOutputResult:oWidget, "copyAvailable(bool)", {|l| ::outputDoubleClicked( l ) } )
 
@@ -890,9 +901,9 @@ METHOD IdeDocks:toggleLeftDocks()
 METHOD IdeDocks:toggleRightDocks()
 
    IF ::lDockRVisible
-      ::oDockR:hide()
+      ::oFuncDock:hide()
    ELSE
-      ::oDockR:show()
+      ::oFuncDock:show()
    ENDIF
    ::oIde:lDockRVisible := !( ::lDockRVisible )
 
@@ -920,22 +931,22 @@ METHOD IdeDocks:toggleBottomDocks()
 METHOD IdeDocks:buildSkeletonWidget()
    LOCAL oUI
 
-   ::oIde:oSkeltn := XbpWindow():new()
-   ::oSkeltn:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oSkeltn:oWidget:setObjectName( "dockSkeleton" )
-   ::oDlg:addChild( ::oSkeltn )
-   ::oSkeltn:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable + ;
-                                                              QDockWidget_DockWidgetVerticalTitleBar )
-   ::oSkeltn:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oSkeltn:oWidget:setWindowTitle( "Code Skeletons" )
-   ::oSkeltn:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oSkeltn:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+   ::oIde:oSkeltnDock := XbpWindow():new()
+   ::oSkeltnDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   ::oSkeltnDock:oWidget:setObjectName( "dockSkeleton" )
+   ::oDlg:addChild( ::oSkeltnDock )
+   ::oSkeltnDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable )
+   ::oSkeltnDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oSkeltnDock:oWidget:setWindowTitle( "Code Skeletons" )
+   ::oSkeltnDock:oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oSkeltnDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+   ::oSkeltnDock:hide()
 
-   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltn:oWidget ):build()
+   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltnDock:oWidget ):build()
 
-   ::oSkeltn:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
+   ::oSkeltnDock:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltn:oWidget, Qt_Horizontal )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
    oUI := ::oIde:oSkeltnUI
 
@@ -952,8 +963,6 @@ METHOD IdeDocks:buildSkeletonWidget()
 
    //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
    aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
-
-   ::oSkeltn:hide()
 
    RETURN Self
 
@@ -1019,47 +1028,10 @@ METHOD IdeDocks:execSkeleton( nMode, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildGenericDock()
-
-   ::oIde:oGeneral := XbpWindow():new()
-   ::oGeneral:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oGeneral:oWidget:setObjectName( "General Purpose Dock" )
-   ::oDlg:addChild( ::oGeneral )
-   //::oGeneral:oWidget:setFeatures( QDockWidget_DockWidgetVerticalTitleBar )
-   ::oGeneral:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oGeneral:oWidget:setWindowTitle( "Generic" )
-   ::oGeneral:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oGeneral:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-
-   ::oGeneral:hbLayout := HBPLAYOUT_TYPE_HORZBOX
-   ::oGeneral:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oGeneral:oWidget, Qt_Horizontal )
-
-   ::oGeneral:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeDocks:buildThemesDock()
 
-   ::oIde:oThemesDock := XbpWindow():new()
-   ::oThemesDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oThemesDock:oWidget:setObjectName( "Editor Themes" )
-   ::oDlg:addChild( ::oThemesDock )
-   ::oThemesDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oThemesDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oThemesDock:oWidget:setWindowTitle( "Editor Themes" )
-   ::oThemesDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oThemesDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-
-   ::oThemesDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-   ::oThemesDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
+   ::oIde:oThemesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockThemes", "Editor Themes" )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
-
-   ::oThemesDock:hide()
 
    RETURN Self
 
@@ -1067,22 +1039,8 @@ METHOD IdeDocks:buildThemesDock()
 
 METHOD IdeDocks:buildPropertiesDock()
 
-   ::oIde:oPropertiesDock := XbpWindow():new()
-   ::oPropertiesDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oPropertiesDock:oWidget:setObjectName( "Project Properties" )
-   ::oDlg:addChild( ::oPropertiesDock )
-   ::oPropertiesDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oPropertiesDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oPropertiesDock:oWidget:setWindowTitle( "Project Properties" )
-   ::oPropertiesDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oPropertiesDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-
-   ::oPropertiesDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-   ::oPropertiesDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
+   ::oIde:oPropertiesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockProperties", "Project Properties" )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
-
-   ::oPropertiesDock:hide()
 
    RETURN Self
 
@@ -1090,21 +1048,8 @@ METHOD IdeDocks:buildPropertiesDock()
 
 METHOD IdeDocks:buildEnvironDock()
 
-   ::oIde:oEnvironDock := XbpWindow():new()
-   ::oEnvironDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oEnvironDock:oWidget:setObjectName( "Compiler Environments" )
-   ::oDlg:addChild( ::oEnvironDock )
-   ::oEnvironDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oEnvironDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oEnvironDock:oWidget:setWindowTitle( "Compiler Environments" )
-   ::oEnvironDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oEnvironDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-
-   ::oEnvironDock:hbLayout := HBPLAYOUT_TYPE_HORZBOX
-   ::oEnvironDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
+   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments" )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
-   ::oEnvironDock:hide()
 
    RETURN Self
 
@@ -1112,21 +1057,8 @@ METHOD IdeDocks:buildEnvironDock()
 
 METHOD IdeDocks:buildFindInFiles()
 
-   ::oIde:oFindDock := XbpWindow():new()
-   ::oFindDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oFindDock:oWidget:setObjectName( "Find In Files" )
-   ::oDlg:addChild( ::oFindDock )
-   ::oFindDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
-   ::oFindDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oFindDock:oWidget:setWindowTitle( "Find In Files" )
-   ::oFindDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oFindDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-
-   ::oFindDock:hbLayout := HBPLAYOUT_TYPE_HORZBOX
-   ::oFindDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
+   ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files" )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
-   ::oFindDock:hide()
 
    RETURN Self
 

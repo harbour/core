@@ -1120,7 +1120,7 @@ hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
 
    IF ::qTabWidget:count() == 0
       IF ::lDockRVisible
-         ::oDockR:hide()
+         ::oFuncDock:hide()
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF

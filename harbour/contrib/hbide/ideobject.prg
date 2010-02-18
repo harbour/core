@@ -153,7 +153,7 @@ CLASS IdeObject
    ACCESS oDockED                                 INLINE ::oIde:oDockED
    ACCESS oEditTree                               INLINE ::oIde:oEditTree
    ACCESS oOpenedSources                          INLINE ::oIde:oOpenedSources
-   ACCESS oDockR                                  INLINE ::oIde:oDockR
+   ACCESS oFuncDock                               INLINE ::oIde:oFuncDock
    ACCESS oFuncList                               INLINE ::oIde:oFuncList
    ACCESS oDockB                                  INLINE ::oIde:oDockB
    ACCESS oCompileResult                          INLINE ::oIde:oCompileResult
@@ -163,13 +163,14 @@ CLASS IdeObject
    ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
    ACCESS oStackedWidget                          INLINE ::oIde:oStackedWidget
    ACCESS oFrame                                  INLINE ::oIde:oFrame
-   ACCESS oHelp                                   INLINE ::oIde:oHelp
-   ACCESS oSkeltn                                 INLINE ::oIde:oSkeltn
+   ACCESS oHelpDock                               INLINE ::oIde:oHelpDock
+   ACCESS oSkeltnDock                             INLINE ::oIde:oSkeltnDock
    ACCESS oSkeltnUI                               INLINE ::oIde:oSkeltnUI
    ACCESS oGeneral                                INLINE ::oIde:oGeneral
    ACCESS oThemesDock                             INLINE ::oIde:oThemesDock
    ACCESS oPropertiesDock                         INLINE ::oIde:oPropertiesDock
    ACCESS oEnvironDock                            INLINE ::oIde:oEnvironDock
+   ACCESS oSearchReplace                          INLINE ::oIde:oSearchReplace
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

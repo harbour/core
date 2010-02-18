@@ -1,0 +1,110 @@
+/********************************************************************************
+** Form generated from reading ui file 'searchreplacepanel.ui'
+**
+** Created: Thu Feb 18 05:42:14 2010
+**      by: Qt User Interface Compiler version 4.5.2
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef SEARCHREPLACEPANEL_H
+#define SEARCHREPLACEPANEL_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QToolButton>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QHBoxLayout *horizontalLayout;
+    QToolButton *buttonClose;
+    QLabel *label;
+    QComboBox *comboBox;
+    QToolButton *toolButton_2;
+    QToolButton *toolButton_3;
+    QSpacerItem *horizontalSpacer;
+    QComboBox *comboBox_2;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(572, 38);
+        Form->setStyleSheet(QString::fromUtf8("border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"));
+        horizontalLayout = new QHBoxLayout(Form);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        buttonClose = new QToolButton(Form);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+
+        horizontalLayout->addWidget(buttonClose);
+
+        label = new QLabel(Form);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setMaximumSize(QSize(25, 16777215));
+
+        horizontalLayout->addWidget(label);
+
+        comboBox = new QComboBox(Form);
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        comboBox->setMinimumSize(QSize(200, 0));
+        comboBox->setMaximumSize(QSize(100, 16777215));
+
+        horizontalLayout->addWidget(comboBox);
+
+        toolButton_2 = new QToolButton(Form);
+        toolButton_2->setObjectName(QString::fromUtf8("toolButton_2"));
+
+        horizontalLayout->addWidget(toolButton_2);
+
+        toolButton_3 = new QToolButton(Form);
+        toolButton_3->setObjectName(QString::fromUtf8("toolButton_3"));
+
+        horizontalLayout->addWidget(toolButton_3);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer);
+
+        comboBox_2 = new QComboBox(Form);
+        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
+        comboBox_2->setMinimumSize(QSize(200, 0));
+        comboBox_2->setMaximumSize(QSize(200, 16777215));
+
+        horizontalLayout->addWidget(comboBox_2);
+
+
+        retranslateUi(Form);
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("Form", "Find:", 0, QApplication::UnicodeUTF8));
+        toolButton_2->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        toolButton_3->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // SEARCHREPLACEPANEL_H

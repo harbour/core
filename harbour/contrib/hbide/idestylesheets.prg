@@ -309,11 +309,12 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, 'QDockWidget {                                                                ' )
       aadd( txt_, '     border: 1px solid darkgray;                                             ' )
       aadd( txt_, ' }                                                                           ' )
-      //aadd( txt_, 'QDockWidget::title {                                                         ' )
-      //aadd( txt_, '     text-align: left; /* align the text to the left */                      ' )
-      //aadd( txt_, '     background: darkgray;                                                  ' )
-      //aadd( txt_, '     padding-left: 5px;                                                      ' )
-      //aadd( txt_, ' }                                                                           ' )
+      aadd( txt_, 'QDockWidget::title {                                                         ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, '     padding-left: 10px;                                                     ' )
+      aadd( txt_, '     padding-top: 3px;                                                       ' )
+      aadd( txt_, ' }                                                                           ' )
 
    ENDCASE
 

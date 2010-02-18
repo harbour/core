@@ -71,6 +71,37 @@
 
 /*----------------------------------------------------------------------*/
 
+CLASS IdeSearchReplace INHERIT IdeObject
+
+   METHOD new( oIde )
+   METHOD create( oIde )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplacepanel.uic", ::oIde:oDlg:oWidget ):build()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//                           IdeFindReplace
+/*----------------------------------------------------------------------*/
+
 CLASS IdeFindReplace INHERIT IdeObject
 
    METHOD new( oIde )
@@ -126,7 +157,8 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "buttonFind"   , "clicked()", {|| ::onClickFind() } )
    ::oUI:signal( "buttonReplace", "clicked()", {|| ::onClickReplace() } )
    ::oUI:signal( "buttonClose"  , "clicked()", ;
-         {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
+         {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ;
+              ::oUI:hide(), ::oSearchReplace:oUI:hide() } )
 
    ::oUI:signal( "comboFindWhat", "editTextChanged(text)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
 
@@ -143,6 +175,8 @@ METHOD IdeFindReplace:create( oIde )
 
 METHOD IdeFindReplace:show()
    LOCAL cText, qLineEdit
+
+   ::oSearchReplace:oUI:show()
 
    ::oUI:q_buttonReplace:setEnabled( .f. )
    ::oUI:q_checkGlobal:setEnabled( .f. )
@@ -667,13 +701,13 @@ METHOD IdeFindInFiles:execContextMenu( p )
 METHOD IdeFindInFiles:destroy()
    LOCAL qItem
 
-   ::disconnect( ::oUI:oWidget, "rejected()" )
+   IF !empty( ::oUI )
+      ::disconnect( ::oUI:oWidget, "rejected()" )
 
-   FOR EACH qItem IN ::aItems
-      qItem := NIL
-   NEXT
-
-   //::oUI:destroy()
+      FOR EACH qItem IN ::aItems
+         qItem := NIL
+      NEXT
+   ENDIF
 
    RETURN Self
 
@@ -808,7 +842,7 @@ METHOD IdeFindInFiles:find()
       ENDIF
    ENDIF
 
-   IF !empty( cFolder )
+   IF ::oUI:q_checkFolders:isChecked() .AND. ! empty( cFolder )
       ::showLog( LOG_SECTION, "Folders" )
       IF !empty( aFolderSrc )
          ::showLog( LOG_SECTION_ITEM, "Folder: " + cFolder )
