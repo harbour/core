@@ -128,8 +128,8 @@ CLASS HbIde
    DATA   oEV                                              /* Available Environments         */
    DATA   oThemes
    DATA   oFindInFiles
-   DATA   oHelp
-   DATA   oSkeltn
+   DATA   oHelpDock
+   DATA   oSkeltnDock
    DATA   oSkeltnUI
    DATA   oFindDock
 
@@ -205,6 +205,8 @@ CLASS HbIde
    DATA   oThemesDock
    DATA   oPropertiesDock
    DATA   oEnvironDock
+   DATA   oSearchReplace
+   DATA   oFuncDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -395,8 +397,8 @@ METHOD HbIde:create( cProjIni )
    ::oPropertiesDock:hide()
    ::oEnvironDock:hide()
    ::oThemesDock:hide()
-   ::oSkeltn:hide()
-   ::oHelp:hide()
+   ::oSkeltnDock:hide()
+   ::oHelpDock:hide()
    ::oFindDock:hide()
    ::oDockB1:hide()
    ::oDockB2:hide()
