@@ -200,14 +200,15 @@ METHOD start( xAction, ... ) CLASS TTHREAD
    IF ::active
       RETURN .F.
    ELSEIF xAction == NIL
-      ::active := .T.
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             { |...|
                WHILE .T.
                   ::startTime := Seconds()
+                  ::active := .T.
                   ThreadObject( Self )
                   ::result := ::execute( ... )
                   ::startTime := NIL
+                  ::active := .F.
                   IF ISNUMBER( ::interval )
                      hb_idleSleep( ::interval / 100 )
                      LOOP
@@ -217,11 +218,11 @@ METHOD start( xAction, ... ) CLASS TTHREAD
                RETURN NIL
             }, ... )
    ELSEIF !Empty( xAction ) .AND. ValType( xAction ) $ "CBS"
-      ::active := .T.
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             { |...|
                WHILE .T.
                   ::startTime := Seconds()
+                  ::active := .T.
                   ThreadObject( Self )
                   IF ::atStart != NIL
                      EVAL( ::atStart, ... )
@@ -231,6 +232,7 @@ METHOD start( xAction, ... ) CLASS TTHREAD
                      EVAL( ::atEnd, ... )
                   ENDIF
                   ::startTime := NIL
+                  ::active := .F.
                   IF ISNUMBER( ::interval )
                      hb_idleSleep( ::interval / 100 )
                      LOOP
