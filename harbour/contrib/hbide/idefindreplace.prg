@@ -73,8 +73,16 @@
 
 CLASS IdeSearchReplace INHERIT IdeObject
 
+   DATA   qFindLineEdit
+   DATA   qReplLineEdit
+
+   DATA   cFind                                   INIT ""
+
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD destroy()
+   METHOD beginFind()
+   METHOD setFindString( cText )
 
    ENDCLASS
 
@@ -95,11 +103,91 @@ METHOD IdeSearchReplace:create( oIde )
    ::oIde := oIde
 
    ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplacepanel.uic", ::oIde:oDlg:oWidget ):build()
+   //::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
+   //::oUI:setStyleSheet( "QWidget { border: 1px solid red; }" )
+   ::oUI:setFocusPolicy( Qt_StrongFocus )
+
+   ::oUI:q_buttonClose:setIcon( ::resPath + "closetab.png" )
+   ::oUI:signal( "buttonClose", "clicked()", {|| ::oUI:hide() } )
+
+   ::oUI:q_buttonNext:setIcon( ::resPath + "next.png"     )
+   ::oUI:q_buttonNext:setToolTip( "Find Next" )
+
+   ::oUI:q_buttonPrev:setIcon( ::resPath + "previous.png" )
+   ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
+
+   ::oUI:q_buttonTop :setIcon( ::resPath + "up.png"       )
+   ::oUI:q_buttonTop :setToolTip( "Start from Top" )
+
+   ::qFindLineEdit := QLineEdit():from( ::oUI:q_comboFind:lineEdit() )
+   ::qFindLineEdit:setFocusPolicy( Qt_StrongFocus )
+   ::connect( ::qFindLineEdit, "textChanged(QString)", {|cText| ::setFindString( cText ) } )
+
+   ::qReplLineEdit := QLineEdit():from( ::oUI:q_comboReplace:lineEdit() )
+   ::qReplLineEdit:setFocusPolicy( Qt_StrongFocus )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:destroy()
+
+   ::disconnect( ::qFindLineEdit, "textChanged(QString)" )
+
+   ::oUI:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:beginFind()
+
+   ::oUI:show()
+
+   ::cFind := ""
+
+   ::qFindLineEdit:selectAll()
+   ::qFindLineEdit:setFocus( Qt_TabFocusReason )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:setFindString( cText )
+   LOCAL nFlags, lFound, qCursor, nPos
+
+   IF empty( cText )
+      RETURN .f.
+   ENDIF
+
+   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   nPos := qCursor:position()
+   qCursor:setPosition( 0 )
+   ::qCurEdit:setTextCursor( qCursor )
+
+   nFlags := 0
+   nFlags += iif( ::oUI:q_checkMatchCase:isChecked(), QTextDocument_FindCaseSensitively, 0 )
+   lFound := ::oEM:getEditCurrent():find( cText, nFlags )
+
+   IF ! lFound
+      qCursor:setPosition( nPos )
+      ::qCurEdit:setTextCursor( qCursor )
+      ::cFind := ""
+      ::qFindLineEdit:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+   ELSE
+      //::qCurEdit:setTextCursor( qCursor )
+      ::cFind := cText
+      ::qFindLineEdit:setStyleSheet( "" )
+   ENDIF
+
+   RETURN lFound
+
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 //                           IdeFindReplace
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
 CLASS IdeFindReplace INHERIT IdeObject
@@ -175,8 +263,6 @@ METHOD IdeFindReplace:create( oIde )
 
 METHOD IdeFindReplace:show()
    LOCAL cText, qLineEdit
-
-   ::oSearchReplace:oUI:show()
 
    ::oUI:q_buttonReplace:setEnabled( .f. )
    ::oUI:q_checkGlobal:setEnabled( .f. )

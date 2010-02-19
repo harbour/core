@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'searchreplacepanel.ui'
 **
-** Created: Thu Feb 18 05:42:14 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Thu Feb 18 17:15:26 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
@@ -28,60 +29,122 @@ class Ui_Form
 {
 public:
     QHBoxLayout *horizontalLayout;
-    QToolButton *buttonClose;
     QLabel *label;
-    QComboBox *comboBox;
-    QToolButton *toolButton_2;
-    QToolButton *toolButton_3;
+    QComboBox *comboFind;
+    QToolButton *buttonNext;
+    QToolButton *buttonPrev;
+    QToolButton *buttonTop;
+    QCheckBox *checkMatchCase;
+    QCheckBox *checkRegEx;
+    QLabel *label_2;
+    QCheckBox *checkReplace;
+    QComboBox *comboReplace;
+    QCheckBox *checkGlobal;
+    QCheckBox *checkNoPrompt;
     QSpacerItem *horizontalSpacer;
-    QComboBox *comboBox_2;
+    QToolButton *buttonClose;
 
     void setupUi(QWidget *Form)
     {
         if (Form->objectName().isEmpty())
             Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(572, 38);
+        Form->resize(916, 38);
+        Form->setMinimumSize(QSize(0, 30));
+        Form->setMaximumSize(QSize(16777215, 38));
         Form->setStyleSheet(QString::fromUtf8("border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"));
         horizontalLayout = new QHBoxLayout(Form);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        buttonClose = new QToolButton(Form);
-        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
-
-        horizontalLayout->addWidget(buttonClose);
-
+        horizontalLayout->setContentsMargins(-1, 2, -1, 2);
         label = new QLabel(Form);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setMaximumSize(QSize(25, 16777215));
+        label->setMaximumSize(QSize(25, 20));
 
         horizontalLayout->addWidget(label);
 
-        comboBox = new QComboBox(Form);
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
-        comboBox->setMinimumSize(QSize(200, 0));
-        comboBox->setMaximumSize(QSize(100, 16777215));
+        comboFind = new QComboBox(Form);
+        comboFind->setObjectName(QString::fromUtf8("comboFind"));
+        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(comboFind->sizePolicy().hasHeightForWidth());
+        comboFind->setSizePolicy(sizePolicy);
+        comboFind->setMinimumSize(QSize(200, 0));
+        comboFind->setMaximumSize(QSize(16777215, 16777215));
+        comboFind->setEditable(true);
 
-        horizontalLayout->addWidget(comboBox);
+        horizontalLayout->addWidget(comboFind);
 
-        toolButton_2 = new QToolButton(Form);
-        toolButton_2->setObjectName(QString::fromUtf8("toolButton_2"));
+        buttonNext = new QToolButton(Form);
+        buttonNext->setObjectName(QString::fromUtf8("buttonNext"));
+        buttonNext->setAutoRaise(true);
 
-        horizontalLayout->addWidget(toolButton_2);
+        horizontalLayout->addWidget(buttonNext);
 
-        toolButton_3 = new QToolButton(Form);
-        toolButton_3->setObjectName(QString::fromUtf8("toolButton_3"));
+        buttonPrev = new QToolButton(Form);
+        buttonPrev->setObjectName(QString::fromUtf8("buttonPrev"));
+        buttonPrev->setAutoRaise(true);
 
-        horizontalLayout->addWidget(toolButton_3);
+        horizontalLayout->addWidget(buttonPrev);
+
+        buttonTop = new QToolButton(Form);
+        buttonTop->setObjectName(QString::fromUtf8("buttonTop"));
+        buttonTop->setAutoRaise(true);
+
+        horizontalLayout->addWidget(buttonTop);
+
+        checkMatchCase = new QCheckBox(Form);
+        checkMatchCase->setObjectName(QString::fromUtf8("checkMatchCase"));
+
+        horizontalLayout->addWidget(checkMatchCase);
+
+        checkRegEx = new QCheckBox(Form);
+        checkRegEx->setObjectName(QString::fromUtf8("checkRegEx"));
+
+        horizontalLayout->addWidget(checkRegEx);
+
+        label_2 = new QLabel(Form);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setMinimumSize(QSize(30, 20));
+        label_2->setMaximumSize(QSize(30, 20));
+
+        horizontalLayout->addWidget(label_2);
+
+        checkReplace = new QCheckBox(Form);
+        checkReplace->setObjectName(QString::fromUtf8("checkReplace"));
+        checkReplace->setMinimumSize(QSize(62, 0));
+        checkReplace->setMaximumSize(QSize(62, 16777215));
+
+        horizontalLayout->addWidget(checkReplace);
+
+        comboReplace = new QComboBox(Form);
+        comboReplace->setObjectName(QString::fromUtf8("comboReplace"));
+        sizePolicy.setHeightForWidth(comboReplace->sizePolicy().hasHeightForWidth());
+        comboReplace->setSizePolicy(sizePolicy);
+        comboReplace->setMinimumSize(QSize(200, 0));
+        comboReplace->setMaximumSize(QSize(16777215, 16777215));
+        comboReplace->setEditable(true);
+
+        horizontalLayout->addWidget(comboReplace);
+
+        checkGlobal = new QCheckBox(Form);
+        checkGlobal->setObjectName(QString::fromUtf8("checkGlobal"));
+
+        horizontalLayout->addWidget(checkGlobal);
+
+        checkNoPrompt = new QCheckBox(Form);
+        checkNoPrompt->setObjectName(QString::fromUtf8("checkNoPrompt"));
+
+        horizontalLayout->addWidget(checkNoPrompt);
 
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer);
 
-        comboBox_2 = new QComboBox(Form);
-        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
-        comboBox_2->setMinimumSize(QSize(200, 0));
-        comboBox_2->setMaximumSize(QSize(200, 16777215));
+        buttonClose = new QToolButton(Form);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+        buttonClose->setAutoRaise(true);
 
-        horizontalLayout->addWidget(comboBox_2);
+        horizontalLayout->addWidget(buttonClose);
 
 
         retranslateUi(Form);
@@ -92,10 +155,17 @@ public:
     void retranslateUi(QWidget *Form)
     {
         Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
-        buttonClose->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("Form", "Find:", 0, QApplication::UnicodeUTF8));
-        toolButton_2->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        toolButton_3->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonNext->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonPrev->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonTop->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        checkMatchCase->setText(QApplication::translate("Form", "Case", 0, QApplication::UnicodeUTF8));
+        checkRegEx->setText(QApplication::translate("Form", "RegEx", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QString());
+        checkReplace->setText(QApplication::translate("Form", "Replace:", 0, QApplication::UnicodeUTF8));
+        checkGlobal->setText(QApplication::translate("Form", "Global", 0, QApplication::UnicodeUTF8));
+        checkNoPrompt->setText(QApplication::translate("Form", "NoPrompt", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(Form);
     } // retranslateUi
 

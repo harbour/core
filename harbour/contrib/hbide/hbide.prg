@@ -469,7 +469,9 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "                                                      " )
 
    ::oFindInFiles:destroy()
+   ::oSearchReplace:destroy()
    ::oFR:destroy()
+
    ::oPM:destroy()
    ::oEM:destroy()
    ::oDK:destroy()
@@ -542,6 +544,7 @@ METHOD HbIde:execAction( cKey )
    CASE "switchReadOnly"
    CASE "Search"
    CASE "Find"
+   CASE "FindEx"
    CASE "SetMark"
    CASE "GotoMark"
    CASE "Goto"
@@ -640,6 +643,11 @@ METHOD HbIde:execEditorAction( cKey )
    CASE "Find"
       IF !Empty( ::qCurEdit )
          ::oFR:show()
+      ENDIF
+      EXIT
+   CASE "FindEx"
+      IF !Empty( ::qCurEdit )
+         ::oSearchReplace:beginFind()
       ENDIF
       EXIT
    CASE "Search"
