@@ -699,8 +699,8 @@ msgstr "Fordítás..."
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
-msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ %1$s makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en,hu-HU,de"
+msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ %1$s makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en,hu-HU,de"
 
 #: hbmk2.prg:7959
 #, c-format

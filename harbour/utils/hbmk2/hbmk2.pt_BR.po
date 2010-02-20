@@ -594,10 +594,10 @@ msgstr ""
 #, c-format
 msgid ""
 "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n"
-"-lng=en-EN,hu-HU,de"
+"-lng=en,hu-HU,de"
 msgstr ""
 "lista de idiomas à serem substituidos nas macros %1$s nos arquivos .pot/.po e nos nomes de arquivos de saída .hbl/.po. Lista separada por vírgula:\\n"
-"-lng=en-EN,hu-HU,de"
+"-lng=en,hu-HU,de"
 
 #: hbmk2.prg:7942
 #, c-format

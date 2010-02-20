@@ -8241,7 +8241,7 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 
    IF Empty( cLNG := GetEnv( "HB_LANG" ) )
       IF Empty( cLNG := hb_UserLang() )
-         cLNG := "en-EN"
+         cLNG := "en"
       ENDIF
    ENDIF
 
@@ -8253,7 +8253,7 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 STATIC PROCEDURE SetUILang( hbmk )
    LOCAL tmp
 
-   IF hbmk[ _HBMK_cUILNG ] == "en-EN"
+   IF hbmk[ _HBMK_cUILNG ] == "en"
       hb_i18n_set( NIL )
    ELSE
       tmp := "${hb_root}hbmk2.${hb_lng}.hbl"
@@ -8282,7 +8282,8 @@ STATIC PROCEDURE ShowHeader( hbmk )
            "Copyright (c) 1999-2010, Viktor Szakats" + _OUT_EOL +;
            "http://www.harbour-project.org/" + _OUT_EOL )
 
-   IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" ) .AND. ;
+   IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
+      !( hbmk[ _HBMK_cUILNG ] == "en-GB" ) .AND. ;
       !( hbmk[ _HBMK_cUILNG ] == "en-US" )
       OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ) + _OUT_EOL )
    ENDIF
@@ -8384,7 +8385,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) },;
       NIL,;
       { "-hbl[=<output>]"   , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
-      { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ), _LNG_MARKER ) },;
+      { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;

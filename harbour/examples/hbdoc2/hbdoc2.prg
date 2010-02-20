@@ -79,19 +79,19 @@ todo - treat '<fixed>' / </fixed> as an non-conformance condition
 todo - look for embedded 'fixed'
 
 these files have <tables>
-   *..\..\doc\en-en\cmdline.txt    txt\lineutility.txt
-   ..\..\doc\en-en\dbstrux.txt    txt\dbstrux.txt
-   *..\..\doc\en-en\file.txt       txt\file.txt
-   ..\..\doc\en-en\input.txt      txt\input.txt
-   ..\..\doc\en-en\lang.txt       txt\lang.txt
-   ..\..\doc\en-en\menu.txt       txt\menu.txt
-   ..\..\doc\en-en\objfunc.txt    txt\objfunc.txt
-   ..\..\doc\en-en\rdddb.txt      txt\rdddb.txt
-   ..\..\doc\en-en\sayget.txt     txt\sayget.txt
-   ..\..\doc\en-en\set.txt        txt\set.txt
-   ..\..\doc\en-en\setmode.txt    txt\setmode.txt
-   ..\..\doc\en-en\string.txt     txt\string.txt
-   ..\..\doc\en-en\var.txt        txt\var.txt
+   *..\..\doc\en\cmdline.txt    txt\lineutility.txt
+   ..\..\doc\en\dbstrux.txt    txt\dbstrux.txt
+   *..\..\doc\en\file.txt       txt\file.txt
+   ..\..\doc\en\input.txt      txt\input.txt
+   ..\..\doc\en\lang.txt       txt\lang.txt
+   ..\..\doc\en\menu.txt       txt\menu.txt
+   ..\..\doc\en\objfunc.txt    txt\objfunc.txt
+   ..\..\doc\en\rdddb.txt      txt\rdddb.txt
+   ..\..\doc\en\sayget.txt     txt\sayget.txt
+   ..\..\doc\en\set.txt        txt\set.txt
+   ..\..\doc\en\setmode.txt    txt\setmode.txt
+   ..\..\doc\en\string.txt     txt\string.txt
+   ..\..\doc\en\var.txt        txt\var.txt
 
 done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
 done - list 'compliance' and 'platforms' within help
