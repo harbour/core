@@ -1720,7 +1720,7 @@ The runtime modules
 - TGet:display() fixed to always evaluate the get block before
   displaying like in C52.
 - TBColumn - Added PreBlock and PostBlock instance variables for
-  Clipper 5.3x compatibility.
+  Clipper 5.3b compatibility.
 - Fixed TYPE() function to return correct value when an  assigment to
   undeclared variable is checked (Clipper creates the memvar variable).
 - TGet - Fixed to correctly display buffer when negative value
@@ -1732,7 +1732,7 @@ The runtime modules
 - Fixed infinite support for WatcomC.
 - Fixed to release memory in cases where invalid syntax was macro compiled.
 - Added DATA CapRow and DATA CapCol values to TGET class
-  (for Clipper 5.3x compatibility).
+  (for Clipper 5.3b compatibility).
 - Fixed to correctly return the procedure name where the codeblock was created.
 - Greek and Serbian language codepage files added.
 - fixed to use 'mkstemp' on Unix (no more GCC linker warnings)

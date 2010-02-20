@@ -58,9 +58,9 @@
 
 /* NOTE: You can fine-tune here, which Clipper features you want to include. */
 
-/* #define HB_CLP_STRICT */       /* Enable Cl*pper 5.2e/5.3x strict compatibility */
-#define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3x undocumented features */
-#define HB_COMPAT_C53             /* Enable Cl*pper 5.3x extensions */
+/* #define HB_CLP_STRICT */       /* Enable Cl*pper 5.2e/5.3b strict compatibility */
+#define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3b undocumented features */
+#define HB_COMPAT_C53             /* Enable Cl*pper 5.3b extensions */
 
 /* ***********************************************************************
  * Leave this #define if you want to allow usage of legacy Harbour 2.0.0/Clipper

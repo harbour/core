@@ -116,8 +116,8 @@ PROCEDURE Main_STR()
    TEST_LINE( Str(Val("+-"))                  , " 0"                                   )
    TEST_LINE( Str(Val("."))                   , "0"                                    )
    TEST_LINE( Str(Val(".."))                  , "0.0"                                  )
-   TEST_LINE( Str(Val("-."))                  , " 0"                                   ) /* Bug in CA-Cl*pper 5.3x, it will return: "  0" */
-   TEST_LINE( Str(Val("-.."))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3x, it will return: " 0.0" */
+   TEST_LINE( Str(Val("-."))                  , " 0"                                   ) /* Bug in CA-Cl*pper 5.3b, it will return: "  0" */
+   TEST_LINE( Str(Val("-.."))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3b, it will return: " 0.0" */
    TEST_LINE( Str(Val("1."))                  , " 1"                                   )
    TEST_LINE( Str(Val("1.."))                 , "1.0"                                  )
    TEST_LINE( Str(Val("1..."))                , "1.00"                                 )
@@ -128,7 +128,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Str(Val("-1..."))               , "-1.00"                                )
    TEST_LINE( Str(Val(".1"))                  , "0.1"                                  )
    TEST_LINE( Str(Val("-.1"))                 , "-0.1"                                 )
-   TEST_LINE( Str(Val("-.0"))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3x, it will return: " 0.0" */
+   TEST_LINE( Str(Val("-.0"))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3b, it will return: " 0.0" */
    TEST_LINE( Str(Val(" -.1"))                , "-0.1"                                 )
    TEST_LINE( Str(Val(" --.1"))               , "  0.0"                                )
    TEST_LINE( Str(Val("+.1"))                 , "0.1"                                  )

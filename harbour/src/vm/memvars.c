@@ -1527,7 +1527,7 @@ HB_FUNC( __MVSAVE )
          hb_itemRelease( pError );
    }
    else
-      /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
+      /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3b. [ckedem] */
       hb_errRT_BASE( EG_ARG, 2008, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
@@ -1718,7 +1718,7 @@ HB_FUNC( __MVRESTORE )
          hb_itemRelease( pError );
    }
    else
-      /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
+      /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3b. [ckedem] */
       hb_errRT_BASE( EG_ARG, 2007, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 

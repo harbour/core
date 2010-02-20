@@ -155,7 +155,7 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( "Language options: ", 0 );
 #if defined( HB_COMPAT_C53 )
-   hb_conOutErr( "(Clipper 5.3) ", 0 );
+   hb_conOutErr( "(Clipper 5.3b) ", 0 );
 #endif
 #if defined( HB_CLP_UNDOC )
    hb_conOutErr( "(Clipper 5.x undoc) ", 0 );
