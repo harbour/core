@@ -72,7 +72,7 @@
 #define ME_TOGGLESCROLL 35      /* Toggle scrolling mode           */
 #define ME_WORDRIGHT    100     /* Perform word-right operation    */
 #define ME_BOTTOMRIGHT  101     /* Perform bottom-right operation  */
-#ifdef HB_COMPAT_XPP
+#ifndef HB_CLP_STRICT
 #define ME_PASTE        110     /* Paste string into buffer        */ /* Xbase++ extension */
 #endif
 
