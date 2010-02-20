@@ -62,8 +62,8 @@
 
 /* TOFIX: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER <= 3004001
-#define sqlite3_int64   LONGLONG
-#define sqlite3_uint64  ULONGLONG
+#define sqlite3_int64   HB_LONGLONG
+#define sqlite3_uint64  HB_ULONGLONG
 #endif
 
 #define HB_SQLITE3_DB                        6000001
