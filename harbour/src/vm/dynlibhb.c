@@ -207,6 +207,8 @@ void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
          return ( void * ) pProcAddr;
 #elif defined( HB_HAS_DLFCN )
       return dlsym( hDynLib, pszSymbol );
+#else
+      HB_SYMBOL_UNUSED( pszSymbol );
 #endif
    }
    return NULL;

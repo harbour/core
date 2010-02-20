@@ -200,5 +200,6 @@ static HB_LANG s_lang =
    }
 };
 
+#undef ES   /* Hack for Solaris builds where ES is macro */
 #define HB_LANG_ID      ES
 #include "hbmsgreg.h"

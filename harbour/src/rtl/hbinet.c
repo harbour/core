@@ -1084,6 +1084,19 @@ HB_FUNC( HB_INETGETALIAS )
 
 
 /**********************************************
+* Interface information function
+****/
+HB_FUNC( HB_INETIFINFO )
+{
+   PHB_ITEM pInfo = hb_socketGetIFaces( hb_parnidef( 2, HB_SOCKET_PF_INET ),
+                                        hb_parl( 1 ) );
+   if( pInfo )
+      hb_itemReturnRelease( pInfo );
+   else
+      hb_reta( 0 );
+}
+
+/**********************************************
 * Server Specific functions
 ****/
 

@@ -512,7 +512,7 @@ static PHB_TASKINFO hb_taskNew( long stack_size )
 
    pTask = ( PHB_TASKINFO ) memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0,
                                     sizeof( HB_TASKINFO ) );
-   pTask->stack = hb_xgrab( stack_size );
+   pTask->stack = ( char * ) hb_xgrab( stack_size );
 
    stack_size += ( HB_PTRDIFF ) pTask->stack;
    stack_size &= ~( HB_TASK_STACK_ALIGN - 1 );

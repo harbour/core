@@ -320,6 +320,7 @@ HB_FUNC( ORDCUSTOM )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
+#ifndef HB_CLP_STRICT
 HB_FUNC( ORDCOUNT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -336,6 +337,60 @@ HB_FUNC( ORDCOUNT )
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
+
+HB_FUNC( ORDWILDSEEK )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      const char * szPattern = hb_parc( 1 );
+
+      if( szPattern )
+      {
+         HB_BOOL fCont = hb_parl( 2 ), fBack = hb_parl( 3 ), fFound = HB_FALSE;
+         DBORDERINFO OrderInfo;
+         HB_ERRCODE errCode = HB_SUCCESS;
+
+         memset( &OrderInfo, 0, sizeof( DBORDERINFO ) );
+         OrderInfo.itmResult = hb_itemNew( NULL );
+
+         if( !fCont )
+         {
+            const char * szKey;
+
+            if( fBack )
+               errCode = SELF_GOBOTTOM( pArea );
+            else
+               errCode = SELF_GOTOP( pArea );
+
+            if( errCode == HB_SUCCESS )
+            {
+               errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &OrderInfo );
+               if( errCode == HB_SUCCESS )
+               {
+                  szKey = hb_itemGetCPtr( OrderInfo.itmResult );
+                  fFound = hb_strMatchWild( szKey, szPattern );
+               }
+            }
+         }
+         if( !fFound && errCode == HB_SUCCESS )
+         {
+            OrderInfo.itmNewVal = hb_param( 1, HB_IT_STRING );
+            if( SELF_ORDINFO( pArea, fBack ? DBOI_SKIPWILDBACK : DBOI_SKIPWILD,
+                          &OrderInfo ) == HB_SUCCESS )
+               fFound = hb_itemGetL( OrderInfo.itmResult );
+         }
+         hb_itemRelease( OrderInfo.itmResult );
+         hb_retl( fFound );
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEPUTBADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+}
+#endif
 
 HB_FUNC( DBINFO )
 {

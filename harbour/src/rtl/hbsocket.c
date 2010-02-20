@@ -80,6 +80,9 @@
    platform supports getaddrinfo()/freeaddrinfo() functions:
       #define HB_HAS_ADDRINFO
 
+   platform uses sockaddr structure which contains sa_len member:
+      #define HB_HAS_SOCKADDR_SA_LEN
+
    platform supports constant inet6 addresses in6addr_any and in6addr_loopback:
       #define HB_HAS_INET6_ADDR_CONST
 
@@ -127,9 +130,17 @@
 #  if defined( HB_OS_BEOS )
 #     define HB_SOCKET_TRANSLATE_DOMAIN
 #     define HB_SOCKET_TRANSLATE_TYPE
+#     define HB_HAS_SOCKADDR_SA_LEN
 #  endif
 #  if defined( HB_OS_LINUX )
 #     define HB_HAS_SELECT_TIMER
+#  endif
+#  if defined( HB_OS_SUNOS ) && !defined( BSD_COMP )
+#     define BSD_COMP
+#  endif
+#  if defined( HB_OS_BSD )
+#     define HB_SOCKET_TRANSLATE_DOMAIN
+#     define HB_HAS_SOCKADDR_SA_LEN
 #  endif
 #elif defined( HB_OS_WIN )
 #  if defined( __WATCOMC__ )
@@ -146,6 +157,7 @@
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
 #elif defined( HB_OS_OS2 )
+#  define HB_HAS_SOCKADDR_SA_LEN
 #  if defined( __WATCOMC__ )
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
@@ -185,7 +197,6 @@
 #     endif
 #     include <sys/socket.h>
 #     include <sys/select.h>
-#     include <sys/ioctl.h>
 #     include <arpa/inet.h>
 #  endif
 #  if !( defined( HB_OS_DOS ) && defined( __WATCOMC__ ) )
@@ -193,6 +204,10 @@
 #  endif
 #  include <sys/types.h>
 #  include <sys/socket.h>
+#  include <sys/ioctl.h>
+#  if defined( HB_OS_BEOS )
+#     include <sys/sockio.h>
+#  endif
 #  include <netdb.h>
 #  include <netinet/in.h>
 #  include <arpa/inet.h>
@@ -200,10 +215,10 @@
 #     include <sys/un.h>
 #  endif
 #  include <netinet/tcp.h>
+#  include <net/if.h>
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )
-#     include <sys/ioctl.h>
 #     define select       select_s
 #  endif
 #endif
@@ -703,6 +718,14 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( af );
+   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   return NULL;
+}
+
+PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
+{
+   HB_SYMBOL_UNUSED( af );
+   HB_SYMBOL_UNUSED( fNoAliases );
    hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
@@ -1702,7 +1725,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET6_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET, &sa->sin6_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET6, &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
                int iTODO;
@@ -1856,7 +1879,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET6_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET, &sa->sin6_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET6, &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
                int iTODO;
@@ -2690,7 +2713,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
       hints.ai_family = AF_INET;
       if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
       {
-         if( res->ai_addrlen >= sizeof( struct sockaddr_in ) &&
+         if( ( int ) res->ai_addrlen >= ( int ) sizeof( struct sockaddr_in ) &&
              hb_socketGetAddrFamilly( res->ai_addr, res->ai_addrlen ) == AF_INET )
          {
             sa.sin_addr.s_addr = ( ( struct sockaddr_in * ) res->ai_addr )->sin_addr.s_addr;
@@ -2944,4 +2967,238 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    return NULL;
 }
 
+#if defined( SIOCGIFCONF )
+static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
+                                       const void * pSockAddr, unsigned len )
+{
+   char * szAddr = hb_socketAddrGetName( pSockAddr, len );
+
+   if( szAddr )
+   {
+      if( ! hb_arraySetCLPtr( pItem, nPos, szAddr, strlen( szAddr ) ) )
+         hb_xfree( szAddr );
+   }
+}
+#endif
+
+PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
+{
+   PHB_ITEM pArray = NULL;
+
+/*
+ * TODO: add suppot for alternative long interface intorduced in some
+ *       new systems using 'struct lifreq' with SIOCGLIF* ioctls instead
+ *       of 'struct ifreq' and SIOCGIF*
+ */
+#if defined( SIOCGIFCONF )
+   PHB_ITEM pItem = NULL;
+   struct ifconf ifc;
+   struct ifreq * pifr;
+   char * buf, * ptr;
+   const char * pLastName = NULL;
+   int len = 0, size, iLastName = 0, iLastFamily = 0, flags, family;
+   HB_SOCKET sd;
+
+   sd = hb_socketOpen( af ? af : HB_SOCKET_AF_INET, HB_SOCKET_PT_DGRAM, 0 );
+   if( sd != HB_NO_SOCKET )
+   {
+#  if defined( HB_SOCKET_TRANSLATE_DOMAIN )
+      af = hb_socketTransDomain( af, NULL );
+#  endif
+#  ifdef SIOCGIFNUM
+      if( ioctl( sd, SIOCGIFNUM, &len ) == -1 )
+         len = 0;
+#  endif
+      if( len <= 0 )
+         len = 0x8000;
+      len *= sizeof( struct ifreq );
+      buf = ( char * ) hb_xgrab( len );
+
+      ifc.ifc_len = len;
+      ifc.ifc_buf = buf;
+
+      /* Warning: On some platforms this code can effectively work only with
+       *          IP4 interfaces and IP6 will need different implementation.
+       */
+
+      if( ioctl( sd, SIOCGIFCONF, &ifc ) != -1 )
+      {
+         for( ptr = ifc.ifc_buf, size = ifc.ifc_len; size > 0; )
+         {
+            pifr = ( struct ifreq * ) ptr;
+            family = pifr->ifr_addr.sa_family;
+#  if defined( HB_HAS_SOCKADDR_SA_LEN )
+            len = pifr->ifr_addr.sa_len;
+            if( len < ( int ) sizeof( struct sockaddr ) )
+               len = sizeof( struct sockaddr );
+#  else
+            switch( family )
+            {
+#     if defined( HB_HAS_INET6 )
+               case AF_INET6:
+                  len = sizeof( struct sockaddr_in6 );
+                  break;
+#     endif
+#     if defined( AF_INET )
+               case AF_INET:
+#     endif
+               default:
+                  len = sizeof( struct sockaddr );
+                  break;
+            }
+#  endif
+            len += sizeof( pifr->ifr_name );
+#  if !defined( HB_OS_BEOS )
+            if( len < ( int ) sizeof( struct ifreq ) )
+               len = ( int ) sizeof( struct ifreq );
+#  endif
+            ptr += len;
+            size -= len;
+
+            if( af && family != af )
+               continue;
+
+            /* skip alias devices */
+            if( fNoAliases )
+            {
+               const char * cptr = strchr( pifr->ifr_name, ':' );
+
+               len = cptr ? ( int ) ( pifr->ifr_name - cptr ) :
+                            ( int ) strlen( pifr->ifr_name );
+               if( pLastName && len == iLastName && family == iLastFamily &&
+                   memcmp( pLastName, pifr->ifr_name, len ) == 0 )
+                  continue;
+               pLastName = pifr->ifr_name;
+               iLastName = len;
+               iLastFamily = family;
+            }
+
+            {
+               struct ifreq ifr = *pifr;
+               if( ioctl(  sd, SIOCGIFFLAGS, &ifr ) == -1 )
+                  continue;
+               flags = ifr.ifr_flags;
+            }
+
+            if( ( flags & IFF_UP ) == 0 )
+               continue;
+
+            if( pItem == NULL )
+               pItem = hb_itemNew( NULL );
+
+            hb_arrayNew( pItem, HB_SOCKET_IFINFO_LEN );
+
+            pifr->ifr_name[ sizeof( pifr->ifr_name ) - 1 ] = '\0';
+            hb_arraySetC( pItem, HB_SOCKET_IFINFO_NAME, pifr->ifr_name );
+
+            switch( family )
+            {
+#  if defined( HB_HAS_INET6 )
+               case AF_INET6:
+                  len = sizeof( struct sockaddr_in6 );
+                  family = HB_SOCKET_AF_INET6;
+                  break;
+#  endif
+#  if defined( AF_INET )
+               case AF_INET:
+                  len = sizeof( struct sockaddr_in );
+                  family = HB_SOCKET_AF_INET;
+                  break;
+#  endif
+               default:
+                  len = 0;
+                  break;
+            }
+            hb_arraySetNI( pItem, HB_SOCKET_IFINFO_FAMILY, family );
+
+            if( len )
+            {
+               hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_ADDR,
+                                          &pifr->ifr_addr, len );
+
+#  if defined( SIOCGIFNETMASK )
+#     ifndef ifr_netmask
+#        define ifr_netmask   ifr_addr
+#     endif
+               if( ioctl( sd, SIOCGIFNETMASK, pifr ) != -1 )
+                  hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_NETMASK,
+                                             &pifr->ifr_netmask, len );
+#  endif
+#  if defined( SIOCGIFBRDADDR )
+               if( flags & IFF_BROADCAST )
+               {
+                  if( ioctl( sd, SIOCGIFBRDADDR, pifr ) != -1 )
+                     hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_BROADCAST,
+                                                &pifr->ifr_broadaddr, len );
+               }
+#  endif
+#  if defined( SIOCGIFDSTADDR )
+               if( flags & IFF_POINTOPOINT )
+               {
+                  if( ioctl( sd, SIOCGIFDSTADDR, pifr ) != -1 )
+                     hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_P2PADDR,
+                                                &pifr->ifr_dstaddr, len );
+               }
+#  endif
+#  if defined( SIOCGIFHWADDR )
+#     ifndef ifr_hwaddr
+#        define ifr_hwaddr    ifr_addr
+#     endif
+               if( ioctl( sd, SIOCGIFHWADDR, pifr ) != -1 )
+               {
+                  char hwaddr[ 24 ];
+                  unsigned char * data;
+                  data = ( unsigned char * ) &pifr->ifr_hwaddr.sa_data[0];
+                  hb_snprintf( hwaddr, sizeof( hwaddr ),
+                               "%02X:%02X:%02X:%02X:%02X:%02X",
+                               data[ 0 ], data[ 1 ], data[ 2 ],
+                               data[ 3 ], data[ 4 ], data[ 5 ] );
+                  hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
+               }
+#  elif defined( SIOCGENADDR )
+               if( ioctl( sd, SIOCGENADDR, pifr ) != -1 )
+               {
+                  char hwaddr[ 24 ];
+                  unsigned char * data;
+                  data = ( unsigned char * ) &pifr->ifr_enaddr[0];
+                  hb_snprintf( hwaddr, sizeof( hwaddr ),
+                               "%02X:%02X:%02X:%02X:%02X:%02X",
+                               data[ 0 ], data[ 1 ], data[ 2 ],
+                               data[ 3 ], data[ 4 ], data[ 5 ] );
+                  hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
+               }
+#  endif
+            }
+
+            flags = ( ( flags & IFF_UP ) ?
+                      HB_SOCKET_IFF_UP : 0 ) |
+                    ( ( flags & IFF_BROADCAST ) ?
+                      HB_SOCKET_IFF_BROADCAST : 0 ) |
+                    ( ( flags & IFF_LOOPBACK ) ?
+                      HB_SOCKET_IFF_LOOPBACK : 0 ) |
+                    ( ( flags & IFF_POINTOPOINT ) ?
+                      HB_SOCKET_IFF_POINTOPOINT : 0 ) |
+                    ( ( flags & IFF_MULTICAST ) ?
+                      HB_SOCKET_IFF_MULTICAST : 0 );
+            hb_arraySetNI( pItem, HB_SOCKET_IFINFO_FLAGS, flags );
+
+            if( pArray == NULL )
+               pArray = hb_itemArrayNew( 0 );
+            hb_arrayAddForward( pArray, pItem );
+         }
+      }
+      hb_xfree( buf );
+      hb_socketClose( sd );
+   }
+
+   if( pItem )
+      hb_itemRelease( pItem );
+#else
+   int iTODO;
+   HB_SYMBOL_UNUSED( af );
+   HB_SYMBOL_UNUSED( fNoAliases );
+#endif
+
+   return pArray;
+}
 #endif /* !HB_SOCKET_OFF */

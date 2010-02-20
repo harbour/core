@@ -186,4 +186,22 @@
 #define HB_SOCKET_SHUT_WR                 1
 #define HB_SOCKET_SHUT_RDWR               2
 
+/* interface information flags */
+#define HB_SOCKET_IFF_UP                  0x0001   /* Interface is up */
+#define HB_SOCKET_IFF_BROADCAST           0x0002   /* Broadcast address valid */
+#define HB_SOCKET_IFF_LOOPBACK            0x0004   /* Is a loopback net */
+#define HB_SOCKET_IFF_POINTOPOINT         0x0008   /* Interface is point-to-point link */
+#define HB_SOCKET_IFF_MULTICAST           0x0010   /* Supports multicast */
+
+/* Harbour interface information indexes */
+#define HB_SOCKET_IFINFO_FAMILY           1     /* adress family */
+#define HB_SOCKET_IFINFO_NAME             2     /* interface name */
+#define HB_SOCKET_IFINFO_FLAGS            3     /* flags HB_SOCKET_IFF_* */
+#define HB_SOCKET_IFINFO_ADDR             4     /* interface address */
+#define HB_SOCKET_IFINFO_NETMASK          5     /* subnetmask */
+#define HB_SOCKET_IFINFO_BROADCAST        6     /* broadcast address */
+#define HB_SOCKET_IFINFO_P2PADDR          7     /* point-to-point address */
+#define HB_SOCKET_IFINFO_HWADDR           8     /* hardware address */
+#define HB_SOCKET_IFINFO_LEN              8
+
 #endif /* HB_SOCKET_CH_ */
