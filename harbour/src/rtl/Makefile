@@ -142,7 +142,6 @@ C_SOURCES := \
    saverest.c \
    scroll.c \
    scrrow.c \
-   secondfs.c \
    seconds.c \
    setcolor.c \
    setcurs.c \
@@ -163,7 +162,6 @@ C_SOURCES := \
    strcase.c \
    strclear.c \
    strmatch.c \
-   strpeek.c \
    strtoexp.c \
    strtran.c \
    strxor.c \

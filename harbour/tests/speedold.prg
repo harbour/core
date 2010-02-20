@@ -35,7 +35,7 @@
 #endif
 
 #ifdef REAL_TIME
-    #xtranslate secondscpu([<x>]) => seconds()
+    #xtranslate hb_secondsCPU([<x>]) => seconds()
 #endif
 #ifndef EOL
     #define EOL hb_OSNewLine()
@@ -100,15 +100,15 @@ t:=seconds()+5; while t > seconds(); enddo
 ? "ARR_LEN =", ARR_LEN
 ? "N_LOOPS =", N_LOOPS
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
 next
-tn:=secondscpu()-t
+tn:=hb_secondsCPU()-t
 ? "empty loops overhead =", tn
 #ifdef REAL_TIME
     ? "real time -> seconds()"
 #else
-    ? "CPU usage -> secondsCPU()"
+    ? "CPU usage -> hb_secondsCPU()"
 #endif
 ? ""
 
@@ -153,39 +153,39 @@ L_N := 112345.67
 L_D := date()
 
 
-total:=secondscpu()
+total:=hb_secondsCPU()
 totalr:=seconds()
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=L_C
 next
 dsp_time( "c:=L_C -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=L_N
 next
 dsp_time( "n:=L_N -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     d:=L_D
 next
 dsp_time( "d:=L_D -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=M_C
 next
 dsp_time( "c:=M_C -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=M_N
 next
 dsp_time( "n:=M_N -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     d:=M_D
 next
@@ -193,38 +193,38 @@ dsp_time( "d:=M_D -> ", t, tn)
 
 #ifndef NO_DBF_TEST
 select(1)
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=F_C
 next
 dsp_time( "(sh) c:=F_C -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=F_N
 next
 dsp_time( "(sh) n:=F_N -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     d:=F_D
 next
 dsp_time( "(sh) d:=F_D -> ", t, tn)
 
 select(2)
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=F_C
 next
 dsp_time( "(ex) c:=F_C -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=F_N
 next
 dsp_time( "(ex) n:=F_N -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     d:=F_D
 next
@@ -232,14 +232,14 @@ dsp_time( "(ex) d:=F_D -> ", t, tn)
 #endif
 
 o:=errorNew()
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=o:GenCode
 next
 dsp_time( "n:=o:GenCode -> ", t, tn)
 
 #ifdef __HARBOUR__
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=o[8]
 next
@@ -247,13 +247,13 @@ dsp_time( "n:=o[8] -> ", t, tn)
 #endif
 
 #ifdef ASSOC_ARRAY
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]:=i
 next
 dsp_time( "aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100)]:=i -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]
 next
@@ -261,38 +261,38 @@ dsp_time( "c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100)] -> ", t, tn)
 #endif
 
 #ifndef NO_KEYBOARD_TEST
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     inkey()
 next
 dsp_time( "inkey() -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     nextkey()
 next
 dsp_time( "nextkey() -> ", t, tn)
 #endif
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     round(i/1000,2)
 next
 dsp_time( "round(i/1000,2) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     str(i/1000)
 next
 dsp_time( "str(i/1000) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     val(a3[i%ARR_LEN+1])
 next
 dsp_time( "val(a3[i%ARR_LEN+1]) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 j:=date()
 for i:=1 to N_LOOPS
     dtos(j+i%10000-5000)
@@ -300,87 +300,87 @@ next
 dsp_time( "dtos(j+i%10000-5000) -> ", t, tn)
 
 bc:={||i%ARR_LEN}
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     eval(bc)
 next
 dsp_time( "eval({||i%ARR_LEN}) -> ", t, tn)
 
 bc:={|x|x%ARR_LEN}
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     eval(bc,i)
 next
 dsp_time( "eval({|x|x%ARR_LEN},i) -> ", t, tn)
 
 bc:={|x|f1(x)}
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     eval(bc,i)
 next
 dsp_time( "eval({|x|f1(x)},i) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     n:=&("f1("+str(i)+")")
 next
 dsp_time( "&('f1('+str(i)+')') -> ", t, tn)
 
 bc:=&("{|x|f1(x)}")
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     eval(bc,i)
 next
 dsp_time( "eval([&('{|x|f1(x)}')]) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j:=valtype(a)+valtype(i)
 next
 dsp_time( "j := valtype(a)+valtype(i) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := str(i%100,2) $ a2[i%ARR_LEN+1]
 next
 dsp_time( "j := str(i%100,2) $ a2[i%ARR_LEN+1] -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := val(a2[i%ARR_LEN+1])
 next
 dsp_time( "j := val(a2[i%ARR_LEN+1]) -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := a2[i%ARR_LEN+1] == c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] == s -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := a2[i%ARR_LEN+1] = c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] = s -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := a2[i%ARR_LEN+1] >= c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] >= s -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     j := a2[i%ARR_LEN+1] < c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] < s -> ", t, tn)
 
 aa:={}
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     if i%1000 == 0
         aa:={}
@@ -389,46 +389,46 @@ for i:=1 to N_LOOPS
 next
 dsp_time( "aadd(aa,{i,j,s,a,a2,t,bc}) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f0()
 next
 dsp_time( "f0() -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f1(i)
 next
 dsp_time( "f1(i) -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(c)
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
 c:=replicate(c,5000)
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(c)
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(@c)
 next
 dsp_time( "f2(@c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(c)
     c2:=c
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]); c2:=c -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(@c)
     c2:=c
@@ -436,44 +436,44 @@ next
 dsp_time( "f2(@c["+ltrim(str(len(c)))+"]); c2:=c -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f3(a,a2,c,i,j,t,bc)
 next
 dsp_time( "f3(a,a2,c,i,j,t,bc) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     f2(a2)
 next
 dsp_time( "f2(a2) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=f4()
 next
 dsp_time( "s:=f4() -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     c:=f5()
 next
 dsp_time( "s:=f5() -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     ascan(a,i%ARR_LEN)
 next
 dsp_time( "ascan(a,i%ARR_LEN) -> ", t, tn)
 
 c:=dtos(date())
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     ascan(a2,c+chr(i%64+64))
 next
 dsp_time( "ascan(a2,c+chr(i%64+64)) -> ", t, tn)
 
-t:=secondscpu()
+t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
     ascan(a,{|x|x==i%ARR_LEN})
 next
@@ -498,7 +498,7 @@ endif
 return nil
 
 function dsp_time(s,t,tn)
-? padr(s,50)+str(max(secondscpu()-t-tn,0),8,2)
+? padr(s,50)+str(max(hb_secondsCPU()-t-tn,0),8,2)
 return nil
 
 function f0(x)

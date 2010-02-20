@@ -43,7 +43,7 @@
       #define __ST__
    #endif
    /* Clipper does not have function to extract process time */
-   #xtranslate secondsCPU() => seconds()
+   #xtranslate hb_secondsCPU() => seconds()
 #endif
 
 #ifdef FlagShip
@@ -52,6 +52,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
+   #xtranslate hb_secondsCPU([<x>]) => secondsCPU([<x>])
    /* the FlagShip version of seconds() returns integer values */
    #xtranslate seconds() => fs_seconds()
 #endif
@@ -59,7 +60,7 @@
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
    /* Has xBase++ function to extract process time? */
-   #xtranslate secondsCPU() => seconds()
+   #xtranslate hb_secondsCPU() => seconds()
 #endif
 
 #ifdef __CLIP__
@@ -126,11 +127,11 @@
       [ private <privates> ; ]      ;
       [ public <publics> ; ]        ;
       [ <init> ; ]                  ;
-      time := secondscpu() ;        ;
+      time := hb_secondsCPU() ;     ;
       for i:=1 to N_LOOPS ;         ;
          [ ( <testExp> ) ; ]        ;
       next ;                        ;
-      time := secondscpu() - time ; ;
+      time := hb_secondsCPU() - time ; ;
       [ <exit> ; ]                  ;
    return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
@@ -542,7 +543,7 @@ else
 endif
 
 nSeconds := seconds()
-nTimes := secondsCPU()
+nTimes := hb_secondsCPU()
 
 nTimeTotST := nTimeTotMT := 0
 
@@ -640,7 +641,7 @@ nTimeTotST := nTimeTotMT := 0
    next
 #endif
 
-nTimes := secondsCPU() - nTimes
+nTimes := hb_secondsCPU() - nTimes
 nSeconds := seconds() - nSeconds
 
 if lScale

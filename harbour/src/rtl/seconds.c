@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * SECONDS() function
  *
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl> (HB_SECONDSCPU())
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
@@ -56,6 +57,11 @@
 HB_FUNC( SECONDS )
 {
    hb_retnd( hb_dateSeconds() );
+}
+
+HB_FUNC( HB_SECONDSCPU )
+{
+   hb_retnd( hb_secondsCPU( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( HB_MILLISECONDS )

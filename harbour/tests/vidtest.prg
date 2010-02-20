@@ -15,8 +15,12 @@
 #include "box.ch"
 
 #ifndef __CLIP__
-    #ifndef FlagShip
-        #xtranslate secondscpu([<x>]) => seconds([<x>])
+    #ifdef FlagShip
+        #xtranslate hb_secondsCPU([<x>]) => secondsCPU([<x>])
+    #else
+        #ifndef __HARBOUR__
+            #xtranslate hb_secondsCPU([<x>]) => seconds([<x>])
+        #endif
         #define EOL chr(13) + chr(10)
     #endif
 #endif
@@ -66,7 +70,7 @@ static function StaticText()
     local c
     local i       := 0
     local nEnd    := 0
-    local nStart  := secondscpu()
+    local nStart  := hb_secondsCPU()
 
     str := "Hello World - From " + Left(str,At(" ",str)-1)
     c   := (MaxCol()-len(str)) / 2
@@ -75,7 +79,7 @@ static function StaticText()
         @ r, c say str
     next i
 
-    nEnd := secondscpu()
+    nEnd := hb_secondsCPU()
 
     cResult := "StaticText:  Iterations=5000, Time="+alltrim(str(nEnd-nStart))+ ;
                "secs,  Average FPS = "+alltrim(str(round(5000 / (nEnd-nStart),0)))+" FPS"
@@ -109,7 +113,7 @@ static function WindowBounce()
         clr[i] := "W+/"+aCol[(i-1)%16+1]
     next i
 
-    nStart := secondscpu()
+    nStart := hb_secondsCPU()
     dispbegin()
 
     do while nFrames < 5000
@@ -141,7 +145,7 @@ static function WindowBounce()
     enddo
 
     dispend()
-    nEnd := secondscpu()
+    nEnd := hb_secondsCPU()
 
     cResult := "WindowBounce:Iterations="+alltrim(str(nFrames))+", Time="+alltrim(str(nEnd-nStart))+ ;
                "secs,  Average FPS = "+alltrim(str(round(nFrames / (nEnd-nStart),0)))+" FPS"
@@ -163,7 +167,7 @@ static function ColourBoxes()
     local aCol    := {"N", "B", "G", "BG", "R", "RB", "GR", "W", ;
                       "N*","B*","G*","BG*","R*","RB*","GR*","W*" }
 
-    nStart := secondscpu()
+    nStart := hb_secondsCPU()
     // display boxes to screen
 
     do while nFrames < 5000
@@ -191,7 +195,7 @@ static function ColourBoxes()
        nDepth--
     enddo
 
-    nEnd := secondscpu()
+    nEnd := hb_secondsCPU()
 
     cResult := "ColourBoxes: Iterations="+alltrim(str(nFrames))+", Time="+alltrim(str(nEnd-nStart))+ ;
                "secs,  Average FPS = "+alltrim(str(round(nFrames / (nEnd-nStart),0)))+" FPS"

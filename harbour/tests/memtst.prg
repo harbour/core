@@ -30,12 +30,12 @@ endif
 ?
 ? "testing single large memory blocks allocation and freeing..."
 nRealSec := seconds()
-nCPUSec := secondsCPU()
+nCPUSec := hb_secondsCPU()
 for i := 1 to N_LOOPS
     a := space( 50000 )
 next
 a := NIL
-nCPUSec := secondsCPU() - nCPUSec
+nCPUSec := hb_secondsCPU() - nCPUSec
 nRealSec := seconds() - nRealSec
 ? " CPU time:", nCPUSec, "sec."
 ? "real time:", nRealSec, "sec."
@@ -43,7 +43,7 @@ nRealSec := seconds() - nRealSec
 ?
 ? "testing many large memory blocks allocation and freeing..."
 nRealSec := seconds()
-nCPUSec := secondsCPU()
+nCPUSec := hb_secondsCPU()
 a := array(100)
 for i := 1 to N_LOOPS
     a[ i % 100 + 1 ] := space( 50000 )
@@ -52,7 +52,7 @@ for i := 1 to N_LOOPS
     endif
 next
 a := NIL
-nCPUSec := secondsCPU() - nCPUSec
+nCPUSec := hb_secondsCPU() - nCPUSec
 nRealSec := seconds() - nRealSec
 ? " CPU time:", nCPUSec, "sec."
 ? "real time:", nRealSec, "sec."
@@ -63,7 +63,7 @@ nRealSec := seconds() - nRealSec
 wait
 
 nRealSec := seconds()
-nCPUSec := secondsCPU()
+nCPUSec := hb_secondsCPU()
 a := {}
 for i := 1 to N_LOOPS
    aadd( a, {} )
@@ -71,7 +71,7 @@ for i := 1 to N_LOOPS
       ?? i
    endif
 next
-nCPUSec := secondsCPU() - nCPUSec
+nCPUSec := hb_secondsCPU() - nCPUSec
 nRealSec := seconds() - nRealSec
 ? " CPU time:", nCPUSec, "sec."
 ? "real time:", nRealSec, "sec."
