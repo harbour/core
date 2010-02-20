@@ -909,7 +909,6 @@ FUNCTION Decode( cType, hsBlock, cKey )
       CASE cCode == "C52U" ;     RETURN "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_CLP_UNDOC flag"
       CASE cCode == "C52S" ;     RETURN "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_CLP_STRICT flag"
       CASE cCode == "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
-      CASE cCode == "FS" ;       RETURN "This a Flagship compatibility function and is only visible if source was compiled with the HB_COMPAT_FLAGSHIP flag"
       CASE cCode == "H" ;        RETURN "This is Harbour specific"
       CASE cCode == "NA" ;       RETURN "Not applicable"
       OTHERWISE ;                RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"

@@ -63,10 +63,7 @@
 #define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3x undocumented features */
 #define HB_COMPAT_C53             /* Enable Cl*pper 5.3x extensions */
 #define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_VO */        /* Enable VO extensions */
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
 /* ***********************************************************************
  * Leave this #define if you want to allow usage of legacy Harbour 2.0.0/Clipper

@@ -166,17 +166,8 @@ void hb_verBuildInfo( void )
 #if defined( HB_COMPAT_FLAGSHIP )
    hb_conOutErr( "(Flagship) ", 0 );
 #endif
-#if defined( HB_COMPAT_VO )
-   hb_conOutErr( "(VO) ", 0 );
-#endif
 #if defined( HB_COMPAT_FOXPRO )
    hb_conOutErr( "(FoxPro) ", 0 );
-#endif
-#if defined( HB_COMPAT_DBASE )
-   hb_conOutErr( "(dBase) ", 0 );
-#endif
-#if defined( HB_COMPAT_CLIP )
-   hb_conOutErr( "(CLIP) ", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 

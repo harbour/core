@@ -323,7 +323,6 @@ INIT PROCEDURE Templates()
       { "C52S",     "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_C52_STRICT flag" }, ;
       { "C52U",     "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_C52_UNDOC flag" }, ;
       { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
-      { "FS",       "This a Flagship compatibility function and is only visible if source was compiled with the HB_COMPAT_FLAGSHIP flag" }, ;
       { "H",        "This is Harbour specific" }, ;
       { "NA",       "Not applicable" } ;
    }

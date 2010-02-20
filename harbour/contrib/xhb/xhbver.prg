@@ -90,11 +90,7 @@ FUNCTION hb_buildinfo( n )
    v[ _HB_COMPAT_C53             ] := .F.
 #endif
    v[ _HB_COMPAT_XPP             ] := .T. /* Converted to library in Harbour. */
-#ifdef HB_COMPAT_VO
-   v[ _HB_COMPAT_VO              ] := .T.
-#else
-   v[ _HB_COMPAT_VO              ] := .F.
-#endif
+   v[ _HB_COMPAT_VO              ] := .T. /* Converted to library in Harbour. */
 #ifdef HB_COMPAT_FLAGSHIP
    v[ _HB_COMPAT_FLAGSHIP        ] := .T.
 #else
@@ -105,11 +101,7 @@ FUNCTION hb_buildinfo( n )
 #else
    v[ _HB_COMPAT_FOXPRO          ] := .F.
 #endif
-#ifdef HB_COMPAT_DBASE
-   v[ _HB_COMPAT_DBASE           ] := .T.
-#else
-   v[ _HB_COMPAT_DBASE           ] := .F.
-#endif
+   v[ _HB_COMPAT_DBASE           ] := .T. /* Converted to library in Harbour. */
    v[ _HB_HARBOUR_OBJ_GENERATION ] := .F. /* Always off in Harbour */
    v[ _HB_HARBOUR_STRICT_ANSI_C  ] := .F. /* Fake value, unlikely it's turned on */
    v[ _HB_CPLUSPLUS              ] := hb_Version( HB_VERSION_COMPILER_CPP )
