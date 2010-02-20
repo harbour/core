@@ -65,9 +65,9 @@ static HB_BOOL hb_clsSetScope( HB_BOOL fScope ) { return fScope; }
 #define HB_DBGINFO_DISABLE    ( ( HB_DEBUGINFO * ) ( HB_PTRDIFF ) 0x01 )
 
 #if defined( HB_OS_UNIX )
-#define FILENAME_EQUAL(s1, s2) ( !strcmp( (s1), (s2) ) )
+#define FILENAME_EQUAL( s1, s2 ) ( ! strcmp( ( s1 ), ( s2 ) ) )
 #else
-#define FILENAME_EQUAL(s1, s2) ( !hb_stricmp( (s1), (s2) ) )
+#define FILENAME_EQUAL( s1, s2 ) ( ! hb_stricmp( ( s1 ), ( s2 ) ) )
 #endif
 
 #define ARRAY_ADD( type, array, length ) \
@@ -85,9 +85,9 @@ static HB_BOOL hb_clsSetScope( HB_BOOL fScope ) { return fScope; }
 
 typedef struct
 {
-   char *szModule;
+   char * szModule;
    int nLine;
-   char *szFunction;
+   char * szFunction;
 } HB_BREAKPOINT;
 
 typedef struct
@@ -98,9 +98,10 @@ typedef struct
 
 typedef struct
 {
-   char *szName;
+   char * szName;
    char cType;
-   union {
+   union
+   {
       int num;
       PHB_ITEM ptr;
    } frame;
@@ -109,34 +110,34 @@ typedef struct
 
 typedef struct
 {
-   char *szExpr;
+   char * szExpr;
    PHB_ITEM pBlock;
    int nVars;
-   char **aVars;
-   HB_VARINFO *aScopes;
+   char ** aVars;
+   HB_VARINFO * aScopes;
 } HB_WATCHPOINT;
 
 typedef struct
 {
-   char *szModule;
-   char *szFunction;
+   char * szModule;
+   char * szFunction;
    int nLine;
    int nProcLevel;
    int nLocals;
-   HB_VARINFO *aLocals;
+   HB_VARINFO * aLocals;
    int nStatics;
-   HB_VARINFO *aStatics;
+   HB_VARINFO * aStatics;
 } HB_CALLSTACKINFO;
 
 typedef struct
 {
-   char *szModule;
+   char * szModule;
    int nStatics;
-   HB_VARINFO *aStatics;
+   HB_VARINFO * aStatics;
    int nGlobals;
-   HB_VARINFO *aGlobals;
+   HB_VARINFO * aGlobals;
    int nExternGlobals;
-   HB_VARINFO *aExternGlobals;
+   HB_VARINFO * aExternGlobals;
 } HB_MODULEINFO;
 
 typedef struct
@@ -145,23 +146,23 @@ typedef struct
    HB_BOOL bGo;
    HB_BOOL bInside;
    int nBreakPoints;
-   HB_BREAKPOINT *aBreak;
+   HB_BREAKPOINT * aBreak;
    int nTracePoints;
-   HB_TRACEPOINT *aTrace;
+   HB_TRACEPOINT * aTrace;
    int nWatchPoints;
-   HB_WATCHPOINT *aWatch;
+   HB_WATCHPOINT * aWatch;
    HB_BOOL bTraceOver;
    int nTraceLevel;
    HB_BOOL bNextRoutine;
    HB_BOOL bCodeBlock;
    HB_BOOL bToCursor;
    int nToCursorLine;
-   char *szToCursorModule;
+   char * szToCursorModule;
    int nProcLevel;
    int nCallStackLen;
-   HB_CALLSTACKINFO *aCallStack;
+   HB_CALLSTACKINFO * aCallStack;
    int nModules;
-   HB_MODULEINFO *aModules;
+   HB_MODULEINFO * aModules;
    HB_BOOL bCBTrace;
    HB_BOOL ( *pFunInvoke )( void );
    HB_BOOL bInitGlobals;
@@ -171,28 +172,28 @@ typedef struct
 } HB_DEBUGINFO;
 
 
-static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO *info );
-static PHB_ITEM hb_dbgActivateModuleArray( HB_DEBUGINFO *info );
-static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars );
-static void     hb_dbgAddLocal( HB_DEBUGINFO *info, const char *szName, int nIndex, int nFrame );
-static void     hb_dbgAddModule( HB_DEBUGINFO *info, const char *szName );
-static void     hb_dbgAddStack( HB_DEBUGINFO *info, const char *szName, int nProcLevel );
-static void     hb_dbgAddStatic( HB_DEBUGINFO *info, const char *szName, int nIndex, PHB_ITEM pFrame );
-static void     hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, const char *szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame );
-static void     hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem );
-static void     hb_dbgEndProc( HB_DEBUGINFO *info );
-static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch );
-static PHB_ITEM hb_dbgEvalMacro( const char *szExpr, PHB_ITEM pItem );
-static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch );
-static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch );
+static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info );
+static PHB_ITEM hb_dbgActivateModuleArray( HB_DEBUGINFO * info );
+static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars );
+static void     hb_dbgAddLocal( HB_DEBUGINFO * info, const char * szName, int nIndex, int nFrame );
+static void     hb_dbgAddModule( HB_DEBUGINFO * info, const char * szName );
+static void     hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nProcLevel );
+static void     hb_dbgAddStatic( HB_DEBUGINFO * info, const char * szName, int nIndex, PHB_ITEM pFrame );
+static void     hb_dbgAddVar( int * nVars, HB_VARINFO ** aVars, const char * szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame );
+static void     hb_dbgAddStopLines( HB_DEBUGINFO * info, PHB_ITEM pItem );
+static void     hb_dbgEndProc( HB_DEBUGINFO * info );
+static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch );
+static PHB_ITEM hb_dbgEvalMacro( const char * szExpr, PHB_ITEM pItem );
+static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch );
+static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch );
 static HB_BOOL  hb_dbgIsAltD( void );
-static HB_BOOL  hb_dbgIsBreakPoint( HB_DEBUGINFO *info, const char *szModule, int nLine );
+static HB_BOOL  hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine );
 static HB_BOOL  hb_dbgEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 );
-static void     hb_dbgQuit( HB_DEBUGINFO *info );
-static PHB_ITEM hb_dbgVarGet( HB_VARINFO *scope );
-static void     hb_dbgVarSet( HB_VARINFO *scope, PHB_ITEM xNewValue );
+static void     hb_dbgQuit( HB_DEBUGINFO * info );
+static PHB_ITEM hb_dbgVarGet( HB_VARINFO * scope );
+static void     hb_dbgVarSet( HB_VARINFO * scope, PHB_ITEM xNewValue );
 
-static void hb_dbgActivate( HB_DEBUGINFO *info )
+static void hb_dbgActivate( HB_DEBUGINFO * info )
 {
    PHB_DYNS pDynSym = hb_dynsymFind( "__DBGENTRY" );
 
@@ -205,7 +206,7 @@ static void hb_dbgActivate( HB_DEBUGINFO *info )
 
       for( i = 0; i < info->nCallStackLen; i++ )
       {
-         HB_CALLSTACKINFO *pEntry = &info->aCallStack[ i ];
+         HB_CALLSTACKINFO * pEntry = &info->aCallStack[ i ];
          PHB_ITEM aEntry = hb_itemArrayNew( 6 );
          PHB_ITEM pItem;
 
@@ -247,7 +248,7 @@ static void hb_dbgActivate( HB_DEBUGINFO *info )
 }
 
 
-static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO *info )
+static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info )
 {
    int i;
    PHB_ITEM pArray = hb_itemArrayNew( info->nBreakPoints );
@@ -262,9 +263,7 @@ static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO *info )
          hb_arraySetC( pBreak, 2, info->aBreak[ i ].szModule );
       }
       else
-      {
          hb_arraySetC( pBreak, 3, info->aBreak[ i ].szFunction );
-      }
 
       hb_arraySet( pArray, i + 1, pBreak );
       hb_itemRelease( pBreak );
@@ -273,7 +272,7 @@ static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO *info )
 }
 
 
-static PHB_ITEM hb_dbgActivateModuleArray( HB_DEBUGINFO *info )
+static PHB_ITEM hb_dbgActivateModuleArray( HB_DEBUGINFO * info )
 {
    int i;
    PHB_ITEM pArray = hb_itemArrayNew( info->nModules );
@@ -307,7 +306,7 @@ static PHB_ITEM hb_dbgActivateModuleArray( HB_DEBUGINFO *info )
 }
 
 
-static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
+static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars )
 {
    int i;
    PHB_ITEM pArray = hb_itemArrayNew( nVars );
@@ -331,13 +330,13 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
 }
 
 
-void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame )
+void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITEM pFrame )
 {
    int i;
    HB_ULONG nProcLevel;
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_DEBUGINFO ** infoPtr = ( HB_DEBUGINFO ** ) hb_stackDebugInfo();
-   HB_DEBUGINFO *info = *infoPtr;
+   HB_DEBUGINFO * info = *infoPtr;
 
    if( info == HB_DBGINFO_DISABLE )
       return;
@@ -402,7 +401,7 @@ void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM
 
       case HB_DBG_SHOWLINE:
       {
-         HB_CALLSTACKINFO *pTop = &info->aCallStack[ info->nCallStackLen - 1 ];
+         HB_CALLSTACKINFO * pTop = &info->aCallStack[ info->nCallStackLen - 1 ];
          HB_BOOL bOldClsScope;
 
          HB_TRACE( HB_TR_DEBUG, ( "SHOWLINE %d", nLine ) );
@@ -413,7 +412,7 @@ void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM
          bOldClsScope = hb_clsSetScope( HB_FALSE );
          for( i = 0; i < info->nTracePoints; i++ )
          {
-            HB_TRACEPOINT *tp = &info->aTrace[ i ];
+            HB_TRACEPOINT * tp = &info->aTrace[ i ];
             PHB_ITEM xValue;
 
             xValue = hb_dbgEval( info, &info->aWatch[ tp->nIndex ] );
@@ -477,9 +476,7 @@ void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM
                info->bToCursor = HB_FALSE;
             }
             else
-            {
                return;
-            }
          }
 
          /* Check if'we skipping to the end of current routine */
@@ -509,9 +506,8 @@ void hb_dbgEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM
          HB_TRACE( HB_TR_DEBUG, ( "ENDPROC %d", nLine ) );
 
          if( info->bInitLines )
-         {
             hb_dbgAddStopLines( info, hb_stackReturnItem() );
-         }
+
          info->bCodeBlock = HB_FALSE;
          info->bInitStatics = HB_FALSE;
          info->bInitGlobals = HB_FALSE;
@@ -536,38 +532,32 @@ static const char * hb_dbgStripModuleName( const char * szName )
    const char * ptr;
 
    if( ( ptr = strrchr( szName, '/' ) ) != NULL )
-   {
       szName = ptr + 1;
-   }
+
    if( ( ptr = strrchr( szName, '\\' ) ) != NULL )
-   {
       szName = ptr + 1;
-   }
 
    return szName;
 }
 
 
-void hb_dbgAddBreak( void *handle, const char *szModule, int nLine, const char *szFunction )
+void hb_dbgAddBreak( void * handle, const char * szModule, int nLine, const char * szFunction )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
-   HB_BREAKPOINT *pBreak;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   HB_BREAKPOINT * pBreak;
 
    pBreak = ARRAY_ADD( HB_BREAKPOINT, info->aBreak, info->nBreakPoints );
    pBreak->szModule = hb_strdup( szModule );
    pBreak->nLine = nLine;
+
    if( szFunction )
-   {
       pBreak->szFunction = hb_strdup( szFunction );
-   }
    else
-   {
       pBreak->szFunction = NULL;
-   }
 }
 
 
-static void hb_dbgAddLocal( HB_DEBUGINFO *info, const char *szName, int nIndex, int nFrame )
+static void hb_dbgAddLocal( HB_DEBUGINFO * info, const char * szName, int nIndex, int nFrame )
 {
    if( info->bInitGlobals )
    {
@@ -577,14 +567,14 @@ static void hb_dbgAddLocal( HB_DEBUGINFO *info, const char *szName, int nIndex, 
    }
    else
    {
-      HB_CALLSTACKINFO *top = &info->aCallStack[ info->nCallStackLen - 1 ];
+      HB_CALLSTACKINFO * top = &info->aCallStack[ info->nCallStackLen - 1 ];
 
       hb_dbgAddVar( &top->nLocals, &top->aLocals, szName, 'L', nIndex, nFrame, NULL );
    }
 }
 
 
-static void hb_dbgAddModule( HB_DEBUGINFO *info, const char *szName )
+static void hb_dbgAddModule( HB_DEBUGINFO * info, const char * szName )
 {
    char * szModuleName;
    const char * szFuncName;
@@ -597,7 +587,7 @@ static void hb_dbgAddModule( HB_DEBUGINFO *info, const char *szName )
 
    if( !info->nModules || strcmp( info->aModules[ info->nModules - 1 ].szModule, szModuleName ) )
    {
-      HB_MODULEINFO *pModule;
+      HB_MODULEINFO * pModule;
 
       pModule = ARRAY_ADD( HB_MODULEINFO, info->aModules, info->nModules );
       pModule->szModule = szModuleName;
@@ -606,22 +596,19 @@ static void hb_dbgAddModule( HB_DEBUGINFO *info, const char *szName )
       pModule->nExternGlobals = 0;
    }
    else
-   {
       hb_xfree( szModuleName );
-   }
 }
 
 
-static void hb_dbgAddStack( HB_DEBUGINFO *info, const char *szName, int nProcLevel )
+static void hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nProcLevel )
 {
    char szBuff[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-   HB_CALLSTACKINFO *top;
-   const char *szFunction = strrchr( szName, ':' );
+   HB_CALLSTACKINFO * top;
+   const char * szFunction = strrchr( szName, ':' );
 
    if( szFunction )
-   {
       szFunction++;
-   }
+
    top = ARRAY_ADD( HB_CALLSTACKINFO, info->aCallStack, info->nCallStackLen );
    if( info->bCodeBlock )
    {
@@ -642,15 +629,14 @@ static void hb_dbgAddStack( HB_DEBUGINFO *info, const char *szName, int nProcLev
          top->szFunction = hb_strdup( szBuff );
       }
    }
+
    szName = hb_dbgStripModuleName( szName );
+
    if( szFunction )
-   {
       top->szModule = hb_strndup( szName, szFunction - szName - 1 );
-   }
    else
-   {
       top->szModule = hb_strdup( szName );
-   }
+
    top->nProcLevel = nProcLevel;
    top->nLine = 0;
    top->nLocals = 0;
@@ -658,7 +644,7 @@ static void hb_dbgAddStack( HB_DEBUGINFO *info, const char *szName, int nProcLev
 }
 
 
-static void hb_dbgAddStatic( HB_DEBUGINFO *info, const char *szName, int nIndex, PHB_ITEM pFrame )
+static void hb_dbgAddStatic( HB_DEBUGINFO * info, const char * szName, int nIndex, PHB_ITEM pFrame )
 {
    if( info->bInitGlobals )
    {
@@ -675,14 +661,14 @@ static void hb_dbgAddStatic( HB_DEBUGINFO *info, const char *szName, int nIndex,
    }
    else
    {
-      HB_CALLSTACKINFO *top = &info->aCallStack[ info->nCallStackLen - 1 ];
+      HB_CALLSTACKINFO * top = &info->aCallStack[ info->nCallStackLen - 1 ];
 
       hb_dbgAddVar( &top->nStatics, &top->aStatics, szName, 'S', nIndex, 0, pFrame );
    }
 }
 
 
-static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
+static void hb_dbgAddStopLines( HB_DEBUGINFO * info, PHB_ITEM pItem )
 {
    int i, nLinesLen;
 
@@ -700,7 +686,7 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
       for( i = 1; i <= nItemLen; i++ )
       {
          PHB_ITEM pEntry = hb_arrayGetItemPtr( pItem, i );
-         const char *szModule = hb_arrayGetCPtr( pEntry, 1 );
+         const char * szModule = hb_arrayGetCPtr( pEntry, 1 );
          HB_BOOL bFound = HB_FALSE;
 
          szModule = hb_dbgStripModuleName( szModule );
@@ -717,19 +703,18 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
                int nNewLen = hb_arrayGetCLen( pEntry, 3 );
                int nMin = HB_MIN( nNewMin, nOrigMin );
                int nMax = HB_MAX( nNewMin + nNewLen * 8, nOrigMin + nOrigLen * 8 );
-               const char *pOrigBuffer = hb_arrayGetCPtr( pLines, 3 );
-               const char *pNewBuffer = hb_arrayGetCPtr( pEntry, 3 );
+               const char * pOrigBuffer = hb_arrayGetCPtr( pLines, 3 );
+               const char * pNewBuffer = hb_arrayGetCPtr( pEntry, 3 );
                int nLen = ( nMax + 1 - nMin + 7 ) / 8 + 1;
                int k;
-               char *pBuffer = (char *) hb_xgrab( nLen );
+               char * pBuffer = ( char * ) hb_xgrab( nLen );
 
                hb_xmemset( pBuffer, 0, nLen );
 
                memmove( &( pBuffer[ ( nNewMin - nMin ) / 8 ] ), pNewBuffer, nNewLen );
                for( k = 0; k < nOrigLen; k++ )
-               {
                   pBuffer[ nOrigMin / 8 + k - nMin / 8 ] |= pOrigBuffer[ k ];
-               }
+
                hb_arraySetNL( pLines, 2, nMin );
                if( !hb_arraySetCLPtr( pLines, 3, pBuffer, nLen - 1 ) )
                   hb_xfree( pBuffer );
@@ -737,34 +722,31 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
                break;
             }
          }
+
          if( !bFound )
-         {
             hb_arrayAddForward( info->pStopLines, pEntry );
-         }
       }
    }
    nLinesLen = hb_itemSize( info->pStopLines );
    for( i = 1; i <= nLinesLen; i++ )
    {
       PHB_ITEM pEntry = hb_arrayGetItemPtr( info->pStopLines, i );
-      const char *szModule = hb_arrayGetCPtr( pEntry, 1 );
+      const char * szModule = hb_arrayGetCPtr( pEntry, 1 );
 
       if( szModule )
       {
-         const char *szName = hb_dbgStripModuleName( szModule );
+         const char * szName = hb_dbgStripModuleName( szModule );
 
          if( szName != szModule )
-         {
             hb_arraySetCLPtr( pEntry, 1, hb_strdup( szName ), ( HB_SIZE ) strlen( szName ) );
-         }
       }
    }
 }
 
 
-static void hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, const char *szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame )
+static void hb_dbgAddVar( int * nVars, HB_VARINFO ** aVars, const char * szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame )
 {
-   HB_VARINFO *var;
+   HB_VARINFO * var;
 
    var = ARRAY_ADD( HB_VARINFO, *aVars, *nVars );
    /* TODO/TOFIX: value should be duplicated here and then released */
@@ -778,10 +760,10 @@ static void hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, const char *szName, ch
 }
 
 
-void hb_dbgAddWatch( void *handle, const char *szExpr, HB_BOOL bTrace )
+void hb_dbgAddWatch( void * handle, const char * szExpr, HB_BOOL bTrace )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
-   HB_WATCHPOINT *pWatch;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   HB_WATCHPOINT * pWatch;
 
    pWatch = ARRAY_ADD( HB_WATCHPOINT, info->aWatch, info->nWatchPoints );
    pWatch->szExpr = hb_strdup( szExpr );
@@ -790,7 +772,7 @@ void hb_dbgAddWatch( void *handle, const char *szExpr, HB_BOOL bTrace )
 
    if( bTrace )
    {
-     HB_TRACEPOINT *pTrace = ARRAY_ADD( HB_TRACEPOINT, info->aTrace, info->nTracePoints );
+     HB_TRACEPOINT * pTrace = ARRAY_ADD( HB_TRACEPOINT, info->aTrace, info->nTracePoints );
 
      pTrace->nIndex = info->nWatchPoints - 1;
      pTrace->xValue = hb_dbgEval( info, pWatch );
@@ -798,44 +780,42 @@ void hb_dbgAddWatch( void *handle, const char *szExpr, HB_BOOL bTrace )
 }
 
 
-static void hb_dbgClearWatch( HB_WATCHPOINT *pWatch )
+static void hb_dbgClearWatch( HB_WATCHPOINT * pWatch )
 {
    hb_xfree( pWatch->szExpr );
+
    if( pWatch->pBlock )
-   {
       hb_itemRelease( pWatch->pBlock );
-   }
+
    if( pWatch->nVars )
    {
       int i;
 
-      for(i = 0; i < pWatch->nVars; i++)
-      {
+      for( i = 0; i < pWatch->nVars; i++ )
          hb_xfree( pWatch->aVars[ i ] );
-      }
+
       hb_xfree( pWatch->aVars );
    }
 }
 
 
-void hb_dbgDelBreak( void *handle, int nBreak )
+void hb_dbgDelBreak( void * handle, int nBreak )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
-   HB_BREAKPOINT *pBreak = &info->aBreak[ nBreak ];
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   HB_BREAKPOINT * pBreak = &info->aBreak[ nBreak ];
 
    hb_xfree( pBreak->szModule );
    if( pBreak->szFunction )
-   {
       hb_xfree( pBreak->szFunction );
-   }
+
    ARRAY_DEL( HB_BREAKPOINT, info->aBreak, info->nBreakPoints, nBreak );
 }
 
 
-void hb_dbgDelWatch( void *handle, int nWatch )
+void hb_dbgDelWatch( void * handle, int nWatch )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
-   HB_WATCHPOINT *pWatch = &info->aWatch[ nWatch ];
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   HB_WATCHPOINT * pWatch = &info->aWatch[ nWatch ];
    int i;
 
    hb_dbgClearWatch( pWatch );
@@ -843,28 +823,25 @@ void hb_dbgDelWatch( void *handle, int nWatch )
 
    for( i = 0; i < info->nTracePoints; i++ )
    {
-      HB_TRACEPOINT *pTrace = &info->aTrace[ i ];
+      HB_TRACEPOINT * pTrace = &info->aTrace[ i ];
 
       if( pTrace->nIndex == nWatch )
       {
          if( pTrace->xValue )
-         {
             hb_itemRelease( pTrace->xValue );
-         }
+
          ARRAY_DEL( HB_TRACEPOINT, info->aTrace, info->nTracePoints, i );
          i--;
       }
       else if( pTrace->nIndex > nWatch )
-      {
          pTrace->nIndex--;
-      }
    }
 }
 
 
-static void hb_dbgEndProc( HB_DEBUGINFO *info )
+static void hb_dbgEndProc( HB_DEBUGINFO * info )
 {
-   HB_CALLSTACKINFO *top;
+   HB_CALLSTACKINFO * top;
 
    if( !info->nCallStackLen )
       return;
@@ -872,14 +849,13 @@ static void hb_dbgEndProc( HB_DEBUGINFO *info )
    top = &info->aCallStack[ --info->nCallStackLen ];
    hb_xfree( top->szFunction );
    hb_xfree( top->szModule );
+
    if( top->nLocals )
-   {
       hb_xfree( top->aLocals );
-   }
+
    if( top->nStatics )
-   {
       hb_xfree( top->aStatics );
-   }
+
    if( !info->nCallStackLen )
    {
       hb_xfree( info->aCallStack );
@@ -912,7 +888,7 @@ static HB_BOOL hb_dbgEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 }
 
 
-static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
+static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
 {
    PHB_ITEM xResult = NULL;
 
@@ -920,9 +896,7 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
 
    /* Check if we have a cached pBlock */
    if( !watch->pBlock )
-   {
       watch->pBlock = hb_dbgEvalMakeBlock( watch );
-   }
 
    if( watch->pBlock )
    {
@@ -942,9 +916,8 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
          PHB_ITEM xNewValue = hb_itemArrayGet( aNewVars, i + 1 );
 
          if( !hb_dbgEqual( xOldValue, xNewValue ) )
-         {
             hb_dbgVarSet( &watch->aScopes[ i ], xNewValue );
-         }
+
          hb_itemRelease( xOldValue );
          hb_itemRelease( xNewValue );
       }
@@ -954,35 +927,31 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
       for( i = 0; i < watch->nVars; i++ )
       {
          if( watch->aScopes[ i ].cType == 'M' )
-         {
             hb_xfree( watch->aScopes[ i ].szName );
-         }
       }
       if( watch->nVars )
-      {
          hb_xfree( watch->aScopes );
-      }
    }
    return xResult;
 }
 
 
-static PHB_ITEM hb_dbgEvalMacro( const char *szExpr, PHB_ITEM pItem )
+static PHB_ITEM hb_dbgEvalMacro( const char * szExpr, PHB_ITEM pItem )
 {
    PHB_ITEM pStr;
-   const char *type;
+   const char * type;
 
    pStr = hb_itemPutC( NULL, szExpr );
    type = hb_macroGetType( pStr );
    hb_itemRelease( pStr );
    if( ( !strcmp( type, "U" ) || !strcmp( type, "UE" ) ) )
-   {
       return NULL;
-   }
+
    hb_vmPushString( szExpr, ( HB_SIZE ) strlen( szExpr ) );
    hb_macroGetValue( hb_stackItemFromTop( -1 ), 0, HB_SM_RT_MACRO );
    hb_itemMove( pItem, hb_stackItemFromTop( -1 ) );
    hb_stackPop();
+
    return pItem;
 }
 
@@ -990,28 +959,23 @@ static PHB_ITEM hb_dbgEvalMacro( const char *szExpr, PHB_ITEM pItem )
 #define IS_IDENT_START( c ) HB_ISFIRSTIDCHAR( ( HB_UCHAR ) ( c ) )
 #define IS_IDENT_CHAR( c )  HB_ISNEXTIDCHAR( ( HB_UCHAR ) ( c ) )
 
-static int hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nStart, int nLen )
+static int hb_dbgEvalSubstituteVar( HB_WATCHPOINT * watch, char * szWord, int nStart, int nLen )
 {
    int j;
-   char *t;
+   char * t;
 
    for( j = 0; j < watch->nVars; j++ )
    {
       if( !strcmp( szWord, watch->aVars[ j ] ) )
-      {
          break;
-      }
-   }
-   if( j == watch->nVars )
-   {
-      *ARRAY_ADD( char *, watch->aVars, watch->nVars ) = szWord;
-   }
-   else
-   {
-      hb_xfree( szWord );
    }
 
-   t = (char *) hb_xgrab( ( HB_SIZE ) strlen( watch->szExpr ) - nLen + 9 + 1 );
+   if( j == watch->nVars )
+      *ARRAY_ADD( char *, watch->aVars, watch->nVars ) = szWord;
+   else
+      hb_xfree( szWord );
+
+   t = ( char * ) hb_xgrab( ( HB_SIZE ) strlen( watch->szExpr ) - nLen + 9 + 1 );
    memmove( t, watch->szExpr, nStart );
    memmove( t + nStart, "__dbg[", 6 );
    t[ nStart + 6 ] = '0' + ( char ) ( ( j + 1 ) / 10 );
@@ -1024,12 +988,12 @@ static int hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nSta
 }
 
 
-static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
+static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
 {
    int i = 0;
    PHB_ITEM pBlock;
    HB_BOOL bAfterId = HB_FALSE;
-   char *s;
+   char * s;
    int buffsize;
 
    watch->nVars = 0;
@@ -1041,7 +1005,7 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
       {
          int nStart = i, nLen;
          int j = i;
-         char *szWord;
+         char * szWord;
 
          while( c && IS_IDENT_CHAR( c ) )
          {
@@ -1054,21 +1018,21 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
          if( c )
          {
             while( watch->szExpr[ i ] && watch->szExpr[ i ] == ' ' )
-            {
                i++;
-            }
+
             if( watch->szExpr[ i ] == '(' )
             {
                hb_xfree( szWord );
                continue;
             }
+
             if( watch->szExpr[ i ] == '-' && watch->szExpr[ i + 1 ] == '>' )
             {
                i += 2;
+
                while( ( c = watch->szExpr[ i ] ) != '\0' && IS_IDENT_CHAR( c ) )
-               {
                   i++;
-               }
+
                hb_xfree( szWord );
                continue;
             }
@@ -1112,15 +1076,15 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
             bAfterId = HB_TRUE;
             continue;
          }
+
          if( c == '-' )
-         {
             i++;
-         }
+
          i++;
+
          while( watch->szExpr[ i ] && IS_IDENT_CHAR( watch->szExpr[ i ] ) )
-         {
             i++;
-         }
+
          bAfterId = HB_TRUE;
          continue;
       }
@@ -1133,14 +1097,13 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
       if( c == '\'' || c == '\"' )
       {
          i++;
+
          while( watch->szExpr[ i ] && watch->szExpr[ i ] != c )
-         {
             i++;
-         }
+
          if( watch->szExpr[ i ] )
-         {
             i++;
-         }
+
          bAfterId = HB_TRUE;
          continue;
       }
@@ -1148,19 +1111,15 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
       {
          i++;
          if( bAfterId )
-         {
             bAfterId = HB_FALSE;
-         }
          else
          {
             while( watch->szExpr[ i ] && watch->szExpr[ i ] != ']' )
-            {
                i++;
-            }
+
             if( watch->szExpr[ i ] )
-            {
                i++;
-            }
+
             bAfterId = HB_TRUE;
          }
          continue;
@@ -1187,21 +1146,19 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
 }
 
 
-static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
+static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
 {
    int i;
-   HB_CALLSTACKINFO *top = &info->aCallStack[ info->nCallStackLen - 1 ];
+   HB_CALLSTACKINFO * top = &info->aCallStack[ info->nCallStackLen - 1 ];
    PHB_ITEM aVars = hb_itemArrayNew( watch->nVars );
-   HB_VARINFO *scopes;
-   HB_MODULEINFO *module = NULL;
+   HB_VARINFO * scopes;
+   HB_MODULEINFO * module = NULL;
    int nProcLevel;
 
    if( !watch->nVars )
-   {
       return aVars;
-   }
 
-   scopes = (HB_VARINFO *) hb_xgrab( watch->nVars * sizeof( HB_VARINFO ) );
+   scopes = ( HB_VARINFO * ) hb_xgrab( watch->nVars * sizeof( HB_VARINFO ) );
    nProcLevel = hb_dbg_ProcLevel();
 
    for( i = 0; i < info->nModules; i++ )
@@ -1215,8 +1172,8 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
 
    for( i = 0; i < watch->nVars; i++ )
    {
-      char *name = watch->aVars[ i ];
-      HB_VARINFO *var;
+      char * name = watch->aVars[ i ];
+      HB_VARINFO * var;
       int j;
       PHB_ITEM pItem;
 
@@ -1300,24 +1257,23 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
 
       scopes[ i ].cType = 'M';
       scopes[ i ].szName = hb_strdup( name );
+
       pItem = hb_dbgVarGet( &scopes[ i ] );
+
       if( pItem )
-      {
          hb_itemArrayPut( aVars, i + 1, pItem );
-      }
+
       if( scopes[ i ].cType == 'F' )
-      {
          hb_itemRelease( pItem );
-      }
    }
    watch->aScopes = scopes;
    return aVars;
 }
 
 
-PHB_ITEM hb_dbgGetExpressionValue( void *handle, const char *expression )
+PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char *expression )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
    PHB_ITEM result;
    HB_WATCHPOINT point;
 
@@ -1333,24 +1289,23 @@ PHB_ITEM hb_dbgGetExpressionValue( void *handle, const char *expression )
 }
 
 
-PHB_ITEM hb_dbgGetSourceFiles( void *handle )
+PHB_ITEM hb_dbgGetSourceFiles( void * handle )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
    int nModules = hb_itemSize( info->pStopLines );
    PHB_ITEM ret = hb_itemArrayNew( nModules );
    int i;
 
    for( i = 1; i <= nModules; i++ )
-   {
       hb_arraySet( ret, i, hb_arrayGetItemPtr( hb_arrayGetItemPtr( info->pStopLines, i ), 1 ) );
-   }
+
    return ret;
 }
 
 
-PHB_ITEM hb_dbgGetWatchValue( void *handle, int nWatch )
+PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    return hb_dbgEval( info, &( info->aWatch[ nWatch ] ) );
 }
@@ -1365,13 +1320,13 @@ static HB_BOOL hb_dbgIsAltD( void )
 }
 
 
-static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO *info, const char *szModule, int nLine )
+static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine )
 {
    int i;
 
    for( i = 0; i < info->nBreakPoints; i++ )
    {
-      HB_BREAKPOINT *point = &info->aBreak[ i ];
+      HB_BREAKPOINT * point = &info->aBreak[ i ];
 
       if( point->nLine == nLine
            && FILENAME_EQUAL( szModule, point->szModule ) )
@@ -1381,9 +1336,9 @@ static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO *info, const char *szModule, int
 }
 
 
-HB_BOOL hb_dbgIsValidStopLine( void *handle, const char *szModule, int nLine )
+HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
    int nModules = hb_itemSize( info->pStopLines );
    int i;
 
@@ -1397,9 +1352,8 @@ HB_BOOL hb_dbgIsValidStopLine( void *handle, const char *szModule, int nLine )
          int nOfs = nLine - nMin;
 
          if( nLine < nMin || ( HB_SIZE )( nOfs / 8 ) > hb_arrayGetCLen( pEntry, 3 ) )
-         {
             return HB_FALSE;
-         }
+
          return ( hb_arrayGetCPtr( pEntry, 3 )[ nOfs / 8 ] & ( 1 << ( nOfs % 8 ) ) ) != 0;
       }
    }
@@ -1407,7 +1361,7 @@ HB_BOOL hb_dbgIsValidStopLine( void *handle, const char *szModule, int nLine )
 }
 
 
-static void hb_dbgQuit( HB_DEBUGINFO *info )
+static void hb_dbgQuit( HB_DEBUGINFO * info )
 {
    while( info->nWatchPoints )
    {
@@ -1447,49 +1401,49 @@ static void hb_dbgQuit( HB_DEBUGINFO *info )
 }
 
 
-void hb_dbgSetCBTrace( void *handle, HB_BOOL bCBTrace )
+void hb_dbgSetCBTrace( void * handle, HB_BOOL bCBTrace )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bCBTrace = bCBTrace;
 }
 
 
-void hb_dbgSetGo( void *handle )
+void hb_dbgSetGo( void * handle )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bGo = HB_TRUE;
 }
 
 
-void hb_dbgSetInvoke( void *handle, HB_BOOL ( *pFunInvoke )( void ) )
+void hb_dbgSetInvoke( void * handle, HB_BOOL ( *pFunInvoke )( void ) )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->pFunInvoke = pFunInvoke;
 }
 
 
-void hb_dbgSetNextRoutine( void *handle )
+void hb_dbgSetNextRoutine( void * handle )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bNextRoutine = HB_TRUE;
 }
 
 
-void hb_dbgSetQuit( void *handle )
+void hb_dbgSetQuit( void * handle )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bQuit = HB_TRUE;
 }
 
 
-void hb_dbgSetToCursor( void *handle, const char *szModule, int nLine )
+void hb_dbgSetToCursor( void * handle, const char * szModule, int nLine )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bToCursor = HB_TRUE;
    info->szToCursorModule = hb_strdup( szModule );
@@ -1497,19 +1451,19 @@ void hb_dbgSetToCursor( void *handle, const char *szModule, int nLine )
 }
 
 
-void hb_dbgSetTrace( void *handle )
+void hb_dbgSetTrace( void * handle )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    info->bTraceOver = HB_TRUE;
    info->nTraceLevel = info->nCallStackLen;
 }
 
 
-void hb_dbgSetWatch( void *handle, int nWatch, const char *szExpr, HB_BOOL bTrace )
+void hb_dbgSetWatch( void * handle, int nWatch, const char * szExpr, HB_BOOL bTrace )
 {
-   HB_DEBUGINFO *info = (HB_DEBUGINFO *)handle;
-   HB_WATCHPOINT *pWatch = &info->aWatch[ nWatch ];
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   HB_WATCHPOINT * pWatch = &info->aWatch[ nWatch ];
    int i;
 
    hb_dbgClearWatch( pWatch );
@@ -1517,21 +1471,20 @@ void hb_dbgSetWatch( void *handle, int nWatch, const char *szExpr, HB_BOOL bTrac
    pWatch->pBlock = NULL;
    for( i = 0; i < info->nTracePoints; i++ )
    {
-      HB_TRACEPOINT *pTrace = &info->aTrace[ i ];
+      HB_TRACEPOINT * pTrace = &info->aTrace[ i ];
 
       if( pTrace->nIndex == nWatch )
       {
          if( pTrace->xValue )
-         {
             hb_itemRelease( pTrace->xValue );
-         }
+
          ARRAY_DEL( HB_TRACEPOINT, info->aTrace, info->nTracePoints, i );
          break;
       }
    }
    if( bTrace )
    {
-      HB_TRACEPOINT *pTrace = ARRAY_ADD( HB_TRACEPOINT, info->aTrace, info->nTracePoints );
+      HB_TRACEPOINT * pTrace = ARRAY_ADD( HB_TRACEPOINT, info->aTrace, info->nTracePoints );
 
       pTrace->nIndex = nWatch;
       pTrace->xValue = hb_dbgEval( info, pWatch );
@@ -1539,7 +1492,7 @@ void hb_dbgSetWatch( void *handle, int nWatch, const char *szExpr, HB_BOOL bTrac
 }
 
 
-static PHB_ITEM hb_dbgVarGet( HB_VARINFO *scope )
+static PHB_ITEM hb_dbgVarGet( HB_VARINFO * scope )
 {
    switch( scope->cType )
    {
@@ -1578,7 +1531,7 @@ static PHB_ITEM hb_dbgVarGet( HB_VARINFO *scope )
 }
 
 
-static void hb_dbgVarSet( HB_VARINFO *scope, PHB_ITEM xNewValue )
+static void hb_dbgVarSet( HB_VARINFO * scope, PHB_ITEM xNewValue )
 {
    switch( scope->cType )
    {

@@ -74,6 +74,11 @@
 /* For Arc() */
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
+
+   /* Pelles C requires this */
+   #ifndef FONTENUMPROC
+   #define FONTENUMPROC FONTENUMPROCW
+   #endif
 #endif
 
 HB_FUNC( WIN_CREATEDC )

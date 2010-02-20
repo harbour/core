@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * FreeImage graphic library low level (client api) interface code.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
@@ -59,7 +59,7 @@
 
 #if defined( HB_OS_WIN )
 #  include <windows.h>
-#  if !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
+#  if !defined( _WINDOWS_ )
 #     define _WINDOWS_
 #  endif
 #endif

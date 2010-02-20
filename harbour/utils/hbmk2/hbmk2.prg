@@ -2620,8 +2620,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
-            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
@@ -3202,8 +3202,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
-            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
                AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM" )
@@ -3306,8 +3306,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
-            AAdd( hbmk[ _HBMK_aOPTRES ], "-D_WIN32_WCE=0x501 -DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"

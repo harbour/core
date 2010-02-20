@@ -77,9 +77,9 @@ int hbwin_bitmapType( const void * pImgBuf, HB_SIZE size )
    {
       if(      size > 2 && memcmp( pImgBuf, "BM", 2 ) == 0 )
          iType = HB_WIN_BITMAP_BMP;
-      else if( size > 3 && memcmp( pImgBuf, "\377\330\377", 3 ) == 0 )
+      else if( size > 3 && memcmp( pImgBuf, "\xFF\xD8\xFF", 3 ) == 0 )
          iType = HB_WIN_BITMAP_JPEG;
-      else if( size > 4 && memcmp( pImgBuf, "\211PNG", 4 ) == 0 )
+      else if( size > 4 && memcmp( pImgBuf, "\x89PNG", 4 ) == 0 )
          iType = HB_WIN_BITMAP_PNG;
    }
 

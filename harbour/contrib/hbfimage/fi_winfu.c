@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * FreeImage windows specific functions.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
@@ -55,11 +55,11 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-#if defined( HB_OS_WIN ) && ! ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) )
+#if defined( HB_OS_WIN )
 
 #include <windows.h>
 
-#if !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
+#if !defined( _WINDOWS_ )
 #  define _WINDOWS_
 #endif
 
@@ -80,6 +80,7 @@ HB_FUNC( FI_FITOBITMAP )
        HB_ISPOINTER( 1 )
      )
    {
+#if ! defined( HB_OS_WIN_CE )
       FIBITMAP *dib;
       HBITMAP bitmap;
       HDC hDC;
@@ -97,6 +98,7 @@ HB_FUNC( FI_FITOBITMAP )
       /* return value */
       if( bitmap )
          hb_retptr( bitmap );
+#endif
    }
    else
    {
@@ -119,6 +121,7 @@ HB_FUNC( FI_BITMAPTOFI )
        HB_ISPOINTER( 1 )
      )
    {
+#if ! defined( HB_OS_WIN_CE )
       FIBITMAP * dib;
       HBITMAP bitmap;
 
@@ -144,6 +147,7 @@ HB_FUNC( FI_BITMAPTOFI )
       /* return value */
       if( dib )
          hb_retptr( dib );
+#endif
    }
    else
    {
@@ -185,7 +189,9 @@ HB_FUNC( FI_WINDRAW )
       rcDest.right  = hb_parni( 6 );
 
       /* run function */
+#if ! defined( HB_OS_WIN_CE )
       SetStretchBltMode( hDC, COLORONCOLOR );
+#endif
 
       scanlines = StretchDIBits( hDC, rcDest.left,
                                       rcDest.top,
