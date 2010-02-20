@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=xpp
+libs=hbxpp

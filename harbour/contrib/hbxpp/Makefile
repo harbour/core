@@ -6,7 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := xpp
+LIBNAME := hbxpp
 
 C_SOURCES := \
    binnumx.c \
@@ -36,7 +36,8 @@ PRG_SOURCES := \
 
 PRG_HEADERS := \
    dll.ch \
-   xpp.ch \
+   hbxpp.ch \
+   hbxppext.ch \
 
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk

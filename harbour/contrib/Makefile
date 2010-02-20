@@ -23,10 +23,10 @@ DIRS := \
    hbtip \
    hbtpathy \
    hbwin \
+   hbxpp \
    hbziparc \
    rddbmcdx \
    xhb \
-   xpp \
 
 # contribs _with_ external dependencies
 DIRS += \

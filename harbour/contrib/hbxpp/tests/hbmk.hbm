@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../xpp.hbc
+../hbxpp.hbc
 
 -w3 -es2
