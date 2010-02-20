@@ -154,7 +154,7 @@
 #define HB_WIN_RGB_RED              WIN_RGB( 0xFF, 0x00, 0x00 )
 #define HB_WIN_RGB_CYAN             WIN_RGB( 0x00, 0xFF, 0xFF )
 #define HB_WIN_RGB_MAGENTA          WIN_RGB( 0xFF, 0x00, 0xFF )
-#define HB_WIN_RGB_BROWN            WIN_RGB( 0xFF, 0xFF, 0x00 )
+#define HB_WIN_RGB_YELLOW           WIN_RGB( 0xFF, 0xFF, 0x00 )
 #define HB_WIN_RGB_WHITE            WIN_RGB( 0xFF, 0xFF, 0xFF )
 
 /* WIN_SETDOCUMENTPROPERTIES() paper types */
@@ -551,7 +551,7 @@
 #define RGB_CYAN                    HB_WIN_RGB_CYAN
 #define RGB_RED                     HB_WIN_RGB_RED
 #define RGB_MAGENTA                 HB_WIN_RGB_MAGENTA
-#define RGB_BROWN                   HB_WIN_RGB_BROWN
+#define RGB_BROWN                   HB_WIN_RGB_YELLOW
 #define RGB_WHITE                   HB_WIN_RGB_WHITE
 
 #define MM_TEXT                     WIN_MM_TEXT
