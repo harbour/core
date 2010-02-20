@@ -507,7 +507,7 @@ msgstr "Multiplos parâmetros -l, -L e <script> são aceitos."
 
 #: hbmk2.prg:7960
 #, c-format
-msgid "Regular Harbour compiler options are also accepted."
+msgid "Regular Harbour compiler options are also accepted.\\n(see them with -harbourhelp option)"
 msgstr "Opções usadas com o compilador Harbour também são aceitas."
 
 #: hbmk2.prg:7960

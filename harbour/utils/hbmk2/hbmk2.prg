@@ -689,6 +689,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptCFlag := .F.
    LOCAL lAcceptLDFlag := .F.
    LOCAL lAcceptLDClipper := .F.
+   LOCAL lHarbourInfo := .F.
 
    LOCAL cWorkDir := NIL
 
@@ -1643,6 +1644,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F.
 
+      CASE cParamL == "--harbourhelp"    ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
+      CASE cParamL == "-harbourhelp"     ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
+      CASE cParamL == "-build"           ; AAdd( hbmk[ _HBMK_aOPTPRG ], "-build" ) ; lHarbourInfo := .T.
+
       CASE cParamL == "-warn" .OR. ;
            Left( cParamL, 6 ) == "-warn="
 
@@ -2118,6 +2123,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    IF ! l_lLIBSYSMISC
       l_aLIBSYSMISC := {}
+   ENDIF
+
+   IF lHarbourInfo
+      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+         /* Use integrated compiler */
+         hb_compile( "harbour", hbmk[ _HBMK_aOPTPRG ] )
+      ELSE
+         /* Use external compiler */
+         cCommand := FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
+                     iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
+         hb_processRun( AllTrim( cCommand ) )
+      ENDIF
+      RETURN 0
    ENDIF
 
    /* Strip leading @ char of .clp files */
@@ -8415,9 +8433,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       I_( "Notes:" ) }
 
    LOCAL aNotes := {;
-      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file." ),;
+      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
-      I_( "Regular Harbour compiler options are also accepted." ),;
+      I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
