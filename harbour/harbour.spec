@@ -559,7 +559,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog*
 %doc doc/*.txt
 %doc doc/%{readme}
-%doc doc/en-EN/
+%doc doc/en/
 
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
