@@ -346,7 +346,6 @@ REQUEST hbmk_KEYW
 
 #define hb_DirCreate( d )       MakeDir( d )
 #define hb_DirDelete( d )       DirRemove( d )
-#define hb_CurDrive()           CurDrive()
 
 PROCEDURE Main( ... )
    LOCAL aArgsIn := hb_AParams()

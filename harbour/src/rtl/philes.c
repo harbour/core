@@ -284,6 +284,42 @@ HB_FUNC( CURDIR )
    hb_retc( szBuffer );
 }
 
+HB_FUNC( HB_CURDRIVE )
+{
+#if defined( HB_OS_HAS_DRIVE_LETTER )
+   char szCurDrive[ 1 ];
+   const char * szDrive;
+
+   szCurDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
+   hb_retclen( szCurDrive, 1 );
+
+   szDrive = hb_parc( 1 );
+   if( szDrive )
+   {
+      int iDrive = -1;
+
+      if( *szDrive >= 'A' && *szDrive <= 'Z' )
+         iDrive = *szDrive - 'A';
+      else if( *szDrive >= 'a' && *szDrive <= 'z' )
+         iDrive = *szDrive - 'a';
+
+      if( iDrive >= 0 )
+      {
+         while( hb_fsChDrv( iDrive ) != 0 )
+         {
+            HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 6001, NULL,
+                                                     HB_ERR_FUNCNAME, 0, EF_CANDEFAULT | EF_CANRETRY,
+                                                     HB_ERR_ARGS_BASEPARAMS );
+            if( uiAction != E_RETRY )
+               break;
+         }
+      }
+   }
+#else
+   hb_retc_null();
+#endif
+}
+
 HB_FUNC( HB_PROGNAME )
 {
    const char * szBaseName = hb_cmdargARGVN( 0 );

@@ -1551,21 +1551,21 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
       // No hIn, hErr == hOut
 
       // save current directory
-      cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+      cCurPath := hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
 
       //hb_toOutDebug( "cCurPath: %s\n\r", cCurPath )
 
       // Change dir to document root
       DirChange( s_cDocumentRoot )
 
-      //hb_toOutDebug( "New Path: %s\n\r", CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+      //hb_toOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
 
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
 
       // return to original folder
       DirChange( cCurPath )
 
-      //hb_toOutDebug( "New 2 Path: %s\n\r", CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+      //hb_toOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
 
       IF hProc > -1
          //hb_toOutDebug( "Process handler: %s\n\r", hProc )
@@ -2807,7 +2807,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
             IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
 
                 // save current directory
-                cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+                cCurPath := hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
                 // Change dir to document root
                 DirChange( s_cDocumentRoot )
 
