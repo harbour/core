@@ -70,6 +70,13 @@ HB_FUNC( DBZAP )
    HB_FUNC_EXEC( HB_DBZAP );
 }
 
+HB_FUNC_EXTERN( __DBSKIPPER );
+
+HB_FUNC( DBSKIPPER )
+{
+   HB_FUNC_EXEC( __DBSKIPPER );
+}
+
 HB_FUNC( ORDWILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -118,63 +125,6 @@ HB_FUNC( ORDWILDSEEK )
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEPUTBADPARAMETER, NULL, HB_ERR_FUNCNAME );
-   }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-}
-
-HB_FUNC( DBSKIPPER )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      HB_LONG lSkipped = 0;
-      HB_LONG lRecs = 1;
-      HB_BOOL fBEof;
-      HB_ULONG ulRecords = 0;
-
-      if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )
-      {
-         if( HB_ISNUM( 1 ) )
-            lRecs = hb_parnl( 1 );
-
-         if( lRecs == 0 )
-            SELF_SKIP( pArea, 0 );
-         else if( lRecs > 0 )
-         {
-            if( SELF_EOF( pArea, &fBEof ) == HB_SUCCESS )
-            {
-               while( lSkipped < lRecs )
-               {
-                  if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
-                     break;
-                  if( SELF_EOF( pArea, &fBEof ) != HB_SUCCESS )
-                     break;
-                  if( fBEof )
-                  {
-                     SELF_SKIP( pArea, -1 );
-                     break;
-                  }
-                  lSkipped++;
-               }
-            }
-         }
-         else /* if( lRecs < 0 ) */
-         {
-            while( lSkipped > lRecs )
-            {
-               if( SELF_SKIP( pArea, -1 ) != HB_SUCCESS )
-                  break;
-               if( SELF_BOF( pArea, &fBEof ) != HB_SUCCESS )
-                  break;
-               if( fBEof )
-                  break;
-               lSkipped--;
-            }
-         }
-      }
-      hb_retnl( lSkipped );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );

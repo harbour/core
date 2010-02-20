@@ -59,10 +59,6 @@
 #else
 #ifdef __HARBOUR__
 
-#ifndef HB_COMPAT_XPP
-#define HB_COMPAT_XPP
-#endif
-
 /* Translations for Xbase++ programs compiled with Harbour compiler */
 
 #include "hbclass.ch"
@@ -75,6 +71,9 @@
 #xtranslate TBrowse()          => xpp_TBrowse()
 #xtranslate Get()              => xpp_Get()
 
+/* NOTE: Several other Xbase++ functions are currently implemented using
+         original Xbase++ names. */
+
 /* box.ch extensions */
 
 #define B_THIN          ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
@@ -82,9 +81,6 @@
 
 #define B_FAT           ( Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + ;
                           Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) )
-
-/* NOTE: Several other Xbase++ function are currently implemented using
-         original Xbase++ names. */
 
 #endif
 #endif

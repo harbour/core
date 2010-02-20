@@ -54,13 +54,15 @@ FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
+   oBrowse:SkipBlock     := { | nRecs | __dbSkipper( nRecs ) }
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
 
    RETURN oBrowse
 
-STATIC FUNCTION Skipped( nRecs )
+#ifdef HB_CLP_STRICT
+
+FUNCTION __dbSkipper( nRecs )
 
    LOCAL nSkipped := 0
 
@@ -88,3 +90,5 @@ STATIC FUNCTION Skipped( nRecs )
    ENDIF
 
    RETURN nSkipped
+
+#endif
