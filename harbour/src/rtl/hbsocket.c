@@ -3063,7 +3063,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
             {
                const char * cptr = strchr( pifr->ifr_name, ':' );
 
-               len = cptr ? ( int ) ( pifr->ifr_name - cptr ) :
+               len = cptr ? ( int ) ( cptr - pifr->ifr_name ) :
                             ( int ) strlen( pifr->ifr_name );
                if( pLastName && len == iLastName && family == iLastFamily &&
                    memcmp( pLastName, pifr->ifr_name, len ) == 0 )
