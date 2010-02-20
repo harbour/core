@@ -17,18 +17,20 @@ C_SOURCES := \
    dbdetach.c \
    dbdrop.c \
    dbexists.c \
+   dbf1.c \
+   dbnubs.c \
    dbrename.c \
+   dbsql.c \
+   delim1.c \
    fieldhb.c \
+   hbdbsort.c \
+   ordcount.c \
+   ordwldsk.c \
    workarea.c \
    wacore.c \
    wafunc.c \
-   dbf1.c \
-   dbnubs.c \
-   dbsql.c \
-   delim1.c \
-   sdf1.c \
    rddinfo.c \
-   hbdbsort.c \
+   sdf1.c \
 
 PRG_SOURCES := \
    dbdelim.prg \
