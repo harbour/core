@@ -89,11 +89,7 @@ FUNCTION hb_buildinfo( n )
 #else
    v[ _HB_COMPAT_C53             ] := .F.
 #endif
-#ifdef HB_COMPAT_XPP
-   v[ _HB_COMPAT_XPP             ] := .T.
-#else
-   v[ _HB_COMPAT_XPP             ] := .F.
-#endif
+   v[ _HB_COMPAT_XPP             ] := .T. /* Converted to library in Harbour. */
 #ifdef HB_COMPAT_VO
    v[ _HB_COMPAT_VO              ] := .T.
 #else

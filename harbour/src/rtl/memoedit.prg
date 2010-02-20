@@ -231,8 +231,8 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
    CASE nUserKey == ME_BOTTOMRIGHT
       ::MoveCursor( K_CTRL_END )
 
-#ifdef HB_COMPAT_XPP
-   CASE nUserKey == ME_PASTE
+#ifndef HB_CLP_STRICT
+   CASE nUserKey == ME_PASTE /* Xbase++ compatibility */
       hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
 #endif
 

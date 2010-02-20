@@ -912,7 +912,6 @@ FUNCTION Decode( cType, hsBlock, cKey )
       CASE cCode == "FS" ;       RETURN "This a Flagship compatibility function and is only visible if source was compiled with the HB_COMPAT_FLAGSHIP flag"
       CASE cCode == "H" ;        RETURN "This is Harbour specific"
       CASE cCode == "NA" ;       RETURN "Not applicable"
-      CASE cCode == "XPP" ;      RETURN "This an Xbase++ compatibility function and is only visible if source was compiled with the HB_COMPAT_XPP flag"
       OTHERWISE ;                RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
       ENDCASE
 

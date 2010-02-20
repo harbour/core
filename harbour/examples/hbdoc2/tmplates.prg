@@ -325,8 +325,7 @@ INIT PROCEDURE Templates()
       { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
       { "FS",       "This a Flagship compatibility function and is only visible if source was compiled with the HB_COMPAT_FLAGSHIP flag" }, ;
       { "H",        "This is Harbour specific" }, ;
-      { "NA",       "Not applicable" }, ;
-      { "XPP",      "This an Xbase++ compatibility function and is only visible if source was compiled with the HB_COMPAT_XPP flag" } ;
+      { "NA",       "Not applicable" } ;
    }
 
    PUBLIC p_aPlatforms := { ;

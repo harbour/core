@@ -58,7 +58,7 @@
 #define ME_UNKEY        1       /* Unknown key, memo unaltered     */
 #define ME_UNKEYX       2       /* Unknown key, memo altered       */
 #define ME_INIT         3       /* Initialization mode             */
-#ifdef HB_COMPAT_XPP
+#ifndef HB_CLP_STRICT
 #define ME_REQUEST      4       /* Memoedit requests an input from */
                                 /* the user function, e.g. after   */
                                 /* ME_PASTE                        */ /* Xbase++ extension */

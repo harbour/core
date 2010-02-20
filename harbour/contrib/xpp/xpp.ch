@@ -75,6 +75,14 @@
 #xtranslate TBrowse()          => xpp_TBrowse()
 #xtranslate Get()              => xpp_Get()
 
+/* box.ch extensions */
+
+#define B_THIN          ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
+                          Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
+
+#define B_FAT           ( Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + ;
+                          Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) )
+
 /* NOTE: Several other Xbase++ function are currently implemented using
          original Xbase++ names. */
 

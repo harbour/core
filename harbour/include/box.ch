@@ -71,14 +71,4 @@
 #define B_DOUBLE_SINGLE ( Chr( 213 ) + Chr( 205 ) + Chr( 184 ) + Chr( 179 ) + ;
                           Chr( 190 ) + Chr( 205 ) + Chr( 212 ) + Chr( 179 ) )
 
-#ifdef HB_COMPAT_XPP
-
-#define B_THIN          ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
-                          Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
-
-#define B_FAT           ( Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + ;
-                          Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) )
-
-#endif
-
 #endif /* _BOX_CH */

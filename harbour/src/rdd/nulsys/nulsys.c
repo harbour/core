@@ -162,10 +162,6 @@ HB_FUNC( DBSEEK ) { hb_retl( HB_FALSE ); }
 
 HB_FUNC( DBSKIP ) { hb_retni( 0 ); }
 
-#ifdef HB_COMPAT_XPP
-HB_FUNC( DBSKIPPER ) { hb_retni( 0 ); }
-#endif
-
 HB_FUNC( DBAPPEND ) {}
 
 HB_FUNC( DBRECALL ) {}

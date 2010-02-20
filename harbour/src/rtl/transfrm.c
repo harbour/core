@@ -145,7 +145,8 @@ HB_FUNC( TRANSFORM )
                case ')':
                   uiPicFlags |= PF_PARNEGWOS;
                   break;
-#if defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_FOXPRO )
+#ifndef HB_CLP_STRICT
+               /* Xbase++ and FoxPro compatibility */
                case 'L':
                case '0':
                   uiPicFlags |= PF_PADL;  /* FoxPro/XPP extension */
