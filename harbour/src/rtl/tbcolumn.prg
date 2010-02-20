@@ -216,10 +216,3 @@ METHOD New( cHeading, bBlock ) CLASS TBCOLUMN
 
 FUNCTION TBColumnNew( cHeading, bBlock )
    RETURN TBColumn():New( cHeading, bBlock )
-
-#ifdef HB_COMPAT_XPP
-
-CREATE CLASS xpp_TBColumn INHERIT TBColumn
-ENDCLASS
-
-#endif

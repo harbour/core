@@ -18,7 +18,6 @@ C_SOURCES := \
    ati.c \
    base64c.c \
    binnum.c \
-   binnumx.c \
    box.c \
    cdpapi.c \
    cdpapihb.c \
@@ -102,7 +101,6 @@ C_SOURCES := \
    hbzlibgz.c \
    hbznet.c \
    idle.c \
-   idlex.c \
    inkey.c \
    inkeyapi.c \
    is.c \
@@ -122,13 +120,11 @@ C_SOURCES := \
    mouse53.c \
    mouseapi.c \
    mousehb.c \
-   mousex.c \
    mtran.c \
    natmsg.c \
    natmsgu.c \
    net.c \
    oemansi.c \
-   oemansix.c \
    oldbox.c \
    oldclear.c \
    pad.c \
@@ -137,7 +133,6 @@ C_SOURCES := \
    padr.c \
    philes.c \
    philes53.c \
-   philesx.c \
    rat.c \
    replic.c \
    right.c \
@@ -206,7 +201,6 @@ PRG_SOURCES := \
    altd.prg \
    base64.prg \
    browdb.prg \
-   browdbx.prg \
    browse.prg \
    checkbox.prg \
    color53.prg \
@@ -253,8 +247,6 @@ PRG_SOURCES := \
    tgethb.prg \
    tgetint.prg \
    tgetlist.prg \
-   tgetx.prg \
-   thfuncx.prg \
    tlabel.prg \
    tmenuitm.prg \
    tmenusys.prg \
@@ -265,10 +257,8 @@ PRG_SOURCES := \
    tscalar.prg \
    tsymbol.prg \
    ttextlin.prg \
-   tthreadx.prg \
    ttopbar.prg \
    typefile.prg \
-   typefilx.prg \
    valtoexp.prg \
    wait.prg \
 

@@ -244,15 +244,6 @@ EXPORTED:
    /* NOTE: nMode is an undocumented parameter in CA-Cl*pper */
    METHOD configure( nMode )                    // mark that the internal settings of the TBrowse object should be reconfigured
 
-#ifdef HB_COMPAT_XPP
-   METHOD viewArea()                            // Xbase++ compatible method
-   METHOD firstScrCol()                         // Xbase++ compatible method
-
-   MESSAGE _left() METHOD Left()
-   MESSAGE _right() METHOD Right()
-   MESSAGE _end() METHOD End()
-#endif
-
    METHOD new( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]
 
 PROTECTED:
@@ -2361,45 +2352,6 @@ METHOD nRight( nRight ) CLASS TBROWSE
 
    RETURN ::n_Right
 
-
-#ifdef HB_COMPAT_XPP
-
-METHOD viewArea() CLASS TBROWSE
-
-   LOCAL nWidth, nFrozenWidth
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   // TOFIX
-
-   nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-   _MAXFREEZE( ::nFrozen, ::aColData, @nWidth )
-   nFrozenWidth -= nWidth
-
-   RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
-            ::n_Left,;
-            ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
-            ::n_Right,;
-            nFrozenWidth }
-
-
-/* NOTE: Returns the left margin relative column position of the first
-         non-frozen column. Xbase++ compatible method. */
-METHOD firstScrCol() CLASS TBROWSE
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   // TOFIX
-
-   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
-
-#endif
-
-
 #ifdef HB_COMPAT_C53
 METHOD nRow() CLASS TBROWSE
 
@@ -2759,62 +2711,4 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
    ENDIF
 
    RETURN TBR_EXCEPTION
-#endif
-
-#ifdef HB_COMPAT_XPP
-
-CREATE CLASS xpp_TBrowse INHERIT TBrowse
-
-EXPORTED:
-
-   METHOD viewArea()
-   METHOD firstScrCol()
-
-   METHOD _left()
-   METHOD _right()
-   METHOD _end()
-
-ENDCLASS
-
-METHOD viewArea() CLASS xpp_TBrowse
-
-   LOCAL nWidth, nFrozenWidth
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   // TOFIX
-
-   nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-   _MAXFREEZE( ::nFrozen, ::aColData, @nWidth )
-   nFrozenWidth -= nWidth
-
-   RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
-            ::n_Left,;
-            ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
-            ::n_Right,;
-            nFrozenWidth }
-
-/* NOTE: Returns the left margin relative column position of the first
-         non-frozen column. Xbase++ compatible method. */
-METHOD firstScrCol() CLASS xpp_TBrowse
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   // TOFIX
-
-   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
-
-METHOD _left() CLASS xpp_TBrowse
-   RETURN ::left()
-
-METHOD _right() CLASS xpp_TBrowse
-   RETURN ::right()
-
-METHOD _end() CLASS xpp_TBrowse
-   RETURN ::end()
-
 #endif
