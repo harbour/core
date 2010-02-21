@@ -107,7 +107,11 @@ else
    AR_RULE = $(create_library) $(ARSTRIP) & $(RM) __lib__.tmp
 endif
 
-DY := $(CC)
+ifeq ($(HB_COMPILER),gccomf)
+   DY := $(HB_CCPATH)$(HB_CCPREFIX)emxomfld
+else
+   DY := $(HB_CCPATH)$(HB_CCPREFIX)ld
+endif
 DFLAGS += -shared $(LIBPATHS)
 ifeq ($(HB_COMPILER),gccomf)
    DFLAGS += -Zomf
