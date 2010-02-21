@@ -66,6 +66,7 @@
 #xtranslate IsPrinter([<x>])   => hb_IsPrinter(<x>)
 #xtranslate DispOutAt(<x,...>) => hb_DispOutAt(<x>)
 #xtranslate Sleep(<x>)         => xpp_Sleep(<x>)
+#xtranslate AAdd(<a>,<v>,<p>)  => hb_AIns(<a>,<v>,<p>,.T.)
 
 #xtranslate TBColumn()         => xpp_TBColumn()
 #xtranslate TBrowse()          => xpp_TBrowse()
