@@ -157,15 +157,16 @@
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
 #elif defined( HB_OS_OS2 )
-#  define HB_HAS_SOCKADDR_SA_LEN
 #  if defined( __WATCOMC__ )
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
+#     define HB_HAS_SOCKADDR_SA_LEN
 #  else
 #     if ! defined( TCPV40HDRS )
 #        define HB_HAS_INET_ATON
 #        define HB_HAS_INET_PTON
 #        define HB_HAS_INET_NTOP
+#        define HB_HAS_SOCKADDR_SA_LEN
 #     endif
 #  endif
 #elif defined( HB_OS_DOS )
