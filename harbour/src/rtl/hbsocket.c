@@ -2968,7 +2968,7 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    return NULL;
 }
 
-#if defined( SIOCGIFCONF )
+#if defined( SIOCGIFCONF ) || defined( HB_OS_WIN )
 static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
                                        const void * pSockAddr, unsigned len )
 {
@@ -2985,6 +2985,8 @@ static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
 PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 {
    PHB_ITEM pArray = NULL;
+   PHB_ITEM pItem = NULL;
+   int iError = 0;
 
 /*
  * TODO: add suppot for alternative long interface intorduced in some
@@ -2992,7 +2994,6 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF )
-   PHB_ITEM pItem = NULL;
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;
@@ -3188,17 +3189,108 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
             hb_arrayAddForward( pArray, pItem );
          }
       }
+      else
+         iError = HB_SOCK_GETERROR();
       hb_xfree( buf );
       hb_socketClose( sd );
    }
+#elif defined( HB_OS_WIN )
+   HB_SOCKET sd;
 
-   if( pItem )
-      hb_itemRelease( pItem );
+   /* TODO: add suport for IP6 */
+
+   /* TODO: implement it */
+   HB_SYMBOL_UNUSED( fNoAliases );
+
+   sd = hb_socketOpen( af ? af : HB_SOCKET_AF_INET, HB_SOCKET_PT_DGRAM, 0 );
+   if( sd != HB_NO_SOCKET )
+   {
+      DWORD dwBuffer = 0x8000 * sizeof( INTERFACE_INFO );
+      void * pBuffer = hb_xgrab( dwBuffer );
+      LPINTERFACE_INFO pIfInfo = ( LPINTERFACE_INFO ) pBuffer;
+
+      if( WSAIoctl( sd, SIO_GET_INTERFACE_LIST, NULL, 0, pIfInfo, dwBuffer,
+                    &dwBuffer, 0, 0 ) != SOCKET_ERROR )
+      {
+         int iCount = dwBuffer / sizeof( INTERFACE_INFO );
+
+         while( iCount-- )
+         {
+            u_long flags = pIfInfo->iiFlags;
+
+            if( flags & IFF_UP )
+            {
+               if( pItem == NULL )
+                  pItem = hb_itemNew( NULL );
+               hb_arrayNew( pItem, HB_SOCKET_IFINFO_LEN );
+
+               hb_arraySetNI( pItem, HB_SOCKET_IFINFO_FAMILY,
+                              pIfInfo->iiAddress.Address.sa_family );
+
+               hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_ADDR,
+                                          &pIfInfo->iiAddress,
+                                          sizeof( pIfInfo->iiAddress ) );
+               hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_NETMASK,
+                                          &pIfInfo->iiNetmask,
+                                          sizeof( pIfInfo->iiNetmask ) );
+               if( flags & IFF_BROADCAST )
+                  hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_BROADCAST,
+                                             &pIfInfo->iiBroadcastAddress,
+                                             sizeof( pIfInfo->iiBroadcastAddress ) );
+               if( flags & IFF_POINTTOPOINT )
+                  hb_socketArraySetInetAddr( pItem, HB_SOCKET_IFINFO_P2PADDR,
+                                             &pIfInfo->iiBroadcastAddress,
+                                             sizeof( pIfInfo->iiBroadcastAddress ) );
+
+               /* TODO:
+                *       hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
+                */
+
+               flags = ( ( flags & IFF_UP ) ?
+                         HB_SOCKET_IFF_UP : 0 ) |
+                       ( ( flags & IFF_BROADCAST ) ?
+                         HB_SOCKET_IFF_BROADCAST : 0 ) |
+                       ( ( flags & IFF_LOOPBACK ) ?
+                         HB_SOCKET_IFF_LOOPBACK : 0 ) |
+                       ( ( flags & IFF_POINTTOPOINT ) ?
+                         HB_SOCKET_IFF_POINTOPOINT : 0 ) |
+                       ( ( flags & IFF_MULTICAST ) ?
+                         HB_SOCKET_IFF_MULTICAST : 0 );
+               hb_arraySetNI( pItem, HB_SOCKET_IFINFO_FLAGS, flags );
+
+               /* Windows does not support interface names like other OS-es
+                * use interface IP address instead
+                */
+               hb_arraySet( pItem, HB_SOCKET_IFINFO_NAME,
+                            hb_arrayGetItemPtr( pItem, HB_SOCKET_IFINFO_ADDR ) );
+
+               if( pArray == NULL )
+                  pArray = hb_itemArrayNew( 0 );
+               hb_arrayAddForward( pArray, pItem );
+            }
+            pIfInfo++;
+         }
+      }
+      else
+         iError = HB_SOCK_GETERROR();
+
+      hb_xfree( pBuffer );
+      hb_socketClose( sd );
+   }
+   else
+      iError = HB_SOCK_GETERROR();
 #else
    int iTODO;
    HB_SYMBOL_UNUSED( af );
    HB_SYMBOL_UNUSED( fNoAliases );
+   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
 #endif
+
+   if( pItem )
+      hb_itemRelease( pItem );
+
+   if( iError != 0 )
+      hb_socketSetOsError( iError );
 
    return pArray;
 }
