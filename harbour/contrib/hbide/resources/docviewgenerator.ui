@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>768</width>
+    <height>515</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="labelInstall">
+       <property name="text">
+        <string>Harbour Installation Root:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="editInstall"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonInstall">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelDocPrefix">
+       <property name="text">
+        <string>Doc folder prefix:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="editDocPrefix">
+       <property name="maximumSize">
+        <size>
+         <width>70</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="5" column="0">
+    <widget class="QTabWidget" name="tabWidgetContents">
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="tabContents">
+      <attribute name="title">
+       <string>Contents</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTreeWidget" name="treeDoc">
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabByName">
+      <attribute name="title">
+       <string>Index</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="editIndex"/>
+       </item>
+       <item>
+        <widget class="QListWidget" name="listIndex"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabByCategory">
+      <attribute name="title">
+       <string>Category</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QTreeWidget" name="treeCategory">
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QTabWidget" name="tabWidgetElements">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabView">
+      <attribute name="title">
+       <string>View</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_8">
+       <item row="0" column="0">
+        <widget class="QTextBrowser" name="browserView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabGeneral">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Template:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="editTemplate"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLineEdit" name="editName"/>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Category:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="editCategory"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Sub-Category:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLineEdit" name="editSubCategory"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>One-Liner</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="3">
+        <widget class="QLineEdit" name="editOneLiner"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Syntax:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" colspan="3">
+        <widget class="QPlainTextEdit" name="plainSyntax"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Returns:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" colspan="3">
+        <widget class="QLineEdit" name="editReturns"/>
+       </item>
+       <item row="6" column="2">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Status:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="3">
+        <widget class="QLineEdit" name="editStatus"/>
+       </item>
+       <item row="7" column="2">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Platforms:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="3">
+        <widget class="QLineEdit" name="editPlatforms"/>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>Files:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1" colspan="3">
+        <widget class="QPlainTextEdit" name="plainFiles"/>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>See Also:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1" colspan="3">
+        <widget class="QLineEdit" name="editSeeAlso"/>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>.txt path:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1" colspan="3">
+        <widget class="QLineEdit" name="editTextPath"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabArguments">
+      <attribute name="title">
+       <string>Arguments</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelArgName">
+         <property name="text">
+          <string>Name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="labelArgDesc">
+         <property name="text">
+          <string>Description:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" rowspan="4">
+        <widget class="QListWidget" name="listArguments">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QToolButton" name="buttonArgPlus">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2" rowspan="4">
+        <widget class="QPlainTextEdit" name="plainArgDesc"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QToolButton" name="buttonArgMinus">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QToolButton" name="buttonArgUp">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QToolButton" name="buttonArgDown">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="3">
+        <widget class="QPlainTextEdit" name="plainArguments">
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabDesc">
+      <attribute name="title">
+       <string>Description</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="plainDescription"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabExamples">
+      <attribute name="title">
+       <string>Examples</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="plainExamples"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabTests">
+      <attribute name="title">
+       <string>Tests</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="plainTests"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabTemplate">
+      <attribute name="title">
+       <string>Template</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="plainTemplate"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSource">
+      <attribute name="title">
+       <string>Source</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_9">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="plainSource"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QToolButton" name="buttonHome">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonBackward">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonForward">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonUp">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonRefresh">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonPrint">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonSave">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonExit">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

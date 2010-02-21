@@ -207,6 +207,7 @@ CLASS HbIde
    DATA   oEnvironDock
    DATA   oSearchReplace
    DATA   oFuncDock
+   DATA   oDocViewDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -224,6 +225,7 @@ CLASS HbIde
    DATA   cWrkFolderFind                          INIT   ""
    DATA   cWrkReplace                             INIT   ""
    DATA   cWrkView                                INIT   ""
+   DATA   cWrkHarbour                             INIT   ""
 
    DATA   oEnvironment
 
@@ -320,6 +322,7 @@ METHOD HbIde:create( cProjIni )
    ::cWrkFolderFind  := ::aINI[ INI_HBIDE, CurrentFolderFind  ]
    ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
    ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
+   ::cWrkHarbour     := ::aINI[ INI_HBIDE, CurrentHarbour     ]
 
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
@@ -403,6 +406,7 @@ METHOD HbIde:create( cProjIni )
    ::oDockB1:hide()
    ::oDockB2:hide()
    ::oDockB:hide()
+   //::oDocViewDock:hide()
 
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()

@@ -316,6 +316,9 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '     padding-top: 3px;                                                       ' )
       aadd( txt_, ' }                                                                           ' )
 
+   CASE cWidget == "PathIsWrong"
+      aadd( txt_, "background-color: rgba( 240,120,120,255 );"                                    )
+
    ENDCASE
 
    aeval( txt_, {|e| s += trim( e ) + chr( 13 ) + chr( 10 ) } )

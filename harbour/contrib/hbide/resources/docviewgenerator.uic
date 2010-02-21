@@ -1,0 +1,572 @@
+/********************************************************************************
+** Form generated from reading ui file 'docviewgenerator.ui'
+**
+** Created: Sat Feb 20 23:12:55 2010
+**      by: Qt User Interface Compiler version 4.5.2
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef DOCVIEWGENERATOR_H
+#define DOCVIEWGENERATOR_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListWidget>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QTabWidget>
+#include <QtGui/QTextBrowser>
+#include <QtGui/QToolButton>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout;
+    QLabel *labelInstall;
+    QLineEdit *editInstall;
+    QToolButton *buttonInstall;
+    QLabel *labelDocPrefix;
+    QLineEdit *editDocPrefix;
+    QTabWidget *tabWidgetContents;
+    QWidget *tabContents;
+    QVBoxLayout *verticalLayout;
+    QTreeWidget *treeDoc;
+    QWidget *tabByName;
+    QVBoxLayout *verticalLayout_2;
+    QLineEdit *editIndex;
+    QListWidget *listIndex;
+    QWidget *tabByCategory;
+    QVBoxLayout *verticalLayout_3;
+    QTreeWidget *treeCategory;
+    QTabWidget *tabWidgetElements;
+    QWidget *tabView;
+    QGridLayout *gridLayout_8;
+    QTextBrowser *browserView;
+    QWidget *tabGeneral;
+    QGridLayout *gridLayout_2;
+    QLabel *label;
+    QLineEdit *editTemplate;
+    QLabel *label_2;
+    QLineEdit *editName;
+    QLabel *label_3;
+    QLineEdit *editCategory;
+    QLabel *label_4;
+    QLineEdit *editSubCategory;
+    QLabel *label_5;
+    QLineEdit *editOneLiner;
+    QLabel *label_6;
+    QPlainTextEdit *plainSyntax;
+    QLabel *label_8;
+    QLineEdit *editReturns;
+    QLabel *label_12;
+    QLineEdit *editStatus;
+    QLabel *label_13;
+    QLineEdit *editPlatforms;
+    QLabel *label_14;
+    QPlainTextEdit *plainFiles;
+    QLabel *label_15;
+    QLineEdit *editSeeAlso;
+    QLabel *label_9;
+    QLineEdit *editTextPath;
+    QWidget *tabArguments;
+    QGridLayout *gridLayout_3;
+    QLabel *labelArgName;
+    QLabel *labelArgDesc;
+    QListWidget *listArguments;
+    QToolButton *buttonArgPlus;
+    QPlainTextEdit *plainArgDesc;
+    QToolButton *buttonArgMinus;
+    QToolButton *buttonArgUp;
+    QToolButton *buttonArgDown;
+    QPlainTextEdit *plainArguments;
+    QWidget *tabDesc;
+    QGridLayout *gridLayout_4;
+    QPlainTextEdit *plainDescription;
+    QWidget *tabExamples;
+    QGridLayout *gridLayout_5;
+    QPlainTextEdit *plainExamples;
+    QWidget *tabTests;
+    QGridLayout *gridLayout_6;
+    QPlainTextEdit *plainTests;
+    QWidget *tabTemplate;
+    QGridLayout *gridLayout_7;
+    QPlainTextEdit *plainTemplate;
+    QWidget *tabSource;
+    QGridLayout *gridLayout_9;
+    QPlainTextEdit *plainSource;
+    QHBoxLayout *horizontalLayout_3;
+    QToolButton *buttonHome;
+    QToolButton *buttonBackward;
+    QToolButton *buttonForward;
+    QToolButton *buttonUp;
+    QToolButton *buttonRefresh;
+    QToolButton *buttonPrint;
+    QSpacerItem *horizontalSpacer_2;
+    QToolButton *buttonSave;
+    QToolButton *buttonExit;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(768, 515);
+        gridLayout = new QGridLayout(Form);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        labelInstall = new QLabel(Form);
+        labelInstall->setObjectName(QString::fromUtf8("labelInstall"));
+
+        horizontalLayout->addWidget(labelInstall);
+
+        editInstall = new QLineEdit(Form);
+        editInstall->setObjectName(QString::fromUtf8("editInstall"));
+
+        horizontalLayout->addWidget(editInstall);
+
+        buttonInstall = new QToolButton(Form);
+        buttonInstall->setObjectName(QString::fromUtf8("buttonInstall"));
+        buttonInstall->setAutoRaise(false);
+
+        horizontalLayout->addWidget(buttonInstall);
+
+        labelDocPrefix = new QLabel(Form);
+        labelDocPrefix->setObjectName(QString::fromUtf8("labelDocPrefix"));
+
+        horizontalLayout->addWidget(labelDocPrefix);
+
+        editDocPrefix = new QLineEdit(Form);
+        editDocPrefix->setObjectName(QString::fromUtf8("editDocPrefix"));
+        editDocPrefix->setMaximumSize(QSize(70, 16777215));
+
+        horizontalLayout->addWidget(editDocPrefix);
+
+
+        gridLayout->addLayout(horizontalLayout, 2, 0, 1, 2);
+
+        tabWidgetContents = new QTabWidget(Form);
+        tabWidgetContents->setObjectName(QString::fromUtf8("tabWidgetContents"));
+        tabWidgetContents->setMaximumSize(QSize(200, 16777215));
+        tabWidgetContents->setDocumentMode(false);
+        tabContents = new QWidget();
+        tabContents->setObjectName(QString::fromUtf8("tabContents"));
+        verticalLayout = new QVBoxLayout(tabContents);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        treeDoc = new QTreeWidget(tabContents);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
+        treeDoc->setHeaderItem(__qtreewidgetitem);
+        treeDoc->setObjectName(QString::fromUtf8("treeDoc"));
+
+        verticalLayout->addWidget(treeDoc);
+
+        tabWidgetContents->addTab(tabContents, QString());
+        tabByName = new QWidget();
+        tabByName->setObjectName(QString::fromUtf8("tabByName"));
+        verticalLayout_2 = new QVBoxLayout(tabByName);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        editIndex = new QLineEdit(tabByName);
+        editIndex->setObjectName(QString::fromUtf8("editIndex"));
+
+        verticalLayout_2->addWidget(editIndex);
+
+        listIndex = new QListWidget(tabByName);
+        listIndex->setObjectName(QString::fromUtf8("listIndex"));
+
+        verticalLayout_2->addWidget(listIndex);
+
+        tabWidgetContents->addTab(tabByName, QString());
+        tabByCategory = new QWidget();
+        tabByCategory->setObjectName(QString::fromUtf8("tabByCategory"));
+        verticalLayout_3 = new QVBoxLayout(tabByCategory);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        treeCategory = new QTreeWidget(tabByCategory);
+        QTreeWidgetItem *__qtreewidgetitem1 = new QTreeWidgetItem();
+        __qtreewidgetitem1->setText(0, QString::fromUtf8("1"));
+        treeCategory->setHeaderItem(__qtreewidgetitem1);
+        treeCategory->setObjectName(QString::fromUtf8("treeCategory"));
+
+        verticalLayout_3->addWidget(treeCategory);
+
+        tabWidgetContents->addTab(tabByCategory, QString());
+
+        gridLayout->addWidget(tabWidgetContents, 5, 0, 1, 1);
+
+        tabWidgetElements = new QTabWidget(Form);
+        tabWidgetElements->setObjectName(QString::fromUtf8("tabWidgetElements"));
+        tabView = new QWidget();
+        tabView->setObjectName(QString::fromUtf8("tabView"));
+        gridLayout_8 = new QGridLayout(tabView);
+        gridLayout_8->setObjectName(QString::fromUtf8("gridLayout_8"));
+        browserView = new QTextBrowser(tabView);
+        browserView->setObjectName(QString::fromUtf8("browserView"));
+
+        gridLayout_8->addWidget(browserView, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabView, QString());
+        tabGeneral = new QWidget();
+        tabGeneral->setObjectName(QString::fromUtf8("tabGeneral"));
+        gridLayout_2 = new QGridLayout(tabGeneral);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        label = new QLabel(tabGeneral);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        gridLayout_2->addWidget(label, 0, 0, 1, 1);
+
+        editTemplate = new QLineEdit(tabGeneral);
+        editTemplate->setObjectName(QString::fromUtf8("editTemplate"));
+
+        gridLayout_2->addWidget(editTemplate, 0, 1, 1, 1);
+
+        label_2 = new QLabel(tabGeneral);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_2->addWidget(label_2, 0, 2, 1, 1);
+
+        editName = new QLineEdit(tabGeneral);
+        editName->setObjectName(QString::fromUtf8("editName"));
+
+        gridLayout_2->addWidget(editName, 0, 3, 1, 1);
+
+        label_3 = new QLabel(tabGeneral);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_2->addWidget(label_3, 1, 2, 1, 1);
+
+        editCategory = new QLineEdit(tabGeneral);
+        editCategory->setObjectName(QString::fromUtf8("editCategory"));
+
+        gridLayout_2->addWidget(editCategory, 1, 3, 1, 1);
+
+        label_4 = new QLabel(tabGeneral);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        gridLayout_2->addWidget(label_4, 2, 2, 1, 1);
+
+        editSubCategory = new QLineEdit(tabGeneral);
+        editSubCategory->setObjectName(QString::fromUtf8("editSubCategory"));
+
+        gridLayout_2->addWidget(editSubCategory, 2, 3, 1, 1);
+
+        label_5 = new QLabel(tabGeneral);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_2->addWidget(label_5, 3, 0, 1, 1);
+
+        editOneLiner = new QLineEdit(tabGeneral);
+        editOneLiner->setObjectName(QString::fromUtf8("editOneLiner"));
+
+        gridLayout_2->addWidget(editOneLiner, 3, 1, 1, 3);
+
+        label_6 = new QLabel(tabGeneral);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        gridLayout_2->addWidget(label_6, 4, 0, 1, 1);
+
+        plainSyntax = new QPlainTextEdit(tabGeneral);
+        plainSyntax->setObjectName(QString::fromUtf8("plainSyntax"));
+
+        gridLayout_2->addWidget(plainSyntax, 4, 1, 1, 3);
+
+        label_8 = new QLabel(tabGeneral);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+
+        gridLayout_2->addWidget(label_8, 5, 0, 1, 1);
+
+        editReturns = new QLineEdit(tabGeneral);
+        editReturns->setObjectName(QString::fromUtf8("editReturns"));
+
+        gridLayout_2->addWidget(editReturns, 5, 1, 1, 3);
+
+        label_12 = new QLabel(tabGeneral);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+
+        gridLayout_2->addWidget(label_12, 6, 2, 1, 1);
+
+        editStatus = new QLineEdit(tabGeneral);
+        editStatus->setObjectName(QString::fromUtf8("editStatus"));
+
+        gridLayout_2->addWidget(editStatus, 6, 3, 1, 1);
+
+        label_13 = new QLabel(tabGeneral);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+
+        gridLayout_2->addWidget(label_13, 7, 2, 1, 1);
+
+        editPlatforms = new QLineEdit(tabGeneral);
+        editPlatforms->setObjectName(QString::fromUtf8("editPlatforms"));
+
+        gridLayout_2->addWidget(editPlatforms, 7, 3, 1, 1);
+
+        label_14 = new QLabel(tabGeneral);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
+
+        gridLayout_2->addWidget(label_14, 8, 0, 1, 1);
+
+        plainFiles = new QPlainTextEdit(tabGeneral);
+        plainFiles->setObjectName(QString::fromUtf8("plainFiles"));
+
+        gridLayout_2->addWidget(plainFiles, 8, 1, 1, 3);
+
+        label_15 = new QLabel(tabGeneral);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+
+        gridLayout_2->addWidget(label_15, 9, 0, 1, 1);
+
+        editSeeAlso = new QLineEdit(tabGeneral);
+        editSeeAlso->setObjectName(QString::fromUtf8("editSeeAlso"));
+
+        gridLayout_2->addWidget(editSeeAlso, 9, 1, 1, 3);
+
+        label_9 = new QLabel(tabGeneral);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+
+        gridLayout_2->addWidget(label_9, 10, 0, 1, 1);
+
+        editTextPath = new QLineEdit(tabGeneral);
+        editTextPath->setObjectName(QString::fromUtf8("editTextPath"));
+
+        gridLayout_2->addWidget(editTextPath, 10, 1, 1, 3);
+
+        tabWidgetElements->addTab(tabGeneral, QString());
+        tabArguments = new QWidget();
+        tabArguments->setObjectName(QString::fromUtf8("tabArguments"));
+        gridLayout_3 = new QGridLayout(tabArguments);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        labelArgName = new QLabel(tabArguments);
+        labelArgName->setObjectName(QString::fromUtf8("labelArgName"));
+
+        gridLayout_3->addWidget(labelArgName, 0, 0, 1, 1);
+
+        labelArgDesc = new QLabel(tabArguments);
+        labelArgDesc->setObjectName(QString::fromUtf8("labelArgDesc"));
+
+        gridLayout_3->addWidget(labelArgDesc, 0, 2, 1, 1);
+
+        listArguments = new QListWidget(tabArguments);
+        listArguments->setObjectName(QString::fromUtf8("listArguments"));
+        listArguments->setMaximumSize(QSize(150, 16777215));
+
+        gridLayout_3->addWidget(listArguments, 1, 0, 4, 1);
+
+        buttonArgPlus = new QToolButton(tabArguments);
+        buttonArgPlus->setObjectName(QString::fromUtf8("buttonArgPlus"));
+
+        gridLayout_3->addWidget(buttonArgPlus, 1, 1, 1, 1);
+
+        plainArgDesc = new QPlainTextEdit(tabArguments);
+        plainArgDesc->setObjectName(QString::fromUtf8("plainArgDesc"));
+
+        gridLayout_3->addWidget(plainArgDesc, 1, 2, 4, 1);
+
+        buttonArgMinus = new QToolButton(tabArguments);
+        buttonArgMinus->setObjectName(QString::fromUtf8("buttonArgMinus"));
+
+        gridLayout_3->addWidget(buttonArgMinus, 2, 1, 1, 1);
+
+        buttonArgUp = new QToolButton(tabArguments);
+        buttonArgUp->setObjectName(QString::fromUtf8("buttonArgUp"));
+
+        gridLayout_3->addWidget(buttonArgUp, 3, 1, 1, 1);
+
+        buttonArgDown = new QToolButton(tabArguments);
+        buttonArgDown->setObjectName(QString::fromUtf8("buttonArgDown"));
+
+        gridLayout_3->addWidget(buttonArgDown, 4, 1, 1, 1);
+
+        plainArguments = new QPlainTextEdit(tabArguments);
+        plainArguments->setObjectName(QString::fromUtf8("plainArguments"));
+        plainArguments->setReadOnly(false);
+
+        gridLayout_3->addWidget(plainArguments, 5, 0, 1, 3);
+
+        tabWidgetElements->addTab(tabArguments, QString());
+        tabDesc = new QWidget();
+        tabDesc->setObjectName(QString::fromUtf8("tabDesc"));
+        gridLayout_4 = new QGridLayout(tabDesc);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        plainDescription = new QPlainTextEdit(tabDesc);
+        plainDescription->setObjectName(QString::fromUtf8("plainDescription"));
+
+        gridLayout_4->addWidget(plainDescription, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabDesc, QString());
+        tabExamples = new QWidget();
+        tabExamples->setObjectName(QString::fromUtf8("tabExamples"));
+        gridLayout_5 = new QGridLayout(tabExamples);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        plainExamples = new QPlainTextEdit(tabExamples);
+        plainExamples->setObjectName(QString::fromUtf8("plainExamples"));
+
+        gridLayout_5->addWidget(plainExamples, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabExamples, QString());
+        tabTests = new QWidget();
+        tabTests->setObjectName(QString::fromUtf8("tabTests"));
+        gridLayout_6 = new QGridLayout(tabTests);
+        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
+        plainTests = new QPlainTextEdit(tabTests);
+        plainTests->setObjectName(QString::fromUtf8("plainTests"));
+
+        gridLayout_6->addWidget(plainTests, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabTests, QString());
+        tabTemplate = new QWidget();
+        tabTemplate->setObjectName(QString::fromUtf8("tabTemplate"));
+        gridLayout_7 = new QGridLayout(tabTemplate);
+        gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
+        plainTemplate = new QPlainTextEdit(tabTemplate);
+        plainTemplate->setObjectName(QString::fromUtf8("plainTemplate"));
+
+        gridLayout_7->addWidget(plainTemplate, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabTemplate, QString());
+        tabSource = new QWidget();
+        tabSource->setObjectName(QString::fromUtf8("tabSource"));
+        gridLayout_9 = new QGridLayout(tabSource);
+        gridLayout_9->setObjectName(QString::fromUtf8("gridLayout_9"));
+        plainSource = new QPlainTextEdit(tabSource);
+        plainSource->setObjectName(QString::fromUtf8("plainSource"));
+
+        gridLayout_9->addWidget(plainSource, 0, 0, 1, 1);
+
+        tabWidgetElements->addTab(tabSource, QString());
+
+        gridLayout->addWidget(tabWidgetElements, 5, 1, 1, 1);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        buttonHome = new QToolButton(Form);
+        buttonHome->setObjectName(QString::fromUtf8("buttonHome"));
+        buttonHome->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonHome);
+
+        buttonBackward = new QToolButton(Form);
+        buttonBackward->setObjectName(QString::fromUtf8("buttonBackward"));
+        buttonBackward->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonBackward);
+
+        buttonForward = new QToolButton(Form);
+        buttonForward->setObjectName(QString::fromUtf8("buttonForward"));
+        buttonForward->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonForward);
+
+        buttonUp = new QToolButton(Form);
+        buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
+        buttonUp->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonUp);
+
+        buttonRefresh = new QToolButton(Form);
+        buttonRefresh->setObjectName(QString::fromUtf8("buttonRefresh"));
+        buttonRefresh->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonRefresh);
+
+        buttonPrint = new QToolButton(Form);
+        buttonPrint->setObjectName(QString::fromUtf8("buttonPrint"));
+        buttonPrint->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonPrint);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_2);
+
+        buttonSave = new QToolButton(Form);
+        buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
+        buttonSave->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonSave);
+
+        buttonExit = new QToolButton(Form);
+        buttonExit->setObjectName(QString::fromUtf8("buttonExit"));
+        buttonExit->setAutoRaise(false);
+
+        horizontalLayout_3->addWidget(buttonExit);
+
+
+        gridLayout->addLayout(horizontalLayout_3, 0, 0, 1, 2);
+
+
+        retranslateUi(Form);
+
+        tabWidgetContents->setCurrentIndex(0);
+        tabWidgetElements->setCurrentIndex(0);
+
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        labelInstall->setText(QApplication::translate("Form", "Harbour Installation Root:", 0, QApplication::UnicodeUTF8));
+        buttonInstall->setText(QString());
+        labelDocPrefix->setText(QApplication::translate("Form", "Doc folder prefix:", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabContents), QApplication::translate("Form", "Contents", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByName), QApplication::translate("Form", "Index", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByCategory), QApplication::translate("Form", "Category", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabView), QApplication::translate("Form", "View", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("Form", "Template:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("Form", "Name", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("Form", "Category:", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("Form", "Sub-Category:", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("Form", "One-Liner", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("Form", "Syntax:", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("Form", "Returns:", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("Form", "Status:", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("Form", "Platforms:", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("Form", "Files:", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("Form", "See Also:", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("Form", ".txt path:", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabGeneral), QApplication::translate("Form", "General", 0, QApplication::UnicodeUTF8));
+        labelArgName->setText(QApplication::translate("Form", "Name:", 0, QApplication::UnicodeUTF8));
+        labelArgDesc->setText(QApplication::translate("Form", "Description:", 0, QApplication::UnicodeUTF8));
+        buttonArgPlus->setText(QString());
+        buttonArgMinus->setText(QString());
+        buttonArgUp->setText(QString());
+        buttonArgDown->setText(QString());
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabArguments), QApplication::translate("Form", "Arguments", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabDesc), QApplication::translate("Form", "Description", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabExamples), QApplication::translate("Form", "Examples", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabTests), QApplication::translate("Form", "Tests", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabTemplate), QApplication::translate("Form", "Template", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabSource), QApplication::translate("Form", "Source", 0, QApplication::UnicodeUTF8));
+        buttonHome->setText(QString());
+        buttonBackward->setText(QString());
+        buttonForward->setText(QString());
+        buttonUp->setText(QString());
+        buttonRefresh->setText(QString());
+        buttonPrint->setText(QString());
+        buttonSave->setText(QString());
+        buttonExit->setText(QString());
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // DOCVIEWGENERATOR_H

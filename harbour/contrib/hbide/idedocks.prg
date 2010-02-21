@@ -77,6 +77,7 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   nPass                                   INIT   0
    DATA   aPanels                                 INIT   {}
    DATA   aBtnLines                               INIT   {}
+   DATA   oBtnTabClose
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -101,6 +102,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildThemesDock()
    METHOD buildPropertiesDock()
    METHOD buildEnvironDock()
+   METHOD buildDocViewer()
    METHOD outputDoubleClicked( lSelected )
    METHOD buildStatusBar()
    METHOD toggleLeftDocks()
@@ -201,6 +203,7 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle )
    ::buildCompileResults()
    ::buildLinkResults()
    ::buildOutputResults()
+   ::buildDocViewer()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
@@ -503,7 +506,7 @@ METHOD IdeDocks:buildToolBarPanels()
    NEXT
 
    /* Toolbar Line Actions */
-   ::oDlg:oWidget:addToolBarBreak( Qt_LeftToolBarArea )
+   //::oDlg:oWidget:addToolBarBreak( Qt_LeftToolBarArea )
 
    ::oIde:qTBarLines := QToolBar():new()
    ::qTBarLines:setObjectName( "ToolBar_Lines" )
@@ -1059,6 +1062,20 @@ METHOD IdeDocks:buildFindInFiles()
 
    ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files" )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildDocViewer()
+
+   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Document Viewer" )
+
+   ::oDocViewDock:qtObject := ideHarbourHelp():new():create( ::oIde )
+
+   ::oDocViewDock:oWidget:setWidget( ::oDocViewDock:qtObject:oUI )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
    RETURN Self
 

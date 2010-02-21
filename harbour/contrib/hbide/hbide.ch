@@ -93,8 +93,9 @@
 #define CurrentFolderFind                         19
 #define CurrentReplace                            20
 #define CurrentView                               21
+#define CurrentHarbour                            22
 
-#define INI_HBIDE_VRBLS                           21
+#define INI_HBIDE_VRBLS                           22
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

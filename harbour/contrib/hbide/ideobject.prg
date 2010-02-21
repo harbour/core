@@ -127,6 +127,7 @@ CLASS IdeObject
    ACCESS cWrkFolderFind                          INLINE ::oIde:cWrkFolderFind
    ACCESS cWrkReplace                             INLINE ::oIde:cWrkReplace
    ACCESS cWrkView                                INLINE ::oIde:cWrkView
+   ACCESS cWrkHarbour                             INLINE ::oIde:cWrkHarbour
    //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
@@ -171,6 +172,7 @@ CLASS IdeObject
    ACCESS oPropertiesDock                         INLINE ::oIde:oPropertiesDock
    ACCESS oEnvironDock                            INLINE ::oIde:oEnvironDock
    ACCESS oSearchReplace                          INLINE ::oIde:oSearchReplace
+   ACCESS oDocViewDock                            INLINE ::oIde:oDocViewDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

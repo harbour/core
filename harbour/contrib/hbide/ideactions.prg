@@ -606,6 +606,8 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()  )
 
+   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()  )
+
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */
    /*----------------------------------------------------------------------------*/

@@ -509,19 +509,19 @@ hbq_dbg( "------------------------------------------------------------" )
             ENDIF
          ENDIF
 
-         IF "setToolTip" $ cCmd
+         IF "setToolTip(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setToolTip( s )
 
-         ELSEIF "setPlainText" $ cCmd
+         ELSEIF "setPlainText(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setPlainText( s )
 
-         ELSEIF "setStyleSheet" $ cCmd
+         ELSEIF "setStyleSheet(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setStyleSheet( s )
 
-         ELSEIF "setText" $ cCmd
+         ELSEIF "setText(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setText( s )
 
@@ -709,7 +709,7 @@ FUNCTION q__tr( p1, p2, p3, p4 )
 
 STATIC FUNCTION hbq_pullText( org_, nFrom )
    LOCAL s := "", nLen := len( org_ )
-   LOCAL a_:= { "setText", "setPlainText", "setStyleSheet" }
+   LOCAL a_:= { "setText(", "setPlainText(", "setStyleSheet(" }
 
    IF ascan( a_, {|e| e $ org_[ nFrom ] } ) > 0
       s := org_[ nFrom ]
@@ -854,9 +854,14 @@ STATIC FUNCTION hbq_getConstants()
          "QTextEdit_NoWrap"                       => QTextEdit_NoWrap                      , ;
          "QTextEdit_WidgetWidth"                  => QTextEdit_WidgetWidth                 , ;
          "QTextEdit_FixedPixelWidth"              => QTextEdit_FixedPixelWidth             , ;
-         "QTextEdit_FixedColumnWidth"             => QTextEdit_FixedColumnWidth              ;
+         "QTextEdit_FixedColumnWidth"             => QTextEdit_FixedColumnWidth            , ;
+         ;
+         "Qt_ScrollBarAsNeeded"                   => Qt_ScrollBarAsNeeded                  , ;
+         "Qt_ScrollBarAlwaysOff"                  => Qt_ScrollBarAlwaysOff                 , ;
+         "Qt_ScrollBarAlwaysOn"                   => Qt_ScrollBarAlwaysOn                    ;
       }
    ENDIF
+
    RETURN h_
 
 /*----------------------------------------------------------------------*/

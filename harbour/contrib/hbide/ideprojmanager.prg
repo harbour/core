@@ -573,8 +573,10 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_buttonHbp         :setIcon( ::resPath + "open.png"  )
 
       ::oUI:q_buttonSelect :setIcon( ::resPath + "open.png"       )
-      ::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
-      ::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
+      //::oUI:q_buttonSort   :setIcon( ::resPath + "toupper.png"    )   // TODO: toupper.png => atoz.png
+      ::oUI:q_buttonSort   :setIcon( ::resPath + "sort.png"    )   // TODO: toupper.png => atoz.png
+      //::oUI:q_buttonSortZA :setIcon( ::resPath + "tolower.png"    )   //       tolower.png => ztoa.png
+      ::oUI:q_buttonSortZA :setIcon( ::resPath + "sortdescend.png"    )   //       tolower.png => ztoa.png
       ::oUI:q_buttonSortOrg:setIcon( ::resPath + "invertcase.png" )   //       tolower.png => ztoa.png
 
       ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } ) //oWidget:close()  } )

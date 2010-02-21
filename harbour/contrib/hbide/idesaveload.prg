@@ -98,6 +98,7 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "CurrentFolderFind         = " + oIde:cWrkFolderFind                               )
    aadd( txt_, "CurrentReplace            = " + oIde:cWrkReplace                                  )
    aadd( txt_, "CurrentView               = " + oIde:cWrkView                                     )
+   aadd( txt_, "CurrentHarbour            = " + oIde:cWrkHarbour                                  )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -203,7 +204,8 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "finddialoggeometry" , "themesdialoggeometry", "currenttheme"       , ;
                       "currentcodec"       , "pathmk2"             , "pathenv"            , ;
                       "currentenvironment" , "findinfilesdialoggeometry", "currentfind"   , ;
-                      "currentreplace"     , "currentfolderfind"   , "currentview"          }
+                      "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
+                      "currentharbour"     }
 
    /* Initiate the place holders */
    oIde:aIni := Array( INI_SECTIONS_COUNT )

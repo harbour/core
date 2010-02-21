@@ -75,7 +75,7 @@ CLASS IdeSearchReplace INHERIT IdeObject
 
    DATA   qFindLineEdit
    DATA   qReplLineEdit
-
+   DATA   nCurDirection                           INIT 0
    DATA   cFind                                   INIT ""
 
    METHOD new( oIde )
@@ -83,6 +83,8 @@ CLASS IdeSearchReplace INHERIT IdeObject
    METHOD destroy()
    METHOD beginFind()
    METHOD setFindString( cText )
+   METHOD find( cText, lBackward )
+   METHOD startFromTop()
 
    ENDCLASS
 
@@ -102,29 +104,43 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplacepanel.uic", ::oIde:oDlg:oWidget ):build()
-   //::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
-   //::oUI:setStyleSheet( "QWidget { border: 1px solid red; }" )
+   //::oUI := HbQtUI():new( ::oIde:resPath + "searchreplacepanel.uic", ::oIde:oDlg:oWidget ):build()
+   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
    ::oUI:setFocusPolicy( Qt_StrongFocus )
 
+   ::oUI:q_frameFind:setStyleSheet( "" )
+   ::oUI:q_frameReplace:setStyleSheet( "" )
+
    ::oUI:q_buttonClose:setIcon( ::resPath + "closetab.png" )
+   ::oUI:q_buttonClose:setToolTip( "Close" )
    ::oUI:signal( "buttonClose", "clicked()", {|| ::oUI:hide() } )
 
    ::oUI:q_buttonNext:setIcon( ::resPath + "next.png"     )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
+   ::oUI:signal( "buttonNext", "clicked()", {|| ::find( ::cFind ), ::oIde:manageFocusInEditor() } )
 
    ::oUI:q_buttonPrev:setIcon( ::resPath + "previous.png" )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
+   ::oUI:signal( "buttonPrev", "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
 
-   ::oUI:q_buttonTop :setIcon( ::resPath + "up.png"       )
-   ::oUI:q_buttonTop :setToolTip( "Start from Top" )
+   ::oUI:q_checkReplace:setChecked( 0 )
+   ::oUI:signal( "checkReplace", "stateChanged(int)", {|i| ;
+                               ::oUI:q_comboReplace:setEnabled( i == 2 ), ;
+                               ::oUI:q_buttonReplace:setEnabled( i == 2 ), ;
+                               iif( i == 2, ::oUI:q_frameReplace:show(), ::oUI:q_frameReplace:hide() ) } )
 
    ::qFindLineEdit := QLineEdit():from( ::oUI:q_comboFind:lineEdit() )
    ::qFindLineEdit:setFocusPolicy( Qt_StrongFocus )
+   ::qFindLineEdit:setStyleSheet( "background-color: white;" )
    ::connect( ::qFindLineEdit, "textChanged(QString)", {|cText| ::setFindString( cText ) } )
+   ::connect( ::qFindLineEdit, "returnPressed()"     , {|| ::find( ::cFind ) } )
 
    ::qReplLineEdit := QLineEdit():from( ::oUI:q_comboReplace:lineEdit() )
    ::qReplLineEdit:setFocusPolicy( Qt_StrongFocus )
+   ::qReplLineEdit:setStyleSheet( "background-color: white;" )
+
+   ::oUI:q_checkReplace:setEnabled( .f. )
+   ::oUI:q_frameReplace:hide()
 
    RETURN Self
 
@@ -140,47 +156,111 @@ METHOD IdeSearchReplace:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeSearchReplace:find( cText, lBackward )
+   LOCAL qCursor, qDoc, qCur, qReg
+   LOCAL lFound := .f.
+   LOCAL nFlags := 0
+
+   DEFAULT lBackward TO .f.
+
+   ::nCurDirection := iif( lBackward, QTextDocument_FindBackward, 0 )
+
+   IF len( cText ) > 0
+      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+
+      IF ::oUI:q_checkRegEx:isChecked()
+         qDoc := QTextDocument():from( ::qCurEdit:document() )
+         qReg := QRegExp():new()
+         qReg:setPattern( cText )
+         qReg:setCaseSensitivity( iif( ::oUI:q_checkMatchCase:isChecked(), Qt_CaseSensitive, Qt_CaseInsensitive ) )
+
+         nFlags += ::nCurDirection
+         nFlags += iif( ::oUI:q_checkWhole:isChecked(), QTextDocument_FindWholeWords, 0 )
+
+         qCur := QTextCursor():from( qDoc:find_1( qReg, qCursor, nFlags  ) )
+         lFound := ! qCur:isNull()
+         IF lFound
+            ::qCurEdit:setTextCursor( qCur )
+         ENDIF
+      ELSE
+         nFlags += iif( ::oUI:q_checkMatchCase:isChecked(), QTextDocument_FindCaseSensitively, 0 )
+         nFlags += iif( ::oUI:q_checkWhole:isChecked(), QTextDocument_FindWholeWords, 0 )
+         nFlags += ::nCurDirection
+
+         lFound := ::oEM:getEditCurrent():find( cText, nFlags )
+      ENDIF
+
+      IF ! lFound
+         ::qCurEdit:setTextCursor( qCursor )
+         ::oUI:q_checkReplace:setChecked( .f. )
+         ::oUI:q_checkReplace:setEnabled( .f. )
+      ELSE
+         ::oUI:q_checkReplace:setEnabled( .t. )
+      ENDIF
+   ENDIF
+   RETURN lFound
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeSearchReplace:beginFind()
+
+   ::oUI:q_checkReplace:setChecked( .f. )
+   ::oUI:q_checkReplace:setEnabled( .f. )
+
+   ::oUI:q_radioTop:setChecked( .t. )
 
    ::oUI:show()
 
    ::cFind := ""
 
+   ::oUI:q_comboFind:setFocus_1()
+   ::qFindLineEdit:setFocus_1()
    ::qFindLineEdit:selectAll()
-   ::qFindLineEdit:setFocus( Qt_TabFocusReason )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSearchReplace:setFindString( cText )
-   LOCAL nFlags, lFound, qCursor, nPos
+   LOCAL qCursor, nPos
 
    IF empty( cText )
       RETURN .f.
    ENDIF
 
    qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-   nPos := qCursor:position()
+   IF ::oUI:q_radioTop:isChecked()
+      nPos := qCursor:position()
+      qCursor:setPosition( 0 )
+      ::qCurEdit:setTextCursor( qCursor )
+   ENDIF
+
+   IF ! ::find( cText )
+      IF !empty( nPos )
+         qCursor:setPosition( nPos )
+         ::qCurEdit:setTextCursor( qCursor )
+      ENDIF
+      ::cFind := ""
+      ::qFindLineEdit:setStyleSheet( getStyleSheet( "PathIsWrong" ) )
+   ELSE
+      ::cFind := cText
+      ::qFindLineEdit:setStyleSheet( "background-color: white;" )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSearchReplace:startFromTop()
+   LOCAL qCursor
+
+   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
    qCursor:setPosition( 0 )
    ::qCurEdit:setTextCursor( qCursor )
 
-   nFlags := 0
-   nFlags += iif( ::oUI:q_checkMatchCase:isChecked(), QTextDocument_FindCaseSensitively, 0 )
-   lFound := ::oEM:getEditCurrent():find( cText, nFlags )
+   ::find( ::cFind )
 
-   IF ! lFound
-      qCursor:setPosition( nPos )
-      ::qCurEdit:setTextCursor( qCursor )
-      ::cFind := ""
-      ::qFindLineEdit:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
-   ELSE
-      //::qCurEdit:setTextCursor( qCursor )
-      ::cFind := cText
-      ::qFindLineEdit:setStyleSheet( "" )
-   ENDIF
-
-   RETURN lFound
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -979,31 +1059,6 @@ METHOD IdeFindInFiles:find()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
-   LOCAL aDir, a_
-
-   DEFAULT lSubs TO .t.
-
-   IF right( cRootPath, 1 ) != hb_osPathSeparator()
-      cRootPath += hb_osPathSeparator()
-   ENDIF
-   cRootPath := hbide_pathToOSPath( cRootPath )
-
-   aadd( aPaths, cRootPath )
-
-   IF lSubs
-      aDir := directory( cRootPath + "*.", "D" )
-      FOR EACH a_ IN aDir
-         IF a_[ 5 ] == "D" .AND. left( a_[ 1 ], 1 ) != "."
-            hbide_fetchSubPaths( @aPaths, cRootPath + a_[ 1 ] )
-         ENDIF
-      NEXT
-   ENDIF
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeFindInFiles:findInABunch( aFiles )
    LOCAL s, cExpr, nLine, aLines, aBuffer, cLine, nNoMatch, aMatch, regEx
 
@@ -1041,7 +1096,6 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
                NEXT
             ELSE
                cExpr := lower( ::cOrigExpr )
-hbide_dbg( cExpr, "llllllllllllllllllll" )
                FOR EACH cLine IN aBuffer
                   nLine++
                   IF cExpr $ lower( cLine )

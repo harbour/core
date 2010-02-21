@@ -501,6 +501,46 @@ FUNCTION hbide_arrayToMemoEx( a_ )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_arrayToMemoEx2( a_ )
+   RETURN hbide_arrayToMemoEx( a_ )
+
+   #if 0
+   LOCAL s := "", k
+   LOCAL lNewPara := .t.
+
+   FOR EACH k IN a_
+      IF empty( k )
+         s += CRLF + CRLF
+         lNewPara := .t.
+      ELSE
+         s += iif( lNewPara, "", " " ) + k
+         lNewPara := .f.
+      ENDIF
+   NEXT
+
+   DO WHILE .t.
+      IF right( s, 2 ) == CRLF
+         s := substr( s, 1, len( s ) - 2 )
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN s
+   #endif
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_arrayToMemoHtml( a_ )
+   LOCAL s := hbide_arrayToMemoEx( a_ )
+
+   s := StrTran( s, "<", "&lt;" )
+   s := StrTran( s, ">", "&gt;" )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_memoToArray( s )
    LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), CRLF, _EOL ), _EOL )
    LOCAL nNewSize := 0
@@ -1529,6 +1569,46 @@ STATIC FUNCTION DirDelPathSep( cDir )
    ENDIF
 
    RETURN cDir
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
+   LOCAL aDir, a_
+
+   DEFAULT lSubs TO .t.
+
+   IF right( cRootPath, 1 ) != hb_osPathSeparator()
+      cRootPath += hb_osPathSeparator()
+   ENDIF
+   cRootPath := hbide_pathToOSPath( cRootPath )
+
+   aadd( aPaths, cRootPath )
+
+   IF lSubs
+      aDir := directory( cRootPath + "*.", "D" )
+      FOR EACH a_ IN aDir
+         IF a_[ 5 ] == "D" .AND. left( a_[ 1 ], 1 ) != "."
+            hbide_fetchSubPaths( @aPaths, cRootPath + a_[ 1 ] )
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_stripRoot( cRoot, cPath )
+   LOCAL cLRoot, cLPath, cP
+
+   cLRoot := hbide_pathNormalized( cRoot, .t. )
+   cLPath := hbide_pathNormalized( cPath, .t. )
+
+   IF left( cLPath, len( cLRoot ) ) == cLRoot
+      cP := substr( cLPath, len( cRoot ) + 2 )
+      RETURN cP
+   ENDIF
+
+   RETURN cPath
 
 /*----------------------------------------------------------------------*/
 
