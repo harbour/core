@@ -406,7 +406,9 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE buttonHome_clicked
-      ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
+      IF !empty( ::aNodes )
+         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
+      ENDIF
       EXIT
 
    CASE buttonBackward_clicked
