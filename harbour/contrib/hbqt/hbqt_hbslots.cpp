@@ -208,6 +208,15 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    else if( signal == ( QString ) "itemDoubleClicked(QLWItem)"                     ) ret = object->connect( object, SIGNAL( itemDoubleClicked( QListWidgetItem * )                            ), t_slots, SLOT( itemDoubleClicked( QListWidgetItem * )                             ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemEntered(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemEntered( QListWidgetItem * )                                  ), t_slots, SLOT( itemEntered( QListWidgetItem * )                                   ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemPressed(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemPressed( QListWidgetItem * )                                  ), t_slots, SLOT( itemPressed( QListWidgetItem * )                                   ), Qt::AutoConnection );
+   /* QTextBrowser */
+   else if( signal == ( QString ) "anchorClicked(QUrl)"                            ) ret = object->connect( object, SIGNAL( anchorClicked( const QUrl & )                                     ), t_slots, SLOT( anchorClicked( const QUrl & )                                      ), Qt::AutoConnection );
+   else if( signal == ( QString ) "backwardAvailable(bool)"                        ) ret = object->connect( object, SIGNAL( backwardAvailable( bool )                                         ), t_slots, SLOT( backwardAvailable( bool )                                          ), Qt::AutoConnection );
+   else if( signal == ( QString ) "forwardAvailable(bool)"                         ) ret = object->connect( object, SIGNAL( forwardAvailable( bool )                                          ), t_slots, SLOT( forwardAvailable( bool )                                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "highlighted(QUrl)"                              ) ret = object->connect( object, SIGNAL( highlighted( const QUrl & )                                       ), t_slots, SLOT( highlighted( const QUrl & )                                        ), Qt::AutoConnection );
+   //else if( signal == ( QString ) "highlighted(QString)"                           ) ret = object->connect( object, SIGNAL( highlighted( const QString & )                                    ), t_slots, SLOT( highlighted( const QString & )                                     ), Qt::AutoConnection );
+   else if( signal == ( QString ) "historyChanged()"                               ) ret = object->connect( object, SIGNAL( historyChanged()                                                  ), t_slots, SLOT( historyChanged()                                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "sourceChanged(QUrl)"                            ) ret = object->connect( object, SIGNAL( sourceChanged( const QUrl & )                                     ), t_slots, SLOT( sourceChanged( const QUrl & )                                      ), Qt::AutoConnection );
+   /* New */
    else ret = false;
 
    return ret;
@@ -350,7 +359,15 @@ static bool disconnect_signal( QObject * object, const char * signal )
    else if( signal == ( QString ) "itemDoubleClicked(QLWItem)"                     ) return object->disconnect( SIGNAL( itemDoubleClicked( QListWidgetItem * )                            ) );
    else if( signal == ( QString ) "itemEntered(QLWItem)"                           ) return object->disconnect( SIGNAL( itemEntered( QListWidgetItem * )                                  ) );
    else if( signal == ( QString ) "itemPressed(QLWItem)"                           ) return object->disconnect( SIGNAL( itemPressed( QListWidgetItem * )                                  ) );
-
+   /* QTextBrowser */
+   else if( signal == ( QString ) "anchorClicked(QUrl)"                            ) return object->disconnect( SIGNAL( anchorClicked( const QUrl & )                                     ) );
+   else if( signal == ( QString ) "backwardAvailable(bool)"                        ) return object->disconnect( SIGNAL( backwardAvailable( bool )                                         ) );
+   else if( signal == ( QString ) "forwardAvailable(bool)"                         ) return object->disconnect( SIGNAL( forwardAvailable( bool )                                          ) );
+   else if( signal == ( QString ) "highlighted(QUrl)"                              ) return object->disconnect( SIGNAL( highlighted( const QUrl & )                                       ) );
+   //else if( signal == ( QString ) "highlighted(QString)"                           ) return object->disconnect( SIGNAL( highlighted( const QString & )                                    ) );
+   else if( signal == ( QString ) "historyChanged()"                               ) return object->disconnect( SIGNAL( historyChanged()                                                  ) );
+   else if( signal == ( QString ) "sourceChanged(QUrl)"                            ) return object->disconnect( SIGNAL( sourceChanged( const QUrl & )                                     ) );
+   /* new */
    return false;
 }
 
@@ -672,6 +689,22 @@ static void hbqt_SlotsExecQPoint( HBSlots * t_slots, QObject * object, const cha
    }
 }
 
+static void hbqt_SlotsExecQUrl( HBSlots * t_slots, QObject * object, const char * pszEvent, const QUrl & link )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QUrl * ) new QUrl( link ) );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         delete ( ( QUrl * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
 HBSlots::HBSlots( QObject* parent ) : QObject( parent )
 {
 }
@@ -929,28 +962,14 @@ void HBSlots::itemClicked( QListWidgetItem * item )                             
 void HBSlots::itemDoubleClicked( QListWidgetItem * item )                                                  { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QLWItem)", item                                ); }
 void HBSlots::itemEntered( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemEntered(QLWItem)", item                                      ); }
 void HBSlots::itemPressed( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemPressed(QLWItem)", item                                      ); }
-
-#if 0
-currentItemChanged( QListWidgetItem *, QListWidgetItem * )
-currentRowChanged( int )
-currentTextChanged( const QString & )
-itemActivated( QListWidgetItem * )
-itemChanged( QListWidgetItem * )
-itemClicked( QListWidgetItem * )
-itemDoubleClicked( QListWidgetItem * )
-itemEntered( QListWidgetItem * )
-itemPressed( QListWidgetItem * )
-
-"currentItemChanged(QLWItem,QLWItem)"
-"currentRowChanged(currentRow)"
-"currentTextChanged(QString)"
-"itemActivated(QLWItem)"
-"itemChanged(QLWItem)"
-"itemClicked(QLWItem)"
-"itemDoubleClicked(QLWItem)"
-"itemEntered(QLWItem)"
-"itemPressed(QLWItem)"
-#endif
+/* QTextBrowser */
+void HBSlots::anchorClicked( const QUrl & link )                                                           { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "anchorClicked(QUrl)", link                                       ); }
+void HBSlots::backwardAvailable( bool available )                                                          { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "backwardAvailable(bool)", available                              ); }
+void HBSlots::forwardAvailable( bool available )                                                           { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "forwardAvailable(bool)", available                               ); }
+void HBSlots::highlighted( const QUrl & link )                                                             { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "highlighted(QUrl)", link                                         ); }
+//void HBSlots::highlighted( const QString & link )                                                          { hbqt_SlotsString(             this, qobject_cast<QObject *>( sender() ), "highlighted(QString)", link                                      ); }
+void HBSlots::historyChanged()                                                                             { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "historyChanged()"                                                ); }
+void HBSlots::sourceChanged( const QUrl & src )                                                            { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "sourceChanged(QUrl)", src                                        ); }
 
 /*----------------------------------------------------------------------*/
 /*

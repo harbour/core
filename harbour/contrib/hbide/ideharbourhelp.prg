@@ -85,6 +85,8 @@
 #define editIndex_returnPressed                   12
 #define lostIndex_ItemDoubleClicked               13
 #define buttonUp_clicked                          14
+#define browserView_anchorClicked                 15
+#define tabWidgetContents_currentChanged          16
 
 /*----------------------------------------------------------------------*/
 
@@ -311,33 +313,38 @@ METHOD IdeHarbourHelp:setParameters()
 
    oUI:q_treeDoc:expandsOnDoubleClick( .f. )
 
+   oUI:q_browserView:setOpenLinks( .f. )
+   oUI:q_tabWidgetContents:setFocusPolicy( Qt_NoFocus )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:installSignals()
 
-   ::oUI:signal( "buttonInstall" , "clicked()"                 , {|    | ::execEvent( buttonInstall_clicked  )     } )
-   ::oUI:signal( "buttonHome"    , "clicked()"                 , {|    | ::execEvent( buttonHome_clicked     )     } )
-   ::oUI:signal( "buttonBackward", "clicked()"                 , {|    | ::execEvent( buttonBackward_clicked )     } )
-   ::oUI:signal( "buttonForward" , "clicked()"                 , {|    | ::execEvent( buttonForward_clicked  )     } )
-   ::oUI:signal( "buttonUp"      , "clicked()"                 , {|    | ::execEvent( buttonUp_clicked       )     } )
-   ::oUI:signal( "buttonRefresh" , "clicked()"                 , {|    | ::execEvent( buttonRefresh_clicked  )     } )
-   ::oUI:signal( "buttonPrint"   , "clicked()"                 , {|    | ::execEvent( buttonPrint_clicked    )     } )
-   ::oUI:signal( "buttonPdf"     , "clicked()"                 , {|    | ::execEvent( buttonPdf_clicked      )     } )
-   ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p   | ::execEvent( editInstall_textChanged, p ) } )
-   ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p   | ::execEvent( editIndex_textChanged, p   ) } )
-   ::oUI:signal( "editIndex"     , "returnPressed()"           , {|    | ::execEvent( editIndex_returnPressed    ) } )
-   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p   | ::execEvent( lostIndex_ItemDoubleClicked, p ) } )
+   ::oUI:signal( "buttonInstall" , "clicked()"                 , {| | ::execEvent( buttonInstall_clicked  )     } )
+   ::oUI:signal( "buttonHome"    , "clicked()"                 , {| | ::execEvent( buttonHome_clicked     )     } )
+   ::oUI:signal( "buttonBackward", "clicked()"                 , {| | ::execEvent( buttonBackward_clicked )     } )
+   ::oUI:signal( "buttonForward" , "clicked()"                 , {| | ::execEvent( buttonForward_clicked  )     } )
+   ::oUI:signal( "buttonUp"      , "clicked()"                 , {| | ::execEvent( buttonUp_clicked       )     } )
+   ::oUI:signal( "buttonRefresh" , "clicked()"                 , {| | ::execEvent( buttonRefresh_clicked  )     } )
+   ::oUI:signal( "buttonPrint"   , "clicked()"                 , {| | ::execEvent( buttonPrint_clicked    )     } )
+   ::oUI:signal( "buttonPdf"     , "clicked()"                 , {| | ::execEvent( buttonPdf_clicked      )     } )
+   ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p| ::execEvent( editInstall_textChanged, p ) } )
+   ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( editIndex_textChanged, p   ) } )
+   ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( editIndex_returnPressed    ) } )
+   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( lostIndex_ItemDoubleClicked, p ) } )
+   ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( browserView_anchorClicked, p ) } )
+   ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( tabWidgetContents_currentChanged, p ) } )
 
-   ::connect( ::oUI:q_treeDoc    , "itemSelectionChanged()"    , {|    | ::execEvent( treeDoc_itemSelectionChanged ) } )
+   ::connect( ::oUI:q_treeDoc    , "itemSelectionChanged()"    , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
-   LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower
+   LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower, qUrl
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -350,9 +357,26 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
+   CASE tabWidgetContents_currentChanged
+      IF p == 1
+         ::oUI:q_editIndex:setFocus_1()
+      ENDIF
+      EXIT
+
+   CASE browserView_anchorClicked
+      qUrl := QUrl():from( p )
+      cText := lower( qUrl:toString() )
+      nLen := len( cText )
+      IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
+         ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
+         ::populateIndexedSelection()
+      ENDIF
+      EXIT
+
    CASE lostIndex_ItemDoubleClicked
    CASE editIndex_returnPressed
       ::populateIndexedSelection()
+      ::oUI:q_editIndex:setFocus_1()
       EXIT
 
    CASE editIndex_textChanged
@@ -787,7 +811,7 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:buildView( oFunc )
-   LOCAL s, x, y, v, w, z
+   LOCAL s, x, y, v, w, z, n, s1, a_
    LOCAL aHtm := {}
 
    aadd( aHtm, "<HTML>" )
@@ -841,29 +865,45 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    v := '<TR><TD margin-left: 20px><pre>'                    ; w := "</pre></TD></TR>"
    z := "<TR><TD>&nbsp;</TD></TR>"
 
-   aadd( aHtm, x + "Syntax"      + y )
+   aadd( aHtm, x + "Syntax"         + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aSyntax      ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Arguments"   + y )
+   aadd( aHtm, x + "Arguments"      + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aArguments   ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Returns"     + y )
+   aadd( aHtm, x + "Returns"        + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aReturns     ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Description" + y )
+   aadd( aHtm, x + "Description"    + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aDescription ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Examples"    + y )
+   aadd( aHtm, x + "Examples"       + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aExamples    ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Files"       + y )
+   aadd( aHtm, x + "Files"          + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aFiles       ) + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Platforms"   + y )
+   aadd( aHtm, x + "SeeAlso"        + y )
+   aadd( aHtm, "<TR><TD>" )
+   a_:= hb_atokens( oFunc:cSeaAlso, "," )
+   IF !empty( a_ )
+      FOR EACH s IN a_
+         IF ( n := at( "(", s ) ) > 0
+            s1 := substr( s, 1, n-1 )
+            aadd( aHtm, '<a href="' + s1 + '">' + s  + "</a>" + ;
+                                     iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+         ENDIF
+      NEXT
+   ELSE
+      aadd( aHtm, "&nbsp;" )
+   ENDIF
+   aadd( aHtm, "</TD></TR>" )
+   aadd( aHtm, z )
+   aadd( aHtm, x + "Platforms"      + y )
    aadd( aHtm, v + oFunc:cPlatforms + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Status"      + y )
-   aadd( aHtm, v + oFunc:cStatus + w )
+   aadd( aHtm, x + "Status"         + y )
+   aadd( aHtm, v + oFunc:cStatus    + w )
    aadd( aHtm, z )
 
    aadd( aHtm, "   </TABLE>"  )

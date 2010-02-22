@@ -58,6 +58,7 @@
 #include "hbapiitm.h"
 
 #include <QtCore/QProcess>
+#include <QtCore/QUrl>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QTreeWidgetItem>
@@ -253,7 +254,15 @@ public slots:
    void itemDoubleClicked( QListWidgetItem * item );
    void itemEntered( QListWidgetItem * item );
    void itemPressed( QListWidgetItem * item );
-   /*  */
+   /* QTextBrowser */
+   void anchorClicked( const QUrl & link );
+   void backwardAvailable( bool available );
+   void forwardAvailable( bool available );
+   void highlighted( const QUrl & link );
+   // void highlighted( const QString & link );
+   void historyChanged();
+   void sourceChanged( const QUrl & src );
+   /* */
 };
 
 /*----------------------------------------------------------------------*/
