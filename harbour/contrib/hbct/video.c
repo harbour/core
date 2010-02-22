@@ -61,14 +61,14 @@
 
 #if defined( HB_OS_DOS )
 
-#   if defined( __DJGPP__ )
-#      include <dpmi.h>
-#      include <go32.h>
-#      include <pc.h>
-#      include <sys/farptr.h>
-#   endif
+#  if defined( __DJGPP__ )
+#     include <dpmi.h>
+#     include <go32.h>
+#     include <pc.h>
+#     include <sys/farptr.h>
+#  endif
 
-#   include "ctvideo.ch"
+#  include "ctvideo.ch"
 
 
 /*  $DOC$
@@ -331,7 +331,10 @@ HB_FUNC( SETFONT )
       hb_retni( 0 );
    }
 #   else
-   hb_retni( -2 );
+   {
+      HB_SYMBOL_UNUSED( font );
+      hb_retni( -2 );
+   }
 #   endif
 }
 

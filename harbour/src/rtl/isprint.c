@@ -53,6 +53,10 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+#if defined( HB_OS_DOS )
+#  include <dos.h>
+#endif
+
 HB_BOOL hb_printerIsReady( const char * pszPrinterName )
 {
    HB_BOOL bIsPrinter;

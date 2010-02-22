@@ -92,13 +92,11 @@
    #endif
 
 #elif defined( HB_OS_OS2 )
-
    #include <os2.h>
-
+#elif defined( HB_OS_DOS )
+   #include <dos.h>
 #elif defined( HB_OS_UNIX ) && !defined( __CEGCC__ )
-
    #include <sys/utsname.h>
-
 #endif
 
 const char * hb_verCPU( void )

@@ -96,7 +96,7 @@
    #endif
 #endif
 
-#if !defined( HB_OS_WIN )
+#if !defined( HB_OS_WIN ) && !defined( HB_OS_DOS )
 static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 {
    HB_BOOL fOK = HB_FALSE;

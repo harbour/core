@@ -71,6 +71,8 @@
    #endif
 #elif defined( HB_OS_OS2 )
    #include <os2.h>
+#elif defined( HB_OS_DOS )
+   #include <dos.h>
 #endif
 
 HB_FUNC( HB_DISKSPACE )

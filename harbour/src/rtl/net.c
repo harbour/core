@@ -63,6 +63,10 @@
 
 #include "hbapi.h"
 
+#if defined( HB_OS_DOS )
+#  include <dos.h>
+#endif
+
 #if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
    #include "hb_io.h"

@@ -471,7 +471,7 @@ HARBOUR
    wce      - MS Windows CE
    dos      - MS-DOS (32-bit protected mode only)
               (MS-DOS compatible systems also work, like dosemu)
-   os2      - OS/2 / eComStation
+   os2      - OS/2 Warp 4 / eComStation
 
    You can use HB_COMPILER values to manually select compilers:
 

@@ -97,6 +97,8 @@
 
 #if defined( HB_OS_WIN )
 #  include <windows.h>
+#elif defined( HB_OS_DOS )
+#  include <dos.h>
 #endif
 
 #if defined( HB_PTHREAD_API )

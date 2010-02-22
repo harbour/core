@@ -59,8 +59,11 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#ifdef __DJGPP__
-#   include <dpmi.h>
+#if defined( HB_OS_DOS )
+#  include <dos.h>
+#  if defined( __DJGPP__ )
+#     include <dpmi.h>
+#  endif
 #endif
 
 

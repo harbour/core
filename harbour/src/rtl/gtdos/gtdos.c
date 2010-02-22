@@ -97,6 +97,8 @@
 #include "hbapiitm.h"
 #include "inkey.ch"
 
+#include <dos.h>
+
 #include <string.h>
 #include <time.h>
 #include <conio.h>

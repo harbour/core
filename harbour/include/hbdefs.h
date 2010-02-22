@@ -152,8 +152,6 @@
 
 #elif defined( HB_OS_DOS )
 
-   #include <dos.h>
-
    #if defined( __WATCOMC__ ) && defined( __386__ ) && !defined( __WINDOWS_386__ )
       #define HB_DOS_INT86 int386
       #define HB_DOS_INT86X int386x
