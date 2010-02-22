@@ -51,11 +51,10 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbapi.h"
+#include "hbqt.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
-
-#include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
 

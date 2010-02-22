@@ -7,6 +7,7 @@
  * Harbour-Qt wrapper generator.
  *
  * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009 Gancov Kostya <kossne@mail.ru>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,8 +52,6 @@
  */
 /*----------------------------------------------------------------------*/
 /*
- *  Copyright( C ) 2009 by Gancov Kostya < kossne@mail.ru >
- *
  *  The code below is puled from TextEdit.cpp of QWriter by Gancov Kotsya
  *
  *  and adopted for Harbour's hbIDE interface. The code has been intensively
@@ -66,17 +65,15 @@
 */
 /*----------------------------------------------------------------------*/
 
-#include "hbapi.h"
+#include "hbqt.h"
+
 #include "hbapiitm.h"
 #include "hbthread.h"
 #include "hbvm.h"
 
-#include "hbqt.h"
-
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqplaintextedit.h"
-
 
 HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent )
 {
@@ -115,9 +112,7 @@ HBQPlainTextEdit::~HBQPlainTextEdit()
 void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
 {
    if( pBlock )
-   {
       block = hb_itemNew( pBlock );
-   }
 }
 
 bool HBQPlainTextEdit::event( QEvent *event )
@@ -191,9 +186,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
          painter.fillRect( r, br );
       }
       else if( highlightCurLine == true )
-      {
          painter.fillRect( r, QBrush( m_currentLineColor ) );
-      }
    }
    this->paintColumnSelection( event );
 
@@ -263,9 +256,7 @@ void HBQPlainTextEdit::bookmarks( int block )
       qSort( bookMark );
    }
    else
-   {
       bookMark.remove( found );
-   }
 
    found = -1;
    int i = 0;
@@ -278,10 +269,9 @@ void HBQPlainTextEdit::bookmarks( int block )
          break;
       }
    }
+
    if( found == -1 )
-   {
       bookMarksGoto.append( block );
-   }
 
    lineNumberArea->repaint();
    update();
@@ -380,16 +370,12 @@ void HBQPlainTextEdit::setSpaces( int newSpaces )
    if( spaces > 0 )
    {
       for( int i = 0; i < spaces; ++i )
-      {
           spacesTab += " ";
-      }
    }
    else
    {
       if( spaces == -101 )
-      {
          spacesTab = "\t";
-      }
    }
 }
 
@@ -410,12 +396,11 @@ int HBQPlainTextEdit::getLine( const QTextCursor &crQTextCursor )
    for( b = document()->begin();b!=document()->end();b = b.next() )
    {
       if( b==cb )
-      {
          return line;
-      }
+
       line++;
    }
-   return( line );
+   return line;
 }
 
 void HBQPlainTextEdit::slotCursorPositionChanged()
@@ -424,9 +409,7 @@ void HBQPlainTextEdit::slotCursorPositionChanged()
       viewport()->update();
 
    if( styleHightlighter != "none" )
-   {
       braceHighlight();
-   }
 }
 
 void HBQPlainTextEdit::setStyleHightlighter( const QString &style )
@@ -458,9 +441,8 @@ void HBQPlainTextEdit::escapeQuotes()
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    QString txt = selTxt.replace( QString( "'" ), QString( "\\\'" ) );
    insertPlainText( txt );
 }
@@ -470,9 +452,8 @@ void HBQPlainTextEdit::escapeDQuotes()
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    QString txt = selTxt.replace( QString( "\"" ), QString( "\\\"" ) );
    insertPlainText( txt );
 }
@@ -482,9 +463,8 @@ void HBQPlainTextEdit::unescapeQuotes()
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    QString txt = selTxt.replace( QString( "\\\'" ), QString( "'" ) );
    insertPlainText( txt );
 }
@@ -494,9 +474,8 @@ void HBQPlainTextEdit::unescapeDQuotes()
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    QString txt = selTxt.replace( QString( "\\\"" ), QString( "\"" ) );
    insertPlainText( txt );
 }
@@ -506,9 +485,8 @@ void HBQPlainTextEdit::caseUpper()
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    int e = cursor.selectionEnd();
    cursor.beginEditBlock();
@@ -526,9 +504,8 @@ void HBQPlainTextEdit::caseLower()
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    int e = cursor.selectionEnd();
    cursor.beginEditBlock();
@@ -546,9 +523,8 @@ void HBQPlainTextEdit::convertQuotes()
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    int e = cursor.selectionEnd();
    cursor.beginEditBlock();
@@ -566,9 +542,8 @@ void HBQPlainTextEdit::convertDQuotes()
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    int e = cursor.selectionEnd();
    cursor.beginEditBlock();
@@ -586,9 +561,8 @@ void HBQPlainTextEdit::replaceSelection( const QString & txt )
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    cursor.beginEditBlock();
 
@@ -605,9 +579,8 @@ void HBQPlainTextEdit::streamComment()
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return;
-   }
+
    int b = cursor.selectionStart();
    int e = cursor.selectionEnd();
    cursor.beginEditBlock();
@@ -625,16 +598,17 @@ QString HBQPlainTextEdit::getSelectedText()
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
    if( selTxt.isEmpty() )
-   {
       return "";
-   }
+
    QString txt = selTxt.replace( 0x2029, QString( "\n" ) );
    return txt;
 }
 
-void HBQPlainTextEdit::paintColumnSelection( QPaintEvent *event )
+void HBQPlainTextEdit::paintColumnSelection( QPaintEvent * event )
 {
    QTextCursor c = textCursor();
+
+   HB_SYMBOL_UNUSED( event );
 
    if( isColumnSelectionEnabled && c.hasSelection() )
    {
@@ -905,9 +879,7 @@ void HBQPlainTextEdit::braceHighlight()
          brace = cursor.selectedText();
       }
       else
-      {
          return;
-      }
    }
 
    QTextCharFormat format;
@@ -960,9 +932,7 @@ void HBQPlainTextEdit::braceHighlight()
             cursor1 = doc->find( closeBrace, cursor1 );
             cursor2 = doc->find( openBrace, cursor2 );
             if( cursor2.isNull() )
-            {
                 break;
-            }
          }
          selection.cursor = cursor;
          extraSelections.append( selection );
@@ -973,7 +943,8 @@ void HBQPlainTextEdit::braceHighlight()
    }
    else
    {
-      if( brace == closeBrace ) {
+      if( brace == closeBrace )
+      {
          QTextCursor cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
          QTextCursor cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
          if( cursor2.isNull() )
@@ -991,9 +962,7 @@ void HBQPlainTextEdit::braceHighlight()
                cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward );
                cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward );
                if( cursor2.isNull() )
-               {
                    break;
-               }
             }
             selection.cursor = cursor;
             extraSelections.append( selection );
