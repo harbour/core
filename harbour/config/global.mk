@@ -935,11 +935,6 @@ ifeq ($(HB_COMP_PATH_PUB),)
       ifneq ($(HB_COMP_PATH),)
          export HB_COMP_PATH_PUB := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
       endif
-   else ifneq ($(filter $(HB_PLATFORM)-$(HB_COMPILER),os2-gcc os2-gccomf),)
-      HB_COMP_PATH := $(call find_in_path,gcc)
-      ifneq ($(HB_COMP_PATH),)
-         export HB_COMP_PATH_PUB := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
-      endif
    endif
 endif
 
