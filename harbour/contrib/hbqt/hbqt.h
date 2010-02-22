@@ -57,6 +57,16 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
+#define OS2EMX_PLAIN_CHAR
+#define INCL_BASE
+#define INCL_PM
+
+#include "hbapi.h"
+
+#if defined( HB_OS_OS2 )
+#  include <os2.h>
+#endif
+
 #include <qglobal.h>
 
 #if !( QT_VERSION >= 0x040500 )

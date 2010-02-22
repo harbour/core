@@ -186,6 +186,7 @@
    #include <time.h>
    #include <utime.h>
 #elif defined( HB_OS_OS2 )
+   #include <os2.h>
    #include <time.h>
    #include <share.h>
    #ifndef SH_COMPAT

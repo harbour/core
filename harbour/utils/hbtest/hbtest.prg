@@ -83,7 +83,6 @@
 
 STATIC s_nPass
 STATIC s_nFail
-STATIC s_cFileName
 STATIC s_nFhnd
 STATIC s_nCount
 STATIC s_lShowAll
@@ -202,22 +201,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
       /* Do nothing */
    ENDIF
 
-   /* Decide about output filename */
-
-   DO CASE
-   CASE "HARBOUR" $ Upper( Version() )     ; s_cFileName := "rtl_test.hb"
-   CASE "CLIPPER (R)" $ Upper( Version() ) .AND. ;
-        "5.3" $ Version()                  ; s_cFileName := "rtl_test.c53"
-   CASE "CLIPPER (R)" $ Upper( Version() ) ; s_cFileName := "rtl_test.c5x"
-   ENDCASE
-
-#ifdef __XPP__
-   s_cFileName := "hbtest.xpp"
-   s_nFhnd := FCreate( s_cFileName )
-#else
-   s_cFileName := "(stdout)"
    s_nFhnd := 1 /* FHND_STDOUT */
-#endif
 
    s_nCount := 0
    s_nPass := 0
@@ -243,7 +227,6 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 #endif
    OutMsg( s_nFhnd, "           OS: " + OS() + HB_OSNewLine() +;
                     "   Date, Time: " + DToC( Date() ) + " " + Time() + HB_OSNewLine() +;
-                    "       Output: " + s_cFileName + HB_OSNewLine() +;
                     "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;
                     "     Switches: " + cParam + HB_OSNewLine() +;
                     "===========================================================================" + HB_OSNewLine() )

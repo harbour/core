@@ -91,6 +91,10 @@
       #define VER_PLATFORM_WIN32_CE 3
    #endif
 
+#elif defined( HB_OS_OS2 )
+
+   #include <os2.h>
+
 #elif defined( HB_OS_UNIX ) && !defined( __CEGCC__ )
 
    #include <sys/utsname.h>

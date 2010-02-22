@@ -106,9 +106,7 @@
 #include "hbapiitm.h"
 #include "inkey.ch"
 
-#ifdef _HB_OS2_H
-#include "hbos2.h"
-#endif
+#include <os2.h>
 
 /* convert 16:16 address to 0:32 */
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))

@@ -68,6 +68,9 @@
  *
  */
 
+#define INCL_DOSEXCEPTIONS
+#define INCL_ERRORS
+
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapifs.h"
@@ -83,9 +86,7 @@
         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
 #     define HB_SIGNAL_EXCEPTION_HANDLER
 #  endif
-#endif
-
-#if defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN )
 #  include <windows.h>
 #  include <tlhelp32.h>
 #  if defined( HB_OS_WIN_CE )
@@ -95,6 +96,8 @@
 #  ifndef TH32CS_SNAPMODULE32
 #     define TH32CS_SNAPMODULE32  0
 #  endif
+#elif defined( HB_OS_OS2 )
+#  include <os2.h>
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )

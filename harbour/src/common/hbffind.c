@@ -106,6 +106,8 @@
 
 #elif defined( HB_OS_OS2 )
 
+   #include <os2.h>
+
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <time.h>

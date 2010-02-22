@@ -52,6 +52,7 @@
 
 #define INCL_DOS
 #define INCL_DOSPROFILE
+#define INCL_ERRORS
 
 #include "hbapi.h"
 #include "hbdate.h"
@@ -61,13 +62,13 @@
    #include <unistd.h>
 #endif
 #if defined( HB_OS_OS2 )
+   #include <os2.h>
    #define BUFSIZE   16 * 1024
    #include <unistd.h>
    #if defined( __WATCOMC__ )
       #include <process.h>
    #endif
-#endif
-#if defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN )
    #include <windows.h>
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"

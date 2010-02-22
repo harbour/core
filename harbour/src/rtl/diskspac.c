@@ -79,6 +79,8 @@
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
+#elif defined( HB_OS_OS2 )
+   #include <os2.h>
 #endif
 
 HB_FUNC( DISKSPACE )

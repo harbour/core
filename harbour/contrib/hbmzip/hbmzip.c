@@ -52,6 +52,7 @@
  */
 
 #define INCL_DOSFILEMGR
+#define INCL_ERRORS
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -78,6 +79,8 @@
    #endif
 #elif defined( HB_OS_WIN )
    #include <windows.h>
+#elif defined( HB_OS_OS2 )
+   #include <os2.h>
 #endif
 
 #define HB_Z_IOBUF_SIZE       ( 1024 * 16 )

@@ -112,6 +112,7 @@ EXPORTED:
       { "Template"      , { S, T, x+U, x, O, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, x+U, x+U, x+U, E } }, ;
       { "Document"      , { S, T, R+U, R, O+U, O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, O+U, O+U, O+U, E } }, ;
       { "Function"      , { S, T, R+U, R, R, O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
+      { "C Function"    , { S, T, R+U, R, R, O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
       { "Procedure"     , { S, T, R+U, R, R, O+U, O+U, O+U,   x, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
       { "Command"       , { S, T, R+U, R, R, O+U, R+U, R+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
       { "Class"         , { S, T, R+U, R, R, O+U, R+U, R+U, R+U, R+U, O+U, O+U, O+U, O+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;

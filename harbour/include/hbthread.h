@@ -72,6 +72,7 @@
 #    include <process.h>
 #  endif
 #elif defined( HB_OS_OS2 )
+#  include <os2.h>
 #  if defined( __WATCOMC__ )
 #     include <process.h>
 #  endif

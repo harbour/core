@@ -56,6 +56,7 @@
  */
 
 #define INCL_DOSMODULEMGR
+#define INCL_ERRORS
 
 #include "hbvmint.h"
 #include "hbapi.h"
@@ -69,6 +70,8 @@
 #  if defined( HB_OS_WIN_CE )
 #     include "hbwince.h"
 #  endif
+#elif defined( HB_OS_OS2 )
+#  include <os2.h>
 #endif
 
 #if !defined( HB_HAS_DLFCN ) && \

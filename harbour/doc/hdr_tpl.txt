@@ -13,7 +13,7 @@ FILE HEADER TEMPLATE
  * Harbour Project source code:
  * {one-liner description about the purpose of this source file}
  *
- * Copyright 2001 {list of individual authors and e-mail addresses}
+ * Copyright 2010 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 2001 {name} <{e-mail address}>
+ * Copyright 2010 {name} <{e-mail address}>
  *    {function or subsystem name}
  *
  * See COPYING for licensing terms.
@@ -101,15 +101,17 @@ FUNCTION HEADER TEMPLATE
 
     $PLATFORMS$
 
+    $VERSION$
+
     $FILES$
 
     $SEEALSO$
-
+       comma separated list of references
     $END$
  */
 
-FUNCTION HEADER EXAMPLE
-=======================
+HEADER EXAMPLES
+===============
 
 /*  $DOC$
     $NAME$
@@ -119,7 +121,7 @@ FUNCTION HEADER EXAMPLE
     $ONELINER$
         Test if a date falls in a leap year.
     $SYNTAX$
-        IsLeapYr( [<dDate>] ) --> lIsLeap
+        IsLeapYr( [<dDate>] ) --> <lIsLeap>
     $ARGUMENTS$
         <dDate> is an optional date. If not supplied is defaults to the
         value returned from date().
@@ -158,43 +160,40 @@ FUNCTION HEADER EXAMPLE
     $END$
  */
 
-/* ------------------------------------------------------------------------- */
+/*  $DOC$
+    $TEMPLATE$
+        Function
+    $NAME$
+        hb_dateEncStr()
+    $CATEGORY$
+        C level API
+    $SUBCATEGORY$
+        Date/Time
+    $ONELINER$
 
-/*
- * ChangeLog:
- *
- * V 1.15   Viktor Szakats              Name correction
- * V 1.14   David G. Holm               Second year 2000 chaned to 2001
- * V 1.13   David G. Holm               Year changed to 2001 from 2000.
- *                                      License changed to be compatible with
- *                                      the Guile 1.4 license (the old one
- *                                      was based on an earlier Guile).
- * V 1.12   Viktor Szakats              Year changed to 2000 from 1999.
- * V 1.11   Viktor Szakats              $FILES$ added.
- * V 1.10   Viktor Szakats              $PLATFORMS$ added.
- * V 1.9    Viktor Szakats              Small format changes.
- * V 1.8    Viktor Szakats              licence -> license
- * V 1.7    Viktor Szakats              History separated from the file header
- *                                      template. Slight changes in the format
- *                                      of the header. Removed "(proposal)"
- *                                      from the top of the file. Added partial
- *                                      copyright header template.
- * V 1.6    Viktor Szakats              RCS Id section separated from
- *                                      Licenc text.
- * V 1.5    Viktor Szakats              Small name correction.
- * V 1.4    David G. Holm               Removed "(C)" from Copyright notice
- *                                      Put author's name rather than date
- *                                      next to each version number, because
- *                                      the RCS tracks dates, but only tracks
- *                                      CVS user names, not author names.
- * V 1.3    Viktor Szakats              Description line changed to be a
- *                                      template, too.
- * V 1.2    David G. Holm               Added HRL/HVM license exception for
- *                                      executables. Added GNU web site.
- *                                      Replaced "?" in copyright statement
- *                                      with "(list of individual authors)".
- * V 1.1    Viktor Szakats              Added templates for file and function
- *                                      headers. Committed to CVS.
- * V 1.0    Viktor Szakats              Initial version.
- *
+    $SYNTAX$
+        C Prototype
+
+        #include <hbdate.h>
+        long hb_dateEncStr( char * szDate )
+    $ARGUMENTS$
+        <szDate>
+    $RETURNS$
+        <lResult>
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        NA
+    $FILES$
+    $PLATFORMS$
+        All
+    $VERSION$
+        1.0
+    $SEEALSO$
+
+    $END$
  */

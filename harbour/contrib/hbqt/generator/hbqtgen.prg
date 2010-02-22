@@ -1427,8 +1427,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
-   aadd( txt_, '#include "hbapi.h"'                                                            )
-   aadd( txt_, '#include "../hbqt.h"'                                                          ) /////////////
+   aadd( txt_, '#include "../hbqt.h"'                                                          )
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
@@ -2369,4 +2368,3 @@ FUNCTION JustACall()
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-

@@ -116,28 +116,34 @@
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) && ! defined( HB_LEGACY_TYPES_OFF )
 
-   /* With the exception of WORD, the IBM Visual Age C++ compiler has
-      its own definitions of the Harbour types most of which conflict with the
+   /* With the exception of WORD, the OS/2 header has its
+      own definitions of the Harbour types most of which conflict with the
       Harbour #undefs, due to typedef being the prevalent method of
-      defining the types in IBMCPP, whereas Harbour assumes that the
+      defining the types in OS/2, whereas Harbour assumes that the
       definitions that it is replacing have been defined using
       #define. Therefore, it is necessary to skip the Harbour
-      definition section when using the IBMCPP compiiler, include
-      the IBMCPP type definitions, and then add the definition for WORD
+      definition section when using the OS/2 compilers, include
+      the OS/2 type definitions, and then add the definition for WORD.
 
       NOTE: This only applies to the common types that most C compilers
             define. Any new types, particulary those that start with
             HB_, must be placed AFTER the #endif __IBMCPP__ line!
    */
-   /* 28/03/2000 - maurilio.longo@libero.it
-      The same holds true when using GCC under OS/2
-   */
+
+   #ifndef INCL_TYPES
    #define INCL_TYPES
-   #define INCL_DOSEXCEPTIONS    /* DOS exception values */
+   #endif
+   #ifndef INCL_DOSEXCEPTIONS
+   #define INCL_DOSEXCEPTIONS
+   #endif
+   #ifndef INCL_ERRORS
    #define INCL_ERRORS           /* DOS error values     */
+   #endif
+   #ifndef INCL_LONGLONG
    #define INCL_LONGLONG         /* include native compiler LONGLONG definition */
+   #endif
 
    #include <os2.h>
    #undef INT

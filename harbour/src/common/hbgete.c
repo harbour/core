@@ -53,8 +53,8 @@
 /* NOTE: Notice that this code is needed as ANSI C getenv() crashes
          so badly when used from a Windows DLL. */
 
-/* For OS/2 */
 #define INCL_DOSMISC
+#define INCL_ERRORS
 
 #include "hbapi.h"
 
@@ -63,6 +63,8 @@
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
+#elif defined( HB_OS_OS2 )
+   #include <os2.h>
 #endif
 
 /* NOTE: Warning, this function _may_ return NULL as a result if
