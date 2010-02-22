@@ -109,6 +109,7 @@
 #define DOC_FUN_STATUS                            13
 #define DOC_FUN_PLATFORMS                         14
 #define DOC_FUN_SEEALSO                           15
+#define DOC_FUN_VERSION                           16
 
 /*----------------------------------------------------------------------*/
 
@@ -129,6 +130,7 @@ CLASS IdeDocFunction
    DATA   cStatus                                 INIT ""
    DATA   cPlatforms                              INIT ""
    DATA   cSeaAlso                                INIT ""
+   DATA   cVersion                                INIT ""
 
    DATA   aSource                                 INIT {}
 
@@ -219,30 +221,62 @@ METHOD IdeHarbourHelp:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:destroy()
-   #if 0
    LOCAL a_
+
+   ::aHistory    := NIL
+   ::aFuncByFile := NIL
+
+   FOR EACH a_ IN ::aCategory
+      a_[ 4 ] := NIL              // Reference to Contents node
+   NEXT
+   FOR EACH a_ IN ::aFunctions
+      a_[ 4 ] := NIL              // Reference to Contents node
+   NEXT
+
+   /* Contents Tab */
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Function"
-         a_[ 1 ] := NIL
+         a_[ 3 ]:removeChild( a_[ 1 ] )
+         a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "File"
-         a_[ 1 ] := NIL
+         a_[ 3 ]:removeChild( a_[ 1 ] )
+         a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Path"
-         a_[ 1 ] := NIL
+         a_[ 3 ]:removeChild( a_[ 1 ] )
+         a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
    ::aNodes[ 1, 1 ] := NIL
+   ::aNodes         := NIL
+   ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
 
-   ::aNodes := NIL
-   #endif
+   /* Index Tab */
 
-   ::oUI:q_treeDoc:clear()
-   //::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
+   FOR EACH a_ IN ::aFunctions
+      a_[ 5 ] := NIL
+   NEXT
+   ::aFunctions := NIL
+
+   /* Category Tab */
+   FOR EACH a_ IN ::aCategory
+      IF a_[ 7 ] == " "
+         a_[ 6 ]:removeChild( a_[ 5 ] )
+         a_[ 6 ] := NIL ; a_[ 5 ] := NIL
+      ENDIF
+   NEXT
+   FOR EACH a_ IN ::aCategory
+      IF a_[ 7 ] == "U"
+         a_[ 5 ] := NIL
+      ENDIF
+   NEXT
+   ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
+   ::aCategory := NIL
 
    ::oUI:destroy()
 
@@ -592,9 +626,11 @@ METHOD IdeHarbourHelp:populateIndex()
    FOR EACH a_ IN ::aFunctions
       oFunc := a_[ 3 ]
       IF !empty( oFunc:cCategory )
-         aadd( ::aCategory, { oFunc:cCategory, oFunc:cSubCategory, oFunc, a_[ 4 ], NIL, NIL } )
          IF ascan( aUnq, {|e_| e_[ 1 ] == oFunc:cCategory } ) == 0
             aadd( aUnq, { oFunc:cCategory, NIL } )
+            aadd( ::aCategory, { oFunc:cCategory, oFunc:cSubCategory, oFunc, a_[ 4 ], NIL, NIL, "U" } )
+         ELSE
+            aadd( ::aCategory, { oFunc:cCategory, oFunc:cSubCategory, oFunc, a_[ 4 ], NIL, NIL, " " } )
          ENDIF
       ENDIF
    NEXT
@@ -688,6 +724,8 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
             nPart := DOC_FUN_PLATFORMS
          CASE "$SEEALSO$"     $ s
             nPart := DOC_FUN_SEEALSO
+         CASE "$VERSION$"     $ s
+            nPart := DOC_FUN_VERSION
          OTHERWISE
             IF ! lIsFunc
                LOOP   // It is a fake line not within $DOC$ => $END$ block
@@ -742,6 +780,9 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
             CASE DOC_FUN_SEEALSO
                oFunc:cSeaAlso   := alltrim( s )
                EXIT
+            CASE DOC_FUN_SEEALSO
+               oFunc:cVersion   := alltrim( s )
+               EXIT
             OTHERWISE
                nPart := DOC_FUN_NONE
                EXIT
@@ -768,7 +809,6 @@ METHOD IdeHarbourHelp:populateRootInfo()
    LOCAL aHtm := {}
 
    aadd( aHtm, "<HTML>" )
-   //aadd( aHtm, ' <BODY ALIGN=center VALIGN=center background="resources/harbour.png" bgproperties="fixed">' )
    aadd( aHtm, ' <BODY ALIGN=center VALIGN=center>' )
    aadd( aHtm, '  <H1><FONT color=green>' + "Welcome" + '</FONT></H1>' )
    aadd( aHtm, '  <BR>' + '&nbsp;' + '</BR>' )
@@ -929,6 +969,9 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, z )
    aadd( aHtm, x + "Examples"       + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aExamples    ) + w )
+   aadd( aHtm, z )
+   aadd( aHtm, x + "Vesrion"        + y )
+   aadd( aHtm, v + oFunc:cVersion   + w )
    aadd( aHtm, z )
    aadd( aHtm, x + "Files"          + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aFiles       ) + w )
