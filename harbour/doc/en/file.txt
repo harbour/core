@@ -1021,7 +1021,7 @@
  *  $ONELINER$
  *      Attempt to remove an directory
  *  $SYNTAX$
- *      DIRCHANGE( <cDirectory> ) --> nError
+ *      DIRREMOVE( <cDirectory> ) --> nError
  *  $ARGUMENTS$
  *      <cDirectory>  The name of the directory you want to remove.
  *  $RETURNS$
