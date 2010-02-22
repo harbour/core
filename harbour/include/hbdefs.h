@@ -91,13 +91,10 @@
 #define HB_LONG_LONG_OFF
 */
 
-#if defined( HB_OS_WIN ) || defined( HB_OS_WIN_64 )
+#if defined( HB_OS_WIN )
    #if defined( HB_OS_WIN_64 )
       #undef HB_LONG_LONG_OFF
       #define HB_STRICT_ALIGNMENT
-      #if !defined( HB_OS_WIN )
-         #define HB_OS_WIN
-      #endif
    #endif
 
    #if !defined( HB_IO_WIN_OFF )

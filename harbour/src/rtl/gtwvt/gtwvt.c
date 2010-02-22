@@ -282,15 +282,15 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->COLORS[ 4]        = RED;
    pWVT->COLORS[ 5]        = MAGENTA;
    pWVT->COLORS[ 6]        = BROWN;
-   pWVT->COLORS[ 7]        = WHITE;
-   pWVT->COLORS[ 8]        = LIGHT_GRAY;
+   pWVT->COLORS[ 7]        = LIGHT_GRAY;
+   pWVT->COLORS[ 8]        = GRAY;
    pWVT->COLORS[ 9]        = BRIGHT_BLUE;
    pWVT->COLORS[10]        = BRIGHT_GREEN;
    pWVT->COLORS[11]        = BRIGHT_CYAN;
    pWVT->COLORS[12]        = BRIGHT_RED;
    pWVT->COLORS[13]        = BRIGHT_MAGENTA;
    pWVT->COLORS[14]        = YELLOW;
-   pWVT->COLORS[15]        = BRIGHT_WHITE;
+   pWVT->COLORS[15]        = WHITE;
 
    /* THESE are the default font parameters, if not changed by user */
    pWVT->PTEXTSIZE.x       = WVT_DEFAULT_FONT_WIDTH;
