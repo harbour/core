@@ -117,7 +117,8 @@ ifeq ($(HB_COMPILER),gccomf)
    DFLAGS += -Zomf
 endif
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
+DLIBPATHS := $(foreach dir,$(HB_COMP_PATH_PUB)..\lib $(subst ;, ,$(LIBRARY_PATH)),-L$(dir))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS) c_alias c_dll os2 gcc_so_d,-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
 define dyn_object
@@ -135,7 +136,7 @@ define create_dynlib
    @$(ECHO) $(ECHOQUOTE)DATA PRELOAD MOVEABLE MULTIPLE NONSHARED$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)EXPORTS$(ECHOQUOTE) >> __dyn__.def
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp __dyn__.def $(DLIBS) $(DYSTRIP)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBPATHS) $(DY_OUT)$(DYN_DIR)/$@ dll0$(OBJ_EXT) @__dyn__.tmp __dyn__.def $(DLIBS) $(DYSTRIP)
    emximp -o $(IMP_FILE) $(DYN_DIR)/$@
 endef
 

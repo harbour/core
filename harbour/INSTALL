@@ -105,10 +105,6 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: To select alternative TCP/IP stack, use these commands:
-            set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
-            set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
-
    on Linux hosts
    --------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
