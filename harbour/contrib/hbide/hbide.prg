@@ -324,11 +324,19 @@ METHOD HbIde:create( cProjIni )
    ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
    ::cWrkHarbour     := ::aINI[ INI_HBIDE, CurrentHarbour     ]
 
+   /* Editor's Font - TODO: User Managed Interface */
+   ::oFont := XbpFont():new()
+   ::oFont:fixed := .t.
+   ::oFont:create( "10.Courier" )
+
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
 
    /* Set Codec at the Begining */
    HbXbp_SetCodec( ::cWrkCodec )
+
+   /* Load IDE|User defined Themes */
+   hbide_loadThemes( Self )
 
    /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )
@@ -353,20 +361,12 @@ METHOD HbIde:create( cProjIni )
    /* Edits Manager */
    ::oEM := IdeEditsManager():new( Self ):create()
 
-   /* Load IDE|User defined Themes */
-   hbide_loadThemes( Self )
-
    /* Load Environments */
    ::oEV := IdeEnvironments():new( Self, hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ):create()
 
    /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
    ::qBrushWrkProject := QBrush():new( "QColor", QColor():new( 255,0,0 ) )
-
-   /* Editor's Font - TODO: User Managed Interface */
-   ::oFont := XbpFont():new()
-   ::oFont:fixed := .t.
-   ::oFont:create( "10.Courier" )
 
    /* Fill various elements of the IDE */
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]

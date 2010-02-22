@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'docviewgenerator.ui'
 **
-** Created: Sat Feb 20 23:12:55 2010
+** Created: Sun Feb 21 18:59:41 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -115,6 +115,7 @@ public:
     QToolButton *buttonUp;
     QToolButton *buttonRefresh;
     QToolButton *buttonPrint;
+    QToolButton *buttonPdf;
     QSpacerItem *horizontalSpacer_2;
     QToolButton *buttonSave;
     QToolButton *buttonExit;
@@ -126,6 +127,7 @@ public:
         Form->resize(768, 515);
         gridLayout = new QGridLayout(Form);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(2, 4, 0, 0);
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         labelInstall = new QLabel(Form);
@@ -486,6 +488,11 @@ public:
 
         horizontalLayout_3->addWidget(buttonPrint);
 
+        buttonPdf = new QToolButton(Form);
+        buttonPdf->setObjectName(QString::fromUtf8("buttonPdf"));
+
+        horizontalLayout_3->addWidget(buttonPdf);
+
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_2);
@@ -556,6 +563,7 @@ public:
         buttonUp->setText(QString());
         buttonRefresh->setText(QString());
         buttonPrint->setText(QString());
+        buttonPdf->setText(QString());
         buttonSave->setText(QString());
         buttonExit->setText(QString());
         Q_UNUSED(Form);

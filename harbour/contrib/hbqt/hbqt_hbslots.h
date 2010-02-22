@@ -61,6 +61,7 @@
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QTreeWidgetItem>
+#include <QtGui/QListWidgetItem>
 #include <QtGui/QHeaderView>
 
 /*----------------------------------------------------------------------*/
@@ -242,6 +243,16 @@ public slots:
    void currentColumnChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
    void currentRowChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
    void selectionChanged( const QItemSelection & selected, const QItemSelection & deselected );
+   /* QListWidget */
+   void currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous );
+   void currentRowChanged( int currentRow );
+   void currentTextChanged( const QString & currentText );
+   void itemActivated( QListWidgetItem * item );
+   void itemChanged( QListWidgetItem * item );
+   void itemClicked( QListWidgetItem * item );
+   void itemDoubleClicked( QListWidgetItem * item );
+   void itemEntered( QListWidgetItem * item );
+   void itemPressed( QListWidgetItem * item );
    /*  */
 };
 

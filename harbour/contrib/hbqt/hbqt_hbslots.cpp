@@ -102,7 +102,7 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    else if( signal == ( QString ) "selectionChanged()"                             ) ret = object->connect( object, SIGNAL( selectionChanged()                                                ), t_slots, SLOT( selectionChanged()                                                 ), Qt::AutoConnection );
    else if( signal == ( QString ) "textChanged(QString)"                           ) ret = object->connect( object, SIGNAL( textChanged( const QString & )                                    ), t_slots, SLOT( textChanged( const QString & )                                     ), Qt::AutoConnection );
    else if( signal == ( QString ) "textEdited(QString)"                            ) ret = object->connect( object, SIGNAL( textEdited( const QString & )                                     ), t_slots, SLOT( textEdited( const QString & )                                      ), Qt::AutoConnection );
-   /* QTreeViewWidget */
+   /* QTreeWidget */
    else if( signal == ( QString ) "currentItemChanged(QTWItem)"                    ) ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )        ), t_slots, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )         ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemActivated(QTWItem)"                         ) ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int )                           ), t_slots, SLOT( itemActivated( QTreeWidgetItem *, int )                            ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemChanged(QTWItem)"                           ) ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemChanged( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
@@ -113,18 +113,6 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    else if( signal == ( QString ) "itemExpanded(QTWItem)"                          ) ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * )                                 ), t_slots, SLOT( itemExpanded( QTreeWidgetItem * )                                  ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemPressed(QTWItem)"                           ) ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemPressed( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
    else if( signal == ( QString ) "itemSelectionChanged()"                         ) ret = object->connect( object, SIGNAL( itemSelectionChanged()                                            ), t_slots, SLOT( itemSelectionChanged()                                             ), Qt::AutoConnection );
-   #if 0
-   /* QListViewWidget */
-   else if( signal == ( QString ) "currentItemChanged(QLWItem)"                    ) ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )        ), t_slots, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )         ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemActivated(QLWItem)"                         ) ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int )                           ), t_slots, SLOT( itemActivated( QTreeWidgetItem *, int )                            ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemChanged(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemChanged( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemClicked(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemClicked( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemClicked( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemCollapsed(QLWItem)"                         ) ret = object->connect( object, SIGNAL( itemCollapsed( QTreeWidgetItem * )                                ), t_slots, SLOT( itemCollapsed( QTreeWidgetItem * )                                 ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemDoubleClicked(QLWItem)"                     ) ret = object->connect( object, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int )                       ), t_slots, SLOT( itemDoubleClicked( QTreeWidgetItem *, int )                        ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemEntered(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemEntered( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemEntered( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemExpanded(QLWItem)"                          ) ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * )                                 ), t_slots, SLOT( itemExpanded( QTreeWidgetItem * )                                  ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemPressed(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int )                             ), t_slots, SLOT( itemPressed( QTreeWidgetItem *, int )                              ), Qt::AutoConnection );
-   #endif
    /* QDialog (s) QFontDialog, QFileDialog */
    else if( signal == ( QString ) "currentFontChanged(QFont)"                      ) ret = object->connect( object, SIGNAL( currentFontChanged( const QFont & )                               ), t_slots, SLOT( currentFontChanged( const QFont & )                                ), Qt::AutoConnection );
    else if( signal == ( QString ) "fontSelected(QFont)"                            ) ret = object->connect( object, SIGNAL( fontSelected( const QFont & )                                     ), t_slots, SLOT( fontSelected( const QFont & )                                      ), Qt::AutoConnection );
@@ -210,6 +198,16 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    else if( signal == ( QString ) "currentColumnChanged(QModelIndex,QModelIndex)"  ) ret = object->connect( object, SIGNAL( currentColumnChanged( const QModelIndex &,const QModelIndex & )   ), t_slots, SLOT( currentColumnChanged( const QModelIndex &, const QModelIndex & )   ), Qt::AutoConnection );
    else if( signal == ( QString ) "currentRowChanged(QModelIndex,QModelIndex)"     ) ret = object->connect( object, SIGNAL( currentRowChanged( const QModelIndex &,const QModelIndex & )      ), t_slots, SLOT( currentRowChanged( const QModelIndex &, const QModelIndex & )      ), Qt::AutoConnection );
    else if( signal == ( QString ) "selectionChanged(QItemSelection,QItemSelection)") ret = object->connect( object, SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & )), t_slots, SLOT( selectionChanged( const QItemSelection &, const QItemSelection &)  ), Qt::AutoConnection );
+   /* QListWidget */
+   else if( signal == ( QString ) "currentItemChanged(QLWItem,QLWItem)"            ) ret = object->connect( object, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * )        ), t_slots, SLOT( currentItemChanged( QListWidgetItem *, QListWidgetItem * )         ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentRowChanged(int)"                         ) ret = object->connect( object, SIGNAL( currentRowChanged( int )                                          ), t_slots, SLOT( currentRowChanged( int )                                           ), Qt::AutoConnection );
+   else if( signal == ( QString ) "currentTextChanged(QString,currentText)"        ) ret = object->connect( object, SIGNAL( currentTextChanged( const QString & )                             ), t_slots, SLOT( currentTextChanged( const QString & )                              ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemActivated(QLWItem)"                         ) ret = object->connect( object, SIGNAL( itemActivated( QListWidgetItem * )                                ), t_slots, SLOT( itemActivated( QListWidgetItem * )                                 ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemChanged(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemChanged( QListWidgetItem * )                                  ), t_slots, SLOT( itemChanged( QListWidgetItem * )                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemClicked(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemClicked( QListWidgetItem * )                                  ), t_slots, SLOT( itemClicked( QListWidgetItem * )                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemDoubleClicked(QLWItem)"                     ) ret = object->connect( object, SIGNAL( itemDoubleClicked( QListWidgetItem * )                            ), t_slots, SLOT( itemDoubleClicked( QListWidgetItem * )                             ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemEntered(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemEntered( QListWidgetItem * )                                  ), t_slots, SLOT( itemEntered( QListWidgetItem * )                                   ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemPressed(QLWItem)"                           ) ret = object->connect( object, SIGNAL( itemPressed( QListWidgetItem * )                                  ), t_slots, SLOT( itemPressed( QListWidgetItem * )                                   ), Qt::AutoConnection );
    else ret = false;
 
    return ret;
@@ -342,6 +340,16 @@ static bool disconnect_signal( QObject * object, const char * signal )
    else if( signal == ( QString ) "currentColumnChanged(QModelIndex,QModelIndex)"  ) return object->disconnect( SIGNAL( currentColumnChanged( const QModelIndex &,const QModelIndex & )   ) );
    else if( signal == ( QString ) "currentRowChanged(QModelIndex,QModelIndex)"     ) return object->disconnect( SIGNAL( currentRowChanged( const QModelIndex &,const QModelIndex & )      ) );
    else if( signal == ( QString ) "selectionChanged(QItemSelection,QItemSelection)") return object->disconnect( SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & )) );
+   /* QListWidget */
+   else if( signal == ( QString ) "currentItemChanged(QLWItem,QLWItem)"            ) return object->disconnect( SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * )        ) );
+   else if( signal == ( QString ) "currentRowChanged(int)"                         ) return object->disconnect( SIGNAL( currentRowChanged( int )                                          ) );
+   else if( signal == ( QString ) "currentTextChanged(QString,currentText)"        ) return object->disconnect( SIGNAL( currentTextChanged( const QString & )                             ) );
+   else if( signal == ( QString ) "itemActivated(QLWItem)"                         ) return object->disconnect( SIGNAL( itemActivated( QListWidgetItem * )                                ) );
+   else if( signal == ( QString ) "itemChanged(QLWItem)"                           ) return object->disconnect( SIGNAL( itemChanged( QListWidgetItem * )                                  ) );
+   else if( signal == ( QString ) "itemClicked(QLWItem)"                           ) return object->disconnect( SIGNAL( itemClicked( QListWidgetItem * )                                  ) );
+   else if( signal == ( QString ) "itemDoubleClicked(QLWItem)"                     ) return object->disconnect( SIGNAL( itemDoubleClicked( QListWidgetItem * )                            ) );
+   else if( signal == ( QString ) "itemEntered(QLWItem)"                           ) return object->disconnect( SIGNAL( itemEntered( QListWidgetItem * )                                  ) );
+   else if( signal == ( QString ) "itemPressed(QLWItem)"                           ) return object->disconnect( SIGNAL( itemPressed( QListWidgetItem * )                                  ) );
 
    return false;
 }
@@ -911,8 +919,38 @@ void HBSlots::currentChanged( const QModelIndex & currentIndex, const QModelInde
 void HBSlots::currentColumnChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex )  { hbqt_SlotsExecModelModel(     this, qobject_cast<QObject *>( sender() ), "currentColumnChanged(QModelIndex,QModelIndex)", currentIndex, previousIndex ); }
 void HBSlots::currentRowChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex )     { hbqt_SlotsExecModelModel(     this, qobject_cast<QObject *>( sender() ), "currentRowChanged(QModelIndex,QModelIndex)", currentIndex, previousIndex    ); }
 void HBSlots::selectionChanged( const QItemSelection & selected, const QItemSelection & deselected )       { hbqt_SlotsExecItemSelItemSel( this, qobject_cast<QObject *>( sender() ), "selectionChanged(QItemSelection,QItemSelection)", selected, deselected      ); }
+/* QListWidget */
+void HBSlots::currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous )                  { hbqt_SlotsExecPointerPointer( this, qobject_cast<QObject *>( sender() ), "currentItemChanged(QLWItem,QLWItem)", current, previous                     ); }
+void HBSlots::currentRowChanged( int currentRow )                                                          { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "currentRowChanged(int)", currentRow                              ); }
+void HBSlots::currentTextChanged( const QString & currentText )                                            { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "currentTextChanged(QString)", currentText                        ); }
+void HBSlots::itemActivated( QListWidgetItem * item )                                                      { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemActivated(QLWItem)", item                                    ); }
+void HBSlots::itemChanged( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemChanged(QLWItem)", item                                      ); }
+void HBSlots::itemClicked( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemClicked(QLWItem)", item                                      ); }
+void HBSlots::itemDoubleClicked( QListWidgetItem * item )                                                  { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QLWItem)", item                                ); }
+void HBSlots::itemEntered( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemEntered(QLWItem)", item                                      ); }
+void HBSlots::itemPressed( QListWidgetItem * item )                                                        { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "itemPressed(QLWItem)", item                                      ); }
 
-/**/
+#if 0
+currentItemChanged( QListWidgetItem *, QListWidgetItem * )
+currentRowChanged( int )
+currentTextChanged( const QString & )
+itemActivated( QListWidgetItem * )
+itemChanged( QListWidgetItem * )
+itemClicked( QListWidgetItem * )
+itemDoubleClicked( QListWidgetItem * )
+itemEntered( QListWidgetItem * )
+itemPressed( QListWidgetItem * )
+
+"currentItemChanged(QLWItem,QLWItem)"
+"currentRowChanged(currentRow)"
+"currentTextChanged(QString)"
+"itemActivated(QLWItem)"
+"itemChanged(QLWItem)"
+"itemClicked(QLWItem)"
+"itemDoubleClicked(QLWItem)"
+"itemEntered(QLWItem)"
+"itemPressed(QLWItem)"
+#endif
 
 /*----------------------------------------------------------------------*/
 /*

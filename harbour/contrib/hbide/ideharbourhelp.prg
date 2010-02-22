@@ -73,8 +73,18 @@
 
 #define buttonInstall_clicked                     1
 #define editInstall_textChanged                   2
-#define buttonRefresh_clicked                     3
-#define treeDoc_doubleClicked                     4
+#define buttonHome_clicked                        3
+#define buttonBackward_clicked                    4
+#define buttonForward_clicked                     5
+#define buttonRefresh_clicked                     6
+#define buttonPrint_clicked                       7
+#define buttonPdf_clicked                         8
+#define editIndex_textChanged                     9
+#define treeDoc_doubleClicked                     10
+#define treeDoc_itemSelectionChanged              11
+#define editIndex_returnPressed                   12
+#define lostIndex_ItemDoubleClicked               13
+#define buttonUp_clicked                          14
 
 /*----------------------------------------------------------------------*/
 
@@ -99,19 +109,52 @@
 
 /*----------------------------------------------------------------------*/
 
+CLASS IdeDocFunction
+
+   DATA   cName                                   INIT ""
+   DATA   cTemplate                               INIT ""
+   DATA   cCategory                               INIT ""
+   DATA   cSubCategory                            INIT ""
+   DATA   cOneliner                               INIT ""
+   DATA   aSyntax                                 INIT {}
+   DATA   aArguments                              INIT {}
+   DATA   aReturns                                INIT {}
+   DATA   aDescription                            INIT {}
+   DATA   aExamples                               INIT {}
+   DATA   aTests                                  INIT {}
+   DATA   aFiles                                  INIT {}
+   DATA   cStatus                                 INIT ""
+   DATA   cPlatforms                              INIT ""
+   DATA   cSeaAlso                                INIT ""
+
+   DATA   aSource                                 INIT {}
+
+   DATA   oTVItem
+   DATA   cSourceTxt                              INIT ""
+
+   METHOD new()                                   INLINE Self
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeHarbourHelp INHERIT IdeObject
 
    DATA   oUI
    DATA   cPathInstall
    DATA   cDocPrefix
+
    DATA   aNodes                                  INIT {}
    DATA   aFunctions                              INIT {}
+   DATA   aFuncByFile                             INIT {}
+   DATA   aHistory                                INIT {}
 
-   DATA   nCurTVItem
+   DATA   nCurTVItem                              INIT 0
+   DATA   nCurInHist                              INIT 0
 
-   DATA   SetColorBG                              INIT "#ffffc0"
-   DATA   SetColorTable                           INIT "#ffff80"
-   DATA   SetColorText                            INIT "#0000ff"
+   DATA   qHiliter
+
+   DATA   hIndex                                  INIT {=>}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -125,8 +168,17 @@ CLASS IdeHarbourHelp INHERIT IdeObject
 
    METHOD installSignals()
    METHOD refreshDocTree()
+   METHOD updateViewer( aHtm )
    METHOD populateFuncDetails( n )
+   METHOD populateTextFile( cTextFile )
+   METHOD populateRootInfo()
+   METHOD populatePathInfo( cPath )
+   METHOD populateIndex()
+   METHOD populateIndexedSelection()
    METHOD buildView( oFunc )
+   METHOD print()
+   METHOD exportAsPdf()
+   METHOD paintRequested( pPrinter )
    METHOD parseTextFile( cTextFile, oParent )
 
    ENDCLASS
@@ -180,7 +232,8 @@ METHOD IdeHarbourHelp:destroy()
    ::aNodes := NIL
    #endif
 
-   //::disconnect( ::oUI:q_treeDoc, "itemDoubleClicked(QTWItem)" )
+   ::oUI:q_treeDoc:clear()
+   //::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
 
    ::oUI:destroy()
 
@@ -197,6 +250,7 @@ METHOD IdeHarbourHelp:setImages()
    oUI:q_buttonUp:setIcon( ::resPath + "dc_up.png" )
    oUI:q_buttonRefresh:setIcon( ::resPath + "dc_refresh.png" )
    oUI:q_buttonPrint:setIcon( ::resPath + "dc_print.png" )
+   oUI:q_buttonPdf:setIcon( ::resPath + "dc_pdffile.png" )
 
    oUI:q_buttonSave:setIcon( ::resPath + "save.png" )
    oUI:q_buttonExit:setIcon( ::resPath + "dc_quit.png" )
@@ -221,6 +275,7 @@ METHOD IdeHarbourHelp:setTooltips()
    oUI:q_buttonRefresh:setToolTip( "Refresh" )
    oUI:q_buttonUp:setToolTip( "Up" )
    oUI:q_buttonPrint:setToolTip( "Print" )
+   oUI:q_buttonPdf:setToolTip( "Export as PDF Document" )
 
    oUI:q_buttonSave:setToolTip( "Save" )
    oUI:q_buttonExit:setToolTip( "Exit" )
@@ -243,25 +298,48 @@ METHOD IdeHarbourHelp:setParameters()
    oUI:q_treeCategory:setHeaderHidden( .t. )
    oUI:q_editInstall:setText( ::cWrkHarbour )
 
+   ::qHiliter := ::oThemes:SetSyntaxHilighting( oUI:q_plainExamples, "Bare Minimum" )
+
+   oUI:q_plainExamples:setFont( ::oFont:oWidget )
+   oUI:q_plainDescription:setFont( ::oFont:oWidget )
+   oUI:q_plainArguments:setFont( ::oFont:oWidget )
+   oUI:q_plainArgDesc:setFont( ::oFont:oWidget )
+   oUI:q_plainTests:setFont( ::oFont:oWidget )
+
+   oUI:q_plainExamples:setLineWrapMode( QTextEdit_NoWrap )
+   oUI:q_plainTests:setLineWrapMode( QTextEdit_NoWrap )
+
+   oUI:q_treeDoc:expandsOnDoubleClick( .f. )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:installSignals()
 
-   ::oUI:signal( "buttonInstall", "clicked()"                 , {|    | ::execEvent( buttonInstall_clicked )      } )
-   ::oUI:signal( "buttonRefresh", "clicked()"                 , {|    | ::execEvent( buttonRefresh_clicked )      } )
-   ::oUI:signal( "editInstall"  , "textChanged(QString)"      , {|p   | ::execEvent( editInstall_textChanged, p ) } )
+   ::oUI:signal( "buttonInstall" , "clicked()"                 , {|    | ::execEvent( buttonInstall_clicked  )     } )
+   ::oUI:signal( "buttonHome"    , "clicked()"                 , {|    | ::execEvent( buttonHome_clicked     )     } )
+   ::oUI:signal( "buttonBackward", "clicked()"                 , {|    | ::execEvent( buttonBackward_clicked )     } )
+   ::oUI:signal( "buttonForward" , "clicked()"                 , {|    | ::execEvent( buttonForward_clicked  )     } )
+   ::oUI:signal( "buttonUp"      , "clicked()"                 , {|    | ::execEvent( buttonUp_clicked       )     } )
+   ::oUI:signal( "buttonRefresh" , "clicked()"                 , {|    | ::execEvent( buttonRefresh_clicked  )     } )
+   ::oUI:signal( "buttonPrint"   , "clicked()"                 , {|    | ::execEvent( buttonPrint_clicked    )     } )
+   ::oUI:signal( "buttonPdf"     , "clicked()"                 , {|    | ::execEvent( buttonPdf_clicked      )     } )
+   ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p   | ::execEvent( editInstall_textChanged, p ) } )
+   ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p   | ::execEvent( editIndex_textChanged, p   ) } )
+   ::oUI:signal( "editIndex"     , "returnPressed()"           , {|    | ::execEvent( editIndex_returnPressed    ) } )
+   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p   | ::execEvent( lostIndex_ItemDoubleClicked, p ) } )
 
-
-   ::connect( ::oUI:q_treeDoc   , "itemDoubleClicked(QTWItem)", {|p,p1| ::execEvent( treeDoc_doubleClicked, p, p1 ) } )
+   ::connect( ::oUI:q_treeDoc    , "itemSelectionChanged()"    , {|    | ::execEvent( treeDoc_itemSelectionChanged ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
-   LOCAL cPath, qTWItem, cText, n
+   LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower
+
+   HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nMode
 
@@ -269,6 +347,19 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       cPath := hbide_fetchADir( ::oDocViewDock, "Harbour Install Root" )
       IF !empty( cPath )
          ::oUI:q_editInstall:setText( cPath )
+      ENDIF
+      EXIT
+
+   CASE lostIndex_ItemDoubleClicked
+   CASE editIndex_returnPressed
+      ::populateIndexedSelection()
+      EXIT
+
+   CASE editIndex_textChanged
+      nLen := len( p )
+      cLower := lower( p )
+      IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
+         ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
       ENDIF
       EXIT
 
@@ -282,19 +373,60 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
+   CASE buttonHome_clicked
+      ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
+      EXIT
+
+   CASE buttonBackward_clicked
+      IF ::nCurInHist > 1
+         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist - 1 ], 1 ], 0 )
+      ENDIF
+      EXIT
+
+   CASE buttonForward_clicked
+      IF ::nCurInHist < len( ::aHistory )
+         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist + 1 ], 1 ], 0 )
+      ENDIF
+      EXIT
+
+   CASE buttonUp_clicked
+      IF ::nCurInHist > 0 .AND. ::nCurInHist <= len( ::aHistory )
+         ::oUI:q_treeDoc:setCurrentItem( ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ), 0 )
+      ENDIF
+      EXIT
+
    CASE buttonRefresh_clicked
       ::refreshDocTree()
       EXIT
 
-   CASE treeDoc_doubleClicked
-      qTWItem := QTreeWidgetItem():from( p )
-      cText := qTWItem:text( p1 )
+   CASE buttonPrint_clicked
+      ::print()
+      EXIT
+
+   CASE buttonPdf_clicked
+      ::exportAsPdf()
+      EXIT
+
+   CASE treeDoc_itemSelectionChanged
+      qTWItem := QTreeWidgetItem():from( ::oUI:q_treeDoc:currentItem() )
+      cText   := qTWItem:text( 0 )
 
       IF ( n := ascan( ::aNodes, {|e_| e_[ 5 ] == cText } ) ) > 0
+         IF ( nn := ascan( ::aHistory, n ) ) == 0
+            aadd( ::aHistory, n )
+            ::nCurInHist := len( ::aHistory )
+         ELSE
+            ::nCurInHist := nn
+         ENDIF
          ::nCurTVItem := n
 
-         IF ::aNodes[ n, 2 ] == "File"
-            ::parseTextFile( ::aNodes[ n, 4 ], ::aNodes[ n, 1 ] )
+
+         IF     ::aNodes[ n, 2 ] == "Root"
+            ::populateRootInfo()
+         ELSEIF ::aNodes[ n, 2 ] == "Path"
+            ::populatePathInfo( ::aNodes[ n, 4 ] )
+         ELSEIF ::aNodes[ n, 2 ] == "File"
+            ::populateTextFile( ::aNodes[ n, 4 ] )
          ELSEIF ::aNodes[ n, 2 ] == "Function"
             ::populateFuncDetails( n )
          ENDIF
@@ -302,6 +434,19 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:populateIndexedSelection()
+   LOCAL qItem := QListWidgetItem():from( ::oUI:q_listIndex:currentItem() )
+   LOCAL cText, n
+
+   cText := qItem:text()
+   IF ( n := ascan( ::aFunctions, {|e_| e_[ 2 ] == cText } ) ) > 0
+      ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+   ENDIF
 
    RETURN Self
 
@@ -325,7 +470,19 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    cIcon := ::resPath + "dc_folder.png"
 
-   aPaths := {} ; aDocs := {}
+   /* Clean Environment */
+   ::oUI:q_treeDoc:clear()
+   //
+   ::aNodes      := {}
+   ::aFuncByFile := {}
+   ::aHistory    := {}
+   ::aFunctions  := {}
+
+   ::nCurTVItem  := 0
+   ::nCurInHist  := 0
+
+   aPaths := {}
+   aDocs  := {}
    hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
 
    FOR EACH cFolder IN aPaths
@@ -351,7 +508,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
       oTWItem:setIcon( 0, cIcon )
       oTWItem:setToolTip( 0, cFolder )
       oParent:addChild( oTWItem )
-      aadd( ::aNodes, { oTWItem, "Folder", oParent, cFolder, cStripped } )
+      aadd( ::aNodes, { oTWItem, "Path", oParent, cFolder, cStripped } )
 
       oParentF := oTWItem
       aDir := directory( cFolder + "*.txt" )
@@ -364,9 +521,12 @@ METHOD IdeHarbourHelp:refreshDocTree()
             oTWItem:setToolTip( 0, cTextFile )
             oParentF:addChild( oTWItem )
             aadd( ::aNodes, { oTWItem, "File", oParentF, cTextFile, a_[ 1 ] } )
+            ::parseTextFile( cTextFile, oTWItem )
          ENDIF
       NEXT
    NEXT
+
+   ::populateIndex()
 
    ::oUI:q_treeDoc:expandItem( oParent )
 
@@ -374,131 +534,221 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
-   LOCAL a_, s, nPart, oFunc
-   LOCAL lIsFunc := .f.
-   LOCAL nIndex  := 0
-   LOCAL oTWItem := 0
-   LOCAL aInfo   := {}
-   LOCAL cIcon   := ::resPath + "dc_function.png"
+METHOD IdeHarbourHelp:populateIndex()
+   LOCAL a_, qItem
 
-   nPart := DOC_FUN_NONE
+   asort( ::aFunctions, , , {|e_, f_| e_[ 2 ] < f_[ 2 ] } )
 
-   a_:= hbide_readSource( cTextFile )
+   ::oUI:q_listIndex:setSortingEnabled( .t. )
 
-   FOR EACH s IN a_
-      DO CASE
-
-      CASE "$DOC$"         $ s
-         nIndex++
-         lIsFunc := .t.
-         nPart := DOC_FUN_BEGINS
-         oFunc := IdeDocFunction():new()
-
-      CASE "$END$"         $ s
-         lIsFunc := .f.
-         nPart := DOC_FUN_ENDS
-         oTWItem := QTreeWidgetItem():new()
-         oTWItem:setText( 0, oFunc:cName )
-         oTWItem:setIcon( 0, cIcon )
-         oTWItem:setTooltip( 0, oFunc:cName )
-         oParent:addChild( oTWItem )
-         aadd( ::aNodes, { oTWItem, "Function", oParent, cTextFile + "<::>" + oFunc:cName, oFunc:cName } )
-         aadd( ::aFunctions, { cTextFile, oFunc:cName, oFunc, oTWItem } )
-
-      CASE "$TEMPLATE$"    $ s
-         nPart := DOC_FUN_TEMPLATE
-      CASE "$FUNCNAME$"    $ s   .OR.  "$NAME$" $ s
-         nPart := DOC_FUN_FUNCNAME
-      CASE "$CATEGORY$"    $ s
-         nPart := DOC_FUN_CATEGORY
-      CASE "$SUBCATEGORY$" $ s
-         nPart := DOC_FUN_SUBCATEGORY
-      CASE "$ONELINER$"    $ s
-         nPart := DOC_FUN_ONELINER
-      CASE "$SYNTAX$"      $ s
-         nPart := DOC_FUN_SYNTAX
-      CASE "$ARGUMENTS$"   $ s
-         nPart := DOC_FUN_ARGUMENTS
-      CASE "$RETURNS$"     $ s
-         nPart := DOC_FUN_RETURNS
-      CASE "$DESCRIPTION$" $ s
-         nPart := DOC_FUN_DESCRIPTION
-      CASE "$EXAMPLES$"    $ s
-         nPart := DOC_FUN_EXAMPLES
-      CASE "$TESTS$"       $ s
-         nPart := DOC_FUN_TESTS
-      CASE "$FILES$"       $ s
-         nPart := DOC_FUN_FILES
-      CASE "$STATUS$"       $ s
-         nPart := DOC_FUN_STATUS
-      CASE "$PLATFORMS$"   $ s  .OR.  "$COMPLIANCE$" $ s
-         nPart := DOC_FUN_PLATFORMS
-      CASE "$SEEALSO$"     $ s
-         nPart := DOC_FUN_SEEALSO
-      OTHERWISE
-         IF ! lIsFunc
-            LOOP   // It is a fake line not within $DOC$ => $END$ block
-         ENDIF
-         s := hbide_stripDocPrefix( s )
-
-         SWITCH nPart
-         CASE DOC_FUN_BEGINS
-            EXIT
-         CASE DOC_FUN_TEMPLATE
-            oFunc:cTemplate    := s
-            EXIT
-         CASE DOC_FUN_FUNCNAME
-            oFunc:cName        := s
-            EXIT
-         CASE DOC_FUN_CATEGORY
-            oFunc:cCategory    := s
-            EXIT
-         CASE DOC_FUN_SUBCATEGORY
-            oFunc:cSubCategory := s
-            EXIT
-         CASE DOC_FUN_ONELINER
-            oFunc:cOneLiner    := s
-            EXIT
-         CASE DOC_FUN_SYNTAX
-            aadd( oFunc:aSyntax, s )
-            EXIT
-         CASE DOC_FUN_ARGUMENTS
-            aadd( oFunc:aArguments, s )
-            EXIT
-         CASE DOC_FUN_RETURNS
-            aadd( oFunc:aReturns, s )
-            EXIT
-         CASE DOC_FUN_DESCRIPTION
-            aadd( oFunc:aDescription, s )
-            EXIT
-         CASE DOC_FUN_EXAMPLES
-            aadd( oFunc:aExamples, s )
-            EXIT
-         CASE DOC_FUN_TESTS
-            aadd( oFunc:aTests, s )
-            EXIT
-         CASE DOC_FUN_FILES
-            aadd( oFunc:aFiles, s )
-            EXIT
-         CASE DOC_FUN_STATUS
-            oFunc:cStatus := s
-            EXIT
-         CASE DOC_FUN_PLATFORMS
-            oFunc:cPlatForms := s
-            EXIT
-         CASE DOC_FUN_SEEALSO
-            oFunc:cSeaAlso := s
-            EXIT
-         OTHERWISE
-            nPart := DOC_FUN_NONE
-            oFunc := NIL
-            EXIT
-         ENDSWITCH
-      ENDCASE
+   FOR EACH a_ IN ::aFunctions
+      IF !empty( a_[ 2 ] )
+         qItem := QListWidgetItem():new()
+         qItem:setText( a_[ 2 ] )
+         a_[ 5 ] := qItem
+         ::oUI:q_listIndex:addItem_1( qItem )
+      ENDIF
    NEXT
 
-   hbide_justACall( nIndex, nPart, s, oTWItem, aInfo, oParent )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
+   LOCAL a_, s, nPart, oFunc, oTWItem
+   LOCAL lIsFunc := .f.
+   LOCAL cIcon   := ::resPath + "dc_function.png"
+   LOCAL aFn     := {}
+   LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
+
+   IF nParsed == 0
+      nPart := DOC_FUN_NONE
+
+      a_:= hbide_readSource( cTextFile )
+
+      FOR EACH s IN a_
+         DO CASE
+
+         CASE "$DOC$"         $ s
+            lIsFunc := .t.
+            nPart   := DOC_FUN_BEGINS
+            oFunc   := IdeDocFunction():new()
+
+         CASE "$END$"         $ s
+            IF lIsFunc
+               lIsFunc := .f.
+               nPart   := DOC_FUN_ENDS
+               oTWItem := QTreeWidgetItem():new()
+               oTWItem:setText( 0, oFunc:cName )
+               oTWItem:setIcon( 0, cIcon )
+               oTWItem:setTooltip( 0, oFunc:cName )
+               oParent:addChild( oTWItem )
+               aadd( ::aNodes, { oTWItem, "Function", oParent, cTextFile + "<::>" + oFunc:cName, oFunc:cName } )
+               aadd( ::aFunctions, { cTextFile, oFunc:cName, oFunc, oTWItem, NIL, lower( oFunc:cName ) } )
+               aadd( aFn, oFunc )
+            ENDIF
+
+         CASE "$TEMPLATE$"    $ s
+            nPart := DOC_FUN_TEMPLATE
+         CASE "$FUNCNAME$"    $ s   .OR.  "$NAME$" $ s
+            nPart := DOC_FUN_FUNCNAME
+         CASE "$CATEGORY$"    $ s
+            nPart := DOC_FUN_CATEGORY
+         CASE "$SUBCATEGORY$" $ s
+            nPart := DOC_FUN_SUBCATEGORY
+         CASE "$ONELINER$"    $ s
+            nPart := DOC_FUN_ONELINER
+         CASE "$SYNTAX$"      $ s
+            nPart := DOC_FUN_SYNTAX
+         CASE "$ARGUMENTS$"   $ s
+            nPart := DOC_FUN_ARGUMENTS
+         CASE "$RETURNS$"     $ s
+            nPart := DOC_FUN_RETURNS
+         CASE "$DESCRIPTION$" $ s
+            nPart := DOC_FUN_DESCRIPTION
+         CASE "$EXAMPLES$"    $ s
+            nPart := DOC_FUN_EXAMPLES
+         CASE "$TESTS$"       $ s
+            nPart := DOC_FUN_TESTS
+         CASE "$FILES$"       $ s
+            nPart := DOC_FUN_FILES
+         CASE "$STATUS$"       $ s
+            nPart := DOC_FUN_STATUS
+         CASE "$PLATFORMS$"   $ s  .OR.  "$COMPLIANCE$" $ s
+            nPart := DOC_FUN_PLATFORMS
+         CASE "$SEEALSO$"     $ s
+            nPart := DOC_FUN_SEEALSO
+         OTHERWISE
+            IF ! lIsFunc
+               LOOP   // It is a fake line not within $DOC$ => $END$ block
+            ENDIF
+            s := hbide_stripDocPrefix( s )
+
+            SWITCH nPart
+            CASE DOC_FUN_BEGINS
+               EXIT
+            CASE DOC_FUN_TEMPLATE
+               oFunc:cTemplate    := s
+               EXIT
+            CASE DOC_FUN_FUNCNAME
+               oFunc:cName        := alltrim( s )
+               EXIT
+            CASE DOC_FUN_CATEGORY
+               oFunc:cCategory    := s
+               EXIT
+            CASE DOC_FUN_SUBCATEGORY
+               oFunc:cSubCategory := s
+               EXIT
+            CASE DOC_FUN_ONELINER
+               oFunc:cOneLiner    := s
+               EXIT
+            CASE DOC_FUN_SYNTAX
+               aadd( oFunc:aSyntax, s )
+               EXIT
+            CASE DOC_FUN_ARGUMENTS
+               aadd( oFunc:aArguments, s )
+               EXIT
+            CASE DOC_FUN_RETURNS
+               aadd( oFunc:aReturns, s )
+               EXIT
+            CASE DOC_FUN_DESCRIPTION
+               aadd( oFunc:aDescription, s )
+               EXIT
+            CASE DOC_FUN_EXAMPLES
+               aadd( oFunc:aExamples, s )
+               EXIT
+            CASE DOC_FUN_TESTS
+               aadd( oFunc:aTests, s )
+               EXIT
+            CASE DOC_FUN_FILES
+               aadd( oFunc:aFiles, s )
+               EXIT
+            CASE DOC_FUN_STATUS
+               oFunc:cStatus := s
+               EXIT
+            CASE DOC_FUN_PLATFORMS
+               oFunc:cPlatForms := s
+               EXIT
+            CASE DOC_FUN_SEEALSO
+               oFunc:cSeaAlso := s
+               EXIT
+            OTHERWISE
+               nPart := DOC_FUN_NONE
+               EXIT
+            ENDSWITCH
+         ENDCASE
+      NEXT
+
+      aadd( ::aFuncByFile, { cTextFile, aFn } )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:updateViewer( aHtm )
+
+   ::oUI:q_browserView:setHTML( hbide_arrayToMemo( aHtm ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:populateRootInfo()
+   LOCAL aHtm := {}
+
+   aadd( aHtm, "<HTML>" )
+   aadd( aHtm, " <BODY ALIGN=center VALIGN=center>" )
+   aadd( aHtm, '  <H1><FONT color=green>' + "Welcome" + '</FONT></H1>' )
+   aadd( aHtm, '  <BR>' + '&nbsp;' + '</BR>' )
+   aadd( aHtm, '  <H2><FONT color=blue>' + ::cPathInstall + '</FONT></H2>' )
+   aadd( aHtm, " </BODY>" )
+   aadd( aHtm, "</HTML>" )
+
+   ::updateViewer( aHtm )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:populatePathInfo( cPath )
+   LOCAL aHtm := {}
+
+   aadd( aHtm, "<HTML>" )
+   aadd( aHtm, " <BODY ALIGN=center VALIGN=center>" )
+   aadd( aHtm, '  <H2><FONT color=blue>' + cPath + '</FONT></H2>' )
+   aadd( aHtm, " </BODY>" )
+   aadd( aHtm, "</HTML>" )
+
+   ::updateViewer( aHtm )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:populateTextFile( cTextFile )
+   LOCAL aHtm, aFn, oFunc
+   LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
+
+   /* Build HTML */
+   aHtm := {}
+   aadd( aHtm, "<HTML>" )
+   aadd( aHtm, " <BODY>" )
+   aadd( aHtm, '  <H3 align=center><FONT color=blue>' + cTextFile + '</FONT></H3>' )
+   aadd( aHtm, '   <BR>' + '&nbsp;' + '</BR>' )
+   IF nParsed > 0
+      aFn := ::aFuncByFile[ nParsed, 2 ]
+      FOR EACH oFunc IN aFn
+         IF hb_isObject( oFunc )
+            aadd( aHtm, '   <BR>' + oFunc:cName + '</BR>' )
+         ENDIF
+      NEXT
+   ENDIF
+   aadd( aHtm, " </BODY>" )
+   aadd( aHtm, "</HTML>" )
+
+   ::updateViewer( aHtm )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -538,7 +788,6 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
 
 METHOD IdeHarbourHelp:buildView( oFunc )
    LOCAL s, x, y, v, w, z
-   LOCAL oVw := ::oUI:q_browserView
    LOCAL aHtm := {}
 
    aadd( aHtm, "<HTML>" )
@@ -571,26 +820,25 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, '  </style>                                                         ' )
    aadd( aHtm, '</head>                                                            ' )
 
-   aadd( aHtm, '<BODY>' )
-   aadd( aHtm, '<CENTER>' )
+   aadd( aHtm, ' <BODY>'    )
+   aadd( aHtm, '  <CENTER>' )
 
-   s := '<TABLE ' +;
+   s := '   <TABLE '            +;
         'Border='      + '0 '   +;
         'Frame='       + 'ALL ' +;
         'CellPadding=' + '0 '   +;
         'CellSpacing=' + '0 '   +;
         'Cols='        + '1 '   +;
         'Width='       + '95% ' +;
-        '>'
+        '   >'
    aadd( aHtm, s )
 
    aadd( aHtm, '<CAPTION align=TOP><FONT SIZE="6"><B>' + oFunc:cName + '</B></FONT></CAPTION>' )
 
    aadd( aHtm, "<TR><TD align=CENTER ><B>" + oFunc:cOneLiner + "</B></TD></TR>" )
 
-//   x := '<TR><TD align=LEFT><font size="5" color="#008AE6">' ; y := "</font></TD></TR>"
    x := '<TR><TD align=LEFT><font size="5" color="#FF4719">' ; y := "</font></TD></TR>"
-   v := '<TR><TD margin-left: 20px><pre>' ; w := "</pre></TD></TR>"
+   v := '<TR><TD margin-left: 20px><pre>'                    ; w := "</pre></TD></TR>"
    z := "<TR><TD>&nbsp;</TD></TR>"
 
    aadd( aHtm, x + "Syntax"      + y )
@@ -618,12 +866,51 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, v + oFunc:cStatus + w )
    aadd( aHtm, z )
 
-   aadd( aHtm, "</TABLE>"  )
-   aadd( aHtm, "</CENTER>" )
-   aadd( aHtm, "</BODY>"   )
-   aadd( aHtm, "</HTML>"   )
+   aadd( aHtm, "   </TABLE>"  )
+   aadd( aHtm, "  </CENTER>"  )
+   aadd( aHtm, " </BODY>"     )
+   aadd( aHtm, "</HTML>"      )
 
-   oVw:setHTML( hbide_arrayToMemo( aHtm ) )
+   ::updateViewer( aHtm )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:exportAsPdf()
+   LOCAL cPdf, qPrinter, cExt, cPath, cFile
+
+   IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Documents", "*.pdf" } } ) )
+      hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
+      IF empty( cExt ) .OR. lower( cExt ) != ".pdf"
+         cPdf := cPath + cFile + ".pdf"
+      ENDIF
+      qPrinter := QPrinter():new()
+      qPrinter:setOutputFileName( cPdf )
+      ::oUI:q_browserView:print( qPrinter )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:print()
+   LOCAL qDlg
+
+   qDlg := QPrintPreviewDialog():new( ::oUI )
+   qDlg:setWindowTitle( "Harbour Help Document" )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:exec()
+   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:paintRequested( pPrinter )
+   LOCAL qPrinter := QPrinter():configure( pPrinter )
+
+   ::oUI:q_browserView:print( qPrinter )
 
    RETURN Self
 
@@ -634,95 +921,3 @@ STATIC FUNCTION hbide_stripDocPrefix( s )
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeDocFunction
-
-   DATA   cName                                   INIT ""
-   DATA   cTemplate                               INIT ""
-   DATA   cCategory                               INIT ""
-   DATA   cSubCategory                            INIT ""
-   DATA   cOneliner                               INIT ""
-   DATA   aSyntax                                 INIT {}
-   DATA   aArguments                              INIT {}
-   DATA   aReturns                                INIT {}
-   DATA   aDescription                            INIT {}
-   DATA   aExamples                               INIT {}
-   DATA   aTests                                  INIT {}
-   DATA   aFiles                                  INIT {}
-   DATA   cStatus                                 INIT ""
-   DATA   cPlatforms                              INIT ""
-   DATA   cSeaAlso                                INIT ""
-
-   DATA   aSource                                 INIT {}
-
-   DATA   oTVItem
-   DATA   cSourceTxt                              INIT ""
-
-   METHOD new()                                   INLINE Self
-
-   ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-#if 0
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_BTreeNew()
- *  $CATEGORY$
- *      BTree API
- *  $ONELINER$
- *      Create a new BTree file
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hb_btree.api"
- *      hb_BTreeNew( CHAR <cFileName>, int <nPageSize>, int <nKeySize>, [ ULONG <nFlags> ], [ USHORT <nBuffers>=1 ] ) -> ( struct hb_BTree * )pHBTree
- *
- *      Harbour Prototype
- *
- *      hb_BTreeNew( CHAR <cFileName>, <nPageSize>, <nKeySize>, [ <nFlags> ], [ <nBuffers>=1 ] ) -> ( int )hb_BTree_Handle
- *
- *      Harbour Class Prototype
- *
- *      TBTreeNew( CHAR <cFileName>, <nPageSize>, <nKeySize>, [ <nFlags> ], [ <nBuffers>=1 ] ) -> <tBTreeInstance>
- *  $ARGUMENTS$
- *      <cFileName> Name of BTree file to create.  This parameter is optional
- *      if the flag HB_BTREE_INMEMORY is used
- *
- *      <nPageSize> Number of bytes one file 'page' is to be; must be a multiple of 2048.
- *      If the hb_btree library is compiled with the value HB_BTREE_HEADERSIZE
- *      defined to another value, that is used in place of 2048
- *
- *      <nKeySize> Number of bytes a key value is to be; must be 8 bytes or greater
- *
- *      <nFlags> Flags that determine the file access mode(s) and BTree mode(s)
- *
- *      <nBuffers> Number of internal I/O buffers to use - not currently supported for shared/dynamic use
- *  $RETURNS$
- *      C Prototype
- *
- *      <pBTree> A pointer to an hb_BTree structure, to be used by other hb_BTree C API calls
- *
- *      Harbour Prototype
- *
- *      <hb_BTree_Handle> A handle, to be used by other hb_BTree Harbour API calls
- *
- *      Harbour Class Prototype
- *
- *      <tBTreeInstance> An instance of the TBTree class
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $FILES$
- *      Library is hb_btree</par>
- *      Header is hb_btree.ch</par>
- *      C Header is hb_btree.api</par>
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      BTree Flags
- *  $END$
- */
-#endif
-
-/*----------------------------------------------------------------------*/
