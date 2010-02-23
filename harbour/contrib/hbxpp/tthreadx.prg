@@ -98,16 +98,17 @@ METHOD signal() CLASS TSIGNAL
 CREATE CLASS TThread FUNCTION Thread
 
 EXPORTED:
+   VAR active           AS LOGICAL READONLY  INIT .F.
+   VAR atEnd            AS USUAL             INIT NIL
+   VAR atStart          AS USUAL             INIT NIL
    VAR cargo            AS USUAL
-   VAR active           AS LOGICAL READONLY  INIT .f.
    VAR deltaTime        AS NUMERIC READONLY  INIT 0
    VAR interval         AS USUAL   READONLY  INIT NIL
    VAR priority         AS NUMERIC READONLY  INIT 0
+   VAR result           AS USUAL             INIT NIL
    VAR startCount       AS NUMERIC READONLY  INIT 0
    VAR startTime        AS USUAL   READONLY  INIT NIL
-   VAR atEnd            AS USUAL             INIT NIL
-   VAR atStart          AS USUAL             INIT NIL
-   VAR result           AS USUAL             INIT NIL
+   VAR threadID         AS NUMERIC READONLY  INIT 0
 
 PROTECTED:
    VAR maxStackSize     AS USUAL             INIT 50000
@@ -130,10 +131,11 @@ EXPORTED:
    METHOD setStartTime( nSeconds )
    METHOD start( xAction, ... )
    METHOD synchronize( nTimeOut )
-   METHOD threadSelf()
-   METHOD threadID()
 
    METHOD thread INLINE ::TThread()
+
+HIDDEN:
+   METHOD threadSelf()
 
 ENDCLASS
 
@@ -194,55 +196,71 @@ METHOD setStartTime( nSeconds ) CLASS TTHREAD
    RETURN .F.
 
 METHOD start( xAction, ... ) CLASS TTHREAD
+
    /* TODO: thread stack size set by user ::maxStackSize */
    IF ::active
       RETURN .F.
-   ELSEIF xAction == NIL
+
+   ELSEIF ! Empty( xAction ) .OR. __ClsMsgType( Self:ClassH(), "EXECUTE" ) == HB_OO_MSG_METHOD
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             { |...|
-               WHILE .T.
+               ::active := .T.
+
+               IF __ClsMsgType( Self:ClassH(), "ATSTART" ) == HB_OO_MSG_METHOD
+                  ::atStart( ... )
+               ENDIF
+
+               IF __ClsMsgType( Self:ClassH(), "_ATSTART" ) == HB_OO_MSG_DATA .AND.;
+                  ValType( ::_atStart ) == "B"
+
+                  EVAL( ::_atStart, ... )
+               ENDIF
+
+               WHILE ::active
+
                   ::startTime := Seconds()
-                  ::active := .T.
+                  ::startCount++
                   ThreadObject( Self )
-                  ::result := ::execute( ... )
-                  ::startTime := NIL
-                  ::active := .F.
+
+                  IF ! Empty( xAction ) .AND. ValType( xAction ) $ "CBS"
+                     ::result := DO( xAction, ... )
+                  ELSE
+                     ::result := ::execute( ... )
+                  ENDIF
+
                   IF ISNUMBER( ::interval )
+                     ::active := .F.
                      hb_idleSleep( ::interval / 100 )
+                     ::active := .T.
                      LOOP
                   ENDIF
-                  EXIT
-               ENDDO
-               RETURN NIL
-            }, ... )
-   ELSEIF !Empty( xAction ) .AND. ValType( xAction ) $ "CBS"
-      ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
-            { |...|
-               WHILE .T.
-                  ::startTime := Seconds()
-                  ::active := .T.
-                  ThreadObject( Self )
-                  IF ::atStart != NIL
-                     EVAL( ::atStart, ... )
-                  ENDIF
-                  ::result := DO( xAction, ... )
-                  IF ::atEnd != NIL
-                     EVAL( ::atEnd, ... )
-                  ENDIF
                   ::startTime := NIL
-                  ::active := .F.
-                  IF ISNUMBER( ::interval )
-                     hb_idleSleep( ::interval / 100 )
-                     LOOP
+
+                  IF __ClsMsgType( Self:ClassH(), "ATEND" ) == HB_OO_MSG_METHOD
+                     ::atEnd( ... )
                   ENDIF
-                  EXIT
+
+                  IF __ClsMsgType( Self:ClassH(), "_ATEND" ) == HB_OO_MSG_DATA .AND.;
+                     ValType( ::_atEnd ) == "B"
+
+                     EVAL( ::_atEnd, ... )
+                  ENDIF
+
+                  ::active := .F.
+
                ENDDO
+
                RETURN NIL
             }, ... )
+
+      ::threadID := IIF( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
+
    ELSE
       RETURN .F.
+
    ENDIF
-   RETURN .T.
+
+RETURN .T.
 
 METHOD synchronize( nTimeOut ) CLASS TTHREAD
    LOCAL pThreadID := ::pThreadID
@@ -257,6 +275,8 @@ METHOD synchronize( nTimeOut ) CLASS TTHREAD
 METHOD threadSelf() CLASS TTHREAD
    RETURN ::pThreadID
 
+/*
 METHOD threadID() CLASS TTHREAD
    LOCAL pThreadID := ::pThreadID
    RETURN IIF( pThreadID == NIL, 0, hb_threadID( pThreadID ) )
+*/
