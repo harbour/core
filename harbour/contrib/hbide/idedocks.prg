@@ -114,7 +114,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD execSkeleton( nMode, p )
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
-   METHOD getADockWidget( nArea, cObjectName, cWindowTitle )
+   METHOD getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
 
    ENDCLASS
 
@@ -163,14 +163,18 @@ METHOD IdeDocks:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle )
-   LOCAL oDock
+METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
+   LOCAL oDock, nBasic
+
+   DEFAULT nFlags TO 0
+
+   nBasic := hb_bitOR( QDockWidget_DockWidgetClosable, nFlags )
 
    oDock := XbpWindow():new()
    oDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
    oDock:oWidget:setObjectName( cObjectName )
    ::oDlg:addChild( oDock )
-   oDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   oDock:oWidget:setFeatures( nBasic )
    oDock:oWidget:setAllowedAreas( nArea )
    oDock:oWidget:setWindowTitle( cWindowTitle )
    oDock:oWidget:setFocusPolicy( Qt_NoFocus )
@@ -265,11 +269,7 @@ METHOD IdeDocks:buildDialog()
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := ::resPath + "vr.png"
    ::oDlg:title := "Harbour IDE"
-   #ifdef HBIDE_USE_UIC
-      ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
-   #else
-      ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.ui" ):create()
-   #endif
+   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    ::oDlg:create( , , , , , .f. )
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
@@ -419,6 +419,7 @@ METHOD IdeDocks:disblePanelButton( qTBtn )
 
 METHOD IdeDocks:addPanelButton( cPanel )
    LOCAL qTBtn, aColors, nIndex
+
    #if 0 /* Royal Blue */
    aColors := { ;
       "#000073" , ;
@@ -449,18 +450,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
       }
    #endif
 
-   aColors := { ;
-      "#996633" , ;
-      "#A37547" , ;
-      "#AD855C" , ;
-      "#B89470" , ;
-      "#C2A385" , ;
-      "#CCB299" , ;
-      "#D6C2AD" , ;
-      "#E0D1C2" , ;
-      "#EBE0D6" , ;
-      "#F5F0EB"   ;
-      }
+   aColors := { "#996633", "#A37547", "#AD855C", "#B89470", "#C2A385", "#CCB299", "#D6C2AD", "#E0D1C2", "#EBE0D6", "#F5F0EB" }
 
 
    IF cPanel == "Main"
@@ -651,7 +641,7 @@ METHOD IdeDocks:buildEditorTree()
 
 METHOD IdeDocks:buildFuncList()
 
-   ::oIde:oFuncDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFuncList", "Functions List" )
+   ::oIde:oFuncDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
 
    ::oIde:oFuncList := XbpListBox():new( ::oFuncDock ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
@@ -675,7 +665,7 @@ METHOD IdeDocks:buildHelpWidget()
    qStr := QStringList():new()
    qStr:append( hb_dirBase() + "docs" )
 
-   ::oIde:oHelpDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockHelp", "hbIDE Help" )
+   ::oIde:oHelpDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockHelp", "hbIDE Help", QDockWidget_DockWidgetFloatable )
 
    ::oIde:qHelpBrw := QTextBrowser():new( ::oHelpDock:oWidget )
    ::qHelpBrw:show()
@@ -816,6 +806,147 @@ METHOD IdeDocks:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:buildThemesDock()
+
+   ::oIde:oThemesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockThemes", "Editor Themes", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildPropertiesDock()
+
+   ::oIde:oPropertiesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildEnvironDock()
+
+   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildFindInFiles()
+
+   ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildDocViewer()
+
+   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Document Viewer", QDockWidget_DockWidgetFloatable )
+
+   ::oDocViewDock:qtObject := ideHarbourHelp():new():create( ::oIde )
+
+   ::oDocViewDock:oWidget:setWidget( ::oDocViewDock:qtObject:oUI )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSkeletonWidget()
+   LOCAL oUI
+
+   ::oIde:oSkeltnDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
+
+   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltnDock:oWidget ):build()
+
+   ::oSkeltnDock:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
+
+   oUI := ::oIde:oSkeltnUI
+
+   ::connect( oUI:q_buttonNew   , "clicked()", {|| ::execSkeleton( 1 ) } )
+   ::connect( oUI:q_buttonRename, "clicked()", {|| ::execSkeleton( 2 ) } )
+   ::connect( oUI:q_buttonDelete, "clicked()", {|| ::execSkeleton( 3 ) } )
+   ::connect( oUI:q_buttonClear , "clicked()", {|| ::execSkeleton( 4 ) } )
+   ::connect( oUI:q_buttonGetSel, "clicked()", {|| ::execSkeleton( 5 ) } )
+   ::connect( oUI:q_buttonUpdate, "clicked()", {|| ::execSkeleton( 6 ) } )
+   ::connect( oUI:q_listNames   , "itemSelectionChanged()", {|| ::execSkeleton( 7 ) } )
+
+   //::oSkeltnUI:q_editCode:setFontFamily( "Courier New" )
+   //::oSkeltnUI:q_editCode:setFontPointSize( 10 )
+
+   //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
+   aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:execSkeleton( nMode, p )
+   LOCAL cName, cNewName, qItem, cCode, n
+
+   HB_SYMBOL_UNUSED( p )
+
+   SWITCH nMode
+
+   CASE 1
+      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, "", "Name", "New Skeleton" ) )
+         ::oSkeltnUI:q_listNames:addItem( cName )
+         aadd( ::oIde:aSkltns, { cName, "" } )
+         ::oSkeltnUI:q_listNames:setCurrentRow( len( ::aSkltns ) - 1 )
+      ENDIF
+      EXIT
+   CASE 2
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      IF !empty( cNewName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "Change Skeleton's Name" ) )
+         qItem:setText( cNewName )
+         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+         ::aSkltns[ n, 1 ] := cNewName
+      ENDIF
+      EXIT
+   CASE 3
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      ::oSkeltnUI:q_listNames:removeItemWidget( qItem )
+      EXIT
+   CASE 4
+      ::oSkeltnUI:q_editCode:clear()
+      EXIT
+   CASE 5
+      IF !empty( cCode := ::oEM:getSelectedText() )
+         // TODO: Format cCode
+         cCode := strtran( cCode, chr( 0x2029 ), chr( 10 ) )
+         ::oSkeltnUI:q_editCode:setPlainText( cCode )
+      ENDIF
+      EXIT
+   CASE 6
+      // Update the skeleton code and save the skeleton's buffer | file
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      IF !empty( cName )
+         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+         ::aSkltns[ n,2 ] := ::oSkeltnUI:q_editCode:toPlainText()
+
+         hbide_saveSkltns( ::oIde )
+      ENDIF
+      EXIT
+   CASE 7
+      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
+      cName := qItem:text()
+      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+      ::oSkeltnUI:q_editCode:setPlainText( ::aSkltns[ n,2 ] )
+      EXIT
+   ENDSWITCH
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:setStatusText( nPart, xValue )
    LOCAL oPanel := ::oSBar:getItem( nPart )
 
@@ -926,156 +1057,6 @@ METHOD IdeDocks:toggleBottomDocks()
       ::oDockB2:show()
    ENDIF
    ::oIde:lDockBVisible := !( ::oIde:lDockBVisible )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildSkeletonWidget()
-   LOCAL oUI
-
-   ::oIde:oSkeltnDock := XbpWindow():new()
-   ::oSkeltnDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
-   ::oSkeltnDock:oWidget:setObjectName( "dockSkeleton" )
-   ::oDlg:addChild( ::oSkeltnDock )
-   ::oSkeltnDock:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetFloatable )
-   ::oSkeltnDock:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
-   ::oSkeltnDock:oWidget:setWindowTitle( "Code Skeletons" )
-   ::oSkeltnDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   ::oSkeltnDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
-   ::oSkeltnDock:hide()
-
-   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltnDock:oWidget ):build()
-
-   ::oSkeltnDock:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
-
-   oUI := ::oIde:oSkeltnUI
-
-   ::connect( oUI:q_buttonNew   , "clicked()", {|| ::execSkeleton( 1 ) } )
-   ::connect( oUI:q_buttonRename, "clicked()", {|| ::execSkeleton( 2 ) } )
-   ::connect( oUI:q_buttonDelete, "clicked()", {|| ::execSkeleton( 3 ) } )
-   ::connect( oUI:q_buttonClear , "clicked()", {|| ::execSkeleton( 4 ) } )
-   ::connect( oUI:q_buttonGetSel, "clicked()", {|| ::execSkeleton( 5 ) } )
-   ::connect( oUI:q_buttonUpdate, "clicked()", {|| ::execSkeleton( 6 ) } )
-   ::connect( oUI:q_listNames   , "itemSelectionChanged()", {|| ::execSkeleton( 7 ) } )
-
-   //::oSkeltnUI:q_editCode:setFontFamily( "Courier New" )
-   //::oSkeltnUI:q_editCode:setFontPointSize( 10 )
-
-   //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
-   aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:execSkeleton( nMode, p )
-   LOCAL cName, cNewName, qItem, cCode, n
-
-   HB_SYMBOL_UNUSED( p )
-
-   SWITCH nMode
-
-   CASE 1
-      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, "", "Name", "New Skeleton" ) )
-         ::oSkeltnUI:q_listNames:addItem( cName )
-         aadd( ::oIde:aSkltns, { cName, "" } )
-         ::oSkeltnUI:q_listNames:setCurrentRow( len( ::aSkltns ) - 1 )
-      ENDIF
-      EXIT
-   CASE 2
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cNewName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "Change Skeleton's Name" ) )
-         qItem:setText( cNewName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n, 1 ] := cNewName
-      ENDIF
-      EXIT
-   CASE 3
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      ::oSkeltnUI:q_listNames:removeItemWidget( qItem )
-      EXIT
-   CASE 4
-      ::oSkeltnUI:q_editCode:clear()
-      EXIT
-   CASE 5
-      IF !empty( cCode := ::oEM:getSelectedText() )
-         // TODO: Format cCode
-         cCode := strtran( cCode, chr( 0x2029 ), chr( 10 ) )
-         ::oSkeltnUI:q_editCode:setPlainText( cCode )
-      ENDIF
-      EXIT
-   CASE 6
-      // Update the skeleton code and save the skeleton's buffer | file
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n,2 ] := ::oSkeltnUI:q_editCode:toPlainText()
-
-         hbide_saveSkltns( ::oIde )
-      ENDIF
-      EXIT
-   CASE 7
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-      ::oSkeltnUI:q_editCode:setPlainText( ::aSkltns[ n,2 ] )
-      EXIT
-   ENDSWITCH
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildThemesDock()
-
-   ::oIde:oThemesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockThemes", "Editor Themes" )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildPropertiesDock()
-
-   ::oIde:oPropertiesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockProperties", "Project Properties" )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildEnvironDock()
-
-   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments" )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildFindInFiles()
-
-   ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files" )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildDocViewer()
-
-   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Document Viewer" )
-
-   ::oDocViewDock:qtObject := ideHarbourHelp():new():create( ::oIde )
-
-   ::oDocViewDock:oWidget:setWidget( ::oDocViewDock:qtObject:oUI )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
    RETURN Self
 

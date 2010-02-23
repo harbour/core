@@ -14,17 +14,8 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
    <property name="topMargin">
     <number>4</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
    </property>
    <item row="2" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -69,9 +60,15 @@
    </item>
    <item row="5" column="0">
     <widget class="QTabWidget" name="tabWidgetContents">
-     <property name="maximumSize">
+     <property name="minimumSize">
       <size>
        <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
        <height>16777215</height>
       </size>
      </property>

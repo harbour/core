@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'docviewgenerator.ui'
 **
-** Created: Sun Feb 21 18:59:41 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Mon Feb 22 18:56:47 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -127,7 +127,7 @@ public:
         Form->resize(768, 515);
         gridLayout = new QGridLayout(Form);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        gridLayout->setContentsMargins(2, 4, 0, 0);
+        gridLayout->setContentsMargins(-1, 4, -1, -1);
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         labelInstall = new QLabel(Form);
@@ -162,7 +162,8 @@ public:
 
         tabWidgetContents = new QTabWidget(Form);
         tabWidgetContents->setObjectName(QString::fromUtf8("tabWidgetContents"));
-        tabWidgetContents->setMaximumSize(QSize(200, 16777215));
+        tabWidgetContents->setMinimumSize(QSize(200, 0));
+        tabWidgetContents->setMaximumSize(QSize(300, 16777215));
         tabWidgetContents->setDocumentMode(false);
         tabContents = new QWidget();
         tabContents->setObjectName(QString::fromUtf8("tabContents"));
