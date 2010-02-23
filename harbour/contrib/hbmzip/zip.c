@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "hbzlib.h"
+#include "zlib.h"
 #include "zip.h"
 #include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
 

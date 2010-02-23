@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "hbapifs.h"
-#include "hbzlib.h"
+#include "zlib.h"
 #include "ioapi.h"
 
 

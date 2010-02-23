@@ -38,7 +38,7 @@ woven in by Terry Thorsen 1/2003.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hbzlib.h"
+#include "zlib.h"
 #include "unzip.h"
 #include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
 

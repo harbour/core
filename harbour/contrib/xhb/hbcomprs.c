@@ -55,7 +55,8 @@
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbvm.h"
-#include "hbzlib.h"
+
+#include <zlib.h>
 
 /*******************************************************************
 * Giancarlo Niccolai:
