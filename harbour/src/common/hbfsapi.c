@@ -50,10 +50,6 @@
  *
  */
 
-/* OS2 */
-#define INCL_DOSFILEMGR   /* File Manager values */
-#define INCL_DOSERRORS    /* DOS error values    */
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
@@ -68,6 +64,8 @@
       #define FILE_ATTRIBUTE_DEVICE       0x00000040
    #endif
 #elif defined( HB_OS_OS2 )
+   #define INCL_DOSFILEMGR
+   #define INCL_DOSERRORS
    #include <os2.h>
    #include <stdio.h>
 #elif defined( HB_OS_UNIX )

@@ -57,13 +57,12 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-#define OS2EMX_PLAIN_CHAR
-#define INCL_BASE
-#define INCL_PM
-
 #include "hbapi.h"
 
 #if defined( HB_OS_OS2 )
+#  define OS2EMX_PLAIN_CHAR
+#  define INCL_BASE
+#  define INCL_PM
 #  include <os2.h>
 #endif
 

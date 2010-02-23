@@ -56,9 +56,6 @@
 #  define _LARGEFILE64_SOURCE
 #endif
 
-#define INCL_DOSFILEMGR
-#define INCL_DOSERRORS
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbvm.h"
@@ -105,6 +102,9 @@
 #endif
 
 #elif defined( HB_OS_OS2 )
+
+   #define INCL_DOSFILEMGR
+   #define INCL_DOSERRORS
 
    #include <os2.h>
 

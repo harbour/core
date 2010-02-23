@@ -81,13 +81,6 @@
 #  endif
 #endif
 
-/* NOTE: For OS/2. Must be ahead of any and all #include statements */
-#define INCL_BASE
-#define INCL_DOSMISC
-#define INCL_DOSERRORS
-#define INCL_DOSPROCESS
-
-
 /* malloc.h has been obsoleted by stdlib.h, which is included via
    hbvmpub.h, which is include via hbapi.h
    #include <malloc.h>

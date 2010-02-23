@@ -52,9 +52,6 @@
 
 #define HB_STACK_PRELOAD
 
-#define INCL_DOSPROCESS
-
-
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapicls.h"

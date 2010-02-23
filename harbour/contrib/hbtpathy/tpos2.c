@@ -51,12 +51,6 @@
  *
  */
 
-#define INCL_BASE
-#define INCL_DOS
-#define INCL_DOSERROR
-#define INCL_DOSDEVICES
-#define INCL_DOSDEVIOCTL
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -64,6 +58,12 @@
 #if defined( HB_OS_OS2 )
 
 #include "telepath.ch"
+
+#define INCL_BASE
+#define INCL_DOS
+#define INCL_DOSERROR
+#define INCL_DOSDEVICES
+#define INCL_DOSDEVIOCTL
 
 #include <os2.h>
 

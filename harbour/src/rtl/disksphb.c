@@ -50,10 +50,6 @@
  *
  */
 
-/* NOTE: For OS/2. Must be ahead of any and all #include statements */
-#define INCL_BASE
-#define INCL_DOSERRORS
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
@@ -70,6 +66,8 @@
       #include "hbwince.h"
    #endif
 #elif defined( HB_OS_OS2 )
+   #define INCL_BASE
+   #define INCL_DOSERRORS
    #include <os2.h>
 #elif defined( HB_OS_DOS )
    #include <dos.h>

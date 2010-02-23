@@ -51,9 +51,6 @@
  *
  */
 
-#define INCL_DOSFILEMGR
-#define INCL_ERRORS
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -80,6 +77,8 @@
 #elif defined( HB_OS_WIN )
    #include <windows.h>
 #elif defined( HB_OS_OS2 )
+   #define INCL_DOSFILEMGR
+   #define INCL_ERRORS
    #include <os2.h>
 #endif
 

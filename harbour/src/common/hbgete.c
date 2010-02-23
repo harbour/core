@@ -51,10 +51,7 @@
  */
 
 /* NOTE: Notice that this code is needed as ANSI C getenv() crashes
-         so badly when used from a Windows DLL. */
-
-#define INCL_DOSMISC
-#define INCL_ERRORS
+         badly when used from a Windows DLL. */
 
 #include "hbapi.h"
 
@@ -64,6 +61,8 @@
       #include "hbwince.h"
    #endif
 #elif defined( HB_OS_OS2 )
+   #define INCL_DOSMISC
+   #define INCL_ERRORS
    #include <os2.h>
 #endif
 

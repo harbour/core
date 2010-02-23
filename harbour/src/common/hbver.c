@@ -71,9 +71,6 @@
  *
  */
 
-/* NOTE: For OS/2. Must be ahead of any and all #include statements */
-#define INCL_DOSMISC
-
 #include "hbapi.h"
 #include "hbmemory.ch"
 
@@ -92,6 +89,7 @@
    #endif
 
 #elif defined( HB_OS_OS2 )
+   #define INCL_DOSMISC
    #include <os2.h>
 #elif defined( HB_OS_DOS )
    #include <dos.h>

@@ -99,11 +99,6 @@
 #  define _GNU_SOURCE
 #endif
 
-/* OS2 */
-#define INCL_DOSFILEMGR   /* File Manager values */
-#define INCL_DOSERRORS    /* DOS error values    */
-#define INCL_DOSDATETIME  /* DATETIME functions  */
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -186,6 +181,9 @@
    #include <time.h>
    #include <utime.h>
 #elif defined( HB_OS_OS2 )
+   #define INCL_DOSFILEMGR
+   #define INCL_DOSERRORS
+   #define INCL_DOSDATETIME
    #include <os2.h>
    #include <time.h>
    #include <share.h>

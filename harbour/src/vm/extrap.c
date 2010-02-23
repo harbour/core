@@ -68,9 +68,6 @@
  *
  */
 
-#define INCL_DOSEXCEPTIONS
-#define INCL_ERRORS
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapifs.h"
@@ -97,6 +94,8 @@
 #     define TH32CS_SNAPMODULE32  0
 #  endif
 #elif defined( HB_OS_OS2 )
+#  define INCL_DOSEXCEPTIONS
+#  define INCL_ERRORS
 #  include <os2.h>
 #endif
 

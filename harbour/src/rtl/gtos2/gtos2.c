@@ -90,14 +90,6 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define INCL_BASE
-#define INCL_VIO
-#define INCL_KBD
-#define INCL_MOU
-#define INCL_DOSMEMMGR
-#define INCL_DOSPROCESS
-#define INCL_NOPMAPI
-
 #define HB_GT_NAME      OS2
 
 #include "hbgtcore.h"
@@ -105,6 +97,14 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "inkey.ch"
+
+#define INCL_BASE
+#define INCL_VIO
+#define INCL_KBD
+#define INCL_MOU
+#define INCL_DOSMEMMGR
+#define INCL_DOSPROCESS
+#define INCL_NOPMAPI
 
 #include <os2.h>
 
