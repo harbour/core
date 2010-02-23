@@ -102,18 +102,17 @@
    #endif
 #else
    #undef HB_IO_WIN
-   #undef HB_OS_WIN_USED
 #endif
 
 /* Include windows.h if applicable and requested */
-#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) && defined( HB_LEGACY_LEVEL3 )
 
    #include <windows.h>
    #if defined( __GNUC__ )
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 
-#elif defined( HB_OS_OS2 ) && ! defined( HB_LEGACY_TYPES_OFF )
+#elif defined( HB_OS_OS2 ) && ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 
    /* With the exception of WORD, the OS/2 header has its
       own definitions of the Harbour types most of which conflict with the
@@ -201,7 +200,7 @@ typedef HB_UCHAR            HB_U8;
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
 
-#if ! defined( HB_LEGACY_TYPES_OFF )
+#if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
       #if ! defined( HB_DONT_DEFINE_BOOL )
@@ -268,7 +267,7 @@ typedef HB_UCHAR            HB_BYTE;
       typedef unsigned long long HB_ULONGLONG;
    #endif
 
-   #if ! defined( HB_LEGACY_TYPES_OFF )
+   #if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
       #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
          #if !defined( LONGLONG )
             #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
@@ -343,7 +342,7 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I16_MIN          SHRT_MIN
    #define HB_I16_MAX          SHRT_MAX
    #define HB_U16_MAX          USHRT_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF )
+#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 #     if !defined( UINT16 )
          typedef HB_U16        UINT16;
 #     endif
@@ -374,7 +373,7 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I32_MIN          INT_MIN
    #define HB_I32_MAX          INT_MAX
    #define HB_U32_MAX          UINT_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF )
+#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 #     if !defined( UINT32 )
          typedef HB_U32        UINT32;
 #     endif
@@ -397,7 +396,7 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I32_MIN          LONG_MIN
    #define HB_I32_MAX          LONG_MAX
    #define HB_U32_MAX          ULONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF )
+#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 #     if !defined( UINT32 )
          typedef HB_U32        UINT32;
 #     endif
@@ -435,7 +434,7 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I64_MIN          LONG_MIN
    #define HB_I64_MAX          LONG_MAX
    #define HB_U64_MAX          ULONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF )
+#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 #     if !defined( UINT64 )
          typedef HB_U64        UINT64;
 #     endif
@@ -458,7 +457,7 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I64_MIN          LONGLONG_MIN
    #define HB_I64_MAX          LONGLONG_MAX
    #define HB_U64_MAX          ULONGLONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF )
+#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
 #     if !defined( UINT64 )
          typedef HB_U64        UINT64;
 #     endif

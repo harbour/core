@@ -73,8 +73,6 @@
  */
 #ifndef HB_LEGACY_OFF
 #define HB_LEGACY_LEVEL3
-#else
-#define HB_LEGACY_TYPES_OFF
 #endif
 
 /* Future level of legacy cleanup */
