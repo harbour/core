@@ -68,7 +68,6 @@ C_HEADERS := \
    hbxvm.h \
    hbwince.h \
    hbwinuni.h \
-   hbzlib.h \
    hbznet.h \
    hb_io.h \
 
