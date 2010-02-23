@@ -229,9 +229,7 @@ METHOD start( xAction, ... ) CLASS TTHREAD
                   ENDIF
 
                   IF ISNUMBER( ::interval )
-                     ::active := .F.
                      hb_idleSleep( ::interval / 100 )
-                     ::active := .T.
                      LOOP
                   ENDIF
                   ::startTime := NIL
