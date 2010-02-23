@@ -83,7 +83,7 @@
 #define treeDoc_doubleClicked                     10
 #define treeDoc_itemSelectionChanged              11
 #define editIndex_returnPressed                   12
-#define lostIndex_ItemDoubleClicked               13
+#define listIndex_ItemDoubleClicked               13
 #define buttonUp_clicked                          14
 #define browserView_anchorClicked                 15
 #define tabWidgetContents_currentChanged          16
@@ -223,6 +223,9 @@ METHOD IdeHarbourHelp:create( oIde )
 METHOD IdeHarbourHelp:destroy()
    LOCAL a_
 
+   ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
+   ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
+
    ::aHistory    := NIL
    ::aFuncByFile := NIL
 
@@ -254,10 +257,8 @@ METHOD IdeHarbourHelp:destroy()
    NEXT
    ::aNodes[ 1, 1 ] := NIL
    ::aNodes         := NIL
-   ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
 
    /* Index Tab */
-
    FOR EACH a_ IN ::aFunctions
       a_[ 5 ] := NIL
    NEXT
@@ -275,7 +276,6 @@ METHOD IdeHarbourHelp:destroy()
          a_[ 5 ] := NIL
       ENDIF
    NEXT
-   ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
    ::aCategory := NIL
 
    ::oUI:destroy()
@@ -374,7 +374,7 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p| ::execEvent( editInstall_textChanged, p ) } )
    ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( editIndex_textChanged, p   ) } )
    ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( editIndex_returnPressed    ) } )
-   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( lostIndex_ItemDoubleClicked, p ) } )
+   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( listIndex_ItemDoubleClicked, p ) } )
    ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( browserView_anchorClicked, p ) } )
    ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( tabWidgetContents_currentChanged, p ) } )
 
@@ -415,10 +415,16 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE lostIndex_ItemDoubleClicked
-   CASE editIndex_returnPressed
+   CASE listIndex_ItemDoubleClicked
       ::populateIndexedSelection()
       ::oUI:q_editIndex:setFocus_1()
+      EXIT
+
+   CASE editIndex_returnPressed
+      IF !empty( ::oUI:q_editIndex:text() )
+         ::populateIndexedSelection()
+         ::oUI:q_editIndex:setFocus_1()
+      ENDIF
       EXIT
 
    CASE editIndex_textChanged
@@ -458,8 +464,10 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE buttonUp_clicked
-      IF ::nCurInHist > 0 .AND. ::nCurInHist <= len( ::aHistory )
-         ::oUI:q_treeDoc:setCurrentItem( ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ), 0 )
+      IF ::nCurInHist > 1 .AND. ::nCurInHist <= len( ::aHistory )
+         IF !empty( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) )
+            ::oUI:q_treeDoc:setCurrentItem( qTWItem, 0 )
+         ENDIF
       ENDIF
       EXIT
 
@@ -498,7 +506,6 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
          ENDIF
          ::nCurTVItem := n
 
-
          IF     ::aNodes[ n, 2 ] == "Root"
             ::populateRootInfo()
          ELSEIF ::aNodes[ n, 2 ] == "Path"
@@ -518,14 +525,17 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:populateIndexedSelection()
-   LOCAL qItem := QListWidgetItem():from( ::oUI:q_listIndex:currentItem() )
-   LOCAL cText, n
+   LOCAL qItem, cText, n
 
-   cText := qItem:text()
-   IF ( n := ascan( ::aFunctions, {|e_| e_[ 2 ] == cText } ) ) > 0
-      ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+   IF !empty( ::aNodes )
+      IF !empty( qItem := ::oUI:q_listIndex:currentItem() )
+         qItem := QListWidgetItem():from( qItem )
+         cText := qItem:text()
+         IF ( n := ascan( ::aFunctions, {|e_| e_[ 2 ] == cText } ) ) > 0
+            ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+         ENDIF
+      ENDIF
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
