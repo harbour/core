@@ -115,7 +115,7 @@ HB_EXTERN_BEGIN
 
    int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
    BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
-   BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
+   BOOL WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
 #endif /* _MSC_VER */
 
 #if defined( _MSC_VER ) && ( _MSC_VER <= 1310 )

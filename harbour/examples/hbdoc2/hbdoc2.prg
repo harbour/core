@@ -225,7 +225,7 @@ PROCEDURE Main( ... )
    AEval( ;
       {;
          p_hsSwitches[ "basedir" ] + "doc", ;
-         p_hsSwitches[ "basedir" ] + "doc" + PATH_SEPARATOR + "en-en", ;
+         p_hsSwitches[ "basedir" ] + "doc" + PATH_SEPARATOR + "en", ;
          IIf( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "source", NIL ), ;
          IIf( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
