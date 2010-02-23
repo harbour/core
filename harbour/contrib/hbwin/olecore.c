@@ -279,6 +279,11 @@ static wchar_t* AnsiToWide( const char* szString )
    return szWide;
 }
 
+static void AnsiToWideBuffer( const char* szString, wchar_t* szWide, int iLen )
+{
+   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, szWide, iLen );
+   szWide[ iLen - 1 ] = '0';
+}
 
 static BSTR hb_oleItemToString( PHB_ITEM pItem )
 {
@@ -1346,7 +1351,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 {
    IDispatch*  pDisp;
    const char* szMethod;
-   wchar_t*    szMethodWide;
+   wchar_t     szMethodWide[ HB_SYMBOL_NAME_LEN + 1 ];
    OLECHAR*    pMemberArray;
    DISPID      dispid;
    DISPPARAMS  dispparam;
@@ -1365,7 +1370,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
       return;
 
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
-   szMethodWide = AnsiToWide( szMethod );
+   AnsiToWideBuffer( szMethod, szMethodWide, ( int ) sizeof( szMethodWide ) );
 
    /* Try property put */
 
@@ -1389,7 +1394,6 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
                                                DISPATCH_PROPERTYPUT, &dispparam,
                                                NULL, &excep, &uiArgErr );
          FreeParams( &dispparam );
-         hb_xfree( szMethodWide );
 
          /* assign method should return assigned value */
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
@@ -1406,7 +1410,6 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    pMemberArray = szMethodWide;
    lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
                                                 &pMemberArray, 1, LOCALE_USER_DEFAULT, &dispid );
-   hb_xfree( szMethodWide );
 
    if( lOleError == S_OK )
    {

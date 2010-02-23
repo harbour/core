@@ -208,7 +208,7 @@ void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
       return ( void * ) GetProcAddress( ( HMODULE ) hDynLib, pszSymbol );
 #elif defined( HB_OS_OS2 )
       PFN pProcAddr = NULL;
-      if( DosQueryProcAddr( ( HMODULE ) hDynLib, 0, pszSymbol, &pProcAddr ) == NO_ERROR )
+      if( DosQueryProcAddr( ( HMODULE ) hDynLib, 0, ( PCSZ ) pszSymbol, &pProcAddr ) == NO_ERROR )
          return ( void * ) pProcAddr;
 #elif defined( HB_HAS_DLFCN )
       return dlsym( hDynLib, pszSymbol );

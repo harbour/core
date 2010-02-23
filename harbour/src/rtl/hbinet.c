@@ -1088,8 +1088,11 @@ HB_FUNC( HB_INETGETALIAS )
 ****/
 HB_FUNC( HB_INETIFINFO )
 {
-   PHB_ITEM pInfo = hb_socketGetIFaces( hb_parnidef( 2, HB_SOCKET_PF_INET ),
-                                        hb_parl( 1 ) );
+   PHB_ITEM pInfo;
+
+   HB_INET_INITIALIZE();
+   pInfo = hb_socketGetIFaces( hb_parnidef( 2, HB_SOCKET_PF_INET ),
+                               hb_parl( 1 ) );
    if( pInfo )
       hb_itemReturnRelease( pInfo );
    else
