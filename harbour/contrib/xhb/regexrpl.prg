@@ -57,20 +57,13 @@
 
 FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch )
 
-   LOCAL pRegex
    LOCAL aMatches, aMatch
    LOCAL cReturn
    LOCAL nOffSet := 0
    LOCAL cSearch, nStart, nLenSearch, nLenReplace
    //LOCAL nEnd
 
-   IF !HB_ISREGEX( cRegex )
-     pRegex := HB_RegExComp( cRegEx )
-   ELSE
-     pRegex := cRegEx
-   ENDIF
-
-   aMatches := HB_RegExAll( pRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
+   aMatches := HB_RegExAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
 
    IF aMatches != NIL
       cReturn := cString

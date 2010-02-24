@@ -233,12 +233,24 @@
                       to refer to current disk
 */
 
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ ) || defined( __DMC__ )
+#if defined( HB_OS_OS2 )
+   /* 1 based version */
+
+   #define HB_FS_GETDRIVE(n)  do { \
+                                    ULONG ulDrive, ulLogical; \
+                                    DosQueryCurrentDisk( &ulDrive, &ulLogical ); \
+                                    ( n ) == ( int ) ulDrive - 1; \
+                              } while( 0 )
+   #define HB_FS_SETDRIVE(n)  do { DosSetDefaultDisk( ( n ) + 1 ); } while( 0 )
+
+#elif defined( __DJGPP__ ) || defined( __BORLANDC__ ) || defined( __DMC__ )
+   /* 0 based version */
 
    #define HB_FS_GETDRIVE(n)  do { n = getdisk(); } while( 0 )
    #define HB_FS_SETDRIVE(n)  setdisk( n )
 
 #elif defined( __WATCOMC__ )
+   /* 1 based version */
 
    #define HB_FS_GETDRIVE(n)  do { \
                                  unsigned _u = 0; \
@@ -248,12 +260,6 @@
                                  unsigned int _u = 0; \
                                  _dos_setdrive( ( n ) + 1, &_u ); \
                               } while( 0 )
-
-#elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
-   /* 'A' based version */
-
-   #define HB_FS_GETDRIVE(n)  do { n = _getdrive() - 'A'; } while( 0 )
-   #define HB_FS_SETDRIVE(n)  _chdrive( ( n ) + 'A' )
 
 #else /* _MSC_VER, __POCC__, __XCC__, MINGW, __BORLANDC__, __DMC__ */
    /* 1 based version */
@@ -2746,8 +2752,8 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
     * and hb_fsNameConv()
     */
 #if defined( HB_OS_WIN ) || \
-    ( !( defined( HB_OS_OS2 ) && defined( __GNUC__ ) ) && \
-      !defined( __MINGW32__ ) && defined( HAVE_POSIX_IO ) )
+    ( !defined( HB_OS_OS2 ) && !defined( __MINGW32__ ) && \
+      defined( HAVE_POSIX_IO ) )
    if( iDrive > 0 )
    {
       iCurDrv = hb_fsCurDrv() + 1;
@@ -2771,12 +2777,15 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
       hb_vmLock();
 #endif
    }
-#elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
+#elif defined( HB_OS_OS2 )
 
    if( iDrive >= 0 )
    {
+      USHORT uiLen = ( USHORT ) ulSize;
+
       hb_vmUnlock();
-      hb_fsSetIOError( ( _getcwd1( pszBuffer, iDrive + 'A' - 1 ) == 0 ), 0 );
+      hb_fsSetIOError( DosQCurDir( ( USHORT ) iDrive, ( PBYTE ) pszBuffer,
+                                   &uiLen ) == NO_ERROR, 0 );
       hb_vmLock();
    }
    else
@@ -2953,6 +2962,13 @@ HB_ERRCODE hb_fsIsDrv( int iDrive )
       nResult = ( ( GetLogicalDrives() >> iDrive ) & 1 ) ? 0 : ( HB_ERRCODE ) F_ERROR;
       hb_vmLock();
       hb_fsSetError( 0 );
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      ULONG ulDrive, ulLogical;
+
+      DosQueryCurrentDisk( &ulDrive, &ulLogical );
+      nResult = ( ( ulLogical >> iDrive ) & 1 ) ? 0 : ( HB_ERRCODE ) F_ERROR;
    }
 #elif defined( HB_OS_HAS_DRIVE_LETTER )
    {
