@@ -239,7 +239,7 @@
    #define HB_FS_GETDRIVE(n)  do { \
                                     ULONG ulDrive, ulLogical; \
                                     DosQueryCurrentDisk( &ulDrive, &ulLogical ); \
-                                    ( n ) == ( int ) ulDrive - 1; \
+                                    ( n ) = ( int ) ulDrive - 1; \
                               } while( 0 )
    #define HB_FS_SETDRIVE(n)  do { DosSetDefaultDisk( ( n ) + 1 ); } while( 0 )
 
@@ -2781,11 +2781,11 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 
    if( iDrive >= 0 )
    {
-      USHORT uiLen = ( USHORT ) ulSize;
+      ULONG ulLen = ( ULONG ) ulSize;
 
       hb_vmUnlock();
-      hb_fsSetIOError( DosQCurDir( ( USHORT ) iDrive, ( PBYTE ) pszBuffer,
-                                   &uiLen ) == NO_ERROR, 0 );
+      hb_fsSetIOError( DosQueryCurrentDir( iDrive, ( PBYTE ) pszBuffer,
+                                           &ulLen ) == NO_ERROR, 0 );
       hb_vmLock();
    }
    else
