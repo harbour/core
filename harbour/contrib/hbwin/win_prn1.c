@@ -71,8 +71,8 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
-/* For Arc() */
 #if defined( HB_OS_WIN_CE )
+   /* For Arc() */
    #include "hbwince.h"
 
    /* Pelles C requires this */

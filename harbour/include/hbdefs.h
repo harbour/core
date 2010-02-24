@@ -96,12 +96,6 @@
       #undef HB_LONG_LONG_OFF
       #define HB_STRICT_ALIGNMENT
    #endif
-
-   #if !defined( HB_IO_WIN_OFF )
-      #define HB_IO_WIN
-   #endif
-#else
-   #undef HB_IO_WIN
 #endif
 
 /* Include windows.h if applicable and requested */
@@ -637,12 +631,8 @@ typedef HB_U32 HB_FATTR;
    typedef HB_LONGLONG HB_FOFFSET;
 #endif
 
-#if defined( HB_IO_WIN )
-#if 1
+#if defined( HB_OS_WIN )
    typedef HB_PTRDIFF HB_FHANDLE;
-#else
-   typedef void * HB_FHANDLE;
-#endif
    typedef HB_PTRDIFF HB_NHANDLE;
 #  define hb_numToHandle( h )   ( ( HB_FHANDLE ) ( HB_NHANDLE ) ( h ) )
 #else

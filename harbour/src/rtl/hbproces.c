@@ -53,8 +53,6 @@
  *
  */
 
-/* #define HB_IO_WIN_OFF */
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbvm.h"
@@ -67,7 +65,7 @@
 #  include <sys/stat.h>
 #  include <fcntl.h>
 #  include <signal.h>
-#elif defined( HB_OS_OS2 ) || ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
+#elif defined( HB_OS_OS2 )
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
@@ -90,8 +88,7 @@
 #  endif
 #endif
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
-    ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_UNIX )
 
 /* convert command to argument list using standard bourne shell encoding:
  * "" and '' can be used to group parameters with blank characters,
@@ -396,7 +393,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 
    pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
 {
 
 #if defined( HB_OS_WIN_CE )
@@ -805,7 +802,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessValue(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fWait));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
 {
    HB_BOOL fError = HB_TRUE;
    DWORD dwResult;
@@ -896,7 +893,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
 {
    HANDLE hProc = ( HANDLE ) hb_fsGetOsHandle( hProcess );
 
@@ -917,20 +914,6 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
       if( kill( pid, fGentle ? SIGTERM : SIGKILL ) == 0 )
          fResult = HB_TRUE;
       hb_fsSetIOError( fResult, 0 );
-   }
-   else
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-}
-#elif defined( HB_OS_WIN )
-{
-   HANDLE hProc = OpenProcess( PROCESS_TERMINATE, FALSE, hProcess );
-
-   if( hProc )
-   {
-      if( TerminateProcess( hProc, fGentle ? 0 : 1 ) )
-         fResult = HB_TRUE;
-      hb_fsSetIOError( fResult, 0 );
-      CloseHandle( hProc );
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -1060,7 +1043,7 @@ int hb_fsProcessRun( const char * pszFilename,
                                 fDetach, NULL );
    if( hProcess != FS_ERROR )
    {
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
 
       DWORD dwResult, dwCount;
       HANDLE lpHandles[ 4 ];

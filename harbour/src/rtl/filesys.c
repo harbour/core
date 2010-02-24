@@ -108,13 +108,6 @@
 #include "hb_io.h"
 #include "hbset.h"
 
-#if defined( HB_OS_WIN )
-   #include <windows.h>
-   #if defined( HB_OS_WIN_CE )
-      #include "hbwince.h"
-   #endif
-#endif
-
 #if defined( HB_OS_UNIX )
    #include <unistd.h>
    #include <time.h>
@@ -190,9 +183,11 @@
    #ifndef SH_COMPAT
       #define SH_COMPAT    0x0000
    #endif
-#elif defined( HB_IO_WIN )
+#elif defined( HB_OS_WIN )
    #include <windows.h>
-
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
    #if !defined( INVALID_SET_FILE_POINTER ) && \
        ( defined( __DMC__ ) || defined( _MSC_VER ) || defined( __LCC__ ) )
       #define INVALID_SET_FILE_POINTER ( ( DWORD ) -1 )
@@ -291,7 +286,7 @@
 #endif
 
 
-#if defined( HAVE_POSIX_IO ) || defined( HB_IO_WIN ) || defined( _MSC_VER ) || defined( __MINGW32__ ) || defined( __LCC__ ) || defined( __DMC__ )
+#if defined( HAVE_POSIX_IO ) || defined( HB_OS_WIN )
 /* Only compilers with Posix or Posix-like I/O support are supported */
    #define HB_FS_FILE_IO
 #endif
@@ -312,7 +307,7 @@ static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 
 #if defined( HB_FS_FILE_IO )
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
 
 static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
 {
@@ -546,7 +541,7 @@ HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetOsHandle(%p)", ( void * ) ( HB_PTRDIFF ) hFileHandle));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    return ( HB_FHANDLE ) DosToWinHandle( hFileHandle );
 #else
    return hFileHandle;
@@ -559,7 +554,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
 
-#if defined( HB_OS_UNIX ) && !defined( __CYGWIN__ )
+#if defined( HB_OS_UNIX )
    {
       HB_FHANDLE hPipeHandle[2], hNullHandle;
       pid_t pid;
@@ -682,7 +677,7 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, HB_USHORT uiFlags )
 
    pFilename = hb_fsNameConv( pFilename, &pszFree );
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
@@ -745,7 +740,7 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, HB_FATTR ulAttr )
 
    pFilename = hb_fsNameConv( pFilename, &pszFree );
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
@@ -808,7 +803,7 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, HB_FATTR ulAttr, HB_USHORT uiF
 
    pFilename = hb_fsNameConv( pFilename, &pszFree );
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
@@ -861,7 +856,7 @@ void hb_fsClose( HB_FHANDLE hFileHandle )
 #if defined( HB_FS_FILE_IO )
 
    hb_vmUnlock();
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
       hb_fsSetIOError( CloseHandle( DosToWinHandle( hFileHandle ) ), 0 );
    #else
       hb_fsSetIOError( close( hFileHandle ) == 0, 0 );
@@ -882,14 +877,14 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %d)", ( void * ) ( HB_PTRDIFF ) hFileHandle, iDevMode));
 
-   /* TODO: HB_IO_WIN support */
+   /* TODO: Support using native Windows API */
 
 #if defined( __BORLANDC__ ) || defined( __IBMCPP__ ) || defined( __DJGPP__ ) || \
     defined( __CYGWIN__ ) || defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
 {
    int iRet = -1;
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    if( hFileHandle == ( HB_FHANDLE ) 0 ||
        hFileHandle == ( HB_FHANDLE ) 1 ||
        hFileHandle == ( HB_FHANDLE ) 2 )
@@ -922,7 +917,7 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 {
    int iRet = -1;
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    if( hFileHandle == ( HB_FHANDLE ) 0 ||
        hFileHandle == ( HB_FHANDLE ) 1 ||
        hFileHandle == ( HB_FHANDLE ) 2 )
@@ -968,7 +963,7 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 
    fResult = HB_FALSE;
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
 
@@ -1141,7 +1136,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
    hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
 
-#if defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
+#if defined( HB_OS_WIN )
    {
       HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READWRITE | FO_SHARED );
 
@@ -1426,7 +1421,7 @@ HB_USHORT hb_fsRead( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount )
 
 #if defined( HB_FS_FILE_IO )
 
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
       {
          DWORD dwRead;
          BOOL fResult;
@@ -1466,7 +1461,7 @@ HB_USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT uiCo
 
 #if defined( HB_FS_FILE_IO )
 
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
       {
          DWORD dwWritten = 0;
          BOOL fResult;
@@ -1526,7 +1521,7 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount )
 
 #if defined( HB_FS_FILE_IO )
 
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
    {
       hb_vmUnlock();
       hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
@@ -1606,7 +1601,7 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulC
 
 #if defined( HB_FS_FILE_IO )
 
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
    {
       ulWritten = 0;
       hb_vmUnlock();
@@ -1724,7 +1719,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount, HB_F
 #  else
       ulRead = 0;
       hb_vmUnlock();
-#     if defined( HB_IO_WIN )
+#     if defined( HB_OS_WIN )
       if( hb_iswinnt() )
       {
          OVERLAPPED Overlapped;
@@ -1818,7 +1813,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCoun
 #  else
       ulWritten = 0;
       hb_vmUnlock();
-#     if defined( HB_IO_WIN )
+#     if defined( HB_OS_WIN )
       if( hb_iswinnt() )
       {
          OVERLAPPED Overlapped;
@@ -1897,7 +1892,7 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
 #if defined( HB_FS_FILE_IO )
 
    hb_vmUnlock();
-   #if defined( HB_IO_WIN )
+   #if defined( HB_OS_WIN )
    {
       ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
             ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
@@ -1940,15 +1935,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 #if defined( HB_OS_WIN )
    {
       hb_vmUnlock();
-      #if defined( HB_IO_WIN )
-         hb_fsSetIOError( FlushFileBuffers( DosToWinHandle( hFileHandle ) ), 0 );
-      #else
-         #if defined( __WATCOMC__ )
-            hb_fsSetIOError( fsync( hFileHandle ) == 0, 0 );
-         #else
-            hb_fsSetIOError( _commit( hFileHandle ) == 0, 0 );
-         #endif
-      #endif
+      hb_fsSetIOError( FlushFileBuffers( DosToWinHandle( hFileHandle ) ), 0 );
       hb_vmLock();
    }
 
@@ -2028,7 +2015,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, ulStart, ulLength, uiMode));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    hb_vmUnlock();
    switch( uiMode & FL_MASK )
    {
@@ -2232,7 +2219,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLockLarge(%p, %" PFHL "u, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, ulStart, ulLength, uiMode));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       DWORD dwOffsetLo = ( DWORD ) ( ulStart & 0xFFFFFFFF ),
             dwOffsetHi = ( DWORD ) ( ulStart >> 32 ),
@@ -2375,7 +2362,7 @@ HB_SIZE hb_fsSeek( HB_FHANDLE hFileHandle, HB_ISIZ lOffset, HB_USHORT uiFlags )
             ulPos = 0;
       }
    }
-   #elif defined( HB_IO_WIN )
+   #elif defined( HB_OS_WIN )
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
@@ -2427,7 +2414,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, HB_USHOR
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSeekLarge(%p, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, llOffset, uiFlags));
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       HB_USHORT Flags = convert_seek_flags( uiFlags );
 
@@ -3238,7 +3225,7 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
    hb_vmUnlock();
 
 #if defined( __DJGPP__ ) || defined( __CYGWIN__ ) || \
-    defined( HB_IO_WIN ) || defined( HB_OS_WIN_CE ) || \
+    defined( HB_OS_WIN ) || defined( HB_OS_WIN_CE ) || \
     defined( HB_OS_UNIX )
 {
    HB_FOFFSET curPos;

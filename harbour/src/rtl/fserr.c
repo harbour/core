@@ -54,127 +54,92 @@
 #include "hbapifs.h"
 #include "hbstack.h"
 #include "hb_io.h"
-#if !( defined( HB_IO_WIN ) || defined( HB_OS_WIN ) )
-#  include <errno.h>
-#endif
 
 #if defined( HB_OS_WIN )
 #  include <windows.h>
+#else
+#  include <errno.h>
 #endif
 
 /* Try to translate C errno into DOS error code */
-#if !defined( HB_IO_WIN )
-static int hb_errnoToDosError( int ErrCode )
+#if !defined( HB_OS_WIN )
+static HB_ERRCODE hb_errnoToDosError( int ErrCode )
 {
-   int iResult;
-
-#if defined( __BORLANDC__ )
-   /* These C compilers use DOS error codes in errno */
-   iResult = ErrCode;
-#else
    switch( ErrCode )
    {
 #if defined( ENMFILE )
       case ENMFILE:
 #endif
       case ENOENT:
-         iResult = 2;   /* File not found */
-         break;
+         return 2;   /* File not found */
 #if defined( ENOTDIR )
       case ENOTDIR:
-         iResult = 3;   /* Path not found */
-         break;
+         return 3;   /* Path not found */
 #endif
 #if defined( ENFILE )
       case ENFILE:
 #endif
       case EMFILE:
-         iResult = 4;   /* Too many open files */
-         break;
+         return 4;   /* Too many open files */
       case EACCES:
 #if defined( ETXTBSY )
       case ETXTBSY:
 #endif
-         iResult = 5;   /* Access denied */
-         break;
+         return 5;   /* Access denied */
       case EBADF:
-         iResult = 6;   /* Invalid handle */
-         break;
+         return 6;   /* Invalid handle */
       case ENOMEM:
-         iResult = 8;   /* Insufficient memory */
-         break;
+         return 8;   /* Insufficient memory */
 #if defined( EFAULT )
       case EFAULT:
-         iResult = 9;   /* Invalid memory block address */
-         break;
+         return 9;   /* Invalid memory block address */
 #endif
       case EINVAL:
-         iResult = 13;  /* Invalid data */
-         break;
+         return 13;  /* Invalid data */
 #if defined( EROFS )
       case EROFS:
-         iResult = 19;  /* Attempt to write on write-protected diskette */
-         break;
+         return 19;  /* Attempt to write on write-protected diskette */
 #endif
 #if defined( ESPIPE )
       case ESPIPE:
-         iResult = 25;  /* Seek error */
-         break;
+         return 25;  /* Seek error */
 #endif
 #if defined( ENOSPC )
       case ENOSPC:
-         iResult = 29;  /* Write fault */
-         break;
+         return 29;  /* Write fault */
 #endif
       case EPIPE:
-         iResult = 29;  /* Write fault */
-         break;
+         return 29;  /* Write fault */
       case EEXIST:
-         iResult = 32;  /* Sharing violation */
-         break;
+         return 32;  /* Sharing violation */
       case EAGAIN:
-         iResult = 33;  /* Lock violation */
-         break;
-      default:
-         iResult = ErrCode;
-         break;
+         return 33;  /* Lock violation */
    }
-#endif
 
-   return iResult;
+   return ( HB_ERRCODE ) ErrCode;
 }
-#endif
 
-#if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
+#else
+
 static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 {
-   int iResult;
-
    switch( dwError )
    {
       case ERROR_ALREADY_EXISTS:
-         iResult = 5;
-         break;
+         return 5;
       case ERROR_FILE_NOT_FOUND:
-         iResult = 2;
-         break;
+         return 2;
       case ERROR_PATH_NOT_FOUND:
-         iResult = 3;
-         break;
+         return 3;
       case ERROR_TOO_MANY_OPEN_FILES:
-         iResult = 4;
-         break;
+         return 4;
       case ERROR_INVALID_HANDLE:
-         iResult = 6;
-         break;
-
-      default:
-         iResult = ( HB_ERRCODE ) dwError;
-         break;
+         return 6;
    }
 
-   return iResult;
+   return ( HB_ERRCODE ) dwError;
 }
+
 #endif
 
 /* return FERROR() code */
@@ -233,31 +198,13 @@ void  hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    HB_SYMBOL_UNUSED( uiOperation );
 
    if( fResult )
-   {
       uiOsErrorLast = uiErrorLast = 0;
-   }
    else
    {
-#if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
+#if defined( HB_OS_WIN )
       DWORD dwLastError = GetLastError();
       uiOsErrorLast = ( HB_ERRCODE ) dwLastError;
       uiErrorLast = hb_WinToDosError( dwLastError );
-#elif defined( _MSC_VER ) || defined( __DMC__ )
-      #if defined( __XCC__ )
-         extern unsigned long _doserrno;
-         extern void __cdecl _dosmaperr( unsigned long oserrno );
-         _dosmaperr( GetLastError() );
-      #endif
-      if( _doserrno != 0 )
-      {
-         uiOsErrorLast = uiErrorLast = _doserrno;
-      }
-      else
-      {
-         int iErrCode = errno;
-         uiOsErrorLast = iErrCode;
-         uiErrorLast = hb_errnoToDosError( iErrCode );
-      }
 #else
       int iErrCode = errno;
       uiOsErrorLast = iErrCode;

@@ -126,8 +126,8 @@ void hb_conInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conInit()"));
 
-#if !defined( HB_IO_WIN )
-   /* when HB_IO_WIN is set file handles with numbers 0, 1, 2 are
+#if !defined( HB_OS_WIN )
+   /* On Windows file handles with numbers 0, 1, 2 are
       transalted inside filesys to:
       GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
       GetStdHandle( STD_ERROR_HANDLE ) */

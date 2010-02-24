@@ -50,6 +50,10 @@
  *
  */
 
+/* NOTE: Need to have these before Harbour headers,
+         because in MT mode, they will automatically #include <os2.h>. */
+#define INCL_DOSPROCESS
+
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"

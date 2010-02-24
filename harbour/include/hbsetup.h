@@ -304,7 +304,7 @@
    #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
    #define HB_OS_ALLFILE_MASK           "*.*"
    #define HB_OS_DRIVE_DELIM_CHR        ':'
-   #if defined( HB_OS_WIN_CE )
+   #if defined( HB_OS_WIN_CE ) || defined( __CYGWIN__ )
       #undef  HB_OS_HAS_DRIVE_LETTER
    #else
       #define HB_OS_HAS_DRIVE_LETTER

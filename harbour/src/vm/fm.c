@@ -81,6 +81,10 @@
 #  endif
 #endif
 
+/* NOTE: Need to have these before Harbour headers,
+         because in MT mode, they will automatically #include <os2.h>. */
+#define INCL_BASE
+
 /* malloc.h has been obsoleted by stdlib.h, which is included via
    hbvmpub.h, which is include via hbapi.h
    #include <malloc.h>

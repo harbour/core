@@ -235,7 +235,7 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
 
    hb_vmUnlock();
 
-#if defined( HB_IO_WIN )
+#if defined( HB_OS_WIN )
    {
       LPTSTR lpPrefix = pszPrefix ? HB_TCHAR_CONVTO( pszPrefix ) : NULL;
       TCHAR lpBuffer[ HB_PATH_MAX ];
@@ -371,7 +371,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
          }
       }
    }
-#elif defined( HB_IO_WIN )
+#elif defined( HB_OS_WIN )
    {
       TCHAR lpDir[ HB_PATH_MAX ];
 
