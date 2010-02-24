@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Xbase++ compatibility header
+ * RUNSHELL()
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -50,25 +50,40 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+#include "common.ch"
 
-#ifndef _DLL_CH
-#define _DLL_CH
+FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
 
-#define DLL_CDECL                   0x08
-#define DLL_STDCALL                 0x20
-#define DLL_SYSTEM                  0x04
-#if defined( __PLATFORM__WINDOWS )
-#define DLL_OSAPI                   DLL_STDCALL
-#elif defined( __PLATFORM__OS2 )
-#define DLL_OSAPI                   DLL_SYSTEM
-#else
-#define DLL_OSAPI                   DLL_CDECL
-#endif
+   /* Not supported (yet?) */
+   HB_SYMBOL_UNUSED( lBackground )
 
-/* Only for compatiblity.
-   Harbour always copies the string to a temporary buffer. */
-#define DLL_CALLMODE_COPY           0
-#define DLL_CALLMODE_NORMAL         DLL_CALLMODE_COPY
+   IF ! ISCHARACTER( cProgram )
+      #if defined( __PLATFORM__UNIX )
+         cProgram := hb_getenv( "SHELL" )
+      #elif defined( __PLATFORM__OS2 )
+         cProgram := hb_getenv( "OS2_SHELL" )
+      #else
+         cProgram := hb_getenv( "COMSPEC" )
+      #endif
+      IF Empty( cProgram )
+         #if defined( __PLATFORM__WINDOWS )
+            IF hb_osIsWinNT()
+               cProgram := "cmd.exe"
+            ELSE
+               cProgram := "command.com"
+            ENDIF
+         #elif defined( __PLATFORM__DOS )
+            cProgram := "command.com"
+         #elif defined( __PLATFORM__OS2 )
+            cProgram := "cmd.exe"
+         #else
+            cProgram := ""
+         #endif
+      ENDIF
+   ENDIF
 
-#endif /* _DLL_CH */
+   IF ISCHARACTER( cCommand )
+      cProgram += " " + cCommand
+   ENDIF
+
+   RETURN hb_processRun( LTrim( cProgram ), NIL, NIL, NIL, lAsync )

@@ -239,7 +239,7 @@ static void hb_getCommand( const char *pszFilename,
 #endif
 
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
-static int hb_fsProcessExec( const char *pszFilename,
+static int hb_fsProcessExec( const char * pszFilename,
                              HB_FHANDLE hStdin, HB_FHANDLE hStdout,
                              HB_FHANDLE hStderr )
 {
