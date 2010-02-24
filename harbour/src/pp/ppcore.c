@@ -50,7 +50,6 @@
  *
  */
 
-/* #define HB_PP_MULTILINE_STRING */
 /* #define HB_CLP_STRICT */
 /* #define HB_PP_NO_LINEINFO_TOKEN */
 /* #define HB_PP_STRICT_LINEINFO_TOKEN */
@@ -318,11 +317,13 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
    pBuffer->ulLen = 0;
 }
 
+#ifdef HB_LEGACY_LEVEL3
 static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, HB_SIZE ulLeft )
 {
    if( ulLeft < pBuffer->ulLen )
       pBuffer->ulLen = ulLeft;
 }
+#endif
 
 static HB_SIZE hb_membufLen( const PHB_MEM_BUFFER pBuffer )
 {
@@ -1112,6 +1113,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                }
             }
 
+#ifdef HB_LEGACY_LEVEL3
             if( pState->fMultiLine )
             {
                while( ul == ulLen )
@@ -1141,7 +1143,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      break;
                }
             }
-
+#endif
             u = ch != '"' ? 2 : 1;
             ulStrip = ul - u;
             hb_strRemEscSeq( pBuffer + u, &ulStrip );
@@ -1195,6 +1197,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( ch == '`' )
                ch = '\'';
             while( ++ul < ulLen && pBuffer[ ul ] != ch ) {};
+#ifdef HB_LEGACY_LEVEL3
             if( pState->fMultiLine )
             {
                while( ul == ulLen )
@@ -1220,7 +1223,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                   }
                }
             }
-
+#endif
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1,
                                 HB_PP_TOKEN_STRING );
             if( ul == ulLen )
@@ -5395,6 +5398,8 @@ void hb_pp_reset( PHB_PP_STATE pState )
    hb_pp_ruleListNonStdFree( &pState->pCommands );
 }
 
+#ifdef HB_LEGACY_LEVEL3
+
 /*
  * set compatibility flag for multiline strings concatenated by ';'
  * f.e.:
@@ -5409,6 +5414,8 @@ void hb_pp_setMultiLine( PHB_PP_STATE pState, HB_BOOL fMultiLine )
 {
    pState->fMultiLine = fMultiLine;
 }
+
+#endif
 
 /*
  * add search path for included files

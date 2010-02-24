@@ -143,7 +143,9 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          s[-]            allow indexed assignment on all types",
            "\n          x[-]            extended Xbase++ mode",
            "\n          j[+]            turn off jump optimization in pcode",
-           "\n          l[-]            enable support for multiline strings in PP",
+#ifdef HB_LEGACY_LEVEL3
+           "\n          l[-]            enable support for multiline strings (deprecated)",
+#endif
            "\n          m[+]            turn off macrotext substitution",
            "\n          ?               this info",
            "\n"

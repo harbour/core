@@ -7824,7 +7824,7 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
    SWITCH nType
    CASE 1
 
-      #pragma __cstream|cString:=%s
+      #pragma __cstream|cString := %s
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
