@@ -142,18 +142,6 @@
 /* #define HB_MAIN_STD */
 /* #define HB_MAIN_WIN */
 
-/* ***********************************************************************
- * You can enable here support for multiline strings concatenated by ';'
- * f.e.:
- *       cVar := "line 1;
- *       line 2;
- *       line 3"
- * It's not Clipper compatible extension and it's not enabled by default
- * anyhow old Harbour PP worked in such way and people may have some code
- * which needs it
- */
-/* #define HB_PP_MULTILINE_STRING */
-
 /* NOTE:
    Compiler                                _MSC_VER value
    --------                                --------------

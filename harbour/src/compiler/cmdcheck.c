@@ -407,6 +407,17 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;
 
+                     case 'L':
+                     case 'l':
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           hb_pp_setMultiLine( HB_COMP_PARAM->pLex->pPP, HB_FALSE );
+                        }
+                        else
+                           hb_pp_setMultiLine( HB_COMP_PARAM->pLex->pPP, HB_TRUE );
+                        break;
+
                      case 'm':
                      case 'M':
                         if( s[i] == '+' )
@@ -1077,7 +1088,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
       if( !szStrEnv || szStrEnv[0] == '\0' )
       {
          if( szStrEnv )
-            hb_xfree( ( void * ) szStrEnv );
+            hb_xfree( szStrEnv );
 
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
@@ -1105,7 +1116,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
             }
          }
-         hb_xfree( ( void * ) szStrEnv );
+         hb_xfree( szStrEnv );
       }
    }
 }
@@ -1118,7 +1129,7 @@ void hb_compChkPaths( HB_COMP_DECL )
    {
       if( szInclude[0] != '\0' )
          hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, szInclude, HB_FALSE );
-      hb_xfree( ( void * ) szInclude );
+      hb_xfree( szInclude );
    }
 }
 
@@ -1176,7 +1187,7 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
       if( !szStrEnv || szStrEnv[0] == '\0' )
       {
          if( szStrEnv )
-            hb_xfree( ( void * ) szStrEnv );
+            hb_xfree( szStrEnv );
 
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
@@ -1204,7 +1215,7 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
                hb_compChkDefineSwitch( HB_COMP_PARAM, szSwitch );
             }
          }
-         hb_xfree( ( void * ) szStrEnv );
+         hb_xfree( szStrEnv );
       }
    }
 

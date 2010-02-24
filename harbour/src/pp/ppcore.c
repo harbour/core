@@ -318,13 +318,11 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
    pBuffer->ulLen = 0;
 }
 
-#ifdef HB_PP_MULTILINE_STRING
 static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, HB_SIZE ulLeft )
 {
    if( ulLeft < pBuffer->ulLen )
       pBuffer->ulLen = ulLeft;
 }
-#endif
 
 static HB_SIZE hb_membufLen( const PHB_MEM_BUFFER pBuffer )
 {
@@ -1113,34 +1111,37 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      break;
                }
             }
-#ifdef HB_PP_MULTILINE_STRING
-            while( ul == ulLen )
+
+            if( pState->fMultiLine )
             {
-               u = 1;
-               while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
-               if( ul >= u && pBuffer[ ul - u ] == ';' )
+               while( ul == ulLen )
                {
-                  ul -= u;
-                  ulLen -= u;
-                  u = hb_membufLen( pState->pBuffer ) - u;
-                  hb_membufRemove( pState->pBuffer, u );
-                  hb_pp_readLine( pState );
-                  ulLen += hb_membufLen( pState->pBuffer ) - u;
-                  pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
-                  --ul;
-                  while( ++ul < ulLen && pBuffer[ ul ] != '"' )
+                  u = 1;
+                  while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
+                  if( ul >= u && pBuffer[ ul - u ] == ';' )
                   {
-                     if( pBuffer[ ul ] == '\\' )
+                     ul -= u;
+                     ulLen -= u;
+                     u = hb_membufLen( pState->pBuffer ) - u;
+                     hb_membufRemove( pState->pBuffer, u );
+                     hb_pp_readLine( pState );
+                     ulLen += hb_membufLen( pState->pBuffer ) - u;
+                     pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
+                     --ul;
+                     while( ++ul < ulLen && pBuffer[ ul ] != '"' )
                      {
-                        if( ++ul == ulLen )
-                           break;
+                        if( pBuffer[ ul ] == '\\' )
+                        {
+                           if( ++ul == ulLen )
+                              break;
+                        }
                      }
                   }
+                  else
+                     break;
                }
-               else
-                  break;
             }
-#endif
+
             u = ch != '"' ? 2 : 1;
             ulStrip = ul - u;
             hb_strRemEscSeq( pBuffer + u, &ulStrip );
@@ -1194,30 +1195,32 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( ch == '`' )
                ch = '\'';
             while( ++ul < ulLen && pBuffer[ ul ] != ch ) {};
-#ifdef HB_PP_MULTILINE_STRING
-            while( ul == ulLen )
+            if( pState->fMultiLine )
             {
-               HB_SIZE u = 1;
-               while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
-               if( ul >= u && pBuffer[ ul - u ] == ';' )
+               while( ul == ulLen )
                {
-                  ul -= u;
-                  ulLen -= u;
-                  u = hb_membufLen( pState->pBuffer ) - u;
-                  hb_membufRemove( pState->pBuffer, u );
-                  hb_pp_readLine( pState );
-                  ulLen += hb_membufLen( pState->pBuffer ) - u;
-                  pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
-                  --ul;
-                  while( ++ul < ulLen && pBuffer[ ul ] != ch );
-               }
-               else
-               {
-                  ul = ulLen;
-                  break;
+                  HB_SIZE u = 1;
+                  while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
+                  if( ul >= u && pBuffer[ ul - u ] == ';' )
+                  {
+                     ul -= u;
+                     ulLen -= u;
+                     u = hb_membufLen( pState->pBuffer ) - u;
+                     hb_membufRemove( pState->pBuffer, u );
+                     hb_pp_readLine( pState );
+                     ulLen += hb_membufLen( pState->pBuffer ) - u;
+                     pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
+                     --ul;
+                     while( ++ul < ulLen && pBuffer[ ul ] != ch );
+                  }
+                  else
+                  {
+                     ul = ulLen;
+                     break;
+                  }
                }
             }
-#endif
+
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1,
                                 HB_PP_TOKEN_STRING );
             if( ul == ulLen )
@@ -5390,6 +5393,21 @@ void hb_pp_reset( PHB_PP_STATE pState )
    hb_pp_ruleListNonStdFree( &pState->pDefinitions );
    hb_pp_ruleListNonStdFree( &pState->pTranslations );
    hb_pp_ruleListNonStdFree( &pState->pCommands );
+}
+
+/*
+ * set compatibility flag for multiline strings concatenated by ';'
+ * f.e.:
+ *       cVar := "line 1;
+ *       line 2;
+ *       line 3"
+ * It's not Clipper compatible extension and it's not enabled by default
+ * anyhow old Harbour PP worked in such way and people may have some code
+ * which needs it
+ */
+void hb_pp_setMultiLine( PHB_PP_STATE pState, HB_BOOL fMultiLine )
+{
+   pState->fMultiLine = fMultiLine;
 }
 
 /*
