@@ -310,7 +310,6 @@ typedef struct
 
    PHB_CODEPAGE hostCDP;                      /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                        /* Host/HVM CodePage for unicode input translations */
-   PHB_CODEPAGE boxCDP;                       /* CodePage for legacy drawing chars: IBM437 */
 
    QIcon        qIcon;                        /* Title Bar and Task List icon. Can be NULL. */
    bool         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */

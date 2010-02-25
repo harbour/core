@@ -1469,9 +1469,9 @@ void DrawingArea::redrawBuffer( const QRect & rect )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
-
+#if !defined( UNICODE )
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
-
+#endif
          if( bAttr & HB_GT_ATTR_BOX )
          {
             drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
