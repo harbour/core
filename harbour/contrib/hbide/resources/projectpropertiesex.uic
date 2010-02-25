@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'projectpropertiesex.ui'
 **
-** Created: Wed Feb 17 15:22:01 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Wed Feb 24 16:25:25 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -30,7 +30,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_FormProjectPropEx
 {
 public:
     QVBoxLayout *verticalLayout;
@@ -84,14 +84,14 @@ public:
     QPushButton *buttonSave;
     QPushButton *buttonCn;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *FormProjectPropEx)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(324, 434);
-        verticalLayout = new QVBoxLayout(Form);
+        if (FormProjectPropEx->objectName().isEmpty())
+            FormProjectPropEx->setObjectName(QString::fromUtf8("FormProjectPropEx"));
+        FormProjectPropEx->resize(324, 434);
+        verticalLayout = new QVBoxLayout(FormProjectPropEx);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        tabWidget = new QTabWidget(Form);
+        tabWidget = new QTabWidget(FormProjectPropEx);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabGeneral = new QWidget();
         tabGeneral->setObjectName(QString::fromUtf8("tabGeneral"));
@@ -324,19 +324,19 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        buttonSaveExit = new QPushButton(Form);
+        buttonSaveExit = new QPushButton(FormProjectPropEx);
         buttonSaveExit->setObjectName(QString::fromUtf8("buttonSaveExit"));
 
         horizontalLayout_4->addWidget(buttonSaveExit);
 
-        buttonSave = new QPushButton(Form);
+        buttonSave = new QPushButton(FormProjectPropEx);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
         buttonSave->setAutoDefault(false);
         buttonSave->setDefault(true);
 
         horizontalLayout_4->addWidget(buttonSave);
 
-        buttonCn = new QPushButton(Form);
+        buttonCn = new QPushButton(FormProjectPropEx);
         buttonCn->setObjectName(QString::fromUtf8("buttonCn"));
         buttonCn->setAutoDefault(false);
 
@@ -346,84 +346,84 @@ public:
         verticalLayout->addLayout(horizontalLayout_4);
 
 
-        retranslateUi(Form);
+        retranslateUi(FormProjectPropEx);
 
         tabWidget->setCurrentIndex(0);
 
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(FormProjectPropEx);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *FormProjectPropEx)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("Form", "Project Type:", 0, QApplication::UnicodeUTF8));
+        FormProjectPropEx->setWindowTitle(QApplication::translate("FormProjectPropEx", "Form", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("FormProjectPropEx", "Project Type:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        comboPrjType->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        comboPrjType->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">A project may be of type Executable|Library|Dll.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_2->setText(QApplication::translate("Form", "Project Title:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("FormProjectPropEx", "Project Title:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editPrjTitle->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editPrjTitle->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Title will be shown as a node in  project tree.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_3->setText(QApplication::translate("Form", "Project Location:", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("FormProjectPropEx", "Project Location:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editPrjLoctn->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editPrjLoctn->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Project location is the folder where project definition file .hbi will be stored. &lt;Project Location&gt; plus &lt;Output Name&gt; will comprise the full file name with .hbp extension.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_4->setText(QApplication::translate("Form", "Working Folder:", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("FormProjectPropEx", "Working Folder:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editWrkFolder->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editWrkFolder->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Working folder will be used to host HBMK2 compliant </span><span style=\" font-size:8pt; font-weight:600;\">&lt;Output Name&gt;</span><span style=\" font-size:8pt;\"> plus </span><span style=\" font-size:8pt; font-weight:600;\">&lt;hbp&gt;</span><span style=\" font-size:8pt;\"> and will be designated as current folder when </span><span style=\" font-size:8pt; font-weight:600;\">HBMK2</span><span style=\" font-size:8pt;\"> will be invoked.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_5->setText(QApplication::translate("Form", "Destination Folder:", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("FormProjectPropEx", "Destination Folder:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editDstFolder->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editDstFolder->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Destination folder is a compatibility slot and is reserved to place the &lt;Output&gt; .exe .a .lib. </p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">But currently this functionality will be achieved through the -o compiler flag.</p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_9->setText(QApplication::translate("Form", "Compile/Link Flags:", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("FormProjectPropEx", "Compile/Link Flags:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editFlags->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editFlags->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Compiler/Linker flags may include all commands except the source files list. Additional libraries can be included here.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         editFlags->setStyleSheet(QString());
-        label_7->setText(QApplication::translate("Form", "Launch Parameters:", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("Form", "Launch Program:", 0, QApplication::UnicodeUTF8));
-        label_13->setText(QApplication::translate("Form", "Backup Location:", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("FormProjectPropEx", "Launch Parameters:", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("FormProjectPropEx", "Launch Program:", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("FormProjectPropEx", "Backup Location:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editOutName->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editOutName->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Output name is used as final name for .hbi .hbp .exe .lib .a and will be added to the paths retrieved via &lt;Project Location&gt;, &lt;Working Folder&gt;, &lt;Destination Folder&gt;, etc. So this is a very important component.</p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_6->setText(QApplication::translate("Form", "Output Name:", 0, QApplication::UnicodeUTF8));
-        buttonChoosePrjLoc->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonBackup->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonChooseDest->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonChooseWd->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("FormProjectPropEx", "Output Name:", 0, QApplication::UnicodeUTF8));
+        buttonChoosePrjLoc->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
+        buttonBackup->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
+        buttonChooseDest->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
+        buttonChooseWd->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        buttonHbp->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        buttonHbp->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -439,9 +439,9 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This is done at the time of \"Build\" proces"
                         "s.</p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        buttonHbp->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
+        buttonHbp->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        buttonXmate->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        buttonXmate->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -452,10 +452,10 @@ public:
                         "text-indent:0px;\">but it is possible that it may not load everything.</p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">So you may need manual editing.</p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        buttonXmate->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tabGeneral), QApplication::translate("Form", "General", 0, QApplication::UnicodeUTF8));
+        buttonXmate->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabGeneral), QApplication::translate("FormProjectPropEx", "General", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editSources->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editSources->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -467,24 +467,24 @@ public:
 #endif // QT_NO_TOOLTIP
         editSources->setStyleSheet(QString());
 #ifndef QT_NO_TOOLTIP
-        buttonSelect->setToolTip(QApplication::translate("Form", "Select Sources", 0, QApplication::UnicodeUTF8));
+        buttonSelect->setToolTip(QApplication::translate("FormProjectPropEx", "Select Sources", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         buttonSelect->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        buttonSort->setToolTip(QApplication::translate("Form", "Sort by Ascending Order", 0, QApplication::UnicodeUTF8));
+        buttonSort->setToolTip(QApplication::translate("FormProjectPropEx", "Sort by Ascending Order", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         buttonSort->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        buttonSortZA->setToolTip(QApplication::translate("Form", "Sort by Descending Order", 0, QApplication::UnicodeUTF8));
+        buttonSortZA->setToolTip(QApplication::translate("FormProjectPropEx", "Sort by Descending Order", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         buttonSortZA->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        buttonSortOrg->setToolTip(QApplication::translate("Form", "Organize by Type and Sort Ascending", 0, QApplication::UnicodeUTF8));
+        buttonSortOrg->setToolTip(QApplication::translate("FormProjectPropEx", "Organize by Type and Sort Ascending", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         buttonSortOrg->setText(QString());
-        tabWidget->setTabText(tabWidget->indexOf(tabFiles), QApplication::translate("Form", "Sources", 0, QApplication::UnicodeUTF8));
-        editMetaHelp->setStyleSheet(QApplication::translate("Form", "background-color: rgb(171, 171, 171);", 0, QApplication::UnicodeUTF8));
-        editMetaHelp->setPlainText(QApplication::translate("Form", "HBIDE will employ the concept of meta-data which will be used to parse the paths or other info supplied to the interface.\n"
+        tabWidget->setTabText(tabWidget->indexOf(tabFiles), QApplication::translate("FormProjectPropEx", "Sources", 0, QApplication::UnicodeUTF8));
+        editMetaHelp->setStyleSheet(QApplication::translate("FormProjectPropEx", "background-color: rgb(171, 171, 171);", 0, QApplication::UnicodeUTF8));
+        editMetaHelp->setPlainText(QApplication::translate("FormProjectPropEx", "HBIDE will employ the concept of meta-data which will be used to parse the paths or other info supplied to the interface.\n"
 "\n"
 "Usually meta-key is enclosed in curly braces, but due to the fact that HBMK2 already exploits it, HBIDE will recognize meta-key in angled brackets.\n"
 "\n"
@@ -499,7 +499,7 @@ public:
 "Enjoy\n"
 "Pritpal Bedi", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editMetaData->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editMetaData->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -509,9 +509,9 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The expression is evaluated only once and keeps its value until the HBIDE interface is closed. In case of any error, the expression string itself is returned.</p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         editMetaData->setStyleSheet(QString());
-        tabWidget->setTabText(tabWidget->indexOf(tabMeta), QApplication::translate("Form", "Meta Data", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabMeta), QApplication::translate("FormProjectPropEx", "Meta Data", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editHbp->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editHbp->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -521,17 +521,17 @@ public:
                         ";\"><span style=\" font-size:14pt; font-weight:600; text-decoration: underline;\">Enjoy</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         editHbp->setStyleSheet(QString());
-        tabWidget->setTabText(tabWidget->indexOf(tabHbp), QApplication::translate("Form", "hbp", 0, QApplication::UnicodeUTF8));
-        buttonSaveExit->setText(QApplication::translate("Form", "Save and Exit", 0, QApplication::UnicodeUTF8));
-        buttonSave->setText(QApplication::translate("Form", "Save", 0, QApplication::UnicodeUTF8));
-        buttonCn->setText(QApplication::translate("Form", "Cancel", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Form);
+        tabWidget->setTabText(tabWidget->indexOf(tabHbp), QApplication::translate("FormProjectPropEx", "hbp", 0, QApplication::UnicodeUTF8));
+        buttonSaveExit->setText(QApplication::translate("FormProjectPropEx", "Save and Exit", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("FormProjectPropEx", "Save", 0, QApplication::UnicodeUTF8));
+        buttonCn->setText(QApplication::translate("FormProjectPropEx", "Cancel", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormProjectPropEx);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class FormProjectPropEx: public Ui_FormProjectPropEx {};
 } // namespace Ui
 
 QT_END_NAMESPACE

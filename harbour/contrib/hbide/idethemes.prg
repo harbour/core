@@ -129,7 +129,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD setSyntaxRule( qHiliter, cName, cPattern, aAttr )
    METHOD setSyntaxFormat( qHiliter, cName, aAttr )
    METHOD setSyntaxHilighting( qEdit, cTheme, lNew )
-   METHOD fetch()
+   METHOD show()
    METHOD copy()
    METHOD setTheme()
    METHOD setAttributes()
@@ -213,8 +213,9 @@ METHOD IdeThemes:create( oIde, cIniFile )
 METHOD IdeThemes:destroy()
 
    IF !empty( ::oThemes )
-
+      ::oUI:destroy()
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -407,15 +408,15 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:fetch()
+METHOD IdeThemes:show()
 
    IF empty( ::oUI )
       ::lCreating := .t.
 
       ::oUI := HbQtUI():new( ::oIde:resPath + "themesex.uic", ::oThemesDock:oWidget ):build()
 
-      ::oThemesDock:oWidget:setWidget( ::oUI )
       ::oThemesDock:qtObject := ::oUI
+      ::oThemesDock:oWidget:setWidget( ::oUI )
 
       ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|i| ::nCurTheme := i+1, ::setTheme( i ) } )
       ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|i| ::nCurItem  := i+1, ::setAttributes( i ) } )
@@ -432,7 +433,7 @@ METHOD IdeThemes:fetch()
       ::oUI:signal( "buttonClose"   , "clicked()", ;
          {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oThemesDock:hide() } )
 
-      ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
+ *    ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
 
       /* Fill Themes Dialog Values */
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
@@ -453,7 +454,7 @@ METHOD IdeThemes:fetch()
       aeval( ::aThemes, {|e_| ::oUI:qObj[ "comboThemes" ]:addItem( e_[ 1 ] ) } )
       aeval( ::aItems , {|e_| ::oUI:qObj[ "comboItems"  ]:addItem( e_[ 2 ] ) } )
 
-      ::qEdit := ::oUI:qObj[ "plainTextEdit"  ]
+      ::qEdit := ::oUI:qObj[ "plainThemeText"  ]
       ::qEdit:setPlainText( GetSource() )
       ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
       ::qEdit:setFont( ::oIde:oFont:oWidget )
@@ -468,8 +469,6 @@ METHOD IdeThemes:fetch()
       ::setAttributes()
 
    ENDIF
-
-   ::oThemesDock:show()
 
    RETURN Self
 
@@ -590,11 +589,7 @@ METHOD IdeThemes:selectTheme()
    LOCAL oSL, oStrList, oStrModel, a_, nDone
    LOCAL pSlots := Qt_Slots_New()
 
-   #ifdef HBIDE_USE_UIC
    oSL := HbQtUI():new( ::oIde:resPath + "selectionlist.uic", ::oIde:oDlg:oWidget ):build()
-   #else
-   oSL := HbQtUI():new( ::oIde:resPath + "selectionlist.ui", ::oIde:oDlg:oWidget ):create()
-   #endif
 
    oSL:setWindowTitle( "Available Themes" )
 

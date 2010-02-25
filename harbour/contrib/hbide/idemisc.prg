@@ -1612,3 +1612,12 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_image( cName )
+   RETURN hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".png" )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_uic( cName )
+   RETURN hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".uic" )
+
+/*----------------------------------------------------------------------*/

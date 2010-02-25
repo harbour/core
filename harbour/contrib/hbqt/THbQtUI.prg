@@ -139,7 +139,7 @@ METHOD HbQtUI:create( cFile, qParent )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtUI:destroy()
-   LOCAL a_
+   LOCAL a_, i
 
    ::oWidget:hide()
 
@@ -151,9 +151,18 @@ METHOD HbQtUI:destroy()
    NEXT
 
    FOR EACH a_ IN ::widgets DESCEND
+      IF ( i := a_:__enumIndex() ) > 1
+         IF type( a_[ 3 ] ) == "UI"  .AND. !( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
+hbide_dbg( "HbQtUI:destroy( 0 )", pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+            ::qObj[ a_[ 2 ] ] := NIL
+         ENDIF
+      ENDIF
+   NEXT
+
+   FOR EACH a_ IN ::widgets DESCEND
       IF a_:__enumIndex() > 1
-         IF type( a_[ 3 ] ) == "UI"
-hbide_dbg( "HbQtUI:destroy()", 1, a_[ 1 ], a_[ 2 ] )
+         IF type( a_[ 3 ] ) == "UI"  .AND. ( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
+hbide_dbg( "HbQtUI:destroy( 1 )", pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
             ::qObj[ a_[ 2 ] ] := NIL
          ENDIF
       ENDIF

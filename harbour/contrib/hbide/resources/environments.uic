@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'environments.ui'
 **
-** Created: Wed Feb 17 15:07:44 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Wed Feb 24 16:25:24 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -28,36 +28,36 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_FormEnvironments
 {
 public:
     QVBoxLayout *verticalLayout;
-    QTabWidget *tabWidget;
+    QTabWidget *tabWidgetEnv;
     QWidget *tabCompilers;
     QGridLayout *gridLayout_5;
     QPlainTextEdit *editCompilers;
-    QHBoxLayout *horizontalLayout_2;
-    QLabel *label_10;
+    QHBoxLayout *horizontalLayoutHbmk2;
+    QLabel *labelPathHbmk2;
     QLineEdit *editPathMk2;
     QToolButton *buttonPathMk2;
-    QHBoxLayout *horizontalLayout_3;
-    QLabel *label_12;
+    QHBoxLayout *horizontalLayoutEnv;
+    QLabel *labelPathEnv;
     QLineEdit *editPathEnv;
     QToolButton *buttonPathEnv;
-    QHBoxLayout *horizontalLayout_4;
+    QHBoxLayout *horizontalLayoutEnvButtons;
     QPushButton *buttonSaveExit;
     QPushButton *buttonSave;
     QPushButton *buttonCn;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *FormEnvironments)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(367, 519);
-        verticalLayout = new QVBoxLayout(Form);
+        if (FormEnvironments->objectName().isEmpty())
+            FormEnvironments->setObjectName(QString::fromUtf8("FormEnvironments"));
+        FormEnvironments->resize(367, 519);
+        verticalLayout = new QVBoxLayout(FormEnvironments);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        tabWidget = new QTabWidget(Form);
-        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidgetEnv = new QTabWidget(FormEnvironments);
+        tabWidgetEnv->setObjectName(QString::fromUtf8("tabWidgetEnv"));
         tabCompilers = new QWidget();
         tabCompilers->setObjectName(QString::fromUtf8("tabCompilers"));
         gridLayout_5 = new QGridLayout(tabCompilers);
@@ -68,92 +68,92 @@ public:
 
         gridLayout_5->addWidget(editCompilers, 2, 1, 1, 1);
 
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_10 = new QLabel(tabCompilers);
-        label_10->setObjectName(QString::fromUtf8("label_10"));
-        label_10->setMinimumSize(QSize(100, 0));
-        label_10->setMaximumSize(QSize(100, 16777215));
+        horizontalLayoutHbmk2 = new QHBoxLayout();
+        horizontalLayoutHbmk2->setObjectName(QString::fromUtf8("horizontalLayoutHbmk2"));
+        labelPathHbmk2 = new QLabel(tabCompilers);
+        labelPathHbmk2->setObjectName(QString::fromUtf8("labelPathHbmk2"));
+        labelPathHbmk2->setMinimumSize(QSize(100, 0));
+        labelPathHbmk2->setMaximumSize(QSize(100, 16777215));
 
-        horizontalLayout_2->addWidget(label_10);
+        horizontalLayoutHbmk2->addWidget(labelPathHbmk2);
 
         editPathMk2 = new QLineEdit(tabCompilers);
         editPathMk2->setObjectName(QString::fromUtf8("editPathMk2"));
 
-        horizontalLayout_2->addWidget(editPathMk2);
+        horizontalLayoutHbmk2->addWidget(editPathMk2);
 
         buttonPathMk2 = new QToolButton(tabCompilers);
         buttonPathMk2->setObjectName(QString::fromUtf8("buttonPathMk2"));
         buttonPathMk2->setMinimumSize(QSize(0, 0));
 
-        horizontalLayout_2->addWidget(buttonPathMk2);
+        horizontalLayoutHbmk2->addWidget(buttonPathMk2);
 
 
-        gridLayout_5->addLayout(horizontalLayout_2, 0, 1, 1, 1);
+        gridLayout_5->addLayout(horizontalLayoutHbmk2, 0, 1, 1, 1);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        label_12 = new QLabel(tabCompilers);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
-        label_12->setMinimumSize(QSize(100, 0));
-        label_12->setMaximumSize(QSize(100, 16777215));
+        horizontalLayoutEnv = new QHBoxLayout();
+        horizontalLayoutEnv->setObjectName(QString::fromUtf8("horizontalLayoutEnv"));
+        labelPathEnv = new QLabel(tabCompilers);
+        labelPathEnv->setObjectName(QString::fromUtf8("labelPathEnv"));
+        labelPathEnv->setMinimumSize(QSize(100, 0));
+        labelPathEnv->setMaximumSize(QSize(100, 16777215));
 
-        horizontalLayout_3->addWidget(label_12);
+        horizontalLayoutEnv->addWidget(labelPathEnv);
 
         editPathEnv = new QLineEdit(tabCompilers);
         editPathEnv->setObjectName(QString::fromUtf8("editPathEnv"));
 
-        horizontalLayout_3->addWidget(editPathEnv);
+        horizontalLayoutEnv->addWidget(editPathEnv);
 
         buttonPathEnv = new QToolButton(tabCompilers);
         buttonPathEnv->setObjectName(QString::fromUtf8("buttonPathEnv"));
 
-        horizontalLayout_3->addWidget(buttonPathEnv);
+        horizontalLayoutEnv->addWidget(buttonPathEnv);
 
 
-        gridLayout_5->addLayout(horizontalLayout_3, 1, 1, 1, 1);
+        gridLayout_5->addLayout(horizontalLayoutEnv, 1, 1, 1, 1);
 
-        tabWidget->addTab(tabCompilers, QString());
+        tabWidgetEnv->addTab(tabCompilers, QString());
 
-        verticalLayout->addWidget(tabWidget);
+        verticalLayout->addWidget(tabWidgetEnv);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        buttonSaveExit = new QPushButton(Form);
+        horizontalLayoutEnvButtons = new QHBoxLayout();
+        horizontalLayoutEnvButtons->setObjectName(QString::fromUtf8("horizontalLayoutEnvButtons"));
+        buttonSaveExit = new QPushButton(FormEnvironments);
         buttonSaveExit->setObjectName(QString::fromUtf8("buttonSaveExit"));
 
-        horizontalLayout_4->addWidget(buttonSaveExit);
+        horizontalLayoutEnvButtons->addWidget(buttonSaveExit);
 
-        buttonSave = new QPushButton(Form);
+        buttonSave = new QPushButton(FormEnvironments);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
         buttonSave->setAutoDefault(false);
         buttonSave->setDefault(true);
 
-        horizontalLayout_4->addWidget(buttonSave);
+        horizontalLayoutEnvButtons->addWidget(buttonSave);
 
-        buttonCn = new QPushButton(Form);
+        buttonCn = new QPushButton(FormEnvironments);
         buttonCn->setObjectName(QString::fromUtf8("buttonCn"));
         buttonCn->setAutoDefault(false);
 
-        horizontalLayout_4->addWidget(buttonCn);
+        horizontalLayoutEnvButtons->addWidget(buttonCn);
 
 
-        verticalLayout->addLayout(horizontalLayout_4);
+        verticalLayout->addLayout(horizontalLayoutEnvButtons);
 
 
-        retranslateUi(Form);
+        retranslateUi(FormEnvironments);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidgetEnv->setCurrentIndex(0);
 
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(FormEnvironments);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *FormEnvironments)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        FormEnvironments->setWindowTitle(QApplication::translate("FormEnvironments", "Form", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editCompilers->setToolTip(QApplication::translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editCompilers->setToolTip(QApplication::translate("FormEnvironments", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -165,21 +165,21 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This opens up the possibility to experiment with different compilers without re-opening the IDE or setting up the envvars manually.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         editCompilers->setStyleSheet(QString());
-        label_10->setText(QApplication::translate("Form", "Path to hbmk2", 0, QApplication::UnicodeUTF8));
+        labelPathHbmk2->setText(QApplication::translate("FormEnvironments", "Path to hbmk2", 0, QApplication::UnicodeUTF8));
         buttonPathMk2->setText(QString());
-        label_12->setText(QApplication::translate("Form", "Path to hbIDE.env", 0, QApplication::UnicodeUTF8));
+        labelPathEnv->setText(QApplication::translate("FormEnvironments", "Path to hbIDE.env", 0, QApplication::UnicodeUTF8));
         buttonPathEnv->setText(QString());
-        tabWidget->setTabText(tabWidget->indexOf(tabCompilers), QApplication::translate("Form", "Environments", 0, QApplication::UnicodeUTF8));
-        buttonSaveExit->setText(QApplication::translate("Form", "Save and Exit", 0, QApplication::UnicodeUTF8));
-        buttonSave->setText(QApplication::translate("Form", "Save", 0, QApplication::UnicodeUTF8));
-        buttonCn->setText(QApplication::translate("Form", "Cancel", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Form);
+        tabWidgetEnv->setTabText(tabWidgetEnv->indexOf(tabCompilers), QApplication::translate("FormEnvironments", "Environments", 0, QApplication::UnicodeUTF8));
+        buttonSaveExit->setText(QApplication::translate("FormEnvironments", "Save and Exit", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("FormEnvironments", "Save", 0, QApplication::UnicodeUTF8));
+        buttonCn->setText(QApplication::translate("FormEnvironments", "Cancel", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormEnvironments);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class FormEnvironments: public Ui_FormEnvironments {};
 } // namespace Ui
 
 QT_END_NAMESPACE

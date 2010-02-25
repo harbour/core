@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'docviewgenerator.ui'
 **
-** Created: Mon Feb 22 18:56:47 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Wed Feb 24 16:25:24 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -31,7 +31,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_FormDocViewer
 {
 public:
     QGridLayout *gridLayout;
@@ -102,12 +102,6 @@ public:
     QWidget *tabTests;
     QGridLayout *gridLayout_6;
     QPlainTextEdit *plainTests;
-    QWidget *tabTemplate;
-    QGridLayout *gridLayout_7;
-    QPlainTextEdit *plainTemplate;
-    QWidget *tabSource;
-    QGridLayout *gridLayout_9;
-    QPlainTextEdit *plainSource;
     QHBoxLayout *horizontalLayout_3;
     QToolButton *buttonHome;
     QToolButton *buttonBackward;
@@ -120,38 +114,38 @@ public:
     QToolButton *buttonSave;
     QToolButton *buttonExit;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *FormDocViewer)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(768, 515);
-        gridLayout = new QGridLayout(Form);
+        if (FormDocViewer->objectName().isEmpty())
+            FormDocViewer->setObjectName(QString::fromUtf8("FormDocViewer"));
+        FormDocViewer->resize(640, 563);
+        gridLayout = new QGridLayout(FormDocViewer);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        gridLayout->setContentsMargins(-1, 4, -1, -1);
+        gridLayout->setContentsMargins(2, 4, 2, 2);
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        labelInstall = new QLabel(Form);
+        labelInstall = new QLabel(FormDocViewer);
         labelInstall->setObjectName(QString::fromUtf8("labelInstall"));
 
         horizontalLayout->addWidget(labelInstall);
 
-        editInstall = new QLineEdit(Form);
+        editInstall = new QLineEdit(FormDocViewer);
         editInstall->setObjectName(QString::fromUtf8("editInstall"));
 
         horizontalLayout->addWidget(editInstall);
 
-        buttonInstall = new QToolButton(Form);
+        buttonInstall = new QToolButton(FormDocViewer);
         buttonInstall->setObjectName(QString::fromUtf8("buttonInstall"));
         buttonInstall->setAutoRaise(false);
 
         horizontalLayout->addWidget(buttonInstall);
 
-        labelDocPrefix = new QLabel(Form);
+        labelDocPrefix = new QLabel(FormDocViewer);
         labelDocPrefix->setObjectName(QString::fromUtf8("labelDocPrefix"));
 
         horizontalLayout->addWidget(labelDocPrefix);
 
-        editDocPrefix = new QLineEdit(Form);
+        editDocPrefix = new QLineEdit(FormDocViewer);
         editDocPrefix->setObjectName(QString::fromUtf8("editDocPrefix"));
         editDocPrefix->setMaximumSize(QSize(70, 16777215));
 
@@ -160,10 +154,9 @@ public:
 
         gridLayout->addLayout(horizontalLayout, 2, 0, 1, 2);
 
-        tabWidgetContents = new QTabWidget(Form);
+        tabWidgetContents = new QTabWidget(FormDocViewer);
         tabWidgetContents->setObjectName(QString::fromUtf8("tabWidgetContents"));
-        tabWidgetContents->setMinimumSize(QSize(200, 0));
-        tabWidgetContents->setMaximumSize(QSize(300, 16777215));
+        tabWidgetContents->setMaximumSize(QSize(200, 16777215));
         tabWidgetContents->setDocumentMode(false);
         tabContents = new QWidget();
         tabContents->setObjectName(QString::fromUtf8("tabContents"));
@@ -209,7 +202,7 @@ public:
 
         gridLayout->addWidget(tabWidgetContents, 5, 0, 1, 1);
 
-        tabWidgetElements = new QTabWidget(Form);
+        tabWidgetElements = new QTabWidget(FormDocViewer);
         tabWidgetElements->setObjectName(QString::fromUtf8("tabWidgetElements"));
         tabView = new QWidget();
         tabView->setObjectName(QString::fromUtf8("tabView"));
@@ -428,68 +421,48 @@ public:
         gridLayout_6->addWidget(plainTests, 0, 0, 1, 1);
 
         tabWidgetElements->addTab(tabTests, QString());
-        tabTemplate = new QWidget();
-        tabTemplate->setObjectName(QString::fromUtf8("tabTemplate"));
-        gridLayout_7 = new QGridLayout(tabTemplate);
-        gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
-        plainTemplate = new QPlainTextEdit(tabTemplate);
-        plainTemplate->setObjectName(QString::fromUtf8("plainTemplate"));
-
-        gridLayout_7->addWidget(plainTemplate, 0, 0, 1, 1);
-
-        tabWidgetElements->addTab(tabTemplate, QString());
-        tabSource = new QWidget();
-        tabSource->setObjectName(QString::fromUtf8("tabSource"));
-        gridLayout_9 = new QGridLayout(tabSource);
-        gridLayout_9->setObjectName(QString::fromUtf8("gridLayout_9"));
-        plainSource = new QPlainTextEdit(tabSource);
-        plainSource->setObjectName(QString::fromUtf8("plainSource"));
-
-        gridLayout_9->addWidget(plainSource, 0, 0, 1, 1);
-
-        tabWidgetElements->addTab(tabSource, QString());
 
         gridLayout->addWidget(tabWidgetElements, 5, 1, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        buttonHome = new QToolButton(Form);
+        buttonHome = new QToolButton(FormDocViewer);
         buttonHome->setObjectName(QString::fromUtf8("buttonHome"));
         buttonHome->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonHome);
 
-        buttonBackward = new QToolButton(Form);
+        buttonBackward = new QToolButton(FormDocViewer);
         buttonBackward->setObjectName(QString::fromUtf8("buttonBackward"));
         buttonBackward->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonBackward);
 
-        buttonForward = new QToolButton(Form);
+        buttonForward = new QToolButton(FormDocViewer);
         buttonForward->setObjectName(QString::fromUtf8("buttonForward"));
         buttonForward->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonForward);
 
-        buttonUp = new QToolButton(Form);
+        buttonUp = new QToolButton(FormDocViewer);
         buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
         buttonUp->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonUp);
 
-        buttonRefresh = new QToolButton(Form);
+        buttonRefresh = new QToolButton(FormDocViewer);
         buttonRefresh->setObjectName(QString::fromUtf8("buttonRefresh"));
         buttonRefresh->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonRefresh);
 
-        buttonPrint = new QToolButton(Form);
+        buttonPrint = new QToolButton(FormDocViewer);
         buttonPrint->setObjectName(QString::fromUtf8("buttonPrint"));
         buttonPrint->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonPrint);
 
-        buttonPdf = new QToolButton(Form);
+        buttonPdf = new QToolButton(FormDocViewer);
         buttonPdf->setObjectName(QString::fromUtf8("buttonPdf"));
 
         horizontalLayout_3->addWidget(buttonPdf);
@@ -498,13 +471,13 @@ public:
 
         horizontalLayout_3->addItem(horizontalSpacer_2);
 
-        buttonSave = new QToolButton(Form);
+        buttonSave = new QToolButton(FormDocViewer);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
         buttonSave->setAutoRaise(false);
 
         horizontalLayout_3->addWidget(buttonSave);
 
-        buttonExit = new QToolButton(Form);
+        buttonExit = new QToolButton(FormDocViewer);
         buttonExit->setObjectName(QString::fromUtf8("buttonExit"));
         buttonExit->setAutoRaise(false);
 
@@ -514,50 +487,48 @@ public:
         gridLayout->addLayout(horizontalLayout_3, 0, 0, 1, 2);
 
 
-        retranslateUi(Form);
+        retranslateUi(FormDocViewer);
 
         tabWidgetContents->setCurrentIndex(0);
         tabWidgetElements->setCurrentIndex(0);
 
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(FormDocViewer);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *FormDocViewer)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
-        labelInstall->setText(QApplication::translate("Form", "Harbour Installation Root:", 0, QApplication::UnicodeUTF8));
+        FormDocViewer->setWindowTitle(QApplication::translate("FormDocViewer", "Form", 0, QApplication::UnicodeUTF8));
+        labelInstall->setText(QApplication::translate("FormDocViewer", "Harbour Installation Root:", 0, QApplication::UnicodeUTF8));
         buttonInstall->setText(QString());
-        labelDocPrefix->setText(QApplication::translate("Form", "Doc folder prefix:", 0, QApplication::UnicodeUTF8));
-        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabContents), QApplication::translate("Form", "Contents", 0, QApplication::UnicodeUTF8));
-        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByName), QApplication::translate("Form", "Index", 0, QApplication::UnicodeUTF8));
-        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByCategory), QApplication::translate("Form", "Category", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabView), QApplication::translate("Form", "View", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("Form", "Template:", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("Form", "Name", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("Form", "Category:", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("Form", "Sub-Category:", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("Form", "One-Liner", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("Form", "Syntax:", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("Form", "Returns:", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("Form", "Status:", 0, QApplication::UnicodeUTF8));
-        label_13->setText(QApplication::translate("Form", "Platforms:", 0, QApplication::UnicodeUTF8));
-        label_14->setText(QApplication::translate("Form", "Files:", 0, QApplication::UnicodeUTF8));
-        label_15->setText(QApplication::translate("Form", "See Also:", 0, QApplication::UnicodeUTF8));
-        label_9->setText(QApplication::translate("Form", ".txt path:", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabGeneral), QApplication::translate("Form", "General", 0, QApplication::UnicodeUTF8));
-        labelArgName->setText(QApplication::translate("Form", "Name:", 0, QApplication::UnicodeUTF8));
-        labelArgDesc->setText(QApplication::translate("Form", "Description:", 0, QApplication::UnicodeUTF8));
+        labelDocPrefix->setText(QApplication::translate("FormDocViewer", "Doc folder prefix:", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabContents), QApplication::translate("FormDocViewer", "Topics", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByName), QApplication::translate("FormDocViewer", "Index", 0, QApplication::UnicodeUTF8));
+        tabWidgetContents->setTabText(tabWidgetContents->indexOf(tabByCategory), QApplication::translate("FormDocViewer", "Category", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabView), QApplication::translate("FormDocViewer", "View", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("FormDocViewer", "Template:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("FormDocViewer", "Name", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("FormDocViewer", "Category:", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("FormDocViewer", "Sub-Category:", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("FormDocViewer", "One-Liner", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("FormDocViewer", "Syntax:", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("FormDocViewer", "Returns:", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("FormDocViewer", "Status:", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("FormDocViewer", "Platforms:", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("FormDocViewer", "Files:", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("FormDocViewer", "See Also:", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("FormDocViewer", ".txt path:", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabGeneral), QApplication::translate("FormDocViewer", "General", 0, QApplication::UnicodeUTF8));
+        labelArgName->setText(QApplication::translate("FormDocViewer", "Name:", 0, QApplication::UnicodeUTF8));
+        labelArgDesc->setText(QApplication::translate("FormDocViewer", "Description:", 0, QApplication::UnicodeUTF8));
         buttonArgPlus->setText(QString());
         buttonArgMinus->setText(QString());
         buttonArgUp->setText(QString());
         buttonArgDown->setText(QString());
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabArguments), QApplication::translate("Form", "Arguments", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabDesc), QApplication::translate("Form", "Description", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabExamples), QApplication::translate("Form", "Examples", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabTests), QApplication::translate("Form", "Tests", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabTemplate), QApplication::translate("Form", "Template", 0, QApplication::UnicodeUTF8));
-        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabSource), QApplication::translate("Form", "Source", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabArguments), QApplication::translate("FormDocViewer", "Args", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabDesc), QApplication::translate("FormDocViewer", "Desc", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabExamples), QApplication::translate("FormDocViewer", "Examples", 0, QApplication::UnicodeUTF8));
+        tabWidgetElements->setTabText(tabWidgetElements->indexOf(tabTests), QApplication::translate("FormDocViewer", "Tests", 0, QApplication::UnicodeUTF8));
         buttonHome->setText(QString());
         buttonBackward->setText(QString());
         buttonForward->setText(QString());
@@ -567,13 +538,13 @@ public:
         buttonPdf->setText(QString());
         buttonSave->setText(QString());
         buttonExit->setText(QString());
-        Q_UNUSED(Form);
+        Q_UNUSED(FormDocViewer);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class FormDocViewer: public Ui_FormDocViewer {};
 } // namespace Ui
 
 QT_END_NAMESPACE

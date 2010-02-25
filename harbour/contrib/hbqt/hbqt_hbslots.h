@@ -63,6 +63,7 @@
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QListWidgetItem>
+#include <QtGui/QDockWidget>
 #include <QtGui/QHeaderView>
 
 /*----------------------------------------------------------------------*/
@@ -259,9 +260,14 @@ public slots:
    void backwardAvailable( bool available );
    void forwardAvailable( bool available );
    void highlighted( const QUrl & link );
-   // void highlighted( const QString & link );
    void historyChanged();
    void sourceChanged( const QUrl & src );
+   /* QDockWidget */
+   void allowedAreasChanged( Qt::DockWidgetAreas allowedAreas );
+   void dockLocationChanged( Qt::DockWidgetArea area );
+   void featuresChanged( QDockWidget::DockWidgetFeatures features );
+   void topLevelChanged( bool topLevel );
+   void visibilityChanged( bool visible );
    /* */
 };
 

@@ -164,6 +164,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
 
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD show()
    METHOD destroy()
 
    METHOD execEvent( nMode, p, p1 )
@@ -204,17 +205,26 @@ METHOD IdeHarbourHelp:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( ::resPath + "docviewgenerator.uic", ::oDlg:oWidget ):build()
+   RETURN Self
 
-   ::setImages()
-   ::setTooltips()
-   ::installSignals()
-   ::setParameters()
+/*----------------------------------------------------------------------*/
 
-   ::populateRootInfo()
+METHOD IdeHarbourHelp:show()
 
-   /* Should it be here */
-   ::refreshDocTree()
+   IF empty( ::oUI )
+      ::oUI := HbQtUI():new( ::resPath + "docviewgenerator.uic", ::oDlg:oWidget ):build()
+
+      ::oDocViewDock:oWidget:setWidget( ::oUI )
+
+      ::setImages()
+      ::setTooltips()
+      ::installSignals()
+      ::setParameters()
+
+      ::populateRootInfo()
+
+      ::refreshDocTree()
+   ENDIF
 
    RETURN Self
 
@@ -222,6 +232,10 @@ METHOD IdeHarbourHelp:create( oIde )
 
 METHOD IdeHarbourHelp:destroy()
    LOCAL a_
+
+   IF empty( ::oUI )
+      RETURN Self
+   ENDIF
 
    ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
    ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
@@ -255,8 +269,10 @@ METHOD IdeHarbourHelp:destroy()
          a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
-   ::aNodes[ 1, 1 ] := NIL
-   ::aNodes         := NIL
+   IF !empty( ::aNodes )
+      ::aNodes[ 1, 1 ] := NIL
+   ENDIF
+   ::aNodes := NIL
 
    /* Index Tab */
    FOR EACH a_ IN ::aFunctions
@@ -287,23 +303,23 @@ METHOD IdeHarbourHelp:destroy()
 METHOD IdeHarbourHelp:setImages()
    LOCAL oUI := ::oUI
 
-   oUI:q_buttonHome:setIcon( ::resPath + "dc_home.png" )
-   oUI:q_buttonBackward:setIcon( ::resPath + "dc_left.png" )
-   oUI:q_buttonForward:setIcon( ::resPath + "dc_right.png" )
-   oUI:q_buttonUp:setIcon( ::resPath + "dc_up.png" )
-   oUI:q_buttonRefresh:setIcon( ::resPath + "dc_refresh.png" )
-   oUI:q_buttonPrint:setIcon( ::resPath + "dc_print.png" )
-   oUI:q_buttonPdf:setIcon( ::resPath + "dc_pdffile.png" )
+   oUI:q_buttonHome:setIcon( hbide_image( "dc_home" ) )
+   oUI:q_buttonBackward:setIcon( hbide_image( "dc_left" ) )
+   oUI:q_buttonForward:setIcon( hbide_image( "dc_right" ) )
+   oUI:q_buttonUp:setIcon( hbide_image( "dc_up" ) )
+   oUI:q_buttonRefresh:setIcon( hbide_image( "dc_refresh" ) )
+   oUI:q_buttonPrint:setIcon( hbide_image( "dc_print" ) )
+   oUI:q_buttonPdf:setIcon( hbide_image( "dc_pdffile" ) )
 
-   oUI:q_buttonSave:setIcon( ::resPath + "save.png" )
-   oUI:q_buttonExit:setIcon( ::resPath + "dc_quit.png" )
+   oUI:q_buttonSave:setIcon( hbide_image( "save" ) )
+   oUI:q_buttonExit:setIcon( hbide_image( "dc_quit" ) )
 
-   oUI:q_buttonInstall:setIcon( ::resPath + "dc_folder.png" )
+   oUI:q_buttonInstall:setIcon( hbide_image( "dc_folder" ) )
 
-   oUI:q_buttonArgPlus:setIcon( ::resPath + "dc_plus.png" )
-   oUI:q_buttonArgMinus:setIcon( ::resPath + "dc_delete.png" )
-   oUI:q_buttonArgUp:setIcon( ::resPath + "dc_up.png" )
-   oUI:q_buttonArgDown:setIcon( ::resPath + "dc_down.png" )
+   oUI:q_buttonArgPlus:setIcon( hbide_image( "dc_plus" ) )
+   oUI:q_buttonArgMinus:setIcon( hbide_image( "dc_delete" ) )
+   oUI:q_buttonArgUp:setIcon( hbide_image( "dc_up" ) )
+   oUI:q_buttonArgDown:setIcon( hbide_image( "dc_down" ) )
 
    RETURN Self
 
@@ -673,7 +689,7 @@ METHOD IdeHarbourHelp:populateIndex()
 METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
    LOCAL a_, s, nPart, oFunc, oTWItem
    LOCAL lIsFunc := .f.
-   LOCAL cIcon   := ::resPath + "dc_function.png"
+   LOCAL cIcon   := hbide_image( "dc_function" )
    LOCAL aFn     := {}
    LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
 

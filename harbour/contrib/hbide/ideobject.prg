@@ -116,6 +116,7 @@ CLASS IdeObject
    ACCESS qTBarSlctns                             INLINE ::oIde:qTBarSlctns
    ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
+   ACCESS qTBarDocks                              INLINE ::oIde:qTBarDocks
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme

@@ -167,6 +167,7 @@ CLASS HbIde
    DATA   qTBarSlctns
    DATA   qTBarLines
    DATA   qTBarPanels
+   DATA   qTBarDocks
 
    ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
    ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
@@ -384,8 +385,8 @@ METHOD HbIde:create( cProjIni )
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
 
    /* Set components Sizes */
-   ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
-   ::setSizeByIni( ::oEditTree:oWidget, ProjectTreeGeometry )
+ * ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
+ * ::setSizeByIni( ::oEditTree:oWidget, ProjectTreeGeometry )
 
    /* Restore Settings */
    hbide_restSettings( Self )
@@ -473,12 +474,11 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "                                                      " )
 
    ::oFindInFiles:destroy()
-   ::oSearchReplace:destroy()
    ::oFR:destroy()
-
    ::oPM:destroy()
    ::oEM:destroy()
    ::oDK:destroy()
+ * ::oSearchReplace:destroy()
    ::oDlg:destroy()
    ::oAC:destroy()
 
@@ -512,8 +512,6 @@ METHOD HbIde:execAction( cKey )
    CASE "Properties"
    CASE "SelectProject"
    CASE "CloseProject"
-   CASE "Environments"
-      ::execProjectAction( cKey )
       EXIT
    CASE "New"
    CASE "Open"
@@ -546,7 +544,6 @@ METHOD HbIde:execAction( cKey )
    CASE "BlockSgl2Dbl"
    CASE "BlockDbl2Sgl"
    CASE "switchReadOnly"
-   CASE "Search"
    CASE "Find"
    CASE "FindEx"
    CASE "SetMark"
@@ -573,7 +570,7 @@ METHOD HbIde:execAction( cKey )
       ::execWindowsAction( cKey )
       EXIT
    CASE "Help"
-      ::oHelp:show()
+      ::oHelpDock:show()
       EXIT
    ENDSWITCH
 
@@ -651,11 +648,8 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "FindEx"
       IF !Empty( ::qCurEdit )
-         ::oSearchReplace:beginFind()
+ *       ::oSearchReplace:beginFind()
       ENDIF
-      EXIT
-   CASE "Search"
-      ::oFindInFiles:show()
       EXIT
    CASE "SetMark"
       ::oEM:setMark()
@@ -750,9 +744,6 @@ METHOD HbIde:execSourceAction( cKey )
 
 METHOD HbIde:execProjectAction( cKey )
    SWITCH cKey
-   CASE "Environments"
-      ::oPM:manageEnvironments()
-      EXIT
    CASE "NewProject"
       ::oPM:loadProperties( , .t., .t., .t. )
       EXIT
@@ -954,6 +945,7 @@ METHOD HbIde:updateProjectTree( aPrj )
    /* Reassign all children nodes */
    FOR EACH cPath IN oProject:hPaths
       oItem := oParent:addItem( cPath:__enumKey() )
+      oItem:oWidget:setTooltip( cPath:__enumKey() )
       aadd( ::aProjData, { oItem, "Path", oParent, cPath:__enumKey(), oProject:title, oProject } )
    NEXT
    /* Souces */
@@ -964,6 +956,7 @@ METHOD HbIde:updateProjectTree( aPrj )
       IF n > 0
          oP := ::aProjData[ n, TRE_OITEM ]
          oItem := oP:addItem( oSource:file + oSource:ext )
+         oItem:oWidget:setTooltip( oSource:file + oSource:ext )
          aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
       ENDIF
    NEXT

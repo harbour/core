@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'searchreplacepanel.ui'
 **
-** Created: Thu Feb 18 17:15:26 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Wed Feb 24 16:25:25 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -25,7 +25,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_FormSearchReplace
 {
 public:
     QHBoxLayout *horizontalLayout;
@@ -44,24 +44,24 @@ public:
     QSpacerItem *horizontalSpacer;
     QToolButton *buttonClose;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *FormSearchReplace)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(916, 38);
-        Form->setMinimumSize(QSize(0, 30));
-        Form->setMaximumSize(QSize(16777215, 38));
-        Form->setStyleSheet(QString::fromUtf8("border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"));
-        horizontalLayout = new QHBoxLayout(Form);
+        if (FormSearchReplace->objectName().isEmpty())
+            FormSearchReplace->setObjectName(QString::fromUtf8("FormSearchReplace"));
+        FormSearchReplace->resize(923, 38);
+        FormSearchReplace->setMinimumSize(QSize(0, 30));
+        FormSearchReplace->setMaximumSize(QSize(16777215, 38));
+        FormSearchReplace->setStyleSheet(QString::fromUtf8("border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"));
+        horizontalLayout = new QHBoxLayout(FormSearchReplace);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(-1, 2, -1, 2);
-        label = new QLabel(Form);
+        label = new QLabel(FormSearchReplace);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMaximumSize(QSize(25, 20));
 
         horizontalLayout->addWidget(label);
 
-        comboFind = new QComboBox(Form);
+        comboFind = new QComboBox(FormSearchReplace);
         comboFind->setObjectName(QString::fromUtf8("comboFind"));
         QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
@@ -74,49 +74,49 @@ public:
 
         horizontalLayout->addWidget(comboFind);
 
-        buttonNext = new QToolButton(Form);
+        buttonNext = new QToolButton(FormSearchReplace);
         buttonNext->setObjectName(QString::fromUtf8("buttonNext"));
         buttonNext->setAutoRaise(true);
 
         horizontalLayout->addWidget(buttonNext);
 
-        buttonPrev = new QToolButton(Form);
+        buttonPrev = new QToolButton(FormSearchReplace);
         buttonPrev->setObjectName(QString::fromUtf8("buttonPrev"));
         buttonPrev->setAutoRaise(true);
 
         horizontalLayout->addWidget(buttonPrev);
 
-        buttonTop = new QToolButton(Form);
+        buttonTop = new QToolButton(FormSearchReplace);
         buttonTop->setObjectName(QString::fromUtf8("buttonTop"));
         buttonTop->setAutoRaise(true);
 
         horizontalLayout->addWidget(buttonTop);
 
-        checkMatchCase = new QCheckBox(Form);
+        checkMatchCase = new QCheckBox(FormSearchReplace);
         checkMatchCase->setObjectName(QString::fromUtf8("checkMatchCase"));
 
         horizontalLayout->addWidget(checkMatchCase);
 
-        checkRegEx = new QCheckBox(Form);
+        checkRegEx = new QCheckBox(FormSearchReplace);
         checkRegEx->setObjectName(QString::fromUtf8("checkRegEx"));
 
         horizontalLayout->addWidget(checkRegEx);
 
-        label_2 = new QLabel(Form);
+        label_2 = new QLabel(FormSearchReplace);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setMinimumSize(QSize(30, 20));
         label_2->setMaximumSize(QSize(30, 20));
 
         horizontalLayout->addWidget(label_2);
 
-        checkReplace = new QCheckBox(Form);
+        checkReplace = new QCheckBox(FormSearchReplace);
         checkReplace->setObjectName(QString::fromUtf8("checkReplace"));
         checkReplace->setMinimumSize(QSize(62, 0));
         checkReplace->setMaximumSize(QSize(62, 16777215));
 
         horizontalLayout->addWidget(checkReplace);
 
-        comboReplace = new QComboBox(Form);
+        comboReplace = new QComboBox(FormSearchReplace);
         comboReplace->setObjectName(QString::fromUtf8("comboReplace"));
         sizePolicy.setHeightForWidth(comboReplace->sizePolicy().hasHeightForWidth());
         comboReplace->setSizePolicy(sizePolicy);
@@ -126,12 +126,12 @@ public:
 
         horizontalLayout->addWidget(comboReplace);
 
-        checkGlobal = new QCheckBox(Form);
+        checkGlobal = new QCheckBox(FormSearchReplace);
         checkGlobal->setObjectName(QString::fromUtf8("checkGlobal"));
 
         horizontalLayout->addWidget(checkGlobal);
 
-        checkNoPrompt = new QCheckBox(Form);
+        checkNoPrompt = new QCheckBox(FormSearchReplace);
         checkNoPrompt->setObjectName(QString::fromUtf8("checkNoPrompt"));
 
         horizontalLayout->addWidget(checkNoPrompt);
@@ -140,39 +140,39 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer);
 
-        buttonClose = new QToolButton(Form);
+        buttonClose = new QToolButton(FormSearchReplace);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
         buttonClose->setAutoRaise(true);
 
         horizontalLayout->addWidget(buttonClose);
 
 
-        retranslateUi(Form);
+        retranslateUi(FormSearchReplace);
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(FormSearchReplace);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *FormSearchReplace)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("Form", "Find:", 0, QApplication::UnicodeUTF8));
-        buttonNext->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonPrev->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonTop->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        checkMatchCase->setText(QApplication::translate("Form", "Case", 0, QApplication::UnicodeUTF8));
-        checkRegEx->setText(QApplication::translate("Form", "RegEx", 0, QApplication::UnicodeUTF8));
+        FormSearchReplace->setWindowTitle(QApplication::translate("FormSearchReplace", "Form", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("FormSearchReplace", "Find:", 0, QApplication::UnicodeUTF8));
+        buttonNext->setText(QApplication::translate("FormSearchReplace", "...", 0, QApplication::UnicodeUTF8));
+        buttonPrev->setText(QApplication::translate("FormSearchReplace", "...", 0, QApplication::UnicodeUTF8));
+        buttonTop->setText(QApplication::translate("FormSearchReplace", "...", 0, QApplication::UnicodeUTF8));
+        checkMatchCase->setText(QApplication::translate("FormSearchReplace", "Case", 0, QApplication::UnicodeUTF8));
+        checkRegEx->setText(QApplication::translate("FormSearchReplace", "RegEx", 0, QApplication::UnicodeUTF8));
         label_2->setText(QString());
-        checkReplace->setText(QApplication::translate("Form", "Replace:", 0, QApplication::UnicodeUTF8));
-        checkGlobal->setText(QApplication::translate("Form", "Global", 0, QApplication::UnicodeUTF8));
-        checkNoPrompt->setText(QApplication::translate("Form", "NoPrompt", 0, QApplication::UnicodeUTF8));
-        buttonClose->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Form);
+        checkReplace->setText(QApplication::translate("FormSearchReplace", "Replace:", 0, QApplication::UnicodeUTF8));
+        checkGlobal->setText(QApplication::translate("FormSearchReplace", "Global", 0, QApplication::UnicodeUTF8));
+        checkNoPrompt->setText(QApplication::translate("FormSearchReplace", "NoPrompt", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("FormSearchReplace", "...", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormSearchReplace);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class FormSearchReplace: public Ui_FormSearchReplace {};
 } // namespace Ui
 
 QT_END_NAMESPACE

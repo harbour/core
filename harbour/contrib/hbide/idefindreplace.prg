@@ -73,6 +73,7 @@
 
 CLASS IdeSearchReplace INHERIT IdeObject
 
+   DATA   oXbp
    DATA   qFindLineEdit
    DATA   qReplLineEdit
    DATA   nCurDirection                           INIT 0
@@ -104,8 +105,17 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oIde := oIde
 
-   //::oUI := HbQtUI():new( ::oIde:resPath + "searchreplacepanel.uic", ::oIde:oDlg:oWidget ):build()
+
+   #if 0
    ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
+   ::oXbp := XbpWindow():new()
+   ::oXbp:oWidget := ::oUI:oWidget
+   ::oDlg:addChild( ::oXbp )
+   ::oXbp:qtObject := ::oUI
+   #else
+   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
+   #endif
+
    ::oUI:setFocusPolicy( Qt_StrongFocus )
 
    ::oUI:q_frameFind:setStyleSheet( "" )
@@ -141,7 +151,7 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oUI:q_checkReplace:setEnabled( .f. )
    ::oUI:q_frameReplace:hide()
-
+hbide_dbg("========================================================================IdeSearchReplace:create()" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -149,8 +159,11 @@ METHOD IdeSearchReplace:create( oIde )
 METHOD IdeSearchReplace:destroy()
 
    ::disconnect( ::qFindLineEdit, "textChanged(QString)" )
+   ::disconnect( ::qFindLineEdit, "returnPressed()"      )
 
-   ::oUI:destroy()
+   IF hb_isObject( ::oUI )
+      ::oUI:destroy()
+   ENDIF
 
    RETURN Self
 
@@ -609,7 +622,7 @@ METHOD IdeFindInFiles:buildUI()
 
    ::oUI := HbQtUI():new( ::oIde:resPath + "findinfilesex.uic", ::oFindDock:oWidget ):build()
    ::oUI:hide()
-hbide_dbg( "-------------------------", 0 )
+
    ::oFindDock:qtObject := ::oUI
    ::oFindDock:oWidget:setWidget( ::oUI )
 
@@ -639,7 +652,7 @@ hbide_dbg( "-------------------------", 0 )
    ::oUI:q_checkListOnly:setChecked( .t. )
    ::oUI:q_checkPrg:setChecked( .t. )
 
-   ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
+ * ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
 
    qLineEdit := QLineEdit():configure( ::oUI:q_comboExpr:lineEdit() )
    IF !empty( ::oEM )
@@ -884,7 +897,6 @@ METHOD IdeFindInFiles:show()
    IF empty( ::oUI )
       ::buildUI()
    ENDIF
-   ::oFindDock:show()
 
    RETURN Self
 
@@ -1328,4 +1340,3 @@ STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
    RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
 
 /*----------------------------------------------------------------------*/
-

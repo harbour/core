@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'searchreplace.ui'
 **
-** Created: Fri Feb 19 14:30:41 2010
+** Created: Wed Feb 24 16:25:25 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -28,7 +28,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_FormSearchReplace1
 {
 public:
     QVBoxLayout *verticalLayout;
@@ -57,16 +57,16 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QToolButton *buttonCloseRepl;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *FormSearchReplace1)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(817, 75);
-        verticalLayout = new QVBoxLayout(Form);
+        if (FormSearchReplace1->objectName().isEmpty())
+            FormSearchReplace1->setObjectName(QString::fromUtf8("FormSearchReplace1"));
+        FormSearchReplace1->resize(817, 75);
+        verticalLayout = new QVBoxLayout(FormSearchReplace1);
         verticalLayout->setSpacing(5);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 3, 0, 3);
-        frameFind = new QFrame(Form);
+        frameFind = new QFrame(FormSearchReplace1);
         frameFind->setObjectName(QString::fromUtf8("frameFind"));
         frameFind->setFrameShape(QFrame::NoFrame);
         frameFind->setFrameShadow(QFrame::Plain);
@@ -163,7 +163,7 @@ public:
 
         verticalLayout->addWidget(frameFind);
 
-        frameReplace = new QFrame(Form);
+        frameReplace = new QFrame(FormSearchReplace1);
         frameReplace->setObjectName(QString::fromUtf8("frameReplace"));
         frameReplace->setFrameShape(QFrame::NoFrame);
         frameReplace->setFrameShadow(QFrame::Plain);
@@ -221,37 +221,37 @@ public:
         verticalLayout->addWidget(frameReplace);
 
 
-        retranslateUi(Form);
+        retranslateUi(FormSearchReplace1);
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(FormSearchReplace1);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *FormSearchReplace1)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
-        labelFind->setText(QApplication::translate("Form", "Search:", 0, QApplication::UnicodeUTF8));
-        buttonNext->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        buttonPrev->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("Form", "From:", 0, QApplication::UnicodeUTF8));
-        radioTop->setText(QApplication::translate("Form", "Top", 0, QApplication::UnicodeUTF8));
-        radioCursor->setText(QApplication::translate("Form", "Cursor", 0, QApplication::UnicodeUTF8));
-        checkMatchCase->setText(QApplication::translate("Form", "Case", 0, QApplication::UnicodeUTF8));
-        checkWhole->setText(QApplication::translate("Form", "Whole", 0, QApplication::UnicodeUTF8));
-        checkRegEx->setText(QApplication::translate("Form", "RegEx", 0, QApplication::UnicodeUTF8));
-        checkReplace->setText(QApplication::translate("Form", "Replace", 0, QApplication::UnicodeUTF8));
-        buttonClose->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        labelReplace->setText(QApplication::translate("Form", "Replace:", 0, QApplication::UnicodeUTF8));
-        buttonReplace->setText(QApplication::translate("Form", "Replace", 0, QApplication::UnicodeUTF8));
-        checkGlobal->setText(QApplication::translate("Form", "Global", 0, QApplication::UnicodeUTF8));
-        checkNoPrompt->setText(QApplication::translate("Form", "No Prompt", 0, QApplication::UnicodeUTF8));
-        buttonCloseRepl->setText(QApplication::translate("Form", "...", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Form);
+        FormSearchReplace1->setWindowTitle(QApplication::translate("FormSearchReplace1", "Form", 0, QApplication::UnicodeUTF8));
+        labelFind->setText(QApplication::translate("FormSearchReplace1", "Search:", 0, QApplication::UnicodeUTF8));
+        buttonNext->setText(QApplication::translate("FormSearchReplace1", "...", 0, QApplication::UnicodeUTF8));
+        buttonPrev->setText(QApplication::translate("FormSearchReplace1", "...", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("FormSearchReplace1", "From:", 0, QApplication::UnicodeUTF8));
+        radioTop->setText(QApplication::translate("FormSearchReplace1", "Top", 0, QApplication::UnicodeUTF8));
+        radioCursor->setText(QApplication::translate("FormSearchReplace1", "Cursor", 0, QApplication::UnicodeUTF8));
+        checkMatchCase->setText(QApplication::translate("FormSearchReplace1", "Case", 0, QApplication::UnicodeUTF8));
+        checkWhole->setText(QApplication::translate("FormSearchReplace1", "Whole", 0, QApplication::UnicodeUTF8));
+        checkRegEx->setText(QApplication::translate("FormSearchReplace1", "RegEx", 0, QApplication::UnicodeUTF8));
+        checkReplace->setText(QApplication::translate("FormSearchReplace1", "Replace", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("FormSearchReplace1", "...", 0, QApplication::UnicodeUTF8));
+        labelReplace->setText(QApplication::translate("FormSearchReplace1", "Replace:", 0, QApplication::UnicodeUTF8));
+        buttonReplace->setText(QApplication::translate("FormSearchReplace1", "Replace", 0, QApplication::UnicodeUTF8));
+        checkGlobal->setText(QApplication::translate("FormSearchReplace1", "Global", 0, QApplication::UnicodeUTF8));
+        checkNoPrompt->setText(QApplication::translate("FormSearchReplace1", "No Prompt", 0, QApplication::UnicodeUTF8));
+        buttonCloseRepl->setText(QApplication::translate("FormSearchReplace1", "...", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormSearchReplace1);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class FormSearchReplace1: public Ui_FormSearchReplace1 {};
 } // namespace Ui
 
 QT_END_NAMESPACE

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>FormEnvironments</class>
+ <widget class="QWidget" name="FormEnvironments">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabWidgetEnv">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -46,9 +46,9 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="0" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="horizontalLayoutHbmk2">
          <item>
-          <widget class="QLabel" name="label_10">
+          <widget class="QLabel" name="labelPathHbmk2">
            <property name="minimumSize">
             <size>
              <width>100</width>
@@ -85,9 +85,9 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
        <item row="1" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayoutEnv">
          <item>
-          <widget class="QLabel" name="label_12">
+          <widget class="QLabel" name="labelPathEnv">
            <property name="minimumSize">
             <size>
              <width>100</width>
@@ -122,7 +122,7 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <layout class="QHBoxLayout" name="horizontalLayoutEnvButtons">
      <item>
       <widget class="QPushButton" name="buttonSaveExit">
        <property name="text">

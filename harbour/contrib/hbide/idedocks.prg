@@ -72,11 +72,20 @@
 
 /*----------------------------------------------------------------------*/
 
+#define docEnvironments_visibilityChanged         301
+#define dockFindInFiles_visibilityChanged         302
+#define dockThemes_visibilityChanged              303
+#define dockProperties_visibilityChanged          304
+#define dockDocViewer_visibilityChanged           305
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeDocks INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
    DATA   aPanels                                 INIT   {}
    DATA   aBtnLines                               INIT   {}
+   DATA   aBtnDocks                               INIT   {}
    DATA   oBtnTabClose
 
    METHOD new( oIde )
@@ -152,9 +161,11 @@ METHOD IdeDocks:destroy()
 
    oUI:destroy()
 
-   /* Initiate more destructors */
-
    FOR EACH qTBtn IN ::aPanels
+      ::disconnect( qTBtn, "clicked()" )
+      qTBtn := NIL
+   NEXT
+   FOR EACH qTBtn IN ::aBtnLines
       ::disconnect( qTBtn, "clicked()" )
       qTBtn := NIL
    NEXT
@@ -190,8 +201,6 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
 
    METHOD IdeDocks:buildDockWidgets()
 
-   ::buildToolBarPanels()
-
    ::buildProjectTree()
    ::buildEditorTree()
 
@@ -209,8 +218,8 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    ::buildOutputResults()
    ::buildDocViewer()
 
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget , ::oDockB1:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget, ::oDockB2:oWidget )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget        , ::oDockB2:oWidget         )
 
    ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget      , ::oSkeltnDock:oWidget     )
    ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oFindDock:oWidget       )
@@ -218,6 +227,8 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oPropertiesDock:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget, ::oEnvironDock:oWidget    )
    ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget   , ::oFuncDock:oWidget       )
+
+   ::buildToolBarPanels()
 
    RETURN Self
 
@@ -257,6 +268,32 @@ METHOD IdeDocks:execEvent( nMode, p )
       aadd( aMenu, { "Copy"      , {|| ::qHelpBrw:copy()      } } )
 
       hbide_execPopup( aMenu, p, ::qHelpBrw )
+
+   CASE nMode == dockDocViewer_visibilityChanged
+      IF p
+         ::oDocViewDock:qtObject:show()
+      ENDIF
+
+   CASE nMode == dockProperties_visibilityChanged
+      IF p
+         ::oPM:fetchProperties()
+      ENDIF
+
+   CASE nMode == docEnvironments_visibilityChanged
+      IF p
+         ::oPM:manageEnvironments()
+      ENDIF
+
+   CASE nMode == dockFindInFiles_visibilityChanged
+      IF p
+         ::oFindInFiles:show()
+      ENDIF
+
+   CASE nMode == dockThemes_visibilityChanged
+      IF p
+         ::oThemes:show()
+      ENDIF
+
    ENDCASE
 
    RETURN Self
@@ -264,10 +301,10 @@ METHOD IdeDocks:execEvent( nMode, p )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDialog()
-   LOCAL s
+   LOCAL s, aSize
 
    ::oIde:oDlg := XbpDialog():new()
-   ::oDlg:icon := ::resPath + "vr.png"
+   ::oDlg:icon := ::resPath + "hbide.png" // "vr.png"
    ::oDlg:title := "Harbour IDE"
    ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    ::oDlg:create( , , , , , .f. )
@@ -279,10 +316,16 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
    ::oDlg:oWidget:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:oWidget:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
+   ::oDlg:oWidget:resize( 850,430 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
    SetAppWindow( ::oDlg )
+
+   // Center on Desktop and decorate
+   aSize := AppDesktop():currentSize()
+   ::oDlg:setPos( { ( aSize[ 1 ] - ::oDlg:currentSize()[ 1 ] ) / 2, ;
+                    ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
 
    ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
    ::oDlg:Show()
@@ -300,8 +343,8 @@ METHOD IdeDocks:buildDialog()
 
    ::buildStackedWidget()
    ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
-   ::buildSearchReplaceWidget()
-   ::qLayout:addWidget_1( ::oSearchReplace:oUI, 1, 0, 1, 1 )
+//   ::buildSearchReplaceWidget()      ////////////////////////////////////
+//   ::qLayout:addWidget_1( ::oSearchReplace:oUI, 1, 0, 1, 1 )
 
    /* View Panels */
    ::buildViewWidget()      /* Main */
@@ -418,55 +461,31 @@ METHOD IdeDocks:disblePanelButton( qTBtn )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:addPanelButton( cPanel )
-   LOCAL qTBtn, aColors, nIndex
+   LOCAL qTBtn, aColors, nIndex, cColor
 
-   #if 0 /* Royal Blue */
-   aColors := { ;
-      "#000073" , ;
-      "#000080" , ;
-      "#19198D" , ;
-      "#333399" , ;
-      "#4D4DA6" , ;
-      "#6666B3" , ;
-      "#8080C0" , ;
-      "#9999CC" , ;
-      "#B2B2D9" , ;
-      "#CCCCE6" , ;
-      "#E6E6F2"   ;
-      }
-   #endif
-   #if 0 /* Turquish */
-   aColors := { ;
-      "#009999" , ;
-      "#19A3A3" , ;
-      "#33ADAD" , ;
-      "#4DB8B8" , ;
-      "#66C2C2" , ;
-      "#80CCCC" , ;
-      "#99D6D6" , ;
-      "#B2E0E0" , ;
-      "#CCEBEB" , ;
-      "#E6F5F5"   ;
-      }
-   #endif
-
-   aColors := { "#996633", "#A37547", "#AD855C", "#B89470", "#C2A385", "#CCB299", "#D6C2AD", "#E0D1C2", "#EBE0D6", "#F5F0EB" }
-
+ * aColors := { "#996633", "#A37547", "#AD855C", "#B89470", "#C2A385", "#CCB299", "#D6C2AD", "#E0D1C2", "#EBE0D6", "#F5F0EB" }
+   aColors := { "#98FB98","#20B2AA","#6B8E23","#9ACD32","#FFFF00","#FF00FF","#FFA500","#4169E1","#00FF7F","#FFFF00" }
 
    IF cPanel == "Main"
-      nIndex := 0
+      nIndex := 1
+      cColor := "#008000"
    ELSE
-      nIndex := len( ::aPanels ) - 1
+      nIndex := len( ::aPanels )
+      IF nIndex > len( aColors )
+         nIndex := nIndex - len( aColors )
+      ENDIF
+      cColor := aColors[ nIndex ]
    ENDIF
 
    qTBtn := QToolButton():new()
    qTBtn:setMaximumHeight( 12 )
    qTBtn:setMaximumWidth( 18 )
    qTBtn:setTooltip( "Panel: " + cPanel )
-   qTBtn:setStyleSheet( "background-color: " + aColors[ nIndex + 1 ] + " ;" )
+   qTBtn:setStyleSheet( "background-color: " + cColor + " ;" )
 
    ::connect( qTBtn, "clicked()", {|| ::disblePanelButton( qTBtn ), ::setView( cPanel ) } )
    ::qTBarPanels:addWidget( qTBtn )
+   ::qTBarPanels:addSeparator()
 
    aadd( ::aPanels, qTBtn )
 
@@ -475,9 +494,13 @@ METHOD IdeDocks:addPanelButton( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildToolBarPanels()
-   LOCAL s, qSize, qTBtn, a_, aBtns
+   LOCAL s, qTBtn, a_, aBtns, qAct
+
+   STATIC qSize
 
    qSize := QSize():new( 20,20 )
+
+   /* Toolbar Panels */
 
    ::oIde:qTBarPanels := QToolBar():new()
    ::qTBarPanels:setObjectName( "ToolBar_Panels" )
@@ -496,7 +519,6 @@ METHOD IdeDocks:buildToolBarPanels()
    NEXT
 
    /* Toolbar Line Actions */
-   //::oDlg:oWidget:addToolBarBreak( Qt_LeftToolBarArea )
 
    ::oIde:qTBarLines := QToolBar():new()
    ::qTBarLines:setObjectName( "ToolBar_Lines" )
@@ -523,26 +545,78 @@ METHOD IdeDocks:buildToolBarPanels()
       ::qTBarLines:addWidget( qTBtn )
       aadd( ::aBtnLines, qTBtn )
    NEXT
-
    ::qTBarLines:addSeparator()
 
    aBtns := {}
+   aadd( aBtns, { "toupper"       , "To Upper"               , {|| ::oEM:convertSelection( "ToUpper" ) } } )
+   aadd( aBtns, { "tolower"       , "To Lower"               , {|| ::oEM:convertSelection( "ToLower" ) } } )
+   aadd( aBtns, { "invertcase"    , "Invert Case"            , {|| ::oEM:convertSelection( "Invert"  ) } } )
+   aadd( aBtns, {} )
    aadd( aBtns, { "blockcomment"  , "Block Comment"          , {|| ::oEM:blockComment()   } } )
    aadd( aBtns, { "streamcomment" , "Stream Comment"         , {|| ::oEM:streamComment()  } } )
+   aadd( aBtns, {} )
    aadd( aBtns, { "blockindentr"  , "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
    aadd( aBtns, { "blockindentl"  , "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
+   aadd( aBtns, {} )
    aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
    aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
+   aadd( aBtns, {} )
    FOR EACH a_ IN aBtns
-      qTBtn := QToolButton():new()
-      qTBtn:setTooltip( a_[ 2 ] )
-      qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
-      qTBtn:setMaximumWidth( 20 )
-      qTBtn:setMaximumHeight( 20 )
-      ::connect( qTBtn, "clicked()", a_[ 3 ] )
-      ::qTBarLines:addWidget( qTBtn )
-      aadd( ::aBtnLines, qTBtn )
+      IF empty( a_ )
+         ::qTBarLines:addSeparator()
+      ELSE
+         qTBtn := QToolButton():new()
+         qTBtn:setTooltip( a_[ 2 ] )
+         qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+         qTBtn:setMaximumWidth( 20 )
+         qTBtn:setMaximumHeight( 20 )
+         ::connect( qTBtn, "clicked()", a_[ 3 ] )
+         ::qTBarLines:addWidget( qTBtn )
+         aadd( ::aBtnLines, qTBtn )
+      ENDIF
    NEXT
+
+   /* Right-hand docks toolbar */
+   ::oIde:qTBarDocks := QToolBar():new()
+   ::qTBarDocks:setObjectName( "ToolBar_Docks" )
+   ::qTBarDocks:setAllowedAreas( Qt_RightToolBarArea )
+   ::qTBarDocks:setOrientation( Qt_Vertical )
+   ::qTBarDocks:setIconSize( QSize():new( 16,16 ) )
+   ::qTBarDocks:setMovable( .f. )
+   ::qTBarDocks:setFloatable( .f. )
+   ::qTBarDocks:setStyleSheet( "QToolBar { spacing: 1px; color: white; margin-top: 2px; }" )
+   ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
+
+   aBtns := {}
+   aadd( aBtns, { ::oHelpDock      , "help"          } )
+   aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { ::oDockPT        , "projectstree"  } )
+   aadd( aBtns, { ::oDockED        , "tabs"          } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { ::oFuncDock      , "dc_function"   } )
+   aadd( aBtns, { ::oPropertiesDock, "properties"    } )
+   aadd( aBtns, { ::oEnvironDock   , "envconfig"     } )
+   aadd( aBtns, { ::oSkeltnDock    , "codeskeletons" } )
+   aadd( aBtns, { ::oThemesDock    , "syntaxhiliter" } )
+   aadd( aBtns, { ::oFindDock      , "search"        } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { ::oDockB2        , "builderror"    } )
+ * aadd( aBtns, { ::oDockB1        , "builderror"    } )
+ * aadd( aBtns, { ::oDockB         , "builderror"    } )
+
+   FOR EACH a_ IN aBtns
+      IF empty( a_ )
+         ::qTBarDocks:addSeparator()
+      ELSE
+         qAct := QAction():from( a_[ 1 ]:oWidget:toggleViewAction() )
+         qAct:setIcon( hbide_image( a_[ 2 ] ) )
+         ::qTBarDocks:addAction( qAct )
+         aadd( ::aBtnDocks, qAct )
+      ENDIF
+   NEXT
+
+   ::oDlg:oWidget:addToolBar( Qt_RightToolBarArea, ::qTBarDocks )
 
    RETURN Self
 
@@ -557,15 +631,17 @@ METHOD IdeDocks:buildProjectTree()
    ::oDlg:addChild( ::oDockPT )
    ::oDockPT:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockPT:oWidget:setAllowedAreas( Qt_LeftDockWidgetArea )
-   ::oDockPT:oWidget:setWindowTitle( "Projects" )
+   ::oDockPT:oWidget:setWindowTitle( "Projects Tree" )
    ::oDockPT:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oIde:oProjTree := XbpTreeView():new()
    ::oProjTree:hasLines   := .T.
    ::oProjTree:hasButtons := .T.
-   ::oProjTree:create( ::oDockPT, , { 0,0 }, { 10,10 }, , .t. )
+   ::oProjTree:create( ::oDockPT, , { 0,0 }, { 100,10 }, , .t. )
 
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
+   ::oProjTree:oWidget:setMinimumWidth( 100 )
+   ::oProjTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
 
  * ::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oProjTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
@@ -613,7 +689,10 @@ METHOD IdeDocks:buildEditorTree()
    ::oIde:oEditTree := XbpTreeView():new()
    ::oEditTree:hasLines   := .T.
    ::oEditTree:hasButtons := .T.
-   ::oEditTree:create( ::oDockED, , { 0,0 }, { 10,10 }, , .t. )
+   ::oEditTree:create( ::oDockED, , { 0,0 }, { 100,10 }, , .t. )
+
+   ::oEditTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
+   ::oEditTree:oWidget:setMinimumWidth( 100 )
 
    //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
@@ -811,6 +890,8 @@ METHOD IdeDocks:buildThemesDock()
    ::oIde:oThemesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockThemes", "Editor Themes", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
 
+   ::connect( ::oThemesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockThemes_visibilityChanged, p ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -820,14 +901,7 @@ METHOD IdeDocks:buildPropertiesDock()
    ::oIde:oPropertiesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildEnvironDock()
-
-   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
+   ::connect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockProperties_visibilityChanged, p ) } )
 
    RETURN Self
 
@@ -838,19 +912,20 @@ METHOD IdeDocks:buildFindInFiles()
    ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
 
+   ::connect( ::oFindDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockFindInFiles_visibilityChanged, p ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDocViewer()
 
-   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Document Viewer", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
    ::oDocViewDock:qtObject := ideHarbourHelp():new():create( ::oIde )
 
-   ::oDocViewDock:oWidget:setWidget( ::oDocViewDock:qtObject:oUI )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
+   ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocViewer_visibilityChanged, p ) } )
 
    RETURN Self
 
@@ -977,16 +1052,16 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       oPanel:caption := "Find: " + xValue
       EXIT
    CASE SB_PNL_CODEC
-      oPanel:caption := "<font color = green >Codec: "  + xValue + "</font>"
+      oPanel:caption := "<font color = brown >Codec: "  + xValue + "</font>"
       EXIT
    CASE SB_PNL_ENVIRON
       oPanel:caption := "<font color = blue  >Env: "    + xValue  + "</font>"
       EXIT
    CASE SB_PNL_VIEW
-      oPanel:caption := "<font color = brown >View: "   + xValue + "</font>"
+      oPanel:caption := "<font color = green >View: "   + xValue + "</font>"
       EXIT
    CASE SB_PNL_PROJECT
-      oPanel:caption := "<font color = darkred >Proj: " + xValue + "</font>"
+      oPanel:caption := "<font color = darkred >Proj: "     + xValue + "</font>"
       EXIT
    ENDSWITCH
 
@@ -1062,3 +1137,13 @@ METHOD IdeDocks:toggleBottomDocks()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:buildEnvironDock()
+
+   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docEnvironments_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/

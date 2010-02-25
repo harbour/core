@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>FormThemesEx</class>
+ <widget class="QWidget" name="FormThemesEx">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -45,7 +45,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit"/>
+        <widget class="QPlainTextEdit" name="plainThemeText"/>
        </item>
       </layout>
      </item>
@@ -145,7 +145,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="Line" name="line">
+        <widget class="Line" name="lineSep">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>

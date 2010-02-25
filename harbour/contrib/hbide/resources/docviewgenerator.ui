@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>FormDocViewer</class>
+ <widget class="QWidget" name="FormDocViewer">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>768</width>
-    <height>515</height>
+    <width>640</width>
+    <height>563</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
    <property name="topMargin">
     <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
    </property>
    <item row="2" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -60,15 +69,9 @@
    </item>
    <item row="5" column="0">
     <widget class="QTabWidget" name="tabWidgetContents">
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
-       <width>300</width>
+       <width>200</width>
        <height>16777215</height>
       </size>
      </property>
@@ -80,7 +83,7 @@
      </property>
      <widget class="QWidget" name="tabContents">
       <attribute name="title">
-       <string>Contents</string>
+       <string>Topics</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -269,7 +272,7 @@
      </widget>
      <widget class="QWidget" name="tabArguments">
       <attribute name="title">
-       <string>Arguments</string>
+       <string>Args</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
@@ -338,7 +341,7 @@
      </widget>
      <widget class="QWidget" name="tabDesc">
       <attribute name="title">
-       <string>Description</string>
+       <string>Desc</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
@@ -363,26 +366,6 @@
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
         <widget class="QPlainTextEdit" name="plainTests"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabTemplate">
-      <attribute name="title">
-       <string>Template</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_7">
-       <item row="0" column="0">
-        <widget class="QPlainTextEdit" name="plainTemplate"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabSource">
-      <attribute name="title">
-       <string>Source</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0">
-        <widget class="QPlainTextEdit" name="plainSource"/>
        </item>
       </layout>
      </widget>

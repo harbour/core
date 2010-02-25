@@ -211,9 +211,14 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "backwardAvailable(bool)"                        ) return object->connect( object, SIGNAL( backwardAvailable( bool )                                         ), t_slots, SLOT( backwardAvailable( bool )                                          ), Qt::AutoConnection );
    if( signal == ( QString ) "forwardAvailable(bool)"                         ) return object->connect( object, SIGNAL( forwardAvailable( bool )                                          ), t_slots, SLOT( forwardAvailable( bool )                                           ), Qt::AutoConnection );
    if( signal == ( QString ) "highlighted(QUrl)"                              ) return object->connect( object, SIGNAL( highlighted( const QUrl & )                                       ), t_slots, SLOT( highlighted( const QUrl & )                                        ), Qt::AutoConnection );
-   //if( signal == ( QString ) "highlighted(QString)"                           ) return object->connect( object, SIGNAL( highlighted( const QString & )                                    ), t_slots, SLOT( highlighted( const QString & )                                     ), Qt::AutoConnection );
    if( signal == ( QString ) "historyChanged()"                               ) return object->connect( object, SIGNAL( historyChanged()                                                  ), t_slots, SLOT( historyChanged()                                                   ), Qt::AutoConnection );
    if( signal == ( QString ) "sourceChanged(QUrl)"                            ) return object->connect( object, SIGNAL( sourceChanged( const QUrl & )                                     ), t_slots, SLOT( sourceChanged( const QUrl & )                                      ), Qt::AutoConnection );
+   /* QDockWidget */
+   if( signal == ( QString ) "allowedAreasChanged(int)"                       ) return object->connect( object, SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ), t_slots, SLOT( allowedAreasChanged( Qt::DockWidgetAreas )                         ), Qt::AutoConnection );
+   if( signal == ( QString ) "dockLocationChanged(int)"                       ) return object->connect( object, SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ), t_slots, SLOT( dockLocationChanged( Qt::DockWidgetArea )                          ), Qt::AutoConnection );
+   if( signal == ( QString ) "featuresChanged(int)"                           ) return object->connect( object, SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ), t_slots, SLOT( featuresChanged( QDockWidget::DockWidgetFeatures )                 ), Qt::AutoConnection );
+   if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->connect( object, SIGNAL( topLevelChanged( bool )                                           ), t_slots, SLOT( topLevelChanged( bool )                                            ), Qt::AutoConnection );
+   if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->connect( object, SIGNAL( visibilityChanged( bool )                                         ), t_slots, SLOT( visibilityChanged( bool )                                          ), Qt::AutoConnection );
    /* New */
 
    return false;
@@ -361,9 +366,14 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "backwardAvailable(bool)"                        ) return object->disconnect( SIGNAL( backwardAvailable( bool )                                         ) );
    if( signal == ( QString ) "forwardAvailable(bool)"                         ) return object->disconnect( SIGNAL( forwardAvailable( bool )                                          ) );
    if( signal == ( QString ) "highlighted(QUrl)"                              ) return object->disconnect( SIGNAL( highlighted( const QUrl & )                                       ) );
-   //if( signal == ( QString ) "highlighted(QString)"                           ) return object->disconnect( SIGNAL( highlighted( const QString & )                                    ) );
    if( signal == ( QString ) "historyChanged()"                               ) return object->disconnect( SIGNAL( historyChanged()                                                  ) );
    if( signal == ( QString ) "sourceChanged(QUrl)"                            ) return object->disconnect( SIGNAL( sourceChanged( const QUrl & )                                     ) );
+   /* QDockWidget */
+   if( signal == ( QString ) "allowedAreasChanged(int)"                       ) return object->disconnect( SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ) );
+   if( signal == ( QString ) "dockLocationChanged(int)"                       ) return object->disconnect( SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ) );
+   if( signal == ( QString ) "featuresChanged(int)"                           ) return object->disconnect( SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ) );
+   if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->disconnect( SIGNAL( topLevelChanged( bool )                                           ) );
+   if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->disconnect( SIGNAL( visibilityChanged( bool )                                         ) );
    /* new */
    return false;
 }
@@ -964,9 +974,16 @@ void HBSlots::anchorClicked( const QUrl & link )                                
 void HBSlots::backwardAvailable( bool available )                                                          { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "backwardAvailable(bool)", available                              ); }
 void HBSlots::forwardAvailable( bool available )                                                           { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "forwardAvailable(bool)", available                               ); }
 void HBSlots::highlighted( const QUrl & link )                                                             { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "highlighted(QUrl)", link                                         ); }
-//void HBSlots::highlighted( const QString & link )                                                          { hbqt_SlotsString(             this, qobject_cast<QObject *>( sender() ), "highlighted(QString)", link                                      ); }
 void HBSlots::historyChanged()                                                                             { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "historyChanged()"                                                ); }
 void HBSlots::sourceChanged( const QUrl & src )                                                            { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "sourceChanged(QUrl)", src                                        ); }
+/* QDockWidget */
+void HBSlots::allowedAreasChanged( Qt::DockWidgetAreas allowedAreas )                                      { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "allowedAreasChanged(int)", allowedAreas                          ); }
+void HBSlots::dockLocationChanged( Qt::DockWidgetArea area )                                               { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "dockLocationChanged(int)", area                                  ); }
+void HBSlots::featuresChanged( QDockWidget::DockWidgetFeatures features )                                  { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "featuresChanged(int)", features                                  ); }
+void HBSlots::topLevelChanged( bool topLevel )                                                             { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "topLevelChanged(bool)", topLevel                                 ); }
+void HBSlots::visibilityChanged( bool visible )                                                            { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "visibilityChanged(bool)", visible                                ); }
+/* Latest */
+
 
 /*----------------------------------------------------------------------*/
 /*
