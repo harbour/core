@@ -144,6 +144,13 @@ METHOD new( ... ) CLASS THREAD
       IF ISNUMBER( nMaxStackSize )
          ::maxStackSize := nMaxStackSize
       ENDIF
+      /* TODO: Create new thread here and suspend its execution
+       *       Then :START() method only resumes this thread instead
+       *       of creating new one.
+       *       xBase++ seems to work in such way.
+       */
+
+      /* TODO: do not ignore thread stack size set by user in ::maxStackSize */
    ENDIF
    ::Init( ... )
    RETURN Self
@@ -165,10 +172,15 @@ METHOD quit( xResult, nRestart ) CLASS THREAD
    RETURN NIL
 
 METHOD setInterval( nHSeconds ) CLASS THREAD
-   IF nHSeconds == NIL .OR. ISNUMBER( nHSeconds )
-      ::interval := nHSeconds
+   IF ISNUMBER( nHSeconds ) .AND. Int( nHSeconds ) >= 0
+      ::interval := Int( nHSeconds )
+   ELSEIF PCount() > 0 .OR. nHSeconds == NIL
+      ::interval := NIL
+   ELSE
+      /* TODO: RT Error */
+      RETURN .F.
    ENDIF
-   RETURN .F.
+   RETURN .T.
 
 METHOD setPriority( nPriority ) CLASS THREAD
    /* TODO: add thread priority setting */
@@ -178,17 +190,21 @@ METHOD setPriority( nPriority ) CLASS THREAD
    RETURN .F.
 
 METHOD setStartTime( nSeconds ) CLASS THREAD
-   /* TODO: add such functionality */
    IF ISNUMBER( nSeconds )
+      IF nSeconds < 0 .OR. nSeconds > 86400
+         RETURN .F.
+      ENDIF
       ::startTime := nSeconds
-   ELSEIF nSeconds == NIL
+   ELSEIF PCount() > 0 .OR. nSeconds == NIL
       ::startTime := NIL
+   ELSE
+      /* TODO: RT Error */
+      RETURN .F.
    ENDIF
-   RETURN .F.
+   RETURN .T.
 
 METHOD start( xAction, ... ) CLASS THREAD
 
-   /* TODO: thread stack size set by user ::maxStackSize */
    IF ::active
       RETURN .F.
 
@@ -198,8 +214,18 @@ METHOD start( xAction, ... ) CLASS THREAD
                LOCAL nTime
 
                ThreadObject( Self )
+
                ::active := .T.
                ::startCount++
+
+               IF ISNUMBER( ::startTime )
+                  nTime := ::startTime - Seconds()
+                  IF nTime < 0
+                     nTime += 86400
+                  ENDIF
+                  hb_idleSleep( nTime )
+                  ::startTime := NIL
+               ENDIF
 
                ::atStart( ... )
                IF ValType( ::_atStart ) == "B"
@@ -223,13 +249,12 @@ METHOD start( xAction, ... ) CLASS THREAD
                   nTime := Int( ( hb_milliSeconds() - nTime ) / 10 )
                   ::deltaTime := nTime
 
+                  /* TODO: when ::startTime is set execution is suspended
+                   *       but I do not know the exact conditions and how
+                   *       it can be resumed
+                   */
+
                   IF !ISNUMBER( ::interval )
-                     ::startTime := NIL
-                     ::atEnd( ... )
-                     IF ValType( ::_atEnd ) == "B"
-                        EVAL( ::_atEnd, ... )
-                     ENDIF
-                     ::active := .F.
                      EXIT
                   ENDIF
 
@@ -240,6 +265,12 @@ METHOD start( xAction, ... ) CLASS THREAD
                   ::startCount++
 
                ENDDO
+
+               ::atEnd( ... )
+               IF ValType( ::_atEnd ) == "B"
+                  EVAL( ::_atEnd, ... )
+               ENDIF
+               ::active := .F.
 
                RETURN NIL
             }, ... )
