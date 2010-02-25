@@ -11486,22 +11486,6 @@ HB_FUNC( __SETPROFILER )
 #endif
 }
 
-/* $Doc$
- * $FuncName$     __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
- * $Description$  Turns on | off tracing of PRG-level function and method calls
- * $End$ */
-HB_FUNC( __TRACEPRGCALLS )
-{
-   HB_STACK_TLS_PRELOAD
-#if defined( HB_PRG_TRACE )
-   hb_retl( hb_bTracePrgCalls );
-   if( HB_ISLOG( 1 ) )
-      hb_bTracePrgCalls = hb_parl( 1 );
-#else
-   hb_retl( HB_FALSE );
-#endif
-}
-
 HB_FUNC( __OPCOUNT ) /* it returns the total amount of opcodes */
 {
    HB_STACK_TLS_PRELOAD
@@ -11529,6 +11513,49 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    {
       hb_storvnl( 0, -1, 1 );
       hb_storvnl( 0, -1, 2 );
+   }
+}
+
+/* $Doc$
+ * $FuncName$     __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+ * $Description$  Turns on | off tracing of PRG-level function and method calls
+ * $End$ */
+HB_FUNC( __TRACEPRGCALLS )
+{
+   HB_STACK_TLS_PRELOAD
+#if defined( HB_PRG_TRACE )
+   hb_retl( hb_bTracePrgCalls );
+   if( HB_ISLOG( 1 ) )
+      hb_bTracePrgCalls = hb_parl( 1 );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
+HB_FUNC( __QUITCANCEL )
+{
+   HB_STACK_TLS_PRELOAD
+
+#if defined( HB_MT_VM )
+   if( !hb_stackQuitState() )
+#endif
+   {
+      long lRecoverBase = hb_stackGetRecoverBase();
+
+      if( lRecoverBase )
+      {
+         PHB_ITEM pRecover = hb_stackItem( lRecoverBase + HB_RECOVER_STATE );
+
+#if defined( _HB_RECOVER_DEBUG )
+         if( pRecover->type != HB_IT_RECOVER )
+            hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak", NULL, NULL );
+#endif
+         if( pRecover->item.asRecover.flags & HB_SEQ_DOALWAYS )
+         {
+            pRecover->item.asRecover.flags &= ~HB_QUIT_REQUESTED;
+            pRecover->item.asRecover.request &= ~HB_QUIT_REQUESTED;
+         }
+      }
    }
 }
 

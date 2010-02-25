@@ -28,6 +28,7 @@ PRG_SOURCES := \
    dbtotalx.prg \
    dbupdatx.prg \
    runshell.prg \
+   sleepx.prg \
    tbcolumx.prg \
    tbrowsex.prg \
    tgetx.prg \
