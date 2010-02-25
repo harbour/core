@@ -407,18 +407,6 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;
 
-#ifdef HB_LEGACY_LEVEL3
-                     case 'L':
-                     case 'l':
-                        if( s[i] == '-' )
-                        {
-                           i++;
-                           hb_pp_setMultiLine( HB_COMP_PARAM->pLex->pPP, HB_FALSE );
-                        }
-                        else
-                           hb_pp_setMultiLine( HB_COMP_PARAM->pLex->pPP, HB_TRUE );
-                        break;
-#endif
                      case 'm':
                      case 'M':
                         if( s[i] == '+' )

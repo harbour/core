@@ -582,9 +582,6 @@ typedef struct
    HB_BOOL  fWriteTrace;            /* write translation to file (.ppt) */
 
    HB_PATHNAMES * pIncludePath;     /* search path(s) for included files */
-#ifdef HB_LEGACY_LEVEL3
-   HB_BOOL  fMultiLine;             /* 'multiline strings' compatibility feature enabled */
-#endif
 
    char *   szOutFileName;          /* output file name */
    FILE *   file_out;               /* output file handle */
@@ -661,9 +658,6 @@ extern void    hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile );
 extern void    hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void    hb_pp_setStdBase( PHB_PP_STATE pState );
 extern void    hb_pp_setStream( PHB_PP_STATE pState, int iMode );
-#ifdef HB_LEGACY_LEVEL3
-extern void    hb_pp_setMultiLine( PHB_PP_STATE pState, HB_BOOL fMultiLine );
-#endif
 extern void    hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, HB_BOOL fReplace );
 extern HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE ulLen );
 extern HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fSearchPath, FILE * file_in, HB_BOOL fError );

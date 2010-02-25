@@ -317,7 +317,7 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
    pBuffer->ulLen = 0;
 }
 
-#ifdef HB_LEGACY_LEVEL3
+#ifdef HB_PP_MULTILINE_STRINGS
 static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, HB_SIZE ulLeft )
 {
    if( ulLeft < pBuffer->ulLen )
@@ -1113,8 +1113,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                }
             }
 
-#ifdef HB_LEGACY_LEVEL3
-            if( pState->fMultiLine )
+#ifdef HB_PP_MULTILINE_STRINGS
             {
                while( ul == ulLen )
                {
@@ -1197,8 +1196,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( ch == '`' )
                ch = '\'';
             while( ++ul < ulLen && pBuffer[ ul ] != ch ) {};
-#ifdef HB_LEGACY_LEVEL3
-            if( pState->fMultiLine )
+#ifdef HB_PP_MULTILINE_STRINGS
             {
                while( ul == ulLen )
                {
@@ -5397,25 +5395,6 @@ void hb_pp_reset( PHB_PP_STATE pState )
    hb_pp_ruleListNonStdFree( &pState->pTranslations );
    hb_pp_ruleListNonStdFree( &pState->pCommands );
 }
-
-#ifdef HB_LEGACY_LEVEL3
-
-/*
- * set compatibility flag for multiline strings concatenated by ';'
- * f.e.:
- *       cVar := "line 1;
- *       line 2;
- *       line 3"
- * It's not Clipper compatible extension and it's not enabled by default
- * anyhow old Harbour PP worked in such way and people may have some code
- * which needs it
- */
-void hb_pp_setMultiLine( PHB_PP_STATE pState, HB_BOOL fMultiLine )
-{
-   pState->fMultiLine = fMultiLine;
-}
-
-#endif
 
 /*
  * add search path for included files
