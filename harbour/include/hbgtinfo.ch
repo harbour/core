@@ -127,7 +127,7 @@
 /* Additional constants to enhance GT */
 #define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
-#define HB_GTI_PALETTE          53  /* Get/Set console colors 1 - 16 given an array of 16 elements containing RGB colors */
+#define HB_GTI_PALETTE          53  /* Get/Set console colors 0 - 15 given an array of 16 elements containing RGB colors */
 
 #define HB_GTI_RESIZEMODE       54  /* Get/Set console resize mode : HB_GTI_RESIZEMODE_FONT | HB_GTI_RESIZEMODE_ROWS */
 #define HB_GTI_SETPOS_XY        55  /* Get/Set current top-left position coordinates of the window by pixels */

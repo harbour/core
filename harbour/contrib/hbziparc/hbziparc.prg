@@ -368,7 +368,7 @@ FUNCTION hb_ZipFile( cFileName,;
 
             hb_FNameSplit( cFileToZip, @cPath, @cName, @cExt, @cDrive )
             hb_ZipFileCreate( hZip, hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt, iif( lWithDrive, cDrive, NIL ) ),;
-                NIL, NIL, NIL, NIL, NIL, nLevel, cPassword, NIL, NIL )
+                NIL, NIL, NIL, NIL, NIL, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_ZipFileCRC32( cFileToZip ) ), NIL )
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, Len( cBuffer ) ) ) > 0
 
