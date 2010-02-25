@@ -572,19 +572,22 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Setup"
-   oSubMenu:addItem( { ::getAction( "DefaultTheme"        ), {|| oIde:oThemes:setWrkTheme()        } } )
-   hbide_menuAddSep( oSubMenu )
    oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
    oSubMenu2:title := "~Codecs"
    oSubMenu:addItem( { oSubMenu2, NIL } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
-   /*                                   Docks                                    */
+   /*                                   View                                     */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Docks"
+   oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
+   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()             )
+   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()             )
+   oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
    oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
    oSubMenu:oWidget:addSeparator()

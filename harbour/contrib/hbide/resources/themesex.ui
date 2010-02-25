@@ -182,7 +182,7 @@
        <item>
         <widget class="QPushButton" name="buttonApply">
          <property name="text">
-          <string>Apply</string>
+          <string>Action</string>
          </property>
         </widget>
        </item>

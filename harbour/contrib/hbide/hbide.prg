@@ -164,7 +164,6 @@ CLASS HbIde
    DATA   qBrushWrkProject
    DATA   qProcess
    DATA   qHelpBrw
-   DATA   qTBarSlctns
    DATA   qTBarLines
    DATA   qTBarPanels
    DATA   qTBarDocks
@@ -303,6 +302,16 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
+   #if 1
+   LOCAL qPixmap, qSplash, nStart
+
+   qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "harbour_splash.png" )
+   qSplash := QSplashScreen():new()
+   qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
+   qSplash:setPixmap( qPixmap )
+   qSplash:show()
+   QApplication():processEvents()
+   #endif
 
    DEFAULT cProjIni TO ::cProjIni
    ::cProjIni := cProjIni
@@ -412,7 +421,15 @@ METHOD HbIde:create( cProjIni )
    /* Request Main Window to Appear on the Screen */
    ::oDlg:Show()
 
-   testPaths()
+   nStart := seconds()
+   DO WHILE .t.
+      QApplication():processEvents()
+      IF seconds()-nStart > 5
+         qSplash:close()
+         qSplash := NIL
+         EXIT
+      ENDIF
+   ENDDO
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -468,6 +485,9 @@ METHOD HbIde:create( cProjIni )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
+   DO WHILE qSplash != NIL
+   ENDDO
+
    /* Very important - destroy resources */
    hbide_dbg( "======================================================" )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
@@ -512,6 +532,7 @@ METHOD HbIde:execAction( cKey )
    CASE "Properties"
    CASE "SelectProject"
    CASE "CloseProject"
+      ::execProjectAction( cKey )
       EXIT
    CASE "New"
    CASE "Open"

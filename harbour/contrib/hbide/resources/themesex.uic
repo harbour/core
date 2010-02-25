@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'themesex.ui'
 **
-** Created: Wed Feb 24 16:25:25 2010
+** Created: Wed Feb 24 21:34:08 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -211,7 +211,7 @@ public:
         buttonSave->setText(QApplication::translate("FormThemesEx", "Save", 0, QApplication::UnicodeUTF8));
         buttonSaveAs->setText(QApplication::translate("FormThemesEx", "Save As", 0, QApplication::UnicodeUTF8));
         buttonCopy->setText(QApplication::translate("FormThemesEx", "Copy", 0, QApplication::UnicodeUTF8));
-        buttonApply->setText(QApplication::translate("FormThemesEx", "Apply", 0, QApplication::UnicodeUTF8));
+        buttonApply->setText(QApplication::translate("FormThemesEx", "Action", 0, QApplication::UnicodeUTF8));
         buttonClose->setText(QApplication::translate("FormThemesEx", "Close", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(FormThemesEx);
     } // retranslateUi

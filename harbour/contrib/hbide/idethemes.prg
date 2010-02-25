@@ -80,6 +80,9 @@
 
 #define THM_NUM_ATTRBS                            6
 
+#define applyMenu_triggered_applyToCurrentTab     1
+#define applyMenu_triggered_setAsDefault          2
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadThemes( oIde )
@@ -104,12 +107,13 @@ CLASS IdeThemes INHERIT IdeObject
    VAR    aControls                               INIT {}
    VAR    aItems                                  INIT {}
    VAR    aPatterns                               INIT {}
-
+   VAR    aApplyAct                               INIT {}
    VAR    nCurTheme                               INIT 1
    VAR    nCurItem                                INIT 1
 
    VAR    qEdit
    VAR    qHiliter
+   VAR    qMenuApply
 
    VAR    lCreating                               INIT .f.
 
@@ -120,6 +124,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD contains( cTheme )
    METHOD load( cFile )
    METHOD save( lAsk )
+   METHOD execEvent( nMode, p )
    METHOD getThemeAttribute( cAttr, cTheme )
    METHOD buildSyntaxFormat( aAttr )
    METHOD setForeBackGround( qEdit, cTheme )
@@ -211,10 +216,38 @@ METHOD IdeThemes:create( oIde, cIniFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:destroy()
+   LOCAL qAct
 
    IF !empty( ::oThemes )
+      FOR EACH qAct IN ::aApplyAct
+         ::disconnect( qAct, "triggered(bool)" )
+         qAct := NIL
+      NEXT
+      ::qMenuApply := NIL
+      ::aApplyAct := NIL
+
       ::oUI:destroy()
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:execEvent( nMode, p )
+   LOCAL oEditor
+
+   HB_SYMBOL_UNUSED( p )
+
+   DO CASE
+   CASE nMode == applyMenu_triggered_applyToCurrentTab
+      IF !empty( oEditor := ::oEM:getEditorCurrent() )
+         oEditor:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
+      ENDIF
+
+   CASE nMode == applyMenu_triggered_setAsDefault
+      ::setWrkTheme( ::aThemes[ ::nCurTheme, 1 ] )
+
+   ENDCASE
 
    RETURN Self
 
@@ -409,6 +442,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:show()
+   LOCAL qAct
 
    IF empty( ::oUI )
       ::lCreating := .t.
@@ -430,8 +464,7 @@ METHOD IdeThemes:show()
       ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
       ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
 
-      ::oUI:signal( "buttonClose"   , "clicked()", ;
-         {|| ::oIde:aIni[ INI_HBIDE, ThemesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ::oThemesDock:hide() } )
+      ::oUI:signal( "buttonClose"   , "clicked()"               , {||  ::oThemesDock:hide() } )
 
  *    ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
 
@@ -450,6 +483,25 @@ METHOD IdeThemes:show()
       ::oUI:qObj[ "buttonSaveAs"   ]:setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
       ::oUI:qObj[ "buttonClose"    ]:setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
       ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
+
+      ::qMenuApply := QMenu():new()
+      //
+      qAct := QAction():new( ::qMenuApply )
+      qAct:setText( "Apply to Current Tab" )
+      ::connect( qAct, "triggered(bool)", {|| ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
+      ::qMenuApply:addAction_4( qAct )
+      aadd( ::aApplyAct, qAct )
+      //
+      ::qMenuApply:addSeparator()
+      //
+      qAct := QAction():new( ::qMenuApply )
+      qAct:setText( "Set as Default" )
+      ::connect( qAct, "triggered(bool)", {|| ::execEvent( applyMenu_triggered_setAsDefault ) } )
+      ::qMenuApply:addAction_4( qAct )
+      ::qMenuApply:addAction_4( qAct )
+      aadd( ::aApplyAct, qAct )
+      //
+      ::oUI:q_buttonApply:setMenu( ::qMenuApply )
 
       aeval( ::aThemes, {|e_| ::oUI:qObj[ "comboThemes" ]:addItem( e_[ 1 ] ) } )
       aeval( ::aItems , {|e_| ::oUI:qObj[ "comboItems"  ]:addItem( e_[ 2 ] ) } )

@@ -113,7 +113,6 @@ CLASS IdeObject
    ACCESS qViewsCombo                             INLINE ::oIde:qViewsCombo
    ACCESS qHelpBrw                                INLINE ::oIde:qHelpBrw
 
-   ACCESS qTBarSlctns                             INLINE ::oIde:qTBarSlctns
    ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
    ACCESS qTBarDocks                              INLINE ::oIde:qTBarDocks

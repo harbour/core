@@ -328,7 +328,7 @@ METHOD IdeDocks:buildDialog()
                     ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
 
    ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
-   ::oDlg:Show()
+   //::oDlg:Show()
 
    /* StatusBar */
    ::buildStatusBar()
@@ -504,6 +504,7 @@ METHOD IdeDocks:buildToolBarPanels()
 
    ::oIde:qTBarPanels := QToolBar():new()
    ::qTBarPanels:setObjectName( "ToolBar_Panels" )
+   ::qTBarPanels:setWindowTitle( "ToolBar: Editor Panels" )
    ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea )
    ::qTBarPanels:setOrientation( Qt_Vertical )
    ::qTBarPanels:setIconSize( qSize )
@@ -522,6 +523,7 @@ METHOD IdeDocks:buildToolBarPanels()
 
    ::oIde:qTBarLines := QToolBar():new()
    ::qTBarLines:setObjectName( "ToolBar_Lines" )
+   ::qTBarLines:setWindowTitle( "ToolBar: Lines and Blocks" )
    ::qTBarLines:setAllowedAreas( Qt_LeftToolBarArea )
    ::qTBarLines:setOrientation( Qt_Vertical )
    ::qTBarLines:setIconSize( qSize )
@@ -579,6 +581,7 @@ METHOD IdeDocks:buildToolBarPanels()
    /* Right-hand docks toolbar */
    ::oIde:qTBarDocks := QToolBar():new()
    ::qTBarDocks:setObjectName( "ToolBar_Docks" )
+   ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
    ::qTBarDocks:setAllowedAreas( Qt_RightToolBarArea )
    ::qTBarDocks:setOrientation( Qt_Vertical )
    ::qTBarDocks:setIconSize( QSize():new( 16,16 ) )
