@@ -206,7 +206,8 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  setShortcutEnabled( nId, lEnable )
    METHOD  setSizeIncrement( pQSize )
    METHOD  setSizeIncrement_1( nW, nH )
-   METHOD  setSizePolicy( nHorizontal, nVertical )
+   METHOD  setSizePolicy( pPolicy )
+   METHOD  setSizePolicy_1( nHorizontal, nVertical )
    METHOD  setStatusTip( cQString )
    METHOD  setStyle( pStyle )
    METHOD  setToolTip( cQString )
@@ -846,8 +847,12 @@ METHOD QWidget:setSizeIncrement_1( nW, nH )
    RETURN Qt_QWidget_setSizeIncrement_1( ::pPtr, nW, nH )
 
 
-METHOD QWidget:setSizePolicy( nHorizontal, nVertical )
-   RETURN Qt_QWidget_setSizePolicy( ::pPtr, nHorizontal, nVertical )
+METHOD QWidget:setSizePolicy( pPolicy )
+   RETURN Qt_QWidget_setSizePolicy( ::pPtr, hbqt_ptr( pPolicy ) )
+
+
+METHOD QWidget:setSizePolicy_1( nHorizontal, nVertical )
+   RETURN Qt_QWidget_setSizePolicy_1( ::pPtr, nHorizontal, nVertical )
 
 
 METHOD QWidget:setStatusTip( cQString )

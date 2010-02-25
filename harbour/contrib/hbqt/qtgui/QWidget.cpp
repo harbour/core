@@ -59,6 +59,7 @@
  */
 /*----------------------------------------------------------------------*/
 
+#include "hbapi.h"
 #include "../hbqt.h"
 
 /*----------------------------------------------------------------------*/
@@ -72,7 +73,7 @@
  */
 
 /*
- *  Constructed[ 210/229 [ 91.70% ] ]
+ *  Constructed[ 211/229 [ 92.14% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -93,7 +94,6 @@
  *  //void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
  *  //void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
  *  // void setEditFocus ( bool enable )
- *  //void setSizePolicy ( QSizePolicy )
  *  // void setWindowSurface ( QWindowSurface * surface )
  *  //WId winId () const
  *  // QWindowSurface * windowSurface () const   (preliminary)
@@ -1303,9 +1303,17 @@ HB_FUNC( QT_QWIDGET_SETSIZEINCREMENT_1 )
 }
 
 /*
- * void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
+ * void setSizePolicy ( const QSizePolicy & policy )
  */
 HB_FUNC( QT_QWIDGET_SETSIZEPOLICY )
+{
+   hbqt_par_QWidget( 1 )->setSizePolicy( *hbqt_par_QSizePolicy( 2 ) );
+}
+
+/*
+ * void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
+ */
+HB_FUNC( QT_QWIDGET_SETSIZEPOLICY_1 )
 {
    hbqt_par_QWidget( 1 )->setSizePolicy( ( QSizePolicy::Policy ) hb_parni( 2 ), ( QSizePolicy::Policy ) hb_parni( 3 ) );
 }

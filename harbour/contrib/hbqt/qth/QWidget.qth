@@ -256,10 +256,7 @@ void setShortcutAutoRepeat ( int id, bool enable = true )
 void setShortcutEnabled ( int id, bool enable = true )
 void setSizeIncrement ( const QSize & )
 void setSizeIncrement ( int w, int h )
-#
-# do not know how to handle ??
-#
-//void setSizePolicy ( QSizePolicy )
+void setSizePolicy ( const QSizePolicy & policy )
 void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
 void setStatusTip ( const QString & )
 void setStyle ( QStyle * style )
