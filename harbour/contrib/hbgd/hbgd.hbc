@@ -9,4 +9,6 @@ libs=hbgd
 {linux}libs=gdlib png jpeg freetype m
 {darwin}libs=gd
 
+libs=../hbct/hbct.hbc
+
 -L/opt/local/lib{darwin}

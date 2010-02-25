@@ -18,6 +18,7 @@ C_SOURCES := \
    oemansix.c \
    philesx.c \
    pvalue.c \
+   xppopc.c \
 
 PRG_SOURCES := \
    browdbx.prg \
@@ -35,6 +36,7 @@ PRG_SOURCES := \
    thfuncx.prg \
    tthreadx.prg \
    typefilx.prg \
+   xppop.prg \
 
 PRG_HEADERS := \
    dll.ch \

@@ -297,7 +297,7 @@ HB_FUNC( XHB_GREATEREQ )
  * data from tail
  */
 #undef HB_IS_VALID_INDEX
-#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_ISIZ ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
 
 HB_FUNC( XHB_INDEX )
 {
@@ -314,9 +314,7 @@ HB_FUNC( XHB_INDEX )
          {
             HB_SIZE ulLen = hb_arrayLen( pSelf );
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
-            {
                hb_itemMoveRef( hb_arrayGetItemPtr( pSelf, ulIndex ), pValue );
-            }
             else
                hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
          }
@@ -344,9 +342,8 @@ HB_FUNC( XHB_INDEX )
             hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
-      }
+
       hb_itemReturn( pSelf );
    }
    else

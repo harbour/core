@@ -63,6 +63,11 @@
 
 #include "hbclass.ch"
 
+#if ! defined( XPP_OP_OVERLOAD_OFF )
+   #pragma -ks+
+   REQUEST XPP_OP_OVERLOAD
+#endif
+
 #xtranslate IsPrinter([<x>])   => hb_IsPrinter(<x>)
 #xtranslate DispOutAt(<x,...>) => hb_DispOutAt(<x>)
 #xtranslate AAdd(<a>,<v>,<p>)  => hb_AIns(<a>,<v>,<p>,.T.)
