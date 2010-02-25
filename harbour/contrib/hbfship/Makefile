@@ -9,6 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbfship
 
 C_SOURCES := \
+   pvalue.c \
    secondfs.c \
    strpeek.c \
 

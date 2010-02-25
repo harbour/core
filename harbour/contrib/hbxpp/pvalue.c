@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Xbase++ compatible SLEEP() function
+ * PVALUE() function
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,10 +52,4 @@
 
 #include "hbapi.h"
 
-/* NOTE: SLEEP() may collide with other implementations with the
-         same name (in FlagsShip, CLIP) which also expects parameter
-         differently. [vszakats] */
-HB_FUNC( SLEEP )
-{
-   hb_idleSleep( ( ( double ) hb_parnl( 1 ) ) / 100 );
-}
+HB_FUNC_EXTERN( HB_PVALUE ); HB_FUNC( PVALUE ) { HB_FUNC_EXEC( HB_PVALUE ); }

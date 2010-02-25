@@ -17,6 +17,7 @@ C_SOURCES := \
    mousex.c \
    oemansix.c \
    philesx.c \
+   pvalue.c \
 
 PRG_SOURCES := \
    browdbx.prg \
@@ -28,7 +29,6 @@ PRG_SOURCES := \
    dbtotalx.prg \
    dbupdatx.prg \
    runshell.prg \
-   sleepx.prg \
    tbcolumx.prg \
    tbrowsex.prg \
    tgetx.prg \

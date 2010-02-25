@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    xBase++ SLEEP() function
+ * PVALUE() function
  *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,10 +50,6 @@
  *
  */
 
-#include "common.ch"
+#include "hbapi.h"
 
-FUNCTION Sleep( nTime )
-
-   hb_idleSleep( IIF( ISNUMBER( nTime ), nTime / 100, 0 ) )
-
-   RETURN NIL
+HB_FUNC_EXTERN( HB_PVALUE ); HB_FUNC( PVALUE ) { HB_FUNC_EXEC( HB_PVALUE ); }
