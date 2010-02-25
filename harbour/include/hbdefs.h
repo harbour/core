@@ -1625,6 +1625,8 @@ typedef HB_U32 HB_FATTR;
 #define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_exit_##funcname ( void )
 #define HB_FUNC_INITSTATICS( )     static HARBOUR hb_INITSTATICS( void )
 #define HB_FUNC_INITLINES( )       static HARBOUR hb_INITLINES( void )
+#define HB_FUNC_TRANSLATE( w, o )  HB_FUNC_EXTERN( o ); HB_FUNC( w ) { HB_FUNC_EXEC( o ); }
+
 
 #if defined( HB_FUNC_CALLCONV )
    #define HARBOUR void HB_FUNC_CALLCONV
