@@ -7857,7 +7857,7 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
 %TAB%<true/>
 </dict>
 </plist>
-      ENDTEXT
+      #pragma __endtext
       EXIT
    CASE 2
       cString := "%__APPTYPE__%%__APPSIGN__%"

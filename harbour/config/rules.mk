@@ -12,10 +12,6 @@ else
    HB_PRGFLAGS := -l $(HB_PRGFLAGS)
 endif
 
-ifeq ($(HB_BUILD_UNICODE),yes)
-   HB_CFLAGS := -DUNICODE $(HB_CFLAGS)
-endif
-
 HB_CFLAGS := -DHB_LEGACY_TYPES_OFF $(HB_CFLAGS)
 
 ifeq ($(HB_DYN_COPT),)
