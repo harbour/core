@@ -42,6 +42,7 @@ PRG_HEADERS := \
    dll.ch \
    hbxpp.ch \
    hbxppext.ch \
+   thread.ch \
 
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk

@@ -57,9 +57,7 @@
 #include "hbclass.ch"
 #include "hbthread.ch"
 
-/* I do not know Xbase++ values */
-#define QUIT_NORESTART  1
-#define QUIT_RESTART    2
+#include "thread.ch"
 
 
 /*
