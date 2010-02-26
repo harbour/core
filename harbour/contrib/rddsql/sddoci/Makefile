@@ -26,6 +26,10 @@ ifneq ($(HB_HAS_OCILIB),)
    ifeq ($(HB_COMPILER),mingw)
       HB_CFLAGS += -DOCI_API=_stdcall
    endif
+   # Required to link against generated implib
+   ifeq ($(HB_COMPILER),bcc)
+      HB_CFLAGS += -DOCI_API=_stdcall
+   endif
    ifneq ($(HB_WITH_OCILIB_UNICODE),)
       HB_CFLAGS += -DOCI_CHARSET_UNICODE
    else ifneq ($(HB_WITH_OCILIB_MIXED),)

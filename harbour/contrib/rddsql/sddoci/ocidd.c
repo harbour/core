@@ -6,6 +6,8 @@
  * Oracle (via OCILIB) Database Driver
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Based on ODBC driver by:
+ * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -363,7 +365,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
 
-      HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable ) );
+      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable ) ); */
 
       switch( uiDataType )
       {
