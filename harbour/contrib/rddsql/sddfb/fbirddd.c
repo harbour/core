@@ -144,7 +144,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    isc_db_handle    db = ( isc_db_handle ) 0;
    char             parambuf[ 520 ];
    int              i;
-   HB_ULONG         ul;
+   HB_SIZE          ul;
 
    i = 0;
    parambuf[ i++ ] = isc_dpb_version1;

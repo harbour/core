@@ -339,7 +339,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
    errCode = 0;
    bError = HB_FALSE;
-   for ( uiIndex = 0; uiIndex < uiFields; uiIndex++  )
+   for ( uiIndex = 0; uiIndex < uiFields; uiIndex++ )
    {
       if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR* ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
       {
@@ -424,7 +424,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             {
                char*    pStr;
 
-               pStr = ( char * ) hb_xgrab( ( HB_ULONG ) pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
@@ -487,10 +487,10 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
    if ( bError )
    {
-     hb_itemRelease( pItemEof );
-     SQLFreeStmt( hStmt, SQL_DROP );
-     hb_errRT_ODBCDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
-     return HB_FAILURE;
+      hb_itemRelease( pItemEof );
+      SQLFreeStmt( hStmt, SQL_DROP );
+      hb_errRT_ODBCDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
+      return HB_FAILURE;
    }
 
    pArea->ulRecCount = 0;
@@ -555,7 +555,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_CHAR, ( SQLCHAR * ) val, 1024, &iLen ) ) )
                {
                   if( iLen > 0 )
-                     pItem = hb_itemPutCL( NULL, val, ( HB_ULONG ) iLen );
+                     pItem = hb_itemPutCL( NULL, val, ( HB_SIZE ) iLen );
                }
                hb_xfree( val );
                break;

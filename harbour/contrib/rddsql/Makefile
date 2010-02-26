@@ -17,6 +17,7 @@ DIRS := \
    sddmy \
    sddpg \
    sddfb \
+   sddoci \
    sddodbc \
 
 include $(TOP)$(ROOT)config/header.mk

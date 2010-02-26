@@ -308,6 +308,7 @@ HARBOUR
    HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
    HB_WITH_MYSQL=C:\mysql\include
+   HB_WITH_OCILIB=C:\ocilib\include
    HB_WITH_ODBC= (may only be needed on non-Windows systems)
    HB_WITH_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
    HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
@@ -903,6 +904,7 @@ HARBOUR
       set HB_WITH_FREEIMAGE=C:\FreeImage\Dist
       set HB_WITH_GD=C:\gd\include
       set HB_WITH_MYSQL=C:\mysql\include
+      set HB_WITH_OCILIB=C:\ocilib\include
       set HB_WITH_OPENSSL=C:\openssl\inc32
       set HB_WITH_PGSQL=C:\pgsql\include
       set HB_WITH_QT=C:\Qt\include
@@ -1335,6 +1337,8 @@ HARBOUR
          http://libharu.org/
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
          http://dev.mysql.com/downloads/
+      HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
+         http://orclib.sourceforge.net/
       HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
          http://www.openssl.org/
       HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]

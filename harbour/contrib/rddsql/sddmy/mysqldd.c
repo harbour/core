@@ -461,7 +461,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
    PHB_ITEM  pError;
-   HB_ULONG  ulLen;
+   HB_SIZE   ulLen;
 
    bError = HB_FALSE;
    uiIndex--;
@@ -489,7 +489,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          if ( pValue )
             memcpy( pStr, pValue, ulLen );
 
-         if ( ( HB_ULONG )pField->uiLen > ulLen )
+         if ( ( HB_SIZE ) pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
 
          pStr[ pField->uiLen ] = '\0';
