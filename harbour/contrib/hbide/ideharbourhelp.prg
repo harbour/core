@@ -374,7 +374,8 @@ METHOD IdeHarbourHelp:setParameters()
 
    oUI:q_treeDoc:expandsOnDoubleClick( .f. )
 
-   oUI:q_browserView:setOpenLinks( .f. )
+   oUI:q_browserView:setOpenLinks( .t. )
+   oUI:q_browserView:setOpenExternalLinks( .t. )
    oUI:q_tabWidgetContents:setFocusPolicy( Qt_NoFocus )
 
    RETURN Self
