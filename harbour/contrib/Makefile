@@ -10,6 +10,7 @@ DIRS := \
    hbbtree \
    hbclipsm \
    hbct \
+   hbfoxpro \
    hbfship \
    hbgt \
    hbmemio \

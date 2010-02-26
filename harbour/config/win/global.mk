@@ -7,11 +7,11 @@ all : first
 BIN_EXT := .exe
 DYN_EXT := .dll
 
-HB_GT_LIBS += gtwvt gtgui gtwin
-
 ifneq ($(HB_BUILD_UNICODE),no)
    HB_CFLAGS += -DUNICODE
 endif
+
+HB_GT_LIBS += gtwvt gtgui gtwin
 
 # kernel32: needed by some compilers (pocc/watcom)
 # user32: *Clipboard*(), GetKeyState(), GetKeyboardState(), SetKeyboardState(), gtwvt stuff

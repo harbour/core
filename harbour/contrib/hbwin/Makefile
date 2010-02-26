@@ -46,7 +46,6 @@ PRG_SOURCES := \
    oleauto.prg \
    axfunc.prg \
    wce_sim.prg \
-   win_dllf.prg \
    win_os.prg \
    win_reg.prg \
    win_tbmp.prg \
