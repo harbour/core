@@ -1,0 +1,73 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSize()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSize object.
+    $INHERITS$
+
+    $SYNTAX$
+        QSize():new( ... )
+        QSize():from( pPtr_OR_oObj_of_type_QSize )
+        QSize():configure( pPtr_OR_oObj_of_type_QSize )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSize
+    $METHODS$
+        :height()                                           -> nInt
+        :isEmpty()                                          -> lBool
+        :isNull()                                           -> lBool
+        :isValid()                                          -> lBool
+        :rheight()                                          -> nInt
+        :rwidth()                                           -> nInt
+        :scale( nWidth, nHeight, nMode )                    -> NIL
+        :scale_1( pSize, nMode )                            -> NIL
+        :setHeight( nHeight )                               -> NIL
+        :setWidth( nWidth )                                 -> NIL
+        :transpose()                                        -> NIL
+        :width()                                            -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oSize := QSize():new()
+        oSize := QSize():new( pSize )
+        oSize := QSize():new( nWidth, nHeight )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQSize.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QSize.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qsize.html
+    $END$
+ */

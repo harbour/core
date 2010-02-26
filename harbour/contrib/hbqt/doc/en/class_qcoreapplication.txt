@@ -1,0 +1,97 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QCoreApplication()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QCoreApplication object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QCoreApplication():new( ... )
+        QCoreApplication():from( pPtr_OR_oObj_of_type_QCoreApplication )
+        QCoreApplication():configure( pPtr_OR_oObj_of_type_QCoreApplication )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QCoreApplication
+    $METHODS$
+        :notify( pReceiver, pEvent )                        -> lBool
+        :addLibraryPath( cPath )                            -> NIL
+        :applicationDirPath()                               -> cQString
+        :applicationFilePath()                              -> cQString
+        :applicationName()                                  -> cQString
+        :applicationPid()                                   -> nQint64
+        :applicationVersion()                               -> cQString
+        :arguments()                                        -> pQStringList
+        :closingDown()                                      -> lBool
+        :exec()                                             -> nInt
+        :exit( nReturnCode )                                -> NIL
+        :flush()                                            -> NIL
+        :hasPendingEvents()                                 -> lBool
+        :installTranslator( pTranslationFile )              -> NIL
+        :libraryPaths()                                     -> pQStringList
+        :organizationDomain()                               -> cQString
+        :organizationName()                                 -> cQString
+        :postEvent( pReceiver, pEvent )                     -> NIL
+        :postEvent_1( pReceiver, pEvent, nPriority )        -> NIL
+        :processEvents( nFlags )                            -> NIL
+        :processEvents_1( nFlags, nMaxtime )                -> NIL
+        :removeLibraryPath( cPath )                         -> NIL
+        :removePostedEvents( pReceiver )                    -> NIL
+        :removePostedEvents_1( pReceiver, nEventType )      -> NIL
+        :removeTranslator( pTranslationFile )               -> NIL
+        :sendEvent( pReceiver, pEvent )                     -> lBool
+        :sendPostedEvents( pReceiver, nEvent_type )         -> NIL
+        :sendPostedEvents_1()                               -> NIL
+        :setApplicationName( cApplication )                 -> NIL
+        :setApplicationVersion( cVersion )                  -> NIL
+        :setAttribute( nAttribute, lOn )                    -> NIL
+        :setLibraryPaths( pPaths )                          -> NIL
+        :setOrganizationDomain( cOrgDomain )                -> NIL
+        :setOrganizationName( cOrgName )                    -> NIL
+        :startingUp()                                       -> lBool
+        :testAttribute( nAttribute )                        -> lBool
+        :translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )  -> cQString
+        :translate_1( pContext, pSourceText, pDisambiguation, nEncoding )  -> cQString
+        :quit()                                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQCoreApplication.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QCoreApplication.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qcoreapplication.html
+    $END$
+ */

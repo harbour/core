@@ -1,0 +1,60 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:19
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStyleOptionToolBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStyleOptionToolBox object.
+    $INHERITS$
+        QStyleOption
+    $SYNTAX$
+        QStyleOptionToolBox():new( ... )
+        QStyleOptionToolBox():from( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
+        QStyleOptionToolBox():configure( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStyleOptionToolBox
+    $METHODS$
+        :icon()                                             -> pQIcon
+        :text()                                             -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStyleOptionToolBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStyleOptionToolBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QStyleOption, http://doc.trolltech.com/4.5/qstyleoptiontoolbox.html
+    $END$
+ */

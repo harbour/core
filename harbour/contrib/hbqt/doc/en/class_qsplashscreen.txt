@@ -1,0 +1,64 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSplashScreen()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSplashScreen object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QSplashScreen():new( ... )
+        QSplashScreen():from( pPtr_OR_oObj_of_type_QSplashScreen )
+        QSplashScreen():configure( pPtr_OR_oObj_of_type_QSplashScreen )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSplashScreen
+    $METHODS$
+        :finish( pMainWin )                                 -> NIL
+        :pixmap()                                           -> pQPixmap
+        :repaint()                                          -> NIL
+        :setPixmap( pPixmap )                               -> NIL
+        :clearMessage()                                     -> NIL
+        :showMessage( cMessage, nAlignment, pColor )        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSplashScreen.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSplashScreen.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qsplashscreen.html
+    $END$
+ */

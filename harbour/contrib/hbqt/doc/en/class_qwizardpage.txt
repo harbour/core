@@ -1,0 +1,75 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:23
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QWizardPage()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QWizardPage object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QWizardPage():new( ... )
+        QWizardPage():from( pPtr_OR_oObj_of_type_QWizardPage )
+        QWizardPage():configure( pPtr_OR_oObj_of_type_QWizardPage )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QWizardPage
+    $METHODS$
+        :buttonText( nWhich )                               -> cQString
+        :cleanupPage()                                      -> NIL
+        :initializePage()                                   -> NIL
+        :isCommitPage()                                     -> lBool
+        :isComplete()                                       -> lBool
+        :isFinalPage()                                      -> lBool
+        :nextId()                                           -> nInt
+        :pixmap( nWhich )                                   -> pQPixmap
+        :setButtonText( nWhich, cText )                     -> NIL
+        :setCommitPage( lCommitPage )                       -> NIL
+        :setFinalPage( lFinalPage )                         -> NIL
+        :setPixmap( nWhich, pPixmap )                       -> NIL
+        :setSubTitle( cSubTitle )                           -> NIL
+        :setTitle( cTitle )                                 -> NIL
+        :subTitle()                                         -> cQString
+        :title()                                            -> cQString
+        :validatePage()                                     -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQWizardPage.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QWizardPage.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qwizardpage.html
+    $END$
+ */

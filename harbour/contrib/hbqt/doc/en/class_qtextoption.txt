@@ -1,0 +1,70 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextOption()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextOption object.
+    $INHERITS$
+
+    $SYNTAX$
+        QTextOption():new( ... )
+        QTextOption():from( pPtr_OR_oObj_of_type_QTextOption )
+        QTextOption():configure( pPtr_OR_oObj_of_type_QTextOption )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextOption
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :flags()                                            -> nFlags
+        :setAlignment( nAlignment )                         -> NIL
+        :setFlags( nFlags )                                 -> NIL
+        :setTabStop( nTabStop )                             -> NIL
+        :setTextDirection( nDirection )                     -> NIL
+        :setUseDesignMetrics( lEnable )                     -> NIL
+        :setWrapMode( nMode )                               -> NIL
+        :tabStop()                                          -> nQreal
+        :textDirection()                                    -> nQt::LayoutDirection
+        :useDesignMetrics()                                 -> lBool
+        :wrapMode()                                         -> nWrapMode
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextOption.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextOption.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qtextoption.html
+    $END$
+ */

@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QDateTime()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QDateTime object.
+    $INHERITS$
+
+    $SYNTAX$
+        QDateTime():new( ... )
+        QDateTime():from( pPtr_OR_oObj_of_type_QDateTime )
+        QDateTime():configure( pPtr_OR_oObj_of_type_QDateTime )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QDateTime
+    $METHODS$
+        :date()                                             -> pQDate
+        :daysTo( pOther )                                   -> nInt
+        :isNull()                                           -> lBool
+        :isValid()                                          -> lBool
+        :secsTo( pOther )                                   -> nInt
+        :setDate( pDate )                                   -> NIL
+        :setTime( pTime )                                   -> NIL
+        :setTimeSpec( nSpec )                               -> NIL
+        :setTime_t( nSeconds )                              -> NIL
+        :time()                                             -> pQTime
+        :timeSpec()                                         -> nQt::TimeSpec
+        :toString( cFormat )                                -> cQString
+        :toString_1( nFormat )                              -> cQString
+        :toTime_t()                                         -> nUint
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQDateTime.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QDateTime.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qdatetime.html
+    $END$
+ */

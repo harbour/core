@@ -1,0 +1,86 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QToolBar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QToolBar object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QToolBar():new( ... )
+        QToolBar():from( pPtr_OR_oObj_of_type_QToolBar )
+        QToolBar():configure( pPtr_OR_oObj_of_type_QToolBar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QToolBar
+    $METHODS$
+        :actionAt( pP )                                     -> pQAction
+        :actionAt_1( nX, nY )                               -> pQAction
+        :addAction( pAction )                               -> NIL
+        :addAction_1( cText )                               -> pQAction
+        :addAction_2( cIcon, cText )                        -> pQAction
+        :addAction_3( cText, pReceiver, pMember )           -> pQAction
+        :addAction_4( cIcon, cText, pReceiver, pMember )    -> pQAction
+        :addSeparator()                                     -> pQAction
+        :addWidget( pWidget )                               -> pQAction
+        :allowedAreas()                                     -> nQt::ToolBarAreas
+        :clear()                                            -> NIL
+        :iconSize()                                         -> pQSize
+        :insertSeparator( pBefore )                         -> pQAction
+        :insertWidget( pBefore, pWidget )                   -> pQAction
+        :isAreaAllowed( nArea )                             -> lBool
+        :isFloatable()                                      -> lBool
+        :isFloating()                                       -> lBool
+        :isMovable()                                        -> lBool
+        :orientation()                                      -> nQt::Orientation
+        :setAllowedAreas( nAreas )                          -> NIL
+        :setFloatable( lFloatable )                         -> NIL
+        :setMovable( lMovable )                             -> NIL
+        :setOrientation( nOrientation )                     -> NIL
+        :toggleViewAction()                                 -> pQAction
+        :toolButtonStyle()                                  -> nQt::ToolButtonStyle
+        :widgetForAction( pAction )                         -> pQWidget
+        :setIconSize( pIconSize )                           -> NIL
+        :setToolButtonStyle( nToolButtonStyle )             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQToolBar.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QToolBar.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qtoolbar.html
+    $END$
+ */

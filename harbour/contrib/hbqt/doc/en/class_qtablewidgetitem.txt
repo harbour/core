@@ -1,0 +1,92 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTableWidgetItem()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTableWidgetItem object.
+    $INHERITS$
+
+    $SYNTAX$
+        QTableWidgetItem():new( ... )
+        QTableWidgetItem():from( pPtr_OR_oObj_of_type_QTableWidgetItem )
+        QTableWidgetItem():configure( pPtr_OR_oObj_of_type_QTableWidgetItem )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTableWidgetItem
+    $METHODS$
+        :background()                                       -> pQBrush
+        :checkState()                                       -> nQt::CheckState
+        :column()                                           -> nInt
+        :data( nRole )                                      -> pQVariant
+        :flags()                                            -> nQt::ItemFlags
+        :font()                                             -> pQFont
+        :foreground()                                       -> pQBrush
+        :icon()                                             -> pQIcon
+        :isSelected()                                       -> lBool
+        :read( pIn )                                        -> NIL
+        :row()                                              -> nInt
+        :setBackground( pBrush )                            -> NIL
+        :setCheckState( nState )                            -> NIL
+        :setData( nRole, pValue )                           -> NIL
+        :setFlags( nFlags )                                 -> NIL
+        :setFont( pFont )                                   -> NIL
+        :setForeground( pBrush )                            -> NIL
+        :setIcon( cIcon )                                   -> NIL
+        :setSelected( lSelect )                             -> NIL
+        :setSizeHint( pSize )                               -> NIL
+        :setStatusTip( cStatusTip )                         -> NIL
+        :setText( cText )                                   -> NIL
+        :setTextAlignment( nAlignment )                     -> NIL
+        :setToolTip( cToolTip )                             -> NIL
+        :setWhatsThis( cWhatsThis )                         -> NIL
+        :sizeHint()                                         -> pQSize
+        :statusTip()                                        -> cQString
+        :tableWidget()                                      -> pQTableWidget
+        :text()                                             -> cQString
+        :textAlignment()                                    -> nInt
+        :toolTip()                                          -> cQString
+        :type()                                             -> nInt
+        :whatsThis()                                        -> cQString
+        :write( pOut )                                      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTableWidgetItem.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTableWidgetItem.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qtablewidgetitem.html
+    $END$
+ */

@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMenuBar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMenuBar object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QMenuBar():new( ... )
+        QMenuBar():from( pPtr_OR_oObj_of_type_QMenuBar )
+        QMenuBar():configure( pPtr_OR_oObj_of_type_QMenuBar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMenuBar
+    $METHODS$
+        :activeAction()                                     -> pQAction
+        :addAction( cText )                                 -> pQAction
+        :addAction_1( cText, pReceiver, pMember )           -> pQAction
+        :addAction_2( pAction )                             -> NIL
+        :addMenu( pMenu )                                   -> pQAction
+        :addMenu_1( cTitle )                                -> pQMenu
+        :addMenu_2( cIcon, cTitle )                         -> pQMenu
+        :addSeparator()                                     -> pQAction
+        :clear()                                            -> NIL
+        :insertMenu( pBefore, pMenu )                       -> pQAction
+        :insertSeparator( pBefore )                         -> pQAction
+        :isDefaultUp()                                      -> lBool
+        :setActiveAction( pAct )                            -> NIL
+        :setDefaultUp( lBool )                              -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQMenuBar.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QMenuBar.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qmenubar.html
+    $END$
+ */

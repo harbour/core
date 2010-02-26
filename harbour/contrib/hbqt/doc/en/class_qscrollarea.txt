@@ -1,0 +1,67 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QScrollArea()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QScrollArea object.
+    $INHERITS$
+        QAbstractScrollArea
+    $SYNTAX$
+        QScrollArea():new( ... )
+        QScrollArea():from( pPtr_OR_oObj_of_type_QScrollArea )
+        QScrollArea():configure( pPtr_OR_oObj_of_type_QScrollArea )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QScrollArea
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :ensureVisible( nX, nY, nXmargin, nYmargin )        -> NIL
+        :ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )  -> NIL
+        :setAlignment( nQt::Alignment )                     -> NIL
+        :setWidget( pWidget )                               -> NIL
+        :setWidgetResizable( lResizable )                   -> NIL
+        :takeWidget()                                       -> pQWidget
+        :widget()                                           -> pQWidget
+        :widgetResizable()                                  -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQScrollArea.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QScrollArea.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractScrollArea, http://doc.trolltech.com/4.5/qscrollarea.html
+    $END$
+ */

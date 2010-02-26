@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSizePolicy()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSizePolicy object.
+    $INHERITS$
+
+    $SYNTAX$
+        QSizePolicy():new( ... )
+        QSizePolicy():from( pPtr_OR_oObj_of_type_QSizePolicy )
+        QSizePolicy():configure( pPtr_OR_oObj_of_type_QSizePolicy )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSizePolicy
+    $METHODS$
+        :controlType()                                      -> nControlType
+        :expandingDirections()                              -> nQt::Orientations
+        :hasHeightForWidth()                                -> lBool
+        :horizontalPolicy()                                 -> nPolicy
+        :horizontalStretch()                                -> nInt
+        :setControlType( nType )                            -> NIL
+        :setHeightForWidth( lDependent )                    -> NIL
+        :setHorizontalPolicy( nPolicy )                     -> NIL
+        :setHorizontalStretch( nStretchFactor )             -> NIL
+        :setVerticalPolicy( nPolicy )                       -> NIL
+        :setVerticalStretch( nStretchFactor )               -> NIL
+        :transpose()                                        -> NIL
+        :verticalPolicy()                                   -> nPolicy
+        :verticalStretch()                                  -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSizePolicy.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSizePolicy.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qsizepolicy.html
+    $END$
+ */

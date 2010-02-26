@@ -1,0 +1,102 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTabBar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTabBar object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QTabBar():new( ... )
+        QTabBar():from( pPtr_OR_oObj_of_type_QTabBar )
+        QTabBar():configure( pPtr_OR_oObj_of_type_QTabBar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTabBar
+    $METHODS$
+        :addTab( cText )                                    -> nInt
+        :count()                                            -> nInt
+        :currentIndex()                                     -> nInt
+        :documentMode()                                     -> lBool
+        :drawBase()                                         -> lBool
+        :elideMode()                                        -> nQt::TextElideMode
+        :expanding()                                        -> lBool
+        :iconSize()                                         -> pQSize
+        :insertTab( nIndex, cText )                         -> nInt
+        :isMovable()                                        -> lBool
+        :isTabEnabled( nIndex )                             -> lBool
+        :moveTab( nFrom, nTo )                              -> NIL
+        :removeTab( nIndex )                                -> NIL
+        :selectionBehaviorOnRemove()                        -> nSelectionBehavior
+        :setDocumentMode( lSet )                            -> NIL
+        :setDrawBase( lDrawTheBase )                        -> NIL
+        :setElideMode( nQt::TextElideMode )                 -> NIL
+        :setExpanding( lEnabled )                           -> NIL
+        :setIconSize( pSize )                               -> NIL
+        :setMovable( lMovable )                             -> NIL
+        :setSelectionBehaviorOnRemove( nBehavior )          -> NIL
+        :setShape( nShape )                                 -> NIL
+        :setTabButton( nIndex, nPosition, pWidget )         -> NIL
+        :setTabData( nIndex, pData )                        -> NIL
+        :setTabEnabled( nIndex, lEnabled )                  -> NIL
+        :setTabText( nIndex, cText )                        -> NIL
+        :setTabTextColor( nIndex, pColor )                  -> NIL
+        :setTabToolTip( nIndex, cTip )                      -> NIL
+        :setTabWhatsThis( nIndex, cText )                   -> NIL
+        :setTabsClosable( lClosable )                       -> NIL
+        :setUsesScrollButtons( lUseButtons )                -> NIL
+        :shape()                                            -> nShape
+        :tabAt( pPosition )                                 -> nInt
+        :tabButton( nIndex, nPosition )                     -> pQWidget
+        :tabData( nIndex )                                  -> pQVariant
+        :tabIcon( nIndex )                                  -> pQIcon
+        :tabRect( nIndex )                                  -> pQRect
+        :tabText( nIndex )                                  -> cQString
+        :tabTextColor( nIndex )                             -> pQColor
+        :tabToolTip( nIndex )                               -> cQString
+        :tabWhatsThis( nIndex )                             -> cQString
+        :tabsClosable()                                     -> lBool
+        :usesScrollButtons()                                -> lBool
+        :setCurrentIndex( nIndex )                          -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTabBar.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTabBar.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qtabbar.html
+    $END$
+ */

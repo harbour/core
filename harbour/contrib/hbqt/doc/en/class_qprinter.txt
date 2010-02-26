@@ -1,0 +1,113 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QPrinter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QPrinter object.
+    $INHERITS$
+        QPaintDevice
+    $SYNTAX$
+        QPrinter():new( ... )
+        QPrinter():from( pPtr_OR_oObj_of_type_QPrinter )
+        QPrinter():configure( pPtr_OR_oObj_of_type_QPrinter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QPrinter
+    $METHODS$
+        :abort()                                            -> lBool
+        :collateCopies()                                    -> lBool
+        :colorMode()                                        -> nColorMode
+        :creator()                                          -> cQString
+        :docName()                                          -> cQString
+        :doubleSidedPrinting()                              -> lBool
+        :duplex()                                           -> nDuplexMode
+        :fontEmbeddingEnabled()                             -> lBool
+        :fromPage()                                         -> nInt
+        :fullPage()                                         -> lBool
+        :getPageMargins( @nLeft, @nTop, @nRight, @nBottom, nUnit )  -> NIL
+        :isValid()                                          -> lBool
+        :newPage()                                          -> lBool
+        :numCopies()                                        -> nInt
+        :orientation()                                      -> nOrientation
+        :outputFileName()                                   -> cQString
+        :outputFormat()                                     -> nOutputFormat
+        :pageOrder()                                        -> nPageOrder
+        :pageRect()                                         -> pQRect
+        :pageRect_1( nUnit )                                -> pQRectF
+        :paintEngine()                                      -> pQPaintEngine
+        :paperRect()                                        -> pQRect
+        :paperRect_1( nUnit )                               -> pQRectF
+        :paperSize()                                        -> nPaperSize
+        :paperSize_1( nUnit )                               -> pQSizeF
+        :paperSource()                                      -> nPaperSource
+        :printEngine()                                      -> pQPrintEngine
+        :printProgram()                                     -> cQString
+        :printRange()                                       -> nPrintRange
+        :printerName()                                      -> cQString
+        :printerState()                                     -> nPrinterState
+        :resolution()                                       -> nInt
+        :setCollateCopies( lCollate )                       -> NIL
+        :setColorMode( nNewColorMode )                      -> NIL
+        :setCreator( cCreator )                             -> NIL
+        :setDocName( cName )                                -> NIL
+        :setDoubleSidedPrinting( lDoubleSided )             -> NIL
+        :setDuplex( nDuplex )                               -> NIL
+        :setFontEmbeddingEnabled( lEnable )                 -> NIL
+        :setFromTo( nFrom, nTo )                            -> NIL
+        :setFullPage( lFp )                                 -> NIL
+        :setNumCopies( nNumCopies )                         -> NIL
+        :setOrientation( nOrientation )                     -> NIL
+        :setOutputFileName( cFileName )                     -> NIL
+        :setOutputFormat( nFormat )                         -> NIL
+        :setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )  -> NIL
+        :setPageOrder( nPageOrder )                         -> NIL
+        :setPaperSize( nNewPaperSize )                      -> NIL
+        :setPaperSize_1( pPaperSize, nUnit )                -> NIL
+        :setPaperSource( nSource )                          -> NIL
+        :setPrintProgram( cPrintProg )                      -> NIL
+        :setPrintRange( nRange )                            -> NIL
+        :setPrinterName( cName )                            -> NIL
+        :setResolution( nDpi )                              -> NIL
+        :toPage()                                           -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQPrinter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QPrinter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QPaintDevice, http://doc.trolltech.com/4.5/qprinter.html
+    $END$
+ */

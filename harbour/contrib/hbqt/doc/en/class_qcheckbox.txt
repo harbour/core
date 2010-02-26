@@ -1,0 +1,62 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QCheckBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QCheckBox object.
+    $INHERITS$
+        QAbstractButton
+    $SYNTAX$
+        QCheckBox():new( ... )
+        QCheckBox():from( pPtr_OR_oObj_of_type_QCheckBox )
+        QCheckBox():configure( pPtr_OR_oObj_of_type_QCheckBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QCheckBox
+    $METHODS$
+        :checkState()                                       -> nQt::CheckState
+        :isTristate()                                       -> lBool
+        :setCheckState( nState )                            -> NIL
+        :setTristate( lY )                                  -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQCheckBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QCheckBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractButton, http://doc.trolltech.com/4.5/qcheckbox.html
+    $END$
+ */

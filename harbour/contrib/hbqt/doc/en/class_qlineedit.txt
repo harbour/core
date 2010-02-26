@@ -1,0 +1,113 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QLineEdit()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QLineEdit object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QLineEdit():new( ... )
+        QLineEdit():from( pPtr_OR_oObj_of_type_QLineEdit )
+        QLineEdit():configure( pPtr_OR_oObj_of_type_QLineEdit )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QLineEdit
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :backspace()                                        -> NIL
+        :completer()                                        -> pQCompleter
+        :createStandardContextMenu()                        -> pQMenu
+        :cursorBackward( lMark, nSteps )                    -> NIL
+        :cursorForward( lMark, nSteps )                     -> NIL
+        :cursorPosition()                                   -> nInt
+        :cursorPositionAt( pPos )                           -> nInt
+        :cursorWordBackward( lMark )                        -> NIL
+        :cursorWordForward( lMark )                         -> NIL
+        :del()                                              -> NIL
+        :deselect()                                         -> NIL
+        :displayText()                                      -> cQString
+        :dragEnabled()                                      -> lBool
+        :echoMode()                                         -> nEchoMode
+        :end( lMark )                                       -> NIL
+        :getTextMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
+        :hasAcceptableInput()                               -> lBool
+        :hasFrame()                                         -> lBool
+        :hasSelectedText()                                  -> lBool
+        :home( lMark )                                      -> NIL
+        :inputMask()                                        -> cQString
+        :insert( cNewText )                                 -> NIL
+        :isModified()                                       -> lBool
+        :isReadOnly()                                       -> lBool
+        :isRedoAvailable()                                  -> lBool
+        :isUndoAvailable()                                  -> lBool
+        :maxLength()                                        -> nInt
+        :minimumSizeHint()                                  -> pQSize
+        :selectedText()                                     -> cQString
+        :selectionStart()                                   -> nInt
+        :setAlignment( nFlag )                              -> NIL
+        :setCompleter( pC )                                 -> NIL
+        :setCursorPosition( nInt )                          -> NIL
+        :setDragEnabled( lB )                               -> NIL
+        :setEchoMode( nEchoMode )                           -> NIL
+        :setFrame( lBool )                                  -> NIL
+        :setInputMask( cInputMask )                         -> NIL
+        :setMaxLength( nInt )                               -> NIL
+        :setModified( lBool )                               -> NIL
+        :setReadOnly( lBool )                               -> NIL
+        :setSelection( nStart, nLength )                    -> NIL
+        :setTextMargins( nLeft, nTop, nRight, nBottom )     -> NIL
+        :setValidator( pV )                                 -> NIL
+        :sizeHint()                                         -> pQSize
+        :text()                                             -> cQString
+        :validator()                                        -> pQValidator
+        :clear()                                            -> NIL
+        :copy()                                             -> NIL
+        :cut()                                              -> NIL
+        :paste()                                            -> NIL
+        :redo()                                             -> NIL
+        :selectAll()                                        -> NIL
+        :setText( cQString )                                -> NIL
+        :undo()                                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQLineEdit.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QLineEdit.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qlineedit.html
+    $END$
+ */

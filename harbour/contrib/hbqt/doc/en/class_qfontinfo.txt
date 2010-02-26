@@ -1,0 +1,70 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFontInfo()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFontInfo object.
+    $INHERITS$
+
+    $SYNTAX$
+        QFontInfo():new( ... )
+        QFontInfo():from( pPtr_OR_oObj_of_type_QFontInfo )
+        QFontInfo():configure( pPtr_OR_oObj_of_type_QFontInfo )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFontInfo
+    $METHODS$
+        :bold()                                             -> lBool
+        :exactMatch()                                       -> lBool
+        :family()                                           -> cQString
+        :fixedPitch()                                       -> lBool
+        :italic()                                           -> lBool
+        :pixelSize()                                        -> nInt
+        :pointSize()                                        -> nInt
+        :pointSizeF()                                       -> nQreal
+        :rawMode()                                          -> lBool
+        :style()                                            -> nQFont::Style
+        :styleHint()                                        -> nQFont::StyleHint
+        :weight()                                           -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFontInfo.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFontInfo.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qfontinfo.html
+    $END$
+ */

@@ -1,0 +1,77 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMimeData()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMimeData object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QMimeData():new( ... )
+        QMimeData():from( pPtr_OR_oObj_of_type_QMimeData )
+        QMimeData():configure( pPtr_OR_oObj_of_type_QMimeData )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMimeData
+    $METHODS$
+        :clear()                                            -> NIL
+        :colorData()                                        -> pQVariant
+        :data( cMimeType )                                  -> pQByteArray
+        :formats()                                          -> pQStringList
+        :hasColor()                                         -> lBool
+        :hasFormat( cMimeType )                             -> lBool
+        :hasHtml()                                          -> lBool
+        :hasImage()                                         -> lBool
+        :hasText()                                          -> lBool
+        :hasUrls()                                          -> lBool
+        :html()                                             -> cQString
+        :imageData()                                        -> pQVariant
+        :removeFormat( cMimeType )                          -> NIL
+        :setColorData( pColor )                             -> NIL
+        :setData( cMimeType, pData )                        -> NIL
+        :setHtml( cHtml )                                   -> NIL
+        :setImageData( pImage )                             -> NIL
+        :setText( cText )                                   -> NIL
+        :text()                                             -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQMimeData.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QMimeData.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qmimedata.html
+    $END$
+ */

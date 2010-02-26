@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:23
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QWebHistory()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QWebHistory object.
+    $INHERITS$
+
+    $SYNTAX$
+        QWebHistory():new( ... )
+        QWebHistory():from( pPtr_OR_oObj_of_type_QWebHistory )
+        QWebHistory():configure( pPtr_OR_oObj_of_type_QWebHistory )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QWebHistory
+    $METHODS$
+        :back()                                             -> NIL
+        :backItem()                                         -> Item
+        :canGoBack()                                        -> lBool
+        :canGoForward()                                     -> lBool
+        :clear()                                            -> NIL
+        :count()                                            -> nInt
+        :currentItem()                                      -> Item
+        :currentItemIndex()                                 -> nInt
+        :forward()                                          -> NIL
+        :forwardItem()                                      -> Item
+        :goToItem( pItem )                                  -> NIL
+        :itemAt( nI )                                       -> Item
+        :maximumItemCount()                                 -> nInt
+        :setMaximumItemCount( nCount )                      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtwebkit/TQWebHistory.prg
+        C++ Wrappers : contrib/hbqt/qtwebkit/QWebHistory.cpp
+        Library      : hbqtwebkit
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qwebhistory.html
+    $END$
+ */

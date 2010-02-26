@@ -1,0 +1,62 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTranslator()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTranslator object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QTranslator():new( ... )
+        QTranslator():from( pPtr_OR_oObj_of_type_QTranslator )
+        QTranslator():configure( pPtr_OR_oObj_of_type_QTranslator )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTranslator
+    $METHODS$
+        :isEmpty()                                          -> lBool
+        :load( cFilename, cDirectory, cSearch_delimiters, cSuffix )  -> lBool
+        :translate( pContext, pSourceText, pDisambiguation )  -> cQString
+        :translate_1( pContext, pSourceText, pDisambiguation, nN )  -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQTranslator.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QTranslator.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qtranslator.html
+    $END$
+ */

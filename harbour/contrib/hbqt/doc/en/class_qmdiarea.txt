@@ -1,0 +1,83 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMdiArea()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMdiArea object.
+    $INHERITS$
+        QAbstractScrollArea
+    $SYNTAX$
+        QMdiArea():new( ... )
+        QMdiArea():from( pPtr_OR_oObj_of_type_QMdiArea )
+        QMdiArea():configure( pPtr_OR_oObj_of_type_QMdiArea )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMdiArea
+    $METHODS$
+        :activationOrder()                                  -> nWindowOrder
+        :activeSubWindow()                                  -> pQMdiSubWindow
+        :addSubWindow( pWidget, nWindowFlags )              -> pQMdiSubWindow
+        :background()                                       -> pQBrush
+        :currentSubWindow()                                 -> pQMdiSubWindow
+        :documentMode()                                     -> lBool
+        :removeSubWindow( pWidget )                         -> NIL
+        :setActivationOrder( nOrder )                       -> NIL
+        :setBackground( pBackground )                       -> NIL
+        :setDocumentMode( lEnabled )                        -> NIL
+        :setOption( nOption, lOn )                          -> NIL
+        :setTabPosition( nPosition )                        -> NIL
+        :setTabShape( nShape )                              -> NIL
+        :setViewMode( nMode )                               -> NIL
+        :tabPosition()                                      -> nQTabWidget::TabPosition
+        :tabShape()                                         -> nQTabWidget::TabShape
+        :testOption( nOption )                              -> lBool
+        :viewMode()                                         -> nViewMode
+        :activateNextSubWindow()                            -> NIL
+        :activatePreviousSubWindow()                        -> NIL
+        :cascadeSubWindows()                                -> NIL
+        :closeActiveSubWindow()                             -> NIL
+        :closeAllSubWindows()                               -> NIL
+        :setActiveSubWindow( pWindow )                      -> NIL
+        :tileSubWindows()                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQMdiArea.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QMdiArea.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractScrollArea, http://doc.trolltech.com/4.5/qmdiarea.html
+    $END$
+ */

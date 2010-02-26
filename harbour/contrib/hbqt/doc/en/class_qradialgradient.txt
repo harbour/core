@@ -1,0 +1,71 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QRadialGradient()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QRadialGradient object.
+    $INHERITS$
+        QGradient
+    $SYNTAX$
+        QRadialGradient():new( ... )
+        QRadialGradient():from( pPtr_OR_oObj_of_type_QRadialGradient )
+        QRadialGradient():configure( pPtr_OR_oObj_of_type_QRadialGradient )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QRadialGradient
+    $METHODS$
+        :center()                                           -> pQPointF
+        :focalPoint()                                       -> pQPointF
+        :radius()                                           -> nQreal
+        :setCenter( pCenter )                               -> NIL
+        :setCenter_1( nX, nY )                              -> NIL
+        :setFocalPoint( pFocalPoint )                       -> NIL
+        :setFocalPoint_1( nX, nY )                          -> NIL
+        :setRadius( nRadius )                               -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oRadialGradient := QRadialGradient():new()
+        oRadialGradient := QRadialGradient():new( pQRadialGradient )
+        oRadialGradient := QRadialGradient():new( pQPointF_center, nRadius )
+        oRadialGradient := QRadialGradient():new( pQPointF_center, nRadius, pQPointF_focalPoint )
+        oRadialGradient := QRadialGradient():new( nCx, nCy, nRadius, nFx, nFy )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQRadialGradient.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QRadialGradient.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QGradient, http://doc.trolltech.com/4.5/qradialgradient.html
+    $END$
+ */

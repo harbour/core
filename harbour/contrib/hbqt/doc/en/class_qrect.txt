@@ -1,0 +1,119 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QRect()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QRect object.
+    $INHERITS$
+
+    $SYNTAX$
+        QRect():new( ... )
+        QRect():from( pPtr_OR_oObj_of_type_QRect )
+        QRect():configure( pPtr_OR_oObj_of_type_QRect )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QRect
+    $METHODS$
+        :adjust( nDx1, nDy1, nDx2, nDy2 )                   -> NIL
+        :bottom()                                           -> nInt
+        :bottomLeft()                                       -> pQPoint
+        :bottomRight()                                      -> pQPoint
+        :center()                                           -> pQPoint
+        :contains( pPoint, lProper )                        -> lBool
+        :contains_1( nX, nY, lProper )                      -> lBool
+        :contains_2( nX, nY )                               -> lBool
+        :contains_3( pRectangle, lProper )                  -> lBool
+        :getCoords( @nX1, @nY1, @nX2, @nY2 )                -> NIL
+        :getRect( @nX, @nY, @nWidth, @nHeight )             -> NIL
+        :height()                                           -> nInt
+        :intersects( pRectangle )                           -> lBool
+        :isEmpty()                                          -> lBool
+        :isNull()                                           -> lBool
+        :isValid()                                          -> lBool
+        :left()                                             -> nInt
+        :moveBottom( nY )                                   -> NIL
+        :moveBottomLeft( pPosition )                        -> NIL
+        :moveBottomRight( pPosition )                       -> NIL
+        :moveCenter( pPosition )                            -> NIL
+        :moveLeft( nX )                                     -> NIL
+        :moveRight( nX )                                    -> NIL
+        :moveTo( nX, nY )                                   -> NIL
+        :moveTo_1( pPosition )                              -> NIL
+        :moveTop( nY )                                      -> NIL
+        :moveTopLeft( pPosition )                           -> NIL
+        :moveTopRight( pPosition )                          -> NIL
+        :right()                                            -> nInt
+        :setBottom( nY )                                    -> NIL
+        :setBottomLeft( pPosition )                         -> NIL
+        :setBottomRight( pPosition )                        -> NIL
+        :setCoords( nX1, nY1, nX2, nY2 )                    -> NIL
+        :setHeight( nHeight )                               -> NIL
+        :setLeft( nX )                                      -> NIL
+        :setRect( nX, nY, nWidth, nHeight )                 -> NIL
+        :setRight( nX )                                     -> NIL
+        :setSize( pSize )                                   -> NIL
+        :setTop( nY )                                       -> NIL
+        :setTopLeft( pPosition )                            -> NIL
+        :setTopRight( pPosition )                           -> NIL
+        :setWidth( nWidth )                                 -> NIL
+        :setX( nX )                                         -> NIL
+        :setY( nY )                                         -> NIL
+        :size()                                             -> pQSize
+        :top()                                              -> nInt
+        :topLeft()                                          -> pQPoint
+        :topRight()                                         -> pQPoint
+        :translate( nDx, nDy )                              -> NIL
+        :translate_1( pOffset )                             -> NIL
+        :width()                                            -> nInt
+        :x()                                                -> nInt
+        :y()                                                -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oRect := QRect():new()
+        oRect := QRect():new( pQRect_other )
+        oRect := QRect():new( pQPoint_topLeft, pQPoint_bottomRight )
+        oRect := QRect():new( nX, nY, nWidth, nHeight )
+        /* TODO:
+         *
+         * oRect := QRect():new( pQPoint_topLeft, pQSize_size )
+         */
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQRect.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QRect.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qrect.html
+    $END$
+ */

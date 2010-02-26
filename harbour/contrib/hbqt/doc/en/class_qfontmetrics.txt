@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFontMetrics()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFontMetrics object.
+    $INHERITS$
+
+    $SYNTAX$
+        QFontMetrics():new( ... )
+        QFontMetrics():from( pPtr_OR_oObj_of_type_QFontMetrics )
+        QFontMetrics():configure( pPtr_OR_oObj_of_type_QFontMetrics )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFontMetrics
+    $METHODS$
+        :ascent()                                           -> nInt
+        :averageCharWidth()                                 -> nInt
+        :boundingRect( pCh )                                -> pQRect
+        :boundingRect_1( cText )                            -> pQRect
+        :boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
+        :boundingRect_3( pRect, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
+        :descent()                                          -> nInt
+        :elidedText( cText, nMode, nWidth, nFlags )         -> cQString
+        :height()                                           -> nInt
+        :inFont( pCh )                                      -> lBool
+        :leading()                                          -> nInt
+        :leftBearing( pCh )                                 -> nInt
+        :lineSpacing()                                      -> nInt
+        :lineWidth()                                        -> nInt
+        :maxWidth()                                         -> nInt
+        :minLeftBearing()                                   -> nInt
+        :minRightBearing()                                  -> nInt
+        :overlinePos()                                      -> nInt
+        :rightBearing( pCh )                                -> nInt
+        :size( nFlags, cText, nTabStops, @nTabArray )       -> pQSize
+        :strikeOutPos()                                     -> nInt
+        :tightBoundingRect( cText )                         -> pQRect
+        :underlinePos()                                     -> nInt
+        :width( cText, nLen )                               -> nInt
+        :width_1( pCh )                                     -> nInt
+        :xHeight()                                          -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oFontMetrics := QFontMetrics():new( pQFontMetrics )
+        oFontMetrics := QFontMetrics():new( "QFont", pQFont )
+        oFontMetrics := QFontMetrics():new( pQFont, pQPaintDevice )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFontMetrics.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFontMetrics.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qfontmetrics.html
+    $END$
+ */

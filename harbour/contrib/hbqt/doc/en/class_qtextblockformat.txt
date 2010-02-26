@@ -1,0 +1,77 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextBlockFormat()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextBlockFormat object.
+    $INHERITS$
+        QTextFormat
+    $SYNTAX$
+        QTextBlockFormat():new( ... )
+        QTextBlockFormat():from( pPtr_OR_oObj_of_type_QTextBlockFormat )
+        QTextBlockFormat():configure( pPtr_OR_oObj_of_type_QTextBlockFormat )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextBlockFormat
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :bottomMargin()                                     -> nQreal
+        :indent()                                           -> nInt
+        :isValid()                                          -> lBool
+        :leftMargin()                                       -> nQreal
+        :nonBreakableLines()                                -> lBool
+        :pageBreakPolicy()                                  -> nPageBreakFlags
+        :rightMargin()                                      -> nQreal
+        :setAlignment( nAlignment )                         -> NIL
+        :setBottomMargin( nMargin )                         -> NIL
+        :setIndent( nIndentation )                          -> NIL
+        :setLeftMargin( nMargin )                           -> NIL
+        :setNonBreakableLines( lB )                         -> NIL
+        :setPageBreakPolicy( nPolicy )                      -> NIL
+        :setRightMargin( nMargin )                          -> NIL
+        :setTextIndent( nIndent )                           -> NIL
+        :setTopMargin( nMargin )                            -> NIL
+        :textIndent()                                       -> nQreal
+        :topMargin()                                        -> nQreal
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextBlockFormat.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextBlockFormat.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QTextFormat, http://doc.trolltech.com/4.5/qtextblockformat.html
+    $END$
+ */

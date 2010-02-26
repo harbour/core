@@ -1,0 +1,91 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QIODevice()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QIODevice object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QIODevice():new( ... )
+        QIODevice():from( pPtr_OR_oObj_of_type_QIODevice )
+        QIODevice():configure( pPtr_OR_oObj_of_type_QIODevice )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QIODevice
+    $METHODS$
+        :atEnd()                                            -> lBool
+        :bytesAvailable()                                   -> nQint64
+        :bytesToWrite()                                     -> nQint64
+        :canReadLine()                                      -> lBool
+        :close()                                            -> NIL
+        :errorString()                                      -> cQString
+        :getChar( cC )                                      -> lBool
+        :isOpen()                                           -> lBool
+        :isReadable()                                       -> lBool
+        :isSequential()                                     -> lBool
+        :isTextModeEnabled()                                -> lBool
+        :isWritable()                                       -> lBool
+        :open( nMode )                                      -> lBool
+        :openMode()                                         -> nOpenMode
+        :peek( cData, nMaxSize )                            -> nQint64
+        :peek_1( nMaxSize )                                 -> pQByteArray
+        :pos()                                              -> nQint64
+        :putChar( cC )                                      -> lBool
+        :read( cData, nMaxSize )                            -> nQint64
+        :read_1( nMaxSize )                                 -> pQByteArray
+        :readAll()                                          -> pQByteArray
+        :readLine( cData, nMaxSize )                        -> nQint64
+        :readLine_1( nMaxSize )                             -> pQByteArray
+        :reset()                                            -> lBool
+        :seek( nPos )                                       -> lBool
+        :setTextModeEnabled( lEnabled )                     -> NIL
+        :size()                                             -> nQint64
+        :ungetChar( cC )                                    -> NIL
+        :waitForBytesWritten( nMsecs )                      -> lBool
+        :waitForReadyRead( nMsecs )                         -> lBool
+        :write( pData, nMaxSize )                           -> nQint64
+        :write_1( pData )                                   -> nQint64
+        :write_2( pByteArray )                              -> nQint64
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQIODevice.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QIODevice.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qiodevice.html
+    $END$
+ */

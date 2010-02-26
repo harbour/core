@@ -1,0 +1,64 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSyntaxHighlighter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSyntaxHighlighter object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QSyntaxHighlighter():new( ... )
+        QSyntaxHighlighter():from( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
+        QSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSyntaxHighlighter
+    $METHODS$
+        :document()                                         -> pQTextDocument
+        :setDocument( pDoc )                                -> NIL
+        :rehighlight()                                      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oSynHiliter := HBQSyntaxHighlighter():new( pObject )
+        oSynHiliter := HBQSyntaxHighlighter():new( "QTextDocument", pQTextDocument )
+        oSynHiliter := HBQSyntaxHighlighter():new( "QTextEdit", pQTextEdit )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSyntaxHighlighter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSyntaxHighlighter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qsyntaxhighlighter.html
+    $END$
+ */

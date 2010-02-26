@@ -1,0 +1,107 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QDir()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QDir object.
+    $INHERITS$
+
+    $SYNTAX$
+        QDir():new( ... )
+        QDir():from( pPtr_OR_oObj_of_type_QDir )
+        QDir():configure( pPtr_OR_oObj_of_type_QDir )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QDir
+    $METHODS$
+        :absoluteFilePath( cFileName )                      -> cQString
+        :absolutePath()                                     -> cQString
+        :canonicalPath()                                    -> cQString
+        :cd( cDirName )                                     -> lBool
+        :cdUp()                                             -> lBool
+        :count()                                            -> nUint
+        :dirName()                                          -> cQString
+        :entryList( pNameFilters, nFilters, nSort )         -> pQStringList
+        :entryList_1( nFilters, nSort )                     -> pQStringList
+        :exists( cName )                                    -> lBool
+        :exists_1()                                         -> lBool
+        :filePath( cFileName )                              -> cQString
+        :filter()                                           -> nFilters
+        :isAbsolute()                                       -> lBool
+        :isReadable()                                       -> lBool
+        :isRelative()                                       -> lBool
+        :isRoot()                                           -> lBool
+        :makeAbsolute()                                     -> lBool
+        :mkdir( cDirName )                                  -> lBool
+        :mkpath( cDirPath )                                 -> lBool
+        :nameFilters()                                      -> pQStringList
+        :path()                                             -> cQString
+        :refresh()                                          -> NIL
+        :relativeFilePath( cFileName )                      -> cQString
+        :remove( cFileName )                                -> lBool
+        :rename( cOldName, cNewName )                       -> lBool
+        :rmdir( cDirName )                                  -> lBool
+        :rmpath( cDirPath )                                 -> lBool
+        :setFilter( nFilters )                              -> NIL
+        :setNameFilters( pNameFilters )                     -> NIL
+        :setPath( cPath )                                   -> NIL
+        :setSorting( nSort )                                -> NIL
+        :sorting()                                          -> nSortFlags
+        :addSearchPath( cPrefix, cPath )                    -> NIL
+        :cleanPath( cPath )                                 -> cQString
+        :currentPath()                                      -> cQString
+        :fromNativeSeparators( cPathName )                  -> cQString
+        :homePath()                                         -> cQString
+        :isAbsolutePath( cPath )                            -> lBool
+        :isRelativePath( cPath )                            -> lBool
+        :match( cFilter, cFileName )                        -> lBool
+        :match_1( pFilters, cFileName )                     -> lBool
+        :rootPath()                                         -> cQString
+        :searchPaths( cPrefix )                             -> pQStringList
+        :separator()                                        -> pQChar
+        :setCurrent( cPath )                                -> lBool
+        :setSearchPaths( cPrefix, pSearchPaths )            -> NIL
+        :tempPath()                                         -> cQString
+        :toNativeSeparators( cPathName )                    -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQDir.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QDir.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qdir.html
+    $END$
+ */

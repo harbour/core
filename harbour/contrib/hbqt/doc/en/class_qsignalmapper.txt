@@ -1,0 +1,69 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSignalMapper()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSignalMapper object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QSignalMapper():new( ... )
+        QSignalMapper():from( pPtr_OR_oObj_of_type_QSignalMapper )
+        QSignalMapper():configure( pPtr_OR_oObj_of_type_QSignalMapper )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSignalMapper
+    $METHODS$
+        :mapping( nId )                                     -> pQObject
+        :mapping_1( cId )                                   -> pQObject
+        :mapping_2( pWidget )                               -> pQObject
+        :mapping_3( pObject )                               -> pQObject
+        :removeMappings( pSender )                          -> NIL
+        :setMapping( pSender, nId )                         -> NIL
+        :setMapping_1( pSender, cText )                     -> NIL
+        :setMapping_2( pSender, pWidget )                   -> NIL
+        :setMapping_3( pSender, pObject )                   -> NIL
+        :map()                                              -> NIL
+        :map_1( pSender )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQSignalMapper.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QSignalMapper.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qsignalmapper.html
+    $END$
+ */

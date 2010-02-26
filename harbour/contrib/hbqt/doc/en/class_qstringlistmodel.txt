@@ -1,0 +1,66 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStringListModel()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStringListModel object.
+    $INHERITS$
+        QAbstractListModel
+    $SYNTAX$
+        QStringListModel():new( ... )
+        QStringListModel():from( pPtr_OR_oObj_of_type_QStringListModel )
+        QStringListModel():configure( pPtr_OR_oObj_of_type_QStringListModel )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStringListModel
+    $METHODS$
+        :data( pIndex, nRole )                              -> pQVariant
+        :flags( pIndex )                                    -> nQt::ItemFlags
+        :insertRows( nRow, nCount, pParent )                -> lBool
+        :removeRows( nRow, nCount, pParent )                -> lBool
+        :rowCount( pParent )                                -> nInt
+        :setData( pIndex, pValue, nRole )                   -> lBool
+        :setStringList( pStrings )                          -> NIL
+        :stringList()                                       -> pQStringList
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStringListModel.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStringListModel.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractListModel, http://doc.trolltech.com/4.5/qstringlistmodel.html
+    $END$
+ */

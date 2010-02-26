@@ -1,0 +1,67 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QKeyEvent()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QKeyEvent object.
+    $INHERITS$
+        QInputEvent
+    $SYNTAX$
+        QKeyEvent():new( ... )
+        QKeyEvent():from( pPtr_OR_oObj_of_type_QKeyEvent )
+        QKeyEvent():configure( pPtr_OR_oObj_of_type_QKeyEvent )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QKeyEvent
+    $METHODS$
+        :count()                                            -> nInt
+        :isAutoRepeat()                                     -> lBool
+        :key()                                              -> nInt
+        :matches( nKey )                                    -> lBool
+        :modifiers()                                        -> nQt::KeyboardModifiers
+        :nativeModifiers()                                  -> nQuint32
+        :nativeScanCode()                                   -> nQuint32
+        :nativeVirtualKey()                                 -> nQuint32
+        :text()                                             -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQKeyEvent.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QKeyEvent.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QInputEvent, http://doc.trolltech.com/4.5/qkeyevent.html
+    $END$
+ */

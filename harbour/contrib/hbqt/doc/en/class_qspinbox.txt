@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSpinBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSpinBox object.
+    $INHERITS$
+        QAbstractSpinBox
+    $SYNTAX$
+        QSpinBox():new( ... )
+        QSpinBox():from( pPtr_OR_oObj_of_type_QSpinBox )
+        QSpinBox():configure( pPtr_OR_oObj_of_type_QSpinBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSpinBox
+    $METHODS$
+        :cleanText()                                        -> cQString
+        :maximum()                                          -> nInt
+        :minimum()                                          -> nInt
+        :prefix()                                           -> cQString
+        :setMaximum( nMax )                                 -> NIL
+        :setMinimum( nMin )                                 -> NIL
+        :setPrefix( cPrefix )                               -> NIL
+        :setRange( nMinimum, nMaximum )                     -> NIL
+        :setSingleStep( nVal )                              -> NIL
+        :setSuffix( cSuffix )                               -> NIL
+        :singleStep()                                       -> nInt
+        :suffix()                                           -> cQString
+        :value()                                            -> nInt
+        :setValue( nVal )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSpinBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSpinBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractSpinBox, http://doc.trolltech.com/4.5/qspinbox.html
+    $END$
+ */

@@ -675,7 +675,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Build Document File */
       IF !empty( doc_ )
-         BuildDocument( cWidget, doc_, cPathDoc, docum_ )
+         Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
       ENDIF
 
       /* Build Class PRG Source */
@@ -694,6 +694,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    ENDIF
 
    RETURN { cCPP, cPRG }
+
+
 
 /*----------------------------------------------------------------------*/
 
@@ -1616,6 +1618,116 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
+   LOCAL cText, n, n1, n2, nLen, pWidget, cRet, cLib, cFile, i, cInherits
+   LOCAL txt_:= {}
+
+   HB_SYMBOL_UNUSED( cls_    )
+   HB_SYMBOL_UNUSED( subCls_ )
+
+   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
+   cInherits := iif( n > 0, cls_[ n, 2 ], '' )
+
+   IF ascan( aGui, cWidget ) > 0
+      cLib := "qtgui"
+   ELSEIF ascan( aCore, cWidget ) > 0
+      cLib := "qtcore"
+   ELSEIF ascan( aWebkit, cWidget ) > 0
+      cLib := "qtwebkit"
+   ELSEIF ascan( aNetwork, cWidget ) > 0
+      cLib := "qtnetwork"
+   ENDIF
+
+   aadd( txt_, '/* '  )
+   aadd( txt_, ' *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+' )
+   aadd( txt_, ' *  '  )
+   aadd( txt_, ' *  Please do not modify this document as it is subject to change in future.' )
+   aadd( txt_, ' *  '  )
+   aadd( txt_, ' *  Pritpal Bedi <bedipritpal@hotmail.com>' )
+   aadd( txt_, ' *  '  )
+   aadd( txt_, ' *  ' + dtoc( date() ) + ' - ' + time()               )
+   aadd( txt_, ' *  '  )
+   aadd( txt_, ' */ ' )
+   aadd( txt_, '    '  )
+   aadd( txt_, '    '  )
+   aadd( txt_, '    '  )
+   aadd( txt_, '/*  $DOC$         ' )
+   aadd( txt_, '    $TEMPLATE$    ' )
+   aadd( txt_, '        Class' )
+   aadd( txt_, '    $NAME$        ' )
+   aadd( txt_, '        ' + cWidget + '()' )
+   aadd( txt_, '    $CATEGORY$    ' )
+   aadd( txt_, '        ' + 'Harbour Bindings for Qt 4.5.3+' )
+   aadd( txt_, '    $SUBCATEGORY$ ' )
+   aadd( txt_, '        ' + 'GUI' )
+   aadd( txt_, '    $ONELINER$    ' )
+   aadd( txt_, '        ' + 'Creates a new ' + cWidget + ' object.' )
+   aadd( txt_, '    $INHERITS$    ' )
+   aadd( txt_, '        ' + cInherits )
+   aadd( txt_, '    $SYNTAX$      ' )
+   aadd( txt_, '        ' + cWidget + '():new( ... )' )
+   aadd( txt_, '        ' + cWidget + '():from( pPtr_OR_oObj_of_type_' + cWidget +' )' )
+   aadd( txt_, '        ' + cWidget + '():configure( pPtr_OR_oObj_of_type_' + cWidget +' )' )
+   aadd( txt_, '    $ARGUMENTS$   ' )
+   aadd( txt_, '        ' )
+   aadd( txt_, '    $RETURNS$     ' )
+   aadd( txt_, '        ' + 'An instance of the object of type ' + cWidget )
+   aadd( txt_, '    $METHODS$     ' )
+   nLen    := len( cWidget )
+   n       := at( cWidget, doc_[ 1 ] )
+   pWidget := 'p' + cWidget
+   FOR i := 1 TO len( doc_ )
+      cText := doc_[ i ]
+      IF !empty( cText )
+         cText := substr( cText, n+nLen+1 )
+         cText := strtran( cText, pWidget + ', ', '' )
+         cText := strtran( cText, pWidget, '' )
+         cText := strtran( cText, '(  )', '()' )
+         n1    := at( '->', cText )
+         cRet  := alltrim( substr( cText, n1+2 ) )
+         cText := substr( cText, 1, n1-1 )
+         n2    := max( 50, len( cText ) )
+         cText := padR( cText, n2 )
+         IF !empty( cRet )
+            aadd( txt_, '        :' + cText + ' -> ' + cRet )
+         ENDIF
+      ENDIF
+   NEXT
+   aadd( txt_, '        ' )
+   aadd( txt_, '    $DESCRIPTION$ ' )
+   aadd( txt_, '        ' )
+   aadd( txt_, '    $EXAMPLES$    ' )
+   FOR EACH cText IN docum_
+      IF !empty( cText )
+         aadd( txt_, '        ' + cText )
+      ENDIF
+   NEXT
+   aadd( txt_, '        ' )
+   aadd( txt_, '    $TESTS$       ' )
+   aadd( txt_, '        ' )
+   aadd( txt_, '    $STATUS$      ' )
+   aadd( txt_, '        ' + 'R' )
+   aadd( txt_, '    $COMPLIANCE$  ' )
+   aadd( txt_, '        ' + 'Not Clipper Compatible' )
+   aadd( txt_, '    $PLATFORMS$   ' )
+   aadd( txt_, '        ' + 'Windows, Linux, MacOS, OS2' )
+   aadd( txt_, '    $VERSION$     ' )
+   aadd( txt_, '        ' + '4.5.3' )
+   aadd( txt_, '    $FILES$       ' )
+   aadd( txt_, '        ' + 'Prg Source   : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/T' + cWidget + '.prg' )
+   aadd( txt_, '        ' + 'C++ Wrappers : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/'  + cWidget + '.cpp' )
+   aadd( txt_, '        ' + 'Library      : ' + 'hb' + cLib )
+   aadd( txt_, '    $SEEALSO$     ' )
+   aadd( txt_, '        ' + iif( empty( cInherits ), "", cInherits + ", " ) + 'http://doc.trolltech.com/4.5/' + lower( cWidget ) + '.html' )
+   aadd( txt_, '    $END$         ' )
+   aadd( txt_, ' */               ' )
+
+   cFile := cPathDoc + s_PathSep + 'en' + s_PathSep + 'class_' + lower( cWidget ) + ".txt"
+
+   RETURN CreateTarget( cFile, txt_ )
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    LOCAL cFile := cPathOut + s_PathSep + "hbqt_garbage.h"
    LOCAL txt_ := {}
@@ -1696,102 +1808,6 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    NEXT
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc, docum_ )
-   LOCAL i, n, n1, nLen, nLen1, pWidget, cText, oWidget, cRet
-   LOCAL cFile := cPathDoc + s_PathSep + cWidget + ".txt"
-   LOCAL txt_:={}
-   LOCAL aHM_:= {}, aHF_:={}
-
-   // BuildHeader( @txt_ )  /* Not Required - It Is Not a Source File */
-
-   aadd( txt_, '/* '  )
-   aadd( txt_, ' *      HBQtGen v1.0 - Harbour Callable Wrappers Generator for QT v4.5      ' )
-   aadd( txt_, ' * '  )
-   aadd( txt_, ' * Please do not modify this document as it is subject to change in future. ' )
-   aadd( txt_, ' * '  )
-   aadd( txt_, ' *                   Pritpal Bedi <pritpal@vouchcac.com>                    ' )
-   aadd( txt_, ' * '  )
-   aadd( txt_, ' *                          ' + dtoc( date() ) + ' - ' + time()               )
-   aadd( txt_, ' * '  )
-   aadd( txt_, ' */ ' )
-   aadd( txt_, '   '  )
-   aadd( txt_, '   '  )
-   aadd( txt_, '   '  )
-
-   aadd( txt_, 'CLASS DOCUMENTATION' )
-   aadd( txt_, '===================' )
-   aadd( txt_, ' '    )
-   //
-   IF !empty( docum_ )
-      aadd( txt_, '   /* Class CONSTRUCTOR Parameters - Apply as per below - STRICTLY.        ' )
-      aadd( txt_, '    *                                                                      ' )
-      aadd( txt_, '    * NOTE:  ' )
-      aadd( txt_, '    *    Parameters MUST be passed with real values and in exact same sequence. ' )
-      aadd( txt_, '    *    QSomeObject():new( p1, , , p4 ) -> GPF                            ' )
-      aadd( txt_, '    */                                                                     ' )
-
-      aeval( docum_, {|e| aadd( txt_, '   ' + e ) } )
-      aadd( txt_, '   '  )
-      aadd( txt_, '   '  )
-   ENDIF
-   //
-   nLen    := len( cWidget )
-   n       := at( cWidget, doc_[ 1 ] )
-   pWidget := 'p' + cWidget
-   oWidget := 'o' + substr( cWidget, 2 )
-
-   FOR i := 1 TO len( doc_ )
-      IF !empty( doc_[ i ] )
-         cText := substr( doc_[ i ], n+nLen+1 )
-         cText := strtran( cText, pWidget + ', ', '' )
-         cText := strtran( cText, pWidget, '' )
-         cText := strtran( cText, '(  )', '()' )
-
-         n1    := at( '->', cText )
-         cRet  := alltrim( substr( cText, n1+2 ) )
-         cText := substr( cText, 1, n1-1 )
-         nLen1 := len( cText )
-         nLen1 := max( 80, nLen1 )
-         IF !empty( cRet )
-            aadd( txt_, '   ' + oWidget + ':' + pad( cText,nLen1 ) + ' -> ' + cRet )
-            aadd( aHM_, { oWidget + ' : ' + cText, cRet } )
-         ENDIF
-      ENDIF
-   NEXT
-
-   aadd( txt_, ' '    )
-   aadd( txt_, ' '    )
-   aadd( txt_, ' '    )
-   aadd( txt_, 'FUNCTIONS DOCUMENTATION' )
-   aadd( txt_, '=======================' )
-   aadd( txt_, ' '    )
-
-   FOR i := 1 TO len( doc_ )
-      IF !empty( doc_[ i ] )
-         cText := doc_[ i ]
-
-         n1    := at( '->', cText )
-         cRet  := alltrim( substr( cText, n1+2 ) )
-         cText := trim( substr( cText, 1, n1-1 ) )
-         nLen1 := len( cText )
-         nLen1 := max( 80, nLen1 )
-
-         aadd( txt_, '   ' + pad( cText, nLen1 ) + ' -> ' + cRet )
-         aadd( aHF_, { cText, cRet } )
-      ENDIF
-   NEXT
-
-   aadd( txt_, ' '    )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"   )
-
-   CreateTarget( cFile, txt_ )
-
-   Build_HTML( cWidget, aHM_, aHF_, cPathDoc, docum_ )
-
-   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 

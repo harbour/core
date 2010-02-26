@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QCompleter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QCompleter object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QCompleter():new( ... )
+        QCompleter():from( pPtr_OR_oObj_of_type_QCompleter )
+        QCompleter():configure( pPtr_OR_oObj_of_type_QCompleter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QCompleter
+    $METHODS$
+        :caseSensitivity()                                  -> nQt::CaseSensitivity
+        :completionColumn()                                 -> nInt
+        :completionCount()                                  -> nInt
+        :completionMode()                                   -> nCompletionMode
+        :completionModel()                                  -> pQAbstractItemModel
+        :completionPrefix()                                 -> cQString
+        :completionRole()                                   -> nInt
+        :currentCompletion()                                -> cQString
+        :currentIndex()                                     -> pQModelIndex
+        :currentRow()                                       -> nInt
+        :model()                                            -> pQAbstractItemModel
+        :modelSorting()                                     -> nModelSorting
+        :pathFromIndex( pIndex )                            -> cQString
+        :popup()                                            -> pQAbstractItemView
+        :setCaseSensitivity( nCaseSensitivity )             -> NIL
+        :setCompletionColumn( nColumn )                     -> NIL
+        :setCompletionMode( nMode )                         -> NIL
+        :setCompletionRole( nRole )                         -> NIL
+        :setCurrentRow( nRow )                              -> lBool
+        :setModel( pModel )                                 -> NIL
+        :setModelSorting( nSorting )                        -> NIL
+        :setPopup( pPopup )                                 -> NIL
+        :setWidget( pWidget )                               -> NIL
+        :splitPath( cPath )                                 -> pQStringList
+        :widget()                                           -> pQWidget
+        :wrapAround()                                       -> lBool
+        :complete( pRect )                                  -> NIL
+        :setCompletionPrefix( cPrefix )                     -> NIL
+        :setWrapAround( lWrap )                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQCompleter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QCompleter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qcompleter.html
+    $END$
+ */

@@ -1,0 +1,62 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:23
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QWidgetAction()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QWidgetAction object.
+    $INHERITS$
+        QAction
+    $SYNTAX$
+        QWidgetAction():new( ... )
+        QWidgetAction():from( pPtr_OR_oObj_of_type_QWidgetAction )
+        QWidgetAction():configure( pPtr_OR_oObj_of_type_QWidgetAction )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QWidgetAction
+    $METHODS$
+        :defaultWidget()                                    -> pQWidget
+        :releaseWidget( pWidget )                           -> NIL
+        :requestWidget( pParent )                           -> pQWidget
+        :setDefaultWidget( pWidget )                        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQWidgetAction.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QWidgetAction.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAction, http://doc.trolltech.com/4.5/qwidgetaction.html
+    $END$
+ */

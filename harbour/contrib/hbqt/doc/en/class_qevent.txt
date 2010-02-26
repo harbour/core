@@ -1,0 +1,65 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QEvent()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QEvent object.
+    $INHERITS$
+
+    $SYNTAX$
+        QEvent():new( ... )
+        QEvent():from( pPtr_OR_oObj_of_type_QEvent )
+        QEvent():configure( pPtr_OR_oObj_of_type_QEvent )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QEvent
+    $METHODS$
+        :accept()                                           -> NIL
+        :ignore()                                           -> NIL
+        :isAccepted()                                       -> lBool
+        :setAccepted( lAccepted )                           -> NIL
+        :spontaneous()                                      -> lBool
+        :type()                                             -> nType
+        :registerEventType( nHint )                         -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQEvent.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QEvent.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qevent.html
+    $END$
+ */

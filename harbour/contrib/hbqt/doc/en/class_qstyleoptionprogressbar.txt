@@ -1,0 +1,64 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:19
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStyleOptionProgressBar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStyleOptionProgressBar object.
+    $INHERITS$
+        QStyleOption
+    $SYNTAX$
+        QStyleOptionProgressBar():new( ... )
+        QStyleOptionProgressBar():from( pPtr_OR_oObj_of_type_QStyleOptionProgressBar )
+        QStyleOptionProgressBar():configure( pPtr_OR_oObj_of_type_QStyleOptionProgressBar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStyleOptionProgressBar
+    $METHODS$
+        :maximum()                                          -> nInt
+        :minimum()                                          -> nInt
+        :progress()                                         -> nInt
+        :text()                                             -> cQString
+        :textAlignment()                                    -> nQt::Alignment
+        :textVisible()                                      -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStyleOptionProgressBar.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStyleOptionProgressBar.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QStyleOption, http://doc.trolltech.com/4.5/qstyleoptionprogressbar.html
+    $END$
+ */

@@ -1,0 +1,68 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTimer()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTimer object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QTimer():new( ... )
+        QTimer():from( pPtr_OR_oObj_of_type_QTimer )
+        QTimer():configure( pPtr_OR_oObj_of_type_QTimer )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTimer
+    $METHODS$
+        :interval()                                         -> nInt
+        :isActive()                                         -> lBool
+        :isSingleShot()                                     -> lBool
+        :setInterval( nMsec )                               -> NIL
+        :setSingleShot( lSingleShot )                       -> NIL
+        :timerId()                                          -> nInt
+        :singleShot( nMsec, pReceiver, pMember )            -> NIL
+        :start()                                            -> NIL
+        :stop()                                             -> NIL
+        :start_1( nMsec )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQTimer.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QTimer.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qtimer.html
+    $END$
+ */

@@ -1,0 +1,78 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSplitter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSplitter object.
+    $INHERITS$
+        QFrame
+    $SYNTAX$
+        QSplitter():new( ... )
+        QSplitter():from( pPtr_OR_oObj_of_type_QSplitter )
+        QSplitter():configure( pPtr_OR_oObj_of_type_QSplitter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSplitter
+    $METHODS$
+        :addWidget( pWidget )                               -> NIL
+        :childrenCollapsible()                              -> lBool
+        :count()                                            -> nInt
+        :getRange( nIndex, @nMin, @nMax )                   -> NIL
+        :handleWidth()                                      -> nInt
+        :indexOf( pWidget )                                 -> nInt
+        :insertWidget( nIndex, pWidget )                    -> NIL
+        :isCollapsible( nIndex )                            -> lBool
+        :opaqueResize()                                     -> lBool
+        :orientation()                                      -> nQt::Orientation
+        :refresh()                                          -> NIL
+        :restoreState( pState )                             -> lBool
+        :saveState()                                        -> pQByteArray
+        :setChildrenCollapsible( lBool )                    -> NIL
+        :setCollapsible( nIndex, lCollapse )                -> NIL
+        :setHandleWidth( nInt )                             -> NIL
+        :setOpaqueResize( lOpaque )                         -> NIL
+        :setOrientation( nQt::Orientation )                 -> NIL
+        :setStretchFactor( nIndex, nStretch )               -> NIL
+        :widget( nIndex )                                   -> pQWidget
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSplitter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSplitter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QFrame, http://doc.trolltech.com/4.5/qsplitter.html
+    $END$
+ */

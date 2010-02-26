@@ -110,6 +110,9 @@
 #define DOC_FUN_PLATFORMS                         14
 #define DOC_FUN_SEEALSO                           15
 #define DOC_FUN_VERSION                           16
+#define DOC_FUN_INHERITS                          17
+#define DOC_FUN_METHODS                           18
+
 
 /*----------------------------------------------------------------------*/
 
@@ -131,7 +134,8 @@ CLASS IdeDocFunction
    DATA   cPlatforms                              INIT ""
    DATA   cSeaAlso                                INIT ""
    DATA   cVersion                                INIT ""
-
+   DATA   cInherits                               INIT ""
+   DATA   aMethods                                INIT {}
    DATA   aSource                                 INIT {}
 
    DATA   oTVItem
@@ -752,6 +756,10 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
             nPart := DOC_FUN_SEEALSO
          CASE "$VERSION$"     $ s
             nPart := DOC_FUN_VERSION
+         CASE "$INHERITS"     $ s
+            nPart := DOC_FUN_INHERITS
+         CASE "$METHODS"      $ s
+            nPart := DOC_FUN_METHODS
          OTHERWISE
             IF ! lIsFunc
                LOOP   // It is a fake line not within $DOC$ => $END$ block
@@ -807,6 +815,15 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
                oFunc:cSeaAlso   := alltrim( s )
                EXIT
             CASE DOC_FUN_SEEALSO
+               oFunc:cVersion   := alltrim( s )
+               EXIT
+            CASE DOC_FUN_INHERITS
+               oFunc:cInherits  := alltrim( s )
+               EXIT
+            CASE DOC_FUN_METHODS
+               aadd( oFunc:aMethods    , s )
+               EXIT
+            CASE DOC_FUN_VERSION
                oFunc:cVersion   := alltrim( s )
                EXIT
             OTHERWISE
@@ -981,6 +998,17 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    v := '<TR><TD margin-left: 20px><pre>'                    ; w := "</pre></TD></TR>"
    z := "<TR><TD>&nbsp;</TD></TR>"
 
+   IF !empty( oFunc:cInherits )
+      aadd( aHtm, x + "Inherits"       + y )
+      aadd( aHtm, v + oFunc:cInherits  + w )
+      aadd( aHtm, z )
+   ENDIF
+   aadd( aHtm, x + "Categoty"       + y )
+   aadd( aHtm, v + oFunc:cCategory  + w )
+   aadd( aHtm, z )
+   aadd( aHtm, x + "SubCategoty"    + y )
+   aadd( aHtm, v + oFunc:cSubCategory+ w )
+   aadd( aHtm, z )
    aadd( aHtm, x + "Syntax"         + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aSyntax      ) + w )
    aadd( aHtm, z )
@@ -990,6 +1018,11 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, x + "Returns"        + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aReturns     ) + w )
    aadd( aHtm, z )
+   IF !empty( oFunc:aMethods )
+      aadd( aHtm, x + "Methods"     + y )
+      aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aMethods  ) + w )
+      aadd( aHtm, z )
+   ENDIF
    aadd( aHtm, x + "Description"    + y )
    aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aDescription ) + w )
    aadd( aHtm, z )
@@ -1007,11 +1040,14 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    a_:= hb_atokens( oFunc:cSeaAlso, "," )
    IF !empty( a_ )
       FOR EACH s IN a_
+         s := alltrim( s )
          IF ( n := at( "(", s ) ) > 0
             s1 := substr( s, 1, n-1 )
-            aadd( aHtm, '<a href="' + s1 + '">' + s  + "</a>" + ;
-                                     iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+         ELSE
+            s1 := s
          ENDIF
+         aadd( aHtm, '<a href="' + s1 + '">' + s  + "</a>" + ;
+                                     iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
       NEXT
    ELSE
       aadd( aHtm, "&nbsp;" )

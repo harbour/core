@@ -1,0 +1,68 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStackedWidget()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStackedWidget object.
+    $INHERITS$
+        QFrame
+    $SYNTAX$
+        QStackedWidget():new( ... )
+        QStackedWidget():from( pPtr_OR_oObj_of_type_QStackedWidget )
+        QStackedWidget():configure( pPtr_OR_oObj_of_type_QStackedWidget )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStackedWidget
+    $METHODS$
+        :addWidget( pWidget )                               -> nInt
+        :count()                                            -> nInt
+        :currentIndex()                                     -> nInt
+        :currentWidget()                                    -> pQWidget
+        :indexOf( pWidget )                                 -> nInt
+        :insertWidget( nIndex, pWidget )                    -> nInt
+        :removeWidget( pWidget )                            -> NIL
+        :widget( nIndex )                                   -> pQWidget
+        :setCurrentIndex( nIndex )                          -> NIL
+        :setCurrentWidget( pWidget )                        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStackedWidget.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStackedWidget.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QFrame, http://doc.trolltech.com/4.5/qstackedwidget.html
+    $END$
+ */

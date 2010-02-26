@@ -1,0 +1,90 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:09
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QAbstractItemModel()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QAbstractItemModel object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QAbstractItemModel():new( ... )
+        QAbstractItemModel():from( pPtr_OR_oObj_of_type_QAbstractItemModel )
+        QAbstractItemModel():configure( pPtr_OR_oObj_of_type_QAbstractItemModel )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QAbstractItemModel
+    $METHODS$
+        :buddy( pIndex )                                    -> pQModelIndex
+        :canFetchMore( pParent )                            -> lBool
+        :columnCount( pParent )                             -> nInt
+        :data( pIndex, nRole )                              -> pQVariant
+        :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
+        :fetchMore( pParent )                               -> NIL
+        :flags( pIndex )                                    -> nQt::ItemFlags
+        :hasChildren( pParent )                             -> lBool
+        :hasIndex( nRow, nColumn, pParent )                 -> lBool
+        :headerData( nSection, nOrientation, nRole )        -> pQVariant
+        :index( nRow, nColumn, pParent )                    -> pQModelIndex
+        :insertColumn( nColumn, pParent )                   -> lBool
+        :insertColumns( nColumn, nCount, pParent )          -> lBool
+        :insertRow( nRow, pParent )                         -> lBool
+        :insertRows( nRow, nCount, pParent )                -> lBool
+        :mimeTypes()                                        -> pQStringList
+        :parent( pIndex )                                   -> pQModelIndex
+        :removeColumn( nColumn, pParent )                   -> lBool
+        :removeColumns( nColumn, nCount, pParent )          -> lBool
+        :removeRow( nRow, pParent )                         -> lBool
+        :removeRows( nRow, nCount, pParent )                -> lBool
+        :rowCount( pParent )                                -> nInt
+        :setData( pIndex, pValue, nRole )                   -> lBool
+        :setHeaderData( nSection, nOrientation, pValue, nRole )  -> lBool
+        :setSupportedDragActions( nActions )                -> NIL
+        :sibling( nRow, nColumn, pIndex )                   -> pQModelIndex
+        :sort( nColumn, nOrder )                            -> NIL
+        :span( pIndex )                                     -> pQSize
+        :supportedDragActions()                             -> nQt::DropActions
+        :supportedDropActions()                             -> nQt::DropActions
+        :revert()                                           -> NIL
+        :submit()                                           -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQAbstractItemModel.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QAbstractItemModel.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qabstractitemmodel.html
+    $END$
+ */

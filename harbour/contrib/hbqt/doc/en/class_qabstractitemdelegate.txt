@@ -1,0 +1,65 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:09
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QAbstractItemDelegate()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QAbstractItemDelegate object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QAbstractItemDelegate():new( ... )
+        QAbstractItemDelegate():from( pPtr_OR_oObj_of_type_QAbstractItemDelegate )
+        QAbstractItemDelegate():configure( pPtr_OR_oObj_of_type_QAbstractItemDelegate )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QAbstractItemDelegate
+    $METHODS$
+        :createEditor( pParent, pOption, pIndex )           -> pQWidget
+        :editorEvent( pEvent, pModel, pOption, pIndex )     -> lBool
+        :paint( pPainter, pOption, pIndex )                 -> NIL
+        :setEditorData( pEditor, pIndex )                   -> NIL
+        :setModelData( pEditor, pModel, pIndex )            -> NIL
+        :sizeHint( pOption, pIndex )                        -> pQSize
+        :updateEditorGeometry( pEditor, pOption, pIndex )   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQAbstractItemDelegate.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QAbstractItemDelegate.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qabstractitemdelegate.html
+    $END$
+ */

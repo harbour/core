@@ -1,0 +1,73 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QColorDialog()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QColorDialog object.
+    $INHERITS$
+        QDialog
+    $SYNTAX$
+        QColorDialog():new( ... )
+        QColorDialog():from( pPtr_OR_oObj_of_type_QColorDialog )
+        QColorDialog():configure( pPtr_OR_oObj_of_type_QColorDialog )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QColorDialog
+    $METHODS$
+        :currentColor()                                     -> pQColor
+        :open()                                             -> NIL
+        :options()                                          -> nColorDialogOptions
+        :selectedColor()                                    -> pQColor
+        :setCurrentColor( pColor )                          -> NIL
+        :setOption( nOption, lOn )                          -> NIL
+        :setOptions( nOptions )                             -> NIL
+        :setVisible( lVisible )                             -> NIL
+        :testOption( nOption )                              -> lBool
+        :customColor( nIndex )                              -> nQRgb
+        :customCount()                                      -> nInt
+        :getColor( pInitial, pParent, cTitle, nOptions )    -> pQColor
+        :getColor_1( pInitial, pParent )                    -> pQColor
+        :setCustomColor( nIndex, nColor )                   -> NIL
+        :setStandardColor( nIndex, nColor )                 -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQColorDialog.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QColorDialog.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QDialog, http://doc.trolltech.com/4.5/qcolordialog.html
+    $END$
+ */

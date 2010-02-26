@@ -1,0 +1,68 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QGroupBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QGroupBox object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QGroupBox():new( ... )
+        QGroupBox():from( pPtr_OR_oObj_of_type_QGroupBox )
+        QGroupBox():configure( pPtr_OR_oObj_of_type_QGroupBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QGroupBox
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :isCheckable()                                      -> lBool
+        :isChecked()                                        -> lBool
+        :isFlat()                                           -> lBool
+        :setAlignment( nAlignment )                         -> NIL
+        :setCheckable( lCheckable )                         -> NIL
+        :setFlat( lFlat )                                   -> NIL
+        :setTitle( cTitle )                                 -> NIL
+        :title()                                            -> cQString
+        :setChecked( lChecked )                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQGroupBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QGroupBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qgroupbox.html
+    $END$
+ */

@@ -1,0 +1,83 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextBlock()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextBlock object.
+    $INHERITS$
+
+    $SYNTAX$
+        QTextBlock():new( ... )
+        QTextBlock():from( pPtr_OR_oObj_of_type_QTextBlock )
+        QTextBlock():configure( pPtr_OR_oObj_of_type_QTextBlock )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextBlock
+    $METHODS$
+        :blockFormat()                                      -> Format
+        :blockFormatIndex()                                 -> nInt
+        :blockNumber()                                      -> nInt
+        :charFormat()                                       -> pQTextCharFormat
+        :charFormatIndex()                                  -> nInt
+        :clearLayout()                                      -> NIL
+        :contains( nPosition )                              -> lBool
+        :document()                                         -> pQTextDocument
+        :firstLineNumber()                                  -> nInt
+        :isValid()                                          -> lBool
+        :isVisible()                                        -> lBool
+        :layout()                                           -> pQTextLayout
+        :length()                                           -> nInt
+        :lineCount()                                        -> nInt
+        :position()                                         -> nInt
+        :revision()                                         -> nInt
+        :setLineCount( nCount )                             -> NIL
+        :setRevision( nRev )                                -> NIL
+        :setUserData( pData )                               -> NIL
+        :setUserState( nState )                             -> NIL
+        :setVisible( lVisible )                             -> NIL
+        :text()                                             -> cQString
+        :textList()                                         -> pQTextList
+        :userData()                                         -> pHBQTextBlockUserData
+        :userState()                                        -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextBlock.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextBlock.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qtextblock.html
+    $END$
+ */

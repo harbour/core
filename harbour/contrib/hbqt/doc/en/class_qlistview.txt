@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QListView()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QListView object.
+    $INHERITS$
+        QAbstractItemView
+    $SYNTAX$
+        QListView():new( ... )
+        QListView():from( pPtr_OR_oObj_of_type_QListView )
+        QListView():configure( pPtr_OR_oObj_of_type_QListView )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QListView
+    $METHODS$
+        :batchSize()                                        -> nInt
+        :clearPropertyFlags()                               -> NIL
+        :flow()                                             -> nFlow
+        :gridSize()                                         -> pQSize
+        :isRowHidden( nRow )                                -> lBool
+        :isSelectionRectVisible()                           -> lBool
+        :isWrapping()                                       -> lBool
+        :layoutMode()                                       -> nLayoutMode
+        :modelColumn()                                      -> nInt
+        :movement()                                         -> nMovement
+        :resizeMode()                                       -> nResizeMode
+        :setBatchSize( nBatchSize )                         -> NIL
+        :setFlow( nFlow )                                   -> NIL
+        :setGridSize( pSize )                               -> NIL
+        :setLayoutMode( nMode )                             -> NIL
+        :setModelColumn( nColumn )                          -> NIL
+        :setMovement( nMovement )                           -> NIL
+        :setResizeMode( nMode )                             -> NIL
+        :setRowHidden( nRow, lHide )                        -> NIL
+        :setSelectionRectVisible( lShow )                   -> NIL
+        :setSpacing( nSpace )                               -> NIL
+        :setUniformItemSizes( lEnable )                     -> NIL
+        :setViewMode( nMode )                               -> NIL
+        :setWordWrap( lOn )                                 -> NIL
+        :setWrapping( lEnable )                             -> NIL
+        :spacing()                                          -> nInt
+        :uniformItemSizes()                                 -> lBool
+        :viewMode()                                         -> nViewMode
+        :wordWrap()                                         -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQListView.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QListView.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractItemView, http://doc.trolltech.com/4.5/qlistview.html
+    $END$
+ */

@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:21
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextLayout()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextLayout object.
+    $INHERITS$
+
+    $SYNTAX$
+        QTextLayout():new( ... )
+        QTextLayout():from( pPtr_OR_oObj_of_type_QTextLayout )
+        QTextLayout():configure( pPtr_OR_oObj_of_type_QTextLayout )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextLayout
+    $METHODS$
+        :beginLayout()                                      -> NIL
+        :boundingRect()                                     -> pQRectF
+        :cacheEnabled()                                     -> lBool
+        :clearAdditionalFormats()                           -> NIL
+        :clearLayout()                                      -> NIL
+        :createLine()                                       -> pQTextLine
+        :drawCursor( pPainter, pPosition, nCursorPosition, nWidth )  -> NIL
+        :drawCursor_1( pPainter, pPosition, nCursorPosition )  -> NIL
+        :endLayout()                                        -> NIL
+        :font()                                             -> pQFont
+        :isValidCursorPosition( nPos )                      -> lBool
+        :lineAt( nI )                                       -> pQTextLine
+        :lineCount()                                        -> nInt
+        :lineForTextPosition( nPos )                        -> pQTextLine
+        :maximumWidth()                                     -> nQreal
+        :minimumWidth()                                     -> nQreal
+        :nextCursorPosition( nOldPos, nMode )               -> nInt
+        :position()                                         -> pQPointF
+        :preeditAreaPosition()                              -> nInt
+        :preeditAreaText()                                  -> cQString
+        :previousCursorPosition( nOldPos, nMode )           -> nInt
+        :setCacheEnabled( lEnable )                         -> NIL
+        :setFont( pFont )                                   -> NIL
+        :setPosition( pP )                                  -> NIL
+        :setPreeditArea( nPosition, cText )                 -> NIL
+        :setText( cString )                                 -> NIL
+        :setTextOption( pOption )                           -> NIL
+        :text()                                             -> cQString
+        :textOption()                                       -> pQTextOption
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextLayout.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextLayout.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qtextlayout.html
+    $END$
+ */

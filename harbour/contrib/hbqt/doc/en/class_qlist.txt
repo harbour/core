@@ -1,0 +1,98 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QList()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QList object.
+    $INHERITS$
+
+    $SYNTAX$
+        QList():new( ... )
+        QList():from( pPtr_OR_oObj_of_type_QList )
+        QList():configure( pPtr_OR_oObj_of_type_QList )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QList
+    $METHODS$
+        :append( xValue )                                   -> NIL
+        :at( nI )                                           -> pT
+        :back()                                             -> pT
+        :back_1()                                           -> pT
+        :clear()                                            -> NIL
+        :count( xValue )                                    -> nInt
+        :count_1()                                          -> nInt
+        :empty()                                            -> lBool
+        :endsWith( xValue )                                 -> lBool
+        :first()                                            -> pT
+        :first_1()                                          -> pT
+        :front()                                            -> pT
+        :front_1()                                          -> pT
+        :indexOf( xValue, nFrom )                           -> nInt
+        :insert( nI, xValue )                               -> NIL
+        :isEmpty()                                          -> lBool
+        :last()                                             -> pT
+        :last_1()                                           -> pT
+        :lastIndexOf( xValue, nFrom )                       -> nInt
+        :length()                                           -> nInt
+        :move( nFrom, nTo )                                 -> NIL
+        :pop_back()                                         -> NIL
+        :pop_front()                                        -> NIL
+        :prepend( xValue )                                  -> NIL
+        :push_back( xValue )                                -> NIL
+        :push_front( xValue )                               -> NIL
+        :removeAll( xValue )                                -> nInt
+        :removeAt( nI )                                     -> NIL
+        :removeFirst()                                      -> NIL
+        :removeLast()                                       -> NIL
+        :removeOne( xValue )                                -> lBool
+        :replace( nI, xValue )                              -> NIL
+        :size()                                             -> nInt
+        :startsWith( xValue )                               -> lBool
+        :swap( nI, nJ )                                     -> NIL
+        :takeAt( nI )                                       -> pT
+        :takeFirst()                                        -> pT
+        :takeLast()                                         -> pT
+        :value( nI )                                        -> pT
+        :value_1( nI, xDefaultValue )                       -> pT
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQList.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QList.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qlist.html
+    $END$
+ */

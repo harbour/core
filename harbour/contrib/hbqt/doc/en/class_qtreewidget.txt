@@ -1,0 +1,95 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTreeWidget()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTreeWidget object.
+    $INHERITS$
+        QTreeView
+    $SYNTAX$
+        QTreeWidget():new( ... )
+        QTreeWidget():from( pPtr_OR_oObj_of_type_QTreeWidget )
+        QTreeWidget():configure( pPtr_OR_oObj_of_type_QTreeWidget )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTreeWidget
+    $METHODS$
+        :addTopLevelItem( pItem )                           -> NIL
+        :closePersistentEditor( pItem, nColumn )            -> NIL
+        :columnCount()                                      -> nInt
+        :currentColumn()                                    -> nInt
+        :currentItem()                                      -> Item
+        :editItem( pItem, nColumn )                         -> NIL
+        :headerItem()                                       -> Item
+        :indexOfTopLevelItem( pItem )                       -> nInt
+        :insertTopLevelItem( nIndex, pItem )                -> NIL
+        :invisibleRootItem()                                -> Item
+        :isFirstItemColumnSpanned( pItem )                  -> lBool
+        :itemAbove( pItem )                                 -> Item
+        :itemAt( pP )                                       -> Item
+        :itemAt_1( nX, nY )                                 -> Item
+        :itemBelow( pItem )                                 -> Item
+        :itemWidget( pItem, nColumn )                       -> pQWidget
+        :openPersistentEditor( pItem, nColumn )             -> NIL
+        :removeItemWidget( pItem, nColumn )                 -> NIL
+        :setColumnCount( nColumns )                         -> NIL
+        :setCurrentItem( pItem )                            -> NIL
+        :setCurrentItem_1( pItem, nColumn )                 -> NIL
+        :setCurrentItem_2( pItem, nColumn, nCommand )       -> NIL
+        :setFirstItemColumnSpanned( pItem, lSpan )          -> NIL
+        :setHeaderItem( pItem )                             -> NIL
+        :setHeaderLabel( cLabel )                           -> NIL
+        :setHeaderLabels( pLabels )                         -> NIL
+        :setItemWidget( pItem, nColumn, pWidget )           -> NIL
+        :sortColumn()                                       -> nInt
+        :sortItems( nColumn, nOrder )                       -> NIL
+        :takeTopLevelItem( nIndex )                         -> Item
+        :topLevelItem( nIndex )                             -> Item
+        :topLevelItemCount()                                -> nInt
+        :visualItemRect( pItem )                            -> pQRect
+        :clear()                                            -> NIL
+        :collapseItem( pItem )                              -> NIL
+        :expandItem( pItem )                                -> NIL
+        :scrollToItem( pItem, nHint )                       -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTreeWidget.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTreeWidget.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QTreeView, http://doc.trolltech.com/4.5/qtreewidget.html
+    $END$
+ */

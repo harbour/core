@@ -1,0 +1,63 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QConicalGradient()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QConicalGradient object.
+    $INHERITS$
+        QGradient
+    $SYNTAX$
+        QConicalGradient():new( ... )
+        QConicalGradient():from( pPtr_OR_oObj_of_type_QConicalGradient )
+        QConicalGradient():configure( pPtr_OR_oObj_of_type_QConicalGradient )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QConicalGradient
+    $METHODS$
+        :angle()                                            -> nQreal
+        :center()                                           -> pQPointF
+        :setAngle( nAngle )                                 -> NIL
+        :setCenter( pCenter )                               -> NIL
+        :setCenter_1( nX, nY )                              -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQConicalGradient.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QConicalGradient.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QGradient, http://doc.trolltech.com/4.5/qconicalgradient.html
+    $END$
+ */

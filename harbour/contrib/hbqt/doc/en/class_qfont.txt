@@ -1,0 +1,123 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFont()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFont object.
+    $INHERITS$
+
+    $SYNTAX$
+        QFont():new( ... )
+        QFont():from( pPtr_OR_oObj_of_type_QFont )
+        QFont():configure( pPtr_OR_oObj_of_type_QFont )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFont
+    $METHODS$
+        :bold()                                             -> lBool
+        :capitalization()                                   -> nCapitalization
+        :defaultFamily()                                    -> cQString
+        :exactMatch()                                       -> lBool
+        :family()                                           -> cQString
+        :fixedPitch()                                       -> lBool
+        :fromString( cDescrip )                             -> lBool
+        :italic()                                           -> lBool
+        :kerning()                                          -> lBool
+        :key()                                              -> cQString
+        :lastResortFamily()                                 -> cQString
+        :lastResortFont()                                   -> cQString
+        :letterSpacing()                                    -> nQreal
+        :letterSpacingType()                                -> nSpacingType
+        :overline()                                         -> lBool
+        :pixelSize()                                        -> nInt
+        :pointSize()                                        -> nInt
+        :pointSizeF()                                       -> nQreal
+        :rawMode()                                          -> lBool
+        :rawName()                                          -> cQString
+        :setBold( lEnable )                                 -> NIL
+        :setCapitalization( nCaps )                         -> NIL
+        :setFamily( cFamily )                               -> NIL
+        :setFixedPitch( lEnable )                           -> NIL
+        :setItalic( lEnable )                               -> NIL
+        :setKerning( lEnable )                              -> NIL
+        :setLetterSpacing( nType, nSpacing )                -> NIL
+        :setOverline( lEnable )                             -> NIL
+        :setPixelSize( nPixelSize )                         -> NIL
+        :setPointSize( nPointSize )                         -> NIL
+        :setPointSizeF( nPointSize )                        -> NIL
+        :setRawMode( lEnable )                              -> NIL
+        :setRawName( cName )                                -> NIL
+        :setStretch( nFactor )                              -> NIL
+        :setStrikeOut( lEnable )                            -> NIL
+        :setStyle( nStyle )                                 -> NIL
+        :setStyleHint( nHint, nStrategy )                   -> NIL
+        :setStyleStrategy( nS )                             -> NIL
+        :setUnderline( lEnable )                            -> NIL
+        :setWeight( nWeight )                               -> NIL
+        :setWordSpacing( nSpacing )                         -> NIL
+        :stretch()                                          -> nInt
+        :strikeOut()                                        -> lBool
+        :style()                                            -> nStyle
+        :styleHint()                                        -> nStyleHint
+        :styleStrategy()                                    -> nStyleStrategy
+        :toString()                                         -> cQString
+        :underline()                                        -> lBool
+        :weight()                                           -> nInt
+        :wordSpacing()                                      -> nQreal
+        :cleanup()                                          -> NIL
+        :initialize()                                       -> NIL
+        :insertSubstitution( cFamilyName, cSubstituteName )  -> NIL
+        :insertSubstitutions( cFamilyName, pSubstituteNames )  -> NIL
+        :removeSubstitution( cFamilyName )                  -> NIL
+        :substitute( cFamilyName )                          -> cQString
+        :substitutes( cFamilyName )                         -> pQStringList
+        :substitutions()                                    -> pQStringList
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oFont := QFont():new()
+        oFont := QFont():new( cFontName )
+        oFont := QFont():new( cFontName, nPointSize )
+        oFont := QFont():new( cFontName, nPointSize, nWeight )
+        oFont := QFont():new( cFontName, nPointSize, nWeight, lItalic )
+        oFont := QFont():new( pFont )
+        oFont := QFont():new( pFont, pPaintDevice )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFont.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFont.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qfont.html
+    $END$
+ */

@@ -1,0 +1,125 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStandardItem()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStandardItem object.
+    $INHERITS$
+
+    $SYNTAX$
+        QStandardItem():new( ... )
+        QStandardItem():from( pPtr_OR_oObj_of_type_QStandardItem )
+        QStandardItem():configure( pPtr_OR_oObj_of_type_QStandardItem )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStandardItem
+    $METHODS$
+        :accessibleDescription()                            -> cQString
+        :accessibleText()                                   -> cQString
+        :appendRow( pItem )                                 -> NIL
+        :background()                                       -> pQBrush
+        :checkState()                                       -> nQt::CheckState
+        :column()                                           -> nInt
+        :columnCount()                                      -> nInt
+        :data( nRole )                                      -> pQVariant
+        :flags()                                            -> nQt::ItemFlags
+        :font()                                             -> pQFont
+        :foreground()                                       -> pQBrush
+        :hasChildren()                                      -> lBool
+        :icon()                                             -> pQIcon
+        :index()                                            -> pQModelIndex
+        :insertColumns( nColumn, nCount )                   -> NIL
+        :insertRow( nRow, pItem )                           -> NIL
+        :insertRows( nRow, nCount )                         -> NIL
+        :isCheckable()                                      -> lBool
+        :isDragEnabled()                                    -> lBool
+        :isDropEnabled()                                    -> lBool
+        :isEditable()                                       -> lBool
+        :isEnabled()                                        -> lBool
+        :isSelectable()                                     -> lBool
+        :isTristate()                                       -> lBool
+        :model()                                            -> Model
+        :read( pIn )                                        -> NIL
+        :removeColumn( nColumn )                            -> NIL
+        :removeColumns( nColumn, nCount )                   -> NIL
+        :removeRow( nRow )                                  -> NIL
+        :removeRows( nRow, nCount )                         -> NIL
+        :row()                                              -> nInt
+        :rowCount()                                         -> nInt
+        :setAccessibleDescription( cAccessibleDescription )  -> NIL
+        :setAccessibleText( cAccessibleText )               -> NIL
+        :setBackground( pBrush )                            -> NIL
+        :setCheckState( nState )                            -> NIL
+        :setCheckable( lCheckable )                         -> NIL
+        :setChild( nRow, nColumn, pItem )                   -> NIL
+        :setChild_1( nRow, pItem )                          -> NIL
+        :setColumnCount( nColumns )                         -> NIL
+        :setData( pValue, nRole )                           -> NIL
+        :setDragEnabled( lDragEnabled )                     -> NIL
+        :setDropEnabled( lDropEnabled )                     -> NIL
+        :setEditable( lEditable )                           -> NIL
+        :setEnabled( lEnabled )                             -> NIL
+        :setFlags( nFlags )                                 -> NIL
+        :setFont( pFont )                                   -> NIL
+        :setForeground( pBrush )                            -> NIL
+        :setIcon( cIcon )                                   -> NIL
+        :setRowCount( nRows )                               -> NIL
+        :setSelectable( lSelectable )                       -> NIL
+        :setSizeHint( pSize )                               -> NIL
+        :setStatusTip( cStatusTip )                         -> NIL
+        :setText( cText )                                   -> NIL
+        :setTextAlignment( nAlignment )                     -> NIL
+        :setToolTip( cToolTip )                             -> NIL
+        :setTristate( lTristate )                           -> NIL
+        :setWhatsThis( cWhatsThis )                         -> NIL
+        :sizeHint()                                         -> pQSize
+        :sortChildren( nColumn, nOrder )                    -> NIL
+        :statusTip()                                        -> cQString
+        :text()                                             -> cQString
+        :textAlignment()                                    -> nQt::Alignment
+        :toolTip()                                          -> cQString
+        :type()                                             -> nInt
+        :whatsThis()                                        -> cQString
+        :write( pOut )                                      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStandardItem.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStandardItem.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qstandarditem.html
+    $END$
+ */

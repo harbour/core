@@ -1,0 +1,67 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:23
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QWheelEvent()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QWheelEvent object.
+    $INHERITS$
+        QInputEvent
+    $SYNTAX$
+        QWheelEvent():new( ... )
+        QWheelEvent():from( pPtr_OR_oObj_of_type_QWheelEvent )
+        QWheelEvent():configure( pPtr_OR_oObj_of_type_QWheelEvent )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QWheelEvent
+    $METHODS$
+        :buttons()                                          -> nQt::MouseButtons
+        :delta()                                            -> nInt
+        :globalPos()                                        -> pQPoint
+        :globalX()                                          -> nInt
+        :globalY()                                          -> nInt
+        :orientation()                                      -> nQt::Orientation
+        :pos()                                              -> pQPoint
+        :x()                                                -> nInt
+        :y()                                                -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQWheelEvent.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QWheelEvent.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QInputEvent, http://doc.trolltech.com/4.5/qwheelevent.html
+    $END$
+ */

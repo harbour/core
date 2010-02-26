@@ -1,0 +1,65 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QDial()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QDial object.
+    $INHERITS$
+        QAbstractSlider
+    $SYNTAX$
+        QDial():new( ... )
+        QDial():from( pPtr_OR_oObj_of_type_QDial )
+        QDial():configure( pPtr_OR_oObj_of_type_QDial )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QDial
+    $METHODS$
+        :notchSize()                                        -> nInt
+        :notchTarget()                                      -> nQreal
+        :notchesVisible()                                   -> lBool
+        :setNotchTarget( nTarget )                          -> NIL
+        :wrapping()                                         -> lBool
+        :setNotchesVisible( lVisible )                      -> NIL
+        :setWrapping( lOn )                                 -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQDial.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QDial.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractSlider, http://doc.trolltech.com/4.5/qdial.html
+    $END$
+ */

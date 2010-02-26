@@ -1,0 +1,84 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFtp()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFtp object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QFtp():new( ... )
+        QFtp():from( pPtr_OR_oObj_of_type_QFtp )
+        QFtp():configure( pPtr_OR_oObj_of_type_QFtp )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFtp
+    $METHODS$
+        :bytesAvailable()                                   -> nQint64
+        :cd( cDir )                                         -> nInt
+        :clearPendingCommands()                             -> NIL
+        :close()                                            -> nInt
+        :connectToHost( cHost, nPort )                      -> nInt
+        :currentCommand()                                   -> nCommand
+        :currentDevice()                                    -> pQIODevice
+        :currentId()                                        -> nInt
+        :error()                                            -> nError
+        :errorString()                                      -> cQString
+        :get( cFile, pDev, nType )                          -> nInt
+        :hasPendingCommands()                               -> lBool
+        :list( cDir )                                       -> nInt
+        :login( cUser, cPassword )                          -> nInt
+        :mkdir( cDir )                                      -> nInt
+        :put( pDev, cFile, nType )                          -> nInt
+        :put_1( pData, cFile, nType )                       -> nInt
+        :rawCommand( cCommand )                             -> nInt
+        :readAll()                                          -> pQByteArray
+        :remove( cFile )                                    -> nInt
+        :rename( cOldname, cNewname )                       -> nInt
+        :rmdir( cDir )                                      -> nInt
+        :setProxy( cHost, nPort )                           -> nInt
+        :setTransferMode( nMode )                           -> nInt
+        :state()                                            -> nState
+        :abort()                                            -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtnetwork/TQFtp.prg
+        C++ Wrappers : contrib/hbqt/qtnetwork/QFtp.cpp
+        Library      : hbqtnetwork
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qftp.html
+    $END$
+ */

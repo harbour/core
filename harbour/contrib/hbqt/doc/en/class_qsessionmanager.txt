@@ -1,0 +1,74 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:17
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QSessionManager()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QSessionManager object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QSessionManager():new( ... )
+        QSessionManager():from( pPtr_OR_oObj_of_type_QSessionManager )
+        QSessionManager():configure( pPtr_OR_oObj_of_type_QSessionManager )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QSessionManager
+    $METHODS$
+        :allowsErrorInteraction()                           -> lBool
+        :allowsInteraction()                                -> lBool
+        :cancel()                                           -> NIL
+        :discardCommand()                                   -> pQStringList
+        :isPhase2()                                         -> lBool
+        :release()                                          -> NIL
+        :requestPhase2()                                    -> NIL
+        :restartCommand()                                   -> pQStringList
+        :restartHint()                                      -> nRestartHint
+        :sessionId()                                        -> cQString
+        :sessionKey()                                       -> cQString
+        :setDiscardCommand( pList )                         -> NIL
+        :setManagerProperty( cName, pValue )                -> NIL
+        :setManagerProperty_1( cName, cValue )              -> NIL
+        :setRestartCommand( pCommand )                      -> NIL
+        :setRestartHint( nHint )                            -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQSessionManager.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QSessionManager.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qsessionmanager.html
+    $END$
+ */

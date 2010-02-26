@@ -1,0 +1,70 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QActionGroup()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QActionGroup object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QActionGroup():new( ... )
+        QActionGroup():from( pPtr_OR_oObj_of_type_QActionGroup )
+        QActionGroup():configure( pPtr_OR_oObj_of_type_QActionGroup )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QActionGroup
+    $METHODS$
+        :addAction( pAction )                               -> pQAction
+        :addAction_1( cText )                               -> pQAction
+        :addAction_2( cIcon, cText )                        -> pQAction
+        :checkedAction()                                    -> pQAction
+        :isEnabled()                                        -> lBool
+        :isExclusive()                                      -> lBool
+        :isVisible()                                        -> lBool
+        :removeAction( pAction )                            -> NIL
+        :setDisabled( lB )                                  -> NIL
+        :setEnabled( lBool )                                -> NIL
+        :setExclusive( lBool )                              -> NIL
+        :setVisible( lBool )                                -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQActionGroup.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QActionGroup.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qactiongroup.html
+    $END$
+ */

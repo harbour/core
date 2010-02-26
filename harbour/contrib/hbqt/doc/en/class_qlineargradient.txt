@@ -1,0 +1,68 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QLinearGradient()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QLinearGradient object.
+    $INHERITS$
+        QGradient
+    $SYNTAX$
+        QLinearGradient():new( ... )
+        QLinearGradient():from( pPtr_OR_oObj_of_type_QLinearGradient )
+        QLinearGradient():configure( pPtr_OR_oObj_of_type_QLinearGradient )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QLinearGradient
+    $METHODS$
+        :finalStop()                                        -> pQPointF
+        :setFinalStop( pStop )                              -> NIL
+        :setFinalStop_1( nX, nY )                           -> NIL
+        :setStart( pStart )                                 -> NIL
+        :setStart_1( nX, nY )                               -> NIL
+        :start()                                            -> pQPointF
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oLinearGradiant := QLinearGradiant():new()
+        oLinearGradiant := QLinearGradiant():new( pQLinearGradient )
+        oLinearGradiant := QLinearGradiant():new( pQPointF_start, pQPointF_finalStop )
+        oLinearGradiant := QLinearGradiant():new( nX1, nY1, nX2, nY2 )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQLinearGradient.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QLinearGradient.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QGradient, http://doc.trolltech.com/4.5/qlineargradient.html
+    $END$
+ */

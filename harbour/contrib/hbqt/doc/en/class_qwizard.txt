@@ -1,0 +1,91 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:23
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QWizard()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QWizard object.
+    $INHERITS$
+        QDialog
+    $SYNTAX$
+        QWizard():new( ... )
+        QWizard():from( pPtr_OR_oObj_of_type_QWizard )
+        QWizard():configure( pPtr_OR_oObj_of_type_QWizard )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QWizard
+    $METHODS$
+        :addPage( pPage )                                   -> nInt
+        :button( nWhich )                                   -> pQAbstractButton
+        :buttonText( nWhich )                               -> cQString
+        :currentId()                                        -> nInt
+        :currentPage()                                      -> Page
+        :field( cName )                                     -> pQVariant
+        :hasVisitedPage( nId )                              -> lBool
+        :nextId()                                           -> nInt
+        :options()                                          -> nWizardOptions
+        :page( nId )                                        -> Page
+        :pixmap( nWhich )                                   -> pQPixmap
+        :removePage( nId )                                  -> NIL
+        :setButton( nWhich, pButton )                       -> NIL
+        :setButtonText( nWhich, cText )                     -> NIL
+        :setDefaultProperty( pClassName, pProperty, pChangedSignal )  -> NIL
+        :setField( cName, pValue )                          -> NIL
+        :setOption( nOption, lOn )                          -> NIL
+        :setOptions( nOptions )                             -> NIL
+        :setPage( nId, pPage )                              -> NIL
+        :setPixmap( nWhich, pPixmap )                       -> NIL
+        :setStartId( nId )                                  -> NIL
+        :setSubTitleFormat( nFormat )                       -> NIL
+        :setTitleFormat( nFormat )                          -> NIL
+        :setWizardStyle( nStyle )                           -> NIL
+        :startId()                                          -> nInt
+        :subTitleFormat()                                   -> nQt::TextFormat
+        :testOption( nOption )                              -> lBool
+        :titleFormat()                                      -> nQt::TextFormat
+        :validateCurrentPage()                              -> lBool
+        :wizardStyle()                                      -> nWizardStyle
+        :back()                                             -> NIL
+        :next()                                             -> NIL
+        :restart()                                          -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQWizard.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QWizard.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QDialog, http://doc.trolltech.com/4.5/qwizard.html
+    $END$
+ */

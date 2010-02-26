@@ -1,0 +1,75 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QLayoutItem()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QLayoutItem object.
+    $INHERITS$
+
+    $SYNTAX$
+        QLayoutItem():new( ... )
+        QLayoutItem():from( pPtr_OR_oObj_of_type_QLayoutItem )
+        QLayoutItem():configure( pPtr_OR_oObj_of_type_QLayoutItem )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QLayoutItem
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :controlTypes()                                     -> nQSizePolicy::ControlTypes
+        :expandingDirections()                              -> nQt::Orientations
+        :geometry()                                         -> pQRect
+        :hasHeightForWidth()                                -> lBool
+        :heightForWidth( nW )                               -> nInt
+        :invalidate()                                       -> NIL
+        :isEmpty()                                          -> lBool
+        :layout()                                           -> pQLayout
+        :maximumSize()                                      -> pQSize
+        :minimumHeightForWidth( nW )                        -> nInt
+        :minimumSize()                                      -> pQSize
+        :setAlignment( nAlignment )                         -> NIL
+        :setGeometry( pR )                                  -> NIL
+        :sizeHint()                                         -> pQSize
+        :spacerItem()                                       -> pQSpacerItem
+        :widget()                                           -> pQWidget
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQLayoutItem.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QLayoutItem.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qlayoutitem.html
+    $END$
+ */

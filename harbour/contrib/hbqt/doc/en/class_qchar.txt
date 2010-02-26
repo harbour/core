@@ -1,0 +1,85 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QChar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QChar object.
+    $INHERITS$
+
+    $SYNTAX$
+        QChar():new( ... )
+        QChar():from( pPtr_OR_oObj_of_type_QChar )
+        QChar():configure( pPtr_OR_oObj_of_type_QChar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QChar
+    $METHODS$
+        :category()                                         -> nCategory
+        :decomposition()                                    -> cQString
+        :decompositionTag()                                 -> nDecomposition
+        :digitValue()                                       -> nInt
+        :direction()                                        -> nDirection
+        :hasMirrored()                                      -> lBool
+        :isDigit()                                          -> lBool
+        :isHighSurrogate()                                  -> lBool
+        :isLetter()                                         -> lBool
+        :isLetterOrNumber()                                 -> lBool
+        :isLowSurrogate()                                   -> lBool
+        :isLower()                                          -> lBool
+        :isMark()                                           -> lBool
+        :isNull()                                           -> lBool
+        :isNumber()                                         -> lBool
+        :isPrint()                                          -> lBool
+        :isPunct()                                          -> lBool
+        :isSpace()                                          -> lBool
+        :isSymbol()                                         -> lBool
+        :isTitleCase()                                      -> lBool
+        :isUpper()                                          -> lBool
+        :joining()                                          -> nJoining
+        :toAscii()                                          -> cChar
+        :toLatin1()                                         -> cChar
+        :unicode()                                          -> nUshort
+        :unicode_1()                                        -> nUshort
+        :unicodeVersion()                                   -> nUnicodeVersion
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQChar.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QChar.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qchar.html
+    $END$
+ */

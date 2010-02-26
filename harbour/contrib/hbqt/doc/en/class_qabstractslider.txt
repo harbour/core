@@ -1,0 +1,82 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:09
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QAbstractSlider()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QAbstractSlider object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QAbstractSlider():new( ... )
+        QAbstractSlider():from( pPtr_OR_oObj_of_type_QAbstractSlider )
+        QAbstractSlider():configure( pPtr_OR_oObj_of_type_QAbstractSlider )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QAbstractSlider
+    $METHODS$
+        :hasTracking()                                      -> lBool
+        :invertedAppearance()                               -> lBool
+        :invertedControls()                                 -> lBool
+        :isSliderDown()                                     -> lBool
+        :maximum()                                          -> nInt
+        :minimum()                                          -> nInt
+        :orientation()                                      -> nQt::Orientation
+        :pageStep()                                         -> nInt
+        :setInvertedAppearance( lBool )                     -> NIL
+        :setInvertedControls( lBool )                       -> NIL
+        :setMaximum( nInt )                                 -> NIL
+        :setMinimum( nInt )                                 -> NIL
+        :setPageStep( nInt )                                -> NIL
+        :setRange( nMin, nMax )                             -> NIL
+        :setSingleStep( nInt )                              -> NIL
+        :setSliderDown( lBool )                             -> NIL
+        :setSliderPosition( nInt )                          -> NIL
+        :setTracking( lEnable )                             -> NIL
+        :singleStep()                                       -> nInt
+        :sliderPosition()                                   -> nInt
+        :triggerAction( nAction )                           -> NIL
+        :value()                                            -> nInt
+        :setOrientation( nQt::Orientation )                 -> NIL
+        :setValue( nInt )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQAbstractSlider.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QAbstractSlider.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qabstractslider.html
+    $END$
+ */

@@ -1,0 +1,67 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QPrintDialog()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QPrintDialog object.
+    $INHERITS$
+        QAbstractPrintDialog
+    $SYNTAX$
+        QPrintDialog():new( ... )
+        QPrintDialog():from( pPtr_OR_oObj_of_type_QPrintDialog )
+        QPrintDialog():configure( pPtr_OR_oObj_of_type_QPrintDialog )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QPrintDialog
+    $METHODS$
+        :done( nResult )                                    -> NIL
+        :open( pReceiver, pMember )                         -> NIL
+        :options()                                          -> nPrintDialogOptions
+        :printer()                                          -> pQPrinter
+        :printer_1()                                        -> pQPrinter
+        :setOption( nOption, lOn )                          -> NIL
+        :setOptions( nOptions )                             -> NIL
+        :setVisible( lVisible )                             -> NIL
+        :testOption( nOption )                              -> lBool
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQPrintDialog.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QPrintDialog.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractPrintDialog, http://doc.trolltech.com/4.5/qprintdialog.html
+    $END$
+ */

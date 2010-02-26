@@ -1,0 +1,71 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QThread()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QThread object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QThread():new( ... )
+        QThread():from( pPtr_OR_oObj_of_type_QThread )
+        QThread():configure( pPtr_OR_oObj_of_type_QThread )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QThread
+    $METHODS$
+        :exit( nReturnCode )                                -> NIL
+        :isFinished()                                       -> lBool
+        :isRunning()                                        -> lBool
+        :priority()                                         -> nPriority
+        :setPriority( nPriority )                           -> NIL
+        :setStackSize( nStackSize )                         -> NIL
+        :stackSize()                                        -> nUint
+        :wait()                                             -> lBool
+        :idealThreadCount()                                 -> nInt
+        :yieldCurrentThread()                               -> NIL
+        :quit()                                             -> NIL
+        :start( nPriority )                                 -> NIL
+        :terminate()                                        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQThread.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QThread.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qthread.html
+    $END$
+ */

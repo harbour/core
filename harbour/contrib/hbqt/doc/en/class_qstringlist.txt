@@ -1,0 +1,91 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStringList()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStringList object.
+    $INHERITS$
+        QList
+    $SYNTAX$
+        QStringList():new( ... )
+        QStringList():from( pPtr_OR_oObj_of_type_QStringList )
+        QStringList():configure( pPtr_OR_oObj_of_type_QStringList )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStringList
+    $METHODS$
+        :append( cValue )                                   -> NIL
+        :indexOf( cValue, nFrom )                           -> nInt
+        :indexOf_1( pRx, nFrom )                            -> nInt
+        :indexOf_2( pRx, nFrom )                            -> nInt
+        :join( cSeparator )                                 -> cQString
+        :lastIndexOf( pRx, nFrom )                          -> nInt
+        :lastIndexOf_1( cValue, nFrom )                     -> nInt
+        :lastIndexOf_2( pRx, nFrom )                        -> nInt
+        :removeDuplicates()                                 -> nInt
+        :sort()                                             -> NIL
+        :at( nI )                                           -> cQString
+        :back()                                             -> cQString
+        :count( cValue )                                    -> nInt
+        :endsWith( cValue )                                 -> lBool
+        :first()                                            -> cQString
+        :first_1()                                          -> cQString
+        :front()                                            -> cQString
+        :front_1()                                          -> cQString
+        :insert( nI, cValue )                               -> NIL
+        :last()                                             -> cQString
+        :last_1()                                           -> cQString
+        :prepend( cValue )                                  -> NIL
+        :push_back( cValue )                                -> NIL
+        :push_front( cValue )                               -> NIL
+        :removeAll( cValue )                                -> nInt
+        :removeOne( cValue )                                -> lBool
+        :replace( nI, cValue )                              -> NIL
+        :startsWith( cValue )                               -> lBool
+        :takeAt( nI )                                       -> cQString
+        :takeFirst()                                        -> cQString
+        :takeLast()                                         -> cQString
+        :value( nI )                                        -> cQString
+        :value_1( nI, cDefaultValue )                       -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQStringList.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QStringList.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QList, http://doc.trolltech.com/4.5/qstringlist.html
+    $END$
+ */

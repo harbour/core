@@ -1,0 +1,103 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFileDialog()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFileDialog object.
+    $INHERITS$
+        QDialog
+    $SYNTAX$
+        QFileDialog():new( ... )
+        QFileDialog():from( pPtr_OR_oObj_of_type_QFileDialog )
+        QFileDialog():configure( pPtr_OR_oObj_of_type_QFileDialog )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFileDialog
+    $METHODS$
+        :acceptMode()                                       -> nAcceptMode
+        :confirmOverwrite()                                 -> lBool
+        :defaultSuffix()                                    -> cQString
+        :directory()                                        -> pQDir
+        :fileMode()                                         -> nFileMode
+        :filter()                                           -> nQDir::Filters
+        :history()                                          -> pQStringList
+        :iconProvider()                                     -> pQFileIconProvider
+        :isNameFilterDetailsVisible()                       -> lBool
+        :isReadOnly()                                       -> lBool
+        :itemDelegate()                                     -> pQAbstractItemDelegate
+        :labelText( nLabel )                                -> cQString
+        :nameFilters()                                      -> pQStringList
+        :options()                                          -> nOptions
+        :proxyModel()                                       -> pQAbstractProxyModel
+        :resolveSymlinks()                                  -> lBool
+        :restoreState( pState )                             -> lBool
+        :saveState()                                        -> pQByteArray
+        :selectFile( cFilename )                            -> NIL
+        :selectNameFilter( cFilter )                        -> NIL
+        :selectedFiles()                                    -> pQStringList
+        :selectedNameFilter()                               -> cQString
+        :setAcceptMode( nMode )                             -> NIL
+        :setConfirmOverwrite( lEnabled )                    -> NIL
+        :setDefaultSuffix( cSuffix )                        -> NIL
+        :setDirectory( cDirectory )                         -> NIL
+        :setDirectory_1( pDirectory )                       -> NIL
+        :setFileMode( nMode )                               -> NIL
+        :setFilter( nFilters )                              -> NIL
+        :setHistory( pPaths )                               -> NIL
+        :setIconProvider( pProvider )                       -> NIL
+        :setItemDelegate( pDelegate )                       -> NIL
+        :setLabelText( nLabel, cText )                      -> NIL
+        :setNameFilter( cFilter )                           -> NIL
+        :setNameFilterDetailsVisible( lEnabled )            -> NIL
+        :setNameFilters( pFilters )                         -> NIL
+        :setOption( nOption, lOn )                          -> NIL
+        :setOptions( nOptions )                             -> NIL
+        :setProxyModel( pProxyModel )                       -> NIL
+        :setReadOnly( lEnabled )                            -> NIL
+        :setResolveSymlinks( lEnabled )                     -> NIL
+        :setViewMode( nMode )                               -> NIL
+        :testOption( nOption )                              -> lBool
+        :viewMode()                                         -> nViewMode
+        :getExistingDirectory( pParent, cCaption, cDir, nOptions )  -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFileDialog.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFileDialog.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QDialog, http://doc.trolltech.com/4.5/qfiledialog.html
+    $END$
+ */

@@ -1,0 +1,104 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTableWidget()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTableWidget object.
+    $INHERITS$
+        QTableView
+    $SYNTAX$
+        QTableWidget():new( ... )
+        QTableWidget():from( pPtr_OR_oObj_of_type_QTableWidget )
+        QTableWidget():configure( pPtr_OR_oObj_of_type_QTableWidget )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTableWidget
+    $METHODS$
+        :cellWidget( nRow, nColumn )                        -> pQWidget
+        :closePersistentEditor( pItem )                     -> NIL
+        :column( pItem )                                    -> nInt
+        :columnCount()                                      -> nInt
+        :currentColumn()                                    -> nInt
+        :currentItem()                                      -> Item
+        :currentRow()                                       -> nInt
+        :editItem( pItem )                                  -> NIL
+        :horizontalHeaderItem( nColumn )                    -> Item
+        :item( nRow, nColumn )                              -> Item
+        :itemAt( pPoint )                                   -> Item
+        :itemAt_1( nAx, nAy )                               -> Item
+        :itemPrototype()                                    -> Item
+        :openPersistentEditor( pItem )                      -> NIL
+        :removeCellWidget( nRow, nColumn )                  -> NIL
+        :row( pItem )                                       -> nInt
+        :rowCount()                                         -> nInt
+        :setCellWidget( nRow, nColumn, pWidget )            -> NIL
+        :setColumnCount( nColumns )                         -> NIL
+        :setCurrentCell( nRow, nColumn )                    -> NIL
+        :setCurrentCell_1( nRow, nColumn, nCommand )        -> NIL
+        :setCurrentItem( pItem )                            -> NIL
+        :setCurrentItem_1( pItem, nCommand )                -> NIL
+        :setHorizontalHeaderItem( nColumn, pItem )          -> NIL
+        :setHorizontalHeaderLabels( pLabels )               -> NIL
+        :setItem( nRow, nColumn, pItem )                    -> NIL
+        :setItemPrototype( pItem )                          -> NIL
+        :setRangeSelected( pRange, lSelect )                -> NIL
+        :setRowCount( nRows )                               -> NIL
+        :setVerticalHeaderItem( nRow, pItem )               -> NIL
+        :setVerticalHeaderLabels( pLabels )                 -> NIL
+        :sortItems( nColumn, nOrder )                       -> NIL
+        :takeHorizontalHeaderItem( nColumn )                -> Item
+        :takeItem( nRow, nColumn )                          -> Item
+        :takeVerticalHeaderItem( nRow )                     -> Item
+        :verticalHeaderItem( nRow )                         -> Item
+        :visualColumn( nLogicalColumn )                     -> nInt
+        :visualItemRect( pItem )                            -> pQRect
+        :visualRow( nLogicalRow )                           -> nInt
+        :clear()                                            -> NIL
+        :clearContents()                                    -> NIL
+        :insertColumn( nColumn )                            -> NIL
+        :insertRow( nRow )                                  -> NIL
+        :removeColumn( nColumn )                            -> NIL
+        :removeRow( nRow )                                  -> NIL
+        :scrollToItem( pItem, nHint )                       -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTableWidget.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTableWidget.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QTableView, http://doc.trolltech.com/4.5/qtablewidget.html
+    $END$
+ */

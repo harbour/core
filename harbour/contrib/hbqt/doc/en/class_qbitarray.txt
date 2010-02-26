@@ -1,0 +1,74 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:10
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QBitArray()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QBitArray object.
+    $INHERITS$
+
+    $SYNTAX$
+        QBitArray():new( ... )
+        QBitArray():from( pPtr_OR_oObj_of_type_QBitArray )
+        QBitArray():configure( pPtr_OR_oObj_of_type_QBitArray )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QBitArray
+    $METHODS$
+        :at( nI )                                           -> lBool
+        :clear()                                            -> NIL
+        :clearBit( nI )                                     -> NIL
+        :count()                                            -> nInt
+        :count_1( lOn )                                     -> nInt
+        :fill( lValue, nSize )                              -> lBool
+        :fill_1( lValue, nBegin, nEnd )                     -> NIL
+        :isEmpty()                                          -> lBool
+        :isNull()                                           -> lBool
+        :resize( nSize )                                    -> NIL
+        :setBit( nI )                                       -> NIL
+        :setBit_1( nI, lValue )                             -> NIL
+        :size()                                             -> nInt
+        :testBit( nI )                                      -> lBool
+        :toggleBit( nI )                                    -> lBool
+        :truncate( nPos )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQBitArray.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QBitArray.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qbitarray.html
+    $END$
+ */

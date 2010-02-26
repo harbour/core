@@ -1,0 +1,124 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextDocument()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextDocument object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QTextDocument():new( ... )
+        QTextDocument():from( pPtr_OR_oObj_of_type_QTextDocument )
+        QTextDocument():configure( pPtr_OR_oObj_of_type_QTextDocument )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextDocument
+    $METHODS$
+        :addResource( nType, pName, pResource )             -> NIL
+        :adjustSize()                                       -> NIL
+        :begin()                                            -> pQTextBlock
+        :blockCount()                                       -> nInt
+        :characterAt( nPos )                                -> pQChar
+        :characterCount()                                   -> nInt
+        :clear()                                            -> NIL
+        :defaultFont()                                      -> pQFont
+        :defaultStyleSheet()                                -> cQString
+        :defaultTextOption()                                -> pQTextOption
+        :documentLayout()                                   -> pQAbstractTextDocumentLayout
+        :documentMargin()                                   -> nQreal
+        :drawContents( pP, pRect )                          -> NIL
+        :end()                                              -> pQTextBlock
+        :find( cSubString, pCursor, nOptions )              -> pQTextCursor
+        :find_1( pExpr, pCursor, nOptions )                 -> pQTextCursor
+        :find_2( cSubString, nPosition, nOptions )          -> pQTextCursor
+        :find_3( pExpr, nPosition, nOptions )               -> pQTextCursor
+        :findBlock( nPos )                                  -> pQTextBlock
+        :findBlockByLineNumber( nLineNumber )               -> pQTextBlock
+        :findBlockByNumber( nBlockNumber )                  -> pQTextBlock
+        :firstBlock()                                       -> pQTextBlock
+        :idealWidth()                                       -> nQreal
+        :indentWidth()                                      -> nQreal
+        :isEmpty()                                          -> lBool
+        :isModified()                                       -> lBool
+        :isRedoAvailable()                                  -> lBool
+        :isUndoAvailable()                                  -> lBool
+        :isUndoRedoEnabled()                                -> lBool
+        :lastBlock()                                        -> pQTextBlock
+        :lineCount()                                        -> nInt
+        :markContentsDirty( nPosition, nLength )            -> NIL
+        :maximumBlockCount()                                -> nInt
+        :metaInformation( nInfo )                           -> cQString
+        :object( nObjectIndex )                             -> pQTextObject
+        :objectForFormat( pF )                              -> pQTextObject
+        :pageCount()                                        -> nInt
+        :pageSize()                                         -> pQSizeF
+        :print( pPrinter )                                  -> NIL
+        :redo( pCursor )                                    -> NIL
+        :resource( nType, pName )                           -> pQVariant
+        :revision()                                         -> nInt
+        :rootFrame()                                        -> pQTextFrame
+        :setDefaultFont( pFont )                            -> NIL
+        :setDefaultStyleSheet( cSheet )                     -> NIL
+        :setDefaultTextOption( pOption )                    -> NIL
+        :setDocumentLayout( pLayout )                       -> NIL
+        :setDocumentMargin( nMargin )                       -> NIL
+        :setHtml( cHtml )                                   -> NIL
+        :setIndentWidth( nWidth )                           -> NIL
+        :setMaximumBlockCount( nMaximum )                   -> NIL
+        :setMetaInformation( nInfo, cString )               -> NIL
+        :setPageSize( pSize )                               -> NIL
+        :setPlainText( cText )                              -> NIL
+        :setTextWidth( nWidth )                             -> NIL
+        :setUndoRedoEnabled( lEnable )                      -> NIL
+        :setUseDesignMetrics( lB )                          -> NIL
+        :size()                                             -> pQSizeF
+        :textWidth()                                        -> nQreal
+        :toHtml( pEncoding )                                -> cQString
+        :toPlainText()                                      -> cQString
+        :undo( pCursor )                                    -> NIL
+        :useDesignMetrics()                                 -> lBool
+        :redo_1()                                           -> NIL
+        :setModified( lM )                                  -> NIL
+        :undo_1()                                           -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextDocument.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextDocument.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qtextdocument.html
+    $END$
+ */

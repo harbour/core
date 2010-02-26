@@ -1,0 +1,90 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:09
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        HBQPlainTextEdit()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new HBQPlainTextEdit object.
+    $INHERITS$
+        QPlainTextEdit
+    $SYNTAX$
+        HBQPlainTextEdit():new( ... )
+        HBQPlainTextEdit():from( pPtr_OR_oObj_of_type_HBQPlainTextEdit )
+        HBQPlainTextEdit():configure( pPtr_OR_oObj_of_type_HBQPlainTextEdit )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type HBQPlainTextEdit
+    $METHODS$
+        :getIndex( pCrQTextCursor )                         -> nInt
+        :getLine( pCrQTextCursor )                          -> nInt
+        :lineNumberAreaWidth()                              -> nInt
+        :getSpaces()                                        -> nInt
+        :setSpaces( nNewSpaces )                            -> NIL
+        :bookmarks( nBlock )                                -> NIL
+        :nextBookmark( nBlock )                             -> NIL
+        :prevBookmark( nBlock )                             -> NIL
+        :gotoBookmark( nBlock )                             -> NIL
+        :numberBlockVisible( lB )                           -> NIL
+        :numberBlockVisible_1()                             -> lBool
+        :highlightCurrentLine( lB )                         -> NIL
+        :highlightCurrentLine_1()                           -> lBool
+        :hbSetEventBlock( xBlock )                          -> NIL
+        :updateLineNumberAreaWidth( nNewBlockCount )        -> NIL
+        :caseUpper()                                        -> NIL
+        :caseLower()                                        -> NIL
+        :escapeQuotes()                                     -> NIL
+        :escapeDQuotes()                                    -> NIL
+        :unescapeQuotes()                                   -> NIL
+        :unescapeDQuotes()                                  -> NIL
+        :convertQuotes()                                    -> NIL
+        :convertDQuotes()                                   -> NIL
+        :blockComment()                                     -> NIL
+        :streamComment()                                    -> NIL
+        :duplicateLine()                                    -> NIL
+        :replaceSelection( cTxt )                           -> NIL
+        :blockIndent( nSteps )                              -> NIL
+        :deleteLine()                                       -> NIL
+        :moveLine( nIDirection )                            -> NIL
+        :highlightSelectedColumns( lYes )                   -> NIL
+        :getSelectedText()                                  -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/THBQPlainTextEdit.prg
+        C++ Wrappers : contrib/hbqt/qtgui/HBQPlainTextEdit.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QPlainTextEdit, http://doc.trolltech.com/4.5/hbqplaintextedit.html
+    $END$
+ */

@@ -1,0 +1,92 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QListWidgetItem()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QListWidgetItem object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QListWidgetItem():new( ... )
+        QListWidgetItem():from( pPtr_OR_oObj_of_type_QListWidgetItem )
+        QListWidgetItem():configure( pPtr_OR_oObj_of_type_QListWidgetItem )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QListWidgetItem
+    $METHODS$
+        :background()                                       -> pQBrush
+        :checkState()                                       -> nQt::CheckState
+        :data( nRole )                                      -> pQVariant
+        :flags()                                            -> nQt::ItemFlags
+        :font()                                             -> pQFont
+        :foreground()                                       -> pQBrush
+        :icon()                                             -> pQIcon
+        :isHidden()                                         -> lBool
+        :isSelected()                                       -> lBool
+        :listWidget()                                       -> pQListWidget
+        :read( pIn )                                        -> NIL
+        :setBackground( pBrush )                            -> NIL
+        :setCheckState( nState )                            -> NIL
+        :setData( nRole, pValue )                           -> NIL
+        :setFlags( nFlags )                                 -> NIL
+        :setFont( pFont )                                   -> NIL
+        :setForeground( pBrush )                            -> NIL
+        :setHidden( lHide )                                 -> NIL
+        :setIcon( cIcon )                                   -> NIL
+        :setSelected( lSelect )                             -> NIL
+        :setSizeHint( pSize )                               -> NIL
+        :setStatusTip( cStatusTip )                         -> NIL
+        :setText( cText )                                   -> NIL
+        :setTextAlignment( nAlignment )                     -> NIL
+        :setToolTip( cToolTip )                             -> NIL
+        :setWhatsThis( cWhatsThis )                         -> NIL
+        :sizeHint()                                         -> pQSize
+        :statusTip()                                        -> cQString
+        :text()                                             -> cQString
+        :textAlignment()                                    -> nInt
+        :toolTip()                                          -> cQString
+        :type()                                             -> nInt
+        :whatsThis()                                        -> cQString
+        :write( pOut )                                      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQListWidgetItem.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QListWidgetItem.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qlistwidgetitem.html
+    $END$
+ */

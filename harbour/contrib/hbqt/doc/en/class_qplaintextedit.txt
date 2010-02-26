@@ -1,0 +1,115 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QPlainTextEdit()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QPlainTextEdit object.
+    $INHERITS$
+        QAbstractScrollArea
+    $SYNTAX$
+        QPlainTextEdit():new( ... )
+        QPlainTextEdit():from( pPtr_OR_oObj_of_type_QPlainTextEdit )
+        QPlainTextEdit():configure( pPtr_OR_oObj_of_type_QPlainTextEdit )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QPlainTextEdit
+    $METHODS$
+        :backgroundVisible()                                -> lBool
+        :blockCount()                                       -> nInt
+        :canPaste()                                         -> lBool
+        :centerOnScroll()                                   -> lBool
+        :createStandardContextMenu()                        -> pQMenu
+        :currentCharFormat()                                -> pQTextCharFormat
+        :cursorForPosition( pPos )                          -> pQTextCursor
+        :cursorRect( pCursor )                              -> pQRect
+        :cursorRect_1()                                     -> pQRect
+        :cursorWidth()                                      -> nInt
+        :document()                                         -> pQTextDocument
+        :documentTitle()                                    -> cQString
+        :ensureCursorVisible()                              -> NIL
+        :find( cExp, nOptions )                             -> lBool
+        :isReadOnly()                                       -> lBool
+        :isUndoRedoEnabled()                                -> lBool
+        :lineWrapMode()                                     -> nLineWrapMode
+        :loadResource( nType, pName )                       -> pQVariant
+        :maximumBlockCount()                                -> nInt
+        :mergeCurrentCharFormat( pModifier )                -> NIL
+        :moveCursor( nOperation, nMode )                    -> NIL
+        :overwriteMode()                                    -> lBool
+        :print( pPrinter )                                  -> NIL
+        :setBackgroundVisible( lVisible )                   -> NIL
+        :setCenterOnScroll( lEnabled )                      -> NIL
+        :setCurrentCharFormat( pFormat )                    -> NIL
+        :setCursorWidth( nWidth )                           -> NIL
+        :setDocument( pDocument )                           -> NIL
+        :setDocumentTitle( cTitle )                         -> NIL
+        :setLineWrapMode( nMode )                           -> NIL
+        :setMaximumBlockCount( nMaximum )                   -> NIL
+        :setOverwriteMode( lOverwrite )                     -> NIL
+        :setReadOnly( lRo )                                 -> NIL
+        :setTabChangesFocus( lB )                           -> NIL
+        :setTabStopWidth( nWidth )                          -> NIL
+        :setTextCursor( pCursor )                           -> NIL
+        :setTextInteractionFlags( nFlags )                  -> NIL
+        :setUndoRedoEnabled( lEnable )                      -> NIL
+        :setWordWrapMode( nPolicy )                         -> NIL
+        :tabChangesFocus()                                  -> lBool
+        :tabStopWidth()                                     -> nInt
+        :textCursor()                                       -> pQTextCursor
+        :textInteractionFlags()                             -> nQt::TextInteractionFlags
+        :toPlainText()                                      -> cQString
+        :wordWrapMode()                                     -> nQTextOption::WrapMode
+        :appendHtml( cHtml )                                -> NIL
+        :appendPlainText( cText )                           -> NIL
+        :centerCursor()                                     -> NIL
+        :clear()                                            -> NIL
+        :copy()                                             -> NIL
+        :cut()                                              -> NIL
+        :insertPlainText( cText )                           -> NIL
+        :paste()                                            -> NIL
+        :redo()                                             -> NIL
+        :selectAll()                                        -> NIL
+        :setPlainText( cText )                              -> NIL
+        :undo()                                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQPlainTextEdit.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QPlainTextEdit.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractScrollArea, http://doc.trolltech.com/4.5/qplaintextedit.html
+    $END$
+ */

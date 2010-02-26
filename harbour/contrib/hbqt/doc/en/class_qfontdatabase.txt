@@ -1,0 +1,78 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFontDatabase()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFontDatabase object.
+    $INHERITS$
+
+    $SYNTAX$
+        QFontDatabase():new( ... )
+        QFontDatabase():from( pPtr_OR_oObj_of_type_QFontDatabase )
+        QFontDatabase():configure( pPtr_OR_oObj_of_type_QFontDatabase )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFontDatabase
+    $METHODS$
+        :bold( cFamily, cStyle )                            -> lBool
+        :families( nWritingSystem )                         -> pQStringList
+        :font( cFamily, cStyle, nPointSize )                -> pQFont
+        :isBitmapScalable( cFamily, cStyle )                -> lBool
+        :isFixedPitch( cFamily, cStyle )                    -> lBool
+        :isScalable( cFamily, cStyle )                      -> lBool
+        :isSmoothlyScalable( cFamily, cStyle )              -> lBool
+        :italic( cFamily, cStyle )                          -> lBool
+        :styleString( pFont )                               -> cQString
+        :styleString_1( pFontInfo )                         -> cQString
+        :styles( cFamily )                                  -> pQStringList
+        :weight( cFamily, cStyle )                          -> nInt
+        :addApplicationFont( cFileName )                    -> nInt
+        :addApplicationFontFromData( pFontData )            -> nInt
+        :applicationFontFamilies( nId )                     -> pQStringList
+        :removeAllApplicationFonts()                        -> lBool
+        :removeApplicationFont( nId )                       -> lBool
+        :supportsThreadedFontRendering()                    -> lBool
+        :writingSystemName( nWritingSystem )                -> cQString
+        :writingSystemSample( nWritingSystem )              -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFontDatabase.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFontDatabase.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qfontdatabase.html
+    $END$
+ */

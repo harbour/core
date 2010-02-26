@@ -1,0 +1,63 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:09
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        HBQSyntaxHighlighter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new HBQSyntaxHighlighter object.
+    $INHERITS$
+        QSyntaxHighlighter
+    $SYNTAX$
+        HBQSyntaxHighlighter():new( ... )
+        HBQSyntaxHighlighter():from( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
+        HBQSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type HBQSyntaxHighlighter
+    $METHODS$
+        :hbSetMultiLineCommentFormat( pFormat )             -> NIL
+        :hbSetSingleLineCommentFormat( pFormat )            -> NIL
+        :hbSetRule( cName, cPattern, pFormat )              -> NIL
+        :hbSetFormat( cName, pFormat )                      -> NIL
+        :hbSetFormatColumnSelection( nStart, nCount, pColor )  -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/THBQSyntaxHighlighter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/HBQSyntaxHighlighter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QSyntaxHighlighter, http://doc.trolltech.com/4.5/hbqsyntaxhighlighter.html
+    $END$
+ */

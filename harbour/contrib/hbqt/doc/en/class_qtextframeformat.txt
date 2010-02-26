@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:21
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextFrameFormat()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextFrameFormat object.
+    $INHERITS$
+        QTextFormat
+    $SYNTAX$
+        QTextFrameFormat():new( ... )
+        QTextFrameFormat():from( pPtr_OR_oObj_of_type_QTextFrameFormat )
+        QTextFrameFormat():configure( pPtr_OR_oObj_of_type_QTextFrameFormat )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextFrameFormat
+    $METHODS$
+        :border()                                           -> nQreal
+        :borderBrush()                                      -> pQBrush
+        :borderStyle()                                      -> nBorderStyle
+        :bottomMargin()                                     -> nQreal
+        :height()                                           -> pQTextLength
+        :isValid()                                          -> lBool
+        :leftMargin()                                       -> nQreal
+        :margin()                                           -> nQreal
+        :padding()                                          -> nQreal
+        :pageBreakPolicy()                                  -> nPageBreakFlags
+        :position()                                         -> nPosition
+        :rightMargin()                                      -> nQreal
+        :setBorder( nWidth )                                -> NIL
+        :setBorderBrush( pBrush )                           -> NIL
+        :setBorderStyle( nStyle )                           -> NIL
+        :setBottomMargin( nMargin )                         -> NIL
+        :setHeight( pHeight )                               -> NIL
+        :setHeight_1( nHeight )                             -> NIL
+        :setLeftMargin( nMargin )                           -> NIL
+        :setMargin( nMargin )                               -> NIL
+        :setPadding( nWidth )                               -> NIL
+        :setPageBreakPolicy( nPolicy )                      -> NIL
+        :setPosition( nPolicy )                             -> NIL
+        :setRightMargin( nMargin )                          -> NIL
+        :setTopMargin( nMargin )                            -> NIL
+        :setWidth( pWidth )                                 -> NIL
+        :setWidth_1( nWidth )                               -> NIL
+        :topMargin()                                        -> nQreal
+        :width()                                            -> pQTextLength
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextFrameFormat.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextFrameFormat.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QTextFormat, http://doc.trolltech.com/4.5/qtextframeformat.html
+    $END$
+ */

@@ -1,0 +1,62 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:15
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QPlainTextDocumentLayout()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QPlainTextDocumentLayout object.
+    $INHERITS$
+        QAbstractTextDocumentLayout
+    $SYNTAX$
+        QPlainTextDocumentLayout():new( ... )
+        QPlainTextDocumentLayout():from( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
+        QPlainTextDocumentLayout():configure( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QPlainTextDocumentLayout
+    $METHODS$
+        :cursorWidth()                                      -> nInt
+        :ensureBlockLayout( pBlock )                        -> NIL
+        :requestUpdate()                                    -> NIL
+        :setCursorWidth( nWidth )                           -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQPlainTextDocumentLayout.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QPlainTextDocumentLayout.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractTextDocumentLayout, http://doc.trolltech.com/4.5/qplaintextdocumentlayout.html
+    $END$
+ */

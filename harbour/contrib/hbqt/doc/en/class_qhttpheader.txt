@@ -1,0 +1,76 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QHttpHeader()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QHttpHeader object.
+    $INHERITS$
+
+    $SYNTAX$
+        QHttpHeader():new( ... )
+        QHttpHeader():from( pPtr_OR_oObj_of_type_QHttpHeader )
+        QHttpHeader():configure( pPtr_OR_oObj_of_type_QHttpHeader )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QHttpHeader
+    $METHODS$
+        :addValue( cKey, cValue )                           -> NIL
+        :allValues( cKey )                                  -> pQStringList
+        :contentLength()                                    -> nUint
+        :contentType()                                      -> cQString
+        :hasContentLength()                                 -> lBool
+        :hasContentType()                                   -> lBool
+        :hasKey( cKey )                                     -> lBool
+        :isValid()                                          -> lBool
+        :keys()                                             -> pQStringList
+        :majorVersion()                                     -> nInt
+        :minorVersion()                                     -> nInt
+        :removeAllValues( cKey )                            -> NIL
+        :removeValue( cKey )                                -> NIL
+        :setContentLength( nLen )                           -> NIL
+        :setContentType( cType )                            -> NIL
+        :setValue( cKey, cValue )                           -> NIL
+        :toString()                                         -> cQString
+        :value( cKey )                                      -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtnetwork/TQHttpHeader.prg
+        C++ Wrappers : contrib/hbqt/qtnetwork/QHttpHeader.cpp
+        Library      : hbqtnetwork
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qhttpheader.html
+    $END$
+ */

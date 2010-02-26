@@ -1,0 +1,91 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:16
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QProcess()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QProcess object.
+    $INHERITS$
+        QIODevice
+    $SYNTAX$
+        QProcess():new( ... )
+        QProcess():from( pPtr_OR_oObj_of_type_QProcess )
+        QProcess():configure( pPtr_OR_oObj_of_type_QProcess )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QProcess
+    $METHODS$
+        :close()                                            -> NIL
+        :closeReadChannel( nChannel )                       -> NIL
+        :closeWriteChannel()                                -> NIL
+        :environment()                                      -> pQStringList
+        :error()                                            -> nQProcess::ProcessError
+        :exitCode()                                         -> nInt
+        :exitStatus()                                       -> nQProcess::ExitStatus
+        :processChannelMode()                               -> nProcessChannelMode
+        :readAllStandardError()                             -> pQByteArray
+        :readAllStandardOutput()                            -> pQByteArray
+        :readChannel()                                      -> nProcessChannel
+        :setEnvironment( pEnvironment )                     -> NIL
+        :setProcessChannelMode( nMode )                     -> NIL
+        :setReadChannel( nChannel )                         -> NIL
+        :setStandardErrorFile( cFileName, nMode )           -> NIL
+        :setStandardInputFile( cFileName )                  -> NIL
+        :setStandardOutputFile( cFileName, nMode )          -> NIL
+        :setStandardOutputProcess( pDestination )           -> NIL
+        :setWorkingDirectory( cDir )                        -> NIL
+        :start( cProgram, pArguments, nMode )               -> NIL
+        :start_1( cProgram, nMode )                         -> NIL
+        :state()                                            -> nQProcess::ProcessState
+        :waitForFinished( nMsecs )                          -> lBool
+        :waitForStarted( nMsecs )                           -> lBool
+        :workingDirectory()                                 -> cQString
+        :execute( cProgram, pArguments )                    -> nInt
+        :execute_1( cProgram )                              -> nInt
+        :startDetached( cProgram, pArguments, cWorkingDirectory, @nPid )  -> lBool
+        :startDetached_1( cProgram, pArguments )            -> lBool
+        :startDetached_2( cProgram )                        -> lBool
+        :systemEnvironment()                                -> pQStringList
+        :kill()                                             -> NIL
+        :terminate()                                        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQProcess.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QProcess.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        QIODevice, http://doc.trolltech.com/4.5/qprocess.html
+    $END$
+ */

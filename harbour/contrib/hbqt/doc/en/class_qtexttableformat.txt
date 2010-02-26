@@ -1,0 +1,69 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:22
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextTableFormat()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextTableFormat object.
+    $INHERITS$
+        QTextFrameFormat
+    $SYNTAX$
+        QTextTableFormat():new( ... )
+        QTextTableFormat():from( pPtr_OR_oObj_of_type_QTextTableFormat )
+        QTextTableFormat():configure( pPtr_OR_oObj_of_type_QTextTableFormat )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextTableFormat
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :cellPadding()                                      -> nQreal
+        :cellSpacing()                                      -> nQreal
+        :clearColumnWidthConstraints()                      -> NIL
+        :columns()                                          -> nInt
+        :headerRowCount()                                   -> nInt
+        :isValid()                                          -> lBool
+        :setAlignment( nAlignment )                         -> NIL
+        :setCellPadding( nPadding )                         -> NIL
+        :setCellSpacing( nSpacing )                         -> NIL
+        :setHeaderRowCount( nCount )                        -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQTextTableFormat.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QTextTableFormat.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QTextFrameFormat, http://doc.trolltech.com/4.5/qtexttableformat.html
+    $END$
+ */

@@ -1,0 +1,84 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QGridLayout()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QGridLayout object.
+    $INHERITS$
+        QLayout
+    $SYNTAX$
+        QGridLayout():new( ... )
+        QGridLayout():from( pPtr_OR_oObj_of_type_QGridLayout )
+        QGridLayout():configure( pPtr_OR_oObj_of_type_QGridLayout )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QGridLayout
+    $METHODS$
+        :addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+        :addLayout( pLayout, nRow, nColumn, nAlignment )    -> NIL
+        :addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+        :addWidget( pWidget, nRow, nColumn, nAlignment )    -> NIL
+        :addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+        :cellRect( nRow, nColumn )                          -> pQRect
+        :columnCount()                                      -> nInt
+        :columnMinimumWidth( nColumn )                      -> nInt
+        :columnStretch( nColumn )                           -> nInt
+        :getItemPosition( nIndex, @nRow, @nColumn, @nRowSpan, @nColumnSpan )  -> NIL
+        :horizontalSpacing()                                -> nInt
+        :itemAtPosition( nRow, nColumn )                    -> pQLayoutItem
+        :originCorner()                                     -> nQt::Corner
+        :rowCount()                                         -> nInt
+        :rowMinimumHeight( nRow )                           -> nInt
+        :rowStretch( nRow )                                 -> nInt
+        :setColumnMinimumWidth( nColumn, nMinSize )         -> NIL
+        :setColumnStretch( nColumn, nStretch )              -> NIL
+        :setHorizontalSpacing( nSpacing )                   -> NIL
+        :setOriginCorner( nCorner )                         -> NIL
+        :setRowMinimumHeight( nRow, nMinSize )              -> NIL
+        :setRowStretch( nRow, nStretch )                    -> NIL
+        :setSpacing( nSpacing )                             -> NIL
+        :setVerticalSpacing( nSpacing )                     -> NIL
+        :spacing()                                          -> nInt
+        :verticalSpacing()                                  -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQGridLayout.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QGridLayout.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QLayout, http://doc.trolltech.com/4.5/qgridlayout.html
+    $END$
+ */

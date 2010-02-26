@@ -1,0 +1,96 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMessageBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMessageBox object.
+    $INHERITS$
+        QDialog
+    $SYNTAX$
+        QMessageBox():new( ... )
+        QMessageBox():from( pPtr_OR_oObj_of_type_QMessageBox )
+        QMessageBox():configure( pPtr_OR_oObj_of_type_QMessageBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMessageBox
+    $METHODS$
+        :addButton( pButton, nRole )                        -> NIL
+        :addButton_1( cText, nRole )                        -> pQPushButton
+        :addButton_2( nButton )                             -> pQPushButton
+        :button( nWhich )                                   -> pQAbstractButton
+        :buttonRole( pButton )                              -> nButtonRole
+        :clickedButton()                                    -> pQAbstractButton
+        :defaultButton()                                    -> pQPushButton
+        :detailedText()                                     -> cQString
+        :escapeButton()                                     -> pQAbstractButton
+        :icon()                                             -> nIcon
+        :iconPixmap()                                       -> pQPixmap
+        :informativeText()                                  -> cQString
+        :open( pReceiver, pMember )                         -> NIL
+        :removeButton( pButton )                            -> NIL
+        :setDefaultButton( pButton )                        -> NIL
+        :setDefaultButton_1( nButton )                      -> NIL
+        :setDetailedText( cText )                           -> NIL
+        :setEscapeButton( pButton )                         -> NIL
+        :setEscapeButton_1( nButton )                       -> NIL
+        :setIcon( nIcon )                                   -> NIL
+        :setIconPixmap( pPixmap )                           -> NIL
+        :setInformativeText( cText )                        -> NIL
+        :setStandardButtons( nButtons )                     -> NIL
+        :setText( cText )                                   -> NIL
+        :setTextFormat( nFormat )                           -> NIL
+        :setWindowModality( nWindowModality )               -> NIL
+        :setWindowTitle( cTitle )                           -> NIL
+        :standardButton( pButton )                          -> nStandardButton
+        :standardButtons()                                  -> nStandardButtons
+        :text()                                             -> cQString
+        :textFormat()                                       -> nQt::TextFormat
+        :about( pParent, cTitle, cText )                    -> NIL
+        :aboutQt( pParent, cTitle )                         -> NIL
+        :critical( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+        :information( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+        :question( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+        :warning( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+        :exec()                                             -> nInt
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQMessageBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QMessageBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QDialog, http://doc.trolltech.com/4.5/qmessagebox.html
+    $END$
+ */

@@ -1,0 +1,59 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QLatin1String()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QLatin1String object.
+    $INHERITS$
+
+    $SYNTAX$
+        QLatin1String():new( ... )
+        QLatin1String():from( pPtr_OR_oObj_of_type_QLatin1String )
+        QLatin1String():configure( pPtr_OR_oObj_of_type_QLatin1String )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QLatin1String
+    $METHODS$
+        :latin1()                                           -> cChar
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQLatin1String.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QLatin1String.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qlatin1string.html
+    $END$
+ */

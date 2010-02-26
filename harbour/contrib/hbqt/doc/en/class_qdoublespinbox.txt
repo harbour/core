@@ -1,0 +1,76 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QDoubleSpinBox()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QDoubleSpinBox object.
+    $INHERITS$
+        QAbstractSpinBox
+    $SYNTAX$
+        QDoubleSpinBox():new( ... )
+        QDoubleSpinBox():from( pPtr_OR_oObj_of_type_QDoubleSpinBox )
+        QDoubleSpinBox():configure( pPtr_OR_oObj_of_type_QDoubleSpinBox )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QDoubleSpinBox
+    $METHODS$
+        :cleanText()                                        -> cQString
+        :decimals()                                         -> nInt
+        :maximum()                                          -> nDouble
+        :minimum()                                          -> nDouble
+        :prefix()                                           -> cQString
+        :setDecimals( nPrec )                               -> NIL
+        :setMaximum( nMax )                                 -> NIL
+        :setMinimum( nMin )                                 -> NIL
+        :setPrefix( cPrefix )                               -> NIL
+        :setRange( nMinimum, nMaximum )                     -> NIL
+        :setSingleStep( nVal )                              -> NIL
+        :setSuffix( cSuffix )                               -> NIL
+        :singleStep()                                       -> nDouble
+        :suffix()                                           -> cQString
+        :textFromValue( nValue )                            -> cQString
+        :value()                                            -> nDouble
+        :valueFromText( cText )                             -> nDouble
+        :setValue( nVal )                                   -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQDoubleSpinBox.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QDoubleSpinBox.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractSpinBox, http://doc.trolltech.com/4.5/qdoublespinbox.html
+    $END$
+ */

@@ -1,0 +1,66 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStylePainter()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStylePainter object.
+    $INHERITS$
+        QPainter
+    $SYNTAX$
+        QStylePainter():new( ... )
+        QStylePainter():from( pPtr_OR_oObj_of_type_QStylePainter )
+        QStylePainter():configure( pPtr_OR_oObj_of_type_QStylePainter )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStylePainter
+    $METHODS$
+        :begin( pWidget )                                   -> lBool
+        :begin_1( pPd, pWidget )                            -> lBool
+        :drawComplexControl( nCc, pOption )                 -> NIL
+        :drawControl( nCe, pOption )                        -> NIL
+        :drawItemPixmap( pRect, nFlags, pPixmap )           -> NIL
+        :drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )  -> NIL
+        :drawPrimitive( nPe, pOption )                      -> NIL
+        :style()                                            -> pQStyle
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStylePainter.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStylePainter.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QPainter, http://doc.trolltech.com/4.5/qstylepainter.html
+    $END$
+ */

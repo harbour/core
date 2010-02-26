@@ -1,0 +1,70 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:20
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QTextCodec()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QTextCodec object.
+    $INHERITS$
+
+    $SYNTAX$
+        QTextCodec():new( ... )
+        QTextCodec():from( pPtr_OR_oObj_of_type_QTextCodec )
+        QTextCodec():configure( pPtr_OR_oObj_of_type_QTextCodec )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QTextCodec
+    $METHODS$
+        :canEncode( pCh )                                   -> lBool
+        :canEncode_1( cS )                                  -> lBool
+        :fromUnicode( cStr )                                -> pQByteArray
+        :makeDecoder()                                      -> pQTextDecoder
+        :makeEncoder()                                      -> pQTextEncoder
+        :mibEnum()                                          -> nInt
+        :name()                                             -> pQByteArray
+        :toUnicode( pA )                                    -> cQString
+        :toUnicode_1( pChars )                              -> cQString
+        :setCodecForCStrings( pCodec )                      -> NIL
+        :setCodecForLocale( pC )                            -> NIL
+        :setCodecForTr( pC )                                -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtcore/TQTextCodec.prg
+        C++ Wrappers : contrib/hbqt/qtcore/QTextCodec.cpp
+        Library      : hbqtcore
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qtextcodec.html
+    $END$
+ */

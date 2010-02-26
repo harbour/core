@@ -1,0 +1,82 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:12
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QHttp()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QHttp object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QHttp():new( ... )
+        QHttp():from( pPtr_OR_oObj_of_type_QHttp )
+        QHttp():configure( pPtr_OR_oObj_of_type_QHttp )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QHttp
+    $METHODS$
+        :bytesAvailable()                                   -> nQint64
+        :clearPendingRequests()                             -> NIL
+        :close()                                            -> nInt
+        :currentDestinationDevice()                         -> pQIODevice
+        :currentId()                                        -> nInt
+        :currentRequest()                                   -> RequestHeader
+        :currentSourceDevice()                              -> pQIODevice
+        :error()                                            -> nError
+        :errorString()                                      -> cQString
+        :get( cPath, pTo )                                  -> nInt
+        :hasPendingRequests()                               -> lBool
+        :head( cPath )                                      -> nInt
+        :lastResponse()                                     -> ResponseHeader
+        :post( cPath, pData, pTo )                          -> nInt
+        :post_1( cPath, pData, pTo )                        -> nInt
+        :readAll()                                          -> pQByteArray
+        :request( pHeader, pData, pTo )                     -> nInt
+        :request_1( pHeader, pData, pTo )                   -> nInt
+        :setHost( cHostName, nPort )                        -> nInt
+        :setHost_1( cHostName, nMode, nPort )               -> nInt
+        :setProxy( cHost, nPort, cUsername, cPassword )     -> nInt
+        :setUser( cUserName, cPassword )                    -> nInt
+        :state()                                            -> nState
+        :abort()                                            -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtnetwork/TQHttp.prg
+        C++ Wrappers : contrib/hbqt/qtnetwork/QHttp.cpp
+        Library      : hbqtnetwork
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qhttp.html
+    $END$
+ */

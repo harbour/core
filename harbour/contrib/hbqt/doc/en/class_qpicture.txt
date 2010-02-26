@@ -1,0 +1,72 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:15
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QPicture()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QPicture object.
+    $INHERITS$
+        QPaintDevice
+    $SYNTAX$
+        QPicture():new( ... )
+        QPicture():from( pPtr_OR_oObj_of_type_QPicture )
+        QPicture():configure( pPtr_OR_oObj_of_type_QPicture )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QPicture
+    $METHODS$
+        :boundingRect()                                     -> pQRect
+        :data()                                             -> cChar
+        :isNull()                                           -> lBool
+        :load( cFileName, pFormat )                         -> lBool
+        :load_1( pDev, pFormat )                            -> lBool
+        :play( pPainter )                                   -> lBool
+        :save( cFileName, pFormat )                         -> lBool
+        :save_1( pDev, pFormat )                            -> lBool
+        :setBoundingRect( pR )                              -> NIL
+        :setData( pData, nSize )                            -> NIL
+        :size()                                             -> nUint
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+        oPicture := QPicture():new()
+        oPicture := QPicture():new( nFormatVersion )
+        oPicture := QPicture():new( pQPicture )
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQPicture.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QPicture.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QPaintDevice, http://doc.trolltech.com/4.5/qpicture.html
+    $END$
+ */

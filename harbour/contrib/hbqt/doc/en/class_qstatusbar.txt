@@ -1,0 +1,68 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:18
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QStatusBar()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QStatusBar object.
+    $INHERITS$
+        QWidget
+    $SYNTAX$
+        QStatusBar():new( ... )
+        QStatusBar():from( pPtr_OR_oObj_of_type_QStatusBar )
+        QStatusBar():configure( pPtr_OR_oObj_of_type_QStatusBar )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QStatusBar
+    $METHODS$
+        :addPermanentWidget( pWidget, nStretch )            -> NIL
+        :addWidget( pWidget, nStretch )                     -> NIL
+        :currentMessage()                                   -> cQString
+        :insertPermanentWidget( nIndex, pWidget, nStretch )  -> nInt
+        :insertWidget( nIndex, pWidget, nStretch )          -> nInt
+        :isSizeGripEnabled()                                -> lBool
+        :removeWidget( pWidget )                            -> NIL
+        :setSizeGripEnabled( lBool )                        -> NIL
+        :clearMessage()                                     -> NIL
+        :showMessage( cMessage, nTimeout )                  -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQStatusBar.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QStatusBar.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QWidget, http://doc.trolltech.com/4.5/qstatusbar.html
+    $END$
+ */

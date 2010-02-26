@@ -1,0 +1,86 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMovie()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMovie object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QMovie():new( ... )
+        QMovie():from( pPtr_OR_oObj_of_type_QMovie )
+        QMovie():configure( pPtr_OR_oObj_of_type_QMovie )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMovie
+    $METHODS$
+        :backgroundColor()                                  -> pQColor
+        :cacheMode()                                        -> nCacheMode
+        :currentFrameNumber()                               -> nInt
+        :currentImage()                                     -> pQImage
+        :currentPixmap()                                    -> pQPixmap
+        :device()                                           -> pQIODevice
+        :fileName()                                         -> cQString
+        :format()                                           -> pQByteArray
+        :frameCount()                                       -> nInt
+        :frameRect()                                        -> pQRect
+        :isValid()                                          -> lBool
+        :jumpToFrame( nFrameNumber )                        -> lBool
+        :loopCount()                                        -> nInt
+        :nextFrameDelay()                                   -> nInt
+        :scaledSize()                                       -> pQSize
+        :setBackgroundColor( pColor )                       -> NIL
+        :setCacheMode( nMode )                              -> NIL
+        :setDevice( pDevice )                               -> NIL
+        :setFileName( cFileName )                           -> NIL
+        :setFormat( pFormat )                               -> NIL
+        :setScaledSize( pSize )                             -> NIL
+        :speed()                                            -> nInt
+        :state()                                            -> nMovieState
+        :jumpToNextFrame()                                  -> lBool
+        :setPaused( lPaused )                               -> NIL
+        :setSpeed( nPercentSpeed )                          -> NIL
+        :start()                                            -> NIL
+        :stop()                                             -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQMovie.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QMovie.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QObject, http://doc.trolltech.com/4.5/qmovie.html
+    $END$
+ */

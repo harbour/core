@@ -1,0 +1,82 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:14
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QMatrix()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QMatrix object.
+    $INHERITS$
+
+    $SYNTAX$
+        QMatrix():new( ... )
+        QMatrix():from( pPtr_OR_oObj_of_type_QMatrix )
+        QMatrix():configure( pPtr_OR_oObj_of_type_QMatrix )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QMatrix
+    $METHODS$
+        :m11()                                              -> nQreal
+        :m12()                                              -> nQreal
+        :m21()                                              -> nQreal
+        :m22()                                              -> nQreal
+        :det()                                              -> nQreal
+        :dx()                                               -> nQreal
+        :dy()                                               -> nQreal
+        :isIdentity()                                       -> lBool
+        :isInvertible()                                     -> lBool
+        :map( nX, nY, @nTx, @nTy )                          -> NIL
+        :map_1( nX, nY, @nTx, @nTy )                        -> NIL
+        :map_2( pPoint )                                    -> pQPointF
+        :map_3( pPoint )                                    -> pQPoint
+        :map_4( pLine )                                     -> pQLineF
+        :map_5( pLine )                                     -> pQLine
+        :map_6( pPolygon )                                  -> pQPolygonF
+        :map_7( pPolygon )                                  -> pQPolygon
+        :map_8( pRegion )                                   -> pQRegion
+        :map_9( pPath )                                     -> pQPainterPath
+        :mapRect( pRectangle )                              -> pQRectF
+        :mapRect_1( pRectangle )                            -> pQRect
+        :mapToPolygon( pRectangle )                         -> pQPolygon
+        :reset()                                            -> NIL
+        :setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )      -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQMatrix.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QMatrix.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        http://doc.trolltech.com/4.5/qmatrix.html
+    $END$
+ */

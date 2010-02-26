@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:11
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QFileSystemModel()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QFileSystemModel object.
+    $INHERITS$
+        QAbstractItemModel
+    $SYNTAX$
+        QFileSystemModel():new( ... )
+        QFileSystemModel():from( pPtr_OR_oObj_of_type_QFileSystemModel )
+        QFileSystemModel():configure( pPtr_OR_oObj_of_type_QFileSystemModel )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QFileSystemModel
+    $METHODS$
+        :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
+        :fileIcon( pIndex )                                 -> pQIcon
+        :fileInfo( pIndex )                                 -> pQFileInfo
+        :fileName( pIndex )                                 -> cQString
+        :filePath( pIndex )                                 -> cQString
+        :filter()                                           -> nQDir::Filters
+        :index( cPath, nColumn )                            -> pQModelIndex
+        :isDir( pIndex )                                    -> lBool
+        :isReadOnly()                                       -> lBool
+        :lastModified( pIndex )                             -> pQDateTime
+        :mimeTypes()                                        -> pQStringList
+        :mkdir( pParent, cName )                            -> pQModelIndex
+        :myComputer( nRole )                                -> pQVariant
+        :nameFilterDisables()                               -> lBool
+        :nameFilters()                                      -> pQStringList
+        :permissions( pIndex )                              -> nQFile::Permissions
+        :remove( pIndex )                                   -> lBool
+        :resolveSymlinks()                                  -> lBool
+        :rmdir( pIndex )                                    -> lBool
+        :rootDirectory()                                    -> pQDir
+        :rootPath()                                         -> cQString
+        :setFilter( nFilters )                              -> NIL
+        :setNameFilterDisables( lEnable )                   -> NIL
+        :setNameFilters( pFilters )                         -> NIL
+        :setReadOnly( lEnable )                             -> NIL
+        :setResolveSymlinks( lEnable )                      -> NIL
+        :setRootPath( cNewPath )                            -> pQModelIndex
+        :size( pIndex )                                     -> nQint64
+        :type( pIndex )                                     -> cQString
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQFileSystemModel.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QFileSystemModel.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QAbstractItemModel, http://doc.trolltech.com/4.5/qfilesystemmodel.html
+    $END$
+ */

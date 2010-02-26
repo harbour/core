@@ -1,0 +1,87 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
+ *
+ *  Please do not modify this document as it is subject to change in future.
+ *
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ *
+ *  02/25/10 - 18:22:13
+ *
+ */
+
+
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QLabel()
+    $CATEGORY$
+        Harbour Bindings for Qt 4.5.3+
+    $SUBCATEGORY$
+        GUI
+    $ONELINER$
+        Creates a new QLabel object.
+    $INHERITS$
+        QFrame
+    $SYNTAX$
+        QLabel():new( ... )
+        QLabel():from( pPtr_OR_oObj_of_type_QLabel )
+        QLabel():configure( pPtr_OR_oObj_of_type_QLabel )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QLabel
+    $METHODS$
+        :alignment()                                        -> nQt::Alignment
+        :buddy()                                            -> pQWidget
+        :hasScaledContents()                                -> lBool
+        :indent()                                           -> nInt
+        :margin()                                           -> nInt
+        :movie()                                            -> pQMovie
+        :openExternalLinks()                                -> lBool
+        :picture()                                          -> pQPicture
+        :pixmap()                                           -> pQPixmap
+        :setAlignment( nQt::Alignment )                     -> NIL
+        :setBuddy( pBuddy )                                 -> NIL
+        :setIndent( nInt )                                  -> NIL
+        :setMargin( nInt )                                  -> NIL
+        :setOpenExternalLinks( lOpen )                      -> NIL
+        :setScaledContents( lBool )                         -> NIL
+        :setTextFormat( nQt::TextFormat )                   -> NIL
+        :setTextInteractionFlags( nFlags )                  -> NIL
+        :setWordWrap( lOn )                                 -> NIL
+        :text()                                             -> cQString
+        :textFormat()                                       -> nQt::TextFormat
+        :textInteractionFlags()                             -> nQt::TextInteractionFlags
+        :wordWrap()                                         -> lBool
+        :clear()                                            -> NIL
+        :setMovie( pMovie )                                 -> NIL
+        :setNum( nNum )                                     -> NIL
+        :setNum_1( nNum )                                   -> NIL
+        :setPicture( pPicture )                             -> NIL
+        :setPixmap( pQPixmap )                              -> NIL
+        :setText( cQString )                                -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/qtgui/TQLabel.prg
+        C++ Wrappers : contrib/hbqt/qtgui/QLabel.cpp
+        Library      : hbqtgui
+    $SEEALSO$
+        QFrame, http://doc.trolltech.com/4.5/qlabel.html
+    $END$
+ */
