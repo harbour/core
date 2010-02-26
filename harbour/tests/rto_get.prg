@@ -167,7 +167,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:colorDisp( "GR/N" ) )
    TEST_LINE( o:VarPut( "<hello>" ) )
    TEST_LINE( o:display() )
-   
+
    SetPos( 14, 16 ) ; o := _GET_( cStr04, "cStr04" )
    TEST_LINE( o:colorSpec := "GR/N" )
    TEST_LINE( o:VarPut( "<hello>" ) )
@@ -269,6 +269,13 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:Picture := "99" )
    TEST_LINE( o:Picture := "!!" )
    TEST_LINE( o:Picture := NIL )
+
+   // ; Picture "Y"
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01", "Y",, )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:setFocus() )
+   TGetTOVS( o, { "NnYyAa" } )
 
    // ; Assign
 
@@ -950,7 +957,7 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
 #endif
-                                                  
+
    s_cTest := "InFocus Assign to C: " + XToStr( xVar )
 
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:BadDate   := xVar )
@@ -984,7 +991,7 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
 #endif
-                                                  
+
    s_cTest := "InFocus Assign to D: " + XToStr( xVar )
 
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:BadDate   := xVar )
@@ -1018,7 +1025,7 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
 #endif
-                                                  
+
    s_cTest := "InFocus Assign to L: " + XToStr( xVar )
 
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:BadDate   := xVar )
@@ -1052,7 +1059,7 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
 #endif
-                                                  
+
    s_cTest := "InFocus Assign to B: " + XToStr( xVar )
 
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:BadDate   := xVar )
@@ -1671,7 +1678,7 @@ FUNCTION XToStrX( xValue )
             cRetVal += ", "
          ENDIF
       NEXT
-   
+
       RETURN cRetVal + ' }'
 
    CASE cType == "M" ; RETURN 'M:' + xValue
@@ -1710,7 +1717,7 @@ STATIC FUNCTION ErrorMessage( oError )
       IF !Empty( oError:filename )
          cMessage += oError:filename + " "
       ENDIF
-      
+
       IF ValType( oError:Args ) == "A"
          cMessage += "A:" + LTrim( Str( Len( oError:Args ) ) ) + ":"
          FOR tmp := 1 TO Len( oError:Args )
@@ -1721,11 +1728,11 @@ STATIC FUNCTION ErrorMessage( oError )
          NEXT
          cMessage += " "
       ENDIF
-      
+
       IF oError:canDefault .OR. ;
          oError:canRetry .OR. ;
          oError:canSubstitute
-      
+
          cMessage += "F:"
          IF oError:canDefault
             cMessage += "D"

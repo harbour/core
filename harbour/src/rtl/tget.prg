@@ -1739,7 +1739,7 @@ METHOD Input( cChar ) CLASS GET
             ::toDecPos()
             RETURN ""
 
-         CASE ! ( cChar $ "0123456789+" )
+         CASE !( cChar $ "0123456789+" )
             RETURN ""
          ENDCASE
          EXIT
@@ -1812,7 +1812,8 @@ METHOD Input( cChar ) CLASS GET
          ENDIF
 
       CASE cPic == "Y"
-         IF !( Upper( cChar ) $ "YN" )
+         cChar := Upper( cChar )
+         IF !( cChar $ "YN" )
             cChar := ""
          ENDIF
 
