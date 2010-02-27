@@ -76,7 +76,7 @@ FUNCTION HEADER TEMPLATE
 
 /*  $DOC$
     $NAME$
-
+        StartHere()
     $CATEGORY$
 
     $SUBCATEGORY$
@@ -106,7 +106,7 @@ FUNCTION HEADER TEMPLATE
     $FILES$
 
     $SEEALSO$
-       comma separated list of references
+        Comma separated list of references
     $END$
  */
 

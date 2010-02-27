@@ -1585,7 +1585,7 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
    aadd( aPaths, cRootPath )
 
    IF lSubs
-      aDir := directory( cRootPath + "*.", "D" )
+      aDir := directory( cRootPath + "*", "D" )
       FOR EACH a_ IN aDir
          IF a_[ 5 ] == "D" .AND. left( a_[ 1 ], 1 ) != "."
             hbide_fetchSubPaths( @aPaths, cRootPath + a_[ 1 ] )
@@ -1594,21 +1594,6 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
    ENDIF
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_stripRoot( cRoot, cPath )
-   LOCAL cLRoot, cLPath, cP
-
-   cLRoot := hbide_pathNormalized( cRoot, .t. )
-   cLPath := hbide_pathNormalized( cPath, .t. )
-
-   IF left( cLPath, len( cLRoot ) ) == cLRoot
-      cP := substr( cLPath, len( cRoot ) + 2 )
-      RETURN cP
-   ENDIF
-
-   RETURN cPath
 
 /*----------------------------------------------------------------------*/
 
@@ -1621,3 +1606,18 @@ FUNCTION hbide_uic( cName )
    RETURN hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".uic" )
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isPrevParent( cRoot, cPath )
+   LOCAL cLRoot, cLPath
+
+   cLRoot := hbide_pathNormalized( cRoot, .t. )
+   cLPath := hbide_pathNormalized( cPath, .t. )
+
+   IF left( cLPath, len( cLRoot ) ) == cLRoot
+      RETURN .t.
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+

@@ -170,6 +170,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD create( oIde )
    METHOD show()
    METHOD destroy()
+   METHOD destroyTrees()
 
    METHOD execEvent( nMode, p, p1 )
 
@@ -235,17 +236,27 @@ METHOD IdeHarbourHelp:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:destroy()
-   LOCAL a_
 
    IF empty( ::oUI )
       RETURN Self
    ENDIF
 
+   ::destroyTrees()
+
+   ::oUI:destroy()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:destroyTrees()
+   LOCAL a_
+
    ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
    ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
 
-   ::aHistory    := NIL
-   ::aFuncByFile := NIL
+   ::aHistory    := {}
+   ::aFuncByFile := {}
 
    FOR EACH a_ IN ::aCategory
       a_[ 4 ] := NIL              // Reference to Contents node
@@ -276,13 +287,13 @@ METHOD IdeHarbourHelp:destroy()
    IF !empty( ::aNodes )
       ::aNodes[ 1, 1 ] := NIL
    ENDIF
-   ::aNodes := NIL
+   ::aNodes := {}
 
    /* Index Tab */
    FOR EACH a_ IN ::aFunctions
       a_[ 5 ] := NIL
    NEXT
-   ::aFunctions := NIL
+   ::aFunctions := {}
 
    /* Category Tab */
    FOR EACH a_ IN ::aCategory
@@ -296,9 +307,7 @@ METHOD IdeHarbourHelp:destroy()
          a_[ 5 ] := NIL
       ENDIF
    NEXT
-   ::aCategory := NIL
-
-   ::oUI:destroy()
+   ::aCategory := {}
 
    RETURN Self
 
@@ -398,9 +407,6 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( listIndex_ItemDoubleClicked, p ) } )
    ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( browserView_anchorClicked, p ) } )
    ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( tabWidgetContents_currentChanged, p ) } )
-
-   ::connect( ::oUI:q_treeDoc       , "itemSelectionChanged()" , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
-   ::connect( ::oUI:q_treeCategory  , "itemSelectionChanged()" , {| | ::execEvent( treeCategory_itemSelectionChanged ) } )
 
    RETURN Self
 
@@ -562,20 +568,19 @@ METHOD IdeHarbourHelp:populateIndexedSelection()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:refreshDocTree()
-   LOCAL aPaths, cFolder, cNFolder, aDocs, oTWItem, oParent, oParentF, cIcon
-   LOCAL aDir, a_, cTextFile, cStripped
+   LOCAL aPaths, cFolder, cNFolder, aDocs, oChild, oParent, oRoot, cRoot
+   LOCAL aDir, a_, cTextFile, n
 
    IF empty( ::cPathInstall ) .OR. ! hb_dirExists( ::cPathInstall )
       RETURN Self
    ENDIF
-   IF !empty( ::aNodes )
-      RETURN Self
-   ENDIF
-
-   cIcon := ::resPath + "dc_folder.png"
 
    /* Clean Environment */
+   ::destroyTrees()
    ::oUI:q_treeDoc:clear()
+   //
+   ::connect( ::oUI:q_treeDoc     , "itemSelectionChanged()" , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
+   ::connect( ::oUI:q_treeCategory, "itemSelectionChanged()" , {| | ::execEvent( treeCategory_itemSelectionChanged ) } )
    //
    ::aNodes      := {}
    ::aFuncByFile := {}
@@ -587,6 +592,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
    aPaths := {}
    aDocs  := {}
    hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
+   cRoot  := aPaths[ 1 ]
 
    FOR EACH cFolder IN aPaths
       cNFolder := hbide_pathNormalized( cFolder, .t. )
@@ -595,45 +601,112 @@ METHOD IdeHarbourHelp:refreshDocTree()
       ENDIF
    NEXT
 
-   oTWItem := QTreeWidgetItem():new()
-   oTWItem:setText( 0, ::cPathInstall )
-   oTWItem:setIcon( 0, ::resPath + "dc_home.png" )
-   oTWItem:setToolTip( 0, ::cPathInstall )
-   oTWItem:setExpanded( .t. )
+   oRoot := QTreeWidgetItem():new()
+   oRoot:setText( 0, aPaths[ 1 ] )
+   oRoot:setIcon( 0, hbide_image( "dc_home" ) )
+   oRoot:setToolTip( 0, aPaths[ 1 ] )
+   oRoot:setExpanded( .t. )
 
-   ::oUI:q_treeDoc:addTopLevelItem( oTWItem )
-   aadd( ::aNodes, { oTWItem, "Root", NIL /*oParent*/, ::cPathInstall, ::cPathInstall } )
-   oParent := oTWItem
+   ::oUI:q_treeDoc:addTopLevelItem( oRoot )
+
+   aadd( ::aNodes, { oRoot, "Path", NIL, cRoot, cRoot } )
+   hbide_buildFoldersTree( ::aNodes, aDocs )
+   ::aNodes[ 1,2 ] := "Root"
 
    FOR EACH cFolder IN aDocs
-      oTWItem := QTreeWidgetItem():new()
-      oTWItem:setText( 0, ( cStripped := hbide_stripRoot( ::cPathInstall, cFolder ) ) )
-      oTWItem:setIcon( 0, cIcon )
-      oTWItem:setToolTip( 0, cFolder )
-      oParent:addChild( oTWItem )
-      aadd( ::aNodes, { oTWItem, "Path", oParent, cFolder, cStripped } )
+      IF ( n := ascan( ::aNodes, {|e_| e_[ 2 ] == "Path" .AND. lower( e_[ 4 ] ) == lower( cFolder ) } ) ) > 0
+         oParent := ::aNodes[ n, 1 ]
 
-      oParentF := oTWItem
-      aDir := directory( cFolder + "*.txt" )
-      FOR EACH a_ IN aDir
-         IF a_[ 5 ] != "D"
-            cTextFile := cFolder + a_[ 1 ]
-            oTWItem := QTreeWidgetItem():new()
-            oTWItem:setText( 0, a_[ 1 ]  )
-            oTWItem:setIcon( 0, ::resPath + "dc_textdoc.png" )
-            oTWItem:setToolTip( 0, cTextFile )
-            oParentF:addChild( oTWItem )
-            aadd( ::aNodes, { oTWItem, "File", oParentF, cTextFile, a_[ 1 ] } )
-            ::parseTextFile( cTextFile, oTWItem )
-         ENDIF
-      NEXT
+         aDir    := directory( cFolder + "*.txt" )
+         FOR EACH a_ IN aDir
+            IF a_[ 5 ] != "D"
+               cTextFile := cFolder + a_[ 1 ]
+               oChild := QTreeWidgetItem():new()
+               oChild:setText( 0, a_[ 1 ]  )
+               oChild:setIcon( 0, ::resPath + "dc_textdoc.png" )
+               oChild:setToolTip( 0, cTextFile )
+               oParent:addChild( oChild )
+               aadd( ::aNodes, { oChild, "File", oParent, cTextFile, a_[ 1 ] } )
+               ::parseTextFile( cTextFile, oChild )
+            ENDIF
+         NEXT
+      ENDIF
    NEXT
 
    ::populateIndex()
 
-   ::oUI:q_treeDoc:expandItem( oParent )
+   ::oUI:q_treeDoc:expandItem( oRoot )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
+   LOCAL cRoot, cPath, s, aSubs, i, n, cCPath, cPPath, nP, cOSPath, oParent, oChild
+   LOCAL cIcon := hbide_image( "dc_folder" )
+
+   cRoot := aNodes[ 1, 4 ]
+
+   FOR EACH s IN aPaths
+      cPath := s
+      cPath := hbide_stripRoot( cRoot, cPath )
+      cPath := hbide_pathNormalized( cPath, .t. )
+
+      aSubs := hb_aTokens( cPath, "/" )
+
+      FOR i := 1 TO len( aSubs )
+         IF !empty( aSubs[ i ] )
+            cCPath := hbide_buildPathFromSubs( aSubs, i )
+            n := ascan( aNodes, {|e_| hbide_pathNormalized( e_[ 4 ], .t. ) == hbide_pathNormalized( cRoot + cCPath, .t. ) } )
+
+            IF n == 0
+               cPPath  := hbide_buildPathFromSubs( aSubs, i - 1 )
+               nP      := ascan( aNodes, {|e_| hbide_pathNormalized( e_[ 4 ], .t. ) == hbide_pathNormalized( cRoot + cPPath, .t. ) } )
+
+               oParent := aNodes[ nP, 1 ]
+
+               cOSPath := hbide_pathToOSPath( cRoot + cCPath )
+
+               oChild  := QTreeWidgetItem():new()
+               oChild:setText( 0, aSubs[ i ] )
+               oChild:setIcon( 0, cIcon )
+               oChild:setToolTip( 0, cOSPath )
+
+               oParent:addChild( oChild )
+
+               aadd( aNodes, { oChild, "Path", oParent, cOSPath, aSubs[ i ] } )
+            ENDIF
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_buildPathFromSubs( aSubs, nUpto )
+   LOCAL i, cPath := ""
+
+   IF nUpto > 0
+      FOR i := 1 TO nUpto
+         cPath += aSubs[ i ] + "/"
+      NEXT
+   ENDIF
+   RETURN cPath
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_stripRoot( cRoot, cPath )
+   LOCAL cLRoot, cLPath, cP
+
+   cLRoot := hbide_pathNormalized( cRoot, .t. )
+   cLPath := hbide_pathNormalized( cPath, .t. )
+   IF left( cLPath, len( cLRoot ) ) == cLRoot
+      cP := substr( cLPath, len( cRoot ) + 1 )
+      RETURN cP
+   ENDIF
+
+   RETURN cPath
 
 /*----------------------------------------------------------------------*/
 
@@ -945,7 +1018,7 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:buildView( oFunc )
-   LOCAL s, x, y, v, w, z, n, s1, a_
+   LOCAL s, x, y, v, w, z, n, s1, a_, cTxt
    LOCAL aHtm := {}
 
    aadd( aHtm, "<HTML>" )
@@ -992,8 +1065,22 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, s )
 
    aadd( aHtm, '<CAPTION align=TOP><FONT SIZE="6"><B>' + oFunc:cName + '</B></FONT></CAPTION>' )
-
-   aadd( aHtm, "<TR><TD align=CENTER ><B>" + oFunc:cOneLiner + "</B></TD></TR>" )
+   aadd( aHtm, '<BR><FONT color="#6699ff"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
+   cTxt := " "
+   IF !empty( oFunc:cCategory )
+      cTxt += "Category: <B>" + oFunc:cCategory + "</B> "
+   ENDIF
+   IF !empty( oFunc:cSubCategory )
+      cTxt += "Sub: <B>" + oFunc:cSubCategory + "</B> "
+   ENDIF
+   IF !empty( oFunc:cVersion )
+      cTxt += "Version: <B>" + oFunc:cVersion + "</B> "
+   ENDIF
+   IF !empty( cTxt )
+      aadd( aHtm, "<BR>" + "[" + cTxt + "]" + "</BR>" )
+   ENDIF
+   //aadd( aHtm, '<HR color="#6699ff" width="90%" size="3"></HR>' )
+   aadd( aHtm, '<HR color="#6699ff" size="5"></HR>' )
 
    x := '<TR><TD align=LEFT><font size="5" color="#FF4719">' ; y := "</font></TD></TR>"
    v := '<TR><TD margin-left: 20px><pre>'                    ; w := "</pre></TD></TR>"
@@ -1004,42 +1091,59 @@ METHOD IdeHarbourHelp:buildView( oFunc )
       aadd( aHtm, v + oFunc:cInherits  + w )
       aadd( aHtm, z )
    ENDIF
-   aadd( aHtm, x + "Categoty"       + y )
+   #if 0
+   aadd( aHtm, x + "Category"       + y )
    aadd( aHtm, v + oFunc:cCategory  + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "SubCategoty"    + y )
+   aadd( aHtm, x + "SubCategory"    + y )
    aadd( aHtm, v + oFunc:cSubCategory+ w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Syntax"         + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aSyntax      ) + w )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "Arguments"      + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aArguments   ) + w )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "Returns"        + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aReturns     ) + w )
-   aadd( aHtm, z )
-   IF !empty( oFunc:aMethods )
-      aadd( aHtm, x + "Methods"     + y )
-      aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aMethods  ) + w )
+   #endif
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aSyntax ) )
+      aadd( aHtm, x + "Syntax"         + y )
+      aadd( aHtm, v + s + w )
       aadd( aHtm, z )
    ENDIF
-   aadd( aHtm, x + "Description"    + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aDescription ) + w )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "Examples"       + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aExamples    ) + w )
-   aadd( aHtm, z )
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aArguments ) )
+      aadd( aHtm, x + "Arguments"      + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aReturns ) )
+      aadd( aHtm, x + "Returns"        + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aMethods ) )
+      aadd( aHtm, x + "Methods"     + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aDescription ) )
+      aadd( aHtm, x + "Description"    + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aExamples ) )
+      aadd( aHtm, x + "Examples"       + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
+   #if 0
    aadd( aHtm, x + "Vesrion"        + y )
    aadd( aHtm, v + oFunc:cVersion   + w )
    aadd( aHtm, z )
-   aadd( aHtm, x + "Files"          + y )
-   aadd( aHtm, v + hbide_arrayToMemoHtml( oFunc:aFiles       ) + w )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "SeeAlso"        + y )
-   aadd( aHtm, "<TR><TD>" )
+   #endif
+   IF !empty( s := hbide_arrayToMemoHtml( oFunc:aFiles ) )
+      aadd( aHtm, x + "Files"          + y )
+      aadd( aHtm, v + s + w )
+      aadd( aHtm, z )
+   ENDIF
    a_:= hb_atokens( oFunc:cSeaAlso, "," )
    IF !empty( a_ )
+      aadd( aHtm, x + "SeeAlso"        + y )
+      aadd( aHtm, "<TR><TD>" )
+
       FOR EACH s IN a_
          s := alltrim( s )
          IF ( n := at( "(", s ) ) > 0
@@ -1047,20 +1151,22 @@ METHOD IdeHarbourHelp:buildView( oFunc )
          ELSE
             s1 := s
          ENDIF
-         aadd( aHtm, '<a href="' + s1 + '">' + s  + "</a>" + ;
+         aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
                                      iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
       NEXT
-   ELSE
-      aadd( aHtm, "&nbsp;" )
+      aadd( aHtm, "</TD></TR>" )
+      aadd( aHtm, z )
    ENDIF
-   aadd( aHtm, "</TD></TR>" )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "Platforms"      + y )
-   aadd( aHtm, v + oFunc:cPlatforms + w )
-   aadd( aHtm, z )
-   aadd( aHtm, x + "Status"         + y )
-   aadd( aHtm, v + oFunc:cStatus    + w )
-   aadd( aHtm, z )
+   IF !empty( oFunc:cPlatforms )
+      aadd( aHtm, x + "Platforms"      + y )
+      aadd( aHtm, v + oFunc:cPlatforms + w )
+      aadd( aHtm, z )
+   ENDIF
+   IF !empty( oFunc:cStatus )
+      aadd( aHtm, x + "Status"         + y )
+      aadd( aHtm, v + oFunc:cStatus    + w )
+      aadd( aHtm, z )
+   ENDIF
 
    aadd( aHtm, "   </TABLE>"  )
    aadd( aHtm, "  </CENTER>"  )
