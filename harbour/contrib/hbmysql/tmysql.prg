@@ -368,21 +368,9 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
          NEXT
 
          ::getRow( ::nCurRow )
-
       ELSE
-         // Should query have returned rows? (Was it a SELECT like query?)
-
-         IF ( ::nNumFields := mysql_num_fields( nSocket ) ) == 0
-
-            // Was not a SELECT so reset ResultHandle changed by previous mysql_store_result()
-            ::nResultHandle := NIL
-
-         ELSE
-            ::lError := .T.
-
-         ENDIF
+         ::nResultHandle := NIL
       ENDIF
-
    ELSE
       ::lError := .T.
    ENDIF

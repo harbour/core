@@ -52,16 +52,19 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
+#include "hbapistr.h"
+#include "hbset.h"
 #include "hbvm.h"
-
-#if defined( HB_OS_WIN )
-#  include <windows.h>
-#endif
 
 #if defined( __XCC__ ) || defined( __LCC__ )
 #  include "hbrddsql.h"
 #else
 #  include "../hbrddsql.h"
+#endif
+
+/* Required by headers on Windows */
+#if defined( HB_OS_WIN )
+#  include <windows.h>
 #endif
 
 #include <sql.h>
@@ -77,6 +80,20 @@
 #  if !defined( SQLULEN )
 #     define SQLULEN          SQLUINTEGER
 #  endif
+#endif
+
+#if defined( UNICODE )
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+#else
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
 #endif
 
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -157,12 +174,13 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
 
    if( SQL_SUCCEEDED( SQLError( hEnv, hConn, hStmt, szError, &iNativeErr, szError + 6, SQL_MAX_MESSAGE_LENGTH, &iLen ) ) )
    {
-      char *  szStr;
+      PHB_ITEM pRet;
 
       szError[ 5 ] = ' ';
-      szStr = HB_TCHAR_CONVFROM( szError );
-      szRet = hb_strdup( szStr );
-      HB_TCHAR_FREE( szStr );
+
+      pRet = O_HB_ITEMPUTSTR( NULL, szError );
+      szRet = hb_strdup( hb_itemGetCPtr( pRet ) );
+      hb_itemRelease( pRet );
    }
    else
       szRet = hb_strdup( "HY000 Unable to get error message" );
@@ -188,29 +206,29 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
       if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_DBC, hEnv, &hConnect ) ) )
       {
-         SQLTCHAR *    lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_arrayGetCPtr( pItem, 2 ) );
-         SQLTCHAR      cBuffer[ 1024 ];
-         SQLSMALLINT   iLen = 1024;
+         void *       hConnStr;
+         SQLTCHAR     cBuffer[ 1024 ];
+         SQLSMALLINT  iLen = HB_SIZEOFARRAY( cBuffer );
 
          cBuffer[ 0 ] ='\0';
 
          if( SQL_SUCCEEDED( SQLDriverConnect( hConnect,
                                               NULL,
-                                              lpStr,
+                                              ( SQLTCHAR * ) O_HB_ARRAYGETSTR( pItem, 2, &hConnStr, NULL ),
                                               ( SQLSMALLINT ) hb_arrayGetCLen( pItem, 2 ),
                                               cBuffer,
                                               HB_SIZEOFARRAY( cBuffer ),
                                               &iLen,
                                               SQL_DRIVER_NOPROMPT ) ) )
          {
-            HB_TCHAR_FREE( lpStr );
+            hb_strfree( hConnStr );
             pConnection->hCargo = ( void * ) hEnv;
             pConnection->hConnection = ( void * ) hConnect;
             return HB_SUCCESS;
          }
          else
          {
-            HB_TCHAR_FREE( lpStr );
+            hb_strfree( hConnStr );
             szError = odbcGetError( hEnv, hConnect, SQL_NULL_HSTMT, &errCode );
             hb_rddsqlSetError( errCode, szError, NULL, NULL, 0 );
             hb_xfree( szError );
@@ -246,7 +264,7 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION * pConnection )
 
 static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   SQLTCHAR *   lpStr;
+   void *       hStatement;
    SQLHSTMT     hStmt;
    SQLLEN       iCount;
    char *       szError;
@@ -260,11 +278,9 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       return HB_FAILURE;
    }
 
-   lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_itemGetCPtr( pItem ) );
-
-   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt, lpStr, hb_itemGetCLen( pItem ) ) ) )
+   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hStatement, NULL ), hb_itemGetCLen( pItem ) ) ) )
    {
-      HB_TCHAR_FREE( lpStr );
+      hb_strfree( hStatement );
 
       if ( SQL_SUCCEEDED( SQLRowCount( hStmt, &iCount ) ) )
       {
@@ -275,7 +291,7 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       }
    }
    else
-      HB_TCHAR_FREE( lpStr );
+      hb_strfree( hStatement );
 
    szError = odbcGetError( ( SQLHENV ) pConnection->hCargo, ( SQLHDBC ) pConnection->hConnection, hStmt, &errCode );
    hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, errCode );
@@ -287,7 +303,7 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 {
-   SQLTCHAR *   lpStr;
+   void *       hQuery;
    SQLHSTMT     hStmt;
    SQLSMALLINT  iNameLen, iDataType, iDec, iNull;
    SQLTCHAR     cName[ 256 ];
@@ -307,11 +323,12 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( pArea->szQuery );
+   pItem = hb_itemPutC( NULL, pArea->szQuery );
 
-   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt, lpStr, strlen( pArea->szQuery ) ) ) )
+   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hQuery, NULL ), hb_itemGetCLen( pItem ) ) ) )
    {
-      HB_TCHAR_FREE( lpStr );
+      hb_strfree( hQuery );
+      hb_itemRelease( pItem );
       szError = odbcGetError( ( SQLHENV ) pArea->pConnection->hCargo, ( SQLHDBC ) pArea->pConnection->hConnection, hStmt, &errCode );
       SQLFreeStmt( hStmt, SQL_DROP );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
@@ -319,7 +336,10 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
    else
-      HB_TCHAR_FREE( lpStr );
+   {
+      hb_strfree( hQuery );
+      hb_itemRelease( pItem );
+   }
 
    if ( ! SQL_SUCCEEDED( SQLNumResultCols( hStmt, &iNameLen ) ) )
    {
@@ -341,7 +361,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for ( uiIndex = 0; uiIndex < uiFields; uiIndex++ )
    {
-      if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR* ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
+      if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR * ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
       {
          hb_itemRelease( pItemEof );
          szError = odbcGetError( ( SQLHENV ) pArea->pConnection->hCargo, ( SQLHDBC ) pArea->pConnection->hConnection, hStmt, NULL );
@@ -422,7 +442,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          {
             case HB_FT_STRING:
             {
-               char*    pStr;
+               char * pStr;
 
                pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
