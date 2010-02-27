@@ -867,7 +867,10 @@ STATIC FUNCTION hbq_getConstants()
          ;
          "Qt_ScrollBarAsNeeded"                   => Qt_ScrollBarAsNeeded                  , ;
          "Qt_ScrollBarAlwaysOff"                  => Qt_ScrollBarAlwaysOff                 , ;
-         "Qt_ScrollBarAlwaysOn"                   => Qt_ScrollBarAlwaysOn                    ;
+         "Qt_ScrollBarAlwaysOn"                   => Qt_ScrollBarAlwaysOn                  , ;
+         ;
+         "Qt_Horizontal"                          => Qt_Horizontal                         , ;
+         "Qt_Vertical"                            => Qt_Vertical                             ;
       }
    ENDIF
 

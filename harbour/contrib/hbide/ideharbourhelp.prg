@@ -966,14 +966,18 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
    aadd( aHtm, "<HTML>" )
    aadd( aHtm, " <BODY>" )
    aadd( aHtm, '  <H3 align=center><FONT color=blue>' + cTextFile + '</FONT></H3>' )
-   aadd( aHtm, '   <BR>' + '&nbsp;' + '</BR>' )
+   aadd( aHtm, '   <BR>' + '&nbsp;  <HR></HR></BR>' )
    IF nParsed > 0
       aFn := ::aFuncByFile[ nParsed, 2 ]
-      FOR EACH oFunc IN aFn
-         IF hb_isObject( oFunc )
-            aadd( aHtm, '   <BR>' + oFunc:cName + '</BR>' )
-         ENDIF
-      NEXT
+      IF len( aFn ) > 0
+         FOR EACH oFunc IN aFn
+            IF hb_isObject( oFunc )
+               aadd( aHtm, '   <BR>' + oFunc:cName + '</BR>' )
+            ENDIF
+         NEXT
+      ELSE
+         aadd( aHtm, '   <BR><PRE>' + hb_memoread( cTextFile ) + '</PRE></BR>' )
+      ENDIF
    ENDIF
    aadd( aHtm, " </BODY>" )
    aadd( aHtm, "</HTML>" )

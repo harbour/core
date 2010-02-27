@@ -322,11 +322,7 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oIde := oIde
 
-   #ifdef HBIDE_USE_UIC
    ::oUI := HbQtUI():new( ::oIde:resPath + "finddialog.uic", ::oIde:oDlg:oWidget ):build()
-   #else
-   ::oUI := HbQtUI():new( ::oIde:resPath + "finddialog.ui", ::oIde:oDlg:oWidget ):create()
-   #endif
    ::oUI:setWindowFlags( Qt_Sheet )
 
    aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
@@ -339,7 +335,7 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "buttonReplace", "clicked()", {|| ::onClickReplace() } )
    ::oUI:signal( "buttonClose"  , "clicked()", ;
          {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ;
-              ::oUI:hide(), ::oSearchReplace:oUI:hide() } )
+              ::oUI:hide() } )
 
    ::oUI:signal( "comboFindWhat", "editTextChanged(text)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
 
