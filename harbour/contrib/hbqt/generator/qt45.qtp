@@ -106,7 +106,7 @@ QHttpHeader.qth
 QHttpRequestHeader.qth
 QHttpResponseHeader.qth
 QIcon.qth
-QInputContext.qth
+;   QInputContext.qth     Disabled of OS2
 QInputMethodEvent.qth
 QImage.qth
 QImageReader.qth

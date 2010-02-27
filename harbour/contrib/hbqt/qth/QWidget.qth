@@ -84,8 +84,8 @@ enum PaintDeviceMetric { PdmWidth, PdmHeight, PdmWidthMM, PdmHeightMM, ..., PdmP
 
 <PROTOS>
 bool acceptDrops () const
-QString accessibleDescription () const
-QString accessibleName () const
+// QString accessibleDescription () const
+// QString accessibleName () const
 QList<QAction *> actions () const
 void activateWindow ()
 void addAction ( QAction * action )
@@ -130,7 +130,7 @@ bool hasFocus () const
 bool hasMouseTracking () const
 int height () const
 virtual int heightForWidth ( int w ) const
-QInputContext * inputContext ()
+// QInputContext * inputContext ()
 virtual QVariant inputMethodQuery ( Qt::InputMethodQuery query ) const
 void insertAction ( QAction * before, QAction * action )
 void insertActions ( QAction * before, QList<QAction *> actions )
@@ -212,8 +212,8 @@ void scroll ( int dx, int dy )
 void scroll ( int dx, int dy, const QRect & r )
 #
 void setAcceptDrops ( bool on )
-void setAccessibleDescription ( const QString & description )
-void setAccessibleName ( const QString & name )
+// void setAccessibleDescription ( const QString & description )
+// void setAccessibleName ( const QString & name )
 void setAttribute ( Qt::WidgetAttribute attribute, bool on = true )
 void setAutoFillBackground ( bool enabled )
 void setBackgroundRole ( QPalette::ColorRole role )
@@ -234,7 +234,7 @@ void setFont ( const QFont & )
 void setForegroundRole ( QPalette::ColorRole role )
 void setGeometry ( const QRect & )
 void setGeometry ( int x, int y, int w, int h )
-void setInputContext ( QInputContext * context )
+// void setInputContext ( QInputContext * context )
 void setLayout ( QLayout * layout )
 void setLayoutDirection ( Qt::LayoutDirection direction )
 void setLocale ( const QLocale & locale )

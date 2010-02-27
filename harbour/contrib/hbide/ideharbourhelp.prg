@@ -112,7 +112,7 @@
 #define DOC_FUN_VERSION                           16
 #define DOC_FUN_INHERITS                          17
 #define DOC_FUN_METHODS                           18
-
+#define DOC_FUN_EXTERNALLINK                      19
 
 /*----------------------------------------------------------------------*/
 
@@ -123,6 +123,12 @@ CLASS IdeDocFunction
    DATA   cCategory                               INIT ""
    DATA   cSubCategory                            INIT ""
    DATA   cOneliner                               INIT ""
+   DATA   cStatus                                 INIT ""
+   DATA   cPlatforms                              INIT ""
+   DATA   cSeaAlso                                INIT ""
+   DATA   cVersion                                INIT ""
+   DATA   cInherits                               INIT ""
+   DATA   cExternalLink                           INIT ""
    DATA   aSyntax                                 INIT {}
    DATA   aArguments                              INIT {}
    DATA   aReturns                                INIT {}
@@ -130,11 +136,6 @@ CLASS IdeDocFunction
    DATA   aExamples                               INIT {}
    DATA   aTests                                  INIT {}
    DATA   aFiles                                  INIT {}
-   DATA   cStatus                                 INIT ""
-   DATA   cPlatforms                              INIT ""
-   DATA   cSeaAlso                                INIT ""
-   DATA   cVersion                                INIT ""
-   DATA   cInherits                               INIT ""
    DATA   aMethods                                INIT {}
    DATA   aSource                                 INIT {}
 
@@ -850,6 +851,8 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
             nPart := DOC_FUN_INHERITS
          CASE "$METHODS"      $ s
             nPart := DOC_FUN_METHODS
+         CASE "$EXTERNALLINK" $ s
+            nPart := DOC_FUN_EXTERNALLINK
          OTHERWISE
             IF ! lIsFunc
                LOOP   // It is a fake line not within $DOC$ => $END$ block
@@ -915,6 +918,9 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
                EXIT
             CASE DOC_FUN_VERSION
                oFunc:cVersion   := alltrim( s )
+               EXIT
+            CASE DOC_FUN_EXTERNALLINK
+               oFunc:cExternalLink := alltrim( s )
                EXIT
             OTHERWISE
                nPart := DOC_FUN_NONE
@@ -1049,6 +1055,11 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, '  <meta http-equiv="content-script-type" content="text/javascript">' )
    aadd( aHtm, '                                                                   ' )
    aadd( aHtm, '  <style type="text/css">                                          ' )
+   aadd( aHtm, '    a                                                              ' )
+   aadd( aHtm, '    {                                                              ' )
+   aadd( aHtm, '      text-decoration  : none;                                     ' )
+   aadd( aHtm, '      color-hover      : #FF9900;                                  ' )
+   aadd( aHtm, '    }                                                              ' )
    aadd( aHtm, '    th                                                             ' )
    aadd( aHtm, '    {                                                              ' )
    aadd( aHtm, '      colspan          : 1;                                        ' )
@@ -1085,7 +1096,8 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, s )
 
    aadd( aHtm, '<CAPTION align=TOP><FONT SIZE="6"><B>' + oFunc:cName + '</B></FONT></CAPTION>' )
-   aadd( aHtm, '<BR><FONT color="#6699ff"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
+   //aadd( aHtm, '<BR><FONT color="#6699ff"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
+   aadd( aHtm, '<BR><FONT color="#FF4719"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
    cTxt := " "
    IF !empty( oFunc:cCategory )
       cTxt += "Category: <B>" + oFunc:cCategory + "</B> "
@@ -1099,7 +1111,9 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    IF !empty( cTxt )
       aadd( aHtm, "<BR>" + "[" + cTxt + "]" + "</BR>" )
    ENDIF
-   //aadd( aHtm, '<HR color="#6699ff" width="90%" size="3"></HR>' )
+   IF !empty( s1 := oFunc:cExternalLink )
+      aadd( aHtm, '<BR><a href="' + s1 + '">' + "<B>" + s1 + "</B>" + "</a></BR>" )
+   ENDIF
    aadd( aHtm, '<HR color="#6699ff" size="5"></HR>' )
 
    x := '<TR><TD align=LEFT><font size="5" color="#FF4719">' ; y := "</font></TD></TR>"

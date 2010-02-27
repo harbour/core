@@ -161,7 +161,10 @@ enum Type { Tty, GuiClient, GuiServer }
 
 <PROTOS>
 virtual void commitData ( QSessionManager & manager )
-QInputContext * inputContext () const
+#
+# Disabled because OS2 does not like it
+// QInputContext * inputContext () const
+#
 bool isSessionRestored () const
 #
 # not-found
@@ -173,7 +176,9 @@ bool isSessionRestored () const
 virtual void saveState ( QSessionManager & manager )
 QString sessionId () const
 QString sessionKey () const
-void setInputContext ( QInputContext * inputContext )
+#
+// void setInputContext ( QInputContext * inputContext )
+#
 QString styleSheet () const
 
 QWidget * activeModalWidget ()

@@ -68,12 +68,10 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, QCoreApplication
    METHOD  new( ... )
 
    METHOD  commitData( pManager )
-   METHOD  inputContext()
    METHOD  isSessionRestored()
    METHOD  saveState( pManager )
    METHOD  sessionId()
    METHOD  sessionKey()
-   METHOD  setInputContext( pInputContext )
    METHOD  styleSheet()
    METHOD  activeModalWidget()
    METHOD  activePopupWidget()
@@ -160,10 +158,6 @@ METHOD QApplication:commitData( pManager )
    RETURN Qt_QApplication_commitData( ::pPtr, hbqt_ptr( pManager ) )
 
 
-METHOD QApplication:inputContext()
-   RETURN Qt_QApplication_inputContext( ::pPtr )
-
-
 METHOD QApplication:isSessionRestored()
    RETURN Qt_QApplication_isSessionRestored( ::pPtr )
 
@@ -178,10 +172,6 @@ METHOD QApplication:sessionId()
 
 METHOD QApplication:sessionKey()
    RETURN Qt_QApplication_sessionKey( ::pPtr )
-
-
-METHOD QApplication:setInputContext( pInputContext )
-   RETURN Qt_QApplication_setInputContext( ::pPtr, hbqt_ptr( pInputContext ) )
 
 
 METHOD QApplication:styleSheet()

@@ -236,14 +236,6 @@ HB_FUNC( QT_QAPPLICATION_COMMITDATA )
 }
 
 /*
- * QInputContext * inputContext () const
- */
-HB_FUNC( QT_QAPPLICATION_INPUTCONTEXT )
-{
-   hb_retptrGC( hbqt_gcAllocate_QInputContext( hbqt_par_QApplication( 1 )->inputContext(), false ) );
-}
-
-/*
  * bool isSessionRestored () const
  */
 HB_FUNC( QT_QAPPLICATION_ISSESSIONRESTORED )
@@ -273,14 +265,6 @@ HB_FUNC( QT_QAPPLICATION_SESSIONID )
 HB_FUNC( QT_QAPPLICATION_SESSIONKEY )
 {
    hb_retc( hbqt_par_QApplication( 1 )->sessionKey().toAscii().data() );
-}
-
-/*
- * void setInputContext ( QInputContext * inputContext )
- */
-HB_FUNC( QT_QAPPLICATION_SETINPUTCONTEXT )
-{
-   hbqt_par_QApplication( 1 )->setInputContext( hbqt_par_QInputContext( 2 ) );
 }
 
 /*

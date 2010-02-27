@@ -72,7 +72,7 @@
  */
 
 /*
- *  Constructed[ 211/229 [ 92.14% ] ]
+ *  Constructed[ 205/229 [ 89.52% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -83,16 +83,22 @@
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
+ *  // QString accessibleDescription () const
+ *  // QString accessibleName () const
  *  // WId effectiveWinId () const
  *  // virtual HDC getDC () const
  *  // QGraphicsProxyWidget * graphicsProxyWidget () const
  *  // bool hasEditFocus () const
+ *  // QInputContext * inputContext ()
  *  // Qt::HANDLE macCGHandle () const
  *  // Qt::HANDLE macQDHandle () const
  *  // virtual void releaseDC ( HDC hdc ) const
  *  //void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
  *  //void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
+ *  // void setAccessibleDescription ( const QString & description )
+ *  // void setAccessibleName ( const QString & name )
  *  // void setEditFocus ( bool enable )
+ *  // void setInputContext ( QInputContext * context )
  *  // void setWindowSurface ( QWindowSurface * surface )
  *  //WId winId () const
  *  // QWindowSurface * windowSurface () const   (preliminary)
@@ -185,22 +191,6 @@ HB_FUNC( QT_QWIDGET )
 HB_FUNC( QT_QWIDGET_ACCEPTDROPS )
 {
    hb_retl( hbqt_par_QWidget( 1 )->acceptDrops() );
-}
-
-/*
- * QString accessibleDescription () const
- */
-HB_FUNC( QT_QWIDGET_ACCESSIBLEDESCRIPTION )
-{
-   hb_retc( hbqt_par_QWidget( 1 )->accessibleDescription().toAscii().data() );
-}
-
-/*
- * QString accessibleName () const
- */
-HB_FUNC( QT_QWIDGET_ACCESSIBLENAME )
-{
-   hb_retc( hbqt_par_QWidget( 1 )->accessibleName().toAscii().data() );
 }
 
 /*
@@ -491,14 +481,6 @@ HB_FUNC( QT_QWIDGET_HEIGHT )
 HB_FUNC( QT_QWIDGET_HEIGHTFORWIDTH )
 {
    hb_retni( hbqt_par_QWidget( 1 )->heightForWidth( hb_parni( 2 ) ) );
-}
-
-/*
- * QInputContext * inputContext ()
- */
-HB_FUNC( QT_QWIDGET_INPUTCONTEXT )
-{
-   hb_retptrGC( hbqt_gcAllocate_QInputContext( hbqt_par_QWidget( 1 )->inputContext(), false ) );
 }
 
 /*
@@ -958,22 +940,6 @@ HB_FUNC( QT_QWIDGET_SETACCEPTDROPS )
 }
 
 /*
- * void setAccessibleDescription ( const QString & description )
- */
-HB_FUNC( QT_QWIDGET_SETACCESSIBLEDESCRIPTION )
-{
-   hbqt_par_QWidget( 1 )->setAccessibleDescription( QWidget::tr( hb_parc( 2 ) ) );
-}
-
-/*
- * void setAccessibleName ( const QString & name )
- */
-HB_FUNC( QT_QWIDGET_SETACCESSIBLENAME )
-{
-   hbqt_par_QWidget( 1 )->setAccessibleName( QWidget::tr( hb_parc( 2 ) ) );
-}
-
-/*
  * void setAttribute ( Qt::WidgetAttribute attribute, bool on = true )
  */
 HB_FUNC( QT_QWIDGET_SETATTRIBUTE )
@@ -1123,14 +1089,6 @@ HB_FUNC( QT_QWIDGET_SETGEOMETRY )
 HB_FUNC( QT_QWIDGET_SETGEOMETRY_1 )
 {
    hbqt_par_QWidget( 1 )->setGeometry( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-}
-
-/*
- * void setInputContext ( QInputContext * context )
- */
-HB_FUNC( QT_QWIDGET_SETINPUTCONTEXT )
-{
-   hbqt_par_QWidget( 1 )->setInputContext( hbqt_par_QInputContext( 2 ) );
 }
 
 /*

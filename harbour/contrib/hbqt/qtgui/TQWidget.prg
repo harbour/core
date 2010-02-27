@@ -68,8 +68,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  new( ... )
 
    METHOD  acceptDrops()
-   METHOD  accessibleDescription()
-   METHOD  accessibleName()
    METHOD  activateWindow()
    METHOD  addAction( pAction )
    METHOD  adjustSize()
@@ -105,7 +103,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  hasMouseTracking()
    METHOD  height()
    METHOD  heightForWidth( nW )
-   METHOD  inputContext()
    METHOD  inputMethodQuery( nQuery )
    METHOD  insertAction( pBefore, pAction )
    METHOD  isActiveWindow()
@@ -163,8 +160,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  scroll( nDx, nDy )
    METHOD  scroll_1( nDx, nDy, pR )
    METHOD  setAcceptDrops( lOn )
-   METHOD  setAccessibleDescription( cDescription )
-   METHOD  setAccessibleName( cName )
    METHOD  setAttribute( nAttribute, lOn )
    METHOD  setAutoFillBackground( lEnabled )
    METHOD  setBackgroundRole( nRole )
@@ -184,7 +179,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  setForegroundRole( nRole )
    METHOD  setGeometry( pQRect )
    METHOD  setGeometry_1( nX, nY, nW, nH )
-   METHOD  setInputContext( pContext )
    METHOD  setLayout( pLayout )
    METHOD  setLayoutDirection( nDirection )
    METHOD  setLocale( pLocale )
@@ -293,14 +287,6 @@ METHOD QWidget:new( ... )
 
 METHOD QWidget:acceptDrops()
    RETURN Qt_QWidget_acceptDrops( ::pPtr )
-
-
-METHOD QWidget:accessibleDescription()
-   RETURN Qt_QWidget_accessibleDescription( ::pPtr )
-
-
-METHOD QWidget:accessibleName()
-   RETURN Qt_QWidget_accessibleName( ::pPtr )
 
 
 METHOD QWidget:activateWindow()
@@ -441,10 +427,6 @@ METHOD QWidget:height()
 
 METHOD QWidget:heightForWidth( nW )
    RETURN Qt_QWidget_heightForWidth( ::pPtr, nW )
-
-
-METHOD QWidget:inputContext()
-   RETURN Qt_QWidget_inputContext( ::pPtr )
 
 
 METHOD QWidget:inputMethodQuery( nQuery )
@@ -675,14 +657,6 @@ METHOD QWidget:setAcceptDrops( lOn )
    RETURN Qt_QWidget_setAcceptDrops( ::pPtr, lOn )
 
 
-METHOD QWidget:setAccessibleDescription( cDescription )
-   RETURN Qt_QWidget_setAccessibleDescription( ::pPtr, cDescription )
-
-
-METHOD QWidget:setAccessibleName( cName )
-   RETURN Qt_QWidget_setAccessibleName( ::pPtr, cName )
-
-
 METHOD QWidget:setAttribute( nAttribute, lOn )
    RETURN Qt_QWidget_setAttribute( ::pPtr, nAttribute, lOn )
 
@@ -757,10 +731,6 @@ METHOD QWidget:setGeometry( pQRect )
 
 METHOD QWidget:setGeometry_1( nX, nY, nW, nH )
    RETURN Qt_QWidget_setGeometry_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QWidget:setInputContext( pContext )
-   RETURN Qt_QWidget_setInputContext( ::pPtr, hbqt_ptr( pContext ) )
 
 
 METHOD QWidget:setLayout( pLayout )

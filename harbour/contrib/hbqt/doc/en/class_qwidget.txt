@@ -1,15 +1,8 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
- *
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
  *  Please do not modify this document as it is subject to change in future.
- *
  *  Pritpal Bedi <bedipritpal@hotmail.com>
- *
- *  02/25/10 - 18:22:23
- *
  */
-
-
 
 /*  $DOC$
     $TEMPLATE$
@@ -17,9 +10,11 @@
     $NAME$
         QWidget()
     $CATEGORY$
-        Harbour Bindings for Qt 4.5.3+
+        Harbour Bindings for Qt
     $SUBCATEGORY$
         GUI
+    $EXTERNALLINK$
+        http://doc.trolltech.com/4.5/qwidget.html
     $ONELINER$
         Creates a new QWidget object.
     $INHERITS$
@@ -34,8 +29,6 @@
         An instance of the object of type QWidget
     $METHODS$
         :acceptDrops()                                      -> lBool
-        :accessibleDescription()                            -> cQString
-        :accessibleName()                                   -> cQString
         :activateWindow()                                   -> NIL
         :addAction( pAction )                               -> NIL
         :adjustSize()                                       -> NIL
@@ -67,7 +60,6 @@
         :hasMouseTracking()                                 -> lBool
         :height()                                           -> nInt
         :heightForWidth( nW )                               -> nInt
-        :inputContext()                                     -> pQInputContext
         :inputMethodQuery( nQuery )                         -> pQVariant
         :insertAction( pBefore, pAction )                   -> NIL
         :isActiveWindow()                                   -> lBool
@@ -122,8 +114,6 @@
         :scroll( nDx, nDy )                                 -> NIL
         :scroll_1( nDx, nDy, pR )                           -> NIL
         :setAcceptDrops( lOn )                              -> NIL
-        :setAccessibleDescription( cDescription )           -> NIL
-        :setAccessibleName( cName )                         -> NIL
         :setAttribute( nAttribute, lOn )                    -> NIL
         :setAutoFillBackground( lEnabled )                  -> NIL
         :setBackgroundRole( nRole )                         -> NIL
@@ -143,7 +133,6 @@
         :setForegroundRole( nRole )                         -> NIL
         :setGeometry( pQRect )                              -> NIL
         :setGeometry_1( nX, nY, nW, nH )                    -> NIL
-        :setInputContext( pContext )                        -> NIL
         :setLayout( pLayout )                               -> NIL
         :setLayoutDirection( nDirection )                   -> NIL
         :setLocale( pLocale )                               -> NIL
@@ -254,6 +243,6 @@
         C++ Wrappers : contrib/hbqt/qtgui/QWidget.cpp
         Library      : hbqtgui
     $SEEALSO$
-        QObject, QPaintDevice, http://doc.trolltech.com/4.5/qwidget.html
+        QObject, QPaintDevice
     $END$
  */

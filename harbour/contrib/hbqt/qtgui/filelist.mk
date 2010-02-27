@@ -76,7 +76,6 @@ CPP_SOURCES := \
    QHeaderView.cpp \
    QHelpEvent.cpp \
    QIcon.cpp \
-   QInputContext.cpp \
    QInputMethodEvent.cpp \
    QImage.cpp \
    QImageReader.cpp \
@@ -297,7 +296,6 @@ PRG_SOURCES := \
    TQHeaderView.prg \
    TQHelpEvent.prg \
    TQIcon.prg \
-   TQInputContext.prg \
    TQInputMethodEvent.prg \
    TQImage.prg \
    TQImageReader.prg \

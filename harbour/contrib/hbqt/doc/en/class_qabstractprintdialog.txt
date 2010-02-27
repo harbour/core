@@ -1,15 +1,8 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
- *
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
  *  Please do not modify this document as it is subject to change in future.
- *
  *  Pritpal Bedi <bedipritpal@hotmail.com>
- *
- *  02/25/10 - 18:22:09
- *
  */
-
-
 
 /*  $DOC$
     $TEMPLATE$
@@ -17,9 +10,11 @@
     $NAME$
         QAbstractPrintDialog()
     $CATEGORY$
-        Harbour Bindings for Qt 4.5.3+
+        Harbour Bindings for Qt
     $SUBCATEGORY$
         GUI
+    $EXTERNALLINK$
+        http://doc.trolltech.com/4.5/qabstractprintdialog.html
     $ONELINER$
         Creates a new QAbstractPrintDialog object.
     $INHERITS$
@@ -63,6 +58,6 @@
         C++ Wrappers : contrib/hbqt/qtgui/QAbstractPrintDialog.cpp
         Library      : hbqtgui
     $SEEALSO$
-        QDialog, http://doc.trolltech.com/4.5/qabstractprintdialog.html
+        QDialog
     $END$
  */
