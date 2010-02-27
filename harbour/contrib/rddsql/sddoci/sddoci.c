@@ -6,7 +6,7 @@
  * Oracle (via OCILIB) Database Driver
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * Based on ODBC driver by:
+ * Originally based on ODBC driver by:
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
  *
@@ -54,6 +54,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
+#include "hbapistr.h"
+#include "hbset.h"
 #include "hbvm.h"
 
 #if defined( __XCC__ ) || defined( __LCC__ )
@@ -65,47 +67,31 @@
 #include <ocilib.h>
 
 #if defined( OCI_CHARSET_UNICODE )
-   #define HB_MTEXT_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
-   #define HB_MTEXT_GETFROM(d,s,l)      hb_wctombget(d,s,l)
-   #define HB_MTEXT_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
-   #define HB_MTEXT_CONVTO(s)           hb_mbtowc(s)
-   #define HB_MTEXT_CONVFROM(s)         hb_wctomb(s)
-   #define HB_MTEXT_CONVNTO(s,l)        hb_mbntowc(s,l)
-   #define HB_MTEXT_CONVNFROM(s,l)      hb_wcntomb(s,l)
-   #define HB_MTEXT_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
-   #define HB_MTEXT_FREE(s)             hb_xfree(s)
+   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
 #else
-   #define HB_MTEXT_CPTO(d,s,l)         hb_strncpy(d,s,l)
-   #define HB_MTEXT_SETTO(d,s,l)        memcpy(d,s,l)
-   #define HB_MTEXT_GETFROM(d,s,l)      memcpy(d,s,l)
-   #define HB_MTEXT_CONVTO(s)           ((char *)(s))
-   #define HB_MTEXT_CONVFROM(s)         ((char *)(s))
-   #define HB_MTEXT_CONVNTO(s,l)        ((char *)(s))
-   #define HB_MTEXT_CONVNFROM(s,l)      ((char *)(s))
-   #define HB_MTEXT_CONVNREV(d,s,l)     do { ; } while( 0 )
-   #define HB_MTEXT_FREE(s)             HB_SYMBOL_UNUSED(s)
+   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
 #endif
 
 #if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_MIXED )
-   #define HB_DTEXT_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
-   #define HB_DTEXT_GETFROM(d,s,l)      hb_wctombget(d,s,l)
-   #define HB_DTEXT_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
-   #define HB_DTEXT_CONVTO(s)           hb_mbtowc(s)
-   #define HB_DTEXT_CONVFROM(s)         hb_wctomb(s)
-   #define HB_DTEXT_CONVNTO(s,l)        hb_mbntowc(s,l)
-   #define HB_DTEXT_CONVNFROM(s,l)      hb_wcntomb(s,l)
-   #define HB_DTEXT_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
-   #define HB_DTEXT_FREE(s)             hb_xfree(s)
+   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
 #else
-   #define HB_DTEXT_CPTO(d,s,l)         hb_strncpy(d,s,l)
-   #define HB_DTEXT_SETTO(d,s,l)        memcpy(d,s,l)
-   #define HB_DTEXT_GETFROM(d,s,l)      memcpy(d,s,l)
-   #define HB_DTEXT_CONVTO(s)           ((char *)(s))
-   #define HB_DTEXT_CONVFROM(s)         ((char *)(s))
-   #define HB_DTEXT_CONVNTO(s,l)        ((char *)(s))
-   #define HB_DTEXT_CONVNFROM(s,l)      ((char *)(s))
-   #define HB_DTEXT_CONVNREV(d,s,l)     do { ; } while( 0 )
-   #define HB_DTEXT_FREE(s)             HB_SYMBOL_UNUSED(s)
+   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
 #endif
 
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -190,17 +176,23 @@ static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, c
 static char * ocilibGetError( HB_ERRCODE * pErrCode )
 {
    OCI_Error * err = OCI_GetLastError();
-   char * szRet;
 
-   int iNativeErr = 9999;
+   char * szRet;
+   int iNativeErr;
 
    if( err )
    {
+      PHB_ITEM pRet = M_HB_ITEMPUTSTR( NULL, OCI_ErrorGetString( err ) );
+      szRet = hb_strdup( hb_itemGetCPtr( pRet ) );
+      hb_itemRelease( pRet );
+
       iNativeErr = OCI_ErrorGetOCICode( err );
-      szRet = hb_strdup( OCI_ErrorGetString( err ) );
    }
    else
+   {
       szRet = hb_strdup( "HY000 Unable to get error message" );
+      iNativeErr = 9999;
+   }
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
@@ -213,27 +205,24 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
 
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   if( hb_arrayGetCPtr( pItem, 2 ) &&
-       hb_arrayGetCPtr( pItem, 3 ) &&
-       hb_arrayGetCPtr( pItem, 4 ) )
+   OCI_Connection * cn;
+
+   void * hConn;
+   void * hUser;
+   void * hPass;
+
+   cn = OCI_ConnectionCreate( ( mtext * ) M_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ),
+                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 3, &hUser, NULL ),
+                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 4, &hPass, NULL ), OCI_SESSION_DEFAULT );
+
+   hb_strfree( hConn );
+   hb_strfree( hUser );
+   hb_strfree( hPass );
+
+   if( cn )
    {
-      OCI_Connection * cn;
-
-      mtext * szConn = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 2 ) );
-      mtext * szUser = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 3 ) );
-      mtext * szPass = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 4 ) );
-
-      cn = OCI_ConnectionCreate( szConn, szUser, szPass, OCI_SESSION_DEFAULT );
-
-      HB_MTEXT_FREE( szConn );
-      HB_MTEXT_FREE( szUser );
-      HB_MTEXT_FREE( szPass );
-
-      if( cn )
-      {
-         pConnection->hConnection = ( void * ) cn;
-         return HB_SUCCESS;
-      }
+      pConnection->hConnection = ( void * ) cn;
+      return HB_SUCCESS;
    }
 
    pConnection->hConnection = NULL;
@@ -250,7 +239,7 @@ static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    OCI_Statement * st = OCI_StatementCreate( ( OCI_Connection * ) pConnection->hConnection );
-   mtext * szStatement;
+   void * hStatement;
    char * szError;
    HB_ERRCODE errCode;
 
@@ -262,11 +251,9 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       return HB_FAILURE;
    }
 
-   szStatement = ( mtext * ) HB_MTEXT_CONVTO( hb_itemGetCPtr( pItem ) );
-
-   if( OCI_ExecuteStmt( st, szStatement ) )
+   if( OCI_ExecuteStmt( st, M_HB_ITEMGETSTR( pItem, &hStatement, NULL ) ) )
    {
-      HB_MTEXT_FREE( szStatement );
+      hb_strfree( hStatement );
 
       /* TODO: new id */
       hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), NULL, ( unsigned long ) OCI_GetAffectedRows( st ) );
@@ -274,7 +261,7 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       return HB_SUCCESS;
    }
    else
-      HB_MTEXT_FREE( szStatement );
+      hb_strfree( hStatement );
 
    szError = ocilibGetError( &errCode );
    hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, errCode );
@@ -288,7 +275,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
    OCI_Statement * st = OCI_StatementCreate( ( OCI_Connection * ) pArea->pConnection->hConnection );
    OCI_Resultset * rs;
-   mtext * szQuery;
+   void * hQuery;
    HB_USHORT uiFields, uiIndex;
    PHB_ITEM pItemEof, pItem;
    HB_ERRCODE errCode;
@@ -303,11 +290,12 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   szQuery = ( mtext * ) HB_MTEXT_CONVTO( pArea->szQuery );
+   pItem = hb_itemPutC( NULL, pArea->szQuery );
 
-   if( ! OCI_ExecuteStmt( st, szQuery ) )
+   if( ! OCI_ExecuteStmt( st, M_HB_ITEMGETSTR( pItem, &hQuery, NULL ) ) )
    {
-      HB_MTEXT_FREE( szQuery );
+      hb_strfree( hQuery );
+      hb_itemRelease( pItem );
       szError = ocilibGetError( &errCode );
       OCI_StatementFree( st );
       hb_errRT_OCIDD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
@@ -315,7 +303,10 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
    else
-      HB_MTEXT_FREE( szQuery );
+   {
+      hb_strfree( hQuery );
+      hb_itemRelease( pItem );
+   }
 
    rs = OCI_GetResultset( st );
 
@@ -332,7 +323,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    {
       OCI_Column * col = OCI_GetColumn( rs, uiIndex + 1 );
 
-      const mtext * szName;
+      PHB_ITEM pName;
       unsigned int uiDataType;
       unsigned int uiSize;
       int iDec;
@@ -350,7 +341,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
-      szName = OCI_ColumnGetName( col );
+      pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
       uiDataType = OCI_ColumnGetType( col );
       uiSize = OCI_ColumnGetSize( col );
       iDec = OCI_ColumnGetPrecision( col );
@@ -358,11 +349,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
       HB_SYMBOL_UNUSED( bNullable );
 
-      szOurName = ( char * ) hb_xgrab( ( 256 + 1 ) * sizeof( char ) );
-      HB_MTEXT_CPTO( szOurName, szName, 256 );
-      szOurName[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( szOurName, MAX_FIELD_NAME );
-      pFieldInfo.atomName = szOurName;
+      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
@@ -400,9 +388,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          {
             case HB_FT_STRING:
             {
-               char * pStr;
-
-               pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
+               char * pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
@@ -410,7 +396,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
                hb_xfree( pStr );
                break;
             }
-
             case HB_FT_MEMO:
                pItem = hb_itemPutC( NULL, NULL );
                break;
@@ -449,7 +434,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
             default:
                pItem = hb_itemNew( NULL );
                bError = HB_TRUE;
-               break;
          }
 
          hb_arraySetForward( pItemEof, uiIndex + 1, pItem );
@@ -529,15 +513,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                  {
-                     HB_SIZE nLen = ( HB_SIZE ) dtslen( val );
-
-                     char * szVal = ( char * ) hb_xgrab( ( nLen + 1 ) * sizeof( char ) );
-                     HB_MTEXT_CPTO( szVal, val, nLen );
-                     szVal[ nLen ] = '\0';
-
-                     pItem = hb_itemPutCLPtr( NULL, szVal, nLen );
-                  }
+                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) );
                   break;
                }
 
@@ -553,17 +529,13 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                   {
                      long int  val = 0;
                      if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
-                     {
                         pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
-                     }
                   }
                   else
                   {
                      double  val = 0.0;
                      if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-                     {
                         pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-                     }
                   }
                   break;
 
@@ -571,9 +543,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   double  val = 0.0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-                  }
                   break;
                }
 
@@ -581,9 +551,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   unsigned char  val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BIT, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutL( NULL, val != 0 );
-                  }
                   break;
                }
 
@@ -591,9 +559,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   DATE_STRUCT  val = {0,0,0};
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DATE, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutD( NULL, val.year, val.month, val.day );
-                  }
                   break;
                }
 
@@ -601,9 +567,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   TIME_STRUCT  val = {0,0,0};
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIME, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutTDT( NULL, 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ) );
-                  }
                   break;
                }
 
@@ -611,10 +575,8 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   TIMESTAMP_STRUCT val = { 0, 0, 0, 0, 0, 0, 0 };
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ),
                                             hb_timeEncode( val.hour, val.minute, val.second, val.fraction / 1000000 ) );
-                  }
                   break;
                }
 */
