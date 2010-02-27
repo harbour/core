@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := sddoci
 
 C_SOURCES := \
-   ocidd.c \
+   sddoci.c \
 
 _DET_DSP_NAME := ocilib
 _DET_VAR_INC_ := HB_INC_OCILIB

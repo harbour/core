@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := sddmy
 
 C_SOURCES := \
-   mysqldd.c \
+   sddmy.c \
 
 _DET_DSP_NAME := mysql
 _DET_VAR_INC_ := HB_INC_MYSQL

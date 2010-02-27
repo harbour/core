@@ -151,8 +151,6 @@ static void hb_ocidd_exit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    OCI_Cleanup();
-
-printf( "CLEANUP!\n" );
 }
 
 HB_FUNC( SDDOCI ) {;}
@@ -215,26 +213,30 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
 
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   OCI_Connection * cn;
-
-   mtext * szConn = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 2 ) );
-   mtext * szUser = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 3 ) );
-   mtext * szPass = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 4 ) );
-
-   cn = OCI_ConnectionCreate( szConn, szUser, szPass, OCI_SESSION_DEFAULT );
-
-   HB_MTEXT_FREE( szConn );
-   HB_MTEXT_FREE( szUser );
-   HB_MTEXT_FREE( szPass );
-
-   if( cn )
+   if( hb_arrayGetCPtr( pItem, 2 ) &&
+       hb_arrayGetCPtr( pItem, 3 ) &&
+       hb_arrayGetCPtr( pItem, 4 ) )
    {
-      pConnection->hConnection = ( void * ) cn;
-      return HB_SUCCESS;
-   }
-   else
-      pConnection->hConnection = NULL;
+      OCI_Connection * cn;
 
+      mtext * szConn = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 2 ) );
+      mtext * szUser = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 3 ) );
+      mtext * szPass = ( mtext * ) HB_MTEXT_CONVTO( hb_arrayGetCPtr( pItem, 4 ) );
+
+      cn = OCI_ConnectionCreate( szConn, szUser, szPass, OCI_SESSION_DEFAULT );
+
+      HB_MTEXT_FREE( szConn );
+      HB_MTEXT_FREE( szUser );
+      HB_MTEXT_FREE( szPass );
+
+      if( cn )
+      {
+         pConnection->hConnection = ( void * ) cn;
+         return HB_SUCCESS;
+      }
+   }
+
+   pConnection->hConnection = NULL;
    return HB_FAILURE;
 }
 
@@ -513,7 +515,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       }
 
       pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
-      for( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
+      for( ui = 1; ui <= pArea->area.uiFieldCount; ++ui )
       {
          pItem = NULL;
 

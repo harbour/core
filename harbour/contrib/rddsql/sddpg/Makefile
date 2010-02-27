@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := sddpg
 
 C_SOURCES := \
-   pgsqldd.c \
+   sddpg.c \
 
 _DET_DSP_NAME := postgresql
 _DET_VAR_INC_ := HB_INC_PGSQL

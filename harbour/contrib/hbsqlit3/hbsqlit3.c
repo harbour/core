@@ -607,7 +607,7 @@ HB_FUNC( SQLITE3_OPEN )
    char     *pszFree;
    const char *pszdbName = hb_fsNameConv( hb_parcx(1), &pszFree );
 
-   if( hb_fsFileExists(( const char * ) pszdbName) || hb_parl(2) )
+   if( hb_fsFileExists( pszdbName) || hb_parl(2) )
    {
       if( sqlite3_open(pszdbName, &db) == SQLITE_OK )
       {

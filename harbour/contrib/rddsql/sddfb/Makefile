@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := sddfb
 
 C_SOURCES := \
-   fbirddd.c \
+   sddfb.c \
 
 _DET_DSP_NAME := firebird
 _DET_VAR_INC_ := HB_INC_FIREBIRD

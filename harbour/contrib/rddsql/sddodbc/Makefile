@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := sddodbc
 
 C_SOURCES := \
-   odbcdd.c \
+   sddodbc.c \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)
    HB_INC_ODBC := force
