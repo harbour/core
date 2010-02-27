@@ -359,7 +359,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
 
-      HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d %d %d %d %d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable, OCI_ColumnGetScale( col ), OCI_ColumnGetPrecision( col ), OCI_ColumnGetFractionalPrecision( col ), OCI_ColumnGetLeadingPrecision( col ) ) );
+      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d %d %d %d %d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable, OCI_ColumnGetScale( col ), OCI_ColumnGetPrecision( col ), OCI_ColumnGetFractionalPrecision( col ), OCI_ColumnGetLeadingPrecision( col ) ) ); */
 
       switch( uiDataType )
       {
