@@ -305,9 +305,12 @@ typedef union YYSTYPE
    PHB_VARTYPE asVarType;
 }
 /* Line 1495 of yacc.c.  */
-#line 310 "harboury.h"
+#line 309 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
+
+
+

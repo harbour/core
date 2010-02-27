@@ -1526,32 +1526,22 @@ void hb_macroGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COM
    hb_macroGenPCodeN( pBuffer, 1 + sizeof( double ) + sizeof( HB_BYTE ) + sizeof( HB_BYTE ), HB_COMP_PARAM );
 }
 
-void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL )
+void hb_macroGenPushFunSym( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
-   const char * szFunction;
-
-   szFunction = hb_compReservedName( szFunName );
-   if( szFunction )
-      /* if abbreviated function name was used - change it for whole name */
-      szFunName = szFunction;
-   else
+   if( ( iFlags & HB_FN_RESERVED ) == 0 )
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
    hb_macroGenPushSymbol( szFunName, HB_TRUE, HB_COMP_PARAM );
 }
 
-void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL )
+void hb_macroGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
-   hb_macroGenPushFunSym( szFunName, HB_COMP_PARAM );
+   hb_macroGenPushFunSym( szFunName, iFlags, HB_COMP_PARAM );
    hb_macroGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
 }
 
 void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 {
-   const char * szFunction;
-
-   /* if abbreviated function name was used - change it for whole name */
-   szFunction = hb_compReservedName( szFunName );
-   hb_macroGenPushSymbol( szFunction ? szFunction : szFunName, HB_TRUE, HB_COMP_PARAM );
+   hb_macroGenPushSymbol( szFunName, HB_TRUE, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */

@@ -250,20 +250,76 @@ typedef enum
 typedef enum
 {
    HB_F_UDF = 0,
-   HB_F_AT,
+   HB_F_AADD,
+   HB_F_ABS,
    HB_F_ASC,
+   HB_F_AT,
+   HB_F_BOF,
+   HB_F_BREAK,
+   HB_F_CDOW,
    HB_F_CHR,
-   HB_F_LEN,
+   HB_F_CMONTH,
+   HB_F_COL,
+   HB_F_CTOD,
+   HB_F_DATE,
+   HB_F_DAY,
+   HB_F_DELETED,
+   HB_F_DEVPOS,
+   HB_F_DOW,
+   HB_F_DTOC,
+   HB_F_DTOS,
    HB_F_EMPTY,
-   HB_F_UPPER,
+   HB_F_EOF,
+   HB_F_EVAL,
+   HB_F_EXP,
+   HB_F_FCOUNT,
+   HB_F_FIELDNAME,
+   HB_F_FILE,
+   HB_F_FLOCK,
+   HB_F_FOUND,
+   HB_F_INKEY,
    HB_F_INT,
+   HB_F_LASTREC,
+   HB_F_LEFT,
+   HB_F_LEN,
+   HB_F_LOCK,
+   HB_F_LOG,
+   HB_F_LOWER,
+   HB_F_LTRIM,
    HB_F_MAX,
    HB_F_MIN,
+   HB_F_MONTH,
+   HB_F_PCOL,
+   HB_F_PCOUNT,
+   HB_F_PROW,
+   HB_F_QSELF,
+   HB_F_RECCOUNT,
+   HB_F_RECNO,
+   HB_F_REPLICATE,
+   HB_F_RLOCK,
+   HB_F_ROUND,
+   HB_F_ROW,
+   HB_F_RTRIM,
+   HB_F_SECONDS,
+   HB_F_SELECT,
+   HB_F_SETPOS,
+   HB_F_SETPOSBS,
+   HB_F_SPACE,
+   HB_F_SQRT,
    HB_F_STOD,
    HB_F_STOT,
-   HB_F_DTOS,
-   HB_F_CTOD,
-   HB_F_EVAL,
+   HB_F_STR,
+   HB_F_SUBSTR,
+   HB_F_TIME,
+   HB_F_TRANSFORM,
+   HB_F_TRIM,
+   HB_F_TYPE,
+   HB_F_UPPER,
+   HB_F_VAL,
+   HB_F_VALTYPE,
+   HB_F_WORD,
+   HB_F_YEAR,
+
    HB_F_BITAND,
    HB_F_BITOR,
    HB_F_BITXOR,
@@ -282,14 +338,22 @@ typedef enum
    HB_F__GET_
 } HB_FUNC_ID;
 
+#define HB_FN_UDF       0
+#define HB_FN_RESERVED  1
+
 typedef HB_USHORT HB_EXPRTYPE;
 
 typedef struct HB_EXPR_
 {
    union
    {
-      const char * asSymbol;  /* variable name */
       HB_BOOL asLogical;      /* logical value */
+      struct
+      {
+         const char * name;   /* variable/function name */
+         HB_FUNC_ID funcid;   /* function ID */
+         int flags;           /* function flags */
+      } asSymbol;
       struct
       {
          char * string;       /* literal strings */
@@ -345,7 +409,6 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ * pFunName;   /* function name */
          struct HB_EXPR_ * pParms;     /* function call parameters */
-         HB_FUNC_ID funcid;
       } asFunCall;
       struct
       {

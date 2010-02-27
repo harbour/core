@@ -2308,7 +2308,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
    HB_RTVAR_PTR pDel;
 
    /* generate the function call frame */
-   hb_compGenPushFunCall( szCreateFun, HB_COMP_PARAM );
+   hb_compGenPushFunCall( szCreateFun, HB_FN_UDF, HB_COMP_PARAM );
 
    /* push variable names to create */
    while( pVar->pNext )
@@ -2786,7 +2786,7 @@ static HB_EXPR_PTR hb_compCheckMethod( HB_COMP_DECL, HB_EXPR_PTR pExpr )
           strcmp( "BASE",  szMessage ) == 0 ||
           strcmp( "VALUE", szMessage ) == 0 )
       {
-         if( ! hb_compForEachVarError( HB_COMP_PARAM, pExpr->value.asMessage.pObject->value.asSymbol ) )
+         if( ! hb_compForEachVarError( HB_COMP_PARAM, pExpr->value.asMessage.pObject->value.asSymbol.name ) )
             pExpr->value.asMessage.pObject->ExprType = HB_ET_VARREF;
       }
    }

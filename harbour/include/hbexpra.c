@@ -117,8 +117,21 @@ HB_EXPR_PTR hb_macroExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_CO
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COMP_DECL )
 #endif
 {
-   HB_FUNC_ID funcID = HB_F_UDF;
    HB_EXPR_PTR pExpr;
+
+#ifdef HB_MACRO_SUPPORT
+   if( pName->ExprType == HB_ET_VARIABLE )
+   {
+      /* My&var.1() executed by macro compiler
+       */
+      /* NOTE: direct type change */
+      pName->ExprType = HB_ET_FUNNAME;
+      pName->value.asSymbol.name =
+                              hb_compGetFuncID( pName->value.asSymbol.name,
+                                                &pName->value.asSymbol.funcid,
+                                                &pName->value.asSymbol.flags );
+   }
+#endif
 
    if( pName->ExprType == HB_ET_FUNNAME )
    {
@@ -130,30 +143,30 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
        * e.g. &MyVar()
        */
 
-      HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol));
-
-      funcID = hb_compGetFuncID( pName->value.asSymbol );
+      HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol.name));
 
 #if !defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
       {
-         int iLen = strlen( pName->value.asSymbol );
-         if( iLen >= 10 && i <= 12 && memcmp( "HB_ENUM", pName->value.asSymbol, 7 ) == 0 )
+         int iLen = strlen( pName->value.asSymbol.name );
+         if( iLen >= 10 && i <= 12 && memcmp( "HB_ENUM", pName->value.asSymbol.name, 7 ) == 0 )
          {
-            char * szMessage = NULL;
+            const char * szMessage = pName->value.asSymbol.name + 7;
 
-            if( iLen == 12 && memcmp( "INDEX", pName->value.asSymbol + 7, 5 ) == 0 )
+            if( iLen == 12 && memcmp( "INDEX", szMessage, 5 ) == 0 )
                szMessage = "__ENUMINDEX";
-            else if( iLen == 12 && memcmp( "VALUE", pName->value.asSymbol + 7, 5 ) == 0 )
+            else if( iLen == 12 && memcmp( "VALUE", szMessage, 5 ) == 0 )
                szMessage = "__ENUMVALUE";
-            else if( iLen == 11 && memcmp( "BASE", pName->value.asSymbol + 7, 4 ) == 0 )
+            else if( iLen == 11 && memcmp( "BASE", szMessage, 4 ) == 0 )
                szMessage = "__ENUMBASE";
-            else if( iLen == 10 && memcmp( "KEY", pName->value.asSymbol + 7, 3 ) == 0 )
+            else if( iLen == 10 && memcmp( "KEY", szMessage, 3 ) == 0 )
                szMessage = "__ENUMKEY";
+            else
+               szMessage = NULL;
 
             if( szMessage )
             {
                int iCount = ( int ) hb_compExprParamListLen( pParms );
-               char * szName = NULL;
+               const char * szName = NULL;
 
                if( iCount == 0 )
                {
@@ -175,7 +188,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                {
                   if( pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE ||
                       pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
-                     szName = pParms->value.asList.pExprList->value.asSymbol;
+                     szName = pParms->value.asList.pExprList->value.asSymbol.name;
                }
                if( szName )
                {
@@ -189,7 +202,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          }
       else
 #endif
-      if( funcID == HB_F_EVAL && hb_compExprParamListLen( pParms ) != 0 )
+      if( pName->value.asSymbol.funcid == HB_F_EVAL &&
+          hb_compExprParamListLen( pParms ) != 0 )
       {
          HB_EXPR_PTR pEval;
 
@@ -209,7 +223,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_COMP_EXPR_DELETE( pName );
          return pEval;
       }
-      else if( funcID == HB_F__GET_ && hb_compExprParamListLen( pParms ) != 0 )
+      else if( pName->value.asSymbol.funcid == HB_F__GET_ &&
+               hb_compExprParamListLen( pParms ) != 0 )
       {
          /* Reserved Clipper function used to handle GET variables
           */
@@ -244,7 +259,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             HB_EXPR_PTR pIndex, pVar;
             HB_EXPR_PTR pBase;
 
-            pName->value.asSymbol = "__GETA";
+            pName->value.asSymbol.name = "__GETA";
             /* NOTE: a[ i, j ] is stored as: (pExprList)->(pIndex)
              * ((a->[ i ])->[ j ])
              */
@@ -342,7 +357,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             /* @ 0,0 GET &var    => __GET( NIL, var,... )
              * @ 0,0 GET var&var => __GET( NIL, "var&var",... )
              */
-            pName->value.asSymbol = "__GET";
+            pName->value.asSymbol.name = "__GET";
             if( pArg->value.asMacro.pExprList == NULL )
             {
                /* Simple macro expansion (not a parenthesized expressions)
@@ -393,7 +408,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          }
          else
          {
-            pName->value.asSymbol = "__GET";
+            pName->value.asSymbol.name = "__GET";
 
             /* store second and a rest of arguments */
             pNext = pArg->pNext;
@@ -402,7 +417,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 #if !defined( HB_MACRO_SUPPORT )
             if( pArg->ExprType == HB_ET_VARIABLE )
             {
-               if( hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol, NULL, NULL ) )
+               if( hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol.name, NULL, NULL ) )
                   pArg = hb_compExprSetGetBlock( pArg, HB_COMP_PARAM );
                else
                {
@@ -423,6 +438,11 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             /* set an updated list of arguments */
             pParms->value.asList.pExprList = pArg;
          }
+
+         pName->value.asSymbol.name =
+                              hb_compGetFuncID( pName->value.asSymbol.name,
+                                                &pName->value.asSymbol.funcid,
+                                                &pName->value.asSymbol.flags );
       }
    }
 
@@ -435,20 +455,10 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(&)"));
    }
-#ifdef HB_MACRO_SUPPORT
-   else if( pName->ExprType == HB_ET_VARIABLE )
-   {
-      /* My&var.1() executed by macro compiler
-       */
-      /* NOTE: direct type change */
-      pName->ExprType = HB_ET_FUNNAME;
-   }
-#endif
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNCALL );
    pExpr->value.asFunCall.pParms = pParms;
    pExpr->value.asFunCall.pFunName = pName;
-   pExpr->value.asFunCall.funcid = funcID;
 
    return pExpr;
 }
@@ -517,12 +527,12 @@ static void hb_compExprCheckStaticInitializer( HB_EXPR_PTR pLeftExpr, HB_EXPR_PT
        !( pRightExpr->ExprType == HB_ET_FUNCALL &&
           pRightExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
           hb_compStaticFunction( pRightExpr->value.asFunCall.pFunName->
-                                 value.asSymbol ) &&
+                                 value.asSymbol.name ) &&
           hb_compExprParamListLen( pRightExpr->value.asFunCall.pParms ) == 0 ) )
    {
       /* Illegal initializer for static variable (not a constant value)
        */
-      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pRightExpr );
+      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol.name, pRightExpr );
    }
 }
 

@@ -2187,7 +2187,7 @@ PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
 
 void hb_compGenBreak( HB_COMP_DECL )
 {
-   hb_compGenPushFunCall( "BREAK", HB_COMP_PARAM );
+   hb_compGenPushFunCall( "BREAK", HB_FN_RESERVED, HB_COMP_PARAM );
 }
 
 /* generates the symbols for the EXTERN names */
@@ -2889,15 +2889,11 @@ void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP
    hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
 }
 
-void hb_compGenPushFunCall( const char * szFunName, HB_COMP_DECL )
+void hb_compGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
-   const char * szFunction;
    HB_USHORT wSym;
 
-   /* if abbreviated function name was used - change it for whole name */
-   szFunction = hb_compReservedName( szFunName );
-   if( szFunction )
-      szFunName = szFunction;
+   HB_SYMBOL_UNUSED( iFlags );
 
    if( !hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) )
       hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
@@ -2905,24 +2901,15 @@ void hb_compGenPushFunCall( const char * szFunName, HB_COMP_DECL )
    hb_compGenPCode3( HB_P_PUSHFUNCSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
 }
 
-void hb_compGenPushFunSym( const char * szFunName, HB_COMP_DECL )
+void hb_compGenPushFunSym( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
-   const char * szFunction;
-
-   /* if abbreviated function name was used - change it for whole name */
-   szFunction = hb_compReservedName( szFunName );
-   hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
-                         HB_SYM_FUNCNAME, HB_COMP_PARAM );
+   HB_SYMBOL_UNUSED( iFlags );
+   hb_compGenPushSymbol( szFunName, HB_SYM_FUNCNAME, HB_COMP_PARAM );
 }
 
 void hb_compGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 {
-   const char * szFunction;
-
-   /* if abbreviated function name was used - change it for whole name */
-   szFunction = hb_compReservedName( szFunName );
-   hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
-                         HB_SYM_FUNCNAME, HB_COMP_PARAM );
+   hb_compGenPushSymbol( szFunName, HB_SYM_FUNCNAME, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */

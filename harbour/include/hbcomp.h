@@ -142,7 +142,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 extern void       hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PINLINE    hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
 extern void       hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName );
-extern HB_FUNC_ID hb_compGetFuncID( const char * szFuncName );
+extern const char * hb_compGetFuncID( const char * szFuncName, HB_FUNC_ID * pFunID, int * piFlags );
 extern HB_BOOL    hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
 
 extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
@@ -196,8 +196,8 @@ extern void hb_compGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COM
 extern void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL );                        /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 extern void hb_compGenPopMemvar( const char * szVarName, HB_COMP_DECL );                     /* generates the pcode to pop a value from the virtual machine stack onto a memvar variable */
 extern void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP_DECL );    /* Pushes a number on the virtual machine stack */
-extern void hb_compGenPushFunCall( const char *, HB_COMP_DECL );                             /* generates the pcode to push function's call */
-extern void hb_compGenPushFunSym( const char *, HB_COMP_DECL );                              /* generates the pcode to push function's symbol */
+extern void hb_compGenPushFunCall( const char *, int, HB_COMP_DECL );                             /* generates the pcode to push function's call */
+extern void hb_compGenPushFunSym( const char *, int, HB_COMP_DECL );                              /* generates the pcode to push function's symbol */
 extern void hb_compGenPushFunRef( const char *, HB_COMP_DECL );                              /* generates the pcode to push function's reference symbol */
 extern void hb_compGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL );    /* generates the pcode to push a variable value to the virtual machine stack */
 extern void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL );                    /* generates the pcode to push a variable by reference to the virtual machine stack */

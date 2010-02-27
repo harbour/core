@@ -287,10 +287,11 @@ const char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
       case HB_ET_VARIABLE:
       case HB_ET_VARREF:
       case HB_ET_FUNNAME:
-         return pExpr->value.asSymbol;
+         return pExpr->value.asSymbol.name;
 
       case HB_ET_FUNCALL:
-         return pExpr->value.asFunCall.pFunName->value.asSymbol;
+         if( pExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
+            return pExpr->value.asFunCall.pFunName->value.asSymbol.name;
    }
    return NULL;
 }
@@ -544,7 +545,7 @@ HB_EXPR_PTR hb_compExprNewVarRef( const char * szVarName, HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_VARREF );
 
-   pExpr->value.asSymbol = szVarName;
+   pExpr->value.asSymbol.name = szVarName;
    pExpr->ValType = HB_EV_VARREF;
    return pExpr;
 }
@@ -557,7 +558,9 @@ HB_EXPR_PTR hb_compExprNewFunRef( const char * szFunName, HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNREF );
 
-   pExpr->value.asSymbol = szFunName;
+   pExpr->value.asSymbol.name = hb_compGetFuncID( szFunName,
+                                                  &pExpr->value.asSymbol.funcid,
+                                                  &pExpr->value.asSymbol.flags );
    pExpr->ValType = HB_EV_FUNREF;
    return pExpr;
 }
@@ -828,7 +831,7 @@ HB_EXPR_PTR hb_compExprNewVar( const char * szName, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewVar(%s,%p)", szName, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_VARIABLE );
-   pExpr->value.asSymbol = szName;
+   pExpr->value.asSymbol.name = szName;
    return pExpr;
 }
 
@@ -861,7 +864,9 @@ HB_EXPR_PTR hb_compExprNewFunName( const char * szName, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunName(%s,%p)", szName, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNNAME );
-   pExpr->value.asSymbol = szName;
+   pExpr->value.asSymbol.name = hb_compGetFuncID( szName,
+                                                  &pExpr->value.asSymbol.funcid,
+                                                  &pExpr->value.asSymbol.flags );
    return pExpr;
 }
 
@@ -874,7 +879,7 @@ HB_EXPR_PTR hb_compExprNewAlias( const char * szName, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewAlias(%s,%p)", szName, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ALIAS );
-   pExpr->value.asSymbol = szName;
+   pExpr->value.asSymbol.name = szName;
    return pExpr;
 }
 

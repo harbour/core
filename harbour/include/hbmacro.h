@@ -150,8 +150,8 @@ extern void hb_macroGenPushAliasedVar( const char * szVarName,
                                        HB_MAXINT lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushLogical( int iTrueFalse, HB_COMP_DECL );
 extern void hb_macroGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP_DECL );
-extern void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL );
-extern void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL );
+extern void hb_macroGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL );
+extern void hb_macroGenPushFunSym( const char * szFunName, int iFlags, HB_COMP_DECL );
 extern void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL );
 extern void hb_macroGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL );
 
