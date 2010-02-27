@@ -7,6 +7,7 @@ ROOT := ../../
 C_SOURCES := \
    expropt1.c \
    expropt2.c \
+   funcid.c \
    hbffind.c \
    hbfopen.c \
    hbfsapi.c \

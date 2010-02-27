@@ -117,7 +117,8 @@ HB_EXPR_PTR hb_macroExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_CO
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COMP_DECL )
 #endif
 {
-   HB_EXPR_PTR pExpr = NULL;
+   HB_FUNC_ID funcID = HB_F_UDF;
+   HB_EXPR_PTR pExpr;
 
    if( pName->ExprType == HB_ET_FUNNAME )
    {
@@ -128,70 +129,67 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
        * at runtime - in this case pName is an expression of HB_ET_MACRO type
        * e.g. &MyVar()
        */
-      int iLen;
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol));
 
-      iLen = strlen( pName->value.asSymbol );
+      funcID = hb_compGetFuncID( pName->value.asSymbol );
 
 #if !defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
-      if( iLen > 7 && memcmp( "HB_ENUM", pName->value.asSymbol, 7 ) == 0 )
       {
-         char * szMessage = NULL;
-
-         if( iLen == 12 && memcmp( "INDEX", pName->value.asSymbol + 7, 5 ) == 0 )
-            szMessage = "__ENUMINDEX";
-         else if( iLen == 12 && memcmp( "VALUE", pName->value.asSymbol + 7, 5 ) == 0 )
-            szMessage = "__ENUMVALUE";
-         else if( iLen == 11 && memcmp( "BASE", pName->value.asSymbol + 7, 4 ) == 0 )
-            szMessage = "__ENUMBASE";
-         else if( iLen == 10 && memcmp( "KEY", pName->value.asSymbol + 7, 3 ) == 0 )
-            szMessage = "__ENUMKEY";
-
-         if( szMessage )
+         int iLen = strlen( pName->value.asSymbol );
+         if( iLen >= 10 && i <= 12 && memcmp( "HB_ENUM", pName->value.asSymbol, 7 ) == 0 )
          {
-            int iCount = ( int ) hb_compExprParamListLen( pParms );
-            char * szName = NULL;
+            char * szMessage = NULL;
 
-            if( iCount == 0 )
+            if( iLen == 12 && memcmp( "INDEX", pName->value.asSymbol + 7, 5 ) == 0 )
+               szMessage = "__ENUMINDEX";
+            else if( iLen == 12 && memcmp( "VALUE", pName->value.asSymbol + 7, 5 ) == 0 )
+               szMessage = "__ENUMVALUE";
+            else if( iLen == 11 && memcmp( "BASE", pName->value.asSymbol + 7, 4 ) == 0 )
+               szMessage = "__ENUMBASE";
+            else if( iLen == 10 && memcmp( "KEY", pName->value.asSymbol + 7, 3 ) == 0 )
+               szMessage = "__ENUMKEY";
+
+            if( szMessage )
             {
-               HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
-               pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
-               if( pForVar )
+               int iCount = ( int ) hb_compExprParamListLen( pParms );
+               char * szName = NULL;
+
+               if( iCount == 0 )
                {
-                  while( pForVar )
+                  HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
+                  pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
+                  if( pForVar )
                   {
-                     if( pForVar->bForEach )
-                        pEnumVar = pForVar;
-                     pForVar = pForVar->pNext;
+                     while( pForVar )
+                     {
+                        if( pForVar->bForEach )
+                           pEnumVar = pForVar;
+                        pForVar = pForVar->pNext;
+                     }
+                     if( pEnumVar )
+                        szName = pEnumVar->szName;
                   }
-                  if( pEnumVar )
-                     szName = pEnumVar->szName;
+               }
+               else if( iCount == 1 )
+               {
+                  if( pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE ||
+                      pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
+                     szName = pParms->value.asList.pExprList->value.asSymbol;
+               }
+               if( szName )
+               {
+                  HB_COMP_EXPR_DELETE( pParms );
+                  HB_COMP_EXPR_DELETE( pName );
+                  return hb_compExprNewMethodObject(
+                                 hb_compExprNewSend( szMessage, HB_COMP_PARAM ),
+                                 hb_compExprNewVar( szName, HB_COMP_PARAM ) );
                }
             }
-            else if( iCount == 1 )
-            {
-               if( pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE ||
-                   pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
-                  szName = pParms->value.asList.pExprList->value.asSymbol;
-            }
-            if( szName )
-            {
-               HB_COMP_EXPR_DELETE( pParms );
-               HB_COMP_EXPR_DELETE( pName );
-               return hb_compExprNewMethodObject(
-                              hb_compExprNewSend( szMessage, HB_COMP_PARAM ),
-                              hb_compExprNewVar( szName, HB_COMP_PARAM ) );
-            }
          }
-      }
       else
 #endif
-      if( hb_compExprParamListLen( pParms ) == 0 )
-      {
-         /* nothing to do, both EVAL and _GET_ below need parameters */
-      }
-      else if( iLen == 4 && memcmp( "EVAL", pName->value.asSymbol, 4 ) == 0 )
+      if( funcID == HB_F_EVAL && hb_compExprParamListLen( pParms ) != 0 )
       {
          HB_EXPR_PTR pEval;
 
@@ -211,7 +209,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_COMP_EXPR_DELETE( pName );
          return pEval;
       }
-      else if( iLen == 5 && memcmp( "_GET_", pName->value.asSymbol, 5 ) == 0 )
+      else if( funcID == HB_F__GET_ && hb_compExprParamListLen( pParms ) != 0 )
       {
          /* Reserved Clipper function used to handle GET variables
           */
@@ -447,12 +445,10 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
    }
 #endif
 
-   if( pExpr == NULL )
-   {
-      pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNCALL );
-      pExpr->value.asFunCall.pParms = pParms;
-      pExpr->value.asFunCall.pFunName = pName;
-   }
+   pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNCALL );
+   pExpr->value.asFunCall.pParms = pParms;
+   pExpr->value.asFunCall.pFunName = pName;
+   pExpr->value.asFunCall.funcid = funcID;
 
    return pExpr;
 }

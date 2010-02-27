@@ -124,13 +124,13 @@ static const char * s_szReservedFun[] = {
    "YEAR"
 };
 
-#define RESERVED_FUNCTIONS    ( sizeof( s_szReservedFun ) / sizeof( char * ) )
 #endif
 
 const char * hb_compReservedName( const char * szName )
 {
 #if !defined( HB_RESERVED_OFF )
-   unsigned int uiFirst = 0, uiLast = RESERVED_FUNCTIONS - 1, uiMiddle;
+   unsigned int uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_szReservedFun ) - 1,
+                uiMiddle;
    int iLen = ( int ) strlen( szName ), iCmp;
 
    /* Respect 4 or more letters shortcuts
@@ -154,7 +154,7 @@ const char * hb_compReservedName( const char * szName )
       iCmp = strncmp( szName, s_szReservedFun[ uiFirst ], iLen );
 
    if( iCmp == 0 )
-      return ( char * ) s_szReservedFun[ uiFirst ];
+      return s_szReservedFun[ uiFirst ];
 #else
    HB_SYMBOL_UNUSED( szName );
 #endif

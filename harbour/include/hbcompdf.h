@@ -247,6 +247,41 @@ typedef enum
 
 #define HB_EXPR_COUNT   ( HB_EO_PREDEC + 1 )
 
+typedef enum
+{
+   HB_F_UDF = 0,
+   HB_F_AT,
+   HB_F_ASC,
+   HB_F_CHR,
+   HB_F_LEN,
+   HB_F_EMPTY,
+   HB_F_UPPER,
+   HB_F_INT,
+   HB_F_MAX,
+   HB_F_MIN,
+   HB_F_STOD,
+   HB_F_STOT,
+   HB_F_DTOS,
+   HB_F_CTOD,
+   HB_F_EVAL,
+   HB_F_BITAND,
+   HB_F_BITOR,
+   HB_F_BITXOR,
+   HB_F_BITSET,
+   HB_F_BITRESET,
+   HB_F_BITSHIFT,
+   HB_F_BITTEST,
+   HB_F_BITNOT,
+   HB_F_ARRAYTOPARAMS,
+   HB_F_I18N_GETTEXT,
+   HB_F_I18N_GETTEXT_STRICT,
+   HB_F_I18N_GETTEXT_NOOP,
+   HB_F_I18N_NGETTEXT,
+   HB_F_I18N_NGETTEXT_STRICT,
+   HB_F_I18N_NGETTEXT_NOOP,
+   HB_F__GET_
+} HB_FUNC_ID;
+
 typedef HB_USHORT HB_EXPRTYPE;
 
 typedef struct HB_EXPR_
@@ -310,6 +345,7 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ * pFunName;   /* function name */
          struct HB_EXPR_ * pParms;     /* function call parameters */
+         HB_FUNC_ID funcid;
       } asFunCall;
       struct
       {

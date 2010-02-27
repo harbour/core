@@ -475,6 +475,13 @@ HB_FUNC( HB_EXECFROMARRAY )
 
    if( pExecSym )
    {
+      pFunc = hb_stackBaseItem();
+      pItem = hb_stackItem( pFunc->item.asSymbol.stackstate->lBaseItem );
+      pFunc->item.asSymbol.stackstate->uiClass =
+      pItem->item.asSymbol.stackstate->uiClass;
+      pFunc->item.asSymbol.stackstate->uiMethod =
+      pItem->item.asSymbol.stackstate->uiMethod;
+
       iPCount = 0;
       hb_vmPushSymbol( pExecSym );
       if( pSelf )

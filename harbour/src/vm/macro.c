@@ -1532,16 +1532,11 @@ void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL )
 
    szFunction = hb_compReservedName( szFunName );
    if( szFunction )
-   {
-      /* Abbreviated function name was used - change it for whole name
-       */
-      hb_macroGenPushSymbol( szFunction, HB_TRUE, HB_COMP_PARAM );
-   }
+      /* if abbreviated function name was used - change it for whole name */
+      szFunName = szFunction;
    else
-   {
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
-      hb_macroGenPushSymbol( szFunName, HB_TRUE, HB_COMP_PARAM );
-   }
+   hb_macroGenPushSymbol( szFunName, HB_TRUE, HB_COMP_PARAM );
 }
 
 void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL )

@@ -1716,94 +1716,84 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
-            HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
             HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
             HB_USHORT usCount = ( HB_USHORT ) hb_compExprParamListLen( pParms );
 
 #ifndef HB_MACRO_SUPPORT
-            if( hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount ) )
+            if( hb_compFunCallCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pFunName->value.asSymbol, usCount ) )
 #endif
             {
-               if( strcmp( "AT", pName->value.asSymbol ) == 0 )
+               switch( pSelf->value.asFunCall.funcid )
                {
-                  if( usCount == 2 )
-                     hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "ASC", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount )
-                     hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "CHR", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount )
-                     hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "LEN", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount )
-                     hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "UPPER", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount )
-                     hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "EMPTY", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceEMPTY( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "INT", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 1 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceINT( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "MIN", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceMIN( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "MAX", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceMAX( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "STOD", pName->value.asSymbol ) == 0 ||
-                        strcmp( "HB_STOD", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount < 2 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
-               }
-               else if( strcmp( "HB_STOT", pName->value.asSymbol ) == 0 )
-               {
-                  hb_compExprReduceSTOT( pSelf, usCount, HB_COMP_PARAM );
-               }
-               else if( strcmp( "DTOS", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 1 )
-                     hb_compExprReduceDTOS( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "CTOD", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
-               }
-               else if( strncmp( "HB_BIT", pName->value.asSymbol, 6 ) == 0 &&
-                        usCount && pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC )
-               {
-                  HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
-                  HB_MAXINT lResult = 0;
-                  HB_BOOL fOptimize = HB_FALSE, fBool = HB_FALSE;
+                  case HB_F_AT:
+                     if( usCount == 2 )
+                        hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_ASC:
+                     if( usCount )
+                        hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_CHR:
+                     if( usCount )
+                        hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_LEN:
+                     if( usCount )
+                        hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_UPPER:
+                     if( usCount )
+                        hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
+                     break;
 
-                  if( usCount >= 2 )
-                  {
-                     if( pArg->pNext->ExprType == HB_ET_NUMERIC )
+                  case HB_F_EMPTY:
+                     if( usCount && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceEMPTY( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_INT:
+                     if( usCount == 1 && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceINT( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_MAX:
+                     if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceMAX( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_MIN:
+                     if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceMIN( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_STOD:
+                     if( usCount < 2 && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
+                     break;
+                  case HB_F_STOT:
+                        hb_compExprReduceSTOT( pSelf, usCount, HB_COMP_PARAM );
+                     break;
+                  case HB_F_DTOS:
+                     if( usCount == 1 )
+                        hb_compExprReduceDTOS( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_CTOD:
+                     if( usCount && HB_SUPPORT_HARBOUR )
+                        hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
+                     break;
+
+                  case HB_F_BITAND:
+                  case HB_F_BITOR:
+                  case HB_F_BITXOR:
+                  case HB_F_BITSET:
+                  case HB_F_BITRESET:
+                  case HB_F_BITSHIFT:
+                     if( usCount >= 2 &&
+                         pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC &&
+                         pParms->value.asList.pExprList->pNext->ExprType == HB_ET_NUMERIC )
                      {
-                        if( strcmp( "AND", pName->value.asSymbol + 6 ) == 0 )
+                        HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+                        HB_MAXINT lResult = hb_compExprAsLongNum( pArg );
+                        HB_BOOL fOptimize = HB_TRUE;
+
+                        if( pSelf->value.asFunCall.funcid == HB_F_BITAND )
                         {
-                           fOptimize = HB_TRUE;
-                           lResult = hb_compExprAsLongNum( pArg );
                            while( --usCount )
                            {
                               pArg = pArg->pNext;
@@ -1815,10 +1805,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                               lResult &= hb_compExprAsLongNum( pArg );
                            }
                         }
-                        else if( strcmp( "OR", pName->value.asSymbol + 6 ) == 0 )
+                        else if( pSelf->value.asFunCall.funcid == HB_F_BITOR )
                         {
-                           fOptimize = HB_TRUE;
-                           lResult = hb_compExprAsLongNum( pArg );
                            while( --usCount )
                            {
                               pArg = pArg->pNext;
@@ -1830,10 +1818,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                               lResult |= hb_compExprAsLongNum( pArg );
                            }
                         }
-                        else if( strcmp( "XOR", pName->value.asSymbol + 6 ) == 0 )
+                        else if( pSelf->value.asFunCall.funcid == HB_F_BITXOR )
                         {
-                           fOptimize = HB_TRUE;
-                           lResult = hb_compExprAsLongNum( pArg );
                            while( --usCount )
                            {
                               pArg = pArg->pNext;
@@ -1845,82 +1831,71 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                               lResult ^= hb_compExprAsLongNum( pArg );
                            }
                         }
-                        else if( strcmp( "TEST", pName->value.asSymbol + 6 ) == 0 )
+                        else if( pSelf->value.asFunCall.funcid == HB_F_BITSET )
                         {
                            HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
-                           lResult = ( hb_compExprAsLongNum( pArg ) &
-                                       ( ( HB_MAXINT ) 1 << lBit ) ) != 0;
-                           fOptimize = fBool = HB_TRUE;
+                           lResult |= ( HB_MAXINT ) 1 << lBit;
                         }
-                        else if( strcmp( "SET", pName->value.asSymbol + 6 ) == 0 )
+                        else if( pSelf->value.asFunCall.funcid == HB_F_BITRESET )
                         {
                            HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
-                           lResult = hb_compExprAsLongNum( pArg ) |
-                                     ( ( HB_MAXINT ) 1 << lBit );
-                           fOptimize = HB_TRUE;
+                           lResult &= ~( ( HB_MAXINT ) 1 << lBit );
                         }
-                        else if( strcmp( "RESET", pName->value.asSymbol + 6 ) == 0 )
-                        {
-                           HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
-                           lResult = hb_compExprAsLongNum( pArg ) &
-                                     ( ~ ( ( HB_MAXINT ) 1 << lBit ) );
-                           fOptimize = HB_TRUE;
-                        }
-                        else if( strcmp( "SHIFT", pName->value.asSymbol + 6 ) == 0 )
+                        else /* if( pSelf->value.asFunCall.funcid == HB_F_BITSHIFT ) */
                         {
                            HB_MAXINT lBits = hb_compExprAsLongNum( pArg->pNext );
-                           lResult = hb_compExprAsLongNum( pArg );
                            if( lBits < 0 )
                               lResult >>= -lBits;
                            else
                               lResult <<= lBits;
-                           fOptimize = HB_TRUE;
                         }
+                        if( fOptimize )
+                           hb_compExprReduceBitFunc( pSelf, lResult, HB_FALSE, HB_COMP_PARAM );
                      }
-                  }
-                  else if( strcmp( "NOT", pName->value.asSymbol + 6 ) == 0 )
-                  {
-                     lResult = ~hb_compExprAsLongNum( pArg );
-                     fOptimize = HB_TRUE;
-                  }
-                  if( fOptimize )
-                     hb_compExprReduceBitFunc( pSelf, lResult, fBool, HB_COMP_PARAM );
-               }
-#ifndef HB_MACRO_SUPPORT
-               else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
-               {
-                  HB_EXPR_PTR pArg = pParms->value.asList.pExprList, pCount = NULL;
-                  HB_BOOL     fStrict, fNoop, fPlural, fI18nFunc;
-                  HB_ULONG    ulPos = 8;
+                     break;
+                  case HB_F_BITTEST:
+                     if( usCount >= 2 &&
+                         pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC &&
+                         pParms->value.asList.pExprList->pNext->ExprType == HB_ET_NUMERIC )
+                     {
+                        HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+                        HB_MAXINT lBit = hb_compExprAsLongNum( pArg->pNext );
+                        HB_MAXINT lResult = ( hb_compExprAsLongNum( pArg ) &
+                                              ( ( HB_MAXINT ) 1 << lBit ) ) != 0;
+                        hb_compExprReduceBitFunc( pSelf, lResult, HB_TRUE, HB_COMP_PARAM );
+                     }
+                     break;
+                  case HB_F_BITNOT:
+                     if( usCount && pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC )
+                     {
+                        HB_MAXINT lResult = ~hb_compExprAsLongNum( pParms->value.asList.pExprList );
+                        hb_compExprReduceBitFunc( pSelf, lResult, HB_FALSE, HB_COMP_PARAM );
+                     }
+                     break;
 
-                  fStrict = fNoop = fPlural = fI18nFunc = HB_FALSE;
-                  if( pName->value.asSymbol[ ulPos ] == 'N' )
+#ifndef HB_MACRO_SUPPORT
+                  case HB_F_I18N_GETTEXT:
+                  case HB_F_I18N_GETTEXT_NOOP:
+                  case HB_F_I18N_GETTEXT_STRICT:
+                  case HB_F_I18N_NGETTEXT:
+                  case HB_F_I18N_NGETTEXT_NOOP:
+                  case HB_F_I18N_NGETTEXT_STRICT:
                   {
-                     fPlural = HB_TRUE;
-                     ulPos++;
-                  }
-                  if( strncmp( "GETTEXT", &pName->value.asSymbol[ ulPos ], 7 ) == 0 )
-                  {
-                     ulPos += 7;
-                     if( strncmp( "_STRICT", &pName->value.asSymbol[ ulPos ], 7 ) == 0 )
-                     {
-                        ulPos += 7;
-                        fStrict = HB_TRUE;
-                     }
-                     else if( strncmp( "_NOOP", &pName->value.asSymbol[ ulPos ], 5 ) == 0 )
-                     {
-                        ulPos += 5;
-                        fNoop = HB_TRUE;
-                     }
-                     if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
-                        fI18nFunc = HB_TRUE;
-                  }
-                  if( fI18nFunc )
-                  {
+                     HB_EXPR_PTR    pArg = pParms->value.asList.pExprList,
+                                    pCount = NULL, pBadParam = NULL;
                      int            iWarning = 0;
-                     HB_EXPR_PTR    pBadParam = NULL;
                      const char *   szExpect = NULL;
                      const char *   szContext = NULL;
+                     HB_BOOL        fStrict, fNoop, fPlural;
+                     HB_FUNC_ID     funcID = pSelf->value.asFunCall.funcid;
+
+                     fStrict = funcID == HB_F_I18N_GETTEXT_STRICT ||
+                               funcID == HB_F_I18N_GETTEXT_STRICT;
+                     fNoop   = funcID == HB_F_I18N_GETTEXT_NOOP ||
+                               funcID == HB_F_I18N_GETTEXT_NOOP;
+                     fPlural = funcID == HB_F_I18N_NGETTEXT ||
+                               funcID == HB_F_I18N_NGETTEXT_NOOP ||
+                               funcID == HB_F_I18N_NGETTEXT_STRICT;
 
                      if( fPlural && usCount )
                      {
@@ -2068,9 +2043,14 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         /* free pArg expression body but without freeing its subexpressions */
                         HB_COMP_EXPR_CLEAR( pArg );
                      }
+
+                     break;
                   }
-               }
 #endif
+                  default:
+                     /* to pacify enum warning */
+                     break;
+               }
             }
          }
          break;
