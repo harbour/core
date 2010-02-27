@@ -593,9 +593,10 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_TIME:
             {
                OCI_Date * date = OCI_GetDate( rs, ui );
-               int iHour, iMin, iSec;
-               if( date && OCI_DateGetTime( date, &iHour, &iMin, &iSec ) )
-                  pItem = hb_itemPutTDT( NULL, 0,
+               int iYear, iMonth, iDay, iHour, iMin, iSec;
+
+               if( date && OCI_DateGetDateTime( date, &iYear, &iMonth, &iDay, &iHour, &iMin, &iSec ) )
+                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( iYear, iMonth, iDay ),
                                          hb_timeEncode( iHour, iMin, iSec, 0 ) );
                break;
             }
