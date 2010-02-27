@@ -115,7 +115,8 @@
    typedef struct
    {
       HDIR            hFindFile;
-      FILEFINDBUF3    entry;
+      PFILEFINDBUF3   entry;
+      PFILEFINDBUF3   next;
       ULONG           fileTypes;
       ULONG           findSize;
       ULONG           findCount;
@@ -484,37 +485,58 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          /* tzset(); */
 
          info->hFindFile = HDIR_CREATE;
-         info->findCount = 1;
+         info->entry = (PFILEFINDBUF3) hb_xgrab( 4 * 1024 );
+         info->findCount = 256;
 
          bFound = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
                                 &info->hFindFile,
                                 ( ULONG ) hb_fsAttrToRaw( ffind->attrmask ),
-                                &info->entry,
-                                sizeof( info->entry ),
+                                info->entry,
+                                4 * 1024,
                                 &info->findCount,
                                 FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
+
+         if ( bFound )
+            info->next = info->entry;
       }
       else
-         bFound = DosFindNext( info->hFindFile,
-                               &info->entry,
-                               sizeof( info->entry ),
-                               &info->findCount ) == NO_ERROR && info->findCount > 0;
+      {
+         if ( info->findCount > 0 )
+            bFound = HB_TRUE;
+         else
+         {
+            info->findCount = 256;
 
-      /* Fill Harbour found file info */
+            bFound = DosFindNext( info->hFindFile,
+                                  info->entry,
+                                  4 * 1024,
+                                  &info->findCount ) == NO_ERROR && info->findCount > 0;
+            if ( bFound )
+               info->next = info->entry;
+         }
+      }
 
       if( bFound )
       {
-         hb_strncpy( ffind->szName, info->entry.achName, sizeof( ffind->szName ) - 1 );
-         ffind->size = info->entry.cbFile;
-         raw_attr = info->entry.attrFile;
+         hb_strncpy( ffind->szName, info->next->achName, sizeof( ffind->szName ) - 1 );
+         ffind->size = info->next->cbFile;
+         raw_attr = info->next->attrFile;
 
-         iYear  = info->entry.fdateLastWrite.year + 1980;
-         iMonth = info->entry.fdateLastWrite.month;
-         iDay   = info->entry.fdateLastWrite.day;
+         iYear  = info->next->fdateLastWrite.year + 1980;
+         iMonth = info->next->fdateLastWrite.month;
+         iDay   = info->next->fdateLastWrite.day;
 
-         iHour  = info->entry.ftimeLastWrite.hours;
-         iMin   = info->entry.ftimeLastWrite.minutes;
-         iSec   = info->entry.ftimeLastWrite.twosecs;
+         iHour  = info->next->ftimeLastWrite.hours;
+         iMin   = info->next->ftimeLastWrite.minutes;
+         iSec   = info->next->ftimeLastWrite.twosecs;
+
+         if ( info->next->oNextEntryOffset > 0 )
+         {
+            info->next = (PFILEFINDBUF3)( (char *)info->next + info->next->oNextEntryOffset );
+            info->findCount--;
+         }
+         else
+            info->findCount = 0;
       }
 
       hb_fsSetIOError( bFound, 0 );
@@ -870,6 +892,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          {
             DosFindClose( info->hFindFile );
+            hb_xfree( info->entry );
          }
 
 #elif defined( HB_OS_WIN )
