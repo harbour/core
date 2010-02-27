@@ -1380,6 +1380,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD presentSkeletons()
    METHOD handleCurrentIndent()
    METHOD handlePreviousWord( lUpdatePrevWord )
+   METHOD loadFuncHelp()
 
    ENDCLASS
 
@@ -1524,7 +1525,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE textChanged
-      hbide_dbg( "textChanged()" )
+      //hbide_dbg( "textChanged()" )
       ::oEditor:setTabImage( qEdit )
       EXIT
 
@@ -1545,7 +1546,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE cursorPositionChanged
-      hbide_dbg( "cursorPositionChanged()" )
+      //hbide_dbg( "cursorPositionChanged()" )
       ::oEditor:dispEditInfo( qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
@@ -1664,6 +1665,11 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
             ::moveLine( 1 )
             RETURN .t.
          ENDIF
+      CASE Qt_Key_ParenLeft
+         IF ! lCtrl .AND. ! lAlt
+            ::loadFuncHelp()
+         ENDIF
+         EXIT
       ENDSWITCH
 
       EXIT
@@ -1838,6 +1844,27 @@ METHOD IdeEdit:caseInvert()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:loadFuncHelp()
+   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol
+
+   qEdit := ::qEdit
+
+   qCursor    := QTextCursor():configure( qEdit:textCursor() )
+   qTextBlock := QTextBlock():configure( qCursor:block() )
+   cText      := qTextBlock:text()
+   nCol       := qCursor:columnNumber()
+   cWord      := hbide_getPreviousWord( cText, nCol )
+hbide_dbg( "IdeEdit:loadFuncHelp()", cWord )
+   IF !empty( cWord )
+      IF !empty( ::oDocViewDock:qtObject )
+         ::oDocViewDock:qtObject:jumpToFunction( cWord )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    LOCAL qCursor, qTextBlock, cText, cWord, nB, nL, qEdit, lPrevOnly, nCol, nSpace, nSpaces, nOff
 
@@ -1915,7 +1942,6 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
             ENDIF
          ENDIF
       ENDIF
-
    ENDIF
 
    RETURN .t.

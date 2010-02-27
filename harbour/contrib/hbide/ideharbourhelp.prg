@@ -192,6 +192,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD exportAsPdf()
    METHOD paintRequested( pPrinter )
    METHOD parseTextFile( cTextFile, oParent )
+   METHOD jumpToFunction( cFunction )
 
    ENDCLASS
 
@@ -546,6 +547,21 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:jumpToFunction( cFunction )
+   LOCAL n, nLen
+
+   nLen := len( cFunction )
+   cFunction := lower( cFunction )
+   IF !empty( ::aNodes )
+      IF ( n := ascan( ::aFunctions, {|e_| lower( left( e_[ 2 ], nLen ) ) == cFunction } ) ) > 0
+         ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+      ENDIF
+   ENDIF
 
    RETURN Self
 
