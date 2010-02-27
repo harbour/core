@@ -496,12 +496,12 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                                 &info->findCount,
                                 FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
 
-         if ( bFound )
+         if( bFound )
             info->next = info->entry;
       }
       else
       {
-         if ( info->findCount > 0 )
+         if( info->findCount > 0 )
             bFound = HB_TRUE;
          else
          {
@@ -511,7 +511,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                                   info->entry,
                                   4 * 1024,
                                   &info->findCount ) == NO_ERROR && info->findCount > 0;
-            if ( bFound )
+            if( bFound )
                info->next = info->entry;
          }
       }
@@ -530,9 +530,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          iMin   = info->next->ftimeLastWrite.minutes;
          iSec   = info->next->ftimeLastWrite.twosecs;
 
-         if ( info->next->oNextEntryOffset > 0 )
+         if( info->next->oNextEntryOffset > 0 )
          {
-            info->next = (PFILEFINDBUF3)( (char *)info->next + info->next->oNextEntryOffset );
+            info->next = ( PFILEFINDBUF3 )( ( char * ) info->next + info->next->oNextEntryOffset );
             info->findCount--;
          }
          else

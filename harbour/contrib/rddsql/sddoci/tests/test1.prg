@@ -27,6 +27,10 @@ PROCEDURE Main()
    ? "-4-"
    ? "DB struct:", HB_VALTOEXP( DBSTRUCT() )
    ? "-5-"
+   FOR tmp := 1 TO FCount()
+      ? FIELDNAME( tmp ), HB_FIELDTYPE( tmp )
+   NEXT
+   ? "-6-"
    INKEY( 0 )
    BROWSE()
 

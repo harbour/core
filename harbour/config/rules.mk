@@ -14,6 +14,13 @@ endif
 
 HB_CFLAGS := -DHB_LEGACY_TYPES_OFF $(HB_CFLAGS)
 
+# Handle it here, so that it can be disabled for individual libs
+ifeq ($(HB_PLATFORM),win)
+   ifneq ($(HB_BUILD_UNICODE),no)
+      HB_CFLAGS += -DUNICODE
+   endif
+endif
+
 ifeq ($(HB_DYN_COPT),)
    OBJ_DYN_POSTFIX :=
 else

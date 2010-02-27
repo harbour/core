@@ -72,12 +72,14 @@
    #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
    #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
    #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define M_HB_CHAR HB_WCHAR
 #else
    #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
    #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
    #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
    #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
    #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define M_HB_CHAR char
 #endif
 
 #if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_MIXED )
@@ -86,12 +88,14 @@
    #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
    #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
    #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define D_HB_CHAR HB_WCHAR
 #else
    #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
    #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
    #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
    #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
    #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define D_HB_CHAR char
 #endif
 
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -355,22 +359,30 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
 
-      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable ) ); */
+      HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d %d %d %d %d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable, OCI_ColumnGetScale( col ), OCI_ColumnGetPrecision( col ), OCI_ColumnGetFractionalPrecision( col ), OCI_ColumnGetLeadingPrecision( col ) ) );
 
       switch( uiDataType )
       {
-         /* TOFIX/TODO: Type mapping */
          case OCI_CDT_TEXT:
            pFieldInfo.uiType = HB_FT_STRING;
            break;
 
          case OCI_CDT_NUMERIC:
-           pFieldInfo.uiType = HB_FT_INTEGER;
+           pFieldInfo.uiType = HB_FT_LONG;
+           break;
+
+         case OCI_CDT_LONG:
+           pFieldInfo.uiType = HB_FT_VARLENGTH;
+           break;
+
+         case OCI_CDT_RAW:
+           pFieldInfo.uiType = HB_FT_BLOB;
            break;
 
          case OCI_CDT_DATETIME:
          case OCI_CDT_TIMESTAMP:
-           pFieldInfo.uiType = HB_FT_TIMESTAMP;
+         case OCI_CDT_INTERVAL:
+           pFieldInfo.uiType = HB_FT_TIME;
            break;
 
          default:
@@ -392,11 +404,12 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
-               hb_xfree( pStr );
+               pItem = hb_itemPutCLPtr( NULL, pStr, pFieldInfo.uiLen );
                break;
             }
             case HB_FT_MEMO:
+            case HB_FT_VARLENGTH:
+            case HB_FT_BLOB:
                pItem = hb_itemPutC( NULL, NULL );
                break;
 
@@ -424,10 +437,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_TIME:
-               pItem = hb_itemPutTDT( NULL, 0, 0 );
-               break;
-
-           case HB_FT_TIMESTAMP:
+            case HB_FT_TIMESTAMP:
                pItem = hb_itemPutTDT( NULL, 0, 0 );
                break;
 
@@ -499,87 +509,105 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       }
 
       pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
+
       for( ui = 1; ui <= pArea->area.uiFieldCount; ++ui )
       {
          pItem = NULL;
 
-         if( ! OCI_IsNull( rs, ui ) )
-         {
-            pField = pArea->area.lpFields + ui - 1;
+         pField = pArea->area.lpFields + ui - 1;
 
-            switch( pField->uiType )
-            {
-               case HB_FT_STRING:
+         switch( pField->uiType )
+         {
+            case HB_FT_STRING:
+               if( OCI_IsNull( rs, ui ) )
+               {
+                  char * pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pField->uiLen + 1 );
+                  memset( pStr, ' ', pField->uiLen );
+                  pStr[ pField->uiLen ] = '\0';
+
+                  pItem = hb_itemPutCLPtr( NULL, pStr, pField->uiLen );
+               }
+               else
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) );
-                  break;
+                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) ); /* TODO: Pad it to pField->uiLen size with spaces? */
                }
+               break;
 
-               case HB_FT_INTEGER:
+            case HB_FT_LONG:
+            case HB_FT_INTEGER:
+               if( pField->uiDec == 0 )
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+                  pItem = hb_itemPutNIntLen( NULL, OCI_GetInt( rs, ui ), pField->uiLen );
+#else
+                  pItem = hb_itemPutNIntLen( NULL, OCI_GetBigInt( rs, ui ), pField->uiLen );
+#endif
+               else
+                  pItem = hb_itemPutNDLen( NULL, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
+               break;
+
+            case HB_FT_VARLENGTH:
+            case HB_FT_MEMO:
+            {
+               OCI_Long * val = OCI_GetLong( rs, ui );
+               if( val )
                {
-                  pItem = hb_itemPutNLLen( NULL, OCI_GetInt( rs, ui ), pField->uiLen );
-                  break;
-               }
-/* TODO: Type conversions */
-/*
-               case HB_FT_LONG:
-                  if( pField->uiDec == 0 )
-                  {
-                     long int  val = 0;
-                     if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
-                        pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
-                  }
+                  unsigned int uiSize = OCI_LongGetSize( val );
+                  if( OCI_LongGetType( val ) == OCI_CLONG )
+                     pItem = D_HB_ITEMPUTSTRLEN( NULL, ( D_HB_CHAR * ) OCI_LongGetBuffer( val ), uiSize );
                   else
-                  {
-                     double  val = 0.0;
-                     if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-                        pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-                  }
-                  break;
-
-               case HB_FT_DOUBLE:
-               {
-                  double  val = 0.0;
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-                     pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-                  break;
+                     pItem = hb_itemPutCL( NULL, ( char * ) OCI_LongGetBuffer( val ), uiSize );
                }
+               break;
+            }
 
-               case HB_FT_LOGICAL:
-               {
-                  unsigned char  val = 0;
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BIT, &val, sizeof( val ), &iLen ) ) )
-                     pItem = hb_itemPutL( NULL, val != 0 );
-                  break;
-               }
+            case HB_FT_IMAGE:
+            case HB_FT_BLOB:
+            case HB_FT_OLE:
+            {
+               OCI_Long * val = OCI_GetLong( rs, ui );
+               if( val )
+                  pItem = hb_itemPutCL( NULL, ( char * ) OCI_LongGetBuffer( val ), OCI_LongGetSize( val ) );
+               break;
+            }
 
-               case HB_FT_DATE:
-               {
-                  DATE_STRUCT  val = {0,0,0};
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DATE, &val, sizeof( val ), &iLen ) ) )
-                     pItem = hb_itemPutD( NULL, val.year, val.month, val.day );
-                  break;
-               }
+            case HB_FT_CURRENCY:
+            case HB_FT_CURDOUBLE:
+            case HB_FT_FLOAT:
+            case HB_FT_DOUBLE:
+            {
+               pItem = hb_itemPutNDLen( NULL, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
+               break;
+            }
 
-               case HB_FT_TIME:
-               {
-                  TIME_STRUCT  val = {0,0,0};
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIME, &val, sizeof( val ), &iLen ) ) )
-                     pItem = hb_itemPutTDT( NULL, 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ) );
-                  break;
-               }
+            case HB_FT_DATE:
+            {
+               OCI_Date * date = OCI_GetDate( rs, ui );
+               int iYear, iMonth, iDay;
+               if( date && OCI_DateGetDate( date, &iYear, &iMonth, &iDay ) )
+                  pItem = hb_itemPutD( NULL, iYear, iMonth, iDay );
+               break;
+            }
 
-               case HB_FT_TIMESTAMP:
-               {
-                  TIMESTAMP_STRUCT val = { 0, 0, 0, 0, 0, 0, 0 };
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
-                     pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ),
-                                            hb_timeEncode( val.hour, val.minute, val.second, val.fraction / 1000000 ) );
-                  break;
-               }
-*/
+            case HB_FT_TIME:
+            {
+               OCI_Date * date = OCI_GetDate( rs, ui );
+               int iHour, iMin, iSec;
+               if( date && OCI_DateGetTime( date, &iHour, &iMin, &iSec ) )
+                  pItem = hb_itemPutTDT( NULL, 0,
+                                         hb_timeEncode( iHour, iMin, iSec, 0 ) );
+               break;
+            }
+
+            case HB_FT_TIMESTAMP:
+            {
+               OCI_Timestamp * ts = OCI_GetTimestamp( rs, ui );
+               int iYear, iMonth, iDay, iHour, iMin, iSec, iFSec;
+               if( ts && OCI_TimestampGetDateTime( ts, &iYear, &iMonth, &iDay, &iHour, &iMin, &iSec, &iFSec ) )
+                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( iYear, iMonth, iDay ),
+                                         hb_timeEncode( iHour, iMin, iSec, iFSec / 1000000 ) );
+               break;
             }
          }
 
