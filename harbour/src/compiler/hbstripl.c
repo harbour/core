@@ -262,7 +262,8 @@ static const PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL,                       /* HB_P_HASHGEN               */
    NULL,                       /* HB_P_SEQBLOCK              */
-   NULL                        /* HB_P_THREADSTATICS         */
+   NULL,                       /* HB_P_THREADSTATICS         */
+   NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
 void hb_compStripFuncLines( PFUNCTION pFunc )

@@ -372,7 +372,8 @@ static const PHB_LABEL_FUNC s_GenLabelFuncTable[] =
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL,                       /* HB_P_HASHGEN               */
    NULL,                       /* HB_P_SEQBLOCK              */
-   NULL                        /* HB_P_THREADSTATICS         */
+   NULL,                       /* HB_P_THREADSTATICS         */
+   NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )

@@ -923,7 +923,8 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL,                       /* HB_P_HASHGEN               */
    NULL,                       /* HB_P_SEQBLOCK              */
-   NULL                        /* HB_P_THREADSTATICS         */
+   NULL,                       /* HB_P_THREADSTATICS         */
+   NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
 void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
@@ -1548,7 +1549,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
       Special attention should be paid, if new pcode introduces branching, codeblocks,
       or are related to parameters, local variables. [Mindaugas] */
 
-   assert( HB_P_LAST_PCODE == 180 );
+   assert( HB_P_LAST_PCODE == 181 );
 
    usLocalCount = 0;
    pVar = pFunc->pLocals;

@@ -1372,10 +1372,15 @@ HB_ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
                pElem->value.asMacro.SubType != HB_ET_MACRO_REFER &&
                pElem->value.asMacro.SubType != HB_ET_MACRO_ALIASED ) ||
              ( pElem->ExprType == HB_ET_ARGLIST &&
-               pElem->value.asList.reference ) )
+               pElem->value.asList.reference ) ||
+             ( pElem->ExprType == HB_ET_FUNCALL &&
+               pElem->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+               pElem->value.asFunCall.pFunName->value.asSymbol.funcid ==
+               HB_F_ARRAYTOPARAMS ) )
          {
             /* &macro was passed
                or optional parameters list passed, f.e.: f(a,b,...)
+               or hb_arrayToParams( aParams )
                - handle it differently then in a normal statement */
             if( pElem->ExprType == HB_ET_MACRO )
                pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;

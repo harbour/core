@@ -251,7 +251,8 @@ typedef enum
    HB_P_HASHGEN,               /* 177 instructs the virtual machine to build a hash and load element from the stack */
    HB_P_SEQBLOCK,              /* 178 set BEQIN SEQUENCE WITH block */
    HB_P_THREADSTATICS,         /* 179 mark thread static variables */
-   HB_P_LAST_PCODE             /* 180 this defines the number of defined pcodes */
+   HB_P_PUSHAPARAMS,           /* 180 push array items on HVM stack */
+   HB_P_LAST_PCODE             /* 181 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

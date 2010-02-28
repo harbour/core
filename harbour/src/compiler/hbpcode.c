@@ -299,7 +299,8 @@ const HB_BYTE hb_comp_pcode_len[] = {
    3,        /* HB_P_PUSHFUNCSYM           */
    3,        /* HB_P_HASHGEN               */
    1,        /* HB_P_SEQBLOCK              */
-   0         /* HB_P_THREADSTATICS         */
+   0,        /* HB_P_THREADSTATICS         */
+   1         /* HB_P_PUSHAPARAMS           */
 };
 
 /*
@@ -490,7 +491,8 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL,                       /* HB_P_HASHGEN               */
    NULL,                       /* HB_P_SEQBLOCK              */
-   hb_p_threadstatics          /* HB_P_THREADSTATICS         */
+   hb_p_threadstatics,         /* HB_P_THREADSTATICS         */
+   NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
 HB_LONG hb_compPCodeSize( PFUNCTION pFunc, HB_ULONG ulOffset )

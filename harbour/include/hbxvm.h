@@ -118,6 +118,7 @@ extern HB_EXPORT void    hb_xvmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB p
 extern HB_EXPORT void    hb_xvmPushBlockLarge( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void    hb_xvmPushSelf( void );
 extern HB_EXPORT void    hb_xvmPushVParams( void );
+extern HB_EXPORT void    hb_xvmPushAParams( void );
 extern HB_EXPORT void    hb_xvmPushLocal( HB_SHORT iLocal );          /* pushes the containts of a local onto the stack */
 extern HB_EXPORT void    hb_xvmPushLocalByRef( HB_SHORT iLocal );     /* pushes a local by refrence onto the stack */
 extern HB_EXPORT void    hb_xvmPopLocal( HB_SHORT iLocal );           /* pops the stack latest value onto a local */

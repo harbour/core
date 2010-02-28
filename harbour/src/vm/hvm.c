@@ -189,7 +189,8 @@ static void    hb_vmPushStatic( HB_USHORT uiStatic );     /* pushes the containt
 static void    hb_vmPushStaticByRef( HB_USHORT uiStatic ); /* pushes a static by refrence onto the stack */
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
 static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object variable */
-static void    hb_vmPushVParams( void );        /* pusges variable parameters */
+static void    hb_vmPushVParams( void );        /* pushes variable parameters */
+static void    hb_vmPushAParams( void );        /* pushes array items */
 static void    hb_vmPushUnRef( void );          /* push the unreferenced latest value on the stack */
 static void    hb_vmDuplicate( void );          /* duplicates the latest value on the stack */
 static void    hb_vmDuplUnRef( void );          /* duplicates the latest value on the stack and unref the source one */
@@ -2336,6 +2337,11 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHVPARAMS:
             hb_vmPushVParams();
+            pCode++;
+            break;
+
+         case HB_P_PUSHAPARAMS:
+            hb_vmPushAParams();
             pCode++;
             break;
 
@@ -5436,7 +5442,11 @@ static void hb_vmMacroPushIndex( void )
       /* First index is still on stack.*/
       do
       {
-         hb_vmArrayPush();
+         PHB_ITEM pArray = hb_stackItemFromTop( -2 );
+         if( HB_IS_BYREF( pArray ) )
+            hb_vmArrayPushRef();
+         else
+            hb_vmArrayPush();
          /* RT error? */
          if( hb_stackGetActionRequest() != 0 )
             break;
@@ -5558,6 +5568,29 @@ static void hb_vmPushVParams( void )
       i++;
    }
    hb_vmPushInteger( i );
+}
+
+static void hb_vmPushAParams( void )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pArray, pCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushAParams()"));
+
+   pArray = hb_stackItemFromTop( -1 );
+   if( HB_IS_ARRAY( pArray ) )
+   {
+      HB_SIZE ulLen = pArray->item.asArray.value->ulLen, ul;
+
+      for( ul = 1; ul < ulLen; ++ul )
+         hb_vmPush( pArray->item.asArray.value->pItems + ul );
+      hb_vmPush( pArray->item.asArray.value->pItems );
+      pCount = hb_stackItemFromTop( -1 );
+      hb_itemMove( pArray, pCount );
+      hb_itemPutNL( pCount, ulLen );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pArray );
 }
 
 /* ------------------------------- */
@@ -11179,6 +11212,14 @@ void hb_xvmPushVParams( void )
 
    hb_vmPushVParams();
 }
+
+void hb_xvmPushAParams( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushAParams()"));
+
+   hb_vmPushAParams();
+}
+
 void hb_xvmWithObjectStart( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectStart()"));
@@ -11557,6 +11598,11 @@ HB_FUNC( __QUITCANCEL )
          }
       }
    }
+}
+
+HB_FUNC( HB_ARRAYTOPARAMS )
+{
+   hb_retni( 0 );
 }
 
 HB_FUNC( ERRORLEVEL )

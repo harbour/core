@@ -79,9 +79,9 @@ static HB_EXPR_FUNC( hb_compExprUseLogical );
 static HB_EXPR_FUNC( hb_compExprUseSelf );
 static HB_EXPR_FUNC( hb_compExprUseArray );
 static HB_EXPR_FUNC( hb_compExprUseHash );
+static HB_EXPR_FUNC( hb_compExprUseFunRef );
 static HB_EXPR_FUNC( hb_compExprUseVarRef );
 static HB_EXPR_FUNC( hb_compExprUseRef );
-static HB_EXPR_FUNC( hb_compExprUseFunRef );
 static HB_EXPR_FUNC( hb_compExprUseIIF );
 static HB_EXPR_FUNC( hb_compExprUseList );
 static HB_EXPR_FUNC( hb_compExprUseArgList );
@@ -1226,7 +1226,11 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
                if( ( pExpr->ExprType == HB_ET_MACRO &&
                      ( pExpr->value.asMacro.SubType & HB_ET_MACRO_LIST ) ) ||
                    ( pExpr->ExprType == HB_ET_ARGLIST &&
-                     pExpr->value.asList.reference ) )
+                     pExpr->value.asList.reference ) ||
+                   ( pExpr->ExprType == HB_ET_FUNCALL &&
+                     pExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+                     pExpr->value.asFunCall.pFunName->value.asSymbol.funcid ==
+                     HB_F_ARRAYTOPARAMS ) )
                {
                   if( usItems )
                   {
@@ -1399,7 +1403,12 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             fMacroIndex = pSelf->value.asList.pIndex->value.asList.reference;
          }
-
+         else if( pSelf->value.asList.pIndex->ExprType == HB_ET_FUNCALL &&
+                  pSelf->value.asList.pIndex->value.asFunCall.pFunName->
+                  value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
+         {
+            fMacroIndex = HB_TRUE;
+         }
          if( pSelf->value.asList.reference && HB_SUPPORT_ARRSTR )
          {
             HB_EXPR_PTR pList = pSelf->value.asList.pExprList;
@@ -1470,6 +1479,12 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          else if( pSelf->value.asList.pIndex->ExprType == HB_ET_ARGLIST )
          {
             fMacroIndex = pSelf->value.asList.pIndex->value.asList.reference;
+         }
+         else if( pSelf->value.asList.pIndex->ExprType == HB_ET_FUNCALL &&
+                  pSelf->value.asList.pIndex->value.asFunCall.pFunName->
+                  value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
+         {
+            fMacroIndex = HB_TRUE;
          }
          /* to manage strings as bytes arrays, they must be pushed by reference */
          /* arrays also are passed by reference */
@@ -2070,6 +2085,17 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
+            if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid ==
+                HB_F_ARRAYTOPARAMS )
+            {
+               usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
+               if( usCount == 1 && pSelf->value.asFunCall.pParms->ExprType != HB_ET_MACROARGLIST )
+               {
+                  HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  HB_GEN_FUNC1( PCode1, HB_P_PUSHAPARAMS );
+                  break;
+               }
+            }
             HB_GEN_FUNC2( PushFunCall, pSelf->value.asFunCall.pFunName->value.asSymbol.name,
                                        pSelf->value.asFunCall.pFunName->value.asSymbol.flags );
          }
