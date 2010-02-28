@@ -144,6 +144,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD convertQuotes()
    METHOD convertDQuotes()
    METHOD toggleSelectionMode()
+   METHOD toggleLineNumbers()
 
    ENDCLASS
 
@@ -585,6 +586,17 @@ METHOD IdeEditsManager:switchToReadOnly()
       ::qCurEdit:setReadOnly( !( ::qCurEdit:isReadOnly() ) )
       ::oCurEditor:setTabImage()
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleLineNumbers()
+   LOCAL oEdit
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleLineNumbers()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1355,6 +1367,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   lUpdatePrevWord                         INIT  .f.
    DATA   lCopyWhenDblClicked                     INIT  .f.
    DATA   cCurLineText                            INIT  ""
+   DATA   lLineNumbersVisible                     INIT  .t.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1381,6 +1394,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD handleCurrentIndent()
    METHOD handlePreviousWord( lUpdatePrevWord )
    METHOD loadFuncHelp()
+   METHOD toggleLineNumbers()
 
    ENDCLASS
 
@@ -1724,6 +1738,15 @@ METHOD IdeEdit:presentSkeletons()
          ENDIF
       ENDIF
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleLineNumbers()
+
+   ::lLineNumbersVisible := ! ::lLineNumbersVisible
+   ::qEdit:numberBlockVisible( ::lLineNumbersVisible )
 
    RETURN Self
 

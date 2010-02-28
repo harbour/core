@@ -305,7 +305,7 @@ METHOD HbIde:create( cProjIni )
    #if 1
    LOCAL qPixmap, qSplash, nStart
 
-   qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "harbour_splash.png" )
+   qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
    qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )

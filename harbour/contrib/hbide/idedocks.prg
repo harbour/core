@@ -304,7 +304,7 @@ METHOD IdeDocks:buildDialog()
    LOCAL s, aSize
 
    ::oIde:oDlg := XbpDialog():new()
-   ::oDlg:icon := ::resPath + "hbide.png" // "vr.png"
+   ::oDlg:icon := hbide_image( "hbide" )
    ::oDlg:title := "Harbour IDE"
    ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    ::oDlg:create( , , , , , .f. )
@@ -533,19 +533,25 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
-   aadd( aBtns, { "movelineup"   , "Move Current Line Up"  , {|| ::oEM:moveLine( -1 )  } } )
-   aadd( aBtns, { "movelinedown" , "Move Current Line Down", {|| ::oEM:moveLine(  1 )  } } )
-   aadd( aBtns, { "deleteline"   , "Delete Current Line"   , {|| ::oEM:deleteLine()    } } )
-   aadd( aBtns, { "duplicateline", "Duplicate Current Line", {|| ::oEM:duplicateLine() } } )
+   aadd( aBtns, { "movelineup"   , "Move Current Line Up"   , {|| ::oEM:moveLine( -1 )  } } )
+   aadd( aBtns, { "movelinedown" , "Move Current Line Down" , {|| ::oEM:moveLine(  1 )  } } )
+   aadd( aBtns, { "deleteline"   , "Delete Current Line"    , {|| ::oEM:deleteLine()    } } )
+   aadd( aBtns, { "duplicateline", "Duplicate Current Line" , {|| ::oEM:duplicateLine() } } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers" , {|| ::oEM:toggleLineNumbers()  } } )
    FOR EACH a_ IN aBtns
-      qTBtn := QToolButton():new()
-      qTBtn:setTooltip( a_[ 2 ] )
-      qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
-      qTBtn:setMaximumWidth( 20 )
-      qTBtn:setMaximumHeight( 20 )
-      ::connect( qTBtn, "clicked()", a_[ 3 ] )
-      ::qTBarLines:addWidget( qTBtn )
-      aadd( ::aBtnLines, qTBtn )
+      IF empty( a_ )
+         ::qTBarLines:addSeparator()
+      ELSE
+         qTBtn := QToolButton():new()
+         qTBtn:setTooltip( a_[ 2 ] )
+         qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+         qTBtn:setMaximumWidth( 20 )
+         qTBtn:setMaximumHeight( 20 )
+         ::connect( qTBtn, "clicked()", a_[ 3 ] )
+         ::qTBarLines:addWidget( qTBtn )
+         aadd( ::aBtnLines, qTBtn )
+      ENDIF
    NEXT
    ::qTBarLines:addSeparator()
 
@@ -562,7 +568,6 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, {} )
    aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
    aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
-   aadd( aBtns, {} )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()
@@ -577,6 +582,7 @@ METHOD IdeDocks:buildToolBarPanels()
          aadd( ::aBtnLines, qTBtn )
       ENDIF
    NEXT
+   ::qTBarLines:addSeparator()
 
    /* Right-hand docks toolbar */
    ::oIde:qTBarDocks := QToolBar():new()

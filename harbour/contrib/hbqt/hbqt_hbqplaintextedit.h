@@ -100,8 +100,6 @@ public:
    void           nextBookmark( int block );
    void           prevBookmark( int block );
    void           gotoBookmark( int block );
-   void           numberBlockVisible( bool b )   { numberBlock = b; }
-   bool           numberBlockVisible()           { return numberBlock; }
    void           highlightCurrentLine( bool b ) { highlightCurLine = b; }
    bool           highlightCurrentLine()         { return highlightCurLine; }
    void           hbSetEventBlock( PHB_ITEM pBlock );
@@ -153,6 +151,8 @@ public slots:
    void           insertTab( int mode );
    void           highlightSelectedColumns( bool yes );
    QString        getSelectedText();
+   void           numberBlockVisible( bool b );
+   bool           numberBlockVisible();
 
 private slots:
    void           slotCursorPositionChanged();

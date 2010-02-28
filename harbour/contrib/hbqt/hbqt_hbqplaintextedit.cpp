@@ -333,6 +333,27 @@ void HBQPlainTextEdit::prevBookmark( int block )
    }
 }
 
+void HBQPlainTextEdit::numberBlockVisible( bool b )
+{
+   numberBlock = b;
+   if( b )
+   {
+      lineNumberArea->show();
+      updateLineNumberAreaWidth( lineNumberAreaWidth() );
+   }
+   else
+   {
+      lineNumberArea->hide();
+      updateLineNumberAreaWidth( 0 );
+   }
+   update();
+}
+
+bool HBQPlainTextEdit::numberBlockVisible()
+{
+   return numberBlock;
+}
+
 int HBQPlainTextEdit::lineNumberAreaWidth()
 {
    int digits = 1;
@@ -348,7 +369,14 @@ int HBQPlainTextEdit::lineNumberAreaWidth()
 
 void HBQPlainTextEdit::updateLineNumberAreaWidth( int )
 {
-   setViewportMargins( lineNumberAreaWidth(), 0, 0, 0 );
+   if( numberBlock )
+   {
+      setViewportMargins( lineNumberAreaWidth(), 0, 0, 0 );
+   }
+   else
+   {
+      setViewportMargins( 0, 0, 0, 0 );
+   }
 }
 
 void HBQPlainTextEdit::updateLineNumberArea( const QRect &rect, int dy )
