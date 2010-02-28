@@ -261,8 +261,10 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
    if( sqlite3_step( st ) != SQLITE_ROW )
    {
+      szError = sqlite3GetError( pArea->pConnection, &errCode );
+      hb_errRT_SQ3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       sqlite3_finalize( st );
-      hb_errRT_SQ3DD( EG_OPEN, ESQLDD_INVALIDQUERY, "No rows", pArea->szQuery, errCode );
+      hb_xfree( szError );
       return HB_FAILURE;
    }
 

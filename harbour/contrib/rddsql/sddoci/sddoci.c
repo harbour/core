@@ -518,8 +518,6 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          PHB_ITEM pItem = NULL;
          LPFIELD pField = pArea->area.lpFields + ui - 1;
 
-         pItem = NULL;
-
          switch( pField->uiType )
          {
             case HB_FT_STRING:
