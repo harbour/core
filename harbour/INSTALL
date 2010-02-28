@@ -1339,6 +1339,7 @@ HARBOUR
          http://dev.mysql.com/downloads/
       HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
          http://orclib.sourceforge.net/
+         http://www.oracle.com/technology/tech/oci/instantclient/index.html
       HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
          http://www.openssl.org/
       HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]

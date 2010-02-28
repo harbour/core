@@ -609,7 +609,8 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
    if ( SUPER_CLOSE( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
-   pArea->pSDD->Close( pArea );
+   if ( pArea->pSDD )
+      pArea->pSDD->Close( pArea );
 
    if ( pArea->pRow )
    {
