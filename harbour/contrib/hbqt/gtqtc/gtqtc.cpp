@@ -1675,7 +1675,6 @@ void DrawingArea::resizeEvent( QResizeEvent *event )
 
             QPainter painter( this );
             _qFont = QFont( _qFont, painter.device() );
-            _qFont.setPointSize( 0 );
             _qFont.setPixelSize( iFH-3 );  /* 3 in cases this is not the exact value but still... */
             _qFont.setStretch( fac );
             QFontMetrics fm( _qFont );
