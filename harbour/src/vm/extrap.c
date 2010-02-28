@@ -449,7 +449,7 @@ static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       pExcep
       fprintf( stderr, HB_I_("\nException %lx at address %p \n"), pExceptionInfo->ExceptionNum, pExceptionInfo->ExceptionAddress );
 
       fprintf( stderr,
-         "\n\n"
+         "\n"
          "    Exception Code:%08X\n"
          "    Exception Address:%08X\n"
          "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"

@@ -369,6 +369,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
          case OCI_CDT_NUMERIC:
            pFieldInfo.uiType = HB_FT_LONG;
+           pFieldInfo.uiLen = ( HB_USHORT ) OCI_ColumnGetPrecision( col );
+           pFieldInfo.uiDec = ( HB_USHORT ) OCI_ColumnGetScale( col );
            break;
 
          case OCI_CDT_LONG:
