@@ -77,7 +77,7 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
-static SDDNODE sq3dd =
+static SDDNODE sqlt3dd =
 {
    NULL,
    "SQLITE3",
@@ -94,7 +94,7 @@ static SDDNODE sq3dd =
 
 HB_FUNC_EXTERN( SQLBASE );
 
-static void hb_sq3dd_init( void * cargo )
+static void hb_sqlt3dd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -102,14 +102,14 @@ static void hb_sq3dd_init( void * cargo )
    sqlite3_initialize();
 #endif
 
-   if( ! hb_sddRegister( &sq3dd ) )
+   if( ! hb_sddRegister( &sqlt3dd ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
       HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
    }
 }
 
-static void hb_sq3dd_exit( void * cargo )
+static void hb_sqlt3dd_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -120,27 +120,27 @@ static void hb_sq3dd_exit( void * cargo )
 
 HB_FUNC( SDDSQLITE3 ) {;}
 
-HB_INIT_SYMBOLS_BEGIN( sq3dd__InitSymbols )
+HB_INIT_SYMBOLS_BEGIN( sqlt3dd__InitSymbols )
 { "SDDSQLITE3", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDSQLITE3 )}, NULL },
-HB_INIT_SYMBOLS_END( sq3dd__InitSymbols )
+HB_INIT_SYMBOLS_END( sqlt3dd__InitSymbols )
 
-HB_CALL_ON_STARTUP_BEGIN( _hb_sq3dd_init_ )
-   hb_vmAtInit( hb_sq3dd_init, NULL );
-   hb_vmAtExit( hb_sq3dd_exit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_sq3dd_init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_sqlt3dd_init_ )
+   hb_vmAtInit( hb_sqlt3dd_init, NULL );
+   hb_vmAtExit( hb_sqlt3dd_exit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup sq3dd__InitSymbols
-   #pragma startup _hb_sq3dd_init_
+   #pragma startup sqlt3dd__InitSymbols
+   #pragma startup _hb_sqlt3dd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sq3dd__InitSymbols ) \
-                              HB_DATASEG_FUNC( _hb_sq3dd_init_ )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sqlt3dd__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
 
 /*=====================================================================================*/
-static HB_USHORT hb_errRT_SQ3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
+static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
    PHB_ITEM pError;
@@ -214,7 +214,7 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
    {
       hb_strfree( hStatement );
       sqlite3GetError( pConnection, &errCode );
-      hb_errRT_SQ3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );
+      hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );
       hb_xfree( pszErrMsg );
       return HB_FAILURE;
    }
@@ -248,7 +248,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
       szError = sqlite3GetError( pArea->pConnection, &errCode );
-      hb_errRT_SQ3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
+      hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       sqlite3_finalize( st );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -262,7 +262,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    if( sqlite3_step( st ) != SQLITE_ROW )
    {
       szError = sqlite3GetError( pArea->pConnection, &errCode );
-      hb_errRT_SQ3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
+      hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       sqlite3_finalize( st );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -369,7 +369,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    {
       hb_itemRelease( pItemEof );
       sqlite3_finalize( st );
-      hb_errRT_SQ3DD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
+      hb_errRT_SQLT3DD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
       return HB_FAILURE;
    }
 

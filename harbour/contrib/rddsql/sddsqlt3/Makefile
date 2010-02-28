@@ -6,10 +6,10 @@ ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := sddsq3
+LIBNAME := sddsqlt3
 
 C_SOURCES := \
-   sddsq3.c \
+   sddsqlt3.c \
 
 _DET_DSP_NAME := sqlite3
 _DET_VAR_INC_ := HB_INC_SQLITE3
