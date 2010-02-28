@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+libs=sddsq3
+libs=sqlite3
+
+libs=../rddsql.hbc

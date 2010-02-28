@@ -354,6 +354,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       HB_SYMBOL_UNUSED( bNullable );
 
       szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+      hb_itemRelease( pName );
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
@@ -364,36 +365,36 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       switch( uiDataType )
       {
          case OCI_CDT_TEXT:
-           pFieldInfo.uiType = HB_FT_STRING;
-           break;
+            pFieldInfo.uiType = HB_FT_STRING;
+            break;
 
          case OCI_CDT_NUMERIC:
-           pFieldInfo.uiType = HB_FT_LONG;
-           pFieldInfo.uiLen = ( HB_USHORT ) OCI_ColumnGetPrecision( col );
-           pFieldInfo.uiDec = ( HB_USHORT ) OCI_ColumnGetScale( col );
-           break;
+            pFieldInfo.uiType = HB_FT_LONG;
+            pFieldInfo.uiLen = ( HB_USHORT ) OCI_ColumnGetPrecision( col );
+            pFieldInfo.uiDec = ( HB_USHORT ) OCI_ColumnGetScale( col );
+            break;
 
          case OCI_CDT_LONG:
-           pFieldInfo.uiType = HB_FT_VARLENGTH;
-           break;
+            pFieldInfo.uiType = HB_FT_VARLENGTH;
+            break;
 
          case OCI_CDT_RAW:
-           pFieldInfo.uiType = HB_FT_BLOB;
-           break;
+            pFieldInfo.uiType = HB_FT_BLOB;
+            break;
 
          case OCI_CDT_DATETIME:
          case OCI_CDT_TIMESTAMP:
          case OCI_CDT_INTERVAL:
-           pFieldInfo.uiType = HB_FT_TIME;
-           break;
+            pFieldInfo.uiType = HB_FT_TIME;
+            break;
 
          default:
-           /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", uiDataType) ); */
-           bError = HB_TRUE;
-           errCode = ( HB_ERRCODE ) uiDataType;
-           pFieldInfo.uiType = 0;
-           pFieldInfo.uiType = HB_FT_STRING;
-           break;
+            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", uiDataType) ); */
+            bError = HB_TRUE;
+            errCode = ( HB_ERRCODE ) uiDataType;
+            pFieldInfo.uiType = 0;
+            pFieldInfo.uiType = HB_FT_STRING;
+            break;
       }
 
       if( ! bError )
@@ -498,12 +499,12 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    OCI_Statement * st = ( OCI_Statement * ) pArea->pStmt;
    OCI_Resultset * rs = OCI_GetResultset( st );
-   PHB_ITEM     pArray, pItem;
-   LPFIELD      pField;
-   HB_USHORT    ui;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
+      PHB_ITEM pArray;
+      HB_USHORT ui;
+
       if( ! OCI_FetchNext( rs ) )
       {
          pArea->fFetched = HB_TRUE;
@@ -514,9 +515,10 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
       for( ui = 1; ui <= pArea->area.uiFieldCount; ++ui )
       {
-         pItem = NULL;
+         PHB_ITEM pItem = NULL;
+         LPFIELD pField = pArea->area.lpFields + ui - 1;
 
-         pField = pArea->area.lpFields + ui - 1;
+         pItem = NULL;
 
          switch( pField->uiType )
          {

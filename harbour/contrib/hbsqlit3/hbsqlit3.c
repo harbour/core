@@ -60,6 +60,8 @@
 #include "hbapifs.h"
 #include "hbstack.h"
 
+/* TOFIX: Convert strings to/from UTF8 in SQLITE3 interface. */
+
 /* TOFIX: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER <= 3004001
 #define sqlite3_int64   HB_LONGLONG

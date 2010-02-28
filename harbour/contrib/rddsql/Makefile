@@ -19,6 +19,7 @@ DIRS := \
    sddfb \
    sddoci \
    sddodbc \
+   sddsq3 \
 
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk
