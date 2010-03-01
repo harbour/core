@@ -194,7 +194,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet = hb_strdup( "HY000 Unable to get error message" );
+      szRet = hb_strdup( "Unable to get error message" );
       iNativeErr = 9999;
    }
 
@@ -350,7 +350,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
       szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
       hb_itemRelease( pName );
-      szOurName[ MAX_FIELD_NAME ] = '\0';
+      if( strlen( szOurName ) > MAX_FIELD_NAME )
+         szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       uiDataType = OCI_ColumnGetType( col );

@@ -167,7 +167,7 @@ static char * sqlite3GetError( SQLDDCONNECTION * pConnection, HB_ERRCODE * pErrC
       iNativeErr = sqlite3_errcode( ( sqlite3 * ) pConnection->hConnection );
    }
    else
-      szRet = hb_strdup( "HY000 Unable to get error message" );
+      szRet = hb_strdup( "Unable to get error message" );
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
@@ -291,7 +291,8 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
       szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
       hb_itemRelease( pName );
-      szOurName[ MAX_FIELD_NAME ] = '\0';
+      if( strlen( szOurName ) > MAX_FIELD_NAME )
+         szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       iDataType = sqlite3_column_type( st, uiIndex );

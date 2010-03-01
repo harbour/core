@@ -382,7 +382,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
       szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
       hb_itemRelease( pName );
-      szOurName[ MAX_FIELD_NAME ] = '\0';
+      if( strlen( szOurName ) > MAX_FIELD_NAME )
+         szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
@@ -578,14 +579,30 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          {
             case HB_FT_STRING:
             {
-               /* TODO: it is not clear for me, how can I get string length */
-               /* TODO: UNICODE support */
+               SQLSMALLINT iTargetType;
+               SQLPOINTER * val;
 
-               char *  val = ( char * ) hb_xgrab( 1024 );
-               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_CHAR, ( SQLCHAR * ) val, 1024, &iLen ) ) )
+               /* TODO: it is not clear for me, how can I get string length */
+
+               iLen = 1024;
+
+#if defined( UNICODE ) && 0
+               iTargetType = SQL_C_WCHAR;
+               iLen *= 2;
+#else
+               iTargetType = SQL_C_CHAR;
+#endif
+
+               val = ( SQLPOINTER * ) hb_xgrab( iLen );
+               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen, &iLen ) ) )
                {
                   if( iLen > 0 )
-                     pItem = hb_itemPutCL( NULL, val, ( HB_SIZE ) iLen );
+                  {
+#if defined( UNICODE )
+                     iLen /= 2;
+#endif
+                     pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                  }
                }
                hb_xfree( val );
                break;
@@ -593,7 +610,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_INTEGER:
             {
-               long int  val = 0;
+               long int val = 0;
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
@@ -604,7 +621,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_LONG:
                if( pField->uiDec == 0 )
                {
-                  long int  val = 0;
+                  long int val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
                   {
                      pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
@@ -612,7 +629,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                }
                else
                {
-                  double  val = 0.0;
+                  double val = 0.0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
                   {
                      pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
@@ -622,7 +639,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_DOUBLE:
             {
-               double  val = 0.0;
+               double val = 0.0;
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
@@ -632,7 +649,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_LOGICAL:
             {
-               unsigned char  val = 0;
+               unsigned char val = 0;
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BIT, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutL( NULL, val != 0 );
@@ -642,7 +659,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_DATE:
             {
-               DATE_STRUCT  val = {0,0,0};
+               DATE_STRUCT val = { 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DATE, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutD( NULL, val.year, val.month, val.day );
@@ -652,7 +669,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_TIME:
             {
-               TIME_STRUCT  val = {0,0,0};
+               TIME_STRUCT val = { 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIME, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutTDT( NULL, 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ) );
@@ -662,7 +679,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_TIMESTAMP:
             {
-               TIMESTAMP_STRUCT  val = {0,0,0,0,0,0,0};
+               TIMESTAMP_STRUCT val = { 0, 0, 0, 0, 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ),

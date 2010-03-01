@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include "simpleio.ch"
 #include "hbrddsql.ch"
 
 REQUEST SDDODBC, SQLMIX
@@ -20,4 +21,4 @@ PROC main()
    DBGOTOP()
    BROWSE()
    DBCLOSEAREA()
-RETURN   
+RETURN

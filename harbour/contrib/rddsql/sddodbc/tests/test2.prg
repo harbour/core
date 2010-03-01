@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include "simpleio.ch"
 #include "hbrddsql.ch"
 
 REQUEST SQLMIX, SDDODBC
@@ -32,4 +33,4 @@ LOCAL nConnection, nI, aI
    ENDDO
    ? "LASTREC:", LASTREC()
    DBCLOSEALL()
-RETURN   
+RETURN
