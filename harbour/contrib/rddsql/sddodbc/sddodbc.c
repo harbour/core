@@ -307,11 +307,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 {
    void *       hQuery;
    SQLHSTMT     hStmt;
-   SQLSMALLINT  iNameLen, iDataType, iDec, iNull;
-   SQLTCHAR     cName[ 256 ];
-   SQLULEN      uiSize;
+   SQLSMALLINT  iNameLen;
    PHB_ITEM     pItemEof, pItem;
-   DBFIELDINFO  pFieldInfo;
    HB_BOOL      bError;
    HB_USHORT    uiFields, uiIndex;
    HB_ERRCODE   errCode;
@@ -363,6 +360,15 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for ( uiIndex = 0; uiIndex < uiFields; uiIndex++ )
    {
+      DBFIELDINFO pFieldInfo;
+
+      PHB_ITEM pName;
+      char * szOurName;
+
+      SQLTCHAR cName[ 256 ];
+      SQLULEN uiSize;
+      SQLSMALLINT iDataType, iDec, iNull;
+
       if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR * ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
       {
          hb_itemRelease( pItemEof );
@@ -373,9 +379,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
-      cName[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( ( char * ) cName, MAX_FIELD_NAME + 1 );
-      pFieldInfo.atomName = ( char * ) cName;
+      pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
+      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+      hb_itemRelease( pName );
+      szOurName[ MAX_FIELD_NAME ] = '\0';
+      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;

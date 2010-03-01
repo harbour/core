@@ -66,7 +66,7 @@
  * HB_PCODE_VER_MIN define minimum supported PCODE by HVM
  */
 
-#define HB_PCODE_VER          0x0002
+#define HB_PCODE_VER          0x0003
 #define HB_PCODE_VER_MIN      0x0002
 
 /* ***********************************************************************

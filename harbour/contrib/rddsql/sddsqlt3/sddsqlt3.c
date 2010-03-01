@@ -279,16 +279,19 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
+      DBFIELDINFO pFieldInfo;
+
       PHB_ITEM pName;
+      char * szOurName;
+
       int iDataType;
       int iSize;
       int iDec;
-      char * szOurName;
-      DBFIELDINFO pFieldInfo;
 
       pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
       szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
       hb_itemRelease( pName );
+      szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       iDataType = sqlite3_column_type( st, uiIndex );

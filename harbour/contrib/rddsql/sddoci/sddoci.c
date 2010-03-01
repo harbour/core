@@ -325,15 +325,17 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
-      OCI_Column * col = OCI_GetColumn( rs, uiIndex + 1 );
+      DBFIELDINFO pFieldInfo;
 
       PHB_ITEM pName;
+      char * szOurName;
+
+      OCI_Column * col = OCI_GetColumn( rs, uiIndex + 1 );
+
       unsigned int uiDataType;
       unsigned int uiSize;
       int iDec;
       HB_BOOL bNullable;
-      char * szOurName;
-      DBFIELDINFO pFieldInfo;
 
       if( ! col )
       {
@@ -346,16 +348,17 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       }
 
       pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
+      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+      hb_itemRelease( pName );
+      szOurName[ MAX_FIELD_NAME ] = '\0';
+      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
+
       uiDataType = OCI_ColumnGetType( col );
       uiSize = OCI_ColumnGetSize( col );
       iDec = OCI_ColumnGetPrecision( col );
       bNullable = ( HB_BOOL ) OCI_ColumnGetNullable( col );
 
       HB_SYMBOL_UNUSED( bNullable );
-
-      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
-      hb_itemRelease( pName );
-      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
