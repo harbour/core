@@ -580,31 +580,31 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_STRING:
             {
                SQLSMALLINT iTargetType;
-               SQLPOINTER * val;
+               char buffer[ 2 ];
 
-               /* TODO: it is not clear for me, how can I get string length */
+               iLen = 0;
 
-               iLen = 1024;
-
-#if defined( UNICODE ) && 0
+#if defined( UNICODE )
                iTargetType = SQL_C_WCHAR;
-               iLen *= 2;
 #else
                iTargetType = SQL_C_CHAR;
 #endif
 
-               val = ( SQLPOINTER * ) hb_xgrab( iLen );
-               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen, &iLen ) ) )
+               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, &buffer, 0, &iLen ) ) )
                {
                   if( iLen > 0 )
                   {
+                     SQLPOINTER * val = ( SQLPOINTER * ) hb_xgrab( iLen );
+                     if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen, &iLen ) ) )
+                     {
 #if defined( UNICODE )
-                     iLen /= 2;
+                        iLen /= 2;
 #endif
-                     pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                        pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                     }
+                     hb_xfree( val );
                   }
                }
-               hb_xfree( val );
                break;
             }
 
