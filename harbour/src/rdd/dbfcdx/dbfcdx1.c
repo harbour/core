@@ -5201,6 +5201,16 @@ static HB_BOOL hb_cdxCurKeyRefresh( CDXAREAP pArea, LPCDXTAG pTag )
             if( memcmp( buf, pKey->val, pKey->len ) != 0 )
                hb_cdxTagKeyFind( pTag, pKey );
          }
+         if( pTag->CurKey->rec != pArea->dbfarea.ulRecNo && pTag->Template )
+         {
+            hb_cdxTagGoTop( pTag );
+            while( !pTag->TagBOF && !pTag->TagEOF && hb_cdxBottomScope( pTag ) )
+            {
+               if( pTag->CurKey->rec == pArea->dbfarea.ulRecNo )
+                  break;
+               hb_cdxTagSkipNext( pTag );
+            }
+         }
       }
       hb_cdxKeyFree( pKey );
       return ( pTag->CurKey->rec != 0 && pTag->CurKey->rec == pArea->dbfarea.ulRecNo );

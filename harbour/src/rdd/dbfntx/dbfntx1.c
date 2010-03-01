@@ -3195,63 +3195,6 @@ static HB_BOOL hb_ntxTagKeyDel( LPTAGINFO pTag, LPKEYINFO pKey )
 }
 
 /*
- * refresh CurKey value and set proper path from RootPage to LeafPage
- */
-static HB_BOOL hb_ntxCurKeyRefresh( LPTAGINFO pTag )
-{
-   NTXAREAP pArea = pTag->Owner->Owner;
-
-   if( pArea->dbfarea.lpdbPendingRel )
-      SELF_FORCEREL( ( AREAP ) pArea );
-
-   if( !pArea->dbfarea.fPositioned )
-   {
-      pTag->stackLevel = 0;
-      pTag->TagBOF = pTag->TagEOF = HB_TRUE;
-      pTag->CurKeyInfo->Xtra = 0;
-      return HB_FALSE;
-   }
-   else if( pTag->stackLevel == 0 || pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo )
-   {
-      HB_BYTE buf[ NTX_MAX_KEY ];
-      HB_BOOL fBuf = HB_FALSE;
-      LPKEYINFO pKey = NULL;
-      /* Try to find previous if it's key for the same record */
-      if( pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo )
-      {
-         fBuf = HB_TRUE;
-         memcpy( buf, pTag->CurKeyInfo->key, pTag->KeyLength );
-         pKey = hb_ntxKeyCopy( pKey, pTag->CurKeyInfo, pTag->KeyLength );
-         hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
-      }
-      if( pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo )
-      {
-         HB_BOOL fValidBuf = pArea->dbfarea.fValidBuffer;
-         /* not found, create new key from DBF and if differs seek again */
-         pKey = hb_ntxEvalKey( pKey, pTag );
-         if( !fBuf || memcmp( buf, pKey->key, pTag->KeyLength ) != 0 )
-         {
-            hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
-         }
-         /* not found, if key was generated from DBF buffer then force to
-          * update it, create the new key and if differs seek again */
-         if( pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo && fValidBuf )
-         {
-            SELF_GOTO( ( AREAP ) pArea, pArea->dbfarea.ulRecNo );
-            memcpy( buf, pKey->key, pTag->KeyLength );
-            pKey = hb_ntxEvalKey( pKey, pTag );
-            if( memcmp( buf, pKey->key, pTag->KeyLength ) != 0 )
-               hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
-         }
-      }
-      hb_ntxKeyFree( pKey );
-      return pTag->CurKeyInfo->Xtra != 0 && pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo;
-   }
-   pTag->TagBOF = pTag->TagEOF = HB_FALSE;
-   return HB_TRUE;
-}
-
-/*
  * Skip in tag respecting record filter only
  */
 static void hb_ntxTagSkipFilter( LPTAGINFO pTag, HB_BOOL fForward )
@@ -3472,6 +3415,73 @@ static void hb_ntxTagGoToRelKeyPos( LPTAGINFO pTag, double dPos )
       hb_ntxTagNextKey( pTag );
    else if( dPos < 0.25 )
       hb_ntxTagPrevKey( pTag );
+}
+
+/*
+ * refresh CurKey value and set proper path from RootPage to LeafPage
+ */
+static HB_BOOL hb_ntxCurKeyRefresh( LPTAGINFO pTag )
+{
+   NTXAREAP pArea = pTag->Owner->Owner;
+
+   if( pArea->dbfarea.lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
+   if( !pArea->dbfarea.fPositioned )
+   {
+      pTag->stackLevel = 0;
+      pTag->TagBOF = pTag->TagEOF = HB_TRUE;
+      pTag->CurKeyInfo->Xtra = 0;
+      return HB_FALSE;
+   }
+   else if( pTag->stackLevel == 0 || pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo )
+   {
+      HB_BYTE buf[ NTX_MAX_KEY ];
+      HB_BOOL fBuf = HB_FALSE;
+      LPKEYINFO pKey = NULL;
+      /* Try to find previous if it's key for the same record */
+      if( pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo )
+      {
+         fBuf = HB_TRUE;
+         memcpy( buf, pTag->CurKeyInfo->key, pTag->KeyLength );
+         pKey = hb_ntxKeyCopy( pKey, pTag->CurKeyInfo, pTag->KeyLength );
+         hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
+      }
+      if( pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo )
+      {
+         HB_BOOL fValidBuf = pArea->dbfarea.fValidBuffer;
+         /* not found, create new key from DBF and if differs seek again */
+         pKey = hb_ntxEvalKey( pKey, pTag );
+         if( !fBuf || memcmp( buf, pKey->key, pTag->KeyLength ) != 0 )
+         {
+            hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
+         }
+         /* not found, if key was generated from DBF buffer then force to
+          * update it, create the new key and if differs seek again */
+         if( pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo && fValidBuf )
+         {
+            SELF_GOTO( ( AREAP ) pArea, pArea->dbfarea.ulRecNo );
+            memcpy( buf, pKey->key, pTag->KeyLength );
+            pKey = hb_ntxEvalKey( pKey, pTag );
+            if( memcmp( buf, pKey->key, pTag->KeyLength ) != 0 )
+               hb_ntxTagKeyFind( pTag, pKey, pTag->KeyLength );
+         }
+         if( pTag->CurKeyInfo->Xtra != pArea->dbfarea.ulRecNo && pTag->Template )
+         {
+            hb_ntxTagGoTop( pTag );
+            while( !pTag->TagEOF )
+            {
+               if( pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo )
+                  break;
+               hb_ntxTagSkipNext( pTag );
+            }
+         }
+      }
+      hb_ntxKeyFree( pKey );
+      return pTag->CurKeyInfo->Xtra != 0 && pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo;
+   }
+   pTag->TagBOF = pTag->TagEOF = HB_FALSE;
+   return HB_TRUE;
 }
 
 /*

@@ -1651,6 +1651,17 @@ static HB_ULONG hb_nsxPageGetFree( LPTAGINFO pTag )
 }
 
 /*
+ * SIX3 compatible template index expression detection
+ */
+static HB_BOOL hb_nsxIsTemplateFunc( const char * szKeyExpr )
+{
+   return hb_strnicmp( szKeyExpr, "sxChar(", 7 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxDate(", 7 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxNum(", 6 ) == 0 ||
+          hb_strnicmp( szKeyExpr, "sxLog(", 6 ) == 0;
+}
+
+/*
  * create the new tag structure
  */
 static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
@@ -3418,61 +3429,6 @@ static HB_BOOL hb_nsxTagKeyDel( LPTAGINFO pTag, LPKEYINFO pKey )
 
 
 /*
- * refresh CurKey value and set proper path from RootPage to LeafPage
- */
-static HB_BOOL hb_nsxCurKeyRefresh( LPTAGINFO pTag )
-{
-   NSXAREAP pArea = pTag->pIndex->pArea;
-
-   if( pArea->dbfarea.lpdbPendingRel )
-      SELF_FORCEREL( ( AREAP ) pArea );
-
-   if( !pArea->dbfarea.fPositioned )
-   {
-      pTag->stackLevel = 0;
-      pTag->TagBOF = pTag->TagEOF = HB_TRUE;
-      pTag->CurKeyInfo->rec = 0;
-      return HB_FALSE;
-   }
-   else if( pTag->stackLevel == 0 || pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo )
-   {
-      HB_BOOL fValidBuf = pArea->dbfarea.fValidBuffer;
-      HB_BYTE buf[ NSX_MAXKEYLEN ];
-      HB_BOOL fBuf = HB_FALSE;
-      LPKEYINFO pKey = NULL;
-      /* Try to find previous if it's key for the same record */
-      if( pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo )
-      {
-         fBuf = HB_TRUE;
-         memcpy( buf, pTag->CurKeyInfo->val, pTag->KeyLength );
-         pKey = hb_nsxKeyCopy( pKey, pTag->CurKeyInfo, pTag->KeyLength );
-         hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
-      }
-      if( pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo )
-      {
-         /* not found, create new key from DBF and if differs seek again */
-         pKey = hb_nsxEvalKey( pKey, pTag );
-         if( !fBuf || memcmp( buf, pKey->val, pTag->KeyLength ) != 0 )
-            hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
-         /* not found, if key was generated from DBF buffer then force to
-          * update it, create the new key and if differs seek again */
-         if( pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo && fValidBuf )
-         {
-            SELF_GOTO( ( AREAP ) pArea, pArea->dbfarea.ulRecNo );
-            memcpy( buf, pKey->val, pTag->KeyLength );
-            pKey = hb_nsxEvalKey( pKey, pTag );
-            if( memcmp( buf, pKey->val, pTag->KeyLength ) != 0 )
-               hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
-         }
-      }
-      hb_nsxKeyFree( pKey );
-      return pTag->CurKeyInfo->rec != 0 && pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo;
-   }
-   pTag->TagBOF = pTag->TagEOF = HB_FALSE;
-   return HB_TRUE;
-}
-
-/*
  * Skip in tag respecting record filter only
  */
 static void hb_nsxTagSkipFilter( LPTAGINFO pTag, HB_BOOL fForward )
@@ -3707,6 +3663,71 @@ static void hb_nsxTagGoToRelKeyPos( LPTAGINFO pTag, double dPos )
       hb_nsxTagNextKey( pTag );
    else if( dPos < 0.25 )
       hb_nsxTagPrevKey( pTag );
+}
+
+/*
+ * refresh CurKey value and set proper path from RootPage to LeafPage
+ */
+static HB_BOOL hb_nsxCurKeyRefresh( LPTAGINFO pTag )
+{
+   NSXAREAP pArea = pTag->pIndex->pArea;
+
+   if( pArea->dbfarea.lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
+   if( !pArea->dbfarea.fPositioned )
+   {
+      pTag->stackLevel = 0;
+      pTag->TagBOF = pTag->TagEOF = HB_TRUE;
+      pTag->CurKeyInfo->rec = 0;
+      return HB_FALSE;
+   }
+   else if( pTag->stackLevel == 0 || pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo )
+   {
+      HB_BOOL fValidBuf = pArea->dbfarea.fValidBuffer;
+      HB_BYTE buf[ NSX_MAXKEYLEN ];
+      HB_BOOL fBuf = HB_FALSE;
+      LPKEYINFO pKey = NULL;
+      /* Try to find previous if it's key for the same record */
+      if( pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo )
+      {
+         fBuf = HB_TRUE;
+         memcpy( buf, pTag->CurKeyInfo->val, pTag->KeyLength );
+         pKey = hb_nsxKeyCopy( pKey, pTag->CurKeyInfo, pTag->KeyLength );
+         hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
+      }
+      if( pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo )
+      {
+         /* not found, create new key from DBF and if differs seek again */
+         pKey = hb_nsxEvalKey( pKey, pTag );
+         if( !fBuf || memcmp( buf, pKey->val, pTag->KeyLength ) != 0 )
+            hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
+         /* not found, if key was generated from DBF buffer then force to
+          * update it, create the new key and if differs seek again */
+         if( pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo && fValidBuf )
+         {
+            SELF_GOTO( ( AREAP ) pArea, pArea->dbfarea.ulRecNo );
+            memcpy( buf, pKey->val, pTag->KeyLength );
+            pKey = hb_nsxEvalKey( pKey, pTag );
+            if( memcmp( buf, pKey->val, pTag->KeyLength ) != 0 )
+               hb_nsxTagKeyFind( pTag, pKey, pTag->KeyLength );
+         }
+         if( pTag->CurKeyInfo->rec != pArea->dbfarea.ulRecNo && pTag->Template )
+         {
+            hb_nsxTagGoTop( pTag );
+            while( !pTag->TagEOF )
+            {
+               if( pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo )
+                  break;
+               hb_nsxTagSkipNext( pTag );
+            }
+         }
+      }
+      hb_nsxKeyFree( pKey );
+      return pTag->CurKeyInfo->rec != 0 && pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo;
+   }
+   pTag->TagBOF = pTag->TagEOF = HB_FALSE;
+   return HB_TRUE;
 }
 
 /*
@@ -6900,6 +6921,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
                            szKey, pKeyExp, bType, ( HB_USHORT ) iLen, bTrail,
                            szFor, pForExp,
                            fAscend, pOrderInfo->fUnique, fCustom );
+      pTag->Template = hb_nsxIsTemplateFunc( pTag->KeyExpr );
       pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && !pArea->dbfarea.area.lpdbOrdCondInfo->fAll );
 
       if( fNewFile )
