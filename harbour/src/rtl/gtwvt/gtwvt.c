@@ -1691,11 +1691,15 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
-         {
+         {  /* Avoid irregular shutdown if SetCancel( .F. ) [jarabal] */
+            if( hb_setGetCancel() )
+               hb_vmRequestCancel();
+#        if 0
             PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
             hb_setSetItem( HB_SET_CANCEL, pItem );
             hb_itemRelease( pItem );
             hb_vmRequestCancel();
+#        endif
          }
          return 0;
 
