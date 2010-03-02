@@ -2,36 +2,9 @@
  * $Id$
 */
 
-#include <stdio.h>
-#include <io.h>
-#include <fcntl.h>
-#include <conio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-
-/* If mc51 is defined then the code created will used Extend and GT API
-   If mc51 is not defined then the standalone editor will be created
- */
-#define  mc51
-
-#ifdef mc51
-  #include "extend.api"
-  #include "fm.api"
-  #include "gt.api"
-  #include "filesys.api"
-  #include "vm.api"
-#else
-  #include "rvideo.h"
-  #include <dos.h>
-
-  #define CLIPPER  void pascal
-  #define FALSE    0
-  #define TRUE     !0
-#endif
-
-#define CLIPPER_ACTION(action)  HB_FUNC( action )
-
+#include "hbapi.h"
+#include "hbapifs.h"
+#include "hbapigt.h"
 
 #define Eof        '\x0'
 #define SOFT        141
@@ -50,24 +23,7 @@
 #define REWRITE    1
 #define NO_WRITE   0
 
-#define  MAX_LINE_LEN   254
-
-#ifndef mc51
-
-  int xk,yk;
-  int xmax,ymax;
-  int il_kol;
-  int i, insert;
-  int array;
-
-  char ramka[9] = "ÚÄ·º¼ÍÔ³";
-  char *str;
-  char name[30];
-  int  adres;
-  char *adr;
-
-#endif
-
+#define MAX_LINE_LEN   254
 
 
 typedef struct
@@ -98,82 +54,32 @@ typedef struct
    int      IsConfigured;
    long int next_line;        /* the offset of next line to return by ED_GetNextLine() */
    long int text_length;      /* the size (in bytes) of edited text */
-   long int bufor_size;       /* the size of allocated memory buffer */
-   char     *begin;           /* the memory buffer */
+   long int buffer_size;      /* the size of allocated memory buffer */
+   char *   begin;           /* the memory buffer */
 
 } EDITOR;
 
 
 
 
-static EDITOR *EStack[] ={ NULL, NULL, NULL, NULL, NULL };
+static EDITOR * s_EStack[] = { NULL, NULL, NULL, NULL, NULL };
 /* table of created editors */
-static EDITOR *ETab[] ={ NULL, NULL, NULL, NULL, NULL,
-                         NULL, NULL, NULL, NULL, NULL, NULL };
-static EDITOR *ED;      /* currently serviced editor */
+static EDITOR * s_ETab[]   = { NULL, NULL, NULL, NULL, NULL,
+                               NULL, NULL, NULL, NULL, NULL, NULL };
+static EDITOR * s_ED;     /* currently serviced editor */
 
 
 
 
 
-#ifdef mc51
-
-  void        _ncopyuc( char*, char*, int );
-  void        _ncopylc( char*, char*, int );
-  static unsigned int Clear( EDITOR*, long int, unsigned int * );
-  static void BackSpace( int );
-  static void NextWord( void );
-  static void Return( int );
-  static void GoTo( int );
-  static int  format_line( EDITOR*, int, unsigned int );
-  static void MoveText ( EDITOR*, long int, long int, long int );
-  static unsigned int GetLineLength( EDITOR*, long int, int* );
-
-#else
-#pragma aux MS_C "_*" \
-        parm caller [] \
-        value struct float struct routine [ax]\
-        modify [ax bx cx dx es];
-
-  static int  format_line( EDITOR*, int, unsigned int );
-  static void GoTo( int );
-  static unsigned int Clear( EDITOR*, long int, unsigned int * );
-  static void BackSpace( int );
-  static void NextWord( void );
-  static void Return( int );
-  static void MoveText ( EDITOR*, long int, long int, long int );
-  static unsigned int GetLineLength( EDITOR*, long int, int* );
-
-  #pragma aux (MS_C) DISPXYA;
-  #pragma aux (MS_C) REPXYA;
-  #pragma aux (MS_C) READKEY;
-  #pragma aux (MS_C) SETXY;
-  #pragma aux (MS_C) VIDEMODE;
-  #pragma aux (MS_C) DRAWBOX;
-
-  static int nColor=15;
-
-void _gtWriteAt( int nTop, int nLeft, char *cText, int nLen )
-{
-  char cBuff[232];
-
-  strncpy( cBuff, cText, nLen );
-  cBuff[nLen] ='\x0';
-
-  DISPXYA( nLeft, nTop, nColor, cBuff );
-}
-
-void _gtRepChar( int nTop, int nLeft, int nChar, int nRep )
-{
-  REPXYA( nLeft, nTop, nColor, nRep, (char)nChar );
-}
-
-void _gtColorSelect( int nClr )
-{
-  nColor =nClr+1;
-}
-
-#endif
+static unsigned int Clear( EDITOR * ED, long int, unsigned int * );
+static void         BackSpace( int );
+static void         NextWord( void );
+static void         Return( int );
+static void         GoTo( int );
+static int          format_line( EDITOR * ED, int, unsigned int );
+static void         MoveText( EDITOR * ED, long int, long int, long int );
+static unsigned int GetLineLength( EDITOR * ED, long int, int * );
 
 /*
  *
@@ -184,7 +90,7 @@ void _gtColorSelect( int nClr )
 
 /* Find the beginning of previous line starting from given offset
  */
-static long int Prev( EDITOR *E, long int adres )
+static long int Prev( EDITOR * E, long int adres )
 {
    long int i;
 
@@ -192,35 +98,35 @@ static long int Prev( EDITOR *E, long int adres )
    {
       for( i = adres; i >= 0; i-- )
       {
-         if( E->begin[ (unsigned int) i ] == '\n' )
+         if( E->begin[ ( unsigned int ) i ] == '\n' )
          {
-            if( i < adres-2 )
-               return( i + 1 );
+            if( i < adres - 2 )
+               return i + 1;
          }
       }
-      return( 0 );
+      return 0;
    }
 
-   return( -1 );
+   return -1;
 }
 
 /* Find the beginning of next line starting from given offset
  */
-static long int Next( EDITOR *E, long int adres )
+static long int Next( EDITOR * E, long int adres )
 {
-   char *tmp;
+   char * tmp;
 
-   tmp =strchr( E->begin + (unsigned int) adres, '\n' );
+   tmp = strchr( E->begin + ( unsigned int ) adres, '\n' );
 
-   if( tmp && tmp[1] )
-      return( (long int)(++tmp - E->begin ) );
+   if( tmp && tmp[ 1 ] )
+      return ( long int ) ( ++tmp - E->begin );
    else
-      return( -1 );
+      return -1;
 }
 
 /* Initializes EDITOR structure
  */
-static void New(EDITOR *E, int tab, int ll, long int BuforSize)
+static void New( EDITOR * E, int tab, int ll, long int bufferSize )
 {
 
   E->line_length    = ll;
@@ -234,106 +140,72 @@ static void New(EDITOR *E, int tab, int ll, long int BuforSize)
   E->first_col      = 0;
   E->stabil         = 0;
   E->current_stabil = 0;
-  E->stable         = FALSE;
+  E->stable         = HB_FALSE;
   E->tab_size       = tab;
   E->active         = 1;
   E->line_number    = 0;
   E->IsConfigured   = 0;
   E->text_length    = 0;
-  E->bufor_size     = BuforSize;
+  E->buffer_size    = bufferSize;
 
-  E->begin [ 0 ]    = '\r';
-  E->begin [ 1 ]    = '\n';
-  E->begin [ 2 ]    = '\x0';
+  E->begin[ 0 ]    = '\r';
+  E->begin[ 1 ]    = '\n';
+  E->begin[ 2 ]    = '\x0';
 
 }
 
 
 
-/*
- ** Creates new editor and returns index into internal editors table
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_NEW )
-#else
-int HB_ED_NEW( int ll, int tab, long int BuforSize )
-#endif
+/* Creates new editor and returns index into internal editors table */
+HB_FUNC( ED_NEW )
 {
-   EDITOR *E;
+   EDITOR * E;
    int nEdit=0;
 
-#ifdef mc51
    int      ll, tab;
-   long int BuforSize;
-#endif
+   long int bufferSize;
 
    /* Find the free slot fpr new editor
     */
-   while ( (nEdit < 10 ) && (ETab[nEdit] != NULL) )
+   while( ( nEdit < 10 ) && ( s_ETab[ nEdit ] != NULL ) )
       nEdit++;
    if( nEdit == 10 )
-   #ifdef mc51
-      _retni(-1);    /* no more free slots */
-   #else
-      return(-1);
-   #endif
+     hb_retni( -1 );    /* no more free slots */
 
-   #ifdef mc51
-      ll  = _parni(1);
-      if( ll > MAX_LINE_LEN )
-         ll = MAX_LINE_LEN;
-      tab = _parni(2);
-      E   = (EDITOR *)_xalloc( sizeof(EDITOR) );
-   #else
-      E = calloc(sizeof(EDITOR),1);
-   #endif
+   ll  = hb_parni( 1 );
+   if( ll > MAX_LINE_LEN )
+      ll = MAX_LINE_LEN;
+   tab = hb_parni( 2 );
+   E   = ( EDITOR * ) hb_xgrab( sizeof( EDITOR ) );
 
-   ETab[nEdit] = E;
+   s_ETab[ nEdit ] = E;
 
    if( E )
    {
-   #ifdef mc51
-      if ( _parinfo ( 0 ) < 3 )
-         BuforSize = 32767;
+      if( hb_parinfo( 0 ) < 3 )
+         bufferSize = 32767;
       else
-         BuforSize = (long int )_parni ( 3 ) + 10;
+         bufferSize = ( long int ) hb_parni( 3 ) + 10;
 
-      if( _parinfo( 0 ) < 4 )
+      if( hb_parinfo( 0 ) < 4 )
          E->escape =0;
       else
-         E->escape =(char)_parni(4);
-   #else
-         E->escape =0;
-   #endif
+         E->escape =( char ) hb_parni( 4 );
 
-   #ifdef mc51
-      E->begin = (char *)_xalloc( (unsigned int) BuforSize+100 );
-   #else
-      E->begin = calloc( (unsigned int) BuforSize+100, 1 );
-   #endif
-      memset( E->begin, '\x0', (unsigned int) BuforSize );
+      E->begin = ( char * ) hb_xgrab( ( unsigned int ) bufferSize + 100 );
+      memset( E->begin, '\x0', ( unsigned int ) bufferSize );
 
-      New(E, tab, ll, BuforSize);
+      New( E, tab, ll, bufferSize );
 
-   #ifdef mc51
-      _retni ( nEdit );
-   #else
-      return ( nEdit );
-   #endif
+      hb_retni( nEdit );
    }
    else
-   {
-      #ifdef mc51
-         _retni ( -1 );    /* failure */
-      #else
-         return ( -1 );
-      #endif
-   }
+      hb_retni( -1 );    /* failure */
 }
 
 /* Replaces TAB with spaces and removes spaces from the end of line
  */
-static void FormatText ( EDITOR *E )
+static void FormatText ( EDITOR * E )
 {
    long int  j, dl;
    char      *wsk;
@@ -346,13 +218,13 @@ static void FormatText ( EDITOR *E )
    /* TODO: remove this TAB replacement because it is time consuming
     * operation if a very large file is edited
     */
-   wsk =E->begin +E->last_line;
-   while( (wsk = strchr( wsk, '\t' )) != 0 )
+   wsk = E->begin + E->last_line;
+   while( ( wsk = strchr( wsk, '\t' ) ) != 0 )
    {
       j = wsk - E->begin;
 
-      MoveText( E, j, j + E->tab_size-1,
-                     (long int)( E->bufor_size - j - E->tab_size +1 ) );
+      MoveText( E, j, j + E->tab_size - 1,
+                     ( long int ) ( E->buffer_size - j - E->tab_size + 1 ) );
 
       for( i = 0; i < E->tab_size; i++, wsk++ )
          *wsk = ' ';
@@ -363,12 +235,12 @@ static void FormatText ( EDITOR *E )
     */
    while( E->current_line >= 0 )
    {
-      E->last_line    =E->current_line;
+      E->last_line    = E->current_line;
       E->line_number++;
 
-      nLen =Clear( E, E->current_line, &nEsc );
+      nLen = Clear( E, E->current_line, &nEsc );
 
-      if( !format_line( E, HARD, nLen ) )
+      if( ! format_line( E, HARD, nLen ) )
          E->current_line = Next( E, E->current_line );
    }
 
@@ -378,27 +250,27 @@ static void FormatText ( EDITOR *E )
 
 /* Resets the editor state after pasting new content of text buffer
  */
-static void NewText( EDITOR *E )
+static void NewText( EDITOR * E )
 {
    unsigned int dl;
    int i;
 
    /* text in buffer have to end with CR/LF
     */
-   dl =(unsigned int)E->text_length;
-   if( E->begin[ dl-1 ] != '\n' )
+   dl = ( unsigned int ) E->text_length;
+   if( E->begin[ dl - 1 ] != '\n' )
    {
       E->begin[ dl     ] = '\r';
       E->begin[ dl + 1 ] = '\n';
       E->begin[ dl + 2 ] = '\x0';
-      E->text_length +=2;
+      E->text_length += 2;
    }
 
    FormatText( E );
 
    E->cursor_col     = 0;
    E->cursor_row     = 0;
-   E->stable         = FALSE;
+   E->stable         = HB_FALSE;
    E->current_stabil = 0;
    E->first_display  = E->last_display = 0;
    E->next_stabil    = 0;
@@ -406,17 +278,17 @@ static void NewText( EDITOR *E )
    E->stabil         = E->bottom - E->top + 1;
 
    for( i = 0; i < E->stabil; i++ )
-      E->last_display =Next( E, E->last_display );
+      E->last_display = Next( E, E->last_display );
 }
 
 /* Appends passed text to the existing text buffer
  */
-static void AddText( int nEdit, char *adres )
+static void AddText( int nEdit, const char * adres )
 {
-   EDITOR    *E;
-   long int  dl, dlold;
+   EDITOR * E;
+   long int dl, dlold;
 
-   E = ETab [ nEdit ];
+   E = s_ETab[ nEdit ];
 
    dl    = strlen( adres );
    dlold = E->text_length;
@@ -425,40 +297,32 @@ static void AddText( int nEdit, char *adres )
 
    /* TODO: add reallocation of text buffer
     */
-   if( (dl+dlold) <= (E->bufor_size - 10) )
+   if( ( dl + dlold ) <= ( E->buffer_size - 10 ) )
    {
       /* there is enough room in text buffer
        */
-      strcpy( E->begin+dlold, adres );
-      E->text_length +=dl;
+      strcpy( E->begin + dlold, adres );
+      E->text_length += dl;
    }
    else
    {
-      strncpy( E->begin+dlold, adres, (int)(E->bufor_size -10 -dlold) );
-      E->text_length =E->bufor_size - 10;
+      strncpy( E->begin + dlold, adres, ( int ) ( E->buffer_size - 10 - dlold ) );
+      E->text_length = E->buffer_size - 10;
    }
 
    NewText( E );     /* reformat text */
 }
 
-/*
- ** Appends passed text at the end of existing one
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_ADDTEXT )
-#else
-CLIPPER HB_ED_ADDTEXT ( int nEdit, char *adres )
-#endif
+/* Appends passed text at the end of existing one */
+HB_FUNC( ED_ADDTEXT )
 {
-  #ifdef mc51
-    char *adres;
-    int nEdit;
+   const char * adres;
+   int nEdit;
 
-    nEdit = _parni(1);
-    adres = _parc(2);
-  #endif
+   nEdit = hb_parni( 1 );
+   adres = hb_parc( 2 );
 
-  AddText( nEdit, adres );
+   AddText( nEdit, adres );
 }
 
 /* Moves text from one location into another
@@ -470,104 +334,107 @@ static void MoveText ( EDITOR * E, long int source, long int dest,
 
    diff = dest - source;
    /* memmove supports overlapped buffers */
-   memmove( E->begin + (unsigned int)dest, E->begin + (unsigned int)source,
-            (unsigned int) ilb );
+   memmove( E->begin + ( unsigned int ) dest, E->begin + ( unsigned int ) source,
+            ( unsigned int ) ilb );
 
    if( E->last_display > E->current_line )
       E->last_display += diff;
 
-   if ( E->current_line < E->last_line )
+   if( E->current_line < E->last_line )
       E->last_line += diff;
 
-   E->text_length +=diff;
+   E->text_length += diff;
 
-   if( E->text_length > ( E->bufor_size - 8 ) )
+   if( E->text_length > ( E->buffer_size - 8 ) )
    {
-      E->text_length =E->bufor_size - 8;
-      E->begin[ E->text_length ]    = '\x0';
-      E->begin[ E->text_length-1 ]  = '\n';
-      E->begin[ E->text_length-2 ]  = '\r';
+      E->text_length = E->buffer_size - 8;
+      E->begin[ E->text_length ]      = '\x0';
+      E->begin[ E->text_length - 1 ]  = '\n';
+      E->begin[ E->text_length - 2 ]  = '\r';
    }
 }
 
 /* Skips to the beginning of given line
  */
-static long int GoToLine( EDITOR *E, int linia )
+static long int GoToLine( EDITOR * E, int linia )
 {
-   char *p;
+   char * p;
    long int  i;
 
-   i =0;
-   p =E->begin;
-   while( (++i <= linia) && (p=strchr( p, '\n' )) != 0 )
-      p +=2;
+   i = 0;
+   p = E->begin;
+   while( ( ++i <= linia ) && ( p = strchr( p, '\n' ) ) != 0 )
+      p += 2;
 
    if( i > linia )
-      return( p - E->begin -1 );
+      return p - E->begin - 1;
    else
-      return( E->text_length );  /* no such line number - go to the end */
+      return E->text_length;  /* no such line number - go to the end */
 }
 
 /* Counts the number of printable characters in given line
  */
-static unsigned int GetLineLength( EDITOR *E, long int off, int *wsk )
+static unsigned int GetLineLength( EDITOR * E, long int off, int *wsk )
 {
    unsigned int i, j;
-   char *p, *tmp;
+   char * p;
+   char * tmp;
 
-   tmp =E->begin + (unsigned int)off;
-   p   =strchr( tmp, '\n' );  /* find EOL starting from given position */
+   tmp = E->begin + ( unsigned int ) off;
+   p   = strchr( tmp, '\n' );  /* find EOL starting from given position */
 
    if( p )
    {
-      off =( p - tmp );
-      i =(unsigned int)off -1;
+      off = ( p - tmp );
+      i = ( unsigned int ) off - 1;
    }
    else
-      i =strlen( tmp );
+      i = strlen( tmp );
 
    *wsk = 0;   /* number of characters used in color escape codes */
    if( E->escape )
    {
-      for( j=0; j < i; j++ )
-         if( (char)tmp[j] == E->escape )
+      for( j = 0; j < i; j++ )
+      {
+         if( ( char ) tmp[ j ] == E->escape )
          {
-            (*wsk) +=2;
+            ( *wsk ) += 2;
             j++;
          }
+      }
    }
 
-   return( i - *wsk );  /* number of all chars minus number of escape chars */
+   return i - *wsk;  /* number of all chars minus number of escape chars */
 }
 
 /* Inserts text into existing text buffer starting from given line number
  */
-static long int InsText ( EDITOR *E, char *adres, long int line )
+static long int InsText( EDITOR * E, char * adres, long int line )
 {
    long int  dl, off, il, dl1;
    int       addCRLF, cc;
 
    addCRLF = 0;
-   dl  = strlen ( adres );    /* length of text to insert */
+   dl  = strlen( adres );    /* length of text to insert */
    dl1 = E->text_length;      /* length of text that is currently in the buffer */
 
    /* TODO: add reallocation  of text buffer
     */
-   if( dl1 < (E->bufor_size - 10) )
+   if( dl1 < (E->buffer_size - 10) )
    {
       /* there is some free space in text buffer
        */
       /* Find the offset of given line */
       if( line > 0 )
-         off = GoToLine( E, (unsigned int) line ); /* Find the offset of given line */
+         off = GoToLine( E, ( unsigned int ) line ); /* Find the offset of given line */
       else
          off = 0;
 
-      if( (long int)(dl + dl1) < (E->bufor_size-10) )
+      if( ( long int )( dl + dl1 ) < ( E->buffer_size - 10 ) )
       {
          /* there is enough free room in text buffer
           */
-         if ( (adres[(unsigned int) dl-1] != '\n') && (adres[(unsigned int) dl-2] != '\r') )
+         if( (adres[ ( unsigned int ) dl - 1 ] != '\n' ) && ( adres[ ( unsigned int ) dl - 2 ] != '\r' ) )
          {
             /* There is no CRLF at the end of inserted text -
              * we have to add CRLF to separate it from existing text
@@ -575,37 +442,37 @@ static long int InsText ( EDITOR *E, char *adres, long int line )
             addCRLF = 1;
             dl += 2;
          }
-         MoveText( E, off, off + dl, E->bufor_size - (off - 1) - dl );
-         strncpy( E->begin + (unsigned int) off, adres , (unsigned int) dl );
+         MoveText( E, off, off + dl, E->buffer_size - ( off - 1 ) - dl );
+         strncpy( E->begin + ( unsigned int ) off, adres , ( unsigned int ) dl );
       }
       else
       {
          /* not enough free space
           * text at the end of existing text buffer will be lost
           */
-         dl = E->bufor_size - 10 - dl1;
-         if( adres[ (unsigned int)dl-1 ] == '\r' )
-            adres[ (unsigned int)dl-1 ] = ' ';
+         dl = E->buffer_size - 10 - dl1;
+         if( adres[ ( unsigned int ) dl - 1 ] == '\r' )
+            adres[ ( unsigned int ) dl - 1 ] = ' ';
 
-         if( (adres[(unsigned int) dl-1] != '\n') && (adres[(unsigned int) dl-2] != '\r') )
+         if( ( adres[ ( unsigned int ) dl - 1 ] != '\n' ) && ( adres[ ( unsigned int ) dl - 2 ] != '\r' ) )
          {
             addCRLF = 1;
             dl += 2;
          }
-         MoveText( E, off, off + dl, E->bufor_size - (off - 1) - dl );
-         strncpy ( E->begin + (unsigned int) off, adres , (unsigned int) dl );
+         MoveText( E, off, off + dl, E->buffer_size - ( off - 1 ) - dl );
+         strncpy( E->begin + ( unsigned int ) off, adres, ( unsigned int ) dl );
       }
 
       if( addCRLF )
       {
-         E->begin [(unsigned int) (off + dl - 2)] = '\r';
-         E->begin [(unsigned int) (off + dl - 1)] = '\n';
+         E->begin[ ( unsigned int ) ( off + dl - 2 ) ] = '\r';
+         E->begin[ ( unsigned int ) ( off + dl - 1 ) ] = '\n';
          E->text_length += 2;
       }
 
-      if ( ( off + dl ) == E->text_length )
-         E->begin [ (unsigned int) E->text_length ] = '\x0';
-      E->text_length = strlen ( E->begin );
+      if( ( off + dl ) == E->text_length )
+         E->begin[ ( unsigned int ) E->text_length ] = '\x0';
+      E->text_length = strlen( E->begin );
 
       il = E->line_number;
       cc = E->cursor_col;
@@ -614,90 +481,73 @@ static long int InsText ( EDITOR *E, char *adres, long int line )
 
       E->cursor_col = cc;
 
-      if ( off <= E->current_line )
+      if( off <= E->current_line )
       {
          E->current_line += E->text_length - dl1;
          E->active       += E->line_number - il;
       }
    }
 
-   return ( dl );
+   return dl;
 }
 
-/*
- ** Inserts passed text into text buffer
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_INSTEXT )
-#else
-unsigned int HB_ED_INSTEXT ( int nEdit, char *adres, long int linia )
-#endif
+/* Inserts passed text into text buffer */
+HB_FUNC( ED_INSTEXT )
 {
    long int dl;
-   EDITOR *E;
+   EDITOR * E;
 
-   #ifdef mc51
-      char *adres;
-      int nEdit;
-      long int linia;
+   char * adres;
+   int nEdit;
+   long int linia;
 
-      nEdit = _parni(1);
-      adres = _parc(2);
-      linia = (long int) _parni(3);
-   #endif
+   nEdit = hb_parni( 1 );
+   adres = hb_strdup( hb_parc( 2 ) );
+   linia = ( long int ) hb_parni( 3 );
 
-   E =ETab[nEdit];
+   E = s_ETab[ nEdit ];
    dl = InsText( E, adres, linia );
-   E->last_line = Prev ( E, (long int) strlen ( E->begin ) );
+   E->last_line = Prev( E, ( long int ) strlen( E->begin ) );
 
-   #ifdef mc51
-      _retni ( (unsigned int) dl );
-   #else
-      return ( (unsigned int) dl );
-   #endif
+   hb_retni( ( unsigned int ) dl );
+
+   hb_xfree( adres );
 }
 
 /*
  **
 */
-#ifdef mc51
-CLIPPER_ACTION( ED_PUSH )
+HB_FUNC( ED_PUSH )
 {
    int i;
 
-   i =0;
-   while( i < 5 && EStack[i] )
-      i++;
+   i = 0;
+   while( i < 5 && s_EStack[ i ] )
+      ++i;
 
-   EStack[ i ] =ED;
+   s_EStack[ i ] = s_ED;
 }
 
-CLIPPER_ACTION( ED_POP )
+HB_FUNC( ED_POP )
 {
    int i;
 
-   i =0;
-   while( i < 5 && EStack[i] )
-      i++;
+   i = 0;
+   while( i < 5 && s_EStack[ i ] )
+      ++i;
 
    if( i )
    {
-      ED =EStack[ i-1 ];
-      EStack[ i-1 ] =NULL;
+      s_ED = s_EStack[ i - 1 ];
+      s_EStack[ i - 1 ] = NULL;
    }
 }
-#endif
 
 /*
  * Selects the editor as active - all next ED_*() calls will be send
  * to this editor.
 */
-#ifdef mc51
-CLIPPER_ACTION( ED_CONFIG )
-#else
-CLIPPER HB_ED_CONFIG(int nEdit, int top, int left, int bottom, int right,
-                       int nRow, int nCol)
-#endif
+HB_FUNC( ED_CONFIG )
 {
    int  szer, wys;
    int      nszer, nwys;
@@ -705,133 +555,131 @@ CLIPPER HB_ED_CONFIG(int nEdit, int top, int left, int bottom, int right,
    long int tmp;
    long int j;
 
-#ifdef mc51
    int top, left, bottom, right;
    int nRow, nCol;
    int nEdit, i;
 
-   nEdit  = _parni(1);
-   top    = _parni(2);
-   left   = _parni(3);
-   bottom = _parni(4);
-   right  = _parni(5);
-   nRow   = _parni(6);
-   nCol   = _parni(7);
-#endif
+   nEdit  = hb_parni( 1 );
+   top    = hb_parni( 2 );
+   left   = hb_parni( 3 );
+   bottom = hb_parni( 4 );
+   right  = hb_parni( 5 );
+   nRow   = hb_parni( 6 );
+   nCol   = hb_parni( 7 );
 
-   ED = ETab[nEdit];  /* select the editor to work on */
+   s_ED = s_ETab[ nEdit ];  /* select the editor to work on */
 
-   szer = ED->right - ED->left + 1;
-   wys  = ED->bottom - ED->top + 1;
+   szer = s_ED->right - s_ED->left + 1;
+   wys  = s_ED->bottom - s_ED->top + 1;
 
-   ED->top        = top;
-   ED->left       = left;
-   ED->bottom     = bottom;
-   ED->right      = right;
+   s_ED->top        = top;
+   s_ED->left       = left;
+   s_ED->bottom     = bottom;
+   s_ED->right      = right;
 
-   ED->last_display = ED->first_display;
-   ED->stabil       = ED->bottom - ED->top + 1;
+   s_ED->last_display = s_ED->first_display;
+   s_ED->stabil       = s_ED->bottom - s_ED->top + 1;
 
-   if( ED->IsConfigured )
+   if( s_ED->IsConfigured )
    {
       /* In event driven world the position and size of the editor window can
       * change between activations - recalculate some required values
       */
-      ED->first_display  = ED->current_line;
+      s_ED->first_display  = s_ED->current_line;
 
       /* find the first line to display - try to keep visible the current line
        * and display this line in the same row in the window (if possible)
        */
-      for ( i = 0; i < ED->cursor_row; i++ )
+      for( i = 0; i < s_ED->cursor_row; i++ )
       {
-         j = Prev( ED, ED->first_display );
-         if ( j >= 0 )
-         ED->first_display = j;
+         j = Prev( s_ED, s_ED->first_display );
+         if( j >= 0 )
+            s_ED->first_display = j;
          else
-         ED->cursor_row--;
-         if ( ED->cursor_row < 0 )
-         ED->cursor_row = 0;
+            s_ED->cursor_row--;
+         if( s_ED->cursor_row < 0 )
+            s_ED->cursor_row = 0;
       }
 
       /* find the last line for display */
-      for( i = 0; i < ED->bottom - ED->top; i++ )
+      for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
       {
-         j = Next ( ED, ED->last_display );
-         if ( j >= 0 )
-         ED->last_display  = j;
+         j = Next( s_ED, s_ED->last_display );
+         if( j >= 0 )
+            s_ED->last_display  = j;
       }
    }
    else
    {
-      ED->first_display  = ED->first_line;
+      s_ED->first_display  = s_ED->first_line;
 
       /* find the last line for display */
-      nwys =ED->bottom - ED->top;
+      nwys = s_ED->bottom - s_ED->top;
       for( i = 0; i < nwys; i++ )
       {
-         j = Next( ED, ED->last_display );
-         if ( j >= 0 )
-         ED->last_display  = j;
+         j = Next( s_ED, s_ED->last_display );
+         if( j >= 0 )
+            s_ED->last_display  = j;
       }
       /* check if this line is empty */
-      if( strlen(ED->begin+(unsigned int)ED->last_display) == 0 )
-         ED->last_display = Prev( ED, ED->last_display );
+      if( strlen( s_ED->begin + ( unsigned int ) s_ED->last_display ) == 0 )
+         s_ED->last_display = Prev( s_ED, s_ED->last_display );
 
       /* set initial cursor position in the window */
-      ED->cursor_row = nRow;
-      ED->cursor_col = nCol;
+      s_ED->cursor_row = nRow;
+      s_ED->cursor_col = nCol;
    }
 
-   if( ED->IsConfigured )
+   if( s_ED->IsConfigured )
    {
-      nszer = ED->right - ED->left + 1;
-      nwys  = ED->bottom - ED->top + 1;
+      nszer = s_ED->right - s_ED->left + 1;
+      nwys  = s_ED->bottom - s_ED->top + 1;
 
-      diff = abs(szer - nszer);
-      if(szer < nszer)
+      diff = abs( szer - nszer );
+      if( szer < nszer )
       {
          /* current width of the window is greater then during previous activation
           * adjust the first visible column
           */
-         if(ED->first_col > diff)
+         if( s_ED->first_col > diff )
          {
-            ED->first_col -= diff;
-            ED->cursor_col+= diff;
+            s_ED->first_col -= diff;
+            s_ED->cursor_col += diff;
          }
          else
          {
-            ED->cursor_col+= ED->first_col;
-            ED->first_col = 0;
+            s_ED->cursor_col += s_ED->first_col;
+            s_ED->first_col = 0;
          }
       }
-      if(szer > nszer)
+      if( szer > nszer )
       { /* current width of the window is smaller then during previous activation
          */
-         if(ED->cursor_col > (nszer - 1))
+         if( s_ED->cursor_col > ( nszer - 1 ) )
          {
-            ED->first_col += ED->cursor_col - nszer + 1;
-            ED->cursor_col = nszer - 1;
+            s_ED->first_col += s_ED->cursor_col - nszer + 1;
+            s_ED->cursor_col = nszer - 1;
          }
       }
 
-      diff = abs(nwys - wys);
-      if(wys > nwys)
+      diff = abs( nwys - wys );
+      if( wys > nwys )
       {
          /* current height of the window is smaller then during previous activation
          */
-         if( ED->cursor_row < nwys )
+         if( s_ED->cursor_row < nwys )
          {
             /* the old cursor row position is smaller then the window height
             */
-            tmp  = ED->last_display;
-            for ( i = 0; i < diff; i++ )
+            tmp = s_ED->last_display;
+            for( i = 0; i < diff; i++ )
             {
-               j = Prev ( ED, tmp );
-               if ( j >= 0 )
+               j = Prev( s_ED, tmp );
+               if( j >= 0 )
                   tmp = j;
 
             }
-            ED->last_display = tmp;
+            s_ED->last_display = tmp;
          }
          else
          {
@@ -839,290 +687,212 @@ CLIPPER HB_ED_CONFIG(int nEdit, int top, int left, int bottom, int right,
              *  display the line where the cursor is placed as the last visible
              *  line in the window
              */
-            ED->last_display  = ED->current_line;
-            tmp  = ED->last_display;
+            s_ED->last_display = s_ED->current_line;
+            tmp = s_ED->last_display;
 
-            for(i = 0; i < nwys-1; i++)
+            for( i = 0; i < nwys - 1; i++ )
             {
-               j = Prev ( ED, tmp );
-               if ( j >= 0 )
+               j = Prev( s_ED, tmp );
+               if( j >= 0 )
                   tmp = j;
             }
-            ED->first_display = tmp;
-            ED->cursor_row = nwys - 1;
+            s_ED->first_display = tmp;
+            s_ED->cursor_row = nwys - 1;
          }
       }
    }
    else
    {
-      ED->current_line   = ED->first_line;
-      ED->active         = 1;
+      s_ED->current_line   = s_ED->first_line;
+      s_ED->active         = 1;
    }
 
-   ED->IsConfigured   = 1;
-   ED->stable         = FALSE;
-   ED->current_stabil = 0;
-   ED->next_stabil    = ED->first_display;
-   ED->dir            = DOWN;
+   s_ED->IsConfigured   = 1;
+   s_ED->stable         = HB_FALSE;
+   s_ED->current_stabil = 0;
+   s_ED->next_stabil    = s_ED->first_display;
+   s_ED->dir            = DOWN;
 }
 
-/*
- ** Returns current text buffer
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_GETTEXT )
-#else
-char *HB_ED_GETTEXT(int nEdit, int Case, int mietka )
-#endif
+/* Returns current text buffer */
+HB_FUNC( ED_GETTEXT )
 {
    long int  dl;
-   char          *bufor, *help;
-   EDITOR        *E;
+   char * buffer, * help;
+   EDITOR * E;
 
-#ifdef mc51
    int Case, mietka;
    int nEdit;
 
-   nEdit  = _parni(1);
-   Case   = _parni(2);
-   mietka = _parni(3);
-#else
-   int p;
-#endif
+   nEdit  = hb_parni( 1 );
+   Case   = hb_parni( 2 );
+   mietka = hb_parni( 3 );
 
-      E = ETab[nEdit];
+      E = s_ETab[ nEdit ];
 
-      dl    = strlen ( E->begin ) +3;
+      dl    = strlen( E->begin ) + 3;
 
-   #ifdef mc51
-      bufor = (char *)_xalloc((unsigned int) dl);
-   #else
-      bufor = calloc((unsigned int) dl,1);
+      buffer = ( char * ) hb_xgrab( ( unsigned int ) dl );
 
-      strcpy(name,"C:\\out.txt");
-      p     = open(name,O_CREAT+O_WRONLY+O_BINARY);
-   #endif
+      strcpy( buffer, E->begin );
 
-      strcpy ( bufor, E->begin );
-
-      switch (Case)
+      switch( Case )
       {
-   /* IT USES INTERNAL CLIPPER FUNCTIONS
-      #ifdef mc51
-         case 0: _ncopyuc(bufor, bufor, (unsigned int) dl);
-                  break;
-         case 1: _ncopylc(bufor, bufor, (unsigned int) dl);
-                  break;
-      #else
-   */
-         case 0: bufor = strlwr(bufor);
-                  break;
-         case 1: bufor = strupr(bufor);
-   /*     #endif */
+         case 0:
+            buffer = strlwr( buffer );
+            break;
+         case 1:
+            buffer = strupr( buffer );
+            break;
 
          default:;
       }
 
-      help = bufor;
-      if(mietka != SOFT)
+      help = buffer;
+      if( mietka != SOFT )
       {
-         while(help !=NULL)
+         while( help !=NULL )
          {
-            help = strstr(bufor,"\n");   /* CHR(141)+CHR(10) */
+            help = strstr( buffer, "\n" );   /* CHR(141)+CHR(10) */
             if( help )
-               help[0] = '\r';
+               help[ 0 ] = '\r';
          }
       }
 
-#ifdef mc51
-   _retc  ( bufor );
-   _xfree ( bufor );
-#else
-   write(p, bufor, (unsigned int) dl);
-   return(bufor);
-#endif
+   hb_retc( buffer );
+   hb_xfree( buffer );
 }
 
-/*
- ** Returns given line of text and positions caret at the beginning of next line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_GETLINE )
-#else
-char *HB_ED_GETLINE(int nEdit, long int linia )
-#endif
+/* Returns given line of text and positions caret at the beginning of next line */
+HB_FUNC( ED_GETLINE )
 {
    long int        l, j;
    long int        tmp;
-   char            *bufor;
-   EDITOR          *E;
+   char *          buffer;
+   EDITOR *        E;
    int             rdl, dl;
    long int        i;
 
-#ifdef mc51
    long int linia;
-   int          nEdit;
+   int      nEdit;
 
-   nEdit  = _parni(1);
-   linia  = (long int) _parni(2);
-#endif
+   nEdit  = hb_parni( 1 );
+   linia  = ( long int ) hb_parni( 2 );
 
-   E = ETab[nEdit];
+   E = s_ETab[ nEdit ];
 
    l = 1;
    tmp = E->first_line;
-   for(i = 1; i < linia; i++)
+   for( i = 1; i < linia; i++ )
    {
-      j = Next ( E, tmp );
-      if ( j >= 0 )
+      j = Next( E, tmp );
+      if( j >= 0 )
       {
          tmp = j;
          l++;
       }
    }
+
    if( l == linia )
    {
-      dl = GetLineLength ( E, tmp, &rdl );
+      dl = GetLineLength( E, tmp, &rdl );
       dl++;
-      #ifdef mc51
-         bufor = (char *)_xalloc( dl );
-      #else
-         bufor = calloc( dl,1 );
-      #endif
+      buffer = ( char * ) hb_xgrab( dl );
 
-      strncpy ( bufor, E->begin + (unsigned int) tmp, dl-1 );
-      bufor[ (dl-1) ] = '\x0';
-   }
+      strncpy( buffer, E->begin + ( unsigned int ) tmp, dl - 1 );
+      buffer[ dl - 1 ] = '\x0';
 
-   E->next_line = Next ( E, tmp );
-
-#ifdef mc51
-   _retc  ( bufor );
-   _xfree ( bufor );
-#else
-   return( bufor );
-#endif
-}
-
-/*
- ** Returns current line pointed by caret position and advances it to the beginning of next line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_GETNEXT )
-#else
-char *HB_ED_GETNEXT(int nEdit)
-#endif
-{
-   char             *bufor;
-   EDITOR           *E;
-   int              rdl, dl;
-
-#ifdef mc51
-   int nEdit;
-
-   nEdit  = _parni(1);
-#endif
-
-   E = ETab[nEdit];
-   if ( E->next_line > 0 )
-   {
-      dl = GetLineLength ( E, E->next_line, &rdl );
-      dl++;
-      #ifdef mc51
-         bufor = (char *)_xalloc ( dl );
-      #else
-         bufor = calloc  ( dl, 1 );
-      #endif
-
-      strncpy ( bufor, E->begin + (unsigned int) E->next_line, dl-1 );
-      bufor [ (unsigned int) (dl-1) ] = '\x0';
-      E->next_line = Next ( E, E->next_line );
-
-      #ifdef mc51
-         _retc  ( bufor );
-         _xfree ( bufor );
-      #else
-
-         DISPXYA( 1, 24, 5, bufor );
-         return( bufor );
-      #endif
+      hb_retc_buffer( buffer );
    }
    else
+      hb_retc_null();
+
+   E->next_line = Next( E, tmp );
+}
+
+/* Returns current line pointed by caret position and advances it to the beginning of next line */
+HB_FUNC( ED_GETNEXT )
+{
+   char * buffer;
+   EDITOR * E;
+   int rdl, dl;
+
+   int nEdit;
+
+   nEdit  = hb_parni( 1 );
+
+   E = s_ETab[ nEdit ];
+   if( E->next_line > 0 )
    {
-      #ifdef mc51
-         _ret();
-      #else
-         DISPXYA( 1, 24, 5, "KONIEC" );
-         return( NULL );
-      #endif
+      dl = GetLineLength( E, E->next_line, &rdl );
+      dl++;
+      buffer = ( char * ) hb_xgrab( dl );
+
+      strncpy( buffer, E->begin + ( unsigned int ) E->next_line, dl-1 );
+      buffer[ ( unsigned int ) ( dl-1 ) ] = '\x0';
+      E->next_line = Next( E, E->next_line );
+
+      hb_retc( buffer );
+      hb_xfree( buffer );
    }
+   else
+      hb_ret();
 }
 
 /* Resets text buffer
  */
-static void KillText ( EDITOR *E )
+static void KillText( EDITOR * E )
 {
-   memset( E->begin, '\x0', (unsigned int) E->bufor_size );
+   memset( E->begin, '\x0', ( unsigned int ) E->buffer_size );
    E->first_line = E->last_line = 0;
 }
 
-/*
- ** Stores new text into editor
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_SETTEXT )
-#else
-CLIPPER HB_ED_SETTEXT(int nEdit, char *adres)
-#endif
+/* Stores new text into editor */
+HB_FUNC( ED_SETTEXT )
 {
-   EDITOR *E;
+   EDITOR * E;
 
-#ifdef mc51
-   char *adres;
-   int  nEdit;
+   const char * adres;
+   int nEdit;
 
-   nEdit = _parni (1);
-   adres = _parc  (2);
-#endif
+   nEdit = hb_parni( 1 );
+   adres = hb_parc( 2 );
 
-   E = ETab[nEdit];
+   E = s_ETab[ nEdit ];
 
    KillText( E );
 
-   New( E, E->tab_size, E->line_length, E->bufor_size );
+   New( E, E->tab_size, E->line_length, E->buffer_size );
 
-   AddText ( nEdit, adres );
+   AddText( nEdit, adres );
 }
 
-/*
- ** Reads a text from the file
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_READTEXT )
+/* Reads a text from the file */
+HB_FUNC( ED_READTEXT )
 {
-   unsigned int nEdit, nFile, nSize, lSuccess=FALSE;
+   unsigned int nEdit, nFile, nSize, lSuccess = HB_FALSE;
    long int nSeek, nRead;
-   EDITOR *E;
+   EDITOR * E;
 /* BOOL lConv; */
 
-   nEdit =_parni( 1 );
-   E =ETab[ nEdit ];
+   nEdit = hb_parni( 1 );
+   E = s_ETab[ nEdit ];
 
    KillText( E );
-   New( E, E->tab_size, E->line_length, E->bufor_size );
+   New( E, E->tab_size, E->line_length, E->buffer_size );
 
-   nFile =_parni( 2 );
-   nSeek =_parnl( 3 );
-   nSize =_parni( 4 );
-/* lConv =_parl( 5 ); */
+   nFile = hb_parni( 2 );
+   nSeek = hb_parnl( 3 );
+   nSize = hb_parni( 4 );
+/* lConv = hb_parl( 5 ); */
 
-   nRead =_fsSeek( nFile, nSeek, FS_SET );
+   nRead = hb_fsSeek( nFile, nSeek, FS_SET );
    if( nRead == nSeek )
    {
-      if( nSize > (unsigned int)(E->bufor_size-10) )
-         nSize =(unsigned int)E->bufor_size-10;
+      if( nSize > ( unsigned int ) ( E->buffer_size - 10 ) )
+         nSize = ( unsigned int ) E->buffer_size - 10;
 
-      nSize =_fsRead( nFile, (unsigned char *)E->begin, nSize );
+      nSize = hb_fsRead( nFile, ( unsigned char * ) E->begin, nSize );
       E->begin[ nSize ] ='\x0';
 
       E->text_length =nSize;
@@ -1134,9 +904,9 @@ CLIPPER_ACTION( ED_READTEXT )
  *
    if( lConv )
    {
-      unsigned char *cPtr;
+      unsigned char * cPtr;
 
-      cPtr =(unsigned char *) E->begin;
+      cPtr = ( unsigned char * ) E->begin;
       while( nSize-- )
       {
          if( *cPtr == 181 )
@@ -1150,52 +920,35 @@ CLIPPER_ACTION( ED_READTEXT )
 */
       NewText( E );
 
-      lSuccess =TRUE;
-      E->stable =FALSE;
+      lSuccess = HB_TRUE;
+      E->stable = HB_FALSE;
    }
 
-   _retl( lSuccess );
+   hb_retl( lSuccess );
 }
-#endif
 
-/*
- ** Releases memory occupied by the editor
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_KILL )
-#else
-CLIPPER HB_ED_KILL(int nEdit)
-#endif
+/* Releases memory occupied by the editor */
+HB_FUNC( ED_KILL )
 {
-   EDITOR *E;
+   EDITOR * E;
 
-#ifdef mc51
    int nEdit;
 
-   nEdit = _parni(1);
-#endif
+   nEdit = hb_parni( 1 );
 
-   E = ETab[nEdit];
+   E = s_ETab[ nEdit ];
    KillText( E );
 
-   #ifdef mc51
-      _xfree ( E->begin );
-   #else
-      free ( E->begin );
-   #endif
+   hb_xfree ( E->begin );
 
-   #ifdef mc51
-      _xfree(E);
-   #else
-      free(E);
-   #endif
+   hb_xfree( E );
 
-   ETab[nEdit] = NULL;
+   s_ETab[nEdit] = NULL;
 }
 
 /* Sorry - I don't remember why it is here
  */
-CLIPPER_ACTION( ED_UNLOCK )
+HB_FUNC( ED_UNLOCK )
 {
 }
 
@@ -1205,179 +958,160 @@ CLIPPER_ACTION( ED_UNLOCK )
  * It is simmilar to TBrowse:forceStable()
  * Incremental stabilisation was too slow
 */
-#ifdef mc51
-CLIPPER_ACTION( ED_STABILIZE )
-#else
-int HB_ED_STABILI( void )
-#endif
+HB_FUNC( ED_STABILIZE )
 {
-   unsigned int nRow=0, nEscLen, nLen, width, i,j, e;
+   unsigned int nRow = 0, nEscLen, nLen, width, i, j, e;
    int nLeft, nTop;
-   char *EscPtr;
-   char *cPtr;
-   char  adres[ MAX_LINE_LEN + 2 ];
+   char * EscPtr;
+   char * cPtr;
+   char adres[ MAX_LINE_LEN + 2 ];
 
-   while( --ED->stabil >= 0 )
+   while( --s_ED->stabil >= 0 )
    {
       /* there are some lines of text to display
       */
-      width =ED->right - ED->left + 1;
+      width = s_ED->right - s_ED->left + 1;
 
-      if( ED->next_stabil >= 0 )
+      if( s_ED->next_stabil >= 0 )
       {
-         cPtr =ED->begin +ED->next_stabil;
-         for( nEscLen=nLen=0; *cPtr && *cPtr != '\n'; cPtr++ )
+         cPtr = s_ED->begin + s_ED->next_stabil;
+         for( nEscLen = nLen = 0; *cPtr && *cPtr != '\n'; cPtr++ )
          {
             /* copy the line into temporary buffer - count characters used
             * as color escape codes
             */
-            adres[nLen++] =*cPtr;
-            if( ED->escape && (char)*cPtr == ED->escape )
-               nEscLen +=2;
+            adres[ nLen++ ] =*cPtr;
+            if( s_ED->escape && ( char ) *cPtr == s_ED->escape )
+               nEscLen += 2;
          }
-         j =nLen -nEscLen;    /* length of printable text */
+         j = nLen - nEscLen;    /* length of printable text */
          adres[nLen] = '\x0';
 
-         if( ED->first_col >= j )
-            adres[ nEscLen=nLen=0 ] ='\x0'; /* first visible column is greater then line length */
+         if( s_ED->first_col >= j )
+            adres[ nEscLen = nLen = 0 ] = '\x0'; /* first visible column is greater then line length */
 
-         else if( ED->first_col )
+         else if( s_ED->first_col )
          {
             /* text is scrolled right - we need to find the first
              * color escape code that will be visible
              * text ~2 in bold ~1 in normal
              *          ^-first visible column
              */
-            e =0;
-            if( ED->escape )
+            e = 0;
+            if( s_ED->escape )
             {
-               for( i=0; i < (ED->first_col+e) ; i++ )
-                  if( (char)adres[i] == ED->escape )
+               for( i = 0; i < ( s_ED->first_col + e ); i++ )
+               {
+                  if( ( char ) adres[ i ] == s_ED->escape )
                   {
-                     adres[0] =adres[i];
-                     adres[1] =adres[++i];
+                     adres[ 0 ] = adres[ i ];
+                     adres[ 1 ] = adres[ ++i ];
                      e +=2;
-                  };
+                  }
+               }
             }
 
             if( e )
             {
-               nLen -=(i-2);
-               if( (char)adres[i-1] == ED->escape )
+               nLen -= ( i - 2 );
+               if( ( char ) adres[ i - 1 ] == s_ED->escape )
                   i++, nLen--;
-               strncpy( adres+2, adres+i, nLen-2 );
-               nEscLen -=(e-2);
+               strncpy( adres + 2, adres + i, nLen - 2 );
+               nEscLen -= ( e - 2 );
             }
             else
             {
-               nLen -=ED->first_col;
-               strncpy( adres, adres+ED->first_col, nLen );
+               nLen -= s_ED->first_col;
+               strncpy( adres, adres+s_ED->first_col, nLen );
             }
             adres[ nLen ] = '\x0';
          }
 
          if( nLen )
+         {
             if( adres[ nLen-1 ] & '\xd' ) /* soft or hard carriage */
                adres[ --nLen ] = '\x0';
-
-         /* find next line for displaying */
-         switch( ED->dir )
-         {
-         case DOWN : ED->next_stabil =Next( ED, ED->next_stabil );
-                     nRow =ED->current_stabil++;
-                     break;
-
-         case UP   : ED->next_stabil =Prev( ED, ED->next_stabil );
-                     nRow =ED->current_stabil--;
-                     break;
-
-         default   : ;
          }
 
-         _gtColorSelect( 0 );    /* select default color */
+         /* find next line for displaying */
+         switch( s_ED->dir )
+         {
+         case DOWN : s_ED->next_stabil = Next( s_ED, s_ED->next_stabil );
+                     nRow = s_ED->current_stabil++;
+                     break;
 
-         nTop  =ED->top +nRow;
+         case UP   : s_ED->next_stabil = Prev( s_ED, s_ED->next_stabil );
+                     nRow = s_ED->current_stabil--;
+                     break;
+         }
+
+         hb_gtColorSelect( 0 );    /* select default color */
+
+         nTop = s_ED->top + nRow;
          if( nLen )
          {
-            if( ED->escape && ( EscPtr = strchr( adres, ED->escape ) ) != 0 )
+            if( s_ED->escape && ( EscPtr = strchr( adres, s_ED->escape ) ) != 0 )
             {
-               i  =(unsigned int)(EscPtr - adres);
-               nLeft =ED->left +i;
+               i = ( unsigned int )( EscPtr - adres );
+               nLeft = s_ED->left + i;
 
                if( i )
-                  _gtWriteAt( nTop, ED->left, (unsigned char *)adres, (width < i)?width:i );
+                  hb_gtWriteAt( nTop, s_ED->left, adres, ( width < i ) ? width : i );
 
-               for( ; i < nLen && nLeft <= ED->right; i++ )
-                  if( (char)adres[i] == ED->escape )
-                     _gtColorSelect( (adres[++i] & '\x0F')-1 );
+               for( ; i < nLen && nLeft <= s_ED->right; i++ )
+               {
+                  if( ( char )adres[ i ] == s_ED->escape )
+                     hb_gtColorSelect( ( adres[ ++i ] & '\x0F' ) - 1 );
                   else
-                     _gtWriteAt( nTop, nLeft++, (unsigned char *)adres+i, 1 );
+                     hb_gtWriteAt( nTop, nLeft++, adres + i, 1 );
+               }
             }
             else
-               _gtWriteAt( nTop, ED->left, (unsigned char *)adres, ((width < nLen)?width:nLen ) );
+               hb_gtWriteAt( nTop, s_ED->left, adres, ( ( width < nLen ) ? width : nLen ) );
          }
 
          /* fill the rest of the row with spaces */
-         if( (nLen-nEscLen) < width )
-            _gtRepChar( nTop, ED->left+nLen-nEscLen, ' ', width-nLen+nEscLen );
+         if( ( nLen - nEscLen ) < width )
+            hb_gtRepChar( nTop, s_ED->left + nLen - nEscLen, ' ', width - nLen + nEscLen );
       }
       else
       {
          /* no more lines of text to display - fill the window with spaces
          */
-         switch( ED->dir )
+         switch( s_ED->dir )
          {
-         case DOWN : nRow = ED->current_stabil++;
-                     break;
-         case UP   : nRow = ED->current_stabil--;
-                     break;
-         default   : ;
+         case DOWN:
+            nRow = s_ED->current_stabil++;
+            break;
+         case UP:
+            nRow = s_ED->current_stabil--;
+            break;
          }
 
-         _gtColorSelect( 0 );
-         _gtRepChar( ED->top+nRow, ED->left, ' ', width );
+         hb_gtColorSelect( 0 );
+         hb_gtRepChar( s_ED->top + nRow, s_ED->left, ' ', width );
       }
 
-      _gtColorSelect( 0 );
+      hb_gtColorSelect( 0 );
    }
 
-   ED->stable = TRUE;
+   s_ED->stable = HB_TRUE;
 
-#ifdef mc51
-   _retni( nRow );
-#else
-   return( nRow );
-#endif
+   hb_retni( nRow );
 }
-
-#ifndef mc51
-   void IInsert(void)
-   {
-      if(insert)
-         insert = FALSE;
-      else
-         insert = TRUE;
-   }
-#endif
-
-#ifndef mc51
-   void init_window(void)
-   {
-   HB_ED_STABILI();
-   }
-#endif
 
 /* Removes trailing spaces from the end of line
  */
-static unsigned int Clear( EDITOR *E, long int e, unsigned int *nEsc )
+static unsigned int Clear( EDITOR * E, long int e, unsigned int *nEsc )
 {
    unsigned int nLen, i;
 
-   nLen =GetLineLength( E, e, (int*)nEsc );
-   i =(unsigned int)e + nLen + *nEsc;
+   nLen = GetLineLength( E, e, ( int * ) nEsc );
+   i = ( unsigned int ) e + nLen + *nEsc;
 
    if( i )
-      while( E->begin[ i-1 ] == ' ' )
+   {
+      while( E->begin[ i - 1 ] == ' ' )
       {
          if( E->cursor_col > 0 )
             E->cursor_col--;
@@ -1385,26 +1119,27 @@ static unsigned int Clear( EDITOR *E, long int e, unsigned int *nEsc )
          else if( E->first_col > 0 )
             E->first_col--;
 
-         MoveText( E, (long int)i, (long int)i-1, E->text_length -i +3 );
+         MoveText( E, ( long int ) i, ( long int ) i - 1, E->text_length - i + 3 );
          nLen--;
       }
+   }
 
-   return( nLen );
+   return nLen;
 }
 
 /* Moves the cursor to the next line of text
  */
-static void Down( EDITOR *E )
+static void Down( EDITOR * E )
 {
    long int j;
    unsigned int nEsc;
 
    j = Next( E, E->current_line );  /* find the offset of next line */
-   if ( E->begin [ (unsigned int) j ] == '\x0' )
+   if( E->begin[ ( unsigned int ) j ] == '\x0' )
       j = -1;     /* no more lines */
-   if ( j < 0 )
+   if( j < 0 )
    {
-      E->stable = TRUE;
+      E->stable = HB_TRUE;
    }
    else
    {
@@ -1412,7 +1147,7 @@ static void Down( EDITOR *E )
       Clear( E, E->current_line, &nEsc );
 
       j = Next( E, E->current_line );
-      if ( j >= 0 )
+      if( j >= 0 )
       {
          E->current_line = j;
       }
@@ -1420,17 +1155,13 @@ static void Down( EDITOR *E )
       {
          /* attempt to move to the line that was not visible yet
           */
-         #ifdef mc51
-            E->stabil      = 1;  /* only one line needs to be redisplayed */
-         #else
-            E->stabil      = E->bottom - E->top + 1;
-         #endif
+         E->stabil      = 1;  /* only one line needs to be redisplayed */
 
          E->cursor_row     = E->bottom - E->top;
          E->first_display  = Next( E, E->first_display );
          E->last_display   = j;
 
-         E->stable         = FALSE;
+         E->stable         = HB_FALSE;
          E->next_stabil    = E->last_display;
          E->dir            = UP;
          E->current_stabil = E->cursor_row;
@@ -1451,20 +1182,12 @@ static void Down( EDITOR *E )
 
 
 
-/*
- ** Moves cursor to the next line of text
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_DOWN )
-#else
-CLIPPER HB_ED_DOWN(void)
-#endif
+/* Moves cursor to the next line of text */
+HB_FUNC( ED_DOWN )
 {
-   Down( ED );
+   Down( s_ED );
 
-#ifdef mc51
-   _retl(ED->stable);
-#endif
+   hb_retl(s_ED->stable);
 }
 
 /* Moves the cursor to the previous line of text
@@ -1476,375 +1199,325 @@ static void Up( void )
    unsigned int nEsc;
 
    /* find the previous line */
-   jj = Prev ( ED, ED->current_line );
-   if ( jj < 0 )
+   jj = Prev( s_ED, s_ED->current_line );
+   if( jj < 0 )
    {
-      ED->stable = TRUE;
+      s_ED->stable = HB_TRUE;
    }
    else
    {
-      ED->active--;
-      Clear( ED, ED->current_line, &nEsc );
-      ED->current_line = jj;
-      if( ((--ED->cursor_row)+ED->top) < ED->top )
+      s_ED->active--;
+      Clear( s_ED, s_ED->current_line, &nEsc );
+      s_ED->current_line = jj;
+      if( ((--s_ED->cursor_row)+s_ED->top) < s_ED->top )
       {
          /* the new line was not displayed yet */
-      #ifdef mc51
-         ED->stabil = 1;   /* only one line needs redisplay - rest of lines will be scrolled */
-      #else
-         ED->stabil = ED->bottom - ED->top + 1;
-      #endif
+         s_ED->stabil = 1;   /* only one line needs redisplay - rest of lines will be scrolled */
 
          j              = 0;
-         ED->cursor_row = 0;
+         s_ED->cursor_row = 0;
 
          /* count the number of lines that will be visible in the window.
           * If the number of lines is smaller then the window height then
           * the offset of last displayed line will be not changed
           */
-         ED->first_display  = Prev ( ED, ED->first_display );
-         tmp                = ED->first_display;
-         for(i = 0; i < ED->bottom - ED->top + 1; i++)
+         s_ED->first_display  = Prev( s_ED, s_ED->first_display );
+         tmp                = s_ED->first_display;
+         for( i = 0; i < s_ED->bottom - s_ED->top + 1; i++ )
          {
-            jj = Next ( ED, tmp );
-            if ( jj >= 0 )
+            jj = Next( s_ED, tmp );
+            if( jj >= 0 )
             {
                tmp = jj;
                j++;
             }
          }
-         if( j == (ED->bottom - ED->top + 1) )
-            ED->last_display   = Prev ( ED, ED->last_display );
+         if( j == (s_ED->bottom - s_ED->top + 1) )
+            s_ED->last_display   = Prev( s_ED, s_ED->last_display );
 
-         ED->stable         = FALSE;
-         ED->next_stabil    = ED->current_line;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         s_ED->stable         = HB_FALSE;
+         s_ED->next_stabil    = s_ED->current_line;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
    }
 }
 
-/*
- ** Moves the cursor to the previous line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_UP )
-#else
-CLIPPER HB_ED_UP(void)
-#endif
+/* Moves the cursor to the previous line */
+HB_FUNC( ED_UP )
 {
   Up();
 
-#ifdef mc51
-   _retl(ED->stable);
-#endif
+   hb_retl(s_ED->stable);
 }
 
-/*
- ** Moves the cursor to the next page of text
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_PGDOWN )
-#else
-CLIPPER HB_ED_PGDOWN(void)
-#endif
+/* Moves the cursor to the next page of text */
+HB_FUNC( ED_PGDOWN )
 {
    int i;
    long int j;
 
-   j = Next( ED, ED->last_display );
-   if( ED->begin[ (unsigned int) j ] == '\x0' )
+   j = Next( s_ED, s_ED->last_display );
+   if( s_ED->begin[ ( unsigned int ) j ] == '\x0' )
    {  /* no more lines */
-      ED->stable = TRUE;
+      s_ED->stable = HB_TRUE;
       /* advance the cursor as much as possible (to the last line) */
-      for( i=0; i < ED->bottom - ED->top +1; i++ )
-         Down( ED );
+      for( i = 0; i < s_ED->bottom - s_ED->top + 1; i++ )
+         Down( s_ED );
       return;
    }
 
    /* the last possible line will be displayed at the very bottom of the window */
    /* find the last line to display */
-   for(i = 0; i < ED->bottom - ED->top; i++)
+   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
    {
-      j = Next ( ED, ED->last_display );
-      if ( j >= 0 )
+      j = Next( s_ED, s_ED->last_display );
+      if( j >= 0 )
       {
-         if ( ED->begin [ (unsigned int)j ] != '\x0' )
+         if( s_ED->begin[ ( unsigned int )j ] != '\x0' )
          {
-            ED->active++;
-            ED->last_display = j;
+            s_ED->active++;
+            s_ED->last_display = j;
          }
       }
       else
          break;   /* no more lines */
    }
 
-   if ( ED->begin[ (unsigned int)ED->last_display ] == '\x0' )
-      ED->last_display = Prev ( ED, ED->last_display );
-   ED->first_display = ED->last_display;
+   if( s_ED->begin[ ( unsigned int )s_ED->last_display ] == '\x0' )
+      s_ED->last_display = Prev( s_ED, s_ED->last_display );
+   s_ED->first_display = s_ED->last_display;
 
    /* find the first displayed line now */
-   for(i = 0; i < ED->bottom - ED->top; i++)
+   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
    {
-      j = Prev ( ED, ED->first_display );
-      if ( j >= 0 )
-         ED->first_display = j;
+      j = Prev( s_ED, s_ED->first_display );
+      if( j >= 0 )
+         s_ED->first_display = j;
       else
-         ED->first_display = 0;
+         s_ED->first_display = 0;
    }
 
    /* find the offset of the line where the currsor will be displayed */
-   ED->current_line = ED->last_display;
-   for(i = 0; i < ED->bottom - ED->top - ED->cursor_row; i++)
+   s_ED->current_line = s_ED->last_display;
+   for( i = 0; i < s_ED->bottom - s_ED->top - s_ED->cursor_row; i++ )
    {
-      j = Prev ( ED, ED->current_line );
-      if ( j >= 0 )
-         ED->current_line = j;
+      j = Prev( s_ED, s_ED->current_line );
+      if( j >= 0 )
+         s_ED->current_line = j;
       else
-         ED->current_line = 0;
+         s_ED->current_line = 0;
    }
 
-   ED->stable         = FALSE;
-   ED->next_stabil    = ED->first_display;
-   ED->stabil         = ED->bottom - ED->top + 1;
-   ED->dir            = DOWN;
-   ED->current_stabil = 0;
+   s_ED->stable         = HB_FALSE;
+   s_ED->next_stabil    = s_ED->first_display;
+   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+   s_ED->dir            = DOWN;
+   s_ED->current_stabil = 0;
 
 }
 
 
-/*
- ** Moves the cursor to the previous page of text
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_PGUP )
-#else
-CLIPPER HB_ED_PGUP(void)
-#endif
+/* Moves the cursor to the previous page of text */
+HB_FUNC( ED_PGUP )
 {
    int i, bt;
    long int j;
 
-   bt = ED->bottom - ED->top;
+   bt = s_ED->bottom - s_ED->top;
 
-   j = Prev ( ED, ED->first_display );
+   j = Prev( s_ED, s_ED->first_display );
    if( j < 0 )
    {  /* no more lines to move */
-      ED->stable = TRUE;
+      s_ED->stable = HB_TRUE;
       /* advannce the cursor to the topmost line */
-      for(i=0; i < bt + 1; i++)
+      for( i = 0; i < bt + 1; i++ )
         Up();
       return;
    }
 
    /* find the offset of the first visible line */
-   for(i = 0; i < bt; i++)
+   for( i = 0; i < bt; i++ )
    {
-      j = Prev ( ED, ED->first_display );
-      if ( j >= 0 )
+      j = Prev( s_ED, s_ED->first_display );
+      if( j >= 0 )
       {
-         ED->active--;
-         ED->first_display = j;
+         s_ED->active--;
+         s_ED->first_display = j;
       }
       else
          break;   /* no more line */
    }
    /* now the last visible line */
-   ED->last_display = ED->first_display;
-   for(i = 0; i < bt; i++)
+   s_ED->last_display = s_ED->first_display;
+   for( i = 0; i < bt; i++ )
    {
-      j = Next ( ED, ED->last_display );
-      if ( j >= 0 )
-        ED->last_display  = j;
+      j = Next( s_ED, s_ED->last_display );
+      if( j >= 0 )
+         s_ED->last_display  = j;
    }
 
    /* update the offset of line where the cursor will be displayed
     * keep the cursor in the same row if possible
     */
-   ED->current_line = ED->last_display;
-   for(i = 0; i < bt - ED->cursor_row; i++)
+   s_ED->current_line = s_ED->last_display;
+   for( i = 0; i < bt - s_ED->cursor_row; i++ )
    {
-     j = Prev ( ED, ED->current_line );
-     if ( j >= 0 )
-       ED->current_line = j;
-     else
-       ED->current_line = 0;
+      j = Prev( s_ED, s_ED->current_line );
+      if( j >= 0 )
+         s_ED->current_line = j;
+      else
+         s_ED->current_line = 0;
    }
 
-   ED->stable         = FALSE;
-   ED->next_stabil    = ED->last_display;
-   ED->stabil         = bt + 1;
-   ED->dir            = UP;
-   ED->current_stabil = bt;
+   s_ED->stable         = HB_FALSE;
+   s_ED->next_stabil    = s_ED->last_display;
+   s_ED->stabil         = bt + 1;
+   s_ED->dir            = UP;
+   s_ED->current_stabil = bt;
 }
 
-/*
- ** Move the cursor to the beginning of the text
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_TOP )
-#else
-CLIPPER HB_ED_TOP(void)
-#endif
+/* Move the cursor to the beginning of the text */
+HB_FUNC( ED_TOP )
 {
    long int j;
    int      i;
    unsigned int nEsc;
 
-   Clear( ED, ED->current_line, &nEsc );
-   ED->current_line   = ED->first_line;
-   ED->cursor_row     = 0;
-   ED->first_display  = ED->last_display = ED->first_line;
+   Clear( s_ED, s_ED->current_line, &nEsc );
+   s_ED->current_line   = s_ED->first_line;
+   s_ED->cursor_row     = 0;
+   s_ED->first_display  = s_ED->last_display = s_ED->first_line;
 
    /* find the last visible line */
-   for(i = 0; i < ED->bottom - ED->top; i++)
+   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
    {
-      j = Next ( ED, ED->last_display );
-      if ( j >= 0 )
-         ED->last_display = j;
+      j = Next( s_ED, s_ED->last_display );
+      if( j >= 0 )
+         s_ED->last_display = j;
    }
 
-   ED->cursor_row     = ED->current_stabil = 0;
-   ED->current_line   = ED->next_stabil = ED->first_line;
-   ED->active         = 1;
-   ED->stable         = FALSE;
-   ED->stabil         = ED->bottom - ED->top + 1;
-   ED->dir            = DOWN;
-   ED->first_col      = ED->cursor_col = 0;
+   s_ED->cursor_row     = s_ED->current_stabil = 0;
+   s_ED->current_line   = s_ED->next_stabil = s_ED->first_line;
+   s_ED->active         = 1;
+   s_ED->stable         = HB_FALSE;
+   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+   s_ED->dir            = DOWN;
+   s_ED->first_col      = s_ED->cursor_col = 0;
 }
 
-/*
- ** Move the cursor to the last line of text
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_BOTTOM )
-#else
-CLIPPER HB_ED_BOTTOM(void)
-#endif
+/* Move the cursor to the last line of text */
+HB_FUNC( ED_BOTTOM )
 {
    int      i, j;
    long int jj;
    unsigned int nEsc;
 
    j = 0;
-   Clear( ED, ED->current_line, &nEsc );
-   ED->current_line   = ED->last_line;
-   ED->cursor_row     = 0;
-   ED->first_display  = ED->last_line;
+   Clear( s_ED, s_ED->current_line, &nEsc );
+   s_ED->current_line   = s_ED->last_line;
+   s_ED->cursor_row     = 0;
+   s_ED->first_display  = s_ED->last_line;
 
    /* find the first visible line */
    /* We have to count from the bottom to make it work in case the number
     * of lines is smaller then the height of the window
     */
-   ED->last_display   = ED->first_display;
-   for(i = 0; i < ED->bottom - ED->top; i++)
+   s_ED->last_display   = s_ED->first_display;
+   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
    {
-      jj = Prev ( ED, ED->first_display );
-      if ( jj >= 0 )
+      jj = Prev( s_ED, s_ED->first_display );
+      if( jj >= 0 )
       {
-         ED->first_display = jj;
+         s_ED->first_display = jj;
          j++;
       }
    }
 
-   ED->current_line   = ED->last_display;
-   ED->active         = ED->line_number;
-   ED->stable         = FALSE;
-   ED->next_stabil    = ED->first_display;
-   ED->dir            = DOWN;
-   ED->current_stabil = 0;
-   ED->first_col      = ED->cursor_col = 0;
-   ED->cursor_row     = j;
-   ED->stabil         = ED->bottom - ED->top + 1;
+   s_ED->current_line   = s_ED->last_display;
+   s_ED->active         = s_ED->line_number;
+   s_ED->stable         = HB_FALSE;
+   s_ED->next_stabil    = s_ED->first_display;
+   s_ED->dir            = DOWN;
+   s_ED->current_stabil = 0;
+   s_ED->first_col      = s_ED->cursor_col = 0;
+   s_ED->cursor_row     = j;
+   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
 }
 
 /* Go to the specified line number
  */
-static void GoTo(int line)
+static void GoTo( int line )
 {
    int          i;
    long int j;
    unsigned int nEsc;
 
-   Clear( ED, ED->current_line, &nEsc );
+   Clear( s_ED, s_ED->current_line, &nEsc );
 
    /* find specified line */
-   ED->current_line = ED->first_line;
-   for(i = 0; i < line-1; i++)
+   s_ED->current_line = s_ED->first_line;
+   for( i = 0; i < line-1; i++ )
    {
-      j = Next( ED, ED->current_line );
-      if ( j >= 0 )
-         ED->current_line = j;
+      j = Next( s_ED, s_ED->current_line );
+      if( j >= 0 )
+         s_ED->current_line = j;
    }
-   ED->cursor_row     = 0;
-   ED->first_display  = ED->current_line;
+   s_ED->cursor_row     = 0;
+   s_ED->first_display  = s_ED->current_line;
 
    /* find the offset of the last visible line */
-   ED->last_display   = ED->first_display;
-   for(i = 0; i < ED->bottom - ED->top; i++)
+   s_ED->last_display   = s_ED->first_display;
+   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
    {
-      j = Next ( ED, ED->last_display );
+      j = Next( s_ED, s_ED->last_display );
       if( j >= 0 )
-         ED->last_display = j;
+         s_ED->last_display = j;
    }
 
-   ED->active          = line;
-   ED->stable          = FALSE;
-   ED->next_stabil     = ED->current_line;
-   ED->stabil          = ED->bottom - ED->top + 1;
-   ED->dir             = DOWN;
-   ED->current_stabil  = ED->cursor_row;
-   ED->first_col       = 0;
+   s_ED->active          = line;
+   s_ED->stable          = HB_FALSE;
+   s_ED->next_stabil     = s_ED->current_line;
+   s_ED->stabil          = s_ED->bottom - s_ED->top + 1;
+   s_ED->dir             = DOWN;
+   s_ED->current_stabil  = s_ED->cursor_row;
+   s_ED->first_col       = 0;
 }
 
-/*
- ** Move the cursor to the given line using line number
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_GOTO )
-#else
-CLIPPER HB_ED_GOTO(long int line)
-#endif
+/* Move the cursor to the given line using line number */
+HB_FUNC( ED_GOTO )
 {
-#ifdef mc51
    long int line;
 
-   line = (long int)_parni(1);
-#endif
+   line = ( long int ) hb_parni( 1 );
 
-   GoTo((unsigned int) line);
+   GoTo( ( unsigned int ) line );
 }
 
 /* Move the cursor to the previous character
  */
 static void Left(void)
 {
-   if( ED->cursor_col > 0 )
-      ED->cursor_col--;    /* inside the window - decrement current column number */
+   if( s_ED->cursor_col > 0 )
+      s_ED->cursor_col--;    /* inside the window - decrement current column number */
    else
    {
-      if( ED->first_col > 0 )
+      if( s_ED->first_col > 0 )
       {
          /* the text is scrolled right - scroll it back to the left by one column */
-         ED->first_col--;
-         ED->stable         = FALSE;
-         ED->next_stabil    = ED->first_display;
-         ED->stabil         = ED->bottom - ED->top + 1;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         s_ED->first_col--;
+         s_ED->stable         = HB_FALSE;
+         s_ED->next_stabil    = s_ED->first_display;
+         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
       /* else no wrap allowed */
    }
 }
 
-/*
- ** Move the cursor to the previous character
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_LEFT )
-#else
-CLIPPER HB_ED_LEFT(void)
-#endif
+/* Move the cursor to the previous character */
+HB_FUNC( ED_LEFT )
 {
    Left();
 }
@@ -1852,7 +1525,7 @@ CLIPPER HB_ED_LEFT(void)
 
 /* Move the cursor to the next character
  */
-static void Right( EDITOR *E )
+static void Right( EDITOR * E )
 {
    if( E->cursor_col < (E->right - E->left) )
    {  /* inside the window */
@@ -1866,7 +1539,7 @@ static void Right( EDITOR *E )
       if( (++E->first_col + E->cursor_col) > E->line_length )
          E->first_col--;
 
-      E->stable         = FALSE;
+      E->stable         = HB_FALSE;
       E->next_stabil    = E->first_display;
       E->stabil         = E->bottom - E->top + 1;
       E->dir            = DOWN;
@@ -1874,33 +1547,26 @@ static void Right( EDITOR *E )
    }
 }
 
-/*
- ** Move the cursor to the next character
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_RIGHT )
-#else
-CLIPPER HB_ED_RIGHT(void)
-#endif
+/* Move the cursor to the next character */
+HB_FUNC( ED_RIGHT )
 {
-   Right( ED );
+   Right( s_ED );
 }
 
 /* Move the cursor to the beginning of line
  */
-static void Home( EDITOR *E )
+static void Home( EDITOR * E )
 {
    if( E->first_col > 0 )
    {
       /* the line was scrolled to the right */
       E->cursor_col     = 0;
       E->first_col      = 0;
-      E->stable         = FALSE;
+      E->stable         = HB_FALSE;
       E->next_stabil    = E->first_display;
       E->stabil         = E->bottom - E->top + 1;
       E->dir            = DOWN;
       E->current_stabil = 0;
-
    }
    else
    {
@@ -1910,21 +1576,15 @@ static void Home( EDITOR *E )
 }
 
 
-/*
- ** Move the cursor to the beginning of the line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_HOME )
-#else
-CLIPPER HB_ED_HOME(void)
-#endif
+/* Move the cursor to the beginning of the line */
+HB_FUNC( ED_HOME )
 {
-   Home( ED );
+   Home( s_ED );
 }
 
 /* Move the cursor to the end of line
  */
-static void End( EDITOR *E )
+static void End( EDITOR * E )
 {
    unsigned int ll, nEsc;
 
@@ -1936,19 +1596,19 @@ static void End( EDITOR *E )
        */
       E->first_col      = ll;
       E->cursor_col     = 0;
-      E->stable         = FALSE;
+      E->stable         = HB_FALSE;
       E->next_stabil    = E->first_display;
       E->stabil         = E->bottom - E->top + 1;
       E->dir            = DOWN;
       E->current_stabil = 0;
    }
    else
-      if( ( ll - E->first_col ) > (E->right - E->left) )
+      if( ( ll - E->first_col ) > ( E->right - E->left ) )
       {
          /* scroll text to the right  */
          E->cursor_col     = E->right - E->left;
-         E->first_col      = (int ) ( ll - (E->right - E->left) );
-         E->stable         = FALSE;
+         E->first_col      = ( int ) ( ll - ( E->right - E->left ) );
+         E->stable         = HB_FALSE;
          E->next_stabil    = E->first_display;
          E->stabil         = E->bottom - E->top + 1;
          E->dir            = DOWN;
@@ -1959,22 +1619,16 @@ static void End( EDITOR *E )
 }
 
 
-/*
- ** Move the cursor the the end of line (after the last non-space character)
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_END )
-#else
-CLIPPER HB_ED_END(void)
-#endif
+/* Move the cursor the the end of line (after the last non-space character) */
+HB_FUNC( ED_END )
 {
-   End( ED );
+   End( s_ED );
 }
 
 
 /* Format the current paragraph
  */
-static void FormatParagraph ( EDITOR *E )
+static void FormatParagraph ( EDITOR * E )
 {
    int       rdl, cc, cr, cor;
    long int  dl, source, CrLine;
@@ -1988,14 +1642,14 @@ static void FormatParagraph ( EDITOR *E )
    rdl       = format_line( E, SOFT, 0 );
    E->stabil = 1;    /* at least one line will be redisplayed */
 
-/*  if ( rdl )
+/*  if( rdl )
 */
    {
-      dl = (long int)GetLineLength( E, E->current_line, &rdl );
-      strncpy( pom, E->begin+(unsigned int)E->current_line, (int)(dl+rdl+10) );
+      dl = ( long int ) GetLineLength( E, E->current_line, &rdl );
+      strncpy( pom, E->begin+( unsigned int )E->current_line, ( int ) ( dl + rdl + 10 ) );
       pom[ E->line_length + rdl + 1 ] = '\x0';
       tmp = strchr( pom, '\n' );
-      if( tmp && ((unsigned char)*(tmp-1) == 141u) )  /* soft CR */
+      if( tmp && ( ( unsigned char ) *( tmp - 1 ) == 141u ) )  /* soft CR */
       {
          tmp--;
          cor++;
@@ -2007,19 +1661,19 @@ static void FormatParagraph ( EDITOR *E )
 
       while( tmp )
       {
-         source   = E->current_line + (long int)(tmp - pom - 1);
-         MoveText ( E, source+2, source+1, E->bufor_size - source + 2 );
-         E->begin[ (unsigned int)(source+1) ] = ' ';
+         source   = E->current_line + ( long int )( tmp - pom - 1 );
+         MoveText ( E, source + 2, source + 1, E->buffer_size - source + 2 );
+         E->begin[ ( unsigned int ) ( source + 1 ) ] = ' ';
 
          rdl = format_line( E, SOFT, 0 );
          Clear( E, E->current_line, &nEsc );
 
          E->current_line = Next( E, E->current_line );
-         dl  = (long int)GetLineLength( E, E->current_line, &rdl );
-         strncpy( pom, E->begin+(unsigned int)E->current_line, (int)(dl+rdl+10) );
+         dl  = ( long int ) GetLineLength( E, E->current_line, &rdl );
+         strncpy( pom, E->begin + ( unsigned int ) E->current_line, ( int )( dl + rdl + 10 ) );
          pom[ E->line_length + rdl + 1 ] = '\x0';
          tmp    = strchr( pom, '\n' );
-         if( tmp && ((unsigned char)*(tmp-1) == 141u) )
+         if( tmp && ( ( unsigned char ) * ( tmp - 1 ) == 141u ) )
          {
             tmp--;
             cor++;
@@ -2041,7 +1695,7 @@ static void FormatParagraph ( EDITOR *E )
       E->current_stabil = E->cursor_row;
    }
 
-   E->stable      = FALSE;
+   E->stable      = HB_FALSE;
    E->dir         = DOWN;
    E->cursor_col  = cc;
    E->cursor_row  = cr;
@@ -2052,7 +1706,7 @@ static void FormatParagraph ( EDITOR *E )
 
 /* Delete the character under the cursor
  */
-static void DelChar ( EDITOR *E )
+static void DelChar( EDITOR * E )
 {
    int ccc, rdl;
    long int cl;
@@ -2062,26 +1716,26 @@ static void DelChar ( EDITOR *E )
    if( ccc <= GetLineLength( E, E->current_line, &rdl ) )
    {
       if( E->escape )
-         while( (char)E->begin[ (unsigned int)(E->current_line + ccc) ] == E->escape )
+         while( ( char ) E->begin[ ( unsigned int ) ( E->current_line + ccc ) ] == E->escape )
             ccc += 2;
-      MoveText ( E, E->current_line + (long int) (ccc + 1),
-                    E->current_line + (long int) ccc,
-                    (E->bufor_size - ( E->current_line + (long int)(ccc + 1))));
+      MoveText( E, E->current_line + ( long int ) ( ccc + 1 ),
+                   E->current_line + ( long int ) ccc,
+                   ( E->buffer_size - ( E->current_line + ( long int ) ( ccc + 1 ) ) ) );
 
-      E->stable         = FALSE;
+      E->stable         = HB_FALSE;
       E->next_stabil    = E->current_line;
 
       E->dir            = DOWN;
       E->current_stabil = E->cursor_row;
 
-      FormatParagraph ( E );
+      FormatParagraph( E );
 
       if( E->current_line == E->last_line )
          E->last_display = E->last_line;
 
       E->current_line = cl;
 
-      E->stable         = FALSE;
+      E->stable         = HB_FALSE;
       E->next_stabil    = E->first_display;
       E->stabil         = E->bottom - E->top + 1;
       E->dir            = DOWN;
@@ -2089,51 +1743,45 @@ static void DelChar ( EDITOR *E )
    }
 }
 
-/*
- ** Delete the character at current cursor position
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_DELCHAR )
-#else
-CLIPPER HB_ED_DELCHAR(void)
-#endif
+/* Delete the character at current cursor position */
+HB_FUNC( ED_DELCHAR )
 {
    long int j;
    int      rdl;
 
-   if ( ( (unsigned int) (ED->cursor_col + ED->first_col) ) >=
-         ( (unsigned int) GetLineLength ( ED, ED->current_line, &rdl ) ) )
+   if( ( ( unsigned int ) (s_ED->cursor_col + s_ED->first_col) ) >=
+         ( ( unsigned int ) GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
    {
       /* The cursor is positioned after the last non-space character
        */
-      j = Next ( ED, ED->current_line );
-      if ( j >= 0 )
+      j = Next( s_ED, s_ED->current_line );
+      if( j >= 0 )
       {
          /* there are more lines below the cursor - join the lines
           */
-         Down( ED ); /* goto the next line */
-         Home( ED ); /* goto the beginning of line */
-         BackSpace(1);  /* delete separating CR/LF */
+         Down( s_ED ); /* goto the next line */
+         Home( s_ED ); /* goto the beginning of line */
+         BackSpace( 1 );  /* delete separating CR/LF */
 
-         ED->stable         = FALSE;
-         ED->next_stabil    = ED->first_display;
-         ED->stabil         = ED->bottom - ED->top + 1;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         s_ED->stable         = HB_FALSE;
+         s_ED->next_stabil    = s_ED->first_display;
+         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
    }
    else
    {
       /* The cursor is inside the line or at the last character
        */
-      if ( (unsigned int) ( ED->cursor_col + ED->first_col ) <
-            (unsigned int) ( GetLineLength ( ED, ED->current_line, &rdl ) ) )
-         DelChar ( ED );   /* inside a line */
+      if( ( unsigned int ) ( s_ED->cursor_col + s_ED->first_col ) <
+          ( unsigned int ) ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
+         DelChar( s_ED );   /* inside a line */
       else
       { /* at the last character */
-         j = Next ( ED, ED->current_line );
-         if ( j >= 0 )  /* if it is not the last line then delete character unde the cursor */
-            DelChar ( ED );
+         j = Next( s_ED, s_ED->current_line );
+         if( j >= 0 )  /* if it is not the last line then delete character unde the cursor */
+            DelChar( s_ED );
       }
    }
 }
@@ -2146,16 +1794,16 @@ static void BackSpace( int INS )
    long int  ww, j, ccc, kk;
    int       rdl, nLen;
 
-   ED->stable         = FALSE;
-   ED->next_stabil    = ED->current_line;
-   ED->stabil         = 1;
-   ED->dir            = DOWN;
-   ED->current_stabil = ED->cursor_row;
+   s_ED->stable         = HB_FALSE;
+   s_ED->next_stabil    = s_ED->current_line;
+   s_ED->stabil         = 1;
+   s_ED->dir            = DOWN;
+   s_ED->current_stabil = s_ED->cursor_row;
 
    if( INS )
    {
-      if( ( ccc = ED->cursor_col+ED->first_col ) >
-                  GetLineLength( ED, ED->current_line, &rdl ) )
+      if( ( ccc = s_ED->cursor_col+s_ED->first_col ) >
+                  GetLineLength( s_ED, s_ED->current_line, &rdl ) )
          INS = 0; /* cursor is scrolled after the last character in the line - just move the cursor left */
    }
 
@@ -2165,141 +1813,133 @@ static void BackSpace( int INS )
        */
       *tmp  ='\x0';
       *tmp1 ='\x0';
-      if( (ccc = ED->cursor_col+ED->first_col) > 0 )
+      if( ( ccc = s_ED->cursor_col + s_ED->first_col ) > 0 )
       {
          /* inside the line */
-         MoveText ( ED, ED->current_line + ccc, ED->current_line + ccc - 1,
-                  (ED->bufor_size - (ED->current_line + (long int) ccc + 1)));
+         MoveText( s_ED, s_ED->current_line + ccc, s_ED->current_line + ccc - 1,
+                   ( s_ED->buffer_size - (s_ED->current_line + ( long int ) ccc + 1 ) ) );
          Left();
       }
       else
       {
          /* at the beginning of the line */
-         if( ED->current_line != ED->first_line )
+         if( s_ED->current_line != s_ED->first_line )
          {
             /* this is not the first line */
-            nLen =GetLineLength( ED, ED->current_line, &rdl );
+            nLen =GetLineLength( s_ED, s_ED->current_line, &rdl );
 
-            if( ED->current_line == ED->last_line )
+            if( s_ED->current_line == s_ED->last_line )
                if( nLen == 0 )
-                  ED->last_line = Prev( ED, ED->last_line );
+                  s_ED->last_line = Prev( s_ED, s_ED->last_line );
 
             /* copy the last line into temporary buffer */
-            strncpy( tmp, ED->begin + (unsigned int) ED->current_line, nLen+rdl );
+            strncpy( tmp, s_ED->begin + ( unsigned int ) s_ED->current_line, nLen+rdl );
             tmp[ nLen+rdl ] = '\x0';
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
             if( ( w = strchr ( tmp, ' ') ) != 0 )
-               ww = (int)(w - tmp);
+               ww = ( int ) ( w - tmp );
             else
                ww = nLen+rdl;
 
             /* go to the previous line */
-            j = Prev ( ED, ED->current_line );
-            kk = GetLineLength( ED, j, &rdl );
-            strncpy( tmp1, ED->begin + (unsigned int) j, (unsigned int)( kk + rdl ) );
-            tmp1[ (unsigned int)( kk + rdl )  ] = '\x0';
+            j = Prev( s_ED, s_ED->current_line );
+            kk = GetLineLength( s_ED, j, &rdl );
+            strncpy( tmp1, s_ED->begin + ( unsigned int ) j, ( unsigned int )( kk + rdl ) );
+            tmp1[ ( unsigned int )( kk + rdl )  ] = '\x0';
             Up();
-            End( ED );
+            End( s_ED );
 
             /* the lines can be joined
              * the sum of whole length of these lines is smaller then maximal allowed
              * or there is a space where the line can be wrapped
              */
-            if( (ww + kk + rdl - 1) < ( ED->line_length ) )
+            if( (ww + kk + rdl - 1) < ( s_ED->line_length ) )
             {
-               kk = GetLineLength ( ED, ED->current_line, &rdl );
-               j  = ED->current_line + kk + rdl;
+               kk = GetLineLength( s_ED, s_ED->current_line, &rdl );
+               j  = s_ED->current_line + kk + rdl;
                /* remove separating CRLF characters */
-               MoveText( ED, j + 2, j, ED->bufor_size - j - 2 );
+               MoveText( s_ED, j + 2, j, s_ED->buffer_size - j - 2 );
 
-               ED->line_number--;
+               s_ED->line_number--;
 
-               j = Next ( ED, ED->last_display );
-               if ( j >= 0 )
-                  ED->last_display = j;
-               if ( ED->begin[ (unsigned int) ED->last_display + 1 ] == '\x0' )
-                  ED->last_display = Prev ( ED, ED->last_display );
+               j = Next( s_ED, s_ED->last_display );
+               if( j >= 0 )
+                  s_ED->last_display = j;
+               if( s_ED->begin[ ( unsigned int ) s_ED->last_display + 1 ] == '\x0' )
+                  s_ED->last_display = Prev( s_ED, s_ED->last_display );
 
                /* split the new line if it is too long */
-               format_line( ED, HARD, 0 );
+               format_line( s_ED, HARD, 0 );
 
-               j = Next ( ED, ED->current_line );
-               if ( j < 0 )
+               j = Next( s_ED, s_ED->current_line );
+               if( j < 0 )
                {
-                  ED->last_display    = Prev ( ED, ED->last_display );
-                  ED->last_line       = ED->current_line;
+                  s_ED->last_display    = Prev( s_ED, s_ED->last_display );
+                  s_ED->last_line       = s_ED->current_line;
                }
-               ED->stable         = FALSE;
-               ED->next_stabil    = ED->first_display;
-               ED->stabil         = ED->bottom - ED->top + 1;
-               ED->dir            = DOWN;
-               ED->current_stabil = 0;
+               s_ED->stable         = HB_FALSE;
+               s_ED->next_stabil    = s_ED->first_display;
+               s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+               s_ED->dir            = DOWN;
+               s_ED->current_stabil = 0;
             }
          }
       }
-      FormatParagraph ( ED );
+      FormatParagraph ( s_ED );
 
-      ED->stable         = FALSE;
-      ED->next_stabil    = ED->first_display;
-      ED->stabil         = ED->bottom - ED->top + 1;
-      ED->dir            = DOWN;
-      ED->current_stabil = 0;
+      s_ED->stable         = HB_FALSE;
+      s_ED->next_stabil    = s_ED->first_display;
+      s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+      s_ED->dir            = DOWN;
+      s_ED->current_stabil = 0;
    }
    else
    {
       /* non-destructive mode - move cursor only */
-      ccc = ED->cursor_col+ED->first_col;
+      ccc = s_ED->cursor_col + s_ED->first_col;
       if( ccc > 0 )
       {
          Left();
       }
       else
       {
-         if( ED->current_line != ED->first_line )
+         if( s_ED->current_line != s_ED->first_line )
          {
             Up();
-            End( ED );
+            End( s_ED );
          }
       }
    }
 }
 
 
-/*
- ** Delete a character on the left side of the cursor
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_BSPACE )
-#else
-CLIPPER HB_ED_BSPACE(int INS)
-#endif
+/* Delete a character on the left side of the cursor */
+HB_FUNC( ED_BSPACE )
 {
-#ifdef mc51
    int INS;
 
-   INS = _parl(1);   /* get current INSERT state  */
-#endif
+   INS = hb_parl( 1 );   /* get current INSERT state  */
 
-   BackSpace(INS);
+   BackSpace( INS );
 }
 
 
 /* Move to the beginning of next non-empty line
  */
-static CLIPPER GotoNextNonEmptyLine(void)
+static void GotoNextNonEmptyLine( void )
 {
    int  rdl;
 
-   Down( ED );
-   Home( ED );
+   Down( s_ED );
+   Home( s_ED );
 
-   while( GetLineLength ( ED, ED->current_line, &rdl ) == 0 )
+   while( GetLineLength( s_ED, s_ED->current_line, &rdl ) == 0 )
    {
-      Down( ED );
-      Home( ED );
-      if( Next ( ED, ED->current_line ) < 0 )
+      Down( s_ED );
+      Home( s_ED );
+      if( Next( s_ED, s_ED->current_line ) < 0 )
          break;
    }
 }
@@ -2314,59 +1954,53 @@ static void NextWord(void)
    int       ccc;
    unsigned int nEsc, nLen;
 
-   ccc = ED->cursor_col + ED->first_col;
-   nLen =Clear( ED, ED->current_line, &nEsc );
+   ccc = s_ED->cursor_col + s_ED->first_col;
+   nLen =Clear( s_ED, s_ED->current_line, &nEsc );
 
    if( nLen < ccc )
       GotoNextNonEmptyLine();
    else
    {
       *tmp ='\x0';
-      strncpy( tmp, ED->begin + (unsigned int) ED->current_line + ccc,
-                     nLen - ED->cursor_col - ED->first_col );
-      tmp[ nLen - ED->cursor_col - ED->first_col ] = '\x0';
+      strncpy( tmp, s_ED->begin + ( unsigned int ) s_ED->current_line + ccc,
+                     nLen - s_ED->cursor_col - s_ED->first_col );
+      tmp[ nLen - s_ED->cursor_col - s_ED->first_col ] = '\x0';
       if( (adr = strchr ( tmp, ' ' ) ) == NULL )
       {
          GotoNextNonEmptyLine();
-         if( !ED->stable )
+         if( !s_ED->stable )
          {
-            ED->next_stabil    = ED->first_display;
-            ED->stabil         = ED->bottom - ED->top + 1;
-            ED->dir            = DOWN;
-            ED->current_stabil = 0;
+            s_ED->next_stabil    = s_ED->first_display;
+            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+            s_ED->dir            = DOWN;
+            s_ED->current_stabil = 0;
          }
       }
       else
       {
-         ED->cursor_col   = (int)( adr - tmp + 1 +ED->cursor_col + ED->first_col);
+         s_ED->cursor_col   = ( int ) ( adr - tmp + 1 + s_ED->cursor_col + s_ED->first_col);
 
-         if(ED->cursor_col > (ED->right - ED->left))
+         if( s_ED->cursor_col > ( s_ED->right - s_ED->left ) )
          {
-            ED->first_col     += ED->cursor_col - (ED->right - ED->left);
-            ED->cursor_col     = ED->right - ED->left;
-            ED->stable         = FALSE;
-            ED->next_stabil    = ED->first_display;
-            ED->stabil         = ED->bottom - ED->top + 1;
-            ED->dir            = DOWN;
-            ED->current_stabil = 0;
+            s_ED->first_col     += s_ED->cursor_col - ( s_ED->right - s_ED->left );
+            s_ED->cursor_col     = s_ED->right - s_ED->left;
+            s_ED->stable         = HB_FALSE;
+            s_ED->next_stabil    = s_ED->first_display;
+            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+            s_ED->dir            = DOWN;
+            s_ED->current_stabil = 0;
          }
       }
    }
 
-   if( ED->begin[ (unsigned int) (ED->current_line +
-                     ED->cursor_col + ED->first_col) ] == ' ')
+   if( s_ED->begin[ ( unsigned int ) (s_ED->current_line +
+                     s_ED->cursor_col + s_ED->first_col) ] == ' ')
       NextWord();
 }
 
 
-/*
- ** Move the cursor to the next word
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_NWORD )
-#else
-CLIPPER HB_ED_NWORD(void)
-#endif
+/* Move the cursor to the next word */
+HB_FUNC( ED_NWORD )
 {
    NextWord();
 }
@@ -2379,19 +2013,19 @@ static void PreviousWord(void)
    unsigned int nLen, nEsc;
 
    pom = -1;
-   nLen =Clear ( ED, ED->current_line, &nEsc );
-   if( nLen < ( ED->cursor_col + ED->first_col ) )
-      End( ED );
+   nLen =Clear ( s_ED, s_ED->current_line, &nEsc );
+   if( nLen < ( s_ED->cursor_col + s_ED->first_col ) )
+      End( s_ED );
 
-   if( ( ED->first_col + ED->cursor_col ) == 0 )
+   if( ( s_ED->first_col + s_ED->cursor_col ) == 0 )
    {
       Up();
-      End( ED );
+      End( s_ED );
    }
 
-   for ( i = ED->first_col + ED->cursor_col - 2; i >= 0; i-- )
+   for( i = s_ED->first_col + s_ED->cursor_col - 2; i >= 0; i-- )
    {
-      if ( ED->begin [ (unsigned int) (ED->current_line + i) ] == ' ')
+      if( s_ED->begin[ ( unsigned int ) (s_ED->current_line + i) ] == ' ')
       {
          pom = i;
          break;
@@ -2402,54 +2036,48 @@ static void PreviousWord(void)
 
    if(pom < 0)
    {
-      Home( ED );
-      while( GetLineLength( ED, ED->current_line, &rdl ) == 0 )
+      Home( s_ED );
+      while( GetLineLength( s_ED, s_ED->current_line, &rdl ) == 0 )
       {
          Up();
-         Home( ED );
-         if( Prev( ED, ED->current_line ) < 0 )
+         Home( s_ED );
+         if( Prev( s_ED, s_ED->current_line ) < 0 )
             break;
       }
-      if(!ED->stable)
+      if(!s_ED->stable)
       {
-         ED->next_stabil    = ED->first_display;
-         ED->stabil         = ED->bottom - ED->top + 1;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         s_ED->next_stabil    = s_ED->first_display;
+         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
    }
    else
    {
-      ED->cursor_col = pom + 1;
-      if( ED->first_col > 0 )
+      s_ED->cursor_col = pom + 1;
+      if( s_ED->first_col > 0 )
       {
-         ED->cursor_col-= ED->first_col;
+         s_ED->cursor_col-= s_ED->first_col;
       }
-      if( ED->cursor_col < 0 )
+      if( s_ED->cursor_col < 0 )
       {
-         ED->first_col      = ED->cursor_col - (ED->right - ED->left);
-         ED->stable         = FALSE;
-         ED->next_stabil    = ED->first_display;
-         ED->stabil         = ED->bottom - ED->top + 1;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         s_ED->first_col      = s_ED->cursor_col - (s_ED->right - s_ED->left);
+         s_ED->stable         = HB_FALSE;
+         s_ED->next_stabil    = s_ED->first_display;
+         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
    }
 
-   if ( ED->begin [ (unsigned int) (ED->current_line + ED->cursor_col +
-                          ED->first_col) ] == ' ')
+   if( s_ED->begin[ ( unsigned int ) (s_ED->current_line + s_ED->cursor_col +
+                          s_ED->first_col) ] == ' ')
       PreviousWord();
 }
 
 
-/*
- ** Move the cursor to the previous word
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_PWORD )
-#else
-CLIPPER HB_ED_PWORD(void)
-#endif
+/* Move the cursor to the previous word */
+HB_FUNC( ED_PWORD )
 {
    PreviousWord();
 }
@@ -2457,7 +2085,7 @@ CLIPPER HB_ED_PWORD(void)
 
 /* Format given line - returns it the line has changed
  */
-static int format_line( EDITOR *E, int Karetka, unsigned int LineDl )
+static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
 {
    char      pom[ MAX_LINE_LEN * 2 ], *p;
    int       podz, jj, status, i;
@@ -2476,16 +2104,16 @@ static int format_line( EDITOR *E, int Karetka, unsigned int LineDl )
       status = 1; /* the line will be splitted */
 
       /* copy maximum allowed bytes form the line into temporary buffer */
-      strncpy( pom, E->begin+(unsigned int)E->current_line,
-               (int)( E->line_length + 10 + rdl ) );
-      pom[ (unsigned int)(E->line_length + rdl) ] = '\x0';
+      strncpy( pom, E->begin + ( unsigned int ) E->current_line,
+               ( int ) ( E->line_length + 10 + rdl ) );
+      pom[ ( unsigned int )(E->line_length + rdl) ] = '\x0';
 
       /* find the last space where the line can be splitted */
       p = strrchr( pom, ' ' );
       if( p )
       {
          /* use this position to split the line */
-         podz = (int)( p - pom + 1 );
+         podz = ( int ) ( p - pom + 1 );
          jj   = 1 - podz + E->cursor_col + E->first_col;
       }
       else
@@ -2495,12 +2123,12 @@ static int format_line( EDITOR *E, int Karetka, unsigned int LineDl )
          jj   = 1;
       }
 
-      j = (long int) (E->current_line + podz );
-      MoveText ( E, j, j + 2, E->bufor_size - j - 2 );
+      j = ( long int ) ( E->current_line + podz );
+      MoveText ( E, j, j + 2, E->buffer_size - j - 2 );
 
       /* replace with separators */
-      E->begin [ (unsigned int) j + 0 ] = (char)Karetka;
-      E->begin [ (unsigned int) j + 1 ] = '\n';
+      E->begin[ ( unsigned int ) j + 0 ] = ( char ) Karetka;
+      E->begin[ ( unsigned int ) j + 1 ] = '\n';
       E->line_number++;
 
       if( ( E->cursor_col + E->first_col ) >= podz )
@@ -2514,38 +2142,38 @@ static int format_line( EDITOR *E, int Karetka, unsigned int LineDl )
          Right( E );
    }
 
-   return ( status );
+   return status;
 }
 
 /* Appends the character at the end of line
  */
-static int AppendChar( EDITOR *E, int znak, int podz )
+static int AppendChar( EDITOR * E, int znak, int podz )
 {
    int       diff, rdl, status;
    long int  iPos, nLen;
    long int  cl;
    int       ccol, fcol;
-   char *cNew;
+   char * cNew;
 
-   nLen = GetLineLength ( E, E->current_line, &rdl );
-   iPos = E->current_line + nLen ;
-   diff = E->cursor_col + E->first_col - (int) nLen;
+   nLen = GetLineLength( E, E->current_line, &rdl );
+   iPos = E->current_line + nLen;
+   diff = E->cursor_col + E->first_col - ( int ) nLen;
 
    /* the cursor is positioned 'diff' columns after the last character
     * in the line - fill the gap with spaces before appending the character
     */
-   MoveText ( E, iPos, iPos + diff + 1, E->bufor_size - 1 - iPos - diff );
-   memset( E->begin + (unsigned int) (E->current_line + nLen), ' ', diff );
+   MoveText( E, iPos, iPos + diff + 1, E->buffer_size - 1 - iPos - diff );
+   memset( E->begin + ( unsigned int ) ( E->current_line + nLen ), ' ', diff );
 
    /* move the CRLF characters after the appended character */
-   cNew  =E->begin +iPos +diff;
-   *cNew++ = (char) znak;
+   cNew  = E->begin + iPos + diff;
+   *cNew++ = ( char ) znak;
    if( *cNew != '\r' )
-      *cNew = (char) podz; /* insert requested soft/hard carriage */
+      *cNew = ( char ) podz; /* insert requested soft/hard carriage */
    *++cNew = '\n';
 
    /* the last line always have to end with the hard carriage return */
-   E->begin [ (unsigned int) E->text_length - 2 ] = '\r';
+   E->begin[ ( unsigned int ) E->text_length - 2 ] = '\r';
 
    status = format_line( E, SOFT, 0 );
 
@@ -2559,7 +2187,7 @@ static int AppendChar( EDITOR *E, int znak, int podz )
    E->cursor_col   = ccol;
    E->first_col    = fcol;
 
-   return ( status );
+   return status;
 }
 
 
@@ -2567,19 +2195,19 @@ static int AppendChar( EDITOR *E, int znak, int podz )
  */
 static int Check_length( int iRequested )
 {
-   if ( ( ED->text_length + iRequested ) <= ( ED->bufor_size - 8 ) )
-      return( 1 );
+   if( ( s_ED->text_length + iRequested ) <= ( s_ED->buffer_size - 8 ) )
+      return 1;
    else
-      return( 0 );
+      return 0;
 }
 
 
 /* Adjusts the offset of last line
  */
-static void SetLastLine( EDITOR *E )
+static void SetLastLine( EDITOR * E )
 {
-   if ( E->current_line > E->last_line )
-      E->last_line = E->current_line ;
+   if( E->current_line > E->last_line )
+      E->last_line = E->current_line;
 }
 
 
@@ -2593,103 +2221,95 @@ static void PutChar( int INS, int znak )
    int       ccol, fcol;
 
    jj = 0;
-   cc = ED->cursor_col + ED->first_col;   /* currnt position in the line */
+   cc = s_ED->cursor_col + s_ED->first_col;   /* currnt position in the line */
    if( INS )
    {
       /* INSERT is ON */
-      if ( Check_length( 1 ) )
+      if( Check_length( 1 ) )
       {
          /* TODO: add reallocation of text buffer
           */
-         if( (unsigned int) cc < GetLineLength ( ED, ED->current_line, &rdl ) )
+         if( ( unsigned int ) cc < GetLineLength( s_ED, s_ED->current_line, &rdl ) )
          {
             /* the character will be inserted within the line - the cursor
              * is placed inside the line
              */
-            i = ED->current_line + cc;
-            MoveText( ED, i, i + 1, ED->bufor_size - ED->current_line - cc - 1);
-            ED->begin [ (unsigned int) i ] = (char) znak;
+            i = s_ED->current_line + cc;
+            MoveText( s_ED, i, i + 1, s_ED->buffer_size - s_ED->current_line - cc - 1 );
+            s_ED->begin[ ( unsigned int ) i ] = ( char ) znak;
 
-            jj = format_line( ED, SOFT, 0 );
+            jj = format_line( s_ED, SOFT, 0 );
 
-            cl     = ED->current_line;
-            ccol   = ED->cursor_col;
-            fcol   = ED->first_col;
+            cl     = s_ED->current_line;
+            ccol   = s_ED->cursor_col;
+            fcol   = s_ED->first_col;
 
-            FormatParagraph( ED );
+            FormatParagraph( s_ED );
 
-            ED->current_line = cl;
-            ED->cursor_col   = ccol;
-            ED->first_col    = fcol;
+            s_ED->current_line = cl;
+            s_ED->cursor_col   = ccol;
+            s_ED->first_col    = fcol;
 
-            if ( jj )
-               SetLastLine( ED );
+            if( jj )
+               SetLastLine( s_ED );
          }
          else  /* the cursor is located after the last character in the line */
-            jj = AppendChar(ED, znak, SOFT);
+            jj = AppendChar( s_ED, znak, SOFT );
 
          if( !jj )
-            Right ( ED );
+            Right( s_ED );
          else
-            SetLastLine( ED );
+            SetLastLine( s_ED );
       }
    }
    else
    {
-      if((long int) cc < (GetLineLength(ED, ED->current_line, &rdl)))
+      if( ( long int ) cc < ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
       {
-         ED->begin [ (unsigned int)(ED->current_line + cc) ] = (char)znak;
+         s_ED->begin[ ( unsigned int ) ( s_ED->current_line + cc ) ] = ( char ) znak;
          jj = 0;
-         Right ( ED );
+         Right( s_ED );
       }
       else
-         if ( Check_length( 1 ) )
+         if( Check_length( 1 ) )
          {
-            jj = AppendChar(ED, znak, SOFT);
-            if( !jj )
-               Right ( ED );
+            jj = AppendChar( s_ED, znak, SOFT );
+            if( ! jj )
+               Right( s_ED );
             else
-               SetLastLine( ED );
+               SetLastLine( s_ED );
          }
    }
 
-   if( !jj )
-      if( ( ED->cursor_col + ED->first_col ) > ( ED->right - ED->left ) )
+   if( ! jj )
+      if( ( s_ED->cursor_col + s_ED->first_col ) > ( s_ED->right - s_ED->left ) )
          jj = 1;
 
    if(jj)
    {
-      ED->stabil = ED->bottom - ED->top + 1;
-      ED->next_stabil    = ED->first_display;
-      ED->current_stabil = 0;
+      s_ED->stabil = s_ED->bottom - s_ED->top + 1;
+      s_ED->next_stabil    = s_ED->first_display;
+      s_ED->current_stabil = 0;
    }
    else
    {
-      ED->stabil = 1;
-      ED->next_stabil    = ED->current_line;
-      ED->current_stabil = ED->cursor_row;
+      s_ED->stabil = 1;
+      s_ED->next_stabil    = s_ED->current_line;
+      s_ED->current_stabil = s_ED->cursor_row;
    }
 
-   ED->stable = FALSE;
-   ED->dir    = DOWN;
+   s_ED->stable = HB_FALSE;
+   s_ED->dir    = DOWN;
 }
 
 
-/*
- ** Insert or replace the character into the text buffer
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_PUTCHAR )
-#else
-CLIPPER HB_ED_PUTCHAR(int INS, int znak)
-#endif
+/* Insert or replace the character into the text buffer */
+HB_FUNC( ED_PUTCHAR )
 {
-#ifdef mc51
    int INS, znak;
 
-   znak = _parni(1);    /* character to paste */
-   INS  = _parl(2);     /* current INSERT state */
-#endif
+   znak = hb_parni( 1 );    /* character to paste */
+   INS  = hb_parl( 2 );     /* current INSERT state */
 
    PutChar( INS, znak );
 }
@@ -2698,12 +2318,16 @@ CLIPPER HB_ED_PUTCHAR(int INS, int znak)
 /*
 static void Tab ( int INS )
 {
-  if(INS)
-    for(i=0; i<ED->tab_size; i++)
-      PutChar(TRUE, 32);
-  else
-    for(i=0; i<ED->tab_size; i++)
-      Right();
+   if( INS )
+   {
+      for( i = 0; i < s_ED->tab_size; i++ )
+         PutChar( HB_TRUE, 32 );
+   }
+   else
+   {
+      for( i = 0; i < s_ED->tab_size; i++ )
+         Right();
+   }
 }
 */
 
@@ -2712,139 +2336,117 @@ static void Tab ( int INS )
 */
 
 /*
-#ifdef mc51
-CLIPPER_ACTION( ED_TAB )
-#else
-CLIPPER HB_ED_TAB(int INS)
-#endif
+HB_FUNC( ED_TAB )
 {
-#ifdef mc51
-  int INS = _parl(1);
-#endif
+  int INS = hb_parl( 1 );
 
-  Tab ( INS );
+  Tab( INS );
 }
 */
 
 
 
-/*
- ** Delete the current line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_DELLINE )
-#else
-CLIPPER HB_ED_DELLINE(void)
-#endif
+/* Delete the current line */
+HB_FUNC( ED_DELLINE )
 {
-   long int  tmp, j;
+   long int tmp, j;
 
-   if( ED->active < ED->line_number )
+   if( s_ED->active < s_ED->line_number )
    {
-      j = Next ( ED, ED->last_display );
-      if ( j >= 0 )
-         ED->last_display   = j;
+      j = Next( s_ED, s_ED->last_display );
+      if( j >= 0 )
+         s_ED->last_display = j;
 
-      tmp = Next ( ED, ED->current_line );
+      tmp = Next( s_ED, s_ED->current_line );
       if( tmp < 0 )
          tmp = 0;
 
-      ED->stabil = ED->bottom - ED->top + 1 - ED->cursor_row;
-      ED->dir    = DOWN;
+      s_ED->stabil = s_ED->bottom - s_ED->top + 1 - s_ED->cursor_row;
+      s_ED->dir    = DOWN;
 
-      MoveText( ED, tmp, ED->current_line, ED->bufor_size - ED->current_line - 2 );
+      MoveText( s_ED, tmp, s_ED->current_line, s_ED->buffer_size - s_ED->current_line - 2 );
 
-      if(ED->line_number > 0)
-         ED->line_number--;
+      if( s_ED->line_number > 0 )
+         s_ED->line_number--;
 
-      ED->next_stabil    = ED->current_line;
-      ED->current_stabil = ED->cursor_row;
-      ED->stable         = FALSE;
+      s_ED->next_stabil    = s_ED->current_line;
+      s_ED->current_stabil = s_ED->cursor_row;
+      s_ED->stable         = HB_FALSE;
 
    }
    else
    {
-      ED->begin [ (unsigned int) ED->current_line + 0 ] = '\r';
-      ED->begin [ (unsigned int) ED->current_line + 1 ] = '\n';
-      ED->begin [ (unsigned int) ED->current_line + 2 ] = '\x0';
-      memset( ED->begin + (unsigned int) ED->current_line + 2, '\x0',
-               (unsigned int) (ED->bufor_size - strlen (ED->begin )) );
+      s_ED->begin[ ( unsigned int ) s_ED->current_line + 0 ] = '\r';
+      s_ED->begin[ ( unsigned int ) s_ED->current_line + 1 ] = '\n';
+      s_ED->begin[ ( unsigned int ) s_ED->current_line + 2 ] = '\x0';
+      memset( s_ED->begin + ( unsigned int ) s_ED->current_line + 2, '\x0',
+               ( unsigned int ) ( s_ED->buffer_size - strlen( s_ED->begin ) ) );
 
-      ED->last_display   = ED->last_line;
-      ED->stabil         = 1;
-      ED->dir            = DOWN;
-      ED->next_stabil    = ED->current_line;
-      ED->current_stabil = ED->cursor_row;
-      ED->stable         = FALSE;
+      s_ED->last_display   = s_ED->last_line;
+      s_ED->stabil         = 1;
+      s_ED->dir            = DOWN;
+      s_ED->next_stabil    = s_ED->current_line;
+      s_ED->current_stabil = s_ED->cursor_row;
+      s_ED->stable         = HB_FALSE;
    }
-   if( ED->text_length == 0 )
+   if( s_ED->text_length == 0 )
    {
-      ED->begin [ 0 ] = '\r';
-      ED->begin [ 1 ] = '\n';
-      ED->begin [ 2 ] = '\x0';
+      s_ED->begin[ 0 ] = '\r';
+      s_ED->begin[ 1 ] = '\n';
+      s_ED->begin[ 2 ] = '\x0';
    }
 }
 
-/*
- ** Delete the word on the right side of the cursor
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_DELWORD )
-#else
-CLIPPER HB_ED_DELWORD(void)
-#endif
+/* Delete the word on the right side of the cursor */
+HB_FUNC( ED_DELWORD )
 {
    long int pos1, pos2, j;
    int cc, fc, cr, rdl;
    long int fd, ld;
    long int l;
 
-   j = ED->current_line + ED->cursor_col + ED->first_col;
-   if ( ED->begin [ (unsigned int) j ] != ' ' )
+   j = s_ED->current_line + s_ED->cursor_col + s_ED->first_col;
+   if( s_ED->begin[ ( unsigned int ) j ] != ' ' )
    {
-      if((unsigned int) ( ED->cursor_col + ED->first_col ) <
-         (unsigned int) ( GetLineLength ( ED, ED->current_line, &rdl ) ))
+      if( ( unsigned int ) ( s_ED->cursor_col + s_ED->first_col ) <
+          ( unsigned int ) ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ))
       {
-         cc = ED->cursor_col;
-         cr = ED->cursor_row;
-         fc = ED->first_col;
-         fd = ED->first_display;
-         ld = ED->last_display;
-         l  = ED->current_line;
+         cc = s_ED->cursor_col;
+         cr = s_ED->cursor_row;
+         fc = s_ED->first_col;
+         fd = s_ED->first_display;
+         ld = s_ED->last_display;
+         l  = s_ED->current_line;
          NextWord();
-         pos2 = ED->cursor_col + ED->first_col;
+         pos2 = s_ED->cursor_col + s_ED->first_col;
          PreviousWord();
-         pos1 = ED->cursor_col + ED->first_col;
+         pos1 = s_ED->cursor_col + s_ED->first_col;
 
-         ED->current_line  = l;
-         ED->cursor_col    = cc;
-         ED->cursor_row    = cr;
-         ED->first_col     = fc;
-         ED->first_display = fd;
-         ED->last_display  = ld;
+         s_ED->current_line  = l;
+         s_ED->cursor_col    = cc;
+         s_ED->cursor_row    = cr;
+         s_ED->first_col     = fc;
+         s_ED->first_display = fd;
+         s_ED->last_display  = ld;
 
-         if(pos2 == 0)
-         pos2 = GetLineLength ( ED, ED->current_line, &rdl );
+         if( pos2 == 0 )
+            pos2 = GetLineLength( s_ED, s_ED->current_line, &rdl );
 
-         MoveText ( ED, ED->current_line + pos2, ED->current_line + pos1,
-                  ED->bufor_size - ED->current_line - pos2 );
-         FormatParagraph ( ED );
-         ED->stable         = FALSE;
-         ED->next_stabil    = ED->first_display;
-         ED->stabil         = ED->bottom - ED->top + 1;
-         ED->dir            = DOWN;
-         ED->current_stabil = 0;
+         MoveText( s_ED, s_ED->current_line + pos2, s_ED->current_line + pos1,
+                   s_ED->buffer_size - s_ED->current_line - pos2 );
+         FormatParagraph ( s_ED );
+         s_ED->stable         = HB_FALSE;
+         s_ED->next_stabil    = s_ED->first_display;
+         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+         s_ED->dir            = DOWN;
+         s_ED->current_stabil = 0;
       }
       else
       {
-         if( ( GetLineLength( ED, ED->current_line, &rdl ) ) == 0 )
+         if( ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) == 0 )
          {
-#ifdef mc51
             HB_FUNC_EXEC( ED_DELLINE )
-#else
-            HB_ED_DELLINE( );
-#endif
-            Home( ED );
+            Home( s_ED );
          }
       }
    }
@@ -2853,7 +2455,7 @@ CLIPPER HB_ED_DELWORD(void)
 
 /* Insert the CRLF characters
  */
-static void Return(int INS)
+static void Return( int INS )
 {
    long int ii, j;
    unsigned int nEsc, nLen;
@@ -2864,403 +2466,146 @@ static void Return(int INS)
       {
          /* only if INSERT state is ON
           */
-         nLen =Clear( ED, ED->current_line, &nEsc );
+         nLen = Clear( s_ED, s_ED->current_line, &nEsc );
 
-         ED->line_number++;
+         s_ED->line_number++;
 
-         j = Next( ED, ED->current_line );
-         if ( j < 0 )
+         j = Next( s_ED, s_ED->current_line );
+         if( j < 0 )
          {
-            ED->last_line =ED->text_length;
-            ED->text_length +=2;
+            s_ED->last_line = s_ED->text_length;
+            s_ED->text_length += 2;
 
-            ED->begin[ ED->text_length -2 ] = '\r';
-            ED->begin[ ED->text_length -1 ] = '\n';
-            ED->begin[ ED->text_length    ] = '\x0';
+            s_ED->begin[ s_ED->text_length - 2 ] = '\r';
+            s_ED->begin[ s_ED->text_length - 1 ] = '\n';
+            s_ED->begin[ s_ED->text_length     ] = '\x0';
          }
          else
          {
-            if( (ED->first_col + ED->cursor_col) > nLen+1 )
-               End( ED );
-            ii = ED->current_line + (long int) ED->first_col +
-                                    (long int) ED->cursor_col;
-            MoveText ( ED, ii, ii + 2, ED->bufor_size - ii - 2 );
+            if( ( s_ED->first_col + s_ED->cursor_col ) > nLen + 1 )
+               End( s_ED );
+            ii = s_ED->current_line + ( long int ) s_ED->first_col +
+                                      ( long int ) s_ED->cursor_col;
+            MoveText ( s_ED, ii, ii + 2, s_ED->buffer_size - ii - 2 );
 
-            ED->begin [ (unsigned int) ii + 0 ] = '\r';
-            ED->begin [ (unsigned int) ii + 1 ] = '\n';
-            if ( ED->last_line == ED->current_line )
-               ED->last_line = Next ( ED, ED->current_line );
+            s_ED->begin[ ( unsigned int ) ii + 0 ] = '\r';
+            s_ED->begin[ ( unsigned int ) ii + 1 ] = '\n';
+            if( s_ED->last_line == s_ED->current_line )
+               s_ED->last_line = Next( s_ED, s_ED->current_line );
          }
 
-         if( ED->cursor_row < (ED->bottom - ED->top) )
+         if( s_ED->cursor_row < ( s_ED->bottom - s_ED->top ) )
          {
-            j = Prev ( ED, ED->last_display );
-            if ( j > 0 )
-               ED->last_display = j;
+            j = Prev( s_ED, s_ED->last_display );
+            if( j > 0 )
+               s_ED->last_display = j;
 
-            ED->next_stabil    = ED->current_line;
-            ED->stabil         = ED->bottom - ED->top + 1 - ED->cursor_row;
-            ED->current_stabil = ED->cursor_row;
+            s_ED->next_stabil    = s_ED->current_line;
+            s_ED->stabil         = s_ED->bottom - s_ED->top + 1 - s_ED->cursor_row;
+            s_ED->current_stabil = s_ED->cursor_row;
          }
          else
          {
-            ED->next_stabil    = ED->first_display;
-            ED->stabil         = ED->bottom - ED->top + 1;
-            ED->current_stabil = 0;
+            s_ED->next_stabil    = s_ED->first_display;
+            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+            s_ED->current_stabil = 0;
          }
       }
    }
    else
    {
-      Clear( ED, ED->current_line, &nEsc );
-      j = Next ( ED, ED->current_line );
-      if ( j > ED->last_line )
+      Clear( s_ED, s_ED->current_line, &nEsc );
+      j = Next( s_ED, s_ED->current_line );
+      if( j > s_ED->last_line )
       {
-         if ( Check_length( 2 ) )
+         if( Check_length( 2 ) )
          {
-            ED->line_number++;
-            ED->last_line       = j;
-            ED->begin [ (unsigned int) j + 0 ] = '\r';
-            ED->begin [ (unsigned int) j + 1 ] = '\n';
-            ED->begin [ (unsigned int) j + 2 ] = '\x0';
+            s_ED->line_number++;
+            s_ED->last_line = j;
+            s_ED->begin[ ( unsigned int ) j + 0 ] = '\r';
+            s_ED->begin[ ( unsigned int ) j + 1 ] = '\n';
+            s_ED->begin[ ( unsigned int ) j + 2 ] = '\x0';
          }
       }
    }
+
    if( Check_length( 0 ) )
    {
-      ED->stable         = FALSE;
-      ED->dir            = DOWN;
-      Down( ED );
-      Home( ED );
+      s_ED->stable         = HB_FALSE;
+      s_ED->dir            = DOWN;
+      Down( s_ED );
+      Home( s_ED );
    }
 
-   if( !ED->stable )
+   if( !s_ED->stable )
    {
-      ED->next_stabil    = ED->first_display;
-      ED->stabil         = ED->bottom - ED->top + 1;
-      ED->current_stabil = 0;
-      ED->dir            = DOWN;
+      s_ED->next_stabil    = s_ED->first_display;
+      s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+      s_ED->current_stabil = 0;
+      s_ED->dir            = DOWN;
    }
 }
 
 
-/*
- ** Insert the CRLF characters
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_RETURN )
-#else
-CLIPPER HB_ED_RETURN(int INS)
-#endif
+/* Insert the CRLF characters */
+HB_FUNC( ED_RETURN )
 {
-#ifdef mc51
-   int INS = _parl(1);
-#endif
+   int INS = hb_parl( 1 );
 
-   Return(INS);
+   Return( INS );
 }
 
 
-/*
- ** Returns the current cursor row inside the editor's window
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_WINROW )
-#else
-int HB_ED_WINROW(void)
-#endif
+/* Returns the current cursor row inside the editor's window */
+HB_FUNC( ED_WINROW )
 {
-#ifdef mc51
-   _retni( ED->cursor_row );
-#else
-   return( ED->cursor_row );
-#endif
+   hb_retni( s_ED->cursor_row );
 }
 
-/*
- ** Returns the line number where the cursor is positioned
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_ROW )
-#else
-int HB_ED_ROW(void)
-#endif
+/* Returns the line number where the cursor is positioned */
+HB_FUNC( ED_ROW )
 {
-#ifdef mc51
-   _retni( (unsigned int) ED->active );
-#else
-   return( (unsigned int) ED->active );
-#endif
+   hb_retni( ( unsigned int ) s_ED->active );
 }
 
 
-/*
- ** Return the current cursor column inside the editor's window
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_WINCOL )
-#else
-int HB_ED_WINCOL(void)
-#endif
+/* Return the current cursor column inside the editor's window */
+HB_FUNC( ED_WINCOL )
 {
-#ifdef mc51
-   _retni( ED->cursor_col );
-#else
-   return( ED->cursor_col );
-#endif
+   hb_retni( s_ED->cursor_col );
 }
 
-/*
- ** Returns the current cursor position inside the line
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_COL )
-#else
-int HB_ED_COL(void)
-#endif
+/* Returns the current cursor position inside the line */
+HB_FUNC( ED_COL )
 {
-#ifdef mc51
-   _retni( ED->cursor_col + ED->first_col + 1 );
-#else
-   return( ED->cursor_col + ED->first_col + 1 );
-#endif
+   hb_retni( s_ED->cursor_col + s_ED->first_col + 1 );
 }
 
 
-/*
- ** Returns the total number of lines
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_MAXLINE )
-#else
-long int HB_ED_MAXLINE(void)
-#endif
+/* Returns the total number of lines */
+HB_FUNC( ED_MAXLINE )
 {
-#ifdef mc51
-   _retni((unsigned int) ED->line_number);
-#else
-   return((unsigned int) ED->line_number);
-#endif
+   hb_retni( ( unsigned int ) s_ED->line_number );
 }
 
-/*
- ** Counts the total number of lines in passed editor
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_LCOUNT )
-#else
-long int HB_ED_LCOUNT(int nEdit)
-#endif
+/* Counts the total number of lines in passed editor */
+HB_FUNC( ED_LCOUNT )
 {
-   EDITOR *E;
+   EDITOR * E = s_ETab[ hb_parni( 1 ) ];
 
-#ifdef mc51
-   E = ETab[ _parni(1) ];
-
-   _retni( (unsigned int) E->line_number );
-#else
-   E = ETab[ nEdit ];
-
-   return( (unsigned int) E->line_number );
-#endif
+   hb_retni( ( unsigned int ) E->line_number );
 }
 
 
-/*
- ** Returns if the editor is correctly displayed
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_STABLE )
-#else
-int HB_ED_STABLE(void)
-#endif
+/* Returns if the editor is correctly displayed */
+HB_FUNC( ED_STABLE )
 {
-#ifdef mc51
-   _retl( ED->stable );
-#else
-   return( ED->stable );
-#endif
+   hb_retl( s_ED->stable );
 }
 
 
-/*
- ** Returns the number of bytes stored in the text buffer
-*/
-#ifdef mc51
-CLIPPER_ACTION( ED_LENGTH )
-#else
-long int HB_ED_LENGTH(void)
-#endif
+/* Returns the number of bytes stored in the text buffer */
+HB_FUNC( ED_LENGTH )
 {
-#ifdef mc51
-   _retni((unsigned int) ED->text_length);
-#else
-   return(ED->text_length);
-#endif
+   hb_retni( ( unsigned int ) s_ED->text_length );
 }
-
-
-/*
- *
- **  This is a standalone version of editor for testing
- * it requires home made screen library
- *
-*/
-
-#ifndef mc51
-
-  CLIPPER Ed(EDITOR *E)
-  {
-  int          l;
-  unsigned int i;
-  char         *adres, pom[80];
-  char         *str1, strall[ MAX_LINE_LEN + 2 ], str11[100];
-
-    str1 = str11;
-    while((i = READKEY(12)) != 283)
-    {
-    switch(i)
-    {
-      case UPARR  : HB_ED_UP();
-                    break;
-      case DNARR  : HB_ED_DOWN();
-                    break;
-      case 0x51E0u: HB_ED_PGDOWN();
-                    break;
-      case 0x49E0u: HB_ED_PGUP();
-                    break;
-      case 0x84E0u: HB_ED_TOP();
-                    break;
-      case 0x76E0u: HB_ED_BOTTOM();
-                    break;
-      case EEE    : HB_ED_GOTO( 1L );
-                    break;
-      case LTARR  : HB_ED_LEFT();
-                    break;
-      case RTARR  : HB_ED_RIGHT();
-                    break;
-      case 0x47E0u: HB_ED_HOME();
-                    break;
-      case 0x4FE0u: HB_ED_END();
-                    break;
-      case DEL    : HB_ED_DELCHAR();
-                    break;
-      case 0x0E08u: HB_ED_BSPACE(insert);
-                    break;
-      case 0x74E0u: HB_ED_NWORD();
-                    break;
-      case 0x73E0u: HB_ED_PWORD();
-                    break;
-      case 0x1519u: HB_ED_DELLINE();
-                    break;
-      case 0x1414u: HB_ED_DELWORD();
-                    break;
-      case ENTER  : HB_ED_RETURN(insert);
-                    break;
-      case 33333u : HB_ED_ROW();
-                    break;
-      case 44444u : HB_ED_COL();
-                    break;
-      case 55555u : HB_ED_STABLE();
-                    break;
-      case INSERT : IInsert();
-                    break;
-      default     : i &= 0xff;
-                    HB_ED_PUTCHAR(insert, i);
-                    break;
-    }
-    l= HB_ED_STABILI();
-
-      strcpy( strall, "col ");
-      str1   = itoa( E->cursor_col+E->first_col, str1, 10 );
-      strcat( strall, str1 );
-      strcat( strall, "  row " );
-      str1   = itoa( E->cursor_row, str1, 10 );
-      strcat( strall, str1 );
-      strcat( strall, "    lines " );
-      str1   = itoa( (int)E->line_number, str1, 10 );
-      strcat( strall, str1 );
-      strcat( strall, "     " );
-
-      DISPXYA( 1, 1, 5, strall );
-
-      if(insert)
-      {
-        str1 = itoa( (int)E->active, str1, 10 );
-        strcpy( strall, "  INS ON   " );
-        strcat( strall, str1 );
-        DISPXYA( 30, 1, 5, strall );
-      }
-      else
-      {
-        str1 = itoa( (int)E->active, str1, 10 );
-        strcpy( strall, "  INS OFF   " );
-        strcat( strall, str1 );
-        DISPXYA( 30, 1, 5, strall );
-      }
-      str1 = itoa( (int)strlen( E->begin ) , str1, 10 );
-      strcpy( strall, "  Length=" );
-      strcat( strall, str1 );
-      strcat( strall, "     " );
-      DISPXYA( 60, 1, 5, strall );
-
-
-
-      strncpy( pom, E->begin, 70 );
-      pom[70] = ' ';
-      pom[71] = '\x0';
-      DISPXYA( 1, 21, 5, pom );
-
-      str1 = ltoa( E->line_number , str1, 10 );
-      strcpy( strall, "  li  " );
-      strcat( strall, str1 );
-      strcat( strall, "     " );
-      DISPXYA( 48, 1, 5, strall );
-
-      SETXY(E->cursor_col+E->left, E->cursor_row+E->top);
-    }
-  }
-
-
-  void main()
-  {
-  int xg, yg, xd, yd, nE, p;
-  char *aaa;
-  int mode, page, row, col;
-
-
-
-    VIDEMODE( &mode, &page, &row, &col );
-
-    DRAWBOX( 00, 00, 79, 24, 7, 7, "ÚÄ¿³±³ÔÍ¾" );
-
-    xg = 0;
-    yg = 1;
-    xd = 79;
-    yd = 23;
-
-    nE = HB_ED_NEW( 96, 8, 4096l );
-    ED = ETab[ nE ];
-
-    strcpy( name, "test.xxx" );
-    p = open ( name, O_RDONLY+O_BINARY );
-    adr = calloc( 7000, 1 );
-    read ( p, adr, 7000 );
-
-    close ( p );
-
-    HB_ED_SETTEXT( nE, adr );
-
-//    HB_ED_INSTEXT( nE, adr, 0l );
-
-    DRAWBOX( xg, yg, xd, yd, 14, 14, "ÚÄ¿³±³ÔÍ¾" );
-    HB_ED_CONFIG( nE, yg+1, xg+1, yd-1, xd-1, 0, 0 );
-    HB_ED_STABILI();
-
-    Ed( ED );
-
-    HB_ED_KILL(nE);
-
-  }
-
-#endif
