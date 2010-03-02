@@ -2,28 +2,25 @@
  * $Id$
  */
 
-#define EDIT_EDIT .T.
-#define EDIT_VIEW .F.
-
 PROCEDURE Main( cFile )
    LOCAL cText
-   LOCAL lMode := EDIT_EDIT
+   LOCAL lEdit := .T.
 
    IF cFile == NIL
       cFile := "license.txt"
-      IF !File( cFile )
+      IF ! hb_FileExsist( cFile )
          cFile := "../../../license.txt"
       ENDIF
-      lMode := EDIT_VIEW
+      lEdit := .F.
    ENDIF
-  
+
    cText := MemoRead( cFile )
-   cText := MemoEditor( cText, 0, 0, MaxRow(), MaxCol(), lMode )
+   cText := MemoEditor( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
    MemoWrit( "output.txt", cText )
- 
+
    RETURN
 
-STATIC FUNCTION MEMOEDITOR( cText, nTop, nLeft, nBottom, nRight, lMode )
+STATIC FUNCTION MEMOEDITOR( cText, nTop, nLeft, nBottom, nRight, lEdit )
    LOCAL oED
 
    /* NOTE: In current design of editor it doesn't reallocate the memory
@@ -32,7 +29,7 @@ STATIC FUNCTION MEMOEDITOR( cText, nTop, nLeft, nBottom, nRight, lMode )
    oED := EditorNew( nTop, nLeft, nBottom, nRight, 254, , , , Len( cText ) * 2, 168 )
    IF oED != NIL
       EditorSetText( oED, cText )
-      EditorEdit( oED, lMode, .T. )
+      EditorEdit( oED, lEdit, .T. )
       cText := EditorGetText( oED )
       EditorKill( oED )
    ELSE

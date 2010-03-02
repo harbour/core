@@ -293,7 +293,7 @@ static void AddText( int nEdit, const char * adres )
    dl    = strlen( adres );
    dlold = E->text_length;
    if( dlold == 2 )
-      dlold =0;   /* if current text buffer contains CRLF only then discard it */
+      dlold = 0;   /* if current text buffer contains CRLF only then discard it */
 
    /* TODO: add reallocation of text buffer
     */
@@ -327,8 +327,8 @@ HB_FUNC( ED_ADDTEXT )
 
 /* Moves text from one location into another
  */
-static void MoveText ( EDITOR * E, long int source, long int dest,
-                       long int ilb )
+static void MoveText( EDITOR * E, long int source, long int dest,
+                      long int ilb )
 {
    long int diff;
 
@@ -420,7 +420,7 @@ static long int InsText( EDITOR * E, char * adres, long int line )
 
    /* TODO: add reallocation  of text buffer
     */
-   if( dl1 < (E->buffer_size - 10) )
+   if( dl1 < ( E->buffer_size - 10 ) )
    {
       /* there is some free space in text buffer
        */
@@ -1169,7 +1169,7 @@ static void Down( EDITOR * E )
       else
       {
          /* the new line is already visible */
-         if( E->line_number <= (E->bottom - E->top + 1) )
+         if( E->line_number <= ( E->bottom - E->top + 1 ) )
             E->last_display = E->last_line; /* the total number of lines is smaller then rows to display */
       }
    }
@@ -1527,9 +1527,9 @@ HB_FUNC( ED_LEFT )
  */
 static void Right( EDITOR * E )
 {
-   if( E->cursor_col < (E->right - E->left) )
+   if( E->cursor_col < ( E->right - E->left ) )
    {  /* inside the window */
-      if( (E->first_col + E->cursor_col) < E->line_length )
+      if( ( E->first_col + E->cursor_col ) < E->line_length )
          E->cursor_col++;
       /* else no wrap allowed */
    }
@@ -1662,7 +1662,7 @@ static void FormatParagraph ( EDITOR * E )
       while( tmp )
       {
          source   = E->current_line + ( long int )( tmp - pom - 1 );
-         MoveText ( E, source + 2, source + 1, E->buffer_size - source + 2 );
+         MoveText( E, source + 2, source + 1, E->buffer_size - source + 2 );
          E->begin[ ( unsigned int ) ( source + 1 ) ] = ' ';
 
          rdl = format_line( E, SOFT, 0 );
@@ -2106,7 +2106,7 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
       /* copy maximum allowed bytes form the line into temporary buffer */
       strncpy( pom, E->begin + ( unsigned int ) E->current_line,
                ( int ) ( E->line_length + 10 + rdl ) );
-      pom[ ( unsigned int )(E->line_length + rdl) ] = '\x0';
+      pom[ ( unsigned int ) ( E->line_length + rdl ) ] = '\x0';
 
       /* find the last space where the line can be splitted */
       p = strrchr( pom, ' ' );
@@ -2124,7 +2124,7 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
       }
 
       j = ( long int ) ( E->current_line + podz );
-      MoveText ( E, j, j + 2, E->buffer_size - j - 2 );
+      MoveText( E, j, j + 2, E->buffer_size - j - 2 );
 
       /* replace with separators */
       E->begin[ ( unsigned int ) j + 0 ] = ( char ) Karetka;
@@ -2486,7 +2486,7 @@ static void Return( int INS )
                End( s_ED );
             ii = s_ED->current_line + ( long int ) s_ED->first_col +
                                       ( long int ) s_ED->cursor_col;
-            MoveText ( s_ED, ii, ii + 2, s_ED->buffer_size - ii - 2 );
+            MoveText( s_ED, ii, ii + 2, s_ED->buffer_size - ii - 2 );
 
             s_ED->begin[ ( unsigned int ) ii + 0 ] = '\r';
             s_ED->begin[ ( unsigned int ) ii + 1 ] = '\n';
