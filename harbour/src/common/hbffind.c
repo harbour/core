@@ -475,6 +475,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
+      APIRET rc = NO_ERROR;
 
       /* TODO: HB_FA_LABEL handling */
 
@@ -485,19 +486,27 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          /* tzset(); */
 
          info->hFindFile = HDIR_CREATE;
-         info->entry = (PFILEFINDBUF3) hb_xgrab( 4 * 1024 );
-         info->findCount = 256;
+         info->findCount = 128;
+         rc = DosAllocMem( (PPVOID) &info->entry, 4 * 1024, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
 
-         bFound = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
-                                &info->hFindFile,
-                                ( ULONG ) hb_fsAttrToRaw( ffind->attrmask ),
-                                info->entry,
-                                4 * 1024,
-                                &info->findCount,
-                                FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
+         if( rc == NO_ERROR )
+         {
+            bFound = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
+                                   &info->hFindFile,
+                                   ( ULONG ) hb_fsAttrToRaw( ffind->attrmask ),
+                                   info->entry,
+                                   4 * 1024,
+                                   &info->findCount,
+                                   FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
 
-         if( bFound )
-            info->next = info->entry;
+            if( bFound )
+               info->next = info->entry;
+         }
+         else
+         {
+            info->entry = NULL;
+            bFound = HB_FALSE;
+         }
       }
       else
       {
@@ -505,7 +514,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             bFound = HB_TRUE;
          else
          {
-            info->findCount = 256;
+            info->findCount = 128;
 
             bFound = DosFindNext( info->hFindFile,
                                   info->entry,
@@ -892,7 +901,8 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          {
             DosFindClose( info->hFindFile );
-            hb_xfree( info->entry );
+            if( info->entry )
+               DosFreeMem( info->entry );
          }
 
 #elif defined( HB_OS_WIN )
