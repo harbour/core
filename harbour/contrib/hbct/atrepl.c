@@ -200,7 +200,7 @@ HB_FUNC( ATREPL )
          HB_SIZE ulMatchCounter = 0;
 
          sRetStrLen = sStrLen;
-         pcRetStr = ( char * ) hb_xgrab( sRetStrLen );
+         pcRetStr = ( char * ) hb_xgrab( sRetStrLen + 1 );
          hb_xmemcpy( pcRetStr, pcString, sRetStrLen );
 
          pcRetSubStr = pcRetStr + sIgnore;
