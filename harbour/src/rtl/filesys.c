@@ -2817,7 +2817,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
       /* NOTE: A trailing underscore is not returned on this platform,
                so we don't need to strip it. [vszakats] */
 
-#if defined( __DJGPP__ )
+#if defined( __DJGPP__ ) || defined( HB_OS_OS2 )
       /* convert '/' to '\' */
       while( ( pszStart = strchr( pszBuffer, '/' ) ) != NULL )
          *pszStart = '\\';
