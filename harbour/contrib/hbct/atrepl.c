@@ -126,29 +126,26 @@ HB_FUNC( ATREPL )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       const char *pcStringToMatch = hb_parc( 1 );
-      HB_SIZE sStrToMatchLen = hb_parclen( 1 );
+      HB_SIZE nStrToMatchLen = hb_parclen( 1 );
       const char *pcString = hb_parc( 2 );
-      HB_SIZE sStrLen = hb_parclen( 2 );
+      HB_SIZE nStrLen = hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
-      HB_SIZE sIgnore, sMatchStrLen = 0;
+      HB_SIZE nIgnore, nMatchStrLen = 0;
       HB_SIZE ulCounter;
       char *pc;
 
       const char *pcReplacement;
-      HB_SIZE sReplaceLen;
+      HB_SIZE nReplaceLen;
       int iReplaceMode;
       char *pcRetStr;
-      HB_SIZE sRetStrLen;
+      HB_SIZE nRetStrLen;
 
       /* eventually ignore some characters */
-      if( HB_ISNUM( 6 ) )
-         sIgnore = ( HB_SIZE ) hb_parnl( 6 );
-      else
-         sIgnore = 0;
+      nIgnore = ( HB_SIZE ) hb_parnl( 6 );
 
-      if( sIgnore >= sStrLen )
+      if( nIgnore >= nStrLen )
       {
          int iArgErrorMode = ct_getargerrormode();
 
@@ -157,33 +154,19 @@ HB_FUNC( ATREPL )
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATREPL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retclen( pcString, sStrLen );
+         hb_retclen( pcString, nStrLen );
          return;
       }
 
       /* replacement */
-      if( HB_ISCHAR( 3 ) )
-      {
-         pcReplacement = hb_parc( 3 );
-         sReplaceLen = hb_parclen( 3 );
-      }
-      else
-      {
-         pcReplacement = "";
-         sReplaceLen = 0;
-      }
+      pcReplacement = hb_parc( 3 );
+      nReplaceLen = pcReplacement ? hb_parclen( 3 ) : 0;
 
       /* replace mode */
-      if( HB_ISLOG( 5 ) )
-         iReplaceMode = hb_parl( 5 );
-      else
-         iReplaceMode = 0;
+      iReplaceMode = hb_parl( 5 );
 
-      /* nth match or last match ? */
-      if( HB_ISNUM( 4 ) )
-         ulCounter = hb_parnl( 4 );
-      else
-         ulCounter = 0;
+      /* n-th match or last match ? */
+      ulCounter = hb_parnl( 4 );
 
       /* little trick: */
       if( iReplaceMode == 0 && ulCounter == 0 )
@@ -199,12 +182,12 @@ HB_FUNC( ATREPL )
          HB_SIZE sRetSubStrLen;
          HB_SIZE ulMatchCounter = 0;
 
-         sRetStrLen = sStrLen;
-         pcRetStr = ( char * ) hb_xgrab( sRetStrLen + 1 );
-         hb_xmemcpy( pcRetStr, pcString, sRetStrLen );
+         nRetStrLen = nStrLen;
+         pcRetStr = ( char * ) hb_xgrab( nRetStrLen + 1 );
+         hb_xmemcpy( pcRetStr, pcString, nRetStrLen );
 
-         pcRetSubStr = pcRetStr + sIgnore;
-         sRetSubStrLen = sRetStrLen - sIgnore;
+         pcRetSubStr = pcRetStr + nIgnore;
+         sRetSubStrLen = nRetStrLen - nIgnore;
 
          while( ulMatchCounter < ulCounter )
          {
@@ -212,12 +195,12 @@ HB_FUNC( ATREPL )
             {
                case CT_SETATLIKE_EXACT:
                   pc = ( char * ) ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                                       sStrToMatchLen, &sMatchStrLen );
+                                                       nStrToMatchLen, &nMatchStrLen );
                   break;
 
                case CT_SETATLIKE_WILDCARD:
                   pc = ( char * ) ct_at_wildcard_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                                          sStrToMatchLen, cAtLike, &sMatchStrLen );
+                                                          nStrToMatchLen, cAtLike, &nMatchStrLen );
                   break;
 
                default:
@@ -226,7 +209,7 @@ HB_FUNC( ATREPL )
 
             if( pc == NULL )
             {
-               hb_retclen_buffer( pcRetStr, sRetStrLen );
+               hb_retclen_buffer( pcRetStr, nRetStrLen );
                return;
             }
 
@@ -235,59 +218,59 @@ HB_FUNC( ATREPL )
             /* replace match ? */
             if( ( iReplaceMode == 0 ) || ( ulMatchCounter == ulCounter ) )
             {
-               if( sMatchStrLen < sReplaceLen )
+               if( nMatchStrLen < nReplaceLen )
                {
                   /* pcRetStr grows, so realloc memory */
                   /* save pc pointer */
                   HB_SIZE sPCPos = pc - pcRetStr;
 
                   pcRetStr = ( char * ) hb_xrealloc( pcRetStr,
-                                 sRetStrLen + ( sReplaceLen - sMatchStrLen ) );
+                                 nRetStrLen + ( nReplaceLen - nMatchStrLen ) + 1 );
                   pc = pcRetStr + sPCPos;
                }
 
-               if( sReplaceLen != sMatchStrLen )
-                  memmove( pc + sReplaceLen, pc + sMatchStrLen,
-                           sRetStrLen - ( ( pc + sMatchStrLen ) - pcRetStr ) );
-               if( sReplaceLen > 0 )
-                  hb_xmemcpy( pc, pcReplacement, sReplaceLen );
+               if( nReplaceLen != nMatchStrLen )
+                  memmove( pc + nReplaceLen, pc + nMatchStrLen,
+                           nRetStrLen - ( ( pc + nMatchStrLen ) - pcRetStr ) );
+               if( nReplaceLen > 0 )
+                  hb_xmemcpy( pc, pcReplacement, nReplaceLen );
 
                if( iMultiPass )
                   pcRetSubStr = pc + 1;
                else
-                  pcRetSubStr = pc + sReplaceLen;
+                  pcRetSubStr = pc + nReplaceLen;
 
-               sRetStrLen += sReplaceLen - sMatchStrLen;
+               nRetStrLen += nReplaceLen - nMatchStrLen;
             }
             else
             {
                if( iMultiPass )
                   pcRetSubStr = pc + 1;
                else
-                  pcRetSubStr = pc + sMatchStrLen;
+                  pcRetSubStr = pc + nMatchStrLen;
             }
-            sRetSubStrLen = sRetStrLen - ( pcRetSubStr - pcRetStr );
+            sRetSubStrLen = nRetStrLen - ( pcRetSubStr - pcRetStr );
          }
       }
       else /* ( ulCounter != 0 ) */
       {
          /* find and replace last match */
-         sRetStrLen = sStrLen;
-         pcRetStr = ( char * ) hb_xgrab( sRetStrLen );
-         hb_xmemcpy( pcRetStr, pcString, sRetStrLen );
+         nRetStrLen = nStrLen;
+         pcRetStr = ( char * ) hb_xgrab( nRetStrLen + 1 );
+         hb_xmemcpy( pcRetStr, pcString, nRetStrLen );
 
          /* we have to find the last match and replace it */
          switch ( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
-               pc = ( char * ) ct_at_exact_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
-                                                     pcStringToMatch, sStrToMatchLen, &sMatchStrLen );
+               pc = ( char * ) ct_at_exact_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
+                                                     pcStringToMatch, nStrToMatchLen, &nMatchStrLen );
                break;
 
             case CT_SETATLIKE_WILDCARD:
-               pc = ( char * ) ct_at_wildcard_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
-                                                        pcStringToMatch, sStrToMatchLen,
-                                                        cAtLike, &sMatchStrLen );
+               pc = ( char * ) ct_at_wildcard_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
+                                                        pcStringToMatch, nStrToMatchLen,
+                                                        cAtLike, &nMatchStrLen );
                break;
 
             default:
@@ -296,34 +279,32 @@ HB_FUNC( ATREPL )
 
          if( pc == NULL )
          {
-            hb_retclen( pcRetStr, sRetStrLen );
-            hb_xfree( pcRetStr );
+            hb_retclen_buffer( pcRetStr, nRetStrLen );
             return;
          }
 
          /* replace match */
-         if( sMatchStrLen < sReplaceLen )
+         if( nMatchStrLen < nReplaceLen )
          {
             /* pcRetStr grows, so realloc memory */
             /* save pc pointer */
             HB_SIZE sPCPos = pc - pcRetStr;
 
             pcRetStr = ( char * ) hb_xrealloc( pcRetStr,
-                                 sRetStrLen + ( sReplaceLen - sMatchStrLen ) );
+                                 nRetStrLen + ( nReplaceLen - nMatchStrLen ) + 1 );
             pc = pcRetStr + sPCPos;
          }
 
-         if( sReplaceLen != sMatchStrLen )
-            memmove( pc + sReplaceLen, pc + sMatchStrLen,
-                     sRetStrLen - ( ( pc + sMatchStrLen ) - pcRetStr ) );
-         if( sReplaceLen > 0 )
-            hb_xmemcpy( pc, pcReplacement, sReplaceLen );
+         if( nReplaceLen != nMatchStrLen )
+            memmove( pc + nReplaceLen, pc + nMatchStrLen,
+                     nRetStrLen - ( ( pc + nMatchStrLen ) - pcRetStr ) );
+         if( nReplaceLen > 0 )
+            hb_xmemcpy( pc, pcReplacement, nReplaceLen );
 
-         sRetStrLen += ( sReplaceLen - sMatchStrLen );
+         nRetStrLen += ( nReplaceLen - nMatchStrLen );
       }
 
-      hb_retclen( pcRetStr, sRetStrLen );
-      hb_xfree( pcRetStr );
+      hb_retclen_buffer( pcRetStr, nRetStrLen );
    }
    else /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
