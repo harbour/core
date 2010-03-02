@@ -19,7 +19,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
- *    hb_gt_CtrlHandler()
+ *    hb_gt_CtrlHandler(), hb_gt_win_SetCloseButton()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
@@ -105,7 +105,7 @@
 /*
  To disable mouse, initialization was made in cmdarg.c
 */
-static HB_BOOL b_MouseEnable = HB_TRUE;
+static HB_BOOL s_bMouseEnable = HB_TRUE;
 
 /* *********************************************************************** */
 
@@ -149,6 +149,8 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
+static HB_BOOL     s_bOldClosable;
+static HB_BOOL     s_bClosable;
 static HB_BOOL     s_bSpecialKeyHandling;
 static HB_BOOL     s_bAltKeyHandling;
 static DWORD       s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
@@ -687,6 +689,43 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    }
 }
 
+static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
+{
+   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
+
+   static P_GETCONSOLEWINDOW s_pGetConsoleWindow;
+   static HB_BOOL s_bChecked = HB_FALSE;
+
+   HB_BOOL bOldClosable = HB_TRUE;
+
+   if( ! s_bChecked )
+   {
+      s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetConsoleWindow" );
+      s_bChecked = HB_TRUE;
+   }
+
+   if( s_pGetConsoleWindow )
+   {
+      HMENU hSysMenu = GetSystemMenu( s_pGetConsoleWindow(), FALSE );
+
+      if( hSysMenu )
+      {
+         MENUITEMINFO mii;
+
+         memset( &mii, 0, sizeof( mii ) );
+         mii.cbSize = sizeof( mii );
+
+         ( void ) GetMenuItemInfo( hSysMenu, SC_CLOSE, FALSE, &mii );
+         bOldClosable = ( mii.fState & MFS_GRAYED ) == 0;
+
+         if( bSet )
+            EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bClosable ? MF_ENABLED : MF_GRAYED ) );
+      }
+   }
+
+   return bOldClosable;
+}
+
 /* *********************************************************************** */
 
 static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -803,7 +842,9 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    GetConsoleMode( s_HOutput, &s_dwomode );
    GetConsoleMode( s_HInput, &s_dwimode );
 
-   SetConsoleMode( s_HInput, b_MouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+   SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+
+   s_bClosable = s_bOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
 }
 
 /* *********************************************************************** */
@@ -813,6 +854,8 @@ static void hb_gt_win_Exit( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Exit(%p)", pGT));
 
    HB_GTSELF_REFRESH( pGT );
+
+   hb_gt_win_SetCloseButton( HB_TRUE, s_bOldClosable );
 
    if( s_pCharInfoScreen )
    {
@@ -988,7 +1031,7 @@ static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
       SetConsoleCtrlHandler( NULL, FALSE );
       SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
       SetConsoleMode( s_HOutput, s_dwomode );
-      SetConsoleMode( s_HInput, b_MouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+      SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
       hb_gt_win_xInitScreenParam( pGT );
       hb_gt_win_xSetCursorStyle();
    }
@@ -1442,7 +1485,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
          }
       }
-      else if( b_MouseEnable &&
+      else if( s_bMouseEnable &&
                s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT &&
                iEventMask & ~( INKEY_KEYBOARD | INKEY_RAW ) )
       {
@@ -1677,6 +1720,20 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
+
+      case HB_GTI_CLOSABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bClosable );
+         if( pInfo->pNewVal )
+         {
+            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( bNewValue != s_bClosable )
+            {
+               hb_gt_win_SetCloseButton( HB_TRUE, bNewValue );
+               s_bClosable = bNewValue;
+            }
+         }
+         break;
+
       case HB_GTI_VIEWMAXHEIGHT:
       {
          COORD coBuf = GetLargestConsoleWindowSize( s_HOutput );
@@ -1718,11 +1775,11 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_MOUSESTATUS:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, b_MouseEnable );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bMouseEnable );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
-            b_MouseEnable = hb_itemGetL( pInfo->pNewVal );
-            SetConsoleMode( s_HInput, b_MouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+            s_bMouseEnable = hb_itemGetL( pInfo->pNewVal );
+            SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
          }
          break;
 
@@ -1761,7 +1818,7 @@ static HB_BOOL hb_gt_win_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   return b_MouseEnable;
+   return s_bMouseEnable;
 }
 
 static void hb_gt_win_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
