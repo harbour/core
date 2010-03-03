@@ -7,10 +7,7 @@ PROCEDURE Main( cFile )
    LOCAL lEdit := .T.
 
    IF cFile == NIL
-      cFile := "license.txt"
-      IF ! hb_FileExists( cFile )
-         cFile := "../../../license.txt"
-      ENDIF
+      cFile := "sample.txt"
       lEdit := .F.
    ENDIF
 
