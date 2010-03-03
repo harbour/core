@@ -333,7 +333,7 @@ static void AddText( PHB_EDITOR pEd, const char * adres )
    {
       /* there is enough room in text buffer
        */
-      hb_strncpy( pEd->begin + dlold, adres, dl - 1 );
+      hb_strncpy( pEd->begin + dlold, adres, dl );
       pEd->text_length += dl;
    }
    else
