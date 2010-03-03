@@ -10,6 +10,7 @@ C_SOURCES := \
    dates2.c \
    ffind.c \
    hb_f.c \
+   hbeditc.c \
    spd.c \
    strfmt.c \
    stringsx.c \
@@ -17,6 +18,7 @@ C_SOURCES := \
 PRG_SOURCES := \
    fcomma.prg \
    fileread.prg \
+   hbedit.prg \
    nconvert.prg \
    numtxthu.prg \
    numtxten.prg \
