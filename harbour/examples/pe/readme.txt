@@ -1,6 +1,6 @@
 /*
  * $Id$
-*/
+ */
 Known bugs:
 ----------
 1) It requires files separated with CR/LF pairs
@@ -16,4 +16,3 @@ To fix:
 2) It reformats whole text at startup - again for a very long text it can
   take too much time
 3) Text buffer shold be reallocated dynamically
-4) Remove static table of created editors

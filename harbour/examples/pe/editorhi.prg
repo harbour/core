@@ -1,6 +1,6 @@
 /*
  * $Id$
-*/
+ */
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -183,17 +183,14 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 //02-03-92 07:53pm
 //
 // Retrieves the text from editor
-// nUpper - specifies if text should be changed to uppercase, lowercase
-//    or unchanged
 // nCarret - specifies if soft carriage return (141/10) should be replaced by
 //    hard carriage returns (13/10)
 //
-FUNCTION EditorGetText( oEdit, nUpper, nCarret )
+FUNCTION EditorGetText( oEdit, nCarret )
 
-   DEFAULT nUpper  TO EDIT_SAME
    DEFAULT nCarret TO EDIT_HARD
 
-   RETURN ED_GetText( oEdit[E_EDIT], nUpper, nCarret )
+   RETURN ED_GetText( oEdit[E_EDIT], nCarret )
 
 //---------------------------------------------------------
 //04-03-92 02:35pm
@@ -502,25 +499,6 @@ STATIC FUNCTION EditorSave( oEdit )
    ENDIF
 
    RETURN nHandle > 0
-
-//---------------------------------------------------------
-//19-08-93 02:05am
-//
-/*
-STATIC PROCEDURE EditorPrint( oEdit )
-   LOCAL oParm
-
-   IF PrintReady()
-      PrintNewQue()
-      PrintSetHead( AppsOwner(), , "-", PRN_OFF )
-
-      PrintAddJob( oEdit, PRN_EDITOR )
-      PrintJob(PRN_OFF)
-      PrintDelQue()
-   ENDIF
-
-   RETURN
-*/
 
 //---------------------------------------------------------
 *09/29/91 08:40pm

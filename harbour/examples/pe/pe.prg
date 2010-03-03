@@ -15,12 +15,12 @@ PROCEDURE Main( cFile )
    ENDIF
 
    cText := MemoRead( cFile )
-   cText := MemoEditor( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
+   cText := MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
    MemoWrit( "output.txt", cText )
 
    RETURN
 
-STATIC FUNCTION MEMOEDITOR( cText, nTop, nLeft, nBottom, nRight, lEdit )
+STATIC FUNCTION MyMemoEdit( cText, nTop, nLeft, nBottom, nRight, lEdit )
    LOCAL oED
 
    /* NOTE: In current design of editor it doesn't reallocate the memory
