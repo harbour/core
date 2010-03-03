@@ -8,7 +8,7 @@ PROCEDURE Main( cFile )
 
    IF cFile == NIL
       cFile := "license.txt"
-      IF ! hb_FileExsist( cFile )
+      IF ! hb_FileExists( cFile )
          cFile := "../../../license.txt"
       ENDIF
       lEdit := .F.

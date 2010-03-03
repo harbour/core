@@ -1,12 +1,13 @@
 /*
  * $Id$
-*/
+ */
 
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbapierr.h"
 
-#define Eof        '\x0'
+#define Eof        '\0'
 #define SOFT        141
 #define HARD       '\r'
 #define END        'í'
@@ -55,42 +56,75 @@ typedef struct
    long int next_line;        /* the offset of next line to return by ED_GetNextLine() */
    long int text_length;      /* the size (in bytes) of edited text */
    long int buffer_size;      /* the size of allocated memory buffer */
-   char *   begin;           /* the memory buffer */
+   char *   begin;            /* the memory buffer */
 
-} EDITOR;
-
-
-
-
-static EDITOR * s_EStack[] = { NULL, NULL, NULL, NULL, NULL };
-/* table of created editors */
-static EDITOR * s_ETab[]   = { NULL, NULL, NULL, NULL, NULL,
-                               NULL, NULL, NULL, NULL, NULL, NULL };
-static EDITOR * s_ED;     /* currently serviced editor */
+} HB_EDITOR, * PHB_EDITOR;
 
 
 
 
+static void         KillText( PHB_EDITOR pEd );
+static unsigned int Clear( PHB_EDITOR pEd, long int, unsigned int * );
+static void         BackSpace( PHB_EDITOR pEd, int );
+static void         NextWord( PHB_EDITOR pEd );
+static void         Return( PHB_EDITOR pEd, int );
+static void         GoTo( PHB_EDITOR pEd, int );
+static int          format_line( PHB_EDITOR pEd, int, unsigned int );
+static void         MoveText( PHB_EDITOR pEd, long int, long int, long int );
+static unsigned int GetLineLength( PHB_EDITOR pEd, long int, int * );
 
-static unsigned int Clear( EDITOR * ED, long int, unsigned int * );
-static void         BackSpace( int );
-static void         NextWord( void );
-static void         Return( int );
-static void         GoTo( int );
-static int          format_line( EDITOR * ED, int, unsigned int );
-static void         MoveText( EDITOR * ED, long int, long int, long int );
-static unsigned int GetLineLength( EDITOR * ED, long int, int * );
 
-/*
- *
- **
- *
-*/
+
+static HB_GARBAGE_FUNC( PHB_EDITOR_release )
+{
+   void ** ph = ( void ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+
+      KillText( ( PHB_EDITOR ) * ph );
+      hb_xfree( ( ( PHB_EDITOR ) * ph )->begin );
+      hb_xfree( ( PHB_EDITOR ) * ph );
+
+      /* set pointer to NULL just in case */
+      * ph = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gcPHB_EDITOR_funcs =
+{
+   PHB_EDITOR_release,
+   hb_gcDummyMark
+};
+
+static void PHB_EDITOR_ret( PHB_EDITOR p )
+{
+   if( p )
+   {
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PHB_EDITOR * ), &s_gcPHB_EDITOR_funcs );
+
+      *ph = p;
+
+      hb_retptrGC( ph );
+   }
+   else
+      hb_retptr( NULL );
+}
+
+static PHB_EDITOR PHB_EDITOR_par( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcPHB_EDITOR_funcs, iParam );
+
+   return ph ? ( PHB_EDITOR ) * ph : NULL;
+}
+
 
 
 /* Find the beginning of previous line starting from given offset
  */
-static long int Prev( EDITOR * E, long int adres )
+static long int Prev( PHB_EDITOR pEd, long int adres )
 {
    long int i;
 
@@ -98,7 +132,7 @@ static long int Prev( EDITOR * E, long int adres )
    {
       for( i = adres; i >= 0; i-- )
       {
-         if( E->begin[ ( unsigned int ) i ] == '\n' )
+         if( pEd->begin[ ( unsigned int ) i ] == '\n' )
          {
             if( i < adres - 2 )
                return i + 1;
@@ -112,45 +146,45 @@ static long int Prev( EDITOR * E, long int adres )
 
 /* Find the beginning of next line starting from given offset
  */
-static long int Next( EDITOR * E, long int adres )
+static long int Next( PHB_EDITOR pEd, long int adres )
 {
    char * tmp;
 
-   tmp = strchr( E->begin + ( unsigned int ) adres, '\n' );
+   tmp = strchr( pEd->begin + ( unsigned int ) adres, '\n' );
 
    if( tmp && tmp[ 1 ] )
-      return ( long int ) ( ++tmp - E->begin );
+      return ( long int ) ( ++tmp - pEd->begin );
    else
       return -1;
 }
 
-/* Initializes EDITOR structure
+/* Initializes HB_EDITOR structure
  */
-static void New( EDITOR * E, int tab, int ll, long int bufferSize )
+static void New( PHB_EDITOR pEd, int tab, int ll, long int bufferSize )
 {
 
-  E->line_length    = ll;
-  E->first_line     = 0;
-  E->last_line      = 0;
-  E->current_line   = 0;
-  E->first_display  = 0;
-  E->last_display   = 0;
-  E->cursor_row     = 0;
-  E->cursor_col     = 0;
-  E->first_col      = 0;
-  E->stabil         = 0;
-  E->current_stabil = 0;
-  E->stable         = HB_FALSE;
-  E->tab_size       = tab;
-  E->active         = 1;
-  E->line_number    = 0;
-  E->IsConfigured   = 0;
-  E->text_length    = 0;
-  E->buffer_size    = bufferSize;
+  pEd->line_length    = ll;
+  pEd->first_line     = 0;
+  pEd->last_line      = 0;
+  pEd->current_line   = 0;
+  pEd->first_display  = 0;
+  pEd->last_display   = 0;
+  pEd->cursor_row     = 0;
+  pEd->cursor_col     = 0;
+  pEd->first_col      = 0;
+  pEd->stabil         = 0;
+  pEd->current_stabil = 0;
+  pEd->stable         = HB_FALSE;
+  pEd->tab_size       = tab;
+  pEd->active         = 1;
+  pEd->line_number    = 0;
+  pEd->IsConfigured   = 0;
+  pEd->text_length    = 0;
+  pEd->buffer_size    = bufferSize;
 
-  E->begin[ 0 ]    = '\r';
-  E->begin[ 1 ]    = '\n';
-  E->begin[ 2 ]    = '\x0';
+  pEd->begin[ 0 ]    = '\r';
+  pEd->begin[ 1 ]    = '\n';
+  pEd->begin[ 2 ]    = '\0';
 
 }
 
@@ -159,228 +193,208 @@ static void New( EDITOR * E, int tab, int ll, long int bufferSize )
 /* Creates new editor and returns index into internal editors table */
 HB_FUNC( ED_NEW )
 {
-   EDITOR * E;
-   int nEdit=0;
+   PHB_EDITOR pEd;
 
    int      ll, tab;
    long int bufferSize;
-
-   /* Find the free slot fpr new editor
-    */
-   while( ( nEdit < 10 ) && ( s_ETab[ nEdit ] != NULL ) )
-      nEdit++;
-   if( nEdit == 10 )
-     hb_retni( -1 );    /* no more free slots */
 
    ll  = hb_parni( 1 );
    if( ll > MAX_LINE_LEN )
       ll = MAX_LINE_LEN;
    tab = hb_parni( 2 );
-   E   = ( EDITOR * ) hb_xgrab( sizeof( EDITOR ) );
+   pEd = ( PHB_EDITOR ) hb_xgrab( sizeof( HB_EDITOR ) );
 
-   s_ETab[ nEdit ] = E;
-
-   if( E )
+   if( pEd )
    {
-      if( hb_parinfo( 0 ) < 3 )
-         bufferSize = 32767;
-      else
-         bufferSize = ( long int ) hb_parni( 3 ) + 10;
+      bufferSize = HB_ISNUM( 3 ) ? ( long int ) hb_parni( 3 ) + 10 : 32767;
 
-      if( hb_parinfo( 0 ) < 4 )
-         E->escape =0;
-      else
-         E->escape =( char ) hb_parni( 4 );
+      pEd->escape = ( char ) hb_parni( 4 );
 
-      E->begin = ( char * ) hb_xgrab( ( unsigned int ) bufferSize + 100 );
-      memset( E->begin, '\x0', ( unsigned int ) bufferSize );
+      pEd->begin = ( char * ) hb_xgrab( ( unsigned int ) bufferSize + 100 );
+      memset( pEd->begin, '\0', ( unsigned int ) bufferSize );
 
-      New( E, tab, ll, bufferSize );
+      New( pEd, tab, ll, bufferSize );
 
-      hb_retni( nEdit );
+      PHB_EDITOR_ret( pEd );
    }
    else
-      hb_retni( -1 );    /* failure */
+      hb_retptr( NULL );
 }
 
 /* Replaces TAB with spaces and removes spaces from the end of line
  */
-static void FormatText ( EDITOR * E )
+static void FormatText( PHB_EDITOR pEd )
 {
    long int  j, dl;
-   char      *wsk;
-   int       i;
+   char * wsk;
+   int i;
    unsigned int nLen, nEsc;
 
-   dl              = E->current_line;
-   E->current_line = E->last_line;
+   dl              = pEd->current_line;
+   pEd->current_line = pEd->last_line;
 
    /* TODO: remove this TAB replacement because it is time consuming
     * operation if a very large file is edited
     */
-   wsk = E->begin + E->last_line;
+   wsk = pEd->begin + pEd->last_line;
    while( ( wsk = strchr( wsk, '\t' ) ) != 0 )
    {
-      j = wsk - E->begin;
+      j = wsk - pEd->begin;
 
-      MoveText( E, j, j + E->tab_size - 1,
-                     ( long int ) ( E->buffer_size - j - E->tab_size + 1 ) );
+      MoveText( pEd, j, j + pEd->tab_size - 1,
+                     ( long int ) ( pEd->buffer_size - j - pEd->tab_size + 1 ) );
 
-      for( i = 0; i < E->tab_size; i++, wsk++ )
+      for( i = 0; i < pEd->tab_size; i++, wsk++ )
          *wsk = ' ';
    }
 
    /* TODO: optimize this line formating - format line only if
     * it will be displayed
     */
-   while( E->current_line >= 0 )
+   while( pEd->current_line >= 0 )
    {
-      E->last_line    = E->current_line;
-      E->line_number++;
+      pEd->last_line    = pEd->current_line;
+      pEd->line_number++;
 
-      nLen = Clear( E, E->current_line, &nEsc );
+      nLen = Clear( pEd, pEd->current_line, &nEsc );
 
-      if( ! format_line( E, HARD, nLen ) )
-         E->current_line = Next( E, E->current_line );
+      if( ! format_line( pEd, HARD, nLen ) )
+         pEd->current_line = Next( pEd, pEd->current_line );
    }
 
-   E->current_line = dl;
-   E->first_col = 0;
+   pEd->current_line = dl;
+   pEd->first_col = 0;
 }
 
 /* Resets the editor state after pasting new content of text buffer
  */
-static void NewText( EDITOR * E )
+static void NewText( PHB_EDITOR pEd )
 {
    unsigned int dl;
    int i;
 
    /* text in buffer have to end with CR/LF
     */
-   dl = ( unsigned int ) E->text_length;
-   if( E->begin[ dl - 1 ] != '\n' )
+   dl = ( unsigned int ) pEd->text_length;
+   if( pEd->begin[ dl - 1 ] != '\n' )
    {
-      E->begin[ dl     ] = '\r';
-      E->begin[ dl + 1 ] = '\n';
-      E->begin[ dl + 2 ] = '\x0';
-      E->text_length += 2;
+      pEd->begin[ dl     ] = '\r';
+      pEd->begin[ dl + 1 ] = '\n';
+      pEd->begin[ dl + 2 ] = '\0';
+      pEd->text_length += 2;
    }
 
-   FormatText( E );
+   FormatText( pEd );
 
-   E->cursor_col     = 0;
-   E->cursor_row     = 0;
-   E->stable         = HB_FALSE;
-   E->current_stabil = 0;
-   E->first_display  = E->last_display = 0;
-   E->next_stabil    = 0;
-   E->dir            = DOWN;
-   E->stabil         = E->bottom - E->top + 1;
+   pEd->cursor_col     = 0;
+   pEd->cursor_row     = 0;
+   pEd->stable         = HB_FALSE;
+   pEd->current_stabil = 0;
+   pEd->first_display  = pEd->last_display = 0;
+   pEd->next_stabil    = 0;
+   pEd->dir            = DOWN;
+   pEd->stabil         = pEd->bottom - pEd->top + 1;
 
-   for( i = 0; i < E->stabil; i++ )
-      E->last_display = Next( E, E->last_display );
+   for( i = 0; i < pEd->stabil; i++ )
+      pEd->last_display = Next( pEd, pEd->last_display );
 }
 
 /* Appends passed text to the existing text buffer
  */
-static void AddText( int nEdit, const char * adres )
+static void AddText( PHB_EDITOR pEd, const char * adres )
 {
-   EDITOR * E;
    long int dl, dlold;
 
-   E = s_ETab[ nEdit ];
-
    dl    = strlen( adres );
-   dlold = E->text_length;
+   dlold = pEd->text_length;
    if( dlold == 2 )
       dlold = 0;   /* if current text buffer contains CRLF only then discard it */
 
    /* TODO: add reallocation of text buffer
     */
-   if( ( dl + dlold ) <= ( E->buffer_size - 10 ) )
+   if( ( dl + dlold ) <= ( pEd->buffer_size - 10 ) )
    {
       /* there is enough room in text buffer
        */
-      strcpy( E->begin + dlold, adres );
-      E->text_length += dl;
+      strcpy( pEd->begin + dlold, adres );
+      pEd->text_length += dl;
    }
    else
    {
-      strncpy( E->begin + dlold, adres, ( int ) ( E->buffer_size - 10 - dlold ) );
-      E->text_length = E->buffer_size - 10;
+      strncpy( pEd->begin + dlold, adres, ( int ) ( pEd->buffer_size - 10 - dlold ) );
+      pEd->text_length = pEd->buffer_size - 10;
    }
 
-   NewText( E );     /* reformat text */
+   NewText( pEd );     /* reformat text */
 }
 
 /* Appends passed text at the end of existing one */
 HB_FUNC( ED_ADDTEXT )
 {
-   const char * adres;
-   int nEdit;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   nEdit = hb_parni( 1 );
-   adres = hb_parc( 2 );
-
-   AddText( nEdit, adres );
+   if( pEd )
+      AddText( pEd, hb_parcx( 2 ) );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Moves text from one location into another
  */
-static void MoveText( EDITOR * E, long int source, long int dest,
+static void MoveText( PHB_EDITOR pEd, long int source, long int dest,
                       long int ilb )
 {
    long int diff;
 
    diff = dest - source;
    /* memmove supports overlapped buffers */
-   memmove( E->begin + ( unsigned int ) dest, E->begin + ( unsigned int ) source,
+   memmove( pEd->begin + ( unsigned int ) dest, pEd->begin + ( unsigned int ) source,
             ( unsigned int ) ilb );
 
-   if( E->last_display > E->current_line )
-      E->last_display += diff;
+   if( pEd->last_display > pEd->current_line )
+      pEd->last_display += diff;
 
-   if( E->current_line < E->last_line )
-      E->last_line += diff;
+   if( pEd->current_line < pEd->last_line )
+      pEd->last_line += diff;
 
-   E->text_length += diff;
+   pEd->text_length += diff;
 
-   if( E->text_length > ( E->buffer_size - 8 ) )
+   if( pEd->text_length > ( pEd->buffer_size - 8 ) )
    {
-      E->text_length = E->buffer_size - 8;
-      E->begin[ E->text_length ]      = '\x0';
-      E->begin[ E->text_length - 1 ]  = '\n';
-      E->begin[ E->text_length - 2 ]  = '\r';
+      pEd->text_length = pEd->buffer_size - 8;
+      pEd->begin[ pEd->text_length ]      = '\0';
+      pEd->begin[ pEd->text_length - 1 ]  = '\n';
+      pEd->begin[ pEd->text_length - 2 ]  = '\r';
    }
 }
 
 /* Skips to the beginning of given line
  */
-static long int GoToLine( EDITOR * E, int linia )
+static long int GoToLine( PHB_EDITOR pEd, int linia )
 {
    char * p;
    long int  i;
 
    i = 0;
-   p = E->begin;
+   p = pEd->begin;
    while( ( ++i <= linia ) && ( p = strchr( p, '\n' ) ) != 0 )
       p += 2;
 
    if( i > linia )
-      return p - E->begin - 1;
+      return p - pEd->begin - 1;
    else
-      return E->text_length;  /* no such line number - go to the end */
+      return pEd->text_length;  /* no such line number - go to the end */
 }
 
 /* Counts the number of printable characters in given line
  */
-static unsigned int GetLineLength( EDITOR * E, long int off, int *wsk )
+static unsigned int GetLineLength( PHB_EDITOR pEd, long int off, int *wsk )
 {
    unsigned int i, j;
    char * p;
    char * tmp;
 
-   tmp = E->begin + ( unsigned int ) off;
+   tmp = pEd->begin + ( unsigned int ) off;
    p   = strchr( tmp, '\n' );  /* find EOL starting from given position */
 
    if( p )
@@ -392,11 +406,11 @@ static unsigned int GetLineLength( EDITOR * E, long int off, int *wsk )
       i = strlen( tmp );
 
    *wsk = 0;   /* number of characters used in color escape codes */
-   if( E->escape )
+   if( pEd->escape )
    {
       for( j = 0; j < i; j++ )
       {
-         if( ( char ) tmp[ j ] == E->escape )
+         if( ( char ) tmp[ j ] == pEd->escape )
          {
             ( *wsk ) += 2;
             j++;
@@ -409,28 +423,28 @@ static unsigned int GetLineLength( EDITOR * E, long int off, int *wsk )
 
 /* Inserts text into existing text buffer starting from given line number
  */
-static long int InsText( EDITOR * E, char * adres, long int line )
+static long int InsText( PHB_EDITOR pEd, char * adres, long int line )
 {
    long int  dl, off, il, dl1;
    int       addCRLF, cc;
 
    addCRLF = 0;
    dl  = strlen( adres );    /* length of text to insert */
-   dl1 = E->text_length;      /* length of text that is currently in the buffer */
+   dl1 = pEd->text_length;      /* length of text that is currently in the buffer */
 
    /* TODO: add reallocation  of text buffer
     */
-   if( dl1 < ( E->buffer_size - 10 ) )
+   if( dl1 < ( pEd->buffer_size - 10 ) )
    {
       /* there is some free space in text buffer
        */
       /* Find the offset of given line */
       if( line > 0 )
-         off = GoToLine( E, ( unsigned int ) line ); /* Find the offset of given line */
+         off = GoToLine( pEd, ( unsigned int ) line ); /* Find the offset of given line */
       else
          off = 0;
 
-      if( ( long int )( dl + dl1 ) < ( E->buffer_size - 10 ) )
+      if( ( long int )( dl + dl1 ) < ( pEd->buffer_size - 10 ) )
       {
          /* there is enough free room in text buffer
           */
@@ -442,15 +456,15 @@ static long int InsText( EDITOR * E, char * adres, long int line )
             addCRLF = 1;
             dl += 2;
          }
-         MoveText( E, off, off + dl, E->buffer_size - ( off - 1 ) - dl );
-         strncpy( E->begin + ( unsigned int ) off, adres , ( unsigned int ) dl );
+         MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
+         strncpy( pEd->begin + ( unsigned int ) off, adres , ( unsigned int ) dl );
       }
       else
       {
          /* not enough free space
           * text at the end of existing text buffer will be lost
           */
-         dl = E->buffer_size - 10 - dl1;
+         dl = pEd->buffer_size - 10 - dl1;
          if( adres[ ( unsigned int ) dl - 1 ] == '\r' )
             adres[ ( unsigned int ) dl - 1 ] = ' ';
 
@@ -459,32 +473,32 @@ static long int InsText( EDITOR * E, char * adres, long int line )
             addCRLF = 1;
             dl += 2;
          }
-         MoveText( E, off, off + dl, E->buffer_size - ( off - 1 ) - dl );
-         strncpy( E->begin + ( unsigned int ) off, adres, ( unsigned int ) dl );
+         MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
+         strncpy( pEd->begin + ( unsigned int ) off, adres, ( unsigned int ) dl );
       }
 
       if( addCRLF )
       {
-         E->begin[ ( unsigned int ) ( off + dl - 2 ) ] = '\r';
-         E->begin[ ( unsigned int ) ( off + dl - 1 ) ] = '\n';
-         E->text_length += 2;
+         pEd->begin[ ( unsigned int ) ( off + dl - 2 ) ] = '\r';
+         pEd->begin[ ( unsigned int ) ( off + dl - 1 ) ] = '\n';
+         pEd->text_length += 2;
       }
 
-      if( ( off + dl ) == E->text_length )
-         E->begin[ ( unsigned int ) E->text_length ] = '\x0';
-      E->text_length = strlen( E->begin );
+      if( ( off + dl ) == pEd->text_length )
+         pEd->begin[ ( unsigned int ) pEd->text_length ] = '\0';
+      pEd->text_length = strlen( pEd->begin );
 
-      il = E->line_number;
-      cc = E->cursor_col;
+      il = pEd->line_number;
+      cc = pEd->cursor_col;
 
-      FormatText ( E );
+      FormatText( pEd );
 
-      E->cursor_col = cc;
+      pEd->cursor_col = cc;
 
-      if( off <= E->current_line )
+      if( off <= pEd->current_line )
       {
-         E->current_line += E->text_length - dl1;
-         E->active       += E->line_number - il;
+         pEd->current_line += pEd->text_length - dl1;
+         pEd->active       += pEd->line_number - il;
       }
    }
 
@@ -494,53 +508,27 @@ static long int InsText( EDITOR * E, char * adres, long int line )
 /* Inserts passed text into text buffer */
 HB_FUNC( ED_INSTEXT )
 {
-   long int dl;
-   EDITOR * E;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   char * adres;
-   int nEdit;
-   long int linia;
-
-   nEdit = hb_parni( 1 );
-   adres = hb_strdup( hb_parc( 2 ) );
-   linia = ( long int ) hb_parni( 3 );
-
-   E = s_ETab[ nEdit ];
-   dl = InsText( E, adres, linia );
-   E->last_line = Prev( E, ( long int ) strlen( E->begin ) );
-
-   hb_retni( ( unsigned int ) dl );
-
-   hb_xfree( adres );
-}
-
-/*
- **
-*/
-HB_FUNC( ED_PUSH )
-{
-   int i;
-
-   i = 0;
-   while( i < 5 && s_EStack[ i ] )
-      ++i;
-
-   s_EStack[ i ] = s_ED;
-}
-
-HB_FUNC( ED_POP )
-{
-   int i;
-
-   i = 0;
-   while( i < 5 && s_EStack[ i ] )
-      ++i;
-
-   if( i )
+   if( pEd )
    {
-      s_ED = s_EStack[ i - 1 ];
-      s_EStack[ i - 1 ] = NULL;
+      long int dl;
+
+      char * adres;
+      long int linia;
+
+      adres = hb_strdup( hb_parc( 2 ) );
+      linia = ( long int ) hb_parni( 3 );
+
+      dl = InsText( pEd, adres, linia );
+      pEd->last_line = Prev( pEd, ( long int ) strlen( pEd->begin ) );
+
+      hb_retni( ( unsigned int ) dl );
+
+      hb_xfree( adres );
    }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -549,192 +537,195 @@ HB_FUNC( ED_POP )
 */
 HB_FUNC( ED_CONFIG )
 {
-   int  szer, wys;
-   int      nszer, nwys;
-   int      diff;
-   long int tmp;
-   long int j;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   int top, left, bottom, right;
-   int nRow, nCol;
-   int nEdit, i;
-
-   nEdit  = hb_parni( 1 );
-   top    = hb_parni( 2 );
-   left   = hb_parni( 3 );
-   bottom = hb_parni( 4 );
-   right  = hb_parni( 5 );
-   nRow   = hb_parni( 6 );
-   nCol   = hb_parni( 7 );
-
-   s_ED = s_ETab[ nEdit ];  /* select the editor to work on */
-
-   szer = s_ED->right - s_ED->left + 1;
-   wys  = s_ED->bottom - s_ED->top + 1;
-
-   s_ED->top        = top;
-   s_ED->left       = left;
-   s_ED->bottom     = bottom;
-   s_ED->right      = right;
-
-   s_ED->last_display = s_ED->first_display;
-   s_ED->stabil       = s_ED->bottom - s_ED->top + 1;
-
-   if( s_ED->IsConfigured )
+   if( pEd )
    {
-      /* In event driven world the position and size of the editor window can
-      * change between activations - recalculate some required values
-      */
-      s_ED->first_display  = s_ED->current_line;
+      int  szer, wys;
+      int      nszer, nwys;
+      int      diff;
+      long int tmp;
+      long int j;
 
-      /* find the first line to display - try to keep visible the current line
-       * and display this line in the same row in the window (if possible)
-       */
-      for( i = 0; i < s_ED->cursor_row; i++ )
+      int top, left, bottom, right;
+      int nRow, nCol;
+      int i;
+
+      top    = hb_parni( 2 );
+      left   = hb_parni( 3 );
+      bottom = hb_parni( 4 );
+      right  = hb_parni( 5 );
+      nRow   = hb_parni( 6 );
+      nCol   = hb_parni( 7 );
+
+      szer = pEd->right - pEd->left + 1;
+      wys  = pEd->bottom - pEd->top + 1;
+
+      pEd->top        = top;
+      pEd->left       = left;
+      pEd->bottom     = bottom;
+      pEd->right      = right;
+
+      pEd->last_display = pEd->first_display;
+      pEd->stabil       = pEd->bottom - pEd->top + 1;
+
+      if( pEd->IsConfigured )
       {
-         j = Prev( s_ED, s_ED->first_display );
-         if( j >= 0 )
-            s_ED->first_display = j;
-         else
-            s_ED->cursor_row--;
-         if( s_ED->cursor_row < 0 )
-            s_ED->cursor_row = 0;
-      }
+         /* In event driven world the position and size of the editor window can
+         * change between activations - recalculate some required values
+         */
+         pEd->first_display  = pEd->current_line;
 
-      /* find the last line for display */
-      for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
-      {
-         j = Next( s_ED, s_ED->last_display );
-         if( j >= 0 )
-            s_ED->last_display  = j;
-      }
-   }
-   else
-   {
-      s_ED->first_display  = s_ED->first_line;
-
-      /* find the last line for display */
-      nwys = s_ED->bottom - s_ED->top;
-      for( i = 0; i < nwys; i++ )
-      {
-         j = Next( s_ED, s_ED->last_display );
-         if( j >= 0 )
-            s_ED->last_display  = j;
-      }
-      /* check if this line is empty */
-      if( strlen( s_ED->begin + ( unsigned int ) s_ED->last_display ) == 0 )
-         s_ED->last_display = Prev( s_ED, s_ED->last_display );
-
-      /* set initial cursor position in the window */
-      s_ED->cursor_row = nRow;
-      s_ED->cursor_col = nCol;
-   }
-
-   if( s_ED->IsConfigured )
-   {
-      nszer = s_ED->right - s_ED->left + 1;
-      nwys  = s_ED->bottom - s_ED->top + 1;
-
-      diff = abs( szer - nszer );
-      if( szer < nszer )
-      {
-         /* current width of the window is greater then during previous activation
-          * adjust the first visible column
+         /* find the first line to display - try to keep visible the current line
+          * and display this line in the same row in the window (if possible)
           */
-         if( s_ED->first_col > diff )
+         for( i = 0; i < pEd->cursor_row; i++ )
          {
-            s_ED->first_col -= diff;
-            s_ED->cursor_col += diff;
+            j = Prev( pEd, pEd->first_display );
+            if( j >= 0 )
+               pEd->first_display = j;
+            else
+               pEd->cursor_row--;
+            if( pEd->cursor_row < 0 )
+               pEd->cursor_row = 0;
          }
-         else
-         {
-            s_ED->cursor_col += s_ED->first_col;
-            s_ED->first_col = 0;
-         }
-      }
-      if( szer > nszer )
-      { /* current width of the window is smaller then during previous activation
-         */
-         if( s_ED->cursor_col > ( nszer - 1 ) )
-         {
-            s_ED->first_col += s_ED->cursor_col - nszer + 1;
-            s_ED->cursor_col = nszer - 1;
-         }
-      }
 
-      diff = abs( nwys - wys );
-      if( wys > nwys )
+         /* find the last line for display */
+         for( i = 0; i < pEd->bottom - pEd->top; i++ )
+         {
+            j = Next( pEd, pEd->last_display );
+            if( j >= 0 )
+               pEd->last_display  = j;
+         }
+      }
+      else
       {
-         /* current height of the window is smaller then during previous activation
-         */
-         if( s_ED->cursor_row < nwys )
-         {
-            /* the old cursor row position is smaller then the window height
-            */
-            tmp = s_ED->last_display;
-            for( i = 0; i < diff; i++ )
-            {
-               j = Prev( s_ED, tmp );
-               if( j >= 0 )
-                  tmp = j;
+         pEd->first_display  = pEd->first_line;
 
-            }
-            s_ED->last_display = tmp;
+         /* find the last line for display */
+         nwys = pEd->bottom - pEd->top;
+         for( i = 0; i < nwys; i++ )
+         {
+            j = Next( pEd, pEd->last_display );
+            if( j >= 0 )
+               pEd->last_display  = j;
          }
-         else
-         {
-            /* old cursor row position is greater then current window height
-             *  display the line where the cursor is placed as the last visible
-             *  line in the window
-             */
-            s_ED->last_display = s_ED->current_line;
-            tmp = s_ED->last_display;
+         /* check if this line is empty */
+         if( strlen( pEd->begin + ( unsigned int ) pEd->last_display ) == 0 )
+            pEd->last_display = Prev( pEd, pEd->last_display );
 
-            for( i = 0; i < nwys - 1; i++ )
+         /* set initial cursor position in the window */
+         pEd->cursor_row = nRow;
+         pEd->cursor_col = nCol;
+      }
+
+      if( pEd->IsConfigured )
+      {
+         nszer = pEd->right - pEd->left + 1;
+         nwys  = pEd->bottom - pEd->top + 1;
+
+         diff = abs( szer - nszer );
+         if( szer < nszer )
+         {
+            /* current width of the window is greater then during previous activation
+             * adjust the first visible column
+             */
+            if( pEd->first_col > diff )
             {
-               j = Prev( s_ED, tmp );
-               if( j >= 0 )
-                  tmp = j;
+               pEd->first_col -= diff;
+               pEd->cursor_col += diff;
             }
-            s_ED->first_display = tmp;
-            s_ED->cursor_row = nwys - 1;
+            else
+            {
+               pEd->cursor_col += pEd->first_col;
+               pEd->first_col = 0;
+            }
+         }
+         if( szer > nszer )
+         { /* current width of the window is smaller then during previous activation
+            */
+            if( pEd->cursor_col > ( nszer - 1 ) )
+            {
+               pEd->first_col += pEd->cursor_col - nszer + 1;
+               pEd->cursor_col = nszer - 1;
+            }
+         }
+
+         diff = abs( nwys - wys );
+         if( wys > nwys )
+         {
+            /* current height of the window is smaller then during previous activation
+            */
+            if( pEd->cursor_row < nwys )
+            {
+               /* the old cursor row position is smaller then the window height
+               */
+               tmp = pEd->last_display;
+               for( i = 0; i < diff; i++ )
+               {
+                  j = Prev( pEd, tmp );
+                  if( j >= 0 )
+                     tmp = j;
+
+               }
+               pEd->last_display = tmp;
+            }
+            else
+            {
+               /* old cursor row position is greater then current window height
+                *  display the line where the cursor is placed as the last visible
+                *  line in the window
+                */
+               pEd->last_display = pEd->current_line;
+               tmp = pEd->last_display;
+
+               for( i = 0; i < nwys - 1; i++ )
+               {
+                  j = Prev( pEd, tmp );
+                  if( j >= 0 )
+                     tmp = j;
+               }
+               pEd->first_display = tmp;
+               pEd->cursor_row = nwys - 1;
+            }
          }
       }
+      else
+      {
+         pEd->current_line   = pEd->first_line;
+         pEd->active         = 1;
+      }
+
+      pEd->IsConfigured   = 1;
+      pEd->stable         = HB_FALSE;
+      pEd->current_stabil = 0;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->dir            = DOWN;
    }
    else
-   {
-      s_ED->current_line   = s_ED->first_line;
-      s_ED->active         = 1;
-   }
-
-   s_ED->IsConfigured   = 1;
-   s_ED->stable         = HB_FALSE;
-   s_ED->current_stabil = 0;
-   s_ED->next_stabil    = s_ED->first_display;
-   s_ED->dir            = DOWN;
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Returns current text buffer */
 HB_FUNC( ED_GETTEXT )
 {
-   long int  dl;
-   char * buffer, * help;
-   EDITOR * E;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   int Case, mietka;
-   int nEdit;
+   if( pEd )
+   {
+      long int  dl;
+      char * buffer, * help;
 
-   nEdit  = hb_parni( 1 );
-   Case   = hb_parni( 2 );
-   mietka = hb_parni( 3 );
+      int Case, mietka;
 
-      E = s_ETab[ nEdit ];
+      Case   = hb_parni( 2 );
+      mietka = hb_parni( 3 );
 
-      dl    = strlen( E->begin ) + 3;
+      dl    = strlen( pEd->begin ) + 3;
 
       buffer = ( char * ) hb_xgrab( ( unsigned int ) dl );
 
-      strcpy( buffer, E->begin );
+      strcpy( buffer, pEd->begin );
 
       switch( Case )
       {
@@ -759,197 +750,177 @@ HB_FUNC( ED_GETTEXT )
          }
       }
 
-   hb_retc( buffer );
-   hb_xfree( buffer );
+      hb_retc( buffer );
+      hb_xfree( buffer );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Returns given line of text and positions caret at the beginning of next line */
 HB_FUNC( ED_GETLINE )
 {
-   long int        l, j;
-   long int        tmp;
-   char *          buffer;
-   EDITOR *        E;
-   int             rdl, dl;
-   long int        i;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   long int linia;
-   int      nEdit;
-
-   nEdit  = hb_parni( 1 );
-   linia  = ( long int ) hb_parni( 2 );
-
-   E = s_ETab[ nEdit ];
-
-   l = 1;
-   tmp = E->first_line;
-   for( i = 1; i < linia; i++ )
+   if( pEd )
    {
-      j = Next( E, tmp );
-      if( j >= 0 )
+      long int        l, j;
+      long int        tmp;
+      char *          buffer;
+      int             rdl, dl;
+      long int        i;
+
+      long int linia;
+
+      linia  = ( long int ) hb_parni( 2 );
+
+      l = 1;
+      tmp = pEd->first_line;
+      for( i = 1; i < linia; i++ )
       {
-         tmp = j;
-         l++;
+         j = Next( pEd, tmp );
+         if( j >= 0 )
+         {
+            tmp = j;
+            l++;
+         }
       }
-   }
 
-   if( l == linia )
-   {
-      dl = GetLineLength( E, tmp, &rdl );
-      dl++;
-      buffer = ( char * ) hb_xgrab( dl );
+      if( l == linia )
+      {
+         dl = GetLineLength( pEd, tmp, &rdl );
+         dl++;
+         buffer = ( char * ) hb_xgrab( dl );
 
-      strncpy( buffer, E->begin + ( unsigned int ) tmp, dl - 1 );
-      buffer[ dl - 1 ] = '\x0';
+         strncpy( buffer, pEd->begin + ( unsigned int ) tmp, dl - 1 );
+         buffer[ dl - 1 ] = '\0';
 
-      hb_retc_buffer( buffer );
+         hb_retc_buffer( buffer );
+      }
+      else
+         hb_retc_null();
+
+      pEd->next_line = Next( pEd, tmp );
    }
    else
-      hb_retc_null();
-
-   E->next_line = Next( E, tmp );
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Returns current line pointed by caret position and advances it to the beginning of next line */
 HB_FUNC( ED_GETNEXT )
 {
-   char * buffer;
-   EDITOR * E;
-   int rdl, dl;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   int nEdit;
-
-   nEdit  = hb_parni( 1 );
-
-   E = s_ETab[ nEdit ];
-   if( E->next_line > 0 )
+   if( pEd )
    {
-      dl = GetLineLength( E, E->next_line, &rdl );
-      dl++;
-      buffer = ( char * ) hb_xgrab( dl );
+      char * buffer;
+      int rdl, dl;
 
-      strncpy( buffer, E->begin + ( unsigned int ) E->next_line, dl-1 );
-      buffer[ ( unsigned int ) ( dl-1 ) ] = '\x0';
-      E->next_line = Next( E, E->next_line );
+      if( pEd->next_line > 0 )
+      {
+         dl = GetLineLength( pEd, pEd->next_line, &rdl );
+         dl++;
+         buffer = ( char * ) hb_xgrab( dl );
 
-      hb_retc( buffer );
-      hb_xfree( buffer );
+         strncpy( buffer, pEd->begin + ( unsigned int ) pEd->next_line, dl-1 );
+         buffer[ ( unsigned int ) ( dl-1 ) ] = '\0';
+         pEd->next_line = Next( pEd, pEd->next_line );
+
+         hb_retc_buffer( buffer );
+      }
+      else
+         hb_ret();
    }
    else
-      hb_ret();
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Resets text buffer
  */
-static void KillText( EDITOR * E )
+static void KillText( PHB_EDITOR pEd )
 {
-   memset( E->begin, '\x0', ( unsigned int ) E->buffer_size );
-   E->first_line = E->last_line = 0;
+   memset( pEd->begin, '\0', ( unsigned int ) pEd->buffer_size );
+   pEd->first_line = pEd->last_line = 0;
 }
 
 /* Stores new text into editor */
 HB_FUNC( ED_SETTEXT )
 {
-   EDITOR * E;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   const char * adres;
-   int nEdit;
+   if( pEd )
+   {
+      KillText( pEd );
 
-   nEdit = hb_parni( 1 );
-   adres = hb_parc( 2 );
+      New( pEd, pEd->tab_size, pEd->line_length, pEd->buffer_size );
 
-   E = s_ETab[ nEdit ];
-
-   KillText( E );
-
-   New( E, E->tab_size, E->line_length, E->buffer_size );
-
-   AddText( nEdit, adres );
+      AddText( pEd, hb_parcx( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Reads a text from the file */
 HB_FUNC( ED_READTEXT )
 {
-   unsigned int nEdit, nFile, nSize, lSuccess = HB_FALSE;
-   long int nSeek, nRead;
-   EDITOR * E;
-/* BOOL lConv; */
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   nEdit = hb_parni( 1 );
-   E = s_ETab[ nEdit ];
-
-   KillText( E );
-   New( E, E->tab_size, E->line_length, E->buffer_size );
-
-   nFile = hb_parni( 2 );
-   nSeek = hb_parnl( 3 );
-   nSize = hb_parni( 4 );
-/* lConv = hb_parl( 5 ); */
-
-   nRead = hb_fsSeek( nFile, nSeek, FS_SET );
-   if( nRead == nSeek )
+   if( pEd )
    {
-      if( nSize > ( unsigned int ) ( E->buffer_size - 10 ) )
-         nSize = ( unsigned int ) E->buffer_size - 10;
+      unsigned int nFile, nSize, lSuccess = HB_FALSE;
+      long int nSeek, nRead;
+/*    BOOL lConv; */
 
-      nSize = hb_fsRead( nFile, ( unsigned char * ) E->begin, nSize );
-      E->begin[ nSize ] ='\x0';
+      KillText( pEd );
+      New( pEd, pEd->tab_size, pEd->line_length, pEd->buffer_size );
 
-      E->text_length =nSize;
+      nFile = hb_parni( 2 );
+      nSeek = hb_parnl( 3 );
+      nSize = hb_parni( 4 );
+/*    lConv = hb_parl( 5 ); */
 
-/*
- * Characters with ASCII code 27 and 26 cannot be stored inside
- * a file - for this reason the replacement characters were used 181 and 198
- * and stored in a file on disk
- *
-   if( lConv )
-   {
-      unsigned char * cPtr;
-
-      cPtr = ( unsigned char * ) E->begin;
-      while( nSize-- )
+      nRead = hb_fsSeek( nFile, nSeek, FS_SET );
+      if( nRead == nSeek )
       {
-         if( *cPtr == 181 )
-            *cPtr =27;
-         else if( *cPtr == 198 )
-            *cPtr =26;
+         if( nSize > ( unsigned int ) ( pEd->buffer_size - 10 ) )
+            nSize = ( unsigned int ) pEd->buffer_size - 10;
 
-         cPtr++;
+         nSize = hb_fsRead( nFile, ( unsigned char * ) pEd->begin, nSize );
+         pEd->begin[ nSize ] ='\0';
+
+         pEd->text_length =nSize;
+
+      /*
+       * Characters with ASCII code 27 and 26 cannot be stored inside
+       * a file - for this reason the replacement characters were used 181 and 198
+       * and stored in a file on disk
+       *
+      if( lConv )
+      {
+         unsigned char * cPtr;
+
+         cPtr = ( unsigned char * ) pEd->begin;
+         while( nSize-- )
+         {
+            if( *cPtr == 181 )
+               *cPtr =27;
+            else if( *cPtr == 198 )
+               *cPtr =26;
+
+            cPtr++;
+         }
       }
-   }
 */
-      NewText( E );
+         NewText( pEd );
 
-      lSuccess = HB_TRUE;
-      E->stable = HB_FALSE;
+         lSuccess = HB_TRUE;
+         pEd->stable = HB_FALSE;
+      }
+
+      hb_retl( lSuccess );
    }
-
-   hb_retl( lSuccess );
-}
-
-/* Releases memory occupied by the editor */
-HB_FUNC( ED_KILL )
-{
-   EDITOR * E;
-
-   int nEdit;
-
-   nEdit = hb_parni( 1 );
-
-   E = s_ETab[ nEdit ];
-   KillText( E );
-
-   hb_xfree ( E->begin );
-
-   hb_xfree( E );
-
-   s_ETab[nEdit] = NULL;
-}
-
-/* Sorry - I don't remember why it is here
- */
-HB_FUNC( ED_UNLOCK )
-{
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -960,166 +931,175 @@ HB_FUNC( ED_UNLOCK )
 */
 HB_FUNC( ED_STABILIZE )
 {
-   unsigned int nRow = 0, nEscLen, nLen, width, i, j, e;
-   int nLeft, nTop;
-   char * EscPtr;
-   char * cPtr;
-   char adres[ MAX_LINE_LEN + 2 ];
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   while( --s_ED->stabil >= 0 )
+   if( pEd )
    {
-      /* there are some lines of text to display
-      */
-      width = s_ED->right - s_ED->left + 1;
+      unsigned int nRow = 0, nEscLen, nLen, width, i, j, e;
+      int nLeft, nTop;
+      char * EscPtr;
+      char * cPtr;
+      char adres[ MAX_LINE_LEN + 2 ];
 
-      if( s_ED->next_stabil >= 0 )
+      while( --pEd->stabil >= 0 )
       {
-         cPtr = s_ED->begin + s_ED->next_stabil;
-         for( nEscLen = nLen = 0; *cPtr && *cPtr != '\n'; cPtr++ )
-         {
-            /* copy the line into temporary buffer - count characters used
-            * as color escape codes
-            */
-            adres[ nLen++ ] =*cPtr;
-            if( s_ED->escape && ( char ) *cPtr == s_ED->escape )
-               nEscLen += 2;
-         }
-         j = nLen - nEscLen;    /* length of printable text */
-         adres[nLen] = '\x0';
+         /* there are some lines of text to display
+         */
+         width = pEd->right - pEd->left + 1;
 
-         if( s_ED->first_col >= j )
-            adres[ nEscLen = nLen = 0 ] = '\x0'; /* first visible column is greater then line length */
-
-         else if( s_ED->first_col )
+         if( pEd->next_stabil >= 0 )
          {
-            /* text is scrolled right - we need to find the first
-             * color escape code that will be visible
-             * text ~2 in bold ~1 in normal
-             *          ^-first visible column
-             */
-            e = 0;
-            if( s_ED->escape )
+            cPtr = pEd->begin + pEd->next_stabil;
+            for( nEscLen = nLen = 0; *cPtr && *cPtr != '\n'; cPtr++ )
             {
-               for( i = 0; i < ( s_ED->first_col + e ); i++ )
+               /* copy the line into temporary buffer - count characters used
+               * as color escape codes
+               */
+               adres[ nLen++ ] =*cPtr;
+               if( pEd->escape && ( char ) *cPtr == pEd->escape )
+                  nEscLen += 2;
+            }
+            j = nLen - nEscLen;    /* length of printable text */
+            adres[nLen] = '\0';
+
+            if( pEd->first_col >= j )
+               adres[ nEscLen = nLen = 0 ] = '\0'; /* first visible column is greater then line length */
+
+            else if( pEd->first_col )
+            {
+               /* text is scrolled right - we need to find the first
+                * color escape code that will be visible
+                * text ~2 in bold ~1 in normal
+                *          ^-first visible column
+                */
+               e = 0;
+               if( pEd->escape )
                {
-                  if( ( char ) adres[ i ] == s_ED->escape )
+                  for( i = 0; i < ( pEd->first_col + e ); i++ )
                   {
-                     adres[ 0 ] = adres[ i ];
-                     adres[ 1 ] = adres[ ++i ];
-                     e +=2;
+                     if( ( char ) adres[ i ] == pEd->escape )
+                     {
+                        adres[ 0 ] = adres[ i ];
+                        adres[ 1 ] = adres[ ++i ];
+                        e +=2;
+                     }
                   }
                }
-            }
 
-            if( e )
-            {
-               nLen -= ( i - 2 );
-               if( ( char ) adres[ i - 1 ] == s_ED->escape )
-                  i++, nLen--;
-               strncpy( adres + 2, adres + i, nLen - 2 );
-               nEscLen -= ( e - 2 );
-            }
-            else
-            {
-               nLen -= s_ED->first_col;
-               strncpy( adres, adres+s_ED->first_col, nLen );
-            }
-            adres[ nLen ] = '\x0';
-         }
-
-         if( nLen )
-         {
-            if( adres[ nLen-1 ] & '\xd' ) /* soft or hard carriage */
-               adres[ --nLen ] = '\x0';
-         }
-
-         /* find next line for displaying */
-         switch( s_ED->dir )
-         {
-         case DOWN : s_ED->next_stabil = Next( s_ED, s_ED->next_stabil );
-                     nRow = s_ED->current_stabil++;
-                     break;
-
-         case UP   : s_ED->next_stabil = Prev( s_ED, s_ED->next_stabil );
-                     nRow = s_ED->current_stabil--;
-                     break;
-         }
-
-         hb_gtColorSelect( 0 );    /* select default color */
-
-         nTop = s_ED->top + nRow;
-         if( nLen )
-         {
-            if( s_ED->escape && ( EscPtr = strchr( adres, s_ED->escape ) ) != 0 )
-            {
-               i = ( unsigned int )( EscPtr - adres );
-               nLeft = s_ED->left + i;
-
-               if( i )
-                  hb_gtWriteAt( nTop, s_ED->left, adres, ( width < i ) ? width : i );
-
-               for( ; i < nLen && nLeft <= s_ED->right; i++ )
+               if( e )
                {
-                  if( ( char )adres[ i ] == s_ED->escape )
-                     hb_gtColorSelect( ( adres[ ++i ] & '\x0F' ) - 1 );
-                  else
-                     hb_gtWriteAt( nTop, nLeft++, adres + i, 1 );
+                  nLen -= ( i - 2 );
+                  if( ( char ) adres[ i - 1 ] == pEd->escape )
+                     i++, nLen--;
+                  strncpy( adres + 2, adres + i, nLen - 2 );
+                  nEscLen -= ( e - 2 );
                }
+               else
+               {
+                  nLen -= pEd->first_col;
+                  strncpy( adres, adres+pEd->first_col, nLen );
+               }
+               adres[ nLen ] = '\0';
             }
-            else
-               hb_gtWriteAt( nTop, s_ED->left, adres, ( ( width < nLen ) ? width : nLen ) );
-         }
 
-         /* fill the rest of the row with spaces */
-         if( ( nLen - nEscLen ) < width )
-            hb_gtRepChar( nTop, s_ED->left + nLen - nEscLen, ' ', width - nLen + nEscLen );
-      }
-      else
-      {
-         /* no more lines of text to display - fill the window with spaces
-         */
-         switch( s_ED->dir )
+            if( nLen )
+            {
+               if( adres[ nLen-1 ] & '\xd' ) /* soft or hard carriage */
+                  adres[ --nLen ] = '\0';
+            }
+
+            /* find next line for displaying */
+            switch( pEd->dir )
+            {
+            case DOWN:
+               pEd->next_stabil = Next( pEd, pEd->next_stabil );
+               nRow = pEd->current_stabil++;
+               break;
+
+            case UP:
+               pEd->next_stabil = Prev( pEd, pEd->next_stabil );
+               nRow = pEd->current_stabil--;
+               break;
+            }
+
+            hb_gtColorSelect( 0 );    /* select default color */
+
+            nTop = pEd->top + nRow;
+            if( nLen )
+            {
+               if( pEd->escape && ( EscPtr = strchr( adres, pEd->escape ) ) != 0 )
+               {
+                  i = ( unsigned int )( EscPtr - adres );
+                  nLeft = pEd->left + i;
+
+                  if( i )
+                     hb_gtWriteAt( nTop, pEd->left, adres, ( width < i ) ? width : i );
+
+                  for( ; i < nLen && nLeft <= pEd->right; i++ )
+                  {
+                     if( ( char ) adres[ i ] == pEd->escape )
+                        hb_gtColorSelect( ( adres[ ++i ] & 0x0F ) - 1 );
+                     else
+                        hb_gtWriteAt( nTop, nLeft++, adres + i, 1 );
+                  }
+               }
+               else
+                  hb_gtWriteAt( nTop, pEd->left, adres, ( ( width < nLen ) ? width : nLen ) );
+            }
+
+            /* fill the rest of the row with spaces */
+            if( ( nLen - nEscLen ) < width )
+               hb_gtRepChar( nTop, pEd->left + nLen - nEscLen, ' ', width - nLen + nEscLen );
+         }
+         else
          {
-         case DOWN:
-            nRow = s_ED->current_stabil++;
-            break;
-         case UP:
-            nRow = s_ED->current_stabil--;
-            break;
+            /* no more lines of text to display - fill the window with spaces
+            */
+            switch( pEd->dir )
+            {
+            case DOWN:
+               nRow = pEd->current_stabil++;
+               break;
+            case UP:
+               nRow = pEd->current_stabil--;
+               break;
+            }
+
+            hb_gtColorSelect( 0 );
+            hb_gtRepChar( pEd->top + nRow, pEd->left, ' ', width );
          }
 
          hb_gtColorSelect( 0 );
-         hb_gtRepChar( s_ED->top + nRow, s_ED->left, ' ', width );
       }
 
-      hb_gtColorSelect( 0 );
+      pEd->stable = HB_TRUE;
+
+      hb_retni( nRow );
    }
-
-   s_ED->stable = HB_TRUE;
-
-   hb_retni( nRow );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Removes trailing spaces from the end of line
  */
-static unsigned int Clear( EDITOR * E, long int e, unsigned int *nEsc )
+static unsigned int Clear( PHB_EDITOR pEd, long int e, unsigned int *nEsc )
 {
    unsigned int nLen, i;
 
-   nLen = GetLineLength( E, e, ( int * ) nEsc );
+   nLen = GetLineLength( pEd, e, ( int * ) nEsc );
    i = ( unsigned int ) e + nLen + *nEsc;
 
    if( i )
    {
-      while( E->begin[ i - 1 ] == ' ' )
+      while( pEd->begin[ i - 1 ] == ' ' )
       {
-         if( E->cursor_col > 0 )
-            E->cursor_col--;
+         if( pEd->cursor_col > 0 )
+            pEd->cursor_col--;
 
-         else if( E->first_col > 0 )
-            E->first_col--;
+         else if( pEd->first_col > 0 )
+            pEd->first_col--;
 
-         MoveText( E, ( long int ) i, ( long int ) i - 1, E->text_length - i + 3 );
+         MoveText( pEd, ( long int ) i, ( long int ) i - 1, pEd->text_length - i + 3 );
          nLen--;
       }
    }
@@ -1129,116 +1109,121 @@ static unsigned int Clear( EDITOR * E, long int e, unsigned int *nEsc )
 
 /* Moves the cursor to the next line of text
  */
-static void Down( EDITOR * E )
+static void Down( PHB_EDITOR pEd )
 {
    long int j;
    unsigned int nEsc;
 
-   j = Next( E, E->current_line );  /* find the offset of next line */
-   if( E->begin[ ( unsigned int ) j ] == '\x0' )
+   j = Next( pEd, pEd->current_line );  /* find the offset of next line */
+   if( pEd->begin[ ( unsigned int ) j ] == '\0' )
       j = -1;     /* no more lines */
    if( j < 0 )
    {
-      E->stable = HB_TRUE;
+      pEd->stable = HB_TRUE;
    }
    else
    {
-      E->active++;
-      Clear( E, E->current_line, &nEsc );
+      pEd->active++;
+      Clear( pEd, pEd->current_line, &nEsc );
 
-      j = Next( E, E->current_line );
+      j = Next( pEd, pEd->current_line );
       if( j >= 0 )
       {
-         E->current_line = j;
+         pEd->current_line = j;
       }
-      if( ((++E->cursor_row)+E->top) > E->bottom )
+      if( ( ( ++pEd->cursor_row ) + pEd->top ) > pEd->bottom )
       {
          /* attempt to move to the line that was not visible yet
           */
-         E->stabil      = 1;  /* only one line needs to be redisplayed */
+         pEd->stabil      = 1;  /* only one line needs to be redisplayed */
 
-         E->cursor_row     = E->bottom - E->top;
-         E->first_display  = Next( E, E->first_display );
-         E->last_display   = j;
+         pEd->cursor_row     = pEd->bottom - pEd->top;
+         pEd->first_display  = Next( pEd, pEd->first_display );
+         pEd->last_display   = j;
 
-         E->stable         = HB_FALSE;
-         E->next_stabil    = E->last_display;
-         E->dir            = UP;
-         E->current_stabil = E->cursor_row;
+         pEd->stable         = HB_FALSE;
+         pEd->next_stabil    = pEd->last_display;
+         pEd->dir            = UP;
+         pEd->current_stabil = pEd->cursor_row;
       }
       else
       {
          /* the new line is already visible */
-         if( E->line_number <= ( E->bottom - E->top + 1 ) )
-            E->last_display = E->last_line; /* the total number of lines is smaller then rows to display */
+         if( pEd->line_number <= ( pEd->bottom - pEd->top + 1 ) )
+            pEd->last_display = pEd->last_line; /* the total number of lines is smaller then rows to display */
       }
    }
-   if( E->current_line > E->last_display )
-      E->last_display = E->current_line;
-   if( E->current_line > E->last_line )
-      E->last_line = E->current_line;
+   if( pEd->current_line > pEd->last_display )
+      pEd->last_display = pEd->current_line;
+   if( pEd->current_line > pEd->last_line )
+      pEd->last_line = pEd->current_line;
 }
-
-
 
 
 /* Moves cursor to the next line of text */
 HB_FUNC( ED_DOWN )
 {
-   Down( s_ED );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   hb_retl(s_ED->stable);
+   if( pEd )
+   {
+      Down( pEd );
+
+      hb_retl( pEd->stable );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Moves the cursor to the previous line of text
  */
-static void Up( void )
+static void Up( PHB_EDITOR pEd )
 {
    int j, i;
    long int jj, tmp;
    unsigned int nEsc;
 
    /* find the previous line */
-   jj = Prev( s_ED, s_ED->current_line );
+   jj = Prev( pEd, pEd->current_line );
    if( jj < 0 )
    {
-      s_ED->stable = HB_TRUE;
+      pEd->stable = HB_TRUE;
    }
    else
    {
-      s_ED->active--;
-      Clear( s_ED, s_ED->current_line, &nEsc );
-      s_ED->current_line = jj;
-      if( ((--s_ED->cursor_row)+s_ED->top) < s_ED->top )
+      pEd->active--;
+      Clear( pEd, pEd->current_line, &nEsc );
+      pEd->current_line = jj;
+      if( ( ( --pEd->cursor_row ) + pEd->top ) < pEd->top )
       {
          /* the new line was not displayed yet */
-         s_ED->stabil = 1;   /* only one line needs redisplay - rest of lines will be scrolled */
+         pEd->stabil = 1;   /* only one line needs redisplay - rest of lines will be scrolled */
 
          j              = 0;
-         s_ED->cursor_row = 0;
+         pEd->cursor_row = 0;
 
          /* count the number of lines that will be visible in the window.
           * If the number of lines is smaller then the window height then
           * the offset of last displayed line will be not changed
           */
-         s_ED->first_display  = Prev( s_ED, s_ED->first_display );
-         tmp                = s_ED->first_display;
-         for( i = 0; i < s_ED->bottom - s_ED->top + 1; i++ )
+         pEd->first_display  = Prev( pEd, pEd->first_display );
+         tmp                = pEd->first_display;
+         for( i = 0; i < pEd->bottom - pEd->top + 1; i++ )
          {
-            jj = Next( s_ED, tmp );
+            jj = Next( pEd, tmp );
             if( jj >= 0 )
             {
                tmp = jj;
                j++;
             }
          }
-         if( j == (s_ED->bottom - s_ED->top + 1) )
-            s_ED->last_display   = Prev( s_ED, s_ED->last_display );
+         if( j == ( pEd->bottom - pEd->top + 1 ) )
+            pEd->last_display   = Prev( pEd, pEd->last_display );
 
-         s_ED->stable         = HB_FALSE;
-         s_ED->next_stabil    = s_ED->current_line;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
+         pEd->stable         = HB_FALSE;
+         pEd->next_stabil    = pEd->current_line;
+         pEd->dir            = DOWN;
+         pEd->current_stabil = 0;
       }
    }
 }
@@ -1246,271 +1231,310 @@ static void Up( void )
 /* Moves the cursor to the previous line */
 HB_FUNC( ED_UP )
 {
-  Up();
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   hb_retl(s_ED->stable);
+   if( pEd )
+   {
+      Up( pEd );
+
+      hb_retl( pEd->stable );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Moves the cursor to the next page of text */
 HB_FUNC( ED_PGDOWN )
 {
-   int i;
-   long int j;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   j = Next( s_ED, s_ED->last_display );
-   if( s_ED->begin[ ( unsigned int ) j ] == '\x0' )
-   {  /* no more lines */
-      s_ED->stable = HB_TRUE;
-      /* advance the cursor as much as possible (to the last line) */
-      for( i = 0; i < s_ED->bottom - s_ED->top + 1; i++ )
-         Down( s_ED );
-      return;
-   }
-
-   /* the last possible line will be displayed at the very bottom of the window */
-   /* find the last line to display */
-   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
+   if( pEd )
    {
-      j = Next( s_ED, s_ED->last_display );
-      if( j >= 0 )
-      {
-         if( s_ED->begin[ ( unsigned int )j ] != '\x0' )
-         {
-            s_ED->active++;
-            s_ED->last_display = j;
-         }
+      int i;
+      long int j;
+
+      j = Next( pEd, pEd->last_display );
+      if( pEd->begin[ ( unsigned int ) j ] == '\0' )
+      {  /* no more lines */
+         pEd->stable = HB_TRUE;
+         /* advance the cursor as much as possible (to the last line) */
+         for( i = 0; i < pEd->bottom - pEd->top + 1; i++ )
+            Down( pEd );
+         return;
       }
-      else
-         break;   /* no more lines */
+
+      /* the last possible line will be displayed at the very bottom of the window */
+      /* find the last line to display */
+      for( i = 0; i < pEd->bottom - pEd->top; i++ )
+      {
+         j = Next( pEd, pEd->last_display );
+         if( j >= 0 )
+         {
+            if( pEd->begin[ ( unsigned int )j ] != '\0' )
+            {
+               pEd->active++;
+               pEd->last_display = j;
+            }
+         }
+         else
+            break;   /* no more lines */
+      }
+
+      if( pEd->begin[ ( unsigned int )pEd->last_display ] == '\0' )
+         pEd->last_display = Prev( pEd, pEd->last_display );
+      pEd->first_display = pEd->last_display;
+
+      /* find the first displayed line now */
+      for( i = 0; i < pEd->bottom - pEd->top; i++ )
+      {
+         j = Prev( pEd, pEd->first_display );
+         if( j >= 0 )
+            pEd->first_display = j;
+         else
+            pEd->first_display = 0;
+      }
+
+      /* find the offset of the line where the currsor will be displayed */
+      pEd->current_line = pEd->last_display;
+      for( i = 0; i < pEd->bottom - pEd->top - pEd->cursor_row; i++ )
+      {
+         j = Prev( pEd, pEd->current_line );
+         if( j >= 0 )
+            pEd->current_line = j;
+         else
+            pEd->current_line = 0;
+      }
+
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
-
-   if( s_ED->begin[ ( unsigned int )s_ED->last_display ] == '\x0' )
-      s_ED->last_display = Prev( s_ED, s_ED->last_display );
-   s_ED->first_display = s_ED->last_display;
-
-   /* find the first displayed line now */
-   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
-   {
-      j = Prev( s_ED, s_ED->first_display );
-      if( j >= 0 )
-         s_ED->first_display = j;
-      else
-         s_ED->first_display = 0;
-   }
-
-   /* find the offset of the line where the currsor will be displayed */
-   s_ED->current_line = s_ED->last_display;
-   for( i = 0; i < s_ED->bottom - s_ED->top - s_ED->cursor_row; i++ )
-   {
-      j = Prev( s_ED, s_ED->current_line );
-      if( j >= 0 )
-         s_ED->current_line = j;
-      else
-         s_ED->current_line = 0;
-   }
-
-   s_ED->stable         = HB_FALSE;
-   s_ED->next_stabil    = s_ED->first_display;
-   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-   s_ED->dir            = DOWN;
-   s_ED->current_stabil = 0;
-
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Moves the cursor to the previous page of text */
 HB_FUNC( ED_PGUP )
 {
-   int i, bt;
-   long int j;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   bt = s_ED->bottom - s_ED->top;
-
-   j = Prev( s_ED, s_ED->first_display );
-   if( j < 0 )
-   {  /* no more lines to move */
-      s_ED->stable = HB_TRUE;
-      /* advannce the cursor to the topmost line */
-      for( i = 0; i < bt + 1; i++ )
-        Up();
-      return;
-   }
-
-   /* find the offset of the first visible line */
-   for( i = 0; i < bt; i++ )
+   if( pEd )
    {
-      j = Prev( s_ED, s_ED->first_display );
-      if( j >= 0 )
-      {
-         s_ED->active--;
-         s_ED->first_display = j;
+      int i, bt;
+      long int j;
+
+      bt = pEd->bottom - pEd->top;
+
+      j = Prev( pEd, pEd->first_display );
+      if( j < 0 )
+      {  /* no more lines to move */
+         pEd->stable = HB_TRUE;
+         /* advannce the cursor to the topmost line */
+         for( i = 0; i < bt + 1; i++ )
+           Up( pEd );
+         return;
       }
-      else
-         break;   /* no more line */
-   }
-   /* now the last visible line */
-   s_ED->last_display = s_ED->first_display;
-   for( i = 0; i < bt; i++ )
-   {
-      j = Next( s_ED, s_ED->last_display );
-      if( j >= 0 )
-         s_ED->last_display  = j;
-   }
 
-   /* update the offset of line where the cursor will be displayed
-    * keep the cursor in the same row if possible
-    */
-   s_ED->current_line = s_ED->last_display;
-   for( i = 0; i < bt - s_ED->cursor_row; i++ )
-   {
-      j = Prev( s_ED, s_ED->current_line );
-      if( j >= 0 )
-         s_ED->current_line = j;
-      else
-         s_ED->current_line = 0;
-   }
+      /* find the offset of the first visible line */
+      for( i = 0; i < bt; i++ )
+      {
+         j = Prev( pEd, pEd->first_display );
+         if( j >= 0 )
+         {
+            pEd->active--;
+            pEd->first_display = j;
+         }
+         else
+            break;   /* no more line */
+      }
+      /* now the last visible line */
+      pEd->last_display = pEd->first_display;
+      for( i = 0; i < bt; i++ )
+      {
+         j = Next( pEd, pEd->last_display );
+         if( j >= 0 )
+            pEd->last_display  = j;
+      }
 
-   s_ED->stable         = HB_FALSE;
-   s_ED->next_stabil    = s_ED->last_display;
-   s_ED->stabil         = bt + 1;
-   s_ED->dir            = UP;
-   s_ED->current_stabil = bt;
+      /* update the offset of line where the cursor will be displayed
+       * keep the cursor in the same row if possible
+       */
+      pEd->current_line = pEd->last_display;
+      for( i = 0; i < bt - pEd->cursor_row; i++ )
+      {
+         j = Prev( pEd, pEd->current_line );
+         if( j >= 0 )
+            pEd->current_line = j;
+         else
+            pEd->current_line = 0;
+      }
+
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->last_display;
+      pEd->stabil         = bt + 1;
+      pEd->dir            = UP;
+      pEd->current_stabil = bt;
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the beginning of the text */
 HB_FUNC( ED_TOP )
 {
-   long int j;
-   int      i;
-   unsigned int nEsc;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   Clear( s_ED, s_ED->current_line, &nEsc );
-   s_ED->current_line   = s_ED->first_line;
-   s_ED->cursor_row     = 0;
-   s_ED->first_display  = s_ED->last_display = s_ED->first_line;
-
-   /* find the last visible line */
-   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
+   if( pEd )
    {
-      j = Next( s_ED, s_ED->last_display );
-      if( j >= 0 )
-         s_ED->last_display = j;
-   }
+      long int j;
+      int      i;
+      unsigned int nEsc;
 
-   s_ED->cursor_row     = s_ED->current_stabil = 0;
-   s_ED->current_line   = s_ED->next_stabil = s_ED->first_line;
-   s_ED->active         = 1;
-   s_ED->stable         = HB_FALSE;
-   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-   s_ED->dir            = DOWN;
-   s_ED->first_col      = s_ED->cursor_col = 0;
+      Clear( pEd, pEd->current_line, &nEsc );
+      pEd->current_line   = pEd->first_line;
+      pEd->cursor_row     = 0;
+      pEd->first_display  = pEd->last_display = pEd->first_line;
+
+      /* find the last visible line */
+      for( i = 0; i < pEd->bottom - pEd->top; i++ )
+      {
+         j = Next( pEd, pEd->last_display );
+         if( j >= 0 )
+            pEd->last_display = j;
+      }
+
+      pEd->cursor_row     = pEd->current_stabil = 0;
+      pEd->current_line   = pEd->next_stabil = pEd->first_line;
+      pEd->active         = 1;
+      pEd->stable         = HB_FALSE;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->first_col      = pEd->cursor_col = 0;
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the last line of text */
 HB_FUNC( ED_BOTTOM )
 {
-   int      i, j;
-   long int jj;
-   unsigned int nEsc;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   j = 0;
-   Clear( s_ED, s_ED->current_line, &nEsc );
-   s_ED->current_line   = s_ED->last_line;
-   s_ED->cursor_row     = 0;
-   s_ED->first_display  = s_ED->last_line;
-
-   /* find the first visible line */
-   /* We have to count from the bottom to make it work in case the number
-    * of lines is smaller then the height of the window
-    */
-   s_ED->last_display   = s_ED->first_display;
-   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
+   if( pEd )
    {
-      jj = Prev( s_ED, s_ED->first_display );
-      if( jj >= 0 )
-      {
-         s_ED->first_display = jj;
-         j++;
-      }
-   }
+      int      i, j;
+      long int jj;
+      unsigned int nEsc;
 
-   s_ED->current_line   = s_ED->last_display;
-   s_ED->active         = s_ED->line_number;
-   s_ED->stable         = HB_FALSE;
-   s_ED->next_stabil    = s_ED->first_display;
-   s_ED->dir            = DOWN;
-   s_ED->current_stabil = 0;
-   s_ED->first_col      = s_ED->cursor_col = 0;
-   s_ED->cursor_row     = j;
-   s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
+      j = 0;
+      Clear( pEd, pEd->current_line, &nEsc );
+      pEd->current_line   = pEd->last_line;
+      pEd->cursor_row     = 0;
+      pEd->first_display  = pEd->last_line;
+
+      /* find the first visible line */
+      /* We have to count from the bottom to make it work in case the number
+       * of lines is smaller then the height of the window
+       */
+      pEd->last_display   = pEd->first_display;
+      for( i = 0; i < pEd->bottom - pEd->top; i++ )
+      {
+         jj = Prev( pEd, pEd->first_display );
+         if( jj >= 0 )
+         {
+            pEd->first_display = jj;
+            j++;
+         }
+      }
+
+      pEd->current_line   = pEd->last_display;
+      pEd->active         = pEd->line_number;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
+      pEd->first_col      = pEd->cursor_col = 0;
+      pEd->cursor_row     = j;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Go to the specified line number
  */
-static void GoTo( int line )
+static void GoTo( PHB_EDITOR pEd, int line )
 {
    int          i;
    long int j;
    unsigned int nEsc;
 
-   Clear( s_ED, s_ED->current_line, &nEsc );
+   Clear( pEd, pEd->current_line, &nEsc );
 
    /* find specified line */
-   s_ED->current_line = s_ED->first_line;
+   pEd->current_line = pEd->first_line;
    for( i = 0; i < line-1; i++ )
    {
-      j = Next( s_ED, s_ED->current_line );
+      j = Next( pEd, pEd->current_line );
       if( j >= 0 )
-         s_ED->current_line = j;
+         pEd->current_line = j;
    }
-   s_ED->cursor_row     = 0;
-   s_ED->first_display  = s_ED->current_line;
+   pEd->cursor_row     = 0;
+   pEd->first_display  = pEd->current_line;
 
    /* find the offset of the last visible line */
-   s_ED->last_display   = s_ED->first_display;
-   for( i = 0; i < s_ED->bottom - s_ED->top; i++ )
+   pEd->last_display   = pEd->first_display;
+   for( i = 0; i < pEd->bottom - pEd->top; i++ )
    {
-      j = Next( s_ED, s_ED->last_display );
+      j = Next( pEd, pEd->last_display );
       if( j >= 0 )
-         s_ED->last_display = j;
+         pEd->last_display = j;
    }
 
-   s_ED->active          = line;
-   s_ED->stable          = HB_FALSE;
-   s_ED->next_stabil     = s_ED->current_line;
-   s_ED->stabil          = s_ED->bottom - s_ED->top + 1;
-   s_ED->dir             = DOWN;
-   s_ED->current_stabil  = s_ED->cursor_row;
-   s_ED->first_col       = 0;
+   pEd->active          = line;
+   pEd->stable          = HB_FALSE;
+   pEd->next_stabil     = pEd->current_line;
+   pEd->stabil          = pEd->bottom - pEd->top + 1;
+   pEd->dir             = DOWN;
+   pEd->current_stabil  = pEd->cursor_row;
+   pEd->first_col       = 0;
 }
 
 /* Move the cursor to the given line using line number */
 HB_FUNC( ED_GOTO )
 {
-   long int line;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   line = ( long int ) hb_parni( 1 );
+   if( pEd )
+   {
+      long line = hb_parnl( 1 );
 
-   GoTo( ( unsigned int ) line );
+      GoTo( pEd, ( unsigned int ) line );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the previous character
  */
-static void Left(void)
+static void Left( PHB_EDITOR pEd )
 {
-   if( s_ED->cursor_col > 0 )
-      s_ED->cursor_col--;    /* inside the window - decrement current column number */
+   if( pEd->cursor_col > 0 )
+      pEd->cursor_col--;    /* inside the window - decrement current column number */
    else
    {
-      if( s_ED->first_col > 0 )
+      if( pEd->first_col > 0 )
       {
          /* the text is scrolled right - scroll it back to the left by one column */
-         s_ED->first_col--;
-         s_ED->stable         = HB_FALSE;
-         s_ED->next_stabil    = s_ED->first_display;
-         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
+         pEd->first_col--;
+         pEd->stable         = HB_FALSE;
+         pEd->next_stabil    = pEd->first_display;
+         pEd->stabil         = pEd->bottom - pEd->top + 1;
+         pEd->dir            = DOWN;
+         pEd->current_stabil = 0;
       }
       /* else no wrap allowed */
    }
@@ -1519,59 +1543,69 @@ static void Left(void)
 /* Move the cursor to the previous character */
 HB_FUNC( ED_LEFT )
 {
-   Left();
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      Left( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Move the cursor to the next character
  */
-static void Right( EDITOR * E )
+static void Right( PHB_EDITOR pEd )
 {
-   if( E->cursor_col < ( E->right - E->left ) )
+   if( pEd->cursor_col < ( pEd->right - pEd->left ) )
    {  /* inside the window */
-      if( ( E->first_col + E->cursor_col ) < E->line_length )
-         E->cursor_col++;
+      if( ( pEd->first_col + pEd->cursor_col ) < pEd->line_length )
+         pEd->cursor_col++;
       /* else no wrap allowed */
    }
    else
    {
       /* scroll text to the right no more then the maximal line length */
-      if( (++E->first_col + E->cursor_col) > E->line_length )
-         E->first_col--;
+      if( (++pEd->first_col + pEd->cursor_col) > pEd->line_length )
+         pEd->first_col--;
 
-      E->stable         = HB_FALSE;
-      E->next_stabil    = E->first_display;
-      E->stabil         = E->bottom - E->top + 1;
-      E->dir            = DOWN;
-      E->current_stabil = 0;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
 }
 
 /* Move the cursor to the next character */
 HB_FUNC( ED_RIGHT )
 {
-   Right( s_ED );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      Right( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the beginning of line
  */
-static void Home( EDITOR * E )
+static void Home( PHB_EDITOR pEd )
 {
-   if( E->first_col > 0 )
+   if( pEd->first_col > 0 )
    {
       /* the line was scrolled to the right */
-      E->cursor_col     = 0;
-      E->first_col      = 0;
-      E->stable         = HB_FALSE;
-      E->next_stabil    = E->first_display;
-      E->stabil         = E->bottom - E->top + 1;
-      E->dir            = DOWN;
-      E->current_stabil = 0;
+      pEd->cursor_col     = 0;
+      pEd->first_col      = 0;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
    else
    {
-      E->cursor_col = 0;
-      E->first_col  = 0;
+      pEd->cursor_col = 0;
+      pEd->first_col  = 0;
    }
 }
 
@@ -1579,75 +1613,84 @@ static void Home( EDITOR * E )
 /* Move the cursor to the beginning of the line */
 HB_FUNC( ED_HOME )
 {
-   Home( s_ED );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      Home( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the end of line
  */
-static void End( EDITOR * E )
+static void End( PHB_EDITOR pEd )
 {
    unsigned int ll, nEsc;
 
-   ll =Clear( E, E->current_line, &nEsc );
-   if( ll < E->first_col )
+   ll = Clear( pEd, pEd->current_line, &nEsc );
+   if( ll < pEd->first_col )
    {
       /* the line length is smaller then the number of characters scrolled -
        * adjust the first visible column to make the end of line visible
        */
-      E->first_col      = ll;
-      E->cursor_col     = 0;
-      E->stable         = HB_FALSE;
-      E->next_stabil    = E->first_display;
-      E->stabil         = E->bottom - E->top + 1;
-      E->dir            = DOWN;
-      E->current_stabil = 0;
+      pEd->first_col      = ll;
+      pEd->cursor_col     = 0;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
    else
-      if( ( ll - E->first_col ) > ( E->right - E->left ) )
+      if( ( ll - pEd->first_col ) > ( pEd->right - pEd->left ) )
       {
          /* scroll text to the right  */
-         E->cursor_col     = E->right - E->left;
-         E->first_col      = ( int ) ( ll - ( E->right - E->left ) );
-         E->stable         = HB_FALSE;
-         E->next_stabil    = E->first_display;
-         E->stabil         = E->bottom - E->top + 1;
-         E->dir            = DOWN;
-         E->current_stabil = 0;
+         pEd->cursor_col     = pEd->right - pEd->left;
+         pEd->first_col      = ( int ) ( ll - ( pEd->right - pEd->left ) );
+         pEd->stable         = HB_FALSE;
+         pEd->next_stabil    = pEd->first_display;
+         pEd->stabil         = pEd->bottom - pEd->top + 1;
+         pEd->dir            = DOWN;
+         pEd->current_stabil = 0;
       }
       else
-         E->cursor_col = ll - E->first_col;
+         pEd->cursor_col = ll - pEd->first_col;
 }
 
 
 /* Move the cursor the the end of line (after the last non-space character) */
 HB_FUNC( ED_END )
 {
-   End( s_ED );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      End( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
-/* Format the current paragraph
- */
-static void FormatParagraph ( EDITOR * E )
+/* Format the current paragraph */
+static void FormatParagraph ( PHB_EDITOR pEd )
 {
    int       rdl, cc, cr, cor;
    long int  dl, source, CrLine;
    char      pom[ MAX_LINE_LEN * 2 ], *tmp;
    unsigned int nEsc;
 
-   cc  = E->cursor_col;
-   cr  = E->cursor_row;
+   cc  = pEd->cursor_col;
+   cr  = pEd->cursor_row;
    cor = 0;
 
-   rdl       = format_line( E, SOFT, 0 );
-   E->stabil = 1;    /* at least one line will be redisplayed */
+   rdl       = format_line( pEd, SOFT, 0 );
+   pEd->stabil = 1;    /* at least one line will be redisplayed */
 
 /*  if( rdl )
 */
    {
-      dl = ( long int ) GetLineLength( E, E->current_line, &rdl );
-      strncpy( pom, E->begin+( unsigned int )E->current_line, ( int ) ( dl + rdl + 10 ) );
-      pom[ E->line_length + rdl + 1 ] = '\x0';
+      dl = ( long int ) GetLineLength( pEd, pEd->current_line, &rdl );
+      strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int ) ( dl + rdl + 10 ) );
+      pom[ pEd->line_length + rdl + 1 ] = '\0';
       tmp = strchr( pom, '\n' );
       if( tmp && ( ( unsigned char ) *( tmp - 1 ) == 141u ) )  /* soft CR */
       {
@@ -1657,21 +1700,21 @@ static void FormatParagraph ( EDITOR * E )
       else
          tmp = NULL;
 
-      CrLine = E->current_line;
+      CrLine = pEd->current_line;
 
       while( tmp )
       {
-         source   = E->current_line + ( long int )( tmp - pom - 1 );
-         MoveText( E, source + 2, source + 1, E->buffer_size - source + 2 );
-         E->begin[ ( unsigned int ) ( source + 1 ) ] = ' ';
+         source   = pEd->current_line + ( long int )( tmp - pom - 1 );
+         MoveText( pEd, source + 2, source + 1, pEd->buffer_size - source + 2 );
+         pEd->begin[ ( unsigned int ) ( source + 1 ) ] = ' ';
 
-         rdl = format_line( E, SOFT, 0 );
-         Clear( E, E->current_line, &nEsc );
+         rdl = format_line( pEd, SOFT, 0 );
+         Clear( pEd, pEd->current_line, &nEsc );
 
-         E->current_line = Next( E, E->current_line );
-         dl  = ( long int ) GetLineLength( E, E->current_line, &rdl );
-         strncpy( pom, E->begin + ( unsigned int ) E->current_line, ( int )( dl + rdl + 10 ) );
-         pom[ E->line_length + rdl + 1 ] = '\x0';
+         pEd->current_line = Next( pEd, pEd->current_line );
+         dl  = ( long int ) GetLineLength( pEd, pEd->current_line, &rdl );
+         strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int )( dl + rdl + 10 ) );
+         pom[ pEd->line_length + rdl + 1 ] = '\0';
          tmp    = strchr( pom, '\n' );
          if( tmp && ( ( unsigned char ) * ( tmp - 1 ) == 141u ) )
          {
@@ -1682,128 +1725,135 @@ static void FormatParagraph ( EDITOR * E )
          tmp = NULL;
 
       }
-      E->current_line   = CrLine;
-      E->stabil         = E->bottom - E->top + 1;
-      E->next_stabil    = E->first_display;
-      E->current_stabil = 0;
+      pEd->current_line   = CrLine;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->current_stabil = 0;
    }
 /*  else
 */
    {
-      E->stabil = 1;
-      E->next_stabil    = E->current_line;
-      E->current_stabil = E->cursor_row;
+      pEd->stabil = 1;
+      pEd->next_stabil    = pEd->current_line;
+      pEd->current_stabil = pEd->cursor_row;
    }
 
-   E->stable      = HB_FALSE;
-   E->dir         = DOWN;
-   E->cursor_col  = cc;
-   E->cursor_row  = cr;
-   E->line_number-= cor;
+   pEd->stable      = HB_FALSE;
+   pEd->dir         = DOWN;
+   pEd->cursor_col  = cc;
+   pEd->cursor_row  = cr;
+   pEd->line_number-= cor;
 }
 
 
 
 /* Delete the character under the cursor
  */
-static void DelChar( EDITOR * E )
+static void DelChar( PHB_EDITOR pEd )
 {
    int ccc, rdl;
    long int cl;
 
-   cl  = E->current_line;
-   ccc = E->cursor_col + E->first_col;
-   if( ccc <= GetLineLength( E, E->current_line, &rdl ) )
+   cl  = pEd->current_line;
+   ccc = pEd->cursor_col + pEd->first_col;
+   if( ccc <= GetLineLength( pEd, pEd->current_line, &rdl ) )
    {
-      if( E->escape )
-         while( ( char ) E->begin[ ( unsigned int ) ( E->current_line + ccc ) ] == E->escape )
+      if( pEd->escape )
+         while( ( char ) pEd->begin[ ( unsigned int ) ( pEd->current_line + ccc ) ] == pEd->escape )
             ccc += 2;
-      MoveText( E, E->current_line + ( long int ) ( ccc + 1 ),
-                   E->current_line + ( long int ) ccc,
-                   ( E->buffer_size - ( E->current_line + ( long int ) ( ccc + 1 ) ) ) );
+      MoveText( pEd, pEd->current_line + ( long int ) ( ccc + 1 ),
+                   pEd->current_line + ( long int ) ccc,
+                   ( pEd->buffer_size - ( pEd->current_line + ( long int ) ( ccc + 1 ) ) ) );
 
-      E->stable         = HB_FALSE;
-      E->next_stabil    = E->current_line;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->current_line;
 
-      E->dir            = DOWN;
-      E->current_stabil = E->cursor_row;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = pEd->cursor_row;
 
-      FormatParagraph( E );
+      FormatParagraph( pEd );
 
-      if( E->current_line == E->last_line )
-         E->last_display = E->last_line;
+      if( pEd->current_line == pEd->last_line )
+         pEd->last_display = pEd->last_line;
 
-      E->current_line = cl;
+      pEd->current_line = cl;
 
-      E->stable         = HB_FALSE;
-      E->next_stabil    = E->first_display;
-      E->stabil         = E->bottom - E->top + 1;
-      E->dir            = DOWN;
-      E->current_stabil = 0;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
 }
 
 /* Delete the character at current cursor position */
 HB_FUNC( ED_DELCHAR )
 {
-   long int j;
-   int      rdl;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   if( ( ( unsigned int ) (s_ED->cursor_col + s_ED->first_col) ) >=
-         ( ( unsigned int ) GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
+   if( pEd )
    {
-      /* The cursor is positioned after the last non-space character
-       */
-      j = Next( s_ED, s_ED->current_line );
-      if( j >= 0 )
-      {
-         /* there are more lines below the cursor - join the lines
-          */
-         Down( s_ED ); /* goto the next line */
-         Home( s_ED ); /* goto the beginning of line */
-         BackSpace( 1 );  /* delete separating CR/LF */
+      long int j;
+      int rdl;
 
-         s_ED->stable         = HB_FALSE;
-         s_ED->next_stabil    = s_ED->first_display;
-         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
+      if( ( ( unsigned int ) (pEd->cursor_col + pEd->first_col) ) >=
+            ( ( unsigned int ) GetLineLength( pEd, pEd->current_line, &rdl ) ) )
+      {
+         /* The cursor is positioned after the last non-space character
+          */
+         j = Next( pEd, pEd->current_line );
+         if( j >= 0 )
+         {
+            /* there are more lines below the cursor - join the lines
+             */
+            Down( pEd ); /* goto the next line */
+            Home( pEd ); /* goto the beginning of line */
+            BackSpace( pEd, 1 );  /* delete separating CR/LF */
+
+            pEd->stable         = HB_FALSE;
+            pEd->next_stabil    = pEd->first_display;
+            pEd->stabil         = pEd->bottom - pEd->top + 1;
+            pEd->dir            = DOWN;
+            pEd->current_stabil = 0;
+         }
+      }
+      else
+      {
+         /* The cursor is inside the line or at the last character
+          */
+         if( ( unsigned int ) ( pEd->cursor_col + pEd->first_col ) <
+             ( unsigned int ) ( GetLineLength( pEd, pEd->current_line, &rdl ) ) )
+            DelChar( pEd );   /* inside a line */
+         else
+         { /* at the last character */
+            j = Next( pEd, pEd->current_line );
+            if( j >= 0 )  /* if it is not the last line then delete character unde the cursor */
+               DelChar( pEd );
+         }
       }
    }
    else
-   {
-      /* The cursor is inside the line or at the last character
-       */
-      if( ( unsigned int ) ( s_ED->cursor_col + s_ED->first_col ) <
-          ( unsigned int ) ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
-         DelChar( s_ED );   /* inside a line */
-      else
-      { /* at the last character */
-         j = Next( s_ED, s_ED->current_line );
-         if( j >= 0 )  /* if it is not the last line then delete character unde the cursor */
-            DelChar( s_ED );
-      }
-   }
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Delete a character on the left side of the cursor
  */
-static void BackSpace( int INS )
+static void BackSpace( PHB_EDITOR pEd, int INS )
 {
    char      tmp[ MAX_LINE_LEN + 2 ], tmp1[ MAX_LINE_LEN + 2 ], *w;
    long int  ww, j, ccc, kk;
    int       rdl, nLen;
 
-   s_ED->stable         = HB_FALSE;
-   s_ED->next_stabil    = s_ED->current_line;
-   s_ED->stabil         = 1;
-   s_ED->dir            = DOWN;
-   s_ED->current_stabil = s_ED->cursor_row;
+   pEd->stable         = HB_FALSE;
+   pEd->next_stabil    = pEd->current_line;
+   pEd->stabil         = 1;
+   pEd->dir            = DOWN;
+   pEd->current_stabil = pEd->cursor_row;
 
    if( INS )
    {
-      if( ( ccc = s_ED->cursor_col+s_ED->first_col ) >
-                  GetLineLength( s_ED, s_ED->current_line, &rdl ) )
+      if( ( ccc = pEd->cursor_col+pEd->first_col ) >
+                  GetLineLength( pEd, pEd->current_line, &rdl ) )
          INS = 0; /* cursor is scrolled after the last character in the line - just move the cursor left */
    }
 
@@ -1811,30 +1861,30 @@ static void BackSpace( int INS )
    {
       /* in destructive mode
        */
-      *tmp  ='\x0';
-      *tmp1 ='\x0';
-      if( ( ccc = s_ED->cursor_col + s_ED->first_col ) > 0 )
+      *tmp  ='\0';
+      *tmp1 ='\0';
+      if( ( ccc = pEd->cursor_col + pEd->first_col ) > 0 )
       {
          /* inside the line */
-         MoveText( s_ED, s_ED->current_line + ccc, s_ED->current_line + ccc - 1,
-                   ( s_ED->buffer_size - (s_ED->current_line + ( long int ) ccc + 1 ) ) );
-         Left();
+         MoveText( pEd, pEd->current_line + ccc, pEd->current_line + ccc - 1,
+                   ( pEd->buffer_size - (pEd->current_line + ( long int ) ccc + 1 ) ) );
+         Left( pEd );
       }
       else
       {
          /* at the beginning of the line */
-         if( s_ED->current_line != s_ED->first_line )
+         if( pEd->current_line != pEd->first_line )
          {
             /* this is not the first line */
-            nLen =GetLineLength( s_ED, s_ED->current_line, &rdl );
+            nLen = GetLineLength( pEd, pEd->current_line, &rdl );
 
-            if( s_ED->current_line == s_ED->last_line )
+            if( pEd->current_line == pEd->last_line )
                if( nLen == 0 )
-                  s_ED->last_line = Prev( s_ED, s_ED->last_line );
+                  pEd->last_line = Prev( pEd, pEd->last_line );
 
             /* copy the last line into temporary buffer */
-            strncpy( tmp, s_ED->begin + ( unsigned int ) s_ED->current_line, nLen+rdl );
-            tmp[ nLen+rdl ] = '\x0';
+            strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line, nLen+rdl );
+            tmp[ nLen+rdl ] = '\0';
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
@@ -1844,71 +1894,71 @@ static void BackSpace( int INS )
                ww = nLen+rdl;
 
             /* go to the previous line */
-            j = Prev( s_ED, s_ED->current_line );
-            kk = GetLineLength( s_ED, j, &rdl );
-            strncpy( tmp1, s_ED->begin + ( unsigned int ) j, ( unsigned int )( kk + rdl ) );
-            tmp1[ ( unsigned int )( kk + rdl )  ] = '\x0';
-            Up();
-            End( s_ED );
+            j = Prev( pEd, pEd->current_line );
+            kk = GetLineLength( pEd, j, &rdl );
+            strncpy( tmp1, pEd->begin + ( unsigned int ) j, ( unsigned int )( kk + rdl ) );
+            tmp1[ ( unsigned int )( kk + rdl )  ] = '\0';
+            Up( pEd );
+            End( pEd );
 
             /* the lines can be joined
              * the sum of whole length of these lines is smaller then maximal allowed
              * or there is a space where the line can be wrapped
              */
-            if( (ww + kk + rdl - 1) < ( s_ED->line_length ) )
+            if( (ww + kk + rdl - 1) < ( pEd->line_length ) )
             {
-               kk = GetLineLength( s_ED, s_ED->current_line, &rdl );
-               j  = s_ED->current_line + kk + rdl;
+               kk = GetLineLength( pEd, pEd->current_line, &rdl );
+               j  = pEd->current_line + kk + rdl;
                /* remove separating CRLF characters */
-               MoveText( s_ED, j + 2, j, s_ED->buffer_size - j - 2 );
+               MoveText( pEd, j + 2, j, pEd->buffer_size - j - 2 );
 
-               s_ED->line_number--;
+               pEd->line_number--;
 
-               j = Next( s_ED, s_ED->last_display );
+               j = Next( pEd, pEd->last_display );
                if( j >= 0 )
-                  s_ED->last_display = j;
-               if( s_ED->begin[ ( unsigned int ) s_ED->last_display + 1 ] == '\x0' )
-                  s_ED->last_display = Prev( s_ED, s_ED->last_display );
+                  pEd->last_display = j;
+               if( pEd->begin[ ( unsigned int ) pEd->last_display + 1 ] == '\0' )
+                  pEd->last_display = Prev( pEd, pEd->last_display );
 
                /* split the new line if it is too long */
-               format_line( s_ED, HARD, 0 );
+               format_line( pEd, HARD, 0 );
 
-               j = Next( s_ED, s_ED->current_line );
+               j = Next( pEd, pEd->current_line );
                if( j < 0 )
                {
-                  s_ED->last_display    = Prev( s_ED, s_ED->last_display );
-                  s_ED->last_line       = s_ED->current_line;
+                  pEd->last_display    = Prev( pEd, pEd->last_display );
+                  pEd->last_line       = pEd->current_line;
                }
-               s_ED->stable         = HB_FALSE;
-               s_ED->next_stabil    = s_ED->first_display;
-               s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-               s_ED->dir            = DOWN;
-               s_ED->current_stabil = 0;
+               pEd->stable         = HB_FALSE;
+               pEd->next_stabil    = pEd->first_display;
+               pEd->stabil         = pEd->bottom - pEd->top + 1;
+               pEd->dir            = DOWN;
+               pEd->current_stabil = 0;
             }
          }
       }
-      FormatParagraph ( s_ED );
+      FormatParagraph ( pEd );
 
-      s_ED->stable         = HB_FALSE;
-      s_ED->next_stabil    = s_ED->first_display;
-      s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-      s_ED->dir            = DOWN;
-      s_ED->current_stabil = 0;
+      pEd->stable         = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
    }
    else
    {
       /* non-destructive mode - move cursor only */
-      ccc = s_ED->cursor_col + s_ED->first_col;
+      ccc = pEd->cursor_col + pEd->first_col;
       if( ccc > 0 )
       {
-         Left();
+         Left( pEd );
       }
       else
       {
-         if( s_ED->current_line != s_ED->first_line )
+         if( pEd->current_line != pEd->first_line )
          {
-            Up();
-            End( s_ED );
+            Up( pEd );
+            End( pEd );
          }
       }
    }
@@ -1918,28 +1968,35 @@ static void BackSpace( int INS )
 /* Delete a character on the left side of the cursor */
 HB_FUNC( ED_BSPACE )
 {
-   int INS;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   INS = hb_parl( 1 );   /* get current INSERT state  */
+   if( pEd )
+   {
+      int INS;
 
-   BackSpace( INS );
+      INS = hb_parl( 2 );   /* get current INSERT state  */
+
+      BackSpace( pEd, INS );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Move to the beginning of next non-empty line
  */
-static void GotoNextNonEmptyLine( void )
+static void GotoNextNonEmptyLine( PHB_EDITOR pEd )
 {
-   int  rdl;
+   int rdl;
 
-   Down( s_ED );
-   Home( s_ED );
+   Down( pEd );
+   Home( pEd );
 
-   while( GetLineLength( s_ED, s_ED->current_line, &rdl ) == 0 )
+   while( GetLineLength( pEd, pEd->current_line, &rdl ) == 0 )
    {
-      Down( s_ED );
-      Home( s_ED );
-      if( Next( s_ED, s_ED->current_line ) < 0 )
+      Down( pEd );
+      Home( pEd );
+      if( Next( pEd, pEd->current_line ) < 0 )
          break;
    }
 }
@@ -1947,85 +2004,90 @@ static void GotoNextNonEmptyLine( void )
 
 /* Move the cursor to the next word
  */
-static void NextWord(void)
+static void NextWord( PHB_EDITOR pEd )
 {
-   char      *adr;
-   char      tmp[ MAX_LINE_LEN + 2 ];
-   int       ccc;
+   char * adr;
+   char tmp[ MAX_LINE_LEN + 2 ];
+   int ccc;
    unsigned int nEsc, nLen;
 
-   ccc = s_ED->cursor_col + s_ED->first_col;
-   nLen =Clear( s_ED, s_ED->current_line, &nEsc );
+   ccc = pEd->cursor_col + pEd->first_col;
+   nLen = Clear( pEd, pEd->current_line, &nEsc );
 
    if( nLen < ccc )
-      GotoNextNonEmptyLine();
+      GotoNextNonEmptyLine( pEd );
    else
    {
-      *tmp ='\x0';
-      strncpy( tmp, s_ED->begin + ( unsigned int ) s_ED->current_line + ccc,
-                     nLen - s_ED->cursor_col - s_ED->first_col );
-      tmp[ nLen - s_ED->cursor_col - s_ED->first_col ] = '\x0';
+      *tmp ='\0';
+      strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line + ccc,
+                     nLen - pEd->cursor_col - pEd->first_col );
+      tmp[ nLen - pEd->cursor_col - pEd->first_col ] = '\0';
       if( (adr = strchr ( tmp, ' ' ) ) == NULL )
       {
-         GotoNextNonEmptyLine();
-         if( !s_ED->stable )
+         GotoNextNonEmptyLine( pEd );
+         if( ! pEd->stable )
          {
-            s_ED->next_stabil    = s_ED->first_display;
-            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-            s_ED->dir            = DOWN;
-            s_ED->current_stabil = 0;
+            pEd->next_stabil    = pEd->first_display;
+            pEd->stabil         = pEd->bottom - pEd->top + 1;
+            pEd->dir            = DOWN;
+            pEd->current_stabil = 0;
          }
       }
       else
       {
-         s_ED->cursor_col   = ( int ) ( adr - tmp + 1 + s_ED->cursor_col + s_ED->first_col);
+         pEd->cursor_col   = ( int ) ( adr - tmp + 1 + pEd->cursor_col + pEd->first_col);
 
-         if( s_ED->cursor_col > ( s_ED->right - s_ED->left ) )
+         if( pEd->cursor_col > ( pEd->right - pEd->left ) )
          {
-            s_ED->first_col     += s_ED->cursor_col - ( s_ED->right - s_ED->left );
-            s_ED->cursor_col     = s_ED->right - s_ED->left;
-            s_ED->stable         = HB_FALSE;
-            s_ED->next_stabil    = s_ED->first_display;
-            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-            s_ED->dir            = DOWN;
-            s_ED->current_stabil = 0;
+            pEd->first_col     += pEd->cursor_col - ( pEd->right - pEd->left );
+            pEd->cursor_col     = pEd->right - pEd->left;
+            pEd->stable         = HB_FALSE;
+            pEd->next_stabil    = pEd->first_display;
+            pEd->stabil         = pEd->bottom - pEd->top + 1;
+            pEd->dir            = DOWN;
+            pEd->current_stabil = 0;
          }
       }
    }
 
-   if( s_ED->begin[ ( unsigned int ) (s_ED->current_line +
-                     s_ED->cursor_col + s_ED->first_col) ] == ' ')
-      NextWord();
+   if( pEd->begin[ ( unsigned int ) (pEd->current_line +
+                     pEd->cursor_col + pEd->first_col) ] == ' ')
+      NextWord( pEd );
 }
 
 
 /* Move the cursor to the next word */
 HB_FUNC( ED_NWORD )
 {
-   NextWord();
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      NextWord( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Move the cursor to the previous word
  */
-static void PreviousWord(void)
+static void PreviousWord( PHB_EDITOR pEd )
 {
-   int       pom, i, rdl;
+   int pom, i, rdl;
    unsigned int nLen, nEsc;
 
    pom = -1;
-   nLen =Clear ( s_ED, s_ED->current_line, &nEsc );
-   if( nLen < ( s_ED->cursor_col + s_ED->first_col ) )
-      End( s_ED );
+   nLen = Clear( pEd, pEd->current_line, &nEsc );
+   if( nLen < ( pEd->cursor_col + pEd->first_col ) )
+      End( pEd );
 
-   if( ( s_ED->first_col + s_ED->cursor_col ) == 0 )
+   if( ( pEd->first_col + pEd->cursor_col ) == 0 )
    {
-      Up();
-      End( s_ED );
+      Up( pEd );
+      End( pEd );
    }
 
-   for( i = s_ED->first_col + s_ED->cursor_col - 2; i >= 0; i-- )
+   for( i = pEd->first_col + pEd->cursor_col - 2; i >= 0; i-- )
    {
-      if( s_ED->begin[ ( unsigned int ) (s_ED->current_line + i) ] == ' ')
+      if( pEd->begin[ ( unsigned int ) (pEd->current_line + i) ] == ' ')
       {
          pom = i;
          break;
@@ -2036,56 +2098,61 @@ static void PreviousWord(void)
 
    if(pom < 0)
    {
-      Home( s_ED );
-      while( GetLineLength( s_ED, s_ED->current_line, &rdl ) == 0 )
+      Home( pEd );
+      while( GetLineLength( pEd, pEd->current_line, &rdl ) == 0 )
       {
-         Up();
-         Home( s_ED );
-         if( Prev( s_ED, s_ED->current_line ) < 0 )
+         Up( pEd );
+         Home( pEd );
+         if( Prev( pEd, pEd->current_line ) < 0 )
             break;
       }
-      if(!s_ED->stable)
+      if(!pEd->stable)
       {
-         s_ED->next_stabil    = s_ED->first_display;
-         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
+         pEd->next_stabil    = pEd->first_display;
+         pEd->stabil         = pEd->bottom - pEd->top + 1;
+         pEd->dir            = DOWN;
+         pEd->current_stabil = 0;
       }
    }
    else
    {
-      s_ED->cursor_col = pom + 1;
-      if( s_ED->first_col > 0 )
+      pEd->cursor_col = pom + 1;
+      if( pEd->first_col > 0 )
       {
-         s_ED->cursor_col-= s_ED->first_col;
+         pEd->cursor_col-= pEd->first_col;
       }
-      if( s_ED->cursor_col < 0 )
+      if( pEd->cursor_col < 0 )
       {
-         s_ED->first_col      = s_ED->cursor_col - (s_ED->right - s_ED->left);
-         s_ED->stable         = HB_FALSE;
-         s_ED->next_stabil    = s_ED->first_display;
-         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
+         pEd->first_col      = pEd->cursor_col - (pEd->right - pEd->left);
+         pEd->stable         = HB_FALSE;
+         pEd->next_stabil    = pEd->first_display;
+         pEd->stabil         = pEd->bottom - pEd->top + 1;
+         pEd->dir            = DOWN;
+         pEd->current_stabil = 0;
       }
    }
 
-   if( s_ED->begin[ ( unsigned int ) (s_ED->current_line + s_ED->cursor_col +
-                          s_ED->first_col) ] == ' ')
-      PreviousWord();
+   if( pEd->begin[ ( unsigned int ) (pEd->current_line + pEd->cursor_col +
+                          pEd->first_col) ] == ' ')
+      PreviousWord( pEd );
 }
 
 
 /* Move the cursor to the previous word */
 HB_FUNC( ED_PWORD )
 {
-   PreviousWord();
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      PreviousWord( pEd );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Format given line - returns it the line has changed
  */
-static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
+static int format_line( PHB_EDITOR pEd, int Karetka, unsigned int LineDl )
 {
    char      pom[ MAX_LINE_LEN * 2 ], *p;
    int       podz, jj, status, i;
@@ -2093,10 +2160,10 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
    int       rdl = 0;
 
    if( !LineDl )
-      LineDl = GetLineLength( E, E->current_line, &rdl );
+      LineDl = GetLineLength( pEd, pEd->current_line, &rdl );
 
    status = 0; /* the line is not splitted yet */
-   if( LineDl > E->line_length )
+   if( LineDl > pEd->line_length )
    {
       /* the line is longer then maximal allowed length  -
        * wrap the line
@@ -2104,9 +2171,9 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
       status = 1; /* the line will be splitted */
 
       /* copy maximum allowed bytes form the line into temporary buffer */
-      strncpy( pom, E->begin + ( unsigned int ) E->current_line,
-               ( int ) ( E->line_length + 10 + rdl ) );
-      pom[ ( unsigned int ) ( E->line_length + rdl ) ] = '\x0';
+      strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line,
+               ( int ) ( pEd->line_length + 10 + rdl ) );
+      pom[ ( unsigned int ) ( pEd->line_length + rdl ) ] = '\0';
 
       /* find the last space where the line can be splitted */
       p = strrchr( pom, ' ' );
@@ -2114,32 +2181,32 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
       {
          /* use this position to split the line */
          podz = ( int ) ( p - pom + 1 );
-         jj   = 1 - podz + E->cursor_col + E->first_col;
+         jj   = 1 - podz + pEd->cursor_col + pEd->first_col;
       }
       else
       {
          /* there is no space in the line - split it at the maximal line length */
-         podz = E->line_length;
+         podz = pEd->line_length;
          jj   = 1;
       }
 
-      j = ( long int ) ( E->current_line + podz );
-      MoveText( E, j, j + 2, E->buffer_size - j - 2 );
+      j = ( long int ) ( pEd->current_line + podz );
+      MoveText( pEd, j, j + 2, pEd->buffer_size - j - 2 );
 
       /* replace with separators */
-      E->begin[ ( unsigned int ) j + 0 ] = ( char ) Karetka;
-      E->begin[ ( unsigned int ) j + 1 ] = '\n';
-      E->line_number++;
+      pEd->begin[ ( unsigned int ) j + 0 ] = ( char ) Karetka;
+      pEd->begin[ ( unsigned int ) j + 1 ] = '\n';
+      pEd->line_number++;
 
-      if( ( E->cursor_col + E->first_col ) >= podz )
+      if( ( pEd->cursor_col + pEd->first_col ) >= podz )
       {
-         Home( E );
-         Down( E );
+         Home( pEd );
+         Down( pEd );
          for( i = 0; i < jj; i++ )
-         Right( E );
+         Right( pEd );
       }
       else
-         Right( E );
+         Right( pEd );
    }
 
    return status;
@@ -2147,7 +2214,7 @@ static int format_line( EDITOR * E, int Karetka, unsigned int LineDl )
 
 /* Appends the character at the end of line
  */
-static int AppendChar( EDITOR * E, int znak, int podz )
+static int AppendChar( PHB_EDITOR pEd, int znak, int podz )
 {
    int       diff, rdl, status;
    long int  iPos, nLen;
@@ -2155,37 +2222,37 @@ static int AppendChar( EDITOR * E, int znak, int podz )
    int       ccol, fcol;
    char * cNew;
 
-   nLen = GetLineLength( E, E->current_line, &rdl );
-   iPos = E->current_line + nLen;
-   diff = E->cursor_col + E->first_col - ( int ) nLen;
+   nLen = GetLineLength( pEd, pEd->current_line, &rdl );
+   iPos = pEd->current_line + nLen;
+   diff = pEd->cursor_col + pEd->first_col - ( int ) nLen;
 
    /* the cursor is positioned 'diff' columns after the last character
     * in the line - fill the gap with spaces before appending the character
     */
-   MoveText( E, iPos, iPos + diff + 1, E->buffer_size - 1 - iPos - diff );
-   memset( E->begin + ( unsigned int ) ( E->current_line + nLen ), ' ', diff );
+   MoveText( pEd, iPos, iPos + diff + 1, pEd->buffer_size - 1 - iPos - diff );
+   memset( pEd->begin + ( unsigned int ) ( pEd->current_line + nLen ), ' ', diff );
 
    /* move the CRLF characters after the appended character */
-   cNew  = E->begin + iPos + diff;
+   cNew  = pEd->begin + iPos + diff;
    *cNew++ = ( char ) znak;
    if( *cNew != '\r' )
       *cNew = ( char ) podz; /* insert requested soft/hard carriage */
    *++cNew = '\n';
 
    /* the last line always have to end with the hard carriage return */
-   E->begin[ ( unsigned int ) E->text_length - 2 ] = '\r';
+   pEd->begin[ ( unsigned int ) pEd->text_length - 2 ] = '\r';
 
-   status = format_line( E, SOFT, 0 );
+   status = format_line( pEd, SOFT, 0 );
 
-   cl     = E->current_line;
-   ccol   = E->cursor_col;
-   fcol   = E->first_col;
+   cl     = pEd->current_line;
+   ccol   = pEd->cursor_col;
+   fcol   = pEd->first_col;
 
-   FormatParagraph( E );
+   FormatParagraph( pEd );
 
-   E->current_line = cl;
-   E->cursor_col   = ccol;
-   E->first_col    = fcol;
+   pEd->current_line = cl;
+   pEd->cursor_col   = ccol;
+   pEd->first_col    = fcol;
 
    return status;
 }
@@ -2193,9 +2260,9 @@ static int AppendChar( EDITOR * E, int znak, int podz )
 
 /* Checks if there is enough free room in the text buffer
  */
-static int Check_length( int iRequested )
+static int Check_length( PHB_EDITOR pEd, int iRequested )
 {
-   if( ( s_ED->text_length + iRequested ) <= ( s_ED->buffer_size - 8 ) )
+   if( ( pEd->text_length + iRequested ) <= ( pEd->buffer_size - 8 ) )
       return 1;
    else
       return 0;
@@ -2204,16 +2271,16 @@ static int Check_length( int iRequested )
 
 /* Adjusts the offset of last line
  */
-static void SetLastLine( EDITOR * E )
+static void SetLastLine( PHB_EDITOR pEd )
 {
-   if( E->current_line > E->last_line )
-      E->last_line = E->current_line;
+   if( pEd->current_line > pEd->last_line )
+      pEd->last_line = pEd->current_line;
 }
 
 
 /* Insert or replace the new character into the text buffer
  */
-static void PutChar( int INS, int znak )
+static void PutChar( PHB_EDITOR pEd, int INS, int znak )
 {
    long int  i, jj, cc;
    int       rdl;
@@ -2221,112 +2288,119 @@ static void PutChar( int INS, int znak )
    int       ccol, fcol;
 
    jj = 0;
-   cc = s_ED->cursor_col + s_ED->first_col;   /* currnt position in the line */
+   cc = pEd->cursor_col + pEd->first_col;   /* currnt position in the line */
    if( INS )
    {
       /* INSERT is ON */
-      if( Check_length( 1 ) )
+      if( Check_length( pEd, 1 ) )
       {
          /* TODO: add reallocation of text buffer
           */
-         if( ( unsigned int ) cc < GetLineLength( s_ED, s_ED->current_line, &rdl ) )
+         if( ( unsigned int ) cc < GetLineLength( pEd, pEd->current_line, &rdl ) )
          {
             /* the character will be inserted within the line - the cursor
              * is placed inside the line
              */
-            i = s_ED->current_line + cc;
-            MoveText( s_ED, i, i + 1, s_ED->buffer_size - s_ED->current_line - cc - 1 );
-            s_ED->begin[ ( unsigned int ) i ] = ( char ) znak;
+            i = pEd->current_line + cc;
+            MoveText( pEd, i, i + 1, pEd->buffer_size - pEd->current_line - cc - 1 );
+            pEd->begin[ ( unsigned int ) i ] = ( char ) znak;
 
-            jj = format_line( s_ED, SOFT, 0 );
+            jj = format_line( pEd, SOFT, 0 );
 
-            cl     = s_ED->current_line;
-            ccol   = s_ED->cursor_col;
-            fcol   = s_ED->first_col;
+            cl     = pEd->current_line;
+            ccol   = pEd->cursor_col;
+            fcol   = pEd->first_col;
 
-            FormatParagraph( s_ED );
+            FormatParagraph( pEd );
 
-            s_ED->current_line = cl;
-            s_ED->cursor_col   = ccol;
-            s_ED->first_col    = fcol;
+            pEd->current_line = cl;
+            pEd->cursor_col   = ccol;
+            pEd->first_col    = fcol;
 
             if( jj )
-               SetLastLine( s_ED );
+               SetLastLine( pEd );
          }
          else  /* the cursor is located after the last character in the line */
-            jj = AppendChar( s_ED, znak, SOFT );
+            jj = AppendChar( pEd, znak, SOFT );
 
          if( !jj )
-            Right( s_ED );
+            Right( pEd );
          else
-            SetLastLine( s_ED );
+            SetLastLine( pEd );
       }
    }
    else
    {
-      if( ( long int ) cc < ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) )
+      if( ( long int ) cc < ( GetLineLength( pEd, pEd->current_line, &rdl ) ) )
       {
-         s_ED->begin[ ( unsigned int ) ( s_ED->current_line + cc ) ] = ( char ) znak;
+         pEd->begin[ ( unsigned int ) ( pEd->current_line + cc ) ] = ( char ) znak;
          jj = 0;
-         Right( s_ED );
+         Right( pEd );
       }
       else
-         if( Check_length( 1 ) )
+         if( Check_length( pEd, 1 ) )
          {
-            jj = AppendChar( s_ED, znak, SOFT );
+            jj = AppendChar( pEd, znak, SOFT );
             if( ! jj )
-               Right( s_ED );
+               Right( pEd );
             else
-               SetLastLine( s_ED );
+               SetLastLine( pEd );
          }
    }
 
    if( ! jj )
-      if( ( s_ED->cursor_col + s_ED->first_col ) > ( s_ED->right - s_ED->left ) )
+      if( ( pEd->cursor_col + pEd->first_col ) > ( pEd->right - pEd->left ) )
          jj = 1;
 
    if(jj)
    {
-      s_ED->stabil = s_ED->bottom - s_ED->top + 1;
-      s_ED->next_stabil    = s_ED->first_display;
-      s_ED->current_stabil = 0;
+      pEd->stabil = pEd->bottom - pEd->top + 1;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->current_stabil = 0;
    }
    else
    {
-      s_ED->stabil = 1;
-      s_ED->next_stabil    = s_ED->current_line;
-      s_ED->current_stabil = s_ED->cursor_row;
+      pEd->stabil = 1;
+      pEd->next_stabil    = pEd->current_line;
+      pEd->current_stabil = pEd->cursor_row;
    }
 
-   s_ED->stable = HB_FALSE;
-   s_ED->dir    = DOWN;
+   pEd->stable = HB_FALSE;
+   pEd->dir    = DOWN;
 }
 
 
 /* Insert or replace the character into the text buffer */
 HB_FUNC( ED_PUTCHAR )
 {
-   int INS, znak;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   znak = hb_parni( 1 );    /* character to paste */
-   INS  = hb_parl( 2 );     /* current INSERT state */
+   if( pEd )
+   {
+      int INS, znak;
 
-   PutChar( INS, znak );
+      znak = hb_parni( 2 );    /* character to paste */
+      INS  = hb_parl( 3 );     /* current INSERT state */
+
+      PutChar( pEd, INS, znak );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /*
-static void Tab ( int INS )
+static void Tab( PHB_EDITOR pEd, int INS )
 {
    if( INS )
    {
-      for( i = 0; i < s_ED->tab_size; i++ )
-         PutChar( HB_TRUE, 32 );
+      for( i = 0; i < pEd->tab_size; i++ )
+         PutChar( pEd, HB_TRUE, 32 );
    }
    else
    {
-      for( i = 0; i < s_ED->tab_size; i++ )
-         Right();
+      for( i = 0; i < pEd->tab_size; i++ )
+         Right( pEd );
    }
 }
 */
@@ -2338,211 +2412,233 @@ static void Tab ( int INS )
 /*
 HB_FUNC( ED_TAB )
 {
-  int INS = hb_parl( 1 );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-  Tab( INS );
+   if( pEd )
+   {
+      int INS = hb_parl( 2 );
+
+      Tab( pEd, INS );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 */
 
+static void DelLine( PHB_EDITOR pEd )
+{
+   long int tmp, j;
+
+   if( pEd->active < pEd->line_number )
+   {
+      j = Next( pEd, pEd->last_display );
+      if( j >= 0 )
+         pEd->last_display = j;
+
+      tmp = Next( pEd, pEd->current_line );
+      if( tmp < 0 )
+         tmp = 0;
+
+      pEd->stabil = pEd->bottom - pEd->top + 1 - pEd->cursor_row;
+      pEd->dir    = DOWN;
+
+      MoveText( pEd, tmp, pEd->current_line, pEd->buffer_size - pEd->current_line - 2 );
+
+      if( pEd->line_number > 0 )
+         pEd->line_number--;
+
+      pEd->next_stabil    = pEd->current_line;
+      pEd->current_stabil = pEd->cursor_row;
+      pEd->stable         = HB_FALSE;
+   }
+   else
+   {
+      pEd->begin[ ( unsigned int ) pEd->current_line + 0 ] = '\r';
+      pEd->begin[ ( unsigned int ) pEd->current_line + 1 ] = '\n';
+      pEd->begin[ ( unsigned int ) pEd->current_line + 2 ] = '\0';
+      memset( pEd->begin + ( unsigned int ) pEd->current_line + 2, '\0',
+               ( unsigned int ) ( pEd->buffer_size - strlen( pEd->begin ) ) );
+
+      pEd->last_display   = pEd->last_line;
+      pEd->stabil         = 1;
+      pEd->dir            = DOWN;
+      pEd->next_stabil    = pEd->current_line;
+      pEd->current_stabil = pEd->cursor_row;
+      pEd->stable         = HB_FALSE;
+   }
+   if( pEd->text_length == 0 )
+   {
+      pEd->begin[ 0 ] = '\r';
+      pEd->begin[ 1 ] = '\n';
+      pEd->begin[ 2 ] = '\0';
+   }
+}
 
 
 /* Delete the current line */
 HB_FUNC( ED_DELLINE )
 {
-   long int tmp, j;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   if( s_ED->active < s_ED->line_number )
-   {
-      j = Next( s_ED, s_ED->last_display );
-      if( j >= 0 )
-         s_ED->last_display = j;
-
-      tmp = Next( s_ED, s_ED->current_line );
-      if( tmp < 0 )
-         tmp = 0;
-
-      s_ED->stabil = s_ED->bottom - s_ED->top + 1 - s_ED->cursor_row;
-      s_ED->dir    = DOWN;
-
-      MoveText( s_ED, tmp, s_ED->current_line, s_ED->buffer_size - s_ED->current_line - 2 );
-
-      if( s_ED->line_number > 0 )
-         s_ED->line_number--;
-
-      s_ED->next_stabil    = s_ED->current_line;
-      s_ED->current_stabil = s_ED->cursor_row;
-      s_ED->stable         = HB_FALSE;
-
-   }
+   if( pEd )
+      DelLine( pEd );
    else
-   {
-      s_ED->begin[ ( unsigned int ) s_ED->current_line + 0 ] = '\r';
-      s_ED->begin[ ( unsigned int ) s_ED->current_line + 1 ] = '\n';
-      s_ED->begin[ ( unsigned int ) s_ED->current_line + 2 ] = '\x0';
-      memset( s_ED->begin + ( unsigned int ) s_ED->current_line + 2, '\x0',
-               ( unsigned int ) ( s_ED->buffer_size - strlen( s_ED->begin ) ) );
-
-      s_ED->last_display   = s_ED->last_line;
-      s_ED->stabil         = 1;
-      s_ED->dir            = DOWN;
-      s_ED->next_stabil    = s_ED->current_line;
-      s_ED->current_stabil = s_ED->cursor_row;
-      s_ED->stable         = HB_FALSE;
-   }
-   if( s_ED->text_length == 0 )
-   {
-      s_ED->begin[ 0 ] = '\r';
-      s_ED->begin[ 1 ] = '\n';
-      s_ED->begin[ 2 ] = '\x0';
-   }
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Delete the word on the right side of the cursor */
 HB_FUNC( ED_DELWORD )
 {
-   long int pos1, pos2, j;
-   int cc, fc, cr, rdl;
-   long int fd, ld;
-   long int l;
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   j = s_ED->current_line + s_ED->cursor_col + s_ED->first_col;
-   if( s_ED->begin[ ( unsigned int ) j ] != ' ' )
+   if( pEd )
    {
-      if( ( unsigned int ) ( s_ED->cursor_col + s_ED->first_col ) <
-          ( unsigned int ) ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ))
+      long int pos1, pos2, j;
+      int cc, fc, cr, rdl;
+      long int fd, ld;
+      long int l;
+
+      j = pEd->current_line + pEd->cursor_col + pEd->first_col;
+      if( pEd->begin[ ( unsigned int ) j ] != ' ' )
       {
-         cc = s_ED->cursor_col;
-         cr = s_ED->cursor_row;
-         fc = s_ED->first_col;
-         fd = s_ED->first_display;
-         ld = s_ED->last_display;
-         l  = s_ED->current_line;
-         NextWord();
-         pos2 = s_ED->cursor_col + s_ED->first_col;
-         PreviousWord();
-         pos1 = s_ED->cursor_col + s_ED->first_col;
-
-         s_ED->current_line  = l;
-         s_ED->cursor_col    = cc;
-         s_ED->cursor_row    = cr;
-         s_ED->first_col     = fc;
-         s_ED->first_display = fd;
-         s_ED->last_display  = ld;
-
-         if( pos2 == 0 )
-            pos2 = GetLineLength( s_ED, s_ED->current_line, &rdl );
-
-         MoveText( s_ED, s_ED->current_line + pos2, s_ED->current_line + pos1,
-                   s_ED->buffer_size - s_ED->current_line - pos2 );
-         FormatParagraph ( s_ED );
-         s_ED->stable         = HB_FALSE;
-         s_ED->next_stabil    = s_ED->first_display;
-         s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-         s_ED->dir            = DOWN;
-         s_ED->current_stabil = 0;
-      }
-      else
-      {
-         if( ( GetLineLength( s_ED, s_ED->current_line, &rdl ) ) == 0 )
+         if( ( unsigned int ) ( pEd->cursor_col + pEd->first_col ) <
+             ( unsigned int ) ( GetLineLength( pEd, pEd->current_line, &rdl ) ))
          {
-            HB_FUNC_EXEC( ED_DELLINE )
-            Home( s_ED );
+            cc = pEd->cursor_col;
+            cr = pEd->cursor_row;
+            fc = pEd->first_col;
+            fd = pEd->first_display;
+            ld = pEd->last_display;
+            l  = pEd->current_line;
+            NextWord( pEd );
+            pos2 = pEd->cursor_col + pEd->first_col;
+            PreviousWord( pEd );
+            pos1 = pEd->cursor_col + pEd->first_col;
+
+            pEd->current_line  = l;
+            pEd->cursor_col    = cc;
+            pEd->cursor_row    = cr;
+            pEd->first_col     = fc;
+            pEd->first_display = fd;
+            pEd->last_display  = ld;
+
+            if( pos2 == 0 )
+               pos2 = GetLineLength( pEd, pEd->current_line, &rdl );
+
+            MoveText( pEd, pEd->current_line + pos2, pEd->current_line + pos1,
+                      pEd->buffer_size - pEd->current_line - pos2 );
+            FormatParagraph( pEd );
+            pEd->stable         = HB_FALSE;
+            pEd->next_stabil    = pEd->first_display;
+            pEd->stabil         = pEd->bottom - pEd->top + 1;
+            pEd->dir            = DOWN;
+            pEd->current_stabil = 0;
+         }
+         else
+         {
+            if( ( GetLineLength( pEd, pEd->current_line, &rdl ) ) == 0 )
+            {
+               DelLine( pEd );
+               Home( pEd );
+            }
          }
       }
    }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Insert the CRLF characters
  */
-static void Return( int INS )
+static void Return( PHB_EDITOR pEd, int INS )
 {
    long int ii, j;
    unsigned int nEsc, nLen;
 
-   if( Check_length( 2 ) )
+   if( Check_length( pEd, 2 ) )
    {
       if( INS )
       {
          /* only if INSERT state is ON
           */
-         nLen = Clear( s_ED, s_ED->current_line, &nEsc );
+         nLen = Clear( pEd, pEd->current_line, &nEsc );
 
-         s_ED->line_number++;
+         pEd->line_number++;
 
-         j = Next( s_ED, s_ED->current_line );
+         j = Next( pEd, pEd->current_line );
          if( j < 0 )
          {
-            s_ED->last_line = s_ED->text_length;
-            s_ED->text_length += 2;
+            pEd->last_line = pEd->text_length;
+            pEd->text_length += 2;
 
-            s_ED->begin[ s_ED->text_length - 2 ] = '\r';
-            s_ED->begin[ s_ED->text_length - 1 ] = '\n';
-            s_ED->begin[ s_ED->text_length     ] = '\x0';
+            pEd->begin[ pEd->text_length - 2 ] = '\r';
+            pEd->begin[ pEd->text_length - 1 ] = '\n';
+            pEd->begin[ pEd->text_length     ] = '\0';
          }
          else
          {
-            if( ( s_ED->first_col + s_ED->cursor_col ) > nLen + 1 )
-               End( s_ED );
-            ii = s_ED->current_line + ( long int ) s_ED->first_col +
-                                      ( long int ) s_ED->cursor_col;
-            MoveText( s_ED, ii, ii + 2, s_ED->buffer_size - ii - 2 );
+            if( ( pEd->first_col + pEd->cursor_col ) > nLen + 1 )
+               End( pEd );
+            ii = pEd->current_line + ( long int ) pEd->first_col +
+                                     ( long int ) pEd->cursor_col;
+            MoveText( pEd, ii, ii + 2, pEd->buffer_size - ii - 2 );
 
-            s_ED->begin[ ( unsigned int ) ii + 0 ] = '\r';
-            s_ED->begin[ ( unsigned int ) ii + 1 ] = '\n';
-            if( s_ED->last_line == s_ED->current_line )
-               s_ED->last_line = Next( s_ED, s_ED->current_line );
+            pEd->begin[ ( unsigned int ) ii + 0 ] = '\r';
+            pEd->begin[ ( unsigned int ) ii + 1 ] = '\n';
+            if( pEd->last_line == pEd->current_line )
+               pEd->last_line = Next( pEd, pEd->current_line );
          }
 
-         if( s_ED->cursor_row < ( s_ED->bottom - s_ED->top ) )
+         if( pEd->cursor_row < ( pEd->bottom - pEd->top ) )
          {
-            j = Prev( s_ED, s_ED->last_display );
+            j = Prev( pEd, pEd->last_display );
             if( j > 0 )
-               s_ED->last_display = j;
+               pEd->last_display = j;
 
-            s_ED->next_stabil    = s_ED->current_line;
-            s_ED->stabil         = s_ED->bottom - s_ED->top + 1 - s_ED->cursor_row;
-            s_ED->current_stabil = s_ED->cursor_row;
+            pEd->next_stabil    = pEd->current_line;
+            pEd->stabil         = pEd->bottom - pEd->top + 1 - pEd->cursor_row;
+            pEd->current_stabil = pEd->cursor_row;
          }
          else
          {
-            s_ED->next_stabil    = s_ED->first_display;
-            s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-            s_ED->current_stabil = 0;
+            pEd->next_stabil    = pEd->first_display;
+            pEd->stabil         = pEd->bottom - pEd->top + 1;
+            pEd->current_stabil = 0;
          }
       }
    }
    else
    {
-      Clear( s_ED, s_ED->current_line, &nEsc );
-      j = Next( s_ED, s_ED->current_line );
-      if( j > s_ED->last_line )
+      Clear( pEd, pEd->current_line, &nEsc );
+      j = Next( pEd, pEd->current_line );
+      if( j > pEd->last_line )
       {
-         if( Check_length( 2 ) )
+         if( Check_length( pEd, 2 ) )
          {
-            s_ED->line_number++;
-            s_ED->last_line = j;
-            s_ED->begin[ ( unsigned int ) j + 0 ] = '\r';
-            s_ED->begin[ ( unsigned int ) j + 1 ] = '\n';
-            s_ED->begin[ ( unsigned int ) j + 2 ] = '\x0';
+            pEd->line_number++;
+            pEd->last_line = j;
+            pEd->begin[ ( unsigned int ) j + 0 ] = '\r';
+            pEd->begin[ ( unsigned int ) j + 1 ] = '\n';
+            pEd->begin[ ( unsigned int ) j + 2 ] = '\0';
          }
       }
    }
 
-   if( Check_length( 0 ) )
+   if( Check_length( pEd, 0 ) )
    {
-      s_ED->stable         = HB_FALSE;
-      s_ED->dir            = DOWN;
-      Down( s_ED );
-      Home( s_ED );
+      pEd->stable         = HB_FALSE;
+      pEd->dir            = DOWN;
+      Down( pEd );
+      Home( pEd );
    }
 
-   if( !s_ED->stable )
+   if( !pEd->stable )
    {
-      s_ED->next_stabil    = s_ED->first_display;
-      s_ED->stabil         = s_ED->bottom - s_ED->top + 1;
-      s_ED->current_stabil = 0;
-      s_ED->dir            = DOWN;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->current_stabil = 0;
+      pEd->dir            = DOWN;
    }
 }
 
@@ -2550,62 +2646,109 @@ static void Return( int INS )
 /* Insert the CRLF characters */
 HB_FUNC( ED_RETURN )
 {
-   int INS = hb_parl( 1 );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   Return( INS );
+   if( pEd )
+   {
+      int INS = hb_parl( 2 );
+
+      Return( pEd, INS );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Returns the current cursor row inside the editor's window */
 HB_FUNC( ED_WINROW )
 {
-   hb_retni( s_ED->cursor_row );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( pEd->cursor_row );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Returns the line number where the cursor is positioned */
 HB_FUNC( ED_ROW )
 {
-   hb_retni( ( unsigned int ) s_ED->active );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( ( unsigned int ) pEd->active );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Return the current cursor column inside the editor's window */
 HB_FUNC( ED_WINCOL )
 {
-   hb_retni( s_ED->cursor_col );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( pEd->cursor_col );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
 
 /* Returns the current cursor position inside the line */
 HB_FUNC( ED_COL )
 {
-   hb_retni( s_ED->cursor_col + s_ED->first_col + 1 );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( pEd->cursor_col + pEd->first_col + 1 );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Returns the total number of lines */
 HB_FUNC( ED_MAXLINE )
 {
-   hb_retni( ( unsigned int ) s_ED->line_number );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( ( unsigned int ) pEd->line_number );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
 
 /* Counts the total number of lines in passed editor */
 HB_FUNC( ED_LCOUNT )
 {
-   EDITOR * E = s_ETab[ hb_parni( 1 ) ];
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
 
-   hb_retni( ( unsigned int ) E->line_number );
+   if( pEd )
+      hb_retni( ( unsigned int ) pEd->line_number );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Returns if the editor is correctly displayed */
 HB_FUNC( ED_STABLE )
 {
-   hb_retl( s_ED->stable );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retl( pEd->stable );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* Returns the number of bytes stored in the text buffer */
 HB_FUNC( ED_LENGTH )
 {
-   hb_retni( ( unsigned int ) s_ED->text_length );
+   PHB_EDITOR pEd = PHB_EDITOR_par( 1 );
+
+   if( pEd )
+      hb_retni( ( unsigned int ) pEd->text_length );
+   else
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

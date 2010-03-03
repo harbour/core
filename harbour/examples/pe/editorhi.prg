@@ -23,7 +23,7 @@
 
 //  The editor structure
 //
-#define E_EDIT          1           // index returned be ED_NEW
+#define E_EDIT          1           // pointer returned be ED_NEW
 #define E_TOP           2           // position on the screen
 #define E_LEFT          3
 #define E_BOTTOM        4
@@ -33,14 +33,11 @@
 #define E_FRAME         8           // frame around the editor
 #define E_LINELEN       9           // maximal line length
 #define E_MODE          10          // editor mode (edit/view)
-#define E_CARGO         11          // cargo slot
-#define E_STRUCT_LEN    11
-
+#define E_INSERT        11          // insert state
+#define E_CARGO         12          // cargo slot
+#define E_STRUCT_LEN    12
 
 STATIC s_nESize := 4096       // default buffer size
-STATIC s_oEditor              // static variable used to speed access to the editor
-STATIC s_aEdit := {}          // the stack of used editors
-STATIC s_lInsert    //current Insert state
 
 //
 **
@@ -64,15 +61,14 @@ STATIC s_lInsert    //current Insert state
 //
 FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
                     cFrame, cTitle, cColor, nSize, nEscape )
-   LOCAL nEdit, oEdit
+   LOCAL pEdit, oEdit
 
    DEFAULT nLength TO 80
 
-   nEdit := ED_New( nLength, 4, IIFNIL(s_nESize, nSize), nEscape )
-   IF nEdit >= 0
+   pEdit := ED_New( nLength, 4, IIFNIL(s_nESize, nSize), nEscape )
+   IF ! Empty( pEdit )
       oEdit := ARRAY( E_STRUCT_LEN )
-      oEdit[E_EDIT]   := nEdit
-
+      oEdit[E_EDIT]    := pEdit
       oEdit[E_TOP]     := nTop
       oEdit[E_LEFT]    := nLeft
       oEdit[E_BOTTOM]  := nBottom
@@ -83,7 +79,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
       oEdit[E_COLOR]   := IIFNIL( "W/N,W+/N,W+/R,GR+/N,G+/N", cColor )
       oEdit[E_MODE]    := EDIT_VIEW
 
-      ED_Config( nEdit, nTop, nLeft, nBottom, nRight, 0, 0 )
+      ED_Config( pEdit, nTop, nLeft, nBottom, nRight, 0, 0 )
    ENDIF
 
    RETURN oEdit
@@ -93,17 +89,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 //
 PROCEDURE EditorKill( oEdit )
 
-   ED_Kill( oEdit[E_EDIT] )
-   MEMORY( -1 )
-
-   RETURN
-
-//---------------------------------------------------------
-//96-02-29 22:22
-//
-PROCEDURE EditorUnlock( oEdit )
-
-   ED_Unlock( oEdit[E_EDIT] )
+   oEdit[E_EDIT] := NIL
 
    RETURN
 
@@ -257,14 +243,13 @@ FUNCTION EditorNextLine( oEdit )
 // nEscape - the code of color escape character
 // lSave - specifies if edited file can be saved under a different name
 //
-FUNCTION EditorFile( xInput, cOutput, nLineLen, nHelp, ;
-                     lPrint, lConv, nEscape, lSave )
-   LOCAL nHandle, nLen, oEdit, bF2, bF8, oHelp, lSaved:=.F., lClose:=.F.
+FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
+                     lConv, nEscape, lSave )
+   LOCAL nHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL nSize
 
-   IF lSave == NIL
-      lSave := .T.
-   ENDIF
+   DEFAULT lSave TO .T.
+
    IF ISCHARACTER(xInput)
       nHandle := FOPEN( xInput )
       lClose := .T.
@@ -294,30 +279,8 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, nHelp, ;
 
    EditorCargo( oEdit, cOutput )
 
-// SAVELINE 24 TO oHelp WITH 80, ColorHelp( ,COLOR_EXTEND )
-// IF lSave
-//    DisplayHelp( 73 )     //F2-save
-//    bF2 := SETKEY( K_F2, {|oE| lSaved:=EditorSave(oE)} )
-// ENDIF
-// IF lPrint != NIL .AND. lPrint
-//    DisplayHelp( 74 )      //F8-print
-//    bF8 := SETKEY( K_F8, {|oE| EditorPrint(oE)} )
-// ENDIF
-
-   lSaved := EditorEdit( oEdit, EDIT_EDIT, .F., nHelp )
+   lSaved := EditorEdit( oEdit, EDIT_EDIT, .F. )
    EditorKill( oEdit )
-
-   IF lSave
-      SETKEY( K_F2, bF2 )
-   ENDIF
-
-//    IF lPrint != NIL .AND. lPrint
-//       SETKEY( K_F8, bF8 )
-//    ENDIF
-//    RESTLINE FROM oHelp
-
-//    FT_IDLE()
-   MEMORY(-1)
 
    RETURN lSaved
 
@@ -348,19 +311,18 @@ FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
 // lFrame - specifies if the frame around the editor should be displayed
 // nHelp - the help index into help subsystem
 //
-FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
-   LOCAL nRow := 0, nCol := 0, nKey, cLine, bKey, oBox, nCursor, nState
+FUNCTION EditorEdit( oEdit, lEdit, lFrame )
+   LOCAL nRow, nCol := 0, nKey, bKey, oBox, nCursor, nState
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL lSaveAllowed, lSaved := .F.
-//HELPSAVE( IIF(nHelp==NIL, H_EDITOR, nHelp ) )
 
    oBox := SAVEBOX( oEdit[E_TOP], oEdit[E_LEFT], ;
                     oEdit[E_BOTTOM], oEdit[E_RIGHT], ;
-                    oEdit[E_COLOR], oEdit[E_FRAME], oEdit[E_TITLE], .F. )
+                    oEdit[E_COLOR], oEdit[E_FRAME] )
 
-   s_lInsert := SET( _SET_INSERT )
+   oEdit[E_INSERT] := SET( _SET_INSERT )
 //   SayInsert()
-   nCursor := SetCursor( IIF(s_lInsert, SC_NORMAL, SC_SPECIAL1) )
+   nCursor := SetCursor( IIF(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
    IF ISLOGICAL( lEdit )
       oEdit[E_MODE] := lEdit
    ENDIF
@@ -380,12 +342,6 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
    ENDIF
    nState := oEdit[ E_RIGHT ] - 8
 
-   /* It uses static variable 'oEditor' to speed access to the editor
-      If this function is called recursively then we have to push
-      currently used editor on the stack
-   */
-   EditorPush( oEdit )
-
    /* The position of the editor can be changed (in a windowed environment)
       then it sets current position of editor.
       It also sets the current editor as the working one. This means that
@@ -395,21 +351,21 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
       (Well... this editor was created when AT-286 computers worked in
       its full glory :)
    */
-   ED_Config( s_oEditor[ E_EDIT ], nTop, nLeft, nBottom, nRight, 0, 0 )
+   ED_Config( oEdit[ E_EDIT ], nTop, nLeft, nBottom, nRight, 0, 0 )
 
    DO WHILE .T.
-      nRow := ED_Stabilize()    //displays all visible lines
+      nRow := ED_Stabilize( oEdit[ E_EDIT ] )    //displays all visible lines
       // It don't uses incremantal stabilization for performance reasons
 
-      IF nRow != ED_Row()
-         nRow := ED_Row()
-         @ s_oEditor[ E_TOP ], nState SAY STRZERO( nRow, 4 )
+      IF nRow != ED_Row( oEdit[ E_EDIT ] )
+         nRow := ED_Row( oEdit[ E_EDIT ] )
+         @ oEdit[ E_TOP ], nState SAY STRZERO( nRow, 4 )
       ENDIF
-      IF nCol != ED_Col()
-         nCol := ED_Col()
-         @ s_oEditor[ E_TOP ], nState + 5 SAY STRZERO( nCol, 3 )
+      IF nCol != ED_Col( oEdit[ E_EDIT ] )
+         nCol := ED_Col( oEdit[ E_EDIT ] )
+         @ oEdit[ E_TOP ], nState + 5 SAY STRZERO( nCol, 3 )
       ENDIF
-      SETPOS( nTop + ED_WinRow(), nLeft + ED_WinCol() )
+      SETPOS( nTop + ED_WinRow( oEdit[ E_EDIT ] ), nLeft + ED_WinCol( oEdit[ E_EDIT ] ) )
 
 //      nKey := WaitForKey()
       nKey := INKEY( 0 )
@@ -417,21 +373,21 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
       DO CASE
       CASE nKey >= 32 .AND. nKey < 256
          IF oEdit[ E_MODE ]
-            ED_PutChar( nKey, s_lInsert )
+            ED_PutChar( oEdit[ E_EDIT ], nKey, oEdit[E_INSERT] )
          ENDIF
 
       CASE nKey == K_F2 .AND. lSaveAllowed
-         lSaved := EditorSave( s_oEditor )     //save the copy of edited buffer
+         lSaved := EditorSave( oEdit )     //save the copy of edited buffer
 
-      CASE EditorMove( nKey )
+      CASE EditorMove( oEdit[ E_EDIT ], nKey )
 
       CASE nKey == K_DOWN
-         IF ! ED_Down()
+         IF ! ED_Down( oEdit[ E_EDIT ] )
             SCROLL( nTop, nLeft, nBottom, nRight, 1 )
          ENDIF
 
       CASE nKey == K_UP
-         IF ! ED_Up()
+         IF ! ED_Up( oEdit[ E_EDIT ] )
             SCROLL( nTop, nLeft, nBottom, nRight, -1 )
          ENDIF
 
@@ -441,23 +397,18 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
       OTHERWISE
          bKey := SETKEY( nKey )
          IF ISBLOCK( bKey )
-            EVAL( bKey, s_oEditor )
+            EVAL( bKey, oEdit )
          ELSE
             IF oEdit[E_MODE]
-               EditorKeys( nKey )
+               EditorKeys( oEdit, nKey )
             ENDIF
          ENDIF
       ENDCASE
    ENDDO
 
-   EditorPop()      //restore the proviously used editor
-
    SetCursor( nCursor )
    RESTBOX( oBox )
 //   HELPREST.
-
-//   FT_IDLE()
-   MEMORY(-1)
 
    RETURN lSaved
 
@@ -469,35 +420,35 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame, nHelp )
 //---------------------------------------------------------
 //03-06-93 08:35pm
 //
-STATIC PROCEDURE EditorKeys( nKey )
+STATIC PROCEDURE EditorKeys( oEdit, nKey )
    LOCAL i
 
    DO CASE
    CASE nKey == K_CTRL_Y
-      ED_DelLine()
+      ED_DelLine( oEdit[ E_EDIT ] )
 
    CASE nKey == K_CTRL_T
-      ED_DelWord()
+      ED_DelWord( oEdit[ E_EDIT ] )
 
    CASE nKey == K_DEL
-      ED_DelChar()
+      ED_DelChar( oEdit[ E_EDIT ] )
 
    CASE nKey == K_BS
-      ED_BSpace( s_lInsert )
+      ED_BSpace( oEdit[ E_EDIT ], oEdit[E_INSERT] )
 
    CASE nKey == K_RETURN
-      ED_Return( s_lInsert )
+      ED_Return( oEdit[ E_EDIT ], oEdit[E_INSERT] )
 
    CASE nKey == K_TAB
-//    ED_Tab( s_lInsert )
+//    ED_Tab( oEdit[ E_EDIT ], oEdit[E_INSERT] )
       FOR i := 1 TO 4
-         ED_PutChar( 32, s_lInsert )
+         ED_PutChar( oEdit[ E_EDIT ], 32, oEdit[E_INSERT] )
       NEXT
 
    CASE nKey == K_INS
-      s_lInsert := !s_lInsert
-      SET( _SET_INSERT, s_lInsert )
-      SetCursor( IIF(s_lInsert, SC_NORMAL, SC_SPECIAL1) )
+      oEdit[E_INSERT] := !oEdit[E_INSERT]
+      SET( _SET_INSERT, oEdit[E_INSERT] )
+      SetCursor( IIF(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
 //    SayInsert()
 
    ENDCASE
@@ -507,57 +458,32 @@ STATIC PROCEDURE EditorKeys( nKey )
 //---------------------------------------------------------
 //04-06-93 02:06am
 //
-STATIC FUNCTION EditorMove( nKey )
+STATIC FUNCTION EditorMove( pEdit, nKey )
    LOCAL lMoved := .T.
 
    DO CASE
-   CASE nKey == K_PGDN       ; ED_PgDown()
-   CASE nKey == K_PGUP       ; ED_PgUp()
-   CASE nKey == K_CTRL_PGUP  ; ED_Top()
-   CASE nKey == K_CTRL_PGDN  ; ED_Bottom()
-   CASE nKey == K_RIGHT      ; ED_Right()
-   CASE nKey == K_LEFT       ; ED_Left()
-   CASE nKey == K_HOME       ; ED_Home()
-   CASE nKey == K_CTRL_HOME  ; ED_Home()
-   CASE nKey == K_END        ; ED_End()
-   CASE nKey == K_CTRL_END   ; ED_End()
-   CASE nKey == K_CTRL_RIGHT // ; ED_NWord()        //there are some problems with it
-   CASE nKey == K_CTRL_LEFT  ; ED_PWord()
+   CASE nKey == K_PGDN       ; ED_PgDown( pEdit )
+   CASE nKey == K_PGUP       ; ED_PgUp( pEdit )
+   CASE nKey == K_CTRL_PGUP  ; ED_Top( pEdit )
+   CASE nKey == K_CTRL_PGDN  ; ED_Bottom( pEdit )
+   CASE nKey == K_RIGHT      ; ED_Right( pEdit )
+   CASE nKey == K_LEFT       ; ED_Left( pEdit )
+   CASE nKey == K_HOME       ; ED_Home( pEdit )
+   CASE nKey == K_CTRL_HOME  ; ED_Home( pEdit )
+   CASE nKey == K_END        ; ED_End( pEdit )
+   CASE nKey == K_CTRL_END   ; ED_End( pEdit )
+   CASE nKey == K_CTRL_RIGHT // ; ED_NWord( pEdit )        //there are some problems with it
+   CASE nKey == K_CTRL_LEFT  ; ED_PWord( pEdit )
    OTHERWISE                 ; lMoved := .F.
    ENDCASE
 
    RETURN lMoved
 
-
-//---------------------------------------------------------
-//03-06-93 09:11pm
-//
-STATIC PROCEDURE EditorPush( oEdit )
-
-   ED_Push()
-   AADD( s_aEdit, s_oEditor )
-   s_oEditor := oEdit
-
-   RETURN
-
-//---------------------------------------------------------
-//03-06-93 09:12pm
-//
-STATIC PROCEDURE EditorPop( )
-   LOCAL nLen
-
-   nLen := LEN( s_aEdit )
-   s_oEditor := s_aEdit[ nLen ]
-   ASIZE( s_aEdit, nLen - 1 )
-   ED_Pop()
-
-   RETURN
-
 //---------------------------------------------------------
 //03-06-93 10:23pm
 //
 STATIC FUNCTION EditorSave( oEdit )
-   LOCAL nHandle, cFile, cNew
+   LOCAL nHandle, cFile
 
    cFile := EditorCargo( oEdit )
    IF EMPTY( cFile )
@@ -567,29 +493,13 @@ STATIC FUNCTION EditorSave( oEdit )
    IF EMPTY( cFile )
       RETURN .F.
    ENDIF
-/*
-   WorkStart( 75 )
-   IF hb_FileExists( cFile )
-      cNew := FileExtension( cFile, "bak" )
-      DELETEFILE( cNew )
-      nHandle := RENAMEFILE( cFile, cNew )
-      IF nHandle < 0
-         FileError( cFile, -nHandle )
-         WorkEnd()
 
-         RETURN .F.
-      ENDIF
-   ENDIF
-*/
    nHandle := FCREATE( cFile, FC_NORMAL )
    IF nHandle > 0
       FWRITE( nHandle, EditorGetText( oEdit ) )
 
       FCLOSE( nHandle )
-// ELSE
-//    FileError( cFile, FERROR() )
    ENDIF
-// WorkEnd()
 
    RETURN nHandle > 0
 
@@ -615,16 +525,13 @@ STATIC PROCEDURE EditorPrint( oEdit )
 //---------------------------------------------------------
 *09/29/91 08:40pm
 *
-FUNCTION SaveBox( top, left, bott, right, kolor, patt, head, shadow )
+FUNCTION SaveBox( top, left, bott, right, kolor, patt )
    LOCAL cBox, cClr, nBottom, nRight
 
    IF PCOUNT() > 4
       cClr    := SETCOLOR( kolor )
       cBox    := SAVESCREEN( top, left, bott, right)
-//    cBox    := BoxShadow( top, left, bott, right, , patt, head, shadow )
       @ top, left, bott, right BOX patt
-//    nBottom := bott + 1
-//    nRight  := right + 1
    ELSE
       cClr    := SETCOLOR()
       cBox    := SAVESCREEN( top, left, bott, right )
