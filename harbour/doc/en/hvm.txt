@@ -405,33 +405,3 @@
  *      Library is rtl
  *  $END$
  */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      __DBGVMVARLGET()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Variable Management
- *  $ONELINER$
- *      Retrive a local variable from a procedure level
- *  $SYNTAX$
- *      __DBGVMVARLGET( <nProcLevel>, <nLocal> ) --> <xRetVal>
- *  $ARGUMENTS$
- *      <nProcLevel> Is the procedure level, same as used in ProcName()
- *      and ProcLine(), from which a local variable containts is going to
- *      be retrieved.
- *
- *      <nLocal> Is the index of the local variable to retrieve.
- *  $RETURNS$
- *      <xRetVal> The content of a specific local variable
- *  $DESCRIPTION$
- *      This function is used from the debugger
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Library is vm
- *  $END$
- */

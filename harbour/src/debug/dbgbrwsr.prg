@@ -131,7 +131,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 
 METHOD Configure()
    ::rowCount := ::nBottom - ::nTop + 1
-   ASize( ::aRowState, ::rowCount )
+   AFill( ASize( ::aRowState, ::rowCount ), .F. )
    ::lConfigured := .T.
    RETURN Self
 
@@ -164,8 +164,9 @@ METHOD ForceStable()
    IF !::lConfigured
       ::Configure()
    ENDIF
+   DispBegin()
    FOR nRow := 1 TO ::rowCount
-      IF Empty( ::aRowState[ nRow ] )
+      IF !::aRowState[ nRow ]
          ::GoTo( ::nFirstVisible + nRow - 1 )
          IF ::hitBottom
             hb_dispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
@@ -182,10 +183,9 @@ METHOD ForceStable()
                   ELSE
                      nClr := oCol:defColor[ nClr ]
                   ENDIF
-                  IF oCol:width == NIL
+                  nWid := oCol:width
+                  IF nWid == NIL
                      nWid := Len( xData )
-                  ELSE
-                     nWid := oCol:width
                   ENDIF
                   hb_dispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
@@ -197,6 +197,7 @@ METHOD ForceStable()
    NEXT
    ::GoTo( ::nFirstVisible + ::rowPos - 1 )
    SetPos( ::nTop + ::rowPos - 1, ::nLeft )
+   DispEnd()
    RETURN Self
 
 METHOD GoTo( nRow )

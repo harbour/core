@@ -63,6 +63,8 @@
  *    __DBGVMSTKGCOUNT()
  *    __DBGVMSTKGLIST()
  *    __DBGVMSTKLCOUNT()
+ *    __DBGVMSTKLLIST()
+ *    __DBGVMLOCALLIST()
  *    __DBGVMPARLLIST()
  * for locals:
  *    __DBGVMVARLGET()              (debugger.prg)
@@ -84,7 +86,7 @@
  *    __DBGVMVARSLEN()
  *    __DBGVMVARSGET()              (debugger.prg)
  *    __DBGVMVARSSET()              (debugger.prg)
- *    hb_dbg_vmVarSGet(int,int)     (dbgentry.c)
+ *    hb_dbg_vmVarSGet(PHB_ITEM,int)(dbgentry.c)
  * for globals (unused):
  *    __DBGVMVARGLIST()
  *    __DBGVMVARGGET()              (debugger.prg)
@@ -102,7 +104,6 @@
  *    HB_DBG_GETENTRY
  *    HB_DBG_VMQUIT
  */
-
 
 
 /* $Doc$
@@ -220,13 +221,37 @@ HB_FUNC( __DBGVMSTKLLIST )
    hb_itemReturnRelease( pReturn );
 }
 
-/* $Doc$
- * $FuncName$     <aParam> __dbgvmParLGet()
- * $Description$  Returns the passed parameters of the calling function
- * $End$ */
-               /* TODO : put bLocals / bParams      */
-               /* somewhere for declared parameters */
-               /* and locals                        */
+HB_FUNC( __DBGVMLOCALLIST )
+{
+   PHB_ITEM pArray;
+   HB_LONG lBaseOffset, lPrevOffset, lLen, l;
+   int iLevel = hb_parni( 1 ) + 1;
+
+   lBaseOffset = hb_stackBaseOffset();
+   while( --iLevel > 0 && lBaseOffset > 1 )
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
+
+   if( lBaseOffset > 1 )
+   {
+      PHB_ITEM pSymItm;
+
+      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
+      pSymItm = hb_stackItem( lPrevOffset );
+      lPrevOffset += HB_MAX( pSymItm->item.asSymbol.paramdeclcnt,
+                             pSymItm->item.asSymbol.paramcnt ) + 1;
+      lLen = lBaseOffset - lPrevOffset - 2;
+   }
+   else
+      lLen = lPrevOffset = 0;
+
+   pArray = hb_itemArrayNew( lLen );
+   for( l = 1; l <= lLen; ++l )
+      hb_itemCopyFromRef( hb_arrayGetItemPtr( pArray, l ),
+                          hb_stackItem( lPrevOffset + l ) );
+
+   hb_itemReturnRelease( pArray );
+}
+
 HB_FUNC( __DBGVMPARLLIST )
 {
    hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
