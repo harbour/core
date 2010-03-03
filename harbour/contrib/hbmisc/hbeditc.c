@@ -322,7 +322,7 @@ static void AddText( PHB_EDITOR pEd, const char * adres )
 {
    long dl, dlold;
 
-   dl    = strlen( adres );
+   dl = strlen( adres );
    dlold = pEd->text_length;
    if( dlold == 2 )
       dlold = 0;   /* if current text buffer contains CRLF only then discard it */
@@ -333,12 +333,12 @@ static void AddText( PHB_EDITOR pEd, const char * adres )
    {
       /* there is enough room in text buffer
        */
-      strcpy( pEd->begin + dlold, adres );
+      hb_strncpy( pEd->begin + dlold, adres, dl - 1 );
       pEd->text_length += dl;
    }
    else
    {
-      strncpy( pEd->begin + dlold, adres, ( int ) ( pEd->buffer_size - 10 - dlold ) );
+      hb_strncpy( pEd->begin + dlold, adres, ( int ) ( pEd->buffer_size - 10 - dlold ) - 1 );
       pEd->text_length = pEd->buffer_size - 10;
    }
 
@@ -473,7 +473,7 @@ static long InsText( PHB_EDITOR pEd, char * adres, long line )
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
-         strncpy( pEd->begin + ( unsigned int ) off, adres , ( unsigned int ) dl );
+         hb_strncpy( pEd->begin + ( unsigned int ) off, adres, ( unsigned int ) dl - 1 );
       }
       else
       {
@@ -490,7 +490,7 @@ static long InsText( PHB_EDITOR pEd, char * adres, long line )
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
-         strncpy( pEd->begin + ( unsigned int ) off, adres, ( unsigned int ) dl );
+         hb_strncpy( pEd->begin + ( unsigned int ) off, adres, ( unsigned int ) dl - 1 );
       }
 
       if( addCRLF )
@@ -736,7 +736,7 @@ HB_FUNC( ED_GETTEXT )
 
       buffer = ( char * ) hb_xgrab( ( unsigned int ) dl );
 
-      strcpy( buffer, pEd->begin );
+      hb_strncpy( buffer, pEd->begin, dl - 1 );
 
       help = buffer;
       if( mietka != SOFT )
@@ -790,8 +790,7 @@ HB_FUNC( ED_GETLINE )
          dl++;
          buffer = ( char * ) hb_xgrab( dl );
 
-         strncpy( buffer, pEd->begin + ( unsigned int ) tmp, dl - 1 );
-         buffer[ dl - 1 ] = '\0';
+         hb_strncpy( buffer, pEd->begin + ( unsigned int ) tmp, dl - 1 );
 
          hb_retc_buffer( buffer );
       }
@@ -820,8 +819,7 @@ HB_FUNC( ED_GETNEXT )
          dl++;
          buffer = ( char * ) hb_xgrab( dl );
 
-         strncpy( buffer, pEd->begin + ( unsigned int ) pEd->next_line, dl-1 );
-         buffer[ ( unsigned int ) ( dl-1 ) ] = '\0';
+         hb_strncpy( buffer, pEd->begin + ( unsigned int ) pEd->next_line, dl - 1 );
          pEd->next_line = Next( pEd, pEd->next_line );
 
          hb_retc_buffer( buffer );
@@ -989,13 +987,13 @@ HB_FUNC( ED_STABILIZE )
                   nLen -= ( i - 2 );
                   if( ( char ) adres[ i - 1 ] == pEd->escape )
                      i++, nLen--;
-                  strncpy( adres + 2, adres + i, nLen - 2 );
+                  hb_strncpy( adres + 2, adres + i, nLen - 2 - 1 );
                   nEscLen -= ( e - 2 );
                }
                else
                {
                   nLen -= pEd->first_col;
-                  strncpy( adres, adres+pEd->first_col, nLen );
+                  hb_strncpy( adres, adres+pEd->first_col, nLen - 1 );
                }
                adres[ nLen ] = '\0';
             }
@@ -1639,20 +1637,19 @@ static void End( PHB_EDITOR pEd )
       pEd->dir            = DOWN;
       pEd->current_stabil = 0;
    }
+   else if( ( ll - pEd->first_col ) > ( pEd->right - pEd->left ) )
+   {
+      /* scroll text to the right  */
+      pEd->cursor_col     = pEd->right - pEd->left;
+      pEd->first_col      = ( int ) ( ll - ( pEd->right - pEd->left ) );
+      pEd->fStable        = HB_FALSE;
+      pEd->next_stabil    = pEd->first_display;
+      pEd->stabil         = pEd->bottom - pEd->top + 1;
+      pEd->dir            = DOWN;
+      pEd->current_stabil = 0;
+   }
    else
-      if( ( ll - pEd->first_col ) > ( pEd->right - pEd->left ) )
-      {
-         /* scroll text to the right  */
-         pEd->cursor_col     = pEd->right - pEd->left;
-         pEd->first_col      = ( int ) ( ll - ( pEd->right - pEd->left ) );
-         pEd->fStable        = HB_FALSE;
-         pEd->next_stabil    = pEd->first_display;
-         pEd->stabil         = pEd->bottom - pEd->top + 1;
-         pEd->dir            = DOWN;
-         pEd->current_stabil = 0;
-      }
-      else
-         pEd->cursor_col = ll - pEd->first_col;
+      pEd->cursor_col = ll - pEd->first_col;
 }
 
 
@@ -1688,8 +1685,7 @@ static void FormatParagraph ( PHB_EDITOR pEd )
 */
    {
       dl = ( long ) GetLineLength( pEd, pEd->current_line, &rdl );
-      strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int ) ( dl + rdl + 10 ) );
-      pom[ pEd->line_length + rdl + 1 ] = '\0';
+      hb_strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int ) ( dl + rdl + 10 ) - 1 );
       tmp = strchr( pom, '\n' );
       if( tmp && ( ( unsigned char ) *( tmp - 1 ) == 141u ) )  /* soft CR */
       {
@@ -1703,7 +1699,7 @@ static void FormatParagraph ( PHB_EDITOR pEd )
 
       while( tmp )
       {
-         source   = pEd->current_line + ( long )( tmp - pom - 1 );
+         source = pEd->current_line + ( long )( tmp - pom - 1 );
          MoveText( pEd, source + 2, source + 1, pEd->buffer_size - source + 2 );
          pEd->begin[ ( unsigned int ) ( source + 1 ) ] = ' ';
 
@@ -1711,10 +1707,9 @@ static void FormatParagraph ( PHB_EDITOR pEd )
          Clear( pEd, pEd->current_line, &nEsc );
 
          pEd->current_line = Next( pEd, pEd->current_line );
-         dl  = ( long ) GetLineLength( pEd, pEd->current_line, &rdl );
-         strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int )( dl + rdl + 10 ) );
-         pom[ pEd->line_length + rdl + 1 ] = '\0';
-         tmp    = strchr( pom, '\n' );
+         dl = ( long ) GetLineLength( pEd, pEd->current_line, &rdl );
+         hb_strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line, ( int ) ( dl + rdl + 10 ) - 1 );
+         tmp = strchr( pom, '\n' );
          if( tmp && ( ( unsigned char ) * ( tmp - 1 ) == 141u ) )
          {
             tmp--;
@@ -1884,21 +1879,19 @@ static void BackSpace( PHB_EDITOR pEd, int INS )
                   pEd->last_line = Prev( pEd, pEd->last_line );
 
             /* copy the last line into temporary buffer */
-            strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line, nLen+rdl );
-            tmp[ nLen+rdl ] = '\0';
+            hb_strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line, nLen + rdl - 1 );
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
             if( ( w = strchr ( tmp, ' ') ) != 0 )
                ww = ( int ) ( w - tmp );
             else
-               ww = nLen+rdl;
+               ww = nLen + rdl;
 
             /* go to the previous line */
             j = Prev( pEd, pEd->current_line );
             kk = GetLineLength( pEd, j, &rdl );
-            strncpy( tmp1, pEd->begin + ( unsigned int ) j, ( unsigned int )( kk + rdl ) );
-            tmp1[ ( unsigned int )( kk + rdl )  ] = '\0';
+            hb_strncpy( tmp1, pEd->begin + ( unsigned int ) j, ( unsigned int ) ( kk + rdl ) - 1 );
             Up( pEd );
             End( pEd );
 
@@ -2020,9 +2013,8 @@ static void NextWord( PHB_EDITOR pEd )
    else
    {
       *tmp ='\0';
-      strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line + ccc,
-                     nLen - pEd->cursor_col - pEd->first_col );
-      tmp[ nLen - pEd->cursor_col - pEd->first_col ] = '\0';
+      hb_strncpy( tmp, pEd->begin + ( unsigned int ) pEd->current_line + ccc,
+                     ( nLen - pEd->cursor_col - pEd->first_col ) - 1 );
       if( (adr = strchr ( tmp, ' ' ) ) == NULL )
       {
          GotoNextNonEmptyLine( pEd );
@@ -2173,9 +2165,8 @@ static int format_line( PHB_EDITOR pEd, int Karetka, unsigned int LineDl )
       status = 1; /* the line will be splitted */
 
       /* copy maximum allowed bytes form the line into temporary buffer */
-      strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line,
-               ( int ) ( pEd->line_length + 10 + rdl ) );
-      pom[ ( unsigned int ) ( pEd->line_length + rdl ) ] = '\0';
+      hb_strncpy( pom, pEd->begin + ( unsigned int ) pEd->current_line,
+               ( int ) ( pEd->line_length + 10 + rdl ) - 1 );
 
       /* find the last space where the line can be splitted */
       p = strrchr( pom, ' ' );
