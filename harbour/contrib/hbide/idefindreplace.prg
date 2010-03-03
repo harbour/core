@@ -683,7 +683,6 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:q_comboExpr:setFocus()
 
    /* Attach all signals */
-   ::connect( ::oUI:oWidget, "rejected()", {|| ::execEvent( "buttonClose" ) } )
    //
    ::oUI:signal( "buttonClose"  , "clicked()"                , {| | ::execEvent( "buttonClose"      ) } )
    ::oUI:signal( "buttonFolder" , "clicked()"                , {| | ::execEvent( "buttonFolder"     ) } )
@@ -709,14 +708,6 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 
    CASE "buttonClose"
       ::oFindDock:hide()
-      #if 0
-      IF ::lInDockWindow
-         ::oFindDock:hide()
-      ELSE
-         ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
-         ::destroy()
-      ENDIF
-      #endif
       EXIT
 
    CASE "comboFind"
@@ -900,7 +891,7 @@ METHOD IdeFindInFiles:show()
 
 METHOD IdeFindInFiles:find()
    LOCAL lPrg, lC, lCpp, lH, lCh, lRc, a_
-   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, aFilter, cExt, cMask, cWrkFolder
+   LOCAL lTabs, lSubF, lSubP, cFolder, qItem, aFilter, cExt, cMask, cWrkFolder, cProjPath
    LOCAL nStart, nEnd, cSource, aDir, cProjTitle, aProjFiles
    LOCAL aOpenSrc   := {}
    LOCAL aFolderSrc := {}
@@ -977,9 +968,10 @@ METHOD IdeFindInFiles:find()
       FOR EACH cProjTitle IN aProjs
          a_:= {}
          IF !empty( aProjFiles := ::oPM:getSourcesByProjectTitle( cProjTitle ) )
+            cProjPath := ::oPM:getProjectPathFromTitle( cProjTitle )
             FOR EACH cSource IN aProjFiles
                IF hbide_isSourceOfType( cSource, aFilter )
-                  aadd( a_, cSource )
+                  aadd( a_, hbide_syncProjPath( cProjPath, hbide_stripFilter( cSource ) ) )
                ENDIF
             NEXT
          ENDIF

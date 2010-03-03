@@ -350,35 +350,53 @@ FUNCTION hbide_fetchHbiStructFromFile( cProject )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_strip3rd( s )
+   LOCAL n
+   IF ( n := at( "-3rd=", s ) ) > 0
+      RETURN substr( s, n + 5 )
+   ENDIF
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION hbide_pullHbiStruct( a_ )
-   LOCAL n, s, nPart, cKey, cVal, ss
+   LOCAL n, s, nPart, cKey, cVal, ss, c3rd
    LOCAL aPrp := { "Type", "Title", "Location", "WorkingFolder", "DestinationFolder", ;
                    "Output", "LaunchParams", "LaunchProgram", "BackupFolder" }
 
    LOCAL a1_0 := afill( array( PRJ_PRP_PRP_VRBLS ), "" )
    LOCAL a1_1 := {}
-   local a2_0 := {}
-   local a2_1 := {}
-   local a3_0 := {}
-   local a3_1 := {}
-   local a4_0 := {}
-   local a4_1 := {}
+   LOCAL a2_0 := {}
+   LOCAL a2_1 := {}
+   LOCAL a3_0 := {}
+   LOCAL a3_1 := {}
+   LOCAL a4_0 := {}
+   LOCAL a4_1 := {}
+
+   IF ascan( a_, {|e| "-3rd=[ HBIDEVERSION ]" $ e } ) == 0
+      c3rd := ""
+   ELSE
+      c3rd := "-3rd="
+   ENDIF
 
    IF .t.
       FOR EACH ss IN a_
          s := alltrim( ss )
-
          IF !empty( s )
             DO CASE
-            CASE s == "[ PROPERTIES ]"
+            CASE s == c3rd + "[ HBIDEVERSION ]"
+               nPart := 0
+            *  nPart := PRJ_PRP_VERSION
+            CASE s == c3rd + "[ PROPERTIES ]"
                nPart := PRJ_PRP_PROPERTIES
-            CASE s == "[ FLAGS ]"
+            CASE s == c3rd + "[ FLAGS ]"
                nPart := PRJ_PRP_FLAGS
-            CASE s == "[ SOURCES ]"
+            CASE s == c3rd + "[ SOURCES ]"
                nPart := PRJ_PRP_SOURCES
-            CASE s == "[ METADATA ]"
+            CASE s == c3rd + "[ METADATA ]"
                nPart := PRJ_PRP_METADATA
             OTHERWISE
+               s := hbide_strip3rd( s )
                DO CASE
                CASE nPart == PRJ_PRP_PROPERTIES
                   IF ( n := at( "=", s ) ) > 0
@@ -395,6 +413,9 @@ STATIC FUNCTION hbide_pullHbiStruct( a_ )
                   aadd( a3_0, s )
 
                CASE nPart == PRJ_PRP_METADATA
+                  IF !empty( c3rd )
+                     s := strtran( s, c3rd, "" )
+                  ENDIF
                   aadd( a4_0, s )
                   IF !( "#" == left( s,1 ) )
                      IF ( n := at( "=", s ) ) > 0
@@ -646,9 +667,14 @@ FUNCTION hbide_pathStripLastSlash( cPath )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathToOSPath( cPath )
+   LOCAL n
 
    cPath := strtran( cPath, "/" , hb_osPathSeparator() )
    cPath := strtran( cPath, "\" , hb_osPathSeparator() )
+
+   IF ( n := at( ":", cPath ) ) > 0
+      cPath := upper( substr( cPath, 1, n - 1 ) ) + substr( cPath, n )
+   ENDIF
 
    RETURN cPath
 
@@ -1270,10 +1296,6 @@ FUNCTION hbide_fetchHbpData( cHBPFileName )
 
    aParamList := hbide_HBPGetParamList( cHBPFileName )
 
-   hbide_dbg( "hbmk2 files"    ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_FILES       ), {| tmp | hbide_dbg( tmp ) } )
-   hbide_dbg( "hbmk2 options"  ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_OPTIONS     ), {| tmp | hbide_dbg( tmp ) } )
-   hbide_dbg( "hbide comments" ) ; AEval( hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_HBIDEPARAMS ), {| tmp | hbide_dbg( tmp ) } )
-
    RETURN  { hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_OPTIONS ), ;
              hbide_HBPParamListFilter( aParamList, HBIDE_HBP_PTYPE_FILES   )  }
 
@@ -1621,3 +1643,82 @@ FUNCTION hbide_isPrevParent( cRoot, cPath )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_space2amp( cStr )
+   RETURN strtran( cStr, " ", chr( 38 ) )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_amp2space( cStr )
+   RETURN strtran( cStr, chr( 38 ), " " )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_stripFilter( cSrc )
+   LOCAL n, n1
+
+   DO WHILE .t.
+      IF ( n := at( "{", cSrc ) ) == 0
+         EXIT
+      ENDIF
+      IF ( n1 := at( "}", cSrc ) ) == 0
+         EXIT
+      ENDIF
+      cSrc := substr( cSrc, 1, n - 1 ) + substr( cSrc, n1 + 1 )
+   ENDDO
+
+   RETURN cSrc
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_stripRoot( cRoot, cPath )
+   LOCAL cLRoot, cLPath, cP
+
+   IF !empty( cRoot ) .AND. ! ( right( cRoot, 1 ) $ "/\" )
+      cRoot += "/"
+   ENDIF
+
+   cLRoot := hbide_pathNormalized( cRoot, .t. )
+   cLPath := hbide_pathNormalized( cPath, .t. )
+   IF left( cLPath, len( cLRoot ) ) == cLRoot
+      cP := substr( cLPath, len( cRoot ) + 1 )
+      RETURN cP
+   ENDIF
+
+   RETURN cPath
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_syncRoot( cRoot, cPath )
+   LOCAL cPth, cFile, cExt
+   LOCAL cPathProc := hbide_pathProc( cRoot, cPath )
+
+   hb_fNameSplit( cPath, @cPth, @cFile, @cExt )
+
+//hbide_dbg( "hbide_syncRoot( cRoot, cPath )", cPathProc, hbide_pathToOSpath( cPathProc + "/" + cFile + cExt ) )
+
+   RETURN hbide_pathToOSpath( cPathProc + "/" + cFile + cExt )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_array2cmdParams( aHbp )
+   LOCAL cCmd := " "
+
+   aeval( aHbp, {|e| cCmd += e + " " } )
+
+   RETURN cCmd
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_syncProjPath( cRoot, cSource )
+
+   IF left( cSource, 1 ) $ "./\" .OR. substr( cSource, 2, 1 ) == ":"
+      RETURN cSource
+   ENDIF
+
+   IF !empty( cRoot ) .AND. ! ( right( cRoot, 1 ) $ "/\" )
+      cRoot += "/"
+   ENDIF
+
+   RETURN cRoot + cSource
+
+/*----------------------------------------------------------------------*/

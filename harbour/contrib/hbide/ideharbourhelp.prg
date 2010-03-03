@@ -219,7 +219,7 @@ METHOD IdeHarbourHelp:create( oIde )
 METHOD IdeHarbourHelp:show()
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( ::resPath + "docviewgenerator.uic", ::oDlg:oWidget ):build()
+      ::oUI := HbQtUI():new( hbide_uic( "docviewgenerator" ) ):build()
 
       ::oDocViewDock:oWidget:setWidget( ::oUI )
 
@@ -239,13 +239,11 @@ METHOD IdeHarbourHelp:show()
 
 METHOD IdeHarbourHelp:destroy()
 
-   IF empty( ::oUI )
-      RETURN Self
+   IF !empty( ::oUI )
+      ::destroyTrees()
+
+      ::oUI:destroy()
    ENDIF
-
-   ::destroyTrees()
-
-   ::oUI:destroy()
 
    RETURN Self
 
@@ -592,6 +590,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
       RETURN Self
    ENDIF
 
+   ::showApplicationCursor( Qt_BusyCursor )
+
    /* Clean Environment */
    ::destroyTrees()
    ::oUI:q_treeDoc:clear()
@@ -654,6 +654,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    ::oUI:q_treeDoc:expandItem( oRoot )
 
+   ::showApplicationCursor()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -709,20 +711,6 @@ STATIC FUNCTION hbide_buildPathFromSubs( aSubs, nUpto )
          cPath += aSubs[ i ] + "/"
       NEXT
    ENDIF
-   RETURN cPath
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_stripRoot( cRoot, cPath )
-   LOCAL cLRoot, cLPath, cP
-
-   cLRoot := hbide_pathNormalized( cRoot, .t. )
-   cLPath := hbide_pathNormalized( cPath, .t. )
-   IF left( cLPath, len( cLRoot ) ) == cLRoot
-      cP := substr( cLPath, len( cRoot ) + 1 )
-      RETURN cP
-   ENDIF
-
    RETURN cPath
 
 /*----------------------------------------------------------------------*/

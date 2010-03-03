@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'environments.ui'
 **
-** Created: Wed Feb 24 16:25:24 2010
+** Created: Mon Mar 1 13:02:17 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -15,7 +15,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QGridLayout>
-#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -23,7 +22,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolButton>
-#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -31,20 +29,17 @@ QT_BEGIN_NAMESPACE
 class Ui_FormEnvironments
 {
 public:
-    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout_2;
     QTabWidget *tabWidgetEnv;
     QWidget *tabCompilers;
-    QGridLayout *gridLayout_5;
-    QPlainTextEdit *editCompilers;
-    QHBoxLayout *horizontalLayoutHbmk2;
-    QLabel *labelPathHbmk2;
+    QGridLayout *gridLayout;
+    QLabel *labelPathMk2;
     QLineEdit *editPathMk2;
     QToolButton *buttonPathMk2;
-    QHBoxLayout *horizontalLayoutEnv;
     QLabel *labelPathEnv;
     QLineEdit *editPathEnv;
     QToolButton *buttonPathEnv;
-    QHBoxLayout *horizontalLayoutEnvButtons;
+    QPlainTextEdit *editCompilers;
     QPushButton *buttonSaveExit;
     QPushButton *buttonSave;
     QPushButton *buttonCn;
@@ -54,91 +49,76 @@ public:
         if (FormEnvironments->objectName().isEmpty())
             FormEnvironments->setObjectName(QString::fromUtf8("FormEnvironments"));
         FormEnvironments->resize(367, 519);
-        verticalLayout = new QVBoxLayout(FormEnvironments);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        gridLayout_2 = new QGridLayout(FormEnvironments);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         tabWidgetEnv = new QTabWidget(FormEnvironments);
         tabWidgetEnv->setObjectName(QString::fromUtf8("tabWidgetEnv"));
         tabCompilers = new QWidget();
         tabCompilers->setObjectName(QString::fromUtf8("tabCompilers"));
-        gridLayout_5 = new QGridLayout(tabCompilers);
-        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        editCompilers = new QPlainTextEdit(tabCompilers);
-        editCompilers->setObjectName(QString::fromUtf8("editCompilers"));
-        editCompilers->setLineWrapMode(QPlainTextEdit::NoWrap);
+        gridLayout = new QGridLayout(tabCompilers);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        labelPathMk2 = new QLabel(tabCompilers);
+        labelPathMk2->setObjectName(QString::fromUtf8("labelPathMk2"));
+        labelPathMk2->setMinimumSize(QSize(100, 0));
+        labelPathMk2->setMaximumSize(QSize(100, 16777215));
 
-        gridLayout_5->addWidget(editCompilers, 2, 1, 1, 1);
-
-        horizontalLayoutHbmk2 = new QHBoxLayout();
-        horizontalLayoutHbmk2->setObjectName(QString::fromUtf8("horizontalLayoutHbmk2"));
-        labelPathHbmk2 = new QLabel(tabCompilers);
-        labelPathHbmk2->setObjectName(QString::fromUtf8("labelPathHbmk2"));
-        labelPathHbmk2->setMinimumSize(QSize(100, 0));
-        labelPathHbmk2->setMaximumSize(QSize(100, 16777215));
-
-        horizontalLayoutHbmk2->addWidget(labelPathHbmk2);
+        gridLayout->addWidget(labelPathMk2, 0, 0, 1, 1);
 
         editPathMk2 = new QLineEdit(tabCompilers);
         editPathMk2->setObjectName(QString::fromUtf8("editPathMk2"));
 
-        horizontalLayoutHbmk2->addWidget(editPathMk2);
+        gridLayout->addWidget(editPathMk2, 0, 1, 1, 1);
 
         buttonPathMk2 = new QToolButton(tabCompilers);
         buttonPathMk2->setObjectName(QString::fromUtf8("buttonPathMk2"));
         buttonPathMk2->setMinimumSize(QSize(0, 0));
 
-        horizontalLayoutHbmk2->addWidget(buttonPathMk2);
+        gridLayout->addWidget(buttonPathMk2, 0, 2, 1, 1);
 
-
-        gridLayout_5->addLayout(horizontalLayoutHbmk2, 0, 1, 1, 1);
-
-        horizontalLayoutEnv = new QHBoxLayout();
-        horizontalLayoutEnv->setObjectName(QString::fromUtf8("horizontalLayoutEnv"));
         labelPathEnv = new QLabel(tabCompilers);
         labelPathEnv->setObjectName(QString::fromUtf8("labelPathEnv"));
         labelPathEnv->setMinimumSize(QSize(100, 0));
         labelPathEnv->setMaximumSize(QSize(100, 16777215));
 
-        horizontalLayoutEnv->addWidget(labelPathEnv);
+        gridLayout->addWidget(labelPathEnv, 1, 0, 1, 1);
 
         editPathEnv = new QLineEdit(tabCompilers);
         editPathEnv->setObjectName(QString::fromUtf8("editPathEnv"));
 
-        horizontalLayoutEnv->addWidget(editPathEnv);
+        gridLayout->addWidget(editPathEnv, 1, 1, 1, 1);
 
         buttonPathEnv = new QToolButton(tabCompilers);
         buttonPathEnv->setObjectName(QString::fromUtf8("buttonPathEnv"));
 
-        horizontalLayoutEnv->addWidget(buttonPathEnv);
+        gridLayout->addWidget(buttonPathEnv, 1, 2, 1, 1);
 
+        editCompilers = new QPlainTextEdit(tabCompilers);
+        editCompilers->setObjectName(QString::fromUtf8("editCompilers"));
+        editCompilers->setLineWrapMode(QPlainTextEdit::NoWrap);
 
-        gridLayout_5->addLayout(horizontalLayoutEnv, 1, 1, 1, 1);
+        gridLayout->addWidget(editCompilers, 2, 0, 1, 3);
 
         tabWidgetEnv->addTab(tabCompilers, QString());
 
-        verticalLayout->addWidget(tabWidgetEnv);
+        gridLayout_2->addWidget(tabWidgetEnv, 0, 0, 1, 3);
 
-        horizontalLayoutEnvButtons = new QHBoxLayout();
-        horizontalLayoutEnvButtons->setObjectName(QString::fromUtf8("horizontalLayoutEnvButtons"));
         buttonSaveExit = new QPushButton(FormEnvironments);
         buttonSaveExit->setObjectName(QString::fromUtf8("buttonSaveExit"));
 
-        horizontalLayoutEnvButtons->addWidget(buttonSaveExit);
+        gridLayout_2->addWidget(buttonSaveExit, 1, 0, 1, 1);
 
         buttonSave = new QPushButton(FormEnvironments);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
         buttonSave->setAutoDefault(false);
         buttonSave->setDefault(true);
 
-        horizontalLayoutEnvButtons->addWidget(buttonSave);
+        gridLayout_2->addWidget(buttonSave, 1, 1, 1, 1);
 
         buttonCn = new QPushButton(FormEnvironments);
         buttonCn->setObjectName(QString::fromUtf8("buttonCn"));
         buttonCn->setAutoDefault(false);
 
-        horizontalLayoutEnvButtons->addWidget(buttonCn);
-
-
-        verticalLayout->addLayout(horizontalLayoutEnvButtons);
+        gridLayout_2->addWidget(buttonCn, 1, 2, 1, 1);
 
 
         retranslateUi(FormEnvironments);
@@ -152,6 +132,10 @@ public:
     void retranslateUi(QWidget *FormEnvironments)
     {
         FormEnvironments->setWindowTitle(QApplication::translate("FormEnvironments", "Form", 0, QApplication::UnicodeUTF8));
+        labelPathMk2->setText(QApplication::translate("FormEnvironments", "Path to hbmk2", 0, QApplication::UnicodeUTF8));
+        buttonPathMk2->setText(QString());
+        labelPathEnv->setText(QApplication::translate("FormEnvironments", "Path to hbide.env", 0, QApplication::UnicodeUTF8));
+        buttonPathEnv->setText(QString());
 #ifndef QT_NO_TOOLTIP
         editCompilers->setToolTip(QApplication::translate("FormEnvironments", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -165,10 +149,6 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This opens up the possibility to experiment with different compilers without re-opening the IDE or setting up the envvars manually.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         editCompilers->setStyleSheet(QString());
-        labelPathHbmk2->setText(QApplication::translate("FormEnvironments", "Path to hbmk2", 0, QApplication::UnicodeUTF8));
-        buttonPathMk2->setText(QString());
-        labelPathEnv->setText(QApplication::translate("FormEnvironments", "Path to hbIDE.env", 0, QApplication::UnicodeUTF8));
-        buttonPathEnv->setText(QString());
         tabWidgetEnv->setTabText(tabWidgetEnv->indexOf(tabCompilers), QApplication::translate("FormEnvironments", "Environments", 0, QApplication::UnicodeUTF8));
         buttonSaveExit->setText(QApplication::translate("FormEnvironments", "Save and Exit", 0, QApplication::UnicodeUTF8));
         buttonSave->setText(QApplication::translate("FormEnvironments", "Save", 0, QApplication::UnicodeUTF8));

@@ -151,6 +151,23 @@ METHOD IdeDocks:destroy()
    LOCAL oUI := ::oIde:oSkeltnUI
    LOCAL qTBtn
 
+   ::disconnect( ::oOutputResult:oWidget  , "copyAvailable(bool)"     )
+
+   ::disconnect( ::oEnvironDock:oWidget   , "visibilityChanged(bool)" )
+   ::disconnect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)" )
+   ::disconnect( ::oThemesDock:oWidget    , "visibilityChanged(bool)" )
+   ::disconnect( ::oDocViewDock:oWidget   , "visibilityChanged(bool)" )
+   ::disconnect( ::oFindDock:oWidget      , "visibilityChanged(bool)" )
+   #if 0  /* Not Implemented */
+   ::disconnect( ::oHelpDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockED:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockB2:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
+   #endif
+
+   /* ?? */
    ::disconnect( oUI:q_buttonNew   , "clicked()" )
    ::disconnect( oUI:q_buttonRename, "clicked()" )
    ::disconnect( oUI:q_buttonDelete, "clicked()" )
@@ -168,6 +185,10 @@ METHOD IdeDocks:destroy()
    FOR EACH qTBtn IN ::aBtnLines
       ::disconnect( qTBtn, "clicked()" )
       qTBtn := NIL
+   NEXT
+
+   FOR EACH qTBtn IN ::oIde:aMarkTBtns
+      ::disconnect( qTBtn, "clicked()" )
    NEXT
 
    RETURN Self
@@ -271,7 +292,7 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == dockDocViewer_visibilityChanged
       IF p
-         ::oDocViewDock:qtObject:show()
+         ::oHL:show()
       ENDIF
 
    CASE nMode == dockProperties_visibilityChanged
@@ -281,7 +302,7 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == docEnvironments_visibilityChanged
       IF p
-         ::oPM:manageEnvironments()
+         ::oEV:show()
       ENDIF
 
    CASE nMode == dockFindInFiles_visibilityChanged
@@ -675,11 +696,6 @@ METHOD IdeDocks:buildProjectTree()
    /* Add dock widget to Main Window */
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
 
-   IF ::oIde:aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
-      ::oIde:lProjTreeVisible := .f.
-      ::oDockPT:hide()
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -717,11 +733,6 @@ METHOD IdeDocks:buildEditorTree()
 
    /* Add dock widget to Main Window */
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
-
-   IF ::oIde:aIni[ INI_HBIDE, ProjectTreeVisible ] == "NO"
-      ::oIde:lProjTreeVisible := .f.
-      ::oDockED:hide()
-   ENDIF
 
    RETURN Self
 
@@ -932,9 +943,18 @@ METHOD IdeDocks:buildDocViewer()
    ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
-   ::oDocViewDock:qtObject := ideHarbourHelp():new():create( ::oIde )
-
    ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocViewer_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildEnvironDock()
+
+   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docEnvironments_visibilityChanged, p ) } )
 
    RETURN Self
 
@@ -1146,13 +1166,3 @@ METHOD IdeDocks:toggleBottomDocks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:buildEnvironDock()
-
-   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docEnvironments_visibilityChanged, p ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/

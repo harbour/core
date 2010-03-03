@@ -248,7 +248,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
-hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
+//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
@@ -275,9 +275,9 @@ hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
             RETURN .F.
          ENDIF
       ENDIF
-hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
+//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
       oEditor:destroy()
-hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
+//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
       ::oIde:updateTitleBar()
    ENDIF
 

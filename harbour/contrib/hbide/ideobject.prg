@@ -90,6 +90,7 @@ CLASS IdeObject
    ACCESS oAC                                     INLINE ::oIde:oAC
    ACCESS oSM                                     INLINE ::oIde:oSM
    ACCESS oEV                                     INLINE ::oIde:oEV
+   ACCESS oHL                                     INLINE ::oIde:oHL
 
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
@@ -163,6 +164,7 @@ CLASS IdeObject
    ACCESS oDockB2                                 INLINE ::oIde:oDockB2
    ACCESS oOutputResult                           INLINE ::oIde:oOutputResult
    ACCESS oStackedWidget                          INLINE ::oIde:oStackedWidget
+   ACCESS oStackedWidgetMisc                      INLINE ::oIde:oStackedWidgetMisc
    ACCESS oFrame                                  INLINE ::oIde:oFrame
    ACCESS oHelpDock                               INLINE ::oIde:oHelpDock
    ACCESS oSkeltnDock                             INLINE ::oIde:oSkeltnDock
@@ -203,6 +205,7 @@ CLASS IdeObject
    METHOD manageFocusInEditor( ... )              INLINE ::oIde:manageFocusInEditor( ... )
    METHOD setCodec( ... )                         INLINE ::oIde:setCodec( ... )
    METHOD updateTitleBar( ... )                   INLINE ::oIde:updateTitleBar( ... )
+   METHOD showApplicationCursor( ... )            INLINE ::oIde:showApplicationCursor( ... )
 
    METHOD editSource( ... )                       INLINE ::oSM:editSource( ... )
    METHOD getEditorByIndex( ... )                 INLINE ::oSM:getEditorByIndex( ... )

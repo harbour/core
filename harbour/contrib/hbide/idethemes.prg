@@ -218,7 +218,10 @@ METHOD IdeThemes:create( oIde, cIniFile )
 METHOD IdeThemes:destroy()
    LOCAL qAct
 
-   IF !empty( ::oThemes )
+   IF !empty( ::oUI )
+      ::qHiliter := NIL
+      ::qEdit    := NIL
+
       FOR EACH qAct IN ::aApplyAct
          ::disconnect( qAct, "triggered(bool)" )
          qAct := NIL
@@ -226,7 +229,12 @@ METHOD IdeThemes:destroy()
       ::qMenuApply := NIL
       ::aApplyAct := NIL
 
-      ::oUI:destroy()
+      ::oThemesDock:oWidget:setWidget( QWidget():new() )
+hbide_dbg( 0,1,"IdeThemes:destroy()" )
+      IF !empty( ::oUI )
+         ::oUI:destroy()
+hbide_dbg( 1,1,"IdeThemes:destroy()" )
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -424,7 +432,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    ::setForeBackGround( qEdit, cTheme )
 
-   qHiliter := HBQSyntaxHighlighter():new()// qEdit:document() )
+   qHiliter := HBQSyntaxHighlighter():new()
 
    FOR EACH a_ IN ::aPatterns
       IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
@@ -442,14 +450,17 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:show()
+   #if 0
    LOCAL qAct
+   #endif
 
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      ::oUI := HbQtUI():new( ::oIde:resPath + "themesex.uic", ::oThemesDock:oWidget ):build()
+      //::oUI := HbQtUI():new( hbide_uic( "themesex" ), ::oThemesDock:oWidget ):build()
+      ::oUI := HbQtUI():new( hbide_uic( "themesex" ) ):build()
 
-      ::oThemesDock:qtObject := ::oUI
+      //::oThemesDock:qtObject := Self
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
       ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|i| ::nCurTheme := i+1, ::setTheme( i ) } )
@@ -466,12 +477,11 @@ METHOD IdeThemes:show()
 
       ::oUI:signal( "buttonClose"   , "clicked()"               , {||  ::oThemesDock:hide() } )
 
- *    ::oIde:setPosAndSizeByIni( ::oUI:oWidget, ThemesDialogGeometry )
-
       /* Fill Themes Dialog Values */
+      #if 0
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
       //
-      ::oUI:qObj[ "labelItem"      ]:setText( GetKeyValue( ::aControls, "labelItem"     , "Item"      ) )
+      ::oUI:qObj[ "labelItems"     ]:setText( GetKeyValue( ::aControls, "labelItems"    , "Items"     ) )
       ::oUI:qObj[ "labelTheme"     ]:setText( GetKeyValue( ::aControls, "labelTheme"    , "Theme"     ) )
       //
       ::oUI:qObj[ "checkItalic"    ]:setText( GetKeyValue( ::aControls, "checkItalic"   , "Italic"    ) )
@@ -483,7 +493,9 @@ METHOD IdeThemes:show()
       ::oUI:qObj[ "buttonSaveAs"   ]:setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
       ::oUI:qObj[ "buttonClose"    ]:setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
       ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
+      #endif
 
+      #if 0
       ::qMenuApply := QMenu():new()
       //
       qAct := QAction():new( ::qMenuApply )
@@ -502,11 +514,12 @@ METHOD IdeThemes:show()
       aadd( ::aApplyAct, qAct )
       //
       ::oUI:q_buttonApply:setMenu( ::qMenuApply )
+      #endif
 
-      aeval( ::aThemes, {|e_| ::oUI:qObj[ "comboThemes" ]:addItem( e_[ 1 ] ) } )
-      aeval( ::aItems , {|e_| ::oUI:qObj[ "comboItems"  ]:addItem( e_[ 2 ] ) } )
+      aeval( ::aThemes, {|e_| ::oUI:q_comboThemes:addItem( e_[ 1 ] ) } )
+      aeval( ::aItems , {|e_| ::oUI:q_comboItems:addItem( e_[ 2 ] ) } )
 
-      ::qEdit := ::oUI:qObj[ "plainThemeText"  ]
+      ::qEdit := ::oUI:q_plainThemeText
       ::qEdit:setPlainText( GetSource() )
       ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
       ::qEdit:setFont( ::oIde:oFont:oWidget )

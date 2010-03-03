@@ -145,8 +145,10 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTreeWidget():new( ::pParent )
+   ::oWidget:setMouseTracking( .t. )
    ::oWidget:setColumnCount( 1 )
    ::oWidget:setHeaderHidden( .t. )
+   ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
 
 
    #if 0
@@ -169,20 +171,17 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    oW:pPtr              := ::oWidget:invisibleRootItem()
    ::oRootItem:oWidget  := oW
 
-   /* Window Events */
-   ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
-
-*  ::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|p1,p2| ::exeBlock(  1, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemActivated(QTWItem)"      , {|p1,p2| ::exeBlock(  2, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemChanged(QTWItem)"        , {|p1,p2| ::exeBlock(  3, p1, p2 ) } )
-   ::connect( ::pWidget, "itemClicked(QTWItem)"        , {|p1,p2| ::exeBlock(  4, p1, p2 ) } )
-   ::connect( ::pWidget, "itemCollapsed(QTWItem)"      , {|p1,p2| ::exeBlock(  5, p1, p2 ) } )
-   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"  , {|p1,p2| ::exeBlock(  6, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemEntered(QTWItem)"        , {|p1,p2| ::exeBlock(  7, p1, p2 ) } )
-   ::connect( ::pWidget, "itemExpanded(QTWItem)"       , {|p1,p2| ::exeBlock(  8, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemPressed(QTWItem)"        , {|p1,p2| ::exeBlock(  9, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemSelectionChanged()"      , {|p1,p2| ::exeBlock( 10, p1, p2 ) } )
+*  ::connect( ::pWidget, "currentItemChanged(QTWItem)"       , {|p1,p2| ::exeBlock(  1, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemActivated(QTWItem)"            , {|p1,p2| ::exeBlock(  2, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemChanged(QTWItem)"              , {|p1,p2| ::exeBlock(  3, p1, p2 ) } )
+   ::connect( ::pWidget, "itemClicked(QTWItem)"              , {|p1,p2| ::exeBlock(  4, p1, p2 ) } )
+   ::connect( ::pWidget, "itemCollapsed(QTWItem)"            , {|p1,p2| ::exeBlock(  5, p1, p2 ) } )
+   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"        , {|p1,p2| ::exeBlock(  6, p1, p2 ) } )
+   ::connect( ::pWidget, "itemEntered(QTWItem)"              , {|p1,p2| ::exeBlock(  7, p1, p2 ) } )
+   ::connect( ::pWidget, "itemExpanded(QTWItem)"             , {|p1,p2| ::exeBlock(  8, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemPressed(QTWItem)"              , {|p1,p2| ::exeBlock(  9, p1, p2 ) } )
+*  ::connect( ::pWidget, "itemSelectionChanged()"            , {|p1,p2| ::exeBlock( 10, p1, p2 ) } )
+   ::connect( ::pWidget, "customContextMenuRequested(QPoint)", {|p1   | ::exeBlock( 21, p1     ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -208,7 +207,7 @@ METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
-   LOCAL oItem, n
+   LOCAL oItem, n, qPt
 
    HB_SYMBOL_UNUSED( nMsg )
    HB_SYMBOL_UNUSED( p1   )
@@ -237,12 +236,18 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
          eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
       ENDIF
    CASE nMsg == 7              // "itemEntered(QTWItem)"
+      ::oWidget:setToolTip( oItem:caption )
+
    CASE nMsg == 8              // "itemExpanded(QTWItem)"
       IF hb_isBlock( ::sl_itemExpanded )
          eval( ::sl_itemExpanded, oItem, {0,0,0,0}, self )
       ENDIF
    CASE nMsg == 9              // "itemPressed(QTWItem)"
    CASE nMsg == 10             // "itemSelectionChanged()"
+
+   CASE nMsg == 21             // "contextmenu"
+      qPt := QPoint():from( ::oWidget:mapToGlobal( p1 ) )
+      ::hbContextMenu( { qPt:x(), qPt:y() } )
 
    ENDCASE
 
@@ -266,8 +271,6 @@ METHOD XbpTreeView:destroy()
    ::disconnect()
 
    FOR i := len( ::aItems ) TO 1 step -1
-//      aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
-//      ::aItems[ i ]:oWidget:pPtr := NIL
       ::aItems[ i ]:destroy()
    NEXT
    ::aItems := NIL

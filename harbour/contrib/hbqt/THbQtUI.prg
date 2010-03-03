@@ -77,9 +77,13 @@ CLASS HbQtUI
    DATA     qParent
 
    DATA     pSlots
+   DATA     pEvents
    DATA     oWidget
+   DATA     cMainWidgetName
+
    DATA     qObj                                  INIT hb_hash()
    DATA     widgets                               INIT {}
+   DATA     aCommands                             INIT {}
 
    DATA     aSignals                              INIT {}
    DATA     aEvents                               INIT {}
@@ -140,40 +144,83 @@ METHOD HbQtUI:create( cFile, qParent )
 
 METHOD HbQtUI:destroy()
    LOCAL a_, i
+   //LOCAL cNam, cCmd, cWdg, n
 
    ::oWidget:hide()
 
    FOR EACH a_ IN ::aSignals
-      Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
+      i := Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
+//hbq_dbg( 300, i, "Qt_Slots_disConnect", a_[ 2 ] )
+      a_:= NIL
    NEXT
+   ::pSlots := NIL
    FOR EACH a_ IN ::aEvents
       Qt_Events_disConnect( ::pEvents, a_[ 1 ], a_[ 2 ] )
    NEXT
+   ::pEvents := NIL
+
+#if 0
+   FOR EACH a_ IN ::aCommands
+      IF a_[ 1 ] $ ::qObj
+         IF ! "splitter" $ lower( a_[ 1 ] )
+            cNam := a_[ 1 ] ; cCmd := a_[ 2 ]
+            IF ( "addWidget" $ cCmd ) .OR. ( "addWidget" $ cCmd )
+               IF ( n := at( "(o[ ", cCmd ) ) > 0
+                  cWdg := substr( cCmd, n + 5 )
+                  IF ( n := at( '"', cWdg ) ) > 0
+                     cWdg := substr( cWdg, 1, n - 1 )
+                     IF     "addWidget" $ cCmd
+   hbide_dbg( 200, cNam, cWdg )
+                        ::qObj[ cNam ]:removeWidget( ::qObj[ cWdg ] )
+                     ELSEIF "addLayout" $ cCmd
+   hbide_dbg( 205, cNam, cWdg )
+                        ::qObj[ cNam ]:removeLayout( ::qObj[ cWdg ] )
+                     ENDIF
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+#endif
 
    FOR EACH a_ IN ::widgets DESCEND
       IF ( i := a_:__enumIndex() ) > 1
-         IF type( a_[ 3 ] ) == "UI"  .AND. !( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
-hbide_dbg( "HbQtUI:destroy( 0 )", pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
-            ::qObj[ a_[ 2 ] ] := NIL
+         IF type( a_[ 3 ] ) == "UI"
+            IF !( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
+//hbq_dbg( 400, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+               ::qObj[ a_[ 2 ] ] := NIL
+            ENDIF
+         ELSEIF type( a_[ 3 ] ) != "UI"
+//hbq_dbg( 500, 0, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
          ENDIF
       ENDIF
    NEXT
 
+   #if 1
    FOR EACH a_ IN ::widgets DESCEND
-      IF a_:__enumIndex() > 1
+      IF ( i := a_:__enumIndex() ) > 1
          IF type( a_[ 3 ] ) == "UI"  .AND. ( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
-hbide_dbg( "HbQtUI:destroy( 1 )", pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
-            ::qObj[ a_[ 2 ] ] := NIL
+            IF i > 2
+//hbq_dbg( 600, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+               ::qObj[ a_[ 2 ] ] := NIL
+            ENDIF
          ENDIF
       ENDIF
    NEXT
+   #endif
 
-   ::oWidget:close()
-
-   ::oWidget  := NIL
+   ::qObj[ ::cMainWidgetName ] := NIL
+   ::widgets[ 1, 2 ] := NIL
    ::aEvents  := NIL
-   ::aSignals := NIL
 
+//hbq_dbg( 101 )
+   aeval( ::aSignals, {|e_| iif( ! empty( e_ ), hbide_dbg( e_[ 2 ] ), NIL ) } )// := NIL
+   ::oWidget:close()
+//hbq_dbg( 102 )
+   ::oWidget := NIL
+//hbq_dbg( 103 )
+   hbide_justACall( i )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -344,14 +391,14 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    IF n == 0
       RETURN Self
    ENDIF
-   s := alltrim( ::org[ n ] )
-   n := at( "*", s )
+   s     := alltrim( ::org[ n ] )
+   n     := at( "*", s )
    cMCls := alltrim( substr( s, 1, n - 1 ) )
    cMNam := alltrim( substr( s, n + 1 ) )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
    //
-   hbq_dbg( "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
+//   hbq_dbg( "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
    //                               Validator   Constructor
    aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
@@ -391,12 +438,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
             cNam := substr( s, 1, n - 1 )
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
             //
-            hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
+         *  hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
          ELSE
             cNam := s
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
             //
-            hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
+         *  hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
          ENDIF
 
       ELSEIF hbq_isObjectNameSet( s )
@@ -408,7 +455,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-         hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !empty( cText := hbq_pullText( ::org, s:__enumIndex() ) )
          n := at( "->", cText )
@@ -416,7 +463,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-         hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := at( ".", s ) ) > 0  )  /* Assignment to objects on stack */
          cNam := substr( s, 1, n - 1 )
@@ -426,7 +473,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-         hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !( left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
                      ( ( n := at( ".", s ) ) > 0  ) .AND. ;
@@ -438,7 +485,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-         hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
          cNam := substr( s, 1, n - 1 )
@@ -446,7 +493,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-         hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "= new", s ) ) > 0
          IF ( n1 := at( "*", s ) ) > 0 .AND. n1 < n
@@ -459,12 +506,14 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          n := at( "(", cCmd )
          cCls := substr( cCmd, 1, n - 1 )
          aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
-         hbq_dbg( "new      ", pad( cNam, 20 ), cCmd )
+      *  hbq_dbg( "new      ", pad( cNam, 20 ), cCmd )
 
       ENDIF
    NEXT
 
    /* Platform is ready */
+
+   ::cMainWidgetName := cMNam
 
    SWITCH cMCls
    CASE "QDialog"
@@ -481,12 +530,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
    ::qObj[ cMNam ] := ::oWidget
 
-hbq_dbg( "------------------------------------------------------------" )
+//hbq_dbg( "------------------------------------------------------------" )
    FOR EACH a_ IN ::widgets
       IF a_:__enumIndex() > 1
          IF type( a_[ 3 ] ) == "UI"
             cBlock := "{|o| " + a_[ 4 ] + "}"
-hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
+//hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
             bBlock := &( cBlock )
 
             x := eval( bBlock, ::qObj )
@@ -494,11 +543,13 @@ hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
                ::qObj[ a_[ 2 ] ] := x
             ENDIF
          ELSE
-hbq_dbg( "----------------------------", a_[ 3 ] )
+//hbq_dbg( "----------------------------", a_[ 3 ] )
          ENDIF
       ENDIF
    NEXT
-hbq_dbg( "------------------------------------------------------------" )
+//hbq_dbg( "------------------------------------------------------------" )
+
+   ::aCommands := aCommands
 
    FOR EACH a_ IN aCommands
       IF a_[ 1 ] $ ::qObj
@@ -539,7 +590,7 @@ hbq_dbg( "------------------------------------------------------------" )
 
          ELSE
             cBlock := "{|o,v| o[v]:" + cCmd + "}"
-hbq_dbg( pad( a_[ 1 ], 20 ), cBlock )
+//hbq_dbg( pad( a_[ 1 ], 20 ), cBlock )
             bBlock := &( cBlock )
             eval( bBlock, ::qObj, cNam )
 
@@ -877,4 +928,5 @@ STATIC FUNCTION hbq_getConstants()
    RETURN h_
 
 /*----------------------------------------------------------------------*/
+
 

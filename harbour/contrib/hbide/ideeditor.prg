@@ -146,6 +146,10 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD toggleSelectionMode()
    METHOD toggleLineNumbers()
 
+   METHOD getText()
+   METHOD getWord( lSelect )
+   METHOD getLine( lSelect )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -598,6 +602,39 @@ METHOD IdeEditsManager:toggleLineNumbers()
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getText()
+   LOCAL oEdit, cText := ""
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      cText := oEdit:getText()
+   ENDIF
+
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getWord( lSelect )
+   LOCAL oEdit, cText := ""
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      cText := oEdit:getWord( lSelect )
+   ENDIF
+
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getLine( lSelect )
+   LOCAL oEdit, cText := ""
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      cText := oEdit:getLine( lSelect )
+   ENDIF
+
+   RETURN cText
 
 /*----------------------------------------------------------------------*/
 
@@ -1093,7 +1130,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
-hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
+//hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
 
    ::qHiliter := NIL
 
@@ -1136,7 +1173,7 @@ hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-hbide_dbg( "IdeEditor:destroy()", 1, "-------------------------------------" )
+//hbide_dbg( "IdeEditor:destroy()", 1, "-------------------------------------" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1394,7 +1431,12 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD handleCurrentIndent()
    METHOD handlePreviousWord( lUpdatePrevWord )
    METHOD loadFuncHelp()
+   METHOD clickFuncHelp()
    METHOD toggleLineNumbers()
+
+   METHOD getWord( lSelect )
+   METHOD getLine( lSelect )
+   METHOD getText()
 
    ENDCLASS
 
@@ -1544,7 +1586,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE selectionChanged
-      hbide_dbg( "selectionChanged()" )
+      //hbide_dbg( "selectionChanged()" )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
@@ -1698,6 +1740,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
    CASE 1001
       IF p == QEvent_MouseButtonDblClick
          ::lCopyWhenDblClicked := .t.
+         ::clickFuncHelp()
       ENDIF
       EXIT
 
@@ -1867,6 +1910,60 @@ METHOD IdeEdit:caseInvert()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:getText()
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   RETURN qCursor:selectedText()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getWord( lSelect )
+   LOCAL cText
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   DEFAULT lSelect TO .F.
+
+   qCursor:select( QTextCursor_WordUnderCursor )
+   cText := qCursor:selectedText()
+
+   IF lSelect
+      ::qEdit:setTextCursor( qCursor )
+   ENDIF
+
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getLine( lSelect )
+   LOCAL cText
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   DEFAULT lSelect TO .F.
+
+   qCursor:select( QTextCursor_LineUnderCursor )
+   cText := qCursor:selectedText()
+
+   IF lSelect
+      ::qEdit:setTextCursor( qCursor )
+   ENDIF
+
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:clickFuncHelp()
+   LOCAL cWord
+
+   IF !empty( cWord := ::getWord( .f. ) )
+      IF !empty( ::oDocViewDock:qtObject )
+         ::oDocViewDock:qtObject:jumpToFunction( cWord )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:loadFuncHelp()
    LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol
 
@@ -1877,7 +1974,7 @@ METHOD IdeEdit:loadFuncHelp()
    cText      := qTextBlock:text()
    nCol       := qCursor:columnNumber()
    cWord      := hbide_getPreviousWord( cText, nCol )
-hbide_dbg( "IdeEdit:loadFuncHelp()", cWord )
+
    IF !empty( cWord )
       IF !empty( ::oDocViewDock:qtObject )
          ::oDocViewDock:qtObject:jumpToFunction( cWord )

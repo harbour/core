@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'themesex.ui'
 **
-** Created: Wed Feb 24 21:34:08 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Tue Mar 2 16:06:43 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -18,208 +18,159 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
-#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
-#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_FormThemesEx
+class Ui_FormThemes
 {
 public:
     QGridLayout *gridLayout;
-    QVBoxLayout *verticalLayout;
-    QHBoxLayout *horizontalLayout_6;
     QLabel *labelTheme;
     QComboBox *comboThemes;
-    QHBoxLayout *horizontalLayout_5;
     QPlainTextEdit *plainThemeText;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *labelItem;
+    QLabel *labelItems;
     QComboBox *comboItems;
     QPushButton *buttonColor;
-    QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer;
     QCheckBox *checkBold;
     QCheckBox *checkItalic;
     QCheckBox *checkUnderline;
     QSpacerItem *horizontalSpacer_2;
-    QHBoxLayout *horizontalLayout_2;
     QFrame *lineSep;
-    QHBoxLayout *horizontalLayout;
     QPushButton *buttonSave;
     QPushButton *buttonSaveAs;
     QPushButton *buttonCopy;
     QPushButton *buttonApply;
     QPushButton *buttonClose;
 
-    void setupUi(QWidget *FormThemesEx)
+    void setupUi(QWidget *FormThemes)
     {
-        if (FormThemesEx->objectName().isEmpty())
-            FormThemesEx->setObjectName(QString::fromUtf8("FormThemesEx"));
-        FormThemesEx->resize(437, 403);
-        gridLayout = new QGridLayout(FormThemesEx);
+        if (FormThemes->objectName().isEmpty())
+            FormThemes->setObjectName(QString::fromUtf8("FormThemes"));
+        FormThemes->resize(438, 402);
+        gridLayout = new QGridLayout(FormThemes);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(10);
-        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        labelTheme = new QLabel(FormThemesEx);
+        labelTheme = new QLabel(FormThemes);
         labelTheme->setObjectName(QString::fromUtf8("labelTheme"));
         labelTheme->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_6->addWidget(labelTheme);
+        gridLayout->addWidget(labelTheme, 0, 0, 1, 1);
 
-        comboThemes = new QComboBox(FormThemesEx);
+        comboThemes = new QComboBox(FormThemes);
         comboThemes->setObjectName(QString::fromUtf8("comboThemes"));
 
-        horizontalLayout_6->addWidget(comboThemes);
+        gridLayout->addWidget(comboThemes, 0, 1, 1, 8);
 
-
-        verticalLayout->addLayout(horizontalLayout_6);
-
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        plainThemeText = new QPlainTextEdit(FormThemesEx);
+        plainThemeText = new QPlainTextEdit(FormThemes);
         plainThemeText->setObjectName(QString::fromUtf8("plainThemeText"));
 
-        horizontalLayout_5->addWidget(plainThemeText);
+        gridLayout->addWidget(plainThemeText, 1, 0, 1, 9);
 
+        labelItems = new QLabel(FormThemes);
+        labelItems->setObjectName(QString::fromUtf8("labelItems"));
+        labelItems->setMaximumSize(QSize(40, 16777215));
 
-        verticalLayout->addLayout(horizontalLayout_5);
+        gridLayout->addWidget(labelItems, 2, 0, 1, 1);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(10);
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        labelItem = new QLabel(FormThemesEx);
-        labelItem->setObjectName(QString::fromUtf8("labelItem"));
-        labelItem->setMaximumSize(QSize(40, 16777215));
-
-        horizontalLayout_4->addWidget(labelItem);
-
-        comboItems = new QComboBox(FormThemesEx);
+        comboItems = new QComboBox(FormThemes);
         comboItems->setObjectName(QString::fromUtf8("comboItems"));
 
-        horizontalLayout_4->addWidget(comboItems);
+        gridLayout->addWidget(comboItems, 2, 1, 1, 6);
 
-        buttonColor = new QPushButton(FormThemesEx);
+        buttonColor = new QPushButton(FormThemes);
         buttonColor->setObjectName(QString::fromUtf8("buttonColor"));
         buttonColor->setMaximumSize(QSize(120, 16777215));
 
-        horizontalLayout_4->addWidget(buttonColor);
+        gridLayout->addWidget(buttonColor, 2, 7, 1, 2);
 
-
-        verticalLayout->addLayout(horizontalLayout_4);
-
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         horizontalSpacer = new QSpacerItem(50, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-        horizontalLayout_3->addItem(horizontalSpacer);
+        gridLayout->addItem(horizontalSpacer, 3, 0, 1, 1);
 
-        checkBold = new QCheckBox(FormThemesEx);
+        checkBold = new QCheckBox(FormThemes);
         checkBold->setObjectName(QString::fromUtf8("checkBold"));
 
-        horizontalLayout_3->addWidget(checkBold);
+        gridLayout->addWidget(checkBold, 3, 1, 1, 2);
 
-        checkItalic = new QCheckBox(FormThemesEx);
+        checkItalic = new QCheckBox(FormThemes);
         checkItalic->setObjectName(QString::fromUtf8("checkItalic"));
 
-        horizontalLayout_3->addWidget(checkItalic);
+        gridLayout->addWidget(checkItalic, 3, 3, 1, 2);
 
-        checkUnderline = new QCheckBox(FormThemesEx);
+        checkUnderline = new QCheckBox(FormThemes);
         checkUnderline->setObjectName(QString::fromUtf8("checkUnderline"));
 
-        horizontalLayout_3->addWidget(checkUnderline);
+        gridLayout->addWidget(checkUnderline, 3, 5, 1, 2);
 
         horizontalSpacer_2 = new QSpacerItem(120, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-        horizontalLayout_3->addItem(horizontalSpacer_2);
+        gridLayout->addItem(horizontalSpacer_2, 3, 7, 1, 2);
 
-
-        verticalLayout->addLayout(horizontalLayout_3);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        lineSep = new QFrame(FormThemesEx);
+        lineSep = new QFrame(FormThemes);
         lineSep->setObjectName(QString::fromUtf8("lineSep"));
         lineSep->setFrameShape(QFrame::HLine);
         lineSep->setFrameShadow(QFrame::Sunken);
 
-        horizontalLayout_2->addWidget(lineSep);
+        gridLayout->addWidget(lineSep, 4, 0, 1, 9);
 
-
-        verticalLayout->addLayout(horizontalLayout_2);
-
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(10);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        buttonSave = new QPushButton(FormThemesEx);
+        buttonSave = new QPushButton(FormThemes);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
 
-        horizontalLayout->addWidget(buttonSave);
+        gridLayout->addWidget(buttonSave, 5, 0, 1, 2);
 
-        buttonSaveAs = new QPushButton(FormThemesEx);
+        buttonSaveAs = new QPushButton(FormThemes);
         buttonSaveAs->setObjectName(QString::fromUtf8("buttonSaveAs"));
 
-        horizontalLayout->addWidget(buttonSaveAs);
+        gridLayout->addWidget(buttonSaveAs, 5, 2, 1, 2);
 
-        buttonCopy = new QPushButton(FormThemesEx);
+        buttonCopy = new QPushButton(FormThemes);
         buttonCopy->setObjectName(QString::fromUtf8("buttonCopy"));
 
-        horizontalLayout->addWidget(buttonCopy);
+        gridLayout->addWidget(buttonCopy, 5, 4, 1, 2);
 
-        buttonApply = new QPushButton(FormThemesEx);
+        buttonApply = new QPushButton(FormThemes);
         buttonApply->setObjectName(QString::fromUtf8("buttonApply"));
 
-        horizontalLayout->addWidget(buttonApply);
+        gridLayout->addWidget(buttonApply, 5, 6, 1, 2);
 
-        buttonClose = new QPushButton(FormThemesEx);
+        buttonClose = new QPushButton(FormThemes);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
 
-        horizontalLayout->addWidget(buttonClose);
+        gridLayout->addWidget(buttonClose, 5, 8, 1, 1);
 
 
-        verticalLayout->addLayout(horizontalLayout);
+        retranslateUi(FormThemes);
 
-        verticalLayout->setStretch(1, 1);
-
-        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
-
-
-        retranslateUi(FormThemesEx);
-
-        QMetaObject::connectSlotsByName(FormThemesEx);
+        QMetaObject::connectSlotsByName(FormThemes);
     } // setupUi
 
-    void retranslateUi(QWidget *FormThemesEx)
+    void retranslateUi(QWidget *FormThemes)
     {
-        FormThemesEx->setWindowTitle(QApplication::translate("FormThemesEx", "Form", 0, QApplication::UnicodeUTF8));
-        labelTheme->setText(QApplication::translate("FormThemesEx", "Theme", 0, QApplication::UnicodeUTF8));
-        labelItem->setText(QApplication::translate("FormThemesEx", "Item", 0, QApplication::UnicodeUTF8));
-        buttonColor->setText(QApplication::translate("FormThemesEx", "Color", 0, QApplication::UnicodeUTF8));
-        checkBold->setText(QApplication::translate("FormThemesEx", "Bold", 0, QApplication::UnicodeUTF8));
-        checkItalic->setText(QApplication::translate("FormThemesEx", "Italic", 0, QApplication::UnicodeUTF8));
-        checkUnderline->setText(QApplication::translate("FormThemesEx", "Underline", 0, QApplication::UnicodeUTF8));
-        buttonSave->setText(QApplication::translate("FormThemesEx", "Save", 0, QApplication::UnicodeUTF8));
-        buttonSaveAs->setText(QApplication::translate("FormThemesEx", "Save As", 0, QApplication::UnicodeUTF8));
-        buttonCopy->setText(QApplication::translate("FormThemesEx", "Copy", 0, QApplication::UnicodeUTF8));
-        buttonApply->setText(QApplication::translate("FormThemesEx", "Action", 0, QApplication::UnicodeUTF8));
-        buttonClose->setText(QApplication::translate("FormThemesEx", "Close", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(FormThemesEx);
+        FormThemes->setWindowTitle(QApplication::translate("FormThemes", "Form", 0, QApplication::UnicodeUTF8));
+        labelTheme->setText(QApplication::translate("FormThemes", "Theme", 0, QApplication::UnicodeUTF8));
+        labelItems->setText(QApplication::translate("FormThemes", "Items:", 0, QApplication::UnicodeUTF8));
+        buttonColor->setText(QApplication::translate("FormThemes", "Color", 0, QApplication::UnicodeUTF8));
+        checkBold->setText(QApplication::translate("FormThemes", "Bold", 0, QApplication::UnicodeUTF8));
+        checkItalic->setText(QApplication::translate("FormThemes", "Italic", 0, QApplication::UnicodeUTF8));
+        checkUnderline->setText(QApplication::translate("FormThemes", "Underline", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("FormThemes", "Save", 0, QApplication::UnicodeUTF8));
+        buttonSaveAs->setText(QApplication::translate("FormThemes", "Save As", 0, QApplication::UnicodeUTF8));
+        buttonCopy->setText(QApplication::translate("FormThemes", "Copy", 0, QApplication::UnicodeUTF8));
+        buttonApply->setText(QApplication::translate("FormThemes", "Action", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("FormThemes", "Close", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormThemes);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class FormThemesEx: public Ui_FormThemesEx {};
+    class FormThemes: public Ui_FormThemes {};
 } // namespace Ui
 
 QT_END_NAMESPACE

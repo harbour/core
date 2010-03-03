@@ -79,6 +79,8 @@
 
 #define UNU( x ) HB_SYMBOL_UNUSED( x )
 
+#define __HBIDE_DEBUG__
+
 /*----------------------------------------------------------------------*/
 
 REQUEST HB_QT
@@ -90,6 +92,11 @@ STATIC s_pathSep
 
 PROCEDURE Main( cProjIni )
    LOCAL oIde
+
+   #ifdef __HBIDE_DEBUG__
+   hb_setEnv( "HB_TR_DEBUG" , "HB_TR_ALWAYS" )
+   hb_setEnv( "HB_TR_WINOUT", "YES"          )
+   #endif
 
    /* Testing paths */
    #ifdef __TESTING_PATHS__
@@ -132,6 +139,7 @@ CLASS HbIde
    DATA   oSkeltnDock
    DATA   oSkeltnUI
    DATA   oFindDock
+   DATA   oHL
 
    DATA   oUI
 
@@ -179,6 +187,7 @@ CLASS HbIde
    DATA   oMenu
    DATA   oTBar
    DATA   oStackedWidget
+   DATA   oStackedWidgetMisc
    DATA   oFont
    DATA   oProjTree
    DATA   oEditTree
@@ -279,6 +288,15 @@ CLASS HbIde
    METHOD execEditorAction( cKey )
    METHOD execWindowsAction( cKey )
 
+   /* Methods to be evaluated as macros */
+   METHOD getWord( lSelect )
+   METHOD getLine( lSelect )
+   METHOD getText()
+   //
+   METHOD evalMacro( cString )
+   METHOD fetchAndExecMacro()
+   METHOD showApplicationCursor( nCursor )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -301,6 +319,21 @@ METHOD HbIde:new( cProjIni )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:showApplicationCursor( nCursor )
+
+   STATIC qCrs
+
+   IF empty( nCursor )
+      QApplication():restoreOverrideCursor()
+   ELSE
+      qCrs := QCursor():new( nCursor )
+      QApplication():setOverrideCursor( qCrs )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:create( cProjIni )
    #if 1
    LOCAL qPixmap, qSplash, nStart
@@ -310,6 +343,7 @@ METHOD HbIde:create( cProjIni )
    qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
    qSplash:show()
+   ::showApplicationCursor( Qt_BusyCursor )
    QApplication():processEvents()
    #endif
 
@@ -348,12 +382,15 @@ METHOD HbIde:create( cProjIni )
    /* Load IDE|User defined Themes */
    hbide_loadThemes( Self )
 
+   /* Harbour Help Object */
+   ::oHL := ideHarbourHelp():new():create( Self )
+
    /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )
    /* IDE's Main Window */
    ::oDK:buildDialog()
    /* Actions */
-   ::oAC := IdeActions():new( Self ):create()
+   ::oAC := IdeActions():new():create( Self )
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
    /* Toolbar */
@@ -425,6 +462,7 @@ METHOD HbIde:create( cProjIni )
    DO WHILE .t.
       QApplication():processEvents()
       IF seconds()-nStart > 5
+         ::showApplicationCursor()
          qSplash:close()
          qSplash := NIL
          EXIT
@@ -493,6 +531,8 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oHL:destroy()
+   ::oThemes:destroy()
    ::oFindInFiles:destroy()
    ::oFR:destroy()
    ::oPM:destroy()
@@ -592,6 +632,9 @@ METHOD HbIde:execAction( cKey )
       EXIT
    CASE "Help"
       ::oHelpDock:show()
+      EXIT
+   CASE "CommandPrompt"
+      ::fetchAndExecMacro()
       EXIT
    ENDSWITCH
 
@@ -922,6 +965,7 @@ METHOD HbIde:updateProjectTree( aPrj )
    LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent, cPath
 
    oProject := IdeProject():new( Self, aPrj )
+
    IF empty( oProject:title )
       RETURN Self
    ENDIF
@@ -966,7 +1010,6 @@ METHOD HbIde:updateProjectTree( aPrj )
    /* Reassign all children nodes */
    FOR EACH cPath IN oProject:hPaths
       oItem := oParent:addItem( cPath:__enumKey() )
-      oItem:oWidget:setTooltip( cPath:__enumKey() )
       aadd( ::aProjData, { oItem, "Path", oParent, cPath:__enumKey(), oProject:title, oProject } )
    NEXT
    /* Souces */
@@ -977,7 +1020,6 @@ METHOD HbIde:updateProjectTree( aPrj )
       IF n > 0
          oP := ::aProjData[ n, TRE_OITEM ]
          oItem := oP:addItem( oSource:file + oSource:ext )
-         oItem:oWidget:setTooltip( oSource:file + oSource:ext )
          aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
       ENDIF
    NEXT
@@ -987,7 +1029,7 @@ METHOD HbIde:updateProjectTree( aPrj )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageItemSelected( oXbpTreeItem )
-   LOCAL n, cHbi, aPrj
+   LOCAL n, cHbp, aPrj
 
    IF     oXbpTreeItem == ::oProjRoot
       n  := -1
@@ -1004,13 +1046,13 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
       aPrj := ::aProjData[ n, 5 ]
 
-      cHbi := hbide_pathToOSPath( aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-                                       aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi" )
+      cHbp := hbide_pathToOSPath( aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+                                  aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbp" )
 
-      ::oPM:loadProperties( cHbi, .f., .t., .f. )
+      ::oPM:loadProperties( cHbp, .f., .t., .f. )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
-      ::oSM:editSource( ::aProjData[ n, TRE_ORIGINAL ] )
+      ::oSM:editSource( hbide_stripFilter( ::aProjData[ n, TRE_ORIGINAL ] ) )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
       ::oEM:setSourceVisible( ::aProjData[ n, TRE_DATA ] )
@@ -1044,9 +1086,9 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n ==  0  // Source File - nothing to do
    CASE n == -2  // "Files"
    CASE n == -1  // Project Root
-      aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( , .t., .t., .t. ) } } )
+      aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( NIL, .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( , .f., .f., .t. ) } } )
+      aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( NIL, .f., .f., .t. ) } } )
       aadd( aPops, { "" } )
       //
       IF !empty( ::oEV:getNames() )
@@ -1062,7 +1104,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
       aPrj := ::aProjData[ n, TRE_DATA ]
       cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbp"
       cHbi := hbide_pathToOSPath( cHbi )
       //
       IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
@@ -1261,13 +1303,59 @@ METHOD HbIde:setCodec( cCodec )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//                       Macro Compilable Methods
+/*----------------------------------------------------------------------*/
 
-FUNCTION testPaths()
+METHOD HbIde:getWord( lSelect )
+   RETURN ::oEM:getWord( lSelect )
 
-   hbide_dbg( hbide_pathProc( "C:\dev_sources\vouch\abc.prg", "C:\harbour\contrib\hbide\projects\hbide.hbi" ) )
-   hbide_dbg( hbide_pathProc( "C:\harbour\contrib\hbide\projects\vouch\abc.prg", "C:\harbour\contrib\hbide\projects\hbide.hbi" ) )
+METHOD HbIde:getLine( lSelect )
+   RETURN ::oEM:getLine( lSelect )
 
-   RETURN NIL
+METHOD HbIde:getText()
+   RETURN ::oEM:getText()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:fetchAndExecMacro()
+   LOCAL cStr
+
+   cStr := hbide_fetchAString( ::oDlg:oWidget, "", "Macro", "Compilation" )
+   IF !empty( cStr )
+      ::evalMacro( cStr )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:evalMacro( cString )
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+   LOCAL oErr, bBlock, n, cBlock, cParam
+
+   IF ( n := at( "|", cString ) ) > 0
+      cString := substr( cString, n + 1 )
+      IF ( n := at( "|", cString ) ) == 0
+         RETURN Self
+      ENDIF
+      cParam := substr( cString, 1, n - 1 )
+      cString := substr( cString, n + 1 )
+      cBlock := "{|o," + cParam + "|" + cString + " }"
+   ELSE
+      cBlock := "{|o| " + cString + " }"
+   ENDIF
+   cBlock := strtran( cBlock, "::", "o:" )
+
+   bBlock := &( cBlock )
+
+hbide_dbg( cBlock )
+   BEGIN SEQUENCE
+      eval( bBlock, self )
+   RECOVER USING oErr
+      MsgBox( "Wrongly defined block. Syntax is |var| method_call( var ) --- " + oErr:description )
+   END SEQUENCE
+
+   ErrorBlock( bError )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/

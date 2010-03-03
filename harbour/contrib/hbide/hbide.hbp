@@ -1,19 +1,13 @@
-#
-# $Id$
-#
-
-../hbxbp/hbxbp.hbc
 
 -inc
-
--w3 -es2 -gc3
-
+-w3
+-es2
+-gc3
 -ohbide
-
-# Trick to make QT 4.6 link using default Harbour build
 -ldflag={msvc}-nodefaultlib:msvcrt.lib
 -ldflag={msvc}-defaultlib:libcmt.lib
-
+ 
+../hbxbp/hbxbp.hbc
 hbide.prg
 ideobject.prg
 idestylesheets.prg
@@ -29,5 +23,8 @@ idethemes.prg
 ideprojmanager.prg
 idesources.prg
 ideharbourhelp.prg
+ideenviron.prg
 
 ideparseexpr.c
+
+ 
