@@ -43,7 +43,7 @@
       #define __ST__
    #endif
    /* Clipper does not have function to extract process time */
-   #xtranslate hb_secondsCPU() => seconds()
+   #xtranslate hb_secondsCPU([<x>]) => seconds()
 #endif
 
 #ifdef FlagShip
@@ -52,7 +52,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #xtranslate hb_secondsCPU([<x>]) => secondsCPU([<x>])
+   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
    /* the FlagShip version of seconds() returns integer values */
    #xtranslate seconds() => fs_seconds()
 #endif
@@ -60,7 +60,7 @@
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
    /* Has xBase++ function to extract process time? */
-   #xtranslate hb_secondsCPU() => seconds()
+   #xtranslate hb_secondsCPU([<x>]) => seconds()
 #endif
 
 #ifdef __CLIP__
@@ -69,6 +69,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
+   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
 #endif
 
 #ifdef __XHARBOUR__
@@ -85,6 +86,7 @@
          #endif
       #endif
    #endif
+   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
 #endif
 
 /* by default create MT version */
@@ -107,32 +109,32 @@
    #endif
 #endif
 
-#xcommand TEST <testfunc>           ;
-          [ WITH <locals,...> ]     ;
-          [ STATIC <statics,...> ]  ;
-          [ FIELD  <fields,...> ]   ;
-          [ MEMVAR <memvars,...> ]  ;
-          [ PRIVATE <privates,...> ];
-          [ PUBLIC <publics,...> ]  ;
-          [ INIT <init> ]           ;
-          [ EXIT <exit> ]           ;
-          [ INFO <info> ]           ;
-          CODE [ <testExp,...> ] => ;
-   func <testfunc> ;                ;
-      local time, i:=nil, x:=nil ;  ;
-      [ local <locals> ; ]          ;
-      [ static <statics> ; ]        ;
-      [ field <fields> ; ]          ;
-      [ memvar <memvars> ; ]        ;
-      [ private <privates> ; ]      ;
-      [ public <publics> ; ]        ;
-      [ <init> ; ]                  ;
-      time := hb_secondsCPU() ;     ;
-      for i:=1 to N_LOOPS ;         ;
-         [ ( <testExp> ) ; ]        ;
-      next ;                        ;
-      time := hb_secondsCPU() - time ; ;
-      [ <exit> ; ]                  ;
+#xcommand TEST <testfunc>                 ;
+          [ WITH <locals,...> ]           ;
+          [ STATIC <statics,...> ]        ;
+          [ FIELD  <fields,...> ]         ;
+          [ MEMVAR <memvars,...> ]        ;
+          [ PRIVATE <privates,...> ]      ;
+          [ PUBLIC <publics,...> ]        ;
+          [ INIT <init> ]                 ;
+          [ EXIT <exit> ]                 ;
+          [ INFO <info> ]                 ;
+          CODE [ <testExp,...> ] =>       ;
+   func <testfunc> ;                      ;
+      local time, i:=nil, x:=nil ;        ;
+      [ local <locals> ; ]                ;
+      [ static <statics> ; ]              ;
+      [ field <fields> ; ]                ;
+      [ memvar <memvars> ; ]              ;
+      [ private <privates> ; ]            ;
+      [ public <publics> ; ]              ;
+      [ <init> ; ]                        ;
+      time := hb_secondsCPU() ;           ;
+      for i:=1 to N_LOOPS ;               ;
+         [ ( <testExp> ) ; ]              ;
+      next ;                              ;
+      time := hb_secondsCPU() - time ;    ;
+      [ <exit> ; ]                        ;
    return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
 STATIC s_lStdOut := .F.

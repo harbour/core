@@ -112,6 +112,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
 
    extern void          hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount );
 
+   extern void          hb_vmEval( HB_USHORT uiParams );
 #endif
 
 extern void hb_vmSetExceptionHandler( void );

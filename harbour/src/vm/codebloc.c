@@ -293,29 +293,13 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen )
    return pCBlock;
 }
 
-/* Evaluate passed codeblock
- * Before evaluation we have to switch to a static variable base that
- * was defined when the codeblock was created.
- * (The codeblock can only see the static variables defined in a module
- * where the codeblock was created)
- */
-void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
-{
-   HB_STACK_TLS_PRELOAD
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
-
-   hb_stackSetStaticsBase( pItem->item.asBlock.value->pStatics );
-   hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
-}
-
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, HB_LONG iItemPos )
+PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetVar(%p, %ld)", pItem, iItemPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetVar(%p, %d)", pItem, iItemPos));
 
    /* local variables accessed in a codeblock are always stored as reference */
    return hb_itemUnRef( pCBlock->pLocals - iItemPos );
@@ -323,9 +307,9 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, HB_LONG iItemPos )
 
 /* Get local variable passed by reference
  */
-PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, HB_LONG iItemPos )
+PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %ld)", pCBlock, iItemPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %d)", pCBlock, iItemPos));
 
    return pCBlock->pLocals - iItemPos;
 }

@@ -5557,11 +5557,13 @@ static void hb_vmPushVParams( void )
 {
    HB_STACK_TLS_PRELOAD
    int iPCount, iFirst, i = 0;
+   PHB_ITEM pBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushVParams()"));
 
-   iFirst = hb_stackBaseItem()->item.asSymbol.paramdeclcnt;
-   iPCount = hb_pcount();
+   pBase = hb_stackBaseItem();
+   iFirst = pBase->item.asSymbol.paramdeclcnt;
+   iPCount = pBase->item.asSymbol.paramcnt;
    while( ++iFirst <= iPCount )
    {
       hb_vmPush( hb_stackItemFromBase( iFirst ) );
@@ -5953,35 +5955,71 @@ static void hb_vmPushObjectVarRef( void )
    hb_stackPushReturn();
 }
 
+void hb_vmEval( HB_USHORT uiParams )
+{
+   HB_STACK_TLS_PRELOAD
+   HB_STACK_STATE sStackState;
+#ifndef HB_NO_PROFILER
+   HB_ULONG ulClock = 0;
+   HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
+#endif
+
+   HB_TASK_SHEDULER
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEval(%hu)", uiParams));
+
+#ifndef HB_NO_PROFILER
+   if( bProfiler )
+      ulClock = ( HB_ULONG ) clock();
+#endif
+
+   hb_stackNewFrame( &sStackState, uiParams );
+
+   hb_vmDoBlock();
+
+#ifndef HB_NO_PROFILER
+   if( bProfiler )
+      hb_mthAddTime( clock() - ulClock );
+#endif
+
+#ifndef HB_NO_DEBUG
+   if( sStackState.fDebugging )
+      hb_vmDebuggerEndProc();
+#endif
+
+   hb_stackOldFrame( &sStackState );
+}
+
 static HARBOUR hb_vmDoBlock( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pBlock;
+   PHB_ITEM pBlock, pBase;
    int iParam;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDoBlock()"));
 
    pBlock = hb_stackSelfItem();
-
    if( ! HB_IS_BLOCK( pBlock ) )
       hb_errInternal( HB_EI_VMNOTCBLOCK, NULL, "hb_vmDoBlock()", NULL );
 
-   /* Check for valid count of parameters */
-   iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
-   hb_stackBaseItem()->item.asSymbol.paramdeclcnt =
-               pBlock->item.asBlock.paramcnt;
+   pBase = hb_stackBaseItem();
 
+   /* set number of declared parameters */
+   pBase->item.asSymbol.paramdeclcnt = pBlock->item.asBlock.paramcnt;
+   /* set the current line number to a line where the codeblock was defined */
+   pBase->item.asSymbol.stackstate->uiLineNo = pBlock->item.asBlock.lineno;
+   /* set execution context for OOP scope */
+   pBase->item.asSymbol.stackstate->uiClass  = pBlock->item.asBlock.hclass;
+   pBase->item.asSymbol.stackstate->uiMethod = pBlock->item.asBlock.method;
    /* add missing parameters */
+   iParam = pBlock->item.asBlock.paramcnt - pBase->item.asSymbol.paramcnt;
    while( --iParam >= 0 )
-      hb_vmPushNil();
+      hb_stackAllocItem()->type = HB_IT_NIL;
+   /* set static base offset */
+   hb_stackSetStaticsBase( pBlock->item.asBlock.value->pStatics );
 
-   /* set the current line number to a line where the codeblock was defined
-    */
-   hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = pBlock->item.asBlock.lineno;
-   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass  = pBlock->item.asBlock.hclass;
-   hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod = pBlock->item.asBlock.method;
-
-   hb_codeblockEvaluate( pBlock );
+   hb_vmExecute( pBlock->item.asBlock.value->pCode,
+                 pBlock->item.asBlock.value->pSymbols );
 }
 
 /* Evaluates a passed codeblock item with no arguments passed to a codeblock
@@ -6953,7 +6991,7 @@ static void hb_vmPushLocal( int iLocal )
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( HB_LONG ) iLocal );
+      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, iLocal );
    }
 
    hb_itemCopy( hb_stackAllocItem(),
@@ -9093,7 +9131,7 @@ static PHB_ITEM hb_xvmLocalPtr( int iLocal )
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( HB_LONG ) iLocal );
+      return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, iLocal );
    }
 }
 

@@ -112,7 +112,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p)", pMacro));
 
    /* initialize the output (pcode) buffer - it will be filled by yacc */
-   pMacro->pCodeInfo = (HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
+   pMacro->pCodeInfo = &pMacro->pCodeInfoBuffer;
    pMacro->pCodeInfo->lPCodeSize = HB_PCODE_SIZE;
    pMacro->pCodeInfo->lPCodePos  = 0;
    pMacro->pCodeInfo->fVParams   = HB_FALSE;
@@ -140,8 +140,7 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
 
-   hb_xfree( (void *) pMacro->pCodeInfo->pCode );
-   hb_xfree( (void *) pMacro->pCodeInfo );
+   hb_xfree( ( void * ) pMacro->pCodeInfo->pCode );
    if( pMacro->pError )
       hb_errRelease( pMacro->pError );
    if( pMacro->Flags & HB_MACRO_DEALLOCATE )
@@ -1639,17 +1638,16 @@ void hb_macroCodeBlockStart( HB_COMP_DECL )
 
    pCB = ( HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
 
-   /* replace current pcode buffer with the new one
-    */
-   pCB->pPrev = HB_PCODE_DATA;
-   HB_PCODE_DATA = pCB;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockStart.(%p)", HB_COMP_PARAM));
    pCB->pCode = ( HB_BYTE * ) hb_xgrab( HB_PCODE_SIZE );
    pCB->lPCodeSize = HB_PCODE_SIZE;
    pCB->lPCodePos  = 0;
    pCB->fVParams   = HB_FALSE;
    pCB->pLocals    = NULL;
+
+   /* replace current pcode buffer with the new one
+    */
+   pCB->pPrev = HB_PCODE_DATA;
+   HB_PCODE_DATA = pCB;
 }
 
 void hb_macroCodeBlockEnd( HB_COMP_DECL )

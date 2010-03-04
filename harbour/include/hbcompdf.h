@@ -649,8 +649,8 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
    HB_ULONG lPCodeSize;    /* total memory size for pcode */
    HB_ULONG lPCodePos;     /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
-   struct HB_PCODE_INFO_ * pPrev;
    HB_CBVAR_PTR pLocals;
+   struct HB_PCODE_INFO_ * pPrev;
 } HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
 
 typedef struct HB_MACRO_      /* a macro compiled pcode container */
@@ -673,6 +673,7 @@ typedef struct HB_MACRO_      /* a macro compiled pcode container */
    int      exprType;         /* type of successfully compiled expression */
    HB_USHORT uiListElements;  /* number of elements in macro list expression */
    HB_USHORT uiNameLen;       /* the maximum symbol name length */
+   HB_PCODE_INFO pCodeInfoBuffer;
 } HB_MACRO;
 
 #else

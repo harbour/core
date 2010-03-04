@@ -1845,7 +1845,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
          {
             /* local variable referenced in a codeblock */
             pItem = hb_codeblockGetRef( pItem->item.asRefer.BasePtr.block,
-                                        pItem->item.asRefer.value );
+                                        ( int ) pItem->item.asRefer.value );
          }
       }
    }

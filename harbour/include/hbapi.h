@@ -1011,9 +1011,8 @@ extern HB_EXPORT HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInsta
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
 extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, HB_USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE ulLen ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen );
-extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, HB_LONG iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, HB_LONG iItemPos ); /* get local variable passed by reference */
-extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
+extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos ); /* get local variable referenced in a codeblock */
+extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos ); /* get local variable passed by reference */
 
 /* memvars subsystem */
 extern void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */

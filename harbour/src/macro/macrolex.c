@@ -59,12 +59,12 @@
 
 typedef struct _HB_MACRO_LEX
 {
-   char *   pString;
-   char *   pDst;
-   HB_SIZE  ulLen;
-   HB_SIZE  ulSrc;
-   HB_BOOL  quote;
-   char     pBuffer[ 2 ];
+   const char *   pString;
+   char *         pDst;
+   HB_SIZE        ulLen;
+   HB_SIZE        ulSrc;
+   HB_BOOL        quote;
+   char           pBuffer[ 2 ];
 }
 HB_MACRO_LEX, * PHB_MACRO_LEX;
 
