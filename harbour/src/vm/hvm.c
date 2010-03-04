@@ -5957,7 +5957,6 @@ static void hb_vmPushObjectVarRef( void )
 
 void hb_vmEval( HB_USHORT uiParams )
 {
-   HB_STACK_TLS_PRELOAD
    HB_STACK_STATE sStackState;
 #ifndef HB_NO_PROFILER
    HB_ULONG ulClock = 0;
