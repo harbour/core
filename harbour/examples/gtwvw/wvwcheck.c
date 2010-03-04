@@ -463,6 +463,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
 
 HB_FUNC( WVW_PGCREATE)
 {
+   HANDLE hInstance = NULL;
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND hWndParent = pWindowData->hWnd;
@@ -523,6 +524,8 @@ HB_FUNC( WVW_PGCREATE)
       iStyle = iStyle | PBS_SMOOTH;
    }
 
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
    hWndPG = CreateWindowEx(
        0L,
        PROGRESS_CLASS,
@@ -534,7 +537,7 @@ HB_FUNC( WVW_PGCREATE)
        iBottom-iTop+1,
        hWndParent,
        (HMENU) uiPGid,
-       (HINSTANCE) hb_hInstance,
+       (HINSTANCE) hInstance,
        (LPVOID) NULL
    );
 

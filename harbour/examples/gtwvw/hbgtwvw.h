@@ -625,8 +625,6 @@ typedef struct wvw_data
    #define HB_PARHANDLE( n )        ( ( LONG ) hb_parnl( n ) )
    #define HB_STOREHANDLE( h, n )   hb_stornl( ( LONG ) ( h ), n )
 HB_EXTERN_BEGIN
-extern HANDLE  hb_hInstance;
-extern HANDLE  hb_hPrevInstance;
 
 /* Get functions for internal Data */
 extern BOOL hb_gt_wvw_GetMainCoordMode( void );
