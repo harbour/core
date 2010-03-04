@@ -131,12 +131,12 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
+   DEFAULT nTimeout TO 0
+
    /* Clipper returns 0 even if a port is not open */
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
-
-   DEFAULT nTimeout TO 0
 
    IF nTimeout > 0
       tp_flush( nPort, nTimeout )
@@ -276,12 +276,10 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    FetchChars( nPort )
 
-   nTimeOut *= 1000
-
-   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
+   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
    DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
-            ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
+            ( nTimeout < 0 .OR. Seconds() < nDone )
 
       IF ! tp_idle()
          FetchChars( nPort )
@@ -315,13 +313,11 @@ FUNCTION tp_send( nPort, cString, nTimeout )
       RETURN 0
    ENDIF
 
-   nTimeOut *= 1000
-
-   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0)
+   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0)
    nTotWritten := 0
 
    DO WHILE nTotWritten < Len( cString ) .AND. ;
-         ( nTimeout < 0 .OR. hb_milliSeconds() <= nDone )
+         ( nTimeout < 0 .OR. Seconds() <= nDone )
 
       nWritten := __tp_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
@@ -379,11 +375,9 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       RETURN ""
    ENDIF
 
-   nTimeOut *= 1000
+   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
-
-   DO WHILE ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
+   DO WHILE ( nTimeout < 0 .OR. Seconds() < nDone )
 
       IF Len( cDelim ) == 1
 
@@ -649,7 +643,7 @@ FUNCTION tp_iscts( nPort )
 //     I'll wait as long as it takes to drain the port.
 FUNCTION tp_flush( nPort, nTimeout )
 
-   //LOCAL nStart := hb_milliSeconds()
+   //LOCAL nStart := Seconds()
    LOCAL nRes
 
    DEFAULT nTimeout TO 0
@@ -662,9 +656,8 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    // Sleep rest of timeout
    /*
-   nTimeOut *= 1000
-   IF nTimeout > 0 .AND. hb_milliSeconds() - nStart < nTimeout
-      hb_idleSleep( nTimeout - ( hb_milliSeconds() - nStart ) )
+   IF nTimeout > 0 .AND. Seconds() - nStart < nTimeout
+      hb_idleSleep( nTimeout - ( Seconds() - nStart ) )
    ENDIF
    */
 
@@ -688,12 +681,10 @@ FUNCTION tp_flush( nPort, nTimeout )
       nTimeout := 1800
    ENDIF
 
-   nTimeOut *= 1000
-
-   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
+   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
    DO WHILE tp_OutFree( nPort ) > 0 .AND. ;
-         ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
+         ( nTimeout < 0 .OR. Seconds() < nDone )
       hb_IdleState()
    ENDDO
 
