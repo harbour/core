@@ -65,6 +65,7 @@ do
             fi
             [ "$1" = "pgsql" ] && NEED_RPM="${NEED_RPM} postgresql-devel"
             [ "$1" = "firebird" ] && NEED_RPM="${NEED_RPM} firebird-devel"
+            [ "$1" = "freeimage" ] && NEED_RPM="${NEED_RPM} freeimage-devel"
             [ "$1" = "allegro" ] && NEED_RPM="${NEED_RPM} allegro-devel"
             [ "$1" = "qt" ] && NEED_RPM="${NEED_RPM} libqt4-devel"
         fi

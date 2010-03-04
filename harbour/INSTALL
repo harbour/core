@@ -225,7 +225,7 @@ HARBOUR
          --with cairo       - build components dependent on cairo (hbcairo)
          --with curl        - build components dependent on libcurl (hbcurl)
          --with firebird    - build components dependent on firebird (hbfbird, sddfb)
-         --with freeimage   - build components dependent on freeimage (hbfimage) [TOFIX]
+         --with freeimage   - build components dependent on freeimage (hbfimage)
          --with gd          - build components dependent on gd (hbgd)
          --with mysql       - build components dependent on mysql (hbmysql, sddmy)
          --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
@@ -1197,7 +1197,7 @@ HARBOUR
    x win    -> wce/msvcmips  mips  (not supported yet)
    x win    -> wce/msvcsh    sh    (not supported yet)
    x win    -> wce/msvc      x86   (not supported yet)
-   x win    -> dos/djgpp     x86   (on Windows x86 only)
+   x win    -> dos/djgpp     x86   (on Windows x86 hosts only)
    x win    -> dos/watcom    x86
    x win    -> os2/watcom    x86
    x win    -> linux/watcom  x86

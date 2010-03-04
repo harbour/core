@@ -48,6 +48,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -71,9 +72,9 @@
 
 /*----------------------------------------------------------------------*/
 
-static int ide_linearfind( const char ** array, const char * pszText, int lenarray, int lentext, HB_BOOL bMatchCase )
+static HB_ISIZ ide_linearfind( const char ** array, const char * pszText, HB_ISIZ lenarray, HB_ISIZ lentext, HB_BOOL bMatchCase )
 {
-   int i;
+   HB_ISIZ i;
 
    if( bMatchCase )
    {
@@ -92,6 +93,7 @@ static int ide_linearfind( const char ** array, const char * pszText, int lenarr
       }
 
    }
+
    return 0;
 }
 
@@ -99,7 +101,7 @@ static int ide_linearfind( const char ** array, const char * pszText, int lenarr
 
 static HB_BOOL ide_strempty( const char * pszString )
 {
-   int i = 0;
+   HB_ISIZ i = 0;
 
    while( pszString[ i ] != 0 )
    {
@@ -112,12 +114,12 @@ static HB_BOOL ide_strempty( const char * pszString )
 
 /*----------------------------------------------------------------------*/
 
-static int ide_atbuff( const char * pszChars, const char * pszString, int StartFrom, int Target, int len_chars, int len )
+static HB_ISIZ ide_atbuff( const char * pszChars, const char * pszString, HB_ISIZ StartFrom, HB_ISIZ Target, HB_ISIZ len_chars, HB_ISIZ len )
 {
    if( len >= len_chars && StartFrom <= len - len_chars )
    {
-      int x;
-      int counter = 0;
+      HB_ISIZ x;
+      HB_ISIZ counter = 0;
 
       for( x = StartFrom; x <= ( len - len_chars ); x++ )
       {
@@ -134,19 +136,19 @@ static int ide_atbuff( const char * pszChars, const char * pszString, int StartF
 
 /*----------------------------------------------------------------------*/
 
-static int ide_getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord, int * pnpos )
+static HB_ISIZ ide_getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord, HB_ISIZ * pnpos )
 {
    static const char s_szGood[]         = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
    static const char * s_szDoubleList[] = { "*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
                                             "<=", ">=", "<>", "!=", "==", "+=", "-=", "*=", "/=", "%=",
                                             "^=", "&&", "^^", ">>", "<<", "=>", "&=", "|=" };
 
-   static int s_lengood   = HB_SIZEOFARRAY( s_szGood ) - 1;
-   static int s_lendouble = HB_SIZEOFARRAY( s_szDoubleList );
+   static HB_ISIZ s_lengood   = HB_SIZEOFARRAY( s_szGood ) - 1;
+   static HB_ISIZ s_lendouble = HB_SIZEOFARRAY( s_szDoubleList );
 
-   int maxlen = strlen( pszText );
-   int npos = 0;
-   int wordlen = 0;
+   HB_ISIZ maxlen = strlen( pszText );
+   HB_ISIZ npos = 0;
+   HB_ISIZ wordlen = 0;
 
    if( maxlen > 0 )
    {
@@ -185,13 +187,13 @@ static int ide_getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszW
             szSingle[ 0 ] = ch;
             if( ide_atbuff( szSingle, s_szGood, 0, 1, 1, s_lengood ) ) /* ch $ s_szGood ) // variables, commands, function names */
             {
-              while( npos < maxlen && ide_atbuff( szSingle, s_szGood, 0, 1, 1, s_lengood ) )
-              {
-                 pszWord[ wordlen++ ] = ch;
-                 npos++;
-                 ch = pszText[ npos ];
-                 szSingle[ 0 ] = ch;
-              }
+               while( npos < maxlen && ide_atbuff( szSingle, s_szGood, 0, 1, 1, s_lengood ) )
+               {
+                  pszWord[ wordlen++ ] = ch;
+                  npos++;
+                  ch = pszText[ npos ];
+                  szSingle[ 0 ] = ch;
+               }
             }
             else if( ch == ' ' )
             {
@@ -240,18 +242,19 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
 {
    const char * pszExpr = hb_parcx( 1 );
 
-   HB_BOOL   bHonorSpacing = hb_parl( 2 );
-   HB_BOOL   bInRemark     = HB_ISLOG( 3 ) ? hb_parl( 3 ) : HB_FALSE;
-   HB_BOOL   bKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : HB_TRUE;
-   HB_BOOL   bPRG          = HB_ISLOG( 6 ) ? hb_parl( 6 ) : HB_TRUE;
-   HB_BOOL   bKeepSpaces   = HB_ISLOG( 7 ) ? hb_parl( 7 ) : HB_TRUE;
-   PHB_ITEM  paExpr        = hb_itemArrayNew( 0 );
-   PHB_ITEM  pTemp         = hb_itemNew( NULL );
-   HB_BOOL   bFirst        = HB_TRUE;
-   int       lenprocessed  = 0;
-   int       lenwords      = 0;
-   int       wordlen;
-   int       npos;
+   PHB_ITEM paExpr = hb_itemArrayNew( 0 );
+   PHB_ITEM pTemp = hb_itemNew( NULL );
+
+   HB_BOOL bHonorSpacing = hb_parl( 2 );
+   HB_BOOL bInRemark     = hb_parl( 3 );
+   HB_BOOL bKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : HB_TRUE;
+   HB_BOOL bPRG          = HB_ISLOG( 6 ) ? hb_parl( 6 ) : HB_TRUE;
+   HB_BOOL bKeepSpaces   = HB_ISLOG( 7 ) ? hb_parl( 7 ) : HB_TRUE;
+   HB_BOOL bFirst        = HB_TRUE;
+   HB_ISIZ lenprocessed  = 0;
+   HB_ISIZ lenwords      = 0;
+   HB_ISIZ wordlen;
+   HB_ISIZ npos;
 
    char szNextWord[ 2048 ];
 
