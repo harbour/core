@@ -131,12 +131,12 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
-   DEFAULT nTimeout TO 0
-
    /* Clipper returns 0 even if a port is not open */
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
+
+   DEFAULT nTimeout TO 0
 
    IF nTimeout > 0
       tp_flush( nPort, nTimeout )
@@ -268,7 +268,7 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
 FUNCTION tp_recv( nPort, nLength, nTimeout )
 
-   LOCAL nStartTime
+   LOCAL nDone
    LOCAL cRet
 
    DEFAULT nLength TO t_aPorts[ nPort, TPFP_INBUF_SIZE  ]
@@ -276,11 +276,13 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    FetchChars( nPort )
 
-   nStartTime := hb_milliSeconds()
    nTimeOut *= 1000
 
-   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
-            ( nTimeout < 0 .OR. ( hb_milliSeconds() - nStartTime ) < nTimeout )
+   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
+
+   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
+            ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
+
       IF ! tp_idle()
          FetchChars( nPort )
       ELSE
@@ -300,8 +302,7 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   LOCAL nWritten, nTotWritten
-   LOCAL nStartTime
+   LOCAL nWritten, nTotWritten, nDone
 
    DEFAULT cString TO ""
    DEFAULT nTimeout TO 0
@@ -314,13 +315,13 @@ FUNCTION tp_send( nPort, cString, nTimeout )
       RETURN 0
    ENDIF
 
-   nStartTime := hb_milliSeconds()
    nTimeOut *= 1000
 
+   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0)
    nTotWritten := 0
 
    DO WHILE nTotWritten < Len( cString ) .AND. ;
-            ( nTimeout < 0 .OR. ( hb_milliSeconds() - nStartTime ) < nTimeout )
+         ( nTimeout < 0 .OR. hb_milliSeconds() <= nDone )
 
       nWritten := __tp_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
@@ -357,15 +358,14 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    LOCAL cChar
    LOCAL nAt
    LOCAL nStartPos := 1, nFirst := 0
-   LOCAL cRet := ""
-   LOCAL nStartTime
+   LOCAL nDone, cRet := ""
 
    IF ! isopenport( nPort )
-      RETURN cRet
+      RETURN ""
    ENDIF
 
    IF ! ISCHARACTER( cDelim ) .OR. Len( cDelim ) == 0
-      RETURN cRet
+      RETURN ""
    ENDIF
 
    DEFAULT nMaxlen TO 64999      /* dos telepathy def. on xharbour could be higher */
@@ -376,13 +376,14 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
                     delimiter or the input buffer is empty. */
    IF nTimeout == 0 .AND. Len( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
-      RETURN cRet
+      RETURN ""
    ENDIF
 
-   nStartTime := hb_milliSeconds()
    nTimeOut *= 1000
 
-   DO WHILE ( nTimeout < 0 .OR. ( hb_milliSeconds() - nStartTime ) < nTimeout )
+   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
+
+   DO WHILE ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
 
       IF Len( cDelim ) == 1
 
@@ -648,7 +649,7 @@ FUNCTION tp_iscts( nPort )
 //     I'll wait as long as it takes to drain the port.
 FUNCTION tp_flush( nPort, nTimeout )
 
-   //LOCAL nStartTime := hb_milliSeconds()
+   //LOCAL nStart := hb_milliSeconds()
    LOCAL nRes
 
    DEFAULT nTimeout TO 0
@@ -662,8 +663,8 @@ FUNCTION tp_flush( nPort, nTimeout )
    // Sleep rest of timeout
    /*
    nTimeOut *= 1000
-   IF nTimeout > 0 .AND. nTimeout > ( hb_milliSeconds() - nStartTime )
-      hb_idleSleep( ( nTimeout - ( hb_milliSeconds() - nStartTime ) / 1000 ) )
+   IF nTimeout > 0 .AND. hb_milliSeconds() - nStart < nTimeout
+      hb_idleSleep( nTimeout - ( hb_milliSeconds() - nStart ) )
    ENDIF
    */
 
@@ -675,7 +676,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 
 FUNCTION tp_flush( nPort, nTimeout )
 
-   LOCAL nStartTime
+   LOCAL nDone
 
    DEFAULT nTimeout TO -1
 
@@ -687,11 +688,12 @@ FUNCTION tp_flush( nPort, nTimeout )
       nTimeout := 1800
    ENDIF
 
-   nStartTime := hb_milliSeconds()
    nTimeOut *= 1000
 
+   nDone := hb_milliSeconds() + iif( nTimeout >= 0, nTimeout, 0 )
+
    DO WHILE tp_OutFree( nPort ) > 0 .AND. ;
-            ( nTimeout < 0 .OR. ( hb_milliSeconds() - nStartTime ) < nTimeout )
+         ( nTimeout < 0 .OR. hb_milliSeconds() < nDone )
       hb_IdleState()
    ENDDO
 
