@@ -151,9 +151,6 @@ void hb_verBuildInfo( void )
 #if defined( __cplusplus )
    hb_conOutErr( "(C++ mode) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Language options: ", 0 );
 #if defined( HB_COMPAT_C53 )
    hb_conOutErr( "(Clipper 5.3b) ", 0 );
 #endif

@@ -158,6 +158,10 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
 
    RETURN lRetVal
 
+STATIC FUNCTION Bin2U( c )
+   LOCAL l := Bin2L( c )
+   RETURN iif( l < 0, l + 4294967296, l )
+
 FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault )
    LOCAL xRetVal
    LOCAL pKeyHandle

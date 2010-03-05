@@ -88,6 +88,10 @@
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0600 /* for hb_gt_win_SetPalette_Vista() */
 
+#ifndef HB_GTWIN_USE_SETCONSOLEMENUCLOSE_OFF
+#  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE /* Enable undocumented Windows API function call */
+#endif
+
 #include <windows.h>
 #if defined( HB_OS_WIN_CE )
 #  include "hbwince.h"
@@ -736,70 +740,17 @@ static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 
 #endif
 
-#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
-
-static void hb_gt_win_SetPalette_Undoc( HB_BOOL bSet, COLORREF * colors )
-{
-   static HB_BOOL s_bChecked = HB_FALSE;
-
-   typedef BOOL ( WINAPI * P_SETCONSOLEPALETTE )( HANDLE, HPALETTE, UINT );
-   static P_SETCONSOLEPALETTE s_pSetConsolePalette;
-
-   if( ! s_bChecked )
-   {
-      s_pSetConsolePalette = ( P_SETCONSOLEPALETTE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsolePalette" );
-      s_bChecked = HB_TRUE;
-   }
-
-   if( bSet && s_pSetConsolePalette )
-   {
-      #define _NUM_ENTRIES 16
-
-      LOGPALETTE * lp = hb_xgrab( sizeof( LOGPALETTE ) + sizeof( PALETTEENTRY ) * _NUM_ENTRIES );
-      HPALETTE palette;
-      int tmp;
-
-      lp->palVersion = ( WORD ) 0x0300;
-      lp->palNumEntries = _NUM_ENTRIES;
-
-      for( tmp = 0; tmp < 16; ++tmp )
-      {
-         lp->palPalEntry[ tmp ].peRed   = GetRValue( colors[ tmp ] );
-         lp->palPalEntry[ tmp ].peGreen = GetGValue( colors[ tmp ] );
-         lp->palPalEntry[ tmp ].peBlue  = GetBValue( colors[ tmp ] );
-         lp->palPalEntry[ tmp ].peFlags = 0;
-      }
-
-      palette = CreatePalette( lp );
-
-      #ifndef SYSPAL_STATIC
-      #define SYSPAL_STATIC 1
-      #endif
-
-      s_pSetConsolePalette( s_HOutput, palette, SYSPAL_STATIC );
-
-      DeleteObject( palette );
-
-      hb_xfree( lp );
-   }
-}
-
-#endif
-
 static void hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 {
 #if defined( NTDDI_VERSION ) && NTDDI_VERSION >= NTDDI_VISTA
-   if( hb_iswinvista() )
-      hb_gt_win_SetPalette_Vista( bSet, colors );
-#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
-   else
-      hb_gt_win_SetPalette_Undoc( bSet, colors );
-#endif
-#elif defined( HB_GTWIN_USE_UNDOC_WINAPI )
-   hb_gt_win_SetPalette_Undoc( bSet, colors );
+   hb_gt_win_SetPalette_Vista( bSet, colors );
 #else
-   HB_SYMBOL_UNUSED( bSet );
-   HB_SYMBOL_UNUSED( colors );
+   if( ! bSet )
+   {
+      int tmp;
+      for( tmp = 0; tmp < 16; ++tmp )
+         colors[ tmp ] = 0;
+   }
 #endif
 }
 
@@ -810,7 +761,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
    typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
    static P_GETCONSOLEWINDOW s_pGetConsoleWindow;
 
-#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
+#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
    typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
    static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose;
 #endif
@@ -819,9 +770,10 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
    if( ! s_bChecked )
    {
-      s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetConsoleWindow" );
-#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
-      s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsoleMenuClose" );
+      HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( hKernel32, "GetConsoleWindow" );
+#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
+      s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) GetProcAddress( hKernel32, "SetConsoleMenuClose" );
 #endif
       s_bChecked = HB_TRUE;
    }
@@ -836,7 +788,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
          if( bSet )
          {
-#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
+#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
             if( s_pSetConsoleMenuClose )
                s_pSetConsoleMenuClose( bClosable );
 #endif
