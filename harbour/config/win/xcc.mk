@@ -50,7 +50,7 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 LDFLAGS += $(LIBPATHS)
 
 AR := xlib.exe
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
 DFLAGS += -nologo -dll $(LIBPATHS)

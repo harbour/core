@@ -7,6 +7,7 @@ ROOT := ../
 # standalone contribs
 DIRS := \
    sqlite3 \
+   bzip2 \
    libhpdf \
    libpng \
    jpeg \

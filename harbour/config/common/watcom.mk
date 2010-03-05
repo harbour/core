@@ -27,7 +27,7 @@ comma := ,
 LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
 LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 
 ifeq ($(HB_SHELL),dos)
 
@@ -62,7 +62,7 @@ ifeq ($(HB_SHELL),dos)
    define create_library
       @$(ECHO) $(ECHOQUOTE)$(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
       $(foreach file,$(^F),$(lib_object))
-      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
+      $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef
 
    AR_RULE = $(create_library)

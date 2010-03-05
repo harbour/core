@@ -1066,6 +1066,7 @@ endif
 # result in recursive runs, see rule 'descend'. [vszakats]
 HB_CFLAGS :=
 HB_LDFLAGS :=
+HB_AFLAGS :=
 HB_PRGFLAGS :=
 
 CFLAGS :=

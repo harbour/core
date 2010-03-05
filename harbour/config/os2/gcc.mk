@@ -69,7 +69,7 @@ ifeq ($(HB_COMPILER),gccomf)
    # NOTE: The empty line directly before 'endef' HAS TO exist!
    #       It causes that every command will be separated by LF
    define lib_object
-      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ $(file)$(ECHOQUOTE)
+      $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ $(file)$(ECHOQUOTE)
 
    endef
 
@@ -93,7 +93,7 @@ else
       $(foreach file,$^,$(lib_object))
       @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
       @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
-      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+      $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
    endef
 endif
 

@@ -43,7 +43,7 @@ LDFLAGS += -subsystem:console
 LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
 DFLAGS += -nologo -dll $(LIBPATHS)

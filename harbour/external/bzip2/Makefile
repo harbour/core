@@ -32,9 +32,9 @@ _DET_INC_HEAD := /bzlib.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_BZIP2_LOCAL),)
-#  ifeq ($(HB_PLATFORM),win)
-#     HB_CFLAGS += -D_WIN32
-#  endif
+   ifeq ($(HB_COMPILER),bcc)
+      HB_AFLAGS += /C
+   endif
    include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := unused
