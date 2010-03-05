@@ -742,7 +742,7 @@ static void hb_gt_win_SetPalette_Undoc( HB_BOOL bSet, COLORREF * colors )
 {
    static HB_BOOL s_bChecked = HB_FALSE;
 
-   typedef VOID ( WINAPI * P_SETCONSOLEPALETTE )( COLORREF * );
+   typedef BOOL ( WINAPI * P_SETCONSOLEPALETTE )( HANDLE, HPALETTE, UINT );
    static P_SETCONSOLEPALETTE s_pSetConsolePalette;
 
    if( ! s_bChecked )
@@ -752,7 +752,36 @@ static void hb_gt_win_SetPalette_Undoc( HB_BOOL bSet, COLORREF * colors )
    }
 
    if( bSet && s_pSetConsolePalette )
-      s_pSetConsolePalette( colors );
+   {
+      #define _NUM_ENTRIES 16
+
+      LOGPALETTE * lp = hb_xgrab( sizeof( LOGPALETTE ) + sizeof( PALETTEENTRY ) * _NUM_ENTRIES );
+      HPALETTE palette;
+      int tmp;
+
+      lp->palVersion = ( WORD ) 0x0300;
+      lp->palNumEntries = _NUM_ENTRIES;
+
+      for( tmp = 0; tmp < 16; ++tmp )
+      {
+         lp->palPalEntry[ tmp ].peRed   = GetRValue( colors[ tmp ] );
+         lp->palPalEntry[ tmp ].peGreen = GetGValue( colors[ tmp ] );
+         lp->palPalEntry[ tmp ].peBlue  = GetBValue( colors[ tmp ] );
+         lp->palPalEntry[ tmp ].peFlags = 0;
+      }
+
+      palette = CreatePalette( lp );
+
+      #ifndef SYSPAL_STATIC
+      #define SYSPAL_STATIC 1
+      #endif
+
+      s_pSetConsolePalette( s_HOutput, palette, SYSPAL_STATIC );
+
+      DeleteObject( palette );
+
+      hb_xfree( lp );
+   }
 }
 
 #endif
