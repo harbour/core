@@ -35,7 +35,7 @@ LIBNAME := hbpcre
 
 ifneq ($(HB_HAS_PCRE_LOCAL),)
 
-   HB_CFLAGS += -DPCRE_STATIC
+   HB_CFLAGS += -DPCRE_STATIC -DHAVE_STDINT_H=0
 
    # workaround for problems in sunpro x86 PIC builds exploited by hbpcre library code
    ifeq ($(HB_COMPILER),sunpro)
