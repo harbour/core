@@ -5,5 +5,5 @@
 incpaths=.
 
 libs=hbmysql
-{unix}libs=mysql
+{unix}libs=mysqlclient
 {!unix}libs=libmysql

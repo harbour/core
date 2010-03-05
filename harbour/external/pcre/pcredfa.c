@@ -7,7 +7,7 @@ and semantics are as close as possible to those of the Perl 5 language (but see
 below for why this module is different).
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2009 University of Cambridge
+           Copyright (c) 1997-2010 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -255,7 +255,7 @@ typedef struct stateblock {
 #define INTS_PER_STATEBLOCK  (sizeof(stateblock)/sizeof(int))
 
 
-#ifdef DEBUG
+#ifdef PCRE_DEBUG
 /*************************************************
 *             Print character string             *
 *************************************************/
@@ -559,7 +559,7 @@ for (;;)
   workspace[0] ^= 1;              /* Remember for the restarting feature */
   workspace[1] = active_count;
 
-#ifdef DEBUG
+#ifdef PCRE_DEBUG
   printf("%.*sNext character: rest of subject = \"", rlevel*2-2, SP);
   pchars((uschar *)ptr, strlen((char *)ptr), stdout);
   printf("\"\n");
@@ -605,7 +605,7 @@ for (;;)
     int state_offset = current_state->offset;
     int count, codevalue, rrc;
 
-#ifdef DEBUG
+#ifdef PCRE_DEBUG
     printf ("%.*sProcessing state %d c=", rlevel*2-2, SP, state_offset);
     if (clen == 0) printf("EOL\n");
       else if (c > 32 && c < 127) printf("'%c'\n", c);
@@ -2299,6 +2299,7 @@ for (;;)
           rlevel,                               /* function recursion level */
           recursing);                           /* pass on regex recursion */
 
+        if (rc == PCRE_ERROR_DFA_UITEM) return rc;
         if ((rc >= 0) == (codevalue == OP_ASSERT || codevalue == OP_ASSERTBACK))
             { ADD_ACTIVE(endasscode + LINK_SIZE + 1 - start_code, 0); }
         }
@@ -2389,6 +2390,7 @@ for (;;)
             rlevel,                               /* function recursion level */
             recursing);                           /* pass on regex recursion */
 
+          if (rc == PCRE_ERROR_DFA_UITEM) return rc;
           if ((rc >= 0) ==
                 (condcode == OP_ASSERT || condcode == OP_ASSERTBACK))
             { ADD_ACTIVE(endasscode + LINK_SIZE + 1 - start_code, 0); }
@@ -2989,7 +2991,7 @@ for (;;)
       bytes to avoid spending too much time in this optimization. */
 
       if (study != NULL && (study->flags & PCRE_STUDY_MINLEN) != 0 &&
-          end_subject - current_subject < study->minlength)
+          (pcre_uint32)(end_subject - current_subject) < study->minlength)
         return PCRE_ERROR_NOMATCH;
 
       /* If req_byte is set, we know that that character must appear in the

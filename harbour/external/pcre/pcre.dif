@@ -19,17 +19,3 @@ diff -u ori_src\pcre_globals.c ori_dst\pcre_globals.c
  #endif
  
  /* End of pcre_globals.c */
-diff -u ori_src\pcre_internal.h ori_dst\pcre_internal.h
---- ori_src\pcre_internal.h	Sat Apr 11 09:21:18 2009
-+++ ori_dst\pcre_internal.h	Thu Sep 10 13:25:46 2009
-@@ -598,9 +598,9 @@
- environments where these macros are defined elsewhere. Unfortunately, there
- is no way to do the same for the typedef. */
- 
--typedef int BOOL;
- 
- #ifndef FALSE
-+typedef int BOOL;
- #define FALSE   0
- #define TRUE    1
- #endif
