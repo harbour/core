@@ -75,7 +75,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    DEFAULT lSetIt TO .F.
    DEFAULT lDoVista TO .T.
 
-   IF ! lDoVista .AND. win_osIsVistaOrUpper()
+   IF ! lDoVista .AND. hb_osIsWinVista()
       /* do nothing */
    ELSEIF hb_osIsWin9x()
       bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
@@ -94,7 +94,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
 
-      IF win_osIsVistaOrUpper()
+      IF hb_osIsWinVista()
          /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
       ENDIF
