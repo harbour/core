@@ -167,7 +167,7 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
       hb_errPutSubCode( pError, errSubCode );
       if( errSubCode > 1000 )
       {
-         UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ] = {0};
+         UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ] = { 0 };
          UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
 
          AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );

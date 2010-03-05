@@ -85,6 +85,9 @@
 
 #include "hbapicdp.h"
 
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600 /* for hb_gt_win_SetPalette_Vista() */
+
 #include <windows.h>
 #if defined( HB_OS_WIN_CE )
 #  include "hbwince.h"
@@ -149,6 +152,7 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
+static COLORREF    s_colorsOld[ 16 ];
 static HB_BOOL     s_bOldClosable;
 static HB_BOOL     s_bClosable;
 static HB_BOOL     s_bSpecialKeyHandling;
@@ -414,16 +418,16 @@ static int hb_gt_win_getKbdState( void )
 {
    int iKbdState = 0;
 
-   if( GetKeyState( VK_SHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_SHIFT;
-   if( GetKeyState( VK_CONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_CTRL;
-   if( GetKeyState( VK_MENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_ALT;
-   if( GetKeyState( VK_LWIN    ) & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
-   if( GetKeyState( VK_RWIN    ) & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
-   if( GetKeyState( VK_APPS    ) & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
-   if( GetKeyState( VK_SCROLL  ) & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
-   if( GetKeyState( VK_NUMLOCK ) & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
-   if( GetKeyState( VK_CAPITAL ) & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
-   if( GetKeyState( VK_INSERT  ) & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
+   if( GetKeyState( VK_SHIFT    ) & 0x80 ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( GetKeyState( VK_CONTROL  ) & 0x80 ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( GetKeyState( VK_MENU     ) & 0x80 ) iKbdState |= HB_GTI_KBD_ALT;
+   if( GetKeyState( VK_LWIN     ) & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
+   if( GetKeyState( VK_RWIN     ) & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
+   if( GetKeyState( VK_APPS     ) & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
+   if( GetKeyState( VK_SCROLL   ) & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( GetKeyState( VK_NUMLOCK  ) & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( GetKeyState( VK_CAPITAL  ) & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( GetKeyState( VK_INSERT   ) & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
 
    if( GetKeyState( VK_LSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_LSHIFT;
    if( GetKeyState( VK_RSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_RSHIFT;
@@ -689,6 +693,87 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    }
 }
 
+#if defined( NTDDI_VERSION ) && NTDDI_VERSION >= NTDDI_VISTA
+
+static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
+{
+   static HB_BOOL s_bChecked = HB_FALSE;
+
+   typedef BOOL ( WINAPI * P_SETCONSOLESCREENBUFFERINFOEX )( HANDLE, PCONSOLE_SCREEN_BUFFER_INFOEX );
+   typedef BOOL ( WINAPI * P_GETCONSOLESCREENBUFFERINFOEX )( HANDLE, PCONSOLE_SCREEN_BUFFER_INFOEX );
+   static P_GETCONSOLESCREENBUFFERINFOEX s_pGetConsoleScreenBufferInfoEx;
+   static P_SETCONSOLESCREENBUFFERINFOEX s_pSetConsoleScreenBufferInfoEx;
+
+   if( ! s_bChecked )
+   {
+      s_pGetConsoleScreenBufferInfoEx = ( P_GETCONSOLESCREENBUFFERINFOEX ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetConsoleScreenBufferInfoEx" );
+      s_pSetConsoleScreenBufferInfoEx = ( P_SETCONSOLESCREENBUFFERINFOEX ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsoleScreenBufferInfoEx" );
+      s_bChecked = HB_TRUE;
+   }
+
+   if( s_pGetConsoleScreenBufferInfoEx )
+   {
+      CONSOLE_SCREEN_BUFFER_INFOEX info;
+      int tmp;
+
+      info.cbSize = sizeof( info );
+      s_pGetConsoleScreenBufferInfoEx( s_HOutput, &info );
+
+      if( bSet && s_pSetConsoleScreenBufferInfoEx )
+      {
+         for( tmp = 0; tmp < 16; ++tmp )
+            info.ColorTable[ tmp ] = colors[ tmp ];
+
+         s_pSetConsoleScreenBufferInfoEx( s_HOutput, &info );
+      }
+      else
+      {
+         for( tmp = 0; tmp < 16; ++tmp )
+            colors[ tmp ] = info.ColorTable[ tmp ];
+      }
+   }
+}
+
+#endif
+
+#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
+
+static void hb_gt_win_SetPalette_Undoc( HB_BOOL bSet, COLORREF * colors )
+{
+   static HB_BOOL s_bChecked = HB_FALSE;
+
+   typedef VOID ( WINAPI * P_SETCONSOLEPALETTE )( COLORREF * );
+   static P_SETCONSOLEPALETTE s_pSetConsolePalette;
+
+   if( ! s_bChecked )
+   {
+      s_pSetConsolePalette = ( P_SETCONSOLEPALETTE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsolePalette" );
+      s_bChecked = HB_TRUE;
+   }
+
+   if( bSet && s_pSetConsolePalette )
+      s_pSetConsolePalette( colors );
+}
+
+#endif
+
+static void hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
+{
+#if defined( NTDDI_VERSION ) && NTDDI_VERSION >= NTDDI_VISTA
+   if( hb_iswinvista() )
+      hb_gt_win_SetPalette_Vista( bSet, colors );
+#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
+   else
+      hb_gt_win_SetPalette_Undoc( bSet, colors );
+#endif
+#elif defined( HB_GTWIN_USE_UNDOC_WINAPI )
+   hb_gt_win_SetPalette_Undoc( bSet, colors );
+#else
+   HB_SYMBOL_UNUSED( bSet );
+   HB_SYMBOL_UNUSED( colors );
+#endif
+}
+
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
    static HB_BOOL s_bChecked = HB_FALSE;
@@ -696,7 +781,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
    typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
    static P_GETCONSOLEWINDOW s_pGetConsoleWindow;
 
-#if HB_GTWIN_USE_UNDOC_WINAPI
+#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
    typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
    static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose;
 #endif
@@ -706,7 +791,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
    if( ! s_bChecked )
    {
       s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetConsoleWindow" );
-#if HB_GTWIN_USE_UNDOC_WINAPI
+#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
       s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsoleMenuClose" );
 #endif
       s_bChecked = HB_TRUE;
@@ -722,7 +807,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
          if( bSet )
          {
-#if HB_GTWIN_USE_UNDOC_WINAPI
+#if defined( HB_GTWIN_USE_UNDOC_WINAPI )
             if( s_pSetConsoleMenuClose )
                s_pSetConsoleMenuClose( bClosable );
 #endif
@@ -852,6 +937,28 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
 
+   {
+      COLORREF colors[ 16 ] = { RGB( 0x00, 0x00, 0x00 ),
+                                RGB( 0x00, 0x00, 0xAA ),
+                                RGB( 0x00, 0xAA, 0x00 ),
+                                RGB( 0x00, 0xAA, 0xAA ),
+                                RGB( 0xAA, 0x00, 0x00 ),
+                                RGB( 0xAA, 0x00, 0xAA ),
+                                RGB( 0xAA, 0x55, 0x00 ),
+                                RGB( 0xAA, 0xAA, 0xAA ),
+                                RGB( 0x55, 0x55, 0x55 ),
+                                RGB( 0x55, 0x55, 0xFF ),
+                                RGB( 0x55, 0xFF, 0x55 ),
+                                RGB( 0x55, 0xFF, 0xFF ),
+                                RGB( 0xFF, 0x55, 0x55 ),
+                                RGB( 0xFF, 0x55, 0xFF ),
+                                RGB( 0xFF, 0xFF, 0x55 ),
+                                RGB( 0xFF, 0xFF, 0xFF ) };
+
+      hb_gt_win_SetPalette( HB_FALSE, s_colorsOld );
+      hb_gt_win_SetPalette( HB_TRUE, colors );
+   }
+
    s_bClosable = s_bOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
 }
 
@@ -864,6 +971,7 @@ static void hb_gt_win_Exit( PHB_GT pGT )
    HB_GTSELF_REFRESH( pGT );
 
    hb_gt_win_SetCloseButton( HB_TRUE, s_bOldClosable );
+   hb_gt_win_SetPalette( HB_TRUE, s_colorsOld );
 
    if( s_pCharInfoScreen )
    {
@@ -1738,6 +1846,53 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                hb_gt_win_SetCloseButton( HB_TRUE, bNewValue );
                s_bClosable = bNewValue;
+            }
+         }
+         break;
+
+      case HB_GTI_PALETTE:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            int iIndex = hb_itemGetNI( pInfo->pNewVal );
+
+            if( iIndex >= 0 && iIndex < 16 )
+            {
+               COLORREF colors[ 16 ];
+
+               hb_gt_win_SetPalette( HB_FALSE, colors );
+
+               pInfo->pResult = hb_itemPutNL( pInfo->pResult, colors[ iIndex ] );
+
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+               {
+                  colors[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
+                  hb_gt_win_SetPalette( HB_TRUE, colors );
+               }
+            }
+         }
+         else
+         {
+            COLORREF colors[ 16 ];
+            int i;
+
+            if( ! pInfo->pResult )
+               pInfo->pResult = hb_itemNew( NULL );
+
+            hb_gt_win_SetPalette( HB_FALSE, colors );
+
+            hb_arrayNew( pInfo->pResult, 16 );
+            for( i = 0; i < 16; i++ )
+               hb_arraySetNL( pInfo->pResult, i + 1, colors[ i ] );
+
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            {
+               if( hb_arrayLen( pInfo->pNewVal ) == 16 )
+               {
+                  for( i = 0; i < 16; i++ )
+                     colors[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
+
+                  hb_gt_win_SetPalette( HB_TRUE, colors );
+               }
             }
          }
          break;
