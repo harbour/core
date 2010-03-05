@@ -162,9 +162,19 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
       }
       else
          pError = hb_errNew();
+
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
+      if( errSubCode > 1000 )
+      {
+         UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ] = {0};
+         UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
+
+         AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
+         hb_errPutDescription( pError, ( char * ) aucError );
+      }
+      else
+         hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       if( errOsCode )
          hb_errPutOsCode( pError, errOsCode );
       if( szFileName )
@@ -384,12 +394,12 @@ static HB_ERRCODE hb_adsCheckLock( ADSAREAP pArea )
       u32RetVal = AdsIsRecordLocked( pArea->hTable, 0, &u16Locked );
       if( u32RetVal != AE_SUCCESS )
       {
-         hb_errRT_DBCMD( EG_UNLOCKED, u32RetVal, "Lock Required by ADSTESTRECLOCKS()", HB_ERR_FUNCNAME );
+         commonError( pArea, EG_UNLOCKED, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
          return HB_FAILURE;
       }
       if( !u16Locked )
       {
-         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0, NULL );
+         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED - 900, 0, NULL, 0, NULL );
          return HB_FAILURE;
       }
    }
@@ -924,7 +934,7 @@ static HB_ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
    }
    else
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
+      commonError( pArea, EG_DATATYPE, EDBF_DATATYPE - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
 }
@@ -973,7 +983,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
 
    if( ! pArea->hOrdCurrent )
    {
-      commonError( pArea, EG_NOORDER, 1201, 0, NULL, EF_CANDEFAULT, NULL );
+      commonError( pArea, EG_NOORDER, EDBF_NOTINDEXED - 900, 0, NULL, EF_CANDEFAULT, NULL );
       return HB_FAILURE;
    }
 
@@ -1036,7 +1046,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
    }
    else
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
+      commonError( pArea, EG_DATATYPE, EDBF_DATATYPE - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
 
@@ -1463,11 +1473,11 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, HB_BOOL fUnLockAll )
    }
    else if( u32RetVal == AE_TABLE_READONLY )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
+      commonError( pArea, EG_READONLY, EDBF_READONLY - 900, 0, NULL, 0, NULL );
    }
    else if( u32RetVal == 1024 /* Append Lock Failed */ )
    {
-      commonError( pArea, EG_APPENDLOCK, EDBF_APPENDLOCK, 0, NULL, EF_CANDEFAULT, NULL );
+      commonError( pArea, EG_APPENDLOCK, EDBF_APPENDLOCK - 900, 0, NULL, EF_CANDEFAULT, NULL );
    }
    else
    {
@@ -2363,7 +2373,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          break;
       }
       default:
-         commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
+         commonError( pArea, EG_DATATYPE, EDBF_DATATYPE - 900, 0, NULL, 0, NULL );
          return HB_FAILURE;
    }
 
@@ -2379,7 +2389,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    else if( u32RetVal != AE_SUCCESS )
    {
       if( u32RetVal == AE_DATA_TOO_LONG )
-         commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, 0, NULL );
+         commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH - 900, 0, NULL, 0, NULL );
       else
          commonError( pArea, EG_READ, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
       return HB_FAILURE;
@@ -2630,18 +2640,18 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
 
    if( bTypeError )
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
+      commonError( pArea, EG_DATATYPE, EDBF_DATATYPE - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
 
    if( u32RetVal != AE_SUCCESS )
    {
       if( u32RetVal == AE_LOCK_FAILED || u32RetVal == AE_RECORD_NOT_LOCKED )
-         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0, NULL );
+         commonError( pArea, EG_UNLOCKED, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
       else if( u32RetVal == AE_TABLE_READONLY )
-         commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
+         commonError( pArea, EG_READONLY, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
       else if( u32RetVal == AE_DATA_TOO_LONG )
-         return commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, EF_CANDEFAULT, NULL );
+         return commonError( pArea, EG_DATAWIDTH, ( HB_ERRCODE ) u32RetVal, 0, NULL, EF_CANDEFAULT, NULL );
       else
          commonError( pArea, EG_WRITE, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
       return HB_FAILURE;
@@ -3575,12 +3585,12 @@ static HB_ERRCODE adsPack( ADSAREAP pArea )
 
    if( pArea->fReadonly )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
+      commonError( pArea, EG_READONLY, EDBF_READONLY - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
    if( pArea->fShared )
    {
-      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0, NULL );
+      commonError( pArea, EG_SHARED, EDBF_SHARED - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
 
@@ -3600,12 +3610,12 @@ static HB_ERRCODE adsZap( ADSAREAP pArea )
 
    if( pArea->fReadonly )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
+      commonError( pArea, EG_READONLY, EDBF_READONLY - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
    if( pArea->fShared )
    {
-      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0, NULL );
+      commonError( pArea, EG_SHARED, EDBF_SHARED - 900, 0, NULL, 0, NULL );
       return HB_FAILURE;
    }
 
