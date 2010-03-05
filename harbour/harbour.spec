@@ -629,15 +629,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbtip*.a
 %{_libdir}/%{name}/libhbfoxpro.a
 %{_libdir}/%{name}/libhbfship.a
-%{_libdir}/%{name}/libhbpp.a
+%{_libdir}/%{name}/libhbxpp.a
 %{_libdir}/%{name}/libxhb.a
 %{_libdir}/%{name}/libhbhpdf.a
 %{_libdir}/%{name}/libhbgt.a
-%{_libdir}/%{name}/librddbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a
-%{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libhbtpathy.a
 %{_libdir}/%{name}/libhbziparc.a
+%{_libdir}/%{name}/librddbmcdx.a
+%{_libdir}/%{name}/librddsql.a
+%{_libdir}/%{name}/libsddsqlt3.a
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}

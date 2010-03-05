@@ -216,7 +216,9 @@
 #     include <sys/un.h>
 #  endif
 #  include <netinet/tcp.h>
-#  include <net/if.h>
+#  if !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
+#     include <net/if.h>
+#  endif
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )
@@ -744,6 +746,16 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 #  define HB_SOCK_IS_EINTR()        ( errno == EINTR )
 #  define HB_SOCK_IS_EINPROGRES()   ( errno == EINPROGRESS )
 #endif
+
+typedef union
+{
+#if defined( HB_HAS_SOCKADDR_STORAGE )
+   struct sockaddr_storage st;
+#else
+   char st[ HB_SOCKADDR_MAX_LEN ];
+#endif
+   struct sockaddr sa;
+} HB_SOCKADDR_STORAGE;
 
 /* MT macros */
 #define HB_SOCKET_LOCK        hb_threadEnterCriticalSection( &s_sockMtx );
@@ -1927,21 +1939,15 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
 
 int hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 {
-   int ret;
-#if defined( HB_HAS_SOCKADDR_STORAGE )
-   struct sockaddr_storage st;
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) &st;
-#else
-   char st[ HB_SOCKADDR_MAX_LEN ];
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) st;
-#endif
+   HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
+   int ret;
 
-   ret = getsockname( sd, sa, &len );
+   ret = getsockname( sd, &st.sa, &len );
    hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
    if( ret == 0 )
    {
-      *pSockAddr = memcpy( hb_xgrab( len + 1 ), sa, len );
+      *pSockAddr = memcpy( hb_xgrab( len + 1 ), &st.sa, len );
       *puiLen = ( unsigned ) len;
    }
    else
@@ -1961,20 +1967,14 @@ int hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
    ret = -1;
    hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
 #else
-#if defined( HB_HAS_SOCKADDR_STORAGE )
-   struct sockaddr_storage st;
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) &st;
-#else
-   char st[ HB_SOCKADDR_MAX_LEN ];
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) st;
-#endif
+   HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
 
-   ret = getpeername( sd, sa, &len );
+   ret = getpeername( sd, &st.sa, &len );
    hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
    if( ret == 0 )
    {
-      *pSockAddr = memcpy( hb_xgrab( len + 1 ), sa, len );
+      *pSockAddr = memcpy( hb_xgrab( len + 1 ), &st.sa, len );
       *puiLen = ( unsigned ) len;
    }
    else
@@ -2121,15 +2121,9 @@ int hb_socketListen( HB_SOCKET sd, int iBacklog )
 HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_MAXINT timeout )
 {
    HB_SOCKET newsd = HB_NO_SOCKET;
-   int ret;
-#if defined( HB_HAS_SOCKADDR_STORAGE )
-   struct sockaddr_storage st;
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) &st;
-#else
-   char st[ HB_SOCKADDR_MAX_LEN ];
-   struct sockaddr * sa = ( struct sockaddr * ) ( void * ) st;
-#endif
+   HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
+   int ret;
 
    hb_vmUnlock();
    ret = hb_socketSelectRD( sd, timeout );
@@ -2141,7 +2135,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
        * accepts incoming connection (concurrent calls).
        */
       ret = timeout < 0 ? 0 : hb_socketSetBlockingIO( sd, HB_FALSE );
-      newsd = accept( sd, sa, &len );
+      newsd = accept( sd, &st.sa, &len );
       hb_socketSetOsError( newsd != HB_NO_SOCKET ? 0 : HB_SOCK_GETERROR() );
       if( ret > 0 )
          hb_socketSetBlockingIO( sd, HB_TRUE );
@@ -2154,7 +2148,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
          }
          else
          {
-            *pSockAddr = memcpy( hb_xgrab( len + 1 ), sa, len );
+            *pSockAddr = memcpy( hb_xgrab( len + 1 ), &st.sa, len );
             *puiLen = ( unsigned ) len;
          }
       }
@@ -2322,18 +2316,12 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
    }
    if( lReceived >= 0 )
    {
-#if defined( HB_HAS_SOCKADDR_STORAGE )
-      struct sockaddr_storage st;
-      struct sockaddr * sa = ( struct sockaddr * ) ( void * ) &st;
-#else
-      char st[ HB_SOCKADDR_MAX_LEN ];
-      struct sockaddr * sa = ( struct sockaddr * ) ( void * ) st;
-#endif
+      HB_SOCKADDR_STORAGE st;
       socklen_t salen = sizeof( st );
 
       do
       {
-         lReceived = recvfrom( sd, ( char * ) data, len, flags, sa, &salen );
+         lReceived = recvfrom( sd, ( char * ) data, len, flags, &st.sa, &salen );
          hb_socketSetOsError( HB_SOCK_GETERROR() );
       }
       while( lReceived == -1 && HB_SOCK_IS_EINTR() && hb_vmRequestQuery() == 0 );
@@ -2347,7 +2335,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
          }
          else
          {
-            *pSockAddr = memcpy( hb_xgrab( salen + 1 ), sa, salen );
+            *pSockAddr = memcpy( hb_xgrab( salen + 1 ), &st.sa, salen );
             *puiSockLen = ( unsigned ) salen;
          }
       }
@@ -2968,7 +2956,8 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    return NULL;
 }
 
-#if defined( SIOCGIFCONF ) || defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || ( defined( SIOCGIFCONF ) && \
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) )
 static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
                                        const void * pSockAddr, unsigned len )
 {
@@ -2993,7 +2982,8 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       new systems using 'struct lifreq' with SIOCGLIF* ioctls instead
  *       of 'struct ifreq' and SIOCGIF*
  */
-#if defined( SIOCGIFCONF )
+#if defined( SIOCGIFCONF ) && \
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;

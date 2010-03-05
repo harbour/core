@@ -79,9 +79,9 @@ static HB_USHORT s_uiRddId;
 #define hb_nsxKeyFree(K)      hb_xfree(K)
 #define hb_nsxFileOffset(I,B) ( (B) << ( (I)->LargeFile ? NSX_PAGELEN_BITS : 0 ) )
 #define hb_nsxGetRecSize(r)   ( (r) < 0x10000 ? 2 : ( (r) < 0x1000000 ? 3 : 4 ) )
-#define hb_nsxPageBuffer(p)   ( (p)->buffer )
-#define hb_nsxIsLeaf(p)       ( ( (p)->buffer[0] & NSX_LEAFPAGE ) != 0 )
-#define hb_nsxIsRoot(p)       ( ( (p)->buffer[0] & NSX_ROOTPAGE ) != 0 )
+#define hb_nsxPageBuffer(p)   ( (p)->data.buffer )
+#define hb_nsxIsLeaf(p)       ( ( (p)->data.buffer[0] & NSX_LEAFPAGE ) != 0 )
+#define hb_nsxIsRoot(p)       ( ( (p)->data.buffer[0] & NSX_ROOTPAGE ) != 0 )
 #define hb_nsxPageType(p)                 ( hb_nsxPageBuffer(p)[0] )
 #define hb_nsxSetPageType(p,t)            do hb_nsxPageBuffer(p)[0]=(t); while(0)
 #define hb_nsxGetKeyRecSize(p)            (hb_nsxPageBuffer(p)[1])
@@ -1175,7 +1175,7 @@ static void hb_nsxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
 /*
  * read a given block from index file
  */
-static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *buffer, int iSize )
+static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, HB_ULONG ulBlock, void * buffer, int iSize )
 {
    if( !pIndex->lockRead && !pIndex->lockWrite )
       hb_errInternal( 9103, "hb_nsxBlockRead on not locked index file.", NULL, NULL );
@@ -1193,7 +1193,7 @@ static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *bu
 /*
  * write a given block into index file
  */
-static HB_BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *buffer, int iSize )
+static HB_BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, HB_ULONG ulBlock, const void * buffer, int iSize )
 {
    if( !pIndex->lockWrite )
       hb_errInternal( 9102, "hb_nsxBlockWrite on not locked index file.", NULL, NULL );
@@ -1219,7 +1219,7 @@ static HB_BOOL hb_nsxPageSave( LPNSXINDEX pIndex, LPPAGEINFO pPage )
       hb_nsxLeafSetFreeOffset( pPage, pPage->uiOffset );
    }
    if( !hb_nsxBlockWrite( pIndex, pPage->Page,
-                          ( HB_BYTE * ) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
+                          hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
       return HB_FALSE;
    pPage->Changed = HB_FALSE;
    pIndex->fFlush = HB_TRUE;
@@ -1270,14 +1270,14 @@ static HB_BOOL hb_nsxTagHeaderCheck( LPTAGINFO pTag )
    {
       if( pTag->HeadBlock )
       {
-         HB_BYTE buffer[ NSX_TAGHEAD_HEADSIZE ];
-         if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, buffer, NSX_TAGHEAD_HEADSIZE ) )
+         NSXTAGHEADERUPDT header;
+
+         if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, &header, sizeof( header ) ) )
          {
-            LPNSXTAGHEADER pHeader = ( LPNSXTAGHEADER ) ( void * ) buffer;
-            if( pHeader->Signature[0] == NSX_SIGNATURE )
+            if( header.Signature[0] == NSX_SIGNATURE )
             {
-               pTag->TagFlags = pHeader->TagFlags[0];
-               pTag->RootBlock = HB_GET_LE_UINT32( pHeader->RootPage );
+               pTag->TagFlags = header.TagFlags[0];
+               pTag->RootBlock = HB_GET_LE_UINT32( header.RootPage );
                hb_nsxTagUpdateFlags( pTag );
             }
          }
@@ -1397,8 +1397,8 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
       pIndex->ulPages = 1;
       pIndex->ulPageLast = 0;
       pIndex->ulPagesDepth = NSX_PAGE_BUFFER;
-      pIndex->pages = (LPPAGEINFO*) hb_xgrab( sizeof(LPPAGEINFO) * NSX_PAGE_BUFFER );
-      memset( pIndex->pages, 0, sizeof(LPPAGEINFO) * NSX_PAGE_BUFFER );
+      pIndex->pages = ( LPPAGEINFO * ) hb_xgrab( sizeof( LPPAGEINFO ) * NSX_PAGE_BUFFER );
+      memset( pIndex->pages, 0, sizeof( LPPAGEINFO ) * NSX_PAGE_BUFFER );
       pPagePtr = &pIndex->pages[0];
    }
    else
@@ -1418,8 +1418,8 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
          {
             ul = pIndex->ulPagesDepth;
             pIndex->ulPagesDepth += NSX_PAGE_BUFFER >> 1;
-            pIndex->pages = (LPPAGEINFO*) hb_xrealloc( pIndex->pages,
-                                 sizeof(LPPAGEINFO) * pIndex->ulPagesDepth );
+            pIndex->pages = ( LPPAGEINFO * ) hb_xrealloc( pIndex->pages,
+                                 sizeof( LPPAGEINFO ) * pIndex->ulPagesDepth );
             memset( pIndex->pages + ul, 0,
                          ( NSX_PAGE_BUFFER >> 1 ) * sizeof( LPPAGEINFO ) );
             pIndex->ulPages++;
@@ -1438,7 +1438,7 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
 #ifdef HB_NSX_EXTERNAL_PAGEBUFFER
    if( !hb_nsxPageBuffer( *pPagePtr ) )
    {
-      hb_nsxPageBuffer( *pPagePtr ) = ( char* ) hb_xgrab( NSX_PAGELEN );
+      hb_nsxPageBuffer( *pPagePtr ) = ( HB_UCHAR * ) hb_xgrab( NSX_PAGELEN );
       memset( hb_nsxPageBuffer( *pPagePtr ), 0, NSX_PAGELEN );
    }
 #endif
@@ -1525,7 +1525,7 @@ static LPPAGEINFO hb_nsxPageLoad( LPTAGINFO pTag, HB_ULONG ulPage )
       pPage = hb_nsxPageGetBuffer( pTag, ulPage );
       pPage->Changed = HB_FALSE;
       if( !hb_nsxBlockRead( pTag->pIndex, ulPage,
-                            ( HB_BYTE * ) hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
+                            hb_nsxPageBuffer( pPage ), NSX_PAGELEN ) )
       {
          hb_nsxPageRelease( pTag, pPage );
          return NULL;
@@ -1556,7 +1556,7 @@ static LPPAGEINFO hb_nsxPageLoad( LPTAGINFO pTag, HB_ULONG ulPage )
  */
 static void hb_nsxPageInit( LPPAGEINFO pPage )
 {
-   memset( pPage->buffer, 0, NSX_PAGELEN );
+   memset( pPage->data.buffer, 0, NSX_PAGELEN );
    pPage->uiKeys = pPage->uiOffset = 0;
 }
 
@@ -1566,10 +1566,11 @@ static void hb_nsxPageInit( LPPAGEINFO pPage )
 static void hb_nsxPageFree( LPTAGINFO pTag, LPPAGEINFO pPage )
 {
    hb_nsxSetPageType( pPage, 'f' );
-   {
-      LPNSXROOTHEADER pHeader = ( LPNSXROOTHEADER ) pPage->buffer;
-      HB_PUT_LE_UINT32( pHeader->FreePage, pTag->pIndex->NextAvail );
-   }
+#ifdef HB_NSX_EXTERNAL_PAGEBUFFER
+   HB_PUT_LE_UINT32( pPage->data.rootHeader->FreePage, pTag->pIndex->NextAvail );
+#else
+   HB_PUT_LE_UINT32( pPage->data.rootHeader.FreePage, pTag->pIndex->NextAvail );
+#endif
    pTag->pIndex->NextAvail = pPage->Page;
    pTag->pIndex->Changed = pPage->Changed = HB_TRUE;
 }
@@ -1619,8 +1620,11 @@ static LPPAGEINFO hb_nsxPageNew( LPTAGINFO pTag, HB_BOOL fNull )
          return NULL;
       else
       {
-         LPNSXROOTHEADER pHeader = ( LPNSXROOTHEADER ) pPage->buffer;
-         pTag->pIndex->NextAvail = HB_GET_LE_UINT32( pHeader->FreePage );
+#ifdef HB_NSX_EXTERNAL_PAGEBUFFER
+         pTag->pIndex->NextAvail = HB_GET_LE_UINT32( pPage->data.rootHeader->FreePage );
+#else
+         pTag->pIndex->NextAvail = HB_GET_LE_UINT32( pPage->data.rootHeader.FreePage );
+#endif
       }
    }
    else
@@ -1943,7 +1947,7 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       iSize = sizeof( Header );
    }
 
-   if( !hb_nsxBlockWrite( pIndex, pTag->HeadBlock, ( HB_BYTE * ) &Header, iSize ) )
+   if( !hb_nsxBlockWrite( pIndex, pTag->HeadBlock, &Header, iSize ) )
       return HB_FAILURE;
 
    pTag->HdrChanged = HB_FALSE;
@@ -2012,7 +2016,7 @@ static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
    HB_PUT_LE_UINT32( pIndex->HeaderBuff.FreePage, pIndex->NextAvail );
    HB_PUT_LE_UINT32( pIndex->HeaderBuff.FileSize, pIndex->FileSize );
 
-   if( !hb_nsxBlockWrite( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, iSize ) )
+   if( !hb_nsxBlockWrite( pIndex, 0, &pIndex->HeaderBuff, iSize ) )
       return HB_FAILURE;
 
    pIndex->Changed = pIndex->Update = HB_FALSE;
@@ -2030,7 +2034,7 @@ static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
 
    if( !pIndex->fValidHeader )
    {
-      if( !hb_nsxBlockRead( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
+      if( !hb_nsxBlockRead( pIndex, 0, &pIndex->HeaderBuff, NSX_PAGELEN ) )
          return HB_FAILURE;
       pIndex->fValidHeader = HB_TRUE;
    }
@@ -2063,7 +2067,7 @@ static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
          if( ulBlock == 0 || pTagItem->TagName[ 0 ] <= 0x20 )
             return HB_FAILURE;
          if( !hb_nsxBlockRead( pIndex, ulBlock,
-                               ( HB_BYTE * ) &tagbuffer, sizeof( NSXTAGHEADER ) ) )
+                               &tagbuffer, sizeof( NSXTAGHEADER ) ) )
             return HB_FAILURE;
          pTag = hb_nsxTagLoad( pIndex, ulBlock, ( const char * ) pTagItem->TagName, &tagbuffer );
          if( !pTag )
@@ -2080,7 +2084,7 @@ static HB_ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
  */
 static HB_ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
 {
-   if( !hb_nsxBlockRead( pIndex, 0, ( HB_BYTE * ) &pIndex->HeaderBuff, NSX_PAGELEN ) )
+   if( !hb_nsxBlockRead( pIndex, 0, &pIndex->HeaderBuff, NSX_PAGELEN ) )
       return HB_FAILURE;
 
    if( pIndex->HeaderBuff.Signature[0] !=

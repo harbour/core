@@ -2593,9 +2593,15 @@ static HB_ERRCODE hb_usrRddInfo( LPRDDNODE pRDD, HB_USHORT uiInfoType, HB_ULONG 
    return hb_usrReturn();
 }
 
-
-static const RDDFUNCS usrFuncTable =
+typedef union
 {
+   RDDFUNCS       funcTable;
+   DBENTRYP_V     funcentries[ 1 ];
+}
+HB_RDD_FUNCTABLE;
+
+static const HB_RDD_FUNCTABLE usrFuncTable =
+{ {
    /* Movement and positioning methods */
    /* ( DBENTRYP_BP )   */ hb_usrBof,         /* Bof        */
    /* ( DBENTRYP_BP )   */ hb_usrEof,         /* Eof        */
@@ -2719,10 +2725,10 @@ static const RDDFUNCS usrFuncTable =
 
    /* Special and reserved methods */
    /* ( DBENTRYP_SVP )  */ NULL               /* WhoCares */
-};
+} };
 
-static const RDDFUNCS rddFuncTable =
-{
+static const HB_RDD_FUNCTABLE rddFuncTable =
+{ {
    /* Movement and positioning methods */
    /* ( DBENTRYP_BP )   */ NULL,              /* Bof        */
    /* ( DBENTRYP_BP )   */ NULL,              /* Eof        */
@@ -2846,7 +2852,7 @@ static const RDDFUNCS rddFuncTable =
 
    /* Special and reserved methods */
    /* ( DBENTRYP_SVP )  */ NULL               /* WhoCares */
-};
+} };
 
 HB_FUNC( USRRDD_GETFUNCTABLE )
 {
@@ -2867,16 +2873,16 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
 
    if( puiCount && pSelfTable && pSuperTable && pMethods )
    {
-      RDDFUNCS funcTable;
+      HB_RDD_FUNCTABLE funcTable;
       DBENTRYP_V * pFunction;
       const DBENTRYP_V * pUsrFunction, * pRddFunction;
 
       * puiCount = RDDFUNCSCOUNT;
       uiSize = ( HB_USHORT ) hb_arrayLen( pMethods );
 
-      pUsrFunction = ( const DBENTRYP_V * ) ( const void * ) &usrFuncTable;
-      pRddFunction = ( const DBENTRYP_V * ) ( const void * ) &rddFuncTable;
-      pFunction    = ( DBENTRYP_V * ) ( void * ) &funcTable;
+      pUsrFunction = usrFuncTable.funcentries;
+      pRddFunction = rddFuncTable.funcentries;
+      pFunction    = funcTable.funcentries;
 
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
@@ -2890,7 +2896,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
          ++pRddFunction;
          ++pFunction;
       }
-      uiResult = hb_rddInherit( pSelfTable, &funcTable, pSuperTable, szSuperRDD );
+      uiResult = hb_rddInherit( pSelfTable, &funcTable.funcTable, pSuperTable, szSuperRDD );
       if( uiResult == HB_SUCCESS )
       {
          pSelfTable->whoCares = ( DBENTRYP_SVP ) hb_itemNew( pMethods );

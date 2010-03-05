@@ -304,6 +304,12 @@ typedef struct _HSXHEADER
 } HSXHEADER;
 typedef HSXHEADER * LPHSXHEADER;
 
+typedef union
+{
+   HB_BYTE     data[ HSXHEADER_LEN ];
+   HSXHEADER   header;
+} HSXHEADERBUF;
+
 typedef struct _HSXINFO
 {
    int        iHandle;          /* HSX handle */
@@ -656,25 +662,24 @@ static int hb_hsxHdrFlush( int iHandle )
 
    if( pHSX->fHdrChanged )
    {
-      HB_BYTE headrBuf[ HSXHEADER_LEN ];
-      LPHSXHEADER pHeader = ( LPHSXHEADER ) ( void * ) headrBuf;
       HB_USHORT uiBits = 0, uiSize = pHSX->uiRecordSize;
+      HSXHEADERBUF buffer;
 
       while( uiSize >>= 1 )
          uiBits++;
 
-      HB_PUT_LE_UINT32( pHeader->recCount,    pHSX->ulRecCount );
-      HB_PUT_LE_UINT32( pHeader->recSize,     ( HB_U32 ) pHSX->uiRecordSize );
-      HB_PUT_LE_UINT32( pHeader->recSizeBits, ( HB_U32 ) uiBits );
-      HB_PUT_LE_UINT16( pHeader->ignoreCase,  pHSX->fIgnoreCase ? 1 : 0 );
-      HB_PUT_LE_UINT16( pHeader->filterType,  pHSX->iFilterType );
-      HB_PUT_LE_UINT32( pHeader->hashLetters, pHSX->fUseHash ? 1 : 0 );
+      HB_PUT_LE_UINT32( buffer.header.recCount,    pHSX->ulRecCount );
+      HB_PUT_LE_UINT32( buffer.header.recSize,     ( HB_U32 ) pHSX->uiRecordSize );
+      HB_PUT_LE_UINT32( buffer.header.recSizeBits, ( HB_U32 ) uiBits );
+      HB_PUT_LE_UINT16( buffer.header.ignoreCase,  pHSX->fIgnoreCase ? 1 : 0 );
+      HB_PUT_LE_UINT16( buffer.header.filterType,  pHSX->iFilterType );
+      HB_PUT_LE_UINT32( buffer.header.hashLetters, pHSX->fUseHash ? 1 : 0 );
 
-      memset( pHeader->keyExpression, 0, HSXKEYEXP_LEN + 1 );
+      memset( buffer.header.keyExpression, 0, HSXKEYEXP_LEN + 1 );
       if( pHSX->szKeyExpr )
-         hb_strncpy( ( char * ) pHeader->keyExpression, pHSX->szKeyExpr, HSXKEYEXP_LEN );
+         hb_strncpy( ( char * ) buffer.header.keyExpression, pHSX->szKeyExpr, HSXKEYEXP_LEN );
 
-      if( hb_fileWriteAt( pHSX->pFile, headrBuf, HSXHEADER_LEN, 0 ) != HSXHEADER_LEN )
+      if( hb_fileWriteAt( pHSX->pFile, buffer.data, HSXHEADER_LEN, 0 ) != HSXHEADER_LEN )
          return HSX_BADHDRWRITE;
 
       pHSX->fHdrChanged = HB_FALSE;
@@ -723,26 +728,25 @@ static int hb_hsxFlushAll( int iHandle )
 static int hb_hsxHdrRead( int iHandle )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
-   HB_BYTE headrBuf[ HSXHEADER_LEN ];
-   LPHSXHEADER pHeader = ( LPHSXHEADER ) ( void * ) headrBuf;
+   HSXHEADERBUF buffer;
    int iResult = HSX_SUCCESS;
 
    if( ! pHSX )
       return HSX_BADHANDLE;
 
-   if( hb_fileReadAt( pHSX->pFile, headrBuf, HSXHEADER_LEN, 0 ) != HSXHEADER_LEN )
+   if( hb_fileReadAt( pHSX->pFile, buffer.data, HSXHEADER_LEN, 0 ) != HSXHEADER_LEN )
       return HSX_BADREAD;
 
-   pHSX->ulRecCount = HB_GET_LE_UINT32( pHeader->recCount );
-   pHSX->uiRecordSize = HB_GET_LE_UINT32( pHeader->recSize );
-   pHSX->fIgnoreCase = HB_GET_LE_UINT16( pHeader->ignoreCase ) != 0;
-   pHSX->iFilterType = HB_GET_LE_UINT16( pHeader->filterType );
-   pHSX->fUseHash = HB_GET_LE_UINT32( pHeader->hashLetters ) != 0;
+   pHSX->ulRecCount = HB_GET_LE_UINT32( buffer.header.recCount );
+   pHSX->uiRecordSize = HB_GET_LE_UINT32( buffer.header.recSize );
+   pHSX->fIgnoreCase = HB_GET_LE_UINT16( buffer.header.ignoreCase ) != 0;
+   pHSX->iFilterType = HB_GET_LE_UINT16( buffer.header.filterType );
+   pHSX->fUseHash = HB_GET_LE_UINT32( buffer.header.hashLetters ) != 0;
 
-   if( pHeader->keyExpression[0] >= ' ' )
+   if( buffer.header.keyExpression[0] >= ' ' )
    {
-      headrBuf[ HSXHEADER_LEN - 1 ] = '\0';
-      pHSX->szKeyExpr = hb_strdup( ( char * ) pHeader->keyExpression );
+      buffer.data[ HSXHEADER_LEN - 1 ] = '\0';
+      pHSX->szKeyExpr = hb_strdup( ( char * ) buffer.header.keyExpression );
       iResult = hb_hsxCompile( pHSX->szKeyExpr, &pHSX->pKeyItem );
    }
 

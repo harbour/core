@@ -590,7 +590,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                iTargetType = SQL_C_CHAR;
 #endif
 
-               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, &buffer, 0, &iLen ) ) )
+               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, buffer, 0, &iLen ) ) )
                {
                   if( iLen > 0 )
                   {

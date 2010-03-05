@@ -1370,7 +1370,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
       return;
 
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
-   AnsiToWideBuffer( szMethod, szMethodWide, ( int ) sizeof( szMethodWide ) );
+   AnsiToWideBuffer( szMethod, szMethodWide, ( int ) HB_SIZEOFARRAY( szMethodWide ) );
 
    /* Try property put */
 

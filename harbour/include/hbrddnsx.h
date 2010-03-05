@@ -294,6 +294,13 @@ typedef struct _NSXTAGHEADER
 } NSXTAGHEADER;
 typedef NSXTAGHEADER * LPNSXTAGHEADER;
 
+typedef struct
+{
+   HB_UCHAR Signature[ 1 ];           /* "i" = 0x69 */
+   HB_UCHAR TagFlags[ 1 ];            /* update flags: NSX_TAG_* */
+   HB_UCHAR RootPage[ 4 ];            /* offset of tag root page */
+} NSXTAGHEADERUPDT;
+
 typedef struct _NSXBRANCHPAGE
 {
    HB_UCHAR NodeID[ 1 ];              /* NSX_BRANCHPAGE | ( lRoot ? NSX_ROOTPAGE : 0 ) */
@@ -383,12 +390,28 @@ typedef struct _HB_PAGEINFO
    struct _HB_PAGEINFO * pNext;
    struct _HB_PAGEINFO * pPrev;
 #ifdef HB_NSX_EXTERNAL_PAGEBUFFER
-   HB_UCHAR * buffer;
+   union
+   {
+      HB_UCHAR *        buffer;
+      LPNSXROOTHEADER   rootHeader;
+      LPNSXTAGHEADER    tagHeader;
+   } data;
 #else
-   HB_UCHAR   buffer[ NSX_PAGELEN ];
+   union
+   {
+      HB_UCHAR       buffer[ NSX_PAGELEN ];
+      NSXROOTHEADER  rootHeader;
+      NSXTAGHEADER   tagHeader;
+   } data;
 #endif
 } HB_PAGEINFO;
 typedef HB_PAGEINFO * LPPAGEINFO;
+
+typedef union
+{
+   HB_UCHAR *        buffer;
+   LPNSXROOTHEADER   header;
+} HB_NSXPAGEHEAD;
 
 typedef struct _HB_NSXSCOPE
 {

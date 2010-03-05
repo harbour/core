@@ -88,13 +88,11 @@ HB_EXTERN_BEGIN
 #define NTXBLOCKBITS                     10     /* Size of NTX block in bits */
 #define NTXBLOCKSIZE      (1<<NTXBLOCKBITS)     /* Size of block in NTX file */
 #define NTX_MAX_TAGNAME                  10     /* Max len of tag name */
-#define NTX_TAGITEMSIZE                  16     /* Size of tag item in CTX header */
 #define NTX_HDR_UNUSED                  473     /* the unused part of header */
 #define NTX_PAGES_PER_TAG                 8
 #define NTX_STACKSIZE                    32     /* Maximum page stack size */
 
 #define NTX_ROOTHEAD_HEADSIZE            12
-#define NTX_TAGHEAD_HEADSIZE              8
 
 /* index file structures - defined as HB_BYTEs to avoid alignment problems */
 
@@ -121,6 +119,13 @@ typedef struct _NTXHEADER     /* Header of NTX file */
 } NTXHEADER;
 typedef NTXHEADER * LPNTXHEADER;
 
+typedef struct
+{
+   HB_BYTE  type[2];
+   HB_BYTE  version[2];
+   HB_BYTE  root[4];
+} NTXHEADERUPDT;
+
 typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */
 {
    HB_BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
@@ -135,7 +140,7 @@ typedef struct _CTXHEADER     /* Header of xHarbour CTX file */
    HB_BYTE  version[ 4 ];  /* update counter LE */
    HB_BYTE  freepage[ 4 ]; /* first free page in index file */
    HB_BYTE  filesize[ 4 ]; /* size of index file in pages */
-   HB_BYTE  tags[ CTX_MAX_TAGS * NTX_TAGITEMSIZE ];
+   CTXTAGITEM tags[ CTX_MAX_TAGS ];
 } CTXHEADER;
 typedef CTXHEADER * LPCTXHEADER;
 

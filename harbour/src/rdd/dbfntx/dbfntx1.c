@@ -931,7 +931,7 @@ static void hb_ntxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
 /*
  * read a given block from index file
  */
-static HB_BOOL hb_ntxBlockRead( LPNTXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *buffer, int iSize )
+static HB_BOOL hb_ntxBlockRead( LPNTXINDEX pIndex, HB_ULONG ulBlock, void *buffer, int iSize )
 {
    if( !pIndex->lockRead && !pIndex->lockWrite )
       hb_errInternal( 9103, "hb_ntxBlockRead on not locked index file.", NULL, NULL );
@@ -952,7 +952,7 @@ static HB_BOOL hb_ntxBlockRead( LPNTXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *bu
 /*
  * write a given block into index file
  */
-static HB_BOOL hb_ntxBlockWrite( LPNTXINDEX pIndex, HB_ULONG ulBlock, HB_BYTE *buffer, int iSize )
+static HB_BOOL hb_ntxBlockWrite( LPNTXINDEX pIndex, HB_ULONG ulBlock, const void * buffer, int iSize )
 {
    if( !pIndex->lockWrite )
       hb_errInternal( 9102, "hb_ntxBlockWrite on not locked index file.", NULL, NULL );
@@ -977,7 +977,7 @@ static HB_BOOL hb_ntxPageSave( LPNTXINDEX pIndex, LPPAGEINFO pPage )
 {
    hb_ntxSetKeyCount( pPage, pPage->uiKeys );
    if( !hb_ntxBlockWrite( pIndex, pPage->Page,
-                          ( HB_BYTE * ) hb_ntxPageBuffer( pPage ), NTXBLOCKSIZE ) )
+                          hb_ntxPageBuffer( pPage ), NTXBLOCKSIZE ) )
       return HB_FALSE;
    pPage->Changed = HB_FALSE;
    pIndex->fFlush = HB_TRUE;
@@ -1039,12 +1039,11 @@ static HB_BOOL hb_ntxTagHeaderCheck( LPTAGINFO pTag )
    {
       if( pTag->HeadBlock )
       {
-         HB_BYTE buffer[ NTX_TAGHEAD_HEADSIZE ];
-         if( hb_ntxBlockRead( pTag->Owner, pTag->HeadBlock, buffer, NTX_TAGHEAD_HEADSIZE ) )
+         NTXHEADERUPDT header;
+         if( hb_ntxBlockRead( pTag->Owner, pTag->HeadBlock, &header, sizeof( header ) ) )
          {
-            LPNTXHEADER pHeader = ( LPNTXHEADER ) ( void * ) buffer;
-            pTag->Signature = HB_GET_LE_UINT16( pHeader->type );
-            pTag->RootBlock = HB_GET_LE_UINT32( pHeader->root );
+            pTag->Signature = HB_GET_LE_UINT16( header.type );
+            pTag->RootBlock = HB_GET_LE_UINT32( header.root );
             hb_ntxTagUpdateFlags( pTag );
          }
       }
@@ -1286,7 +1285,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, HB_ULONG ulPage )
       pPage = hb_ntxPageGetBuffer( pTag, ulPage );
       pPage->Changed = HB_FALSE;
       if( !hb_ntxBlockRead( pTag->Owner, ulPage,
-                            ( HB_BYTE * ) hb_ntxPageBuffer( pPage ), NTXBLOCKSIZE ) )
+                            hb_ntxPageBuffer( pPage ), NTXBLOCKSIZE ) )
       {
          hb_ntxPageRelease( pTag, pPage );
          return NULL;
@@ -1623,7 +1622,7 @@ static void hb_ntxIndexTagAdd( LPNTXINDEX pIndex, LPTAGINFO pTag )
 {
    LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
    int iTags = HB_GET_LE_UINT16( lpCTX->ntags ), iLen, i;
-   LPCTXTAGITEM pTagItem = ( LPCTXTAGITEM ) lpCTX->tags;
+   LPCTXTAGITEM pTagItem = lpCTX->tags;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
@@ -1651,14 +1650,14 @@ static void hb_ntxIndexTagDel( LPNTXINDEX pIndex, char * szTagName )
 {
    LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
    int iTags = HB_GET_LE_UINT16( lpCTX->ntags ), i;
-   LPCTXTAGITEM pTagItem = ( LPCTXTAGITEM ) lpCTX->tags;
+   LPCTXTAGITEM pTagItem = lpCTX->tags;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
       if( !hb_strnicmp( ( char * ) pTagItem->tag_name, szTagName, NTX_MAX_TAGNAME ) )
       {
-         memmove( pTagItem, pTagItem + 1, ( iTags - i ) * NTX_TAGITEMSIZE );
-         memset( pTagItem + iTags - 1, 0, NTX_TAGITEMSIZE );
+         memmove( pTagItem, pTagItem + 1, ( iTags - i ) * sizeof( CTXTAGITEM ) );
+         memset( pTagItem + iTags - 1, 0, sizeof( CTXTAGITEM ) );
          --iTags;
          HB_PUT_LE_UINT16( lpCTX->ntags, iTags );
          pIndex->Update = HB_TRUE;
@@ -1673,7 +1672,7 @@ static void hb_ntxIndexTagDel( LPNTXINDEX pIndex, char * szTagName )
 static HB_ULONG hb_ntxIndexTagFind( LPCTXHEADER lpCTX, char * szTagName )
 {
    int iTags = HB_GET_LE_UINT16( lpCTX->ntags ), i;
-   LPCTXTAGITEM pTagItem = ( LPCTXTAGITEM ) lpCTX->tags;
+   LPCTXTAGITEM pTagItem = lpCTX->tags;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
@@ -1768,7 +1767,7 @@ static HB_ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
       iSize = sizeof( NTXHEADER );
    }
 
-   if( !hb_ntxBlockWrite( pIndex, pTag->HeadBlock, ( HB_BYTE * ) &Header, iSize ) )
+   if( !hb_ntxBlockWrite( pIndex, pTag->HeadBlock, &Header, iSize ) )
       return HB_FAILURE;
    pTag->HdrChanged = HB_FALSE;
    pIndex->Changed = pIndex->Compound;
@@ -1841,7 +1840,7 @@ static HB_ERRCODE hb_ntxIndexHeaderSave( LPNTXINDEX pIndex )
       HB_PUT_LE_UINT32( lpCTX->freepage, pIndex->NextAvail );
       HB_PUT_LE_UINT32( lpCTX->filesize, pIndex->TagBlock );
 
-      if( !hb_ntxBlockWrite( pIndex, 0, ( HB_BYTE * ) lpCTX, iSize ) )
+      if( !hb_ntxBlockWrite( pIndex, 0, lpCTX, iSize ) )
          return HB_FAILURE;
    }
    pIndex->Changed = pIndex->Update = HB_FALSE;
@@ -1872,7 +1871,7 @@ static HB_ERRCODE hb_ntxIndexLoad( LPNTXINDEX pIndex, char * szTagName )
    {
       HB_BYTE tagbuffer[ NTXBLOCKSIZE ];
       LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
-      LPCTXTAGITEM pTagItem = ( LPCTXTAGITEM ) lpCTX->tags;
+      LPCTXTAGITEM pTagItem = lpCTX->tags;
       HB_ULONG ulBlock;
       int iTags;
 
