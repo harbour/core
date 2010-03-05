@@ -691,16 +691,24 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
-   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
-
-   static P_GETCONSOLEWINDOW s_pGetConsoleWindow;
    static HB_BOOL s_bChecked = HB_FALSE;
+
+   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
+   static P_GETCONSOLEWINDOW s_pGetConsoleWindow;
+
+#if HB_GTWIN_USE_UNDOC_WINAPI
+   typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
+   static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose;
+#endif
 
    HB_BOOL bOldClosable = HB_TRUE;
 
    if( ! s_bChecked )
    {
       s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetConsoleWindow" );
+#if HB_GTWIN_USE_UNDOC_WINAPI
+      s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ), "SetConsoleMenuClose" );
+#endif
       s_bChecked = HB_TRUE;
    }
 
@@ -710,16 +718,16 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
       if( hSysMenu )
       {
-         MENUITEMINFO mii;
-
-         memset( &mii, 0, sizeof( mii ) );
-         mii.cbSize = sizeof( mii );
-
-         ( void ) GetMenuItemInfo( hSysMenu, SC_CLOSE, FALSE, &mii );
-         bOldClosable = ( mii.fState & MFS_GRAYED ) == 0;
+         bOldClosable = ( GetMenuState( hSysMenu, SC_CLOSE, MF_BYCOMMAND ) & MFS_GRAYED ) == 0;
 
          if( bSet )
+         {
+#if HB_GTWIN_USE_UNDOC_WINAPI
+            if( s_pSetConsoleMenuClose )
+               s_pSetConsoleMenuClose( bClosable );
+#endif
             EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bClosable ? MF_ENABLED : MF_GRAYED ) );
+         }
       }
    }
 
