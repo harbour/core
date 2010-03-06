@@ -66,7 +66,7 @@ HB_FUNC( EVAL )
       int iPCount = hb_pcount();
       int iParam;
 
-      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPushEvalSym();
       hb_vmPush( pItem );
       /* NOTE: hb_param() function cannot be used for parameter access
        * because we need to pass the references too.

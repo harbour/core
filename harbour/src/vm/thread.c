@@ -944,7 +944,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 
       if( HB_IS_BLOCK( pStart ) )
       {
-         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPushEvalSym();
          hb_vmPush( pStart );
          fSend = HB_TRUE;
       }

@@ -313,7 +313,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, HB_ULONG ulPCount, ... )
 /* undocumented Clipper _cEval0() */
 void hb_evalBlock0( PHB_ITEM pCodeBlock )
 {
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
    hb_vmPush( pCodeBlock );
    hb_vmSend( 0 );
 }
@@ -321,7 +321,7 @@ void hb_evalBlock0( PHB_ITEM pCodeBlock )
 /* undocumented Clipper _cEval1() */
 void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
 {
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
    hb_vmPush( pCodeBlock );
    hb_vmPush( pParam );
    hb_vmSend( 1 );
@@ -334,7 +334,7 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
    HB_USHORT uiParams = 0;
    PHB_ITEM pParam;
 
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
    hb_vmPush( pCodeBlock );
 
    va_start( args, pCodeBlock );
@@ -364,7 +364,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 
          while( lStart <= lEnd )
          {
-            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPushEvalSym();
             hb_vmPush( pCodeBlock );
             hb_vmPushLong( lStart );
             hb_vmSend( 1 );
@@ -380,7 +380,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
          lEnd = hb_parnl( 2 );
          while( lStart <= lEnd )
          {
-            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPushEvalSym();
             hb_vmPush( pCodeBlock );
             hb_vmPushLong( lStart );
             hb_vmSend( 1 );

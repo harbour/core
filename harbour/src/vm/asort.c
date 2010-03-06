@@ -67,7 +67,7 @@ static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock,
 {
    if( pBlock )
    {
-      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPushEvalSym();
       hb_vmPush( pBlock );
       hb_vmPush( pItem1 );
       hb_vmPush( pItem2 );

@@ -997,7 +997,7 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_S
                HB_STACK_TLS_PRELOAD
                do
                {
-                  hb_vmPushSymbol( &hb_symEval );
+                  hb_vmPushEvalSym();
                   hb_vmPush( pValue );
                   hb_vmPush( pBaseArray->pItems + ulStart );
                   hb_vmPushLong( ++ulStart );
@@ -1161,7 +1161,7 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, H
                HB_STACK_TLS_PRELOAD
                do
                {
-                  hb_vmPushSymbol( &hb_symEval );
+                  hb_vmPushEvalSym();
                   hb_vmPush( pValue );
                   if( ulStart < pBaseArray->ulLen )
                      hb_vmPush( pBaseArray->pItems + ulStart );
@@ -1322,7 +1322,7 @@ HB_BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pulStart, HB_S
          {
             do
             {
-               hb_vmPushSymbol( &hb_symEval );
+               hb_vmPushEvalSym();
                hb_vmPush( bBlock );
                hb_vmPush( pBaseArray->pItems + ulStart );
                hb_vmPushLong( ulStart + 1 );

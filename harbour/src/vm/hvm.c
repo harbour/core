@@ -6029,7 +6029,7 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlock(%p)", pBlock));
 
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
    hb_vmPush( pBlock );
    hb_vmSend( 0 );
    return hb_stackReturnItem();
@@ -6051,7 +6051,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, HB_ULONG ulArgCount, ... )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %lu, ...)", pBlock, ulArgCount));
 
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
    hb_vmPush( pBlock );
 
    va_start( va, ulArgCount );
@@ -6076,9 +6076,9 @@ PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
 
    if( HB_IS_BLOCK( pItem ) )
    {
-      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPushEvalSym();
       hb_vmPush( pItem );
-      hb_vmSend( 0 );
+      hb_vmEval( 0 );
    }
    else
    {

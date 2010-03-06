@@ -4333,7 +4333,7 @@ HB_FUNC_STATIC( msgEvalInline )
    HB_USHORT uiPCount = hb_pcount(), uiParam;
    PHB_ITEM pBlock;
 
-   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPushEvalSym();
 
    hb_vmPush( hb_arrayGetItemPtr( s_pClasses[ pMethod->uiSprClass ]->pInlines,
                                   pMethod->uiData ) );
