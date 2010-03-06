@@ -227,17 +227,29 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPC
             fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
             return 1;
 
+         case HB_P_MODULUS:
+            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ld ) ) break;\n", lValue );
+            return 1;
+
          case HB_P_MINUS:
             if( lValue > 0 )
             {
                fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
                return 1;
             }
+#if -HB_LONG_MAX > HB_LONG_MIN
+            else if( lValue < -HB_LONG_MAX )
+               break;
+#endif
             lValue = -lValue;
             /* no break */
 
          case HB_P_PLUS:
             fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
+            return 1;
+
+         case HB_P_RETVALUE:
+            fprintf( cargo->yyc, "\thb_xvmRetInt( %ld );\n", lValue );
             return 1;
       }
    }
@@ -1293,8 +1305,17 @@ static HB_GENC_FUNC( hb_p_pushnil )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushNil();\n" );
-   return 1;
+   if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_RETVALUE &&
+       HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
+   {
+      fprintf( cargo->yyc, "\thb_xvmRetNil();\n" );
+      return 2;
+   }
+   else
+   {
+      fprintf( cargo->yyc, "\thb_xvmPushNil();\n" );
+      return 1;
+   }
 }
 
 static HB_GENC_FUNC( hb_p_pushself )
@@ -1380,8 +1401,7 @@ static HB_GENC_FUNC( hb_p_pushsym )
 {
    HB_GENC_LABEL();
 
-   if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 &&
-       pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHNIL &&
+   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHNIL &&
        HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 )
    {
       fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
@@ -1398,8 +1418,7 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
 {
    HB_GENC_LABEL();
 
-   if( HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 &&
-       pFunc->pCode[ lPCodePos + 2 ] == HB_P_PUSHNIL &&
+   if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_PUSHNIL &&
        HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 )
    {
       fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",

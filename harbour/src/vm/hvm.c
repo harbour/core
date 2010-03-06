@@ -9070,6 +9070,24 @@ void hb_xvmRetValue( void )
    hb_stackReturnItem()->type &= ~HB_IT_MEMOFLAG;
 }
 
+void hb_xvmRetNil( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmRetNil()"));
+
+   hb_itemSetNil( hb_stackReturnItem() );
+}
+
+void hb_xvmRetInt( HB_LONG lValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmRetInt(%ld)", lValue));
+
+   hb_itemPutNL( hb_stackReturnItem(), lValue );
+}
+
 void hb_xvmStatics( PHB_SYMB pSymbol, HB_USHORT uiStatics )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStatics(%p,%hu)", pSymbol, uiStatics));
@@ -10528,9 +10546,7 @@ HB_BOOL hb_xvmDivideByInt( HB_LONG lDivisor )
          }
       }
       else
-      {
          hb_itemPutND( pValue, hb_itemGetND( pValue ) / lDivisor );
-      }
    }
    else if( hb_objHasOperator( pValue, HB_OO_OP_DIVIDE ) )
    {
@@ -10545,6 +10561,62 @@ HB_BOOL hb_xvmDivideByInt( HB_LONG lDivisor )
 
       hb_vmPushLong( lDivisor );
       pSubst = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/", 2, pValue, hb_stackItemFromTop( -1 ) );
+
+      if( pSubst )
+      {
+         hb_stackPop();
+         hb_itemMove( pValue, pSubst );
+         hb_itemRelease( pSubst );
+      }
+   }
+
+   HB_XVM_RETURN
+}
+
+HB_BOOL hb_xvmModulusByInt( HB_LONG lDivisor )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmModulusByInt(%ld)", lDivisor));
+
+   pValue = hb_stackItemFromTop( -1 );
+
+   if( HB_IS_NUMERIC( pValue ) )
+   {
+      if( lDivisor == 0 )
+      {
+         PHB_ITEM pSubst;
+
+         hb_vmPushLong( lDivisor );
+         pSubst = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, pValue, hb_stackItemFromTop( -1 ) );
+
+         if( pSubst )
+         {
+            hb_stackPop();
+            hb_itemMove( pValue, pSubst );
+            hb_itemRelease( pSubst );
+         }
+      }
+      else if( HB_IS_NUMINT( pValue ) )
+         hb_itemPutND( pValue, HB_ITEM_GET_NUMINTRAW( pValue ) % lDivisor );
+      else
+         hb_itemPutND( pValue, fmod( hb_itemGetND( pValue ), lDivisor ) );
+
+   }
+   else if( hb_objHasOperator( pValue, HB_OO_OP_MOD ) )
+   {
+      hb_vmPushLong( lDivisor );
+      hb_objOperatorCall( HB_OO_OP_MOD, pValue, pValue,
+                          hb_stackItemFromTop( -1 ), NULL );
+      hb_stackPop();
+   }
+   else
+   {
+      PHB_ITEM pSubst;
+
+      hb_vmPushLong( lDivisor );
+      pSubst = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%", 2, pValue, hb_stackItemFromTop( -1 ) );
 
       if( pSubst )
       {

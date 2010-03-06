@@ -104,6 +104,8 @@ extern HB_EXPORT void    hb_xvmStatics( PHB_SYMB pSymbol, HB_USHORT uiStatics );
 extern HB_EXPORT void    hb_xvmThreadStatics( HB_USHORT uiStatics, const HB_BYTE * statics );
 extern HB_EXPORT void    hb_xvmParameter( PHB_SYMB pSymbol, int iParams );
 extern HB_EXPORT void    hb_xvmRetValue( void );                   /* pops the latest stack value into stack.Return */
+extern HB_EXPORT void    hb_xvmRetNil( void );
+extern HB_EXPORT void    hb_xvmRetInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmDo( HB_USHORT uiParams );
 extern HB_EXPORT HB_BOOL hb_xvmFunction( HB_USHORT uiParams );
 extern HB_EXPORT HB_BOOL hb_xvmSend( HB_USHORT uiParams );
@@ -235,6 +237,7 @@ extern HB_EXPORT HB_BOOL hb_xvmArrayItemPush( HB_SIZE ulIndex );
 extern HB_EXPORT HB_BOOL hb_xvmArrayItemPop( HB_SIZE ulIndex );
 extern HB_EXPORT HB_BOOL hb_xvmMultByInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmDivideByInt( HB_LONG lValue );
+extern HB_EXPORT HB_BOOL hb_xvmModulusByInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmAddInt( HB_LONG lValue );
 extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, HB_LONG lValue );
 /*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, HB_SIZE ulLen );*/
