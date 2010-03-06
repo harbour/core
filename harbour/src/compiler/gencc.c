@@ -237,8 +237,8 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPC
                fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
                return 1;
             }
-#if -HB_LONG_MAX > HB_LONG_MIN
-            else if( lValue < -HB_LONG_MAX )
+#if -LONG_MAX > LONG_MIN
+            else if( lValue < -LONG_MAX )
                break;
 #endif
             lValue = -lValue;
