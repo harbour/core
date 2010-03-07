@@ -61,8 +61,8 @@ HB_FUNC( __TIP_BASE64_ENCODE )
    HB_ISIZ nLen = hb_parclen( 1 );
    HB_ISIZ nPos = 0, nPosRet = 0, nPosBlock = 0;
    HB_SIZE nFinalLen;
-   int nLineCount = 0;
-   unsigned char cElem, cElem1;
+   HB_ISIZ nLineCount = 0;
+   HB_UCHAR cElem, cElem1;
    HB_BOOL bExcept;
 
    if( ! cData )
@@ -88,7 +88,7 @@ HB_FUNC( __TIP_BASE64_ENCODE )
 
    while( nPos < nLen )
    {
-      cElem = ( unsigned char ) cData[ nPos ];
+      cElem = ( HB_UCHAR ) cData[ nPos ];
       /* NOT using trailing 0 here as some buggy 3dparty func
          will create strings without trailing 0. */
 
@@ -100,12 +100,12 @@ HB_FUNC( __TIP_BASE64_ENCODE )
             cElem = cElem >> 2;
             break;
          case 2:
-            cElem1 = nPos < nLen - 1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem1 = nPos < nLen - 1 ? ( HB_UCHAR ) cData[ nPos + 1 ] : 0;
             cElem = ( ( cElem & 0x3 ) << 4 ) | ( cElem1 >> 4 );
             nPos++;
             break;
          case 3:
-            cElem1 = nPos < nLen - 1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem1 = nPos < nLen - 1 ? ( HB_UCHAR ) cData[ nPos + 1 ] : 0;
             cElem = ( ( cElem & 0xF ) << 2 ) | ( cElem1 >> 6 );
             nPos++;
             break;
@@ -167,10 +167,10 @@ HB_FUNC( __TIP_BASE64_ENCODE )
 HB_FUNC( __TIP_BASE64_DECODE )
 {
    const char * cData = hb_parc( 1 );
-   unsigned char * cRet;
-   int nLen = hb_parclen( 1 );
-   int nPos = 0, nPosRet = 0, nPosBlock = 0;
-   unsigned char cElem;
+   HB_UCHAR * cRet;
+   HB_ISIZ nLen = hb_parclen( 1 );
+   HB_ISIZ nPos = 0, nPosRet = 0, nPosBlock = 0;
+   HB_UCHAR cElem;
 
    if( ! cData )
    {
@@ -187,7 +187,7 @@ HB_FUNC( __TIP_BASE64_DECODE )
 
 
    /* we know exactly the renturned length. */
-   cRet = ( unsigned char * ) hb_xgrab( ( nLen / 4 + 1 ) * 3 );
+   cRet = ( HB_UCHAR * ) hb_xgrab( ( nLen / 4 + 1 ) * 3 );
 
    while( nPos < nLen )
    {
@@ -243,6 +243,6 @@ HB_FUNC( __TIP_BASE64_DECODE )
 
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
-   cRet = ( unsigned char * ) hb_xrealloc( cRet, nPosRet + 1 );
+   cRet = ( HB_UCHAR * ) hb_xrealloc( cRet, nPosRet + 1 );
    hb_retclen_buffer( ( char * ) cRet, nPosRet );
 }

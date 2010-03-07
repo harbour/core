@@ -57,14 +57,11 @@
 HB_FUNC( __TIP_URL_ENCODE )
 {
    const char * cData = hb_parc( 1 );
-   int nLen = hb_parclen( 1 );
-   HB_BOOL bComplete = hb_parl( 2 );
+   HB_ISIZ nLen = hb_parclen( 1 );
+   HB_BOOL bComplete = HB_ISLOG( 2 ) ? hb_parl( 2 ) : HB_TRUE;
    char * cRet;
-   int nPos = 0, nPosRet = 0, nVal;
+   HB_ISIZ nPos = 0, nPosRet = 0, nVal;
    char cElem;
-
-   if( hb_pcount() < 2 )
-      bComplete = HB_TRUE;
 
    if( ! cData )
    {
@@ -106,9 +103,9 @@ HB_FUNC( __TIP_URL_ENCODE )
       else /* encode! */
       {
          cRet[ nPosRet++ ] = '%';
-         nVal = ( ( unsigned char ) cElem ) >> 4;
+         nVal = ( ( HB_UCHAR ) cElem ) >> 4;
          cRet[ nPosRet++ ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
-         nVal = ( ( unsigned char ) cElem ) & 0x0F;
+         nVal = ( ( HB_UCHAR ) cElem ) & 0x0F;
          cRet[ nPosRet ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
       }
 
@@ -122,9 +119,9 @@ HB_FUNC( __TIP_URL_ENCODE )
 HB_FUNC( __TIP_URL_DECODE )
 {
    const char * cData = hb_parc( 1 );
-   int nLen = hb_parclen( 1 );
+   HB_ISIZ nLen = hb_parclen( 1 );
    char * cRet;
-   int nPos = 0, nPosRet = 0;
+   HB_ISIZ nPos = 0, nPosRet = 0;
    char cElem;
 
    if( ! cData )

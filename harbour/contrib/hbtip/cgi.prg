@@ -617,7 +617,7 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  AScan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
                ENDIF
             ENDIF

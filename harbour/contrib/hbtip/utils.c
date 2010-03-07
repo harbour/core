@@ -259,7 +259,7 @@ typedef struct tag_mime_ext
 {
    const char * pattern;      /* Extension to match */
    const char * mime_type;    /* Mimetype if complete */
-   short unsigned int flags;  /* flags for confrontation */
+   HB_USHORT flags;  /* flags for confrontation */
 } EXT_MIME_ENTRY;
 
 #define EXT_MIME_TABLE_SIZE 19
@@ -668,7 +668,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          hb_retc_null();
    }
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC_EXTERN( HB_BASE64ENCODE );
