@@ -536,7 +536,6 @@ static HB_BOOL hb_dbfPasswordSet( DBFAREAP pArea, PHB_ITEM pPasswd, HB_BOOL fRaw
    fSet = !pArea->fHasMemo && HB_IS_STRING( pPasswd ) && (!fRaw || ulLen == 8);
    if( fSet )
    {
-      ulLen = hb_itemGetCLen( pPasswd );
       if( ulLen > 0 )
       {
          if( ulLen < 8 )
