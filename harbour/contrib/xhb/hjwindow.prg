@@ -268,11 +268,11 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
    ::height  := h
    ::width   := w
 
-   cStr := "screenX=" + NTRIM( ::screenX ) + ","
+   cStr := "screenX=" + hb_ntos( ::screenX ) + ","
 
-   cStr += "screenY=" + NTRIM( ::screenY ) + ","
-   cStr += "height=" + NTRIM( ::height ) + ","
-   cStr += "width=" + NTRIM( ::width )
+   cStr += "screenY=" + hb_ntos( ::screenY ) + ","
+   cStr += "height=" + hb_ntos( ::height ) + ","
+   cStr += "width=" + hb_ntos( ::width )
 
    ::features += IF( Empty( ::Features ), cStr + ",", cStr )
 
@@ -437,11 +437,11 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    ENDIF
 
    IF nBorder != NIL
-      cStr += " BORDER = " + NTRIM( nBorder ) + CRLF()
+      cStr += " BORDER = " + hb_ntos( nBorder ) + CRLF()
    ENDIF
 
    IF nHeight != NIL
-      cStr += " HEIGHT = " + NTRIM( nHeight ) + "% " + CRLF()
+      cStr += " HEIGHT = " + hb_ntos( nHeight ) + "% " + CRLF()
    ENDIF
 
    IF cOnClick != NIL

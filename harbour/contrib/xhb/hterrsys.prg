@@ -110,7 +110,7 @@ STATIC FUNC xhb_cgi_DefError( e )
 
    // display message and traceback
    IF ( !Empty( e:osCode ) )
-      cMessage += " (DOS Error   : " + NTRIM( e:osCode ) + ")"
+      cMessage += " (DOS Error   : " + hb_ntos( e:osCode ) + ")"
    ENDIF
 
    // RESET System //
@@ -134,12 +134,12 @@ STATIC FUNC xhb_cgi_DefError( e )
 
    cErrString += '</TD></TR><TR><TD bgcolor="cyan">' + CRLF()
    cErrstring += '<FONT face ="verdana" size ="2" color="black">' + CRLF()
-   cErrString += "ERRORCODE...... :" + NTRIM( e:GenCode ) + "<BR>" + CRLF()
+   cErrString += "ERRORCODE...... :" + hb_ntos( e:GenCode ) + "<BR>" + CRLF()
    cErrString += "SUBSYSTEM..... :" + e:SubSystem + "<BR>" + CRLF()
    cErrString += "DESCRIPTION...:" + e:Description + "<BR>" + CRLF()
    cErrString += "OPERATION......:" + e:Operation + "<BR>" + CRLF()
    cErrString += "FILENAME........ :" + e:FileName + "<BR>" + CRLF()
-   cErrString += "TRIES............. :" + NTRIM( e:Tries ) + CRLF()
+   cErrString += "TRIES............. :" + hb_ntos( e:Tries ) + CRLF()
 
    cErrString += '</TD></TR>'
    cErrString += '<TR><TD bgcolor="red">'
@@ -151,7 +151,7 @@ STATIC FUNC xhb_cgi_DefError( e )
    DO WHILE ( !Empty( Procname( i ) ) )
 
       cErrString += "Called from " + RTrim( Procname( i ) ) + ;
-                                           "(" + NTRIM( Procline( i ) ) + ") <BR>" + CRLF()
+                                           "(" + hb_ntos( Procline( i ) ) + ") <BR>" + CRLF()
 
       i ++
    ENDDO
@@ -215,7 +215,7 @@ STATIC FUNC ErrorMessage( e )
 
    // add subsystem's error code if available
    IF ISNUMBER( e:subCode )
-      cMessage += "/" + NTRIM( e:subCode )
+      cMessage += "/" + hb_ntos( e:subCode )
    ELSE
       cMessage += "/???"
    ENDIF

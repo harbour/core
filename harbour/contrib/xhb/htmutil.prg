@@ -187,11 +187,11 @@ oHtm:endTable()
       oHtm:newTableCell( "center" )
       IF lUseLinks
          LINK ( cAction ) ;
-               TEXT( NTrim( Recno() ) ) ;
+               TEXT( hb_ntos( Recno() ) ) ;
                OF oHtm
       ELSE
          PUSH BUTTON ;
-            NAME "'B" + NTRIM( Recno() ) + "'" ;
+            NAME "'B" + hb_ntos( Recno() ) + "'" ;
             CAPTION "' ? '" ;
             ONCLICK ( cAction ) ;
             OF oHtm
@@ -259,11 +259,11 @@ oHtm:endTable()
       oHtm:newTableCell( "center" )
       IF lUseLinks
          LINK( cAction ) ;
-               TEXT( NTrim( oQuery:RECNO() ) ) ;
+               TEXT( hb_ntos( oQuery:RECNO() ) ) ;
                OF oHtm
       ELSE
          PUSH BUTTON ;
-            NAME "'B" + NTRIM( oQuery:RECNO() ) + "'" ;
+            NAME "'B" + hb_ntos( oQuery:RECNO() ) + "'" ;
             CAPTION "' ? '" ;
             ONCLICK( cAction ) ;
             OF oHtm
@@ -520,11 +520,11 @@ METHOD SetSize( x, y, h, w ) Class JWindow
    ::height  := h
    ::width   := w
 
-   cStr := "screenX=" + NTRIM( ::screenX ) + ","
+   cStr := "screenX=" + hb_ntos( ::screenX ) + ","
 
-   cStr += "screenY=" + NTRIM( ::screenY ) + ","
-   cStr += "height=" + NTRIM( ::height ) + ","
-   cStr += "width=" + NTRIM( ::width )
+   cStr += "screenY=" + hb_ntos( ::screenY ) + ","
+   cStr += "height=" + hb_ntos( ::height ) + ","
+   cStr += "width=" + hb_ntos( ::width )
 
    ::features += IF( Empty( ::Features ), cStr + ",", cStr )
 
@@ -695,11 +695,11 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    ENDIF
 
    IF nBorder != NIL
-      cStr += " BORDER = " + NTRIM( nBorder ) + CRLF()
+      cStr += " BORDER = " + hb_ntos( nBorder ) + CRLF()
    ENDIF
 
    IF nHeight != NIL
-      cStr += " HEIGHT = " + NTRIM( nHeight ) + "% " + CRLF()
+      cStr += " HEIGHT = " + hb_ntos( nHeight ) + "% " + CRLF()
    ENDIF
 
    IF cOnClick != NIL

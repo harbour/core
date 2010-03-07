@@ -126,8 +126,8 @@ METHOD New( name, lOpen, width, height, bgColor, ;
            "<!--" + crlf() + ;
            "var " + name + ";" + CRLF() + CRLF() + ;
            "function listInit() {" + CRLF() + ;
-           "var width =" + NTRIM( width ) + ";" + ;
-           "var height=" + NTRIM( height ) + ";" + CRLF() + ;
+           "var width =" + hb_ntos( width ) + ";" + ;
+           "var height=" + hb_ntos( height ) + ";" + CRLF() + ;
            'listSetImages( "' + cMinusImg + '", "' + cPlusImg + '" );' + CRLF() + CRLF()
 
    ::cMainNode := name
@@ -135,11 +135,11 @@ METHOD New( name, lOpen, width, height, bgColor, ;
    cStr += ""       //SPACE(10)
    cStr += name + " = new List("
    cStr += IF( lOpen, "true,", "false," )
-   cStr += NTRIM( width ) + ","
-   cStr += NTRIM( height ) + ","
+   cStr += hb_ntos( width ) + ","
+   cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
    cStr += ""       //SPACE(10)
-   cStr += name + [.setFont("<FONT FACE='] + FONT + [' SIZE=] + NTRIM( fntSize ) + [' COLOR='] + fntColor + ['>","</FONT>");] + CRLF()
+   cStr += name + [.setFont("<FONT FACE='] + FONT + [' SIZE=] + hb_ntos( fntSize ) + [' COLOR='] + fntColor + ['>","</FONT>");] + CRLF()
 
    ::nItems ++
    Aadd( ::aScript, cStr )
@@ -162,8 +162,8 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
    cStr += ""       //SPACE(10)
    cStr += name + "= new List("
    cStr += IF( lOpen, "true,", "false," )
-   cStr += NTRIM( width ) + ","
-   cStr += NTRIM( height ) + ","
+   cStr += hb_ntos( width ) + ","
+   cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
 
    ::cCurrentNode := name
@@ -191,7 +191,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJsList
 
    cStr += name + [.setFont("<FONT ] + ;
       [ FACE = '] + font + [' ] + ;
-      [ SIZE = ] + NTRIM( fntSize ) + ['] + ;
+      [ SIZE = ] + hb_ntos( fntSize ) + ['] + ;
       [ COLOR = '] + fntColor + [' ] + ;
       [ > ","</FONT>");]+CRLF()
 
@@ -254,7 +254,7 @@ METHOD Build( xPos, yPos ) CLASS TJsList
    DEFAULT xPos TO 5
    DEFAULT yPos TO 5
 
-   cStr += ::cMainNode + ".build(" + NTRIM( xPos ) + "," + NTRIM( yPos ) + ");" + CRLF()
+   cStr += ::cMainNode + ".build(" + hb_ntos( xPos ) + "," + hb_ntos( yPos ) + ");" + CRLF()
    cStr += "}" + CRLF()
    CsTR += "// -->" + crlf()
    cStr += "</SCRIPT>" + CRLF()
@@ -263,7 +263,7 @@ METHOD Build( xPos, yPos ) CLASS TJsList
    cStr += "</STYLE>" + CRLF()
    cStr += '<STYLE TYPE="text/css">' + CRLF()
    FOR i := 0 TO ::nItems + 6
-      cStr += "#" + ::cMainNode + "Item" + NTRIM( i ) + " { position:absolute; }" + CRLF()
+      cStr += "#" + ::cMainNode + "Item" + hb_ntos( i ) + " { position:absolute; }" + CRLF()
    NEXT
    cStr += "</STYLE>" + CRLF()
 
@@ -277,7 +277,7 @@ METHOD Build( xPos, yPos ) CLASS TJsList
    //cStr += '<DIV ID="'+::cMainNode+'Item0" NAME="'+::cMainNode+"Item0"></DIV>'+CRLF()
 
    FOR i := 0 TO ::nItems
-      cStr += '<DIV ID="' + ::cMainNode + 'Item' + NTRIM( i ) + '" NAME="' + ::cMainNode + 'Item' + NTRIM( i ) + '"></DIV>' + CRLF()
+      cStr += '<DIV ID="' + ::cMainNode + 'Item' + hb_ntos( i ) + '" NAME="' + ::cMainNode + 'Item' + hb_ntos( i ) + '"></DIV>' + CRLF()
    NEXT
    cStr += "</BODY></HTML>" + CRLF()
 

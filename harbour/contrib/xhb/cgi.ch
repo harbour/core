@@ -45,7 +45,6 @@
 
 #xTranslate DEFAULT( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
 #xTranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  //"&#32;"
-#xTranslate NTRIM(<n>)           => hb_ntos( <n> )
 #xTranslate CRLF()               => Chr( 13 ) + Chr( 10 )
 
 #define STD_IN       0

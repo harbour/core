@@ -141,13 +141,13 @@ CLASS THtml
                     cName, cAlt, cTarget, nWidth, lBreak, ID, MAP, ALING, HSPACE )
 
    METHOD TEXT( cText, nCols, lWrap ) INLINE DEFAULT( lWrap, .T. ), DEFAULT( nCols, 80 ),;
-              ::cStr +=  "<PRE" + IIF( nCols != NIL, ' COLS="' + NTRIM( nCols ) + "'", "" ) + IIF( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</PRE>" + CRLF()
+              ::cStr +=  "<PRE" + IIF( nCols != NIL, ' COLS="' + hb_ntos( nCols ) + "'", "" ) + IIF( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</PRE>" + CRLF()
 
    METHOD MultiCol( txt, cols, gutter, width ) INLINE DEFAULT( txt, "" ),;
                     DEFAULT( cols, 2 ),;
                     DEFAULT( gutter, 5 ),;
                     DEFAULT( width, 100 ),;
-                    ::cStr +=  '<MULTICOL COLS="' + NTRIM( cols ) + '" GUTTER="' + NTRIM( gutter ) + '" WIDTH="' + NTRIM( width ) + '">' ,;
+                    ::cStr +=  '<MULTICOL COLS="' + hb_ntos( cols ) + '" GUTTER="' + hb_ntos( gutter ) + '" WIDTH="' + hb_ntos( width ) + '">' ,;
                     ::cStr +=  txt ,;
                     ::cStr +=  "</MULTICOL>"
 
@@ -362,7 +362,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF nRefresh != NIL
-      ::cStr +=  [   <META HTTP-EQUIV="Refresh" CONTENT="] + NTRIM( nRefresh ) + [; URL=] + cRefreshURL + [">]
+      ::cStr +=  [   <META HTTP-EQUIV="Refresh" CONTENT="] + hb_ntos( nRefresh ) + [; URL=] + cRefreshURL + [">]
    ENDIF
 
    IF lnocache
@@ -480,19 +480,19 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF nMarginTop != NIL
-      ::cStr +=  ' topMargin=' + NTRIM( nMarginTop )
+      ::cStr +=  ' topMargin=' + hb_ntos( nMarginTop )
    ENDIF
 
    IF nMarginLeft != NIL
-      ::cStr +=  ' LeftMargin=' + NTRIM( nMarginLeft )
+      ::cStr +=  ' LeftMargin=' + hb_ntos( nMarginLeft )
    ENDIF
 
    IF nMarginHeight != NIL
-      ::cStr +=  ' MARGINHEIGHT=' + NTRIM( nMarginHeight )
+      ::cStr +=  ' MARGINHEIGHT=' + hb_ntos( nMarginHeight )
    ENDIF
 
    IF nMarginWidth != NIL
-      ::cStr +=  ' MARGINWIDTH=' + NTRIM( nMarginWidth )
+      ::cStr +=  ' MARGINWIDTH=' + hb_ntos( nMarginWidth )
    ENDIF
 
    ::cStr +=  '>'
@@ -736,7 +736,7 @@ METHOD SAY( str, font, size, type, color, style ) CLASS THtml
    DEFAULT COLOR TO ::FontColor
 
    IF FONT != NIL .or. Size != NIL .or. COLOR != NIL
-      cOut := '<FONT ' + IIF( font != NIL, 'FACE="' + font + '"', '' ) + IIF( color != NIL, ' COLOR=' + color, '' ) + IIF( nSize != NIL, ' SIZE=' + NTRIM( size ), "" )
+      cOut := '<FONT ' + IIF( font != NIL, 'FACE="' + font + '"', '' ) + IIF( color != NIL, ' COLOR=' + color, '' ) + IIF( nSize != NIL, ' SIZE=' + hb_ntos( size ), "" )
 
       IF Style != NIL
          cOut += '" Style="' + style + '">'
@@ -821,8 +821,8 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
 
    LOCAL cStr := "<P"
 
-   DEFAULT( lStart, .T. )
-   DEFAULT( cAlign, "LEFT" )
+   DEFAULT lStart TO .T.
+   DEFAULT cAlign TO "LEFT"
 
    IF lStart
       cStr := "<P ALIGN='" + cAlign + "'"
@@ -855,11 +855,11 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    IF lShade
       ::cStr +=  CRLF() + ;
-              '<HR SIZE = ' + NTRIM( nSize ) + IIF( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + NTRIM( nWidth ) + '%>' + ;
+              '<HR SIZE = ' + hb_ntos( nSize ) + IIF( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
               CRLF()
    ELSE
       ::cStr +=  CRLF() + ;
-              '<HR NOSHADE SIZE = ' + NTRIM( nSize ) + IIF( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + NTRIM( nWidth ) + '%>' + ;
+              '<HR NOSHADE SIZE = ' + hb_ntos( nSize ) + IIF( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
               CRLF()
    ENDIF
 
@@ -881,7 +881,7 @@ METHOD PutHeading( cText, nWeight, lCentered ) CLASS THtml
       ::cStr +=  "<CENTER>"
    ENDIF
 
-   ::cStr +=  "<H" + NTRIM( nWeight ) + ">" + cText + "</H" + NTRIM( nWeight ) + ">" + CRLF()
+   ::cStr +=  "<H" + hb_ntos( nWeight ) + ">" + cText + "</H" + hb_ntos( nWeight ) + ">" + CRLF()
 
    IF lCentered
       ::cStr +=  "</CENTER>"
@@ -946,7 +946,7 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
       ENDIF
 
       IF size != NIL
-         cStr += ' size=' + NTRIM( size )
+         cStr += ' size=' + hb_ntos( size )
       ENDIF
 
       IF style != NIL
@@ -1000,17 +1000,17 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF nBorder != NIL
-      cStr += " border = " + IIF( Valtype( nBorder ) == "N", NTRIM( nBorder ), nBorder ) + CRLF()
+      cStr += " border = " + IIF( Valtype( nBorder ) == "N", hb_ntos( nBorder ), nBorder ) + CRLF()
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) == "N"
-      cStr += " height = " + NTRIM( nHeight ) + " " + CRLF()
+      cStr += " height = " + hb_ntos( nHeight ) + " " + CRLF()
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) == "C"
       cStr += " height = " + nHeight + " " + CRLF()
    ENDIF
 
    IF nWidth != NIL .and. Valtype( nWidth ) == "N"
-      cStr += " width = " + NTRIM( nWidth ) + " " + CRLF()
+      cStr += " width = " + hb_ntos( nWidth ) + " " + CRLF()
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) == "C"
       cStr += " width = " + nWidth + " " + CRLF()
    ENDIF
@@ -1040,7 +1040,7 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF hSpace != NIL
-      cStr += " hSpace= " + NTRIM( hSpace ) + " "
+      cStr += " hSpace= " + hb_ntos( hSpace ) + " "
    ENDIF
 
    ::cStr +=  ;
@@ -1062,17 +1062,17 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF nBorder != NIL
-      cStr += " border = " + NTRIM( nBorder )
+      cStr += " border = " + hb_ntos( nBorder )
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) == "N"
-      cStr += " height = " + NTRIM( nHeight ) + " "
+      cStr += " height = " + hb_ntos( nHeight ) + " "
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) == "C"
       cStr += " height = " + nHeight + " "
    ENDIF
 
    IF nWidth != NIL .and. Valtype( nWidth ) == "N"
-      cStr += " width = " + NTRIM( nWidth ) + " "
+      cStr += " width = " + hb_ntos( nWidth ) + " "
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) == "C"
       cStr += " width = " + nWidth + " "
    ENDIF
@@ -1121,19 +1121,19 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    ENDIF
 
    IF nBorder != NIL .and. Valtype( nBorder ) == "N"
-      cStr += " BORDER = " + NTRIM( nBorder )
+      cStr += " BORDER = " + hb_ntos( nBorder )
    ELSEIF nBorder != NIL .and. Valtype( nBorder ) == "C"
       cStr += " BORDER = " + '"' + nBorder + '"'
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) == "N"
-      cStr += " HEIGHT = " + NTRIM( nHeight ) + " "
+      cStr += " HEIGHT = " + hb_ntos( nHeight ) + " "
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) == "C"
       cStr += " HEIGHT = " + '"' + nHeight + '"'
    ENDIF
 
    IF nWidth != NIL .and. Valtype( nWidth ) == "N"
-      cStr += " width = " + NTRIM( nWidth ) + " "
+      cStr += " width = " + hb_ntos( nWidth ) + " "
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) == "C"
       cStr += " width = " + nWidth + " "
    ENDIF
@@ -1167,7 +1167,7 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    ENDIF
 
    IF hSpace != NIL
-      cStr += " hSpace= " + NTRIM( hSpace ) + " "
+      cStr += " hSpace= " + hb_ntos( hSpace ) + " "
    ENDIF
 
    ::cStr +=  ;
@@ -1243,30 +1243,30 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += " bgcolor=" + ColorBG + ' '
    ENDIF
 
-   cStr += IIF( nBorder = NIL, "border ", "border=" + NTRIM( nBorder ) + ' ' )
+   cStr += IIF( nBorder = NIL, "border ", "border=" + hb_ntos( nBorder ) + ' ' )
 
    IF ncellpadding != NIL
-      cStr += ' CellPadding=' + NTRIM( nCellPadding )
+      cStr += ' CellPadding=' + hb_ntos( nCellPadding )
    ENDIF
 
    IF nCellSpacing != NIL
-      cStr += ' CellSpacing=' + NTRIM( nCellSpacing )
+      cStr += ' CellSpacing=' + hb_ntos( nCellSpacing )
    ENDIF
 
    IF cAling != NIL
       cStr += ' aling=' + '"' + cAling + '"'
    ENDIF
 
-   cStr += IIF( xCols != NIL, " COLS=" + NTRIM( nCols ), "" )
+   cStr += IIF( xCols != NIL, " COLS=" + hb_ntos( nCols ), "" )
 
    IF nWidth != NIL .and. Valtype( nWidth ) == "N"
-      cStr += " WIDTH=" + NTRIM( nWidth )
+      cStr += " WIDTH=" + hb_ntos( nWidth )
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) == "C"
       cStr += " WIDTH=" + '"' + nWidth + '"'
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) == "N"
-      cStr += " HEIGHT=" + NTRIM( nHeight )
+      cStr += " HEIGHT=" + hb_ntos( nHeight )
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) == "C"
       cStr += " HEIGHT=" + '"' + nHeight + '"'
    ENDIF
@@ -1343,7 +1343,7 @@ METHOD TableHead( cHead, cColor, cAlign, ;
    ENDIF
 
    IF nHeight != NIL
-      cStr += " height=" + '"' + NTRIM( nHeight ) + '"'
+      cStr += " height=" + '"' + hb_ntos( nHeight ) + '"'
    ENDIF
 
    IF cBgPic != NIL
@@ -1356,7 +1356,7 @@ METHOD TableHead( cHead, cColor, cAlign, ;
       cStr += '<font face="' + cFont + '"'
 
       IF nSize != NIL
-         cStr += ' size="' + NTRIM( nSize ) + '"'
+         cStr += ' size="' + hb_ntos( nSize ) + '"'
       ENDIF
 
       IF cFntColor != NIL
@@ -1452,7 +1452,7 @@ METHOD NewTableCell( cAlign, cColor, ;
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) = "N"
-      cStr += " HEIGHT=" + NTRIM( nHeight )
+      cStr += " HEIGHT=" + hb_ntos( nHeight )
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) = "C"
       cStr += " HEIGHT=" + '"' + nHeight + '"'
    ENDIF
@@ -1462,13 +1462,13 @@ METHOD NewTableCell( cAlign, cColor, ;
    ENDIF
 
    IF nWidth != NIL .and. Valtype( nWidth ) = "N"
-      cStr += " WIDTH=" + NTRIM( nWidth )
+      cStr += " WIDTH=" + hb_ntos( nWidth )
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) = "C"
       cStr += " WIDTH=" + '"' + nWidth + '"'
    ENDIF
 
    IF nColspan != NIL .and. Valtype( nColspan ) = "N"
-      cStr += " COLSPAN=" + NTRIM( nColspan )
+      cStr += " COLSPAN=" + hb_ntos( nColspan )
    ELSEIF nColspan != NIL .and. Valtype( nColspan ) = "C"
       cStr += " COLSPAN=" + '"' + nColspan + '"'
    ENDIF
@@ -1486,7 +1486,7 @@ METHOD NewTableCell( cAlign, cColor, ;
    ENDIF
 
    IF nRowspan != NIL .and. Valtype( nRowspan ) = "N"
-      cStr += " ROWSPAN=" + NTRIM( nRowspan )
+      cStr += " ROWSPAN=" + hb_ntos( nRowspan )
    ELSEIF nRowspan != NIL .and. Valtype( nRowspan ) = "C"
       cStr += " ROWSPAN=" + '"' + nRowspan + '"'
    ENDIF
@@ -1501,7 +1501,7 @@ METHOD NewTableCell( cAlign, cColor, ;
       cStr += '<FONT '
 
       IF nSize != NIL
-         cStr += 'SIZE=' + NTRIM( nSize )
+         cStr += 'SIZE=' + hb_ntos( nSize )
       ENDIF
 
       IF cFntColor != NIL
@@ -1823,12 +1823,12 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
 
    ::cStr +=  '<MARQUEE align="' + cAlign + '" '
    ::cStr +=  'behavior="' + cBehavior + '" '
-   ::cStr +=  'width="' + NTRIM( nWidth ) + '%" '
-   ::cStr +=  IIF( nHeight != NIL, 'height=' + NTRIM( nHeight ) + " ", "" )
+   ::cStr +=  'width="' + hb_ntos( nWidth ) + '%" '
+   ::cStr +=  IIF( nHeight != NIL, 'height=' + hb_ntos( nHeight ) + " ", "" )
    ::cStr +=  'bgColor="' + cBgColor + '" '
-   ::cStr +=  'scrollamount="' + NTRIM( nScrollAmt ) + '" '
-   ::cStr +=  'scrolldelay="' + NTRIM( nScrollDelay ) + '" '
-   ::cStr +=  'loop=' + IIF( Valtype( loop ) == "N", NTRIM( loop ), loop ) + ' '
+   ::cStr +=  'scrollamount="' + hb_ntos( nScrollAmt ) + '" '
+   ::cStr +=  'scrolldelay="' + hb_ntos( nScrollDelay ) + '" '
+   ::cStr +=  'loop=' + IIF( Valtype( loop ) == "N", hb_ntos( loop ), loop ) + ' '
    ::cStr +=  'direction="' + cDirection + '" '
    ::cStr +=  IIF( onMsOver != NIL, 'onMouseOver="' + onMsOver + '" ', "" )
    ::cStr +=  IIF( onMsOut != NIL, 'onMouseOut="' + onMsOut + '" ', "" )
@@ -1874,12 +1874,12 @@ METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
 
    cStr += '<MARQUEE align="' + cAlign + '" ' + ;
       'behavior="' + cBehavior + '" ' + ;
-      'width="' + NTRIM( nWidth ) + '%" ' + ;
-      IIF( nHeight != NIL, 'height=' + NTRIM( nHeight ) + " ", "" ) + ;
+      'width="' + hb_ntos( nWidth ) + '%" ' + ;
+      IIF( nHeight != NIL, 'height=' + hb_ntos( nHeight ) + " ", "" ) + ;
       'bgColor="' + cBgColor + '" ' + ;
-      'scrollamount="' + NTRIM( nScrollAmt ) + '" ' + ;
-      'scrolldelay="' + NTRIM( nScrollDelay ) + '" ' + ;
-      'loop=' + IIF( Valtype( loop ) == "N", NTRIM( loop ), loop ) + ' ' + ;
+      'scrollamount="' + hb_ntos( nScrollAmt ) + '" ' + ;
+      'scrolldelay="' + hb_ntos( nScrollDelay ) + '" ' + ;
+      'loop=' + IIF( Valtype( loop ) == "N", hb_ntos( loop ), loop ) + ' ' + ;
       'direction="' + cDirection + '" ' + ;
       IIF( onMsOver != NIL, 'onMouseOver="' + onMsOver + '" ', "" ) + ;
       IIF( onMsOut != NIL, 'onMouseOut="' + onMsOut + '" ', "" ) + ;
@@ -1942,19 +1942,19 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
    ENDIF
 
    IF marginwidth != NIL
-      cStr += Space( 5 ) + " MARGINWIDTH='" + NTRIM( marginWidth ) + "'" + CRLF()
+      cStr += Space( 5 ) + " MARGINWIDTH='" + hb_ntos( marginWidth ) + "'" + CRLF()
    ENDIF
 
    IF marginheight != NIL
-      cStr += Space( 5 ) + "MARGINHEIGHT='" + NTRIM( marginheight ) + "'" + CRLF()
+      cStr += Space( 5 ) + "MARGINHEIGHT='" + hb_ntos( marginheight ) + "'" + CRLF()
    ENDIF
 
    IF WIDTH != NIL
-      cStr += Space( 5 ) + "       WIDTH='" + NTRIM( Width ) + "'" + CRLF()
+      cStr += Space( 5 ) + "       WIDTH='" + hb_ntos( Width ) + "'" + CRLF()
    ENDIF
 
    IF HEIGHT != NIL
-      cStr += Space( 5 ) + "      HEIGHT='" + NTRIM( height ) + "'" + CRLF()
+      cStr += Space( 5 ) + "      HEIGHT='" + hb_ntos( height ) + "'" + CRLF()
    ENDIF
 
    IF align != NIL
@@ -2018,13 +2018,13 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
    ENDIF
 
    IF nHeight != NIL .and. Valtype( nHeight ) == "N"
-      cStr += " height = " + NTRIM( nHeight ) + " " + CRLF()
+      cStr += " height = " + hb_ntos( nHeight ) + " " + CRLF()
    ELSEIF nHeight != NIL .and. Valtype( nHeight ) == "C"
       cStr += " height = " + nHeight + " " + CRLF()
    ENDIF
 
    IF nWidth != NIL .and. Valtype( nWidth ) == "N"
-      cStr += " width = " + NTRIM( nWidth ) + " " + CRLF()
+      cStr += " width = " + hb_ntos( nWidth ) + " " + CRLF()
    ELSEIF nWidth != NIL .and. Valtype( nWidth ) == "C"
       cStr += " width = " + nWidth + " " + CRLF()
    ENDIF

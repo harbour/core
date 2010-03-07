@@ -222,11 +222,11 @@ METHOD Put() CLASS THtmlControl
    IF ::Type = "TEXTAREA"
 
       IF ::Rows != NIL
-         ::cOutput += Space( 2 ) + '     ROWS="' + NTRIM( ::Rows ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '     ROWS="' + hb_ntos( ::Rows ) + '"' + CRLF()
       ENDIF
 
       IF ::Cols != NIL
-         ::cOutput += Space( 2 ) + '     COLS="' + NTRIM( ::Cols ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '     COLS="' + hb_ntos( ::Cols ) + '"' + CRLF()
       ENDIF
 
       IF ::Wrap != NIL
@@ -245,11 +245,11 @@ METHOD Put() CLASS THtmlControl
    ENDIF
 
    IF ::maxChars != NIL
-      ::cOutput += Space( 2 ) + 'MAXLENGTH="' + NTRIM( ::maxChars ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + 'MAXLENGTH="' + hb_ntos( ::maxChars ) + '"' + CRLF()
    ENDIF
 
    IF ::Size != NIL
-      ::cOutput += Space( 2 ) + '     SIZE="' + NTRIM( ::Size ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '     SIZE="' + hb_ntos( ::Size ) + '"' + CRLF()
    ENDIF
 
    IF ::Id != NIL
@@ -569,7 +569,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
                    "       ROWS=1 " + CRLF() + ;
                    "       CELLPADDING=3 " + CRLF() + ;
                    "       CELLSPACING=3 " + CRLF() + ;
-                   "       WIDTH=" + NTRIM( ::width ) + "% " + CRLF() + ;
+                   "       WIDTH=" + hb_ntos( ::width ) + "% " + CRLF() + ;
                    '       BORDERCOLORLIGHT="#000000" ' + CRLF() + ;
                    '       BORDERCOLORDARK="#FFFFFF" ' + CRLF() + ;
                    "       BORDER " + CRLF() + ;
