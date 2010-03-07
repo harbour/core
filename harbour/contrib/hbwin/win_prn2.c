@@ -170,7 +170,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
       }
    }
 
-   if( ! bResult && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+   if( ! bResult && hb_iswin9x() )
    {
       /* This option should never be required but is included because of this article
             http://support.microsoft.com/kb/246772/en-us
