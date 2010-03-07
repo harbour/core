@@ -32,7 +32,7 @@ DOC_FILES := \
    windll.txt \
 
 DIRS := \
-   en-EN \
+   en \
 
 include $(TOP)$(ROOT)config/doc.mk
 include $(TOP)$(ROOT)config/dir.mk
