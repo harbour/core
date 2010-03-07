@@ -3886,8 +3886,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   cFile += ''                                                                     + Chr( 10 )
                   AEval( array, {| tmp | cFile += 'HB_FUNC_EXTERN( ' + tmp + ' );'                + Chr( 10 ) } )
                   IF l_cCMAIN != NIL
-                     cFile += ''                                                                  + Chr( 10 ) +;
-                              'HB_EXTERN_BEGIN'                                                   + Chr( 10 ) +;
+                     IF ! Empty( array )
+                        cFile += ''                                                               + Chr( 10 )
+                     ENDIF
+                     cFile += 'HB_EXTERN_BEGIN'                                                   + Chr( 10 ) +;
                               'void ' + l_cCMAIN + '( void );'                                    + Chr( 10 ) +;
                               'HB_EXTERN_END'                                                     + Chr( 10 )
                   ENDIF
@@ -3896,7 +3898,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   cFile += '{'                                                                    + Chr( 10 )
                   AEval( array, {| tmp | cFile += '   HB_FUNC_EXEC( ' + tmp + ' );'               + Chr( 10 ) } )
                   IF l_cCMAIN != NIL
-                     cFile += ''                                                                  + Chr( 10 )
+                     IF ! Empty( array )
+                        cFile += ''                                                               + Chr( 10 )
+                     ENDIF
                      cFile += '   ' + l_cCMAIN + '();'                                            + Chr( 10 )
                   ENDIF
                   cFile += '}'                                                                    + Chr( 10 )
