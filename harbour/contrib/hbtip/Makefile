@@ -9,7 +9,8 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbtip
 
 C_SOURCES := \
-   encmthd.c \
+   encb64c.c \
+   encurlc.c \
    utils.c \
 
 PRG_SOURCES := \
