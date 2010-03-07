@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,11 +52,9 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbapicls.h"
 #include "hbapierr.h"
-#include "hbstack.h"
 
-HB_FUNC( TIPENCODERBASE64_ENCODE )
+HB_FUNC( __TIP_BASE64_ENCODE )
 {
    const char * cData = hb_parc( 1 );
    char * cRet;
@@ -81,17 +78,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       return;
    }
 
-   /* read the status of bHttpExcept */
-   if( hb_pcount() > 1 )
-   {
-      /* this makes this function static!!!! */
-      bExcept = hb_parl( 2 );
-   }
-   else
-   {
-      hb_objSendMsg( hb_stackSelfItem(), "BHTTPEXCEPT", 0 );
-      bExcept = hb_parl( -1 );
-   }
+   bExcept = hb_parl( 2 );
 
    /* we know exactly the renturned length. */
    nFinalLen = ( HB_SIZE ) ( ( nLen / 3 + 2 ) * 4 );
@@ -113,12 +100,12 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
             cElem = cElem >> 2;
             break;
          case 2:
-            cElem1 = nPos < nLen -1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem1 = nPos < nLen - 1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
             cElem = ( ( cElem & 0x3 ) << 4 ) | ( cElem1 >> 4 );
             nPos++;
             break;
          case 3:
-            cElem1 = nPos < nLen -1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
+            cElem1 = nPos < nLen - 1 ? ( unsigned char ) cData[ nPos + 1 ] : 0;
             cElem = ( ( cElem & 0xF ) << 2 ) | ( cElem1 >> 6 );
             nPos++;
             break;
@@ -142,7 +129,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
       if( ! bExcept )
       {
-         nLineCount ++ ;
+         ++nLineCount;
          /* RFC says to add a CRLF each 76 chars, but is pretty unclear about
             the fact of this 76 chars counting CRLF or not. Common
             practice is to limit line size to 72 chars */
@@ -177,7 +164,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
    hb_retclen_buffer( cRet, nPosRet );
 }
 
-HB_FUNC( TIPENCODERBASE64_DECODE )
+HB_FUNC( __TIP_BASE64_DECODE )
 {
    const char * cData = hb_parc( 1 );
    unsigned char * cRet;
@@ -260,7 +247,7 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
    hb_retclen_buffer( ( char * ) cRet, nPosRet );
 }
 
-HB_FUNC( TIPENCODERQP_ENCODE )
+HB_FUNC( __TIP_QP_ENCODE )
 {
    const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
@@ -334,7 +321,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
    hb_retclen_buffer( cRet, nPosRet );
 }
 
-HB_FUNC( TIPENCODERQP_DECODE )
+HB_FUNC( __TIP_QP_DECODE )
 {
    const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
@@ -406,7 +393,7 @@ HB_FUNC( TIPENCODERQP_DECODE )
    hb_retclen_buffer( cRet, nPosRet );
 }
 
-HB_FUNC( TIPENCODERURL_ENCODE )
+HB_FUNC( __TIP_URL_ENCODE )
 {
    const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
@@ -447,7 +434,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
          ( cElem >= 'a' && cElem <= 'z' ) ||
          ( cElem >= '0' && cElem <= '9' ) ||
          cElem == '.' || cElem == ',' || cElem == '&' ||
-         cElem == '/' || cElem == ';' || cElem =='_' )
+         cElem == '/' || cElem == ';' || cElem == '_' )
       {
          cRet[ nPosRet ] = cElem;
       }
@@ -471,7 +458,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
    hb_retclen_buffer( cRet, nPosRet );
 }
 
-HB_FUNC( TIPENCODERURL_DECODE )
+HB_FUNC( __TIP_URL_DECODE )
 {
    const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );

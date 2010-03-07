@@ -61,3 +61,9 @@ ENDCLASS
 METHOD New() CLASS TIPEncoderURL
    ::cName := "urlencoded"
    RETURN Self
+
+METHOD Encode( cData ) CLASS TIPEncoderURL
+   RETURN __tip_url_encode( cData )
+
+METHOD Decode( cData ) CLASS TIPEncoderURL
+   RETURN __tip_url_decode( cData )

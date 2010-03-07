@@ -67,3 +67,9 @@ METHOD New() CLASS TIPEncoderBase64
    ::cName := "Base64"
    ::bHttpExcept := .F.
    RETURN Self
+
+METHOD Encode( cData ) CLASS TIPEncoderBase64
+   RETURN __tip_base64_encode( cData, ::bHttpExcept )
+
+METHOD Decode( cData ) CLASS TIPEncoderBase64
+   RETURN __tip_base64_decode( cData )

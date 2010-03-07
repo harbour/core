@@ -137,7 +137,7 @@ METHOD New() CLASS TIpCgi
             FOR nCount := 1 TO nLen
                aVar := hb_ATokens( aTemp[ nCount ], "=" )
                IF Len( aVar ) == 2
-                  ::hPosts[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+                  ::hPosts[ AllTrim( __tip_url_Decode( aVar[ 1 ] ) ) ] := __tip_url_Decode( aVar[ 2 ] )
                ENDIF
             NEXT
          ENDIF
@@ -151,7 +151,7 @@ METHOD New() CLASS TIpCgi
             FOR nCount := 1 TO nLen
                aVar := hb_ATokens( aTemp[ nCount ], "=" )
                IF Len( aVar ) == 2
-                  ::hGets[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+                  ::hGets[ AllTrim( __tip_url_Decode( aVar[ 1 ] ) ) ] := __tip_url_Decode( aVar[ 2 ] )
                ENDIF
             NEXT
          ENDIF
@@ -166,7 +166,7 @@ METHOD New() CLASS TIpCgi
          FOR nCount := 1 TO nLen
             aVar := hb_ATokens( aTemp[ nCount ], "=" )
             IF Len( aVar ) == 2
-               ::hCookies[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+               ::hCookies[ AllTrim( __tip_url_Decode( aVar[ 1 ] ) ) ] := __tip_url_Decode( aVar[ 2 ] )
             ENDIF
          NEXT
       ENDIF
