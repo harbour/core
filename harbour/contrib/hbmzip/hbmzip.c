@@ -406,7 +406,7 @@ HB_FUNC( HB_UNZIPFILEGOTO )
 /*  HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
                       @nInternalAttr, @nExternalAttr,
                       @nMethod, @nSize, @nCompressedSize,
-                      @lCrypted, @cComment ) --> nError */
+                      @lCrypted, @cComment, @nCRC ) --> nError */
 HB_FUNC( HB_UNZIPFILEINFO )
 {
    unzFile hUnzip = hb_unzipfileParam( 1 );
@@ -444,6 +444,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( ufi.uncompressed_size, 8 );
          hb_stornl( ufi.compressed_size, 9 );
          hb_storl( ( ufi.flag & 1 ) != 0, 10 );
+         hb_stornint( ufi.crc, 12 );
 
          if( ufi.size_file_comment > 0 && HB_ISBYREF( 11 ) )
          {

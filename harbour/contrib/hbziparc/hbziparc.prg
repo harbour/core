@@ -159,6 +159,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
    LOCAL lCrypted
    LOCAL cComment
    LOCAL nRatio
+   LOCAL nCRC
 
    LOCAL aFiles := {}
 
@@ -176,7 +177,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
       nErr := hb_UnzipFileFirst( hUnzip )
       DO WHILE nErr == 0
 
-         hb_UnzipFileInfo( hUnzip, @cFileName, @dDate, @cTime, @nInternalAttr, NIL, @nMethod, @nSize, @nCompSize, @lCrypted, @cComment )
+         hb_UnzipFileInfo( hUnzip, @cFileName, @dDate, @cTime, @nInternalAttr, NIL, @nMethod, @nSize, @nCompSize, @lCrypted, @cComment, @nCRC )
 
          IF lVerbose
 
@@ -191,8 +192,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
 
             /* TOFIX: Original hbziparch has nMethod as string: Unknown, Stored, DeflatN, DeflatX, DeflatF. */
             /* TOFIX: Original hbziparch has attributes as string. */
-            /* TOFIX: Original hbziparch has crc32 filled with a hexadecimal value. */
-            AAdd( aFiles, { cFileName, nSize, nMethod, nCompSize, nRatio, dDate, cTime, "" /* crc32 */, nInternalAttr /* cAttr */, lCrypted, cComment } )
+            AAdd( aFiles, { cFileName, nSize, nMethod, nCompSize, nRatio, dDate, cTime, hb_numtohex( nCRC, 8 ), nInternalAttr /* cAttr */, lCrypted, cComment } )
          ELSE
             AAdd( aFiles, cFileName )
          ENDIF
