@@ -475,7 +475,7 @@ typedef unsigned int HB_ERRCODE;
 #define HB_SUCCESS         0
 #define HB_FAILURE         1
 
-#ifdef HB_LEGACY_LEVEL3
+#if defined( _HB_API_INTERNAL_ ) || defined( HB_LEGACY_LEVEL3 )
 /* NOTE: Deprecated. Use 'hb_vmPushEvalSym()' instead of 'hb_vmPushSymbol( &hb_symEval )' */
 extern HB_SYMB hb_symEval;
 #endif
