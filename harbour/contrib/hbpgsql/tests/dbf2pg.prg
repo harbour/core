@@ -302,7 +302,8 @@ procedure main(...)
    close all
    oTable:Destroy()
    oServer:Destroy()
-return
+
+   return
 
 
 procedure Help()
@@ -323,4 +324,4 @@ procedure Help()
 
    ? ""
 
-return
+   return

@@ -1,69 +1,70 @@
 /*
  * $Id$
- *
+ */
+
+/*
  * This sample show howto use asynchronous/nonblocking queries
- *
  */
 
 Function Main( cServer, cDatabase, cUser, cPass )
-    Local conn
+   Local conn
 
-    CLEAR SCREEN
+   CLEAR SCREEN
 
-    ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432)
+   ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432)
 
-    ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
+   ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
 
-    Query( conn, 'SELECT codigo, descri FROM client limit 100', .f. )
-    Query( conn, 'SELECT codigo, descri FROM fornec limit 100', .f. )
-    Query( conn, 'SELECT pedido, vlrped FROM pedido', .t. )
+   Query( conn, 'SELECT codigo, descri FROM client limit 100', .f. )
+   Query( conn, 'SELECT codigo, descri FROM fornec limit 100', .f. )
+   Query( conn, 'SELECT pedido, vlrped FROM pedido', .t. )
 
-    conn := NIL
+   conn := NIL
 
-    return nil
+   return nil
 
 Procedure Query( conn, cQuery, lCancel )
-    Local pCancel, cErrMsg := space(30)
-    Local res, x, y, xTime
+   Local pCancel, cErrMsg := space(30)
+   Local res, x, y, xTime
 
-    ? "PQSendQuery", PQsendQuery(conn, cQuery)
+   ? "PQSendQuery", PQsendQuery(conn, cQuery)
 
-    xTime := time()
-    CLEAR TYPEAHEAD
+   xTime := time()
+   CLEAR TYPEAHEAD
 
-    do while inkey() != 27
-        DevPos(Row(), 20)
-        DevOut("Processing: " + Elaptime(xtime, time()))
+   do while inkey() != 27
+      DevPos(Row(), 20)
+      DevOut("Processing: " + Elaptime(xtime, time()))
 
-        inkey(1)
+      inkey(1)
 
-        if lCancel
-            if .t.
-                pCancel := PQgetCancel(conn)
-                ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
-                pCancel := NIL
-            else
-                ? PQrequestCancel(conn) // Deprecated
-            endif
-        endif
+      if lCancel
+         if .t.
+            pCancel := PQgetCancel(conn)
+            ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
+            pCancel := NIL
+         else
+            ? PQrequestCancel(conn) // Deprecated
+         endif
+      endif
 
-        if PQconsumeInput(conn)
-            if ! PQisBusy(conn)
-                exit
-            endif
-        endif
-    enddo
+      if PQconsumeInput(conn)
+         if ! PQisBusy(conn)
+            exit
+         endif
+      endif
+   enddo
 
-    if inkey() != 27
-        ? "PQgetResult", hb_valtoexp(res := PQgetResult(conn))
+   if inkey() != 27
+      ? "PQgetResult", hb_valtoexp(res := PQgetResult(conn))
 
-        for x := 1 to PQlastrec(res)
-            ?
-            for y := 1 to PQfcount(res)
-                ?? PQgetvalue(res, x, y), " "
-            next
-        next
-    else
-        ? "Canceling Query", PQrequestCancel(conn)
-    endif
-Return
+      for x := 1 to PQlastrec(res)
+         ?
+         for y := 1 to PQfcount(res)
+            ?? PQgetvalue(res, x, y), " "
+         next
+      next
+   else
+      ? "Canceling Query", PQrequestCancel(conn)
+   endif
+   Return

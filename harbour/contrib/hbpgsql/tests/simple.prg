@@ -71,7 +71,7 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
 
    FOR i := 1 TO 10
       cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-      cQuery += "VALUES( " + Str( i ) + ", 2, "TEST", "y", 5, 3000, 1500.2, 7.5, "01-01-2003", "Short Description about what ? ")"
+      cQuery += "VALUES( " + Str( i ) + ", 2, "TEST", "y", 5, 3000, 1500.2, 7.5, "2003-12-17", "Short Description about what ? ")"
 
       oQuery := oServer:Query( cQuery )
 
