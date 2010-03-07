@@ -72,7 +72,7 @@
 
 FUNCTION __objHasData( oObject, cSymbol )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
@@ -81,18 +81,12 @@ FUNCTION __objHasData( oObject, cSymbol )
 
 FUNCTION __objHasMethod( oObject, cSymbol )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
    RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
           !__objHasMsg( oObject, "_" + cSymbol )
-
-
-// nCLassType can be 0, 1 or 2 see hbOO.ch
-//#define HB_MSGLISTALL   0
-//#define HB_MSGLISTCLASS 1
-//#define HB_MSGLISTPURE  2
 
 FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    LOCAL aInfo
@@ -100,27 +94,27 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    LOCAL n
    LOCAL nLen
 
-   IF !ISOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF !ISLOGICAL( lDataMethod )
+   IF ! ISLOGICAL( lDataMethod )
       lDataMethod := .T.
    ENDIF
 
-   IF !ISNUMBER( nClassType  )
+   IF ! ISNUMBER( nClassType  )
       nClasstype  := HB_MSGLISTALL
    ENDIF
 
-   aInfo := ASort( oObject:ClassSel(nClassType) )
+   aInfo := ASort( oObject:ClassSel( nClassType ) )
    aData := {}
    n     := 1
    nLen  := Len( aInfo )
 
    DO WHILE n <= nLen .AND. !( Substr( aInfo[ n ], 1, 1 ) == "_" )
 
-      /* If in range and no set function found yet ( set functions */
-      /* begin with a leading underscore ).                        */
+      /* If in range and no set function found yet
+         (set functions begin with a leading underscore). */
 
       // If found -> DATA
       //     else    METHOD
@@ -139,7 +133,7 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
 
 FUNCTION __objGetMethodList( oObject )
 
-   IF !ISOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
@@ -152,11 +146,11 @@ FUNCTION __objGetValueList( oObject, aExcept )
    LOCAL cSymbol
    LOCAL n
 
-   IF !ISOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF !ISARRAY( aExcept )
+   IF ! ISARRAY( aExcept )
       aExcept := {}
    ENDIF
 
@@ -175,7 +169,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
 FUNCTION __ObjSetValueList( oObject, aData )
 
-   IF !ISOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSE
       AEval( aData, {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
@@ -185,7 +179,7 @@ FUNCTION __ObjSetValueList( oObject, aData )
 
 FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !hb_ISSYMBOL( nFuncPtr )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol ) .OR. !hb_ISSYMBOL( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD, NIL, 1 )
@@ -195,7 +189,7 @@ FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
 
 FUNCTION __objAddInline( oObject, cSymbol, bInline )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE, NIL, 1 )
@@ -206,7 +200,7 @@ FUNCTION __objAddInline( oObject, cSymbol, bInline )
 FUNCTION __objAddData( oObject, cSymbol )
    LOCAL nSeq, hClass
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. !__objHasMsg( oObject, "_" + cSymbol )
       hClass := oObject:ClassH
@@ -219,7 +213,7 @@ FUNCTION __objAddData( oObject, cSymbol )
 
 FUNCTION __objModMethod( oObject, cSymbol, nFuncPtr )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !hb_ISSYMBOL( nFuncPtr )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol ) .OR. !hb_ISSYMBOL( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, nFuncPtr )
@@ -229,7 +223,7 @@ FUNCTION __objModMethod( oObject, cSymbol, nFuncPtr )
 
 FUNCTION __objModInline( oObject, cSymbol, bInline )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISBLOCK( bInline )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol ) .OR. ! ISBLOCK( bInline )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, bInline )
@@ -239,7 +233,7 @@ FUNCTION __objModInline( oObject, cSymbol, bInline )
 
 FUNCTION __objDelMethod( oObject, cSymbol )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF __objHasMethod( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, cSymbol )
@@ -248,11 +242,11 @@ FUNCTION __objDelMethod( oObject, cSymbol )
    RETURN oObject
 
 FUNCTION __objDelInline( oObject, cSymbol )
-   RETURN __objDelMethod( oObject, cSymbol )              // Same story
+   RETURN __objDelMethod( oObject, cSymbol )
 
 FUNCTION __objDelData( oObject, cSymbol )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+   IF ! ISOBJECT( oObject ) .OR. ! ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF __objHasData( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, cSymbol )
@@ -265,7 +259,7 @@ FUNCTION __objDelData( oObject, cSymbol )
 FUNCTION __objDerivedFrom( oObject, xSuper )
    LOCAL cClassName
 
-   IF !ISOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 

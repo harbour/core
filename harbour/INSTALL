@@ -17,7 +17,7 @@ HARBOUR
 ===============================================
 
    NOTE: Before reporting a problem on the developers' mailing list, please
-         make sure to read the TROUBLESHOOTING section in this file.
+         make sure to read the TROUBLESHOOTING section in this document.
 
    For all platforms you'll need:
 
@@ -37,7 +37,7 @@ HARBOUR
           instructions for details. It's recommended to make sure no tools
           in your PATH belonging to other C compilers are interfering with
           your setup. For the list of supported compilers, please look up
-          the relevant section in this file.
+          the relevant section in this document.
       3.) You need to get GNU Make. We recommend this link:
              http://sourceforge.net/projects/mingw/files/MinGW%20make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
@@ -1037,7 +1037,7 @@ HARBOUR
 9. HOW TO GET THE HARBOUR SOURCES
 =================================
 
-   1.) It's possible you're reading this file as part of the Harbour
+   1.) It's possible you're reading this document as part of the Harbour
        source code package. If not, read along.
 
    2.) Harbour source repository
@@ -1093,7 +1093,7 @@ HARBOUR
         set HB_INC_*=
         set HB_DIR_*=
    - Try to do no or only small modifications at once to command examples
-     included in this file. If it doesn't work, fall back to documented
+     included in this document. If it doesn't work, fall back to documented
      examples as is.
 
 

@@ -1067,7 +1067,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n == -1  // Project Root
       aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( NIL, .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Open Project"                      , {|| ::oPM:loadProperties( NIL, .f., .f., .t. ) } } )
+      aadd( aPops, { "Open Project..."                   , {|| ::oPM:loadProperties( NIL, .f., .f., .t. ) } } )
       aadd( aPops, { "" } )
       //
       IF !empty( ::oEV:getNames() )

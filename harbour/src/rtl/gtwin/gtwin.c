@@ -18,8 +18,10 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
- *    hb_gt_CtrlHandler(), hb_gt_win_SetCloseButton()
+ * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
+ *    hb_gt_win_CtrlHandler()
+ *    hb_gt_win_SetCloseButton()
+ *    hb_gt_win_SetPalette*()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()

@@ -66,7 +66,7 @@
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
-/* Used by ObjFunc.prg (__objGetMsgList) and Classes.c (hb___msgClsSel()) */
+/* Used by objfunc.prg (__objGetMsgList) and classes.c (hb___msgClsSel()) */
 #define HB_MSGLISTALL   0
 #define HB_MSGLISTCLASS 1
 #define HB_MSGLISTPURE  2

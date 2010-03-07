@@ -813,7 +813,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Stream"   ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Edit"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Search"   ):oWidget:setMinimumWidth(  20 )
-   ::oSBar:addItem( "", , , , "Codec"    ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Encoding" ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Environ"  ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "View"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
@@ -1002,7 +1002,7 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       EXIT
    CASE SB_PNL_CODEC
       xValue := iif( empty( xValue ), "default", xValue )
-      oPanel:caption := "<font color = brown >Codec: "  + xValue + "</font>"
+      oPanel:caption := "<font color = brown >Encoding: "  + xValue + "</font>"
       EXIT
    CASE SB_PNL_ENVIRON
       xValue := iif( empty( xValue ), "default", xValue )

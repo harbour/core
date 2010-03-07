@@ -230,12 +230,12 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Paste"                , "~Paste"                       , "paste"          , ""     , "No", "Yes" } )
    aadd( aAct, { "SelectAll"            , "Select ~All"                  , "selectall"      , ""     , "No", "Yes" } )
    aadd( aAct, { "SelectionMode"        , "Toggle Selection Mode"        , "stream"         , ""     , "No", "Yes" } )
-   aadd( aAct, { "Find"                 , "~Find / Replace"              , "find"           , "^F"   , "No", "Yes" } )
+   aadd( aAct, { "Find"                 , "~Find / Replace..."           , "find"           , "^F"   , "No", "Yes" } )
    aadd( aAct, { "FindEx"               , "~Find / Replace Ex"           , "find"           , "Sh+^F", "No", "Yes" } )
    aadd( aAct, { "Search"               , "F~ind in Files"               , "search"         , ""     , "No", "Yes" } )
    aadd( aAct, { "SetMark"              , "Set Mark"                     , "placeremovemark", ""     , "No", "Yes" } )
    aadd( aAct, { "GotoMark"             , "Goto Mark"                    , "gotomark"       , ""     , "No", "Yes" } )
-   aadd( aAct, { "Goto"                 , "~Goto Line"                   , "gotoline"       , "^G"   , "No", "Yes" } )
+   aadd( aAct, { "Goto"                 , "~Goto Line..."                , "gotoline"       , "^G"   , "No", "Yes" } )
    aadd( aAct, { "ToUpper"              , "To Upper"                     , "toupper"        , ""     , "No", "Yes" } )
    aadd( aAct, { "ToLower"              , "To Lower"                     , "tolower"        , ""     , "No", "Yes" } )
    aadd( aAct, { "Invert"               , "Invert"                       , "invertcase"     , ""     , "No", "Yes" } )
@@ -244,7 +244,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "ZoomOut"              , "ZoomOut"                      , "zoomout"        , ""     , "No", "Yes" } )
    //
    aadd( aAct, { "NewProject"           , "~Project"                     , "project"        , ""     , "No", "Yes" } )
-   aadd( aAct, { "LoadProject"          , "Open Projec~t"                , ""               , ""     , "No", "Yes" } )
+   aadd( aAct, { "LoadProject"          , "Open Projec~t..."             , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "SaveAs"               , "Save ~as..."                  , "saveas"         , ""     , "No", "Yes" } )
    aadd( aAct, { "SaveAll"              , "Save A~ll"                    , "saveall"        , "Sh+^s", "No", "Yes" } )
    aadd( aAct, { "CloseAll"             , "Clos~e All"                   , "closeall"       , ""     , "No", "Yes" } )
@@ -884,4 +884,3 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-

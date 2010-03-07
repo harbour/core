@@ -332,8 +332,8 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
       lFetch := .t.
    ELSE
       IF empty( cProjFileName )
-         cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Projects (*.hbp)", "*.hbp" } , ;
-                                                                         { "xMate Projects (*.xhp)"  , "*.xhp" } } )
+         cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Projects", "*.hbp" } , ;
+                                                                         { "xMate Projects"  , "*.xhp" } } )
          cProjFileName := ::synchronizeAlienProject( cProjFileName )
       ENDIF
       IF empty( cProjFileName )
@@ -1433,5 +1433,3 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-
