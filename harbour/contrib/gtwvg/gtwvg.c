@@ -319,10 +319,6 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
-   OSVERSIONINFO osvi;
-
-   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osvi );
 
    pWVT = ( PHB_GTWVT ) hb_xgrab( sizeof( HB_GTWVT ) );
    memset( pWVT, 0, sizeof( HB_GTWVT ) );
@@ -384,7 +380,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->boxCodePage       = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 #endif
 
-   pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   pWVT->Win9X             = hb_iswin9x();
    pWVT->AltF4Close        = HB_FALSE;
 
    pWVT->IgnoreWM_SYSCHAR  = HB_FALSE;

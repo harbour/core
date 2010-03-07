@@ -132,9 +132,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
-   WNDCLASS wndclass;
+   WNDCLASSEX wndclass;
 
-   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   memset( &wndclass, 0, sizeof( WNDCLASSEX ) );
+   wndclass.cbSize        = sizeof( WNDCLASSEX );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
 /* wndclass.cbClsExtra    = 0; */
@@ -146,7 +147,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 /* wndclass.lpszMenuName  = NULL; */
    wndclass.lpszClassName = s_szClassName;
 
-   if( ! RegisterClass( &wndclass ) )
+   if( ! RegisterClassEx( &wndclass ) )
    {
       if( GetLastError() != 1410 )
          hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
@@ -251,10 +252,6 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
-   OSVERSIONINFO osvi;
-
-   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osvi );
 
    pWVT = ( PHB_GTWVT ) hb_xgrab( sizeof( HB_GTWVT ) );
    memset( pWVT, 0, sizeof( HB_GTWVT ) );
@@ -319,7 +316,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->boxCodePage       = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 #endif
 
-   pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   pWVT->Win9X             = hb_iswin9x();
    pWVT->AltF4Close        = HB_FALSE;
 
    pWVT->IgnoreWM_SYSCHAR  = HB_FALSE;

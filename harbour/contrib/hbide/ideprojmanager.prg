@@ -137,7 +137,7 @@ CLASS IdeProject
    DATA   hSources                                INIT {=>}
    DATA   hPaths                                  INIT {=>}
    DATA   lPathAbs                                INIT .F.  // Lets try relative paths first . xhp and hbp will be relative anyway
-   DATA   projPath                               INIT ""
+   DATA   projPath                                INIT ""
 
    METHOD new( oIDE, aProps )
 

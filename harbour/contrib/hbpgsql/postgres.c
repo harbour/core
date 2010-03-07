@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * PostgreSQL RDBMS low level (client api) interface code.
  *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (GC support)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  * www - http://www.harbour-project.org
  *
@@ -1037,6 +1038,8 @@ HB_FUNC( PQCREATETRACE )
 {
 #ifdef NODLL
    hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );
+#else
+   hb_retptr( NULL );
 #endif
 }
 
@@ -1133,30 +1136,37 @@ HB_FUNC( LO_UNLINK )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if HB_PGVERSION >= 0x0800
-
 HB_FUNC( PQSERVERVERSION )
 {
+#if HB_PGVERSION >= 0x0800
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn )
       hb_retni( PQserverVersion( conn ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( PQGETCANCEL )
 {
+#if HB_PGVERSION >= 0x0800
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn )
       hb_PGcancel_ret( PQgetCancel( conn ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retptr( NULL );
+#endif
 }
 
 HB_FUNC( PQCANCEL )
 {
+#if HB_PGVERSION >= 0x0800
    PGcancel * cancel = hb_PGcancel_par( 1 );
 
    if( cancel )
@@ -1171,11 +1181,18 @@ HB_FUNC( PQCANCEL )
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retl( HB_FALSE );
+   hb_storc( NULL, 2 );
+#endif
 }
+
+#if defined( HB_LEGACY_LEVEL3 )
 
 /* NOTE: Deprecated */
 HB_FUNC( PQFREECANCEL )
 {
+#if HB_PGVERSION >= 0x0800
    void ** ph = ( void ** ) hb_parptrGC( &s_gcPGcancelFuncs, 1 );
 
    /* Check if pointer is not NULL to avoid multiple freeing */
@@ -1187,10 +1204,14 @@ HB_FUNC( PQFREECANCEL )
       /* set pointer to NULL to avoid multiple freeing */
       * ph = NULL;
    }
+#endif
 }
+
+#endif
 
 HB_FUNC( PQESCAPEBYTEACONN )
 {
+#if HB_PGVERSION >= 0x0800
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn && HB_ISCHAR( 2 ) )
@@ -1205,9 +1226,10 @@ HB_FUNC( PQESCAPEBYTEACONN )
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
+#else
+   hb_retc_null();
 #endif
+}
 
 /*
 

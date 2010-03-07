@@ -400,6 +400,7 @@ char * hb_verPlatform( void )
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K = HB_FALSE;
 static HB_BOOL s_fWinNT = HB_FALSE;
 static HB_BOOL s_fWin9x = HB_FALSE;
 
@@ -411,6 +412,7 @@ static void s_hb_winVerInit( void )
    if( GetVersionEx( &osvi ) )
    {
       s_fWinVista = osvi.dwMajorVersion >= 6;
+      s_fWin2K = osvi.dwMajorVersion >= 5;
       s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
       s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
    }
@@ -424,6 +426,17 @@ HB_BOOL hb_iswinvista( void )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWinVista;
+#else
+   return HB_FALSE;
+#endif
+}
+
+HB_BOOL hb_iswin2k( void )
+{
+#if defined( HB_OS_WIN )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin2K;
 #else
    return HB_FALSE;
 #endif

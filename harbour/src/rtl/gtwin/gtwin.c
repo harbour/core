@@ -209,8 +209,6 @@ static int           s_mouseLast;  /* Last mouse button to be pressed           
 static int           s_mouse_iCol;
 static int           s_mouse_iRow;
 
-static OSVERSIONINFO s_osv;
-
 typedef struct _CLIPKEYCODE
 {
     int key;
@@ -808,9 +806,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
 
-   s_osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &s_osv );
-   if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+   if( hb_iswin9x() )
       s_dwAltGrBits = RIGHT_ALT_PRESSED;
    else
       s_dwAltGrBits = LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED;
@@ -1478,9 +1474,9 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
             if( s_bSpecialKeyHandling &&
                 ( dwState & CAPSLOCK_ON ) &&
-                s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+                hb_iswin9x() )
             {
-               ch = SpecialHandling( &wChar, wKey, ch, (dwState & SHIFT_PRESSED) );
+               ch = SpecialHandling( &wChar, wKey, ch, ( dwState & SHIFT_PRESSED ) );
             }
 
             if( s_wRepeated == 0 )

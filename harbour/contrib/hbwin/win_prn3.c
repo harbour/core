@@ -104,7 +104,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
    GetVersionEx( &osv );
 
    /* If Windows 95 or 98, use SetPrinter. */
-   if( osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+   if( hb_iswin9x() )
    {
       /* Open this printer so you can get information about it. */
       bFlag = OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL );

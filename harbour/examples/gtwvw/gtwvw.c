@@ -1576,8 +1576,6 @@ static void gt_wNtTone( double dFreq, double dDurat )
 /*                                                                   */
 static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-    OSVERSIONINFO osv;
-
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvw_Tone(%lf, %lf)", dFrequency, dDuration));
     HB_SYMBOL_UNUSED( pGT );
 
@@ -1592,14 +1590,9 @@ static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
     /* keep the frequency in an acceptable range */
     dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
 
-    /* What version of Windows are you running? */
-    osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-    GetVersionEx( &osv );
-
     /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
-    if ( osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+    if( hb_iswin9x() )
     {
-
        #if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __WATCOMC__ )  || defined(__MINGW32__)
           gt_w9xTone( dFrequency, dDuration );
        #else
@@ -1609,9 +1602,9 @@ static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
     /* If Windows NT or NT2k, use wNtTone, which provides TONE()
        reset sequence support (new) */
-    else if ( osv.dwPlatformId == VER_PLATFORM_WIN32_NT )
+    else if( hb_iswinnt() )
     {
-      gt_wNtTone( dFrequency, dDuration );
+       gt_wNtTone( dFrequency, dDuration );
     }
 }
 

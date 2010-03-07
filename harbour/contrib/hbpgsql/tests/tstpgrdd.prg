@@ -11,7 +11,7 @@
 
 PROCEDURE Main()
 
-   LOCAL NCONN
+   LOCAL nConn
 
    SET DELETED ON
 

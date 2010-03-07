@@ -119,14 +119,10 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
 {
 #if ! defined( HB_OS_WIN_CE )
    HB_BOOL bResult = HB_FALSE;
-   OSVERSIONINFO osvi;
 
    hb_itemPutC( pPrinterName, NULL );
 
-   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osvi );
-
-   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
+   if( hb_iswin2k() ) /* Windows 2000 or later */
    {
       typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
       DEFPRINTER fnGetDefaultPrinter;

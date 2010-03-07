@@ -106,7 +106,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
-      IF win_osIs2000OrUpper()
+      IF hb_osIsWin2K()
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
    ENDIF
