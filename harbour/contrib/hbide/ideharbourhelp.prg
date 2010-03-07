@@ -1038,7 +1038,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, "<html>" )
 
    aadd( aHtm, '<head>                                                             ' )
-   aadd( aHtm, '  <meta name="Author" CONTENT=Pritpal Bedi [pritpal@vouchcac.com]">' )
+   aadd( aHtm, '  <meta name="Author" content=Pritpal Bedi [pritpal@vouchcac.com]">' )
    aadd( aHtm, '  <meta http-equiv="content-style-type" content="text/css" >       ' )
    aadd( aHtm, '  <meta http-equiv="content-script-type" content="text/javascript">' )
    aadd( aHtm, '                                                                   ' )

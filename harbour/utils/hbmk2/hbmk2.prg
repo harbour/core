@@ -6914,7 +6914,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
             cLine := AllTrim( cLine )
-            IF LEFTEQUAL( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine
+            IF LEFTEQUAL( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine .AND. !( "HB_FS_STATIC" $ cLine )
                n := 4
                DO WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
                   cFuncName += c

@@ -12,7 +12,8 @@ vpath %.prg ../
 LIBNAME := hbtipssl
 
 C_SOURCES := \
-   encmthd.c \
+   encb64c.c \
+   encurlc.c \
    utils.c \
 
 PRG_SOURCES := \

@@ -219,8 +219,7 @@ METHOD Flush() CLASS TIpCgi
 
    IF ::lDumpHtml
       IF Empty( ::cDumpSavePath )
-         /* TOFIX: *nix specific default. [vszakats] */
-         ::cDumpSavePath := "/tmp/"
+         ::cDumpSavePath := hb_DirTemp()
       ENDIF
       IF ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != F_ERROR
          FWrite( nH, ::cHtmlPage )
@@ -399,8 +398,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    ENDIF
 
    IF Empty( ::cSessionSavePath )
-      /* TOFIX: *nix specific default. [vszakats] */
-      ::cSessionSavePath := "/tmp/"
+      ::cSessionSavePath := hb_DirTemp()
    ENDIF
 
    IF ! Empty( cSID )

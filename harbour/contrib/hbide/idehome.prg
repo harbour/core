@@ -73,7 +73,7 @@
 /*----------------------------------------------------------------------*/
 
 #define browserStat_anchorClicked                 101
-#define browserWelcome_contextMenuRequested          102
+#define browserWelcome_contextMenuRequested       102
 #define browserFaq_contextMenuRequested           103
 #define tabWidget_currentChanged                  104
 
@@ -82,14 +82,14 @@
 STATIC FUNCTION hbide_htmlImgAnchor( cHref, cImg, nWidth, nHeight )
    DEFAULT nWidth  TO 12
    DEFAULT nHeight TO 12
-   RETURN '<A href="' + cHref + '"' + '>' + ' <IMG src="' + cImg + '"' + ;
-          ' width="' + hb_ntos( nWidth ) + '" height="' + hb_ntos( nHeight ) + '"' + '</IMG>' + '</A>'
+   RETURN '<a href="' + cHref + '"' + '>' + ' <img src="' + cImg + '"' + ;
+          ' width="' + hb_ntos( nWidth ) + '" height="' + hb_ntos( nHeight ) + '"' + '</img>' + '</a>'
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_htmlAnchor( cHref, cText, cTooltip )
 
-   RETURN '<A href="' + cHref + '"' + iif( empty( cTooltip ), '', ' title="' + cTooltip + '"' ) +'>' + cText + '</A>'
+   RETURN '<a href="' + cHref + '"' + iif( empty( cTooltip ), '', ' title="' + cTooltip + '"' ) +'>' + cText + '</A>'
 
 /*----------------------------------------------------------------------*/
 
@@ -409,12 +409,12 @@ METHOD IdeHome:buildSourcesInfo( cProjectTitle, aSrcInfo )
    aadd( aHtm, '    <img src="' + 'resources/' + cIcon + '.png' + '"' + '</img>' + '&nbsp;' + '&nbsp;' + '&nbsp;' )
    aadd( aHtm, '    <font color="#FF4719" size=5><u>' + cProjectTitle + '</u></font>' )
    aadd( aHtm, '   </td>'                                )
-   aadd( aHtm, '   <TR bgcolor="#F0F0F5">'               )
-   aadd( aHtm, '    <TH width="150" >Source</TH>'        )
-   aadd( aHtm, '    <TH width="50"  >Type</TH>'          )
-   aadd( aHtm, '    <TH width="60"  >Size</TH>'          )
-   aadd( aHtm, '    <TH width="150" >Last Modified</TH>' )
-   aadd( aHtm, '    <TH             >Location</TH>'      )
+   aadd( aHtm, '   <tr bgcolor="#F0F0F5">'               )
+   aadd( aHtm, '    <th width="150" >Source</th>'        )
+   aadd( aHtm, '    <th width="50"  >Type</th>'          )
+   aadd( aHtm, '    <th width="60"  >Size</th>'          )
+   aadd( aHtm, '    <th width="150" >Last Modified</th>' )
+   aadd( aHtm, '    <th             >Location</th>'      )
    AADD( aHtm, '   </tr>'                                )
    //
    FOR EACH aSrc IN aSrcInfo
