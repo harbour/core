@@ -131,4 +131,4 @@ PROCEDURE main()
       wait
    ENDIF
 
-RETURN
+   RETURN

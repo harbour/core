@@ -104,13 +104,13 @@ FUNCTION main()
 
    sqlite3_sleep( 10000 )
    //
-RETURN 0
+   RETURN 0
 
 /**
 */
 FUNCTION CallBack( nColCount, aValue, aColName )
-LOCAL nI
-LOCAL oldColor := SetColor( "G/N" )
+   LOCAL nI
+   LOCAL oldColor := SetColor( "G/N" )
    //
    FOR nI := 1 TO nColCount
       Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
@@ -118,36 +118,36 @@ LOCAL oldColor := SetColor( "G/N" )
 
    SetColor( oldColor )
    //
-RETURN 0
+   RETURN 0
 
 /**
 */
 FUNCTION HookCommitY()
-LOCAL oldColor := SetColor( "R+/N" )
+   LOCAL oldColor := SetColor( "R+/N" )
    //
    Qout( "!! COMMIT" )
 
    SetColor( oldColor )
    //
-RETURN 0
+   RETURN 0
 
 FUNCTION HookCommitN()
-LOCAL oldColor := SetColor( "B+/N" )
+   LOCAL oldColor := SetColor( "B+/N" )
    //
    Qout( "?? COMMIT or ROLLBACK" )
 
    SetColor( oldColor )
    //
-RETURN 1 // not 0
+   RETURN 1 // not 0
 
 FUNCTION HookRollback()
-LOCAL oldColor := SetColor( "R+/N" )
+   LOCAL oldColor := SetColor( "R+/N" )
    //
    Qout( "!! ROLLBACK" )
 
    SetColor( oldColor )
    //
-RETURN 1
+   RETURN 1
 
 /**
 */
@@ -182,7 +182,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_ROW        , "SQLITE_ROW"        , "sqlite3_step() has another row ready"        }, ;
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
-   //
+
    DEFAULT lShortMsg TO .T.
 
    IF hb_IsNumeric( nError )
@@ -193,8 +193,8 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
          cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif(lShortMsg,2,3) ], cErrorMsg )
       ENDIF
    ENDIF
-   //
-RETURN cErrorMsg
+
+   RETURN cErrorMsg
 
 /**
 */
@@ -247,5 +247,5 @@ STATIC FUNCTION PrepareDB( cFile )
 
    sqlite3_clear_bindings( pStmt )
    sqlite3_finalize( pStmt )
-   //
-RETURN pDb
+
+   RETURN pDb

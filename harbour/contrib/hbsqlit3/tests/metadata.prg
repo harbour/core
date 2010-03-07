@@ -61,7 +61,8 @@ PROCEDURE main()
    IF ! Empty( db )
       test( db )
    ENDIF
-RETURN
+
+   RETURN
 
 /*
 
@@ -89,4 +90,5 @@ PROCEDURE test( db )
 
       sqlite3_sleep( 3000 )
    ENDIF
-RETURN
+
+   RETURN

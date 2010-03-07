@@ -52,84 +52,79 @@
 
 #include "dbstruct.ch"
 
-procedure main(cArg)
+PROCEDURE Main( cArg )
 
-   local oServer, oQuery2, oRow, aStru
-   local oQuery
+   LOCAL oServer, oQuery2, oRow, aStru
+   LOCAL oQuery
 
    SET CENTURY ON
    SET EPOCH TO 1960
 
-   oServer := TMySQLServer():New("localhost", "root", "")
-   if oServer:NetErr()
-      Alert(oServer:Error())
-   endif
+   oServer := TMySQLServer():New( "localhost", "root", "" )
+   IF oServer:NetErr()
+      Alert( oServer:Error() )
+   ENDIF
 
-   oServer:SelectDB("ims")
-// oQuery := oServer:Query("SELECT * from maga limit 10")
+   oServer:SelectDB( "ims" )
+// oQuery := oServer:Query( "SELECT * from maga limit 10" )
 // oRow := oQuery:GetRow()
 
-   dbUseArea(.T.,, cArg, "wn", .F.)
+   dbUseArea( .T.,, cArg, "wn", .F. )
 
-   if !oServer:DeleteTable("test")
-      Alert(oServer:Error())
-   endif
+   IF !oServer:DeleteTable( "test" )
+      Alert( oServer:Error() )
+   ENDIF
 
    aStru := dbStruct()
-   if oServer:CreateTable("test", aStru)
-      Alert("test created successfully")
-   else
-      Alert(oServer:Error())
-   endif
+   IF oServer:CreateTable( "test", aStru )
+      Alert( "test created successfully" )
+   ELSE
+      Alert( oServer:Error() )
+   ENDIF
 
-   oQuery:=oServer:Query("SELECT C111, C116, C134 from maga limit 10")
+   oQuery:=oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
 // oRow := oQuery:GetRow()
 
    oServer:Destroy()
 
-   while !wn->(eof())
+   DO WHILE !wn->(Eof())
 
-      oQuery2 := oServer:Query("SELECT * from test where CODF='" + wn->CODF + "' and CODP='" + wn->CODP + "'")
+      oQuery2 := oServer:Query( "SELECT * from test where CODF='" + wn->CODF + "' and CODP='" + wn->CODP + "'" )
 
-      if oQuery2:LastRec() > 0
+      IF oQuery2:LastRec() > 0
 
          ? "found "
 
          oRow := oQuery2:GetRow()
 
-         oRow:FieldPut(oRow:FieldPos("GIACENZA"), oRow:FieldGet(oRow:FieldPos("GIACENZA")) + wn->GIACENZA)
-         oRow:FieldPut(oRow:FieldPos("ACQGR"), oRow:FieldGet(oRow:FieldPos("ACQGR")) + wn->ACQGR)
-         oRow:FieldPut(oRow:FieldPos("ACQDI"), oRow:FieldGet(oRow:FieldPos("ACQDI")) + wn->ACQDI)
+         oRow:FieldPut( oRow:FieldPos( "GIACENZA" ), oRow:FieldGet( oRow:FieldPos( "GIACENZA" ) ) + wn->GIACENZA )
+         oRow:FieldPut( oRow:FieldPos( "ACQGR" ), oRow:FieldGet( oRow:FieldPos( "ACQGR" ) ) + wn->ACQGR )
+         oRow:FieldPut( oRow:FieldPos( "ACQDI" ), oRow:FieldGet( oRow:FieldPos( "ACQDI" ) ) + wn->ACQDI )
 
-         if !oQuery2:Update(oRow)
-            Alert(oQuery2:Error())
-         endif
-
-      else
-
+         IF ! oQuery2:Update( oRow )
+            Alert( oQuery2:Error() )
+         ENDIF
+      ELSE
          ? wn->CODF + " " + wn->CODP
 
          oRow := oQuery:GetBlankRow()
 
-         oRow:FieldPut(oRow:FieldPos("CODF"), wn->CODF)
-         oRow:FieldPut(oRow:FieldPos("CODP"), wn->CODP)
-         oRow:FieldPut(oRow:FieldPos("GIACENZA"), wn->GIACENZA)
-         oRow:FieldPut(oRow:FieldPos("DATA"), wn->DATA + 365 * 100)
-         oRow:FieldPut(oRow:FieldPos("ACQGR"), wn->ACQGR)
-         oRow:FieldPut(oRow:FieldPos("ACQDI"), wn->ACQDI)
+         oRow:FieldPut( oRow:FieldPos( "CODF" ), wn->CODF )
+         oRow:FieldPut( oRow:FieldPos( "CODP" ), wn->CODP )
+         oRow:FieldPut( oRow:FieldPos( "GIACENZA" ), wn->GIACENZA )
+         oRow:FieldPut( oRow:FieldPos( "DATA" ), wn->DATA + 365 * 100 )
+         oRow:FieldPut( oRow:FieldPos( "ACQGR" ), wn->ACQGR )
+         oRow:FieldPut( oRow:FieldPos( "ACQDI" ), wn->ACQDI )
 
-         if !oQuery:Append(oRow)
-            Alert(oQuery:Error())
-         endif
-
-      endif
+         IF ! oQuery:Append( oRow )
+            Alert( oQuery:Error() )
+         ENDIF
+      ENDIF
 
       wn->(dbSkip())
 
-   enddo
-
+   ENDDO
 
    wn->(dbCloseArea())
 
-return
-
+   RETURN

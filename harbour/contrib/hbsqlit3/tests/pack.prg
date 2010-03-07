@@ -53,10 +53,9 @@
 #include "hbsqlit3.ch"
 
 PROCEDURE main()
-LOCAL db := ;
-   sqlite3_open_v2( "new.s3db", SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE )
+   LOCAL db := sqlite3_open_v2( "new.s3db", SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE )
 
-   IF !Empty( db )
+   IF ! Empty( db )
       IF sqlite3_exec( db, "VACUUM" ) == SQLITE_OK
          ? "PACK - Done"
 
@@ -64,4 +63,4 @@ LOCAL db := ;
       ENDIF
    ENDIF
 
-RETURN
+   RETURN

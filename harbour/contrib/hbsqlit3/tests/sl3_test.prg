@@ -66,7 +66,8 @@ PROCEDURE main()
 
    t1()
    t2()
-RETURN
+
+   RETURN
 
 /*
 */
@@ -77,7 +78,8 @@ PROCEDURE t1()
    IF ! Empty( db )
       sqlite3_exec( db, "DROP TABLE t1" )
    ENDIF
-RETURN
+
+   RETURN
 
 /*
 */
@@ -272,4 +274,4 @@ PROCEDURE t2()
       sqlite3_sleep( 3000 )
    ENDIF
 
-RETURN
+   RETURN

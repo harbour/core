@@ -119,13 +119,13 @@ FUNCTION main()
 
    sqlite3_sleep( 3000 )
    //
-RETURN 0
+   RETURN 0
 
 /**
 */
 FUNCTION CallBack( nColCount, aValue, aColName )
-LOCAL nI
-LOCAL oldColor := SetColor( "G/N" )
+   LOCAL nI
+   LOCAL oldColor := SetColor( "G/N" )
    //
    FOR nI := 1 TO nColCount
       Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
@@ -133,7 +133,7 @@ LOCAL oldColor := SetColor( "G/N" )
 
    SetColor( oldColor )
    //
-RETURN 0
+   RETURN 0
 
 /**
 */
@@ -180,7 +180,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       ENDIF
    ENDIF
    //
-RETURN cErrorMsg
+   RETURN cErrorMsg
 
 /**
 */
@@ -233,4 +233,4 @@ STATIC FUNCTION PrepareDB( cFile )
    sqlite3_clear_bindings( pStmt )
    sqlite3_finalize( pStmt )
    //
-RETURN pDb
+   RETURN pDb

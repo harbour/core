@@ -9,7 +9,7 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL cQuery
 
-   oServer := TPQServer():New(cHost, cDatabase, cUser, cPass)
+   oServer := TPQServer():New( cHost, cDatabase, cUser, cPass )
 
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
@@ -17,7 +17,7 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
    ENDIF
 
    oServer:SetVerbosity( 2 )
-   oServer:traceon( "lixo.log" )
+   oServer:traceon( "simple.log" )
 
    ? "Tables..."
 
@@ -70,8 +70,8 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
    oServer:StartTransaction()
 
    FOR i := 1 TO 10
-      cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-      cQuery += "VALUES( " + Str( i ) + ", 2, "TEST", "y", 5, 3000, 1500.2, 7.5, "2003-12-17", "Short Description about what ? ")"
+      cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) " +;
+                "VALUES( " + Str( i ) + ', 2, "TEST", "y", 5, 3000, 1500.2, 7.5, "2003-12-17", "Short Description about what ? ")'
 
       oQuery := oServer:Query( cQuery )
 
