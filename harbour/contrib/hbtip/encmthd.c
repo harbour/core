@@ -92,6 +92,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       hb_objSendMsg( hb_stackSelfItem(), "BHTTPEXCEPT", 0 );
       bExcept = hb_parl( -1 );
    }
+
    /* we know exactly the renturned length. */
    nFinalLen = ( HB_SIZE ) ( ( nLen / 3 + 2 ) * 4 );
    /* add line termination padding, CRLF each 76 output bytes */
@@ -129,25 +130,15 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
       }
 
       if( cElem < 26 )
-      {
          cRet[ nPosRet++ ] = cElem + 'A';
-      }
       else if( cElem < 52 )
-      {
          cRet[ nPosRet++ ] = ( cElem - 26 ) + 'a';
-      }
       else if( cElem < 62 )
-      {
          cRet[ nPosRet++ ] = ( cElem - 52 ) + '0';
-      }
       else if( cElem == 62 )
-      {
          cRet[ nPosRet++ ] = '+';
-      }
       else
-      {
          cRet[ nPosRet++ ] = '/';
-      }
 
       if( ! bExcept )
       {
@@ -209,39 +200,25 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
 
    /* we know exactly the renturned length. */
-   cRet = ( unsigned char * ) hb_xgrab( (nLen / 4 + 1) * 3 );
+   cRet = ( unsigned char * ) hb_xgrab( ( nLen / 4 + 1 ) * 3 );
 
    while( nPos < nLen )
    {
       cElem = cData[ nPos ];
 
       if( cElem >= 'A' && cElem <= 'Z' )
-      {
          cElem -= 'A';
-      }
       else if( cElem >= 'a' && cElem <= 'z' )
-      {
          cElem = cElem - 'a' + 26;
-      }
       else if( cElem >= '0' && cElem <= '9' )
-      {
          cElem = cElem - '0' + 52;
-      }
       else if( cElem == '+' )
-      {
          cElem = 62;
-      }
       else if( cElem == '/' )
-      {
          cElem = 63;
-      }
-      /* end of stream? */
-      else if( cElem == '=' )
-      {
+      else if( cElem == '=' ) /* end of stream? */
          break;
-      }
-      /* RFC 2045 specifies characters not in base64 must be ignored */
-      else
+      else /* RFC 2045 specifies characters not in base64 must be ignored */
       {
          nPos++;
          continue;
@@ -250,25 +227,25 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
       switch( nPosBlock )
       {
          case 0:
-            cRet[nPosRet]  = cElem << 2;
+            cRet[ nPosRet ] = cElem << 2;
             nPosBlock++;
             break;
          case 1:
             /* higer bits are zeros */
-            cRet[nPosRet] |= cElem >> 4;
+            cRet[ nPosRet ] |= cElem >> 4;
             nPosRet++;
-            cRet[nPosRet]  = cElem << 4;
+            cRet[ nPosRet ]  = cElem << 4;
             nPosBlock++;
             break;
          case 2:
             /* higer bits are zeros */
-            cRet[nPosRet] |= cElem >> 2;
+            cRet[ nPosRet ] |= cElem >> 2;
             nPosRet++;
-            cRet[nPosRet]  = cElem << 6;
+            cRet[ nPosRet ]  = cElem << 6;
             nPosBlock++;
             break;
          case 3:
-            cRet[nPosRet] |= cElem;
+            cRet[ nPosRet ] |= cElem;
             nPosRet++;
             nPosBlock = 0;
             break;
@@ -285,9 +262,9 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
 HB_FUNC( TIPENCODERQP_ENCODE )
 {
-   const char *cData = hb_parc( 1 );
+   const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
-   char *cRet;
+   char * cRet;
    unsigned char cElem;
    int nVal, iLineLen = 0;
    int nPosRet = 0, nPos = 0;
@@ -306,49 +283,49 @@ HB_FUNC( TIPENCODERQP_ENCODE )
    }
 
    /* Preallocating maximum possible length */
-   cRet = ( char * ) hb_xgrab( nLen * 3 + ( nLen/72 ) *3 + 3 );
+   cRet = ( char * ) hb_xgrab( nLen * 3 + ( nLen / 72 ) * 3 + 3 );
    /* last +3 is trailing \r\n\0 */
    while( nPos < nLen )
    {
-      cElem = (unsigned char) cData[ nPos ];
+      cElem = ( unsigned char ) cData[ nPos ];
 
       /* We chose not to encode spaces and tab here.
          cElem is signed and ranges from -126 to +127.
          negative values are automatically encoded */
-      if( (cElem >=33 && cElem <= 60) || cElem >= 62 ||
-         cElem == 9 || cElem == 32 )
+      if( ( cElem >= 33 && cElem <= 60 ) || cElem >= 62 ||
+          cElem == 9 || cElem == 32 )
       {
-         cRet[nPosRet++] = (char) cElem;
+         cRet[ nPosRet++ ] = ( char ) cElem;
          iLineLen++;
       }
       else
       {
-         cRet[nPosRet++] = '=';
+         cRet[ nPosRet++ ] = '=';
          nVal = cElem >> 4;
-         cRet[nPosRet++] = (char) (nVal < 10 ? '0' + nVal : 'A' + nVal - 10);
+         cRet[ nPosRet++ ] = ( char ) ( nVal < 10 ? '0' + nVal : 'A' + nVal - 10 );
          nVal = cElem & 0x0f;
-         cRet[nPosRet++] = (char) (nVal < 10 ? '0' + nVal : 'A' + nVal - 10);
-         iLineLen+=3;
+         cRet[ nPosRet++ ] = ( char ) ( nVal < 10 ? '0' + nVal : 'A' + nVal - 10 );
+         iLineLen += 3;
       }
 
       nPos++;
 
       if( iLineLen >= 72 )
       {
-         cRet[nPosRet++] = '=';
-         cRet[nPosRet++] = '\r';
-         cRet[nPosRet++] = '\n';
+         cRet[ nPosRet++ ] = '=';
+         cRet[ nPosRet++ ] = '\r';
+         cRet[ nPosRet++ ] = '\n';
          iLineLen = 0;
       }
    }
 
    /* Securing last line trailing space, if needed */
-   cElem = (unsigned char) cRet[nPosRet - 1];
+   cElem = ( unsigned char ) cRet[ nPosRet - 1 ];
    if( cElem == 9 || cElem == 32 )
    {
-      cRet[nPosRet++] = '=';
-      cRet[nPosRet++] = '\r';
-      cRet[nPosRet++] = '\n';
+      cRet[ nPosRet++ ] = '=';
+      cRet[ nPosRet++ ] = '\r';
+      cRet[ nPosRet++ ] = '\n';
    }
    /* Adding canonical new line for RFC2045 blocks */
 
@@ -384,45 +361,41 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
    while( nPos < nLen )
    {
-      cElem = (unsigned char) cData[ nPos ];
+      cElem = ( unsigned char ) cData[ nPos ];
 
       if( cElem == '=' )
       {
          if( nPos < nLen - 2 )
          {
-            cCipher = (unsigned char) cData[ ++nPos ];
+            cCipher = ( unsigned char ) cData[ ++nPos ];
             /* soft line break */
             if( cCipher == '\r' )
             {
                nPos += 2;
                continue;
             }
-            else {
-
+            else
+            {
                nVal = cCipher >= 'A' && cCipher <= 'F' ? cCipher - 'A' + 10 :
                      cCipher - '0';
                nVal *= 16;
 
-               cCipher = (unsigned char) cData[ ++nPos ];
+               cCipher = ( unsigned char ) cData[ ++nPos ];
                nVal += cCipher >= 'A' && cCipher <= 'F' ? cCipher - 'A' + 10 :
                      cCipher - '0';
 
-               cRet[ nPosRet++ ] = (char) nVal;
+               cRet[ nPosRet++ ] = ( char ) nVal;
             }
          }
          /* else the encoding is malformed */
          else
          {
-            if(nPosRet > 0 )
-            {
+            if( nPosRet > 0 )
                break;
-            }
          }
       }
       else
-      {
-         cRet[ nPosRet++ ] = (char) cElem;
-      }
+         cRet[ nPosRet++ ] = ( char ) cElem;
 
       nPos ++;
    }
@@ -435,10 +408,10 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
 HB_FUNC( TIPENCODERURL_ENCODE )
 {
-   const char *cData = hb_parc( 1 );
+   const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
    HB_BOOL bComplete = hb_parl( 2 );
-   char *cRet;
+   char * cRet;
    int nPos = 0, nPosRet = 0, nVal;
    char cElem;
 
@@ -470,9 +443,9 @@ HB_FUNC( TIPENCODERURL_ENCODE )
          cRet[ nPosRet ] = '+';
       }
       else if(
-         (cElem >= 'A' && cElem <= 'Z') ||
-         (cElem >= 'a' && cElem <= 'z') ||
-         (cElem >= '0' && cElem <= '9') ||
+         ( cElem >= 'A' && cElem <= 'Z' ) ||
+         ( cElem >= 'a' && cElem <= 'z' ) ||
+         ( cElem >= '0' && cElem <= '9' ) ||
          cElem == '.' || cElem == ',' || cElem == '&' ||
          cElem == '/' || cElem == ';' || cElem =='_' )
       {
@@ -500,9 +473,9 @@ HB_FUNC( TIPENCODERURL_ENCODE )
 
 HB_FUNC( TIPENCODERURL_DECODE )
 {
-   const char *cData = hb_parc( 1 );
+   const char * cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
-   char *cRet;
+   char * cRet;
    int nPos = 0, nPosRet = 0;
    char cElem;
 
@@ -518,7 +491,6 @@ HB_FUNC( TIPENCODERURL_DECODE )
       hb_retc_null();
       return;
    }
-
 
    /* maximum possible lenght */
    cRet = ( char * ) hb_xgrab( nLen );
@@ -545,15 +517,11 @@ HB_FUNC( TIPENCODERURL_DECODE )
          else
          {
             if( nPosRet > 0 )
-            {
                break;
-            }
          }
       }
       else
-      {
          cRet[ nPosRet ] = cElem;
-      }
 
       nPos++;
       nPosRet++;
