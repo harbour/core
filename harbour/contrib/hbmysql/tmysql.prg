@@ -1685,40 +1685,32 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 // Returns an SQL string with clipper value converted ie. Date() -> "'YYYY-MM-DD'"
 STATIC FUNCTION ClipValue2SQL( Value )
 
-   LOCAL cValue
-
    SWITCH ValType( Value )
    CASE "N"
-      cValue := hb_NToS( Value )
-      EXIT
+      RETURN hb_NToS( Value )
 
    CASE "D"
-      IF ! Empty( Value )
-         /* MySQL dates are like YYYY-MM-DD */
-         cValue := "'" + StrZero( Year( Value ), 4 ) + "-" + StrZero( Month( Value ), 2 ) + "-" + StrZero( Day( Value ), 2 ) + "'"
+      IF Empty( Value )
+         RETURN "''"
       ELSE
-         cValue := "''"
+         /* MySQL dates are like YYYY-MM-DD */
+         RETURN "'" + StrZero( Year( Value ), 4 ) + "-" + StrZero( Month( Value ), 2 ) + "-" + StrZero( Day( Value ), 2 ) + "'"
       ENDIF
-      EXIT
 
    CASE "C"
    CASE "M"
       IF Empty( Value )
-         cValue := "''"
+         RETURN "''"
       ELSE
-         cValue := "'"
-         Value := mysql_escape_string( value )
-         cValue += value + "'"
+         RETURN "'" + mysql_escape_string( value ) + "'"
       ENDIF
-      EXIT
 
    CASE "L"
-      cValue := iif( Value, "1", "0" )
-      EXIT
+      RETURN iif( Value, "1", "0" )
 
-   OTHERWISE
-      cValue := "''"       // NOTE: Here we lose values we cannot convert
+   CASE "U"
+      RETURN "NULL"
 
    ENDSWITCH
 
-   RETURN cValue
+   RETURN "''"       // NOTE: Here we lose values we cannot convert

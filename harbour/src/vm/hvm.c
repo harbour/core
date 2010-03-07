@@ -259,12 +259,7 @@ static const char * s_vm_pszLinkedMain = NULL; /* name of startup function set b
 
 /* virtual machine state */
 
-#ifdef HB_LEGACY_LEVEL3
-       HB_SYMB hb_symEval = { "EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
-#else
-/* TODO: Rename to s_symEval. */
-static HB_SYMB hb_symEval = { "EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
-#endif
+HB_SYMB hb_symEval = { "EVAL", { HB_FS_PUBLIC }, { hb_vmDoBlock }, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_BOOL  s_fHVMActive = HB_FALSE;  /* is HVM ready for PCODE executing */
 static HB_BOOL  s_fDoExitProc = HB_TRUE;  /* execute EXIT procedures */

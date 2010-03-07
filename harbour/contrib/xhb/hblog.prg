@@ -462,7 +462,7 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
    LOCAL nLen := Len( hb_aParams() )
    FOR EACH xPar IN hb_aParams()
        cMsg += hb_CStr( xPar )
-       IF HB_EnumIndex() < nLen
+       IF xPar:__EnumIndex() < nLen
           cMsg += " "
        ENDIF
    NEXT

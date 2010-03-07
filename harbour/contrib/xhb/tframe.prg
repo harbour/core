@@ -100,40 +100,38 @@ RETURN Self
 
 METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
-   LOCAL i
    LOCAL cStr := ""
    LOCAL cItem
 
    cStr += CRLF() + " <FRAMESET "
 
-   IF aRows != NIL .and. Valtype( aRows ) == "A" .and. !Empty( aRows )
+   IF aRows != NIL .AND. Valtype( aRows ) == "A" .AND. !Empty( aRows )
+
       cStr += ' rows="'
 
       FOR EACH cItem in aRows
-         i:=HB_ENUMINDEX()
 
-         IF i < Len( aRows )
+         IF cItem:__enumIndex() < Len( aRows )
             cStr += cItem + ","
          ELSE
             cStr += cItem
          ENDIF
-
       NEXT
+
       cStr += '"'
    ENDIF
 
-   IF aCols != NIL .and. Valtype( aCols ) == "A" .and. !Empty( aCols )
+   IF aCols != NIL .AND. Valtype( aCols ) == "A" .AND. !Empty( aCols )
 
       cStr += ' cols="'
 
       FOR EACH cItem IN aCols
-        i:=hb_enumindex()
-         IF i < Len( aCols )
+
+         IF cItem:__enumIndex() < Len( aCols )
             cStr += cItem + ","
          ELSE
             cStr += cItem
          ENDIF
-
       NEXT
 
       cStr += '"'

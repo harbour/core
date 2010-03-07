@@ -656,4 +656,4 @@ FUNCTION hb_SetMimeType( cFile, cFname, cFext )
    CASE ( cFile LIKE ".+\.vrt" ); RETURN "x-world/x-vrt=" + cFname + cFext
    ENDCASE
 
-   RETURN "text/plain;filename=" + cFname + cFext
+   RETURN "text/plain; name=" + cFname + cFext
