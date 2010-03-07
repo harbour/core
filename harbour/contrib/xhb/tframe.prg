@@ -110,12 +110,10 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' rows="'
 
       FOR EACH cItem in aRows
-
-         IF cItem:__enumIndex() < Len( aRows )
-            cStr += cItem + ","
-         ELSE
-            cStr += cItem
+         IF cItem:__enumIndex() > 1
+            cStr += ","
          ENDIF
+         cStr += cItem
       NEXT
 
       cStr += '"'
@@ -126,12 +124,10 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' cols="'
 
       FOR EACH cItem IN aCols
-
-         IF cItem:__enumIndex() < Len( aCols )
-            cStr += cItem + ","
-         ELSE
-            cStr += cItem
+         IF cItem:__enumIndex() > 1
+            cStr += ","
          ENDIF
+         cStr += cItem
       NEXT
 
       cStr += '"'
