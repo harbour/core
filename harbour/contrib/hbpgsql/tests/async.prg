@@ -6,65 +6,68 @@
  * This sample show howto use asynchronous/nonblocking queries
  */
 
-Function Main( cServer, cDatabase, cUser, cPass )
-   Local conn
+#include "inkey.ch"
+
+FUNCTION Main( cServer, cDatabase, cUser, cPass )
+   LOCAL conn
 
    CLEAR SCREEN
 
-   ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432)
+   ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432 )
 
    ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
 
-   Query( conn, 'SELECT codigo, descri FROM client limit 100', .f. )
-   Query( conn, 'SELECT codigo, descri FROM fornec limit 100', .f. )
-   Query( conn, 'SELECT pedido, vlrped FROM pedido', .t. )
+   Query( conn, "SELECT codigo, descri FROM client limit 100", .F. )
+   Query( conn, "SELECT codigo, descri FROM fornec limit 100", .F. )
+   Query( conn, "SELECT pedido, vlrped FROM pedido", .T. )
 
    conn := NIL
 
-   return nil
+   RETURN NIL
 
-Procedure Query( conn, cQuery, lCancel )
-   Local pCancel, cErrMsg := space(30)
-   Local res, x, y, xTime
+PROCEDURE Query( conn, cQuery, lCancel )
+   LOCAL pCancel, cErrMsg := Space( 30 )
+   LOCAL res, x, y, cTime
 
-   ? "PQSendQuery", PQsendQuery(conn, cQuery)
+   ? "PQSendQuery", PQsendQuery( conn, cQuery )
 
-   xTime := time()
+   cTime := Time()
    CLEAR TYPEAHEAD
 
-   do while inkey() != 27
-      DevPos(Row(), 20)
-      DevOut("Processing: " + Elaptime(xtime, time()))
+   DO WHILE Inkey() != K_ESC
+      DevPos( Row(), 20 )
+      DevOut( "Processing: " + Elaptime( cTime, Time() ) )
 
-      inkey(1)
+      Inkey( 1 )
 
-      if lCancel
-         if .t.
-            pCancel := PQgetCancel(conn)
+      IF lCancel
+         IF .T.
+            pCancel := PQgetCancel( conn )
             ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
             pCancel := NIL
-         else
-            ? PQrequestCancel(conn) // Deprecated
-         endif
-      endif
+         ELSE
+            ? PQrequestCancel( conn ) /* Deprecated */
+         ENDIF
+      ENDIF
 
-      if PQconsumeInput(conn)
-         if ! PQisBusy(conn)
-            exit
-         endif
-      endif
-   enddo
+      IF PQconsumeInput( conn )
+         IF ! PQisBusy( conn )
+            EXIT
+         ENDIF
+      ENDIF
+   ENDDO
 
-   if inkey() != 27
-      ? "PQgetResult", hb_valtoexp(res := PQgetResult(conn))
+   IF Inkey() != K_ESC
+      ? "PQgetResult", hb_valtoexp( res := PQgetResult( conn ) )
 
-      for x := 1 to PQlastrec(res)
+      FOR x := 1 TO PQlastrec( res )
          ?
-         for y := 1 to PQfcount(res)
-            ?? PQgetvalue(res, x, y), " "
-         next
-      next
-   else
-      ? "Canceling Query", PQrequestCancel(conn)
-   endif
-   Return
+         FOR y := 1 TO PQfcount( res )
+            ?? PQgetvalue( res, x, y ), " "
+         NEXT
+      NEXT
+   ELSE
+      ? "Canceling Query", PQrequestCancel( conn )
+   ENDIF
+
+   RETURN

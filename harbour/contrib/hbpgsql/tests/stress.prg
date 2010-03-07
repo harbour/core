@@ -9,119 +9,99 @@
 #include "common.ch"
 #include "postgres.ch"
 
-Function Main( cServer, cDatabase, cUser, cPass )
-   Local conn, res, i, x
+PROCEDURE Main( cServer, cDatabase, cUser, cPass )
+   LOCAL conn, res, i, x
 
-   Local cQuery
+   LOCAL cQuery
 
    CLEAR SCREEN
 
-   ? 'Connecting....'
-   conn := PQconnect(cDatabase, cServer, cUser, cPass, 5432)
+   ? "Connecting...."
+   conn := PQconnect( cDatabase, cServer, cUser, cPass, 5432 )
 
-   ? PQstatus(conn), PQerrormessage(conn)
+   ? PQstatus( conn ), PQerrormessage( conn )
 
-   if PQstatus(conn) != CONNECTION_OK
-      quit
-   endif
+   IF PQstatus( conn ) != CONNECTION_OK
+      QUIT
+   ENDIF
 
-   ? 'Dropping table...'
+   ? "Dropping table..."
 
-   res := PQexec(conn, 'DROP TABLE test')
-   res := NIL
+   PQexec( conn, "DROP TABLE test" )
 
-   ? 'Creating test table...'
-   cQuery := 'CREATE TABLE test('
-   cQuery += '     Code integer not null primary key, '
-   cQuery += '     dept Integer, '
-   cQuery += '     Name Varchar(40), '
-   cQuery += '     Sales boolean, '
-   cQuery += '     Tax Float4, '
-   cQuery += '     Salary Double Precision, '
-   cQuery += '     Budget Numeric(12,2), '
-   cQuery += '     Discount Numeric (5,2), '
-   cQuery += '     Creation Date, '
-   cQuery += '     Description text ) '
+   ? "Creating test table..."
+   cQuery := "CREATE TABLE test("
+   cQuery += "     Code integer not null primary key, "
+   cQuery += "     dept Integer, "
+   cQuery += "     Name Varchar(40), "
+   cQuery += "     Sales boolean, "
+   cQuery += "     Tax Float4, "
+   cQuery += "     Salary Double Precision, "
+   cQuery += "     Budget Numeric(12,2), "
+   cQuery += "     Discount Numeric(5,2), "
+   cQuery += "     Creation Date, "
+   cQuery += "     Description text ) "
 
-   res := PQexec(conn, cQuery)
-   res := NIL
+   PQexec( conn, cQuery )
+   PQexec( conn, "SELECT code, dept, name, sales, salary, creation FROM test" )
+   PQexec( conn, "BEGIN" )
 
-   res := PQexec(conn, 'SELECT code, dept, name, sales, salary, creation FROM test')
-   res := NIL
+   FOR i := 1 TO 10000
+      @ 15, 0 SAY "Inserting values...." + Str( i )
 
-   res := PQexec(conn, 'BEGIN')
-   res := NIL
+      cQuery := "INSERT INTO test(code, dept, name, sales, salary, creation) " +;
+                "VALUES( " + Str( i ) + "," + Str( i + 1 ) + ", 'DEPARTMENT NAME " + StrZero( i ) + "', 'y', " + Str( 300.49 + i ) + ", '2003-12-28' )"
 
-   For i := 1 to 10000
-      @ 15,0 say 'Inserting values....' + str(i)
+      PQexec( conn, cQuery )
 
-      cQuery := 'INSERT INTO test(code, dept, name, sales, salary, creation) '
-      cQuery += 'VALUES( ' + str(i) + ',' + str(i+1) + ", 'DEPARTMENT NAME " + strzero(i) + "', 'y', " + str(300.49+i) + ", '2003-12-28' )"
+      IF Mod( i, 100 ) == 0
+         ? PQexec(conn, "COMMIT")
+         ? PQexec(conn, "BEGIN")
+      ENDIF
+   NEXT
 
-      res := PQexec(conn, cQuery)
-      res := NIL
+   FOR i := 5000 TO 7000
+      @ 16, 0 SAY "Deleting values...." + Str( i )
 
-      if mod(i,100) == 0
-         ? res := PQexec(conn, 'COMMIT')
-         ? res := NIL
+      cQuery := "DELETE FROM test WHERE code = " + Str( i )
+      PQexec( conn, cQuery )
 
-         ? res := PQexec(conn, 'BEGIN')
-         ? res := NIL
-      endif
-   Next
+      IF Mod( i, 100 ) == 0
+         PQexec( conn, "COMMIT" )
+         PQexec( conn, "BEGIN" )
+      ENDIF
+   NEXT
 
-   For i := 5000 to 7000
-      @ 16,0 say 'Deleting values....' + str(i)
+   FOR i := 2000 TO 3000
+      @ 17, 0 SAY "Updating values...." + Str( i )
 
-      cQuery := 'DELETE FROM test WHERE code = ' + str(i)
-      res := PQexec(conn, cQuery)
-      res := NIL
+      cQuery := "UPDATE FROM test SET salary = 400 WHERE code = " + str( i )
+      PQexec( conn, cQuery )
 
-      if mod(i,100) == 0
-         res := PQexec(conn, 'COMMIT')
-         res := NIL
+      IF Mod( i, 100 ) == 0
+         PQexec( conn, "COMMIT" )
+         PQexec( conn, "BEGIN" )
+      ENDIF
+   NEXT
 
-         res := PQexec(conn, 'BEGIN')
-         res := NIL
-      endif
-   Next
+   res := PQexec( conn, "SELECT sum(salary) as sum_salary FROM test WHERE code between 1 and 4000" )
 
-   For i := 2000 to 3000
-      @ 17,0 say 'Updating values....' + str(i)
-
-      cQuery := 'UPDATE FROM test SET salary = 400 WHERE code = ' + str(i)
-      res := PQexec(conn, cQuery)
-      res := NIL
-
-      if mod(i,100) == 0
-         res := PQexec(conn, 'COMMIT')
-         res := NIL
-
-         res := PQexec(conn, 'BEGIN')
-         res := NIL
-      endif
-   Next
-
-   res := PQexec(conn, 'SELECT sum(salary) as sum_salary FROM test WHERE code between 1 and 4000')
-
-   if PQresultStatus(res) == PGRES_TUPLES_OK
-      @ 18,0 say 'Sum values....' + PQgetvalue(res, 1, 1)
-   endif
-
-   res := NIL
+   IF PQresultStatus( res ) == PGRES_TUPLES_OK
+      @ 18, 0 SAY "Sum values...." + PQgetvalue( res, 1, 1 )
+   ENDIF
 
    x := 0
-   For i := 1 to 4000
-      res := PQexec(conn, 'SELECT salary FROM test WHERE code = ' + str(i))
+   FOR i := 1 TO 4000
+      res := PQexec( conn, "SELECT salary FROM test WHERE code = " + Str( i ) )
 
-      if PQresultStatus(res) == PGRES_TUPLES_OK
-         x += val(PQgetvalue(res, 1, 1))
+      IF PQresultStatus( res ) == PGRES_TUPLES_OK
+         x += Val( PQgetvalue( res, 1, 1 ) )
 
-         @ 19,0 say 'Sum values....' + str(x)
-      endif
-   Next
+         @ 19, 0 SAY "Sum values...." + Str( x )
+      ENDIF
+   NEXT
 
    ? "Closing..."
    conn := NIL
 
-   return nil
+   RETURN

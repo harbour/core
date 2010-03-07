@@ -7,7 +7,8 @@
  * dbf2pg.prg - converts a .dbf file into a Postgres table
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
- * www - http://www.harbour-project.org
+ * (The Original file was ported from Mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com)
+ * * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,265 +49,260 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * The Original file was ported from Mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com
- *
  */
 
 #include "inkey.ch"
 #include "common.ch"
 
-#define CRLF chr(13) + chr(10)
+PROCEDURE Main( ... )
 
-procedure main(...)
-
-   local cTok
-   local cHostName := "localhost"
-   local cUser := "postgres"
-   local cPassWord := ""
-   local cDataBase, cTable, cFile
-   local aDbfStruct, i
-   local lCreateTable := .F.
-   local oServer, oTable, oRecord
-   Local cField
-   Local sType
-   Local dType
-   Local cValue
-   Local nCommit := 100
-   Local nHandle
-   Local nCount := 0
-   Local nRecno := 0
-   Local lTruncate := .F.
-   Local lUseTrans := .F.
-   Local cPath := 'public'
+   LOCAL cTok
+   LOCAL cHostName := "localhost"
+   LOCAL cUser := "postgres"
+   LOCAL cPassWord := ""
+   LOCAL cDataBase, cTable, cFile
+   LOCAL aDbfStruct, i
+   LOCAL lCreateTable := .F.
+   LOCAL oServer, oTable, oRecord
+   LOCAL cField
+   LOCAL sType
+   LOCAL dType
+   LOCAL cValue
+   LOCAL nCommit := 100
+   LOCAL nHandle
+   LOCAL nCount := 0
+   LOCAL nRecno := 0
+   LOCAL lTruncate := .F.
+   LOCAL lUseTrans := .F.
+   LOCAL cPath := "public"
 
    SET CENTURY ON
+   SET DATE ANSI
    SET EPOCH TO 1960
    SET DELETE ON
-   SET DATE FORMAT "dd/mm/yyyy"
 
    rddSetDefault( "DBFDBT" )
 
-   if PCount() < 6
+   IF PCount() < 6
       help()
-      quit
-   endif
+      QUIT
+   ENDIF
 
    i := 1
-   // Scan parameters and setup workings
-   while (i <= PCount())
+   /* Scan parameters and setup workings */
+   DO WHILE i <= PCount()
 
-      cTok := hb_PValue(i++)
+      cTok := hb_PValue( i++ )
 
-      do case
-      case cTok == "-h"
-         cHostName := hb_PValue(i++)
+      DO CASE
+      CASE cTok == "-h"
+         cHostName := hb_PValue( i++ )
 
-      case cTok == "-d"
-         cDataBase := hb_PValue(i++)
+      CASE cTok == "-d"
+         cDataBase := hb_PValue( i++ )
 
-      case cTok == "-t"
-         cTable := hb_PValue(i++)
+      CASE cTok == "-t"
+         cTable := hb_PValue( i++ )
 
-      case cTok == "-f"
-         cFile := hb_PValue(i++)
+      CASE cTok == "-f"
+         cFile := hb_PValue( i++ )
 
-      case cTok == "-u"
-         cUser := hb_PValue(i++)
+      CASE cTok == "-u"
+         cUser := hb_PValue( i++ )
 
-      case cTok == "-p"
-         cPassWord := hb_PValue(i++)
+      CASE cTok == "-p"
+         cPassWord := hb_PValue( i++ )
 
-      case cTok == "-c"
+      CASE cTok == "-c"
          lCreateTable := .T.
 
-      case cTok == "-x"
+      CASE cTok == "-x"
          lTruncate := .T.
 
-      case cTok == "-s"
+      CASE cTok == "-s"
          lUseTrans := .T.
 
-      case cTok == "-m"
-         nCommit := val(hb_PValue(i++))
+      CASE cTok == "-m"
+         nCommit := Val( hb_PValue( i++ ) )
 
-      case cTok == "-r"
-         nRecno := val(hb_PValue(i++))
+      CASE cTok == "-r"
+         nRecno := Val( hb_PValue( i++ ) )
 
-      case cTok == "-e"
-         cPath := hb_PValue(i++)
+      CASE cTok == "-e"
+         cPath := hb_PValue( i++ )
 
-      otherwise
+      OTHERWISE
          help()
-         quit
-      endcase
-   enddo
+         QUIT
+      ENDCASE
+   ENDDO
 
    // create log file
-   if (nHandle := FCreate(Trim(cTable) + '.log')) == -1
-        ? 'Cannot create log file'
-        quit
-   endif
+   IF ( nHandle := FCreate( RTrim( cTable ) + ".log" ) ) == -1
+      ? "Cannot create log file"
+      QUIT
+   ENDIF
 
-   USE (cFile) SHARED
+   USE ( cFile ) SHARED
    aDbfStruct := DBStruct()
 
-   oServer := TPQServer():New(cHostName, cDatabase, cUser, cPassWord, nil, cPath)
-   if oServer:NetErr()
+   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassWord, NIL, cPath )
+   IF oServer:NetErr()
       ? oServer:ErrorMsg()
-      quit
-   endif
+      QUIT
+   ENDIF
 
    oServer:lallCols := .F.
 
-   if lCreateTable
-      if oServer:TableExists(cTable)
-         oServer:DeleteTable(cTable)
-         if oServer:NetErr()
+   IF lCreateTable
+      IF oServer:TableExists( cTable )
+         oServer:DeleteTable( cTable )
+         IF oServer:NetErr()
             ? oServer:ErrorMsg()
-            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
+            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
             FClose( nHandle )
-            quit
-         endif
-      endif
-      oServer:CreateTable(cTable, aDbfStruct)
+            QUIT
+         ENDIF
+      ENDIF
+      oServer:CreateTable( cTable, aDbfStruct )
 
-      if oServer:NetErr()
+      IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
+         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
          FClose( nHandle )
-         quit
-      endif
-   endif
+         QUIT
+      ENDIF
+   ENDIF
 
-   if lTruncate
-        oServer:Execute('truncate table ' + cTable)
-        if oServer:NetErr()
-            ? oServer:ErrorMsg()
-            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
-            FClose( nHandle )
-            quit
-        endif
-   endif
+   IF lTruncate
+      oServer:Execute( "truncate table " + cTable )
+      IF oServer:NetErr()
+         ? oServer:ErrorMsg()
+         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
+         FClose( nHandle )
+         QUIT
+      ENDIF
+   ENDIF
 
-   oTable := oServer:Query("SELECT * FROM " + cTable + " LIMIT 1")
-   if oTable:NetErr()
-      Alert(oTable:ErrorMsg())
-      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + CRLF )
+   oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
+   IF oTable:NetErr()
+      Alert( oTable:ErrorMsg() )
+      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_osNewLine() )
       FClose( nHandle )
-      quit
-   endif
+      QUIT
+   ENDIF
 
-   if lUseTrans
+   IF lUseTrans
       oServer:StartTransaction()
-   endif
+   ENDIF
 
-   FWrite( nHandle, "Start: " + time() + CRLF )
+   FWrite( nHandle, "Start: " + Time() + hb_osNewLine() )
 
-   ? "Start: ", time()
+   ? "Start: ", Time()
    ?
 
-   if ! Empty(nRecno)
-      dbgoto(nRecno)
-   endif
+   IF ! Empty( nRecno )
+      dbGoto( nRecno )
+   ENDIF
 
-   do while ! eof() .and. Inkey() != K_ESC .and. (empty(nRecno) .or. nRecno == recno())
+   DO WHILE ! Eof() .AND. Inkey() != K_ESC .AND. ( Empty( nRecno ) .OR. nRecno == RecNo() )
       oRecord := oTable:GetBlankRow()
 
-      for i := 1 to oTable:FCount()
-         cField := lower(oTable:FieldName(i))
-         sType := fieldtype(fieldpos(cField))
-         dType := oRecord:Fieldtype(i)
-         cValue := fieldget(fieldpos(cField))
+      FOR i := 1 TO oTable:FCount()
+         cField := Lower( oTable:FieldName( i ) )
+         sType := FieldType( FieldPos( cField ) )
+         dType := oRecord:Fieldtype( i )
+         cValue := FieldGet( FieldPos( cField ) )
 
-         if cValue != NIL
-            if dType != sType
-               if dType == 'C' .and. sType == 'N'
-                 cValue := Str(cValue)
+         IF cValue != NIL
+            IF dType != sType
+               IF dType == "C" .AND. sType == "N"
+                 cValue := Str( cValue )
 
-               elseif dType == 'C' .and. sType == 'D'
-                 cValue := DtoC(cValue)
+               ELSEIF dType == "C" .AND. sType == "D"
+                 cValue := DToC( cValue )
 
-               elseif dType == 'C' .and. sType == 'L'
-                 cValue := IIF( cValue, "S", "N" )
+               ELSEIF dType == "C" .AND. sType == "L"
+                 cValue := iif( cValue, "S", "N" )
 
-               elseif dType == 'N' .and. sType == 'C'
-                 cValue := val(cValue)
+               ELSEIF dType == "N" .AND. sType == "C"
+                 cValue := Val( cValue )
 
-               elseif dType == 'N' .and. sType == 'D'
-                 cValue := Val(DtoS(cValue))
+               ELSEIF dType == "N" .AND. sType == "D"
+                 cValue := Val( DToS( cValue ) )
 
-               elseif dType == 'N' .and. sType == 'L'
-                 cValue := IIF( cValue, 1, 0 )
+               ELSEIF dType == "N" .AND. sType == "L"
+                 cValue := iif( cValue, 1, 0 )
 
-               elseif dType == 'D' .and. sType == 'C'
-                 cValue := CtoD(cValue)
+               ELSEIF dType == "D" .AND. sType == "C"
+                 cValue := CToD( cValue )
 
-               elseif dType == 'D' .and. sType == 'N'
-                 cValue := StoD(Str(cValue))
+               ELSEIF dType == "D" .AND. sType == "N"
+                 cValue := SToD( Str( cValue ) )
 
-               elseif dType == 'L' .and. sType == 'N'
-                 cValue := ! Empty(cValue)
+               ELSEIF dType == "L" .AND. sType == "N"
+                 cValue := ! Empty( cValue )
 
-               elseif dType == 'L' .and. sType == 'C'
-                 cValue := IIF( alltrim(cValue) $ "YySs1", .T., .F. )
+               ELSEIF dType == "L" .AND. sType == "C"
+                 cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
 
-               endif
-            endif
+               ENDIF
+            ENDIF
 
-            if cValue != NIL
-                if oRecord:Fieldtype(i) == 'C' .or. oRecord:Fieldtype(i) == 'M'
-                    oRecord:FieldPut(i, hb_oemtoansi(cValue))
-                else
-                    oRecord:FieldPut(i, cValue)
-                endif
-            endif
-         endif
-      next
+            IF cValue != NIL
+               IF oRecord:Fieldtype( i ) == "C" .OR. oRecord:Fieldtype( i ) == "M"
+                  oRecord:FieldPut( i, hb_oemtoansi( cValue ) )
+               ELSE
+                  oRecord:FieldPut( i, cValue )
+               ENDIF
+            ENDIF
+         ENDIF
+      NEXT
 
       oTable:Append(oRecord)
 
-      if oTable:NetErr()
+      IF oTable:NetErr()
          ?
-         ? "Error Record: ", recno(), left(oTable:ErrorMsg(),70)
+         ? "Error Record: ", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
-         FWrite( nHandle, "Error at record: " + Str(recno()) + " Description: " + oTable:ErrorMsg() + CRLF )
-      else
+         FWrite( nHandle, "Error at record: " + Str( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_osNewLine() )
+      ELSE
          nCount++
-      endif
+      ENDIF
 
       dbSkip()
 
-      if (nCount % nCommit) == 0
-         DevPos(Row(), 1)
-         DevOut("imported recs: " + Str(nCount))
+      IF ( nCount % nCommit ) == 0
+         DevPos( Row(), 1 )
+         DevOut( "imported recs: " + Str( nCount ) )
 
-         if lUseTrans
+         IF lUseTrans
             oServer:commit()
             oServer:StartTransaction()
-         endif
-      endif
-   enddo
+         ENDIF
+      ENDIF
+   ENDDO
 
-   if (nCount % nCommit) != 0
-        if lUseTrans
-            oServer:commit()
-        endif
-   endif
+   IF ( nCount % nCommit ) != 0
+      IF lUseTrans
+         oServer:commit()
+      ENDIF
+   ENDIF
 
-   FWrite( nHandle, "End: " +  time() + ", records in dbf: " + ltrim(str(recno())) + ", imported recs: " + ltrim(str(nCount)) + CRLF )
+   FWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_osNewLine() )
 
-   ? "End: ", time()
+   ? "End: ", Time()
    ?
 
    FClose( nHandle )
 
-   close all
+   CLOSE ALL
    oTable:Destroy()
    oServer:Destroy()
 
-   return
+   RETURN
 
-
-procedure Help()
+PROCEDURE Help()
 
    ? "dbf2pg - dbf file to PostgreSQL table conversion utility"
    ? "-h hostname (default: localhost)"
@@ -324,4 +320,4 @@ procedure Help()
 
    ? ""
 
-   return
+   RETURN
