@@ -153,8 +153,8 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    ENDIF
 
    qPop := NIL
-
-   RETURN xRet
+   hbide_justACall( xRet )
+   RETURN cAct
 
 /*----------------------------------------------------------------------*/
 
@@ -1411,7 +1411,7 @@ STATIC FUNCTION hbide_HBPStrStripQuote( cString )
 STATIC FUNCTION hbide_HBPExtGet( cFileName )
    LOCAL cExt
 
-   hb_FNameSplit( cFileName,,, @cExt )
+   hb_FNameSplit( cFileName, , , @cExt )
 
    RETURN cExt
 
@@ -1720,5 +1720,287 @@ FUNCTION hbide_syncProjPath( cRoot, cSource )
    ENDIF
 
    RETURN cRoot + cSource
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_popupBrwContextMenu( qTextBrowser, p )
+   LOCAL aMenu := {}
+
+   aadd( aMenu, { "Back"      , {|| qTextBrowser:backward()  } } )
+   aadd( aMenu, { "Forward"   , {|| qTextBrowser:forward()   } } )
+   aadd( aMenu, { "Home"      , {|| qTextBrowser:home()      } } )
+   aadd( aMenu, { "" } )
+   aadd( aMenu, { "Reload"    , {|| qTextBrowser:reload()    } } )
+   aadd( aMenu, { "" } )
+   aadd( aMenu, { "Select All", {|| qTextBrowser:selectAll() } } )
+   aadd( aMenu, { "Copy"      , {|| qTextBrowser:copy()      } } )
+   aadd( aMenu, { "Print"     , {|| NIL                      } } )
+
+   RETURN hbide_execPopup( aMenu, p, qTextBrowser )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_groupSources( cMode, a_ )
+   LOCAL cTyp, s, d_, n
+   LOCAL aSrc := { ".prg", ".c", ".cpp", ".h", ".ch", ".hbp", ".hbc", ".rc", ".res", ".obj", ".o", ".lib", ".a" }
+   LOCAL aTxt := { {}    , {}  , {}    , {}  , {}   , {}    , {}    , {}   , {}    , {}    , {}  , {}    , {}   }
+   LOCAL aRst := {}
+
+   IF     cMode == "az"
+      asort( a_, , , {|e,f| lower( hbide_stripFilter( e ) ) < lower( hbide_stripFilter( f ) ) } )
+   ELSEIF cMode == "za"
+      asort( a_, , , {|e,f| lower( hbide_stripFilter( f ) ) < lower( hbide_stripFilter( e ) ) } )
+   ELSEIF cMode == "org"
+      asort( a_, , , {|e,f| lower( hbide_stripFilter( e ) ) < lower( hbide_stripFilter( f ) ) } )
+
+      FOR EACH s IN a_
+         s := alltrim( s )
+         IF left( s, 1 ) != "#"
+            cTyp := hbide_sourceType( s )
+
+            IF ( n := ascan( aSrc, {|e| cTyp == e } ) ) > 0
+               aadd( aTxt[ n ], s )
+            ELSE
+               aadd( aRst, s )
+            ENDIF
+         ENDIF
+      NEXT
+
+      a_:= {}
+      FOR EACH d_ IN aTxt
+         IF !empty( d_ )
+            FOR EACH s IN d_
+               aadd( a_, s )
+            NEXT
+         ENDIF
+      NEXT
+      IF !empty( aRst )
+         FOR EACH s IN aRst
+            aadd( a_, s )
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_imageForProjectType( cType )
+   cType := left( cType, 8 )
+   RETURN iif( cType == "Lib", "fl_lib", iif( cType == "Dll", "fl_dll", "fl_exe" ) )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_imageForFileType( cType )
+   cType := lower( cType )
+   SWITCH cType
+   CASE ".exe"
+      RETURN "fl_exe"
+   CASE ".lib"
+   CASE ".a"
+      RETURN "fl_lib"
+   CASE ".rc"
+   CASE ".res"
+      RETURN "source_res" //"fl_res"
+   CASE ".prg"
+      RETURN "source_prg" //"fl_prg"
+   CASE ".c"
+      RETURN "source_c"
+   CASE ".cpp"
+      RETURN "source_cpp" //"fl_c"
+   CASE ".o"
+   CASE ".obj"
+      RETURN "source_o"   //"fl_obj"
+   CASE ".hbp"
+      RETURN "project"
+   CASE ".hbc"
+      RETURN "envconfig"
+   CASE ".h"
+   CASE ".ch"
+      RETURN "source_h"
+   OTHERWISE
+      RETURN "source_unknown" //"fl_txt"
+   ENDSWITCH
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+/* Borrowed from hbmk2.prg - thanks Viktor */
+
+PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
+   LOCAL cSrc := MemoRead( cSrcName )
+   LOCAL cDst
+   LOCAL aDst := {}
+   LOCAL tmp
+   LOCAL cLine
+   LOCAL cSetting
+   LOCAL cValue
+   LOCAL aValue
+   LOCAL cFile
+
+   LOCAL hLIBPATH := {=>}
+
+   LOCAL cMAIN := NIL
+
+   LOCAL lFileSection := .F.
+
+   IF empty( cDstName )
+      cDstName := FN_ExtSet( cSrcName, ".hbp" )
+   ENDIF
+
+   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
+
+   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+      IF cLine == "[Files]"
+         lFileSection := .T.
+      ELSEIF lFileSection
+         tmp := At( "=", cLine )
+         IF tmp > 0
+            cFile := AllTrim( Left( cLine, tmp - 1 ) )
+            SWITCH Lower( FN_ExtGet( cFile ) )
+            CASE ".c"
+            CASE ".prg"
+               IF !( "%HB_INSTALL%\" $ cFile )
+                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+               ENDIF
+               EXIT
+            CASE ".lib"
+            CASE ".a"
+               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
+                  !( "%HB_LIB_INSTALL%\" $ cFile )
+                  cFile := StrTran( cFile, "%HOME%\" )
+                  IF !( FN_DirGet( cFile ) $ hLIBPATH )
+                     hLIBPATH[ FN_DirGet( cFile ) ] := NIL
+                  ENDIF
+                  AAdd( aDst, "-l" + FN_NameGet( cFile ) )
+               ENDIF
+               EXIT
+            CASE ".obj"
+            CASE ".o"
+               IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
+                  !( "%HB_LIB_INSTALL%\" $ cFile )
+                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+               ENDIF
+               EXIT
+            ENDSWITCH
+         ENDIF
+      ELSE
+         tmp := At( "=", cLine )
+         IF tmp > 0
+            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+            cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
+            aValue := hb_ATokens( cValue )
+            IF ! Empty( cValue )
+               SWITCH cSetting
+               CASE "Create Map/List File"
+                  IF cValue == "Yes"
+                     AAdd( aDst, "-map" )
+                  ENDIF
+                  EXIT
+               CASE "Final Path"
+                  IF ! Empty( cValue )
+                     AAdd( aDst, "-o" + DirAddPathSep( StrTran( cValue, "%HOME%\" ) ) )
+                  ENDIF
+                  EXIT
+               CASE "Include"
+                  FOR EACH tmp IN aValue
+                     IF Left( tmp, 2 ) == "-I"
+                        tmp := SubStr( tmp, 3 )
+                     ENDIF
+                     AAdd( aDst, "-incpath=" + StrTran( StrTran( tmp, Chr( 34 ) ), "%HOME%\" ) )
+                  NEXT
+                  EXIT
+               CASE "Define"
+                  FOR EACH tmp IN aValue
+                     IF Left( tmp, 2 ) == "-D"
+                        tmp := SubStr( tmp, 3 )
+                     ENDIF
+                     AAdd( aDst, "-D" + tmp )
+                  NEXT
+                  EXIT
+               CASE "Params"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-runflag=" + tmp )
+                  NEXT
+                  EXIT
+               ENDSWITCH
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   FOR EACH tmp IN hLIBPATH
+      AAdd( aDst, "-L" + tmp:__enumKey() )
+   NEXT
+
+   cDst := ""
+   FOR EACH tmp IN aDst
+      cDst += tmp + hb_osNewLine()
+   NEXT
+
+   hb_MemoWrit( cDstName, cDst )
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION FN_DirGet( cFileName )
+   LOCAL cDir
+
+   hb_FNameSplit( cFileName, @cDir )
+
+   RETURN cDir
+
+STATIC FUNCTION FN_NameGet( cFileName )
+   LOCAL cName
+
+   hb_FNameSplit( cFileName,, @cName )
+
+   RETURN cName
+
+STATIC FUNCTION FN_NameExtGet( cFileName )
+   LOCAL cName, cExt
+
+   hb_FNameSplit( cFileName,, @cName, @cExt )
+
+   RETURN hb_FNameMerge( NIL, cName, cExt )
+
+STATIC FUNCTION FN_ExtGet( cFileName )
+   LOCAL cExt
+
+   hb_FNameSplit( cFileName,,, @cExt )
+
+   RETURN cExt
+
+STATIC FUNCTION FN_ExtDef( cFileName, cDefExt )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+   IF Empty( cExt )
+      cExt := cDefExt
+   ENDIF
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
+   IF cDirNew != NIL
+      cDir := cDirNew
+   ENDIF
+   IF cExtNew != NIL
+      cExt := cExtNew
+   ENDIF
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /*----------------------------------------------------------------------*/

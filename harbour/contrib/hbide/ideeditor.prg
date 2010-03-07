@@ -288,9 +288,10 @@ METHOD IdeEditsManager:getTabBySource( cSource )
 METHOD IdeEditsManager:getTabCurrent()
    LOCAL qTab, nTab
 
-   qTab := ::qTabWidget:currentWidget()
-   nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } )
-
+   IF !empty( ::qTabWidget )
+      qTab := ::qTabWidget:currentWidget()
+      nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } )
+   ENDIF
    RETURN nTab
 
 /*----------------------------------------------------------------------*/
@@ -298,7 +299,7 @@ METHOD IdeEditsManager:getTabCurrent()
 METHOD IdeEditsManager:getDocumentCurrent()
    LOCAL qTab, nTab
 
-   IF ::qTabWidget:count() > 0
+   IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
       IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
          RETURN QTextDocument():configure( ::aTabs[ nTab, TAB_OEDITOR ]:document() )
@@ -312,7 +313,7 @@ METHOD IdeEditsManager:getDocumentCurrent()
 METHOD IdeEditsManager:getEditObjectCurrent()
    LOCAL qTab, nTab
 
-   IF ::qTabWidget:count() > 0
+   IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
       IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCoEdit
@@ -326,7 +327,7 @@ METHOD IdeEditsManager:getEditObjectCurrent()
 METHOD IdeEditsManager:getEditCurrent()
    LOCAL qTab, nTab
 
-   IF ::qTabWidget:count() > 0
+   IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
       IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCqEdit
@@ -340,7 +341,7 @@ METHOD IdeEditsManager:getEditCurrent()
 METHOD IdeEditsManager:getEditorCurrent()
    LOCAL qTab, nTab
 
-   IF ::qTabWidget:count() > 0
+   IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
       IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]
@@ -426,6 +427,8 @@ METHOD IdeEditsManager:setSourceVisible( cSource )
    LOCAL oEdit, nIndex
 
    IF !empty( oEdit := ::getEditorBySource( cSource ) )
+      ::oDK:setView( oEdit:cView )
+
       nIndex := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
       IF ::qTabWidget:currentIndex() != nIndex
          ::qTabWidget:setCurrentIndex( nIndex )
@@ -1050,7 +1053,6 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
-   LOCAL n
 
    ::qSlots := HBSlots():new()
 
@@ -1070,17 +1072,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    ::cTheme         := cTheme
    ::cView          := cView
 
-   DEFAULT ::cView TO iif( ::nCurView == 0, "Main", ::aINI[ INI_VIEWS, ::nCurView ] )
-
-   IF ::cView == "Main"
-      ::oStackedWidget:oWidget:setCurrentIndex( 0 )
-   ELSE
-      IF ( n := ascan( ::aINI[ INI_VIEWS ], {|e| e == ::cView } ) ) > 0
-         ::oStackedWidget:oWidget:setCurrentIndex( n )
-      ELSE
-         ::oStackedWidget:oWidget:setCurrentIndex( 0 )
-      ENDIF
-   ENDIF
+   DEFAULT ::cView TO iif( ::cWrkView == "Stats", "Main", ::cWrkView )
+   ::oDK:setView( ::cView )
 
    ::pathNormalized := hbide_pathNormalized( cSourceFile, .t. )
 

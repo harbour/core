@@ -112,15 +112,15 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
 
-   FOR j := 0 TO len( oIde:aINI[ INI_VIEWS ] )
+   FOR j := 2 TO len( oIde:aViews )
       oIde:lClosing := .t.
-      oIde:oStackedWidget:oWidget:setCurrentIndex( j )
+      oIde:oDK:setView( oIde:aViews[ j ]:oWidget:objectName() )
 
       nTabs := oIde:qTabWidget:count()
       FOR n := 1 TO nTabs
-         pTab      := oIde:qTabWidget:widget( n-1 )
-         nTab      := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
-         oEdit     := oIde:aTabs[ nTab, TAB_OEDITOR ]
+         pTab  := oIde:qTabWidget:widget( n - 1 )
+         nTab  := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
+         oEdit := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
             IF oEdit:lLoaded
@@ -348,16 +348,20 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_saveSettings( oIde )
+   LOCAL cPath
 
-   hbqt_QMainWindow_saveSettings( hb_dirBase() + "idesettings.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
+   hb_fNameSplit( oIde:cProjIni, @cPath )
+   hbqt_QMainWindow_saveSettings( cPath + "hbide.set", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_restSettings( oIde )
+   LOCAL cPath
 
-   hbqt_QMainWindow_restSettings( hb_dirBase() + "idesettings.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
+   hb_fNameSplit( oIde:cProjIni, @cPath )
+   hbqt_QMainWindow_restSettings( cPath + "hbide.set", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
 

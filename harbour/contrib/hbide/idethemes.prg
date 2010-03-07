@@ -450,14 +450,13 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:show()
-   #if 0
+   #if 1
    LOCAL qAct
    #endif
 
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      //::oUI := HbQtUI():new( hbide_uic( "themesex" ), ::oThemesDock:oWidget ):build()
       ::oUI := HbQtUI():new( hbide_uic( "themesex" ) ):build()
 
       //::oThemesDock:qtObject := Self
@@ -478,7 +477,7 @@ METHOD IdeThemes:show()
       ::oUI:signal( "buttonClose"   , "clicked()"               , {||  ::oThemesDock:hide() } )
 
       /* Fill Themes Dialog Values */
-      #if 0
+      #if 1
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
       //
       ::oUI:qObj[ "labelItems"     ]:setText( GetKeyValue( ::aControls, "labelItems"    , "Items"     ) )
@@ -495,7 +494,7 @@ METHOD IdeThemes:show()
       ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
       #endif
 
-      #if 0
+      #if 1
       ::qMenuApply := QMenu():new()
       //
       qAct := QAction():new( ::qMenuApply )

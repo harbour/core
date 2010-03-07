@@ -442,7 +442,7 @@ METHOD XbpWindow:connectWindowEvents()
    //
    ::connectEvent( ::pWidget, QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
 *  ::connectEvent( ::pWidget, QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
-   ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
+*  ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
    //
    ::connectEvent( ::pWidget, QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
    ::connectEvent( ::pWidget, QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
@@ -478,7 +478,11 @@ METHOD XbpWindow:destroy()
 HBXBP_DBG( ".   " )
 HBXBP_DBG( ".   " )
 HBXBP_DBG( ".   " )
-HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+
+   LOCAL cCls := __ObjGetClsName( self ), cMsg
+cMsg := iif( cCls == "XBPWINDOW", ::oWidget:objectName(), IF( empty(::cargo),'',str(::cargo) ) )
+HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ), hbqt_getMemUsed() )
 #endif
    ::oParent := NIL
    ::oOwner  := NIL
@@ -503,7 +507,7 @@ HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(emp
 
    IF !empty( ::qtObject )
       ::qtObject:destroy()
-      ::qtObject := NIL
+//      ::qtObject := NIL
    ENDIF
 
    IF !empty( ::qLayout )
@@ -511,8 +515,9 @@ HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(__ObjGetClsName( self ),12)+ IF(emp
    ENDIF
 
    ::oWidget := NIL
-
 #if 0
+HBXBP_DBG( hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+
 HBXBP_DBG( ".   " )
 HBXBP_DBG( ".   " )
 HBXBP_DBG( ".   " )

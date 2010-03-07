@@ -173,6 +173,7 @@ METHOD IdeActions:loadActions()
    //            Name                     Text                             Image             Shortcut  Checkable  IconVisInMenu
    //
    aadd( aAct, { "TB_Exit"              , "E~xit"                        , "exit"           , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Home"              , "~Home"                        , "dc_home"        , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_New"               , "~Source"                      , "new"            , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Open"              , "~Open"                        , "open"           , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Save"              , "~Save"                        , "save"           , ""     , "No", "Yes" } )
@@ -209,10 +210,10 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Help"                 , "~Help"                        , "help"           , "F1"   , "No", "Yes" } )
    aadd( aAct, { "Exit"                 , "E~xit"                        , "exit"           , "Sh+^W", "No", "Yes" } )
    aadd( aAct, { "New"                  , "~Source"                      , "new"            , "^N"   , "No", "Yes" } )
-   aadd( aAct, { "Open"                 , "~Open"                        , "open"           , "^O"   , "No", "Yes" } )
+   aadd( aAct, { "Open"                 , "~Open..."                     , "open"           , "^O"   , "No", "Yes" } )
    aadd( aAct, { "Save"                 , "~Save"                        , "save"           , "^S"   , "No", "Yes" } )
    aadd( aAct, { "Close"                , "~Close"                       , "close"          , "^W"   , "No", "Yes" } )
-   aadd( aAct, { "Print"                , "~Print"                       , "print"          , "^P"   , "No", "Yes" } )
+   aadd( aAct, { "Print"                , "~Print..."                    , "print"          , "^P"   , "No", "Yes" } )
    aadd( aAct, { "Compile"              , "Co~mpile"                     , "compile"        , ""     , "No", "Yes" } )
    aadd( aAct, { "CompilePPO"           , "Com~pile to PPO"              , "ppo"            , ""     , "No", "Yes" } )
    aadd( aAct, { "Build"                , "Build Project"                , "build"          , ""     , "No", "Yes" } )
@@ -244,7 +245,7 @@ METHOD IdeActions:loadActions()
    //
    aadd( aAct, { "NewProject"           , "~Project"                     , "project"        , ""     , "No", "Yes" } )
    aadd( aAct, { "LoadProject"          , "Open Projec~t"                , ""               , ""     , "No", "Yes" } )
-   aadd( aAct, { "SaveAs"               , "Save ~As"                     , "saveas"         , ""     , "No", "Yes" } )
+   aadd( aAct, { "SaveAs"               , "Save ~as..."                  , "saveas"         , ""     , "No", "Yes" } )
    aadd( aAct, { "SaveAll"              , "Save A~ll"                    , "saveall"        , "Sh+^s", "No", "Yes" } )
    aadd( aAct, { "CloseAll"             , "Clos~e All"                   , "closeall"       , ""     , "No", "Yes" } )
    aadd( aAct, { "CloseOther"           , "Close Ot~hers"                , "closeexcept"    , ""     , "No", "Yes" } )
@@ -277,7 +278,7 @@ METHOD IdeActions:loadActions()
 
    aadd( aAct, { "ManageThemes"         , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"         , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
-   aadd( aAct, { "AboutIDE"             , "About Harbour IDE"            , "vr-16x16"       , ""     , "No", "Yes" } )
+   aadd( aAct, { "AboutIDE"             , "About Harbour IDE"            , "hbide"          , ""     , "No", "Yes" } )
    aadd( aAct, { "AboutHarbour"         , "About Harbour"                , "hb-16x16"       , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourUsersList"     , "Harbour Users (Mailing Lists)", "list-users"     , ""     , "No", "Yes" } )
    aadd( aAct, { "HarbourDevList"       , "Harbour Developers (Mailing Lists)", "list-developers", "", "No", "Yes" } )
@@ -317,14 +318,14 @@ METHOD IdeActions:buildToolBar()
    oTBar:imageWidth  := 22
    oTBar:imageHeight := 22
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
-   oTBar:setStyleSheet( GetStyleSheet( "QToolBar" ) )
+ * oTBar:setStyleSheet( GetStyleSheet( "QToolBar" ) )
 
    oTBar:oWidget:setMaximumHeight( 28 )
 
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
    oTBar:addItem( ::getAction( "TB_Exit"              ), , , , , , "Exit"              )
- * oTBar:addItem( ::getAction( "Help"                 ), , , , , , "Help"              )
+   oTBar:addItem( ::getAction( "TB_Home"              ), , , , , , "Home"              )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_New"               ), , , , , , "New"               )
    oTBar:addItem( ::getAction( "TB_Open"              ), , , , , , "Open"              )
@@ -488,7 +489,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "DeleteLine"         ), {|| oIde:execAction( "DeleteLine"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineUp"         ), {|| oIde:execAction( "MoveLineUp"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineDown"       ), {|| oIde:execAction( "MoveLineDown"   ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Line..." ) } )
+   oMenuBar:addItem( { oSubMenu2,  _T( "~Line" ) } )
    //
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
    oSubMenu2:addItem( { ::getAction( "StreamComment"      ), {|| oIde:execAction( "StreamComment"  ) } } )
@@ -499,7 +500,7 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu2 )
    oSubMenu2:addItem( { ::getAction( "BlockSgl2Dbl"       ), {|| oIde:execAction( "BlockSgl2Dbl"   ) } } )
    oSubMenu2:addItem( { ::getAction( "BlockDbl2Sgl"       ), {|| oIde:execAction( "BlockDbl2Sgl"   ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Block..." ) } )
+   oMenuBar:addItem( { oSubMenu2,  _T( "~Block" ) } )
 
    hbide_menuAddSep( oSubMenu )
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
@@ -556,6 +557,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Tools                                    */
    /*----------------------------------------------------------------------------*/
+#if 0
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Tools"
    oSubMenu:addItem( { ::getAction( "ConfigureTools"      ), {|| oIde:execAction( "ConfigureTools"     ) } } )
@@ -566,14 +568,14 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "Terminal"            ), {|| oIde:execAction( "Terminal"           ) } } )
 #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
-
+#endif
    /*----------------------------------------------------------------------------*/
    /*                                   Options                                  */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Setup"
    oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
-   oSubMenu2:title := "~Codecs"
+   oSubMenu2:title := "~Encoding"
    oSubMenu:addItem( { oSubMenu2, NIL } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 

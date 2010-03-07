@@ -140,6 +140,7 @@ CLASS HbIde
    DATA   oSkeltnUI
    DATA   oFindDock
    DATA   oHL
+   DATA   oHM
 
    DATA   oUI
 
@@ -154,7 +155,6 @@ CLASS HbIde
    DATA   aProjData                               INIT   {}
    DATA   aPrpObjs                                INIT   {}
    DATA   aEditorPath                             INIT   {}
-   DATA   nCurView                                INIT   1
 
    /* HBQT Objects */
    DATA   qLayout
@@ -286,7 +286,6 @@ CLASS HbIde
    METHOD execProjectAction( cKey )
    METHOD execSourceAction( cKey )
    METHOD execEditorAction( cKey )
-   METHOD execWindowsAction( cKey )
 
    /* Methods to be evaluated as macros */
    METHOD getWord( lSelect )
@@ -335,8 +334,7 @@ METHOD HbIde:showApplicationCursor( nCursor )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
-   #if 1
-   LOCAL qPixmap, qSplash, nStart
+   LOCAL qPixmap, qSplash
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -345,7 +343,6 @@ METHOD HbIde:create( cProjIni )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
    QApplication():processEvents()
-   #endif
 
    DEFAULT cProjIni TO ::cProjIni
    ::cProjIni := cProjIni
@@ -411,6 +408,9 @@ METHOD HbIde:create( cProjIni )
    /* Load Environments */
    ::oEV := IdeEnvironments():new( Self, hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ):create()
 
+   /* Home Implementation */
+   ::oHM := IdeHome():new():create( Self )
+
    /* Just to spare some GC calls */
    ::qCursor := QTextCursor():new()
    ::qBrushWrkProject := QBrush():new( "QColor", QColor():new( 255,0,0 ) )
@@ -453,21 +453,16 @@ METHOD HbIde:create( cProjIni )
    ::oDockB1:hide()
    ::oDockB2:hide()
    ::oDockB:hide()
-   //::oDocViewDock:hide()
+   ::oDocViewDock:hide()
 
    /* Request Main Window to Appear on the Screen */
+   ::oHM:refresh()
    ::oDlg:Show()
+   ::oDK:setView( "Stats" )
 
-   nStart := seconds()
-   DO WHILE .t.
-      QApplication():processEvents()
-      IF seconds()-nStart > 5
-         ::showApplicationCursor()
-         qSplash:close()
-         qSplash := NIL
-         EXIT
-      ENDIF
-   ENDDO
+   ::showApplicationCursor()
+   qSplash:close()
+   qSplash := NIL
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -531,6 +526,7 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oHM:destroy()
    ::oHL:destroy()
    ::oThemes:destroy()
    ::oFindInFiles:destroy()
@@ -559,6 +555,10 @@ METHOD HbIde:execAction( cKey )
    SWITCH cKey
    CASE "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+      EXIT
+   CASE "Home"
+      ::oDK:setView( "Stats" )
+      //::oHM:refresh()
       EXIT
    CASE "NewProject"
    CASE "LoadProject"
@@ -628,7 +628,7 @@ METHOD HbIde:execAction( cKey )
    CASE "ToggleProjectTree"
    CASE "ToggleBuildInfo"
    CASE "ToggleFuncList"
-      ::execWindowsAction( cKey )
+      //::execWindowsAction( cKey )
       EXIT
    CASE "Help"
       ::oHelpDock:show()
@@ -849,23 +849,6 @@ METHOD HbIde:execProjectAction( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:execWindowsAction( cKey )
-
-   SWITCH cKey
-   CASE "ToggleProjectTree"
-      ::oDK:toggleLeftDocks()
-      EXIT
-   CASE "ToggleBuildInfo"
-      ::oDK:toggleBottomDocks()
-      EXIT
-   CASE "ToggleFuncList"
-      ::oDK:toggleRightDocks()
-      EXIT
-   ENDSWITCH
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
    LOCAL aRect
 
@@ -1029,12 +1012,12 @@ METHOD HbIde:updateProjectTree( aPrj )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageItemSelected( oXbpTreeItem )
-   LOCAL n, cHbp, aPrj
+   LOCAL n, cHbp
 
    IF     oXbpTreeItem == ::oProjRoot
-      n  := -1
+      n := -1
    ELSEIF oXbpTreeItem == ::oOpenedSources
-      n  := -2
+      n := -2
    ELSE
       n := ascan( ::aProjData, {|e_| e_[ 1 ] == oXbpTreeItem } )
    ENDIF
@@ -1044,11 +1027,7 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
    CASE n == -2  // "Files"
    CASE n == -1
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
-      aPrj := ::aProjData[ n, 5 ]
-
-      cHbp := hbide_pathToOSPath( aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-                                  aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbp" )
-
+      cHbp := ::oPM:getProjectFileNameFromTitle( ::aProjData[ n, TRE_ORIGINAL ] )
       ::oPM:loadProperties( cHbp, .f., .t., .f. )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
@@ -1067,7 +1046,7 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
-   LOCAL n, cHbi, aPrj, s
+   LOCAL n, cHbp, s
    LOCAL aPops := {}, aSub :={}
 
    HB_SYMBOL_UNUSED( mp2 )
@@ -1088,7 +1067,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n == -1  // Project Root
       aadd( aPops, { "New Project"                       , {|| ::oPM:loadProperties( NIL, .t., .t., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Load Project"                      , {|| ::oPM:loadProperties( NIL, .f., .f., .t. ) } } )
+      aadd( aPops, { "Open Project"                      , {|| ::oPM:loadProperties( NIL, .f., .f., .t. ) } } )
       aadd( aPops, { "" } )
       //
       IF !empty( ::oEV:getNames() )
@@ -1102,15 +1081,12 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
-      aPrj := ::aProjData[ n, TRE_DATA ]
-      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
-              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbp"
-      cHbi := hbide_pathToOSPath( cHbi )
+      cHbp := hbide_pathToOSPath( ::oPM:getProjectFileNameFromTitle( ::aProjData[ n, TRE_ORIGINAL ] ) )
       //
       IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
          aadd( aPops, { "Set as Current"                 , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
-      aadd( aPops, { "Properties"                        , {|| ::oPM:loadProperties( cHbi, .f., .t., .t. ) } } )
+      aadd( aPops, { "Properties"                        , {|| ::oPM:loadProperties( cHbp, .f., .t., .t. ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { ::oAC:getAction( "BuildQt"         ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F.,    , , .T. ) } } )
       aadd( aPops, { ::oAC:getAction( "BuildLaunchQt"   ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T.,    , , .T. ) } } )
@@ -1169,7 +1145,7 @@ METHOD HbIde:updateFuncList()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
-   LOCAL n, cAnchor, oEdit
+   LOCAL n, cAnchor, oEdit, lFound
 
    mp1 := oListBox:getData()
    mp2 := oListBox:getItem( mp1 )
@@ -1177,8 +1153,11 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
       IF !empty( oEdit := ::oEM:getEditCurrent() )
-         IF !( oEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
-            oEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+         IF !( lFound := oEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+            lFound := oEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+         ENDIF
+         IF lFound
+            oEdit:centerCursor()
          ENDIF
       ENDIF
    ENDIF

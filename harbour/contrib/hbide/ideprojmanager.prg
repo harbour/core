@@ -238,6 +238,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD getProjectProperties( cProjectTitle )
    METHOD getProjectByFile( cProjectFile )
    METHOD getProjectFileNameFromTitle( cProjectTitle )
+   METHOD getProjectTypeFromTitle( cProjectTitle )
    METHOD getProjectPathFromTitle( cProjectTitle )
    METHOD getProjectByTitle( cProjectTitle )
    METHOD getSourcesByProjectTitle( cProjectTitle )
@@ -248,12 +249,12 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD launchProject( cProject, cExe )
    METHOD showOutput( cOutput, mp2, oProcess )
    METHOD finished( nExitCode, nExitStatus, oProcess )
-   METHOD loadXhpProject()
    METHOD loadHbpProject( cHbp )
    METHOD isValidProjectLocation( lTell )
    METHOD setProjectLocation( cPath )
    METHOD buildInterface()
    METHOD pullHbpData( cHbp )
+   METHOD synchronizeAlienProject( cProjFileName )
 
    ENDCLASS
 
@@ -299,20 +300,11 @@ METHOD IdeProjManager:populate()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:getProperties()
-   LOCAL aPrj, cHbi, cTmp, n
+   LOCAL cTmp, n
 
-   IF Empty( ::cWrkProject )
-      MsgBox( 'No active project detected' )
-   ENDIF
    cTmp := ::getCurrentProject()
    IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
-      aPrj := ::aProjects[ n, 3 ]
-      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + ::pathSep + ;
-              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbp"
-
-      ::loadProperties( cHbi, .f., .t., .t. )
-   ELSE
-      MsgBox( 'Invalid project: ' + cTmp )
+      ::loadProperties( ::aProjects[ n, 1 ], .f., .t., .t. )
    ENDIF
 
    RETURN Self
@@ -340,7 +332,9 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
       lFetch := .t.
    ELSE
       IF empty( cProjFileName )
-         cProjFileName := hbide_fetchAFile( ::oDlg, "Load Project...", { { "Harbour IDE Projects (*.hbp)", "*.hbp" } } )
+         cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Projects (*.hbp)", "*.hbp" } , ;
+                                                                         { "xMate Projects (*.xhp)"  , "*.xhp" } } )
+         cProjFileName := ::synchronizeAlienProject( cProjFileName )
       ENDIF
       IF empty( cProjFileName )
          RETURN Self
@@ -362,24 +356,22 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
       ::oPropertiesDock:hide()
       ::oPropertiesDock:show()
    ELSE
-      IF nAlready == 0 .AND. !empty( ::aPrjProps )
-         aadd( ::oIDE:aProjects, { hbide_pathNormalized( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
-         IF lUpdateTree
-            ::oIDE:updateProjectTree( ::aPrjProps )
+      IF !empty( ::aPrjProps )
+         IF nAlready == 0
+            aadd( ::oIDE:aProjects, { hbide_pathNormalized( cProjFileName ), cProjFileName, aclone( ::aPrjProps ) } )
+            IF lUpdateTree
+               ::oIDE:updateProjectTree( ::aPrjProps )
+            ENDIF
+            hbide_mnuAddFileToMRU( ::oIDE, cProjFileName, INI_RECENTPROJECTS )
+         ELSE
+            ::aProjects[ nAlready, 3 ] := aclone( ::aPrjProps )
+            IF lUpdateTree
+               ::oIDE:updateProjectTree( ::aPrjProps )
+            ENDIF
          ENDIF
-         hbide_mnuAddFileToMRU( ::oIDE, cProjFileName, INI_RECENTPROJECTS )
-      ELSE
-         ::aProjects[ nAlready, 3 ] := aclone( ::aPrjProps )
-         IF lUpdateTree
-            ::oIDE:updateProjectTree( ::aPrjProps )
-         ENDIF
-         #if 0
-         IF lUpdateTree .AND. ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] <> t
-            MsgBox( "::removeProjectFromTree( ::aPrjProps )" )
-         ENDIF
-         #endif
       ENDIF
 
+      ::oHM:refresh()  /* Rearrange Projects Data */
    ENDIF
 
    RETURN Self
@@ -596,25 +588,24 @@ METHOD IdeProjManager:save( lCanClose )
    ::cSaveTo := ::oUI:q_editPrjLoctn:text() + ::pathSep + ::oUI:q_editOutName:text() + ".hbp"
 
    ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
-hbide_dbg( ::lUpdateTree, ::cSaveTo )
+
    IF ( lOk := hbide_createTarget( ::cSaveTo, txt_ ) )
       ::aPrjProps := ::pullHbpData( hbide_pathToOSPath( ::cSaveTo ) )
 
       IF ( nAlready := ascan( ::aProjects, {|e_| e_[ 1 ] == hbide_pathNormalized( ::cSaveTo ) } ) ) == 0
-hbide_dbg( nAlready, ::lUpdateTree, ::cSaveTo )
          aadd( ::oIDE:aProjects, { hbide_pathNormalized( ::cSaveTo ), ::cSaveTo, aclone( ::aPrjProps ) } )
          IF ::lUpdateTree
             ::oIDE:updateProjectTree( ::aPrjProps )
          ENDIF
          hbide_mnuAddFileToMRU( ::oIDE, ::cSaveTo, INI_RECENTPROJECTS )
       ELSE
-hbide_dbg( nAlready, ::lUpdateTree, ::cSaveTo )
          ::aProjects[ nAlready, 3 ] := aclone( ::aPrjProps )
          IF ::lUpdateTree
             ::oIDE:updateProjectTree( ::aPrjProps )
          ENDIF
       ENDIF
 
+      ::oHM:refresh()  /* Rearrange Projects Data */
    ELSE
       MsgBox( 'Error saving project file: ' + ::cSaveTo, 'Error saving project ...' )
 
@@ -749,7 +740,6 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_buttonChooseWd    :setIcon( cLukupPng )
    ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
    ::oUI:q_buttonBackup      :setIcon( cLukupPng )
-   ::oUI:q_buttonXmate       :setIcon( hbide_image( "xmate" ) )
 
    ::oUI:q_buttonSelect :setIcon( hbide_image( "open"        ) )
    ::oUI:q_buttonSort   :setIcon( hbide_image( "sort"        ) )
@@ -771,7 +761,6 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
    ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
    ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
-   ::oUI:signal( "buttonXmate"       , "clicked()", {|| ::loadXhpProject() } )
 
    ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
@@ -779,167 +768,28 @@ METHOD IdeProjManager:buildInterface()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:loadXhpProject()
-   LOCAL cXhp, a_, s, n, cPart, cKey, cVal
-   LOCAL cHome, cOutname, cType, cDefine, cInclude
-   LOCAL cRun, cParams, cDestntn, cMap
-   LOCAL cPath, cFile, cExt
-   LOCAL hLIBPATH := {=>}
-   LOCAL aLibs := {}, aFlags := {}, aFiles := {}, aSrc := {}
+METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
+   LOCAL cPath, cFile, cExt, cHbp
 
-   cXhp := hbide_fetchAFile( ::oDlg, "Selecet xMate Project File", { { "xMate Project Files", "*.xhp" } } )
-
-   IF empty( cXhp )
-      RETURN Self
+   hb_fNameSplit( cProjFileName, @cPath, @cFile, @cExt )
+   IF lower( cExt ) == ".hbp"              /* Nothing to do */
+      RETURN cProjFileName
    ENDIF
-   hb_fNameSplit( cXhp, @cHome, @cOutName )
-   cHome := hbide_pathStripLastSlash( cHome )
 
-   a_:= hbide_readSource( cXhp )
-
-   cPart := ""
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF empty( s )
-         LOOP
-      ENDIF
-      IF left( s, 1 ) == "["
-         IF ( n := at( "]", s ) ) > 0
-            cPart := substr( s, 2, n-2 )
-         ELSE
-            cPart := ""
-         ENDIF
-      ELSE
-         SWITCH lower( cPart )
-         CASE "version"
-            EXIT
-         CASE "xmate"
-            IF hbide_parseKeyValPair( s, @cKey, @cVal )
-               IF cKey == "Create Map/List File" .AND. cVal == "Yes"
-                  cMap := "-map"
-               ENDIF
-            ENDIF
-            EXIT
-         CASE "info"
-            IF hbide_parseKeyValPair( s, @cKey, @cVal )
-               SWITCH lower( cKey )
-               CASE "type"
-                  cType := cVal
-                  EXIT
-               CASE "include"
-                  cInclude := cVal
-                  EXIT
-               CASE "define"
-                  cDefine := cVal
-                  EXIT
-               CASE "architecture"
-                  EXIT
-               ENDSWITCH
-            ENDIF
-            EXIT
-         CASE "xmate"
-            EXIT
-         CASE "project"
-            IF hbide_parseKeyValPair( s, @cKey, @cVal )
-               SWITCH lower( cKey )
-               CASE "run"
-                  cRun := cVal
-                  EXIT
-               CASE "params"
-                  cParams := cVal
-                  EXIT
-               CASE "final path"
-                  cDestntn := hbide_pathStripLastSlash( cVal )
-                  EXIT
-               ENDSWITCH
-            ENDIF
-            EXIT
-         CASE "data path"
-            EXIT
-         CASE "editor"
-            EXIT
-         CASE "files"
-            IF hbide_parseKeyValPair( s, @cKey, @cVal )
-               aadd( aFiles, cKey )
-            ENDIF
-            EXIT
-         ENDSWITCH
-      ENDIF
-   NEXT
-
-   /* Basic Parsing is complete , parse paths from keywords */
-   SWITCH cType
-   CASE "Executable"
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
-      EXIT
-   CASE "Library"
-      ::oUI:q_comboPrjType:setCurrentIndex( 1 )
-      EXIT
-   CASE "Dll"
-      ::oUI:q_comboPrjType:setCurrentIndex( 2 )
-      EXIT
-   OTHERWISE
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
-      EXIT
-   ENDSWITCH
-
-   ::oUI:q_editPrjTitle :setText( cOutName )
-   ::oUI:q_editPrjLoctn :setText( cHome    )
-*  ::oUI:q_editWrkFolder:setText( ""       )
-   ::oUI:q_editDstFolder:setText( iif( cDestntn == "%HOME%", cHome, strtran( cDestntn, "%HOME%\", ) ) )
-*  ::oUI:q_editBackup   :setText( ""       )
-   ::oUI:q_editOutName  :setText( cOutName )
-   ::oUI:q_editLaunchParams:setText( cParams )
-   ::oUI:q_editLaunchExe:setText( cRun )
-
-   IF !empty( cMap )
-      aadd( aFlags, cMap )
-   endif
-   aadd( aFlags, "-inc" )
-   IF !empty( cDefine )
-      FOR EACH s IN hb_aTokens( cDefine, ";" )
-         IF !empty( s )
-            aadd( aFlags, "-D" + StrTran( s, "%HOME%\", ) )
-         ENDIF
-      NEXT
+   IF !( lower( cExt ) $ ".xhp" )          /* Not a valid alien project file */
+      RETURN ""
    ENDIF
-   IF !empty( cInclude )
-      FOR EACH s IN hb_aTokens( cInclude, ";" )
-         IF !empty( s )
-            IF !( "%HB_INSTALL%" $ s .OR. "%HB_LIB_INSTALL%" $ s .OR. "%C_LIB_INSTALL%" $ s )
-               aadd( aFlags, "-incpath=" + StrTran( s, "%HOME%\", ) )
-            ENDIF
-         ENDIF
-      NEXT
-   ENDIF
-   FOR EACH s IN aFiles
-      IF !( "%HB_INSTALL%" $ s .OR. "%HB_LIB_INSTALL%" $ s .OR. "%C_LIB_INSTALL%" $ s )
-         hb_fNameSplit( s, @cPath, @cFile, @cExt )
-         SWITCH lower( cExt )
-         CASE ".lib"
-         CASE ".a"
-            IF !( cPath $ hLIBPATH )
-               hLIBPATH[ cPath ] := NIL
-            ENDIF
-            aadd( aLibs, cFile )
-            EXIT
-         OTHERWISE
-            aadd( aSrc, StrTran( s, "%HOME%\", ) )
-            EXIT
-         ENDSWITCH
+
+   cHbp := cPath + cFile + ".hbp"
+   IF hb_fileExists( cHbp )
+      IF ! hbide_getYesNo( "A .hbp with convered name already exists, overwrite ?", "", "Project exists" )
+         RETURN ""
       ENDIF
-   NEXT
-   FOR EACH s IN hLIBPATH
-      aadd( aFlags, "-L" + s:__enumKey() )
-   NEXT
-   FOR EACH s IN aLibs
-      aadd( aFlags, "-l" + s )
-   NEXT
+   ENDIF
 
-   ::oUI:q_editFlags  :setPlainText( hbide_arrayToMemo( aFlags ) )
-   ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( aSrc   ) )
+   convert_xhp_to_hbp( cProjFileName, cHbp )
 
-   RETURN Self
+   RETURN cHbp
 
 /*----------------------------------------------------------------------*/
 
@@ -1142,23 +992,18 @@ METHOD IdeProjManager:selectCurrentProject()
       RETURN ::cWrkProject
    ENDIF
 
-   #ifdef HBIDE_USE_UIC
    oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.uic", ::oDlg:oWidget ):build()
-   #else
-   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.ui", ::oDlg:oWidget ):create()
-   #endif
 
  * Fill ComboBox with current project names
    FOR EACH p IN ::aProjects
-       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
-          oDlg:qObj[ "cbProjects" ]:addItem( t )
-       ENDIF
+      IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
+         oDlg:qObj[ "cbProjects" ]:addItem( t )
+      ENDIF
    NEXT
 
+   oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:close() } )
    oDlg:signal( "btnOk"    , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
                                                                                        oDlg:oWidget:close() } )
-   oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:close() } )
-
    oDlg:exec()
    oDlg:destroy()
    oDlg := NIL
@@ -1199,6 +1044,17 @@ METHOD IdeProjManager:getProjectByFile( cProjectFile )
    ENDIF
 
    RETURN IdeProject():new( ::oIDE, aProj )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:getProjectTypeFromTitle( cProjectTitle )
+   LOCAL n, cType := ""
+
+   IF ( n := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1, 2, PRJ_PRP_TITLE ] == cProjectTitle } ) ) > 0
+      cType := ::aProjects[ n, 3, PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TYPE ]
+   ENDIF
+
+   RETURN cType
 
 /*----------------------------------------------------------------------*/
 

@@ -91,6 +91,7 @@ CLASS IdeObject
    ACCESS oSM                                     INLINE ::oIde:oSM
    ACCESS oEV                                     INLINE ::oIde:oEV
    ACCESS oHL                                     INLINE ::oIde:oHL
+   ACCESS oHM                                     INLINE ::oIde:oHM
 
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
@@ -143,7 +144,6 @@ CLASS IdeObject
    ACCESS aViews                                  INLINE ::oIde:aViews
    ACCESS aSkltns                                 INLINE ::oIde:aSkltns
 
-   ACCESS nCurView                                INLINE ::oIde:nCurView
    ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
    ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
    ACCESS cSeparator                              INLINE ::oIde:cSeparator

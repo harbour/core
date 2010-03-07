@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'projectpropertiesex.ui'
 **
-** Created: Mon Mar 1 01:10:15 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Sat Mar 6 14:12:50 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -56,9 +56,6 @@ public:
     QToolButton *buttonChoosePrjLoc;
     QToolButton *buttonBackup;
     QToolButton *buttonChooseDest;
-    QHBoxLayout *horizontalLayout_7;
-    QToolButton *buttonXmate;
-    QSpacerItem *horizontalSpacer;
     QSpacerItem *verticalSpacer;
     QLineEdit *editWrkFolder;
     QLabel *labelInitFolder;
@@ -104,147 +101,133 @@ public:
         label->setFont(font);
         label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label, 1, 0, 1, 1);
+        gridLayout->addWidget(label, 0, 0, 1, 1);
 
         comboPrjType = new QComboBox(tabGeneral);
         comboPrjType->setObjectName(QString::fromUtf8("comboPrjType"));
         comboPrjType->setEditable(false);
 
-        gridLayout->addWidget(comboPrjType, 1, 1, 1, 1);
+        gridLayout->addWidget(comboPrjType, 0, 1, 1, 1);
 
         label_2 = new QLabel(tabGeneral);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+        gridLayout->addWidget(label_2, 1, 0, 1, 1);
 
         editPrjTitle = new QLineEdit(tabGeneral);
         editPrjTitle->setObjectName(QString::fromUtf8("editPrjTitle"));
 
-        gridLayout->addWidget(editPrjTitle, 2, 1, 1, 1);
+        gridLayout->addWidget(editPrjTitle, 1, 1, 1, 1);
 
         label_3 = new QLabel(tabGeneral);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_3, 3, 0, 1, 1);
+        gridLayout->addWidget(label_3, 2, 0, 1, 1);
 
         editPrjLoctn = new QLineEdit(tabGeneral);
         editPrjLoctn->setObjectName(QString::fromUtf8("editPrjLoctn"));
 
-        gridLayout->addWidget(editPrjLoctn, 3, 1, 1, 1);
+        gridLayout->addWidget(editPrjLoctn, 2, 1, 1, 1);
 
         label_5 = new QLabel(tabGeneral);
         label_5->setObjectName(QString::fromUtf8("label_5"));
         label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_5, 6, 0, 1, 1);
+        gridLayout->addWidget(label_5, 5, 0, 1, 1);
 
         editDstFolder = new QLineEdit(tabGeneral);
         editDstFolder->setObjectName(QString::fromUtf8("editDstFolder"));
 
-        gridLayout->addWidget(editDstFolder, 6, 1, 1, 1);
+        gridLayout->addWidget(editDstFolder, 5, 1, 1, 1);
 
         label_7 = new QLabel(tabGeneral);
         label_7->setObjectName(QString::fromUtf8("label_7"));
         label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_7, 10, 0, 1, 1);
+        gridLayout->addWidget(label_7, 9, 0, 1, 1);
 
         editLaunchParams = new QLineEdit(tabGeneral);
         editLaunchParams->setObjectName(QString::fromUtf8("editLaunchParams"));
 
-        gridLayout->addWidget(editLaunchParams, 10, 1, 1, 2);
+        gridLayout->addWidget(editLaunchParams, 9, 1, 1, 2);
 
         label_8 = new QLabel(tabGeneral);
         label_8->setObjectName(QString::fromUtf8("label_8"));
         label_8->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_8, 11, 0, 1, 1);
+        gridLayout->addWidget(label_8, 10, 0, 1, 1);
 
         editLaunchExe = new QLineEdit(tabGeneral);
         editLaunchExe->setObjectName(QString::fromUtf8("editLaunchExe"));
 
-        gridLayout->addWidget(editLaunchExe, 11, 1, 1, 2);
+        gridLayout->addWidget(editLaunchExe, 10, 1, 1, 2);
 
         label_13 = new QLabel(tabGeneral);
         label_13->setObjectName(QString::fromUtf8("label_13"));
         label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_13, 8, 0, 1, 1);
+        gridLayout->addWidget(label_13, 7, 0, 1, 1);
 
         editBackup = new QLineEdit(tabGeneral);
         editBackup->setObjectName(QString::fromUtf8("editBackup"));
 
-        gridLayout->addWidget(editBackup, 8, 1, 1, 1);
+        gridLayout->addWidget(editBackup, 7, 1, 1, 1);
 
         editOutName = new QLineEdit(tabGeneral);
         editOutName->setObjectName(QString::fromUtf8("editOutName"));
 
-        gridLayout->addWidget(editOutName, 4, 1, 1, 1);
+        gridLayout->addWidget(editOutName, 3, 1, 1, 1);
 
         label_6 = new QLabel(tabGeneral);
         label_6->setObjectName(QString::fromUtf8("label_6"));
         label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_6, 4, 0, 1, 1);
+        gridLayout->addWidget(label_6, 3, 0, 1, 1);
 
         buttonChoosePrjLoc = new QToolButton(tabGeneral);
         buttonChoosePrjLoc->setObjectName(QString::fromUtf8("buttonChoosePrjLoc"));
 
-        gridLayout->addWidget(buttonChoosePrjLoc, 3, 2, 1, 1);
+        gridLayout->addWidget(buttonChoosePrjLoc, 2, 2, 1, 1);
 
         buttonBackup = new QToolButton(tabGeneral);
         buttonBackup->setObjectName(QString::fromUtf8("buttonBackup"));
 
-        gridLayout->addWidget(buttonBackup, 8, 2, 1, 1);
+        gridLayout->addWidget(buttonBackup, 7, 2, 1, 1);
 
         buttonChooseDest = new QToolButton(tabGeneral);
         buttonChooseDest->setObjectName(QString::fromUtf8("buttonChooseDest"));
 
-        gridLayout->addWidget(buttonChooseDest, 6, 2, 1, 1);
-
-        horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
-        buttonXmate = new QToolButton(tabGeneral);
-        buttonXmate->setObjectName(QString::fromUtf8("buttonXmate"));
-
-        horizontalLayout_7->addWidget(buttonXmate);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_7->addItem(horizontalSpacer);
-
-
-        gridLayout->addLayout(horizontalLayout_7, 0, 1, 1, 1);
+        gridLayout->addWidget(buttonChooseDest, 5, 2, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer, 9, 1, 1, 1);
+        gridLayout->addItem(verticalSpacer, 8, 1, 1, 1);
 
         editWrkFolder = new QLineEdit(tabGeneral);
         editWrkFolder->setObjectName(QString::fromUtf8("editWrkFolder"));
 
-        gridLayout->addWidget(editWrkFolder, 12, 1, 1, 1);
+        gridLayout->addWidget(editWrkFolder, 11, 1, 1, 1);
 
         labelInitFolder = new QLabel(tabGeneral);
         labelInitFolder->setObjectName(QString::fromUtf8("labelInitFolder"));
         labelInitFolder->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(labelInitFolder, 12, 0, 1, 1);
+        gridLayout->addWidget(labelInitFolder, 11, 0, 1, 1);
 
         buttonChooseWd = new QToolButton(tabGeneral);
         buttonChooseWd->setObjectName(QString::fromUtf8("buttonChooseWd"));
 
-        gridLayout->addWidget(buttonChooseWd, 12, 2, 1, 1);
+        gridLayout->addWidget(buttonChooseWd, 11, 2, 1, 1);
 
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer_2, 5, 1, 1, 1);
+        gridLayout->addItem(verticalSpacer_2, 4, 1, 1, 1);
 
         verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer_3, 13, 1, 1, 1);
+        gridLayout->addItem(verticalSpacer_3, 12, 1, 1, 1);
 
         tabWidget->addTab(tabGeneral, QString());
         tabFiles = new QWidget();
@@ -386,19 +369,6 @@ public:
         buttonChoosePrjLoc->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
         buttonBackup->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
         buttonChooseDest->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
-#ifndef QT_NO_TOOLTIP
-        buttonXmate->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Load an xMate project file.</p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This feature is available only for new projects.</p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">hbIDE attempts to recognize various components</p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-                        "text-indent:0px;\">but it is possible that it may not load everything.</p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">So you may need manual editing.</p></body></html>", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
-        buttonXmate->setText(QApplication::translate("FormProjectPropEx", "...", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         editWrkFolder->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
