@@ -93,15 +93,10 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 {
 #if ! defined( HB_OS_WIN_CE )
    BOOL bFlag;
-   OSVERSIONINFO osv;
    DWORD dwNeeded = 0;
    HANDLE hPrinter = NULL;
    PRINTER_INFO_2 * ppi2 = NULL;
    LPTSTR pBuffer = NULL;
-
-   /* What version of Windows are you running? */
-   osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osv );
 
    /* If Windows 95 or 98, use SetPrinter. */
    if( hb_iswin9x() )
@@ -155,9 +150,9 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
    }
    /* If Windows NT, use the SetDefaultPrinter API for Windows 2000,
       or WriteProfileString for version 4.0 and earlier. */
-   else if( osv.dwPlatformId == VER_PLATFORM_WIN32_NT )
+   else if( hb_iswinnt() )
    {
-      if( osv.dwMajorVersion >= 5 ) /* Windows 2000 or later (use explicit call) */
+      if( hb_iswin2k() ) /* Windows 2000 or later (use explicit call) */
       {
          HMODULE hWinSpool;
          typedef BOOL ( WINAPI * DEFPRINTER )( LPCTSTR ); /* stops warnings */
