@@ -43,10 +43,10 @@
  *
  */
 
-#xTranslate DEFAULT( <p>, <v> )  => <p> := IIF( <p> == NIL, <v>, <p> )
-#xTranslate HTMLSpace( <n> )     => replicate( "&nbsp;", <n> )  //"&#32;"
+#xTranslate DEFAULT( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
+#xTranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  //"&#32;"
 #xTranslate NTRIM(<n>)           => hb_ntos( <n> )
-#xTranslate CRLF()               => chr(13)+chr(10)
+#xTranslate CRLF()               => Chr( 13 ) + Chr( 10 )
 
 #define STD_IN       0
 #define STD_OUT      1
@@ -76,7 +76,7 @@
                                  "A:hover {text-decoration:none;color:white;background:black;} "+;
                                  " -->"
 
-#define _HTML_SPACE  chr(38)+"nbsp;"
+#define _HTML_SPACE  Chr( 38 ) + "nbsp;"
 
 #define CLR_LIGHT_YELLOW  "#fffffc0"
 #define CLR_DARK_YELLOW   "#fffffcc"

@@ -935,16 +935,16 @@ METHOD IdeHarbourHelp:updateViewer( aHtm )
 METHOD IdeHarbourHelp:populateRootInfo()
    LOCAL aHtm := {}
 
-   aadd( aHtm, "<HTML>" )
-   aadd( aHtm, ' <BODY ALIGN=center VALIGN=center>' )
-   aadd( aHtm, '  <H1><FONT color=green>' + "Welcome" + '</FONT></H1>' )
-   aadd( aHtm, '  <BR>' + '&nbsp;' + '</BR>' )
-   aadd( aHtm, '  <H2><FONT color=blue>' + ::cPathInstall + '</FONT></H2>' )
-   aadd( aHtm, '  <BR>&nbsp;</BR>' )
-   aadd( aHtm, '  <BR>&nbsp;</BR>' )
-   aadd( aHtm, '  <IMG src="' + 'resources/harbour.png' + '" width="300" height="200"</IMG></BR>' )
-   aadd( aHtm, " </BODY>" )
-   aadd( aHtm, "</HTML>" )
+   aadd( aHtm, "<html>" )
+   aadd( aHtm, ' <body align=center valign=center>' )
+   aadd( aHtm, '  <h1><font color=green>' + "Welcome" + '</font></h1>' )
+   aadd( aHtm, '  <br>' + '&nbsp;' + '</br>' )
+   aadd( aHtm, '  <h2><font color=blue>' + ::cPathInstall + '</font></h2>' )
+   aadd( aHtm, '  <br>&nbsp;</br>' )
+   aadd( aHtm, '  <br>&nbsp;</br>' )
+   aadd( aHtm, '  <img src="' + 'resources/harbour.png' + '" width="300" height="200"</img></br>' )
+   aadd( aHtm, " </body>" )
+   aadd( aHtm, "</html>" )
 
    ::updateViewer( aHtm )
 
@@ -955,11 +955,11 @@ METHOD IdeHarbourHelp:populateRootInfo()
 METHOD IdeHarbourHelp:populatePathInfo( cPath )
    LOCAL aHtm := {}
 
-   aadd( aHtm, "<HTML>" )
-   aadd( aHtm, " <BODY ALIGN=center VALIGN=center>" )
-   aadd( aHtm, '  <H2><FONT color=blue>' + cPath + '</FONT></H2>' )
-   aadd( aHtm, " </BODY>" )
-   aadd( aHtm, "</HTML>" )
+   aadd( aHtm, "<html>" )
+   aadd( aHtm, " <body align=center valign=center>" )
+   aadd( aHtm, '  <h2><font color=blue>' + cPath + '</font></h2>' )
+   aadd( aHtm, " </body>" )
+   aadd( aHtm, "</html>" )
 
    ::updateViewer( aHtm )
 
@@ -973,24 +973,24 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
 
    /* Build HTML */
    aHtm := {}
-   aadd( aHtm, "<HTML>" )
-   aadd( aHtm, " <BODY>" )
-   aadd( aHtm, '  <H3 align=center><FONT color=blue>' + cTextFile + '</FONT></H3>' )
-   aadd( aHtm, '   <BR>' + '&nbsp;  <HR></HR></BR>' )
+   aadd( aHtm, "<html>" )
+   aadd( aHtm, " <body>" )
+   aadd( aHtm, '  <h3 align=center><font color=blue>' + cTextFile + '</font></h3>' )
+   aadd( aHtm, '   <br>' + '&nbsp;  <hr></hr></br>' )
    IF nParsed > 0
       aFn := ::aFuncByFile[ nParsed, 2 ]
       IF len( aFn ) > 0
          FOR EACH oFunc IN aFn
             IF hb_isObject( oFunc )
-               aadd( aHtm, '   <BR>' + oFunc:cName + '</BR>' )
+               aadd( aHtm, '   <br>' + oFunc:cName + '</br>' )
             ENDIF
          NEXT
       ELSE
-         aadd( aHtm, '   <BR><PRE>' + hb_memoread( cTextFile ) + '</PRE></BR>' )
+         aadd( aHtm, '   <br><pre>' + hb_memoread( cTextFile ) + '</pre></br>' )
       ENDIF
    ENDIF
-   aadd( aHtm, " </BODY>" )
-   aadd( aHtm, "</HTML>" )
+   aadd( aHtm, " </body>" )
+   aadd( aHtm, "</html>" )
 
    ::updateViewer( aHtm )
 
@@ -1035,7 +1035,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    LOCAL s, x, y, v, w, z, n, s1, a_, cTxt
    LOCAL aHtm := {}
 
-   aadd( aHtm, "<HTML>" )
+   aadd( aHtm, "<html>" )
 
    aadd( aHtm, '<head>                                                             ' )
    aadd( aHtm, '  <meta name="Author" CONTENT=Pritpal Bedi [pritpal@vouchcac.com]">' )
@@ -1070,10 +1070,10 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, '  </style>                                                         ' )
    aadd( aHtm, '</head>                                                            ' )
 
-   aadd( aHtm, ' <BODY>'    )
-   aadd( aHtm, '  <CENTER>' )
+   aadd( ahtm, ' <body>'    )
+   aadd( ahtm, '  <center>' )
 
-   s := '   <TABLE '            +;
+   s := '   <table '            +;
         'Border='      + '0 '   +;
         'Frame='       + 'ALL ' +;
         'CellPadding=' + '0 '   +;
@@ -1083,30 +1083,30 @@ METHOD IdeHarbourHelp:buildView( oFunc )
         '   >'
    aadd( aHtm, s )
 
-   aadd( aHtm, '<CAPTION align=TOP><FONT SIZE="6"><B>' + oFunc:cName + '</B></FONT></CAPTION>' )
-   //aadd( aHtm, '<BR><FONT color="#6699ff"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
-   aadd( aHtm, '<BR><FONT color="#FF4719"><B>' + oFunc:cOneLiner + '</B></FONT></BR>' )
+   aadd( aHtm, '<caption align=top><font size="6"><b>' + oFunc:cName + '</b></font></caption>' )
+   //aadd( aHtm, '<br><font color="#6699ff"><b>' + oFunc:cOneLiner + '</b></font></br>' )
+   aadd( aHtm, '<br><font color="#FF4719"><b>' + oFunc:cOneLiner + '</b></font></br>' )
    cTxt := " "
    IF !empty( oFunc:cCategory )
-      cTxt += "Category: <B>" + oFunc:cCategory + "</B> "
+      cTxt += "Category: <b>" + oFunc:cCategory + "</b> "
    ENDIF
    IF !empty( oFunc:cSubCategory )
-      cTxt += "Sub: <B>" + oFunc:cSubCategory + "</B> "
+      cTxt += "Sub: <b>" + oFunc:cSubCategory + "</b> "
    ENDIF
    IF !empty( oFunc:cVersion )
-      cTxt += "Version: <B>" + oFunc:cVersion + "</B> "
+      cTxt += "Version: <b>" + oFunc:cVersion + "</b> "
    ENDIF
    IF !empty( cTxt )
-      aadd( aHtm, "<BR>" + "[" + cTxt + "]" + "</BR>" )
+      aadd( aHtm, "<br>" + "[" + cTxt + "]" + "</br>" )
    ENDIF
    IF !empty( s1 := oFunc:cExternalLink )
-      aadd( aHtm, '<BR><a href="' + s1 + '">' + "<B>" + s1 + "</B>" + "</a></BR>" )
+      aadd( aHtm, '<br><a href="' + s1 + '">' + "<b>" + s1 + "</b>" + "</a></br>" )
    ENDIF
-   aadd( aHtm, '<HR color="#6699ff" size="5"></HR>' )
+   aadd( aHtm, '<hr color="#6699ff" size="5"></hr>' )
 
-   x := '<TR><TD align=LEFT><font size="5" color="#FF4719">' ; y := "</font></TD></TR>"
-   v := '<TR><TD margin-left: 20px><pre>'                    ; w := "</pre></TD></TR>"
-   z := "<TR><TD>&nbsp;</TD></TR>"
+   x := '<tr><td align=left><font size="5" color="#FF4719">' ; y := "</font></td></tr>"
+   v := '<tr><td margin-left: 20px><pre>'                    ; w := "</pre></td></tr>"
+   z := "<tr><td>&nbsp;</td></tr>"
 
    IF !empty( oFunc:cInherits )
       aadd( aHtm, x + "Inherits"       + y )
@@ -1164,7 +1164,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    a_:= hb_atokens( oFunc:cSeaAlso, "," )
    IF !empty( a_ )
       aadd( aHtm, x + "SeeAlso"        + y )
-      aadd( aHtm, "<TR><TD>" )
+      aadd( aHtm, "<tr><td>" )
 
       FOR EACH s IN a_
          s := alltrim( s )
@@ -1176,7 +1176,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
          aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
                                      iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
       NEXT
-      aadd( aHtm, "</TD></TR>" )
+      aadd( aHtm, "</td></tr>" )
       aadd( aHtm, z )
    ENDIF
    IF !empty( oFunc:cPlatforms )
@@ -1190,10 +1190,10 @@ METHOD IdeHarbourHelp:buildView( oFunc )
       aadd( aHtm, z )
    ENDIF
 
-   aadd( aHtm, "   </TABLE>"  )
-   aadd( aHtm, "  </CENTER>"  )
-   aadd( aHtm, " </BODY>"     )
-   aadd( aHtm, "</HTML>"      )
+   aadd( aHtm, "   </table>"  )
+   aadd( aHtm, "  </center>"  )
+   aadd( aHtm, " </body>"     )
+   aadd( aHtm, "</html>"      )
 
    ::updateViewer( aHtm )
 
@@ -1239,4 +1239,3 @@ METHOD IdeHarbourHelp:paintRequested( pPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

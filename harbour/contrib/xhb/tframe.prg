@@ -49,13 +49,13 @@
 #include "cgi.ch"
 
 
-CLASS THtmlFrameSet
+CREATE CLASS THtmlFrameSet
 
-   DATA nH
-   DATA FName
-   Data cStr INIT ""
+   VAR nH
+   VAR FName
+   VAR cStr INIT ""
 
-   DATA TITLE INIT "FrameSet01"
+   VAR TITLE INIT "FrameSet01"
 
    METHOD New( cFName, cTitle )
 
@@ -73,39 +73,38 @@ ENDCLASS
 
 METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
-   LOCAL cStr := ""
+   LOCAL cStr
 
    DEFAULT cTitle TO ""
 
    ::FName := cFName
    ::Title := cTitle
 
-   IF ::FName == NIL
-      cStr += "Content-Type: text/html" + CRLF() + CRLF()
-      //   cStr := ""
-      ::nH := STD_OUT
-   ELSE
+   IF ISCHARACTER( ::FName )
       cStr := ""
-      ::nH := Fcreate( ::FName )
+      ::nH := FCreate( ::FName )
+   ELSE
+      cStr := "Content-Type: text/html" + CRLF() + CRLF()
+      ::nH := STD_OUT
    ENDIF
 
-   cStr += "<HTML>" + CRLF() + ;
-                             " <HEAD>" + CRLF() + ;
-                             "  <TITLE>" + ::Title + "</TITLE>" + CRLF() + ;
-                             " </HEAD>" + CRLF()
+   cStr += "<html>" + CRLF() + ;
+                             " <head>" + CRLF() + ;
+                             "  <title>" + ::Title + "</title>" + CRLF() + ;
+                             " </head>" + CRLF()
 
-   ::cStr +=  cStr
+   ::cStr += cStr
 
-RETURN Self
+   RETURN Self
 
 METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
-   LOCAL cStr := ""
+   LOCAL cStr
    LOCAL cItem
 
-   cStr += CRLF() + " <FRAMESET "
+   cStr := CRLF() + " <frameset "
 
-   IF aRows != NIL .AND. Valtype( aRows ) == "A" .AND. !Empty( aRows )
+   IF ISARRAY( aRows ) .AND. !Empty( aRows )
 
       cStr += ' rows="'
 
@@ -119,7 +118,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += '"'
    ENDIF
 
-   IF aCols != NIL .AND. Valtype( aCols ) == "A" .AND. !Empty( aCols )
+   IF ISARRAY( aCols ) .AND. !Empty( aCols )
 
       cStr += ' cols="'
 
@@ -133,38 +132,39 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += '"'
    ENDIF
 
-   IF onLoad != NIL
+   IF ISCHARACTER( onLoad )
       cStr += Space( 7 ) + ' onLoad="' + onLoad + '"'
    ENDIF
 
-   IF onUnLoad != NIL
+   IF ISCHARACTER( onUnLoad )
       cStr += Space( 5 ) + ' onUnLoad="' + onUnLoad + '"'
    ENDIF
 
    cStr += " >" + CRLF()
 
-   ::cStr +=  cStr
+   ::cStr += cStr
 
-RETURN Self
+   RETURN Self
 
 
 METHOD Endset() CLASS THtmlFrameSet
 
-   ::cStr +=  " </FRAMESET>" + CRLF()
+   ::cStr += " </frameset>" + CRLF()
 
-RETURN Self
+   RETURN Self
 
 
 METHOD END () CLASS THtmlFrameSet
 
-   ::cStr +=  "</HTML>" + CRLF()
+   ::cStr += "</html>" + CRLF()
+
    FWrite( ::nH, ::cStr )
 
    IF ::FName != NIL
-      Fclose( ::nH )
+      FClose( ::nH )
    ENDIF
 
-RETURN Self
+   RETURN Self
 
 
 METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
@@ -178,52 +178,50 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
    DEFAULT cScrolling TO "AUTO"
    DEFAULT cTarget TO "_self"
 
-   cStr := "  <FRAME "
+   cStr := "  <frame "
 
-   IF cName != NIL
+   IF ISCHARACTER( cName )
       cStr += ' name="' + cName + '"'
    ENDIF
 
-   IF cUrl != NIL
+   IF ISCHARACTER( cUrl )
       cStr += ' src="' + cURL + '"'
    ENDIF
 
-   IF cTarget != NIL
-      cStr += ' TARGET="' + cTarget + '"'
+   IF ISCHARACTER( cTarget )
+      cStr += ' target="' + cTarget + '"'
    ENDIF
 
-   IF !lBorder
+   IF ! lBorder
       cStr += ' frameborder="0"'
    ELSE
       cStr += ' frameborder="1"'
    ENDIF
 
-   IF !lResize
-      cStr += " NORESIZE"
+   IF ! lResize
+      cStr += " noresize"
    ENDIF
 
-   IF cScrolling != NIL
-      cStr += ' SCROLLING="' + cScrolling + '"'
+   IF ISCHARACTER( cScrolling )
+      cStr += ' scrolling="' + cScrolling + '"'
    ELSE
-
       IF lScrolling != NIL
-         cStr += ' SCROLLING=' + IF( lScrolling, '"yes"', '"no"' )
+         cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
       ELSE
-         cStr += ' SCROLLING="auto"'
+         cStr += ' scrolling="auto"'
       ENDIF
-
    ENDIF
 
-   IF marginwidth != NIL
-      cStr += " MARGINWIDTH= " + NTRIM( marginwidth )
+   IF ISNUMBER( marginwidth )
+      cStr += " marginwidth= " + hb_ntos( marginwidth )
    ENDIF
 
-   IF marginheight != NIL
-      cStr += " MARGINHEIGHT= " + NTRIM( marginheight )
+   IF ISNUMBER( marginheight )
+      cStr += " marginheight= " + hb_ntos( marginheight )
    ENDIF
 
    cStr += ">" + CRLF()
 
-   ::cStr +=  cStr
+   ::cStr += cStr
 
    RETURN Self
