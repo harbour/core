@@ -180,7 +180,7 @@ HB_FUNC( HB_DISKSPACE )
 
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
 
-#if defined( HB_OS_WIN_CE ) || defined( HB_NO_WIN95 )
+#if defined( HB_OS_WIN_CE )
 
          fResult = GetDiskFreeSpaceEx( lpPath,
                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
@@ -224,10 +224,11 @@ HB_FUNC( HB_DISKSPACE )
             {
                s_fInit = HB_TRUE;
                s_pGetDiskFreeSpaceEx = ( P_GDFSE )
-                     GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
 #if defined( UNICODE )
+                     GetProcAddress( GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
                                      "GetDiskFreeSpaceExW" );
 #else
+                     GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
                                      "GetDiskFreeSpaceExA" );
 #endif
             }
