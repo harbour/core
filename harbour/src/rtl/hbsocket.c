@@ -3199,17 +3199,8 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
       void * pBuffer = hb_xgrab( dwBuffer );
       LPINTERFACE_INFO pIfInfo = ( LPINTERFACE_INFO ) pBuffer;
 
-#if defined( HB_OS_WIN_CE ) || defined( HB_NO_WIN95 )
       if( WSAIoctl( sd, SIO_GET_INTERFACE_LIST, NULL, 0, pIfInfo, dwBuffer,
                     &dwBuffer, 0, 0 ) != SOCKET_ERROR )
-#else
-      LPFN_WSAIOCTL pWSAIoctl =
-         ( LPFN_WSAIOCTL ) GetProcAddress( GetModuleHandle( TEXT( "ws2_32.dll" ) ), "WSAIoctl" );
-
-      if( pWSAIoctl &&
-          pWSAIoctl( sd, SIO_GET_INTERFACE_LIST, NULL, 0, pIfInfo, dwBuffer,
-                    &dwBuffer, 0, 0 ) != SOCKET_ERROR )
-#endif
       {
          int iCount = dwBuffer / sizeof( INTERFACE_INFO );
 

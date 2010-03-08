@@ -465,6 +465,7 @@ HARBOUR
    hpux     - HP-UX
    sunos    - Sun Solaris / OpenSolaris
    win      - MS Windows (all flavors)
+              (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
    dos      - MS-DOS (32-bit protected mode only)
               (MS-DOS compatible systems also work, like dosemu)
@@ -616,8 +617,8 @@ HARBOUR
    - HB_BUILD_OPTIM=no           Enable C compiler optimizations. Default: yes
    - HB_BUILD_UNICODE=yes        Create Unicode build (on Windows/Windows CE).
                                  Default: yes
-                                 Instead of turning it off, we recommended to
-                                 use UNICOWS solution to support Win9x systems.
+                                 Instead of turning it off, we recommend to use
+                                 UNICOWS solution to support Win9x/ME systems.
    - HB_BUILD_MODE=[cpp|c]       Change default build mode to C++ or C.
                                  Default: c, except for msvc* compilers, where it's cpp.
    - HB_BUILD_PARTS=
@@ -1368,10 +1369,16 @@ HARBOUR
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
          http://www.zlib.net/
 
+      Windows Winsock2 [win, free, closed-source]
+         Information: http://support.microsoft.com/kb/182108/EN-US/
+         Direct link: http://download.microsoft.com/download/0/e/0/0e05231b-6bd1-4def-a216-c656fbd22b4e/w95ws2setup.exe
+            (required for Win95 support to run applications built with Harbour)
       Windows UNICOWS .dll [win, free, closed-source]
          http://go.microsoft.com/fwlink/?LinkId=14851
+            (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
       Windows UNICOWS runtime/import library [win, free, open-source]
          http://libunicows.sourceforge.net/
+            (required for Win9x/ME support at application built-time)
 
    Tools:
 
