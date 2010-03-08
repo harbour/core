@@ -225,7 +225,7 @@ typedef struct _CLIPKEYCODE
 /* Keypad keys */
 
 
-static const CLIPKEYCODE stdKeyTab[CLIP_STDKEY_COUNT] = {
+static const CLIPKEYCODE stdKeyTab[ CLIP_STDKEY_COUNT ] = {
    { 32,                  0,             0,         0,             0}, /* ' ' */
    { 33,                  0,             0,         0,             0}, /* '!' */
    { 34,                  0,             0,         0,             0}, /* '"' */

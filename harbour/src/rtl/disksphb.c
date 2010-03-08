@@ -180,7 +180,7 @@ HB_FUNC( HB_DISKSPACE )
 
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
 
-#if defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN_CE ) || defined( HB_NO_WIN95 )
 
          fResult = GetDiskFreeSpaceEx( lpPath,
                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
@@ -211,6 +211,8 @@ HB_FUNC( HB_DISKSPACE )
             }
          }
 #else
+         /* NOTE: We need to call this function dynamically to maintain support
+                  Win95 first edition. It was introduced in Win95B (aka OSR2) [vszakats] */
          {
             typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                                PULARGE_INTEGER, PULARGE_INTEGER );

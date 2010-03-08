@@ -366,7 +366,11 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    {
       s_getPathNameAddr = ( _HB_GETPATHNAME )
                     GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                                    "GetLongPathName" );
+#if defined( UNICODE )
+                                    "GetLongPathNameW" );
+#else
+                                    "GetLongPathNameA" );
+#endif
       if( !s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;
    }

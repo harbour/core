@@ -63,7 +63,12 @@ HB_FUNC( WAPI_ADDFONTRESOURCEEX )
       static _HB_ADDFONTRESOURCEEX s_pAddFontResourceEx = NULL;
 
       if( ! s_pAddFontResourceEx )
-         s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ), "AddFontResourceEx" );
+         s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ),
+#if defined( UNICODE )
+            "AddFontResourceExW" );
+#else
+            "AddFontResourceExA" );
+#endif
 
       if( s_pAddFontResourceEx )
       {
@@ -88,7 +93,12 @@ HB_FUNC( WAPI_REMOVEFONTRESOURCEEX )
       static _HB_REMOVEFONTRESOURCEEX s_pRemoveFontResourceEx = NULL;
 
       if( ! s_pRemoveFontResourceEx )
-         s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ), "RemoveFontResourceEx" );
+         s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ),
+#if defined( UNICODE )
+            "RemoveFontResourceExW" );
+#else
+            "RemoveFontResourceExA" );
+#endif
 
       if( s_pRemoveFontResourceEx )
       {

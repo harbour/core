@@ -144,7 +144,7 @@ HB_FUNC( DISKSPACE )
          lpPath[ 2 ] = TEXT( '\\' );
          lpPath[ 3 ] = TEXT( '\0' );
 
-#if defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN_CE ) || defined( HB_NO_WIN95 )
 
          bError = ! GetDiskFreeSpaceEx( lpPath,
                                         ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
@@ -153,6 +153,8 @@ HB_FUNC( DISKSPACE )
          if( ! bError )
             dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
 #else
+         /* NOTE: We need to call this function dynamically to maintain support
+                  Win95 first edition. It was introduced in Win95B (aka OSR2) [vszakats] */
          {
             typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                                PULARGE_INTEGER, PULARGE_INTEGER );

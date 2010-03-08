@@ -137,7 +137,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
     if [ "$HB_COMPILER" = "mingwarm" ]; then
         SYSLIBS="-lws2"
     else
-        SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"
+        SYSLIBS="-luser32 -lwsock32 -ladvapi32 -lgdi32"
     fi
     # -Wl,--output-def,testdll.def,--out-implib,libtestdll.a
     ${HB_CCPATH}${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
