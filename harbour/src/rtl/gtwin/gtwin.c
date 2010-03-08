@@ -158,6 +158,7 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
+static HB_BOOL     s_bWin9x;
 static COLORREF    s_colorsOld[ 16 ];
 static HB_BOOL     s_bOldClosable;
 static HB_BOOL     s_bClosable;
@@ -806,7 +807,9 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
 
-   if( hb_iswin9x() )
+   s_bWin9x = hb_iswin9x();
+
+   if( s_bWin9x )
       s_dwAltGrBits = RIGHT_ALT_PRESSED;
    else
       s_dwAltGrBits = LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED;
@@ -1381,13 +1384,40 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
       if( s_cNumRead )
       {
+#if defined( UNICODE )
+         /* Workaround for UNICOWS bug:
+               http://blogs.msdn.com/michkap/archive/2007/01/13/1460724.aspx
+            [vszakats] */
+
+         if( s_bWin9x )
+         {
+            DWORD tmp;
+
+            for( tmp = 0; tmp < INPUT_BUFFER_LEN; ++tmp )
+               s_irInBuf[ tmp ].EventType = 0xFFFF;
+         }
+#endif
+
          /* Read keyboard input */
          ReadConsoleInput( s_HInput,          /* input buffer handle   */
                            s_irInBuf,         /* buffer to read into   */
                            INPUT_BUFFER_LEN,  /* size of read buffer   */
-                           &s_cNumRead);      /* number of records read */
+                           &s_cNumRead );     /* number of records read */
          /* Set up to process the first input event */
          s_cNumIndex = 0;
+
+#if defined( UNICODE )
+         if( s_bWin9x )
+         {
+            DWORD tmp;
+
+            for( tmp = 0; tmp < s_cNumRead; ++tmp )
+            {
+               if( s_irInBuf[ tmp ].EventType == 0xFFFF )
+                  s_irInBuf[ tmp ].EventType = KEY_EVENT;
+            }
+         }
+#endif
 
          if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
          {
@@ -1474,7 +1504,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
             if( s_bSpecialKeyHandling &&
                 ( dwState & CAPSLOCK_ON ) &&
-                hb_iswin9x() )
+                s_bWin9x )
             {
                ch = SpecialHandling( &wChar, wKey, ch, ( dwState & SHIFT_PRESSED ) );
             }
