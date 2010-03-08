@@ -2,9 +2,9 @@
 # $Id$
 #
 
-{allwin}libpaths=${HB_WITH_QT}\..\lib
+{allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
-libs=QtCore QtGui QtNetwork QtWebKit
+libs=QtCore QtGui
 {allgcc}libs=supc++
 
 hbcppmm=yes

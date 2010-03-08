@@ -4,8 +4,7 @@
 
 incpaths=.
 
-{allwin}libpaths=${HB_WITH_QT}\..\lib
-{os2}libpaths=${HB_WITH_QT}\..\lib
+{allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
 libs=hbqt
 libs=hbqtcore hbqtgui hbqtnetwork
