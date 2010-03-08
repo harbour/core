@@ -74,7 +74,7 @@
 
 static void hb_macroFlagsInit( void * pFlags )
 {
-   * ( ( HB_ULONG * ) pFlags ) = HB_SM_DEFAULT;
+   * ( ( int * ) pFlags ) = HB_SM_DEFAULT;
 }
 
 static HB_TSD_NEW( s_macroFlags, sizeof( int ), hb_macroFlagsInit, NULL );

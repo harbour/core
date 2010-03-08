@@ -1169,7 +1169,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    memcpy( pSet, pSrc, sizeof( HB_SET_STRUCT ) );
 
    pSet->hb_set_althan = pSet->hb_set_extrahan = pSet->hb_set_printhan = FS_ERROR;
-
+   pSet->hb_set_path = NULL;
    pSet->hb_set_listener = NULL;
 
    pSet->HB_SET_TYPEAHEAD = HB_DEFAULT_INKEY_BUFSIZE;
@@ -1192,6 +1192,8 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    if( pSet->HB_SET_HBOUTLOGINFO ) pSet->HB_SET_HBOUTLOGINFO = hb_strdup( pSet->HB_SET_HBOUTLOGINFO );
    if( pSet->HB_SET_OSCODEPAGE )   pSet->HB_SET_OSCODEPAGE   = hb_strdup( pSet->HB_SET_OSCODEPAGE );
    if( pSet->HB_SET_DBCODEPAGE )   pSet->HB_SET_DBCODEPAGE   = hb_strdup( pSet->HB_SET_DBCODEPAGE );
+
+   hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
 
    return pSet;
 }
