@@ -3,8 +3,10 @@
 #
 
 {allwin}libpaths=${HB_WITH_QT}\..\lib
+{os2}libpaths=${HB_WITH_QT}\..\lib
 
-libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{allwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{os2}libs=QtCore4 QtGui4 QtNet4
 {linux}libs=QtCore QtGui QtNetwork QtWebKit
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
@@ -12,7 +14,7 @@ libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
 {allgcc}libs=supc++
 
-hbcppmm=yes
+{win|os2}hbcppmm=yes
 
 gui=yes
 gt=gtqtc
