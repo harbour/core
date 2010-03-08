@@ -616,6 +616,8 @@ HARBOUR
    - HB_BUILD_OPTIM=no           Enable C compiler optimizations. Default: yes
    - HB_BUILD_UNICODE=yes        Create Unicode build (on Windows/Windows CE).
                                  Default: yes
+                                 Instead of turning it off, we recommended to
+                                 use UNICOWS solution to support Win9x systems.
    - HB_BUILD_MODE=[cpp|c]       Change default build mode to C++ or C.
                                  Default: c, except for msvc* compilers, where it's cpp.
    - HB_BUILD_PARTS=
@@ -1365,6 +1367,11 @@ HARBOUR
          http://www.bgnett.no/~giva/
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
          http://www.zlib.net/
+
+      Windows UNICOWS .dll [win, free, closed-source]
+         http://go.microsoft.com/fwlink/?LinkId=14851
+      Windows UNICOWS runtime/import library [win, free, open-source]
+         http://libunicows.sourceforge.net/
 
    Tools:
 
