@@ -28,7 +28,7 @@ PROCEDURE main()
    pFile := PQcreatetrace( "trace.log" )
    PQtrace( conn, pFile )
 
-   ? "Verbose: ", PQsetErrorVerbosity(conn, 2)
+   ? "Verbose: ", PQsetErrorVerbosity( conn, 2 )
 
    ? "Protocol: ", PQprotocolVersion( conn ),;
      " Server Version: ", PQserverVersion( conn ),;
@@ -37,11 +37,11 @@ PROCEDURE main()
 
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
-   res := PQexec( "drop table products" )
+   res := PQexec( conn, "drop table products" )
    ? PQresultStatus( res ), PQresultErrorMessage( res )
    res := NIL
 
-   res := PQexec( "create table products ( product_no numeric(10), name varchar(20), price numeric(10,2) )" )
+   res := PQexec( conn, "create table products ( product_no numeric(10), name varchar(20), price numeric(10,2) )" )
    ? PQresultStatus( res ), PQresultErrorMessage( res )
 
    res := PQexecParams( conn, "insert into products(product_no, name, price) values ($1, $2, $3)", { "2", "bread", "10.95" } )

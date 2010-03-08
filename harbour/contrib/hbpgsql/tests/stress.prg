@@ -55,8 +55,8 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
       PQexec( conn, cQuery )
 
       IF Mod( i, 100 ) == 0
-         ? PQexec(conn, "COMMIT")
-         ? PQexec(conn, "BEGIN")
+         ? PQexec( conn, "COMMIT" )
+         ? PQexec( conn, "BEGIN" )
       ENDIF
    NEXT
 
