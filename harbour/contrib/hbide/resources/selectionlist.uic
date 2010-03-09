@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'selectionlist.ui'
 **
-** Created: Wed Feb 24 16:25:25 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Sun Mar 7 21:27:38 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -15,23 +15,19 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QListView>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
-#include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_Dialog
 {
 public:
-    QVBoxLayout *verticalLayout_2;
-    QVBoxLayout *verticalLayout;
-    QHBoxLayout *horizontalLayout;
+    QGridLayout *gridLayout;
     QListView *listOptions;
-    QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer;
     QPushButton *buttonOk;
     QPushButton *buttonCancel;
@@ -40,45 +36,30 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QString::fromUtf8("Dialog"));
-        Dialog->resize(221, 285);
-        verticalLayout_2 = new QVBoxLayout(Dialog);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        Dialog->resize(223, 285);
+        gridLayout = new QGridLayout(Dialog);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         listOptions = new QListView(Dialog);
         listOptions->setObjectName(QString::fromUtf8("listOptions"));
         listOptions->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-        horizontalLayout->addWidget(listOptions);
+        gridLayout->addWidget(listOptions, 0, 0, 1, 3);
 
-
-        verticalLayout->addLayout(horizontalLayout);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer);
+        gridLayout->addItem(horizontalSpacer, 1, 0, 1, 1);
 
         buttonOk = new QPushButton(Dialog);
         buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
         buttonOk->setMaximumSize(QSize(77, 25));
 
-        horizontalLayout_2->addWidget(buttonOk);
+        gridLayout->addWidget(buttonOk, 1, 1, 1, 1);
 
         buttonCancel = new QPushButton(Dialog);
         buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
         buttonCancel->setMaximumSize(QSize(77, 25));
 
-        horizontalLayout_2->addWidget(buttonCancel);
-
-
-        verticalLayout->addLayout(horizontalLayout_2);
-
-
-        verticalLayout_2->addLayout(verticalLayout);
+        gridLayout->addWidget(buttonCancel, 1, 2, 1, 1);
 
 
         retranslateUi(Dialog);

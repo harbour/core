@@ -67,38 +67,39 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
 
    METHOD  new( ... )
 
-   METHOD  getIndex( pCrQTextCursor )
-   METHOD  getLine( pCrQTextCursor )
-   METHOD  lineNumberAreaWidth()
-   METHOD  getSpaces()
-   METHOD  setSpaces( nNewSpaces )
-   METHOD  bookmarks( nBlock )
-   METHOD  nextBookmark( nBlock )
-   METHOD  prevBookmark( nBlock )
-   METHOD  gotoBookmark( nBlock )
-   METHOD  numberBlockVisible( lB )
-   METHOD  numberBlockVisible_1()
-   METHOD  highlightCurrentLine( lB )
-   METHOD  highlightCurrentLine_1()
+   METHOD  hbGetIndex( pCrQTextCursor )
+   METHOD  hbGetLine( pCrQTextCursor )
+   METHOD  hbLineNumberAreaWidth()
+   METHOD  hbGetSpaces()
+   METHOD  hbSetSpaces( nNewSpaces )
+   METHOD  hbBookmarks( nBlock )
+   METHOD  hbNextBookmark( nBlock )
+   METHOD  hbPrevBookmark( nBlock )
+   METHOD  hbGotoBookmark( nBlock )
+   METHOD  hbNumberBlockVisible( lB )
+   METHOD  hbNumberBlockVisible_1()
+   METHOD  hbHighlightCurrentLine( lB )
+   METHOD  hbHighlightCurrentLine_1()
    METHOD  hbSetEventBlock( xBlock )
-   METHOD  updateLineNumberAreaWidth( nNewBlockCount )
-   METHOD  caseUpper()
-   METHOD  caseLower()
-   METHOD  escapeQuotes()
-   METHOD  escapeDQuotes()
-   METHOD  unescapeQuotes()
-   METHOD  unescapeDQuotes()
-   METHOD  convertQuotes()
-   METHOD  convertDQuotes()
-   METHOD  blockComment()
-   METHOD  streamComment()
-   METHOD  duplicateLine()
-   METHOD  replaceSelection( cTxt )
-   METHOD  blockIndent( nSteps )
-   METHOD  deleteLine()
-   METHOD  moveLine( nIDirection )
-   METHOD  highlightSelectedColumns( lYes )
-   METHOD  getSelectedText()
+   METHOD  hbUpdateLineNumberAreaWidth( nNewBlockCount )
+   METHOD  hbCaseUpper()
+   METHOD  hbCaseLower()
+   METHOD  hbEscapeQuotes()
+   METHOD  hbEscapeDQuotes()
+   METHOD  hbUnescapeQuotes()
+   METHOD  hbUnescapeDQuotes()
+   METHOD  hbConvertQuotes()
+   METHOD  hbConvertDQuotes()
+   METHOD  hbBlockComment()
+   METHOD  hbStreamComment()
+   METHOD  hbDuplicateLine()
+   METHOD  hbReplaceSelection( cTxt )
+   METHOD  hbBlockIndent( nSteps )
+   METHOD  hbDeleteLine()
+   METHOD  hbMoveLine( nIDirection )
+   METHOD  hbHighlightSelectedColumns( lYes )
+   METHOD  hbGetSelectedText()
+   METHOD  hbShowPrototype( cTip )
 
    ENDCLASS
 
@@ -112,130 +113,134 @@ METHOD HBQPlainTextEdit:new( ... )
    RETURN Self
 
 
-METHOD HBQPlainTextEdit:getIndex( pCrQTextCursor )
-   RETURN Qt_HBQPlainTextEdit_getIndex( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
+METHOD HBQPlainTextEdit:hbGetIndex( pCrQTextCursor )
+   RETURN Qt_HBQPlainTextEdit_hbGetIndex( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
 
 
-METHOD HBQPlainTextEdit:getLine( pCrQTextCursor )
-   RETURN Qt_HBQPlainTextEdit_getLine( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
+METHOD HBQPlainTextEdit:hbGetLine( pCrQTextCursor )
+   RETURN Qt_HBQPlainTextEdit_hbGetLine( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
 
 
-METHOD HBQPlainTextEdit:lineNumberAreaWidth()
-   RETURN Qt_HBQPlainTextEdit_lineNumberAreaWidth( ::pPtr )
+METHOD HBQPlainTextEdit:hbLineNumberAreaWidth()
+   RETURN Qt_HBQPlainTextEdit_hbLineNumberAreaWidth( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:getSpaces()
-   RETURN Qt_HBQPlainTextEdit_getSpaces( ::pPtr )
+METHOD HBQPlainTextEdit:hbGetSpaces()
+   RETURN Qt_HBQPlainTextEdit_hbGetSpaces( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:setSpaces( nNewSpaces )
-   RETURN Qt_HBQPlainTextEdit_setSpaces( ::pPtr, nNewSpaces )
+METHOD HBQPlainTextEdit:hbSetSpaces( nNewSpaces )
+   RETURN Qt_HBQPlainTextEdit_hbSetSpaces( ::pPtr, nNewSpaces )
 
 
-METHOD HBQPlainTextEdit:bookmarks( nBlock )
-   RETURN Qt_HBQPlainTextEdit_bookmarks( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbBookmarks( nBlock )
+   RETURN Qt_HBQPlainTextEdit_hbBookmarks( ::pPtr, nBlock )
 
 
-METHOD HBQPlainTextEdit:nextBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_nextBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbNextBookmark( nBlock )
+   RETURN Qt_HBQPlainTextEdit_hbNextBookmark( ::pPtr, nBlock )
 
 
-METHOD HBQPlainTextEdit:prevBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_prevBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbPrevBookmark( nBlock )
+   RETURN Qt_HBQPlainTextEdit_hbPrevBookmark( ::pPtr, nBlock )
 
 
-METHOD HBQPlainTextEdit:gotoBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_gotoBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbGotoBookmark( nBlock )
+   RETURN Qt_HBQPlainTextEdit_hbGotoBookmark( ::pPtr, nBlock )
 
 
-METHOD HBQPlainTextEdit:numberBlockVisible( lB )
-   RETURN Qt_HBQPlainTextEdit_numberBlockVisible( ::pPtr, lB )
+METHOD HBQPlainTextEdit:hbNumberBlockVisible( lB )
+   RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible( ::pPtr, lB )
 
 
-METHOD HBQPlainTextEdit:numberBlockVisible_1()
-   RETURN Qt_HBQPlainTextEdit_numberBlockVisible_1( ::pPtr )
+METHOD HBQPlainTextEdit:hbNumberBlockVisible_1()
+   RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible_1( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:highlightCurrentLine( lB )
-   RETURN Qt_HBQPlainTextEdit_highlightCurrentLine( ::pPtr, lB )
+METHOD HBQPlainTextEdit:hbHighlightCurrentLine( lB )
+   RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine( ::pPtr, lB )
 
 
-METHOD HBQPlainTextEdit:highlightCurrentLine_1()
-   RETURN Qt_HBQPlainTextEdit_highlightCurrentLine_1( ::pPtr )
+METHOD HBQPlainTextEdit:hbHighlightCurrentLine_1()
+   RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine_1( ::pPtr )
 
 
 METHOD HBQPlainTextEdit:hbSetEventBlock( xBlock )
    RETURN Qt_HBQPlainTextEdit_hbSetEventBlock( ::pPtr, xBlock )
 
 
-METHOD HBQPlainTextEdit:updateLineNumberAreaWidth( nNewBlockCount )
-   RETURN Qt_HBQPlainTextEdit_updateLineNumberAreaWidth( ::pPtr, nNewBlockCount )
+METHOD HBQPlainTextEdit:hbUpdateLineNumberAreaWidth( nNewBlockCount )
+   RETURN Qt_HBQPlainTextEdit_hbUpdateLineNumberAreaWidth( ::pPtr, nNewBlockCount )
 
 
-METHOD HBQPlainTextEdit:caseUpper()
-   RETURN Qt_HBQPlainTextEdit_caseUpper( ::pPtr )
+METHOD HBQPlainTextEdit:hbCaseUpper()
+   RETURN Qt_HBQPlainTextEdit_hbCaseUpper( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:caseLower()
-   RETURN Qt_HBQPlainTextEdit_caseLower( ::pPtr )
+METHOD HBQPlainTextEdit:hbCaseLower()
+   RETURN Qt_HBQPlainTextEdit_hbCaseLower( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:escapeQuotes()
-   RETURN Qt_HBQPlainTextEdit_escapeQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbEscapeQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbEscapeQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:escapeDQuotes()
-   RETURN Qt_HBQPlainTextEdit_escapeDQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbEscapeDQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbEscapeDQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:unescapeQuotes()
-   RETURN Qt_HBQPlainTextEdit_unescapeQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbUnescapeQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbUnescapeQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:unescapeDQuotes()
-   RETURN Qt_HBQPlainTextEdit_unescapeDQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbUnescapeDQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbUnescapeDQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:convertQuotes()
-   RETURN Qt_HBQPlainTextEdit_convertQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbConvertQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbConvertQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:convertDQuotes()
-   RETURN Qt_HBQPlainTextEdit_convertDQuotes( ::pPtr )
+METHOD HBQPlainTextEdit:hbConvertDQuotes()
+   RETURN Qt_HBQPlainTextEdit_hbConvertDQuotes( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:blockComment()
-   RETURN Qt_HBQPlainTextEdit_blockComment( ::pPtr )
+METHOD HBQPlainTextEdit:hbBlockComment()
+   RETURN Qt_HBQPlainTextEdit_hbBlockComment( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:streamComment()
-   RETURN Qt_HBQPlainTextEdit_streamComment( ::pPtr )
+METHOD HBQPlainTextEdit:hbStreamComment()
+   RETURN Qt_HBQPlainTextEdit_hbStreamComment( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:duplicateLine()
-   RETURN Qt_HBQPlainTextEdit_duplicateLine( ::pPtr )
+METHOD HBQPlainTextEdit:hbDuplicateLine()
+   RETURN Qt_HBQPlainTextEdit_hbDuplicateLine( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:replaceSelection( cTxt )
-   RETURN Qt_HBQPlainTextEdit_replaceSelection( ::pPtr, cTxt )
+METHOD HBQPlainTextEdit:hbReplaceSelection( cTxt )
+   RETURN Qt_HBQPlainTextEdit_hbReplaceSelection( ::pPtr, cTxt )
 
 
-METHOD HBQPlainTextEdit:blockIndent( nSteps )
-   RETURN Qt_HBQPlainTextEdit_blockIndent( ::pPtr, nSteps )
+METHOD HBQPlainTextEdit:hbBlockIndent( nSteps )
+   RETURN Qt_HBQPlainTextEdit_hbBlockIndent( ::pPtr, nSteps )
 
 
-METHOD HBQPlainTextEdit:deleteLine()
-   RETURN Qt_HBQPlainTextEdit_deleteLine( ::pPtr )
+METHOD HBQPlainTextEdit:hbDeleteLine()
+   RETURN Qt_HBQPlainTextEdit_hbDeleteLine( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:moveLine( nIDirection )
-   RETURN Qt_HBQPlainTextEdit_moveLine( ::pPtr, nIDirection )
+METHOD HBQPlainTextEdit:hbMoveLine( nIDirection )
+   RETURN Qt_HBQPlainTextEdit_hbMoveLine( ::pPtr, nIDirection )
 
 
-METHOD HBQPlainTextEdit:highlightSelectedColumns( lYes )
-   RETURN Qt_HBQPlainTextEdit_highlightSelectedColumns( ::pPtr, lYes )
+METHOD HBQPlainTextEdit:hbHighlightSelectedColumns( lYes )
+   RETURN Qt_HBQPlainTextEdit_hbHighlightSelectedColumns( ::pPtr, lYes )
 
 
-METHOD HBQPlainTextEdit:getSelectedText()
-   RETURN Qt_HBQPlainTextEdit_getSelectedText( ::pPtr )
+METHOD HBQPlainTextEdit:hbGetSelectedText()
+   RETURN Qt_HBQPlainTextEdit_hbGetSelectedText( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbShowPrototype( cTip )
+   RETURN Qt_HBQPlainTextEdit_hbShowPrototype( ::pPtr, cTip )
 

@@ -28,38 +28,39 @@
     $RETURNS$
         An instance of the object of type HBQPlainTextEdit
     $METHODS$
-        :getIndex( pCrQTextCursor )                         -> nInt
-        :getLine( pCrQTextCursor )                          -> nInt
-        :lineNumberAreaWidth()                              -> nInt
-        :getSpaces()                                        -> nInt
-        :setSpaces( nNewSpaces )                            -> NIL
-        :bookmarks( nBlock )                                -> NIL
-        :nextBookmark( nBlock )                             -> NIL
-        :prevBookmark( nBlock )                             -> NIL
-        :gotoBookmark( nBlock )                             -> NIL
-        :numberBlockVisible( lB )                           -> NIL
-        :numberBlockVisible_1()                             -> lBool
-        :highlightCurrentLine( lB )                         -> NIL
-        :highlightCurrentLine_1()                           -> lBool
+        :hbGetIndex( pCrQTextCursor )                       -> nInt
+        :hbGetLine( pCrQTextCursor )                        -> nInt
+        :hbLineNumberAreaWidth()                            -> nInt
+        :hbGetSpaces()                                      -> nInt
+        :hbSetSpaces( nNewSpaces )                          -> NIL
+        :hbBookmarks( nBlock )                              -> NIL
+        :hbNextBookmark( nBlock )                           -> NIL
+        :hbPrevBookmark( nBlock )                           -> NIL
+        :hbGotoBookmark( nBlock )                           -> NIL
+        :hbNumberBlockVisible( lB )                         -> NIL
+        :hbNumberBlockVisible_1()                           -> lBool
+        :hbHighlightCurrentLine( lB )                       -> NIL
+        :hbHighlightCurrentLine_1()                         -> lBool
         :hbSetEventBlock( xBlock )                          -> NIL
-        :updateLineNumberAreaWidth( nNewBlockCount )        -> NIL
-        :caseUpper()                                        -> NIL
-        :caseLower()                                        -> NIL
-        :escapeQuotes()                                     -> NIL
-        :escapeDQuotes()                                    -> NIL
-        :unescapeQuotes()                                   -> NIL
-        :unescapeDQuotes()                                  -> NIL
-        :convertQuotes()                                    -> NIL
-        :convertDQuotes()                                   -> NIL
-        :blockComment()                                     -> NIL
-        :streamComment()                                    -> NIL
-        :duplicateLine()                                    -> NIL
-        :replaceSelection( cTxt )                           -> NIL
-        :blockIndent( nSteps )                              -> NIL
-        :deleteLine()                                       -> NIL
-        :moveLine( nIDirection )                            -> NIL
-        :highlightSelectedColumns( lYes )                   -> NIL
-        :getSelectedText()                                  -> cQString
+        :hbUpdateLineNumberAreaWidth( nNewBlockCount )      -> NIL
+        :hbCaseUpper()                                      -> NIL
+        :hbCaseLower()                                      -> NIL
+        :hbEscapeQuotes()                                   -> NIL
+        :hbEscapeDQuotes()                                  -> NIL
+        :hbUnescapeQuotes()                                 -> NIL
+        :hbUnescapeDQuotes()                                -> NIL
+        :hbConvertQuotes()                                  -> NIL
+        :hbConvertDQuotes()                                 -> NIL
+        :hbBlockComment()                                   -> NIL
+        :hbStreamComment()                                  -> NIL
+        :hbDuplicateLine()                                  -> NIL
+        :hbReplaceSelection( cTxt )                         -> NIL
+        :hbBlockIndent( nSteps )                            -> NIL
+        :hbDeleteLine()                                     -> NIL
+        :hbMoveLine( nIDirection )                          -> NIL
+        :hbHighlightSelectedColumns( lYes )                 -> NIL
+        :hbGetSelectedText()                                -> cQString
+        :hbShowPrototype( cTip )                            -> NIL
 
     $DESCRIPTION$
 

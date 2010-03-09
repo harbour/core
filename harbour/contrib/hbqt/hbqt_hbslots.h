@@ -63,6 +63,7 @@
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QListWidgetItem>
+#include <QtGui/QTableWidgetItem>
 #include <QtGui/QDockWidget>
 #include <QtGui/QHeaderView>
 
@@ -246,15 +247,23 @@ public slots:
    void currentRowChanged( const QModelIndex & currentIndex, const QModelIndex & previousIndex );
    void selectionChanged( const QItemSelection & selected, const QItemSelection & deselected );
    /* QListWidget */
-   void currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous );
    void currentRowChanged( int currentRow );
    void currentTextChanged( const QString & currentText );
+   void currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous );
    void itemActivated( QListWidgetItem * item );
    void itemChanged( QListWidgetItem * item );
    void itemClicked( QListWidgetItem * item );
    void itemDoubleClicked( QListWidgetItem * item );
    void itemEntered( QListWidgetItem * item );
    void itemPressed( QListWidgetItem * item );
+   /* QTableWidget */
+   void currentItemChanged( QTableWidgetItem * current, QTableWidgetItem * previous );
+   void itemActivated( QTableWidgetItem * item );
+   void itemChanged( QTableWidgetItem * item );
+   void itemClicked( QTableWidgetItem * item );
+   void itemDoubleClicked( QTableWidgetItem * item );
+   void itemEntered( QTableWidgetItem * item );
+   void itemPressed( QTableWidgetItem * item );
    /* QTextBrowser */
    void anchorClicked( const QUrl & link );
    void backwardAvailable( bool available );

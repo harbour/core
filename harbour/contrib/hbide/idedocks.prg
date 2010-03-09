@@ -77,6 +77,7 @@
 #define dockThemes_visibilityChanged              303
 #define dockProperties_visibilityChanged          304
 #define dockDocViewer_visibilityChanged           305
+#define docFunctions_visibilityChanged            306
 
 /*----------------------------------------------------------------------*/
 
@@ -104,6 +105,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildProjectTree()
    METHOD buildEditorTree()
    METHOD buildFuncList()
+   METHOD buildFunctionsDock()
    METHOD buildCompileResults()
    METHOD buildLinkResults()
    METHOD buildOutputResults()
@@ -150,6 +152,7 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oThemesDock:oWidget    , "visibilityChanged(bool)" )
    ::disconnect( ::oDocViewDock:oWidget   , "visibilityChanged(bool)" )
    ::disconnect( ::oFindDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oFunctionsDock:oWidget , "visibilityChanged(bool)" )
    #if 0  /* Not Implemented */
    ::disconnect( ::oHelpDock:oWidget      , "visibilityChanged(bool)" )
    ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
@@ -264,6 +267,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildLinkResults()
    ::buildOutputResults()
    ::buildDocViewer()
+   ::buildFunctionsDock()
 
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget        , ::oDockB2:oWidget         )
@@ -312,6 +316,11 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
+
+   CASE nMode == docFunctions_visibilityChanged
+      IF p
+         ::oFN:show()
+      ENDIF
 
    CASE nMode == dockDocViewer_visibilityChanged
       IF p
@@ -544,13 +553,13 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
 
    aBtns := {}
-   aadd( aBtns, { ::oHelpDock      , "help"          } )
-   aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
-   aadd( aBtns, {} )
    aadd( aBtns, { ::oDockPT        , "projectstree"  } )
    aadd( aBtns, { ::oDockED        , "tabs"          } )
    aadd( aBtns, {} )
+   aadd( aBtns, { ::oHelpDock      , "help"          } )
+   aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
    aadd( aBtns, { ::oFuncDock      , "dc_function"   } )
+   aadd( aBtns, { ::oFunctionsDock , "ffn"           } )
    aadd( aBtns, { ::oPropertiesDock, "properties"    } )
    aadd( aBtns, { ::oEnvironDock   , "envconfig"     } )
    aadd( aBtns, { ::oSkeltnDock    , "codeskeletons" } )
@@ -817,6 +826,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Environ"  ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "View"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
+   ::oSBar:addItem( "", , , , "Theme"    ):oWidget:setMinimumWidth(  20 )
 
    FOR i := 1 TO 6
       ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )
@@ -869,6 +879,17 @@ METHOD IdeDocks:buildDocViewer()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:buildFunctionsDock()
+
+   ::oIde:oFunctionsDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFunctions", "Projects Functions Lookup", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFunctionsDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oFunctionsDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docFunctions_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildEnvironDock()
 
    ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
@@ -884,12 +905,11 @@ METHOD IdeDocks:buildSkeletonWidget()
    LOCAL oUI
 
    ::oIde:oSkeltnDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
-   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic", ::oSkeltnDock:oWidget ):build()
+   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic" ):build()
 
    ::oSkeltnDock:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
-
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
    oUI := ::oIde:oSkeltnUI
 
@@ -1015,6 +1035,11 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       xValue := iif( empty( xValue ), "none", xValue )
       oPanel:caption := "<font color = darkred >Proj: " + xValue + "</font>"
       EXIT
+   CASE SB_PNL_THEME
+      xValue := iif( empty( xValue ), "Bare Minimum", xValue )
+      oPanel:caption := "<font color = blue >Theme: " + xValue + "</font>"
+      EXIT
+
    ENDSWITCH
 
    RETURN Self

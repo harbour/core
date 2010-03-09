@@ -268,6 +268,7 @@ METHOD IdeThemes:setWrkTheme( cTheme )
    ENDIF
    IF !empty( cTheme )
       ::oIde:cWrkTheme := cTheme
+      ::oDK:setStatusText( SB_PNL_THEME, ::cWrkTheme )
    ENDIF
 
    RETURN Self
@@ -676,6 +677,8 @@ METHOD IdeThemes:selectTheme()
    Qt_Slots_disConnect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
    Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()" )
    Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()" )
+
+   oSL:destroy()
 
    RETURN iif( nDone == 1, cTheme, "" )
 

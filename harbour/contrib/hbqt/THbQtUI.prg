@@ -213,13 +213,14 @@ METHOD HbQtUI:destroy()
    ::qObj[ ::cMainWidgetName ] := NIL
    ::widgets[ 1, 2 ] := NIL
    ::aEvents  := NIL
+   ::qObj := NIL
+   ::widgets := {}
 
-//hbq_dbg( 101 )
-   aeval( ::aSignals, {|e_| iif( ! empty( e_ ), hbide_dbg( e_[ 2 ] ), NIL ) } )// := NIL
+hbq_dbg( 101 )
    ::oWidget:close()
-//hbq_dbg( 102 )
-   ::oWidget := NIL
-//hbq_dbg( 103 )
+hbq_dbg( 102 )
+//   ::oWidget := NIL  /* Variable Destruction GPFs */
+hbq_dbg( 103 )
    hbide_justACall( i )
    RETURN NIL
 

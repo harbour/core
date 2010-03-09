@@ -133,14 +133,15 @@ CLASS HbIde
    DATA   oSM                                              /* Souces Manager                 */
    DATA   oFR                                              /* Find Replace Manager           */
    DATA   oEV                                              /* Available Environments         */
+   DATA   oHL                                              /* Harbour Help Manager           */
+   DATA   oHM                                              /* <Stats> panel manager          */
+   DATA   oFN                                              /* Functions Tags Manager         */
    DATA   oThemes
    DATA   oFindInFiles
    DATA   oHelpDock
    DATA   oSkeltnDock
    DATA   oSkeltnUI
    DATA   oFindDock
-   DATA   oHL
-   DATA   oHM
 
    DATA   oUI
 
@@ -217,6 +218,7 @@ CLASS HbIde
    DATA   oSearchReplace
    DATA   oFuncDock
    DATA   oDocViewDock
+   DATA   oFunctionsDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -350,6 +352,14 @@ METHOD HbIde:create( cProjIni )
    /* Setup GUI Error Reporting System*/
    hbqt_errorsys()
 
+   /* Editor's Font - TODO: User Managed Interface */
+   ::oFont := XbpFont():new()
+   ::oFont:fixed := .t.
+   ::oFont:create( "10.Courier" )
+
+   /* Functions Tag Manager */
+   ::oFN := IdeFunctions():new():create( Self )
+
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
@@ -364,11 +374,6 @@ METHOD HbIde:create( cProjIni )
    ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
    ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
    ::cWrkHarbour     := ::aINI[ INI_HBIDE, CurrentHarbour     ]
-
-   /* Editor's Font - TODO: User Managed Interface */
-   ::oFont := XbpFont():new()
-   ::oFont:fixed := .t.
-   ::oFont:create( "10.Courier" )
 
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
@@ -439,6 +444,7 @@ METHOD HbIde:create( cProjIni )
    /* Again to be displayed in Statusbar */
    HbXbp_SetCodec( ::cWrkCodec )
    ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
+   ::oDK:setStatusText( SB_PNL_THEME, ::cWrkTheme )
 
    /* Display cWrkEnvironment in StatusBar */
    ::oDK:dispEnvironment( ::cWrkEnvironment )
@@ -518,14 +524,13 @@ METHOD HbIde:create( cProjIni )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
-   DO WHILE qSplash != NIL
-   ENDDO
-
    /* Very important - destroy resources */
    hbide_dbg( "======================================================" )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oEV:destroy()
+   ::oFN:destroy()
    ::oHM:destroy()
    ::oHL:destroy()
    ::oThemes:destroy()
@@ -1095,8 +1100,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aadd( aPops, { "" } )
       aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Close this Project"                , {|| ::oPM:closeProject( oXbpTreeItem:caption ) } } )
-      aadd( aPops, { "Remove this Project"               , {|| ::oPM:removeProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Remove Project"                    , {|| ::oPM:removeProject( oXbpTreeItem:caption ) } } )
       IF !empty( ::oEV:getNames() )
          aadd( aPops, { "" } )
          FOR EACH s IN ::oEV:getNames()

@@ -171,6 +171,8 @@ METHOD IdeEditsManager:create( oIde )
 
    ::qContextMenu := QMenu():new()
 
+   aadd( ::aActions, { "GotoFunc"     , ::qContextMenu:addAction_4( ::oAC:getAction( "GotoFunc"      ) ) } )
+   aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
    aadd( ::aActions, { "TB_Cut"       , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Cut"        ) ) } )
    aadd( ::aActions, { "TB_Copy"      , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Copy"       ) ) } )
    aadd( ::aActions, { "TB_Paste"     , ::qContextMenu:addAction_4( ::oAC:getAction( "TB_Paste"      ) ) } )
@@ -458,7 +460,7 @@ METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:undo()
    IF !empty( ::qCurEdit )
       ::qCurEdit:undo()
@@ -466,7 +468,7 @@ METHOD IdeEditsManager:undo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:redo()
    IF !empty( ::qCurEdit )
       ::qCurEdit:redo()
@@ -474,7 +476,7 @@ METHOD IdeEditsManager:redo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:cut()
    IF !empty( ::qCurEdit )
       ::qCurEdit:cut()
@@ -482,7 +484,7 @@ METHOD IdeEditsManager:cut()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:copy()
    IF !empty( ::qCurEdit )
       ::qCurEdit:copy()
@@ -490,7 +492,7 @@ METHOD IdeEditsManager:copy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:paste()
    IF !empty( ::qCurEdit )
       ::qCurEdit:paste()
@@ -498,7 +500,7 @@ METHOD IdeEditsManager:paste()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:selectAll()
    IF !empty( ::qCurEdit )
       ::qCurEdit:selectAll()
@@ -506,88 +508,88 @@ METHOD IdeEditsManager:selectAll()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:toggleSelectionMode()
 
    IF !empty( ::qCurEdit )
-      ::qCurEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
+      ::qCurEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:duplicateLine()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:duplicateLine()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:duplicateLine()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:moveLine( nDirection )
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:moveLine( nDirection )
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:moveLine( nDirection )
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:deleteLine()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:deleteLine()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:deleteLine()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:streamComment()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:streamComment()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:streamComment()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:blockComment()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:blockComment()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:blockComment()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:indent( nStep )
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:blockIndent( nStep )
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:blockIndent( nStep )
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:convertQuotes()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:convertQuotes()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:convertQuotes()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:convertDQuotes()
-   LOCAL qEdit
-   IF !empty( qEdit := ::getEditCurrent() )
-      qEdit:convertDQuotes()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:convertDQuotes()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+////
 METHOD IdeEditsManager:switchToReadOnly()
    IF !empty( ::qCurEdit )
       ::qCurEdit:setReadOnly( !( ::qCurEdit:isReadOnly() ) )
@@ -599,51 +601,42 @@ METHOD IdeEditsManager:switchToReadOnly()
 
 METHOD IdeEditsManager:toggleLineNumbers()
    LOCAL oEdit
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleLineNumbers()
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:getText()
    LOCAL oEdit, cText := ""
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       cText := oEdit:getText()
    ENDIF
-
    RETURN cText
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:getWord( lSelect )
    LOCAL oEdit, cText := ""
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       cText := oEdit:getWord( lSelect )
    ENDIF
-
    RETURN cText
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:getLine( lSelect )
    LOCAL oEdit, cText := ""
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       cText := oEdit:getLine( lSelect )
    ENDIF
-
    RETURN cText
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:convertSelection( cKey )
    LOCAL oEdit
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       SWITCH cKey
       CASE "ToUpper"
@@ -657,152 +650,121 @@ METHOD IdeEditsManager:convertSelection( cKey )
          EXIT
       ENDSWITCH
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:insertSeparator()
-   LOCAL oEdit, qCursor
-
-   IF empty( oEdit := ::getEditObjectCurrent() )
-      RETURN Self
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:insertSeparator()
    ENDIF
-
-   qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
-
-   qCursor:beginEditBlock()
-   qCursor:movePosition( QTextCursor_StartOfBlock )
-   qCursor:insertBlock()
-   qCursor:movePosition( QTextCursor_PreviousBlock )
-   qCursor:insertText( ::cSeparator )
-   qCursor:movePosition( QTextCursor_NextBlock )
-   qCursor:movePosition( QTextCursor_StartOfBlock )
-   qCursor:endEditBlock()
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:insertText( cKey )
-   LOCAL nB, nL, qCursor, cFile, cText, oEdit
+   LOCAL cFile, cText, oEdit
 
-   IF empty( oEdit := ::getEditObjectCurrent() )
-      RETURN Self
-   ENDIF
+   IF ! empty( oEdit := ::getEditObjectCurrent() )
+      DO CASE
 
-   qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+      CASE cKey == "InsertDateTime"
+         cText := DTOC( Date() ) + ' - ' + Time()
 
-   DO CASE
+      CASE cKey == "InsertRandomName"
+         cText := hbide_getUniqueFuncName()
 
-   CASE cKey == "InsertDateTime"
-      cText := DTOC( Date() ) + ' - ' + Time()
+      CASE cKey == "InsertExternalFile"
+         cFile := ::oSM:selectSource( "open" )
+         IF Empty( cFile ) .OR. !hb_FileExists( cFile )
+            RETURN Self
+         ENDIF
+         IF !( hbide_isValidText( cFile ) )
+            MsgBox( 'File type unknown or unsupported: ' + cFile )
+            RETURN Self
+         ENDIF
+         cText := hb_memoread( cFile )
 
-   CASE cKey == "InsertRandomName"
-      cText := hbide_getUniqueFuncName()
-
-   CASE cKey == "InsertExternalFile"
-      cFile := ::oSM:selectSource( "open" )
-      IF Empty( cFile ) .OR. !hb_FileExists( cFile )
+      OTHERWISE
          RETURN Self
-      ENDIF
-      IF !( hbide_isValidText( cFile ) )
-         MsgBox( 'File type unknown or unsupported: ' + cFile )
-         RETURN Self
-      ENDIF
-      cText := hb_memoread( cFile )
 
-   OTHERWISE
-      RETURN Self
+      ENDCASE
 
-   ENDCASE
-
-   IF !Empty( cText )
-      nL := len( cText )
-      nB := qCursor:position() + nL
-
-      qCursor:beginEditBlock()
-      qCursor:removeSelectedText()
-      qCursor:insertText( cText )
-      qCursor:setPosition( nB )
-      qCursor:endEditBlock()
+      oEdit:insertText( cText )
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+////
 METHOD IdeEditsManager:formatBraces()
    LOCAL qEdit, qDoc, cText
 
-   IF empty( qEdit := ::getEditCurrent() )
-      RETURN Self
+   IF !empty( qEdit := ::getEditCurrent() )
+
+      qDoc := QTextDocument():configure( qedit:document() )
+
+      IF !( qDoc:isEmpty() )
+         qDoc:setUndoRedoEnabled( .f. )
+
+         cText := qDoc:toPlainText()
+
+         cText := strtran( cText, "( ", "(" )
+         cText := strtran( cText, "(  ", "(" )
+         cText := strtran( cText, "(   ", "(" )
+         cText := strtran( cText, "(    ", "(" )
+         cText := strtran( cText, "(     ", "(" )
+         cText := strtran( cText, "(      ", "(" )
+         cText := strtran( cText, " (", "(" )
+         cText := strtran( cText, "  (", "(" )
+         cText := strtran( cText, "   (", "(" )
+         cText := strtran( cText, "    (", "(" )
+         cText := strtran( cText, "     (", "(" )
+
+         cText := strtran( cText, "      )", ")" )
+         cText := strtran( cText, "     )", ")" )
+         cText := strtran( cText, "    )", ")" )
+         cText := strtran( cText, "   )", ")" )
+         cText := strtran( cText, "  )", ")" )
+         cText := strtran( cText, " )", ")" )
+
+         cText := strtran( cText, "(", "( " )
+         cText := strtran( cText, ")", " )" )
+
+         cText := strtran( cText, "(     )", "()" )
+         cText := strtran( cText, "(    )", "()" )
+         cText := strtran( cText, "(   )", "()" )
+         cText := strtran( cText, "(  )", "()" )
+         cText := strtran( cText, "( )", "()" )
+
+         qDoc:clear()
+         qDoc:setPlainText( cText )
+
+         qDoc:setUndoRedoEnabled( .t. )
+      ENDIF
    ENDIF
-
-   qDoc := QTextDocument():configure( qedit:document() )
-
-   IF !( qDoc:isEmpty() )
-      qDoc:setUndoRedoEnabled( .f. )
-
-      cText := qDoc:toPlainText()
-
-      cText := strtran( cText, "( ", "(" )
-      cText := strtran( cText, "(  ", "(" )
-      cText := strtran( cText, "(   ", "(" )
-      cText := strtran( cText, "(    ", "(" )
-      cText := strtran( cText, "(     ", "(" )
-      cText := strtran( cText, "(      ", "(" )
-      cText := strtran( cText, " (", "(" )
-      cText := strtran( cText, "  (", "(" )
-      cText := strtran( cText, "   (", "(" )
-      cText := strtran( cText, "    (", "(" )
-      cText := strtran( cText, "     (", "(" )
-
-      cText := strtran( cText, "      )", ")" )
-      cText := strtran( cText, "     )", ")" )
-      cText := strtran( cText, "    )", ")" )
-      cText := strtran( cText, "   )", ")" )
-      cText := strtran( cText, "  )", ")" )
-      cText := strtran( cText, " )", ")" )
-
-      cText := strtran( cText, "(", "( " )
-      cText := strtran( cText, ")", " )" )
-
-      cText := strtran( cText, "(     )", "()" )
-      cText := strtran( cText, "(    )", "()" )
-      cText := strtran( cText, "(   )", "()" )
-      cText := strtran( cText, "(  )", "()" )
-      cText := strtran( cText, "( )", "()" )
-
-      qDoc:clear()
-      qDoc:setPlainText( cText )
-
-      qDoc:setUndoRedoEnabled( .t. )
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+//////
 METHOD IdeEditsManager:RemoveTabs()
    LOCAL qEdit, qDoc, cText, cSpaces
 
-   IF empty( qEdit := ::getEditCurrent() )
-      RETURN Self
-   ENDIF
+   IF ! empty( qEdit := ::getEditCurrent() )
 
-   qDoc := QTextDocument():configure( qedit:document() )
+      qDoc := QTextDocument():configure( qedit:document() )
 
-   IF !( qDoc:isEmpty() )
-      cSpaces := space( ::nTabSpaces )
+      IF !( qDoc:isEmpty() )
+         cSpaces := space( ::nTabSpaces )
 
-      qDoc:setUndoRedoEnabled( .f. )
+         qDoc:setUndoRedoEnabled( .f. )
 
-      cText := qDoc:toPlainText()
-      qDoc:clear()
-      qDoc:setPlainText( strtran( cText, chr( 9 ), cSpaces ) )
+         cText := qDoc:toPlainText()
+         qDoc:clear()
+         qDoc:setPlainText( strtran( cText, chr( 9 ), cSpaces ) )
 
-      qDoc:setUndoRedoEnabled( .t. )
+         qDoc:setUndoRedoEnabled( .t. )
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -812,29 +774,27 @@ METHOD IdeEditsManager:RemoveTabs()
 METHOD IdeEditsManager:RemoveTrailingSpaces()
    LOCAL qEdit, qDoc, cText, a_, s
 
-   IF empty( qEdit := ::getEditCurrent() )
-      RETURN Self
+   IF ! empty( qEdit := ::getEditCurrent() )
+
+      qDoc := QTextDocument():configure( qedit:document() )
+
+      IF !( qDoc:isEmpty() )
+         qDoc:setUndoRedoEnabled( .f. )
+
+         cText := qDoc:toPlainText()
+
+         a_:= hbide_memoToArray( cText )
+         FOR EACH s IN a_
+            s := trim( s )
+         NEXT
+         cText := hbide_arrayToMemo( a_ )
+
+         qDoc:clear()
+         qDoc:setPlainText( cText )
+
+         qDoc:setUndoRedoEnabled( .t. )
+      ENDIF
    ENDIF
-
-   qDoc := QTextDocument():configure( qedit:document() )
-
-   IF !( qDoc:isEmpty() )
-      qDoc:setUndoRedoEnabled( .f. )
-
-      cText := qDoc:toPlainText()
-
-      a_:= hbide_memoToArray( cText )
-      FOR EACH s IN a_
-         s := trim( s )
-      NEXT
-      cText := hbide_arrayToMemo( a_ )
-
-      qDoc:clear()
-      qDoc:setPlainText( cText )
-
-      qDoc:setUndoRedoEnabled( .t. )
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -842,124 +802,107 @@ METHOD IdeEditsManager:RemoveTrailingSpaces()
 METHOD IdeEditsManager:zoom( nKey )
    LOCAL nPointSize, qFont, oEdit, oEditor
 
-   IF empty( oEditor := ::getEditorCurrent() )
-      RETURN Self
-   ENDIF
-   oEdit := oEditor:oEdit
+   IF ! empty( oEditor := ::getEditorCurrent() )
+      oEdit := oEditor:oEdit
 
-   qFont := QFont():configure( oEdit:qEdit:font() )
-   qFont:setFamily( "Courier New" )
-   qFont:setFixedPitch( .t. )
-   nPointSize := qFont:pointSize()
-   nPointSize += iif( nKey == 1, 1, -1 )
+      qFont := QFont():configure( oEdit:qEdit:font() )
+      qFont:setFamily( "Courier New" )
+      qFont:setFixedPitch( .t. )
+      nPointSize := qFont:pointSize()
+      nPointSize += iif( nKey == 1, 1, -1 )
 
-   IF nPointSize > 4 .AND. nPointSize < 37
-      qFont:setPointSize( nPointSize )
+      IF nPointSize > 4 .AND. nPointSize < 37
+         qFont:setPointSize( nPointSize )
 
-      oEdit:qEdit:setFont( qFont )
-
-      FOR EACH oEdit IN oEditor:aEdits
          oEdit:qEdit:setFont( qFont )
-      NEXT
+
+         FOR EACH oEdit IN oEditor:aEdits
+            oEdit:qEdit:setFont( qFont )
+         NEXT
+      ENDIF
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+////
 METHOD IdeEditsManager:printPreview()
    LOCAL qDlg
-
-   IF empty( ::qCurEdit )
-      RETURN Self
+   IF ! empty( ::qCurEdit )
+      qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
+      qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
+      Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+      qDlg:exec()
+      Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
    ENDIF
-
-   qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
-   qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
-   qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
-
    RETURN self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:getSelectedText()
-   LOCAL qEdit
-
-   IF !empty( qEdit := ::oEM:getEditCurrent() )
-      RETURN qEdit:getSelectedText()
-   ENDIF
-
-   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:paintRequested( pPrinter )
    LOCAL qPrinter
-
    qPrinter := QPrinter():configure( pPrinter )
-
    ::qCurEdit:print( qPrinter )
-
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getSelectedText()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      RETURN oEdit:getSelectedText()
+   ENDIF
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:setMark()
    LOCAL oEdit
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:setNewMark()
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:gotoMark( nIndex )
    LOCAL oEdit
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:gotoMark( nIndex )
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+///////
 METHOD IdeEditsManager:goto()
    LOCAL qGo, nLine, qCursor, qEdit, nRows
 
-   IF empty( qEdit := ::oEM:getEditCurrent() )
-      RETURN Self
+   IF ! empty( qEdit := ::oEM:getEditCurrent() )
+      qCursor := QTextCursor():configure( qEdit:textCursor() )
+      nLine := qCursor:blockNumber()
+      nRows := qEdit:blockCount()
+
+      qGo := QInputDialog():new( ::oDlg:oWidget )
+      qGo:setIntMinimum( 1 )
+      qGo:setIntMaximum( nRows )
+      qGo:setIntValue( nLine + 1 )
+      qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
+      qGo:setWindowTitle( "Harbour-Qt" )
+
+      ::setPosByIni( qGo, GotoDialogGeometry )
+      qGo:exec()
+      ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
+
+      nLine := qGo:intValue() -  nLine
+
+      qGo:pPtr := NIL
+
+      IF nLine < 0
+         qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
+      ELSEIF nLine > 0
+         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+      ENDIF
+      qEdit:setTextCursor( qCursor )
    ENDIF
-
-   qCursor := QTextCursor():configure( qEdit:textCursor() )
-   nLine := qCursor:blockNumber()
-   nRows := qEdit:blockCount()
-
-   qGo := QInputDialog():new( ::oDlg:oWidget )
-   qGo:setIntMinimum( 1 )
-   qGo:setIntMaximum( nRows )
-   qGo:setIntValue( nLine + 1 )
-   qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
-   qGo:setWindowTitle( "Harbour-Qt" )
-
-   ::setPosByIni( qGo, GotoDialogGeometry )
-   qGo:exec()
-   ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
-
-   nLine := qGo:intValue() -  nLine
-
-   qGo:pPtr := NIL
-
-   IF nLine < 0
-      qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
-   ELSEIF nLine > 0
-      qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
-   ENDIF
-   qEdit:setTextCursor( qCursor )
-
    RETURN nLine
 
 /*----------------------------------------------------------------------*/
@@ -1418,6 +1361,8 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD caseUpper()
    METHOD caseLower()
    METHOD caseInvert()
+   METHOD convertQuotes()
+   METHOD convertDQuotes()
    METHOD findLastIndent()
    METHOD reLayMarkButtons()
    METHOD presentSkeletons()
@@ -1425,11 +1370,15 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD handlePreviousWord( lUpdatePrevWord )
    METHOD loadFuncHelp()
    METHOD clickFuncHelp()
+   METHOD gotoFunction()
    METHOD toggleLineNumbers()
 
    METHOD getWord( lSelect )
    METHOD getLine( lSelect )
    METHOD getText()
+   METHOD getSelectedText()
+   METHOD insertSeparator()
+   METHOD insertText( cText )
 
    ENDCLASS
 
@@ -1459,9 +1408,10 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:setFont( ::oFont:oWidget )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::qEdit:setSpaces( ::nTabSpaces )
    ::qEdit:installEventFilter( ::pEvents )
-   ::qEdit:highlightCurrentLine( .t. )              /* Via user-setup */
+
+   ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
+   ::qEdit:hbSetSpaces( ::nTabSpaces )
 
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
@@ -1569,6 +1519,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
             ENDIF
          CASE qAct:text() == "Apply Theme"
             ::oEditor:applyTheme()
+         CASE qAct:text() == "Goto Function"
+            ::gotoFunction()
          ENDCASE
       ENDIF
       EXIT
@@ -1589,7 +1541,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::relayMarkButtons()
 
       /* An experimental move but seems a lot is required to achieve column selection */
-      qEdit:highlightSelectedColumns( ::isColumnSelectionEnabled )
+      qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
 
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
       EXIT
@@ -1732,7 +1684,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
 
    CASE 1001
       IF p == QEvent_MouseButtonDblClick
-         ::lCopyWhenDblClicked := .t.
+         ::lCopyWhenDblClicked := .f.       /* not intuitive */
          ::clickFuncHelp()
       ENDIF
       EXIT
@@ -1782,7 +1734,7 @@ METHOD IdeEdit:presentSkeletons()
 METHOD IdeEdit:toggleLineNumbers()
 
    ::lLineNumbersVisible := ! ::lLineNumbersVisible
-   ::qEdit:numberBlockVisible( ::lLineNumbersVisible )
+   ::qEdit:hbNumberBlockVisible( ::lLineNumbersVisible )
 
    RETURN Self
 
@@ -1790,7 +1742,7 @@ METHOD IdeEdit:toggleLineNumbers()
 
 METHOD IdeEdit:gotoMark( nIndex )
    IF len( ::aBookMarks ) >= nIndex
-      ::qEdit:gotoBookmark( ::aBookMarks[ nIndex ] )
+      ::qEdit:hbGotoBookmark( ::aBookMarks[ nIndex ] )
    ENDIF
    RETURN Self
 
@@ -1826,56 +1778,68 @@ METHOD IdeEdit:setNewMark()
          ::aMarkTBtns[ n ]:show()
       ENDIF
 
-      ::qEdit:bookMarks( nBlock )
+      ::qEdit:hbBookMarks( nBlock )
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:duplicateLine()
-   ::qEdit:duplicateLine()
+   ::qEdit:hbDuplicateLine()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:deleteLine()
-   ::qEdit:deleteLine()
+   ::qEdit:hbDeleteLine()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:moveLine( nDirection )
-   ::qEdit:moveLine( nDirection )
+   ::qEdit:hbMoveLine( nDirection )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockComment()
-   ::qEdit:blockComment()
+   ::qEdit:hbBlockComment()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:streamComment()
-   ::qEdit:streamComment()
+   ::qEdit:hbStreamComment()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockIndent( nMode )
-   ::qEdit:blockIndent( nMode )
+   ::qEdit:hbBlockIndent( nMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:caseUpper()
-   ::qEdit:caseUpper()
+   ::qEdit:hbCaseUpper()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:caseLower()
-   ::qEdit:caseLower()
+   ::qEdit:hbCaseLower()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:convertQuotes()
+   ::qEdit:hbConvertQuotes()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:convertDQuotes()
+   ::qEdit:hbConvertDQuotes()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1883,10 +1847,9 @@ METHOD IdeEdit:caseLower()
 METHOD IdeEdit:caseInvert()
    LOCAL i, c, s, cBuffer, nLen
 
-   IF !empty( cBuffer := ::oEM:getSelectedText() )
+   IF !empty( cBuffer := ::getSelectedText() )
       s    := ""
       nLen := len( cBuffer )
-
       FOR i := 1 TO nLen
          c := substr( cBuffer, i, 1 )
          IF isAlpha( c )
@@ -1895,24 +1858,25 @@ METHOD IdeEdit:caseInvert()
             s += c
          ENDIF
       NEXT
-
-      ::qEdit:replaceSelection( s )
+      ::qEdit:hbReplaceSelection( s )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:getText()
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+METHOD IdeEdit:getSelectedText()
+   RETURN ::qEdit:hbGetSelectedText()
 
-   RETURN qCursor:selectedText()
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getText()
+   RETURN QTextCursor():from( ::qEdit:textCursor() ):selectedText()
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getWord( lSelect )
-   LOCAL cText
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL cText, qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    DEFAULT lSelect TO .F.
 
@@ -1922,14 +1886,12 @@ METHOD IdeEdit:getWord( lSelect )
    IF lSelect
       ::qEdit:setTextCursor( qCursor )
    ENDIF
-
    RETURN cText
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getLine( lSelect )
-   LOCAL cText
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL cText, qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    DEFAULT lSelect TO .F.
 
@@ -1944,21 +1906,63 @@ METHOD IdeEdit:getLine( lSelect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:clickFuncHelp()
-   LOCAL cWord
+METHOD IdeEdit:insertSeparator()
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
-   IF !empty( cWord := ::getWord( .f. ) )
-      IF !empty( ::oDocViewDock:qtObject )
-         ::oDocViewDock:qtObject:jumpToFunction( cWord )
-      ENDIF
-   ENDIF
+   qCursor:beginEditBlock()
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:insertBlock()
+   qCursor:movePosition( QTextCursor_PreviousBlock )
+   qCursor:insertText( ::cSeparator )
+   qCursor:movePosition( QTextCursor_NextBlock )
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:endEditBlock()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:insertText( cText )
+   LOCAL qCursor, nL, nB
+
+   IF !Empty( cText )
+      qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+      nL := len( cText )
+      nB := qCursor:position() + nL
+
+      qCursor:beginEditBlock()
+      qCursor:removeSelectedText()
+      qCursor:insertText( cText )
+      qCursor:setPosition( nB )
+      qCursor:endEditBlock()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:gotoFunction()
+   LOCAL cWord
+   IF !empty( cWord := ::getWord( .f. ) )
+      ::oFN:jumpToFunction( cWord, .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:clickFuncHelp()
+   LOCAL cWord
+   IF !empty( cWord := ::getWord( .f. ) )
+      IF ! empty( ::oHL )
+         ::oHL:jumpToFunction( cWord )
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:loadFuncHelp()
-   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol
+   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cProto
 
    qEdit := ::qEdit
 
@@ -1967,13 +1971,13 @@ METHOD IdeEdit:loadFuncHelp()
    cText      := qTextBlock:text()
    nCol       := qCursor:columnNumber()
    cWord      := hbide_getPreviousWord( cText, nCol )
-
    IF !empty( cWord )
-      IF !empty( ::oDocViewDock:qtObject )
-         ::oDocViewDock:qtObject:jumpToFunction( cWord )
+      IF ! empty( ::oHL )
+         ::oHL:jumpToFunction( cWord )
       ENDIF
+      cProto := ::oFN:positionToFunction( cWord, .t. )
+      qEdit:hbShowPrototype( hbide_formatProto( cProto ) )
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2248,4 +2252,21 @@ FUNCTION hbide_isHarbourKeyword( cWord )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_formatProto( cProto )
+   LOCAL n, n1, cArgs
+
+   n  := at( "(", cProto )
+   n1 := at( ")", cProto )
+
+   IF n > 0 .AND. n1 > 0
+      cArgs  := substr( cProto, n + 1, n1 - n - 1 )
+      cArgs  := strtran( cArgs, ",", "<font color=red><b>" + "," + "</b></font>" )
+      cProto := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;
+                   "<font color=red><b>" + "(" + "</b></font>" + ;
+                      cArgs + ;
+                         "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+   ENDIF
+   RETURN cProto
+
+/*----------------------------------------------------------------------*/
 

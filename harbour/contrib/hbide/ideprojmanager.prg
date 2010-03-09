@@ -156,7 +156,6 @@ METHOD IdeProject:new( oIDE, aProps )
 
       ::type           := a_[ E_qPrjType ]
       ::title          := a_[ E_oPrjTtl  ]
-    * ::location       := a_[ E_oPrjLoc  ]
       ::wrkDirectory   := a_[ E_oPrjWrk  ]
       ::destination    := a_[ E_oPrjDst  ]
       ::outputName     := a_[ E_oPrjOut  ]
@@ -231,17 +230,21 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD updateHbp( iIndex )
    METHOD addSources()
 
-   METHOD getProjectsTitleList()
    METHOD setCurrentProject( cProjectName )
-   METHOD getCurrentProject( lAlert )
    METHOD selectCurrentProject()
+
+   METHOD getCurrentProject( lAlert )
    METHOD getProjectProperties( cProjectTitle )
+
    METHOD getProjectByFile( cProjectFile )
+   METHOD getProjectByTitle( cProjectTitle )
+   METHOD getProjectsTitleList()
+
    METHOD getProjectFileNameFromTitle( cProjectTitle )
    METHOD getProjectTypeFromTitle( cProjectTitle )
    METHOD getProjectPathFromTitle( cProjectTitle )
-   METHOD getProjectByTitle( cProjectTitle )
    METHOD getSourcesByProjectTitle( cProjectTitle )
+
    METHOD removeProject( cProjectTitle )
    METHOD closeProject( cProjectTitle )
    METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
@@ -249,7 +252,6 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD launchProject( cProject, cExe )
    METHOD showOutput( cOutput, mp2, oProcess )
    METHOD finished( nExitCode, nExitStatus, oProcess )
-   METHOD loadHbpProject( cHbp )
    METHOD isValidProjectLocation( lTell )
    METHOD setProjectLocation( cPath )
    METHOD buildInterface()
@@ -281,7 +283,7 @@ METHOD IdeProjManager:create( oIDE )
 METHOD IdeProjManager:destroy()
 
    IF !empty( ::oUI )
-      // ::oUI:destroy()
+      ::oUI:destroy()
    ENDIF
 
    RETURN Self
@@ -385,6 +387,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
    LOCAL aPrp := { ;
             "hbide_type="              , ;
             "hbide_title="             , ;
+            "hbide_location="          , ;  // do not pull out this slot
             "hbide_workingfolder="     , ;
             "hbide_destinationfolder=" , ;
             "hbide_output="            , ;
@@ -437,11 +440,11 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_PROPERTIES */
    FOR EACH s IN a3rd
-//hbide_dbg( "3rd     ", s )
       IF ( n := at( "=", s ) ) > 0
-         cKey := alltrim( substr( s, 1, n-1 ) )
-         cVal := alltrim( substr( s, n+1 ) )
-         IF ( n := ascan( aPrp, cKey ) ) > 0
+         cKey := alltrim( substr( s, 1, n ) )
+         cVal := alltrim( substr( s, n + 1 ) )
+
+         IF ( n := ascan( aPrp, {|e| e == cKey } ) ) > 0
             a1_0[ n ] := hbide_amp2space( cVal )
          ENDIF
       ENDIF
@@ -488,60 +491,6 @@ METHOD IdeProjManager:pullHbpData( cHbp )
    ENDIF
 
    RETURN { { a1_0, a1_1 }, { a2_0, a2_1 }, { a3_0, a3_1 }, { a4_0, a4_1 } }
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjManager:loadHbpProject( cHbp )
-   LOCAL aData, aOptns, aFiles, cHome, cOutName, cType, n, s
-
-   IF empty( cHbp ) .OR. !hb_fileExists( cHbp )
-      cHbp := hbide_fetchAFile( ::oDlg, "Selecet Harbour Project File", { { "Harbour Project Files", "*.hbp" } } )
-      IF empty( cHbp )
-         RETURN Self
-      ENDIF
-   ENDIF
-   hb_fNameSplit( cHbp, @cHome, @cOutName )
-   cHome  := hbide_pathStripLastSlash( cHome )
-
-   aData  := hbide_fetchHbpData( cHbp )
-   aOptns := aData[ 1 ]
-   aFiles := aData[ 2 ]
-
-   FOR EACH s IN aFiles
-      s := hbide_stripRoot( cHome, s )
-   NEXT
-
-   IF ( n := ascan( aOptns, {|e| lower( e ) $ "-hbexec,-hblib,-hbdyn" } ) ) > 0
-      cType := lower( aOptns[ n ] )
-   ELSE
-      cType := ""
-   ENDIF
-   /* Basic Parsing is complete , parse paths from keywords */
-   SWITCH cType
-   CASE "-hblib"
-      ::oUI:q_comboPrjType:setCurrentIndex( 1 )
-      EXIT
-   CASE "-hbdyn"
-      ::oUI:q_comboPrjType:setCurrentIndex( 2 )
-      EXIT
-   OTHERWISE
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
-      EXIT
-   ENDSWITCH
-
-   ::oUI:q_editPrjTitle :setText( cOutName )
-   ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( cHome    ) )
-*  ::oUI:q_editWrkFolder:setText( ""       )
-   ::oUI:q_editDstFolder:setText( ""       )  /* To parse -o : but first fix path verification to honor filters */
-*  ::oUI:q_editBackup   :setText( ""       )
-   ::oUI:q_editOutName  :setText( cOutName )
-*  ::oUI:q_editLaunchParams:setText( cParams )
-*  ::oUI:q_editLaunchExe:setText( cRun )
-
-   ::oUI:q_editFlags  :setPlainText( hbide_arrayToMemo( aOptns ) )
-   ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( aFiles ) )
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -725,10 +674,10 @@ METHOD IdeProjManager:fetchProperties()
 METHOD IdeProjManager:buildInterface()
    LOCAL cLukupPng
 
-   ::oUI := HbQtUI():new( ::resPath + "projectpropertiesex.uic", ::oDlg:oWidget ):build()
+   ::oUI := HbQtUI():new( ::resPath + "projectpropertiesex.uic" ):build()
 
    ::oPropertiesDock:oWidget:setWidget( ::oUI )
-   ::oPropertiesDock:qtObject := ::oUI
+   //::oPropertiesDock:qtObject := ::oUI
 
    ::oUI:q_comboPrjType:addItem( "Executable" )
    ::oUI:q_comboPrjType:addItem( "Library"    )
@@ -994,16 +943,15 @@ METHOD IdeProjManager:selectCurrentProject()
 
    oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.uic", ::oDlg:oWidget ):build()
 
- * Fill ComboBox with current project names
    FOR EACH p IN ::aProjects
       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
          oDlg:qObj[ "cbProjects" ]:addItem( t )
       ENDIF
    NEXT
 
-   oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:close() } )
+   oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:done( 1 ) } )
    oDlg:signal( "btnOk"    , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
-                                                                                       oDlg:oWidget:close() } )
+                                                                                             oDlg:done( 1 ) } )
    oDlg:exec()
    oDlg:destroy()
    oDlg := NIL
@@ -1398,7 +1346,7 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ENDIF
 
    IF !hb_FileExists( cTargetFN )
-      cTmp := "Launch application error: file not found " + cTargetFN + "!"
+      cTmp := "Launch error: file not found - " + cTargetFN
 
    ELSEIF oProject:type == "Executable"
       cTmp := "Launching application [ " + cTargetFN + " ]"
@@ -1433,3 +1381,4 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

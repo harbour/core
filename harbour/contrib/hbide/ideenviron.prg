@@ -204,8 +204,7 @@ METHOD IdeEnvironments:prepareBatch( cEnvName )
 METHOD IdeEnvironments:show()
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "environments" ), ::oEnvironDock:oWidget ):build()
-      ::oEnvironDock:qtObject := Self //::oUI
+      ::oUI := HbQtUI():new( hbide_uic( "environments" ) ):build()
       ::oEnvironDock:oWidget:setWidget( ::oUI )
 
       ::oUI:q_buttonPathMk2:setIcon( hbide_image( "folder" ) )

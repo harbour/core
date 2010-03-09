@@ -92,6 +92,7 @@ CLASS IdeObject
    ACCESS oEV                                     INLINE ::oIde:oEV
    ACCESS oHL                                     INLINE ::oIde:oHL
    ACCESS oHM                                     INLINE ::oIde:oHM
+   ACCESS oFN                                     INLINE ::oIde:oFN
 
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
@@ -175,6 +176,7 @@ CLASS IdeObject
    ACCESS oEnvironDock                            INLINE ::oIde:oEnvironDock
    ACCESS oSearchReplace                          INLINE ::oIde:oSearchReplace
    ACCESS oDocViewDock                            INLINE ::oIde:oDocViewDock
+   ACCESS oFunctionsDock                          INLINE ::oIde:oFunctionsDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

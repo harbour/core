@@ -171,7 +171,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD create( oIde )
    METHOD show()
    METHOD destroy()
-   METHOD destroyTrees()
+   METHOD clear()
 
    METHOD execEvent( nMode, p, p1 )
 
@@ -240,7 +240,7 @@ METHOD IdeHarbourHelp:show()
 METHOD IdeHarbourHelp:destroy()
 
    IF !empty( ::oUI )
-      ::destroyTrees()
+      ::clear()
 
       ::oUI:destroy()
    ENDIF
@@ -249,10 +249,10 @@ METHOD IdeHarbourHelp:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:destroyTrees()
+METHOD IdeHarbourHelp:clear()
    LOCAL a_
 
-   ::disconnect( ::oUI:q_treeDoc, "itemSelectionChanged()" )
+   ::disconnect( ::oUI:q_treeDoc     , "itemSelectionChanged()" )
    ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
 
    ::aHistory    := {}
@@ -308,6 +308,8 @@ METHOD IdeHarbourHelp:destroyTrees()
       ENDIF
    NEXT
    ::aCategory := {}
+
+   ::oUI:q_treeDoc:clear()
 
    RETURN Self
 
@@ -593,8 +595,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
    ::showApplicationCursor( Qt_BusyCursor )
 
    /* Clean Environment */
-   ::destroyTrees()
-   ::oUI:q_treeDoc:clear()
+   ::clear()
    //
    ::connect( ::oUI:q_treeDoc     , "itemSelectionChanged()" , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
    ::connect( ::oUI:q_treeCategory, "itemSelectionChanged()" , {| | ::execEvent( treeCategory_itemSelectionChanged ) } )

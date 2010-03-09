@@ -113,7 +113,7 @@ METHOD IdeSearchReplace:create( oIde )
    ::oDlg:addChild( ::oXbp )
    ::oXbp:qtObject := ::oUI
    #else
-   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
+   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic" ):build()
    #endif
 
    ::oUI:setFocusPolicy( Qt_StrongFocus )
@@ -613,13 +613,28 @@ METHOD IdeFindInFiles:create( oIde, lShowOnCreate )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeFindInFiles:destroy()
+   LOCAL qItem
+
+   IF !empty( ::oUI )
+      ::disconnect( ::oUI:oWidget, "rejected()" )
+
+      FOR EACH qItem IN ::aItems
+         qItem := NIL
+      NEXT
+
+      ::oUI:destroy()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeFindInFiles:buildUI()
    LOCAL cText, qLineEdit, aProjList, cProj, qItem, n
 
-   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfilesex.uic", ::oFindDock:oWidget ):build()
-   ::oUI:hide()
+   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfilesex.uic" ):build()
 
-   ::oFindDock:qtObject := ::oUI
    ::oFindDock:oWidget:setWidget( ::oUI )
 
    ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
@@ -858,21 +873,6 @@ METHOD IdeFindInFiles:execContextMenu( p )
             EXIT
          ENDSWITCH
       ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeFindInFiles:destroy()
-   LOCAL qItem
-
-   IF !empty( ::oUI )
-      ::disconnect( ::oUI:oWidget, "rejected()" )
-
-      FOR EACH qItem IN ::aItems
-         qItem := NIL
-      NEXT
    ENDIF
 
    RETURN Self

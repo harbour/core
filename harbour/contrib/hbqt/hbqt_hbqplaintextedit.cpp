@@ -77,22 +77,22 @@
 
 HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent )
 {
-   spaces            = 3;
-   spacesTab         = "";
-   styleHightlighter = "prg";
-   numberBlock       = true;
-   lineNumberArea    = new LineNumberArea( this );
-
-   columnBegins      = -1;
-   columnEnds        = -1;
+   spaces                   = 3;
+   spacesTab                = "";
+   styleHightlighter        = "prg";
+   numberBlock              = true;
+   lineNumberArea           = new LineNumberArea( this );
+   isTipActive              = false;
+   columnBegins             = -1;
+   columnEnds               = -1;
    isColumnSelectionEnabled = false;
 
-   connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( updateLineNumberAreaWidth( int ) ) );
-   connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( updateLineNumberArea( const QRect &, int ) ) );
+   connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
+   connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
 
-   updateLineNumberAreaWidth( 0 );
+   hbUpdateLineNumberAreaWidth( 0 );
 
-   connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( slotCursorPositionChanged() ) );
+   connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbSlotCursorPositionChanged() ) );
 
    m_currentLineColor.setNamedColor( "#e8e8ff" );
 }
@@ -115,11 +115,26 @@ void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
       block = hb_itemNew( pBlock );
 }
 
+void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
+{
+   if( tip == ( QString ) "" )
+   {
+      QToolTip::hideText();
+      isTipActive = false;
+   }
+   else
+   {
+      QRect r = HBQPlainTextEdit::cursorRect();
+      QToolTip::showText( mapToGlobal( QPoint( r.x(), r.y() ) ), tip );
+      isTipActive = true;
+   }
+}
+
 bool HBQPlainTextEdit::event( QEvent *event )
 {
    if( event->type() == QEvent::KeyPress )
    {
-      QKeyEvent *keyEvent =( QKeyEvent * )event;
+      QKeyEvent *keyEvent = ( QKeyEvent * ) event;
       if( ( keyEvent->key() == Qt::Key_Tab ) && ( keyEvent->modifiers() & Qt::ControlModifier ) )
       {
          return false;
@@ -128,16 +143,30 @@ bool HBQPlainTextEdit::event( QEvent *event )
       {
          if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) )
          {
-            this->insertTab( 0 );
+            this->hbInsertTab( 0 );
             return true;
          }
          else if( ( keyEvent->key() == Qt::Key_Backtab ) && ( keyEvent->modifiers() & Qt::ShiftModifier ) )
          {
-            this->insertTab( 1 );
+            this->hbInsertTab( 1 );
             return true;
          }
       }
    }
+   else if( event->type() == QEvent::ToolTip )
+   {
+      event->ignore();
+      #if 0
+      QHelpEvent * helpEvent = static_cast<QHelpEvent *>( event );
+
+      if( helpEvent && isTipActive )
+      {
+         event->ignore();
+      }
+      #endif
+      return false;//true;
+   }
+
    return QPlainTextEdit::event( event );
 }
 
@@ -188,7 +217,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
       else if( highlightCurLine == true )
          painter.fillRect( r, QBrush( m_currentLineColor ) );
    }
-   this->paintColumnSelection( event );
+   this->hbPaintColumnSelection( event );
 
    painter.end();
    QPlainTextEdit::paintEvent( event );
@@ -243,11 +272,11 @@ void HBQPlainTextEdit::resizeEvent( QResizeEvent *e )
    QPlainTextEdit::resizeEvent( e );
 
    QRect cr = contentsRect();
-   lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), lineNumberAreaWidth(), cr.height() ) );
+   lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), hbLineNumberAreaWidth(), cr.height() ) );
 }
 
 
-void HBQPlainTextEdit::bookmarks( int block )
+void HBQPlainTextEdit::hbBookmarks( int block )
 {
    int found = bookMark.indexOf( block );
    if( found == -1 )
@@ -277,7 +306,7 @@ void HBQPlainTextEdit::bookmarks( int block )
    update();
 }
 
-void HBQPlainTextEdit::gotoBookmark( int block )
+void HBQPlainTextEdit::hbGotoBookmark( int block )
 {
    if( bookMarksGoto.size() > 0 )
    {
@@ -294,7 +323,7 @@ void HBQPlainTextEdit::gotoBookmark( int block )
    }
 }
 
-void HBQPlainTextEdit::nextBookmark( int block )
+void HBQPlainTextEdit::hbNextBookmark( int block )
 {
    if( bookMark.count() > 0 )
    {
@@ -312,7 +341,7 @@ void HBQPlainTextEdit::nextBookmark( int block )
    }
 }
 
-void HBQPlainTextEdit::prevBookmark( int block )
+void HBQPlainTextEdit::hbPrevBookmark( int block )
 {
    if( bookMark.count() > 0 )
    {
@@ -333,28 +362,28 @@ void HBQPlainTextEdit::prevBookmark( int block )
    }
 }
 
-void HBQPlainTextEdit::numberBlockVisible( bool b )
+void HBQPlainTextEdit::hbNumberBlockVisible( bool b )
 {
    numberBlock = b;
    if( b )
    {
       lineNumberArea->show();
-      updateLineNumberAreaWidth( lineNumberAreaWidth() );
+      hbUpdateLineNumberAreaWidth( hbLineNumberAreaWidth() );
    }
    else
    {
       lineNumberArea->hide();
-      updateLineNumberAreaWidth( 0 );
+      hbUpdateLineNumberAreaWidth( 0 );
    }
    update();
 }
 
-bool HBQPlainTextEdit::numberBlockVisible()
+bool HBQPlainTextEdit::hbNumberBlockVisible()
 {
    return numberBlock;
 }
 
-int HBQPlainTextEdit::lineNumberAreaWidth()
+int HBQPlainTextEdit::hbLineNumberAreaWidth()
 {
    int digits = 1;
    int max = qMax( 1, blockCount() );
@@ -367,11 +396,11 @@ int HBQPlainTextEdit::lineNumberAreaWidth()
    return space;
 }
 
-void HBQPlainTextEdit::updateLineNumberAreaWidth( int )
+void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 {
    if( numberBlock )
    {
-      setViewportMargins( lineNumberAreaWidth(), 0, 0, 0 );
+      setViewportMargins( hbLineNumberAreaWidth(), 0, 0, 0 );
    }
    else
    {
@@ -379,7 +408,7 @@ void HBQPlainTextEdit::updateLineNumberAreaWidth( int )
    }
 }
 
-void HBQPlainTextEdit::updateLineNumberArea( const QRect &rect, int dy )
+void HBQPlainTextEdit::hbUpdateLineNumberArea( const QRect &rect, int dy )
 {
    if( dy )
       lineNumberArea->scroll( 0, dy );
@@ -387,10 +416,12 @@ void HBQPlainTextEdit::updateLineNumberArea( const QRect &rect, int dy )
       lineNumberArea->update( 0, rect.y(), lineNumberArea->width(), rect.height() );
 
    if( rect.contains( viewport()->rect() ) )
-      updateLineNumberAreaWidth( 0 );
+   {
+      hbUpdateLineNumberAreaWidth( 0 );
+   }
 }
 
-void HBQPlainTextEdit::setSpaces( int newSpaces )
+void HBQPlainTextEdit::hbSetSpaces( int newSpaces )
 {
    spaces = newSpaces;
    spacesTab = "";
@@ -407,7 +438,7 @@ void HBQPlainTextEdit::setSpaces( int newSpaces )
    }
 }
 
-int HBQPlainTextEdit::getIndex( const QTextCursor &crQTextCursor )
+int HBQPlainTextEdit::hbGetIndex( const QTextCursor &crQTextCursor )
 {
    QTextBlock b;
    int column = 1;
@@ -416,7 +447,7 @@ int HBQPlainTextEdit::getIndex( const QTextCursor &crQTextCursor )
    return column;
 }
 
-int HBQPlainTextEdit::getLine( const QTextCursor &crQTextCursor )
+int HBQPlainTextEdit::hbGetLine( const QTextCursor &crQTextCursor )
 {
    QTextBlock b,cb;
    int line = 1;
@@ -425,27 +456,26 @@ int HBQPlainTextEdit::getLine( const QTextCursor &crQTextCursor )
    {
       if( b==cb )
          return line;
-
       line++;
    }
    return line;
 }
 
-void HBQPlainTextEdit::slotCursorPositionChanged()
+void HBQPlainTextEdit::hbSlotCursorPositionChanged()
 {
    if( m_currentLineColor.isValid() )
       viewport()->update();
 
    if( styleHightlighter != "none" )
-      braceHighlight();
+      hbBraceHighlight();
 }
 
-void HBQPlainTextEdit::setStyleHightlighter( const QString &style )
+void HBQPlainTextEdit::hbSetStyleHightlighter( const QString &style )
 {
    styleHightlighter = style;
 }
 
-void HBQPlainTextEdit::showHighlighter( const QString &style, bool b )
+void HBQPlainTextEdit::hbShowHighlighter( const QString &style, bool b )
 {
    if( b )
    {
@@ -464,7 +494,7 @@ void HBQPlainTextEdit::showHighlighter( const QString &style, bool b )
    styleHightlighter = style;
 }
 
-void HBQPlainTextEdit::escapeQuotes()
+void HBQPlainTextEdit::hbEscapeQuotes()
 {
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
@@ -475,7 +505,7 @@ void HBQPlainTextEdit::escapeQuotes()
    insertPlainText( txt );
 }
 
-void HBQPlainTextEdit::escapeDQuotes()
+void HBQPlainTextEdit::hbEscapeDQuotes()
 {
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
@@ -486,7 +516,7 @@ void HBQPlainTextEdit::escapeDQuotes()
    insertPlainText( txt );
 }
 
-void HBQPlainTextEdit::unescapeQuotes()
+void HBQPlainTextEdit::hbUnescapeQuotes()
 {
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
@@ -497,7 +527,7 @@ void HBQPlainTextEdit::unescapeQuotes()
    insertPlainText( txt );
 }
 
-void HBQPlainTextEdit::unescapeDQuotes()
+void HBQPlainTextEdit::hbUnescapeDQuotes()
 {
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
@@ -508,7 +538,7 @@ void HBQPlainTextEdit::unescapeDQuotes()
    insertPlainText( txt );
 }
 
-void HBQPlainTextEdit::caseUpper()
+void HBQPlainTextEdit::hbCaseUpper()
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -527,7 +557,7 @@ void HBQPlainTextEdit::caseUpper()
    setTextCursor( cursor );
 }
 
-void HBQPlainTextEdit::caseLower()
+void HBQPlainTextEdit::hbCaseLower()
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -546,7 +576,7 @@ void HBQPlainTextEdit::caseLower()
    setTextCursor( cursor );
 }
 
-void HBQPlainTextEdit::convertQuotes()
+void HBQPlainTextEdit::hbConvertQuotes()
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -565,7 +595,7 @@ void HBQPlainTextEdit::convertQuotes()
    setTextCursor( cursor );
 }
 
-void HBQPlainTextEdit::convertDQuotes()
+void HBQPlainTextEdit::hbConvertDQuotes()
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -584,7 +614,7 @@ void HBQPlainTextEdit::convertDQuotes()
    setTextCursor( cursor );
 }
 
-void HBQPlainTextEdit::replaceSelection( const QString & txt )
+void HBQPlainTextEdit::hbReplaceSelection( const QString & txt )
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -602,7 +632,7 @@ void HBQPlainTextEdit::replaceSelection( const QString & txt )
    setTextCursor( cursor );
 }
 
-void HBQPlainTextEdit::streamComment()
+void HBQPlainTextEdit::hbStreamComment()
 {
    QTextCursor cursor = textCursor();
    QString selTxt( cursor.selectedText() );
@@ -621,7 +651,7 @@ void HBQPlainTextEdit::streamComment()
    setTextCursor( cursor );
 }
 
-QString HBQPlainTextEdit::getSelectedText()
+QString HBQPlainTextEdit::hbGetSelectedText()
 {
    QTextCursor cursor( textCursor() );
    QString selTxt( cursor.selectedText() );
@@ -632,7 +662,7 @@ QString HBQPlainTextEdit::getSelectedText()
    return txt;
 }
 
-void HBQPlainTextEdit::paintColumnSelection( QPaintEvent * event )
+void HBQPlainTextEdit::hbPaintColumnSelection( QPaintEvent * event )
 {
    QTextCursor c = textCursor();
 
@@ -667,7 +697,7 @@ void HBQPlainTextEdit::paintColumnSelection( QPaintEvent * event )
    }
 }
 
-void HBQPlainTextEdit::highlightSelectedColumns( bool yes )
+void HBQPlainTextEdit::hbHighlightSelectedColumns( bool yes )
 {
    if( yes )
    {
@@ -690,7 +720,7 @@ void HBQPlainTextEdit::highlightSelectedColumns( bool yes )
    update();
 }
 
-void HBQPlainTextEdit::insertTab( int mode )
+void HBQPlainTextEdit::hbInsertTab( int mode )
 {
    QTextCursor cursor = textCursor();
    QTextCursor c( cursor );
@@ -711,7 +741,7 @@ void HBQPlainTextEdit::insertTab( int mode )
    setTextCursor( c );
 }
 
-void HBQPlainTextEdit::moveLine( int iDirection )
+void HBQPlainTextEdit::hbMoveLine( int iDirection )
 {
    QTextCursor cursor = textCursor();
    QTextCursor c = cursor;
@@ -756,7 +786,7 @@ void HBQPlainTextEdit::moveLine( int iDirection )
    setTextCursor( c );
 }
 
-void HBQPlainTextEdit::deleteLine()
+void HBQPlainTextEdit::hbDeleteLine()
 {
    QTextCursor cursor = textCursor();
    QTextCursor c = cursor;
@@ -775,7 +805,7 @@ void HBQPlainTextEdit::deleteLine()
    setTextCursor( c );
 }
 
-void HBQPlainTextEdit::blockIndent( int steps )
+void HBQPlainTextEdit::hbBlockIndent( int steps )
 {
    QTextCursor cursor = textCursor();
 
@@ -825,7 +855,7 @@ void HBQPlainTextEdit::blockIndent( int steps )
    }
 }
 
-void HBQPlainTextEdit::blockComment()
+void HBQPlainTextEdit::hbBlockComment()
 {
    QTextCursor cursor = textCursor();
    QTextCursor c = cursor;
@@ -863,7 +893,7 @@ void HBQPlainTextEdit::blockComment()
    setTextCursor( c );
 }
 
-void HBQPlainTextEdit::duplicateLine()
+void HBQPlainTextEdit::hbDuplicateLine()
 {
    QTextCursor cursor = textCursor();
    QTextCursor c = cursor;
@@ -876,7 +906,7 @@ void HBQPlainTextEdit::duplicateLine()
    setTextCursor( c );
 }
 
-void HBQPlainTextEdit::braceHighlight()
+void HBQPlainTextEdit::hbBraceHighlight()
 {
    extraSelections.clear();
    setExtraSelections( extraSelections );

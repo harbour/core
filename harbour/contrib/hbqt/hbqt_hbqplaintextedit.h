@@ -63,6 +63,7 @@
 #include <QTextBlock>
 #include <QPainter>
 #include <QMessageBox>
+#include <QToolTip>
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
@@ -87,21 +88,21 @@ public:
    HBQSyntaxHighlighter * highlighter;
 
    QString        styleHightlighter;
-   void           setStyleHightlighter( const QString & style );
-   QString        getStyleHightlighter()         { return styleHightlighter; }
-   void           showHighlighter( const QString & style, bool b );
+   void           hbSetStyleHightlighter( const QString & style );
+   QString        hbGetStyleHightlighter()         { return styleHightlighter; }
+   void           hbShowHighlighter( const QString & style, bool b );
 
-   int            getIndex( const QTextCursor &crQTextCursor );
-   int            getLine( const QTextCursor &crQTextCursor );
-   int            lineNumberAreaWidth();
-   int            getSpaces()                    { return spaces; }
-   void           setSpaces( int newSpaces );
-   void           bookmarks( int block );
-   void           nextBookmark( int block );
-   void           prevBookmark( int block );
-   void           gotoBookmark( int block );
-   void           highlightCurrentLine( bool b ) { highlightCurLine = b; }
-   bool           highlightCurrentLine()         { return highlightCurLine; }
+   int            hbGetIndex( const QTextCursor &crQTextCursor );
+   int            hbGetLine( const QTextCursor &crQTextCursor );
+   int            hbLineNumberAreaWidth();
+   int            hbGetSpaces()                    { return spaces; }
+   void           hbSetSpaces( int newSpaces );
+   void           hbBookmarks( int block );
+   void           hbNextBookmark( int block );
+   void           hbPrevBookmark( int block );
+   void           hbGotoBookmark( int block );
+   void           hbHighlightCurrentLine( bool b ) { highlightCurLine = b; }
+   bool           hbHighlightCurrentLine()         { return highlightCurLine; }
    void           hbSetEventBlock( PHB_ITEM pBlock );
 
 private:
@@ -116,11 +117,12 @@ private:
    int            posClose;
    QList<QTextEdit::ExtraSelection> extraSelections;
    QTextEdit::ExtraSelection selection;
-   void           braceHighlight();
+   void           hbBraceHighlight();
 
    int            columnBegins;
    int            columnEnds;
    bool           isColumnSelectionEnabled;
+   bool           isTipActive;
 
 protected:
    bool           event( QEvent * event );
@@ -132,32 +134,33 @@ protected:
    #endif
 
 public slots:
-   void           updateLineNumberAreaWidth( int newBlockCount );
-   void           caseUpper();
-   void           caseLower();
-   void           escapeQuotes();
-   void           escapeDQuotes();
-   void           unescapeQuotes();
-   void           unescapeDQuotes();
-   void           convertQuotes();
-   void           convertDQuotes();
-   void           deleteLine();
-   void           moveLine( int iDirection );
-   void           blockIndent( int steps );
-   void           blockComment();
-   void           streamComment();
-   void           duplicateLine();
-   void           replaceSelection( const QString & txt );
-   void           insertTab( int mode );
-   void           highlightSelectedColumns( bool yes );
-   QString        getSelectedText();
-   void           numberBlockVisible( bool b );
-   bool           numberBlockVisible();
+   void           hbUpdateLineNumberAreaWidth( int newBlockCount );
+   void           hbCaseUpper();
+   void           hbCaseLower();
+   void           hbEscapeQuotes();
+   void           hbEscapeDQuotes();
+   void           hbUnescapeQuotes();
+   void           hbUnescapeDQuotes();
+   void           hbConvertQuotes();
+   void           hbConvertDQuotes();
+   void           hbDeleteLine();
+   void           hbMoveLine( int iDirection );
+   void           hbBlockIndent( int steps );
+   void           hbBlockComment();
+   void           hbStreamComment();
+   void           hbDuplicateLine();
+   void           hbReplaceSelection( const QString & txt );
+   void           hbInsertTab( int mode );
+   void           hbHighlightSelectedColumns( bool yes );
+   QString        hbGetSelectedText();
+   void           hbNumberBlockVisible( bool b );
+   bool           hbNumberBlockVisible();
+   void           hbShowPrototype( const QString & tip );
 
 private slots:
-   void           slotCursorPositionChanged();
-   void           updateLineNumberArea( const QRect &, int );
-   void           paintColumnSelection( QPaintEvent * );
+   void           hbSlotCursorPositionChanged();
+   void           hbUpdateLineNumberArea( const QRect &, int );
+   void           hbPaintColumnSelection( QPaintEvent * );
 };
 
 
@@ -172,7 +175,7 @@ public:
 protected:
    QSize sizeHint() const
    {
-       return QSize( codeEditor->lineNumberAreaWidth(), 0 );
+       return QSize( codeEditor->hbLineNumberAreaWidth(), 0 );
    }
 
 private:

@@ -146,6 +146,7 @@
 #define SB_PNL_ENVIRON                            12
 #define SB_PNL_VIEW                               13
 #define SB_PNL_PROJECT                            14
+#define SB_PNL_THEME                              15
 
 #define TAB_OTAB                                  1
 #define TAB_OEDITOR                               2

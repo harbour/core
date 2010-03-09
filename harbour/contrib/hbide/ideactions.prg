@@ -304,7 +304,8 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "MoveLineUp"           , "Move Line Up"                 , "movelineup"     , "Sh+^Up", "No", "Yes" } )
    aadd( aAct, { "MoveLineDown"         , "Move Line Down"               , "movelinedown"   , "Sh+^Down", "No", "Yes" } )
 
-   aadd( aAct, { "Environments"         , "Environments..."              , "Envconfig"      , ""     , "No", "Yes" } )
+   aadd( aAct, { "Environments"         , "Environments..."              , "envconfig"      , ""     , "No", "Yes" } )
+   aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -587,25 +588,25 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
-   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()             )
-   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()             )
-   oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
+   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
+   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()         )
    oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()         )
    oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
    oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addAction_4( ::oFunctionsDock:oWidget:toggleViewAction()  )
    oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction()    )
    oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction()     )
    oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()     )
    oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()       )
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction() )
- * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction() )
- * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()  )
+   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()         )
+ * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()         )
+ * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()          )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */

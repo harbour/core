@@ -155,107 +155,107 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
 }
 
 /*
- * int            getIndex( const QTextCursor & crQTextCursor)
+ * int            hbGetIndex( const QTextCursor & crQTextCursor)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_GETINDEX )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETINDEX )
 {
-   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->getIndex( *hbqt_par_QTextCursor( 2 ) ) );
+   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->hbGetIndex( *hbqt_par_QTextCursor( 2 ) ) );
 }
 
 /*
- * int            getLine( const QTextCursor & crQTextCursor)
+ * int            hbGetLine( const QTextCursor & crQTextCursor)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_GETLINE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETLINE )
 {
-   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->getLine( *hbqt_par_QTextCursor( 2 ) ) );
+   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->hbGetLine( *hbqt_par_QTextCursor( 2 ) ) );
 }
 
 /*
- * int            lineNumberAreaWidth()
+ * int            hbLineNumberAreaWidth()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_LINENUMBERAREAWIDTH )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBLINENUMBERAREAWIDTH )
 {
-   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->lineNumberAreaWidth() );
+   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->hbLineNumberAreaWidth() );
 }
 
 /*
- * int            getSpaces()
+ * int            hbGetSpaces()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_GETSPACES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSPACES )
 {
-   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->getSpaces() );
+   hb_retni( hbqt_par_HBQPlainTextEdit( 1 )->hbGetSpaces() );
 }
 
 /*
- * void           setSpaces(int newSpaces)
+ * void           hbSetSpaces(int newSpaces)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_SETSPACES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSPACES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->setSpaces( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbSetSpaces( hb_parni( 2 ) );
 }
 
 /*
- * void           bookmarks(int block)
+ * void           hbBookmarks(int block)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_BOOKMARKS )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBBOOKMARKS )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->bookmarks( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbBookmarks( hb_parni( 2 ) );
 }
 
 /*
- * void           nextBookmark(int block)
+ * void           hbNextBookmark(int block)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_NEXTBOOKMARK )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBNEXTBOOKMARK )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->nextBookmark( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbNextBookmark( hb_parni( 2 ) );
 }
 
 /*
- * void           prevBookmark(int block)
+ * void           hbPrevBookmark(int block)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_PREVBOOKMARK )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBPREVBOOKMARK )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->prevBookmark( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbPrevBookmark( hb_parni( 2 ) );
 }
 
 /*
- * void           gotoBookmark(int block)
+ * void           hbGotoBookmark(int block)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_GOTOBOOKMARK )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGOTOBOOKMARK )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->gotoBookmark( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbGotoBookmark( hb_parni( 2 ) );
 }
 
 /*
- * void           numberBlockVisible(bool b)
+ * void           hbNumberBlockVisible(bool b)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_NUMBERBLOCKVISIBLE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBNUMBERBLOCKVISIBLE )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->numberBlockVisible( hb_parl( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbNumberBlockVisible( hb_parl( 2 ) );
 }
 
 /*
- * bool           numberBlockVisible()
+ * bool           hbNumberBlockVisible()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_NUMBERBLOCKVISIBLE_1 )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBNUMBERBLOCKVISIBLE_1 )
 {
-   hb_retl( hbqt_par_HBQPlainTextEdit( 1 )->numberBlockVisible() );
+   hb_retl( hbqt_par_HBQPlainTextEdit( 1 )->hbNumberBlockVisible() );
 }
 
 /*
- * void           highlightCurrentLine(bool b)
+ * void           hbHighlightCurrentLine(bool b)
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_HIGHLIGHTCURRENTLINE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTCURRENTLINE )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->highlightCurrentLine( hb_parl( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbHighlightCurrentLine( hb_parl( 2 ) );
 }
 
 /*
- * bool           highlightCurrentLine()
+ * bool           hbHighlightCurrentLine()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_HIGHLIGHTCURRENTLINE_1 )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTCURRENTLINE_1 )
 {
-   hb_retl( hbqt_par_HBQPlainTextEdit( 1 )->highlightCurrentLine() );
+   hb_retl( hbqt_par_HBQPlainTextEdit( 1 )->hbHighlightCurrentLine() );
 }
 
 /*
@@ -267,147 +267,155 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETEVENTBLOCK )
 }
 
 /*
- * void           updateLineNumberAreaWidth( int newBlockCount )
+ * void           hbUpdateLineNumberAreaWidth( int newBlockCount )
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_UPDATELINENUMBERAREAWIDTH )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBUPDATELINENUMBERAREAWIDTH )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->updateLineNumberAreaWidth( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbUpdateLineNumberAreaWidth( hb_parni( 2 ) );
 }
 
 /*
- * void           caseUpper()
+ * void           hbCaseUpper()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_CASEUPPER )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCASEUPPER )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->caseUpper();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbCaseUpper();
 }
 
 /*
- * void           caseLower()
+ * void           hbCaseLower()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_CASELOWER )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCASELOWER )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->caseLower();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbCaseLower();
 }
 
 /*
- * void           escapeQuotes()
+ * void           hbEscapeQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_ESCAPEQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBESCAPEQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->escapeQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbEscapeQuotes();
 }
 
 /*
- * void           escapeDQuotes()
+ * void           hbEscapeDQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_ESCAPEDQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBESCAPEDQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->escapeDQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbEscapeDQuotes();
 }
 
 /*
- * void           unescapeQuotes()
+ * void           hbUnescapeQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_UNESCAPEQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBUNESCAPEQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->unescapeQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbUnescapeQuotes();
 }
 
 /*
- * void           unescapeDQuotes()
+ * void           hbUnescapeDQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_UNESCAPEDQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBUNESCAPEDQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->unescapeDQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbUnescapeDQuotes();
 }
 
 /*
- * void           convertQuotes()
+ * void           hbConvertQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_CONVERTQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCONVERTQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->convertQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbConvertQuotes();
 }
 
 /*
- * void           convertDQuotes()
+ * void           hbConvertDQuotes()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_CONVERTDQUOTES )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCONVERTDQUOTES )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->convertDQuotes();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbConvertDQuotes();
 }
 
 /*
- * void           blockComment()
+ * void           hbBlockComment()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_BLOCKCOMMENT )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBBLOCKCOMMENT )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->blockComment();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbBlockComment();
 }
 
 /*
- * void           streamComment()
+ * void           hbStreamComment()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_STREAMCOMMENT )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSTREAMCOMMENT )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->streamComment();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbStreamComment();
 }
 
 /*
- * void           duplicateLine()
+ * void           hbDuplicateLine()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_DUPLICATELINE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBDUPLICATELINE )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->duplicateLine();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbDuplicateLine();
 }
 
 /*
- * void           replaceSelection( const QString & txt )
+ * void           hbReplaceSelection( const QString & txt )
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_REPLACESELECTION )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBREPLACESELECTION )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->replaceSelection( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbReplaceSelection( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 /*
- * void           blockIndent( int steps )
+ * void           hbBlockIndent( int steps )
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_BLOCKINDENT )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBBLOCKINDENT )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->blockIndent( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbBlockIndent( hb_parni( 2 ) );
 }
 
 /*
- * void           deleteLine()
+ * void           hbDeleteLine()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_DELETELINE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBDELETELINE )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->deleteLine();
+   hbqt_par_HBQPlainTextEdit( 1 )->hbDeleteLine();
 }
 
 /*
- * void           moveLine( int iDirection )
+ * void           hbMoveLine( int iDirection )
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_MOVELINE )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBMOVELINE )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->moveLine( hb_parni( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbMoveLine( hb_parni( 2 ) );
 }
 
 /*
- * void           highlightSelectedColumns( bool yes )
+ * void           hbHighlightSelectedColumns( bool yes )
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_HIGHLIGHTSELECTEDCOLUMNS )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTSELECTEDCOLUMNS )
 {
-   hbqt_par_HBQPlainTextEdit( 1 )->highlightSelectedColumns( hb_parl( 2 ) );
+   hbqt_par_HBQPlainTextEdit( 1 )->hbHighlightSelectedColumns( hb_parl( 2 ) );
 }
 
 /*
- * QString        getSelectedText()
+ * QString        hbGetSelectedText()
  */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_GETSELECTEDTEXT )
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTEDTEXT )
 {
-   hb_retc( hbqt_par_HBQPlainTextEdit( 1 )->getSelectedText().toAscii().data() );
+   hb_retc( hbqt_par_HBQPlainTextEdit( 1 )->hbGetSelectedText().toAscii().data() );
+}
+
+/*
+ * void           hbShowPrototype( const QString & tip )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSHOWPROTOTYPE )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
 }
 
 

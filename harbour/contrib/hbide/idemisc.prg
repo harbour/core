@@ -1944,35 +1944,35 @@ PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION FN_DirGet( cFileName )
+FUNCTION FN_DirGet( cFileName )
    LOCAL cDir
 
    hb_FNameSplit( cFileName, @cDir )
 
    RETURN cDir
 
-STATIC FUNCTION FN_NameGet( cFileName )
+FUNCTION FN_NameGet( cFileName )
    LOCAL cName
 
    hb_FNameSplit( cFileName,, @cName )
 
    RETURN cName
 
-STATIC FUNCTION FN_NameExtGet( cFileName )
+FUNCTION FN_NameExtGet( cFileName )
    LOCAL cName, cExt
 
    hb_FNameSplit( cFileName,, @cName, @cExt )
 
    RETURN hb_FNameMerge( NIL, cName, cExt )
 
-STATIC FUNCTION FN_ExtGet( cFileName )
+FUNCTION FN_ExtGet( cFileName )
    LOCAL cExt
 
    hb_FNameSplit( cFileName,,, @cExt )
 
    RETURN cExt
 
-STATIC FUNCTION FN_ExtDef( cFileName, cDefExt )
+FUNCTION FN_ExtDef( cFileName, cDefExt )
    LOCAL cDir, cName, cExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
@@ -1982,14 +1982,14 @@ STATIC FUNCTION FN_ExtDef( cFileName, cDefExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
-STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+FUNCTION FN_ExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
-STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
+FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
    LOCAL cDir, cName, cExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )

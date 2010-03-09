@@ -522,6 +522,38 @@ STATIC FUNCTION hbide_getFaqs()
              'list on top-toolbar and providing a name in the editing dialog. For this reason you will never ' + ;
              'need to exit hbIDE and reenter again. It is a big productivity boost.' )
 
+   aadd( a_, 'Does hbIDE allows to compile a project for different compilers and/or environments ?' )
+   aadd( b_, 'Yes. Infact this feature had been the one of the main reasons of hbIDEs existance. ' + ;
+             'All you have to do is to enter different environment settings in _ONE_ hbide.env file which ' + ;
+             'resides alongside hbide.ini. hbIDE provides the interface to manipulate this .env settings ' + ;
+             'which can be invoked from right-toolbar icon "Compiler Environments". Follow the input fields. ' + ;
+             'A template is provided in "resources/hbide.env", inspect it and you are through. Once hbide.env ' + ;
+             'is ready, you will simply need to switch over the other environment which can be invoked ' + ;
+             'via right-click on a project node in "Projects" tree and point to "Select an environment" ' + ;
+             'and click on listed options. Next step is just to build the project.' )
+
+   aadd( a_, 'Can we keep any other content in hbide.ini ?' )
+   aadd( b_, 'No. hbide.ini is always re-written at the time hbIDE exits. Also this action is executed ' + ;
+             'several times depending upon the underlying needs. However, you can alter the contents in some ' + ;
+             'sections, i.e., [Files], [Projects], etc., but only before running hbIDE. At exit, it will ' + ;
+             're-write it again.' )
+
+   aadd( a_, 'Does hbIDE provides "intellisense" ? If yes, in what aspects ?' )
+   aadd( b_, 'Yes. Not so powerful yet, but "yes". hbIDE embeds two components as the basis of this intellisense, ' + ;
+             CRLF + ;
+             '   1. Harbour Documentation, and ' + CRLF + ;
+             '   2. Project(s) Prototype Tagging. ' + CRLF + ;
+             'Both these components can be pressed in servive simultaneously and as per need. Both are loaded ' + ;
+             'only when requested. Prototype Tagging extends one step forward as to offer to load only those ' + ;
+             'projects which a developer will be working on during that session. Both components can be aligned ' + ;
+             'on the side corners to provide always-on view of the actual contents. The moment you press "(" ' + ;
+             'hbIDE examines the contents of these components, if the function is available in Harbour Docs, ' + ;
+             'its details are dumped into the viewer, otherwise if the function is contained in the tagged ' + ;
+             'prototypes, it is made current in the list, and a html formatted prototype is displayed as tooltip ' + ;
+             'beneth the current caret position. ' + CRLF + ;
+             CRLF + ;
+             'Code completion tool is almost done with, and probably will make up its presence in the hbIDE soon. ' )
+
    RETURN { a_, b_ }
 
 /*----------------------------------------------------------------------*/
