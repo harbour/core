@@ -351,7 +351,7 @@ STATIC FUNCTION hbide_saveSettings( oIde )
    LOCAL cPath
 
    hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_saveSettings( cPath + "hbide.set", "hbIDE", oIde:oDlg:oWidget:pPtr )
+   hbqt_QMainWindow_saveSettings( cPath + "hbidewnd.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
    //hbqt_QMainWindow_saveSettings( cPath + "hbide.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
@@ -362,7 +362,7 @@ FUNCTION hbide_restSettings( oIde )
    LOCAL cPath
 
    hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_restSettings( cPath + "hbide.set", "hbIDE", oIde:oDlg:oWidget:pPtr )
+   hbqt_QMainWindow_restSettings( cPath + "hbidewnd.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
    //hbqt_QMainWindow_restSettings( cPath + "hbide.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
@@ -438,4 +438,3 @@ FUNCTION hbide_saveSkltns( oIde )
    RETURN hbide_createTarget( oIde:cPathSkltns, txt_ )
 
 /*----------------------------------------------------------------------*/
-

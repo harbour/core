@@ -374,5 +374,3 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    ENDIF
 
    RETURN IIF( !Empty( cBuffer ), cBuffer, NIL )
-
-

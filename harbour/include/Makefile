@@ -86,6 +86,7 @@ PRG_HEADERS := \
    error.ch \
    fileio.ch \
    getexit.ch \
+   hb.ch \
    hbclass.ch \
    hbdebug.ch \
    hbdyn.ch \
