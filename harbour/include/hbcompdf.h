@@ -209,6 +209,7 @@ typedef enum
    HB_ET_FUNCALL,
    HB_ET_ALIASVAR,
    HB_ET_ALIASEXPR,
+   HB_ET_SETGET,
    HB_ET_SEND,
    HB_ET_FUNNAME,
    HB_ET_ALIAS,
@@ -363,7 +364,12 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ * pMacro;  /* macro variable */
          const char * szName;       /* variable name  */
-      } asRTVar;                /* PUBLIC or PRIVATE variable declaration */
+      } asRTVar;                 /* PUBLIC or PRIVATE variable declaration */
+      struct
+      {
+         struct HB_EXPR_ * pVar;    /* variable */
+         struct HB_EXPR_ * pExpr;   /* expression */
+      } asSetGet;                /* IIF( <var>==NIL, <expr>, <expr>:=<var> ) */
       struct
       {
          union {
@@ -424,10 +430,9 @@ typedef struct HB_EXPR_
       } asOperator;
       struct HB_EXPR_ * asReference;
    } value;
-   HB_ULONG ulLength;
-   HB_ULONG Counter;
+   HB_ULONG    ulLength;
    HB_EXPRTYPE ExprType;      /* internal expression type */
-   HB_USHORT ValType;         /* language level value type */
+   HB_USHORT   ValType;       /* language level value type */
    struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
 } HB_EXPR, *HB_EXPR_PTR;
 
@@ -841,7 +846,6 @@ typedef struct _HB_COMP_FUNCS
    HB_EXPR_PTR ( * ExprNew )        ( HB_COMP_DECL, HB_EXPRTYPE iType );
    void        ( * ExprClear )      ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
    void        ( * ExprFree )       ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
-   void        ( * ExprDelete )     ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 
    HB_EXPR_PTR ( * ErrorType )      ( HB_COMP_DECL, HB_EXPR_PTR );
    HB_EXPR_PTR ( * ErrorSyntax )    ( HB_COMP_DECL, HB_EXPR_PTR );

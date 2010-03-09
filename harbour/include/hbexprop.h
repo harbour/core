@@ -147,7 +147,6 @@ extern HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 extern HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType );
 extern HB_ULONG hb_compExprListLen( HB_EXPR_PTR );
 extern HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR );

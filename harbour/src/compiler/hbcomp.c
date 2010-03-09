@@ -100,7 +100,6 @@ static HB_EXPR_PTR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
    pExpr->ExprType = iType;
    pExpr->pNext    = NULL;
    pExpr->ValType  = HB_EV_UNKNOWN;
-   pExpr->Counter  = 1;
 
    return pExpr;
 }
@@ -109,20 +108,7 @@ static HB_EXPR_PTR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
  */
 static void hb_compExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   if( --pExpr->Counter == 0 )
-      hb_compExprDealloc( HB_COMP_PARAM, pExpr );
-}
-
-/* Delete all components and delete self
- */
-static void hb_compExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete(%p,%p)", HB_COMP_PARAM, pExpr));
-   if( pExpr && --pExpr->Counter == 0 )
-   {
-      HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      hb_compExprDealloc( HB_COMP_PARAM, pExpr );
-   }
+   hb_compExprDealloc( HB_COMP_PARAM, pExpr );
 }
 
 /* Delete all components and delete self
@@ -130,11 +116,9 @@ static void hb_compExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_compExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprFree()"));
-   if( --pExpr->Counter == 0 )
-   {
-      HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      hb_compExprDealloc( HB_COMP_PARAM, pExpr );
-   }
+
+   HB_EXPR_USE( pExpr, HB_EA_DELETE );
+   hb_compExprDealloc( HB_COMP_PARAM, pExpr );
 }
 
 void hb_compExprLstDealloc( HB_COMP_DECL )
@@ -146,7 +130,7 @@ void hb_compExprLstDealloc( HB_COMP_DECL )
       HB_COMP_PARAM->pExprLst = NULL;
       do
       {
-         hb_compExprDelete( HB_COMP_PARAM, &pExp->Expression );
+         hb_compExprFree( HB_COMP_PARAM, &pExp->Expression );
          pExp = pExp->pNext;
       }
       while( pExp != pExpItm );
@@ -184,7 +168,6 @@ static const HB_COMP_FUNCS s_comp_funcs =
    hb_compExprNew,
    hb_compExprClear,
    hb_compExprFree,
-   hb_compExprDelete,
 
    hb_compErrorType,
    hb_compErrorSyntax,

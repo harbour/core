@@ -82,6 +82,7 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
    "()",
    "->",
    "->",
+   "(:=)",  /* setget */
    ":",
    "",      /* symbol */
    "",      /* alias */
@@ -147,6 +148,7 @@ static const HB_BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_FUNCALL,     */
    HB_ET_NIL,                 /*   HB_ET_ALIASVAR,    */
    HB_ET_NIL,                 /*   HB_ET_ALIASEXPR,   */
+   HB_ET_NIL,                 /*   HB_ET_SETGET,      */
    HB_ET_NIL,                 /*   HB_ET_SEND,        */
    HB_ET_NIL,                 /*   HB_ET_FUNNAME,     */
    HB_ET_NIL,                 /*   HB_ET_ALIAS,       */
@@ -184,15 +186,6 @@ static const HB_BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
 };
 
 /* ************************************************************************* */
-
-/* Increase a reference counter (this allows to share the same expression
- * in more then one context)
- */
-HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc )
-{
-   pSrc->Counter++;
-   return pSrc;
-}
 
 const char * hb_compExprDescription( HB_EXPR_PTR pExpr )
 {
@@ -1485,39 +1478,20 @@ void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
 
 /* Creates a set/get codeblock for passed expression used in __GET
  *
- * {|var| IIF( var==NIL, <pExpr>, <pExpr>:=var )}
+ * { | ~1 | IIF( ~1 == NIL, <pExpr>, <pExpr> := ~1 )}
+ *
+ * NOTE: "~1" is not a valid variable name so there will be no collisions
  */
 HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pIIF;
    HB_EXPR_PTR pSet;
 
-   /* NOTE: this is the only code which uses hb_compExprClone().
-    *       It's important to reduce pExpr before because it should
-    *       not be changed later and our expression optimizer does
-    *       not respect cloned expressions.
-    */
-
-   /* create {|var|  expression
-    * NOTE: "~1" is not a valid variable name so there will be no collisions
-    */
-   /* create var==NIL */
-   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( hb_compExprNewVar( "~1", HB_COMP_PARAM ), HB_COMP_PARAM ),
-                                 hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM );
-   /* create ( var==NIL, */
-   pIIF = hb_compExprNewList( pIIF, HB_COMP_PARAM );
-   /* create ( var==NIL, <pExpr>, */
-   pIIF = hb_compExprAddListExpr( pIIF, pExpr );
-   /* create var */
-   pSet =hb_compExprNewVar( "~1", HB_COMP_PARAM );
-   /* create <pExpr>:=var */
-   pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet, HB_COMP_PARAM );
-   /* create ( var==nil, <pExpr>, <pExpr>:=var ) */
-   pIIF = hb_compExprAddListExpr( pIIF, pSet );
-   /* create IIF() expression */
-   pIIF = hb_compExprNewIIF( pIIF );
+   /* create setget expression: IIF( var==NIL, <pExpr>, <pExpr>:=var ) */
+   pSet = HB_COMP_EXPR_NEW( HB_ET_SETGET );
+   pSet->value.asSetGet.pVar = hb_compExprNewVar( "~1", HB_COMP_PARAM );
+   pSet->value.asSetGet.pExpr = pExpr;
    /* create a codeblock */
    return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd(
                      hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ),
-                     "~1", ' ', HB_COMP_PARAM ), pIIF );
+                     "~1", ' ', HB_COMP_PARAM ), pSet );
 }

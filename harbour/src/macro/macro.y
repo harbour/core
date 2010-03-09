@@ -779,7 +779,6 @@ static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
    pExpr->ExprType = iType;
    pExpr->pNext    = NULL;
    pExpr->ValType  = HB_EV_UNKNOWN;
-   pExpr->Counter  = 1;
 
    return pExpr;
 }
@@ -789,20 +788,8 @@ static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-   if( --pExpr->Counter == 0 )
-      pExpr->ExprType = HB_ET_NONE;
-}
 
-/* Delete all components and delete self
- */
-static void hb_macroExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprDelete(%p,%p)", HB_COMP_PARAM, pExpr));
-   if( pExpr && --pExpr->Counter == 0 )
-   {
-      HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      pExpr->ExprType = HB_ET_NONE;
-   }
+   pExpr->ExprType = HB_ET_NONE;
 }
 
 /* Delete all components and delete self
@@ -810,11 +797,9 @@ static void hb_macroExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroExprFree()"));
-   if( --pExpr->Counter == 0 )
-   {
-      HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      pExpr->ExprType = HB_ET_NONE;
-   }
+
+   HB_EXPR_USE( pExpr, HB_EA_DELETE );
+   pExpr->ExprType = HB_ET_NONE;
 }
 
 /* Deallocate all memory used by expression optimizer */
@@ -872,7 +857,6 @@ static const HB_COMP_FUNCS s_macro_funcs =
    hb_macroExprNew,
    hb_macroExprClear,
    hb_macroExprFree,
-   hb_macroExprDelete,
 
    hb_macroErrorType,
    hb_macroErrorSyntax,

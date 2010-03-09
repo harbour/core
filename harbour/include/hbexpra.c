@@ -192,8 +192,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                }
                if( szName )
                {
-                  HB_COMP_EXPR_DELETE( pParms );
-                  HB_COMP_EXPR_DELETE( pName );
+                  if( pParms )
+                     HB_COMP_EXPR_FREE( pParms );
+                  HB_COMP_EXPR_FREE( pName );
                   return hb_compExprNewMethodObject(
                                  hb_compExprNewSend( szMessage, HB_COMP_PARAM ),
                                  hb_compExprNewVar( szName, HB_COMP_PARAM ) );
@@ -219,8 +220,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                               pParms->value.asList.pExprList->pNext,
                               HB_COMP_PARAM ) );
          pParms->value.asList.pExprList = NULL;
-         HB_COMP_EXPR_DELETE( pParms );
-         HB_COMP_EXPR_DELETE( pName );
+         HB_COMP_EXPR_FREE( pParms );
+         HB_COMP_EXPR_FREE( pName );
          return pEval;
       }
       else if( pName->value.asSymbol.funcid == HB_F__GET_ &&
@@ -316,7 +317,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             if( pVar->pNext ) /* Delete 6-th argument if present */
             {
                pIndex->pNext = pVar->pNext->pNext;
-               HB_COMP_EXPR_DELETE( pVar->pNext );
+               HB_COMP_EXPR_FREE( pVar->pNext );
             }
             pVar->pNext = pIndex;   /* Set a new 6-th argument */
 
@@ -377,12 +378,12 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                   /* simple &variable - replace the second argument with
                    * a variable name
                    */
-                  const char *szName = pFirst->value.asMacro.szMacro;
+                  const char * szName = pFirst->value.asMacro.szMacro;
                   if( pFirst->pNext )
-                     HB_COMP_EXPR_DELETE( pFirst->pNext );  /* delete a second argument */
+                     HB_COMP_EXPR_FREE( pFirst->pNext );  /* delete a second argument */
                   pArg->pNext = hb_compExprNewVar( szName, HB_COMP_PARAM );
                   pArg->pNext->pNext = pNext;    /* restore third argument */
-                  HB_COMP_EXPR_DELETE( pFirst );
+                  HB_COMP_EXPR_FREE( pFirst );
                }
                else
                {
@@ -396,7 +397,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                      pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
                      pArg->pNext->pNext = pNext;
                   }
-                  HB_COMP_EXPR_DELETE( pFirst );  /* delete first argument */
+                  HB_COMP_EXPR_FREE( pFirst );  /* delete first argument */
                }
             }
             else

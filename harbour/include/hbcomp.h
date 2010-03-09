@@ -240,7 +240,6 @@ extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
 #define HB_COMP_EXPR_NEW( i )       HB_COMP_PARAM->funcs->ExprNew( HB_COMP_PARAM, i )
 #define HB_COMP_EXPR_FREE( x )      HB_COMP_PARAM->funcs->ExprFree( HB_COMP_PARAM, x )
 #define HB_COMP_EXPR_CLEAR( x )     HB_COMP_PARAM->funcs->ExprClear( HB_COMP_PARAM, x )
-#define HB_COMP_EXPR_DELETE( x )    HB_COMP_PARAM->funcs->ExprDelete( HB_COMP_PARAM, x )
 
 #if defined( HB_MACRO_SUPPORT )
 

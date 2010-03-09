@@ -91,6 +91,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro );
 static HB_EXPR_FUNC( hb_compExprUseFunCall );
 static HB_EXPR_FUNC( hb_compExprUseAliasVar );
 static HB_EXPR_FUNC( hb_compExprUseAliasExpr );
+static HB_EXPR_FUNC( hb_compExprUseSetGet );
 static HB_EXPR_FUNC( hb_compExprUseSend );
 static HB_EXPR_FUNC( hb_compExprUseFunName );
 static HB_EXPR_FUNC( hb_compExprUseAlias );
@@ -173,6 +174,7 @@ const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseFunCall,
    hb_compExprUseAliasVar,
    hb_compExprUseAliasExpr,
+   hb_compExprUseSetGet,
    hb_compExprUseSend,
    hb_compExprUseFunName,
    hb_compExprUseAlias,
@@ -481,7 +483,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          while( pExpr )
          {
             HB_EXPR_PTR pNext = pExpr->pNext;
-            HB_COMP_EXPR_DELETE( pExpr );
+            HB_COMP_EXPR_FREE( pExpr );
             pExpr = pNext;
          }
          break;
@@ -639,7 +641,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
          while( pElem )
          {
             HB_EXPR_PTR pNext = pElem->pNext;
-            HB_COMP_EXPR_DELETE( pElem );
+            HB_COMP_EXPR_FREE( pElem );
             pElem = pNext;
          }
       }
@@ -710,7 +712,7 @@ static HB_EXPR_FUNC( hb_compExprUseHash )
          while( pElem )
          {
             HB_EXPR_PTR pNext = pElem->pNext;
-            HB_COMP_EXPR_DELETE( pElem );
+            HB_COMP_EXPR_FREE( pElem );
             pElem = pNext;
          }
       }
@@ -880,7 +882,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
       case HB_EA_DELETE:
-         HB_COMP_EXPR_DELETE( pSelf->value.asReference );
+         HB_COMP_EXPR_FREE( pSelf->value.asReference );
          break;
    }
    return pSelf;
@@ -1004,7 +1006,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
             while( pExpr )
             {
                pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_DELETE( pExpr );
+               HB_COMP_EXPR_FREE( pExpr );
                pExpr = pNext;
             }
             pSelf->value.asList.pExprList = NULL;
@@ -1127,8 +1129,8 @@ static HB_EXPR_FUNC( hb_compExprUseList )
             while( pExpr )
             {
                pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_DELETE( pExpr );
-               pExpr =pNext;
+               HB_COMP_EXPR_FREE( pExpr );
+               pExpr = pNext;
             }
             pSelf->value.asList.pExprList = NULL;
          }
@@ -1190,8 +1192,8 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
             while( pExpr )
             {
                pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_DELETE( pExpr );
-               pExpr =pNext;
+               HB_COMP_EXPR_FREE( pExpr );
+               pExpr = pNext;
             }
             pSelf->value.asList.pExprList = NULL;
          }
@@ -1262,8 +1264,8 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
             while( pExpr )
             {
                pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_DELETE( pExpr );
-               pExpr =pNext;
+               HB_COMP_EXPR_FREE( pExpr );
+               pExpr = pNext;
             }
             pSelf->value.asList.pExprList = NULL;
          }
@@ -1348,7 +1350,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                       */
                      pExpr->ExprType = HB_ET_NONE;
                      /* Here comes the magic */
-                     HB_COMP_EXPR_DELETE( pSelf );
+                     HB_COMP_EXPR_FREE( pSelf );
                      pSelf = pNew;
                   }
                   else if( !HB_SUPPORT_ARRSTR )
@@ -1362,7 +1364,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                {
                   HB_UCHAR ucValue = ( HB_UCHAR ) pExpr->value.asString.string[ lIndex - 1 ];
 
-                  HB_COMP_EXPR_DELETE( pSelf );
+                  HB_COMP_EXPR_FREE( pSelf );
                   pSelf = hb_compExprNewLong( ucValue, HB_COMP_PARAM );
                }
                else
@@ -1549,8 +1551,8 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          break;
 
       case HB_EA_DELETE:
-         HB_COMP_EXPR_DELETE( pSelf->value.asList.pExprList );
-         HB_COMP_EXPR_DELETE( pSelf->value.asList.pIndex );
+         HB_COMP_EXPR_FREE( pSelf->value.asList.pExprList );
+         HB_COMP_EXPR_FREE( pSelf->value.asList.pIndex );
          break;
    }
    return pSelf;
@@ -1713,7 +1715,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 
       case HB_EA_DELETE:
          if( pSelf->value.asMacro.pExprList )
-            HB_COMP_EXPR_DELETE( pSelf->value.asMacro.pExprList );
+            HB_COMP_EXPR_FREE( pSelf->value.asMacro.pExprList );
          break;
    }
    return pSelf;
@@ -2170,8 +2172,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
       }
       case HB_EA_DELETE:
          if( pSelf->value.asFunCall.pParms )
-            HB_COMP_EXPR_DELETE( pSelf->value.asFunCall.pParms );
-         HB_COMP_EXPR_DELETE( pSelf->value.asFunCall.pFunName );
+            HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pParms );
+         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
          break;
    }
    return pSelf;
@@ -2315,9 +2317,9 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
          break;
 
       case HB_EA_DELETE:
-         HB_COMP_EXPR_DELETE( pSelf->value.asAlias.pAlias );
+         HB_COMP_EXPR_FREE( pSelf->value.asAlias.pAlias );
          if( pSelf->value.asAlias.pVar )
-            HB_COMP_EXPR_DELETE( pSelf->value.asAlias.pVar );
+            HB_COMP_EXPR_FREE( pSelf->value.asAlias.pVar );
          break;
    }
    return pSelf;
@@ -2392,8 +2394,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
          break;
 
       case HB_EA_DELETE:
-         HB_COMP_EXPR_DELETE( pSelf->value.asAlias.pAlias );
-         HB_COMP_EXPR_DELETE( pSelf->value.asAlias.pExpList );
+         HB_COMP_EXPR_FREE( pSelf->value.asAlias.pAlias );
+         HB_COMP_EXPR_FREE( pSelf->value.asAlias.pExpList );
          break;
    }
    return pSelf;
@@ -2476,13 +2478,12 @@ static HB_EXPR_FUNC( hb_compExprUseRTVariable )
       case HB_EA_DELETE:
 #if ! defined( HB_MACRO_SUPPORT )
          if( ! pSelf->value.asRTVar.szName )
-            HB_COMP_EXPR_DELETE( pSelf->value.asRTVar.pMacro );
+            HB_COMP_EXPR_FREE( pSelf->value.asRTVar.pMacro );
 #endif
          break;
    }
    return pSelf;
 }
-
 
 static HB_EXPR_FUNC( hb_compExprUseVariable )
 {
@@ -2495,33 +2496,29 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
          break;
       case HB_EA_PUSH_PCODE:
 #if defined( HB_MACRO_SUPPORT )
-         {
-            /* NOTE: When the following syntax is used:
-            *    ( any_expr )->&var2
-            * then macro compiler is compiling the right side of alias
-            * operator only (if 'any_expr' is not a string) - an alias value
-            * is placed on the eval stack before macro compilation.
-            * The HB_MACRO_GEN_ALIASED flag is used to signal that we have to
-            * genearate alias aware pcode even if we known a variable part only.
-            */
-            if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
-               HB_GEN_FUNC4( PushAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
-            else
-               HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
-         }
+         /* NOTE: When the following syntax is used:
+         *    ( any_expr )->&var2
+         * then macro compiler is compiling the right side of alias
+         * operator only (if 'any_expr' is not a string) - an alias value
+         * is placed on the eval stack before macro compilation.
+         * The HB_MACRO_GEN_ALIASED flag is used to signal that we have to
+         * genearate alias aware pcode even if we known a variable part only.
+         */
+         if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
+            HB_GEN_FUNC4( PushAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
+         else
+            HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
 #else
          HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
 #endif
-          break;
+         break;
 
-       case HB_EA_POP_PCODE:
+      case HB_EA_POP_PCODE:
 #if defined( HB_MACRO_SUPPORT )
-         {
-            if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
-               HB_GEN_FUNC4( PopAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
-            else
-               HB_GEN_FUNC1( PopVar, pSelf->value.asSymbol.name );
-         }
+         if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
+            HB_GEN_FUNC4( PopAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
+         else
+            HB_GEN_FUNC1( PopVar, pSelf->value.asSymbol.name );
 #else
          HB_GEN_FUNC1( PopVar, pSelf->value.asSymbol.name );
 #endif
@@ -2534,6 +2531,98 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
          break;
 
       case HB_EA_DELETE:
+         break;
+   }
+   return pSelf;
+}
+
+/* IIF( <pVar>==NIL, <pExpr>, <pExpr>:=<pVar> ) */
+static HB_EXPR_FUNC( hb_compExprUseSetGet )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         pSelf->value.asSetGet.pVar = HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_REDUCE );
+         pSelf->value.asSetGet.pExpr = HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_REDUCE );
+         HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_LVALUE );
+         break;
+      case HB_EA_ARRAY_AT:
+      case HB_EA_ARRAY_INDEX:
+      case HB_EA_LVALUE:
+         break;
+      case HB_EA_PUSH_PCODE:
+      {
+         HB_LONG lPosFalse, lPosEnd;
+
+         /* <pVar>==NIL */
+         HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
+         HB_GEN_FUNC1( PCode1, HB_P_PUSHNIL );
+         HB_GEN_FUNC1( PCode1, HB_P_EXACTLYEQUAL );
+         lPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
+         /* <pExpr> */
+         HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_PUSH_PCODE );
+         lPosEnd = HB_GEN_FUNC1( Jump, 0 );
+         /* <pExpr>:=<pVar> */
+         HB_GEN_FUNC1( JumpHere, lPosFalse );
+         if( pSelf->value.asSetGet.pExpr->ExprType == HB_ET_SEND )
+         {
+            HB_EXPR_PTR pObj, pParams;
+            pObj = pSelf->value.asSetGet.pExpr;
+            pParams = pObj->value.asMessage.pParms;
+            pObj->value.asMessage.pParms = pSelf->value.asSetGet.pVar;
+            HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
+            pObj->value.asMessage.pParms = pParams;
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
+            HB_GEN_FUNC1( PCode1, HB_P_PUSHUNREF );
+            HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_POP_PCODE );
+         }
+         HB_GEN_FUNC1( JumpHere, lPosEnd );
+         break;
+      }
+      case HB_EA_POP_PCODE:
+         break;
+
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+      {
+         HB_LONG lPosFalse, lPosEnd;
+
+         /* <pVar>==NIL */
+         HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
+         HB_GEN_FUNC1( PCode1, HB_P_PUSHNIL );
+         HB_GEN_FUNC1( PCode1, HB_P_EXACTLYEQUAL );
+         lPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
+         /* <pExpr> */
+         HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_PUSH_PCODE );
+         lPosEnd = HB_GEN_FUNC1( Jump, 0 );
+         /* <pExpr>:=<pVar> */
+         HB_GEN_FUNC1( JumpHere, lPosFalse );
+         if( pSelf->value.asSetGet.pExpr->ExprType == HB_ET_SEND )
+         {
+            HB_EXPR_PTR pObj, pParams;
+            pObj = pSelf->value.asSetGet.pExpr;
+            pParams = pObj->value.asMessage.pParms;
+            pObj->value.asMessage.pParms = pSelf->value.asSetGet.pVar;
+            HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
+            pObj->value.asMessage.pParms = pParams;
+            /* Remove the return value */
+            HB_GEN_FUNC1( PCode1, HB_P_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_POP_PCODE );
+         }
+         HB_GEN_FUNC1( JumpHere, lPosEnd );
+         break;
+      }
+
+      case HB_EA_DELETE:
+         HB_COMP_EXPR_FREE( pSelf->value.asSetGet.pExpr );
+         HB_COMP_EXPR_FREE( pSelf->value.asSetGet.pVar );
          break;
    }
    return pSelf;
@@ -2626,17 +2715,11 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
       case HB_EA_DELETE:
          {
             if( pSelf->value.asMessage.pObject )
-            {
-               HB_COMP_EXPR_DELETE( pSelf->value.asMessage.pObject );
-            }
+               HB_COMP_EXPR_FREE( pSelf->value.asMessage.pObject );
             if( pSelf->value.asMessage.pParms )
-            {
-               HB_COMP_EXPR_DELETE( pSelf->value.asMessage.pParms );
-            }
+               HB_COMP_EXPR_FREE( pSelf->value.asMessage.pParms );
             if( pSelf->value.asMessage.pMessage )
-            {
-               HB_COMP_EXPR_DELETE( pSelf->value.asMessage.pMessage );
-            }
+               HB_COMP_EXPR_FREE( pSelf->value.asMessage.pMessage );
          }
          break;
    }
@@ -2675,7 +2758,7 @@ static HB_EXPR_FUNC( hb_compExprUsePostInc )
 
       case HB_EA_DELETE:
          if( pSelf->value.asOperator.pLeft )
-            HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+            HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -2711,7 +2794,7 @@ static HB_EXPR_FUNC( hb_compExprUsePostDec )
 
       case HB_EA_DELETE:
          if( pSelf->value.asOperator.pLeft )
-            HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+            HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -2783,10 +2866,12 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
           */
          if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
-            HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
+            HB_EXPR_PTR pObj, pParams;
+            pObj = pSelf->value.asOperator.pLeft;
+            pParams = pObj->value.asMessage.pParms;
             pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
             HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
-            pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
+            pObj->value.asMessage.pParms = pParams;
          }
          else
          {
@@ -2809,10 +2894,12 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
           */
          if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
-            HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
+            HB_EXPR_PTR pObj, pParams;
+            pObj = pSelf->value.asOperator.pLeft;
+            pParams = pObj->value.asMessage.pParms;
             pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
             HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
-            pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
+            pObj->value.asMessage.pParms = pParams;
             /* Remove the return value */
             HB_GEN_FUNC1( PCode1, HB_P_POP );
          }
@@ -3265,7 +3352,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
              */
             pExpr->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
             pExpr = pExpr->value.asOperator.pLeft;
-            HB_COMP_EXPR_DELETE( pSelf );
+            HB_COMP_EXPR_FREE( pSelf );
             pSelf = pExpr;
          }
          break;
@@ -3310,7 +3397,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
          break;
 
       case HB_EA_DELETE:
-         HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+         HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -4231,7 +4318,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
 
       case HB_EA_DELETE:
          if( pSelf->value.asOperator.pLeft )
-            HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+            HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -4271,7 +4358,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreInc )
 
       case HB_EA_DELETE:
          if( pSelf->value.asOperator.pLeft )
-            HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+            HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -4311,7 +4398,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreDec )
 
       case HB_EA_DELETE:
          if( pSelf->value.asOperator.pLeft )
-            HB_COMP_EXPR_DELETE( pSelf->value.asOperator.pLeft );
+            HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
          break;
    }
    return pSelf;
@@ -4449,7 +4536,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew, HB_COMP_PARAM ), hb_compExprNewString( "}", 1, HB_FALSE, HB_COMP_PARAM ), HB_COMP_PARAM );
       pNew = hb_compExprNewMacro( pNew, 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
-      HB_COMP_EXPR_DELETE( pNew );
+      HB_COMP_EXPR_FREE( pNew );
    }
    else
    {
@@ -4459,7 +4546,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       hb_compExprCodeblockPush( pSelf, HB_FALSE, HB_COMP_PARAM );
       pExpr = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->ulLength, HB_FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-      HB_COMP_EXPR_DELETE( pExpr );
+      HB_COMP_EXPR_FREE( pExpr );
       hb_compCodeBlockStop( HB_COMP_PARAM );
    }
 }
@@ -5346,7 +5433,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
             else if( pAlias->value.asString.dealloc )
                szAlias = hb_compIdentifierNew( HB_COMP_PARAM, szAlias, HB_IDENT_COPY );
 #endif
-            HB_COMP_EXPR_DELETE( pExpr );
+            HB_COMP_EXPR_FREE( pExpr );
             pExpr = hb_compExprNewAlias( szAlias, HB_COMP_PARAM );
          }
       }
