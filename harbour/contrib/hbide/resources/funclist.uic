@@ -1,0 +1,138 @@
+/********************************************************************************
+** Form generated from reading ui file 'funclist.ui'
+**
+** Created: Tue Mar 9 11:59:02 2010
+**      by: Qt User Interface Compiler version 4.5.3
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef FUNCLIST_H
+#define FUNCLIST_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListWidget>
+#include <QtGui/QPushButton>
+#include <QtGui/QTableWidget>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_Form
+{
+public:
+    QGridLayout *gridLayout;
+    QListWidget *listProjects;
+    QLineEdit *editFunction;
+    QTableWidget *tableFuncList;
+    QLabel *label;
+    QLineEdit *editSyntax;
+    QLabel *labelEntries;
+    QFrame *line;
+    QPushButton *buttonMark;
+    QPushButton *pushButton;
+    QPushButton *buttonTag;
+    QPushButton *buttonClose;
+
+    void setupUi(QWidget *Form)
+    {
+        if (Form->objectName().isEmpty())
+            Form->setObjectName(QString::fromUtf8("Form"));
+        Form->resize(400, 486);
+        gridLayout = new QGridLayout(Form);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        listProjects = new QListWidget(Form);
+        listProjects->setObjectName(QString::fromUtf8("listProjects"));
+        listProjects->setMaximumSize(QSize(16777215, 100));
+
+        gridLayout->addWidget(listProjects, 0, 0, 1, 5);
+
+        editFunction = new QLineEdit(Form);
+        editFunction->setObjectName(QString::fromUtf8("editFunction"));
+
+        gridLayout->addWidget(editFunction, 1, 0, 1, 5);
+
+        tableFuncList = new QTableWidget(Form);
+        tableFuncList->setObjectName(QString::fromUtf8("tableFuncList"));
+
+        gridLayout->addWidget(tableFuncList, 2, 0, 1, 5);
+
+        label = new QLabel(Form);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setMaximumSize(QSize(46, 16777215));
+
+        gridLayout->addWidget(label, 3, 0, 1, 1);
+
+        editSyntax = new QLineEdit(Form);
+        editSyntax->setObjectName(QString::fromUtf8("editSyntax"));
+
+        gridLayout->addWidget(editSyntax, 3, 1, 1, 3);
+
+        labelEntries = new QLabel(Form);
+        labelEntries->setObjectName(QString::fromUtf8("labelEntries"));
+        labelEntries->setMaximumSize(QSize(70, 16777215));
+
+        gridLayout->addWidget(labelEntries, 3, 4, 1, 1);
+
+        line = new QFrame(Form);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        gridLayout->addWidget(line, 4, 0, 1, 5);
+
+        buttonMark = new QPushButton(Form);
+        buttonMark->setObjectName(QString::fromUtf8("buttonMark"));
+
+        gridLayout->addWidget(buttonMark, 5, 0, 1, 2);
+
+        pushButton = new QPushButton(Form);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+
+        gridLayout->addWidget(pushButton, 5, 2, 1, 1);
+
+        buttonTag = new QPushButton(Form);
+        buttonTag->setObjectName(QString::fromUtf8("buttonTag"));
+
+        gridLayout->addWidget(buttonTag, 5, 3, 1, 1);
+
+        buttonClose = new QPushButton(Form);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+
+        gridLayout->addWidget(buttonClose, 5, 4, 1, 1);
+
+
+        retranslateUi(Form);
+
+        QMetaObject::connectSlotsByName(Form);
+    } // setupUi
+
+    void retranslateUi(QWidget *Form)
+    {
+        Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("Form", "Syntax:", 0, QApplication::UnicodeUTF8));
+        labelEntries->setText(QString());
+        buttonMark->setText(QApplication::translate("Form", "Mark Projs", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("Form", "Load Tags", 0, QApplication::UnicodeUTF8));
+        buttonTag->setText(QApplication::translate("Form", "Re-Tag", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("Form", "Close", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(Form);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class Form: public Ui_Form {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // FUNCLIST_H
