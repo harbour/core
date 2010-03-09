@@ -57,6 +57,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
    <item row="4" column="0" colspan="5">
@@ -69,12 +72,12 @@
    <item row="5" column="0" colspan="2">
     <widget class="QPushButton" name="buttonMark">
      <property name="text">
-      <string>Mark Projs</string>
+      <string>Mark Projects</string>
      </property>
     </widget>
    </item>
    <item row="5" column="2">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="buttonLoad">
      <property name="text">
       <string>Load Tags</string>
      </property>

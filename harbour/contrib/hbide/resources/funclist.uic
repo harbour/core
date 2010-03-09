@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'funclist.ui'
 **
-** Created: Tue Mar 9 11:59:02 2010
+** Created: Tue Mar 9 12:14:29 2010
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -38,7 +38,7 @@ public:
     QLabel *labelEntries;
     QFrame *line;
     QPushButton *buttonMark;
-    QPushButton *pushButton;
+    QPushButton *buttonLoad;
     QPushButton *buttonTag;
     QPushButton *buttonClose;
 
@@ -94,10 +94,10 @@ public:
 
         gridLayout->addWidget(buttonMark, 5, 0, 1, 2);
 
-        pushButton = new QPushButton(Form);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        buttonLoad = new QPushButton(Form);
+        buttonLoad->setObjectName(QString::fromUtf8("buttonLoad"));
 
-        gridLayout->addWidget(pushButton, 5, 2, 1, 1);
+        gridLayout->addWidget(buttonLoad, 5, 2, 1, 1);
 
         buttonTag = new QPushButton(Form);
         buttonTag->setObjectName(QString::fromUtf8("buttonTag"));
@@ -121,7 +121,7 @@ public:
         label->setText(QApplication::translate("Form", "Syntax:", 0, QApplication::UnicodeUTF8));
         labelEntries->setText(QString());
         buttonMark->setText(QApplication::translate("Form", "Mark Projs", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("Form", "Load Tags", 0, QApplication::UnicodeUTF8));
+        buttonLoad->setText(QApplication::translate("Form", "Load Tags", 0, QApplication::UnicodeUTF8));
         buttonTag->setText(QApplication::translate("Form", "Re-Tag", 0, QApplication::UnicodeUTF8));
         buttonClose->setText(QApplication::translate("Form", "Close", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(Form);
