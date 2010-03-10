@@ -2803,7 +2803,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cObjExt := ".o"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "gpp" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
-         cOpt_CompC := "-c -pipe"
+         cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
