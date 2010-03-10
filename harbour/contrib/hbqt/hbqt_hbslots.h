@@ -277,7 +277,10 @@ public slots:
    void featuresChanged( QDockWidget::DockWidgetFeatures features );
    void topLevelChanged( bool topLevel );
    void visibilityChanged( bool visible );
-   /* */
+   /* QCompleter */
+   void activated( const QModelIndex & index );
+   void highlighted( const QModelIndex & index );
+   /* Latest */
 };
 
 /*----------------------------------------------------------------------*/

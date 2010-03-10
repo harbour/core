@@ -86,6 +86,8 @@
 #define contentsChange                            22
 #define timerTimeout                              23
 
+#define qcompleter_activated                      101
+
 #define EDT_LINNO_WIDTH                           50
 
 /*----------------------------------------------------------------------*/
@@ -100,7 +102,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD destroy()
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile )
-   METHOD exeEvent( nMode, p )
+   METHOD execEvent( nMode, p )
    METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD getTabBySource( cSource )
    METHOD getTabCurrent()
@@ -197,8 +199,11 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
 
    ::oIde:qCompleter := QCompleter():new()
-   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
 
+   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+   ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
+
+   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( qcompleter_activated, p ) } )
 
    RETURN Self
 
@@ -206,6 +211,9 @@ METHOD IdeEditsManager:create( oIde )
 
 METHOD IdeEditsManager:destroy()
    LOCAL a_
+
+   ::disconnect( ::qCompleter, "activated(QString)" )
+   ::oIde:qCompleter := NIL
 
    FOR EACH a_ IN ::aActions
       a_[ 2 ] := NIL
@@ -256,20 +264,13 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:exeEvent( nMode, p )
-   //LOCAL qObj
+METHOD IdeEditsManager:execEvent( nMode, p )
 
    HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nMode == 1  // "customContextMenuRequested(QPoint)"
-      #if 0
-      qObj := QWidget():configure( ::qTabWidget:childAt_1( QPoint():configure( p ) ) )
-      IF !e
-      hbide_dbg( qObj:x(), qObj:y() )
-      #endif
-   CASE nMode == 2
-   CASE nMode == 3
+   CASE nMode == qcompleter_activated
+
    ENDCASE
 
    RETURN Nil

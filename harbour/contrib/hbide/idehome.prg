@@ -252,7 +252,7 @@ METHOD IdeHome:paintRequested( pPrinter )
 METHOD IdeHome:setStyleSheetTextBrowser( qBrw )
 
    qBrw:setStyleSheet( 'QTextBrowser { background-image: url(resources/hbidesplashwatermark.png); ' + ;
-          'background-attachment: scroll; background-repeat:no-repeat; background-position:center;' + ;
+          'background-attachment: scroll; background-repeat:no-repeat; background-position:center; ' + ;
           'background-color: rgb(255,255,255); }' )
 
    RETURN Self

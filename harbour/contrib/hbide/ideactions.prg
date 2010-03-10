@@ -384,7 +384,7 @@ METHOD IdeActions:buildToolBar()
       ::qViewsCombo:addItem( s )
    NEXT
    ::qViewsCombo:setCurrentIndex( -1 )
-   ::connect( ::qViewsCombo, "currentIndexChanged(text)", {|p| ::oDK:setView( p ) } )
+   ::connect( ::qViewsCombo, "currentIndexChanged(QString)", {|p| ::oDK:setView( p ) } )
 
    RETURN Self
 

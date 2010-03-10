@@ -2212,6 +2212,14 @@
 #define QLayout_SetMinAndMaxSize                  5        // The main widget's minimum size is set to minimumSize() and its maximum size is set to maximumSize().
 #define QLayout_SetNoConstraint                   1        // The widget is not constrained.
 
+#define QCompleter_PopupCompletion                0        // Current completions are displayed in a popup window.
+#define QCompleter_InlineCompletion               2        // Completions appear inline (as selected text).
+#define QCompleter_UnfilteredPopupCompletion      1        // All possible completions are displayed in a popup window with the most likely suggestion indicated as current.
+
+#define QCompleter_UnsortedModel                  0        // The model is unsorted.
+#define QCompleter_CaseSensitivelySortedModel     1        // The model is sorted case sensitively.
+#define QCompleter_CaseInsensitivelySortedModel   2        // The model is sorted case insensitively.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

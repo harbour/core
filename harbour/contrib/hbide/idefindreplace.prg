@@ -337,9 +337,9 @@ METHOD IdeFindReplace:create( oIde )
          {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ;
               ::oUI:hide() } )
 
-   ::oUI:signal( "comboFindWhat", "editTextChanged(text)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
+   ::oUI:signal( "comboFindWhat", "editTextChanged(QString)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
 
-   ::oUI:signal( "comboFindWhat", "currentIndexChanged(text)", ;
+   ::oUI:signal( "comboFindWhat", "currentIndexChanged(QString)", ;
                                {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
 
    ::oUI:signal( "checkListOnly", "stateChanged(int)", {|p| ;
@@ -705,7 +705,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:signal( "buttonRepl"   , "clicked()"                , {| | ::execEvent( "buttonRepl"       ) } )
    ::oUI:signal( "buttonStop"   , "clicked()"                , {| | ::execEvent( "buttonStop"       ) } )
    ::oUI:signal( "checkAll"     , "stateChanged(int)"        , {|p| ::execEvent( "checkAll", p      ) } )
-   ::oUI:signal( "comboFind"    , "currentIndexChanged(text)", {|p| ::execEvent( "comboFind", p     ) } )
+   ::oUI:signal( "comboFind"    , "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
    ::oUI:signal( "checkListOnly", "stateChanged(int)"        , {|p| ::execEvent( "checkListOnly", p ) } )
    ::oUI:signal( "checkFolders" , "stateChanged(int)"        , {|p| ::execEvent( "checkFolders", p  ) } )
    ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )

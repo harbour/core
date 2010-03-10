@@ -195,10 +195,10 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "started()"                                      ) return object->connect( object, SIGNAL( started()                                                         ), t_slots, SLOT( started()                                                          ), Qt::AutoConnection );
    if( signal == ( QString ) "stateChanged(int)"                              ) return object->connect( object, SIGNAL( stateChanged( int )                                               ), t_slots, SLOT( stateChanged( int )                                                ), Qt::AutoConnection );
    /* QComboBox */
-   if( signal == ( QString ) "activated(text)"                                ) return object->connect( object, SIGNAL( activated( const QString & )                                      ), t_slots, SLOT( activated( const QString & )                                       ), Qt::AutoConnection );
-   if( signal == ( QString ) "currentIndexChanged(text)"                      ) return object->connect( object, SIGNAL( currentIndexChanged( const QString & )                            ), t_slots, SLOT( currentIndexChanged( const QString & )                             ), Qt::AutoConnection );
-   if( signal == ( QString ) "editTextChanged(text)"                          ) return object->connect( object, SIGNAL( editTextChanged( const QString & )                                ), t_slots, SLOT( editTextChanged( const QString & )                                 ), Qt::AutoConnection );
-   if( signal == ( QString ) "highlighted(text)"                              ) return object->connect( object, SIGNAL( highlighted( const QString & )                                    ), t_slots, SLOT( highlighted( const QString & )                                     ), Qt::AutoConnection );
+   if( signal == ( QString ) "activated(QString)"                             ) return object->connect( object, SIGNAL( activated( const QString & )                                      ), t_slots, SLOT( activated( const QString & )                                       ), Qt::AutoConnection );
+   if( signal == ( QString ) "currentIndexChanged(QString)"                   ) return object->connect( object, SIGNAL( currentIndexChanged( const QString & )                            ), t_slots, SLOT( currentIndexChanged( const QString & )                             ), Qt::AutoConnection );
+   if( signal == ( QString ) "editTextChanged(QString)"                       ) return object->connect( object, SIGNAL( editTextChanged( const QString & )                                ), t_slots, SLOT( editTextChanged( const QString & )                                 ), Qt::AutoConnection );
+   if( signal == ( QString ) "highlighted(QString)"                           ) return object->connect( object, SIGNAL( highlighted( const QString & )                                    ), t_slots, SLOT( highlighted( const QString & )                                     ), Qt::AutoConnection );
    /* QTextDocument */
    if( signal == ( QString ) "blockCountChanged(int)"                         ) return object->connect( object, SIGNAL( blockCountChanged( int )                                          ), t_slots, SLOT( blockCountChanged( int )                                           ), Qt::AutoConnection );
    if( signal == ( QString ) "contentsChange(int,int,int)"                    ) return object->connect( object, SIGNAL( contentsChange( int, int, int )                                   ), t_slots, SLOT( contentsChange( int, int, int )                                    ), Qt::AutoConnection );
@@ -227,6 +227,9 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "featuresChanged(int)"                           ) return object->connect( object, SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ), t_slots, SLOT( featuresChanged( QDockWidget::DockWidgetFeatures )                 ), Qt::AutoConnection );
    if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->connect( object, SIGNAL( topLevelChanged( bool )                                           ), t_slots, SLOT( topLevelChanged( bool )                                            ), Qt::AutoConnection );
    if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->connect( object, SIGNAL( visibilityChanged( bool )                                         ), t_slots, SLOT( visibilityChanged( bool )                                          ), Qt::AutoConnection );
+   /* QCompleter */
+   if( signal == ( QString ) "activated(QModelIndex)"                         ) return object->connect( object, SIGNAL( activated( const QModelIndex & )                                  ), t_slots, SLOT( activated( const QModelIndex & )                                   ), Qt::AutoConnection );
+   if( signal == ( QString ) "highlighted(QModelIndex)"                       ) return object->connect( object, SIGNAL( highlighted( const QModelIndex & )                                ), t_slots, SLOT( highlighted( const QModelIndex & )                                 ), Qt::AutoConnection );
    /* New */
 
    return false;
@@ -351,10 +354,10 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "started()"                                      ) return object->disconnect( SIGNAL( started()                                                         ) );
    if( signal == ( QString ) "stateChanged(int)"                              ) return object->disconnect( SIGNAL( stateChanged( int )                                               ) );
    /* QComboBox */
-   if( signal == ( QString ) "activated(text)"                                ) return object->disconnect( SIGNAL( activated( const QString & )                                      ) );
-   if( signal == ( QString ) "currentIndexChanged(text)"                      ) return object->disconnect( SIGNAL( currentIndexChanged( const QString & )                            ) );
-   if( signal == ( QString ) "editTextChanged(text)"                          ) return object->disconnect( SIGNAL( editTextChanged( const QString & )                                ) );
-   if( signal == ( QString ) "highlighted(text)"                              ) return object->disconnect( SIGNAL( highlighted( const QString & )                                    ) );
+   if( signal == ( QString ) "activated(QString)"                             ) return object->disconnect( SIGNAL( activated( const QString & )                                      ) );
+   if( signal == ( QString ) "currentIndexChanged(QString)"                   ) return object->disconnect( SIGNAL( currentIndexChanged( const QString & )                            ) );
+   if( signal == ( QString ) "editTextChanged(QString)"                       ) return object->disconnect( SIGNAL( editTextChanged( const QString & )                                ) );
+   if( signal == ( QString ) "highlighted(QString)"                           ) return object->disconnect( SIGNAL( highlighted( const QString & )                                    ) );
    /* QTextDocument */
    if( signal == ( QString ) "blockCountChanged(int)"                         ) return object->disconnect( SIGNAL( blockCountChanged( int )                                          ) );
    if( signal == ( QString ) "contentsChange(int,int,int)"                    ) return object->disconnect( SIGNAL( contentsChange( int, int, int )                                   ) );
@@ -392,6 +395,9 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "featuresChanged(int)"                           ) return object->disconnect( SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ) );
    if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->disconnect( SIGNAL( topLevelChanged( bool )                                           ) );
    if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->disconnect( SIGNAL( visibilityChanged( bool )                                         ) );
+   /* QCompleter */
+   if( signal == ( QString ) "activated(QModelIndex)"                         ) return object->disconnect( SIGNAL( activated( const QModelIndex & )                                  ) );
+   if( signal == ( QString ) "highlighted(QModelIndex)"                       ) return object->disconnect( SIGNAL( highlighted( const QModelIndex & )                                ) );
    /* new */
    return false;
 }
@@ -958,10 +964,10 @@ void HBSlots::readyReadStandardOutput()                                         
 void HBSlots::started()                                                                                    { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "started()"                                                       ); }
 void HBSlots::stateChanged( QProcess::ProcessState newState )                                              { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "stateChanged(int)", newState                                     ); }
 /* QComboBox */
-void HBSlots::activated( const QString & text )                                                            { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "activated(text)", text                                           ); }
-void HBSlots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "currentIndexChanged(text)", text                                 ); }
-void HBSlots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "editTextChanged(text)", text                                     ); }
-void HBSlots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "highlighted(text)", text                                         ); }
+void HBSlots::activated( const QString & text )                                                            { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "activated(QString)", text                                        ); }
+void HBSlots::currentIndexChanged( const QString & text )                                                  { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "currentIndexChanged(QString)", text                              ); }
+void HBSlots::editTextChanged( const QString & text )                                                      { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "editTextChanged(QString)", text                                  ); }
+void HBSlots::highlighted( const QString & text )                                                          { hbqt_SlotsExecString(         this, qobject_cast<QObject *>( sender() ), "highlighted(QString)", text                                      ); }
 /* QTextDocument */
 void HBSlots::blockCountChanged( int newBlockCount )                                                       { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "blockCountChanged(int)", newBlockCount                           ); }
 void HBSlots::contentsChange( int position, int charsRemoved, int charsAdded )                             { hbqt_SlotsExecIntIntInt(      this, qobject_cast<QObject *>( sender() ), "contentsChange(int,int,int)", position, charsRemoved, charsAdded ); }
@@ -1008,6 +1014,9 @@ void HBSlots::dockLocationChanged( Qt::DockWidgetArea area )                    
 void HBSlots::featuresChanged( QDockWidget::DockWidgetFeatures features )                                  { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "featuresChanged(int)", features                                  ); }
 void HBSlots::topLevelChanged( bool topLevel )                                                             { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "topLevelChanged(bool)", topLevel                                 ); }
 void HBSlots::visibilityChanged( bool visible )                                                            { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "visibilityChanged(bool)", visible                                ); }
+/* QCompleter */
+void HBSlots::activated( const QModelIndex & index )                                                       { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "activated(QModelIndex)", index                                   ); }
+void HBSlots::highlighted( const QModelIndex & index )                                                     { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "highlighted(QModelIndex)", index                                 ); }
 /* Latest */
 
 
