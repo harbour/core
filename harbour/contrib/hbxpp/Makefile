@@ -41,6 +41,7 @@ PRG_SOURCES := \
 
 PRG_HEADERS := \
    dll.ch \
+   dmlb.ch \
    hbxpp.ch \
    hbxppext.ch \
    thread.ch \
