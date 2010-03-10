@@ -16,7 +16,7 @@ CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_INC_COMPILE) -pipe
 
 # Equivalent to MSVC -GS (default) option, available in GCC 4.1 and upper:
 #    -fstack-protector
@@ -32,9 +32,14 @@ ifneq ($(HB_BUILD_WARN),no)
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
+   # -O3 is not recommended for GCC 4.x by some packagers (see http://www.gentoo.org/doc/en/gcc-optimization.xml)
    CFLAGS += -O3
-   ifneq ($(HB_BUILD_DEBUG),yes)
-      CFLAGS += -fomit-frame-pointer
+   # This option is not needed in x86_64 mode.
+   ifneq ($(HB_COMPILER),mingw64)
+      # It makes debugging hard or impossible on x86 systems.
+      ifneq ($(HB_BUILD_DEBUG),yes)
+         CFLAGS += -fomit-frame-pointer
+      endif
    endif
    ifeq ($(HB_COMPILER),mingw)
       CFLAGS += -march=i586 -mtune=pentiumpro
