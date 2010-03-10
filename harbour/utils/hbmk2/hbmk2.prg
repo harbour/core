@@ -2382,7 +2382,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] )
          ENDCASE
-         cOpt_CompC := "-c"
+         cOpt_CompC := "-c -pipe"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
@@ -2571,7 +2571,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cObjExt := ".o"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
-         cOpt_CompC := "-c"
+         cOpt_CompC := "-c -pipe"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
             IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw"
@@ -2706,7 +2706,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cObjExt := ".o"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
-         cOpt_CompC := "-c"
+         cOpt_CompC := "-c -pipe"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
@@ -2803,7 +2803,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cObjExt := ".o"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "gpp" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
-         cOpt_CompC := "-c"
+         cOpt_CompC := "-c -pipe"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
