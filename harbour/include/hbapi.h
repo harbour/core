@@ -1055,7 +1055,6 @@ extern HB_EXPORT int          hb_conSetCursor( HB_BOOL bSetCursor, int iNewCurso
 extern HB_EXPORT const char * hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
-extern const char * hb_compReservedName( const char * szName ); /* determines if a string contains a reserve word */
 extern char *       hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pulLen );
 extern char *       hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pulLen );
 

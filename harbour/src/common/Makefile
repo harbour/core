@@ -23,7 +23,6 @@ C_SOURCES := \
    hbver.c \
    hbverdsp.c \
    hbarch.c \
-   reserved.c \
    strwild.c \
 
 LIBNAME := hbcommon

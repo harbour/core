@@ -2021,6 +2021,23 @@ static void hb_compUpdateFunctionNames( HB_COMP_DECL )
    }
 }
 
+static HB_BOOL hb_compCheckReservedNames( HB_COMP_DECL, const char * szFunName, HB_BOOL fError )
+{
+   const char * szFunction;
+   HB_FUNC_ID funcID;
+   int iFlags;
+
+   szFunction = hb_compGetFuncID( szFunName, &funcID, &iFlags );
+   if( iFlags & HB_FN_RESERVED )
+   {
+      if( fError )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, szFunName );
+      return HB_TRUE;
+   }
+   else
+      return HB_FALSE;
+}
+
 static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fError )
 {
    if( hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName,
@@ -2032,13 +2049,7 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
    }
    else
    {
-      const char * szFunction = hb_compReservedName( pFunc->szName );
-      if( szFunction )
-      {
-         if( fError )
-            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, pFunc->szName );
-      }
-      else
+      if( !hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
       {
          PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          if( ! pSym )
@@ -2106,11 +2117,16 @@ static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
 {
    PFUNCTION pFunc;
 
-   /* Clipper call this function after compiling .prg module when ANNOUNCE
+   /* Clipper call this function after compiling .prg module where ANNOUNCE
     * symbol was deined not after compiling all .prg modules and search for
     * public ANNOUNCEd function/procedure in all compiled so far modules
     * and then for static one in currently compiler module.
     */
+
+   /* check for reserved name
+   * NOTE: Clipper doesn't check for it
+   */
+   hb_compCheckReservedNames( HB_COMP_PARAM, szFunName, HB_TRUE );
 
    pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName, HB_FALSE );
    if( pFunc )

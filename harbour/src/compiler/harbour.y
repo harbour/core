@@ -441,15 +441,7 @@ Statement  : ExecFlow CrlfStmnt
            | DYNAMIC DynList Crlf
            | ANNOUNCE IdentName {
                   if( HB_COMP_PARAM->szAnnounce == NULL )
-                  {
-                     /* check for reserved name
-                     * NOTE: Clipper doesn't check for it
-                     */
-                     const char * szFunction = hb_compReservedName( $2 );
-                     if( szFunction )
-                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
                      HB_COMP_PARAM->szAnnounce = $2;
-                  }
                   else
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
                } Crlf
