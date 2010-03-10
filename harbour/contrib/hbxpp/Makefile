@@ -18,6 +18,7 @@ C_SOURCES := \
    oemansix.c \
    philesx.c \
    pvalue.c \
+   wafuncx.c \
    xppopc.c \
 
 PRG_SOURCES := \

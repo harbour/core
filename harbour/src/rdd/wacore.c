@@ -529,8 +529,8 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    /* tests shows that Xbase++ does not remove locks */
    /* SELF_UNLOCK( pArea, NULL ); */
 
-   /* Xbase++ documentation says that child area are also detached but
-    * but tests shows that it's not true and chilled and parent relations
+   /* Xbase++ documentation says that child areas are also detached but
+    * but tests shows that it's not true and either child or parent relations
     * are still active and corresponding WA are not detached together.
     * Harbour clears all child and parent relations.
     */
@@ -623,7 +623,8 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
             for( ulPos = 1; ulPos <= ulLen; ++ulPos )
             {
                AREAP * pDetachedArea = ( AREAP * )
-                  hb_arrayGetPtr( hb_arrayGetItemPtr( s_pDetachedAreas, ulPos ), 1 );
+                  hb_arrayGetPtrGC( hb_arrayGetItemPtr( s_pDetachedAreas, ulPos ),
+                                    1, &s_gcWAFuncs );
                if( pSymAlias == ( PHB_DYNS ) ( *pDetachedArea )->atomAlias )
                   break;
             }
@@ -631,7 +632,8 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
          if( ulPos <= ulLen )
          {
             PHB_ITEM pArray = hb_arrayGetItemPtr( s_pDetachedAreas, ulPos );
-            AREAP * pDetachedArea = ( AREAP * ) hb_arrayGetPtr( pArray, 1 );
+            AREAP * pDetachedArea = ( AREAP * )
+                                    hb_arrayGetPtrGC( pArray, 1, &s_gcWAFuncs );
 
             pArea = *pDetachedArea;
             *pDetachedArea = NULL;
@@ -660,8 +662,40 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
    {
       hb_waNodeInsert( hb_stackRDD(), pArea );
       if( pArea->atomAlias )
-         hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, pArea->uiArea );
+      {
+         if( hb_dynsymAreaHandle( ( PHB_DYNS ) pArea->atomAlias ) == 0 )
+            hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, pArea->uiArea );
+      }
    }
 
    return pArea;
+}
+
+PHB_ITEM hb_rddDetachedList( void )
+{
+   PHB_ITEM pArray;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddDetachedList()"));
+
+   pArray = hb_itemArrayNew( 0 );
+   /* protect by critical section access to s_pDetachedAreas array */
+   hb_threadEnterCriticalSection( &s_waMtx );
+   if( s_pDetachedAreas )
+   {
+      HB_SIZE nLen = hb_arrayLen( s_pDetachedAreas ), nPos;
+
+      hb_arraySize( pArray, nLen );
+      for( nPos = 1; nPos <= nLen; ++nPos )
+      {
+         AREAP * pDetachedArea = ( AREAP * )
+               hb_arrayGetPtrGC( hb_arrayGetItemPtr( s_pDetachedAreas, nPos ),
+                                 1, &s_gcWAFuncs );
+         PHB_DYNS pAlias = ( PHB_DYNS ) ( *pDetachedArea )->atomAlias;
+         hb_arraySetC( pArray, nPos, hb_dynsymName( pAlias ) );
+      }
+   }
+   /* leave critical section */
+   hb_threadLeaveCriticalSection( &s_waMtx );
+
+   return pArray;
 }
