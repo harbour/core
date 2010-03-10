@@ -176,6 +176,7 @@ CLASS HbIde
    DATA   qTBarLines
    DATA   qTBarPanels
    DATA   qTBarDocks
+   DATA   qCompleter
 
    ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
    ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()
@@ -225,6 +226,7 @@ CLASS HbIde
    DATA   lDockBVisible                           INIT   .f.
    DATA   lTabCloseRequested                      INIT   .f.
    DATA   isColumnSelectionEnabled                INIT   .f.
+   DATA   lLineNumbersVisible                     INIT   .t.
 
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
@@ -1045,7 +1047,7 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 
    ENDCASE
 
-   ::manageFocusInEditor()
+   // ::manageFocusInEditor()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -84,6 +84,7 @@
 
 #define blockCountChanged                         21
 #define contentsChange                            22
+#define timerTimeout                              23
 
 #define EDT_LINNO_WIDTH                           50
 
@@ -194,6 +195,10 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Split V"      , oSub:addAction( "Split Vertically"   ) } )
    aadd( ::aActions, { ""             , oSub:addSeparator() } )
    aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
+
+   ::oIde:qCompleter := QCompleter():new()
+   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+
 
    RETURN Self
 
@@ -1209,6 +1214,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
    IF !empty( oEdit := ::oEM:getEditorByTabObject( oXbp ) )
       oEdit:setDocumentProperties()
       oEdit:qCoEdit:relayMarkButtons()
+      oEdit:qCoEdit:toggleLineNumbers()
    ENDIF
 
    RETURN Self
@@ -1340,7 +1346,12 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   lUpdatePrevWord                         INIT  .f.
    DATA   lCopyWhenDblClicked                     INIT  .f.
    DATA   cCurLineText                            INIT  ""
-   DATA   lLineNumbersVisible                     INIT  .t.
+
+   DATA   cProto                                  INIT ""
+   DATA   qTimer
+   DATA   nProtoLine                              INIT -1
+   DATA   nProtoCol                               INIT -1
+   DATA   isSuspended                             INIT .f.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1377,8 +1388,15 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD getLine( lSelect )
    METHOD getText()
    METHOD getSelectedText()
+   METHOD getColumnNo()
+   METHOD getLineNo()
    METHOD insertSeparator()
    METHOD insertText( cText )
+
+   METHOD suspendPrototype()
+   METHOD resumePrototype()
+   METHOD showPrototype( cProto )
+   METHOD hidePrototype()
 
    ENDCLASS
 
@@ -1413,6 +1431,8 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
    ::qEdit:hbSetSpaces( ::nTabSpaces )
 
+   ::toggleLineNumbers()
+
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )
 
@@ -1422,9 +1442,15 @@ METHOD IdeEdit:create( oEditor, nMode )
 
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn     ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
    ::qEdit:hbSetEventBlock( {|p| ::execKeyEvent( 115, 1001, p ) } )
+
+   ::qTimer := QTimer():new()
+   ::qTimer:setInterval( 2000 )
+   ::connect( ::qTimer, "timeout()",  {|| ::execEvent( timerTimeout, Self ) } )
 
    RETURN Self
 
@@ -1432,8 +1458,15 @@ METHOD IdeEdit:create( oEditor, nMode )
 
 METHOD IdeEdit:destroy()
 
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_KeyPress )
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_Wheel    )
+   ::disconnect( ::qTimer, "timeout()" )
+   IF ::qTimer:isActive()
+      ::qTimer:stop()
+   ENDIF
+   ::qTimer := NIL
+
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_KeyPress            )
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_Wheel               )
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick )
 
    ::disconnectEditSignals( Self )
 
@@ -1488,7 +1521,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qCursor, qEdit, oo
+   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nLine
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -1539,6 +1572,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       /* Book Marks reach-out buttons */
       ::relayMarkButtons()
+      ::toggleLineNumbers()
 
       /* An experimental move but seems a lot is required to achieve column selection */
       qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
@@ -1547,10 +1581,24 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE cursorPositionChanged
-      //hbide_dbg( "cursorPositionChanged()" )
+      // hbide_dbg( "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
       ::oEditor:dispEditInfo( qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
+
+      IF ::nProtoLine != -1
+         nLine := ::getLineNo()
+         IF ! ::isSuspended
+            IF nLine != ::nProtoLine .OR. ::getColumnNo() <= ::nProtoCol
+               ::suspendPrototype()
+            ENDIF
+         ELSE
+            IF nLine == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol
+               ::resumePrototype()
+            ENDIF
+         ENDIF
+      ENDIF
+
       EXIT
 
    CASE copyAvailable
@@ -1558,6 +1606,14 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          ::qEdit:copy()
       ENDIF
       ::lCopyWhenDblClicked := .f.
+      EXIT
+
+   CASE timerTimeout
+      IF empty( ::cProto )
+         ::hidePrototype()
+      ELSE
+         ::showPrototype()
+      ENDIF
       EXIT
 
    #if 0
@@ -1668,11 +1724,29 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
          ENDIF
       CASE Qt_Key_ParenLeft
          IF ! lCtrl .AND. ! lAlt
-            ::loadFuncHelp()
+            ::loadFuncHelp()     // Also invokes prototype display
+         ENDIF
+         EXIT
+      CASE Qt_Key_ParenRight
+         IF ! lCtrl .AND. ! lAlt
+            ::hidePrototype()
+         ENDIF
+         EXIT
+      CASE Qt_Key_T
+         IF lCtrl
+            ::gotoFunction()
          ENDIF
          EXIT
       ENDSWITCH
 
+      EXIT
+
+   CASE QEvent_FocusIn
+      ::resumePrototype()
+      EXIT
+
+   CASE QEvent_FocusOut
+      ::suspendPrototype()
       EXIT
 
    CASE QEvent_Wheel
@@ -1681,6 +1755,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
    CASE QEvent_MouseButtonDblClick
       ::lCopyWhenDblClicked := .t.
       EXIT
+
 
    CASE 1001
       IF p == QEvent_MouseButtonDblClick
@@ -1733,7 +1808,6 @@ METHOD IdeEdit:presentSkeletons()
 
 METHOD IdeEdit:toggleLineNumbers()
 
-   ::lLineNumbersVisible := ! ::lLineNumbersVisible
    ::qEdit:hbNumberBlockVisible( ::lLineNumbersVisible )
 
    RETURN Self
@@ -1906,6 +1980,16 @@ METHOD IdeEdit:getLine( lSelect )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:getColumnNo()
+   RETURN QTextCursor():from( ::qEdit:textCursor() ):columnNumber() + 1
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getLineNo()
+   RETURN QTextCursor():from( ::qEdit:textCursor() ):blockNumber() + 1
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:insertSeparator()
    LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
@@ -1936,47 +2020,6 @@ METHOD IdeEdit:insertText( cText )
       qCursor:insertText( cText )
       qCursor:setPosition( nB )
       qCursor:endEditBlock()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:gotoFunction()
-   LOCAL cWord
-   IF !empty( cWord := ::getWord( .f. ) )
-      ::oFN:jumpToFunction( cWord, .t. )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:clickFuncHelp()
-   LOCAL cWord
-   IF !empty( cWord := ::getWord( .f. ) )
-      IF ! empty( ::oHL )
-         ::oHL:jumpToFunction( cWord )
-      ENDIF
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:loadFuncHelp()
-   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cProto
-
-   qEdit := ::qEdit
-
-   qCursor    := QTextCursor():configure( qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
-   cText      := qTextBlock:text()
-   nCol       := qCursor:columnNumber()
-   cWord      := hbide_getPreviousWord( cText, nCol )
-   IF !empty( cWord )
-      IF ! empty( ::oHL )
-         ::oHL:jumpToFunction( cWord )
-      ENDIF
-      cProto := ::oFN:positionToFunction( cWord, .t. )
-      qEdit:hbShowPrototype( hbide_formatProto( cProto ) )
    ENDIF
    RETURN Self
 
@@ -2104,6 +2147,100 @@ METHOD IdeEdit:handleCurrentIndent()
       ENDIF
    ENDIF
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:gotoFunction()
+   LOCAL cWord
+   IF !empty( cWord := ::getWord( .f. ) )
+      ::oFN:jumpToFunction( cWord, .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:clickFuncHelp()
+   LOCAL cWord
+   IF !empty( cWord := ::getWord( .f. ) )
+      IF ! empty( ::oHL )
+         ::oHL:jumpToFunction( cWord )
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:resumePrototype()
+
+   ::isSuspended := .f.
+   IF !empty( ::qEdit )
+      ::qEdit:hbShowPrototype( ::cProto )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:suspendPrototype()
+
+   ::isSuspended := .t.
+   IF !empty( ::qEdit )
+      ::qEdit:hbShowPrototype( "" )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:showPrototype( cProto )
+
+   IF ! ::isSuspended  .AND. !empty( ::qEdit )
+      IF !empty( cProto )
+         ::cProto     := cProto
+         ::nProtoLine := ::getLineNo()
+         ::nProtoCol  := ::getColumnNo()
+         ::qTimer:start()
+      ENDIF
+      ::qEdit:hbShowPrototype( ::cProto )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:hidePrototype()
+
+   IF !empty( ::qedit )
+      ::nProtoLine := -1
+      ::nProtoCol  := -1
+      ::cProto     := ""
+      ::qTimer:stop()
+      ::qEdit:hbShowPrototype( "" )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:loadFuncHelp()
+   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cPro
+
+   qEdit := ::qEdit
+
+   qCursor    := QTextCursor():configure( qEdit:textCursor() )
+   qTextBlock := QTextBlock():configure( qCursor:block() )
+   cText      := qTextBlock:text()
+   nCol       := qCursor:columnNumber()
+   cWord      := hbide_getPreviousWord( cText, nCol )
+   IF !empty( cWord )
+      IF ! empty( ::oHL )
+         ::oHL:jumpToFunction( cWord )
+      ENDIF
+      IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
+         IF empty( ::cProto )
+            ::showPrototype( ::cProto := hbide_formatProto( cPro ) )
+         ENDIF
+      ENDIF
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

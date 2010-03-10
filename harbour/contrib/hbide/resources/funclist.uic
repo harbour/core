@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'funclist.ui'
 **
-** Created: Tue Mar 9 12:14:29 2010
+** Created: Tue Mar 9 18:20:01 2010
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -30,7 +30,6 @@ class Ui_Form
 {
 public:
     QGridLayout *gridLayout;
-    QListWidget *listProjects;
     QLineEdit *editFunction;
     QTableWidget *tableFuncList;
     QLabel *label;
@@ -41,6 +40,7 @@ public:
     QPushButton *buttonLoad;
     QPushButton *buttonTag;
     QPushButton *buttonClose;
+    QListWidget *listProjects;
 
     void setupUi(QWidget *Form)
     {
@@ -49,12 +49,6 @@ public:
         Form->resize(400, 486);
         gridLayout = new QGridLayout(Form);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        listProjects = new QListWidget(Form);
-        listProjects->setObjectName(QString::fromUtf8("listProjects"));
-        listProjects->setMaximumSize(QSize(16777215, 100));
-
-        gridLayout->addWidget(listProjects, 0, 0, 1, 5);
-
         editFunction = new QLineEdit(Form);
         editFunction->setObjectName(QString::fromUtf8("editFunction"));
 
@@ -79,6 +73,7 @@ public:
         labelEntries = new QLabel(Form);
         labelEntries->setObjectName(QString::fromUtf8("labelEntries"));
         labelEntries->setMaximumSize(QSize(70, 16777215));
+        labelEntries->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(labelEntries, 3, 4, 1, 1);
 
@@ -87,27 +82,33 @@ public:
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        gridLayout->addWidget(line, 4, 0, 1, 5);
+        gridLayout->addWidget(line, 5, 0, 1, 5);
 
         buttonMark = new QPushButton(Form);
         buttonMark->setObjectName(QString::fromUtf8("buttonMark"));
 
-        gridLayout->addWidget(buttonMark, 5, 0, 1, 2);
+        gridLayout->addWidget(buttonMark, 6, 0, 1, 2);
 
         buttonLoad = new QPushButton(Form);
         buttonLoad->setObjectName(QString::fromUtf8("buttonLoad"));
 
-        gridLayout->addWidget(buttonLoad, 5, 2, 1, 1);
+        gridLayout->addWidget(buttonLoad, 6, 2, 1, 1);
 
         buttonTag = new QPushButton(Form);
         buttonTag->setObjectName(QString::fromUtf8("buttonTag"));
 
-        gridLayout->addWidget(buttonTag, 5, 3, 1, 1);
+        gridLayout->addWidget(buttonTag, 6, 3, 1, 1);
 
         buttonClose = new QPushButton(Form);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
 
-        gridLayout->addWidget(buttonClose, 5, 4, 1, 1);
+        gridLayout->addWidget(buttonClose, 6, 4, 1, 1);
+
+        listProjects = new QListWidget(Form);
+        listProjects->setObjectName(QString::fromUtf8("listProjects"));
+        listProjects->setMaximumSize(QSize(16777215, 100));
+
+        gridLayout->addWidget(listProjects, 4, 0, 1, 5);
 
 
         retranslateUi(Form);
@@ -120,7 +121,7 @@ public:
         Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("Form", "Syntax:", 0, QApplication::UnicodeUTF8));
         labelEntries->setText(QString());
-        buttonMark->setText(QApplication::translate("Form", "Mark Projs", 0, QApplication::UnicodeUTF8));
+        buttonMark->setText(QApplication::translate("Form", "Mark Projects", 0, QApplication::UnicodeUTF8));
         buttonLoad->setText(QApplication::translate("Form", "Load Tags", 0, QApplication::UnicodeUTF8));
         buttonTag->setText(QApplication::translate("Form", "Re-Tag", 0, QApplication::UnicodeUTF8));
         buttonClose->setText(QApplication::translate("Form", "Close", 0, QApplication::UnicodeUTF8));

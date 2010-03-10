@@ -119,6 +119,7 @@ CLASS IdeObject
    ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
    ACCESS qTBarDocks                              INLINE ::oIde:qTBarDocks
+   ACCESS qCompleter                              INLINE ::oIde:qCompleter
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme
@@ -183,6 +184,7 @@ CLASS IdeObject
    ACCESS lDockBVisible                           INLINE ::oIde:lDockBVisible
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
    ACCESS isColumnSelectionEnabled                INLINE ::oIde:isColumnSelectionEnabled
+   ACCESS lLineNumbersVisible                     INLINE ::oIde:lLineNumbersVisible
 
    ACCESS aMarkTBtns                              INLINE ::oIde:aMarkTBtns
 

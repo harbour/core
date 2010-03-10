@@ -494,7 +494,8 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { "deleteline"   , "Delete Current Line"    , {|| ::oEM:deleteLine()    } } )
    aadd( aBtns, { "duplicateline", "Duplicate Current Line" , {|| ::oEM:duplicateLine() } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers" , {|| ::oEM:toggleLineNumbers()  } } )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers" , {|| ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible, ;
+                                                                                          ::oEM:toggleLineNumbers()  } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()
@@ -504,6 +505,9 @@ METHOD IdeDocks:buildToolBarPanels()
          qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
          qTBtn:setMaximumWidth( 20 )
          qTBtn:setMaximumHeight( 20 )
+         IF a_[ 1 ] == "togglelinenumber"
+            qTBtn:setCheckable( .t. )
+         ENDIF
          ::connect( qTBtn, "clicked()", a_[ 3 ] )
          ::qTBarLines:addWidget( qTBtn )
          aadd( ::aBtnLines, qTBtn )
@@ -677,7 +681,7 @@ METHOD IdeDocks:buildEditorTree()
    ::oEditTree:oWidget:setMinimumWidth( 100 )
 
    //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
-   ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem, ::oIde:manageFocusInEditor() }
+   ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem }
    ::oEditTree:itemSelected  := {|oItem| ::oIde:manageItemSelected( oItem ) }
    ::oEditTree:hbContextMenu := {|mp1, mp2, oXbp| ::oIde:manageProjectContext( mp1, mp2, oXbp ) }
 
