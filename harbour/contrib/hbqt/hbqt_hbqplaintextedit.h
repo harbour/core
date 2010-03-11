@@ -63,6 +63,9 @@
 #include <QTextBlock>
 #include <QPainter>
 #include <QMessageBox>
+#include <QCompleter>
+#include <QAbstractItemView>
+#include <QScrollBar>
 #include <QToolTip>
 
 #include "hbqt_hbqsyntaxhighlighter.h"
@@ -123,15 +126,14 @@ private:
    int            columnEnds;
    bool           isColumnSelectionEnabled;
    bool           isTipActive;
+   QCompleter   * c;
 
 protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
    void           mouseDoubleClickEvent( QMouseEvent * event );
-   #if 0
-   void           contextMenuEvent( QContextMenuEvent * event );
+   void           focusInEvent( QFocusEvent * event );
    void           keyPressEvent( QKeyEvent * event );
-   #endif
 
 public slots:
    void           hbUpdateLineNumberAreaWidth( int newBlockCount );
@@ -153,9 +155,11 @@ public slots:
    void           hbInsertTab( int mode );
    void           hbHighlightSelectedColumns( bool yes );
    QString        hbGetSelectedText();
+   QString        hbTextUnderCursor();
    void           hbNumberBlockVisible( bool b );
    bool           hbNumberBlockVisible();
    void           hbShowPrototype( const QString & tip );
+   void           hbSetCompleter( QCompleter * completer ) { c = completer; };
 
 private slots:
    void           hbSlotCursorPositionChanged();

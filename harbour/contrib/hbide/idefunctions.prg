@@ -425,7 +425,7 @@ METHOD IdeFunctions:enableControls( lEnable )
 
    ::oUI:q_editFunction:setEnabled( lEnable )
 
-   ::showApplicationCursor( iif( lEnable, NIL, Qt_BusyCursor ) )
+   ::showApplicationCursor( iif( lEnable, NIL, Qt_WaitCursor ) )
 
    RETURN Self
 
@@ -586,29 +586,56 @@ METHOD IdeFunctions:consolidateList()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFunctions:populateTable()
-   LOCAL oTbl, qItm, a_, n
+   LOCAL oTbl, qItm, a_, n, s, k_:={}
 
-      ::clear( .t. )
-      ::buildHeader()
+   ::clear( .t. )
+   ::buildHeader()
 
-      oTbl := ::oUI:q_tableFuncList
-      oTbl:setRowCount( len( ::aList ) )
+   oTbl := ::oUI:q_tableFuncList
+   oTbl:setRowCount( len( ::aList ) )
 
-      n := 0
-      FOR EACH a_ IN ::aList
-         qItm := QTableWidgetItem():new()
+   n := 0
+   FOR EACH a_ IN ::aList
+      qItm := QTableWidgetItem():new()
 
-         qItm:setText( a_[ 3 ] )
-         qItm:setTooltip( a_[ 2 ] )
-         oTbl:setItem( n, 0, qItm )
-         oTbl:setRowHeight( n, 16 )
+      qItm:setText( a_[ 3 ] )
+      qItm:setTooltip( a_[ 2 ] )
+      oTbl:setItem( n, 0, qItm )
+      oTbl:setRowHeight( n, 16 )
 
-         QApplication():processEvents()
+      QApplication():processEvents()
 
-         aadd( ::aItems, qItm )
-         n++
-         ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
-      NEXT
+      aadd( ::aItems, qItm )
+      n++
+      ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
+   NEXT
+
+   ::qProtoList:clear()
+
+   FOR EACH a_ IN ::aList
+      s := a_[ 2 ]
+      IF ( n := at( "(", s ) ) == 0
+         IF ( n := at( " ", s ) ) > 0
+            aadd( k_, substr( s, 1, n - 1 ) )
+         ELSE
+            aadd( k_, trim( s ) )
+         ENDIF
+      ELSE
+         aadd( k_, substr( s, 1, n - 1 ) )
+      ENDIF
+   NEXT
+
+   asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
+   aeval( k_, {|e| ::qProtoList:append( e ) } )
+
+   ::qCompModel:setStringList( ::qProtoList )
+   ::qCompleter:setModel( ::qCompModel )
+   ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
+   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+   ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
+   ::qCompleter:setWrapAround( .f. )
+
+   QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
 
    RETURN Self
 

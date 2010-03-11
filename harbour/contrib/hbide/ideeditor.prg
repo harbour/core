@@ -198,10 +198,16 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { ""             , oSub:addSeparator() } )
    aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
 
+   ::oIde:qProtoList := QStringList():new()
+   ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
 
+   ::qCompModel:setStringList( ::qProtoList )
+   ::qCompleter:setModel( ::qCompModel )
+   ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
    ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
+   ::qCompleter:setWrapAround( .f. )
 
    ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( qcompleter_activated, p ) } )
 
@@ -265,11 +271,13 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:execEvent( nMode, p )
-
-   HB_SYMBOL_UNUSED( p )
+   LOCAL oEdit
 
    DO CASE
    CASE nMode == qcompleter_activated
+      IF !empty( oEdit := ::getEditObjectCurrent() )
+         oEdit:completeCode( p )
+      ENDIF
 
    ENDCASE
 
@@ -1398,6 +1406,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD resumePrototype()
    METHOD showPrototype( cProto )
    METHOD hidePrototype()
+   METHOD completeCode( p )
 
    ENDCLASS
 
@@ -1431,6 +1440,8 @@ METHOD IdeEdit:create( oEditor, nMode )
 
    ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
    ::qEdit:hbSetSpaces( ::nTabSpaces )
+
+   ::qEdit:hbSetCompleter( ::qCompleter )
 
    ::toggleLineNumbers()
 
@@ -2218,6 +2229,23 @@ METHOD IdeEdit:hidePrototype()
       ::qTimer:stop()
       ::qEdit:hbShowPrototype( "" )
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:completeCode( p )
+   LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
+
+   qCursor:movePosition( QTextCursor_Left )
+
+   qCursor:movePosition( QTextCursor_StartOfWord )
+   qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
+   qCursor:insertText( p )
+   qCursor:movePosition( QTextCursor_Left )
+   qCursor:movePosition( QTextCursor_Right )
+
+   ::qEdit:setTextCursor( qCursor )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

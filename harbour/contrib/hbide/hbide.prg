@@ -177,6 +177,8 @@ CLASS HbIde
    DATA   qTBarPanels
    DATA   qTBarDocks
    DATA   qCompleter
+   DATA   qCompModel
+   DATA   qProtoList
 
    ACCESS oCurEditor                              INLINE ::oEM:getEditorCurrent()
    ACCESS qCurEdit                                INLINE ::oEM:getEditCurrent()

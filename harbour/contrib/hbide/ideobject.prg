@@ -120,6 +120,8 @@ CLASS IdeObject
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
    ACCESS qTBarDocks                              INLINE ::oIde:qTBarDocks
    ACCESS qCompleter                              INLINE ::oIde:qCompleter
+   ACCESS qCompModel                              INLINE ::oIde:qCompModel
+   ACCESS qProtoList                              INLINE ::oIde:qProtoList
 
    ACCESS cWrkProject                             INLINE ::oIde:cWrkProject
    ACCESS cWrkTheme                               INLINE ::oIde:cWrkTheme

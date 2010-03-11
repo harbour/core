@@ -170,6 +170,75 @@ bool HBQPlainTextEdit::event( QEvent *event )
    return QPlainTextEdit::event( event );
 }
 
+void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
+{
+   if( c && c->popup()->isVisible() )
+   {
+      // The following keys are forwarded by the completer to the widget
+      switch( event->key() )
+      {
+      case Qt::Key_Enter:
+      case Qt::Key_Return:
+      case Qt::Key_Escape:
+      case Qt::Key_Tab:
+      case Qt::Key_Backtab:
+         event->ignore();
+         return;                                    // let the completer do default behavior
+      default:
+         break;
+      }
+   }
+
+   QPlainTextEdit::keyPressEvent( event );
+
+   const bool ctrlOrShift = event->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier);
+   if( !c || ( ctrlOrShift && event->text().isEmpty() ) )
+       return;
+
+   static  QString            eow( "~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
+   QString completionPrefix = hbTextUnderCursor();
+
+   if( ( hasModifier || event->text().isEmpty() || completionPrefix.length() < 3
+                                                || eow.contains( event->text().right( 1 ) ) ) )
+   {
+      c->popup()->hide();
+      return;
+   }
+
+   if( completionPrefix != c->completionPrefix() )
+   {
+      c->setCompletionPrefix( completionPrefix );
+      c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
+   }
+   QRect cr = cursorRect();
+   cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
+   c->complete( cr ); // popup it up!
+}
+
+QString HBQPlainTextEdit::hbTextUnderCursor()
+{
+   QTextCursor tc = textCursor();
+   tc.select( QTextCursor::WordUnderCursor );
+   return tc.selectedText();
+}
+
+void HBQPlainTextEdit::resizeEvent( QResizeEvent *e )
+{
+   QPlainTextEdit::resizeEvent( e );
+
+   QRect cr = contentsRect();
+   lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), hbLineNumberAreaWidth(), cr.height() ) );
+}
+
+void HBQPlainTextEdit::focusInEvent( QFocusEvent * event )
+{
+   if( c )
+      c->setWidget( this );
+
+   QPlainTextEdit::focusInEvent( event );
+}
+
 void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 {
    HB_TRACE( HB_TR_ALWAYS, ( "void HBQPlainTextEdit::mouseDblClickEvent( QMouseEvent * %p )", event ) );
@@ -256,24 +325,6 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
    }
 }
 
-#if 0
-void HBQPlainTextEdit::contextMenuEvent( QContextMenuEvent *event )
-{
-   QWidget::contextMenuEvent( event );
-}
-
-void HBQPlainTextEdit::keyPressEvent( QKeyEvent *event )
-{
-   QPlainTextEdit::keyPressEvent( event );
-}
-#endif
-void HBQPlainTextEdit::resizeEvent( QResizeEvent *e )
-{
-   QPlainTextEdit::resizeEvent( e );
-
-   QRect cr = contentsRect();
-   lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), hbLineNumberAreaWidth(), cr.height() ) );
-}
 
 
 void HBQPlainTextEdit::hbBookmarks( int block )

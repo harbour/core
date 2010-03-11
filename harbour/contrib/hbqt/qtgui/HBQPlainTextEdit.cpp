@@ -411,11 +411,27 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTEDTEXT )
 }
 
 /*
+ * QString        hbTextUnderCursor()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTEXTUNDERCURSOR )
+{
+   hb_retc( hbqt_par_HBQPlainTextEdit( 1 )->hbTextUnderCursor().toAscii().data() );
+}
+
+/*
  * void           hbShowPrototype( const QString & tip )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSHOWPROTOTYPE )
 {
    hbqt_par_HBQPlainTextEdit( 1 )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
+}
+
+/*
+ * void           hbSetCompleter( QCompleter * completer )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETCOMPLETER )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbSetCompleter( hbqt_par_QCompleter( 2 ) );
 }
 
 
