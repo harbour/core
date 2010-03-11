@@ -308,7 +308,7 @@ static size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nm
    return ( size_t ) -1;
 }
 
-#define HB_CURL_DL_BUFF_SIZE_INIT ( CURL_MAX_WRITE_SIZE * 2 )
+#define HB_CURL_DL_BUFF_SIZE_INIT ( CURL_MAX_WRITE_SIZE * 4 )
 #define HB_CURL_DL_BUFF_SIZE_INCR ( CURL_MAX_WRITE_SIZE * 4 )
 
 static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
