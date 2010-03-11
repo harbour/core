@@ -1089,6 +1089,7 @@ HARBOUR
      Some environment variable settings which are commonly believed by
      users to be useful, but which in reality are either not needed or
      not even used by Harbour build process and hbmk2. You can delete them:
+        set HB_DIR=<Harbour root dir>
         set HB_PATH=<Harbour root dir>
         set HRB_DIR=<Some Harbour dir>
         set INCLUDE=<Harbour include dir>
