@@ -82,7 +82,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 {
    if( bUseDirEntry )
    {
-#if defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN )
       char * pszFree;
       PHB_FFIND ffind;
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
