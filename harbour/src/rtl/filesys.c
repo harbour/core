@@ -238,7 +238,12 @@
                               } while( 0 )
    #define HB_FS_SETDRIVE(n)  do { DosSetDefaultDisk( ( n ) + 1 ); } while( 0 )
 
-#elif defined( __DJGPP__ ) || defined( __BORLANDC__ ) || defined( __DMC__ )
+#elif defined( HB_OS_WIN )
+
+   #define HB_FS_GETDRIVE(n)  do { n = fs_win_get_drive(); } while( 0 )
+   #define HB_FS_SETDRIVE(n)  fs_win_set_drive( n )
+
+#elif defined( __DJGPP__ ) || defined( __BORLANDC__ )
    /* 0 based version */
 
    #define HB_FS_GETDRIVE(n)  do { n = getdisk(); } while( 0 )
@@ -256,7 +261,7 @@
                                  _dos_setdrive( ( n ) + 1, &_u ); \
                               } while( 0 )
 
-#else /* _MSC_VER, __POCC__, __XCC__, MINGW, __BORLANDC__, __DMC__ */
+#else /* _MSC_VER */
    /* 1 based version */
 
    #define HB_FS_GETDRIVE(n)  do { n = _getdrive() - 1; } while( 0 )
@@ -304,6 +309,53 @@
 #endif
 
 static HB_BOOL s_fUseWaitLocks = HB_TRUE;
+
+#if defined( HB_OS_WIN )
+
+static int fs_win_get_drive( void )
+{
+   int iDrive;
+   char szBuffer[ HB_PATH_MAX ];
+   PHB_FNAME pFilepath;
+
+#if defined( UNICODE )
+   {
+      TCHAR lpBuffer[ HB_PATH_MAX ];
+      HB_SIZE ulSize = HB_SIZEOFARRAY( lpBuffer );
+      hb_fsSetIOError( ( GetCurrentDirectory( ulSize, lpBuffer ) != 0 ), 0 );
+      hb_wctombget( szBuffer, lpBuffer, ulSize );
+   }
+#else
+   hb_fsSetIOError( ( GetCurrentDirectory( ulSize, szBuffer ) != 0 ), 0 );
+#endif
+
+   pFilepath = hb_fsFNameSplit( szBuffer );
+
+   if( pFilepath->szDrive )
+      iDrive = HB_TOUPPER( pFilepath->szDrive[ 0 ] ) - 'A';
+   else
+      iDrive = -1;
+
+   hb_xfree( pFilepath );
+
+   return iDrive;
+}
+
+static void fs_win_set_drive( int iDrive )
+{
+   if( iDrive >= 0 )
+   {
+      TCHAR szBuffer[ 3 ];
+
+      szBuffer[ 0 ] = ( TCHAR ) ( iDrive + 'A' );
+      szBuffer[ 1 ] = TEXT( ':' );
+      szBuffer[ 2 ] = TEXT( '\0' );
+
+      hb_fsSetIOError( SetCurrentDirectory( szBuffer ), 0 );
+   }
+}
+
+#endif
 
 #if defined( HB_FS_FILE_IO )
 
@@ -876,8 +928,6 @@ void hb_fsClose( HB_FHANDLE hFileHandle )
 int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %d)", ( void * ) ( HB_PTRDIFF ) hFileHandle, iDevMode));
-
-   /* TODO: Support using native Windows API */
 
 #if defined( __BORLANDC__ ) || defined( __IBMCPP__ ) || defined( __DJGPP__ ) || \
     defined( __CYGWIN__ ) || defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
@@ -1840,8 +1890,8 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCoun
       }
 
       /* TOFIX: this is not atom operation. It has to be fixed for RDD
-          *        file access with shared file handles in aliased work areas
-          */
+       *        file access with shared file handles in aliased work areas
+       */
 #     elif defined( HB_FS_LARGE_OPTIMIZED )
       {
          HB_FOFFSET llPos;
@@ -3039,9 +3089,7 @@ char * hb_fsExtName( const char * pFilename, const char * pDefExt,
    pFilepath = hb_fsFNameSplit( pFilename );
 
    if( pDefExt && ( ( uiExFlags & FXO_FORCEEXT ) || !pFilepath->szExtension ) )
-   {
       pFilepath->szExtension = pDefExt;
-   }
 
    if( pFilepath->szPath )
    {
@@ -3095,9 +3143,8 @@ char * hb_fsExtName( const char * pFilename, const char * pDefExt,
       }
    }
    else
-   {
       hb_fsFNameMerge( szPath, pFilepath );
-   }
+
    hb_xfree( pFilepath );
 
    return szPath;

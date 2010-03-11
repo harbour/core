@@ -51,14 +51,6 @@
  *
  */
 
-/*
- 2002-01-28 21:30 UTC+0100 Patrick Mast <email@patrickmast.com>
-   * contrib/mysql/tmysql
-     + Added DateTime field
-     * Added more info on Alert message for Unknown type
-     * Modified ClipValue2SQL() to process empty strings
- */
-
 #include "hbclass.ch"
 
 #include "common.ch"
@@ -617,13 +609,13 @@ METHOD FieldPos( cFieldName ) CLASS TMySQLQuery
 
    cUpperName := Upper( cFieldName )
 
-   //DAVID: nPos := AScan( ::aFieldStruct, {|aItem| iif( Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName, .T., .F. ) } )
-   nPos := AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ]) == cUpperName } )
+   //DAVID: nPos := AScan( ::aFieldStruct, {| aItem | iif( Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName, .T., .F. ) } )
+   nPos := AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
 
    /*
    nPos := 0
    DO WHILE ++nPos <= Len( ::aFieldStruct )
-      IF Upper( ::aFieldStruct[nPos][ MYSQL_FS_NAME ] ) == cUpperName
+      IF Upper( ::aFieldStruct[ nPos ][ MYSQL_FS_NAME ] ) == cUpperName
          EXIT
       ENDIF
    ENDDO
