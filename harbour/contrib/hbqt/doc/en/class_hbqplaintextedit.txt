@@ -5,7 +5,7 @@
  *
  *  Pritpal Bedi <bedipritpal@hotmail.com>
  *
- *  03/10/10 - 14:17:24
+ *  03/10/10 - 19:03:11
  *
  */
 
@@ -68,6 +68,8 @@
         :hbTextUnderCursor()                                -> cQString
         :hbShowPrototype( cTip )                            -> NIL
         :hbSetCompleter( pCompleter )                       -> NIL
+        :hbSetCurrentLineColor( pColor )                    -> NIL
+        :hbSetLineAreaBkColor( pColor )                     -> NIL
 
     $DESCRIPTION$
 

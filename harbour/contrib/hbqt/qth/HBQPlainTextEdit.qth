@@ -133,6 +133,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    QString        hbTextUnderCursor()
    void           hbShowPrototype( const QString & tip )
    void           hbSetCompleter( QCompleter * completer )
+   void           hbSetCurrentLineColor( const QColor & color )
+   void           hbSetLineAreaBkColor( const QColor & color )
 </SLOTS>
 
 <SIGNALS>

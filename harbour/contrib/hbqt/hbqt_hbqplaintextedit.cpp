@@ -95,6 +95,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbSlotCursorPositionChanged() ) );
 
    m_currentLineColor.setNamedColor( "#e8e8ff" );
+   m_lineAreaBkColor.setNamedColor( "#e4e4e4" );
 }
 
 HBQPlainTextEdit::~HBQPlainTextEdit()
@@ -295,7 +296,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
 {
    QPainter painter( lineNumberArea );
-   painter.fillRect( event->rect(), QColor( "#e4e4e4" ) );
+   painter.fillRect( event->rect(), m_lineAreaBkColor );
 
    QTextBlock block = firstVisibleBlock();
    int blockNumber = block.blockNumber();

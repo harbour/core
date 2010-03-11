@@ -82,6 +82,7 @@ public:
 
    PHB_ITEM       block;
    QColor         m_currentLineColor;
+   QColor         m_lineAreaBkColor;
    long           m_matchingBegin;
    long           m_matchingEnd;
 
@@ -160,6 +161,8 @@ public slots:
    bool           hbNumberBlockVisible();
    void           hbShowPrototype( const QString & tip );
    void           hbSetCompleter( QCompleter * completer ) { c = completer; };
+   void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
+   void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
 
 private slots:
    void           hbSlotCursorPositionChanged();

@@ -434,6 +434,22 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETCOMPLETER )
    hbqt_par_HBQPlainTextEdit( 1 )->hbSetCompleter( hbqt_par_QCompleter( 2 ) );
 }
 
+/*
+ * void           hbSetCurrentLineColor( const QColor & color )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETCURRENTLINECOLOR )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbSetCurrentLineColor( *hbqt_par_QColor( 2 ) );
+}
+
+/*
+ * void           hbSetLineAreaBkColor( const QColor & color )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETLINEAREABKCOLOR )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbSetLineAreaBkColor( *hbqt_par_QColor( 2 ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
