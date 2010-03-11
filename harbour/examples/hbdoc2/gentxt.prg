@@ -87,8 +87,8 @@ PROTECTED:
    DATA lContinuous AS LOGICAL INIT .F.
 
 EXPORTED:
-   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
+   METHOD NewIndex( cFolder, cFilename, cTitle )
+   METHOD NewDocument( cFolder, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
@@ -98,14 +98,12 @@ EXPORTED:
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateText
-   HB_SYMBOL_UNUSED( cDescription )
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
    super:NewDocument( cFolder, cFilename, cTitle, "txt" )
    ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateText
-   HB_SYMBOL_UNUSED( cDescription )
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
    super:NewIndex( cFolder, cFilename, cTitle, "txt" )
    ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self

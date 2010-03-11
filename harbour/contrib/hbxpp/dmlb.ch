@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _DMLB_CH
 #define _DMLB_CH
 
