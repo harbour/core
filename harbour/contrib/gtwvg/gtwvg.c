@@ -3381,7 +3381,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
-            if( iIndex >= 0 && iIndex <= 15 )
+            if( iIndex >= 0 && iIndex < 16 )
             {
                pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->COLORS[ iIndex ] );
 
@@ -3400,14 +3400,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( !pInfo->pResult )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
-            for( i = 1; i <= 16; i++ )
-               hb_arraySetNL( pInfo->pResult, i, pWVT->COLORS[ i - 1 ] );
+            for( i = 0; i < 16; i++ )
+               hb_arraySetNL( pInfo->pResult, i + 1, pWVT->COLORS[ i ] );
 
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
             {
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
-                  for( i = 0; i <= 15; i++ )
+                  for( i = 0; i < 16; i++ )
                      pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )
@@ -3420,9 +3420,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_RESIZEMODE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ResizeMode );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
             pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
-         }
          break;
 
       case HB_GTI_SETPOS_XY:
