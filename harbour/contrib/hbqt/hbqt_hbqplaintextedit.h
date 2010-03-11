@@ -163,7 +163,7 @@ public slots:
    void           hbSetCompleter( QCompleter * completer ) { c = completer; };
    void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
    void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
-
+   void           hbRefresh();
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );

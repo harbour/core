@@ -135,6 +135,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbSetCompleter( QCompleter * completer )
    void           hbSetCurrentLineColor( const QColor & color )
    void           hbSetLineAreaBkColor( const QColor & color )
+   void           hbRefresh()
 </SLOTS>
 
 <SIGNALS>

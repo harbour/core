@@ -116,6 +116,11 @@ void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
       block = hb_itemNew( pBlock );
 }
 
+void HBQPlainTextEdit::hbRefresh()
+{
+   update();
+}
+
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
 {
    if( tip == ( QString ) "" )

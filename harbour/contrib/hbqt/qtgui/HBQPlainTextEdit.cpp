@@ -450,6 +450,14 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETLINEAREABKCOLOR )
    hbqt_par_HBQPlainTextEdit( 1 )->hbSetLineAreaBkColor( *hbqt_par_QColor( 2 ) );
 }
 
+/*
+ * void           hbRefresh()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBREFRESH )
+{
+   hbqt_par_HBQPlainTextEdit( 1 )->hbRefresh();
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -82,6 +82,9 @@
 
 #define applyMenu_triggered_applyToCurrentTab     1
 #define applyMenu_triggered_setAsDefault          2
+#define applyMenu_triggered_applyToAllTabs        3
+#define listThemes_currentRowChanged              4
+#define listItems_currentRowChanged               5
 
 /*----------------------------------------------------------------------*/
 
@@ -144,6 +147,8 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD selectThemeProc( nMode, p, oSL, cTheme )
    METHOD buildINI()
    METHOD parseINI( lAppend )
+   METHOD updateLineNumbersBkColor()
+   METHOD updateCurrentLineColor()
 
    ENDCLASS
 
@@ -216,24 +221,14 @@ METHOD IdeThemes:create( oIde, cIniFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:destroy()
-   LOCAL qAct
 
    IF !empty( ::oUI )
       ::qHiliter := NIL
       ::qEdit    := NIL
 
-      FOR EACH qAct IN ::aApplyAct
-         ::disconnect( qAct, "triggered(bool)" )
-         qAct := NIL
-      NEXT
-      ::qMenuApply := NIL
-      ::aApplyAct := NIL
-
       ::oThemesDock:oWidget:setWidget( QWidget():new() )
-hbide_dbg( 0,1,"IdeThemes:destroy()" )
       IF !empty( ::oUI )
          ::oUI:destroy()
-hbide_dbg( 1,1,"IdeThemes:destroy()" )
       ENDIF
    ENDIF
 
@@ -242,11 +237,31 @@ hbide_dbg( 1,1,"IdeThemes:destroy()" )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:execEvent( nMode, p )
-   LOCAL oEditor
+   LOCAL oEditor, a_
 
    HB_SYMBOL_UNUSED( p )
 
    DO CASE
+   CASE nMode == listItems_currentRowChanged
+      ::nCurItem  := p+1
+
+      IF ::nCurItem == 13
+         ::updateCurrentLineColor()
+      ELSEIF ::nCurItem == 16
+         ::updateLineNumbersBkColor()
+      ELSE
+         ::setAttributes( p )
+      ENDIF
+
+   CASE nMode == listThemes_currentRowChanged
+      ::nCurTheme := p+1
+      ::setTheme( p )
+
+   CASE nMode == applyMenu_triggered_applyToAllTabs
+      FOR EACH a_ IN ::aTabs
+         a_[ TAB_OEDITOR ]:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
+      NEXT
+
    CASE nMode == applyMenu_triggered_applyToCurrentTab
       IF !empty( oEditor := ::oEM:getEditorCurrent() )
          oEditor:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
@@ -444,6 +459,14 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    ::setSingleLineCommentRule( qHiliter, cTheme )
    ::setQuotesRule( qHiliter, cTheme )
 
+   IF __ObjGetClsName( qEdit ) == "HBQPLAINTEXTEDIT"
+      aAttr := ::getThemeAttribute( "CurrentLineBackground", cTheme )
+      qEdit:hbSetCurrentLineColor( QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+
+      aAttr := ::getThemeAttribute( "LineNumbersBkColor", cTheme )
+      qEdit:hbSetLineAreaBkColor( QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+   ENDIF
+
    qHiliter:setDocument( qEdit:document() )
 
    RETURN qHiliter
@@ -451,25 +474,23 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:show()
-   #if 1
-   LOCAL qAct
-   #endif
 
    IF empty( ::oUI )
       ::lCreating := .t.
 
       ::oUI := HbQtUI():new( hbide_uic( "themesex" ) ):build()
-
-      //::oThemesDock:qtObject := Self
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
-      ::oUI:signal( "comboThemes"   , "currentIndexChanged(int)", {|i| ::nCurTheme := i+1, ::setTheme( i ) } )
-      ::oUI:signal( "comboItems"    , "currentIndexChanged(int)", {|i| ::nCurItem  := i+1, ::setAttributes( i ) } )
+      ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( listThemes_currentRowChanged, i ) } )
+      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( listItems_currentRowChanged, i ) } )
 
       ::oUI:signal( "buttonColor"   , "clicked()"               , {|| ::updateColor() } )
       ::oUI:signal( "buttonSave"    , "clicked()"               , {|| ::save( .f. ) } )
       ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {|| ::save( .t. ) } )
       ::oUI:signal( "buttonCopy"    , "clicked()"               , {|| ::copy( .t. ) } )
+      ::oUI:signal( "buttonApply"   , "clicked()"               , {|| ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
+      ::oUI:signal( "buttonApplyAll", "clicked()"               , {|| ::execEvent( applyMenu_triggered_applyToAllTabs    ) } )
+      ::oUI:signal( "buttonDefault" , "clicked()"               , {|| ::execEvent( applyMenu_triggered_setAsDefault      ) } )
 
       ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
       ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
@@ -478,7 +499,6 @@ METHOD IdeThemes:show()
       ::oUI:signal( "buttonClose"   , "clicked()"               , {||  ::oThemesDock:hide() } )
 
       /* Fill Themes Dialog Values */
-      #if 1
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
       //
       ::oUI:qObj[ "labelItems"     ]:setText( GetKeyValue( ::aControls, "labelItems"    , "Items"     ) )
@@ -493,31 +513,9 @@ METHOD IdeThemes:show()
       ::oUI:qObj[ "buttonSaveAs"   ]:setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
       ::oUI:qObj[ "buttonClose"    ]:setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
       ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
-      #endif
 
-      #if 1
-      ::qMenuApply := QMenu():new()
-      //
-      qAct := QAction():new( ::qMenuApply )
-      qAct:setText( "Apply to Current Tab" )
-      ::connect( qAct, "triggered(bool)", {|| ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
-      ::qMenuApply:addAction_4( qAct )
-      aadd( ::aApplyAct, qAct )
-      //
-      ::qMenuApply:addSeparator()
-      //
-      qAct := QAction():new( ::qMenuApply )
-      qAct:setText( "Set as Default" )
-      ::connect( qAct, "triggered(bool)", {|| ::execEvent( applyMenu_triggered_setAsDefault ) } )
-      ::qMenuApply:addAction_4( qAct )
-      ::qMenuApply:addAction_4( qAct )
-      aadd( ::aApplyAct, qAct )
-      //
-      ::oUI:q_buttonApply:setMenu( ::qMenuApply )
-      #endif
-
-      aeval( ::aThemes, {|e_| ::oUI:q_comboThemes:addItem( e_[ 1 ] ) } )
-      aeval( ::aItems , {|e_| ::oUI:q_comboItems:addItem( e_[ 2 ] ) } )
+      aeval( ::aThemes, {|e_| ::oUI:q_listThemes:addItem( e_[ 1 ] ) } )
+      aeval( ::aItems , {|e_| ::oUI:q_listItems:addItem( e_[ 2 ] ) } )
 
       ::qEdit := ::oUI:q_plainThemeText
       ::qEdit:setPlainText( GetSource() )
@@ -527,12 +525,14 @@ METHOD IdeThemes:show()
 
       ::lCreating := .f.
 
-      ::nCurTheme := 1
-      ::nCurItem  := 1
+      ::oUI:q_listThemes:setCurrentRow( 0 )
+      ::oUI:q_listItems:setCurrentRow( 0 )
+
+      //::nCurTheme := 1
+      //::nCurItem  := 1
 
       ::setTheme()
       ::setAttributes()
-
    ENDIF
 
    RETURN Self
@@ -555,8 +555,8 @@ METHOD IdeThemes:copy()
       aItems := aclone( ::aThemes[ ::nCurTheme ] )
       aItems[ 1 ] := cTheme
       aadd( ::aThemes, aItems )
-      ::oUI:qObj[ "comboThemes" ]:addItem( cTheme )
-      ::oUI:qObj[ "comboThemes" ]:setCurrentIndex( len( ::aThemes ) - 1 )
+      ::oUI:qObj[ "listThemes" ]:addItem( cTheme )
+      ::oUI:qObj[ "listThemes" ]:setCurrentRow( len( ::aThemes ) - 1 )
    ENDIF
 
    RETURN Self
@@ -586,6 +586,34 @@ METHOD IdeThemes:setAttributes()
 
       ::oUI:qObj[ "buttonColor" ]:setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
                                                  "background-color: " + Attr2RGBfn( aAttr ) + ";" )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:updateLineNumbersBkColor()
+   LOCAL oEdit, aAttr
+
+   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      aAttr := ::getThemeAttribute( "LineNumbersBkColor", ::aThemes[ ::nCurTheme, 1 ] )
+      oEdit:setLineNumbersBkColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
+      oEdit:refresh()
+      ::setAttributes()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:updateCurrentLineColor()
+   LOCAL oEdit, aAttr
+
+   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      aAttr := ::getThemeAttribute( "CurrentLineBackground", ::aThemes[ ::nCurTheme, 1 ] )
+      oEdit:setCurrentLineColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
+      oEdit:refresh()
+      ::setAttributes()
    ENDIF
 
    RETURN Self
@@ -623,6 +651,14 @@ METHOD IdeThemes:updateColor()
    ELSEIF aAttr[ 1 ] == "CommentsAndRemarks"
       ::setMultiLineCommentRule( ::qHiliter, ::aThemes[ ::nCurTheme, 1 ] )
       ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
+
+   ELSEIF aAttr[ 1 ] == "CurrentLineBackground"
+      ::updateCurrentLineColor()
+      RETURN Self
+
+   ELSEIF aAttr[ 1 ] == "LineNumbersBkColor"
+      ::updateLineNumbersBkColor()
+      RETURN Self
 
    ELSE
       ::setSyntaxFormat( ::qHiliter, aAttr[ 1 ], aAttr[ 2 ] )
@@ -974,7 +1010,7 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "SelectionBackground            = Selection Background                " )
       aadd( aIni, "CurrentLineBackground          = Current Line Background             " )
       aadd( aIni, "UnterminatedStrings            = Unterminated Strings                " )
-      aadd( aIni, "WAPIDictionary                 = WAPIDictionary                      " )
+      aadd( aIni, "LineNumbersBkColor             = Line Numbers Background             " )
       aadd( aIni, "UserDictionary                 = UserDictionary                      " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -993,9 +1029,9 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "UnrecognizedText               =    0,   0,   0,  No,  No,  No,      " )
       aadd( aIni, "BookMarkLineBackground         =    0, 255, 255,  No,  No,  No,      " )
       aadd( aIni, "SelectionBackground            =  255, 128, 255,  No,  No,  No,      " )
-      aadd( aIni, "CurrentLineBackground          =  128,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "CurrentLineBackground          =  255, 215, 155,  No,  No,  No,      " )
       aadd( aIni, "UnterminatedStrings            =  255, 128, 128,  No,  No,  No,      " )
-      aadd( aIni, "WAPIDictionary                 =    0,   0, 128,  No,  No,  No,      " )
+      aadd( aIni, "LineNumbersBkColor             =  255, 215, 155,  No,  No,  No,      " )
       aadd( aIni, "UserDictionary                 =    0,   0,   0,  No,  No,  No,      " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -1014,9 +1050,9 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "UnrecognizedText               =    0,   0,   0,  No,  No,  No,      " )
       aadd( aIni, "BookMarkLineBackground         =    0, 255, 255,  No,  No,  No,      " )
       aadd( aIni, "SelectionBackground            =  255, 128, 255,  No,  No,  No,      " )
-      aadd( aIni, "CurrentLineBackground          =  128,   0,   0,  No,  No,  No,      " )
+      aadd( aIni, "CurrentLineBackground          =  235, 235, 235,  No,  No,  No,      " )
       aadd( aIni, "UnterminatedStrings            =  255, 128, 128,  No,  No,  No,      " )
-      aadd( aIni, "WAPIDictionary                 =    0,   0, 128,  No,  No,  No,      " )
+      aadd( aIni, "LineNumbersBkColor             =  235, 235, 235,  No,  No,  No,      " )
       aadd( aIni, "UserDictionary                 =    0,   0,   0,  No,  No,  No,      " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -1035,9 +1071,9 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "UnrecognizedText               = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "BookMarkLineBackground         = 0,255,255      ,  No,  No,  No,     " )
       aadd( aIni, "SelectionBackground            = 255,128,255    ,  No,  No,  No,     " )
-      aadd( aIni, "CurrentLineBackground          = 128,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 220,220,220    ,  No,  No,  No,     " )
       aadd( aIni, "UnterminatedStrings            = 255,128,128    ,  No,  No,  No,     " )
-      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "LineNumbersBkColor             = 220,220,220    ,  No,  No,  No,     " )
       aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -1058,7 +1094,7 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "SelectionBackground            = 255,128,255    ,  No,  No,  No,     " )
       aadd( aIni, "CurrentLineBackground          = 0,0,255        ,  No,  No,  No,     " )
       aadd( aIni, "UnterminatedStrings            = 255,255,255    ,  No,  No,  No,     " )
-      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "LineNumbersBkColor             = 0,0,255        ,  No,  No,  No,     " )
       aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -1077,9 +1113,9 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "UnrecognizedText               = 255,255,255    ,  No,  No,  No,     " )
       aadd( aIni, "BookMarkLineBackground         = 128,0,255      ,  No,  No,  No,     " )
       aadd( aIni, "SelectionBackground            = 0,128,255      ,  No,  No,  No,     " )
-      aadd( aIni, "CurrentLineBackground          = 128,255,255    ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 90,180,180     ,  No,  No,  No,     " )
       aadd( aIni, "UnterminatedStrings            = 255,128,64     ,  No,  No,  No,     " )
-      aadd( aIni, "WAPIDictionary                 = 128,128,64     ,  No,  No,  No,     " )
+      aadd( aIni, "LineNumbersBkColor             = 90,180,180     ,  No,  No,  No,     " )
       aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "                                                                     " )
       aadd( aIni, "                                                                     " )
@@ -1098,9 +1134,9 @@ STATIC FUNCTION hbide_loadDefaultThemes()
       aadd( aIni, "UnrecognizedText               = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "BookMarkLineBackground         = 0,255,255      ,  No,  No,  No,     " )
       aadd( aIni, "SelectionBackground            = 255,0,255      ,  No,  No,  No,     " )
-      aadd( aIni, "CurrentLineBackground          = 128,0,0        ,  No,  No,  No,     " )
+      aadd( aIni, "CurrentLineBackground          = 220,220,110    ,  No,  No,  No,     " )
       aadd( aIni, "UnterminatedStrings            = 128,128,0      ,  No,  No,  No,     " )
-      aadd( aIni, "WAPIDictionary                 = 0,0,128        ,  No,  No,  No,     " )
+      aadd( aIni, "LineNumbersBkColor             = 220,220,110    ,  No,  No,  No,     " )
       aadd( aIni, "UserDictionary                 = 0,0,0          ,  No,  No,  No,     " )
       aadd( aIni, "                                                                     " )
    ENDIF
@@ -1126,7 +1162,7 @@ SelectionBackground        = Selection Background      255,128,255   255,128,255
 CurrentLineBackground      = Current Line Background   128,0,0       0,0,255       128,255,255   128,0,0
 UnrecognizedText           = Unrecognized Text         0,0,0         255,255,255   255,255,255   0,0,0
 UnterminatedStrings        = Unterminated Strings      255,128,128   255,255,255   255,128,64    128,128,0
-WAPIDictionary             = WAPIDictionary            0,0,128       0,0,128       128,128,64    0,0,128
+LineNumbersBkColor         = WAPIDictionary            0,0,128       0,0,128       128,128,64    0,0,128
 UserDictionary             = UserDictionary            0,0,0         0,0,0         0,0,0         0,0,0
 
 #endif

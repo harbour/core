@@ -1408,6 +1408,11 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD hidePrototype()
    METHOD completeCode( p )
 
+   METHOD setLineNumbersBkColor( nR, nG, nB )
+   METHOD setCurrentLineColor( nR, nG, nB )
+   METHOD down()
+   METHOD up()
+   METHOD refresh()
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1866,6 +1871,44 @@ METHOD IdeEdit:setNewMark()
 
       ::qEdit:hbBookMarks( nBlock )
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:setLineNumbersBkColor( nR, nG, nB )
+   ::qEdit:hbSetLineAreaBkColor( QColor():new( nR, nG, nB ) )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:setCurrentLineColor( nR, nG, nB )
+   ::qEdit:hbSetCurrentLineColor( QColor():new( nR, nG, nB ) )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:refresh()
+   ::qEdit:hbRefresh()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:down()
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   qCursor:movePosition( QTextCursor_Down )
+   ::qEdit:setTextCursor( qCursor )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:up()
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   qCursor:movePosition( QTextCursor_Up )
+   ::qEdit:setTextCursor( qCursor )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
