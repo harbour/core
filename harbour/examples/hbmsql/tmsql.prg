@@ -315,7 +315,7 @@ METHOD GetRow(nRow) CLASS TmSQLQuery
                   aRow[i] := CToD("")
                else
                   // Date format MM/DD/YYYY
-                  aRow[i] := CToD(NMonth(__StrToken(aRow[i], 2, "-")) + "/" + __StrToken(aRow[i], 1, "-") + "/" + __StrToken(aRow[i], 3, "-"))
+                  aRow[i] := CToD(NMonth(hb_tokenGet(aRow[i], 2, "-")) + "/" + hb_tokenGet(aRow[i], 1, "-") + "/" + hb_tokenGet(aRow[i], 3, "-"))
                endif
              otherwise
              endcase
@@ -377,7 +377,7 @@ METHOD New(nSocket, cQuery, cTableName) CLASS TmSQLTable
    cTrimmedQuery := AllTrim(cQuery)
 
    // if it's a SELECT * I cannot add _rowid to query; I need to expand * to the full list of fields
-   if __StrToken(cTrimmedQuery, 2, " ") == "*"
+   if hb_tokenGet(cTrimmedQuery, 2, " ") == "*"
 
       nRes := msqlListFi(nSocket, cTableName)
 
@@ -393,14 +393,14 @@ METHOD New(nSocket, cQuery, cTableName) CLASS TmSQLTable
          cFieldList := Left(cFieldList, Len(cFieldList) - 1)
 
          // remove SELECT
-         cTrimmedQuery := StrTran(cTrimmedQuery, __StrToken(cTrimmedQuery, 1, " "), "")
+         cTrimmedQuery := StrTran(cTrimmedQuery, hb_tokenGet(cTrimmedQuery, 1, " "), "")
          // remove *
-         cTrimmedQuery := StrTran(cTrimmedQuery, __StrToken(cTrimmedQuery, 1, " "), "")
+         cTrimmedQuery := StrTran(cTrimmedQuery, hb_tokenGet(cTrimmedQuery, 1, " "), "")
          cTrimmedQuery := cFieldList + cTrimmedQuery
          msqlFreeR(nRes)
       endif
    else
-      cTrimmedQuery := StrTran(cTrimmedQuery, __StrToken(cTrimmedQuery, 1, " "), "SELECT _rowid, ")
+      cTrimmedQuery := StrTran(cTrimmedQuery, hb_tokenGet(cTrimmedQuery, 1, " "), "SELECT _rowid, ")
    endif
 
    super:New(nSocket, cTrimmedQuery)
@@ -743,11 +743,11 @@ METHOD Query(cQuery) CLASS TmSQLServer
    i := 1
    nNumTables := 0
 
-   while !( __StrToken(cUpperQuery, i++, " ") == "FROM" )
+   while !( hb_tokenGet(cUpperQuery, i++, " ") == "FROM" )
    enddo
 
-   while !( (cToken := __StrToken(cUpperQuery, i++, " ")) == "WHERE" ) .AND. !( cToken == "LIMIT" ) .AND. !Empty(cToken)
-      cTableName := __StrToken(cQuery, i - 1, " ")
+   while !( (cToken := hb_tokenGet(cUpperQuery, i++, " ")) == "WHERE" ) .AND. !( cToken == "LIMIT" ) .AND. !Empty(cToken)
+      cTableName := hb_tokenGet(cQuery, i - 1, " ")
       nNumTables++
    enddo
 

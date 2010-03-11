@@ -176,7 +176,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
    // positioning blocks
    ::SkipBlock := {| n | ::oCurRow := Skipper( @n, ::oQuery ), n }
    ::GoBottomBlock := {|| ::oCurRow := ::oQuery:GetRow( ::oQuery:LastRec() ), 1 }
-   ::GoTopBlock := {|| ::oCurRow := ::oQuery:GetRow( 1), 1 }
+   ::GoTopBlock := {|| ::oCurRow := ::oQuery:GetRow( 1 ), 1 }
 
    // Add a column for each field
    FOR i := 1 TO ::oQuery:FCount()
