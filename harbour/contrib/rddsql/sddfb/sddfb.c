@@ -229,7 +229,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   if ( pSqlda->sqld > pSqlda->sqln ) {
+   if ( pSqlda->sqld > pSqlda->sqln )
+   {
        uiFields = pSqlda->sqld;
        hb_xfree( pSqlda );
        pSqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( uiFields ) );

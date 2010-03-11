@@ -54,13 +54,15 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
  *    hb_fsSetError()
  *    hb_fsSetDevMode()
  *    hb_fsReadLarge()
  *    hb_fsWriteLarge()
  *    hb_fsCurDirBuff()
  *    hb_fsBaseDirBuff()
+ *    fs_win_get_drive()
+ *    fs_win_set_drive()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -334,7 +336,7 @@ static int fs_win_get_drive( void )
    if( pFilepath->szDrive )
       iDrive = HB_TOUPPER( pFilepath->szDrive[ 0 ] ) - 'A';
    else
-      iDrive = -1;
+      iDrive = 0;
 
    hb_xfree( pFilepath );
 
@@ -343,7 +345,7 @@ static int fs_win_get_drive( void )
 
 static void fs_win_set_drive( int iDrive )
 {
-   if( iDrive >= 0 )
+   if( iDrive >= 0 && iDrive <= 25 )
    {
       TCHAR szBuffer[ 3 ];
 
