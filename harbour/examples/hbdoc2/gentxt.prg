@@ -98,12 +98,14 @@ EXPORTED:
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateText
+   HB_SYMBOL_UNUSED( cDescription )
    super:NewDocument( cFolder, cFilename, cTitle, "txt" )
    ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateText
+   HB_SYMBOL_UNUSED( cDescription )
    super:NewIndex( cFolder, cFilename, cTitle, "txt" )
    ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self

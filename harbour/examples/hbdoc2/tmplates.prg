@@ -132,8 +132,8 @@ EXPORTED:
 
    METHOD New( cType ) CONSTRUCTOR
    METHOD IsField( c, nType )
-   METHOD IsTemplate( c )
-   METHOD SetTemplate( cType )
+   METHOD IsTemplate( cType )
+   METHOD SetTemplate( cTemplate )
    METHOD IsConstraint( cSectionName, cSection )
    METHOD IsComplete( cIncompleteFielsList )
    METHOD IsPreformatted( cField )
@@ -142,7 +142,7 @@ EXPORTED:
    METHOD IsOutput( cField )
    METHOD FieldName( cField )
    METHOD CategoryIndex( cCategory )
-   METHOD SubcategoryIndex( cCategory )
+   METHOD SubcategoryIndex( cCategory, cSubcategory )
 
    DATA Group AS ARRAY
    DATA filename AS STRING

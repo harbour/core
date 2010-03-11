@@ -89,8 +89,8 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
 CLASS GenerateHTML FROM TPLGenerate
 HIDDEN:
    METHOD RecreateStyleDocument( cStyleFile )
-   METHOD OpenTag( cText )
-   METHOD Tagged( cText )
+   METHOD OpenTag( cText, ... )
+   METHOD Tagged( cText, cTag, ... )
    METHOD CloseTag( cText )
    METHOD Append( cText, cFormat )
    METHOD Newline() INLINE FWrite( ::nHandle, "<br />" + HB_OSNewLine() ), self
@@ -107,7 +107,7 @@ EXPORTED:
    METHOD NewDocument( cFolder, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    //~ METHOD AddIndex( oEntry ) HIDDEN
-   METHOD AddReference( oEntry )
+   METHOD AddReference( oEntry, cReference, cSubReference )
    METHOD BeginSection( cSection, cFilename )
    METHOD EndSection( cSection, cFilename )
    METHOD Generate()
