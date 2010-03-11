@@ -3381,13 +3381,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
-            if( iIndex > 0 && iIndex <= 16 )
+            if( iIndex >= 0 && iIndex <= 15 )
             {
-               pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->COLORS[ iIndex - 1 ] );
+               pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->COLORS[ iIndex ] );
 
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
-                  pWVT->COLORS[ iIndex - 1 ] = hb_itemGetNL( pInfo->pNewVal2 );
+                  pWVT->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -3407,7 +3407,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
-                  for( i = 0; i < 16; i++ )
+                  for( i = 0; i <= 15; i++ )
                      pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )

@@ -845,7 +845,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
 
    DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
    DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
-   DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
+   DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(Hb_ThreadID(),3)+'>',maxcol()+1), 'B/W' )
 
    oTBar:buttonClick := {|oBtn| IF( oBtn:caption=='Show',__keyboard( chr( K_DOWN ) ),nil ) }
 
@@ -876,7 +876,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
 
          DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
          DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
-         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
+         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(Hb_ThreadID(),3)+'>',maxcol()+1), 'B/W' )
          oBrowse:configure()
 
       case nKey == K_F2
