@@ -292,7 +292,6 @@ extern void        hb_stackRemove( HB_LONG lUntilPos );
 extern int        hb_stackCallDepth( void );
 extern HB_LONG    hb_stackBaseProcOffset( int iLevel );
 extern void       hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
-extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
 extern void       hb_stackDispCall( void );
 extern void       hb_stackFree( void );       /* releases all memory used by the stack */
 extern void       hb_stackInit( void );       /* initializes the stack */

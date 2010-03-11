@@ -672,6 +672,103 @@ void hb_stackRemove( HB_LONG lUntilPos )
    }
 }
 
+#if defined( HB_VM_DEBUG )
+
+static void hb_stackDispLocal( void )
+{
+   char buffer[ 1024 ];
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM * pBase;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
+
+   hb_conOutErr( hb_conNewLine(), 0 );
+   hb_snprintf( buffer, sizeof( buffer ), HB_I_("Virtual Machine Stack Dump at %s(%i):"),
+           ( *hb_stack.pBase )->item.asSymbol.value->szName,
+           ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
+   hb_conOutErr( buffer, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
+   hb_conOutErr( "--------------------------", 0 );
+
+   for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
+   {
+      hb_conOutErr( hb_conNewLine(), 0 );
+
+      switch( hb_itemType( *pBase ) )
+      {
+         case HB_IT_NIL:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("NIL ") );
+            break;
+
+         case HB_IT_ARRAY:
+            if( hb_arrayIsObject( *pBase ) )
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("OBJECT = %s "), hb_objGetClsName( *pBase ) );
+            else
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("ARRAY ") );
+            break;
+
+         case HB_IT_BLOCK:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("BLOCK ") );
+            break;
+
+         case HB_IT_DATE:
+            {
+               char szDate[ 9 ];
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
+            }
+            break;
+
+         case HB_IT_TIMESTAMP:
+            {
+               char szDateTime[ 24 ];
+               hb_snprintf( buffer, sizeof( buffer ), HB_I_("TIMESTAMP = \"%s\" "),
+                       hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
+                                                    ( *pBase )->item.asDateTime.time ) );
+            }
+            break;
+
+         case HB_IT_DOUBLE:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("DOUBLE = %f "), hb_itemGetND( *pBase ) );
+            break;
+
+         case HB_IT_LOGICAL:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LOGICAL = %s "), hb_itemGetL( *pBase ) ? ".T." : ".F." );
+            break;
+
+         case HB_IT_LONG:
+         {
+            char szBuf[ 24 ];
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LONG = %s ") , hb_numToStr( szBuf, sizeof( szBuf ), hb_itemGetNInt( *pBase ) ) );
+            break;
+         }
+
+         case HB_IT_INTEGER:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );
+            break;
+
+         case HB_IT_STRING:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("STRING = \"%s\" "), hb_itemGetCPtr( *pBase ) );
+            break;
+
+         case HB_IT_SYMBOL:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
+            break;
+
+         case HB_IT_POINTER:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("POINTER = %p "), ( *pBase )->item.asPointer.value );
+            break;
+
+         default:
+            hb_snprintf( buffer, sizeof( buffer ), HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
+            break;
+      }
+
+      hb_conOutErr( buffer, 0 );
+   }
+}
+
+#endif
+
 HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
@@ -682,7 +779,9 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams )
 
    if( ! HB_IS_SYMBOL( pItem ) )
    {
+#if defined( HB_VM_DEBUG )
       hb_stackDispLocal();
+#endif
       hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
    }
 
@@ -1101,100 +1200,6 @@ void hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine )
          szProcName[ 0 ] = '\0';
          * puiProcLine = 0;
       }
-   }
-}
-
-/* NOTE: DEBUG function */
-void hb_stackDispLocal( void )
-{
-   char buffer[ 1024 ];
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM * pBase;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
-
-   hb_conOutErr( hb_conNewLine(), 0 );
-   hb_snprintf( buffer, sizeof( buffer ), HB_I_("Virtual Machine Stack Dump at %s(%i):"),
-           ( *hb_stack.pBase )->item.asSymbol.value->szName,
-           ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
-   hb_conOutErr( buffer, 0 );
-   hb_conOutErr( hb_conNewLine(), 0 );
-   hb_conOutErr( "--------------------------", 0 );
-
-   for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
-   {
-      hb_conOutErr( hb_conNewLine(), 0 );
-
-      switch( hb_itemType( *pBase ) )
-      {
-         case HB_IT_NIL:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("NIL ") );
-            break;
-
-         case HB_IT_ARRAY:
-            if( hb_arrayIsObject( *pBase ) )
-               hb_snprintf( buffer, sizeof( buffer ), HB_I_("OBJECT = %s "), hb_objGetClsName( *pBase ) );
-            else
-               hb_snprintf( buffer, sizeof( buffer ), HB_I_("ARRAY ") );
-            break;
-
-         case HB_IT_BLOCK:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("BLOCK ") );
-            break;
-
-         case HB_IT_DATE:
-            {
-               char szDate[ 9 ];
-               hb_snprintf( buffer, sizeof( buffer ), HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
-            }
-            break;
-
-         case HB_IT_TIMESTAMP:
-            {
-               char szDateTime[ 24 ];
-               hb_snprintf( buffer, sizeof( buffer ), HB_I_("TIMESTAMP = \"%s\" "),
-                       hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
-                                                    ( *pBase )->item.asDateTime.time ) );
-            }
-            break;
-
-         case HB_IT_DOUBLE:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("DOUBLE = %f "), hb_itemGetND( *pBase ) );
-            break;
-
-         case HB_IT_LOGICAL:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LOGICAL = %s "), hb_itemGetL( *pBase ) ? ".T." : ".F." );
-            break;
-
-         case HB_IT_LONG:
-         {
-            char szBuf[ 24 ];
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("LONG = %s ") , hb_numToStr( szBuf, sizeof( szBuf ), hb_itemGetNInt( *pBase ) ) );
-            break;
-         }
-
-         case HB_IT_INTEGER:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );
-            break;
-
-         case HB_IT_STRING:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("STRING = \"%s\" "), hb_itemGetCPtr( *pBase ) );
-            break;
-
-         case HB_IT_SYMBOL:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
-            break;
-
-         case HB_IT_POINTER:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("POINTER = %p "), ( *pBase )->item.asPointer.value );
-            break;
-
-         default:
-            hb_snprintf( buffer, sizeof( buffer ), HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
-            break;
-      }
-
-      hb_conOutErr( buffer, 0 );
    }
 }
 
