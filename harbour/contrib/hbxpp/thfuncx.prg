@@ -68,7 +68,7 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
    LOCAL xResult, nPos, apThIDs, th
 
    apThIDs := {}
-   FOR each th IN aThreads
+   FOR EACH th IN aThreads
       IF ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )
       ELSE
@@ -89,7 +89,7 @@ FUNCTION ThreadWaitAll( aThreads, nTimeOut )
    LOCAL apThIDs, th
 
    apThIDs := {}
-   FOR each th IN aThreads
+   FOR EACH th IN aThreads
       IF ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )
       ELSE

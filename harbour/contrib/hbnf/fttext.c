@@ -1329,7 +1329,7 @@ HB_FUNC( FT_FAPPEND )
  *  $END$
  */
 
-HB_FUNC( FT_FWRITEL )
+HB_FUNC( FT_FWRITELN )
 {
    const char * theData  = hb_parc( 1 );
    int      iDataLen = hb_parclen( 1 );
@@ -1400,6 +1400,10 @@ HB_FUNC( FT_FWRITEL )
    hb_retl( err );
 }
 
+HB_FUNC( FT_FWRITEL )
+{
+   HB_FUNC_EXEC( FT_FWRITELN );
+}
 
 /*  $DOC$
  *  $FUNCNAME$
