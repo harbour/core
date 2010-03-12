@@ -128,6 +128,7 @@ private:
    bool           isColumnSelectionEnabled;
    bool           isTipActive;
    QCompleter   * c;
+   QBrush         brushForBookmark( int index );
 
 protected:
    bool           event( QEvent * event );

@@ -261,41 +261,65 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 {
    QPainter painter( viewport() );
 
-   if( m_currentLineColor.isValid() )
+   int curBlock     = textCursor().blockNumber();
+
+   QTextBlock block = firstVisibleBlock();
+   int blockNumber  = block.blockNumber();
+   int height       = ( int ) blockBoundingRect( block ).height();
+   int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
+   int bottom       = top + height;
+
+   while( block.isValid() && top <= event->rect().bottom() )
    {
-      QRect r = HBQPlainTextEdit::cursorRect();
-      r.setX( 0 );
-      r.setWidth( viewport()->width() );
-
-      int index = bookMark.indexOf( textCursor().blockNumber() + 1 );
-      if( index != -1 )
+      if( block.isVisible() && bottom >= event->rect().top() )
       {
-         QBrush br = QBrush( m_currentLineColor );
-
-         if(      index == 0 )
-            br = QBrush( QColor( 255, 255, 127 ) );
-         else if( index == 1 )
-            br = QBrush( QColor( 175, 175, 255 ) );
-         else if( index == 2 )
-            br = QBrush( QColor( 255, 175, 175 ) );
-         else if( index == 3 )
-            br = QBrush( QColor( 175, 255, 175 ) );
-         else if( index == 4 )
-            br = QBrush( QColor( 255, 190, 125 ) );
-         else if( index == 5 )
-            br = QBrush( QColor( 175, 255, 255 ) );
-         else
-            br = QBrush( m_currentLineColor );
-
-         painter.fillRect( r, br );
+         int index = bookMarksGoto.indexOf( blockNumber + 1 );
+         if( index != -1 )
+         {
+            QRect r( 0, top, viewport()->width(), height );
+            painter.fillRect( r, brushForBookmark( index ) );
+         }
+         else if( curBlock == blockNumber && m_currentLineColor.isValid() )
+         {
+            if( highlightCurLine == true )
+            {
+               QRect r = HBQPlainTextEdit::cursorRect();
+               r.setX( 0 );
+               r.setWidth( viewport()->width() );
+               painter.fillRect( r, QBrush( m_currentLineColor ) );
+            }
+         }
       }
-      else if( highlightCurLine == true )
-         painter.fillRect( r, QBrush( m_currentLineColor ) );
+      block  = block.next();
+      top    = bottom;
+      bottom = top + height;//( int ) blockBoundingRect( block ).height();
+      ++blockNumber;
    }
    this->hbPaintColumnSelection( event );
-
    painter.end();
    QPlainTextEdit::paintEvent( event );
+}
+
+QBrush HBQPlainTextEdit::brushForBookmark( int index )
+{
+   QBrush br;
+
+   if(      index == 0 )
+      br = QBrush( QColor( 255, 255, 127 ) );
+   else if( index == 1 )
+      br = QBrush( QColor( 175, 175, 255 ) );
+   else if( index == 2 )
+      br = QBrush( QColor( 255, 175, 175 ) );
+   else if( index == 3 )
+      br = QBrush( QColor( 175, 255, 175 ) );
+   else if( index == 4 )
+      br = QBrush( QColor( 255, 190, 125 ) );
+   else if( index == 5 )
+      br = QBrush( QColor( 175, 255, 255 ) );
+   else
+      br = QBrush( m_currentLineColor );
+
+   return br;
 }
 
 void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
@@ -304,9 +328,9 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
    painter.fillRect( event->rect(), m_lineAreaBkColor );
 
    QTextBlock block = firstVisibleBlock();
-   int blockNumber = block.blockNumber();
-   int top = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
-   int bottom = top +( int ) blockBoundingRect( block ).height();
+   int blockNumber  = block.blockNumber();
+   int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
+   int bottom       = top +( int ) blockBoundingRect( block ).height();
 
    while( block.isValid() && top <= event->rect().bottom() )
    {
@@ -315,23 +339,25 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
          QString number = QString::number( blockNumber + 1 );
          painter.setPen( (  blockNumber + 1 ) % 10 == 0 ? Qt::red : Qt::black );
          painter.drawText( 0, top, lineNumberArea->width()-2, fontMetrics().height(), Qt::AlignRight, number );
-         int index = bookMark.indexOf( number.toInt() );
+         int index = bookMarksGoto.indexOf( number.toInt() );
          if( index != -1 )
          {
             //painter.drawText( 0, top, 30, fontMetrics().height(), Qt::AlignCenter, "+" );
-            painter.setBrush( QBrush( Qt::yellow, Qt::SolidPattern ) );
-            painter.drawEllipse( 5, top +( fontMetrics().height()/4 ),
+            //painter.setBrush( QBrush( Qt::yellow, Qt::SolidPattern ) );
+            painter.setBrush( brushForBookmark( index ) );
+            #if 0
+            painter.drawEllipse( 5, top + ( fontMetrics().height()/4 ),
                                        fontMetrics().height()/2, fontMetrics().height()/2 );
+            #endif
+            painter.drawRect( 5, top+2, fontMetrics().height()-4, fontMetrics().height()-4 );
          }
       }
-      block = block.next();
-      top = bottom;
+      block  = block.next();
+      top    = bottom;
       bottom = top +( int ) blockBoundingRect( block ).height();
       ++blockNumber;
    }
 }
-
-
 
 void HBQPlainTextEdit::hbBookmarks( int block )
 {
@@ -342,7 +368,9 @@ void HBQPlainTextEdit::hbBookmarks( int block )
       qSort( bookMark );
    }
    else
+   {
       bookMark.remove( found );
+   }
 
    found = -1;
    int i = 0;
@@ -357,8 +385,9 @@ void HBQPlainTextEdit::hbBookmarks( int block )
    }
 
    if( found == -1 )
+   {
       bookMarksGoto.append( block );
-
+   }
    lineNumberArea->repaint();
    update();
 }
