@@ -112,12 +112,8 @@ static void hbqt_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_exit 0 %p", s_app ) );
-
    s_app->quit();
    s_app = NULL;
-
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_exit 1 %p", s_app ) );
 }
 
 static void hbqt_Init( void * cargo )
