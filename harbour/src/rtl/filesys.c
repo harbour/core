@@ -323,12 +323,11 @@ static int fs_win_get_drive( void )
 #if defined( UNICODE )
    {
       TCHAR lpBuffer[ HB_PATH_MAX ];
-      HB_SIZE ulSize = HB_SIZEOFARRAY( lpBuffer );
-      hb_fsSetIOError( ( GetCurrentDirectory( ulSize, lpBuffer ) != 0 ), 0 );
-      hb_wctombget( szBuffer, lpBuffer, ulSize );
+      hb_fsSetIOError( ( GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer ) != 0 ), 0 );
+      hb_wctombget( szBuffer, lpBuffer, HB_SIZEOFARRAY( lpBuffer ) );
    }
 #else
-   hb_fsSetIOError( ( GetCurrentDirectory( ulSize, szBuffer ) != 0 ), 0 );
+   hb_fsSetIOError( ( GetCurrentDirectory( HB_SIZEOFARRAY( szBuffer ), szBuffer ) != 0 ), 0 );
 #endif
 
    pFilepath = hb_fsFNameSplit( szBuffer );
