@@ -125,6 +125,7 @@ HB_FUNC( X509_GET_ISSUER_NAME )
 
 HB_FUNC( X509_NAME_ONELINE )
 {
+#if OPENSSL_VERSION_NUMBER < 0x10000000L /* TOFIX: Compilation error when tried with 1.0.0beta5 */
    X509_NAME * x509_name = ( X509_NAME * ) hb_parptr( 1 );
 
    if( x509_name )
@@ -135,4 +136,5 @@ HB_FUNC( X509_NAME_ONELINE )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }

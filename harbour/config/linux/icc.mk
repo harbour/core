@@ -18,7 +18,7 @@ CC := $(HB_CCACHE) $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_INC_COMPILE) -pipe
+CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 CFLAGS += -D_GNU_SOURCE
 #CFLAGS += -fast

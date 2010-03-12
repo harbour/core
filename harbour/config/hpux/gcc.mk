@@ -18,7 +18,7 @@ CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_INC_COMPILE) -pipe
+CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 # uncomment this if you want to force creating 64bit binaries on IA64
 #CFLAGS += -mlp64

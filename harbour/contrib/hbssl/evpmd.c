@@ -111,7 +111,7 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
    switch( hb_parni( iParam ) )
    {
    case HB_EVP_MD_MD_NULL   : p = EVP_md_null();   break;
-#ifndef OPENSSL_NO_MD2
+#if ! defined( OPENSSL_NO_MD2 ) && OPENSSL_VERSION_NUMBER < 0x10000000L
    case HB_EVP_MD_MD2       : p = EVP_md2();       break;
 #endif
 #ifndef OPENSSL_NO_MD4

@@ -322,9 +322,9 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          {
             case HB_FT_STRING:
             {
-               char*    pStr;
+               char * pStr;
 
-               pStr = ( char* ) hb_xgrab( pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
