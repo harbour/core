@@ -2402,6 +2402,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_CompC += " {IC} -o{OO}"
             ELSE
                cOpt_CompC += " {IC} -o {OO}"
+               IF hbmk[ _HBMK_cCOMP ] $ "icc|gcc"
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
+               ENDIF
             ENDIF
          ELSE
             cOpt_CompC += " {LC}"
@@ -2588,6 +2591,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOptIncMask := "-I{DI}"
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
@@ -2716,6 +2720,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC += " {FC}"
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
@@ -5020,11 +5025,18 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cOb
    LOCAL cCommand
    LOCAL tmp, tmp1
 
+   LOCAL lOutputSpecified
+   LOCAL cOutputFile
+
    FOR EACH tmp IN aTODO
 
       cCommand := cOpt_CompC
+
+      lOutputSpecified := "{OO}" $ cCommand
+      cOutputFile := FN_DirExtSet( tmp, cWorkDir, cObjExt )
+
       cCommand := StrTran( cCommand, "{IC}", FN_Escape( tmp, nOpt_Esc ) )
-      cCommand := StrTran( cCommand, "{OO}", FN_Escape( PathSepToTarget( hbmk, FN_DirExtSet( tmp, cWorkDir, cObjExt ) ), nOpt_Esc ) )
+      cCommand := StrTran( cCommand, "{OO}", FN_Escape( PathSepToTarget( hbmk, cOutputFile ), nOpt_Esc ) )
 
       cCommand := cBin_CompC + " " + AllTrim( cCommand )
 
@@ -5047,6 +5059,15 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cOb
          ENDIF
          IF ! hbmk[ _HBMK_lQuiet ]
             OutErr( cCommand + _OUT_EOL )
+         ENDIF
+         /* Delete output file in case of compile error.
+            (only if we know for sure what is the output filename, that is when we
+             speficied it on the command line)
+            This is to protect against compiler bugs (f.e. gcc with -pipe option)
+            when dummy or wrong object file is left on the disk, and misleading
+            next incremental build pass. [vszakats] */
+         IF lOutputSpecified
+            FErase( cOutputFile )
          ENDIF
          lResult := .F.
          EXIT
