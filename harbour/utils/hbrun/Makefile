@@ -2,10 +2,6 @@
 # $Id$
 #
 
-ifeq ($(HB_MAIN),)
-   HB_MAIN := std
-endif
-
 ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk

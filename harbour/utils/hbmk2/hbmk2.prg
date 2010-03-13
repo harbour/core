@@ -600,6 +600,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL l_aLIBSYS
    LOCAL l_aLIBSYSCORE := {}
    LOCAL l_aLIBSYSMISC := {}
+   LOCAL l_aLIBSTATICPOST := {}
    LOCAL l_aOPTRUN
    LOCAL l_cPROGDIR
    LOCAL l_cPROGNAME
@@ -2581,7 +2582,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw"
                cOpt_CompC += " -march=i586 -mtune=pentiumpro"
             ENDIF
-            IF ! hbmk[ _HBMK_lDEBUG ]
+            IF ! hbmk[ _HBMK_lDEBUG ] .AND. !( hbmk[ _HBMK_cCOMP ] == "mingw64" )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
          ENDIF
@@ -2689,6 +2690,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                l_aLIBSHAREDPOST := { "hbmainwin" }
             ELSE
                l_aLIBSHAREDPOST := { "hbmainstd" }
+            ENDIF
+            IF ! l_lNOHBLIB .AND. ! hbmk[ _HBMK_lCreateDyn ]
+               l_aLIBSTATICPOST := l_aLIBSHAREDPOST
             ENDIF
          ENDIF
 
@@ -4140,7 +4144,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                                       hbmk[ _HBMK_aLIBCOREGT ],;
                                       iif( hbmk[ _HBMK_lNULRDD ], aLIB_BASE_NULRDD, iif( hbmk[ _HBMK_lMT ], aLIB_BASE_RDD_MT, aLIB_BASE_RDD ) ),;
                                       l_aLIBHBBASE_2,;
-                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_3_MT, aLIB_BASE_3 ) } )
+                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_3_MT, aLIB_BASE_3 ),;
+                                      l_aLIBSTATICPOST } )
          ENDIF
       ELSE
          l_aLIBHB := {}
