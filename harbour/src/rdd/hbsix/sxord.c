@@ -335,7 +335,7 @@ HB_FUNC( SX_ISREINDEX )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_ISREINDEX, &Info );
       fReindex = hb_itemGetL( Info.itmResult );
@@ -353,7 +353,7 @@ HB_FUNC( SX_STEP )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_EVALSTEP, &Info );
       lStep = hb_itemGetNL( Info.itmResult );
@@ -371,7 +371,7 @@ HB_FUNC( SX_KEYSINCLUDED )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_KEYSINCLUDED, &Info );
       ulKeys = hb_itemGetNL( Info.itmResult );
@@ -388,7 +388,7 @@ HB_FUNC( SX_I_INDEXNAME )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_I_BAGNAME, &Info );
       hb_itemReturnRelease( Info.itmResult );
@@ -405,7 +405,7 @@ HB_FUNC( SX_I_TAGNAME )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_I_TAGNAME, &Info );
       hb_itemReturnRelease( Info.itmResult );
@@ -423,7 +423,7 @@ HB_FUNC( SX_INDEXCOUNT )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_BAGCOUNT, &Info );
       iCount = hb_itemGetNI( Info.itmResult );
@@ -636,7 +636,7 @@ HB_FUNC( SX_SKIPUNIQUE )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmNewVal = hb_param( 1, HB_IT_ANY );
       Info.itmResult = hb_itemNew( NULL );
       SELF_ORDINFO( pArea, DBOI_SKIPUNIQUE, &Info );
@@ -690,10 +690,10 @@ HB_FUNC( SX_WILDSEEK )
    if( pArea )
    {
       DBORDERINFO Info;
-      memset( &Info, 0, sizeof( DBORDERINFO ) );
+      memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );
 
-      if( szPattern && szPattern[0] )
+      if( szPattern && szPattern[ 0 ] )
       {
          if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == HB_SUCCESS )
             iOrder = hb_itemGetNI( Info.itmResult );

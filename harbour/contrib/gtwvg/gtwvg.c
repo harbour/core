@@ -139,7 +139,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
    WNDCLASS wndclass;
 
-   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
 /* wndclass.cbClsExtra    = 0; */
@@ -476,7 +476,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
    {
       LOGFONT logfont;
 
-      memset( &logfont, 0, sizeof( LOGFONT ) );
+      memset( &logfont, 0, sizeof( logfont ) );
       logfont.lfEscapement     = 0;
       logfont.lfOrientation    = 0;
       logfont.lfWeight         = iWeight;

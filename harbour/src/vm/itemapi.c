@@ -2419,7 +2419,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
          memset( szResult, ' ', iPos );
 
       if( iDec > 0 && iPos >= 0 )
-         memset( &szResult[iSize - iDec], '0', iDec );
+         memset( &szResult[ iSize - iDec ], '0', iDec );
    }
 
    szResult[ iSize ] = '\0';
@@ -2430,9 +2430,8 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
       return HB_FALSE;
    }
    else if( iDot > 0 )
-   {
       szResult[ iDot ] = '.';
-   }
+
    return HB_TRUE;
 }
 
@@ -2647,7 +2646,7 @@ char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
             /* remove leading spaces if any, a little bit redundant but
              * I don't want to complicate the API interface more. Druzus
              */
-            for( i = 0; buffer[i] == ' '; i++ ) {};
+            for( i = 0; buffer[ i ] == ' '; i++ ) {};
 
             if( i > 0 )
             {
@@ -2655,9 +2654,9 @@ char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
                * pulSize -= i;
                do
                {
-                  buffer[j++] = buffer[i];
+                  buffer[ j++ ] = buffer[ i ];
                }
-               while( buffer[i++] );
+               while( buffer[ i++ ] );
             }
             return buffer;
          }

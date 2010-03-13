@@ -2076,7 +2076,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
          {
             OVERLAPPED sOlap;
             DWORD dwFlags;
-            memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+            memset( &sOlap, 0, sizeof( sOlap ) );
             sOlap.Offset = ( DWORD ) ulStart;
             dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK;
             if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
@@ -2096,7 +2096,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
          if( hb_iswinnt() )
          {
             OVERLAPPED sOlap;
-            memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+            memset( &sOlap, 0, sizeof( sOlap ) );
             sOlap.Offset = ( DWORD ) ulStart;
             fResult = UnlockFileEx( DosToWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
          }
@@ -2292,7 +2292,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
                   dwFlags |= LOCKFILE_FAIL_IMMEDIATELY;
                }
 
-               memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+               memset( &sOlap, 0, sizeof( sOlap ) );
                sOlap.Offset = dwOffsetLo;
                sOlap.OffsetHigh = dwOffsetHi;
 
@@ -2312,7 +2312,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
             {
                OVERLAPPED sOlap;
 
-               memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+               memset( &sOlap, 0, sizeof( sOlap ) );
                sOlap.Offset = dwOffsetLo;
                sOlap.OffsetHigh = dwOffsetHi;
 

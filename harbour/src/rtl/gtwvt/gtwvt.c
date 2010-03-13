@@ -132,10 +132,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
-   WNDCLASSEX wndclass;
+   WNDCLASS wndclass;
 
-   memset( &wndclass, 0, sizeof( WNDCLASSEX ) );
-   wndclass.cbSize        = sizeof( WNDCLASSEX );
+   memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
 /* wndclass.cbClsExtra    = 0; */
@@ -147,7 +146,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 /* wndclass.lpszMenuName  = NULL; */
    wndclass.lpszClassName = s_szClassName;
 
-   if( ! RegisterClassEx( &wndclass ) )
+   if( ! RegisterClass( &wndclass ) )
    {
       if( GetLastError() != 1410 )
          hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
@@ -380,7 +379,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
    {
       LOGFONT logfont;
 
-      memset( &logfont, 0, sizeof( LOGFONT ) );
+      memset( &logfont, 0, sizeof( logfont ) );
       logfont.lfEscapement     = 0;
       logfont.lfOrientation    = 0;
       logfont.lfWeight         = iWeight;

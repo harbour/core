@@ -1376,10 +1376,7 @@ static HB_ERRCODE hb_waRelArea( AREAP pArea, HB_USHORT uiRelNo, HB_USHORT * pRel
  */
 static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 {
-   PHB_ITEM pResult;
-   DBORDERINFO pInfo;
    HB_ERRCODE errCode;
-   int iOrder;
    HB_BOOL fEof;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
@@ -1394,18 +1391,21 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
          errCode = SELF_EVALBLOCK( pRelInfo->lpaParent, pRelInfo->itmCobExpr );
          if( errCode == HB_SUCCESS )
          {
+            PHB_ITEM pResult;
+            DBORDERINFO pInfo;
+
             /*
              *  Check the current order
              */
             pResult = pRelInfo->lpaParent->valResult;
             pRelInfo->lpaParent->valResult = NULL;
-            memset( &pInfo, 0, sizeof( DBORDERINFO ) );
+            memset( &pInfo, 0, sizeof( pInfo ) );
             pInfo.itmResult = hb_itemPutNI( NULL, 0 );
             errCode = SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );
 
             if( errCode == HB_SUCCESS )
             {
-               iOrder = hb_itemGetNI( pInfo.itmResult );
+               int iOrder = hb_itemGetNI( pInfo.itmResult );
                if( iOrder != 0 )
                {
                   if( pRelInfo->isScoped )

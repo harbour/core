@@ -1086,7 +1086,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    HB_USHORT uiPrevArea, uiCount, uiSwap;
    HB_ERRCODE errCode;
 
-   memset( &dbTransInfo, 0, sizeof( DBTRANSINFO ) );
+   memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
    if( szDriver == NULL )

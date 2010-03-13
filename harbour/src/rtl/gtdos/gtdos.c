@@ -652,7 +652,7 @@ static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, void * pBuffer )
       union REGS regs;
       struct SREGS sregs;
 
-      memset( &sregs, 0, sizeof( struct SREGS ) );
+      memset( &sregs, 0, sizeof( sregs ) );
 
 #if defined( __DJGPP__ )
 {
@@ -689,7 +689,7 @@ static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const void * pBuffer )
       union REGS regs;
       struct SREGS sregs;
 
-      memset( &sregs, 0, sizeof( struct SREGS ) );
+      memset( &sregs, 0, sizeof( sregs ) );
 
       /*
        * Calling hb_mouse_SetCursor is necessary only for

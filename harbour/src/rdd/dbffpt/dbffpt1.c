@@ -3949,7 +3949,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
    }
    /* else -> For zap file */
 
-   memset( &fptHeader, 0, sizeof( FPTHEADER ) );
+   memset( &fptHeader, 0, sizeof( fptHeader ) );
    ulSize = 512;
    if( pArea->uiMemoVersion == DB_MEMOVER_SIX )
    {
@@ -3986,7 +3986,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
    ulLen = ulNextBlock * pArea->ulMemoBlockSize - ulSize;
    if( ulLen > ulSize )
    {
-      memset( &fptHeader, 0, sizeof( FPTHEADER ) );
+      memset( &fptHeader, 0, sizeof( fptHeader ) );
       do
       {
          HB_ULONG ulWrite = HB_MIN( ulLen - ulSize, sizeof( FPTHEADER ) );
@@ -4146,7 +4146,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    else
    {
       FPTHEADER fptHeader;
-      memset( &fptHeader, 0, sizeof( FPTHEADER ) );
+      memset( &fptHeader, 0, sizeof( fptHeader ) );
       if( hb_fptFileLockSh( pArea, HB_TRUE ) )
       {
          if( hb_fileReadAt( pArea->pMemoFile, &fptHeader,

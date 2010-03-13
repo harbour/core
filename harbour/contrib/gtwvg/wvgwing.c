@@ -952,10 +952,10 @@ HB_FUNC( WVG_CHOOSEFONT )
 HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
-   LOGFONT  lf;
+   LOGFONT lf;
    PHB_ITEM aFont;
 
-   memset( &lf, 0, sizeof( LOGFONT ) );
+   memset( &lf, 0, sizeof( lf ) );
 
    SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, ( WPARAM ) 0, ( LPARAM ) &lf );
 
@@ -970,9 +970,9 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 HB_FUNC( WVG_FONTCREATE )
 {
    LOGFONT lf;
-   HFONT   hFont;
+   HFONT hFont;
 
-   memset( &lf, 0, sizeof( LOGFONT ) );
+   memset( &lf, 0, sizeof( lf ) );
 
    HB_TCHAR_CPTO( lf.lfFaceName,  hb_parvcx( 1, 1 ), sizeof( lf.lfFaceName ) - 1 );
    lf.lfHeight         = ( LONG ) hb_parvnl( 1, 2 );

@@ -1189,7 +1189,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
          {
             DBOPENINFO pInfo;
 
-            memset( &pInfo, 0, sizeof( DBOPENINFO ) );
+            memset( &pInfo, 0, sizeof( pInfo ) );
             pInfo.abName = "";
             pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;
@@ -1257,7 +1257,7 @@ HB_FUNC( ADSEXECUTESQL )
          {
             DBOPENINFO pInfo;
 
-            memset( &pInfo, 0, sizeof( DBOPENINFO ) );
+            memset( &pInfo, 0, sizeof( pInfo ) );
             pInfo.abName = "";
             pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;

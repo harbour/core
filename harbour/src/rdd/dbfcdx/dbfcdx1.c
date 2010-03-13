@@ -3403,7 +3403,7 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
       pTag->OptFlags |= CDX_TYPE_CUSTOM;
 #endif
 
-   memset( &tagHeader, 0, sizeof( CDXTAGHEADER ) );
+   memset( &tagHeader, 0, sizeof( tagHeader ) );
    HB_PUT_LE_UINT32( tagHeader.rootPtr, pTag->RootBlock );
    HB_PUT_LE_UINT16( tagHeader.keySize, pTag->uiLen );
    tagHeader.indexOpt = pTag->OptFlags;

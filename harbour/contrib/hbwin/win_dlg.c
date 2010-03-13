@@ -67,9 +67,9 @@ HB_FUNC( WIN_PRINTDLGDC )
 {
    PRINTDLG pd;
 
-   memset( &pd, 0, sizeof( PRINTDLG ) );
+   memset( &pd, 0, sizeof( pd ) );
 
-   pd.lStructSize = sizeof( PRINTDLG );
+   pd.lStructSize = sizeof( pd );
    pd.hwndOwner = GetActiveWindow();
    pd.Flags = PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
    pd.nFromPage = ( WORD ) hb_parnidef( 2, 1 );
@@ -227,7 +227,7 @@ static void s_GetFileName( HB_BOOL fSave )
    LPTSTR lpstrFilter;
    OPENFILENAME ofn;
 
-   memset( &ofn, 0, sizeof( OPENFILENAME ) );
+   memset( &ofn, 0, sizeof( ofn ) );
 #if defined( OPENFILENAME_SIZE_VERSION_400 )
    ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 #else

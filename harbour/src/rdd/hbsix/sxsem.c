@@ -77,7 +77,7 @@ static HB_BOOL hb_sxSemName( char * szFileName )
       {
          DBORDERINFO pOrderInfo;
 
-         memset( &pOrderInfo, 0, sizeof( DBORDERINFO ) );
+         memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
          if( pOrderInfo.itmOrder && hb_itemGetNI( pOrderInfo.itmOrder ) == 0 )
             pOrderInfo.itmOrder = NULL;

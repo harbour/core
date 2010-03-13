@@ -108,7 +108,7 @@ HB_FUNC( __TP_READPORT )
    DWORD nRead = 0;
    OVERLAPPED Overlapped;
 
-   memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
+   memset( &Overlapped, 0, sizeof( Overlapped ) );
    if( ReadFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), buffer, sizeof( buffer ), &nRead, &Overlapped ) )
       hb_retclen( buffer, nRead );
    else
@@ -120,7 +120,7 @@ HB_FUNC( __TP_WRITEPORT )
    DWORD nWritten = 0;
    OVERLAPPED Overlapped;
 
-   memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
+   memset( &Overlapped, 0, sizeof( Overlapped ) );
    if( WriteFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped ) )
       hb_retnl( ( long ) nWritten ); /* Put GetLastError() on error, or better a second byref param? */
    else
