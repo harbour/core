@@ -38,7 +38,7 @@ endif
 DIRS :=
 
 ifeq ($(HB_PLATFORM),win)
-   ifeq ($(HB_COMPILER),mingw)
+   ifneq ($(filter $(HB_COMPILER),mingw mingw64),)
       C_MAIN := mainwin.c
    else
       C_MAIN := mainstd.c mainwin.c
