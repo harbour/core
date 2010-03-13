@@ -2221,13 +2221,10 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
    HB_BOOL fNeg;
 
    if( iDec < 0 )
-   {
       iDec = 0;
-   }
+
    if( iDec > 0 )
-   {
       iPos = iDot = iSize - iDec - 1;
-   }
    else
    {
       iPos = iSize;
@@ -2278,9 +2275,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
          }
 
          if( iPos > 0 )
-         {
             memset( szResult, ' ', iPos );
-         }
 
          if( iDec > 0 && iPos >= 0 )
          {
@@ -2291,14 +2286,10 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
                if( iFirst < 0 )
                {
                   if( szResult[ iPos ] != '0' )
-                  {
                      iFirst = iPos - 1;
-                  }
                }
                else if( iPos - iFirst >= iPrec )
-               {
                   break;
-               }
             }
          }
 
@@ -2309,13 +2300,10 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
             int iZer, iLast;
 
             if( iFirst < 0 )
-            {
                iZer = 0;
-            }
             else
-            {
                iZer = iSize - iFirst - iPrec - ( iDec > 0 ? 1 : 0 );
-            }
+
             dFract = modf( dFract * doBase, &dDig );
             iLast = ( int ) ( dDig + 0.01 );
 
@@ -2341,18 +2329,15 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
                   if( iZer > 0 )
                   {
                      if( iDec == 0 || iPos <= iDot + 1 )
-                     {
                         iLast = szResult[ iPos ] >= '5' ? 1 : 0;
-                     }
+
                      szResult[ iPos ] = '0';
                      --iZer;
                   }
                   else if( iLast > 0 )
                   {
                      if( szResult[ iPos ] == '9' )
-                     {
                         szResult[ iPos ] = '0';
-                     }
                      else
                      {
                         if( szResult[ iPos ] < '0' ) /* '-' or ' ' */
@@ -2364,26 +2349,21 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
                         {
                            szResult[ iPos ]++;
                            if( iFirst < 0 )
-                           {
                               iFirst = iPos;
-                           }
                         }
                         break;
                      }
                   }
                   else
-                  {
                      break;
-                  }
                }
             }
+
             if( fNeg && iFirst >= 0 && iPos >= 0 )
             {
                iPos = ( iDot > 0 && iFirst >= iDot ) ? iDot - 2 : iFirst - 1;
                if( iPos >= 0 )
-               {
                   szResult[ iPos ] = '-';
-               }
             }
          }
       }

@@ -704,102 +704,112 @@ ifeq ($(HB_COMPILER),)
                            $(error ! Error: DJGPP cross-builds are only possible on 32-bit Windows hosts)
                         endif
                      else
+                        # tdragon DWARF-2 build
                         HB_COMP_PATH := $(call find_in_path,gcc-dw2)
                         ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := mingw
                            HB_CCPOSTFIX := -dw2
                         else
-                           HB_COMP_PATH := $(call find_in_path,gcc)
+                           # Equation Solution build (requires x86_64 host)
+                           HB_COMP_PATH := $(call find_in_path,x86_64-pc-mingw32-gcc)
                            ifneq ($(HB_COMP_PATH),)
-                              HB_COMPILER := mingw
+                              HB_COMPILER := mingw64
+                              HB_CPU := x86_64
                            else
-                              HB_COMP_PATH := $(call find_in_path,wpp386)
+                              HB_COMP_PATH := $(call find_in_path,gcc)
                               ifneq ($(HB_COMP_PATH),)
-                                 HB_COMPILER := watcom
-                                 $(eval $(call detect_watcom_platform))
+                                 HB_COMPILER := mingw
                               else
-                                 HB_COMP_PATH := $(call find_in_path,clarm)
+                                 HB_COMP_PATH := $(call find_in_path,wpp386)
                                  ifneq ($(HB_COMP_PATH),)
-                                    HB_COMPILER_VER := 710
-                                    HB_COMPILER := msvcarm
-                                    HB_PLATFORM := wce
-                                    HB_CPU := arm
+                                    HB_COMPILER := watcom
+                                    $(eval $(call detect_watcom_platform))
                                  else
-                                    HB_COMP_PATH := $(call find_in_path,armasm)
+                                    HB_COMP_PATH := $(call find_in_path,clarm)
                                     ifneq ($(HB_COMP_PATH),)
+                                       HB_COMPILER_VER := 710
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
                                        HB_CPU := arm
                                     else
-                                       HB_COMP_PATH := $(call find_in_path,idis)
+                                       HB_COMP_PATH := $(call find_in_path,armasm)
                                        ifneq ($(HB_COMP_PATH),)
-                                          HB_COMPILER := iccia64
-                                          HB_CPU := ia64
+                                          HB_COMPILER := msvcarm
+                                          HB_PLATFORM := wce
+                                          HB_CPU := arm
                                        else
-                                          HB_COMP_PATH := $(call find_in_path,icl)
+                                          HB_COMP_PATH := $(call find_in_path,idis)
                                           ifneq ($(HB_COMP_PATH),)
-                                             HB_COMPILER := icc
+                                             HB_COMPILER := iccia64
+                                             HB_CPU := ia64
                                           else
-                                             HB_COMP_PATH := $(call find_in_path,ml64)
+                                             HB_COMP_PATH := $(call find_in_path,icl)
                                              ifneq ($(HB_COMP_PATH),)
-                                                HB_COMPILER := msvc64
-                                                HB_CPU := x86_64
+                                                HB_COMPILER := icc
                                              else
-                                                HB_COMP_PATH := $(call find_in_path,ias)
+                                                HB_COMP_PATH := $(call find_in_path,ml64)
                                                 ifneq ($(HB_COMP_PATH),)
-                                                   HB_COMPILER := msvcia64
-                                                   HB_CPU := ia64
+                                                   HB_COMPILER := msvc64
+                                                   HB_CPU := x86_64
                                                 else
-                                                   HB_COMP_PATH := $(call find_in_path,cl)
+                                                   HB_COMP_PATH := $(call find_in_path,ias)
                                                    ifneq ($(HB_COMP_PATH),)
-                                                      HB_COMPILER := msvc
-                                                      ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
-                                                         HB_COMPILER_VER := 600
-                                                      else ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
-                                                         HB_COMPILER_VER := 700
-                                                      else ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
-                                                         HB_COMPILER_VER := 800
-                                                      else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
-                                                         HB_COMPILER_VER := 900
-                                                      else ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
-                                                         HB_COMPILER_VER := 1000
-                                                      endif
+                                                      HB_COMPILER := msvcia64
+                                                      HB_CPU := ia64
                                                    else
-                                                      HB_COMP_PATH := $(call find_in_path,bcc32)
+                                                      HB_COMP_PATH := $(call find_in_path,cl)
                                                       ifneq ($(HB_COMP_PATH),)
-                                                         HB_COMPILER := bcc
+                                                         HB_COMPILER := msvc
+                                                         ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 600
+                                                         else ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 700
+                                                         else ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 800
+                                                         else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 900
+                                                         else ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 1000
+                                                         endif
                                                       else
-                                                         HB_COMP_PATH := $(call find_in_path,pocc)
+                                                         HB_COMP_PATH := $(call find_in_path,bcc32)
                                                          ifneq ($(HB_COMP_PATH),)
-                                                            ifneq ($(call find_in_path_raw,coredll.lib,$(LIB)),)
-                                                               HB_PLATFORM := wce
-                                                               HB_COMPILER := poccarm
-                                                               HB_CPU := arm
-                                                            else
-                                                               ifneq ($(call find_in_path_raw,dbgeng.lib,$(LIB)),)
-                                                                  HB_COMPILER := pocc64
-                                                                  HB_CPU := x86_64
-                                                               else
-                                                                  HB_COMPILER := pocc
-                                                               endif
-                                                            endif
+                                                            HB_COMPILER := bcc
                                                          else
-                                                            HB_COMP_PATH := $(call find_in_path,xcc)
+                                                            HB_COMP_PATH := $(call find_in_path,pocc)
                                                             ifneq ($(HB_COMP_PATH),)
-                                                               HB_COMPILER := xcc
-                                                            else
-                                                               HB_COMP_PATH := $(call find_in_path,i686-w64-mingw32-gcc)
-                                                               ifneq ($(HB_COMP_PATH),)
-                                                                  HB_COMPILER := mingw64
-                                                                  HB_CCPREFIX := i686-w64-mingw32-
-                                                                  HB_CPU := x86_64
+                                                               ifneq ($(call find_in_path_raw,coredll.lib,$(LIB)),)
+                                                                  HB_PLATFORM := wce
+                                                                  HB_COMPILER := poccarm
+                                                                  HB_CPU := arm
                                                                else
-                                                                  ifeq ($(HB_HOST_CPU),x86_64)
-                                                                     HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
-                                                                     ifneq ($(HB_COMP_PATH),)
-                                                                        HB_COMPILER := mingw64
-                                                                        HB_CCPREFIX := x86_64-w64-mingw32-
-                                                                        HB_CPU := x86_64
+                                                                  ifneq ($(call find_in_path_raw,dbgeng.lib,$(LIB)),)
+                                                                     HB_COMPILER := pocc64
+                                                                     HB_CPU := x86_64
+                                                                  else
+                                                                     HB_COMPILER := pocc
+                                                                  endif
+                                                               endif
+                                                            else
+                                                               HB_COMP_PATH := $(call find_in_path,xcc)
+                                                               ifneq ($(HB_COMP_PATH),)
+                                                                  HB_COMPILER := xcc
+                                                               else
+                                                                  # mingw-w64 build
+                                                                  HB_COMP_PATH := $(call find_in_path,i686-w64-mingw32-gcc)
+                                                                  ifneq ($(HB_COMP_PATH),)
+                                                                     HB_COMPILER := mingw64
+                                                                     HB_CCPREFIX := i686-w64-mingw32-
+                                                                     HB_CPU := x86_64
+                                                                  else
+                                                                     ifeq ($(HB_HOST_CPU),x86_64)
+                                                                        # mingw-w64 build
+                                                                        HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                                        ifneq ($(HB_COMP_PATH),)
+                                                                           HB_COMPILER := mingw64
+                                                                           HB_CCPREFIX := x86_64-w64-mingw32-
+                                                                           HB_CPU := x86_64
+                                                                        endif
                                                                      endif
                                                                   endif
                                                                endif

@@ -1276,6 +1276,7 @@ HARBOUR
       MinGW [win, *nix, free, open-soource]
          http://www.tdragon.net/recentgcc/ (unofficial, recommended)
          http://www.mingw.org/ (official, rarely updated, MSYS home)
+         http://www.equation.com/servlet/equation.cmd?fa=fortran (unofficial)
       MinGW x64 [win, *nix, free, open-source]
          http://mingw-w64.org/
          http://mingw-w64.sourceforge.net/
