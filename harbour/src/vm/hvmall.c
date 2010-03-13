@@ -57,6 +57,7 @@
 #define HB_MACRO_SUPPORT
 
 #define HB_NO_FLATTEN
+
 #define HB_STACK_LOCAL_MACROS
 
 #define INCL_BASE
@@ -79,6 +80,25 @@
 
 #include "hbvmopt.h"
 #include "hbfloat.h"
+
+#include "hbstack.h"
+
+#if defined( HB_STACK_MACROS ) && defined( HB_STACK_LOCAL_MACROS )
+#  if defined( HB_MT_VM )
+#     if defined( HB_USE_TLS )
+#        if defined( __BORLANDC__ )
+            static PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#        else
+            static HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#        endif
+#     else
+         static HB_TLS_KEY hb_stack_key;
+#     endif
+#  else
+      static HB_STACK hb_stack;
+#  endif
+#endif
+
 
 #include "hvm.c"
 #include "itemapi.c"

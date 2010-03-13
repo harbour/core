@@ -194,13 +194,7 @@ typedef struct
 #if defined( HB_STACK_MACROS )
 #  if defined( HB_MT_VM )
 #     if defined( HB_USE_TLS )
-#        if defined( HB_STACK_LOCAL_MACROS )
-#           if defined( __BORLANDC__ )
-               static PHB_STACK HB_TLS_ATTR hb_stack_ptr;
-#           else
-               static HB_TLS_ATTR PHB_STACK hb_stack_ptr;
-#           endif
-#        else
+#        if !defined( HB_STACK_LOCAL_MACROS )
 #           if defined( __BORLANDC__ )
                extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
 #           else
@@ -208,7 +202,9 @@ typedef struct
 #           endif
 #        endif
 #     else
-         extern HB_TLS_KEY hb_stack_key;
+#        if !defined( HB_STACK_LOCAL_MACROS )
+            extern HB_TLS_KEY hb_stack_key;
+#        endif
 #        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD ) && \
             !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE ) && 0
             static __inline void * hb_stack_ptr_from_tls( void )
@@ -257,9 +253,7 @@ typedef struct
 #        define hb_stack_ref()      ( hb_stack_ptr )
 #     endif
 #  else
-#     if defined( HB_STACK_LOCAL_MACROS )
-         static HB_STACK hb_stack;
-#     else
+#     if !defined( HB_STACK_LOCAL_MACROS )
          extern HB_STACK hb_stack;
 #     endif
 #     define hb_stack_ref()         ( &hb_stack )
