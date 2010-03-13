@@ -1116,13 +1116,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "winmm", "mapi32", "imm32", "msimg32", "wininet" }
    CASE hbmk[ _HBMK_cPLAT ] == "wce"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingwarm" },;
-                    { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
+      aCOMPDET := { { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
                     { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" },;
                     { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
-                    { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } }
+                    { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } ,;
+                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingwarm" } }
 #endif
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       l_aLIBHBGT := { "gtwvt", "gtgui" }
