@@ -79,6 +79,7 @@
 
 STATIC s_oDeskTop
 STATIC s_oApp
+STATIC s_hLastEvent := {=>}
 
 THREAD STATIC t_events
 
@@ -174,6 +175,12 @@ FUNCTION hbxbp_SetEventLoop( oELoop )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION AppType()
+
+   RETURN APPTYPE_PM
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    LOCAL qEvent
 
@@ -191,7 +198,6 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
-
 /*
  *  Internal to the XbpParts, must NOT be called from application code
  */
@@ -213,9 +219,46 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION LastAppEvent( mp1, mp2, oXbp, nThreadID )
+   LOCAL nEvent
+
+   DEFAULT nThreadID TO hb_threadID()
+
+   IF hb_hHasKey( s_hLastEvent, nThreadID )
+hbide_dbg( "hb_hHasKey( s_hLastEvent, nThreadID )", nThreadID )
+      nEvent := s_hLastEvent[ nThreadID ] [ 1 ]
+      mp1    := s_hLastEvent[ nThreadID ] [ 2 ]
+      mp2    := s_hLastEvent[ nThreadID ] [ 3 ]
+      oXbp   := s_hLastEvent[ nThreadID ] [ 4 ]
+   ENDIF
+
+   RETURN nEvent
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION NextAppEvent( mp1, mp2, oXbp )
+   LOCAL nEvent, n
+
+   n := t_nEventOut + 1
+   IF n > EVENT_BUFFER
+      n := 1
+   ENDIF
+
+   IF !empty( t_events[ n, 4 ] )
+      //
+      nEvent := t_events[ n, 1 ]
+      mp1    := t_events[ n, 2 ]
+      mp2    := t_events[ n, 3 ]
+      oXbp   := t_events[ n, 4 ]
+   ENDIF
+
+   RETURN nEvent
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    LOCAL nEvent
-   //LOCAL nThreadID := hb_threadId()
+   LOCAL nThreadID := hb_threadId()
 
    //DEFAULT nTimeout TO 0
    HB_SYMBOL_UNUSED( nTimeOut )
@@ -239,6 +282,9 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
       ENDIF
       hb_releaseCPU()
    ENDDO
+
+   s_hLastEvent[ nThreadID ] := { nEvent, mp1, mp2, oXbp }
+
 //HBXBP_DEBUG( "..........................", hb_threadId() )
 
    RETURN nEvent

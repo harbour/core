@@ -434,6 +434,8 @@
 #define XBPCLPBRD_TEXT                            1
 #define XBPCLPBRD_BITMAP                          2
 
+#define APPTYPE_PM                                3
+
 /*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif
